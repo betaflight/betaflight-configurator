@@ -20,6 +20,7 @@ var GUI_control = function () {
     this.defaultAllowedTabsWhenConnected = [
         'failsafe',
         'transponder',
+        'osd',
         'adjustments',
         'auxiliary',
         'cli',

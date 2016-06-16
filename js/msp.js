@@ -40,6 +40,12 @@ var MSP_codes = {
     MSP_SET_BLACKBOX_CONFIG:    81,
     MSP_TRANSPONDER_CONFIG:     82,
     MSP_SET_TRANSPONDER_CONFIG: 83,
+    MSP_OSD_CONFIG:             84,
+    MSP_SET_OSD_CONFIG:         85,
+    MSP_OSD_CHAR_READ:          86,
+    MSP_OSD_CHAR_WRITE:         87,
+    MSP_VTX_CONFIG:             88,
+    MSP_SET_VTX_CONFIG:         89,
 
     // Multiwii MSP commands
     MSP_IDENT:              100,
@@ -1007,6 +1013,9 @@ var MSP = {
             case MSP_codes.MSP_SET_FAILSAFE_CONFIG:
                 console.log('Failsafe config saved');
                 break;
+            case MSP_codes.MSP_OSD_CHAR_WRITE:
+                console.log('OSD char saved');
+                break;
             default:
                 console.log('Unknown code detected: ' + code);
         } else {
@@ -1421,6 +1430,18 @@ MSP.dataflashRead = function(address, onDataCallback) {
             onDataCallback(address, null);
         }
     });
+};
+
+MSP.osdCharWrite = function(address, data, onDataCallback) {
+    var buffer = [];
+
+    buffer.push(address);
+    for (var i = 0; i < 54; i++) {
+        buffer.push(data[i]);
+    }
+    console.log("MSP data: " + buffer.toString());
+    MSP.send_message(MSP_codes.MSP_OSD_CHAR_WRITE, buffer, false, onDataCallback);
+    //onDataCallback(true);
 };
 
 MSP.sendServoMixRules = function(onCompleteCallback) {

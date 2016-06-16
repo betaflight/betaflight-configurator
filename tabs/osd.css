@@ -1,0 +1,259 @@
+.tab-osd .info {
+    margin: 10px 0 0 0;
+    position: relative;
+}
+
+.tab-osd .info .progressLabel {
+    position: absolute;
+    width: 100%;
+    height: 26px;
+    top: 0px;
+    left: 0;
+    text-align: center;
+    line-height: 24px;
+    color: white;
+    font-weight: bold;
+
+    /* text-shadow: 1px 0px 2px rgba(0, 0, 0, 0.9);*/
+}
+
+.darkgrey {
+    background-color: #575757;
+}
+
+.tab-osd .spacer_box_title {
+    float: none;
+}
+
+.tab-osd .info {
+    float: left;
+    width: 100%;
+}
+
+.tab-osd .info .progressLabel a {
+    color: white;
+}
+
+.tab-osd .info .progressLabel a:hover {
+    text-decoration: underline;
+}
+
+.tab-osd .info .progress {
+    width: 100%;
+    height: 26px;
+    border-radius: 5px;
+    border: 1px solid silver;
+}
+
+.tab-osd .info .progress {
+    -webkit-appearance: none;
+}
+
+.tab-osd .info .progress::-webkit-progress-bar {
+    background-color: #4f4f4f;
+    border-radius: 4px;
+    box-shadow: inset 0px 0px 5px #2f2f2f;
+}
+
+.tab-osd .info .progress::-webkit-progress-value {
+    background-color: #F86008;
+    border-radius: 4px;
+}
+
+.tab-osd .info .progress.valid::-webkit-progress-bar {
+    background-color: #56ac1d;
+    border-radius: 4px;
+}
+
+.tab-osd .info .progress.valid::-webkit-progress-value {
+    background-color: #56ac1d;
+    border-radius: 4px;
+}
+
+.tab-osd .info .progress.invalid::-webkit-progress-bar {
+    background-color: #A62E32;
+    border-radius: 4px;
+}
+
+.tab-osd .info .progress.invalid::-webkit-progress-value {
+    background-color: #A62E32;
+    border-radius: 4px;
+}
+
+.tab-osd ul li {
+    list-style: initial;
+    list-style-type: circle;
+    margin-left: 30px;
+}
+
+.tab-osd .options {
+    position: relative;
+    margin-bottom: 10px;
+    line-height: 18px;
+    text-align: left;
+}
+
+.tab-osd td {
+    text-align: left;
+}
+
+.tab-osd .options label input {
+    float: left;
+    margin-top: 2px;
+}
+
+.tab-osd .options label span {
+    font-weight: bold;
+    margin-left: 6px;
+}
+
+.tab-osd .options select {
+    width: 300px;
+    height: 20px;
+    border: 1px solid silver;
+}
+
+.tab-osd .options .releases select {
+    width: 280px;
+}
+
+.tab-osd .option.releases {
+    margin: 0 0 2px 0;
+    line-height: 20px;
+}
+
+.tab-osd .options .description {
+    position: relative;
+    left: 0px;
+    font-style: italic;
+    color: #818181;
+}
+
+.tab-osd .cf_table td:last-child {
+    text-align: left;
+}
+
+.tab-osd .options .flash_on_connect_wrapper {
+    display: none;
+}
+
+.tab-osd .options .manual_baud_rate select {
+    width: 75px;
+    margin-left: 19px;
+}
+
+.tab-osd .release_info {
+    display: none;
+}
+
+.tab-osd .release_info .title {
+    line-height: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    border-bottom: 1px solid silver;
+    background-color: #3f4241;
+}
+
+.tab-osd .release_info .target {
+    color: blue;
+}
+
+.tab-osd .release_info p {
+    padding: 5px;
+}
+
+.tab-osd .release_info p a {
+    font-weight: bold;
+}
+
+.tab-osd .release_info p a:hover {
+    text-decoration: underline;
+}
+
+.tab-osd .release_info .notes {
+    padding: 5px;
+}
+
+.tab-osd .git_info {
+    display: none;
+    margin-bottom: 10px;
+    border: 1px solid silver;
+}
+
+.tab-osd .git_info .title {
+    line-height: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    border-bottom: 1px solid silver;
+    background-color: #3f4241;
+}
+
+.tab-osd .git_info p {
+    padding: 5px;
+}
+
+.tab-osd .git_info p a {
+    font-weight: bold;
+}
+
+.tab-osd .git_info p a:hover {
+    text-decoration: underline;
+}
+
+.tab-osd .buttons {
+    width: calc(100% - 20px);
+    margin-top: 10px;
+    bottom: 10px;
+}
+
+.tab-osd .buttons a {
+    display: block;
+    float: left;
+    margin: 0 10px 0 0;
+    padding: 0 15px 0 15px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid silver;
+    background-color: #ececec;
+}
+
+.tab-osd .buttons a:hover {
+    background-color: #dedcdc;
+}
+
+.tab-osd .buttons a.flash_font.locked {
+    background-color: #b8b8b8;
+}
+
+.tab-osd .buttons a.flash_font.locked:hover {
+    cursor: default;
+    background-color: #b8b8b8;
+}
+
+.tab-osd .buttons a.load_remote_file.locked {
+    background-color: #b8b8b8;
+}
+
+.tab-osd .buttons a.load_remote_file.locked:hover {
+    cursor: default;
+    background-color: #b8b8b8;
+}
+
+.tab-osd .buttons .back {
+    float: right;
+    margin: 0;
+}
+
+.btn .disabled {
+    cursor: default;
+    color: #fff;
+    background-color: #AFAFAF;
+    border: none;
+    pointer-events: none;
+    text-shadow: none;
+    opacity: 0.5;
+}
