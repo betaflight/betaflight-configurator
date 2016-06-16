@@ -798,6 +798,14 @@ li.active .ic_transponder {
     background-image: url(images/icons/cf_icon_transponder_white.svg);
 }
 
+.ic_osd {
+    background-image: url(images/icons/icon_osd.svg);
+    background-position-y: 4px;
+}
+
+.ic_osd:hover, li.active .ic_osd {
+    background-image: url(images/icons/icon_osd_white.svg);
+}
 
 /* SPARE Tab-Icons */
 .ic_failsafe {
