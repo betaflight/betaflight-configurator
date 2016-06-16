@@ -1694,6 +1694,22 @@ dialog {
     border-bottom-right-radius: 5px;
 }
 
+button {
+    padding: .5em .75em;
+    border-radius: 4px;
+    background-color: #ccc;
+    color: #666;
+    border: 1px solid #ddd;
+    font-family: 'open_sanssemibold', Arial;
+    font-size: 10pt;
+    cursor: pointer;
+}
+
+button.active {
+    background-color: #ffbb00;
+    border: 1px solid #dba718;
+    color: #000;
+}
 
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {

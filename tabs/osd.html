@@ -1,20 +1,31 @@
 <div class="tab-osd toolbar_fixed_bottom">
-    <div class="content_wrapper">
-        <div class="clear-both"></div>
+    <div class="content_wrapper font-picker">
+        <h1 class="tab_title">Font</h1>
+
+        <div class="content_wrapper font-preview"></div>
+
+        <div style="text-align: center">
+            <button data-font-file="default">Default</button>
+            <button data-font-file="bold">Bold</button>
+            <button data-font-file="large">Large</button>
+        </div>
+
         <div class="info"><a name="progressbar"></a>
             <progress class="progress" value="0" min="0" max="100"></progress>
-            <span class="progressLabel" i18n="fontFlasherLoadFirmwareFile"></span>
+            <span class="progressLabel"</span>
         </div>
     </div>
     <div class="content_toolbar">
         <div class="btn">
             <a class="load_font_file" href="#" i18n="fontFlasherButtonLoadLocal"></a>
         </div>
+        <!--
         <div class="btn">
             <a class="load_remote_font_file disabled" href="#" i18n="fontFlasherButtonLoadOnline"></a>
         </div>
+        -->
         <div class="btn">
-            <a class="flash_font disabled" href="#progressbar" i18n="fontFlasherFlashFont"></a>
+            <a class="flash_font" href="#progressbar" i18n="fontFlasherFlashFont"></a>
         </div>
     </div>
 </div>

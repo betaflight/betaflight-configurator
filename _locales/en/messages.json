@@ -1405,7 +1405,7 @@
         "message": "Load Font [Online]"
     },
     "fontFlasherFlashFont": {
-        "message": "Flash Font"
+        "message": "Upload Font"
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "Github Firmware Info"

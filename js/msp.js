@@ -1014,7 +1014,7 @@ var MSP = {
                 console.log('Failsafe config saved');
                 break;
             case MSP_codes.MSP_OSD_CHAR_WRITE:
-                console.log('OSD char saved');
+                console.log('OSD char uploaded');
                 break;
             default:
                 console.log('Unknown code detected: ' + code);
@@ -1112,6 +1112,14 @@ var MSP = {
         }
 
         return true;
+    },
+    promise: function(code, data) {
+      var self = this;
+      return new Promise(function(resolve) {
+        self.send_message(code, data, false, function(data) {
+          resolve(data);
+        });
+      });
     },
     callbacks_cleanup: function () {
         for (var i = 0; i < this.callbacks.length; i++) {
@@ -1430,18 +1438,6 @@ MSP.dataflashRead = function(address, onDataCallback) {
             onDataCallback(address, null);
         }
     });
-};
-
-MSP.osdCharWrite = function(address, data, onDataCallback) {
-    var buffer = [];
-
-    buffer.push(address);
-    for (var i = 0; i < 54; i++) {
-        buffer.push(data[i]);
-    }
-    console.log("MSP data: " + buffer.toString());
-    MSP.send_message(MSP_codes.MSP_OSD_CHAR_WRITE, buffer, false, onDataCallback);
-    //onDataCallback(true);
 };
 
 MSP.sendServoMixRules = function(onCompleteCallback) {

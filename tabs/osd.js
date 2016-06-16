@@ -1,138 +1,210 @@
 'use strict';
 
+var FONT = FONT || {};
+
+var initData = function() {
+  if (FONT.data) {
+    return;
+  }
+  FONT.data = {
+    loaded_font_file: 'default',
+    // array of arry of image bytes ready to upload to fc
+    characters_bytes: [],
+    // array of array of image bits by character
+    characters: [],
+    // an array of base64 encoded image strings by character
+    character_image_urls: []
+  }
+};
+
+FONT.constants = {
+  SIZES: {
+    /** NVM ram size for one font char, actual character bytes **/
+    MAX_NVM_FONT_CHAR_SIZE: 54,
+    /** NVM ram field size for one font char, last 10 bytes dont matter **/
+    MAX_NVM_FONT_CHAR_FIELD_SIZE: 64,
+    CHAR_HEIGHT: 18,
+    CHAR_WIDTH: 12
+  },
+  COLORS: {
+    // black
+    0: 'rgba(0, 0, 0, 1)',
+    // also the value 3, could yield transparent according to
+    // https://www.sparkfun.com/datasheets/BreakoutBoards/MAX7456.pdf
+    1: 'rgba(255, 255, 255, 0)',
+    // white
+    2: 'rgba(255,255,255, 1)'
+  }
+};
+
+/**
+ * Each line is composed of 8 asci 1 or 0, representing 1 bit each for a total of 1 byte per line
+ */
+FONT.parseMCMFontFile = function(data) {
+  var data = data.split("\n");
+  // clear local data
+  FONT.data.characters.length = 0;
+  FONT.data.characters_bytes.length = 0;
+  FONT.data.character_image_urls.length = 0;
+  // make sure the font file is valid
+  if (data.shift().trim() != 'MAX7456') {
+    var msg = 'that font file doesnt have the MAX7456 header, giving up';
+    console.debug(msg);
+    Promise.reject(msg);
+  }
+  var character_bits = [];
+  var character_bytes = [];
+  // hexstring is for debugging
+  FONT.data.hexstring = [];
+  for (var i = 0; i < data.length; i++) {
+    var line = data[i];
+    // hexstring is for debugging
+    FONT.data.hexstring.push('0x' + parseInt(line, 2).toString(16));
+    // every 64 bytes (line) is a char, we're counting chars though, which are 2 bits
+    if (character_bits.length == FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE * (8 / 2)) {
+      FONT.data.characters_bytes.push(character_bytes);
+      FONT.data.characters.push(character_bits);
+      FONT.draw(FONT.data.characters.length-1);
+      //$log.debug('parsed char ', i, ' as ', character);
+      character_bits = [];
+      character_bytes = [];
+    }
+    for (var y = 0; y < 8; y = y + 2) {
+      var v = parseInt(line.slice(y, y+2), 2);
+      character_bits.push(v);
+    }
+    character_bytes.push(parseInt(line, 2));
+  }
+  return FONT.data.characters;
+};
+
+
+FONT.openFontFile = function($preview) {
+  chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
+    FONT.data.loaded_font_file = fileEntry.name;
+    if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError.message);
+        return;
+    }
+    fileEntry.file(function (file) {
+      var reader = new FileReader();
+      reader.onloadend = function(e) {
+        if (e.total != 0 && e.total == e.loaded) {
+          FONT.parseMCMFontFile(e.target.result);
+          if ($preview) {
+            FONT.preview($preview);
+          }
+        }
+        var msg = 'could not load whole font file';
+        console.error(msg);
+      };
+      reader.readAsText(file);
+    });
+  });
+};
+
+/**
+ * returns a canvas image with the character on it
+ */
+var drawCanvas = function(charAddress) {
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext("2d");
+
+  // TODO: do we want to be able to set pixel size? going to try letting the consumer scale the image.
+  var pixelSize = pixelSize || 1;
+  var width = pixelSize * FONT.constants.SIZES.CHAR_WIDTH;
+  var height = pixelSize * FONT.constants.SIZES.CHAR_HEIGHT;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  for (var y = 0; y < height; y++) {
+    for (var x = 0; x < width; x++) {
+      var v = FONT.data.characters[charAddress][(y*width)+x];
+      ctx.fillStyle = FONT.constants.COLORS[v];
+      ctx.fillRect(x, y, pixelSize, pixelSize);
+    }
+  }
+  return canvas;
+};
+
+FONT.draw = function(charAddress) {
+  var cached = FONT.data.character_image_urls[charAddress];
+  if (!cached) {
+    cached = FONT.data.character_image_urls[charAddress] = drawCanvas(charAddress).toDataURL('image/png');
+  }
+  return cached;
+};
+
+FONT.msp = {
+  encode: function(charAddress) {
+    return [charAddress].concat(FONT.data.characters_bytes[charAddress].slice(0,FONT.constants.SIZES.MAX_NVM_FONT_CHAR_SIZE));
+  }
+};
+
+FONT.upload = function($progress) {
+  return Promise.mapSeries(FONT.data.characters, function(data, i) {
+    $progress.val((i / FONT.data.characters.length) * 100);
+    return MSP.promise(MSP_codes.MSP_OSD_CHAR_WRITE, FONT.msp.encode(i));
+  })
+  .then(function() {
+    return MSP.promise(MSP_codes.MSP_SET_REBOOT);
+  });
+};
+
+FONT.preview = function($el) {
+  $el.empty()
+  FONT.data.character_image_urls.map(function(url) {
+    $el.append('<img src='+url+'></img>');
+  });
+}
+
 TABS.osd = {};
 TABS.osd.initialize = function (callback) {
     var self = this;
 
-    console.log('Initialize OSD');
     if (GUI.active_tab != 'osd') {
         GUI.active_tab = 'osd';
-        googleAnalytics.sendAppView('OSD');
     }
-
-
-    var font_mcm = false, // standard mcm font in string format
-        parsed_mcm = false; // parsed raw mcm in array format
 
     $('#content').load("./tabs/osd.html", function () {
         // translate to user-selected language
         localize();
 
-        function parse_mcm(str, callback) {
-            // parsing hex in different thread
-            var worker = new Worker('./js/workers/mcm_parser.js');
+        var $preview = $('.font-preview');
 
-            // "callback"
-            worker.onmessage = function (event) {
-                callback(event.data);
-            };
+        //  init structs once, also clears current font
+        initData();
 
-            // send data/string over for processing
-            worker.postMessage(str);
-        }
-
-
-        // UI Hooks
-        $('a.load_font_file').click(function () {
-            chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
-                if (chrome.runtime.lastError) {
-                    console.error(chrome.runtime.lastError.message);
-
-                    return;
-                }
-
-                chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
-                    console.log('Loading file from: ' + path);
-
-                    fileEntry.file(function (file) {
-                        var reader = new FileReader();
-
-                        reader.onprogress = function (e) {
-                            if (e.total > 1048576) { // 1 MB
-                                // dont allow reading files bigger then 1 MB
-                                console.log('File limit (1 MB) exceeded, aborting');
-                                reader.abort();
-                            }
-                        };
-
-                        reader.onloadend = function(e) {
-                            if (e.total != 0 && e.total == e.loaded) {
-                                console.log('File loaded');
-
-                                font_mcm = e.target.result;
-
-                                parse_mcm(font_mcm, function (data) {
-                                    parsed_mcm = data;
-
-                                    if (parsed_mcm) {
-                                        googleAnalytics.sendEvent('Flashing', 'Font', 'local');
-                                        $('a.flash_font').removeClass('disabled');
-
-                                        $('span.progressLabel').text('Loaded Local Font: (' + parsed_mcm.bytes_total + ' bytes)');
-                                    } else {
-                                        $('span.progressLabel').text(chrome.i18n.getMessage('fontFlasherHexCorrupted'));
-                                    }
-                                });
-                            }
-                        };
-
-                        reader.readAsText(file);
-                    });
-                });
-            });
+        var $fontPicker = $('.font-picker button');
+        $fontPicker.click(function(e) {
+          $fontPicker.removeClass('active');
+          $(this).addClass('active');
+          $.get('/resources/osd/' + $(e.target).data('font-file') + '.mcm', function(data) {
+            FONT.parseMCMFontFile(data);
+            FONT.preview($preview);
+          });
         });
 
-        function asyncLoop(iterations, func, callback) {
-            var index = 0;
-            var done = false;
-            var loop = {
-                next: function() {
-                    if (done) {
-                        return;
-                    }
+        // load the first font when we change tabs
+        $fontPicker.first().click();
 
-                    if (index < iterations) {
-                        index++;
-                        func(loop);
+        // UI Hooks
+        $('a.load_font_file').click((function($preview) {
+          return function() {
+            $fontPicker.removeClass('active');
+            FONT.openFontFile($preview);
+          }
+        })($preview));
 
-                    } else {
-                        done = true;
-                        callback();
-                    }
-                },
-
-                iteration: function() {
-                    return index - 1;
-                },
-
-                break: function() {
-                    done = true;
-                    callback();
-                }
-            };
-            loop.next();
-            return loop;
-        }
         $('a.flash_font').click(function () {
-            if (!$(this).hasClass('disabled')) {
-                if (!GUI.connect_lock) { // button disabled while flashing is in progress
-                    if (parsed_mcm != false) {
-                        var addr = 0;
-                        // send loaded font here
-                        asyncLoop(256, function(loop) {
-                                var i = loop.iteration();
-                                var data = parsed_mcm.data.slice(i * 64, i * 64 + 64);
-                                MSP.osdCharWrite(i, data, function(result) {
-                                    // log the iteration
-                                    $('.progress').val(Math.round(loop.iteration()*64 / (parsed_mcm.bytes_total) * 100));
-                                    // Okay, for cycle could continue
-                                    loop.next();
-                                })
-                        }, function() { console.log('cycle ended') });
-                   } else {
-                        $('span.progressLabel').text(chrome.i18n.getMessage('fontFlasherFirmwareNotLoaded'));
-                    }
-                }
+            if (!GUI.connect_lock) { // button disabled while flashing is in progress
+                $('.progressLabel').text('Uploading...');
+                FONT.upload($('.progress').val(0)).then(function() {
+                    var msg = 'Uploaded all ' + FONT.data.characters.length + ' characters';
+                    console.log(msg);
+                    $('.progressLabel').text(msg);
+                });
             }
         });
 
