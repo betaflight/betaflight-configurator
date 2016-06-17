@@ -2,7 +2,7 @@
 
 var FONT = FONT || {};
 
-var initData = function() {
+FONT.initData = function() {
   if (FONT.data) {
     return;
   }
@@ -159,6 +159,134 @@ FONT.preview = function($el) {
   });
 }
 
+var OSD = OSD || {};
+
+// parsed fc output and output to fc, used by to OSD.msp.encode
+OSD.initData = function() {
+  OSD.data = {
+    video_system: null,
+    display_items: []
+  };
+};
+
+OSD.constants = {
+  VIDEO_TYPES: [
+    'AUTO',
+    'PAL',
+    'NTSC'
+  ],
+  VIDEO_LINES: {
+    PAL: 16,
+    NTSC: 13
+  },
+  VIDEO_BUFFER_CHARS: {
+    PAL: 480,
+    NTSC: 390
+  },
+  // order matters, so these are going in an array... pry could iterate the example map instead
+  DISPLAY_FIELDS: [
+    {
+      name: 'MAIN_BATT_VOLTAGE',
+      default_position: -29,
+      positionable: true
+    },
+    {
+      name: 'RSSI_VALUE',
+      default_position: -59,
+      positionable: true
+    },
+    {
+      name: 'TIMER',
+      default_position: -39,
+      positionable: true
+    },
+    {
+      name: 'THROTTLE_POS',
+      default_position: -9,
+      positionable: true
+    },
+    {
+      name: 'CPU_LOAD',
+      default_position: 26,
+      positionable: true
+    },
+    {
+      name: 'VTX_CHANNEL',
+      default_position: 1,
+      positionable: true
+    },
+    {
+      name: 'VOLTAGE_WARNING',
+      default_position: -80,
+      positionable: true
+    },
+    {
+      name: 'ARMED',
+      default_position: -107,
+      positionable: true
+    },
+    {
+      name: 'DISARMED',
+      default_position: -109,
+      positionable: true
+    },
+    {
+      name: 'ARTIFICIAL_HORIZON',
+      default_position: -1,
+      positionable: false
+    },
+    {
+      name: 'HORIZON_SIDEBARS',
+      default_position: -1,
+      positionable: false
+    }
+  ],
+};
+
+OSD.updateDisplaySize = function() {
+  // compute the size
+  OSD.data.display_size = {
+    x: 18,
+    y: OSD.constants.VIDEO_LINES[OSD.data.video_system]
+  };
+};
+
+OSD.msp = {
+  encodeOther: function() {
+    return [-1, OSD.data.video_system];
+  },
+  encode: function(display_item) {
+    return [
+      display_item.index,
+      specificByte(display_item.position, 0),
+      specificByte(display_item.position, 1)
+    ];
+  },
+  // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled
+  decode: function(payload) {
+    OSD.initData();
+    var view = payload.data;
+    var d = OSD.data;
+    d.compiled_in = view.getUint8(0, 1);
+    d.video_system = view.getUint8(1, 1);
+    d.display_items = [];
+    // start at the offset from the other fields
+    for (var i = 2; i < view.byteLength; i = i + 2) {
+      var v = view.getInt16(i, 1)
+      var j = d.display_items.length;
+      var c = OSD.constants.DISPLAY_FIELDS[j];
+      d.display_items.push({
+        name: c.name,
+        index: j,
+        position: v,
+        positionable: c.positionable
+      });
+    }
+    OSD.updateDisplaySize();
+  }
+};
+
+
 TABS.osd = {};
 TABS.osd.initialize = function (callback) {
     var self = this;
@@ -171,10 +299,78 @@ TABS.osd.initialize = function (callback) {
         // translate to user-selected language
         localize();
 
+        // 2 way binding... sorta
+        function updateOsdView() {
+          // ask for the OSD config data
+          MSP.promise(MSP_codes.MSP_OSD_CONFIG)
+          .then(function(info) {
+            OSD.msp.decode(info);
+            // video mode
+            var $videoTypes = $('.video-types').empty();
+            for (var i = 0; i < OSD.constants.VIDEO_TYPES.length; i++) {
+              var type = OSD.constants.VIDEO_TYPES[i];
+              var $checkbox = $('<label/>').append($('<input name="video_system" type="radio"/>'+type+'</label>')
+                .prop('checked', i === OSD.data.video_system)
+                .data('type', type)
+                .data('type', i)
+              );
+              $videoTypes.append($checkbox);
+            }
+            $videoTypes.find(':radio').click(function(e) {
+              OSD.data.video_system = $(e.target).data('type');
+              MSP.promise(MSP_codes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
+              .then(function() {
+                updateOsdView();
+              });
+            });
+
+            // display fields on/off and position
+            var $displayFields = $('.display-fields').empty();
+            for (let field of OSD.data.display_items) {
+              var checked = (-1 != field.position) ? 'checked' : '';
+              //$displayFields.append('<input type="checkbox" data-field-index="'+field.index+'" '+checked+'>'+field.name+'</input>');
+              var $field = $('<div class="display-field"/>');
+              $field.append(
+                $('<input type="checkbox" name="'+field.name+'"></input>')
+                .data('field', field)
+                .attr('checked', field.position != -1)
+                .click(function(e) {
+                  var field = $(e.target).data('field');
+                  var $position = $field.find('.position');
+                  field.position = (field.position == -1) ? ($position.val()||0) : -1;
+                  MSP.promise(MSP_codes.MSP_SET_OSD_CONFIG, OSD.msp.encode(field))
+                    .then(function() {
+                      updateOsdView();
+                    });
+                })
+              );
+              $field.append('<label for="'+field.name+'">'+field.name+'</label>');
+              if (field.positionable) {
+                $field.append(
+                  $('<input type="text" class="position"></input>')
+                  .data('field', field)
+                  .val(field.position)
+                );
+              }
+              $displayFields.append($field);
+            }
+          });
+        };
+        updateOsdView();
+        $('.display-layout .save').click(function() {
+          MSP.promise(MSP_codes.MSP_EEPROM_WRITE)
+          var that = $(this)
+          $(this).html("Saved");
+          setTimeout(function () {
+              that.html(oldText);
+          }, 2000);
+        });
+
+        // font preview window
         var $preview = $('.font-preview');
 
         //  init structs once, also clears current font
-        initData();
+        FONT.initData();
 
         var $fontPicker = $('.font-picker button');
         $fontPicker.click(function(e) {
@@ -197,6 +393,7 @@ TABS.osd.initialize = function (callback) {
           }
         })($preview));
 
+        // font upload
         $('a.flash_font').click(function () {
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
                 $('.progressLabel').text('Uploading...');

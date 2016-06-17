@@ -1013,8 +1013,19 @@ var MSP = {
             case MSP_codes.MSP_SET_FAILSAFE_CONFIG:
                 console.log('Failsafe config saved');
                 break;
+            case MSP_codes.MSP_OSD_CONFIG:
+                break;
+            case MSP_codes.MSP_SET_OSD_CONFIG:
+                console.log('OSD config set');
+                break;
+            case MSP_codes.MSP_OSD_CHAR_READ:
+                break;
             case MSP_codes.MSP_OSD_CHAR_WRITE:
                 console.log('OSD char uploaded');
+                break;
+            case MSP_codes.MSP_VTX_CONFIG:
+                break;
+            case MSP_codes.MSP_SET_VTX_CONFIG:
                 break;
             default:
                 console.log('Unknown code detected: ' + code);
@@ -1078,6 +1089,8 @@ var MSP = {
             bufView[5] = bufView[3] ^ bufView[4]; // checksum
         }
 
+        //console.log('msp sending: ', data);
+
         // dev version 0.57 code below got recently changed due to the fact that queueing same MSP codes was unsupported
         // and was causing trouble while backup/restoring configurations
         // watch out if the recent change create any inconsistencies and then adjust accordingly
@@ -1113,6 +1126,9 @@ var MSP = {
 
         return true;
     },
+    /**
+     * resolves: {command: code, data: data, length: message_length}
+     */
     promise: function(code, data) {
       var self = this;
       return new Promise(function(resolve) {
