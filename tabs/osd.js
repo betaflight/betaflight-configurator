@@ -165,9 +165,11 @@ var OSD = OSD || {};
 OSD.initData = function() {
   OSD.data = {
     video_system: null,
-    display_items: []
+    display_items: [],
+    last_positions: {}
   };
 };
+OSD.initData();
 
 OSD.constants = {
   VIDEO_TYPES: [
@@ -264,7 +266,6 @@ OSD.msp = {
   },
   // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled
   decode: function(payload) {
-    OSD.initData();
     var view = payload.data;
     var d = OSD.data;
     d.compiled_in = view.getUint8(0, 1);
@@ -336,8 +337,16 @@ TABS.osd.initialize = function (callback) {
                 .attr('checked', field.position != -1)
                 .click(function(e) {
                   var field = $(this).data('field');
-                  var $position = $field.find('.position');
-                  field.position = (field.position == -1) ? (parseInt($position.val())||0) : -1;
+                  var $position = $(this).parent().find('.position.'+field.name);
+                  if (field.position == -1) {
+                    $position.show();
+                    field.position = OSD.data.last_positions[field.name]
+                  }
+                  else {
+                    $position.hide();
+                    OSD.data.last_positions[field.name] = field.position
+                    field.position = -1
+                  }
                   MSP.promise(MSP_codes.MSP_SET_OSD_CONFIG, OSD.msp.encode(field))
                   .then(function() {
                     updateOsdView();
@@ -345,14 +354,15 @@ TABS.osd.initialize = function (callback) {
                 })
               );
               $field.append('<label for="'+field.name+'">'+field.name+'</label>');
-              if (field.positionable) {
+              if (field.positionable && field.position != -1) {
                 $field.append(
-                  $('<input type="text" class="position"></input>')
+                  $('<input type="number" class="'+field.name+' position"></input>')
                   .data('field', field)
                   .val(field.position)
                   .change($.debounce(250, function(e) {
                     var field = $(this).data('field');
-                    field.position = parseInt($(this).val());
+                    var position = parseInt($(this).val());
+                    field.position = position;
                     MSP.promise(MSP_codes.MSP_SET_OSD_CONFIG, OSD.msp.encode(field))
                     .then(function() {
                       updateOsdView();

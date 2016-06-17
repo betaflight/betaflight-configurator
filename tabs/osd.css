@@ -259,10 +259,15 @@
 }
 
 .tab-osd .display-layout label {
-  margin: .25em 1em;
+  margin: .25em .1em;
   display: inline-block;
 }
 
 .tab-osd .display-layout input {
-  margin: .25em 1em;
+  margin: .1em 1em;
+}
+
+.tab-osd .display-layout input.position{
+  width: 5em;
+  border-bottom: 1px solid #ccc
 }
