@@ -317,7 +317,7 @@ TABS.osd.initialize = function (callback) {
               $videoTypes.append($checkbox);
             }
             $videoTypes.find(':radio').click(function(e) {
-              OSD.data.video_system = $(e.target).data('type');
+              OSD.data.video_system = $(this).data('type');
               MSP.promise(MSP_codes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
               .then(function() {
                 updateOsdView();
@@ -335,13 +335,13 @@ TABS.osd.initialize = function (callback) {
                 .data('field', field)
                 .attr('checked', field.position != -1)
                 .click(function(e) {
-                  var field = $(e.target).data('field');
+                  var field = $(this).data('field');
                   var $position = $field.find('.position');
-                  field.position = (field.position == -1) ? ($position.val()||0) : -1;
+                  field.position = (field.position == -1) ? (parseInt($position.val())||0) : -1;
                   MSP.promise(MSP_codes.MSP_SET_OSD_CONFIG, OSD.msp.encode(field))
-                    .then(function() {
-                      updateOsdView();
-                    });
+                  .then(function() {
+                    updateOsdView();
+                  });
                 })
               );
               $field.append('<label for="'+field.name+'">'+field.name+'</label>');
@@ -350,6 +350,14 @@ TABS.osd.initialize = function (callback) {
                   $('<input type="text" class="position"></input>')
                   .data('field', field)
                   .val(field.position)
+                  .change($.debounce(250, function(e) {
+                    var field = $(this).data('field');
+                    field.position = parseInt($(this).val());
+                    MSP.promise(MSP_codes.MSP_SET_OSD_CONFIG, OSD.msp.encode(field))
+                    .then(function() {
+                      updateOsdView();
+                    });
+                  }))
                 );
               }
               $displayFields.append($field);
@@ -358,11 +366,12 @@ TABS.osd.initialize = function (callback) {
         };
         updateOsdView();
         $('.display-layout .save').click(function() {
+          var self = this;
           MSP.promise(MSP_codes.MSP_EEPROM_WRITE)
-          var that = $(this)
+          var oldText = $(this).text();
           $(this).html("Saved");
           setTimeout(function () {
-              that.html(oldText);
+              $(self).html(oldText);
           }, 2000);
         });
 
@@ -376,7 +385,7 @@ TABS.osd.initialize = function (callback) {
         $fontPicker.click(function(e) {
           $fontPicker.removeClass('active');
           $(this).addClass('active');
-          $.get('/resources/osd/' + $(e.target).data('font-file') + '.mcm', function(data) {
+          $.get('/resources/osd/' + $(this).data('font-file') + '.mcm', function(data) {
             FONT.parseMCMFontFile(data);
             FONT.preview($preview);
           });
