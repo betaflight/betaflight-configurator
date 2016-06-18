@@ -7,6 +7,7 @@ FONT.initData = function() {
     return;
   }
   FONT.data = {
+    // default font file name
     loaded_font_file: 'default',
     // array of arry of image bytes ready to upload to fc
     characters_bytes: [],
@@ -305,6 +306,11 @@ TABS.osd.initialize = function (callback) {
           // ask for the OSD config data
           MSP.promise(MSP_codes.MSP_OSD_CONFIG)
           .then(function(info) {
+            if (!info.length) {
+              $('.tab-osd .content_wrapper.unsupported').fadeIn();;
+              return;
+            }
+            $('.tab-osd .content_wrapper.supported').fadeIn();;
             OSD.msp.decode(info);
             // video mode
             var $videoTypes = $('.video-types').empty();

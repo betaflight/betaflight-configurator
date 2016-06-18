@@ -271,3 +271,11 @@
   width: 5em;
   border-bottom: 1px solid #ccc
 }
+
+.tab-osd .hide {
+  display: none;
+}
+
+.tab-osd .note {
+  padding: 1em;
+}
