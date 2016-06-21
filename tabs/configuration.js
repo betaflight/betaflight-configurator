@@ -53,12 +53,21 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_3d() {
-        var next_callback = load_sensor_alignment;
+        var next_callback = esc_protocol;
         if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
             MSP.send_message(MSP_codes.MSP_3D, false, false, next_callback);
         } else {
             next_callback();
         }
+    }
+
+    function esc_protocol() {
+        var next_callback = load_sensor_alignment;
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
+            MSP.send_message(MSP_codes.MSP_PID_ADVANCED_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }        
     }
     
     function load_sensor_alignment() {
@@ -69,6 +78,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             next_callback();
         }
     }
+    
+
+    
     //Update Analog/Battery Data
     function load_analog() {
         MSP.send_message(MSP_codes.MSP_ANALOG, false, false, function () {
@@ -132,7 +144,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
             {bit: 16, group: 'other', name: 'LED_STRIP'},
             {bit: 17, group: 'other', name: 'DISPLAY'},
-            {bit: 18, group: 'esc', name: 'ONESHOT125', haveTip: true},
             {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true}
         ];
         
@@ -239,9 +250,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'CW 270° flip'
         ];
         
+        
+        
         var orientation_gyro_e = $('select.gyroalign');
         var orientation_acc_e = $('select.accalign');
         var orientation_mag_e = $('select.magalign');
+        
 
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.tab-configuration .sensoralignment').hide();
@@ -255,6 +269,91 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             orientation_acc_e.val(SENSOR_ALIGNMENT.align_acc);
             orientation_mag_e.val(SENSOR_ALIGNMENT.align_mag);
         }
+        
+        // ESC protocols 
+        
+        var escprotocols = [
+            'PWM',
+            'ONESHOT125',
+            'ONESHOT42',
+            'MULTISHOT'
+        ];
+        
+        var esc_protocol_e = $('select.escprotocol');
+
+        for (var i = 0; i < escprotocols.length; i++) {
+            esc_protocol_e.append('<option value="' + (i+1) + '">'+ escprotocols[i] + '</option>');
+        }
+        esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol+1);
+        
+        
+        $('input[name="unsyncedPWMSwitch"]').prop('checked', PID_ADVANCED_CONFIG.use_unsyncedPwm);
+        $('input[name="unsyncedpwmfreq"]').val(PID_ADVANCED_CONFIG.motor_pwm_rate);
+        if (PID_ADVANCED_CONFIG.use_unsyncedPwm) {
+            
+            $('div.unsyncedpwmfreq').show();
+        }
+        else {
+            $('div.unsyncedpwmfreq').hide();
+        }
+        
+        // Gyro and PID update
+        var gyroFreq = [
+            "8KHz",
+            "4KHz",
+            "2.67KHz", 
+            "2KHz",
+            "1.6KHz",
+            "1.33KHz",
+            "1.14KHz",
+            "1KHz"
+        ];
+        
+        var gyro_select_e = $('select.gyroSyncDenom');
+                
+        for (var i = 0; i < gyroFreq.length; i++) {
+            gyro_select_e.append('<option value="'+(i+1)+'">'+gyroFreq[i]+'</option>');
+        }
+        gyro_select_e.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
+ 
+        var gyroDenom = PID_ADVANCED_CONFIG.gyro_sync_denom;
+        var pidFreq = [
+            8 / (gyroDenom * 1),
+            8 / (gyroDenom * 2),
+            8 / (gyroDenom * 3),
+            8 / (gyroDenom * 4),
+            8 / (gyroDenom * 5),
+            8 / (gyroDenom * 6),
+            8 / (gyroDenom * 7),
+            8 / (gyroDenom * 8)
+        ];
+ 
+        var pid_select_e = $('select.pidProcessDenom');
+        for (var i = 0; i < pidFreq.length; i++) {
+            var pidF = (1000 * pidFreq[i] / 10); // Could be done better
+            pidF = pidF.toFixed(0);
+            pid_select_e.append('<option value="'+(i+1)+'">'+(pidF / 100).toString()+'KHz</option>');
+        }
+        pid_select_e.val(PID_ADVANCED_CONFIG.pid_process_denom);
+        
+        $('select.gyroSyncDenom').change(function() {
+           var gyroDenom = $('select.gyroSyncDenom').val();
+           var newPidFreq = [
+                8 / (gyroDenom * 1),
+                8 / (gyroDenom * 2),
+                8 / (gyroDenom * 3),
+                8 / (gyroDenom * 4),
+                8 / (gyroDenom * 5),
+                8 / (gyroDenom * 6),
+                8 / (gyroDenom * 7),
+                8 / (gyroDenom * 8)
+            ];
+           for (var i=0; i<newPidFreq.length;i++) {
+                var pidF = (1000 * newPidFreq[i] / 10); // Could be done better
+                pidF = pidF.toFixed(0);
+                $('select.pidProcessDenom option[value="'+(i+1)+'"]').text((pidF / 100).toString()+'KHz');}
+           
+        });
         
         
         // generate GPS
@@ -434,6 +533,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         });
 
+        $("input[type='checkbox']").change(function() {
+            var element = $(this), 
+                name = element.attr('name'),
+                isChecked = element.is(':checked');
+            if (name == 'unsyncedPWMSwitch') {
+                if (isChecked) { $('div.unsyncedpwmfreq').show(); }
+                else { $('div.unsyncedpwmfreq').hide(); }
+            }
+        });
+
         // UI hooks
         $('input[type="radio"].feature', features_e).change(function () {
             var element = $(this),
@@ -498,6 +607,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             SENSOR_ALIGNMENT.align_gyro = parseInt(orientation_gyro_e.val());
             SENSOR_ALIGNMENT.align_acc = parseInt(orientation_acc_e.val());
             SENSOR_ALIGNMENT.align_mag = parseInt(orientation_mag_e.val());
+            
+            PID_ADVANCED_CONFIG.fast_pwm_protocol = parseInt(esc_protocol_e.val()-1);
+            PID_ADVANCED_CONFIG.use_unsyncedPwm = ~~$('input[name="unsyncedPWMSwitch"]').is(':checked');
+            PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
+            PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyro_select_e.val());
+            PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pid_select_e.val());
 
             function save_serial_config() {
                 if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
@@ -521,12 +636,20 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             
             function save_sensor_alignment() {
-                var next_callback = save_acc_trim;
+                var next_callback = save_esc_protocol;
                 if(semver.gte(CONFIG.apiVersion, "1.15.0")) {
                    MSP.send_message(MSP_codes.MSP_SET_SENSOR_ALIGNMENT, MSP.crunch(MSP_codes.MSP_SET_SENSOR_ALIGNMENT), false, next_callback);
                 } else {
                    next_callback();
                 }     
+            }
+            function save_esc_protocol() {
+                var next_callback = save_acc_trim;
+                if(semver.gte(CONFIG.apiVersion, "1.16.0")) {
+                    MSP.send_message(MSP_codes.MSP_SET_PID_ADVANCED_CONFIG, MSP.crunch(MSP_codes.MSP_SET_PID_ADVANCED_CONFIG), false, next_callback);
+                } else {
+                   next_callback();
+                }
             }
 
             function save_acc_trim() {
@@ -535,11 +658,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_arming_config() {
-                MSP.send_message(MSP_codes.MSP_SET_ARMING_CONFIG, MSP.crunch(MSP_codes.MSP_SET_ARMING_CONFIG), false, save_looptime_config);
-            }
-
-            function save_looptime_config() {
-                MSP.send_message(MSP_codes.MSP_SET_LOOP_TIME, MSP.crunch(MSP_codes.MSP_SET_LOOP_TIME), false, save_to_eeprom);
+                MSP.send_message(MSP_codes.MSP_SET_ARMING_CONFIG, MSP.crunch(MSP_codes.MSP_SET_ARMING_CONFIG), false, save_to_eeprom);
             }
 
             function save_to_eeprom() {

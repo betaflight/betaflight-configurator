@@ -46,6 +46,14 @@ var MSP_codes = {
     MSP_OSD_CHAR_WRITE:         87,
     MSP_VTX_CONFIG:             88,
     MSP_SET_VTX_CONFIG:         89,
+    MSP_PID_ADVANCED_CONFIG:    90,
+    MSP_SET_PID_ADVANCED_CONFIG: 91,
+    MSP_FILTER_CONFIG:          92,
+    MSP_SET_FILTER_CONFIG:      93,
+    MSP_ADVANCED_TUNING:        94,
+    MSP_SET_ADVANCED_TUNING:    95,
+    MSP_TEMPORARY_COMMANDS:     98,
+    MSP_SET_TEMPORARY_COMMANDS: 99,
 
     // Multiwii MSP commands
     MSP_IDENT:              100,
@@ -874,7 +882,33 @@ var MSP = {
                 }
                 break;
 
-
+            case MSP_codes.MSP_PID_ADVANCED_CONFIG:
+                var offset = 0;
+                PID_ADVANCED_CONFIG.gyro_sync_denom = data.getUint8(offset++, 1);
+                PID_ADVANCED_CONFIG.pid_process_denom = data.getUint8(offset++, 1);
+                PID_ADVANCED_CONFIG.use_unsyncedPwm = data.getUint8(offset++, 1);
+                PID_ADVANCED_CONFIG.fast_pwm_protocol = data.getUint8(offset++, 1);
+                PID_ADVANCED_CONFIG.motor_pwm_rate = data.getUint16(offset++, 1);
+                break;
+            case MSP_codes.MSP_FILTER_CONFIG:
+                var offset = 0;
+                FILTER_CONFIG.gyro_soft_lpf_hz = data.getUint8(offset++, 1);
+                FILTER_CONFIG.dterm_lpf_hz = data.getUint16(offset, 1);
+                offset += 2;
+                FILTER_CONFIG.yaw_lpf_hz = data.getUint16(offset, 1);
+                break;
+            
+            case MSP_codes.MSP_ADVANCED_TUNING:
+                var offset = 0;
+                ADVANCED_TUNING.rollPitchItermIgnoreRate = data.getUint16(offset, 1); 
+                offset += 2;
+                ADVANCED_TUNING.yawItermIgnoreRate = data.getUint16(offset, 1); 
+                offset += 2;
+                ADVANCED_TUNING.yaw_p_limit = data.getUint16(offset, 1);
+                break;
+            case MSP_codes.MSP_TEMPORARY_COMMANDS:
+                TEMPORARY_COMMANDS.RC_RATE_YAW = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
+                break;
             case MSP_codes.MSP_LED_STRIP_CONFIG:
                 LED_STRIP = [];
                 
@@ -1397,7 +1431,22 @@ MSP.crunch = function (code) {
             buffer.push(SENSOR_ALIGNMENT.align_acc);
             buffer.push(SENSOR_ALIGNMENT.align_mag);
             break
-
+        case MSP_codes.MSP_SET_PID_ADVANCED_CONFIG:
+            buffer.push(PID_ADVANCED_CONFIG.gyro_sync_denom);
+            buffer.push(PID_ADVANCED_CONFIG.pid_process_denom);
+            buffer.push(PID_ADVANCED_CONFIG.use_unsyncedPwm);
+            buffer.push(PID_ADVANCED_CONFIG.fast_pwm_protocol);
+            buffer.push(lowByte(PID_ADVANCED_CONFIG.motor_pwm_rate));
+            buffer.push(highByte(PID_ADVANCED_CONFIG.motor_pwm_rate));
+            break;
+		case MSP_codes.MSP_SET_FILTER_CONFIG:
+            buffer.push(FILTER_CONFIG.gyro_soft_lpf_hz);
+            buffer.push(FILTER_CONFIG.dterm_lpf_hz);
+            buffer.push(FILTER_CONFIG.yaw_lpf_hz);
+            break;
+        case MSP_codes.MSP_SET_TEMPORARY_COMMANDS:
+            buffer.push(Math.round(TEMPORARY_COMMANDS.RC_RATE_YAW * 100));
+            break;
         default:
             return false;
     }
