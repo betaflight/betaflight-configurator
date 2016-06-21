@@ -301,6 +301,18 @@ GUI_control.prototype.content_ready = function (callback) {
             outside: 'x'
             });
         });
+        
+    new jBox('Modal', {
+    width: 600,
+    height: 290,
+    closeButton: 'title',
+    animation: false,
+    attach: $('#fontmanager'),
+    title: 'OSD Font Manager',
+    content: $('#fontmanagercontent')
+});
+
+
     });
 
     if (callback) callback();
