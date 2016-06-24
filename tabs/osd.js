@@ -74,18 +74,21 @@ FONT.parseMCMFontFile = function(data) {
   var character_bytes = [];
   // hexstring is for debugging
   FONT.data.hexstring = [];
+  var pushChar = function() {
+    FONT.data.characters_bytes.push(character_bytes);
+    FONT.data.characters.push(character_bits);
+    FONT.draw(FONT.data.characters.length-1);
+    //$log.debug('parsed char ', i, ' as ', character);
+    character_bits = [];
+    character_bytes = [];
+  };
   for (var i = 0; i < data.length; i++) {
     var line = data[i];
     // hexstring is for debugging
     FONT.data.hexstring.push('0x' + parseInt(line, 2).toString(16));
     // every 64 bytes (line) is a char, we're counting chars though, which are 2 bits
     if (character_bits.length == FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE * (8 / 2)) {
-      FONT.data.characters_bytes.push(character_bytes);
-      FONT.data.characters.push(character_bits);
-      FONT.draw(FONT.data.characters.length-1);
-      //$log.debug('parsed char ', i, ' as ', character);
-      character_bits = [];
-      character_bytes = [];
+      pushChar()
     }
     for (var y = 0; y < 8; y = y + 2) {
       var v = parseInt(line.slice(y, y+2), 2);
@@ -93,30 +96,33 @@ FONT.parseMCMFontFile = function(data) {
     }
     character_bytes.push(parseInt(line, 2));
   }
+  // push the last char
+  pushChar();
   return FONT.data.characters;
 };
 
 
 FONT.openFontFile = function($preview) {
-  chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
-    FONT.data.loaded_font_file = fileEntry.name;
-    if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError.message);
-        return;
-    }
-    fileEntry.file(function (file) {
-      var reader = new FileReader();
-      reader.onloadend = function(e) {
-        if (e.total != 0 && e.total == e.loaded) {
-          FONT.parseMCMFontFile(e.target.result);
-          if ($preview) {
-            FONT.preview($preview);
+  return new Promise(function(resolve) {
+    chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
+      FONT.data.loaded_font_file = fileEntry.name;
+      if (chrome.runtime.lastError) {
+          console.error(chrome.runtime.lastError.message);
+          return;
+      }
+      fileEntry.file(function (file) {
+        var reader = new FileReader();
+        reader.onloadend = function(e) {
+          if (e.total != 0 && e.total == e.loaded) {
+            FONT.parseMCMFontFile(e.target.result);
+            resolve();
           }
-        }
-        var msg = 'could not load whole font file';
-        console.error(msg);
-      };
-      reader.readAsText(file);
+          else {
+            console.error('could not load whole font file');
+          }
+        };
+        reader.readAsText(file);
+      });
     });
   });
 };
@@ -138,6 +144,9 @@ var drawCanvas = function(charAddress) {
 
   for (var y = 0; y < height; y++) {
     for (var x = 0; x < width; x++) {
+      if (!(charAddress in FONT.data.characters)) {
+        console.log('charAddress', charAddress, ' is not in ', FONT.data.characters.length);
+      }
       var v = FONT.data.characters[charAddress][(y*width)+x];
       ctx.fillStyle = FONT.constants.COLORS[v];
       ctx.fillRect(x, y, pixelSize, pixelSize);
@@ -413,7 +422,7 @@ TABS.osd.initialize = function (callback) {
               }
               $displayFields.append($field);
             }
-            // render preview
+            // buffer the preview
             OSD.data.preview = [];
             // empty the screen buffer
             var screen_size = OSD.data.display_size.x * OSD.data.display_size.y;
@@ -428,6 +437,13 @@ TABS.osd.initialize = function (callback) {
                 OSD.data.preview[j++] = field.preview.charCodeAt(i);
               }
             }
+            // logo
+            var x = 160;
+            for (var i = 1; i < 5; i++) {
+              for (var j = 3; j < 27; j++)
+                  OSD.data.preview[i * 30 + j] = x++;
+            }
+            // render
             var $preview = $('.display-layout .preview').empty();
             var $row = $('<div class="row"/>');
             for(var i = 0; i < screen_size;) {
@@ -481,12 +497,13 @@ TABS.osd.initialize = function (callback) {
             content: $('#fontmanagercontent')
         });
 
-        $('a.load_font_file').click((function($preview) {
-          return function() {
-            $fontPicker.removeClass('active');
-            FONT.openFontFile($preview);
-          }
-        })($preview));
+        $('a.load_font_file').click(function() {
+          $fontPicker.removeClass('active');
+          FONT.openFontFile().then(function() {
+            FONT.preview($preview);
+            updateOsdView();
+          });
+        });
 
         // font upload
         $('a.flash_font').click(function () {
