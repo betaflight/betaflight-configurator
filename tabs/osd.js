@@ -307,10 +307,10 @@ TABS.osd.initialize = function (callback) {
           MSP.promise(MSP_codes.MSP_OSD_CONFIG)
           .then(function(info) {
             if (!info.length) {
-              $('.tab-osd .content_wrapper.unsupported').fadeIn();;
+              $('.tab-osd .unsupported').fadeIn();;
               return;
             }
-            $('.tab-osd .content_wrapper.supported').fadeIn();;
+            $('.tab-osd .supported').fadeIn();;
             OSD.msp.decode(info);
             // video mode
             var $videoTypes = $('.video-types').empty();

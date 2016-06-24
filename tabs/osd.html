@@ -1,40 +1,52 @@
 <div class="tab-osd toolbar_fixed_bottom">
-    <div class="content_wrapper unsupported hide">
-        <p class="note">Your flight controller isn't responding to OSD commands. This probably means that it does not have an integrated BetaFlight OSD.</p>
-        <p class="note">Note that some flight controllers have an onboard <a href="https://www.youtube.com/watch?v=ikKH_6SQ-Tk" target="_blank">MinimOSD</a> that can be flashed and configured with <a href="https://github.com/ShikOfTheRa/scarab-osd/releases/latest" target="_blank">scarab-osd</a>, however the MinimOSD cannot be configured through this interface.</p>
+    <div class="content_wrapper">
+		<h1 class="tab_title">OSD</h1>
+
+    <div class="unsupported hide">
+        <p class="note">Your flight controller isn't responding to OSD commands. This probably means that it does not have an integrated BetaFlight OSD.Note that some flight controllers have an onboard <a href="https://www.youtube.com/watch?v=ikKH_6SQ-Tk" target="_blank">MinimOSD</a> that can be flashed and configured with <a href="https://github.com/ShikOfTheRa/scarab-osd/releases/latest" target="_blank">scarab-osd</a>, however the MinimOSD cannot be configured through this interface.</p>
+        
     </div>
-    <div class="content_wrapper supported hide">
+    <div class="supported hide">
         <div class="display-layout">
-            <h1 class="tab_title">Display</h1>
             <div class="video-types">
             </div>
             <div class="display-fields">
             </div>
-            <div style="text-align: center">
-                <button class="active save">Save</button>
             </div>
-        </div>
 
-        <div class="font-picker" style="margin-bottom: 8em;">
-            <h1 class="tab_title">Font</h1>
+        <div id="fontmanagercontent" style="display:none; width:600px;">
+        <div class="font-picker" style="margin-bottom: 10px;">
+            <h1 class="tab_title">Font presets:</h1>
             <div class="content_wrapper font-preview"></div>
-            <div style="text-align: center">
+            <div class="fontbuttons">
                 <button data-font-file="default">Default</button>
                 <button data-font-file="bold">Bold</button>
                 <button data-font-file="large">Large</button>
             </div>
             <div class="info"><a name="progressbar"></a>
                 <progress class="progress" value="0" min="0" max="100"></progress>
-                <span class="progressLabel"</span>
+                <span class="progressLabel"></span>
             </div>
         </div>
-        <div class="content_toolbar" style="left:0;">
-            <div class="btn">
+        <div class="default_btn green" style="width: calc(50% - 10px); float:left; margin-right:10px;">
                 <a class="load_font_file" href="#" i18n="fontFlasherButtonLoadLocal"></a>
             </div>
-            <div class="btn">
+            <div class="default_btn green" style="width: calc(50% - 10px); float:right; margin-right:2px;">
                 <a class="flash_font" href="#progressbar" i18n="fontFlasherFlashFont"></a>
             </div>
         </div>
+        
+        
+        <div class="content_toolbar" style="left:0;">
+            <div class="btn">
+                <a class="fonts" id="fontmanager" href="#" >Font manager</a>
+            </div>
+            <div class="btn">
+                <a class="active save" href="#" >Save</a>
+            </div>
+        </div>
+
+        
+    </div>
     </div>
 </div>
