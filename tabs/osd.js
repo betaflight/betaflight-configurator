@@ -1,5 +1,22 @@
 'use strict';
 
+var SYM = SYM || {};
+
+SYM._sym_sizes = {
+  VOLT: 1,
+  RSSI: 1,
+  FLY_M: 1,
+  ON_M: 1,
+  THR: 2,
+  AH_CENTER_LINE: 1,
+  AH_CENTER_LINE_RIGHT: 1,
+  AH_CENTER: 1,
+  AH_BAR9_0: 10,
+  AH_DECORATION: 1,
+  AH_LEFT: 1,
+  AH_RIGHT: 1
+};
+
 var FONT = FONT || {};
 
 FONT.initData = function() {
@@ -158,7 +175,11 @@ FONT.preview = function($el) {
   FONT.data.character_image_urls.map(function(url) {
     $el.append('<img src='+url+'></img>');
   });
-}
+};
+
+FONT.symbol = function(hexVal) {
+  return String.fromCharCode(hexVal);
+};
 
 var OSD = OSD || {};
 
@@ -167,7 +188,8 @@ OSD.initData = function() {
   OSD.data = {
     video_system: null,
     display_items: [],
-    last_positions: {}
+    last_positions: {},
+    preview: []
   };
 };
 OSD.initData();
@@ -191,27 +213,32 @@ OSD.constants = {
     {
       name: 'MAIN_BATT_VOLTAGE',
       default_position: -29,
-      positionable: true
+      positionable: true,
+      preview: FONT.symbol(SYM.VOLT) + '16.8'
     },
     {
       name: 'RSSI_VALUE',
       default_position: -59,
-      positionable: true
+      positionable: true,
+      preview: FONT.symbol(SYM.RSSI) + '99'
     },
     {
       name: 'TIMER',
       default_position: -39,
-      positionable: true
+      positionable: true,
+      preview: FONT.symbol(SYM.ON_M) + ' 11:11'
     },
     {
       name: 'THROTTLE_POS',
       default_position: -9,
-      positionable: true
+      positionable: true,
+      preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + '  0'
     },
     {
       name: 'CPU_LOAD',
       default_position: 26,
-      positionable: true
+      positionable: true,
+      preview: '15'
     },
     {
       name: 'VTX_CHANNEL',
@@ -221,17 +248,20 @@ OSD.constants = {
     {
       name: 'VOLTAGE_WARNING',
       default_position: -80,
-      positionable: true
+      positionable: true,
+      preview: 'LOW VOLTAGE'
     },
     {
       name: 'ARMED',
       default_position: -107,
-      positionable: true
+      positionable: true,
+      preview: 'ARMED'
     },
     {
       name: 'DISARMED',
       default_position: -109,
-      positionable: true
+      positionable: true,
+      preview: 'DISARMED'
     },
     {
       name: 'ARTIFICIAL_HORIZON',
@@ -247,10 +277,14 @@ OSD.constants = {
 };
 
 OSD.updateDisplaySize = function() {
+  var video_type = OSD.constants.VIDEO_TYPES[OSD.data.video_system];
+  if (video_type == 'AUTO') {
+    video_type = 'PAL';
+  }
   // compute the size
   OSD.data.display_size = {
-    x: 18,
-    y: OSD.constants.VIDEO_LINES[OSD.data.video_system]
+    x: 30,
+    y: OSD.constants.VIDEO_LINES[video_type]
   };
 };
 
@@ -281,7 +315,8 @@ OSD.msp = {
         name: c.name,
         index: j,
         position: v,
-        positionable: c.positionable
+        positionable: c.positionable,
+        preview: c.preview
       });
     }
     OSD.updateDisplaySize();
@@ -378,12 +413,37 @@ TABS.osd.initialize = function (callback) {
               }
               $displayFields.append($field);
             }
+            // render preview
+            OSD.data.preview = [];
+            // empty the screen buffer
+            var screen_size = OSD.data.display_size.x * OSD.data.display_size.y;
+            for(var i = 0; i < screen_size; i++) {
+              OSD.data.preview.push(' '.charCodeAt(0));
+            }
+            // draw all the displayed items
+            for(let field of OSD.data.display_items) {
+              if (!field.preview || field.position == -1) { continue; }
+              var j = (field.position >= 0) ? field.position : field.position + screen_size;
+              for(var i = 0; i < field.preview.length; i++) {
+                OSD.data.preview[j++] = field.preview.charCodeAt(i);
+              }
+            }
+            var $preview = $('.display-layout .preview').empty();
+            var $row = $('<div class="row"/>');
+            for(var i = 0; i < screen_size;) {
+              var charCode = OSD.data.preview[i];
+              $row.append('<img src='+FONT.draw(charCode)+'></img>');
+              if (++i % OSD.data.display_size.x == 0) {
+                $preview.append($row);
+                $row = $('<div class="row"/>');
+              }
+            }
           });
         };
-        updateOsdView();
+
         $('.display-layout .save').click(function() {
           var self = this;
-          MSP.promise(MSP_codes.MSP_EEPROM_WRITE)
+          MSP.promise(MSP_codes.MSP_EEPROM_WRITE);
           var oldText = $(this).text();
           $(this).html("Saved");
           setTimeout(function () {
@@ -404,6 +464,7 @@ TABS.osd.initialize = function (callback) {
           $.get('/resources/osd/' + $(this).data('font-file') + '.mcm', function(data) {
             FONT.parseMCMFontFile(data);
             FONT.preview($preview);
+            updateOsdView();
           });
         });
 
@@ -411,6 +472,15 @@ TABS.osd.initialize = function (callback) {
         $fontPicker.first().click();
 
         // UI Hooks
+        $('#fontmanager').jBox('Modal', {
+            width: 600,
+            height: 290,
+            closeButton: 'title',
+            animation: false,
+            title: 'OSD Font Manager',
+            content: $('#fontmanagercontent')
+        });
+
         $('a.load_font_file').click((function($preview) {
           return function() {
             $fontPicker.removeClass('active');
