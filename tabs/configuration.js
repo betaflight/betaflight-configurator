@@ -278,7 +278,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'ONESHOT42',
             'MULTISHOT'
         ];
-        
+
+        if (semver.gte(CONFIG.apiVersion, "1.17.0")) {
+            escprotocols.push('BRUSHED');
+        }
+
         var esc_protocol_e = $('select.escprotocol');
 
         for (var i = 0; i < escprotocols.length; i++) {
