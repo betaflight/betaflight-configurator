@@ -1,3 +1,18 @@
+div.expochart {
+	height: 120px;
+	width: 240px;
+	position:relative;
+	display:block;
+}
+
+.expochart canvas {
+	position:absolute;
+	margin: 0%;
+	height: 100%;
+	width: 100%;
+	background:rgba(128,128,128,0);
+}
+
 .tab-pid_tuning .tpa th {
     background-color: #828885;
     padding: 4px;
@@ -84,10 +99,12 @@
     border-top-right-radius: 3px;
 }
 
-.tab-pid_tuning .pitch_roll_curve {
-    margin: 0 0px 0px 0;
+.tab-pid_tuning .pitch_roll_curve,
+.tab-pid_tuning .yaw_curve 
+ {
+    /* margin: 0 0px 0px 0; */
     width: 100%;
-    height: 100%;
+    height: 240px;
     border: 1px solid silver;
     border-radius: 3px;
     background-image: url(../images/paper.jpg);
@@ -116,17 +133,6 @@
 
 .tab-pid_tuning .rc_yaw_curve th:last-child {
     border-top-right-radius: 3px;
-}
-
-.tab-pid_tuning .yaw_curve {
-    margin: 0 0px 0px 0;
-    width: 100%;
-    height: 100%;
-    border: 1px solid silver;
-    border-radius: 3px;
-    background-image: url(../images/paper.jpg);
-    background-size: 200%;
-    background-position: center;
 }
 
 .tab-pid_tuning input[type="number"]::-webkit-inner-spin-button {
