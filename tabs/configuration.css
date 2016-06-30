@@ -82,7 +82,7 @@
 }
 
 .tab-configuration .number input {
-    width: 50px;
+    width: 55px;
     padding-left: 3px;
     height: 20px;
     line-height: 20px;
@@ -93,23 +93,9 @@
     font-size: 12px;
     font-weight: normal;
 }
-
-.tab-configuration .numberwide input {
-    width: 50px;
-    padding-left: 3px;
-    height: 20px;
-    line-height: 20px;
-    text-align: left;
-    border: 1px solid silver;
-    border-radius: 3px;
-    margin-right: 11px;
-    font-size: 12px;
-    font-weight: normal;
-}
-
 
 .tab-configuration .number .disabled {
-    width: 43px;
+    width: 48px;
     padding: 0px 5px;
     background-color: #ececec;
 }
@@ -156,6 +142,11 @@
 }
 
 .tab-configuration .disarm .checkbox {
+    margin-top: 2px;
+    margin-right: 5px;
+}
+
+.tab-configuration .disarm .checkboxPwm {
     margin-top: 2px;
     margin-right: 5px;
 }
@@ -218,6 +209,26 @@
 
 .tab-configuration .number,
 .tab-configuration .select
+ {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    float: left;
+}
+
+.tab-configuration .selectProtocol
+ {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    float: left;
+}
+
+.tab-configuration .pidProcessDenom
  {
     margin-bottom: 5px;
     clear: left;

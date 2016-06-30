@@ -1,49 +1,37 @@
 'use strict';
 
 TABS.pid_tuning = {
-    controllerChanged: true
+    controllerChanged: false
 };
 
 TABS.pid_tuning.initialize = function (callback) {
     var self = this;
+
     if (GUI.active_tab != 'pid_tuning') {
         GUI.active_tab = 'pid_tuning';
     }
 
-    function get_pid_controller() {
-        if (GUI.canChangePidController) {
-            MSP.send_message(MSP_codes.MSP_PID_CONTROLLER, false, false, get_pid_names);
-        } else {
-            get_pid_names();
-        }
-    }
-
-    function get_pid_names() {
-        MSP.send_message(MSP_codes.MSP_PIDNAMES, false, false, get_pid_data);
-    }
-
-    function get_pid_data() {
-        MSP.send_message(MSP_codes.MSP_PID, false, false, get_rc_tuning_data);
-    }
-
-    function get_rc_tuning_data() {
-        MSP.send_message(MSP_codes.MSP_RC_TUNING, false, false, get_temp_data);
-    }
-
-    function get_temp_data() {
-        MSP.send_message(MSP_codes.MSP_TEMPORARY_COMMANDS, false, false, get_filter_config);
-    }
-
-    function get_filter_config() {
-        MSP.send_message(MSP_codes.MSP_FILTER_CONFIG, false, false, load_html);
-    }
-
-    function load_html() {
-        $('#content').load("./tabs/pid_tuning.html", process_html);
-    }
-
     // requesting MSP_STATUS manually because it contains CONFIG.profile
-    MSP.send_message(MSP_codes.MSP_STATUS, false, false, get_pid_controller);
+    MSP.promise(MSP_codes.MSP_STATUS).then(function() {
+        if (GUI.canChangePidController) {
+            return MSP.promise(MSP_codes.MSP_PID_CONTROLLER);
+        }
+        return true;
+    }).then(function() {
+        return MSP.promise(MSP_codes.MSP_PIDNAMES)
+    }).then(function() {
+        return MSP.promise(MSP_codes.MSP_PID);
+    }).then(function() {
+        return MSP.promise(MSP_codes.MSP_RC_TUNING);
+    }).then(function() {
+        return MSP.promise(MSP_codes.MSP_SPECIAL_PARAMETERS);
+    }).then(function() {
+        return MSP.promise(MSP_codes.MSP_ADVANCED_TUNING);
+    }).then(function() {
+        return MSP.promise(MSP_codes.MSP_FILTER_CONFIG);
+    }).then(function() {
+        $('#content').load("./tabs/pid_tuning.html", process_html);
+    });
 
     function pid_and_rc_to_form() {
         // Fill in the data from PIDs array
@@ -185,7 +173,10 @@ TABS.pid_tuning.initialize = function (callback) {
         $('.pid_tuning input[name="yaw_rate"]').val(RC_tuning.yaw_rate.toFixed(2));
         $('.pid_tuning input[name="rc_expo"]').val(RC_tuning.RC_EXPO.toFixed(2));
         $('.pid_tuning input[name="rc_yaw_expo"]').val(RC_tuning.RC_YAW_EXPO.toFixed(2));
-        $('.pid_tuning input[name="rc_rate_yaw"]').val(TEMPORARY_COMMANDS.RC_RATE_YAW.toFixed(2));
+        $('.pid_tuning input[name="rc_rate_yaw"]').val(SPECIAL_PARAMETERS.RC_RATE_YAW.toFixed(2));
+
+        $('.throttle input[name="mid"]').val(RC_tuning.throttle_MID.toFixed(2));
+        $('.throttle input[name="expo"]').val(RC_tuning.throttle_EXPO.toFixed(2));
 
         $('.tpa input[name="tpa"]').val(RC_tuning.dynamic_THR_PID.toFixed(2));
         $('.tpa input[name="tpa-breakpoint"]').val(RC_tuning.dynamic_THR_breakpoint);
@@ -195,10 +186,14 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning input[name="rc_expo"]').attr("rowspan", "3");
         }
 
-        $('.pid_tuning input[name="gyro_soft_lpf"]').val(FILTER_CONFIG.gyro_soft_lpf_hz);
-        $('.pid_tuning input[name="dterm_lpf"]').val(FILTER_CONFIG.dterm_lpf_hz);
-        $('.pid_tuning input[name="yaw_lpf"]').val(FILTER_CONFIG.yaw_lpf_hz);
-        
+        $('.pid_filter .gyro').val(FILTER_CONFIG.gyro_soft_lpf_hz);
+        $('.pid_filter .dterm').val(FILTER_CONFIG.dterm_lpf_hz);
+        $('.pid_filter .yaw').val(FILTER_CONFIG.yaw_lpf_hz);
+
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+            $('.pid_filter').hide();
+            $('.pid_tuning input[name="rc_rate_yaw"]').hide();
+        }
     }
 
     function form_to_pid_and_rc() {
@@ -261,14 +256,16 @@ TABS.pid_tuning.initialize = function (callback) {
         RC_tuning.yaw_rate = parseFloat($('.pid_tuning input[name="yaw_rate"]').val());
         RC_tuning.RC_EXPO = parseFloat($('.pid_tuning input[name="rc_expo"]').val());
         RC_tuning.RC_YAW_EXPO = parseFloat($('.pid_tuning input[name="rc_yaw_expo"]').val());
-		TEMPORARY_COMMANDS.RC_RATE_YAW = parseFloat($('.pid_tuning input[name="rc_rate_yaw"]').val());
+        SPECIAL_PARAMETERS.RC_RATE_YAW = parseFloat($('.pid_tuning input[name="rc_rate_yaw"]').val());
+
+        RC_tuning.throttle_MID = parseFloat($('.throttle input[name="mid"]').val());
+        RC_tuning.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val())
 
         RC_tuning.dynamic_THR_PID = parseFloat($('.tpa input[name="tpa"]').val());
         RC_tuning.dynamic_THR_breakpoint = parseInt($('.tpa input[name="tpa-breakpoint"]').val());
-		
-		FILTER_CONFIG.gyro_soft_lpf_hz = parseInt($('.tpa input[name="gyro_soft_lpf"]').val());
-		FILTER_CONFIG.dterm_lpf_hz = parseInt($('.tpa input[name="dterm_lpf"]').val());
-		FILTER_CONFIG.yaw_lpf_hz = parseInt($('.tpa input[name="yaw_lpf"]').val());
+        FILTER_CONFIG.gyro_soft_lpf_hz = parseInt($('.pid_filter .gyro').val());
+        FILTER_CONFIG.dterm_lpf_hz = parseInt($('.pid_filter .dterm').val());
+        FILTER_CONFIG.yaw_lpf_hz = parseInt($('.pid_filter .yaw').val());
     }
     function hideUnusedPids(sensors_detected) {
       $('.tab-pid_tuning table.pid_tuning').hide();
@@ -308,7 +305,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('#resetPIDs').on('click', function(){
           MSP.send_message(MSP_codes.MSP_SET_RESET_CURR_PID, false, false, false);
-	  updateActivatedTab();
+          updateActivatedTab();
         });
 
         $('.pid_tuning tr').each(function(){
@@ -318,7 +315,6 @@ TABS.pid_tuning.initialize = function (callback) {
             }
           }
         });
-
 
         pid_and_rc_to_form();
 
@@ -343,12 +339,12 @@ TABS.pid_tuning.initialize = function (callback) {
                 { name: "Float"},
             ]
         }
-        
+
         for (var i = 0; i < pidControllerList.length; i++) {
             pidController_e.append('<option value="' + (i) + '">' + pidControllerList[i].name + '</option>');
         }
-       
-        
+
+
         var form_e = $('#pid-tuning');
 
         if (GUI.canChangePidController) {
@@ -371,79 +367,47 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning .roll_pitch_rate').hide();
         }
 
-        function drawRateCurve(rateElement, expoElement, canvasElement) {
-            var rate = parseFloat(rateElement.val()),
-                expo = parseFloat(expoElement.val()),
-                context = canvasElement.getContext("2d");
+        // UI Hooks
+        $('.throttle input').on('input change', function () {
+            setTimeout(function () { // let global validation trigger and adjust the values firs
+                var throttleMidE = $('.throttle input[name="mid"]'),
+                    throttleExpoE = $('.throttle input[name="expo"]'),
+                    mid = parseFloat(throttleMidE.val()),
+                    expo = parseFloat(throttleExpoE.val()),
+                    throttleCurve = $('.throttle .throttle_curve canvas').get(0),
+                    context = throttleCurve.getContext("2d");
 
-            // local validation to deal with input event
-            if (rate >= parseFloat(rateElement.prop('min')) &&
-                rate <= parseFloat(rateElement.prop('max')) &&
-                expo >= parseFloat(expoElement.prop('min')) &&
-                expo <= parseFloat(expoElement.prop('max'))) {
+                // local validation to deal with input event
+                if (mid >= parseFloat(throttleMidE.prop('min')) &&
+                    mid <= parseFloat(throttleMidE.prop('max')) &&
+                    expo >= parseFloat(throttleExpoE.prop('min')) &&
+                    expo <= parseFloat(throttleExpoE.prop('max'))) {
+                    // continue
+                } else {
+                    return;
+                }
 
-                var rateHeight = canvasElement.height;
-                var rateWidth = canvasElement.width;
+                var canvasHeight = throttleCurve.height;
+                var canvasWidth = throttleCurve.width;
 
                 // math magic by englishman
-                var ratey = rateHeight * rate;
+                var midx = canvasWidth * mid,
+                    midxl = midx * 0.5,
+                    midxr = (((canvasWidth - midx) * 0.5) + midx),
+                    midy = canvasHeight - (midx * (canvasHeight / canvasWidth)),
+                    midyl = canvasHeight - ((canvasHeight - midy) * 0.5 *(expo + 1)),
+                    midyr = (midy / 2) * (expo + 1);
 
                 // draw
-                context.clearRect(0, 0, rateWidth, rateHeight);
+                context.clearRect(0, 0, canvasWidth, canvasHeight);
                 context.beginPath();
-                context.moveTo(0, rateHeight);
-                context.quadraticCurveTo(rateWidth * 11 / 20, rateHeight - ((ratey / 2) * (1 - expo)), rateWidth, rateHeight - ratey);
+                context.moveTo(0, canvasHeight);
+                context.quadraticCurveTo(midxl, midyl, midx, midy);
+                context.moveTo(midx, midy);
+                context.quadraticCurveTo(midxr, midyr, canvasWidth, 0);
                 context.lineWidth = 2;
                 context.strokeStyle = '#ffbb00';
                 context.stroke();
-            }
-        }
-
-		var rateElement = $('.pid_tuning input[name="rc_rate"]'),
-			expoElement = $('.pid_tuning input[name="rc_expo"]'),
-			yawExpoElement = $('.pid_tuning input[name="rc_yaw_expo"]'),
-			rollRateElement = $('.pid_tuning input[name="roll_rate"]'),
-			pitchRateElement = $('.pid_tuning input[name="pitch_rate"]'),
-			yawRateElement = $('.pid_tuning input[name="yaw_rate"]'),
-			rcCurveElement = $('.pitch_roll_curve canvas').get(0),
-			rcYawCurveElement = $('.yaw_curve canvas').get(0);
-			
-    	var pitchRollCurve = new ExpoChart(rcCurveElement, 
-    							 1500/*rcData*/, 
-    							 parseFloat(expoElement.val()) * 100/*rcExpo*/, 
-    							 parseFloat(rateElement.val()) * 100/*rcRate*/, 
-    							 0/*deadband*/, 
-    							 1500/*midrc*/, 
-    							 parseFloat(rollRateElement.val()) * 100/*axisRate*/, 
-    							 true/*superExpoActive*/);
-
-    	var yawCurve = new ExpoChart(rcYawCurveElement, 
-    							 1500/*rcData*/, 
-    							 parseFloat(yawExpoElement.val()) * 100/*rcExpo*/, 
-    							 100.0/*rcRate*/, 
-    							 0/*deadband*/, 
-    							 1500/*midrc*/, 
-    							 parseFloat(yawRateElement.val()) * 100/*axisRate*/, 
-    							 true/*superExpoActive*/);
-
-        // UI Hooks
-        // curves
-        $('.pid_tuning').on('input change', function () {
-            setTimeout(function () { // let global validation trigger and adjust the values first
-				pitchRollCurve.refresh(1500 /*rcData*/, 
-									   parseFloat(expoElement.val()) * 100/*rcExpo*/, 
-									   parseFloat(rateElement.val()) * 100/*rcRate*/, 
-									   0/*deadband*/, 
-									   1500/*midrc*/, 
-									   70/*axisRate*/, 
-									   true/*superExpoActive*/);
-				yawCurve.refresh(1500 /*rcData*/, 
-									   parseFloat(yawExpoElement.val()) * 100/*rcExpo*/, 
-									   100.0/*rcRate*/, 
-									   0/*deadband*/, 
-									   1500/*midrc*/, 
-									   70/*axisRate*/, 
-									   true/*superExpoActive*/);
             }, 0);
         }).trigger('input');
 
@@ -470,40 +434,18 @@ TABS.pid_tuning.initialize = function (callback) {
             }
         });
 
+        $('.delta select').val(ADVANCED_TUNING.deltaMethod).change(function() {
+            ADVANCED_TUNING.deltaMethod = $(this).val();
+        });
+
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.2")) {
+            $('.delta').hide();
+            $('.note').hide();
+        }
 
         // update == save.
         $('a.update').click(function () {
             form_to_pid_and_rc();
-
-            function send_pids() {
-                if (!TABS.pid_tuning.controllerChanged) {
-                    MSP.send_message(MSP_codes.MSP_SET_PID, MSP.crunch(MSP_codes.MSP_SET_PID), false, send_temporary);
-                }
-            }
-
-            function send_temporary() {
-                if (!TABS.pid_tuning.controllerChanged) {
-                    MSP.send_message(MSP_codes.MSP_SET_TEMPORARY_COMMANDS, MSP.crunch(MSP_codes.MSP_SET_TEMPORARY_COMMANDS), false, send_rc_tuning_changes);
-                }
-            }
-
-            /* Uncomment when HTML layout added
-            function send_filters() {
-                if (!TABS.pid_tuning.controllerChanged) {
-                    MSP.send_message(MSP_codes.MSP_SET_FILTER_CONFIG, MSP.crunch(MSP_codes.MSP_SET_FILTER_CONFIG), false, send_rc_tuning_changes);
-                }
-            }*/
-
-            function send_rc_tuning_changes() {
-                MSP.send_message(MSP_codes.MSP_SET_RC_TUNING, MSP.crunch(MSP_codes.MSP_SET_RC_TUNING), false, save_to_eeprom);
-            }
-
-            function save_to_eeprom() {
-                MSP.send_message(MSP_codes.MSP_EEPROM_WRITE, false, false, function () {
-                    GUI.log(chrome.i18n.getMessage('pidTuningEepromSaved'));
-                });
-            }
-
             if (GUI.canChangePidController && TABS.pid_tuning.controllerChanged) {
                 PID.controller = pidController_e.val();
                 MSP.send_message(MSP_codes.MSP_SET_PID_CONTROLLER, MSP.crunch(MSP_codes.MSP_SET_PID_CONTROLLER), false, function () {
@@ -513,97 +455,166 @@ TABS.pid_tuning.initialize = function (callback) {
                     TABS.pid_tuning.initialize();
                 });
             } else {
-                send_pids();
+                if (TABS.pid_tuning.controllerChanged) { return; }
+                MSP.promise(MSP_codes.MSP_SET_PID, MSP.crunch(MSP_codes.MSP_SET_PID)).then(function() {
+                    if (TABS.pid_tuning.controllerChanged) { Promise.reject('pid controller changed'); }
+                    if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+                        return MSP.promise(MSP_codes.MSP_SET_SPECIAL_PARAMETERS, MSP.crunch(MSP_codes.MSP_SET_SPECIAL_PARAMETERS));
+                    }
+                }).then(function() {
+                    if (TABS.pid_tuning.controllerChanged) { Promise.reject('pid controller changed'); }
+                    return MSP.promise(MSP_codes.MSP_SET_ADVANCED_TUNING, MSP.crunch(MSP_codes.MSP_SET_ADVANCED_TUNING));
+                }).then(function() {
+                    if (TABS.pid_tuning.controllerChanged) { Promise.reject('pid controller changed'); }
+                    if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+                        return MSP.promise(MSP_codes.MSP_SET_FILTER_CONFIG, MSP.crunch(MSP_codes.MSP_SET_FILTER_CONFIG));
+                    }
+                }).then(function() {
+                    return MSP.promise(MSP_codes.MSP_SET_RC_TUNING, MSP.crunch(MSP_codes.MSP_SET_RC_TUNING));
+                }).then(function() {
+                    return MSP.promise(MSP_codes.MSP_EEPROM_WRITE);
+                }).then(function() {
+                    GUI.log(chrome.i18n.getMessage('pidTuningEepromSaved'));
+                });
             }
         });
 
-        // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSP_codes.MSP_STATUS);
-        }, 250, true);
+        // Setup model for rates preview
+        self.initRatesPreview();
+        self.renderModel();
+
+        // enable RC data pulling for rates preview
+        GUI.interval_add('receiver_pull', function() { MSP.send_message(MSP_codes.MSP_RC) }, true);
+
+        // setup curves
+        self.curves = [
+            new ExpoChart('roll'),
+            new ExpoChart('yaw')
+        ];
 
         GUI.content_ready(callback);
     }
+
 };
 
-TABS.pid_tuning.cleanup = function (callback) {
-    if (callback) {
-        callback();
+TABS.pid_tuning.initRatesPreview = function () {
+    this.keepRendering = true;
+    this.model = new Model($('.rates_preview'), $('.rates_preview canvas'));
+
+    var scale = d3.scale.linear().domain([900, 2100]);
+
+    this.rollScale = scale.range([Math.PI * 2, -Math.PI * 2]);
+    this.pitchScale = scale.range([Math.PI * 2, -Math.PI * 2]);
+    this.yawScale = scale.range([Math.PI * 2, -Math.PI * 2]);
+
+    $(window).on('resize', $.proxy(this.model.resize, this.model));
+};
+
+TABS.pid_tuning.renderModel = function () {
+    var self = this;
+
+    if (this.keepRendering) { requestAnimationFrame(this.renderModel.bind(this)); }
+
+    if (!this.clock) { this.clock = new THREE.Clock(); }
+
+    if (RC.channels[0] && RC.channels[1] && RC.channels[2]) {
+        var delta = this.clock.getDelta(),
+            roll  = delta * this.rollScale(RC.channels[0]),
+            pitch = delta * this.pitchScale(RC.channels[1]),
+            yaw   = delta * this.yawScale(RC.channels[2]);
+
+        this.model.rotateBy(pitch, yaw, roll);
+        // draw the curves
+        _.map(self.curves, function(curve) { curve.refresh(); });
     }
 };
 
 /* Wrap whole function in an independant class */
 
-function ExpoChart(canvas, rcData, rcExpo, rcRate, deadband, midrc, axisRate, superExpoActive) {
-	
-	var fontHeight, fontFace;
-	var rcCommandMaxDegS, rcCommandMinDegS;
-	var canvasHeightScale;
+function ExpoChart(axisName) {
 
-	var DEFAULT_FONT_FACE = "pt Verdana, Arial, sans-serif";
-	var stickColor 		  = "rgba(255,102,102,1.0)";  	// Betaflight Orange
-	var expoCurveColor    = "rgba(0,0,255,0.5)";		// Blue
-	var axisColor		  = "rgba(0,0,255,0.5)";		// Blue
-	var axisLabelColor	  = "rgba(0,0,0,0.9)";			// Black
+    var self = this;
+    var rcCommandMaxDegS, rcCommandMinDegS;
+    var canvasHeightScale;
 
-	function constrain(value, min, max) {
-	    return Math.max(min, Math.min(value, max));
-	}
-	
-	function rcLookup(tmp, expo, rate) {
-	    var tmpf = tmp / 100.0;
-	    return ((2500.0 + expo * (tmpf * tmpf - 25.0)) * tmpf * (rate) / 2500.0 );
-	}
-	
-	var rcCommand = function(rcData, rate, expo) {
-	        var tmp = Math.min(Math.abs(rcData - midrc), 500);
-            (tmp > deadband) ? (tmp -= deadband):(tmp = 0);            
-	        return (((rcData < midrc)?-1:1) * rcLookup(tmp, expo, rate)).toFixed(0);
-	};
-	
-	var rcCommandMax = function () {
-		return rcCommand(2000, rcRate, rcExpo);
-	};
+    var fontFace        = " 'open_sansregular', 'Segoe UI', Tahoma, sans-serif";
+    var stickColor      = "rgba(255,102,102,1.0)";
+    var expoCurveColor  = "rgba(0,0,255,0.5)";
+    var axisColor       = "rgba(0,0,255,0.5)";
+    var axisLabelColor  = "rgba(0,0,0,0.9)";
 
-	var rcCommandMin = function () {
-		return rcCommand(1000, rcRate, rcExpo);
-	};
+    self.axisName = axisName;
+    self.$el = $('.' + axisName + '_curve');
+    self.canvas = self.$el.find('canvas').get(0);
+    if (!self.$el.length || !self.canvas) {
+      throw 'cannot find curve element or canvas for ' + axisName;
+    }
+    self.rcData = function() { return RC.channels[parseInt(self.$el.data('rc-channel'))] };
+    self.rcRate = function() { return parseFloat($('input[name="rc_rate"]').val()) * 100 };
+    self.axisRate = function() { return parseFloat($('.pid_tuning input[name="'+axisName+'_rate"]').val()) };
+    self.expo = function() { return parseFloat($('input[name="rc_expo"]').val()) * 100 };
+    self.deadband = function() { return RC_deadband.deadband };
+    self.midrc = function() { return RX_CONFIG.midrc };
+    self.superExpoActive = function() { return bit_check(BF_CONFIG.features, 23) };
 
-	var rcCommandRawToDegreesPerSecond = function(value, axisRate, superExpoActive) {
+    function constrain(value, min, max) {
+        return Math.max(min, Math.min(value, max));
+    }
 
-    var calculateRate = function(value) {
-		var angleRate;
+    function rcLookup() {
+        var tmpf = tmp / 100.0;
+        return ;
+    }
 
-		if (superExpoActive) {
-			var rcFactor = (Math.abs(value) / (500.0 * (rcRate) / 100.0));
-			rcFactor = 1.0 / (constrain(1.0 - (rcFactor * (axisRate / 100.0)), 0.01, 1.00));
+    var rcCommand = function(rcData) {
+        var tmp = Math.min(Math.abs(rcData - self.midrc()), 500);
+        (tmp > self.deadband()) ? (tmp -= self.deadband()):(tmp = 0);
+        var tmpf = tmp / 100.0;
+        return (((rcData < self.midrc())?-1:1) * ((2500.0 + self.expo() * (tmpf * tmpf - 25.0)) * tmpf * (self.rcRate()) / 2500.0)).toFixed(0);
+    };
 
-			angleRate = rcFactor * ((27 * value) / 16.0);
-		} else {
-			angleRate = ((axisRate + 27) * value) / 16.0;
-		}
+    var rcCommandMax = function () {
+        return rcCommand(2000);
+    };
 
-		return constrain(angleRate, -8190.0, 8190.0); // Rate limit protection
-	};
+    var rcCommandMin = function () {
+        return rcCommand(1000);
+    };
 
-	return calculateRate(value) >> 2; // the shift by 2 is to counterbalance the divide by 4 that occurs on the gyro to calculate the error       
+    var rcCommandRawToDegreesPerSecond = function(value) {
+      var calculateRate = function(value) {
+          var angleRate;
 
-	};
+          if (self.superExpoActive()) {
+              var rcFactor = (Math.abs(value) / (500.0 * (self.rcRate()) / 100.0));
+              rcFactor = 1.0 / (constrain(1.0 - (rcFactor * (self.axisRate() / 100.0)), 0.01, 1.00));
 
-	function calculateDrawingParameters() {
+              angleRate = rcFactor * ((27 * value) / 16.0);
+          } else {
+              angleRate = ((self.axisRate() + 27) * value) / 16.0;
+          }
 
-		fontHeight = constrain(canvas.height / 15, 20, 40);
-		fontFace   = fontHeight + DEFAULT_FONT_FACE;
+          return constrain(angleRate, -8190.0, 8190.0); // Rate limit protection
+      };
 
-		rcCommandMaxDegS = rcCommandRawToDegreesPerSecond(rcCommandMax(), axisRate, superExpoActive) + " deg/s";
-		rcCommandMinDegS = rcCommandRawToDegreesPerSecond(rcCommandMin(), axisRate, superExpoActive) + " deg/s";
-		
-		canvasHeightScale = canvas.height / Math.abs(rcCommandRawToDegreesPerSecond(rcCommandMax(), axisRate, superExpoActive) - rcCommandRawToDegreesPerSecond(rcCommandMin(), axisRate, superExpoActive));
-		
-	};
+      return calculateRate(value) >> 2; // the shift by 2 is to counterbalance the divide by 4 that occurs on the gyro to calculate the error
 
-	 var ctx = canvas.getContext("2d");
-	 ctx.translate(0.5, 0.5);
+    };
+
+    function calculateDrawingParameters() {
+
+        self.fontHeight = self.fontHeight || constrain(self.canvas.height / 15, 20, 40);
+        self.fontFace   = self.fontFace || (self.fontHeight + 'px ' + fontFace);
+
+        rcCommandMaxDegS = rcCommandRawToDegreesPerSecond(rcCommandMax()) + " deg/s";
+        rcCommandMinDegS = rcCommandRawToDegreesPerSecond(rcCommandMin()) + " deg/s";
+
+        canvasHeightScale = self.canvas.height / Math.abs(rcCommandRawToDegreesPerSecond(rcCommandMax()) - rcCommandRawToDegreesPerSecond(rcCommandMin()));
+
+    };
+
+     var ctx = self.canvas.getContext("2d");
+     ctx.translate(0.5, 0.5);
 
     //Draw an origin line for a graph (at the origin and spanning the window)
     function drawAxisLines() {
@@ -611,91 +622,93 @@ function ExpoChart(canvas, rcData, rcExpo, rcRate, deadband, midrc, axisRate, su
         ctx.lineWidth = 1;
 
         // Horizontal
-		ctx.beginPath();
-        ctx.moveTo(-canvas.width/2, 0);
-        ctx.lineTo( canvas.width/2, 0);        
+        ctx.beginPath();
+        ctx.moveTo(-self.canvas.width/2, 0);
+        ctx.lineTo( self.canvas.width/2, 0);
         ctx.stroke();
-        
+
         // Vertical
-		ctx.beginPath();
-        ctx.moveTo(0, -canvas.height/2);
-        ctx.lineTo(0, canvas.height/2);        
+        ctx.beginPath();
+        ctx.moveTo(0, -self.canvas.height/2);
+        ctx.lineTo(0, self.canvas.height/2);
         ctx.stroke();
 
     }
-	 
-	 function plotExpoCurve() {
 
-		 ctx.save();
-         ctx.strokeStyle = expoCurveColor;
-         ctx.lineWidth = 3;
+    function plotExpoCurve() {
 
-         ctx.beginPath();
-         ctx.moveTo(-500, -canvasHeightScale * rcCommandRawToDegreesPerSecond(rcCommand(1000, rcRate, rcExpo), axisRate, superExpoActive));
-         for(var rcData = 1001; rcData<2000; rcData++) {
-        	ctx.lineTo(rcData-midrc, -canvasHeightScale * rcCommandRawToDegreesPerSecond(rcCommand(rcData, rcRate, rcExpo), axisRate, superExpoActive));
-	 	 }
-         ctx.stroke();
-         ctx.restore();
-	 }
+        ctx.save();
+        ctx.strokeStyle = expoCurveColor;
+        ctx.lineWidth = 3;
 
-	function plotStickPosition(rcData) {
-		 ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(-500, -self.canvasHeightScale * rcCommandRawToDegreesPerSecond(rcCommand(1000)));
+        for(var i = 1001; i < 2000; i++) {
+            ctx.lineTo(self.rcData()-self.midrc(), -self.canvasHeightScale * rcCommandRawToDegreesPerSecond(rcCommand(i)));
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
 
-         ctx.beginPath();
-         ctx.fillStyle = stickColor;
-         ctx.arc(rcData-midrc, -canvasHeightScale * rcCommandRawToDegreesPerSecond(rcCommand(rcData, rcRate, rcExpo), axisRate, superExpoActive), canvas.height / 40, 0, 2 * Math.PI);
-         ctx.fill();
+    function plotStickPosition() {
+        ctx.save();
 
-         
-         ctx.restore();
-		
-	}
+        ctx.beginPath();
+        ctx.fillStyle = stickColor;
+        ctx.arc(self.rcData()-self.midrc(), -self.canvasHeightScale * rcCommandRawToDegreesPerSecond(rcCommand(self.rcData())), self.canvas.height / 40, 0, 2 * Math.PI);
+        ctx.fill();
+
+
+        ctx.restore();
+
+    }
 
     function drawAxisLabel(axisLabel, x, y, align) {
-        ctx.font = fontFace;
+        ctx.font = self.fontFace;
         ctx.fillStyle = axisLabelColor;
         if(align!=null) {
             ctx.textAlign = align;
         } else {
             ctx.textAlign = 'center';
         }
-        
+
         ctx.fillText(axisLabel, x, y);
     }
 
-    function drawAxisLabels(rcData) {
-    	
-    	drawAxisLabel(rcCommandMaxDegS, 0, 0 + fontHeight * 1.5, 'left');
-    	drawAxisLabel(rcCommandRawToDegreesPerSecond(rcCommand(rcData, rcRate, rcExpo), axisRate, superExpoActive) + " deg/s", 0,canvas.height/2 + fontHeight/2, 'left');   	
+    function drawAxisLabels() {
 
-    	drawAxisLabel('1000', 0, canvas.height, 'left');
-    	drawAxisLabel('2000', canvas.width, canvas.height, 'right');
-    	drawAxisLabel(midrc, canvas.width/2, canvas.height, 'center');   	
+        drawAxisLabel(rcCommandMaxDegS, 0, 0 + self.fontHeight * 1.5, 'left');
+        drawAxisLabel(rcCommandRawToDegreesPerSecond(rcCommand(self.rcData())) + " deg/s", 0,self.canvas.height/2 + self.fontHeight/2, 'left');
+
+        drawAxisLabel('1000', 0, self.canvas.height, 'left');
+        drawAxisLabel('2000', self.canvas.width, self.canvas.height, 'right');
+        drawAxisLabel(self.midrc(), self.canvas.width/2, self.canvas.height, 'center');
 
     }
-    
-	// Public Functions
-	this.refresh = function(rcData, rcExpo, rcRate, deadband, midrc, axisRate, superExpoActive){
-		calculateDrawingParameters();
 
-		ctx.save();
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.translate(canvas.width/2,canvas.height/2);	 
-			drawAxisLines();
-			plotExpoCurve();
-			plotStickPosition(rcData);
-		ctx.restore();
-		drawAxisLabels(rcData);		
-	}
+    // Public Functions
+    this.refresh = function() {
+        calculateDrawingParameters();
+        ctx.save();
+        ctx.clearRect(0, 0, self.canvas.width, self.canvas.height);
+        ctx.translate(self.canvas.width/2, self.canvas.height/2);
+        drawAxisLines();
+        plotExpoCurve();
+        plotStickPosition();
+        ctx.restore();
+        drawAxisLabels();
+    }
 
     // Initialisation Code
+    // Set the canvas coordinate system to match the rcData/rcCommand outputs
+    self.canvas.width = 1000;
+    self.canvas.height = 1000;
+};
 
-	// Set the canvas coordinate system to match the rcData/rcCommand outputs
-	canvas.width  = 1000; canvas.height=1000;
+TABS.pid_tuning.cleanup = function (callback) {
+    $(window).off('resize', $.proxy(this.model.resize, this.model));
 
-	var that = this;
-	that.refresh(rcData, rcExpo, rcRate, deadband, midrc, axisRate, superExpoActive);
-	
+    this.keepRendering = false;
 
-}
+    if (callback) callback();
+};
