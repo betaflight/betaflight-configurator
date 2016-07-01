@@ -93,6 +93,9 @@
     "tabTransponder": {
         "message": "Race Transponder"
     },
+    "tabOsd": {
+        "message": "OSD"
+    },
     "tabGPS": {
         "message": "GPS"
     },
@@ -232,7 +235,7 @@
     "defaultWelcomeIntro": {
         "message": "Welcome to <strong>Betaflight - Configurator</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
     },
-    
+
     "defaultWelcomeText": {
         "message": "The application supports all hardware that can run Betaflight (<a href=\"http://seriouslypro.com/spracingf3\" target=\"_blank\">SPRacingF3</a>, <a href=\"http://www.immersionrc.com/fpv-products/vortex-racing-quad/\" target=\"_blank\">Vortex</a>, <a href=\"https://github.com/TauLabs/TauLabs/wiki/Sparky\" target=\"_blank\">Sparky</a>, <a href=\"http://www.readymaderc.com/store/index.php?main_page=product_info&cPath=76_156&products_id=4221\" target=\"_blank\">DoDo</a>, <a href=\"https://www.openpilot.org/product/coptercontrol/\" target=\"_blank\">CC3D/EVO</a>, <a href=\"http://www.multiwiicopter.com/products/paris-air-hero-32-naze\" target=\"_blank\">Air Hero 32</a>, <a href=\"http://www.readytoflyquads.com/flight-controllers/flip-series\" target=\"_blank\">Flip32/+/Deluxe</a>, <a href=\"http://multirotormania.com/129-dragonfly32\" target=\"_blank\">DragonFly32</a>, <a href=\"http://www.goodluckbuy.com/micro-quadcopter-flight-driver-controller-9dof-9-axis-altitude-sensor-stm32f103.html\" target=\"_blank\">CJMCU Microquad</a>, Chebuzz F3, <a href=\"http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF254044\" target=\"_blank\">STM32F3Discovery</a>, <a href=\"http://www.overskyrc.com/hermit-micro-fpv-brushless-quadcopter-145mm-98g-fully-assembled-p-621.html\" target=\"_blank\">Hermit</a>, <a href=\"http://rcexplorer.se/blog/2015/05/introducing-the-naze32-tricopter-frame/\" target=\"_blank\">Naze32 Tricopter Frame</a>, <a href=\"http://www.2dogrc.com/skyline-32-naze-32-bit-flight-controller-acro-version.html\" target=\"_blank\">Skyline32</a>, <a href=\"http://abusemark.com/store/index.php?main_page=index&cPath=1\" target=\"_blank\">Naze/32/Mini/Pro</a>/<a href=\"http://www.massiverc.com/Shop/en/574-massive-acro-blackbox-flight-control-board.html\" target=\"_blank\">Blackbox</a> etc)<br /><br />The firmware source code can be downloaded from <a href=\"https://github.com/Betaflight/Betaflight\" title=\"www.github.com\" target=\"_blank\">here</a><br />The newest binary firmware image is available <a href=\"https://github.com/Betaflight/Betaflight/releases\" title=\"www.github.com\" target=\"_blank\">here</a>, development builds available <a href=\"http://Betaflight.memoryleaks.org/builds/\" target=\"_blank\">here</a><br /><br />Latest <strong>CP210x Drivers</strong> can be downloaded from <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">here</a><br />Latest <strong>STM USB VCP Drivers</strong> can be downloaded from <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">here</a><br />Latest <strong>Zadig</strong> for Windows DFU flashing can be downloaded from <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">here</a><br />"
     },
@@ -273,7 +276,7 @@
         "message": "Support"
     },
     "defaultSupportSubline1": {
-        "message": "Support Scources"
+        "message": "Support Sources"
     },
     "defaultSupportSubline2": {
         "message": "Developer"
@@ -296,7 +299,7 @@
     "defaultSupport5": {
         "message": "<a href=\"http://webchat.freenode.net/?channels=Betaflight\" target=\"_blank\">Join via WebClient</a>"
     },
-    
+
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span style=\"color: red\">Backup and restore functionality disabled.</span>  You have firmware with API version <span style=\"color: red\">$1</span>, backup and restore requires <span style=\"color: #ffbb00\">$2</span>.  Please backup your settings via the CLI, see Betaflight documentation for procedure."
     },
@@ -526,7 +529,13 @@
     "featureTRANSPONDERTip": {
         "message": "Configure via the Race Transponder tab after enabling."
     },
-    
+    "featureSUPEREXPO_RATES": {
+        "message": "Rate value adds instead of rate also Super Expo. Mid stick stays same. Rc rate is always liniear"
+    },
+    "featureAIRMODE": {
+        "message": "Airmode always enabled!"
+    },
+
     "configurationFeatureEnabled": {
         "message": "Enabled"
     },
@@ -662,11 +671,11 @@
     "configurationLoopTime": {
         "message": "Flight Controller Loop Time"
     },
-    "configurationCalculatedCyclesSec": {    
+    "configurationCalculatedCyclesSec": {
         "message": "Cycles/Sec (Hz)"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Note:</strong> Make sure your FC is capable to operate on these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance. (CLI commands: set acc_hardware = NONE, set baro_hardware = NONE, set mag_hardware = NONE)"
+        "message": "<strong>Note:</strong> Make sure your FC is capable to operate on these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -760,6 +769,9 @@
     "pidTuningRate": {
         "message": "Rate"
     },
+    "pidTuningRatesPreview": {
+        "message": "Rates Preview"
+    },
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
@@ -780,6 +792,9 @@
     },
     "rcYawCurve": {
 	"message": "RC Yaw Curve"
+    },
+    "throttle": {
+	"message": "Throttle"
     },
     "pidTuningButtonSave": {
         "message": "Save"
@@ -806,6 +821,9 @@
     "receiverHelp": {
         "message": "Please read receiver chapter of the documentation.  Configure serial port (if required), receiver mode (serial/ppm/pwm), provider (for serial receivers), bind receiver, set channel map, configure channel endpoints/range on TX so that all channels go from ~1000 to ~2000.  Set midpoint (default 1500), trim channels to 1500, configure stick deadband, verify behaviour when TX is off or out of range.<br /><span style=\"color: red\">IMPORTANT:</span> Before flying read failsafe chapter of documentation and configure failsafe."
     },
+    "tuningHelp": {
+        "message": "<b>Tuning tips</b><br><i>Derivative from Error</i> provides more direct stick response and is mostly prefered for Racing.<br><i>Derivative from Measurement</i> provides smoother stick response what is more usefull for freestyling<br><br /><span style=\"color: red\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you do to get more noise into the motors. <br>Default value of 100hz is optimal, but for noiser setups you can try lowering Dterm filter to 50hz and possibly also the gyro filter."
+    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -820,7 +838,7 @@
     },
     "receiverHelpYawDeadband": {
         "message": "These are values (in us) by how much RC input can be different before it's considered valid. For transmitters with jitter on outputs, this value can be increased if rc inputs twitch while idle. <strong>This setting is for Yaw only.</strong>"
-    },    
+    },
     "receiverYawDeadband": {
         "message": "Yaw Deadband"
     },
@@ -1066,7 +1084,7 @@
     },
     "transponderDataInvalid": {
         "message": "Transponder data is <span style=\"color: red\">invalid</span>"
-    },    
+    },
     "transponderEepromSaved": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"
     },
@@ -1239,14 +1257,14 @@
     "blackboxButtonSave": {
         "message": "Save and reboot"
     },
-    
+
     "serialLoggingSupportedNote": {
         "message": "You can log to an external logging device (such as an OpenLog or compatible clone) by using a serial port. Configure the port on the Ports tab."
     },
     "sdcardNote": {
         "message": "Flight logs can be recorded to your flight controller's onboard SD card slot."
     },
-    
+
     "dataflashNote": {
         "message": "Flight logs can be recorded to your flight controller's onboard dataflash chip."
     },
@@ -1292,7 +1310,7 @@
     "dataflashFileWriteFailed": {
         "message": "Failed to write to the file you selected, are the permissions on that folder okay?"
     },
-    
+
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release info"
     },
@@ -1448,7 +1466,7 @@
     "ledStripEepromSaved": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"
     },
-    
+
     "controlAxisRoll": {
         "message": "Roll"
     },
@@ -1509,7 +1527,7 @@
     "controlAxisAux16": {
         "message": "AUX 16"
     },
-    
+
     "pidTuningBasic": {
         "message": "Basic/Acro"
     },
@@ -1533,7 +1551,7 @@
     },
     "pidTuningLevelD": {
         "message": "Transition (Horizon)"
-    },    
+    },
     "pidTuningLevelHelp": {
         "message": "The values below change the behaviour of the ANGLE and HORIZON flight modes. Different PID controllers handle the LEVEL values differently. Please check the documentation."
     },
@@ -1647,5 +1665,15 @@
     },
     "configurationPidProcessDenom": {
         "message": "PID loop frequency"
-    }      
+    },
+    "configurationAccHardware": {
+        "message": "Accelerometer"
+    },
+    "configurationBaroHardware": {
+        "message": "Barometer (if supported)"
+    },
+    "configurationMagHardware": {
+        "message": "Magnetometer (if supported)"
+    }
+
 }

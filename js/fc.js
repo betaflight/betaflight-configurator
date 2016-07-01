@@ -38,7 +38,8 @@ var RXFAIL_CONFIG;
 var PID_ADVANCED_CONFIG;
 var FILTER_CONFIG;
 var ADVANCED_TUNING;
-var TEMPORARY_COMMANDS;
+var SPECIAL_PARAMETERS;
+var SENSOR_CONFIG;
 
 var FC = {
     resetState: function() {
@@ -256,13 +257,24 @@ var FC = {
         ADVANCED_TUNING = {
             rollPitchItermIgnoreRate: 0,
             yawItermIgnoreRate:       0,
-            yaw_p_limit:              0
+            yaw_p_limit:              0,
+            deltaMethod:              0,
+            vbatPidCompensation:      0
         };
 
-        TEMPORARY_COMMANDS = {
-            RC_RATE_YAW:              0
-        };
-        
+        SPECIAL_PARAMETERS = {
+            RC_RATE_YAW:              0,
+            airModeActivateThreshold: 0,
+            rcSmoothInterval:         0,
+            escDesyncProtection:      0
+         };
+
+        SENSOR_CONFIG = {
+            acc_hardware:             0,
+            baro_hardware:            0,
+            mag_hardware:             0
+        }
+
         RX_CONFIG = {
             serialrx_provider:      0,
             maxcheck:               0,

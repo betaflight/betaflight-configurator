@@ -62,12 +62,21 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function esc_protocol() {
-        var next_callback = load_sensor_alignment;
-        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
+        var next_callback = sensor_config;
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
             MSP.send_message(MSP_codes.MSP_PID_ADVANCED_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }        
+    }
+    
+    function sensor_config() {
+        var next_callback = load_sensor_alignment;
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+            MSP.send_message(MSP_codes.MSP_SENSOR_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
     }
     
     function load_sensor_alignment() {
@@ -94,17 +103,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     MSP.send_message(MSP_codes.MSP_IDENT, false, false, load_config);
-
-    function recalculate_cycles_sec() {
-        var looptime = $('input[name="looptime"]').val();
-
-        var message = 'Max';
-        if (looptime > 0) {
-            message = parseFloat((1 / looptime) * 1000 * 1000).toFixed(0);
-        }
-        
-        $('input[name="looptimehz"]').val(message);
-    }
     
     function process_html() {
         
@@ -156,6 +154,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             features.push(
                 {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true}
+            );
+        }
+
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.0")) {
+             features.push(
+                {bit: 22, group: 'other', name: 'AIRMODE'},
+                {bit: 23, group: 'other', name: 'SUPEREXPO_RATES'}
             );
         }
 
@@ -354,8 +359,24 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('select.pidProcessDenom option[value="'+(i+1)+'"]').text((pidF / 100).toString()+'KHz');}
            
         });
+
+        $('input[name="accHardwareSwitch"]').prop('checked', (SENSOR_CONFIG.acc_hardware!=1)?1:0);
+        $('input[name="baroHardwareSwitch"]').prop('checked', (SENSOR_CONFIG.baro_hardware!=1)?1:0);
+        $('input[name="magHardwareSwitch"]').prop('checked', (SENSOR_CONFIG.mag_hardware!=1)?1:0);
+
+
+        // Only show these sections for supported FW
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+            $('.selectProtocol').hide();
+            $('.checkboxPwm').hide();
+            $('.selectPidProcessDenom').hide();
+        }
         
-        
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.2")) {
+            $('.hardwareSelection').hide();
+        }
+
+
         // generate GPS
         var gpsProtocols = [
             'NMEA',
@@ -472,12 +493,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.disarmdelay').show();
             else
                 $('div.disarmdelay').hide();
-            
-            // fill FC loop time
-            $('input[name="looptime"]').val(FC_CONFIG.loopTime);
 
-            recalculate_cycles_sec();
-            
             $('div.cycles').show();
         }
         
@@ -511,11 +527,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('.3ddeadbandthrottle').hide();
             }
         }
-
-        // UI hooks
-        $('input[name="looptime"]').change(function() {
-            recalculate_cycles_sec();
-        });
 
         $('input[type="checkbox"].feature', features_e).change(function () {
             var element = $(this),
@@ -579,7 +590,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
                 ARMING_CONFIG.auto_disarm_delay = parseInt($('input[name="autodisarmdelay"]').val());
                 ARMING_CONFIG.disarm_kill_switch = ~~$('input[name="disarmkillswitch"]').is(':checked'); // ~~ boolean to decimal conversion
-                FC_CONFIG.loopTime = parseInt($('input[name="looptime"]').val());
             }
             
             MISC.minthrottle = parseInt($('input[name="minthrottle"]').val());
@@ -645,7 +655,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             function save_esc_protocol() {
                 var next_callback = save_acc_trim;
-                if(semver.gte(CONFIG.apiVersion, "1.16.0")) {
+                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
                     MSP.send_message(MSP_codes.MSP_SET_PID_ADVANCED_CONFIG, MSP.crunch(MSP_codes.MSP_SET_PID_ADVANCED_CONFIG), false, next_callback);
                 } else {
                    next_callback();
@@ -658,7 +668,29 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_arming_config() {
-                MSP.send_message(MSP_codes.MSP_SET_ARMING_CONFIG, MSP.crunch(MSP_codes.MSP_SET_ARMING_CONFIG), false, save_to_eeprom);
+                MSP.send_message(MSP_codes.MSP_SET_ARMING_CONFIG, MSP.crunch(MSP_codes.MSP_SET_ARMING_CONFIG), false, save_looptime_config);
+            }
+
+            function save_looptime_config() {
+                var next_callback = save_sensor_config;
+                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+                    FC_CONFIG.loopTime = PID_ADVANCED_CONFIG.gyro_sync_denom * 125;
+                    MSP.send_message(MSP_codes.MSP_SET_LOOP_TIME, MSP.crunch(MSP_codes.MSP_SET_LOOP_TIME), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+            function save_sensor_config() {
+                var next_callback = save_to_eeprom;
+                
+                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                    SENSOR_CONFIG.acc_hardware = $('input[name="accHardwareSwitch"]').is(':checked')?0:1;
+                    SENSOR_CONFIG.baro_hardware = $('input[name="baroHardwareSwitch"]').is(':checked')?0:1;
+                    SENSOR_CONFIG.mag_hardware = $('input[name="magHardwareSwitch"]').is(':checked')?0:1
+                    MSP.send_message(MSP_codes.MSP_SET_SENSOR_CONFIG, MSP.crunch(MSP_codes.MSP_SET_SENSOR_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
             }
 
             function save_to_eeprom() {

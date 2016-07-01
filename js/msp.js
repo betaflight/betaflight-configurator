@@ -40,15 +40,22 @@ var MSP_codes = {
     MSP_SET_BLACKBOX_CONFIG:    81,
     MSP_TRANSPONDER_CONFIG:     82,
     MSP_SET_TRANSPONDER_CONFIG: 83,
-    
+    MSP_OSD_CONFIG:             84,
+    MSP_SET_OSD_CONFIG:         85,
+    MSP_OSD_CHAR_READ:          86,
+    MSP_OSD_CHAR_WRITE:         87,
+    MSP_VTX_CONFIG:             88,
+    MSP_SET_VTX_CONFIG:         89,
     MSP_PID_ADVANCED_CONFIG:    90,
     MSP_SET_PID_ADVANCED_CONFIG: 91,
     MSP_FILTER_CONFIG:          92,
     MSP_SET_FILTER_CONFIG:      93,
     MSP_ADVANCED_TUNING:        94,
     MSP_SET_ADVANCED_TUNING:    95,
-    MSP_TEMPORARY_COMMANDS:     98,
-    MSP_SET_TEMPORARY_COMMANDS: 99,
+    MSP_SENSOR_CONFIG:          96,
+    MSP_SET_SENSOR_CONFIG:      97,
+    MSP_SPECIAL_PARAMETERS:     98,
+    MSP_SET_SPECIAL_PARAMETERS: 99,
 
     // Multiwii MSP commands
     MSP_IDENT:              100,
@@ -892,17 +899,36 @@ var MSP = {
                 offset += 2;
                 FILTER_CONFIG.yaw_lpf_hz = data.getUint16(offset, 1);
                 break;
-            
+
             case MSP_codes.MSP_ADVANCED_TUNING:
-                var offset = 0;
-                ADVANCED_TUNING.rollPitchItermIgnoreRate = data.getUint16(offset, 1); 
-                offset += 2;
-                ADVANCED_TUNING.yawItermIgnoreRate = data.getUint16(offset, 1); 
-                offset += 2;
-                ADVANCED_TUNING.yaw_p_limit = data.getUint16(offset, 1);
+                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                    var offset = 0;
+                    ADVANCED_TUNING.rollPitchItermIgnoreRate = data.getUint16(offset, 1);
+                    offset += 2;
+                    ADVANCED_TUNING.yawItermIgnoreRate = data.getUint16(offset, 1);
+                    offset += 2;
+                    ADVANCED_TUNING.yaw_p_limit = data.getUint16(offset, 1);
+                    offset += 2;
+                    ADVANCED_TUNING.deltaMethod = data.getUint8(offset++, 1);
+                    ADVANCED_TUNING.vbatPidCompensation = data.getUint8(offset++, 1);
+                }
                 break;
-            case MSP_codes.MSP_TEMPORARY_COMMANDS:
-                TEMPORARY_COMMANDS.RC_RATE_YAW = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
+
+            case MSP_codes.MSP_SPECIAL_PARAMETERS:
+                var offset = 0;
+                SPECIAL_PARAMETERS.RC_RATE_YAW = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
+                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                    SPECIAL_PARAMETERS.airModeActivateThreshold = data.getUint16(offset, 1);
+                    offset += 2;
+                    SPECIAL_PARAMETERS.rcSmoothInterval = data.getUint8(offset++, 1)
+                    SPECIAL_PARAMETERS.escDesyncProtection = data.getUint16(offset, 1);
+                }
+                break;
+            case MSP_codes.MSP_SENSOR_CONFIG:
+                var offset = 0;
+                SENSOR_CONFIG.acc_hardware = data.getUint8(offset++, 1);
+                SENSOR_CONFIG.baro_hardware = data.getUint8(offset++, 1);
+                SENSOR_CONFIG.mag_hardware = data.getUint8(offset, 1);
                 break;
             case MSP_codes.MSP_LED_STRIP_CONFIG:
                 LED_STRIP = [];
@@ -1042,6 +1068,20 @@ var MSP = {
             case MSP_codes.MSP_SET_FAILSAFE_CONFIG:
                 console.log('Failsafe config saved');
                 break;
+            case MSP_codes.MSP_OSD_CONFIG:
+                break;
+            case MSP_codes.MSP_SET_OSD_CONFIG:
+                console.log('OSD config set');
+                break;
+            case MSP_codes.MSP_OSD_CHAR_READ:
+                break;
+            case MSP_codes.MSP_OSD_CHAR_WRITE:
+                console.log('OSD char uploaded');
+                break;
+            case MSP_codes.MSP_VTX_CONFIG:
+                break;
+            case MSP_codes.MSP_SET_VTX_CONFIG:
+                break;
             default:
                 console.log('Unknown code detected: ' + code);
         } else {
@@ -1138,6 +1178,17 @@ var MSP = {
         }
 
         return true;
+    },
+    /**
+     * resolves: {command: code, data: data, length: message_length}
+     */
+    promise: function(code, data) {
+      var self = this;
+      return new Promise(function(resolve) {
+        self.send_message(code, data, false, function(data) {
+          resolve(data);
+        });
+      });
     },
     callbacks_cleanup: function () {
         for (var i = 0; i < this.callbacks.length; i++) {
@@ -1408,12 +1459,31 @@ MSP.crunch = function (code) {
             buffer.push(highByte(PID_ADVANCED_CONFIG.motor_pwm_rate));
             break;
         case MSP_codes.MSP_SET_FILTER_CONFIG:
-            buffer.push(FILTER_CONFIG.gyro_soft_lpf_hz);
-            buffer.push(FILTER_CONFIG.dterm_lpf_hz);
-            buffer.push(FILTER_CONFIG.yaw_lpf_hz);
+            buffer.push8(FILTER_CONFIG.gyro_soft_lpf_hz)
+              .push16(FILTER_CONFIG.dterm_lpf_hz)
+              .push16(FILTER_CONFIG.yaw_lpf_hz);
             break;
-        case MSP_codes.MSP_SET_TEMPORARY_COMMANDS:
-            buffer.push(Math.round(TEMPORARY_COMMANDS.RC_RATE_YAW * 100));
+        case MSP_codes.MSP_SET_ADVANCED_TUNING:
+            if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                buffer.push16(ADVANCED_TUNING.rollPitchItermIgnoreRate)
+                .push16(ADVANCED_TUNING.yawItermIgnoreRate)
+                .push16(ADVANCED_TUNING.yaw_p_limit)
+                .push8(ADVANCED_TUNING.deltaMethod)
+                .push8(ADVANCED_TUNING.vbatPidCompensation);
+            }
+            break;
+        case MSP_codes.MSP_SET_SPECIAL_PARAMETERS:
+            buffer.push(Math.round(SPECIAL_PARAMETERS.RC_RATE_YAW * 100));
+            if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                buffer.push16(SPECIAL_PARAMETERS.airModeActivateThreshold);
+                buffer.push(SPECIAL_PARAMETERS.rcSmoothInterval);
+                buffer.push16(SPECIAL_PARAMETERS.escDesyncProtection);
+            }
+            break;
+        case MSP_codes.MSP_SET_SENSOR_CONFIG:
+            buffer.push(SENSOR_CONFIG.acc_hardware);
+            buffer.push(SENSOR_CONFIG.baro_hardware);
+            buffer.push(SENSOR_CONFIG.mag_hardware);
             break;
         default:
             return false;

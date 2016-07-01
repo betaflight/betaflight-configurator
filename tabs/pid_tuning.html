@@ -4,11 +4,23 @@
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="https://github.com/betaflight/betaflight/releases" target="_blank"></a>
         </div>
+        <div class="note">
+        <div class="note_spacer">
+            <p i18n="tuningHelp"></p>
+        </div>
+        </div>
         <div class="cf_column twothird">
-            <div class="controller">
-                <span class="head" i18n="pidTuningControllerHead"></span> 
+            <div class="controller single-field">
+                <div class="head" i18n="pidTuningControllerHead"></div>
                 <select name="controller">
                     <!-- list generated here -->
+                </select>
+            </div>
+            <div class="delta single-field">
+                <div class="head">Derivative Method</div>
+                <select name="delta">
+                    <option value="0">Error</option>
+                    <option value="1">Measurement</option>
                 </select>
             </div>
             <div class="cf_column right">
@@ -28,13 +40,13 @@
                 <div class="gui_box grey">
                     <table class="pid_titlebar">
                         <tr>
-                            <th class="name" i18n="pidTuningName""></th>
+                            <th class="name" i18n="pidTuningName"></th>
                             <th class="proportional" i18n="pidTuningProportional"></th>
                             <th class="integral" i18n="pidTuningIntegral"></th>
                             <th class="derivative" i18n="pidTuningDerivative"></th>
-			    <th class="rc_rate" i18n="pidTuningRcRate"></th>
+                            <th class="rc_rate" i18n="pidTuningRcRate"></th>
                             <th class="rate" i18n="pidTuningRate"></th>
-			    <th class="rc_expo" i18n="pidTuningRcExpo"></th>
+                            <th class="rc_expo" i18n="pidTuningRcExpo"></th>
                         </tr>
                     </table>
                     <table id="pid_main" class="pid_tuning">
@@ -49,10 +61,10 @@
                             <td><input type="number" name="p" step="1" min="0" max="255" /></td>
                             <td><input type="number" name="i" step="1" min="0" max="255" /></td>
                             <td><input type="number" name="d" step="1" min="0" max="255" /></td>
-			    <td rowspan="2"><input type="number" name="rc_rate" step="0.01" min="0" max="2.5" /></td>
-			    <td class="roll_rate"><input type="number" name="roll_rate" step="0.01" min="0" max="1.00" /></td>
-			    <td class="roll_pitch_rate" rowspan="2"><input type="number" name="roll_pitch_rate" step="0.01" min="0" max="1.00" /></td>
-                            <td rowspan="2"><input type="number" name="rc_expo" step="0.01" min="0" max="1" /></td>
+                            <td rowspan="2" style="background-color:white;"><input type="number" name="rc_rate" step="0.01" min="0" max="2.5" /><div class="bracket"></div></td>
+                            <td class="roll_rate"><input type="number" name="roll_rate" step="0.01" min="0" max="1.00" /></td>
+                            <td class="roll_pitch_rate" rowspan="2"><input type="number" name="roll_pitch_rate" step="0.01" min="0" max="1.00" /></td>
+                            <td rowspan="2" style="background-color:white;"><input type="number" name="rc_expo" step="0.01" min="0" max="1" /><div class="bracket"></div></td>
 
                         </tr>
                         <tr class="PITCH">
@@ -69,16 +81,16 @@
                             <td><input type="number" name="p" step="1" min="0" max="255" /></td>
                             <td><input type="number" name="i" step="1" min="0" max="255" /></td>
                             <td><input type="number" name="d" step="1" min="0" max="255" /></td>
-				<td rowspan="1"><input type="number" name="rc_rate_yaw" step="0.01" min="0" max="2.5" /></td>
-			    <td><input type="number" name="yaw_rate" step="0.01" min="0" max="2.55" /></td>
-			    <td><input type="number" name="rc_yaw_expo" step="0.01" min="0" max="1" /></td>
+                            <td><input type="number" name="rc_rate_yaw" step="0.01" min="0" max="2.5" /></td>
+                            <td><input type="number" name="yaw_rate" step="0.01" min="0" max="2.55" /></td>
+                            <td><input type="number" name="rc_yaw_expo" step="0.01" min="0" max="1" /></td>
                         </tr>
                     </table>
-		</div>
+                </div>
                 <div class="gui_box grey topspacer">
                     <table class="pid_titlebar">
                         <tr>
-                            <th class="name" i18n="pidTuningName""></th>
+                            <th class="name" i18n="pidTuningName"></th>
                             <th class="proportional" i18n="pidTuningProportional"></th>
                             <th class="integral" i18n="pidTuningIntegral"></th>
                             <th class="derivative" i18n="pidTuningDerivative"></th>
@@ -149,20 +161,17 @@
                         </tr>
                     </table>
                 </div>
+
                 <div class="gui_box grey topspacer">
                     <table id="pid_accel" class="pid_tuning">
-                        <tr>
-                            <th colspan="4">
-                                <div class="pid_mode borderleft">
-                                    <div class="textleft">
-                                        <div class="pidTuningLevel" i18n="pidTuningLevel"></div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningLevelHelp"></div>
-                                    </div>
-                                    <div class="pids" i18n="pidTuningLevelP"></div>
-                                    <div class="pids" i18n="pidTuningLevelI"></div>
-                                    <div class="pids" i18n="pidTuningLevelD"></div>
-                                </div>
+                        <tr class="fancy header">
+                            <th>
+                                <div class="pidTuningLevel" i18n="pidTuningLevel"></div>
+                                <div class="helpicon cf_tip" i18n_title="pidTuningLevelHelp"></div>
                             </th>
+                            <th i18n="pidTuningLevelP"></th>
+                            <th i18n="pidTuningLevelI"></th>
+                            <th i18n="pidTuningLevelD"></th>
                         </tr>
                         <tr class="LEVEL">
                             <!-- 7 -->
@@ -173,46 +182,125 @@
                         </tr>
                     </table>
                 </div>
-            </div>
-            <div class="cf_column third_right">
-                <div class="spacer_left">
-                    <table class="rc_curve cf">
-                        <thead>
-                            <tr>
-                                <th i18n="rcCurve"></th>
-			    </tr>
-		        </thead>
-			</tbody>
-			    <tr>
-			        <td>
-                                    <div class="spacer" style="margin-top: 10px; margin-bottom: 10px;">
-                                        <div class="expochart pitch_roll_curve">
-                                            <canvas></canvas>
-                                        </div>
-                                    </div>
-			        </td>
-		            </tr>
-			</tbody>
+
+                <div class="gui_box grey topspacer">
+                    <table class="pid_filter" class="pid_tuning">
+                        <tr class="fancy header">
+                            <th>LFP Filters (Hz)</th>
+                            <th>Gyro Soft</th>
+                            <th>D Term</th>
+                            <th>Yaw</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="number" class="gyro" step="1" min="0" max="255" /></td>
+                            <td><input type="number" class="dterm" step="1" min="0" max="500" /></td>
+                            <td><input type="number" class="yaw" step="1" min="0" max="500" /></td>
+                        </tr>
                     </table>
                 </div>
-                <div class="spacer_left topspacer">
-                    <table class="rc_yaw_curve cf">
+
+                <div class="cf_column half topspacer">
+                        <div>
+                            <table class="rc_curve cf">
+                                <thead>
+                                    <tr>
+                                        <th i18n="rcCurve"></th>
+                                    </tr>
+                                </thead>
+                                </tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="spacer" style="margin-top: 10px; margin-bottom: 10px;">
+                                                <div class="roll_curve" data-rc-channel="1">
+                                                    <canvas height="120px" style="width: 100%; height: 100%"></canvas>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="topspacer">
+                            <table class="rc_yaw_curve cf">
+                                <thead>
+                                    <tr>
+                                        <th i18n="rcYawCurve"></th>
+                                    </tr>
+                                </thead>
+                                </tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="spacer" style="margin-top: 10px; margin-bottom: 10px;">
+                                                <div class="yaw_curve" data-rc-channel="2">
+                                                    <canvas height="120px" style="width: 100%; height: 100%"></canvas>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="clear-both"></div>
+                        </div>
+                </div>
+
+                <div class="cf_column half topspacer">
+                    <table class="tpa cf">
                         <thead>
                             <tr>
-                                <th i18n="rcYawCurve"></th>
-			    </tr>
-		        </thead>
-			</tbody>
-			    <tr>
-			        <td>
+                                <th i18n="pidTuningRatesPreview"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="rates_preview_cell">
+                                    <div class="rates_preview">
+                                        <canvas id="canvas"></canvas>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="cf_column third_right">
+                <div class="spacer_left throttle">
+                    <table class="cf">
+                        <thead>
+                            <tr>
+                                <th colspan=2 i18n="throttle"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan=2>
                                     <div class="spacer" style="margin-top: 10px; margin-bottom: 10px;">
-                                        <div class="expochart yaw_curve">
-                                            <canvas></canvas>
+                                        <div class="throttle_curve">
+                                            <canvas height="120px" style="width: 100%; height: 100%"></canvas>
                                         </div>
                                     </div>
-			        </td>
-		            </tr>
-			</tbody>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="spacer_left topspacer throttle">
+                    <table class="cf">
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <th i18n="receiverThrottleMid"></th>
+                                <th i18n="receiverThrottleExpo"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" name="mid" step="0.01" min="0" max="1" /></td>
+                                <td><input type="number" name="expo" step="0.01" min="0" max="1" /></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="spacer_left topspacer">
@@ -223,7 +311,7 @@
                                 <th class="tpa-breakpoint" i18n="pidTuningTPABreakPoint"></th>
                             </tr>
                         </thead>
-			<tbody>
+                        <tbody>
                             <tr>
                                 <td class="leftzero"><input type="number" name="tpa" step="0.01" min="0"
                                     max="1.00" /></td>
