@@ -7,7 +7,13 @@
                         <td><select name="release">
                                 <option value="0">Loading ...</option>
                         </select></td>
-                        <td><span class="description" i18n="firmwareFlasherOnlineReleasesDescription"></span></td>
+                        <td>
+                            <span class="description" i18n="firmwareFlasherOnlineReleasesDescription"></span>
+                            <div class="btn small">
+                                <a class="updateReleasesList" href="#" i18n="firmwareFlasherButtonUpdateReleasesList"></a>
+                            </div>
+                            <div class="helpicon cf_tip" i18n_title="firmwareFlasherHelpReleaseUpdate"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td><label> <input class="updating toggle" type="checkbox" /> <span
@@ -18,7 +24,7 @@
                     <tr class="option flash_on_connect_wrapper">
                         <td><label> <input class="flash_on_connect toggle" type="checkbox" /> <span
                                 i18n="firmwareFlasherFlashOnConnect"></span></label></td>
-                        
+
                         <td><span class="description" i18n="firmwareFlasherFlashOnConnectDescription"></span></td>
                     </tr>
                     <tr class="option">
@@ -101,7 +107,7 @@
                 <p i18n="firmwareFlasherRecoveryText"></p>
             </div>
         </div>
-            
+
         <div class="info"><a name="progressbar"></a>
             <progress class="progress" value="0" min="0" max="100"></progress>
             <span class="progressLabel" i18n="firmwareFlasherLoadFirmwareFile"></span>

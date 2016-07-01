@@ -1462,7 +1462,12 @@
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Failed to load remote firmware"
     },
-
+    "firmwareFlasherHelpReleaseUpdate": {
+        "message": "The available releases are being updated once a day. The button \"Force Release update\" triggers the update manually"
+    },
+    "firmwareFlasherButtonUpdateReleasesList": {
+        "message": "Force Release update"
+    },
     "ledStripHelp": {
         "message": "The flight controller can control colors and effects of individual LEDs on a strip. Configure LEDs on the grid, configure wiring order then attach LEDs on your aircraft according to grid positions. LEDs without wire ordering number will not be saved."
     },
@@ -1698,10 +1703,10 @@
     },
       "PIDTip": {
         "message": "<b>Derivative from Error</b> provides more direct stick response and is mostly prefered for Racing.<br><br><b>Derivative from Measurement</b> provides smoother stick response what is more usefull for freestyling"
-    }  
-    
+    }
 
-    
-    
+
+
+
 
 }
