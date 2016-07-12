@@ -19,22 +19,22 @@ TABS.motors.initialize = function (callback) {
     function get_arm_status() {
         MSP.send_message(MSP_codes.MSP_STATUS, false, false, load_config);
     }
-    
+
     function load_config() {
         MSP.send_message(MSP_codes.MSP_BF_CONFIG, false, false, load_3d);
     }
-    
+
     function load_3d() {
         var next_callback = get_motor_data;
-        if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
+        if (FC.apiVersion.gte('1.14.0')) {
             self.feature3DSupported = true;
             MSP.send_message(MSP_codes.MSP_3D, false, false, next_callback);
         } else {
             next_callback();
         }
-        
+
     }
-    
+
     function get_motor_data() {
         update_arm_status();
         MSP.send_message(MSP_codes.MSP_MOTOR, false, false, load_html);

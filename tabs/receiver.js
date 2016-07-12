@@ -38,7 +38,7 @@ TABS.receiver.initialize = function (callback) {
 
     function load_rc_configs() {
         var next_callback = load_html;
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+        if (FC.apiVersion.gte('1.15.0')) {
             MSP.send_message(MSP_codes.MSP_RC_DEADBAND, false, false, next_callback);
         } else {
             next_callback();
@@ -63,7 +63,7 @@ TABS.receiver.initialize = function (callback) {
             }
         });
 
-        if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
+        if (!FC.apiVersion.gte('1.15.0')) {
             $('.deadband').hide();
         } else {
             $('.deadband input[name="yaw_deadband"]').val(RC_deadband.yaw_deadband);
@@ -208,7 +208,7 @@ TABS.receiver.initialize = function (callback) {
         });
 
         $('a.update').click(function () {
-            if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+            if (FC.apiVersion.gte('1.15.0')) {
                RC_deadband.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
                RC_deadband.deadband = parseInt($('.deadband input[name="deadband"]').val());
             }
@@ -230,7 +230,7 @@ TABS.receiver.initialize = function (callback) {
 
             function save_rc_configs() {
                 var next_callback = save_to_eeprom;
-                if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+                if (FC.apiVersion.gte('1.15.0')) {
                    MSP.send_message(MSP_codes.MSP_SET_RC_DEADBAND, MSP.crunch(MSP_codes.MSP_SET_RC_DEADBAND), false, next_callback);
                 } else {
                    next_callback();
@@ -404,11 +404,11 @@ TABS.receiver.initModelPreview = function () {
     this.model = new Model($('.model_preview'), $('.model_preview canvas'));
 
     this.useSuperExpo = false;
-    if (CONFIG.flightControllerIdentifier === 'BTFL' && semver.gte(CONFIG.flightControllerVersion, '2.8.0')) {
+    if (FC.version.gte('2.8.0')) {
         this.useSuperExpo = bit_check(BF_CONFIG.features, SUPEREXPO_FEATURE_BIT);
     }
 
-    this.rateCurve = new RateCurve(CONFIG.flightControllerIdentifier !== 'BTFL' || semver.lt(CONFIG.flightControllerVersion, '2.8.0'));
+    this.rateCurve = new RateCurve(!FC.version.gte('2.8.0'));
 
     $(window).on('resize', $.proxy(this.model.resize, this.model));
 };

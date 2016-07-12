@@ -357,7 +357,7 @@ var MSP = {
                 var offset = 0;
                 RC_tuning.RC_RATE = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
                 RC_tuning.RC_EXPO = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
-                if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
+                if (!FC.apiVersion.gte('1.7.0')) {
                     RC_tuning.roll_pitch_rate = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
                     RC_tuning.pitch_rate = 0;
                     RC_tuning.roll_rate = 0;
@@ -370,13 +370,13 @@ var MSP = {
                 RC_tuning.dynamic_THR_PID = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
                 RC_tuning.throttle_MID = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
                 RC_tuning.throttle_EXPO = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
-                if (semver.gte(CONFIG.apiVersion, "1.7.0")) {
+                if (FC.apiVersion.gte('1.7.0')) {
                     RC_tuning.dynamic_THR_breakpoint = data.getUint16(offset, 1);
                     offset += 2;
                 } else {
                     RC_tuning.dynamic_THR_breakpoint = 0;
                 }
-                if (semver.gte(CONFIG.apiVersion, "1.10.0")) {
+                if (FC.apiVersion.gte('1.10.0')) {
                     RC_tuning.RC_YAW_EXPO = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
                 } else {
                     RC_tuning.RC_YAW_EXPO = 0;
@@ -424,13 +424,13 @@ var MSP = {
                 break;
             */
             case MSP_codes.MSP_ARMING_CONFIG:
-                if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+                if (FC.apiVersion.gte('1.8.0')) {
                     ARMING_CONFIG.auto_disarm_delay = data.getUint8(0, 1);
                     ARMING_CONFIG.disarm_kill_switch = data.getUint8(1);
                 }
                 break;
             case MSP_codes.MSP_LOOP_TIME:
-                if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+                if (FC.apiVersion.gte('1.8.0')) {
                     FC_CONFIG.loopTime = data.getInt16(0, 1);
                 }
                 break;
@@ -451,11 +451,11 @@ var MSP = {
                 MISC.gps_ubx_sbas = data.getInt8(offset++);
                 MISC.multiwiicurrentoutput = data.getUint8(offset++);
                 MISC.rssi_channel = data.getUint8(offset++);
-                MISC.placeholder2 = data.getUint8(offset++);                
-                if (semver.lt(CONFIG.apiVersion, "1.18.0"))
+                MISC.placeholder2 = data.getUint8(offset++);
+                if (!FC.apiVersion.gte('1.18.0'))
                     MISC.mag_declination = data.getInt16(offset, 1) / 10; // -1800-1800
                 else
-                    MISC.mag_declination = data.getInt16(offset, 1) / 100; // -18000-18000                
+                    MISC.mag_declination = data.getInt16(offset, 1) / 100; // -18000-18000
                 offset += 2;
                 MISC.vbatscale = data.getUint8(offset++, 1); // 10-200
                 MISC.vbatmincellvoltage = data.getUint8(offset++, 1) / 10; // 10-50
@@ -469,8 +469,8 @@ var MSP = {
                 _3D.deadband3d_high = data.getUint16(offset, 1);
                 offset += 2;
                 _3D.neutral3d = data.getUint16(offset, 1);
-                
-                if (semver.lt(CONFIG.apiVersion, "1.17.0")) {
+
+                if (!FC.apiVersion.gte('1.17.0')) {
                     offset += 2;
                     _3D.deadband3d_throttle = data.getUint16(offset, 1);
                 }
@@ -524,7 +524,7 @@ var MSP = {
             case MSP_codes.MSP_SERVO_CONFIGURATIONS:
                 SERVO_CONFIG = []; // empty the array as new data is coming in
 
-                if (semver.gte(CONFIG.apiVersion, "1.12.0")) {
+                if (FC.apiVersion.gte('1.12.0')) {
                     if (data.byteLength % 14 == 0) {
                         for (var i = 0; i < data.byteLength; i += 14) {
                             var arr = {
@@ -558,12 +558,12 @@ var MSP = {
                             SERVO_CONFIG.push(arr);
                         }
                     }
-                    
-                    if (semver.eq(CONFIG.apiVersion, '1.10.0')) {
+
+                    if (FC.apiVersion.eq('1.10.0')) {
                         // drop two unused servo configurations due to MSP rx buffer to small)
                         while (SERVO_CONFIG.length > 8) {
                             SERVO_CONFIG.pop();
-                        } 
+                        }
                     }
                 }
                 break;
@@ -736,8 +736,8 @@ var MSP = {
                 break;
 
             case MSP_codes.MSP_CF_SERIAL_CONFIG:
-                
-                if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
+
+                if (!FC.apiVersion.gte('1.6.0')) {
                     SERIAL_CONFIG.ports = [];
                     var offset = 0;
                     var serialPortCount = (data.byteLength - (4 * 4)) / 2;
@@ -859,7 +859,7 @@ var MSP = {
                 offset++;
                 FAILSAFE_CONFIG.failsafe_throttle = data.getUint16(offset, 1);
                 offset += 2;
-                if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+                if (FC.apiVersion.gte('1.15.0')) {
                     FAILSAFE_CONFIG.failsafe_kill_switch = data.getUint8(offset, 1);
                     offset++;
                     FAILSAFE_CONFIG.failsafe_throttle_low_delay = data.getUint16(offset, 1);
@@ -901,7 +901,7 @@ var MSP = {
                 break;
 
             case MSP_codes.MSP_ADVANCED_TUNING:
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                if (FC.version.gte('2.8.2')) {
                     var offset = 0;
                     ADVANCED_TUNING.rollPitchItermIgnoreRate = data.getUint16(offset, 1);
                     offset += 2;
@@ -917,7 +917,7 @@ var MSP = {
             case MSP_codes.MSP_SPECIAL_PARAMETERS:
                 var offset = 0;
                 SPECIAL_PARAMETERS.RC_RATE_YAW = parseFloat((data.getUint8(offset++) / 100).toFixed(2));
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                if (FC.version.gte('2.8.2')) {
                     SPECIAL_PARAMETERS.airModeActivateThreshold = data.getUint16(offset, 1);
                     offset += 2;
                     SPECIAL_PARAMETERS.rcSmoothInterval = data.getUint8(offset++, 1)
@@ -1264,7 +1264,7 @@ MSP.crunch = function (code) {
         case MSP_codes.MSP_SET_RC_TUNING:
             buffer.push(Math.round(RC_tuning.RC_RATE * 100));
             buffer.push(Math.round(RC_tuning.RC_EXPO * 100));
-            if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
+            if (!FC.apiVersion.gte('1.7.0')) {
                 buffer.push(Math.round(RC_tuning.roll_pitch_rate * 100));
             } else {
                 buffer.push(Math.round(RC_tuning.roll_rate * 100));
@@ -1274,11 +1274,11 @@ MSP.crunch = function (code) {
             buffer.push(Math.round(RC_tuning.dynamic_THR_PID * 100));
             buffer.push(Math.round(RC_tuning.throttle_MID * 100));
             buffer.push(Math.round(RC_tuning.throttle_EXPO * 100));
-            if (semver.gte(CONFIG.apiVersion, "1.7.0")) {
+            if (FC.apiVersion.gte('1.7.0')) {
                 buffer.push(lowByte(RC_tuning.dynamic_THR_breakpoint));
                 buffer.push(highByte(RC_tuning.dynamic_THR_breakpoint));
             }
-            if (semver.gte(CONFIG.apiVersion, "1.10.0")) {
+            if (FC.apiVersion.gte('1.10.0')) {
                 buffer.push(Math.round(RC_tuning.RC_YAW_EXPO * 100));
             }
             break;
@@ -1327,10 +1327,10 @@ MSP.crunch = function (code) {
             buffer.push(MISC.multiwiicurrentoutput);
             buffer.push(MISC.rssi_channel);
             buffer.push(MISC.placeholder2);
-            if (semver.lt(CONFIG.apiVersion, "1.18.0")) {
+            if (!FC.apiVersion.gte('1.18.0')) {
                 buffer.push(lowByte(Math.round(MISC.mag_declination * 10)));
                 buffer.push(highByte(Math.round(MISC.mag_declination * 10)));
-            } else {            
+            } else {
                 buffer.push(lowByte(Math.round(MISC.mag_declination * 100)));
                 buffer.push(highByte(Math.round(MISC.mag_declination * 100)));
             }
@@ -1360,7 +1360,7 @@ MSP.crunch = function (code) {
             buffer.push(FAILSAFE_CONFIG.failsafe_off_delay);
             buffer.push(lowByte(FAILSAFE_CONFIG.failsafe_throttle));
             buffer.push(highByte(FAILSAFE_CONFIG.failsafe_throttle));
-            if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+            if (FC.apiVersion.gte('1.15.0')) {
                 buffer.push(FAILSAFE_CONFIG.failsafe_kill_switch);
                 buffer.push(lowByte(FAILSAFE_CONFIG.failsafe_throttle_low_delay));
                 buffer.push(highByte(FAILSAFE_CONFIG.failsafe_throttle_low_delay));
@@ -1384,7 +1384,7 @@ MSP.crunch = function (code) {
             }
             break;
         case MSP_codes.MSP_SET_CF_SERIAL_CONFIG:
-            if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
+            if (!FC.apiVersion.gte('1.6.0')) {
 
                 for (var i = 0; i < SERIAL_CONFIG.ports.length; i++) {
                     buffer.push(SERIAL_CONFIG.ports[i].scenario);
@@ -1433,7 +1433,7 @@ MSP.crunch = function (code) {
             buffer.push(highByte(_3D.deadband3d_high));
             buffer.push(lowByte(_3D.neutral3d));
             buffer.push(highByte(_3D.neutral3d));
-            if (semver.lt(CONFIG.apiVersion, "1.17.0")) {
+            if (!FC.apiVersion.gte('1.17.0')) {
                 buffer.push(lowByte(_3D.deadband3d_throttle));
                 buffer.push(highByte(_3D.deadband3d_throttle));
             }
@@ -1464,7 +1464,7 @@ MSP.crunch = function (code) {
               .push16(FILTER_CONFIG.yaw_lpf_hz);
             break;
         case MSP_codes.MSP_SET_ADVANCED_TUNING:
-            if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+            if (FC.version.gte('2.8.2')) {
                 buffer.push16(ADVANCED_TUNING.rollPitchItermIgnoreRate)
                 .push16(ADVANCED_TUNING.yawItermIgnoreRate)
                 .push16(ADVANCED_TUNING.yaw_p_limit)
@@ -1474,7 +1474,7 @@ MSP.crunch = function (code) {
             break;
         case MSP_codes.MSP_SET_SPECIAL_PARAMETERS:
             buffer.push(Math.round(SPECIAL_PARAMETERS.RC_RATE_YAW * 100));
-            if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+            if (FC.version.gte('2.8.2')) {
                 buffer.push16(SPECIAL_PARAMETERS.airModeActivateThreshold);
                 buffer.push(SPECIAL_PARAMETERS.rcSmoothInterval);
                 buffer.push16(SPECIAL_PARAMETERS.escDesyncProtection);
@@ -1561,10 +1561,10 @@ MSP.sendServoConfigurations = function(onCompleteCallback) {
 
 
     function send_next_servo_configuration() {
-        
+
         var buffer = [];
 
-        if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
+        if (!FC.apiVersion.gte('1.12.0')) {
             // send all in one go
             // 1.9.0 had a bug where the MSP input buffer was too small, limit to 8.
             for (var i = 0; i < SERVO_CONFIG.length && i < 8; i++) {

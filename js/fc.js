@@ -1,5 +1,24 @@
 'use strict';
 
+var VersionChecker = function (base_version) {
+    this.eq = function (candidate) { 
+        return semver.eq(base_version(), candidate);
+    };
+
+    this.gt = function (candidate) {
+        return semver.gt(base_version(), candidate);
+    };
+
+    this.gte = function (candidate) {
+        return semver.gte(base_version(), candidate);
+    };
+
+    this.between = function (candidate1, candidate2) {
+        return semver.gte(base_version(), candidate1) &&
+               semver.lte(base_version(), candidate2);
+    };
+};
+
 // define all the global variables that are uses to hold FC state
 var CONFIG;
 var BF_CONFIG;
@@ -42,6 +61,13 @@ var SPECIAL_PARAMETERS;
 var SENSOR_CONFIG;
 
 var FC = {
+    version:    new VersionChecker(function () { return CONFIG.flightControllerVersion; }),
+    apiVersion: new VersionChecker(function () { return CONFIG.apiVersion; }),
+    
+    isBetaFlight: function () {
+        return CONFIG.flightControllerIdentifier === 'BTFL';
+    },
+
     resetState: function() {
         CONFIG = {
             apiVersion:    "0.0.0",

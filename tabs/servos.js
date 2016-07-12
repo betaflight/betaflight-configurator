@@ -18,10 +18,10 @@ TABS.servos.initialize = function (callback) {
 
     function get_channel_forwarding() {
         var nextFunction = get_rc_data;
-        
-        if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
+
+        if (!FC.apiVersion.gte('1.12.0')) {
             MSP.send_message(MSP_codes.MSP_CHANNEL_FORWARDING, false, false, nextFunction);
-        } else { 
+        } else {
             nextFunction();
         }
     }
@@ -37,19 +37,19 @@ TABS.servos.initialize = function (callback) {
     function load_html() {
         $('#content').load("./tabs/servos.html", process_html);
     }
-    
+
     MSP.send_message(MSP_codes.MSP_IDENT, false, false, get_servo_configurations);
-    
+
     function update_ui() {
-            
-        if (semver.lt(CONFIG.apiVersion, "1.12.0") || SERVO_CONFIG.length == 0) {
-            
+
+        if (!FC.apiVersion.gte('1.12.0') || SERVO_CONFIG.length == 0) {
+
             $(".tab-servos").removeClass("supported");
             return;
         }
-        
+
         $(".tab-servos").addClass("supported");
-            
+
         var servoCheckbox = '';
         var servoHeader = '';
         for (var i = 0; i < RC.active_channels-4; i++) {
