@@ -15,7 +15,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_serial_config() {
         var next_callback = load_rc_map;
-        if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
+        if (!FC.apiVersion.gte('1.6.0')) {
             MSP.send_message(MSP_codes.MSP_CF_SERIAL_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -29,23 +29,23 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     function load_misc() {
         MSP.send_message(MSP_codes.MSP_MISC, false, false, load_acc_trim);
     }
-    
+
     function load_acc_trim() {
         MSP.send_message(MSP_codes.MSP_ACC_TRIM, false, false, load_arming_config);
     }
 
     function load_arming_config() {
         var next_callback = load_loop_time;
-        if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+        if (FC.apiVersion.gte('1.8.0')) {
             MSP.send_message(MSP_codes.MSP_ARMING_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
     }
-    
+
     function load_loop_time() {
         var next_callback = load_3d;
-        if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+        if (FC.apiVersion.gte('1.8.0')) {
             MSP.send_message(MSP_codes.MSP_LOOP_TIME, false, false, next_callback);
         } else {
             next_callback();
@@ -54,7 +54,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_3d() {
         var next_callback = esc_protocol;
-        if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
+        if (FC.apiVersion.gte('1.14.0')) {
             MSP.send_message(MSP_codes.MSP_3D, false, false, next_callback);
         } else {
             next_callback();
@@ -63,25 +63,25 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function esc_protocol() {
         var next_callback = sensor_config;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (FC.version.gte('2.8.1')) {
             MSP.send_message(MSP_codes.MSP_PID_ADVANCED_CONFIG, false, false, next_callback);
         } else {
             next_callback();
-        }        
+        }
     }
-    
+
     function sensor_config() {
         var next_callback = load_sensor_alignment;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (FC.version.gte('2.8.2')) {
             MSP.send_message(MSP_codes.MSP_SENSOR_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
     }
-    
+
     function load_sensor_alignment() {
         var next_callback = load_advanced_tuning;
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+        if (FC.apiVersion.gte('1.15.0')) {
             MSP.send_message(MSP_codes.MSP_SENSOR_ALIGNMENT, false, false, next_callback);
         } else {
             next_callback();
@@ -90,7 +90,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     
     function load_advanced_tuning() {
         var next_callback = load_html;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (FC.version.gte('2.8.1')) {
             MSP.send_message(MSP_codes.MSP_ADVANCED_TUNING, false, false, next_callback);
         } else {
             next_callback();
@@ -153,20 +153,20 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             {bit: 17, group: 'other', name: 'DISPLAY'},
             {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true}
         ];
-        
-        if (semver.gte(CONFIG.apiVersion, "1.12.0")) {
+
+        if (FC.apiVersion.gte('1.12.0')) {
             features.push(
                 {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING'}
             );
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
+        if (FC.apiVersion.gte('1.16.0')) {
             features.push(
                 {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true}
             );
         }
 
-        if (CONFIG.flightControllerIdentifier === "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.0")) {
+        if (FC.version.gte('2.8.0')) {
              features.push(
                 {bit: 22, group: 'other', name: 'AIRMODE'}
             );
@@ -262,15 +262,15 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'CW 180° flip',
             'CW 270° flip'
         ];
-        
-        
-        
+
+
+
         var orientation_gyro_e = $('select.gyroalign');
         var orientation_acc_e = $('select.accalign');
         var orientation_mag_e = $('select.magalign');
-        
 
-        if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
+
+        if (!FC.apiVersion.gte('1.15.0')) {
             $('.tab-configuration .sensoralignment').hide();
         } else {
             for (var i = 0; i < alignments.length; i++) {
@@ -282,17 +282,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             orientation_acc_e.val(SENSOR_ALIGNMENT.align_acc);
             orientation_mag_e.val(SENSOR_ALIGNMENT.align_mag);
         }
-        
-        // ESC protocols 
-        
+
+        // ESC protocols
+
         var escprotocols = [
             'PWM',
             'ONESHOT125',
             'ONESHOT42',
             'MULTISHOT'
         ];
-        
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+
+        if (FC.version.gte('3.0.0')) {
             escprotocols.push('BRUSHED');
         }
 
@@ -378,13 +378,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
 
         // Only show these sections for supported FW
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (!FC.version.gte('2.8.1')) {
             $('.selectProtocol').hide();
             $('.checkboxPwm').hide();
             $('.selectPidProcessDenom').hide();
         }
-        
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.2")) {
+
+        if (!FC.version.gte('2.8.2')) {
             $('.hardwareSelection').hide();
         }
 
@@ -422,14 +422,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         });
 
         gps_protocol_e.val(MISC.gps_type);
-        
-        
+
+
         var gps_baudrate_e = $('select.gps_baudrate');
         for (var i = 0; i < gpsBaudRates.length; i++) {
             gps_baudrate_e.append('<option value="' + gpsBaudRates[i] + '">' + gpsBaudRates[i] + '</option>');
         }
-    
-        if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
+
+        if (!FC.apiVersion.gte('1.6.0')) {
             gps_baudrate_e.change(function () {
                 SERIAL_CONFIG.gpsBaudRate = parseInt($(this).val());
             });
@@ -463,11 +463,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'XBUS_MODE_B_RJ01'
         ];
 
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+        if (FC.apiVersion.gte('1.15.0')) {
             serialRXtypes.push('IBUS');
         }
 
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.6.0"))  {
+        if (FC.version.gte('2.6.0'))  {
             serialRXtypes.push('JETIEXBUS');
         }
 
@@ -500,11 +500,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // fill magnetometer
         $('input[name="mag_declination"]').val(MISC.mag_declination.toFixed(2));
 
-        //fill motor disarm params and FC loop time        
-        if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
+        //fill motor disarm params and FC loop time
+        if(FC.apiVersion.gte('1.8.0')) {
             $('input[name="autodisarmdelay"]').val(ARMING_CONFIG.auto_disarm_delay);
             $('input[name="disarmkillswitch"]').prop('checked', ARMING_CONFIG.disarm_kill_switch);
-            $('div.disarm').show();            
+            $('div.disarm').show();
             if(bit_check(BF_CONFIG.features, 4))//MOTOR_STOP
                 $('div.disarmdelay').show();
             else
@@ -532,13 +532,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[name="multiwiicurrentoutput"]').prop('checked', MISC.multiwiicurrentoutput);
 
         //fill 3D
-        if (semver.lt(CONFIG.apiVersion, "1.14.0")) {
+        if (!FC.apiVersion.gte('1.14.0')) {
             $('.tab-configuration .3d').hide();
         } else {
             $('input[name="3ddeadbandlow"]').val(_3D.deadband3d_low);
             $('input[name="3ddeadbandhigh"]').val(_3D.deadband3d_high);
             $('input[name="3dneutral"]').val(_3D.neutral3d);
-            if (semver.lt(CONFIG.apiVersion, "1.17.0")) {
+            if (!FC.apiVersion.gte('1.17.0')) {
                 $('input[name="3ddeadbandthrottle"]').val(_3D.deadband3d_throttle);
             } else {
                 $('.3ddeadbandthrottle').hide();
@@ -602,13 +602,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
             MISC.mag_declination = parseFloat($('input[name="mag_declination"]').val());
-            
+
             // motor disarm
-            if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
+            if(FC.apiVersion.gte('1.8.0')) {
                 ARMING_CONFIG.auto_disarm_delay = parseInt($('input[name="autodisarmdelay"]').val());
                 ARMING_CONFIG.disarm_kill_switch = ~~$('input[name="disarmkillswitch"]').is(':checked'); // ~~ boolean to decimal conversion
             }
-            
+
             MISC.midrc = parseInt($('input[name="midrc"]').val());
             MISC.minthrottle = parseInt($('input[name="minthrottle"]').val());
             MISC.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
@@ -626,7 +626,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             _3D.deadband3d_low = parseInt($('input[name="3ddeadbandlow"]').val());
             _3D.deadband3d_high = parseInt($('input[name="3ddeadbandhigh"]').val());
             _3D.neutral3d = parseInt($('input[name="3dneutral"]').val());
-            if (semver.lt(CONFIG.apiVersion, "1.17.0")) {
+            if (!FC.apiVersion.gte('1.17.0')) {
                 _3D.deadband3d_throttle = ($('input[name="3ddeadbandthrottle"]').val());
             }
 
@@ -642,7 +642,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pid_select_e.val());
 
             function save_serial_config() {
-                if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
+                if (!FC.apiVersion.gte('1.6.0')) {
                     MSP.send_message(MSP_codes.MSP_SET_CF_SERIAL_CONFIG, MSP.crunch(MSP_codes.MSP_SET_CF_SERIAL_CONFIG), false, save_misc);
                 } else {
                     save_misc();
@@ -652,27 +652,27 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             function save_misc() {
                 MSP.send_message(MSP_codes.MSP_SET_MISC, MSP.crunch(MSP_codes.MSP_SET_MISC), false, save_3d);
             }
-            
+
             function save_3d() {
                 var next_callback = save_sensor_alignment;
-                if(semver.gte(CONFIG.apiVersion, "1.14.0")) {
+                if(FC.apiVersion.gte('1.14.0')) {
                    MSP.send_message(MSP_codes.MSP_SET_3D, MSP.crunch(MSP_codes.MSP_SET_3D), false, next_callback);
                 } else {
                    next_callback();
-                }     
+                }
             }
-            
+
             function save_sensor_alignment() {
                 var next_callback = save_esc_protocol;
-                if(semver.gte(CONFIG.apiVersion, "1.15.0")) {
+                if(FC.apiVersion.gte('1.15.0')) {
                    MSP.send_message(MSP_codes.MSP_SET_SENSOR_ALIGNMENT, MSP.crunch(MSP_codes.MSP_SET_SENSOR_ALIGNMENT), false, next_callback);
                 } else {
                    next_callback();
-                }     
+                }
             }
             function save_esc_protocol() {
                 var next_callback = save_acc_trim;
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (FC.version.gte('2.8.1')) {
                     MSP.send_message(MSP_codes.MSP_SET_PID_ADVANCED_CONFIG, MSP.crunch(MSP_codes.MSP_SET_PID_ADVANCED_CONFIG), false, next_callback);
                 } else {
                    next_callback();
@@ -681,7 +681,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_acc_trim() {
                 MSP.send_message(MSP_codes.MSP_SET_ACC_TRIM, MSP.crunch(MSP_codes.MSP_SET_ACC_TRIM), false
-                                , semver.gte(CONFIG.apiVersion, "1.8.0") ? save_arming_config : save_to_eeprom);
+                                , FC.apiVersion.gte('1.8.0') ? save_arming_config : save_to_eeprom);
             }
 
             function save_arming_config() {
@@ -690,7 +690,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_looptime_config() {
                 var next_callback = save_sensor_config;
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (!FC.version.gte('2.8.1')) {
                     FC_CONFIG.loopTime = PID_ADVANCED_CONFIG.gyro_sync_denom * 125;
                     MSP.send_message(MSP_codes.MSP_SET_LOOP_TIME, MSP.crunch(MSP_codes.MSP_SET_LOOP_TIME), false, next_callback);
                 } else {
@@ -699,8 +699,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             function save_sensor_config() {
                 var next_callback = save_advanced_tuning;
-                
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+
+                if (FC.version.gte('2.8.2')) {
                     SENSOR_CONFIG.acc_hardware = $('input[name="accHardwareSwitch"]').is(':checked')?0:1;
                     SENSOR_CONFIG.baro_hardware = $('input[name="baroHardwareSwitch"]').is(':checked')?0:1;
                     SENSOR_CONFIG.mag_hardware = $('input[name="magHardwareSwitch"]').is(':checked')?0:1
@@ -713,7 +713,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             function save_advanced_tuning() {
                 var next_callback = save_to_eeprom;
                 
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (FC.version.gte('2.8.1')) {
 
                     ADVANCED_TUNING.vbatPidCompensation = $('input[name="vbatpidcompensation"]').is(':checked') ? 1 : 0;
 

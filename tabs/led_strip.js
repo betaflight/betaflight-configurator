@@ -286,14 +286,14 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             }
 
         });
-        
-        if (CONFIG.apiVersion < '1.18.0') {
+
+        if (!FC.apiVersion.gte('1.18.0')) {
             $(".extra_functions").hide();
         }
-        
+
         GUI.content_ready(callback);
     }
-    
+
     function findLed(x, y) {
         for (var ledIndex = 0; ledIndex < LED_STRIP.length; ledIndex++) {
             var led = LED_STRIP[ledIndex];

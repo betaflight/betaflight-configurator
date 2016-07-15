@@ -17,7 +17,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
     if (CONFIGURATOR.connectionValid) {
         // Blackbox was introduced in 1.5.0, dataflash API was introduced in 1.8.0, BLACKBOX/SDCARD MSP APIs in 1.11.0
-        TABS.onboard_logging.available = semver.gte(CONFIG.flightControllerVersion, "1.5.0");
+        TABS.onboard_logging.available = FC.version.gte('1.5.0');
         
         if (!TABS.onboard_logging.available) {
             load_html();
@@ -25,9 +25,9 @@ TABS.onboard_logging.initialize = function (callback) {
         }
         
         MSP.send_message(MSP_codes.MSP_BF_CONFIG, false, false, function() {
-            if (semver.gte(CONFIG.flightControllerVersion, "1.8.0")) {
+            if (FC.version.gte('1.8.0')) {
                 MSP.send_message(MSP_codes.MSP_DATAFLASH_SUMMARY, false, false, function() {
-                    if (semver.gte(CONFIG.flightControllerVersion, "1.11.0")) {
+                    if (FC.version.gte('1.11.0')) {
                         MSP.send_message(MSP_codes.MSP_SDCARD_SUMMARY, false, false, function() {
                             MSP.send_message(MSP_codes.MSP_BLACKBOX_CONFIG, false, false, load_html);
                         });
@@ -93,10 +93,9 @@ TABS.onboard_logging.initialize = function (callback) {
              * 
              * The best we can do on those targets is check the BLACKBOX feature bit to identify support for Blackbox instead.
              */
-            if (BLACKBOX.supported || DATAFLASH.supported 
-                    || semver.gte(CONFIG.flightControllerVersion, "1.5.0") && semver.lte(CONFIG.flightControllerVersion, "1.10.0") && bit_check(BF_CONFIG.features, 19)) {
+            if (BLACKBOX.supported || DATAFLASH.supported  || FC.version.between('1.5.0', '1.10.0') && bit_check(BF_CONFIG.features, 19)) {
                 blackboxSupport = 'yes';
-            } else if (semver.gte(CONFIG.flightControllerVersion, "1.5.0") && semver.lte(CONFIG.flightControllerVersion, "1.10.0")) {
+            } else if (FC.version.between('1.5.0', '1.10.0')) {
                 blackboxSupport = 'maybe';
             } else {
                 blackboxSupport = 'no';

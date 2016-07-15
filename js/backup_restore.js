@@ -23,12 +23,12 @@ function configuration_backup(callback) {
     ];
 
     function update_profile_specific_data_list() {
-        if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
+        if (!FC.apiVersion.gte('1.12.0')) {
             profileSpecificData.push(MSP_codes.MSP_CHANNEL_FORWARDING);
-         } else {            
+        } else {
             profileSpecificData.push(MSP_codes.MSP_SERVO_MIX_RULES);
         }
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+        if (FC.apiVersion.gte('1.15.0')) {
             profileSpecificData.push(MSP_codes.MSP_RC_DEADBAND);
         }
     }
@@ -71,7 +71,7 @@ function configuration_backup(callback) {
                             'AdjustmentRanges': jQuery.extend(true, [], ADJUSTMENT_RANGES)
                         });
 
-                        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+                        if (FC.apiVersion.gte('1.15.0')) {
                             configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, RC_deadband);
                         }
                         codeKey = 0;
@@ -98,14 +98,14 @@ function configuration_backup(callback) {
     ];
 
     function update_unique_data_list() {
-        if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+        if (FC.apiVersion.gte('1.8.0')) {
             uniqueData.push(MSP_codes.MSP_LOOP_TIME);
             uniqueData.push(MSP_codes.MSP_ARMING_CONFIG);
         }
-        if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
+        if (FC.apiVersion.gte('1.14.0')) {
             uniqueData.push(MSP_codes.MSP_3D);
         }
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+        if (FC.apiVersion.gte('1.15.0')) {
             uniqueData.push(MSP_codes.MSP_SENSOR_ALIGNMENT);
             uniqueData.push(MSP_codes.MSP_RX_CONFIG);
             uniqueData.push(MSP_codes.MSP_FAILSAFE_CONFIG);
@@ -130,15 +130,15 @@ function configuration_backup(callback) {
                 configuration.BF_CONFIG = jQuery.extend(true, {}, BF_CONFIG);
                 configuration.SERIAL_CONFIG = jQuery.extend(true, {}, SERIAL_CONFIG);
                 configuration.LED_STRIP = jQuery.extend(true, [], LED_STRIP);
-                
-                if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+
+                if (FC.apiVersion.gte('1.8.0')) {
                     configuration.FC_CONFIG = jQuery.extend(true, {}, FC_CONFIG);
                     configuration.ARMING_CONFIG = jQuery.extend(true, {}, ARMING_CONFIG);
                 }
-                if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
+                if (FC.apiVersion.gte('1.14.0')) {
                     configuration._3D = jQuery.extend(true, {}, _3D);
                 }
-                if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+                if (FC.apiVersion.gte('1.15.0')) {
                     configuration.SENSOR_ALIGNMENT = jQuery.extend(true, {}, SENSOR_ALIGNMENT);
                     configuration.RX_CONFIG = jQuery.extend(true, {}, RX_CONFIG);
                     configuration.FAILSAFE_CONFIG = jQuery.extend(true, {}, FAILSAFE_CONFIG);
@@ -495,8 +495,8 @@ function configuration_restore(callback) {
 
             appliedMigrationsCount++;
         }
-        
-        if (semver.lt(configuration.apiVersion, '1.14.0') && semver.gte(CONFIG.apiVersion, "1.14.0")) {
+
+        if (semver.lt(configuration.apiVersion, '1.14.0') && FC.apiVersion.gte('1.14.0')) {
             // api 1.14 removed old pid controllers
             for (var profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
                 var newPidControllerIndex = configuration.profiles[profileIndex].PID.controller;
@@ -622,7 +622,7 @@ function configuration_restore(callback) {
                 MSP_codes.MSP_SET_ACC_TRIM
             ];
 
-            if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+            if (FC.apiVersion.gte('1.15.0')) {
                 profileSpecificData.push(MSP_codes.MSP_SET_RC_DEADBAND);
             }
 
@@ -709,22 +709,22 @@ function configuration_restore(callback) {
                     MSP_codes.MSP_SET_BF_CONFIG,
                     MSP_codes.MSP_SET_CF_SERIAL_CONFIG
                 ];
-                
+
                 function update_unique_data_list() {
-                    if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+                    if (FC.apiVersion.gte('1.8.0')) {
                         uniqueData.push(MSP_codes.MSP_SET_LOOP_TIME);
                         uniqueData.push(MSP_codes.MSP_SET_ARMING_CONFIG);
                     }
-                    if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
+                    if (FC.apiVersion.gte('1.14.0')) {
                         uniqueData.push(MSP_codes.MSP_SET_3D);
                     }
-                    if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+                    if (FC.apiVersion.gte('1.15.0')) {
                         uniqueData.push(MSP_codes.MSP_SET_SENSOR_ALIGNMENT);
                         uniqueData.push(MSP_codes.MSP_SET_RX_CONFIG);
                         uniqueData.push(MSP_codes.MSP_SET_FAILSAFE_CONFIG);
                     }
                 }
-                
+
                 function load_objects() {
                     MISC = configuration.MISC;
                     RC_MAP = configuration.RCMAP;
@@ -762,9 +762,9 @@ function configuration_restore(callback) {
             function send_led_strip_config() {
                 MSP.sendLedStripConfig(send_rxfail_config);
             }
-            
+
             function send_rxfail_config() {
-                if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+                if (FC.apiVersion.gte('1.15.0')) {
                     MSP.sendRxFailConfig(save_to_eeprom);
                 } else {
                     save_to_eeprom();

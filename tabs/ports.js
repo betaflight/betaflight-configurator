@@ -17,7 +17,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
          {name: 'BLACKBOX',             groups: ['logging', 'blackbox'], sharableWith: ['msp'], notSharableWith: ['telemetry'], maxPorts: 1},
     ];
 
-    if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+    if (FC.apiVersion.gte('1.15.0')) {
         var ltmFunctionRule = {name: 'TELEMETRY_LTM',        groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['blackbox'], maxPorts: 1};
         functionRules.push(ltmFunctionRule);
     } else {
@@ -25,7 +25,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push(mspFunctionRule);
     }
 
-    if (semver.gte(CONFIG.apiVersion, "1.18.0")) {
+    if (FC.apiVersion.gte('1.18.0')) {
         var mavlinkFunctionRule = {name: 'TELEMETRY_MAVLINK',    groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['blackbox'], maxPorts: 1};
         functionRules.push(mavlinkFunctionRule);
     }
@@ -88,9 +88,9 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
     function update_ui() {
-        
-        if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
-            
+
+        if (!FC.apiVersion.gte('1.6.0')) {
+
             $(".tab-ports").removeClass("supported");
             return;
         }

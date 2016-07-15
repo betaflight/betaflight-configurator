@@ -51,7 +51,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
         $('#content').load("./tabs/failsafe.html", process_html);
     }
 
-    var apiVersionGte1_15_0 = semver.gte(CONFIG.apiVersion, "1.15.0");
+    var apiVersionGte1_15_0 = FC.apiVersion.gte('1.15.0');
 
     // Uncomment next line for testing older functionality on newer API version
     //apiVersionGte1_15_0 = false;
