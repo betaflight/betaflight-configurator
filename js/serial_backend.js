@@ -256,14 +256,14 @@ function onConnect() {
     	MSP.send_message(MSP_codes.MSP_STATUS_EX, false, false);
     } else {
     	MSP.send_message(MSP_codes.MSP_STATUS, false, false);
-
-        if (semver.gte(CONFIG.flightControllerVersion, "2.4.0")) {
-            CONFIG.numProfiles = 2;
-            $('select[name="profilechange"] .profile3').hide();
-        } else {
-            CONFIG.numProfiles = 3;
-        }
     }
+    if (semver.gte(CONFIG.flightControllerVersion, "2.4.0")) {
+        CONFIG.numProfiles = 2;
+        $('select[name="profilechange"] .profile3').hide();
+    } else {
+        CONFIG.numProfiles = 3;
+    }
+
     
     MSP.send_message(MSP_codes.MSP_DATAFLASH_SUMMARY, false, false);
     
