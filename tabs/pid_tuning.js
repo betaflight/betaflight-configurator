@@ -443,7 +443,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         updatePidDisplay();
 
-        showAllButton.on('click', function(){
+        $('#showAllPids').on('click', function(){
             TABS.pid_tuning.showAllPids = !TABS.pid_tuning.showAllPids;
 
             updatePidDisplay();
