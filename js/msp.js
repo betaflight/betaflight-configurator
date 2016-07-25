@@ -40,7 +40,12 @@ var MSP_codes = {
     MSP_SET_BLACKBOX_CONFIG:    81,
     MSP_TRANSPONDER_CONFIG:     82,
     MSP_SET_TRANSPONDER_CONFIG: 83,
-    
+    MSP_OSD_CONFIG:             84,
+    MSP_SET_OSD_CONFIG:         85,
+    MSP_OSD_CHAR_READ:          86,
+    MSP_OSD_CHAR_WRITE:         87,
+    MSP_VTX_CONFIG:             88,
+    MSP_SET_VTX_CONFIG:         89,
     MSP_PID_ADVANCED_CONFIG:    90,
     MSP_SET_PID_ADVANCED_CONFIG: 91,
     MSP_FILTER_CONFIG:          92,
@@ -1042,6 +1047,20 @@ var MSP = {
             case MSP_codes.MSP_SET_FAILSAFE_CONFIG:
                 console.log('Failsafe config saved');
                 break;
+            case MSP_codes.MSP_OSD_CONFIG:
+                break;
+            case MSP_codes.MSP_SET_OSD_CONFIG:
+                console.log('OSD config set');
+                break;
+            case MSP_codes.MSP_OSD_CHAR_READ:
+                break;
+            case MSP_codes.MSP_OSD_CHAR_WRITE:
+                console.log('OSD char uploaded');
+                break;
+            case MSP_codes.MSP_VTX_CONFIG:
+                break;
+            case MSP_codes.MSP_SET_VTX_CONFIG:
+                break;
             default:
                 console.log('Unknown code detected: ' + code);
         } else {
@@ -1104,6 +1123,8 @@ var MSP = {
             bufView[5] = bufView[3] ^ bufView[4]; // checksum
         }
 
+        //console.log('msp sending: ', data);
+
         // dev version 0.57 code below got recently changed due to the fact that queueing same MSP codes was unsupported
         // and was causing trouble while backup/restoring configurations
         // watch out if the recent change create any inconsistencies and then adjust accordingly
@@ -1138,6 +1159,17 @@ var MSP = {
         }
 
         return true;
+    },
+    /**
+     * resolves: {command: code, data: data, length: message_length}
+     */
+    promise: function(code, data) {
+      var self = this;
+      return new Promise(function(resolve) {
+        self.send_message(code, data, false, function(data) {
+          resolve(data);
+        });
+      });
     },
     callbacks_cleanup: function () {
         for (var i = 0; i < this.callbacks.length; i++) {
@@ -1407,7 +1439,7 @@ MSP.crunch = function (code) {
             buffer.push(lowByte(PID_ADVANCED_CONFIG.motor_pwm_rate));
             buffer.push(highByte(PID_ADVANCED_CONFIG.motor_pwm_rate));
             break;
-		case MSP_codes.MSP_SET_FILTER_CONFIG:
+        case MSP_codes.MSP_SET_FILTER_CONFIG:
             buffer.push(FILTER_CONFIG.gyro_soft_lpf_hz);
             buffer.push(FILTER_CONFIG.dterm_lpf_hz);
             buffer.push(FILTER_CONFIG.yaw_lpf_hz);

@@ -27,6 +27,7 @@
 <link type="text/css" rel="stylesheet" href="./tabs/auxiliary.css" media="all" />
 <link type="text/css" rel="stylesheet" href="./tabs/failsafe.css" media="all" />
 <link type="text/css" rel="stylesheet" href="./tabs/transponder.css" media="all" />
+<link type="text/css" rel="stylesheet" href="./tabs/osd.css" media="all" />
 <link type="text/css" rel="stylesheet" href="./css/opensans_webfontkit/fonts.css" media="all" />
 <link type="text/css" rel="stylesheet" href="./css/dropdown-lists/css/style_lists.css" media="all" />
 <link type="text/css" rel="stylesheet" href="./js/libraries/switchery/switchery.css" media="all" />
@@ -35,6 +36,7 @@
 <script type="text/javascript" src="./js/libraries/google-analytics-bundle.js"></script>
 <script type="text/javascript" src="./js/libraries/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="./js/libraries/jquery-ui-1.11.4.min.js"></script>
+<script type="text/javascript" src="./js/libraries/jquery.ba-throttle-debounce.min.js"></script>
 <script type="text/javascript" src="./js/libraries/d3.min.js"></script>
 <script type="text/javascript" src="./js/libraries/jquery.nouislider.all.min.js"></script>
 <script type="text/javascript" src="./js/libraries/three/three.min.js"></script>
@@ -44,6 +46,7 @@
 <script type="text/javascript" src="./js/libraries/semver.js"></script>
 <script type="text/javascript" src="./js/libraries/jbox/jBox.min.js"></script>
 <script type="text/javascript" src="./js/libraries/switchery/switchery.js"></script>
+<script type="text/javascript" src="./js/libraries/bluebird.min.js"></script>
 <script type="text/javascript" src="./js/port_handler.js"></script>
 <script type="text/javascript" src="./js/port_usage.js"></script>
 <script type="text/javascript" src="./js/serial.js"></script>
@@ -80,6 +83,7 @@
 <script type="text/javascript" src="./tabs/firmware_flasher.js"></script>
 <script type="text/javascript" src="./tabs/failsafe.js"></script>
 <script type="text/javascript" src="./tabs/transponder.js"></script>
+<script type="text/javascript" src="./tabs/osd.js"></script>
 <title></title>
 </head>
 <body>
@@ -214,6 +218,7 @@
                     <li class="tab_gps"><a href="#" i18n="tabGPS" class="tabicon ic_gps" title="GPS"></a></li>
                     <li class="tab_motors"><a href="#" i18n="tabMotorTesting" class="tabicon ic_motor" title="Motors"></a></li>
                     <li class="tab_transponder"><a href="#" i18n="tabTransponder" class="tabicon ic_transponder" title="Transponder"></a></li>
+                    <li class="tab_osd"><a href="#" i18n="tabOsd" class="tabicon ic_osd" title="OSD"></a></li>
                     <li class="tab_led_strip"><a href="#" i18n="tabLedStrip" class="tabicon ic_led" title="LED Strip"></a></li>
                     <li class="tab_sensors"><a href="#" i18n="tabRawSensorData" class="tabicon ic_sensors" title="Sensors"></a></li>
                     <li class="tab_logging"><a href="#" i18n="tabLogging" class="tabicon ic_log" title="Tethered Logging"></a></li>
