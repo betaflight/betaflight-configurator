@@ -1,20 +1,25 @@
 'use strict';
 
 TABS.pid_tuning = {
+    RATE_PROFILE_MASK: 128,
     showAllPids: false,
+    updating: true,
     profileDirty: false,
-    loadingProfile: true
+    rateProfileDirty: false,
+    currentProfile: null,
+    currentRateProfile: null
 };
 
 TABS.pid_tuning.initialize = function (callback) {
     var self = this;
+
     if (GUI.active_tab != 'pid_tuning') {
         GUI.active_tab = 'pid_tuning';
     }
 
     // requesting MSP_STATUS manually because it contains CONFIG.profile
     MSP.promise(MSP_codes.MSP_STATUS).then(function() {
-        if (GUI.canChangePidController) {
+        if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
             return MSP.promise(MSP_codes.MSP_PID_CONTROLLER);
         }
         return true;
@@ -42,6 +47,9 @@ TABS.pid_tuning.initialize = function (callback) {
     });
 
     function pid_and_rc_to_form() {
+        self.setProfile();
+        self.setRateProfile();
+
         if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
             $('input[name="vbatpidcompensation"]').prop('checked', ADVANCED_TUNING.vbatPidCompensation !== 0);
         }
@@ -438,7 +446,7 @@ TABS.pid_tuning.initialize = function (callback) {
         var showAllButton = $('#showAllPids');
 
         function updatePidDisplay() {
-            if (!TABS.pid_tuning.showAllPids) {
+            if (!self.showAllPids) {
                 hideUnusedPids();
 
                 showAllButton.text(chrome.i18n.getMessage("pidTuningShowAllPids"));
@@ -452,30 +460,43 @@ TABS.pid_tuning.initialize = function (callback) {
         updatePidDisplay();
 
         showAllButton.on('click', function(){
-            TABS.pid_tuning.showAllPids = !TABS.pid_tuning.showAllPids;
+            self.showAllPids = !self.showAllPids;
 
             updatePidDisplay();
         });
 
-        $('#resetPIDs').on('click', function(){
-            TABS.pid_tuning.profileLoading = true;
+        $('#resetProfile').on('click', function(){
+            self.updating = true;
             MSP.promise(MSP_codes.MSP_SET_RESET_CURR_PID).then(function () {
-                TABS.pid_tuning.refresh(function () {
-                    TABS.pid_tuning.profileDirty = false;
+                self.refresh(function () {
+                    self.updating = false;
+                    self.setProfileDirty(false);
 
-                    GUI.log(chrome.i18n.getMessage('pidTuningPidsReset'));
+                    GUI.log(chrome.i18n.getMessage('pidTuningProfileReset'));
                 });
             });
         });
 
-        $('.tab-pid_tuning select[name="profilechange"]').change(function () {
-            var profile = parseInt($(this).val());
-            TABS.pid_tuning.loadingProfile = true;
-            MSP.promise(MSP_codes.MSP_SELECT_SETTING, [profile]).then(function () {
-                TABS.pid_tuning.refresh(function () {
-                    TABS.pid_tuning.loadingProfile = false;
+        $('.tab-pid_tuning select[name="profile"]').change(function () {
+            self.currentProfile = parseInt($(this).val());
+            self.updating = true;
+            MSP.promise(MSP_codes.MSP_SELECT_SETTING, [self.currentProfile]).then(function () {
+                self.refresh(function () {
+                    self.updating = false;
 
-                    GUI.log(chrome.i18n.getMessage('pidTuningLoadedProfile', [profile + 1]));
+                    GUI.log(chrome.i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
+                });
+            });
+        });
+
+        $('.tab-pid_tuning select[name="rate_profile"]').change(function () {
+            self.currentRateProfile = parseInt($(this).val());
+            self.updating = true;
+            MSP.promise(MSP_codes.MSP_SELECT_SETTING, [self.currentProfile + self.RATE_PROFILE_MASK]).then(function () {
+                self.refresh(function () {
+                    self.updating = false;
+
+                    GUI.log(chrome.i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
                 });
             });
         });
@@ -661,24 +682,29 @@ TABS.pid_tuning.initialize = function (callback) {
         }).trigger('input');
 
         $('a.refresh').click(function () {
-            TABS.pid_tuning.refresh(function () {
+            self.refresh(function () {
                 GUI.log(chrome.i18n.getMessage('pidTuningDataRefreshed'));
             });
         });
 
         $('#pid-tuning').find('input').each(function (k, item) {
             $(item).change(function () {
-                TABS.pid_tuning.profileDirty = true;
+                self.setProfileDirty(true);
+
+                var elementName = $(this).attr('name');
+                if (!(elementName === 'p' || elementName === 'i' || elementName === 'd')) {
+                    self.setRateProfileDirty(true);
+                }
             })
         });
 
         pidController_e.change(function () {
-            TABS.pid_tuning.profileDirty = true;
+            self.setProfileDirty(true);
         });
 
         if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
             $('.delta select').change(function() {
-                TABS.pid_tuning.profileDirty = true;
+                self.setProfileDirty(true);
             });
         } else {
             $('.delta').hide();
@@ -689,15 +715,18 @@ TABS.pid_tuning.initialize = function (callback) {
         $('a.update').click(function () {
             form_to_pid_and_rc();
 
-            Promise.resolve(function () {
-                var promise;
-                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
-                    PID.controller = pidController_e.val();
-                    promise = MSP.promise(MSP_codes.MSP_SET_PID_CONTROLLER, MSP.crunch(MSP_codes.MSP_SET_PID_CONTROLLER));
-                }
+            self.updating = true;
+            var promise;
+            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
+                PID.controller = pidController_e.val();
+                promise = MSP.promise(MSP_codes.MSP_SET_PID_CONTROLLER, MSP.crunch(MSP_codes.MSP_SET_PID_CONTROLLER));
+            } else {
+                promise = new Promise(function (resolve) {
+                    resolve();
+                });
+            }
 
-                return promise;
-            }).then(function () {
+            promise.then(function () {
                 return MSP.promise(MSP_codes.MSP_SET_PID, MSP.crunch(MSP_codes.MSP_SET_PID));
             }).then(function () {
                 var promise;
@@ -727,6 +756,9 @@ TABS.pid_tuning.initialize = function (callback) {
             }).then(function () {
                 return MSP.promise(MSP_codes.MSP_EEPROM_WRITE);
             }).then(function () {
+                self.updating = false;
+                self.setProfileDirty(false);
+
                 GUI.log(chrome.i18n.getMessage('pidTuningEepromSaved'));
             });
         });
@@ -735,6 +767,8 @@ TABS.pid_tuning.initialize = function (callback) {
         self.initRatesPreview();
         self.renderModel();
 
+        self.updating = false;
+
         // enable RC data pulling for rates preview
         GUI.interval_add('receiver_pull', self.getRecieverData, true);
 
@@ -742,8 +776,6 @@ TABS.pid_tuning.initialize = function (callback) {
         GUI.interval_add('status_pull', function status_pull() {
             MSP.send_message(MSP_codes.MSP_STATUS);
         }, 250, true);
-
-        TABS.pid_tuning.profileLoaded = true;
 
         GUI.content_ready(callback);
     }
@@ -777,18 +809,22 @@ TABS.pid_tuning.renderModel = function () {
 };
 
 TABS.pid_tuning.cleanup = function (callback) {
-    if (this.model) {
-        $(window).off('resize', $.proxy(this.model.resize, this.model));
+    var self = this;
+
+    if (self.model) {
+        $(window).off('resize', $.proxy(self.model.resize, self.model));
     }
 
-    this.keepRendering = false;
+    self.keepRendering = false;
 
     if (callback) callback();
 };
 
 TABS.pid_tuning.refresh = function (callback) {
+    var self = this;
+
     GUI.tab_switch_cleanup(function () {
-        TABS.pid_tuning.initialize();
+        self.initialize();
 
         if (callback) {
             callback();
@@ -796,20 +832,72 @@ TABS.pid_tuning.refresh = function (callback) {
     });
 }
 
+TABS.pid_tuning.setProfile = function () {
+    var self = this;
+
+    $('.tab-pid_tuning select[name="profile"]').val(CONFIG.profile);
+    self.currentProfile = CONFIG.profile;
+}
+
+TABS.pid_tuning.setRateProfile = function () {
+    var self = this;
+
+    $('.tab-pid_tuning select[name="rate_profile"]').val(CONFIG.rateProfile);
+    self.currentRateProfile = CONFIG.rateProfile;
+}
+
+TABS.pid_tuning.setProfileDirty = function (isDirty) {
+    var self = this;
+
+    self.profileDirty = isDirty;
+    $('.tab-pid_tuning select[name="profile"]').prop('disabled', isDirty);
+
+    if (!isDirty) {
+        self.setRateProfileDirty(isDirty);
+    }
+}
+
+TABS.pid_tuning.setRateProfileDirty = function (isDirty) {
+    var self = this;
+
+    self.rateProfileDirty = isDirty;
+    $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', isDirty);
+}
+
 TABS.pid_tuning.checkUpdateProfile = function () {
+    var self = this;
+
     if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")
         && CONFIG.numProfiles === 2) {
-        $('.tab-pid_tuning select[name="profilechange"] .profile3').hide();
+        $('.tab-pid_tuning select[name="profile"] .profile3').hide();
     }
 
-    if (!TABS.pid_tuning.loadingProfile && !TABS.pid_tuning.profileDirty) {
-        var profileElement = $('.tab-pid_tuning select[name="profilechange"]')
-        if (profileElement.length > 0 && parseInt(profileElement.val()) !== CONFIG.profile) {
-            profileElement.val(CONFIG.profile);
+    if (!self.updating) {
+        var changedProfile = false;
+        if (!self.profileDirty && self.currentProfile !== CONFIG.profile) {
+            self.setProfile();
 
-            TABS.pid_tuning.refresh(function () {
-                GUI.log(chrome.i18n.getMessage('pidTuningReceivedProfile', [CONFIG.profile + 1]));
+            changedProfile = true;
+        }
+
+        var changedRateProfile = false;
+        if (!self.rateProfileDirty && self.currentRateProfile !== CONFIG.rateProfile) {
+            self.setRateProfile();
+
+            changedRateProfile = true;
+        }
+
+        if (changedProfile || changedRateProfile) {
+            self.refresh(function () {
+                if (changedProfile) {
+                    GUI.log(chrome.i18n.getMessage('pidTuningReceivedProfile', [CONFIG.profile + 1]));
+                }
+
+                if (changedRateProfile) {
+                    GUI.log(chrome.i18n.getMessage('pidTuningReceivedRateProfile', [CONFIG.rateProfile + 1]));
+                }
             });
         }
+
     }
 }
