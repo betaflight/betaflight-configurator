@@ -1313,7 +1313,7 @@
         "message": "Blackbox configuration"
     },
     "blackboxButtonSave": {
-        "message": "Save and reboot"
+        "message": "Save"
     },
 
     "serialLoggingSupportedNote": {

@@ -11,6 +11,16 @@ TABS.onboard_logging.initialize = function (callback) {
         self = this,
         saveCancelled, eraseCancelled;
 
+    BLACKBOX.populate();
+    DATAFLASH.populate();
+    PID_ADVANCED_CONFIG.populate();
+    
+    BLACKBOX.listen(load_html);
+    DATAFLASH.listen(load_html);
+    PID_ADVANCED_CONFIG.listen(load_html);
+    
+    //TODO, add also for MSP_SDCARD_SUMMARY ?
+    
     if (GUI.active_tab != 'onboard_logging') {
         GUI.active_tab = 'onboard_logging';
     }
@@ -24,23 +34,7 @@ TABS.onboard_logging.initialize = function (callback) {
             return;
         }
         
-        MSP.send_message(MSP_codes.MSP_BF_CONFIG, false, false, function() {
-            if (semver.gte(CONFIG.flightControllerVersion, "1.8.0")) {
-                MSP.send_message(MSP_codes.MSP_DATAFLASH_SUMMARY, false, false, function() {
-                    if (semver.gte(CONFIG.flightControllerVersion, "1.11.0")) {
-                        MSP.send_message(MSP_codes.MSP_SDCARD_SUMMARY, false, false, function() {
-                            MSP.send_message(MSP_codes.MSP_BLACKBOX_CONFIG, false, false, function() { 
-                            	MSP.send_message(MSP_codes.MSP_ADVANCED_CONFIG, false, false, load_html);
-                            });
-                        });
-                    } else {
-                        load_html();
-                    }
-                });
-            } else {
-                load_html();
-            }
-        });
+        load_html();
     }
     
     function gcd(a, b) {
@@ -80,7 +74,6 @@ TABS.onboard_logging.initialize = function (callback) {
             },1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
         }
     }
-    
     function load_html() {
         $('#content').load("./tabs/onboard_logging.html", function() {
             // translate to user-selected language
@@ -134,8 +127,7 @@ TABS.onboard_logging.initialize = function (callback) {
                     BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
                     BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
                     BLACKBOX.blackboxDevice = parseInt($(".blackboxDevice select").val(), 10);
-                    
-                    MSP.sendBlackboxConfiguration(save_to_eeprom);
+                    BLACKBOX.save(); // Reboot also needed ?
                 });
             }
             
@@ -186,11 +178,15 @@ TABS.onboard_logging.initialize = function (callback) {
         for (var i = 0; i < loggingRates.length; i++) {
         	var loggingRate = Math.round(pidRate / loggingRates[i].denom);
         	var loggingRateUnit = " Hz";
-        	if (gcd(loggingRate, 1000)==1000) {
-        		loggingRate /= 1000;
-        		loggingRateUnit = " KHz";
-        		
-        	}
+        	
+        	if (loggingRate != Infinity) {
+            	if (gcd(loggingRate, 1000)==1000) {
+            		loggingRate /= 1000;
+            		loggingRateUnit = " KHz";
+            		
+            	}
+            }
+        	
             loggingRatesSelect.append('<option value="' + loggingRates[i].num + '/' + loggingRates[i].denom + '">' 
                 + loggingRate + loggingRateUnit + ' (' + Math.round(loggingRates[i].num / loggingRates[i].denom * 100) + '%)</option>');
             

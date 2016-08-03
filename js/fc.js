@@ -28,20 +28,49 @@ var ARMING_CONFIG;
 var FC_CONFIG;
 var MISC;
 var _3D;
-var DATAFLASH;
+var DATAFLASH = new Config(
+        {
+            configName: "DATAFLASH",
+            ready: false,
+            supported: false,
+            sectors: 0,
+            totalSize: 0,
+            usedSize: 0
+        });  
 var SDCARD;
-var BLACKBOX;
+var BLACKBOX = new Config(
+		{
+	        configName: "BLACKBOX",
+			supported: false,
+	        blackboxDevice: 0,
+	        blackboxRateNum: 1,
+	        blackboxRateDenom: 1
+		});
 var TRANSPONDER;
 var RC_deadband;
 var SENSOR_ALIGNMENT;
 var RX_CONFIG;
 var FAILSAFE_CONFIG;
 var RXFAIL_CONFIG;
-var PID_ADVANCED_CONFIG;
+var PID_ADVANCED_CONFIG = new Config ({
+        configName:             "PID_ADVANCED_CONFIG",
+        gyro_sync_denom:        0,
+        pid_process_denom:      0,
+        use_unsyncedPwm:        0,
+        fast_pwm_protocol:      0,
+        motor_pwm_rate:         0
+    });
 var FILTER_CONFIG;
 var SPECIAL_PARAMETERS;
 var ADVANCED_TUNING;
 var SENSOR_CONFIG;
+
+var newFC = new FC;
+newFC.add(BLACKBOX);
+newFC.add(DATAFLASH);
+newFC.add(PID_ADVANCED_CONFIG);
+var newCP = new MSPConfigProvider;
+newFC.setConfigProvider(newCP);
 
 var FC = {
     resetState: function() {
@@ -207,14 +236,7 @@ var FC = {
             neutral3d:              0,
             deadband3d_throttle:    0
         };
-        
-        DATAFLASH = {
-            ready: false,
-            supported: false,
-            sectors: 0,
-            totalSize: 0,
-            usedSize: 0
-        };
+       
         
         SDCARD = {
             supported: false,
@@ -222,13 +244,6 @@ var FC = {
             filesystemLastError: 0,
             freeSizeKB: 0,
             totalSizeKB: 0,
-        };
-        
-        BLACKBOX = {
-            supported: false,
-            blackboxDevice: 0,
-            blackboxRateNum: 1,
-            blackboxRateDenom: 1
         };
         
         TRANSPONDER = {
@@ -246,14 +261,6 @@ var FC = {
             align_gyro:             0,
             align_acc:              0,
             align_mag:              0
-        };
-        
-        PID_ADVANCED_CONFIG = {
-            gyro_sync_denom:        0,
-            pid_process_denom:      0,
-            use_unsyncedPwm:        0,
-            fast_pwm_protocol:      0,
-            motor_pwm_rate:         0
         };
         
         FILTER_CONFIG = {
