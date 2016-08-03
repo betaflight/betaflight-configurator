@@ -16,7 +16,13 @@ function MSPConfigProvider() {
 	});
 	
 	this.update = function(config) {
-		MSP.send_message(MSPCommands[config.configName].populate, false, false, false);
+	    if (typeof MSPCommands[config.configName].populate === "object") {
+	        MSPCommands[config.configName].populate.forEach(function (mspCode) {
+	            MSP.send_message(mspCode, false, false, false);
+	        });
+	    } else {
+	        MSP.send_message(MSPCommands[config.configName].populate, false, false, false);
+	    }
 	}
 	this.populate = function(config) {
 	    this.update(config);
