@@ -1180,6 +1180,7 @@ var MSP = {
                     DATAFLASH.totalSize = 0;
                     DATAFLASH.usedSize = 0;
                 }
+                DATAFLASH.update();
                 update_dataflash_global();
                 break;
             case MSP_codes.MSP_DATAFLASH_READ:
