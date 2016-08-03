@@ -28,24 +28,22 @@ var ARMING_CONFIG;
 var FC_CONFIG;
 var MISC;
 var _3D;
-var DATAFLASH = new Config(
-        {
-            configName: "DATAFLASH",
-            ready: false,
-            supported: false,
-            sectors: 0,
-            totalSize: 0,
-            usedSize: 0
-        });  
+var DATAFLASH = new Config({
+    configName:             "DATAFLASH",
+    ready:                  false,
+    supported:              false,
+    sectors:                0,
+    totalSize:              0,
+    usedSize:               0
+});  
 var SDCARD;
-var BLACKBOX = new Config(
-		{
-	        configName: "BLACKBOX",
-			supported: false,
-	        blackboxDevice: 0,
-	        blackboxRateNum: 1,
-	        blackboxRateDenom: 1
-		});
+var BLACKBOX = new Config({
+    configName:             "BLACKBOX",
+    supported:              false,
+    blackboxDevice:         0,
+    blackboxRateNum:        1,
+    blackboxRateDenom:      1
+});
 var TRANSPONDER;
 var RC_deadband;
 var SENSOR_ALIGNMENT;
@@ -53,13 +51,13 @@ var RX_CONFIG;
 var FAILSAFE_CONFIG;
 var RXFAIL_CONFIG;
 var PID_ADVANCED_CONFIG = new Config ({
-        configName:             "PID_ADVANCED_CONFIG",
-        gyro_sync_denom:        0,
-        pid_process_denom:      0,
-        use_unsyncedPwm:        0,
-        fast_pwm_protocol:      0,
-        motor_pwm_rate:         0
-    });
+    configName:             "PID_ADVANCED_CONFIG",
+    gyro_sync_denom:        0,
+    pid_process_denom:      0,
+    use_unsyncedPwm:        0,
+    fast_pwm_protocol:      0,
+    motor_pwm_rate:         0
+});
 var FILTER_CONFIG;
 var SPECIAL_PARAMETERS;
 var ADVANCED_TUNING;
