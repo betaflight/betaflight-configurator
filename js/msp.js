@@ -960,6 +960,7 @@ var MSP = {
                 PID_ADVANCED_CONFIG.use_unsyncedPwm = data.getUint8(offset++, 1);
                 PID_ADVANCED_CONFIG.fast_pwm_protocol = data.getUint8(offset++, 1);
                 PID_ADVANCED_CONFIG.motor_pwm_rate = data.getUint16(offset++, 1);
+                PID_ADVANCED_CONFIG.update();
                 break;
             case MSP_codes.MSP_FILTER_CONFIG:
                 var offset = 0;
@@ -1179,6 +1180,7 @@ var MSP = {
                     DATAFLASH.totalSize = 0;
                     DATAFLASH.usedSize = 0;
                 }
+                DATAFLASH.update();
                 update_dataflash_global();
                 break;
             case MSP_codes.MSP_DATAFLASH_READ:
@@ -1201,6 +1203,7 @@ var MSP = {
                 BLACKBOX.blackboxDevice = data.getUint8(1);
                 BLACKBOX.blackboxRateNum = data.getUint8(2);
                 BLACKBOX.blackboxRateDenom = data.getUint8(3);
+                BLACKBOX.update();
                 break;
             case MSP_codes.MSP_SET_BLACKBOX_CONFIG:
                 console.log("Blackbox config saved");
@@ -1722,6 +1725,11 @@ MSP.crunch = function (code) {
             }
             break;
         
+        case MSP_codes.MSP_SET_BLACKBOX_CONFIG:
+            buffer.push(BLACKBOX.blackboxDevice); 
+            buffer.push(BLACKBOX.blackboxRateNum);
+            buffer.push(BLACKBOX.blackboxRateDenom);
+            break;
         
         default:
             return false;
@@ -1744,19 +1752,6 @@ MSP.setRawRx = function(channels) {
     }
     
     MSP.send_message(MSP_codes.MSP_SET_RAW_RC, buffer, false);
-}
-
-MSP.sendBlackboxConfiguration = function(onDataCallback) {
-    var 
-        message = [
-            BLACKBOX.blackboxDevice & 0xFF, 
-            BLACKBOX.blackboxRateNum & 0xFF, 
-            BLACKBOX.blackboxRateDenom & 0xFF
-        ];
-    
-    MSP.send_message(MSP_codes.MSP_SET_BLACKBOX_CONFIG, message, false, function(response) {
-        onDataCallback();
-    });
 }
 
 /**
