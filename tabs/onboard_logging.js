@@ -10,11 +10,8 @@ TABS.onboard_logging.initialize = function (callback) {
     var 
         self = this,
         saveCancelled, eraseCancelled;
+    newFC.purge(); // This should be noved to a general "change-tab" callback
 
-    BLACKBOX.populate();
-    DATAFLASH.populate();
-    PID_ADVANCED_CONFIG.populate();
-    
     BLACKBOX.listen(load_html);
     DATAFLASH.listen(load_html);
     PID_ADVANCED_CONFIG.listen(load_html);

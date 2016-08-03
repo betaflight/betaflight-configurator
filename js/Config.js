@@ -9,6 +9,11 @@ function FC() {
 	this.add = function(config) {
 		this._subConfigCategories.push(config);
 	}
+	this.purge = function()  {
+	    this._subConfigCategories.forEach(function (subConfig) {
+            subConfig.refresh();
+        }); 
+	}
 }
 
 function Config(properties) {
