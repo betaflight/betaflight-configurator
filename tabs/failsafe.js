@@ -57,9 +57,9 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     //apiVersionGte1_15_0 = false;
 
     if(apiVersionGte1_15_0) {
-        MSP.send_message(MSP_codes.MSP_IDENT, false, false, load_rx_config);
+        load_rx_config();
     } else {
-        MSP.send_message(MSP_codes.MSP_IDENT, false, false, load_config);
+        load_config();
     }
 
     function process_html() {
@@ -333,10 +333,8 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 } else {
 
                     GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                        MSP.send_message(MSP_codes.MSP_IDENT, false, false, function () {
-                            GUI.log(chrome.i18n.getMessage('deviceReady'));
-                            TABS.failsafe.initialize(false, $('#content').scrollTop());
-                        });
+                        GUI.log(chrome.i18n.getMessage('deviceReady'));
+                        TABS.failsafe.initialize(false, $('#content').scrollTop());
                     },1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
                 }
             }

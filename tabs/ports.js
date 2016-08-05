@@ -275,10 +275,8 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                 },2500);
             } else {
                 GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                    MSP.send_message(MSP_codes.MSP_IDENT, false, false, function () {
-                        GUI.log(chrome.i18n.getMessage('deviceReady'));
-                        TABS.ports.initialize(false, $('#content').scrollTop());
-                    });
+                    GUI.log(chrome.i18n.getMessage('deviceReady'));
+                    TABS.ports.initialize(false, $('#content').scrollTop());
                },  1500); // seems to be just the right amount of delay to prevent data request timeouts
             }
         }
