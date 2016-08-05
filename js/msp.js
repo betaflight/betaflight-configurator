@@ -63,7 +63,7 @@ var MSP_codes = {
     MSP_SET_SPECIAL_PARAMETERS: 99,
 
     // Multiwii MSP commands
-    MSP_IDENT:              100,
+    //MSP_IDENT:              100,
     MSP_STATUS:             101,
     MSP_RAW_IMU:            102,
     MSP_SERVO:              103,
@@ -269,14 +269,6 @@ var MSP = {
         var data = new DataView(message_buffer, 0); // DataView (allowing us to view arrayBuffer as struct/union)
 
         if (!this.unsupported) switch (code) {
-            case MSP_codes.MSP_IDENT:
-                console.log('Using deprecated msp command: MSP_IDENT');
-                // Deprecated
-                CONFIG.version = parseFloat((data.getUint8(0) / 100).toFixed(2));
-                CONFIG.multiType = data.getUint8(1);
-                CONFIG.msp_version = data.getUint8(2);
-                CONFIG.capability = data.getUint32(3, 1);
-                break;
             case MSP_codes.MSP_STATUS:
                 CONFIG.cycleTime = data.getUint16(0, 1);
                 CONFIG.i2cError = data.getUint16(2, 1);
