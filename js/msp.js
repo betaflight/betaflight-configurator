@@ -76,7 +76,7 @@ var MSP_codes = {
     MSP_ANALOG:             110,
     MSP_RC_TUNING:          111,
     MSP_PID:                112,
-    MSP_BOX:                113,
+    // MSP_BOX:                113, // Not used
     MSP_MISC:               114,
     MSP_MOTOR_PINS:         115,
     MSP_BOXNAMES:           116,
@@ -448,17 +448,7 @@ var MSP = {
                     }
                 }
                 break;
-            // Disabled, cleanflight does not use MSP_BOX.
-            /*
-            case MSP_codes.MSP_BOX:
-                AUX_CONFIG_values = []; // empty the array as new data is coming in
 
-                // fill in current data
-                for (var i = 0; i < data.byteLength; i += 2) { // + 2 because uint16_t = 2 bytes
-                    AUX_CONFIG_values.push(data.getUint16(i, 1));
-                }
-                break;
-            */
             case MSP_codes.MSP_ARMING_CONFIG:
                 if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
                     ARMING_CONFIG.auto_disarm_delay = data.getUint8(0, 1);
