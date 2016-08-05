@@ -1725,6 +1725,11 @@ MSP.crunch = function (code) {
             }
             break;
         
+        case MSP_codes.MSP_SET_BLACKBOX_CONFIG:
+            buffer.push(BLACKBOX.blackboxDevice); 
+            buffer.push(BLACKBOX.blackboxRateNum);
+            buffer.push(BLACKBOX.blackboxRateDenom);
+            break;     
         
         default:
             return false;
@@ -1747,19 +1752,6 @@ MSP.setRawRx = function(channels) {
     }
     
     MSP.send_message(MSP_codes.MSP_SET_RAW_RC, buffer, false);
-}
-
-MSP.sendBlackboxConfiguration = function(onDataCallback) {
-    var 
-        message = [
-            BLACKBOX.blackboxDevice & 0xFF, 
-            BLACKBOX.blackboxRateNum & 0xFF, 
-            BLACKBOX.blackboxRateDenom & 0xFF
-        ];
-    
-    MSP.send_message(MSP_codes.MSP_SET_BLACKBOX_CONFIG, message, false, function(response) {
-        onDataCallback();
-    });
 }
 
 /**
