@@ -78,10 +78,10 @@ var MSP_codes = {
     MSP_PID:                112,
     MSP_BOX:                113, // Not used
     MSP_MISC:               114,
-    MSP_MOTOR_PINS:         115,
+    MSP_MOTOR_PINS:         115, // Not used
     MSP_BOXNAMES:           116,
     MSP_PIDNAMES:           117,
-    MSP_WP:                 118,
+    MSP_WP:                 118, // Not used
     MSP_BOXIDS:             119,
     MSP_SERVO_CONFIGURATIONS: 120,
     MSP_3D:                 124,
@@ -91,7 +91,7 @@ var MSP_codes = {
     MSP_STATUS_EX:          150,
     
     MSP_SET_RAW_RC:         200,
-    MSP_SET_RAW_GPS:        201,
+    MSP_SET_RAW_GPS:        201, // Not used
     MSP_SET_PID:            202,
     MSP_SET_BOX:            203,
     MSP_SET_RC_TUNING:      204,
@@ -99,9 +99,9 @@ var MSP_codes = {
     MSP_MAG_CALIBRATION:    206,
     MSP_SET_MISC:           207,
     MSP_RESET_CONF:         208,
-    MSP_SET_WP:             209,
+    MSP_SET_WP:             209, // Not used
     MSP_SELECT_SETTING:     210,
-    MSP_SET_HEAD:           211,
+    MSP_SET_HEAD:           211, // Not used
     MSP_SET_SERVO_CONFIGURATION: 212,
     MSP_SET_MOTOR:          214,
     MSP_SET_3D:             217,
@@ -110,14 +110,13 @@ var MSP_codes = {
     MSP_SET_SENSOR_ALIGNMENT: 220,
     MSP_SET_LED_STRIP_MODECOLOR:221,
     
-    // MSP_BIND:               240,
     
     MSP_SERVO_MIX_RULES:    241,
-    MSP_SET_SERVO_MIX_RULE: 242,
+    MSP_SET_SERVO_MIX_RULE: 242, // Not used
 
     MSP_EEPROM_WRITE:       250,
 
-    MSP_DEBUGMSG:           253,
+    MSP_DEBUGMSG:           253, // Not used
     MSP_DEBUG:              254,
 
     // Additional baseflight commands that are not compatible with MultiWii
@@ -132,7 +131,7 @@ var MSP_codes = {
     MSP_BF_CONFIG:           66, // baseflight-specific settings that aren't covered elsewhere
     MSP_SET_BF_CONFIG:       67, // baseflight-specific settings save
     MSP_SET_REBOOT:          68, // reboot settings
-    MSP_BF_BUILD_INFO:       69  // build date as well as some space for future expansion
+    MSP_BF_BUILD_INFO:       69  // Not used
 };
 
 var MSP = {
@@ -493,9 +492,6 @@ var MSP = {
                     _3D.deadband3d_throttle = data.getUint16(offset, 1);
                 }
                 break;
-            case MSP_codes.MSP_MOTOR_PINS:
-                console.log(data);
-                break;
             case MSP_codes.MSP_BOXNAMES:
                 AUX_CONFIG = []; // empty the array as new data is coming in
 
@@ -525,9 +521,6 @@ var MSP = {
                         buff.push(data.getUint8(i));
                     }
                 }
-                break;
-            case MSP_codes.MSP_WP:
-                console.log(data);
                 break;
             case MSP_codes.MSP_BOXIDS:
                 AUX_CONFIG_IDS = []; // empty the array as new data is coming in
@@ -605,8 +598,6 @@ var MSP = {
                 break;
             case MSP_codes.MSP_SET_RAW_RC:
                 break;
-            case MSP_codes.MSP_SET_RAW_GPS:
-                break;
             case MSP_codes.MSP_SET_PID:
                 console.log('PID settings saved');
                 break;
@@ -638,8 +629,6 @@ var MSP = {
                 break;
             case MSP_codes.MSP_EEPROM_WRITE:
                 console.log('Settings Saved in EEPROM');
-                break;
-            case MSP_codes.MSP_DEBUGMSG:
                 break;
             case MSP_codes.MSP_DEBUG:
                 for (var i = 0; i < 4; i++)
