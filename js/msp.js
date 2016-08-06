@@ -63,7 +63,7 @@ var MSP_codes = {
     MSP_SET_SPECIAL_PARAMETERS: 99,
 
     // Multiwii MSP commands
-    //MSP_IDENT:              100,
+    MSP_IDENT:              100, // Not used
     MSP_STATUS:             101,
     MSP_RAW_IMU:            102,
     MSP_SERVO:              103,
@@ -76,7 +76,7 @@ var MSP_codes = {
     MSP_ANALOG:             110,
     MSP_RC_TUNING:          111,
     MSP_PID:                112,
-    // MSP_BOX:                113, // Not used
+    MSP_BOX:                113, // Not used
     MSP_MISC:               114,
     MSP_MOTOR_PINS:         115,
     MSP_BOXNAMES:           116,

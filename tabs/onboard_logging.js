@@ -73,8 +73,10 @@ TABS.onboard_logging.initialize = function (callback) {
         } else {
 
             GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                GUI.log(chrome.i18n.getMessage('deviceReady'));
-                TABS.onboard_logging.initialize(false, $('#content').scrollTop());
+                MSP.send_message(MSP_codes.MSP_STATUS, false, false, function() {
+                    GUI.log(chrome.i18n.getMessage('deviceReady'));
+                    TABS.onboard_logging.initialize(false, $('#content').scrollTop());
+                });
             },1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
         }
     }
