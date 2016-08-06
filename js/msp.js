@@ -1758,11 +1758,6 @@ MSP.dataflashRead = function(address, onDataCallback) {
     });
 };
 
-MSP.sendServoMixRules = function(onCompleteCallback) {
-    // TODO implement
-    onCompleteCallback();
-};
-
 MSP.sendServoConfigurations = function(onCompleteCallback) {
     var nextFunction = send_next_servo_configuration; 
     

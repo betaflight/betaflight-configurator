@@ -705,10 +705,6 @@ function configuration_restore(callback) {
                     });
                 }
 
-                function upload_servo_mix_rules() {
-                    MSP.sendServoMixRules(upload_servo_configuration);
-                }
-
                 function upload_servo_configuration() {
                     MSP.sendServoConfigurations(upload_mode_ranges);
                 }
