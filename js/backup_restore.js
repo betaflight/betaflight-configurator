@@ -823,7 +823,6 @@ function configuration_restore(callback) {
                 GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
                     MSP.send_message(MSP_codes.MSP_STATUS, false, false, function() {
                         GUI.log(chrome.i18n.getMessage('deviceReady'));
-        
                         if (callback) callback();
                     });
                 }, 1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
