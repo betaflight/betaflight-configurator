@@ -27,14 +27,6 @@ $(document).ready(function () {
             break;
     }
 
-    // check release time to inform people in case they are running old release
-    if (CONFIGURATOR.releaseDate > (new Date().getTime() - (86400000 * 91))) { // 1 day = 86400000 miliseconds, * 91 = 3 month window
-        console.log('Application version is valid for another: ' + Math.round((CONFIGURATOR.releaseDate - (new Date().getTime() - (86400000 * 60))) / 86400000) + ' days');
-    } else {
-        console.log('Application version expired');
-        GUI.log('You are using an old version of ' + chrome.runtime.getManifest().name + '. There may be a more recent version with improvements and fixes.');
-    }
-
     chrome.storage.local.get('logopen', function (result) {
         if (result.logopen) {
             $("#showlog").trigger('click');
