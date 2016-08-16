@@ -2,7 +2,7 @@
 
 TABS.led_strip = {
         wireMode: false,
-        directions: ['n', 'e', 's', 'w', 'u', 'd'],
+        directions: ['n', 'e', 's', 'w', 'u', 'd']
     };
 
 
@@ -83,6 +83,24 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         $('.tempOutput').click(function() {
             $(this).select();
         });
+        
+        // Aux channel drop-down
+        if (semver.lte(CONFIG.apiVersion, "1.20.0")) {
+            $('.auxSelect').hide();
+            $('.labelSelect').show();
+        } else {
+            $('.auxSelect').show();
+            $('.labelSelect').hide();
+
+            var AuxMode = 7;
+            var AuxDir = 0;
+            
+            $('.auxSelect').val(getModeColor(AuxMode, AuxDir));
+                        
+            $('.auxSelect').on('change', function() {
+                setModeColor(AuxMode, AuxDir, $('.auxSelect').val());
+            });
+        }
 
         // Clear button
         $('.funcClear').click(function() {
@@ -591,12 +609,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
     
         
     function updateBulkCmd() {
-        var counter = 0;
-
-        var lines = [];
         var ledStripLength = LED_STRIP.length;
-        var ledColorsLength = LED_COLORS.length;
-        var ledModeColorsLenggth = LED_MODE_COLORS.length;
         
         LED_STRIP = [];
         
@@ -646,7 +659,6 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                     
                     LED_STRIP[wireNumber] = led;
                 }
-                counter++;
             }
         });
 
