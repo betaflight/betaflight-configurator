@@ -22,14 +22,8 @@ function configuration_backup(callback) {
     ];
 
     function update_profile_specific_data_list() {
-        if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
-            profileSpecificData.push(MSPCodes.MSP_CHANNEL_FORWARDING);
-         } else {            
-            profileSpecificData.push(MSPCodes.MSP_SERVO_MIX_RULES);
-        }
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-            profileSpecificData.push(MSPCodes.MSP_RC_DEADBAND);
-        }
+        profileSpecificData.push(MSPCodes.MSP_SERVO_MIX_RULES);
+        profileSpecificData.push(MSPCodes.MSP_RC_DEADBAND);
     }
     
     update_profile_specific_data_list();
@@ -69,10 +63,7 @@ function configuration_backup(callback) {
                             'ModeRanges': jQuery.extend(true, [], MODE_RANGES),
                             'AdjustmentRanges': jQuery.extend(true, [], ADJUSTMENT_RANGES)
                         });
-
-                        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                            configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, RC_deadband);
-                        }
+                        configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, RC_deadband);
                         codeKey = 0;
                         fetchingProfile++;
 
@@ -98,19 +89,13 @@ function configuration_backup(callback) {
     ];
 
     function update_unique_data_list() {
-        if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
-            uniqueData.push(MSPCodes.MSP_LOOP_TIME);
-            uniqueData.push(MSPCodes.MSP_ARMING_CONFIG);
-        }
-        if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-            uniqueData.push(MSPCodes.MSP_3D);
-        }
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-            uniqueData.push(MSPCodes.MSP_SENSOR_ALIGNMENT);
-            uniqueData.push(MSPCodes.MSP_RX_CONFIG);
-            uniqueData.push(MSPCodes.MSP_FAILSAFE_CONFIG);
-            uniqueData.push(MSPCodes.MSP_RXFAIL_CONFIG);
-        }
+        uniqueData.push(MSPCodes.MSP_LOOP_TIME);
+        uniqueData.push(MSPCodes.MSP_ARMING_CONFIG);
+        uniqueData.push(MSPCodes.MSP_3D);
+        uniqueData.push(MSPCodes.MSP_SENSOR_ALIGNMENT);
+        uniqueData.push(MSPCodes.MSP_RX_CONFIG);
+        uniqueData.push(MSPCodes.MSP_FAILSAFE_CONFIG);
+        uniqueData.push(MSPCodes.MSP_RXFAIL_CONFIG);
         if (semver.gte(CONFIG.apiVersion, "1.19.0")) {
             uniqueData.push(MSPCodes.MSP_LED_STRIP_MODECOLOR);
         }
@@ -138,19 +123,14 @@ function configuration_backup(callback) {
                 if (semver.gte(CONFIG.apiVersion, "1.19.0")) {
                     configuration.LED_MODE_COLORS = jQuery.extend(true, [], LED_MODE_COLORS);
                 }
-                if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
-                    configuration.FC_CONFIG = jQuery.extend(true, {}, FC_CONFIG);
-                    configuration.ARMING_CONFIG = jQuery.extend(true, {}, ARMING_CONFIG);
-                }
-                if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-                    configuration._3D = jQuery.extend(true, {}, _3D);
-                }
-                if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                    configuration.SENSOR_ALIGNMENT = jQuery.extend(true, {}, SENSOR_ALIGNMENT);
-                    configuration.RX_CONFIG = jQuery.extend(true, {}, RX_CONFIG);
-                    configuration.FAILSAFE_CONFIG = jQuery.extend(true, {}, FAILSAFE_CONFIG);
-                    configuration.RXFAIL_CONFIG = jQuery.extend(true, [], RXFAIL_CONFIG);
-                }
+
+                configuration.FC_CONFIG = jQuery.extend(true, {}, FC_CONFIG);
+                configuration.ARMING_CONFIG = jQuery.extend(true, {}, ARMING_CONFIG);
+                configuration._3D = jQuery.extend(true, {}, _3D);
+                configuration.SENSOR_ALIGNMENT = jQuery.extend(true, {}, SENSOR_ALIGNMENT);
+                configuration.RX_CONFIG = jQuery.extend(true, {}, RX_CONFIG);
+                configuration.FAILSAFE_CONFIG = jQuery.extend(true, {}, FAILSAFE_CONFIG);
+                configuration.RXFAIL_CONFIG = jQuery.extend(true, [], RXFAIL_CONFIG);
 
                 save();
             }
@@ -381,8 +361,8 @@ function configuration_restore(callback) {
                 }
                 
                 // Roll and pitch rates were split
-                RC.roll_rate = RC.roll_pitch_rate;
-                RC.pitch_rate = RC.roll_pitch_rate;
+                RC.roll_rate = 0; //TODO rework/remove this
+                RC.pitch_rate = 0;
             }
             
             migratedVersion = '0.63.0';
@@ -474,13 +454,6 @@ function configuration_restore(callback) {
         if (semver.lt(migratedVersion, '0.66.0')) {
             // api 1.12 updated servo configuration protocol and added servo mixer rules
             for (var profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
-                
-                if (semver.eq(configuration.apiVersion, '1.10.0')) {
-                    // drop two unused servo configurations
-                    while (configuration.profiles[profileIndex].ServoConfig.length > 8) {
-                        configuration.profiles[profileIndex].ServoConfig.pop();
-                    } 
-                }
                 
                 for (var i = 0; i < configuration.profiles[profileIndex].ServoConfig.length; i++) {
                     var servoConfig = profiles[profileIndex].ServoConfig;
@@ -647,9 +620,8 @@ function configuration_restore(callback) {
                 MSPCodes.MSP_SET_ACC_TRIM
             ];
 
-            if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                profileSpecificData.push(MSPCodes.MSP_SET_RC_DEADBAND);
-            }
+            profileSpecificData.push(MSPCodes.MSP_SET_RC_DEADBAND);
+
 
             MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
                 activeProfile = CONFIG.profile;
@@ -732,18 +704,12 @@ function configuration_restore(callback) {
                 ];
                 
                 function update_unique_data_list() {
-                    if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
-                        uniqueData.push(MSPCodes.MSP_SET_LOOP_TIME);
-                        uniqueData.push(MSPCodes.MSP_SET_ARMING_CONFIG);
-                    }
-                    if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-                        uniqueData.push(MSPCodes.MSP_SET_3D);
-                    }
-                    if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                        uniqueData.push(MSPCodes.MSP_SET_SENSOR_ALIGNMENT);
-                        uniqueData.push(MSPCodes.MSP_SET_RX_CONFIG);
-                        uniqueData.push(MSPCodes.MSP_SET_FAILSAFE_CONFIG);
-                    }
+                    uniqueData.push(MSPCodes.MSP_SET_LOOP_TIME);
+                    uniqueData.push(MSPCodes.MSP_SET_ARMING_CONFIG);
+                    uniqueData.push(MSPCodes.MSP_SET_3D);
+                    uniqueData.push(MSPCodes.MSP_SET_SENSOR_ALIGNMENT);
+                    uniqueData.push(MSPCodes.MSP_SET_RX_CONFIG);
+                    uniqueData.push(MSPCodes.MSP_SET_FAILSAFE_CONFIG);
                 }
                 
                 function load_objects() {
@@ -798,11 +764,7 @@ function configuration_restore(callback) {
             }
             
             function send_rxfail_config() {
-                if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                    mspHelper.sendRxFailConfig(save_to_eeprom);
-                } else {
-                    save_to_eeprom();
-                }
+                mspHelper.sendRxFailConfig(save_to_eeprom);
             }
 
             function save_to_eeprom() {

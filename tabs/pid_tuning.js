@@ -18,9 +18,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
     // requesting MSP_STATUS manually because it contains CONFIG.profile
     MSP.promise(MSPCodes.MSP_STATUS).then(function() {
-        if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
-            return MSP.promise(MSPCodes.MSP_PID_CONTROLLER);
-        }
+        return MSP.promise(MSPCodes.MSP_PID_CONTROLLER);
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_PIDNAMES)
     }).then(function() {
@@ -221,7 +219,6 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // Fill in data from RC_tuning object
         $('.pid_tuning input[name="rc_rate"]').val(RC_tuning.RC_RATE.toFixed(2));
-        $('.pid_tuning input[name="roll_pitch_rate"]').val(RC_tuning.roll_pitch_rate.toFixed(2));
         $('.pid_tuning input[name="roll_rate"]').val(RC_tuning.roll_rate.toFixed(2));
         $('.pid_tuning input[name="pitch_rate"]').val(RC_tuning.pitch_rate.toFixed(2));
         $('.pid_tuning input[name="yaw_rate"]').val(RC_tuning.yaw_rate.toFixed(2));
@@ -234,11 +231,6 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('.tpa input[name="tpa"]').val(RC_tuning.dynamic_THR_PID.toFixed(2));
         $('.tpa input[name="tpa-breakpoint"]').val(RC_tuning.dynamic_THR_breakpoint);
-
-        if (semver.lt(CONFIG.apiVersion, "1.10.0")) {
-            $('.pid_tuning input[name="rc_yaw_expo"]').hide();
-            $('.pid_tuning input[name="rc_expo"]').attr("rowspan", "3");
-        }
 
         $('.pid_tuning input[name="gyro"]').val(FILTER_CONFIG.gyro_soft_lpf_hz);
         $('.pid_tuning input[name="dterm"]').val(FILTER_CONFIG.dterm_lpf_hz);
@@ -333,7 +325,6 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // catch RC_tuning changes
         RC_tuning.RC_RATE = parseFloat($('.pid_tuning input[name="rc_rate"]').val());
-        RC_tuning.roll_pitch_rate = parseFloat($('.pid_tuning input[name="roll_pitch_rate"]').val());
         RC_tuning.roll_rate = parseFloat($('.pid_tuning input[name="roll_rate"]').val());
         RC_tuning.pitch_rate = parseFloat($('.pid_tuning input[name="pitch_rate"]').val());
         RC_tuning.yaw_rate = parseFloat($('.pid_tuning input[name="yaw_rate"]').val());
@@ -477,11 +468,6 @@ TABS.pid_tuning.initialize = function (callback) {
             self.currentRates.rc_rate_yaw = self.currentRates.rc_rate;
         }
 
-        if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
-            self.currentRates.roll_rate = RC_tuning.roll_pitch_rate;
-            self.currentRates.pitch_rate = RC_tuning.roll_pitch_rate;
-        }
-
         var showAllButton = $('#showAllPids');
 
         function updatePidDisplay() {
@@ -586,16 +572,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         var pidControllerList;
 
-        if (semver.lt(CONFIG.apiVersion, "1.14.0")) {
-            pidControllerList = [
-                { name: "MultiWii (Old)"},
-                { name: "MultiWii (rewrite)"},
-                { name: "LuxFloat"},
-                { name: "MultiWii (2.3 - latest)"},
-                { name: "MultiWii (2.3 - hybrid)"},
-                { name: "Harakiri"}
-            ]
-        } else if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
             pidControllerList = [
                 { name: "Legacy"},
                 { name: "Betaflight"},
@@ -611,28 +588,8 @@ TABS.pid_tuning.initialize = function (callback) {
         for (var i = 0; i < pidControllerList.length; i++) {
             pidController_e.append('<option value="' + (i) + '">' + pidControllerList[i].name + '</option>');
         }
-
-        if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
-            pidController_e.val(PID.controller);
-
-			self.updatePidControllerParameters();
-        } else {
-            GUI.log(chrome.i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion]));
-
-            pidController_e.empty();
-            pidController_e.append('<option value="">Unknown</option>');
-
-            pidController_e.prop('disabled', true);
-        }
-
-        if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
-            $('.tpa .tpa-breakpoint').hide();
-
-            $('.pid_tuning .roll_rate').hide();
-            $('.pid_tuning .pitch_rate').hide();
-        } else {
-            $('.pid_tuning .roll_pitch_rate').hide();
-        }
+        pidController_e.val(PID.controller);
+        self.updatePidControllerParameters();
 
         if (useLegacyCurve) {
             $('.new_rates').hide();
@@ -663,13 +620,6 @@ TABS.pid_tuning.initialize = function (callback) {
 
                 if (targetElement.attr('name') === 'rc_rate' && CONFIG.flightControllerIdentifier !== "BTFL" || semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
                     self.currentRates.rc_rate_yaw = targetValue;
-                }
-
-                if (targetElement.attr('name') === 'roll_pitch_rate' && semver.lt(CONFIG.apiVersion, "1.7.0")) {
-                    self.currentRates.roll_rate = targetValue;
-                    self.currentRates.pitch_rate = targetValue;
-
-                    updateNeeded = true;
                 }
 
                 if (targetElement.attr('name') === 'SUPEREXPO_RATES') {
@@ -795,10 +745,8 @@ TABS.pid_tuning.initialize = function (callback) {
             Promise.resolve(true)
             .then(function () {
                 var promise;
-                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
-                    PID.controller = pidController_e.val();
-                    promise = MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
-                }
+                PID.controller = pidController_e.val();
+                promise = MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
                 return promise;
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));

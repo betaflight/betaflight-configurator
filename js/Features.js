@@ -22,20 +22,10 @@ var Features = function (config) {
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
         {bit: 16, group: 'other', name: 'LED_STRIP'},
         {bit: 17, group: 'other', name: 'DISPLAY'},
-        {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true}
+        {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true},
+        {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING'},
+        {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true}
     ];
-
-    if (semver.gte(config.apiVersion, "1.12.0")) {
-        features.push(
-            {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING'}
-        );
-    }
-
-    if (semver.gte(config.apiVersion, "1.16.0")) {
-        features.push(
-            {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true}
-        );
-    }
 
     if (config.flightControllerVersion !== '' && semver.gte(config.flightControllerVersion, "3.0.0")) {
         features.push(
@@ -52,19 +42,19 @@ var Features = function (config) {
 
     self._features = features;
     self._featureMask = 0;
-}
+};
 
 Features.prototype.getMask = function () {
     var self = this;
 
     return self._featureMask;
-}
+};
 
 Features.prototype.setMask = function (featureMask) {
     var self = this;
 
     self._featureMask = featureMask;
-}
+};
 
 Features.prototype.isEnabled = function (featureName) {
     var self = this;
@@ -75,7 +65,7 @@ Features.prototype.isEnabled = function (featureName) {
         }
     }
     return false;
-}
+};
 
 Features.prototype.generateElements = function (featuresElements) {
     var self = this;
@@ -144,7 +134,7 @@ Features.prototype.generateElements = function (featuresElements) {
             $(this).prop('checked', state);
         });
     }
-}
+};
 
 Features.prototype.updateData = function (featureElement) {
     var self = this;
@@ -175,4 +165,4 @@ Features.prototype.updateData = function (featureElement) {
             });
             break;
     }
-}
+};

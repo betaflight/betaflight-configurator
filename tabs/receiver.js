@@ -33,12 +33,7 @@ TABS.receiver.initialize = function (callback) {
     }
 
     function load_rc_configs() {
-        var next_callback = load_html;
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-            MSP.send_message(MSPCodes.MSP_RC_DEADBAND, false, false, next_callback);
-        } else {
-            next_callback();
-        }
+        MSP.send_message(MSPCodes.MSP_RC_DEADBAND, false, false, load_html);
     }
 
     function load_html() {
@@ -59,12 +54,9 @@ TABS.receiver.initialize = function (callback) {
             }
         });
 
-        if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
-            $('.deadband').hide();
-        } else {
-            $('.deadband input[name="yaw_deadband"]').val(RC_deadband.yaw_deadband);
-            $('.deadband input[name="deadband"]').val(RC_deadband.deadband);
-        }
+        $('.deadband input[name="yaw_deadband"]').val(RC_deadband.yaw_deadband);
+        $('.deadband input[name="deadband"]').val(RC_deadband.deadband);
+
 
         // generate bars
         var bar_names = [
@@ -204,10 +196,8 @@ TABS.receiver.initialize = function (callback) {
         });
 
         $('a.update').click(function () {
-            if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-               RC_deadband.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
-               RC_deadband.deadband = parseInt($('.deadband input[name="deadband"]').val());
-            }
+           RC_deadband.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
+           RC_deadband.deadband = parseInt($('.deadband input[name="deadband"]').val());
 
             // catch rc map
             var RC_MAP_Letters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
@@ -225,12 +215,7 @@ TABS.receiver.initialize = function (callback) {
             }
 
             function save_rc_configs() {
-                var next_callback = save_to_eeprom;
-                if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                   MSP.send_message(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND), false, next_callback);
-                } else {
-                   next_callback();
-                }
+                MSP.send_message(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND), false, save_to_eeprom);
             }
 
             function save_to_eeprom() {

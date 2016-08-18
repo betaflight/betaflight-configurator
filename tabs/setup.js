@@ -33,13 +33,6 @@ TABS.setup.initialize = function (callback) {
         // translate to user-selected language
         localize();
 
-        if (semver.lt(CONFIG.apiVersion, CONFIGURATOR.backupRestoreMinApiVersionAccepted)) {
-            $('#content .backup').addClass('disabled');
-            $('#content .restore').addClass('disabled');
-
-            GUI.log(chrome.i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [CONFIG.apiVersion, CONFIGURATOR.backupRestoreMinApiVersionAccepted]));
-        }
-
         // initialize 3D Model
         self.initModel();
 

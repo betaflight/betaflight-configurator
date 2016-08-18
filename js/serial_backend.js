@@ -190,52 +190,41 @@ function onOpen(openInfo) {
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             GUI.log(chrome.i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
 
-            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.apiVersionAccepted)) {
+            MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
+                if (CONFIG.flightControllerIdentifier === 'BTFL') {
+                    MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
 
-                MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
-                    if (CONFIG.flightControllerIdentifier === 'BTFL') {
-                        MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
+                        GUI.log(chrome.i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
 
-                            GUI.log(chrome.i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
+                        MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
 
-                            MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
+                            GUI.log(chrome.i18n.getMessage('buildInfoReceived', [CONFIG.buildInfo]));
 
-                                GUI.log(chrome.i18n.getMessage('buildInfoReceived', [CONFIG.buildInfo]));
+                            MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
 
-                                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
+                                GUI.log(chrome.i18n.getMessage('boardInfoReceived', [CONFIG.boardIdentifier, CONFIG.boardVersion]));
 
-                                    GUI.log(chrome.i18n.getMessage('boardInfoReceived', [CONFIG.boardIdentifier, CONFIG.boardVersion]));
+                                MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
+                                    GUI.log(chrome.i18n.getMessage('uniqueDeviceIdReceived', [CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16)]));
 
-                                    MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
-                                        GUI.log(chrome.i18n.getMessage('uniqueDeviceIdReceived', [CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16)]));
+                                    // continue as usually
+                                    CONFIGURATOR.connectionValid = true;
+                                    GUI.allowedTabs = GUI.defaultAllowedTabsWhenConnected.slice();
 
-                                        // continue as usually
-                                        CONFIGURATOR.connectionValid = true;
-                                        GUI.allowedTabs = GUI.defaultAllowedTabsWhenConnected.slice();
-                                        if (semver.lt(CONFIG.apiVersion, "1.4.0")) {
-                                            GUI.allowedTabs.splice(GUI.allowedTabs.indexOf('led_strip'), 1);
-                                        }
+                                    onConnect();
 
-                                        onConnect();
-
-                                        $('#tabs ul.mode-connected .tab_setup a').click();
-                                    });
+                                    $('#tabs ul.mode-connected .tab_setup a').click();
                                 });
                             });
                         });
-                    } else {
-                        GUI.show_modal(chrome.i18n.getMessage('warningTitle'),
-                            chrome.i18n.getMessage('firmwareTypeNotSupported'));
+                    });
+                } else {
+                    GUI.show_modal(chrome.i18n.getMessage('warningTitle'),
+                        chrome.i18n.getMessage('firmwareTypeNotSupported'));
 
-                        connectCli();
-                    }
-                });
-            } else {
-                GUI.show_modal(chrome.i18n.getMessage('warningTitle'),
-                    chrome.i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.apiVersionAccepted]));
-
-                connectCli();
-            }
+                    connectCli();
+                }
+            });
         });
     } else {
         console.log('Failed to open serial port');
