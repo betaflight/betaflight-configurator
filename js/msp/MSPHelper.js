@@ -383,10 +383,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
             }
             break;
 
-        case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
-            console.log('Channel forwarding saved');
-            break;
-
         case MSPCodes.MSP_CF_SERIAL_CONFIG:
             var supportedBaudRates = [ // 0 based index.
                                        'AUTO',
@@ -456,17 +452,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     auxSwitchChannelIndex: data.readU8()
                 };
                 ADJUSTMENT_RANGES.push(adjustmentRange);
-            }
-            break;
-
-        case MSPCodes.MSP_CHANNEL_FORWARDING:
-            for (var i = 0; i < data.byteLength && i < SERVO_CONFIG.length; i ++) {
-                var channelIndex = data.readU8();
-                if (channelIndex < 255) {
-                    SERVO_CONFIG[i].indexOfChannelToForward = channelIndex;
-                } else {
-                    SERVO_CONFIG[i].indexOfChannelToForward = undefined;
-                }
             }
             break;
 
@@ -950,15 +935,6 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
 
-        case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
-            for (var i = 0; i < SERVO_CONFIG.length; i++) {
-                var out = SERVO_CONFIG[i].indexOfChannelToForward;
-                if (out == undefined) {
-                    out = 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
-                }
-                buffer.push8(out);
-            }
-            break;
         case MSPCodes.MSP_SET_CF_SERIAL_CONFIG:
             var supportedBaudRates = [ // 0 based index.
                                        'AUTO',
@@ -1175,22 +1151,6 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
         }
 
         MSP.send_message(MSPCodes.MSP_SET_SERVO_CONFIGURATION, buffer, false, nextFunction);
-    }
-    
-    function send_channel_forwarding() {
-        var buffer = [];
-
-        for (var i = 0; i < SERVO_CONFIG.length; i++) {
-            var out = SERVO_CONFIG[i].indexOfChannelToForward;
-            if (out == undefined) {
-                out = 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
-            }
-            buffer.push8(out);
-        }
-
-        nextFunction = onCompleteCallback;
-
-        MSP.send_message(MSPCodes.MSP_SET_CHANNEL_FORWARDING, buffer, false, nextFunction);
     }
 };
 
