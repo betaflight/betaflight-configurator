@@ -11,8 +11,8 @@ var MSPCodes = {
     MSP_NAME:                   10,
     MSP_SET_NAME:               11,
 
-    MSP_CHANNEL_FORWARDING:     32,
-    MSP_SET_CHANNEL_FORWARDING: 33,
+    MSP_CHANNEL_FORWARDING:     32, // Not used
+    MSP_SET_CHANNEL_FORWARDING: 33, // Not used
     MSP_MODE_RANGES:            34,
     MSP_SET_MODE_RANGE:         35,
 

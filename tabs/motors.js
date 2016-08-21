@@ -25,14 +25,8 @@ TABS.motors.initialize = function (callback) {
     }
     
     function load_3d() {
-        var next_callback = get_motor_data;
-        if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-            self.feature3DSupported = true;
-            MSP.send_message(MSPCodes.MSP_3D, false, false, next_callback);
-        } else {
-            next_callback();
-        }
-        
+        self.feature3DSupported = true;
+        MSP.send_message(MSPCodes.MSP_3D, false, false, get_motor_data);
     }
     
     function get_motor_data() {

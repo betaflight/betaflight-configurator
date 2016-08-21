@@ -12,7 +12,7 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
     }
 
     // transponder supported added in MSP API Version 1.16.0
-    TABS.transponder.available = semver.gte(CONFIG.apiVersion, "1.16.0");
+    TABS.transponder.available = true;
     
     if (!TABS.transponder.available) {
         load_html();
