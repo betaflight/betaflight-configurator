@@ -24,12 +24,7 @@ TABS.receiver.initialize = function (callback) {
     }
 
     function get_rc_map() {
-        MSP.send_message(MSPCodes.MSP_RX_MAP, false, false, load_config);
-    }
-
-    // Fetch features so we can check if RX_MSP is enabled:
-    function load_config() {
-        MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, load_rc_configs);
+        MSP.send_message(MSPCodes.MSP_RX_MAP, false, false, load_rc_configs);
     }
 
     function load_rc_configs() {
@@ -241,35 +236,6 @@ TABS.receiver.initialize = function (callback) {
 
             MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_misc);
         });
-
-        $("a.sticks").click(function() {
-            var
-                windowWidth = 370,
-                windowHeight = 510;
-
-            chrome.app.window.create("/tabs/receiver_msp.html", {
-                id: "receiver_msp",
-                innerBounds: {
-                    minWidth: windowWidth, minHeight: windowHeight,
-                    width: windowWidth, height: windowHeight,
-                    maxWidth: windowWidth, maxHeight: windowHeight
-                },
-                alwaysOnTop: true
-            }, function(createdWindow) {
-                // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
-                createdWindow.contentWindow.setRawRx = function(channels) {
-                    if (CONFIGURATOR.connectionValid && GUI.active_tab != 'cli') {
-                        mspHelper.setRawRx(channels);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        });
-
-        // Only show the MSP control sticks if the MSP Rx feature is enabled
-        $(".sticks_btn").toggle(BF_CONFIG.features.isEnabled('RX_MSP'));
 
         $('select[name="rx_refresh_rate"]').change(function () {
             var plot_update_rate = parseInt($(this).val(), 10);

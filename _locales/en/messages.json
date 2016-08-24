@@ -501,9 +501,6 @@
     "featureRX_PARALLEL_PWM": {
         "message": "PWM RX input (one wire per channel)"
     },
-    "featureRX_MSP": {
-        "message": "MSP RX input (control via MSP port)"
-    },
     "featureRSSI_ADC": {
         "message": "Analog RSSI input"
     },
@@ -956,9 +953,6 @@
     },
     "receiverButtonRefresh": {
         "message": "Refresh"
-    },
-    "receiverButtonSticks": {
-        "message": "Control sticks"
     },
     "receiverDataRefreshed": {
         "message": "RC Tuning data <strong>refreshed</strong>"
