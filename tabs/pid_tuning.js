@@ -261,7 +261,7 @@ TABS.pid_tuning.initialize = function (callback) {
     }
 
     function form_to_pid_and_rc() {
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.0")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.0") && !semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
             BF_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
         }
 
@@ -452,7 +452,7 @@ TABS.pid_tuning.initialize = function (callback) {
     self.rateCurve = new RateCurve(useLegacyCurve);
 
     function printMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, maxAngularVelElement) {
-        var maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo);
+        var maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo).toFixed(0);
         maxAngularVelElement.text(maxAngularVel);
 
         return maxAngularVel;
@@ -486,13 +486,17 @@ TABS.pid_tuning.initialize = function (callback) {
             superexpo:   BF_CONFIG.features.isEnabled('SUPEREXPO_RATES')
         };
 
-        if (CONFIG.flightControllerIdentifier !== "BTFL" || semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
-            self.currentRates.rc_rate_yaw = self.currentRates.rc_rate;
-        }
-
         if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
             self.currentRates.roll_rate = RC_tuning.roll_pitch_rate;
             self.currentRates.pitch_rate = RC_tuning.roll_pitch_rate;
+        }
+
+        if (semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+            self.currentRates.rc_rate_yaw = self.currentRates.rc_rate;
+        }
+
+        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+            self.currentRates.superexpo = true;
         }
 
         $('.tab-pid_tuning .tab_container .pid').on('click', function () {
@@ -673,9 +677,9 @@ TABS.pid_tuning.initialize = function (callback) {
         rcCurveElement.width = 1000;
         rcCurveElement.height = 1000;
 
-        var maxAngularVelRollElement = $('.rc_curve .maxAngularVelRoll');
-        var maxAngularVelPitchElement = $('.rc_curve .maxAngularVelPitch');
-        var maxAngularVelYawElement = $('.rc_curve .maxAngularVelYaw');
+        var maxAngularVelRollElement = $('.pid_tuning .maxAngularVelRoll');
+        var maxAngularVelPitchElement = $('.pid_tuning .maxAngularVelPitch');
+        var maxAngularVelYawElement = $('.pid_tuning .maxAngularVelYaw');
 
         var updateNeeded = true;
 
@@ -690,7 +694,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     updateNeeded = true;
                 }
 
-                if (targetElement.attr('name') === 'rc_rate' && CONFIG.flightControllerIdentifier !== "BTFL" || semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (targetElement.attr('name') === 'rc_rate' && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
                     self.currentRates.rc_rate_yaw = targetValue;
                 }
 
@@ -711,7 +715,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     var curveHeight = rcCurveElement.height;
                     var curveWidth = rcCurveElement.width;
 
-		    var maxAngularVel = Math.max(
+                    var maxAngularVel = Math.max(
                         printMaxAngularVel(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, maxAngularVelRollElement),
                         printMaxAngularVel(self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, maxAngularVelPitchElement),
                         printMaxAngularVel(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, maxAngularVelYawElement));
@@ -724,11 +728,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
                     curveContext.lineWidth = 4;
 
-		    drawCurve(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, maxAngularVel, '#ff0000', 0, curveContext);
-
-		    drawCurve(self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, maxAngularVel, '#00ff00', -4, curveContext);
-
-		    drawCurve(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, maxAngularVel, '#0000ff', 4, curveContext);
+                    drawCurve(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, maxAngularVel, '#ff0000', 0, curveContext);
+                    drawCurve(self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, maxAngularVel, '#00ff00', -4, curveContext);
+                    drawCurve(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, maxAngularVel, '#0000ff', 4, curveContext);
 
                     updateNeeded = false;
                 }
@@ -737,8 +739,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // UI Hooks
         // curves
-        $('.pid_tuning').on('input change', updateRates);
-        $('input.feature').on('input change', updateRates).trigger('input');
+        $('input.feature').on('input change', updateRates);
+        $('.pid_tuning').on('input change', updateRates).trigger('input');
 
         $('.throttle input').on('input change', function () {
             setTimeout(function () { // let global validation trigger and adjust the values first
@@ -900,9 +902,9 @@ TABS.pid_tuning.renderModel = function () {
     if (RC.channels[0] && RC.channels[1] && RC.channels[2]) {
         var delta = this.clock.getDelta();
 
-        var roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[0], this.currentRates.roll_rate,  this.currentRates.rc_rate,     this.currentRates.rc_expo,     this.currentRates.super_expo),
-            pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[1], this.currentRates.pitch_rate, this.currentRates.rc_rate,     this.currentRates.rc_expo,     this.currentRates.super_expo),
-            yaw   = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[2], this.currentRates.yaw_rate,   this.currentRates.rc_rate_yaw, this.currentRates.rc_yaw_expo, this.currentRates.super_expo);
+        var roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[0], this.currentRates.roll_rate,  this.currentRates.rc_rate,     this.currentRates.rc_expo,     this.currentRates.superexpo),
+            pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[1], this.currentRates.pitch_rate, this.currentRates.rc_rate,     this.currentRates.rc_expo,     this.currentRates.superexpo),
+            yaw   = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[2], this.currentRates.yaw_rate,   this.currentRates.rc_rate_yaw, this.currentRates.rc_yaw_expo, this.currentRates.superexpo);
 
         this.model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }

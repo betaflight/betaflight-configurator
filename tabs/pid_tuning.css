@@ -286,7 +286,7 @@
 
 .tab-pid_tuning table td {
     padding: 1px;
-    width: 14%;
+    width: 10%;
     border-right: 1px solid #ccc;
 }
 
@@ -692,7 +692,6 @@ width: 50%;
 
 .tab-pid_tuning .rc_curve_bg {
     float: left;
-    padding-bottom: 20px;
     background: #ddd;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
