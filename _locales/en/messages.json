@@ -1601,6 +1601,12 @@
     "pidTuningYawJumpPreventionHelp": {
         "message": "Keeps the craft from jumping up at the end of yaws. Higher number gives more damping at the end of yaw moves (works like old yaw D, which was not a real D like on other axis)"
     },
+    "pidTuningRcExpoPower": {
+        "message": "RC Expo Power"
+    },
+    "pidTuningRcExpoPowerHelp": {
+        "message": "The exponent that is used when calculating RC Expo. In Betaflight versions prior to 3.0, value is fixed at 3."
+    },
     "pidTuningLevel": {
         "message": "Angle/Horizon"
     },

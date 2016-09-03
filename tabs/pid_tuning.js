@@ -58,28 +58,6 @@ TABS.pid_tuning.initialize = function (callback) {
             self.setRateProfile();
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
-            $('input[id="vbatpidcompensation"]').prop('checked', ADVANCED_TUNING.vbatPidCompensation !== 0);
-        }
-
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
-            $('#pid-tuning .delta select').val(ADVANCED_TUNING.deltaMethod);
-        }
-
-        if (semver.gte(CONFIG.flightControllerVersion, '3.0.0')) {
-            $('select[name="rcInterpolation-select"]').val(RX_CONFIG.rcInterpolation);
-
-            $('input[name="rcInterpolationInterval-number"]').val(RX_CONFIG.rcInterpolationInterval);
-
-            $('input[name="ptermSetpoint-number"]').val(ADVANCED_TUNING.ptermSetpointWeight / 100);
-            $('input[name="ptermSetpoint-range"]').val(ADVANCED_TUNING.ptermSetpointWeight / 100);
-
-            $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
-            $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
-
-            self.updateRcInterpolationParameters();
-        }
-
         // Fill in the data from PIDs array
         var i = 0;
         $('.pid_tuning .ROLL input').each(function () {
@@ -239,6 +217,14 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning input[name="rc_expo"]').attr("rowspan", "3");
         }
 
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+            $('input[id="vbatpidcompensation"]').prop('checked', ADVANCED_TUNING.vbatPidCompensation !== 0);
+        }
+
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+            $('#pid-tuning .delta select').val(ADVANCED_TUNING.deltaMethod);
+        }
+
         if (semver.gte(CONFIG.flightControllerVersion, '2.9.0')) {
             $('.pid_tuning input[name="rc_rate_yaw"]').val(RC_tuning.rcYawRate.toFixed(2));
             $('.pid_filter input[name="gyroLowpassFrequency"]').val(FILTER_CONFIG.gyro_soft_lpf_hz);
@@ -255,34 +241,28 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter input[name="gyroNotchCutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff);
             $('.pid_filter input[name="dTermNotchFrequency"]').val(FILTER_CONFIG.dterm_notch_hz);
             $('.pid_filter input[name="dTermNotchCutoff"]').val(FILTER_CONFIG.dterm_notch_cutoff);
+
+            $('select[name="rcInterpolation-select"]').val(RX_CONFIG.rcInterpolation);
+
+            $('input[name="rcInterpolationInterval-number"]').val(RX_CONFIG.rcInterpolationInterval);
+
+            $('input[name="ptermSetpoint-number"]').val(ADVANCED_TUNING.ptermSetpointWeight / 100);
+            $('input[name="ptermSetpoint-range"]').val(ADVANCED_TUNING.ptermSetpointWeight / 100);
+
+            $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
+            $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
+
+            self.updateRcInterpolationParameters();
+
+            $('.pid_tuning input[name="rcExpoPower"]').val(RC_tuning.rcExpoPower.toFixed(0)).prop("readonly", false);
         } else {
             $('.pid_filter .newFilter').hide();
+
+            $('.pid_tuning input[name="rcExpoPower"]').val(3).prop("readonly", true);
         }
     }
 
     function form_to_pid_and_rc() {
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.0") && !semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
-            BF_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
-        }
-
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
-            ADVANCED_TUNING.vbatPidCompensation = $('input[id="vbatpidcompensation"]').is(':checked') ? 1 : 0;
-        }
-
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
-            ADVANCED_TUNING.deltaMethod = $('#pid-tuning .delta select').val();
-        }
-
-        if (semver.gte(CONFIG.flightControllerVersion, '3.0.0')) {
-            RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
-
-            RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
-
-            ADVANCED_TUNING.ptermSetpointWeight = parseInt($('input[name="ptermSetpoint-number"]').val() * 100);
-
-            ADVANCED_TUNING.dtermSetpointWeight = parseInt($('input[name="dtermSetpoint-number"]').val() * 100);
-        }
-
         // Fill in the data from PIDs array
         // Catch all the changes and stuff the inside PIDs array
         var i = 0;
@@ -360,12 +340,33 @@ TABS.pid_tuning.initialize = function (callback) {
         FILTER_CONFIG.dterm_lpf_hz = parseInt($('.pid_filter input[name="dtermLowpassFrequency"]').val());
         FILTER_CONFIG.yaw_lpf_hz = parseInt($('.pid_filter input[name="yawLowpassFrequency"]').val());
 
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.0") && !semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+            BF_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
+        }
+
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+            ADVANCED_TUNING.vbatPidCompensation = $('input[id="vbatpidcompensation"]').is(':checked') ? 1 : 0;
+        }
+
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+            ADVANCED_TUNING.deltaMethod = $('#pid-tuning .delta select').val();
+        }
+
         if (semver.gte(CONFIG.flightControllerVersion, '3.0.0')) {
+            RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
+            RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
+
+            ADVANCED_TUNING.ptermSetpointWeight = parseInt($('input[name="ptermSetpoint-number"]').val() * 100);
+            ADVANCED_TUNING.dtermSetpointWeight = parseInt($('input[name="dtermSetpoint-number"]').val() * 100);
+
             FILTER_CONFIG.gyro_soft_notch_hz = parseInt($('.pid_filter input[name="gyroNotchFrequency"]').val());
             FILTER_CONFIG.gyro_soft_notch_cutoff = parseInt($('.pid_filter input[name="gyroNotchCutoff"]').val());
             FILTER_CONFIG.dterm_notch_hz = parseInt($('.pid_filter input[name="dTermNotchFrequency"]').val());
             FILTER_CONFIG.dterm_notch_cutoff = parseInt($('.pid_filter input[name="dTermNotchCutoff"]').val());
+
+            RC_tuning.rcExpoPower = parseInt($('.pid_tuning input[name="rcExpoPower"]').val());
         }
+
     }
 
     function showAllPids() {
@@ -688,7 +689,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 var targetElement = $(event.target),
                     targetValue = checkInput(targetElement);
 
-                if (self.currentRates.hasOwnProperty(targetElement.attr('name')) && targetValue) {
+                if (self.currentRates.hasOwnProperty(targetElement.attr('name')) && targetValue !== undefined) {
                     self.currentRates[targetElement.attr('name')] = targetValue;
 
                     updateNeeded = true;
