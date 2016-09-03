@@ -452,7 +452,7 @@ TABS.pid_tuning.initialize = function (callback) {
     self.rateCurve = new RateCurve(useLegacyCurve);
 
     function printMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, maxAngularVelElement) {
-        var maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo);
+        var maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo).toFixed(0);
         maxAngularVelElement.text(maxAngularVel);
 
         return maxAngularVel;
@@ -677,9 +677,9 @@ TABS.pid_tuning.initialize = function (callback) {
         rcCurveElement.width = 1000;
         rcCurveElement.height = 1000;
 
-        var maxAngularVelRollElement = $('.rc_curve .maxAngularVelRoll');
-        var maxAngularVelPitchElement = $('.rc_curve .maxAngularVelPitch');
-        var maxAngularVelYawElement = $('.rc_curve .maxAngularVelYaw');
+        var maxAngularVelRollElement = $('.pid_tuning .maxAngularVelRoll');
+        var maxAngularVelPitchElement = $('.pid_tuning .maxAngularVelPitch');
+        var maxAngularVelYawElement = $('.pid_tuning .maxAngularVelYaw');
 
         var updateNeeded = true;
 

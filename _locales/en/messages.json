@@ -850,6 +850,9 @@
     "pidTuningRcRate": {
         "message": "RC Rate"
     },
+    "pidTuningMaxVel": {
+        "message": "Max Vel (deg/s)"
+    },
     "pidTuningRate": {
         "message": "Rate"
     },
@@ -872,19 +875,10 @@
         "message": "Frequency"
     },
     "pidTuningRatesCurve": {
-	"message": "Rates"
-    },
-    "pidTuningMaxAngularVelRoll": {
-	"message": "Max roll speed (deg/s):"
-    },
-    "pidTuningMaxAngularVelPitch": {
-	"message": "Max pitch speed (deg/s):"
-    },
-    "pidTuningMaxAngularVelYaw": {
-	"message": "Max yaw speed (deg/s):"
+	    "message": "Rates"
     },
     "throttle": {
-	"message": "Throttle"
+	    "message": "Throttle"
     },
     "pidTuningButtonSave": {
         "message": "Save"
