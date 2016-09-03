@@ -370,32 +370,8 @@
     border-top-right-radius: 3px;
 }
 
-.tab-pid_tuning .name {
-    width: 14%;
-}
-
-.tab-pid_tuning .proportional {
-    width: 14%;
-}
-
-.tab-pid_tuning .integral {
-    width: 14%;
-}
-
-.tab-pid_tuning .derivative {
-    width: 14%;
-}
-
-.tab-pid_tuning .rc_rate {
-    width: 14%;
-}
-
-.tab-pid_tuning .rate {
-    width: 14%;
-}
-
-.tab-pid_tuning .rc_expo {
-    width: 14%;
+.tab-pid_tuning .new_rates {
+    text-align: center;
 }
 
 .tab-pid_tuning .tpa {
