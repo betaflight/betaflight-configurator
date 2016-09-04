@@ -242,13 +242,13 @@
     padding: 5px;
     text-align: left;
     border-right: 1px solid #ccc;
-    width: 14%;
+    width: 12%;
 
 }
 
 .tab-pid_tuning .pid_titlebar th:first-child {
     text-align: left;
-    width: 14%;
+    width: 12%;
 }
 
 .tab-pid_tuning .pid_titlebar th:last-child {
