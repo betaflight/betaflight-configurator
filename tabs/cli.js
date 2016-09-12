@@ -98,8 +98,8 @@ TABS.cli.sendSlowly = function (out_arr, i, timeout_needle) {
         bufView[out_arr[i].length] = 0x0D; // enter (\n)
 
         serial.send(bufferOut);
-        if (out_arr[i].substring(1, 7) == 'profile') {
-            timeout_needle *= 2; // switching profiles needs additional time
+        if (out_arr[i].startsWith('profile')) {
+            timeout_needle = timeout_needle + 10; // switching profiles needs additional time
         }
     }, timeout_needle * 15);
 };
