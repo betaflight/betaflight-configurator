@@ -569,7 +569,7 @@ function configuration_restore(callback) {
                     rx_max_usec:            2115,
                     rx_spi_protocol:        0,
                     rx_spi_id:              0,
-					rx_spi_channel_count:   0
+                    rx_spi_channel_count:   0
                 };
             }
 

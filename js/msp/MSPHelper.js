@@ -1016,10 +1016,10 @@ MspHelper.prototype.crunch = function(code) {
             }
           	if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
                 buffer.push8(RX_CONFIG.rx_spi_protocol)
-                	.push32(RX_CONFIG.rx_spi_id)
-                	.push8(RX_CONFIG.rx_spi_channel_count);
+                    .push32(RX_CONFIG.rx_spi_id)
+                    .push8(RX_CONFIG.rx_spi_channel_count);
             }
-			break;
+            break;
 
         case MSPCodes.MSP_SET_FAILSAFE_CONFIG:
             buffer.push8(FAILSAFE_CONFIG.failsafe_delay)
