@@ -46,6 +46,13 @@ var Features = function (config) {
         );
     }
 
+    if (semver.gte(config.apiVersion, "1.21.0")) {
+        features.push(
+            {bit: 25, group: 'rxMode', mode: 'group', name: 'RX_SPI', haveTip: true},
+            {bit: 26, group: 'other', name: 'SOFTSPI'}
+        );
+    }
+
     if (config.flightControllerVersion !== '') {
         if (semver.gte(config.flightControllerVersion, "2.8.0")) {
             features.push(

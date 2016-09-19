@@ -553,6 +553,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 RX_CONFIG.rcInterpolationInterval = 0;
                 RX_CONFIG.airModeActivateThreshold = 0;
             }
+            if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                RX_CONFIG.rx_spi_protocol = data.readU8();
+                RX_CONFIG.rx_spi_id = data.readU32();
+                RX_CONFIG.rx_spi_channel_count = data.readU8();
+            }
             break;
 
         case MSPCodes.MSP_FAILSAFE_CONFIG:
@@ -1009,8 +1014,12 @@ MspHelper.prototype.crunch = function(code) {
                     .push8(RX_CONFIG.rcInterpolationInterval)
                     .push16(RX_CONFIG.airModeActivateThreshold);
             }
-
-            break;
+          	if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                buffer.push8(RX_CONFIG.rx_spi_protocol)
+                	.push32(RX_CONFIG.rx_spi_id)
+                	.push8(RX_CONFIG.rx_spi_channel_count);
+            }
+			break;
 
         case MSPCodes.MSP_SET_FAILSAFE_CONFIG:
             buffer.push8(FAILSAFE_CONFIG.failsafe_delay)

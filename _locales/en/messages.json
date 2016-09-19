@@ -536,6 +536,15 @@
     "featureTRANSPONDERTip": {
         "message": "Configure via the Race Transponder tab after enabling."
     },
+    "featureRX_SPI": {
+        "message": "SPI based receiver"
+    },
+    "featureRX_SPITip": {
+        "message": "Remember to set the SPI Receiver Protocol after enabling."
+    },
+    "featureSOFTSPI": {
+        "message": "Enable CPU based SPI"
+    },
     "featureAIRMODE": {
         "message": "Permanently enable Airmode"
     },
@@ -727,6 +736,9 @@
     },
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
+    },
+    "configurationRxSpiProtocol": {
+        "message": "SPI Receiver Protocol"
     },
     "configurationEepromSaved": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"

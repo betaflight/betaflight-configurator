@@ -44,9 +44,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
     
     function load_loop_time() {
-        var next_callback = load_3d;
+        var next_callback = load_rx_config;
         if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
             MSP.send_message(MSPCodes.MSP_LOOP_TIME, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+    function load_rx_config() {
+        var next_callback = load_3d;
+        if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+            MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -388,6 +397,31 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // code below is a temporary fix, which we will be able to remove in the future (hopefully)
         $('#content').scrollTop((scrollPosition) ? scrollPosition : 0);
 
+        var rxSpiProtocoltypes = [
+            'V202 250Kbps',
+            'V202 1Mbps',
+            'Syma X',
+            'Syma X5C',
+            'Cheerson CX10',
+            'Cheerson CX10A',
+            'JJRC H8_3D',
+            'iNav'
+        ];
+
+        var rxSpiProtocol_e = $('select.rxSpiProtocol');
+        for (var i = 0; i < rxSpiProtocoltypes.length; i++) {
+            rxSpiProtocol_e.append('<option value="' + i + '">' + rxSpiProtocoltypes[i] + '</option>');
+        }
+
+        rxSpiProtocol_e.change(function () {
+            RX_CONFIG.rx_spi_protocol = parseInt($(this).val(), 10);
+            RX_CONFIG.rx_spi_id = 0;
+            RX_CONFIG.rx_spi_channel_count = 0;
+        });
+
+        // select current nrf24 protocol
+        rxSpiProtocol_e.val(RX_CONFIG.rx_spi_protocol);
+
         // fill board alignment
         $('input[name="board_align_roll"]').val(BF_CONFIG.board_align_roll);
         $('input[name="board_align_pitch"]').val(BF_CONFIG.board_align_pitch);
@@ -569,7 +603,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_looptime_config() {
-                var next_callback = save_sensor_config;
+                var next_callback = save_rx_config;
                 if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
                     FC_CONFIG.loopTime = PID_ADVANCED_CONFIG.gyro_sync_denom * 125;
                     MSP.send_message(MSPCodes.MSP_SET_LOOP_TIME, mspHelper.crunch(MSPCodes.MSP_SET_LOOP_TIME), false, next_callback);
@@ -577,6 +611,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     next_callback();
                 }
             }
+
+            function save_rx_config() {
+                var next_callback = save_sensor_config;
+                if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
             function save_sensor_config() {
                 var next_callback = save_name;
                 

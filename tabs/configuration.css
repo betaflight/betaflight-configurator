@@ -127,6 +127,12 @@
     margin-bottom: 5px;
 }
 
+tab-configuration .rxSpiProtocol {
+    width: 100%;
+    border: 1px solid silver;
+    margin-bottom: 5px;
+}
+
 .tab-configuration .current .checkbox {
     margin-top: 0px;
     float: left;
@@ -297,6 +303,10 @@
 
 .tab-configuration .rxprovider {
     min-height: 184px;
+}
+
+.tab-configuration .rxSpiProvider {
+    min-height: 140px;
 }
 
 .tab-configuration .current td:nth-child(2) {
