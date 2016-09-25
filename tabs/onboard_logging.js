@@ -5,7 +5,10 @@ var
 
 TABS.onboard_logging = {
     available: false,
-    BLOCK_SIZE: 4096
+    blockSize: 128,
+
+    BLOCK_SIZE: 4096,
+    VCP_BLOCK_SIZE: 512
 };
 TABS.onboard_logging.initialize = function (callback) {
     var 
@@ -317,7 +320,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function mark_saving_dialog_done(startTime, totalBytes) {
         var totalTime = (new Date().getTime() - startTime) / 1000;
         console.log('Received ' + totalBytes + ' bytes in ' + totalTime.toFixed(2) + 's ('
-            + (totalBytes / totalTime / 1024).toFixed(2) + 'kB / s) with block size ' + self.BLOCK_SIZE + '.');
+            + (totalBytes / totalTime / 1024).toFixed(2) + 'kB / s) with block size ' + self.blockSize + '.');
 
 
         $(".dataflash-saving").addClass("done");
@@ -335,14 +338,18 @@ TABS.onboard_logging.initialize = function (callback) {
     
     function flash_save_begin() {
         if (GUI.connected_to) {
+            if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
+                self.blockSize = self.VCP_BLOCK_SIZE;
+            } else {
+                self.blockSize = self.BLOCK_SIZE;
+            }
+
             // Begin by refreshing the occupied size in case it changed while the tab was open
             flash_update_summary(function() {
-                var
-                    maxBytes = DATAFLASH.usedSize;
+                var maxBytes = DATAFLASH.usedSize;
                 
                 prepare_file(function(fileWriter) {
-                    var
-                        nextAddress = 0;
+                    var nextAddress = 0;
                     
                     show_saving_dialog();
                     
@@ -354,8 +361,7 @@ TABS.onboard_logging.initialize = function (callback) {
                                 
                                 $(".dataflash-saving progress").attr("value", nextAddress / maxBytes * 100);
 
-                                var 
-                                    blob = new Blob([chunkDataView]);
+                                var blob = new Blob([chunkDataView]);
                                 
                                 fileWriter.onwriteend = function(e) {
                                     if (saveCancelled || nextAddress >= maxBytes) {
@@ -365,7 +371,7 @@ TABS.onboard_logging.initialize = function (callback) {
                                             mark_saving_dialog_done(startTime, nextAddress);
                                         }
                                     } else {
-                                        mspHelper.dataflashRead(nextAddress, self.BLOCK_SIZE, onChunkRead);
+                                        mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                                     }
                                 };
                                 
@@ -376,13 +382,13 @@ TABS.onboard_logging.initialize = function (callback) {
                             }
                         } else {
                             // There was an error with the received block (address didn't match the one we asked for), retry
-                            mspHelper.dataflashRead(nextAddress, self.BLOCK_SIZE, onChunkRead);
+                            mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                         }
                     }
 
                     var startTime = new Date().getTime();
                     // Fetch the initial block
-                    mspHelper.dataflashRead(nextAddress, self.BLOCK_SIZE, onChunkRead);
+                    mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                 });
             });
         }
