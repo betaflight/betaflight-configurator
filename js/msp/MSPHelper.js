@@ -1221,9 +1221,11 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
 
         var headerSize = 4;
         var dataSize = response.data.buffer.byteLength - headerSize;
+        var dataCompressionType = 0;
         if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-            headerSize = headerSize + 2;
+            headerSize = headerSize + 3;
             dataSize = response.data.readU16();
+            dataCompressionType = response.data.readU8();
         }
 
         // Verify that the address of the memory returned matches what the caller asked for
