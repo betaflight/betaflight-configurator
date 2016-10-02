@@ -566,7 +566,10 @@ function configuration_restore(callback) {
                     mincheck:               1100,
                     maxcheck:               1900,
                     rx_min_usec:            885,
-                    rx_max_usec:            2115
+                    rx_max_usec:            2115,
+                    rx_spi_protocol:        0,
+                    rx_spi_id:              0,
+                    rx_spi_channel_count:   0
                 };
             }
 

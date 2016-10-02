@@ -302,7 +302,10 @@ var FC = {
             rx_max_usec:            0,
             rcInterpolation:        0,
             rcInterpolationInterval:0,
-            airModeActivateThreshold: 0
+            airModeActivateThreshold: 0,
+            rx_spi_protocol:        0,
+            rx_spi_id:              0,
+            rx_spi_channel_count:   0
         };
         
         FAILSAFE_CONFIG = {
