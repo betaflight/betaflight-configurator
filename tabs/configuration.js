@@ -186,11 +186,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'MULTISHOT'
         ];
         
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
             escprotocols.push('BRUSHED');
         }
 
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
             escprotocols.push('DSHOT');
         }
 
