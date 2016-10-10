@@ -198,7 +198,7 @@ function configuration_backup(callback) {
                         chosenFileEntry = fileEntryWritable;
 
                         // crunch the config object
-                        var serialized_config_object = JSON.stringify(configuration);
+                        var serialized_config_object = JSON.stringify(configuration, null, '\t');
                         var blob = new Blob([serialized_config_object], {type: 'text/plain'}); // first parameter for Blob needs to be an array
 
                         chosenFileEntry.createWriter(function (writer) {
