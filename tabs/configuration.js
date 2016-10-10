@@ -190,6 +190,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             escprotocols.push('BRUSHED');
         }
 
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            escprotocols.push('DSHOT');
+        }
+
         var esc_protocol_e = $('select.escprotocol');
 
         for (var i = 0; i < escprotocols.length; i++) {
