@@ -261,10 +261,12 @@ var FC = {
             gyro_soft_lpf_hz:       0,
             dterm_lpf_hz:           0,
             yaw_lpf_hz:             0,
-            gyro_soft_notch_hz:     0,
-            gyro_soft_notch_cutoff: 0,
+            gyro_soft_notch_hz_1:     0,
+            gyro_soft_notch_cutoff_1: 0,
             dterm_notch_hz:         0,
-            dterm_notch_cutoff:     0
+            dterm_notch_cutoff:     0,
+            gyro_soft_notch_hz_2:     0,
+            gyro_soft_notch_cutoff_2: 0
         };
         
         ADVANCED_TUNING = {
