@@ -191,7 +191,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-            escprotocols.push('DSHOT');
+            escprotocols.push('DSHOT600');
+            escprotocols.push('DSHOT150');
         }
 
         var esc_protocol_e = $('select.escprotocol');
