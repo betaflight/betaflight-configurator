@@ -26,7 +26,8 @@ var mixerList = [
     {name: 'A-tail Quad',      model: 'quad_atail', image: 'atail_quad'},
     {name: 'Custom',           model: 'custom',     image: 'custom'},
     {name: 'Custom Airplane',  model: 'custom',     image: 'custom'},
-    {name: 'Custom Tricopter', model: 'custom',     image: 'custom'}
+    {name: 'Custom Tricopter', model: 'custom',     image: 'custom'},
+    {name: 'Quad X 1234',      model: 'quad_x',     image: 'quad_x'}
 ];
 
 
