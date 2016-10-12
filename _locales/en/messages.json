@@ -1649,16 +1649,22 @@
   "pidTuningGyroLowpassFrequencyHelp": {
     "message": "Gyro Soft Lowpass Frequency (Hz)"
   },
-  "pidTuningGyroNotchFrequency": {
-    "message": "Gyro Notch Filter Frequency (Hz)"
+  "pidTuningGyroNotch1Frequency": {
+      "message": "Gyro Notch Filter 1 Frequency (Hz)"
+  },
+  "pidTuningGyroNotch2Frequency": {
+      "message": "Gyro Notch Filter 2 Frequency (Hz)"
   },
   "pidTuningGyroNotchFrequencyHelp": {
     "message": "Gyro Notch Filter Frequency in Hz (0 means disabled)"
   },
-  "pidTuningGyroNotchCutoff": {
-    "message": "Gyro Notch Filter Cutoff Frequency (Hz)"
-  },
-  "pidTuningGyroNotchCutoffHelp": {
+  "pidTuningGyroNotch1Cutoff": {
+        "message": "Gyro Notch Filter Cutoff 1 Frequency (Hz)"
+    },
+    "pidTuningGyroNotch2Cutoff": {
+        "message": "Gyro Notch Filter Cutoff 2 Frequency (Hz)"
+    },
+    "pidTuningGyroNotchCutoffHelp": {
     "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
   },
   "pidTuningFilterSettings": {

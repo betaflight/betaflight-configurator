@@ -247,8 +247,8 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(CONFIG.flightControllerVersion, '3.0.0')) {
-            $('.pid_filter input[name="gyroNotchFrequency"]').val(FILTER_CONFIG.gyro_soft_notch_hz);
-            $('.pid_filter input[name="gyroNotchCutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff);
+            $('.pid_filter input[name="gyroNotch1Frequency"]').val(FILTER_CONFIG.gyro_soft_notch_hz_1);
+            $('.pid_filter input[name="gyroNotch1Cutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff_1);
             $('.pid_filter input[name="dTermNotchFrequency"]').val(FILTER_CONFIG.dterm_notch_hz);
             $('.pid_filter input[name="dTermNotchCutoff"]').val(FILTER_CONFIG.dterm_notch_cutoff);
 
@@ -257,6 +257,10 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
             $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
+            if (semver.gte(CONFIG.flightControllerVersion, '3.0.1')) {
+                $('.pid_filter input[name="gyroNotch2Frequency"]').val(FILTER_CONFIG.gyro_soft_notch_hz_2);
+                $('.pid_filter input[name="gyroNotch2Cutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff_2);
+            }
         } else {
             $('.pid_filter .newFilter').hide();
         }
@@ -356,10 +360,14 @@ TABS.pid_tuning.initialize = function (callback) {
             ADVANCED_TUNING.ptermSetpointWeight = parseInt($('input[name="ptermSetpoint-number"]').val() * 100);
             ADVANCED_TUNING.dtermSetpointWeight = parseInt($('input[name="dtermSetpoint-number"]').val() * 100);
 
-            FILTER_CONFIG.gyro_soft_notch_hz = parseInt($('.pid_filter input[name="gyroNotchFrequency"]').val());
-            FILTER_CONFIG.gyro_soft_notch_cutoff = parseInt($('.pid_filter input[name="gyroNotchCutoff"]').val());
+            FILTER_CONFIG.gyro_soft_notch_hz_1 = parseInt($('.pid_filter input[name="gyroNotch1Frequency"]').val());
+            FILTER_CONFIG.gyro_soft_notch_cutoff_1 = parseInt($('.pid_filter input[name="gyroNotch1Cutoff"]').val());
             FILTER_CONFIG.dterm_notch_hz = parseInt($('.pid_filter input[name="dTermNotchFrequency"]').val());
             FILTER_CONFIG.dterm_notch_cutoff = parseInt($('.pid_filter input[name="dTermNotchCutoff"]').val());
+            if (semver.gte(CONFIG.flightControllerVersion, '3.0.1')) {
+                FILTER_CONFIG.gyro_soft_notch_hz_2 = parseInt($('.pid_filter input[name="gyroNotch2Frequency"]').val());
+                FILTER_CONFIG.gyro_soft_notch_cutoff_2 = parseInt($('.pid_filter input[name="gyroNotch2Cutoff"]').val());
+            }
         }
 
     }

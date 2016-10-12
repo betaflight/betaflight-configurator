@@ -591,13 +591,16 @@ MspHelper.prototype.process_data = function(dataHandler) {
             FILTER_CONFIG.dterm_lpf_hz = data.readU16();
             FILTER_CONFIG.yaw_lpf_hz = data.readU16();
             if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-                FILTER_CONFIG.gyro_soft_notch_hz = data.readU16();
-                FILTER_CONFIG.gyro_soft_notch_cutoff = data.readU16();
+                FILTER_CONFIG.gyro_soft_notch_hz_1 = data.readU16();
+                FILTER_CONFIG.gyro_soft_notch_cutoff_1 = data.readU16();
                 FILTER_CONFIG.dterm_notch_hz = data.readU16();
                 FILTER_CONFIG.dterm_notch_cutoff = data.readU16();
+                if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                    FILTER_CONFIG.gyro_soft_notch_hz_2 = data.readU16();
+                    FILTER_CONFIG.gyro_soft_notch_cutoff_2 = data.readU16();
+                }
             }
             break;
-
         case MSPCodes.MSP_SET_PID_ADVANCED:
             console.log("Advanced PID settings saved");
             break;
@@ -1124,10 +1127,14 @@ MspHelper.prototype.crunch = function(code) {
                 .push16(FILTER_CONFIG.dterm_lpf_hz)
                 .push16(FILTER_CONFIG.yaw_lpf_hz);
             if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-                buffer.push16(FILTER_CONFIG.gyro_soft_notch_hz)
-                    .push16(FILTER_CONFIG.gyro_soft_notch_cutoff)
+                buffer.push16(FILTER_CONFIG.gyro_soft_notch_hz_1)
+                    .push16(FILTER_CONFIG.gyro_soft_notch_cutoff_1)
                     .push16(FILTER_CONFIG.dterm_notch_hz)
                     .push16(FILTER_CONFIG.dterm_notch_cutoff);
+                if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                    buffer.push16(FILTER_CONFIG.gyro_soft_notch_hz_2)
+                        .push16(FILTER_CONFIG.gyro_soft_notch_cutoff_2)
+                }
             }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:
