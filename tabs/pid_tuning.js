@@ -257,12 +257,15 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
             $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
-            if (semver.gte(CONFIG.flightControllerVersion, '3.0.1')) {
-                $('.pid_filter input[name="gyroNotch2Frequency"]').val(FILTER_CONFIG.gyro_soft_notch_hz_2);
-                $('.pid_filter input[name="gyroNotch2Cutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff_2);
-            }
         } else {
             $('.pid_filter .newFilter').hide();
+        }
+
+        if (semver.gte(CONFIG.flightControllerVersion, '3.0.1')) {
+            $('.pid_filter input[name="gyroNotch2Frequency"]').val(FILTER_CONFIG.gyro_soft_notch_hz_2);
+            $('.pid_filter input[name="gyroNotch2Cutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff_2);
+        } else {
+            $('.pid_filter .gyroNotch2').hide();
         }
     }
 
