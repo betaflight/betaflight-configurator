@@ -1,4 +1,4 @@
-Raven.config('https://405b7f80a3c94e1ba0d6723f65795757@sentry.io/106024', {
+Raven.config('https://65c765cf0c7543d5b3f262503ec5fd5a@sentry.io/106023', {
     release: chrome.runtime.getManifest().version
 }).install()
 
