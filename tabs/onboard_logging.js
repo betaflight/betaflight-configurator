@@ -397,12 +397,16 @@ TABS.onboard_logging.initialize = function (callback) {
     function prepare_file(onComplete) {
         var 
             date = new Date(),
-            filename = 'blackbox_log_' + date.getFullYear() + '-'  + zeroPad(date.getMonth() + 1, 2) + '-' 
-                + zeroPad(date.getDate(), 2) + '_' + zeroPad(date.getHours(), 2) + zeroPad(date.getMinutes(), 2) 
-                + zeroPad(date.getSeconds(), 2);
+            filename = 'BLACKBOX_LOG_' + date.getFullYear()
+                + zeroPad(date.getMonth() + 1, 2)
+                + zeroPad(date.getDate(), 2)
+                + '_' + zeroPad(date.getHours(), 2)
+                + zeroPad(date.getMinutes(), 2) 
+                + zeroPad(date.getSeconds(), 2)
+                + '.BFL';
         
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, 
-                accepts: [{extensions: ['TXT']}]}, function(fileEntry) {
+                accepts: [{extensions: ['BFL']}]}, function(fileEntry) {
             var error = chrome.runtime.lastError;
             
             if (error) {
