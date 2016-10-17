@@ -410,11 +410,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('input[name="autodisarmdelay"]').val(ARMING_CONFIG.auto_disarm_delay);
             $('input[id="disarmkillswitch"]').prop('checked', ARMING_CONFIG.disarm_kill_switch !== 0);
             $('div.disarm').show();            
-            if (BF_CONFIG.features.isEnabled('MOTOR_STOP')) {
-                $('div.disarmdelay').show();
-            } else {
-                $('div.disarmdelay').hide();
-            }
 
             $('div.cycles').show();
         }
@@ -447,6 +442,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         // UI hooks
+        function checkShowDisarmDelay() {
+            if (BF_CONFIG.features.isEnabled('MOTOR_STOP')) {
+                $('div.disarmdelay').show();
+            } else {
+                $('div.disarmdelay').hide();
+            }
+        }
+
         $('input.feature', features_e).change(function () {
             var element = $(this);
 
@@ -454,13 +457,30 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             updateTabList(BF_CONFIG.features);
 
             if (element.attr('name') === 'MOTOR_STOP') {
-                if (BF_CONFIG.features.isEnabled('MOTOR_STOP')) {
-                    $('div.disarmdelay').show();
-                } else {
-                    $('div.disarmdelay').hide();
-                }
+                checkShowDisarmDelay();
             }
         });
+        checkShowDisarmDelay();
+
+        function checkShowSerialRxBox() {
+            if (BF_CONFIG.features.isEnabled('RX_SERIAL')) {
+                $('div.serialRXBox').show();
+            } else {
+                $('div.serialRXBox').hide();
+            }
+        }
+
+        $(features_e).filter('select').change(function () {
+            var element = $(this);
+
+            BF_CONFIG.features.updateData(element);
+            updateTabList(BF_CONFIG.features);
+
+            if (element.attr('name') === 'rxMode') {
+                checkShowSerialRxBox();
+            }
+        });
+        checkShowSerialRxBox();
 
         $("input[id='unsyncedPWMSwitch']").change(function() {
             if ($(this).is(':checked')) {

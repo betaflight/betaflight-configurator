@@ -573,6 +573,9 @@
         "message": "Other Features"
     },
     "configurationReceiver": {
+        "message": "Receiver"
+    },
+    "configurationReceiverMode": {
         "message": "Receiver Mode"
     },
     "configurationRSSI": {
