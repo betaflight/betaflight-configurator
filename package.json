@@ -1,0 +1,40 @@
+{
+  "name": "betaflight-configurator",
+  "version": "1.8.3",
+  "description": "![Betaflight](http://static.rcgroups.net/forums/attachments/6/1/0/3/7/6/a9088900-228-bf_logo.jpg)",
+  "main": "main.html",
+  "window": {
+    "title": "Betaflight Configurator",
+    "icon": "images/bf_icon_128.png",
+    "toolbar": true,
+    "width": 1024,
+    "height": 800
+  },
+  "snapshot": "",
+  "default_locale": "en",
+  "scripts": {
+    "start": "node_modules/gulp/bin/gulp.js & node_modules/nw/bin/nw .",
+    "postinstall": "node_modules/bower/bin/bower install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/betaflight/betaflight-configurator"
+  },
+  "author": "BetaFlight Dev Squad",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "babel-preset-es2015": "^6.16.0",
+    "bower": "^1.7.9",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-bower": "0.0.13",
+    "gulp-clean-css": "^2.0.13",
+    "gulp-concat": "^2.6.0",
+    "gulp-debug": "^2.1.2",
+    "gulp-sourcemaps": "^2.1.1",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "nw": "^0.18.0",
+    "pump": "^1.0.1"
+  }
+}
