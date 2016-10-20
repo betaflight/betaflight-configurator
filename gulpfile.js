@@ -21,6 +21,7 @@ var isProduction = (gutil.env.production === true ? true : false);
 var buildfiles = {
   js: [
     (isProduction ? './bower_components/raven-js/dist/raven.js' : null),
+    (isProduction ? null : './js/nwjs_reload.js'),
     './bower_components/cryptojslib/rollups/md5.js',
     './js/analytics.js',
     './js/libraries/q.js',
