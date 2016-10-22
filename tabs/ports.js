@@ -110,6 +110,10 @@ TABS.ports.initialize = function (callback, scrollPosition) {
            3: 'UART4',
            4: 'UART5',
            5: 'UART6',
+           6: 'UART7',
+           7: 'UART8',
+           8: 'UART9',
+           9: 'UART10',
            20: 'USB VCP',
            30: 'SOFTSERIAL1',
            31: 'SOFTSERIAL2'
