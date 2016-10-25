@@ -322,7 +322,6 @@
 
 .tab-osd .preview-logo {
   position: absolute;
-  font-weight: 800;
   right: 0;
 }
 
@@ -357,7 +356,7 @@ button {
 }
 
 .tab-osd .display-field {
-  padding: .3em;
+  padding: 3px;
   border: 1px solid transparent;
   border-bottom: 1px solid #ddd;
 }
@@ -424,6 +423,34 @@ button {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 }
+
+.tab-osd .alarms label {
+    display: block;
+    width:100%;
+    border-bottom: 1px solid #ddd;
+    margin-top:5px;
+    padding-bottom: 5px
+    }
+    
+.tab-osd .alarms label:last-child {
+    border-bottom: none;
+    padding-bottom: 0px
+    }
+    
+.tab-osd .alarms input {
+    width: 55px;
+    padding-left: 3px;
+    height: 18px;
+    line-height: 20px;
+    text-align: left;
+    border: 1px solid silver;
+    border-radius: 3px;
+    margin-right: 11px;
+    font-size: 11px;
+    font-weight: normal;    
+    }
+
+
 
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {

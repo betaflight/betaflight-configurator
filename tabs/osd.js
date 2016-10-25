@@ -605,7 +605,7 @@ TABS.osd.initialize = function (callback) {
             // show Betaflight logo in preview
             var $previewLogo = $('.preview-logo').empty();
             $previewLogo.append(
-              $('<label for="preview-logo">Logo:</label><input type="checkbox" name="preview-logo" class="togglesmall"></input>')
+              $('<label for="preview-logo">Logo: </label><input type="checkbox" name="preview-logo" class="togglesmall"></input>')
               .attr('checked', OSD.data.preview_logo)
               .change(function(e) {
                 OSD.data.preview_logo = $(this).attr('checked') == undefined;
