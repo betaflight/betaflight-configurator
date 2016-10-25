@@ -279,7 +279,6 @@
 }
 
 .tab-configuration .gps .gui_box, .tab-configuration .other .gui_box {
-    min-height: 263px;
     float: left;
     margin-bottom: 10px;
 }
@@ -307,6 +306,14 @@
 .tab-configuration .serialRXBox {
     padding-top: 0px;
 }
+
+.tab-configuration .serialRX, .rxMode {
+    border: 1px solid silver;
+    width: 230px;
+    float: left;
+    margin-right: 15px;
+}
+
 
 .tab-configuration .gps td:nth-child(2) {
     width: 38px;
@@ -507,7 +514,6 @@
         float: left;
     }
     .tab-configuration .gps .gui_box, .tab-configuration .other .gui_box {
-        min-height: 259px;
         float: left;
     }
     .tab-configuration .current .gui_box {
