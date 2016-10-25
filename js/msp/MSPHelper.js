@@ -2,6 +2,25 @@
 
 
 function MspHelper () {
+  var self = this;
+
+  // 0 based index, must be identical to 'baudRates' in 'src/main/io/serial.c' in betaflight
+  self.BAUD_RATES = ['AUTO', '9600', '19200', '38400', '57600', '115200',
+    '230400', '250000', '400000', '460800', '500000', '921600', '1000000',
+    '1500000', '2000000', '2470000'];
+  // needs to be identical to 'serialPortFunction_e' in 'src/main/io/serial.h' in betaflight
+  self.SERIAL_PORT_FUNCTIONS = {
+    'MSP': 0,
+    'GPS': 1,
+    'TELEMETRY_FRSKY': 2,
+    'TELEMETRY_HOTT': 3,
+    'TELEMETRY_MSP': 4,
+    'TELEMETRY_LTM': 4, // LTM replaced MSP
+    'TELEMETRY_SMARTPORT': 5,
+    'RX_SERIAL': 6,
+    'BLACKBOX': 7,
+    'TELEMETRY_MAVLINK': 8,
+  };
 }
 
 MspHelper.prototype.process_data = function(dataHandler) {
@@ -437,18 +456,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
             break;
 
         case MSPCodes.MSP_CF_SERIAL_CONFIG:
-            var supportedBaudRates = [ // 0 based index.
-                                       'AUTO',
-                                       '9600',
-                                       '19200',
-                                       '38400',
-                                       '57600',
-                                       '115200',
-                                       '230400',
-                                       '250000',
-                                       '500000',
-                                       '1000000'
-                                   ];
             if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
                 SERIAL_CONFIG.ports = [];
                 var serialPortCount = (data.byteLength - (4 * 4)) / 2;
@@ -472,10 +479,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     var serialPort = {
                         identifier: data.readU8(),
                         functions: self.serialPortFunctionMaskToFunctions(data.readU16()),
-                        msp_baudrate: supportedBaudRates[data.readU8()],
-                        gps_baudrate: supportedBaudRates[data.readU8()],
-                        telemetry_baudrate: supportedBaudRates[data.readU8()],
-                        blackbox_baudrate: supportedBaudRates[data.readU8()]
+                        msp_baudrate: self.BAUD_RATES[data.readU8()],
+                        gps_baudrate: self.BAUD_RATES[data.readU8()],
+                        telemetry_baudrate: self.BAUD_RATES[data.readU8()],
+                        blackbox_baudrate: self.BAUD_RATES[data.readU8()]
                     }
                     
                     SERIAL_CONFIG.ports.push(serialPort);
@@ -1042,31 +1049,6 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
         case MSPCodes.MSP_SET_CF_SERIAL_CONFIG:
-            var supportedBaudRates = [ // 0 based index.
-                                       'AUTO',
-                                       '9600',
-                                       '19200',
-                                       '38400',
-                                       '57600',
-                                       '115200',
-                                       '230400',
-                                       '250000',
-                                       '500000',
-                                       '1000000'
-                                   ]; //TODO, instead of lookuptable, this should be sent as uint32
-            var serialPortFunctions = {
-                'MSP': 0,
-                'GPS': 1, 
-                'TELEMETRY_FRSKY': 2, 
-                'TELEMETRY_HOTT': 3,
-                'TELEMETRY_MSP': 4, 
-                'TELEMETRY_LTM': 4, // LTM replaced MSP 
-                'TELEMETRY_SMARTPORT': 5,
-                'RX_SERIAL': 6,
-                'BLACKBOX': 7,
-                'TELEMETRY_MAVLINK': 8,
-            };
-
             if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
 
                 for (var i = 0; i < SERIAL_CONFIG.ports.length; i++) {
@@ -1084,10 +1066,10 @@ MspHelper.prototype.crunch = function(code) {
                     
                     var functionMask = self.serialPortFunctionsToMask(serialPort.functions);
                     buffer.push16(functionMask)
-                        .push8(supportedBaudRates.indexOf(serialPort.msp_baudrate))
-                        .push8(supportedBaudRates.indexOf(serialPort.gps_baudrate))
-                        .push8(supportedBaudRates.indexOf(serialPort.telemetry_baudrate))
-                        .push8(supportedBaudRates.indexOf(serialPort.blackbox_baudrate));
+                        .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
+                        .push8(self.BAUD_RATES.indexOf(serialPort.gps_baudrate))
+                        .push8(self.BAUD_RATES.indexOf(serialPort.telemetry_baudrate))
+                        .push8(self.BAUD_RATES.indexOf(serialPort.blackbox_baudrate));
                 }
             }
             break;
@@ -1528,24 +1510,13 @@ MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
 }
 
 MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {
+    var self = this;
     var functions = [];
-    var serialPortFunctions = {
-        'MSP': 0,
-        'GPS': 1, 
-        'TELEMETRY_FRSKY': 2, 
-        'TELEMETRY_HOTT': 3,
-        'TELEMETRY_MSP': 4, 
-        'TELEMETRY_LTM': 4, // LTM replaced MSP 
-        'TELEMETRY_SMARTPORT': 5,
-        'RX_SERIAL': 6,
-        'BLACKBOX': 7,
-        'TELEMETRY_MAVLINK': 8,
-    };
 
-    var keys = Object.keys(serialPortFunctions);
+    var keys = Object.keys(self.SERIAL_PORT_FUNCTIONS);
     for (var index = 0; index < keys.length; index++) {
         var key = keys[index];
-        var bit = serialPortFunctions[key];
+        var bit = self.SERIAL_PORT_FUNCTIONS[key];
         if (bit_check(functionMask, bit)) {
             functions.push(key);
         }
@@ -1554,24 +1525,13 @@ MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {
 }
 
 MspHelper.prototype.serialPortFunctionsToMask = function(functions) {
+    var self = this;
     var mask = 0;
-    var serialPortFunctions = {
-            'MSP': 0,
-            'GPS': 1, 
-            'TELEMETRY_FRSKY': 2, 
-            'TELEMETRY_HOTT': 3,
-            'TELEMETRY_MSP': 4, 
-            'TELEMETRY_LTM': 4, // LTM replaced MSP 
-            'TELEMETRY_SMARTPORT': 5,
-            'RX_SERIAL': 6,
-            'BLACKBOX': 7,
-            'TELEMETRY_MAVLINK': 8,
-        };
     
-    var keys = Object.keys(serialPortFunctions);
+    var keys = Object.keys(self.SERIAL_PORT_FUNCTIONS);
     for (var index = 0; index < functions.length; index++) {
         var key = functions[index];
-        var bitIndex = serialPortFunctions[key];
+        var bitIndex = self.SERIAL_PORT_FUNCTIONS[key];
         if (bitIndex >= 0) {
             mask = bit_set(mask, bitIndex);
         }
