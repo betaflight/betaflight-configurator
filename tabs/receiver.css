@@ -306,20 +306,33 @@
 
 .tab-receiver .rcInterpolation td {
     padding: 5px;
+    width: 100%;
+    background-color: #f9f9f9 !important;
+}
+
+.tab-receiver .rcInterpolationInterval td {
+    padding: 5px;
+    width: 100%;
+    background-color: #f9f9f9 !important;
+    border-top: 1px solid silver;
 }
 
 .tab-receiver .rcInterpolation td:first-child {
-    width: 20%;
-    padding-bottom: 6px;
-    padding-top: 5px;
+    width: 70px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left:8px;
+    border-right: none;
 }
 
 .tab-receiver .rcInterpolation td:last-child {
-    width: 80%;
+    width: calc(100% - 78px);
 }
 
-.tab-receiver .rcInterpolation td {
-    width: 20%;
+
+.tab-receiver .rcInterpolation select {
+    border: 1px solid silver;
+    width: 66px;
 }
 
 .tab-receiver .rcInterpolation .slider input {
