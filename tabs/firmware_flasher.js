@@ -480,46 +480,36 @@ TABS.firmware_flasher.initialize = function (callback) {
             $('input.flash_manual_baud_rate').change();
         });
 
-        chrome.storage.local.get('flash_on_connect', function (result) {
-            if (result.flash_on_connect) {
-                $('input.flash_on_connect').prop('checked', true);
+        $('input.flash_on_connect').change(function () {
+            var status = $(this).is(':checked');
+
+            if (status) {
+                var catch_new_port = function () {
+                    PortHandler.port_detected('flash_detected_device', function (result) {
+                        var port = result[0];
+
+                        if (!GUI.connect_lock) {
+                            GUI.log('Detected: <strong>' + port + '</strong> - triggering flash on connect');
+                            console.log('Detected: ' + port + ' - triggering flash on connect');
+
+                            // Trigger regular Flashing sequence
+                            GUI.timeout_add('initialization_timeout', function () {
+                                $('a.flash_firmware').click();
+                            }, 100); // timeout so bus have time to initialize after being detected by the system
+                        } else {
+                            GUI.log('Detected <strong>' + port + '</strong> - previous device still flashing, please replug to try again');
+                        }
+
+                        // Since current port_detected request was consumed, create new one
+                        catch_new_port();
+                    }, false, true);
+                };
+
+                catch_new_port();
             } else {
-                $('input.flash_on_connect').prop('checked', false);
+                PortHandler.flush_callbacks();
             }
-
-            $('input.flash_on_connect').change(function () {
-                var status = $(this).is(':checked');
-
-                if (status) {
-                    var catch_new_port = function () {
-                        PortHandler.port_detected('flash_detected_device', function (result) {
-                            var port = result[0];
-
-                            if (!GUI.connect_lock) {
-                                GUI.log('Detected: <strong>' + port + '</strong> - triggering flash on connect');
-                                console.log('Detected: ' + port + ' - triggering flash on connect');
-
-                                // Trigger regular Flashing sequence
-                                GUI.timeout_add('initialization_timeout', function () {
-                                    $('a.flash_firmware').click();
-                                }, 100); // timeout so bus have time to initialize after being detected by the system
-                            } else {
-                                GUI.log('Detected <strong>' + port + '</strong> - previous device still flashing, please replug to try again');
-                            }
-
-                            // Since current port_detected request was consumed, create new one
-                            catch_new_port();
-                        }, false, true);
-                    };
-
-                    catch_new_port();
-                } else {
-                    PortHandler.flush_callbacks();
-                }
-
-                chrome.storage.local.set({'flash_on_connect': status});
-            }).change();
-        });
+        }).change();
 
         chrome.storage.local.get('erase_chip', function (result) {
             if (result.erase_chip) {
