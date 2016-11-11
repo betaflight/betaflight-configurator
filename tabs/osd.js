@@ -286,8 +286,8 @@ OSD.constants = {
       positionable: true,
       preview: 'ARMED'
     },
-    DIASRMED: {
-      name: 'DIASRMED',
+    DISARMED: {
+      name: 'DISARMED',
       default_position: -109,
       positionable: true,
       preview: 'DISARMED'
@@ -401,7 +401,7 @@ OSD.chooseFields = function () {
       F.VTX_CHANNEL,
       F.VOLTAGE_WARNING,
       F.ARMED,
-      F.DIASRMED,
+      F.DISARMED,
       F.ARTIFICIAL_HORIZON,
       F.HORIZON_SIDEBARS,
       F.CURRENT_DRAW,
