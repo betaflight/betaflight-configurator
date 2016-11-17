@@ -13,6 +13,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
          {name: 'TELEMETRY_FRSKY',      groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['blackbox'], maxPorts: 1},
          {name: 'TELEMETRY_HOTT',       groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['blackbox'], maxPorts: 1},
          {name: 'TELEMETRY_SMARTPORT',  groups: ['telemetry'], maxPorts: 1},
+         {name: 'TELEMETRY_ESC',        groups: ['telemetry'], maxPorts: 1},
          {name: 'RX_SERIAL',            groups: ['rx'], maxPorts: 1},
          {name: 'BLACKBOX',             groups: ['logging', 'blackbox'], sharableWith: ['msp'], notSharableWith: ['telemetry'], maxPorts: 1},
     ];
@@ -81,28 +82,28 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
     load_configuration_from_fc();
-    
+
     function load_configuration_from_fc() {
         MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, on_configuration_loaded_handler);
-        
+
         function on_configuration_loaded_handler() {
             $('#content').load("./tabs/ports.html", on_tab_loaded_handler);
-            
+
             board_definition = BOARD.find_board_definition(CONFIG.boardIdentifier);
             console.log('Using board definition', board_definition);
         }
     }
 
     function update_ui() {
-        
+
         if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
-            
+
             $(".tab-ports").removeClass("supported");
             return;
         }
-        
+
         $(".tab-ports").addClass("supported");
-        
+
         var portIdentifierToNameMapping = {
            0: 'UART1',
            1: 'UART2',
@@ -141,13 +142,13 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
         var ports_e = $('.tab-ports .ports');
         var port_configuration_template_e = $('#tab-ports-templates .portConfiguration');
-        
+
         for (var portIndex = 0; portIndex < SERIAL_CONFIG.ports.length; portIndex++) {
             var port_configuration_e = port_configuration_template_e.clone();
             var serialPort = SERIAL_CONFIG.ports[portIndex];
-            
+
             port_configuration_e.data('serialPort', serialPort);
-            
+
             var msp_baudrate_e = port_configuration_e.find('select.msp_baudrate');
             msp_baudrate_e.val(serialPort.msp_baudrate);
 
@@ -161,24 +162,24 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             blackbox_baudrate_e.val(serialPort.blackbox_baudrate);
 
             port_configuration_e.find('.identifier').text(portIdentifierToNameMapping[serialPort.identifier])
-            
+
             port_configuration_e.data('index', portIndex);
             port_configuration_e.data('port', serialPort);
 
 
             for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
                 var column = columns[columnIndex];
-                
+
                 var functions_e = $(port_configuration_e).find('.functionsCell-' + column);
-                
+
                 for (var i = 0; i < functionRules.length; i++) {
                     var functionRule = functionRules[i];
                     var functionName = functionRule.name;
-                    
+
                     if (functionRule.groups.indexOf(column) == -1) {
                         continue;
                     }
-                    
+
                     var select_e;
                     if (column != 'telemetry') {
                         var checkboxId = 'functionCheckbox-' + portIndex + '-' + columnIndex + '-' + i;
@@ -188,13 +189,13 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                             var checkbox_e = functions_e.find('#' + checkboxId);
                             checkbox_e.prop("checked", true);
                         }
-                        
+
                     } else {
-                        
+
                         var selectElementName = 'function-' + column;
                         var selectElementSelector = 'select[name=' + selectElementName + ']';
                         select_e = functions_e.find(selectElementSelector);
-                        
+
                         if (select_e.size() == 0) {
                             functions_e.prepend('<span class="function"><select name="' + selectElementName + '" /></span>');
                             select_e = functions_e.find(selectElementSelector);
@@ -213,11 +214,11 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             ports_e.find('tbody').append(port_configuration_e);
         }
     }
-    
+
     function on_tab_loaded_handler() {
 
         localize();
-        
+
         update_ui();
 
         $('a.save').click(on_save_handler);
@@ -231,25 +232,25 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
    function on_save_handler() {
-        
+
         // update configuration based on current ui state
         SERIAL_CONFIG.ports = [];
 
         var ports_e = $('.tab-ports .portConfiguration').each(function (portConfiguration_e) {
-            
+
             var portConfiguration_e = this;
-            
+
             var oldSerialPort = $(this).data('serialPort');
-            
+
             var functions = $(portConfiguration_e).find('input:checkbox:checked').map(function() {
                 return this.value;
             }).get();
-            
+
             var telemetryFunction = $(portConfiguration_e).find('select[name=function-telemetry]').val();
             if (telemetryFunction) {
                 functions.push(telemetryFunction);
             }
-            
+
             var serialPort = {
                 functions: functions,
                 msp_baudrate: $(portConfiguration_e).find('.msp_baudrate').val(),
@@ -260,7 +261,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             };
             SERIAL_CONFIG.ports.push(serialPort);
         });
-        
+
         MSP.send_message(MSPCodes.MSP_SET_CF_SERIAL_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CF_SERIAL_CONFIG), false, save_to_eeprom);
 
         function save_to_eeprom() {

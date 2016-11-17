@@ -21,7 +21,8 @@ var Features = function (config) {
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
         {bit: 16, group: 'other', name: 'LED_STRIP'},
         {bit: 17, group: 'other', name: 'DISPLAY'},
-        {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true}
+        {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true},
+        {bit: 27, group: 'other', name: 'ESC_TELEMETRY'}
     ];
 
     if (semver.gte(config.apiVersion, "1.12.0")) {

@@ -20,13 +20,14 @@ function MspHelper () {
     'RX_SERIAL': 6,
     'BLACKBOX': 7,
     'TELEMETRY_MAVLINK': 8,
+    'TELEMETRY_ESC': 10
   };
 }
 
 MspHelper.prototype.process_data = function(dataHandler) {
     var self = this;
     var data = dataHandler.dataView; // DataView (allowing us to view arrayBuffer as struct/union)
-    var code = dataHandler.code; 
+    var code = dataHandler.code;
     if (!dataHandler.unsupported) switch (code) {
         case MSPCodes.MSP_STATUS:
             CONFIG.cycleTime = data.readU16();
@@ -60,7 +61,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             $('span.cycle-time').text(CONFIG.cycleTime);
             $('span.cpu-load').text(chrome.i18n.getMessage('statusbar_cpu_load', [CONFIG.cpuload]));
             break;
-        
+
         case MSPCodes.MSP_RAW_IMU:
             // 512 for mpu6050, 256 for mma
             // currently we are unable to differentiate between the sensor types, so we are goign with 512
@@ -192,11 +193,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
             MISC.gps_ubx_sbas = data.readU8();
             MISC.multiwiicurrentoutput = data.readU8();
             MISC.rssi_channel = data.readU8();
-            MISC.placeholder2 = data.readU8();                
+            MISC.placeholder2 = data.readU8();
             if (semver.lt(CONFIG.apiVersion, "1.18.0"))
                 MISC.mag_declination = data.read16() / 10; // -1800-1800
             else
-                MISC.mag_declination = data.read16() / 100; // -18000-18000                
+                MISC.mag_declination = data.read16() / 100; // -18000-18000
             MISC.vbatscale = data.readU8(); // 10-200
             MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
             MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
@@ -289,12 +290,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         SERVO_CONFIG.push(arr);
                     }
                 }
-                
+
                 if (semver.eq(CONFIG.apiVersion, '1.10.0')) {
                     // drop two unused servo configurations due to MSP rx buffer to small)
                     while (SERVO_CONFIG.length > 8) {
                         SERVO_CONFIG.pop();
-                    } 
+                    }
                 }
             }
             break;
@@ -302,7 +303,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             RC_deadband.deadband = data.readU8();
             RC_deadband.yaw_deadband = data.readU8();
             RC_deadband.alt_hold_deadband = data.readU8();
-            
+
             if (semver.gte(CONFIG.apiVersion, "1.17.0")) {
                 _3D.deadband3d_throttle = data.readU16();
             }
@@ -403,7 +404,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             break;
 
         case MSPCodes.MSP_API_VERSION:
-            CONFIG.mspProtocolVersion = data.readU8(); 
+            CONFIG.mspProtocolVersion = data.readU8();
             CONFIG.apiVersion = data.readU8() + '.' + data.readU8() + '.0';
             break;
 
@@ -426,7 +427,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 buff.push(data.readU8());
             }
             buff.push(32); // ascii space
-            
+
             var timeLength = 8;
             for (var i = 0; i < timeLength; i++) {
                 buff.push(data.readU8());
@@ -464,7 +465,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         identifier: data.readU8(),
                         scenario: data.readU8()
                     }
-                    SERIAL_CONFIG.ports.push(serialPort); 
+                    SERIAL_CONFIG.ports.push(serialPort);
                 }
                 SERIAL_CONFIG.mspBaudRate = data.readU32();
                 SERIAL_CONFIG.cliBaudRate = data.readU32();
@@ -474,7 +475,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 SERIAL_CONFIG.ports = [];
                 var bytesPerPort = 1 + 2 + (1 * 4);
                 var serialPortCount = data.byteLength / bytesPerPort;
-                
+
                 for (var i = 0; i < serialPortCount; i++) {
                     var serialPort = {
                         identifier: data.readU8(),
@@ -484,7 +485,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         telemetry_baudrate: self.BAUD_RATES[data.readU8()],
                         blackbox_baudrate: self.BAUD_RATES[data.readU8()]
                     }
-                    
+
                     SERIAL_CONFIG.ports.push(serialPort);
                 }
             }
@@ -498,7 +499,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             MODE_RANGES = []; // empty the array as new data is coming in
 
             var modeRangeCount = data.byteLength / 4; // 4 bytes per item.
-            
+
             for (var i = 0; i < modeRangeCount; i++) {
                 var modeRange = {
                     id: data.readU8(),
@@ -516,7 +517,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
 
             var adjustmentRangeCount = data.byteLength / 6; // 6 bytes per item.
-            
+
             for (var i = 0; i < adjustmentRangeCount; i++) {
                 var adjustmentRange = {
                     slotIndex: data.readU8(),
@@ -644,25 +645,25 @@ MspHelper.prototype.process_data = function(dataHandler) {
             SENSOR_CONFIG.baro_hardware = data.readU8();
             SENSOR_CONFIG.mag_hardware = data.readU8();
             break;
-            
+
         case MSPCodes.MSP_LED_STRIP_CONFIG:
             LED_STRIP = [];
-            
+
             var ledDirectionLetters =       ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
             var ledFunctionLetters =        ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l']; // in LSB bit order
-            var ledBaseFunctionLetters =    ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit 
-            var ledOverlayLetters =         ['t', 'o', 'b', 'n', 'i', 'w']; // in LSB bit 
+            var ledBaseFunctionLetters =    ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
+            var ledOverlayLetters =         ['t', 'o', 'b', 'n', 'i', 'w']; // in LSB bit
 
-            
+
             var ledCount = data.byteLength / 7; // v1.4.0 and below incorrectly reported 4 bytes per led.
             if (semver.gte(CONFIG.apiVersion, "1.20.0"))
                 ledCount = data.byteLength / 4;
-                
+
             for (var i = 0; i < ledCount; i++) {
 
                 if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
                     var directionMask = data.readU16();
-                    
+
                     var directions = [];
                     for (var directionLetterIndex = 0; directionLetterIndex < ledDirectionLetters.length; directionLetterIndex++) {
                         if (bit_check(directionMask, directionLetterIndex)) {
@@ -671,14 +672,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
 
                     var functionMask = data.readU16();
-                    
+
                     var functions = [];
                     for (var functionLetterIndex = 0; functionLetterIndex < ledFunctionLetters.length; functionLetterIndex++) {
                         if (bit_check(functionMask, functionLetterIndex)) {
                             functions.push(ledFunctionLetters[functionLetterIndex]);
                         }
                     }
-                    
+
                     var led = {
                         directions: directions,
                         functions: functions,
@@ -686,11 +687,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         y: data.readU8(),
                         color: data.readU8()
                     };
-                    
+
                     LED_STRIP.push(led);
                 } else {
                     var mask = data.readU32();
-                    
+
                     var functionId = (mask >> 8) & 0xF;
                     var functions = [];
                     for (var baseFunctionLetterIndex = 0; baseFunctionLetterIndex < ledBaseFunctionLetters.length; baseFunctionLetterIndex++) {
@@ -699,14 +700,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             break;
                         }
                     }
-                    
+
                     var overlayMask = (mask >> 12) & 0x3F;
                     for (var overlayLetterIndex = 0; overlayLetterIndex < ledOverlayLetters.length; overlayLetterIndex++) {
                         if (bit_check(overlayMask, overlayLetterIndex)) {
                             functions.push(ledOverlayLetters[overlayLetterIndex]);
                         }
                     }
-                    
+
                     var directionMask = (mask >> 22) & 0x3F;
                     var directions = [];
                     for (var directionLetterIndex = 0; directionLetterIndex < ledDirectionLetters.length; directionLetterIndex++) {
@@ -722,7 +723,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         directions: directions,
                         parameters: (mask >> 28) & 0xF
                     };
-                    
+
                     LED_STRIP.push(led);
                 }
             }
@@ -731,11 +732,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
             console.log('Led strip config saved');
             break;
         case MSPCodes.MSP_LED_COLORS:
-            
+
             LED_COLORS = [];
-            
+
             var colorCount = data.byteLength / 4;
-            
+
             for (var i = 0; i < colorCount; i++) {
 
                 var color = {
@@ -745,7 +746,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 };
                 LED_COLORS.push(color);
             }
-            
+
             break;
         case MSPCodes.MSP_SET_LED_COLORS:
             console.log('Led strip colors saved');
@@ -754,9 +755,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             if (semver.gte(CONFIG.apiVersion, "1.19.0")) {
 
                 LED_MODE_COLORS = [];
-                
+
                 var colorCount = data.byteLength / 3;
-                
+
                 for (var i = 0; i < colorCount; i++) {
 
                     var mode_color = {
@@ -797,8 +798,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
             console.log("Data flash erase begun...");
             break;
         case MSPCodes.MSP_SDCARD_SUMMARY:
-            var flags = data.readU8(); 
-            
+            var flags = data.readU8();
+
             SDCARD.supported = (flags & 0x01) != 0;
             SDCARD.state = data.readU8();
             SDCARD.filesystemLastError = data.readU8();
@@ -817,7 +818,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
         case MSPCodes.MSP_TRANSPONDER_CONFIG:
             TRANSPONDER.supported = (data.readU8() & 1) != 0;
             TRANSPONDER.data = [];
-            var bytesRemaining = data.byteLength - 1; 
+            var bytesRemaining = data.byteLength - 1;
             for (var i = 0; i < bytesRemaining; i++) {
                 TRANSPONDER.data.push(data.readU8());
             }
@@ -831,7 +832,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
         case MSPCodes.MSP_SET_ADJUSTMENT_RANGE:
             console.log('Adjustment range saved');
             break;
-            
+
         case MSPCodes.MSP_PID_CONTROLLER:
             PID.controller = data.readU8();
             break;
@@ -855,7 +856,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             break;
         case MSPCodes.MSP_SET_SENSOR_ALIGNMENT:
             console.log('Sensor alignment saved');
-            break; 
+            break;
         case MSPCodes.MSP_SET_RX_CONFIG:
             console.log('Rx config saved');
             break;
@@ -997,7 +998,7 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(MISC.placeholder2);
             if (semver.lt(CONFIG.apiVersion, "1.18.0")) {
                 buffer.push16(Math.round(MISC.mag_declination * 10));
-            } else {            
+            } else {
                 buffer.push16(Math.round(MISC.mag_declination * 100));
             }
             buffer.push8(MISC.vbatscale)
@@ -1061,9 +1062,9 @@ MspHelper.prototype.crunch = function(code) {
             } else {
                 for (var i = 0; i < SERIAL_CONFIG.ports.length; i++) {
                     var serialPort = SERIAL_CONFIG.ports[i];
-                    
+
                     buffer.push8(serialPort.identifier);
-                    
+
                     var functionMask = self.serialPortFunctionsToMask(serialPort.functions);
                     buffer.push16(functionMask)
                         .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
@@ -1081,11 +1082,11 @@ MspHelper.prototype.crunch = function(code) {
             if (semver.lt(CONFIG.apiVersion, "1.17.0")) {
                 buffer.push16(_3D.deadband3d_throttle);
             }
-            break;    
+            break;
 
         case MSPCodes.MSP_SET_RC_DEADBAND:
             buffer.push8(RC_deadband.deadband)
-                .push8(RC_deadband.yaw_deadband) 
+                .push8(RC_deadband.yaw_deadband)
                 .push8(RC_deadband.alt_hold_deadband);
             if (semver.gte(CONFIG.apiVersion, "1.17.0")) {
                 buffer.push16(_3D.deadband3d_throttle);
@@ -1158,20 +1159,20 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(SENSOR_CONFIG.baro_hardware)
                 .push8(SENSOR_CONFIG.mag_hardware);
             break;
-            
+
         case MSPCodes.MSP_SET_NAME:
             var MSP_BUFFER_SIZE = 64;
             for (var i = 0; i<CONFIG.name.length && i<MSP_BUFFER_SIZE; i++) {
                 buffer.push8(CONFIG.name.charCodeAt(i));
             }
             break;
-        
+
         case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
-            buffer.push8(BLACKBOX.blackboxDevice) 
+            buffer.push8(BLACKBOX.blackboxDevice)
                 .push8(BLACKBOX.blackboxRateNum)
                 .push8(BLACKBOX.blackboxRateDenom);
-            break;     
-        
+            break;
+
         default:
             return false;
     }
@@ -1181,16 +1182,16 @@ MspHelper.prototype.crunch = function(code) {
 
 /**
  * Set raw Rx values over MSP protocol.
- * 
+ *
  * Channels is an array of 16-bit unsigned integer channel values to be sent. 8 channels is probably the maximum.
  */
 MspHelper.prototype.setRawRx = function(channels) {
     var buffer = [];
-    
+
     for (var i = 0; i < channels.length; i++) {
         buffer.push16(channels[i]);
     }
-    
+
     MSP.send_message(MSPCodes.MSP_SET_RAW_RC, buffer, false);
 }
 
@@ -1231,8 +1232,8 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
 };
 
 MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
-    var nextFunction = send_next_servo_configuration; 
-    
+    var nextFunction = send_next_servo_configuration;
+
     var servoIndex = 0;
 
     if (SERVO_CONFIG.length == 0) {
@@ -1243,7 +1244,7 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
 
 
     function send_next_servo_configuration() {
-        
+
         var buffer = [];
 
         if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
@@ -1258,9 +1259,9 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
             nextFunction = send_channel_forwarding;
         } else {
             // send one at a time, with index
-            
+
             var servoConfiguration = SERVO_CONFIG[servoIndex];
-            
+
             buffer.push8(servoIndex)
                 .push16(servoConfiguration.min)
                 .push16(servoConfiguration.max)
@@ -1275,7 +1276,7 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
             }
             buffer.push8(out)
                 .push32(servoConfiguration.reversedInputSources);
-            
+
             // prepare for next iteration
             servoIndex++;
             if (servoIndex == SERVO_CONFIG.length) {
@@ -1284,7 +1285,7 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
         }
         MSP.send_message(MSPCodes.MSP_SET_SERVO_CONFIGURATION, buffer, false, nextFunction);
     }
-    
+
     function send_channel_forwarding() {
         var buffer = [];
 
@@ -1303,8 +1304,8 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
 };
 
 MspHelper.prototype.sendModeRanges = function(onCompleteCallback) {
-    var nextFunction = send_next_mode_range; 
-    
+    var nextFunction = send_next_mode_range;
+
     var modeRangeIndex = 0;
 
     if (MODE_RANGES.length == 0) {
@@ -1314,29 +1315,29 @@ MspHelper.prototype.sendModeRanges = function(onCompleteCallback) {
     }
 
     function send_next_mode_range() {
-        
+
         var modeRange = MODE_RANGES[modeRangeIndex];
-                        
+
         var buffer = [];
         buffer.push8(modeRangeIndex)
             .push8(modeRange.id)
             .push8(modeRange.auxChannelIndex)
             .push8((modeRange.range.start - 900) / 25)
             .push8((modeRange.range.end - 900) / 25);
-        
+
         // prepare for next iteration
         modeRangeIndex++;
         if (modeRangeIndex == MODE_RANGES.length) {
             nextFunction = onCompleteCallback;
-        
+
         }
         MSP.send_message(MSPCodes.MSP_SET_MODE_RANGE, buffer, false, nextFunction);
     }
 };
 
 MspHelper.prototype.sendAdjustmentRanges = function(onCompleteCallback) {
-    var nextFunction = send_next_adjustment_range; 
-        
+    var nextFunction = send_next_adjustment_range;
+
     var adjustmentRangeIndex = 0;
 
     if (ADJUSTMENT_RANGES.length == 0) {
@@ -1347,9 +1348,9 @@ MspHelper.prototype.sendAdjustmentRanges = function(onCompleteCallback) {
 
 
     function send_next_adjustment_range() {
-        
+
         var adjustmentRange = ADJUSTMENT_RANGES[adjustmentRangeIndex];
-                        
+
         var buffer = [];
         buffer.push8(adjustmentRangeIndex)
             .push8(adjustmentRange.slotIndex)
@@ -1358,21 +1359,21 @@ MspHelper.prototype.sendAdjustmentRanges = function(onCompleteCallback) {
             .push8((adjustmentRange.range.end - 900) / 25)
             .push8(adjustmentRange.adjustmentFunction)
             .push8(adjustmentRange.auxSwitchChannelIndex);
-        
+
         // prepare for next iteration
         adjustmentRangeIndex++;
         if (adjustmentRangeIndex == ADJUSTMENT_RANGES.length) {
             nextFunction = onCompleteCallback;
-        
+
         }
         MSP.send_message(MSPCodes.MSP_SET_ADJUSTMENT_RANGE, buffer, false, nextFunction);
     }
 };
 
 MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
-    
-    var nextFunction = send_next_led_strip_config; 
-    
+
+    var nextFunction = send_next_led_strip_config;
+
     var ledIndex = 0;
 
     if (LED_STRIP.length == 0) {
@@ -1382,15 +1383,15 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
     }
 
     function send_next_led_strip_config() {
-        
+
         var led = LED_STRIP[ledIndex];
         var ledDirectionLetters =        ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
         var ledFunctionLetters =         ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l']; // in LSB bit order
-        var ledBaseFunctionLetters =     ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit 
-        var ledOverlayLetters =         ['t', 'o', 'b', 'n', 'i', 'w']; // in LSB bit 
+        var ledBaseFunctionLetters =     ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
+        var ledOverlayLetters =         ['t', 'o', 'b', 'n', 'i', 'w']; // in LSB bit
 
         var buffer = [];
-        
+
         buffer.push(ledIndex);
 
         if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
@@ -1402,7 +1403,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
                 }
             }
             buffer.push16(directionMask);
-    
+
             var functionMask = 0;
             for (var functionLetterIndex = 0; functionLetterIndex < led.functions.length; functionLetterIndex++) {
                 var bitIndex = ledFunctionLetters.indexOf(led.functions[functionLetterIndex]);
@@ -1411,10 +1412,10 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
                 }
             }
             buffer.push16(functionMask)
-            
+
                 .push8(led.x)
                 .push8(led.y)
-    
+
                 .push8(led.color);
         } else {
             var mask = 0;
@@ -1429,7 +1430,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
                     break;
                 }
             }
-            
+
             for (var overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
                 var bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
                 if (bitIndex >= 0) {
@@ -1445,19 +1446,19 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
                     mask |= bit_set(mask, bitIndex + 22);
                 }
             }
-            
+
             mask |= (0 << 28); // parameters
-            
-            
+
+
             buffer.push32(mask);
         }
-        
+
         // prepare for next iteration
         ledIndex++;
         if (ledIndex == LED_STRIP.length) {
             nextFunction = onCompleteCallback;
         }
-        
+
         MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer, false, nextFunction);
     }
 }
@@ -1467,10 +1468,10 @@ MspHelper.prototype.sendLedStripColors = function(onCompleteCallback) {
         onCompleteCallback();
     } else {
         var buffer = [];
-        
+
         for (var colorIndex = 0; colorIndex < LED_COLORS.length; colorIndex++) {
             var color = LED_COLORS[colorIndex];
-            
+
             buffer.push16(color.h)
                 .push8(color.s)
                 .push8(color.v);
@@ -1480,21 +1481,21 @@ MspHelper.prototype.sendLedStripColors = function(onCompleteCallback) {
 }
 
 MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
-    
-    var nextFunction = send_next_led_strip_mode_color; 
+
+    var nextFunction = send_next_led_strip_mode_color;
     var index = 0;
-    
+
     if (LED_MODE_COLORS.length == 0) {
         onCompleteCallback();
     } else {
         send_next_led_strip_mode_color();
     }
-    
+
     function send_next_led_strip_mode_color() {
         var buffer = [];
-        
+
         var mode_color = LED_MODE_COLORS[index];
-        
+
         buffer.push8(mode_color.mode)
             .push8(mode_color.direction)
             .push8(mode_color.color);
@@ -1527,7 +1528,7 @@ MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {
 MspHelper.prototype.serialPortFunctionsToMask = function(functions) {
     var self = this;
     var mask = 0;
-    
+
     var keys = Object.keys(self.SERIAL_PORT_FUNCTIONS);
     for (var index = 0; index < functions.length; index++) {
         var key = functions[index];
@@ -1558,7 +1559,7 @@ MspHelper.prototype.sendRxFailConfig = function(onCompleteCallback) {
         buffer.push8(rxFailIndex)
             .push8(rxFail.mode)
             .push16(rxFail.value);
-        
+
 
         // prepare for next iteration
         rxFailIndex++;
