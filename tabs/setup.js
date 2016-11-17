@@ -33,13 +33,6 @@ TABS.setup.initialize = function (callback) {
         // translate to user-selected language
         localize();
 
-        if (semver.lt(CONFIG.apiVersion, CONFIGURATOR.backupRestoreMinApiVersionAccepted)) {
-            $('#content .backup').addClass('disabled');
-            $('#content .restore').addClass('disabled');
-
-            GUI.log(chrome.i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [CONFIG.apiVersion, CONFIGURATOR.backupRestoreMinApiVersionAccepted]));
-        }
-
         // initialize 3D Model
         self.initModel();
 
@@ -130,29 +123,6 @@ TABS.setup.initialize = function (callback) {
             $(this).text(chrome.i18n.getMessage('initialSetupButtonResetZaxisValue', [self.yaw_fix]));
 
             console.log('YAW reset to 0 deg, fix: ' + self.yaw_fix + ' deg');
-        });
-
-        $('#content .backup').click(function () {
-            if ($(this).hasClass('disabled')) {
-                return;
-            }
-
-            configuration_backup(function () {
-                GUI.log(chrome.i18n.getMessage('initialSetupBackupSuccess'));
-            });
-        });
-
-        $('#content .restore').click(function () {
-            if ($(this).hasClass('disabled')) {
-                return;
-            }
-
-            configuration_restore(function () {
-                // get latest settings
-                TABS.setup.initialize();
-
-                GUI.log(chrome.i18n.getMessage('initialSetupRestoreSuccess'));
-            });
         });
 
         // cached elements
