@@ -476,17 +476,25 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
                         if (data[4] == self.state.dfuDNBUSY) { // completely normal
                             var delay = data[1] | (data[2] << 8) | (data[3] << 16);
-
-                            setTimeout(function () {
+                            var startTime = (Date.now() / 1000 | 0);
+                            var check = function () {
                                 self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
                                     if (data[4] == self.state.dfuDNLOAD_IDLE) {
+                                        self.progress_bar_e.val(100);
                                         self.upload_procedure(4);
                                     } else {
-                                        console.log('Failed to execute global chip erase');
-                                        self.upload_procedure(99);
+                                        var currentTime = (Date.now() / 1000 | 0);
+                                        if ((currentTime - startTime) < 20) {
+                                            self.progress_bar_e.val((currentTime - startTime) / 20 * 100);
+                                            setTimeout(check, delay);
+                                        } else {
+                                            console.log('Failed to execute global chip erase');
+                                            self.upload_procedure(99);
+                                        }
                                     }
                                 });
-                            }, delay);
+                            };
+                            setTimeout(check, delay);
                         } else {
                             console.log('Failed to initiate global chip erase');
                             self.upload_procedure(99);
