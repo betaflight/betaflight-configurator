@@ -527,6 +527,9 @@
     "featureBLACKBOXTip": {
         "message": "Configure via the BlackBox tab after enabling."
     },
+    "featureESC_TELEMETRY": {
+        "message": "KISS ESC 24A telemetry support"
+    },
     "featureCHANNEL_FORWARDING": {
         "message": "Forward aux channels to servo outputs"
     },
@@ -776,6 +779,9 @@
     },
     "portsFunction_TELEMETRY_SMARTPORT": {
         "message": "SmartPort"
+    },
+    "portsFunction_TELEMETRY_ESC": {
+        "message": "ESC telemetry"
     },
     "portsFunction_RX_SERIAL": {
         "message": "Serial RX"
@@ -1114,7 +1120,7 @@
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
     },
-    
+
     "adjustmentsSave": {
         "message": "Save"
     },
@@ -1857,25 +1863,25 @@
     	"message": "Blackbox logging device"
     },
       "onboardLoggingRateOfLogging": {
-    	"message": "Blackbox logging rate"  
+    	"message": "Blackbox logging rate"
     },
       "onboardLoggingSerialLogger": {
-    	"message": "Outboard serial logging device"  
+    	"message": "Outboard serial logging device"
     },
       "onboardLoggingFlashLogger": {
-    	"message": "Onboard dataflash chip"  
+    	"message": "Onboard dataflash chip"
     },
       "onboardLoggingEraseInProgress": {
-    	"message": "Erase in progress, please wait..."  
+    	"message": "Erase in progress, please wait..."
     },
       "onboardLoggingOnboardSDCard": {
     	"message": "Onboard SD card"
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 
 
 
