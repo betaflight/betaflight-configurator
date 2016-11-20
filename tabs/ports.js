@@ -8,8 +8,8 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     var board_definition = {};
 
     var functionRules = [
-         {name: 'MSP',                  groups: ['data', 'msp'], maxPorts: 2},
-         {name: 'GPS',                  groups: ['gps'], maxPorts: 1},
+         {name: 'MSP',                  groups: ['configuration', 'msp'], maxPorts: 2},
+         {name: 'GPS',                  groups: ['sensors'], maxPorts: 1},
          {name: 'TELEMETRY_FRSKY',      groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['blackbox'], maxPorts: 1},
          {name: 'TELEMETRY_HOTT',       groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['blackbox'], maxPorts: 1},
          {name: 'TELEMETRY_SMARTPORT',  groups: ['telemetry'], maxPorts: 1},
@@ -31,7 +31,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
     if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-        var escTlmFunctionRule = {name: 'TELEMETRY_ESC',        groups: ['telemetry'], maxPorts: 1};
+        var escTlmFunctionRule = {name: 'TELEMETRY_ESC',        groups: ['sensors'], maxPorts: 1};
         functionRules.push(escTlmFunctionRule);
     }
 
@@ -54,6 +54,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
     var gpsBaudRates = [
+        'AUTO',
         '9600',
         '19200',
         '38400',
@@ -79,7 +80,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         '250000',
     ];
 
-    var columns = ['data', 'logging', 'gps', 'telemetry', 'rx'];
+    var columns = ['configuration', 'logging', 'sensors', 'telemetry', 'rx'];
 
     if (GUI.active_tab != 'ports') {
         GUI.active_tab = 'ports';
@@ -159,8 +160,15 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             var telemetry_baudrate_e = port_configuration_e.find('select.telemetry_baudrate');
             telemetry_baudrate_e.val(serialPort.telemetry_baudrate);
 
+            var gpsBaudrate;
+            if (serialPort.functions.indexOf('GPS') >= 0) {
+                gpsBaudrate = serialPort.gps_baudrate;
+            } else {
+                gpsBaudrate = 'AUTO';
+            }
+
             var gps_baudrate_e = port_configuration_e.find('select.gps_baudrate');
-            gps_baudrate_e.val(serialPort.gps_baudrate);
+            gps_baudrate_e.val(gpsBaudrate);
 
             var blackbox_baudrate_e = port_configuration_e.find('select.blackbox_baudrate');
             blackbox_baudrate_e.val(serialPort.blackbox_baudrate);
@@ -185,7 +193,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                     }
 
                     var select_e;
-                    if (column != 'telemetry') {
+                    if (column !== 'telemetry' && column !== 'sensors') {
                         var checkboxId = 'functionCheckbox-' + portIndex + '-' + columnIndex + '-' + i;
                         functions_e.prepend('<span class="function"><input type="checkbox" class="togglemedium" id="' + checkboxId + '" value="' + functionName + '" /><label for="' + checkboxId + '"> ' + functionRule.displayName + '</label></span>');
 
@@ -255,11 +263,21 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                 functions.push(telemetryFunction);
             }
 
+             var sensorFunction = $(portConfiguration_e).find('select[name=function-sensors]').val();
+            if (sensorFunction) {
+                functions.push(sensorFunction);
+             }
+
+            var gpsBaudrate = $(portConfiguration_e).find('.gps_baudrate').val();
+            if (gpsBaudrate === 'AUTO') {
+                 gpsBaudrate = '57600';
+            }
+
             var serialPort = {
                 functions: functions,
                 msp_baudrate: $(portConfiguration_e).find('.msp_baudrate').val(),
                 telemetry_baudrate: $(portConfiguration_e).find('.telemetry_baudrate').val(),
-                gps_baudrate: $(portConfiguration_e).find('.gps_baudrate').val(),
+                gps_baudrate: gpsBaudrate,
                 blackbox_baudrate: $(portConfiguration_e).find('.blackbox_baudrate').val(),
                 identifier: oldSerialPort.identifier
             };

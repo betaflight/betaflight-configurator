@@ -741,6 +741,24 @@
         "message": "Save and Reboot"
     },
 
+    "portsIdentifier": {
+      "message": "Port Identifier"
+    },
+    "portsConfiguration": {
+      "message": "Configuration"
+    },
+    "portsSerialRx": {
+      "message": "Serial Rx"
+    },
+    "portsSensorIn": {
+      "message": "Sensor Input"
+    },
+    "portsTelemetryOut": {
+      "message": "Telemetry Output"
+    },
+    "portsLogging": {
+        "message": "Logging"
+    },
     "portsHelp": {
         "message": "<strong>Note:</strong> not all combinations are valid.  When the flight controller firmware detects this the serial port configuration will be reset."
     },
@@ -759,8 +777,8 @@
     "portsFunction_MSP": {
         "message": "MSP"
     },
-    "portsFunction_GSP": {
-        "message": "GSP"
+    "portsFunction_GPS": {
+        "message": "GPS"
     },
     "portsFunction_TELEMETRY_FRSKY": {
         "message": "FrSky"
@@ -781,7 +799,7 @@
         "message": "SmartPort"
     },
     "portsFunction_TELEMETRY_ESC": {
-        "message": "ESC telemetry"
+        "message": "ESC Telemetry"
     },
     "portsFunction_RX_SERIAL": {
         "message": "Serial RX"
