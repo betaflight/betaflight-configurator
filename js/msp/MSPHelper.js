@@ -19,7 +19,7 @@ function MspHelper () {
     'TELEMETRY_SMARTPORT': 5,
     'RX_SERIAL': 6,
     'BLACKBOX': 7,
-    'TELEMETRY_MAVLINK': 8,
+    'TELEMETRY_MAVLINK': 9,
     'TELEMETRY_ESC': 10
   };
 }
