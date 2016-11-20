@@ -21,8 +21,7 @@ var Features = function (config) {
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
         {bit: 16, group: 'other', name: 'LED_STRIP'},
         {bit: 17, group: 'other', name: 'DISPLAY'},
-        {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true},
-        {bit: 27, group: 'other', name: 'ESC_TELEMETRY'}
+        {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true}
     ];
 
     if (semver.gte(config.apiVersion, "1.12.0")) {
@@ -64,6 +63,12 @@ var Features = function (config) {
             features.push(
                 {bit: 18, group: 'other', name: 'OSD'}
             );
+        }
+
+        if (semver.gte(config.flightControllerVersion, "3.1.0")) {
+            features.push(
+                {bit: 27, group: 'other', name: 'ESC_TELEMETRY'}
+            )
         }
     }
 
