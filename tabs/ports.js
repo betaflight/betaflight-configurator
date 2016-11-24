@@ -31,7 +31,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
     if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-        var escTlmFunctionRule = {name: 'TELEMETRY_ESC',        groups: ['sensors'], maxPorts: 1};
+        var escTlmFunctionRule = {name: 'ESC_SENSOR',        groups: ['sensors'], maxPorts: 1};
         functionRules.push(escTlmFunctionRule);
     }
 

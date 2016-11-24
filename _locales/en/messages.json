@@ -527,8 +527,8 @@
     "featureBLACKBOXTip": {
         "message": "Configure via the BlackBox tab after enabling."
     },
-    "featureESC_TELEMETRY": {
-        "message": "KISS ESC 24A telemetry support"
+    "featureESC_SENSOR": {
+        "message": "Use KISS ESC 24A telemetry as sensor"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Forward aux channels to servo outputs"
@@ -798,8 +798,8 @@
     "portsFunction_TELEMETRY_SMARTPORT": {
         "message": "SmartPort"
     },
-    "portsFunction_TELEMETRY_ESC": {
-        "message": "ESC Telemetry"
+    "portsFunction_ESC_SENSOR": {
+        "message": "ESC"
     },
     "portsFunction_RX_SERIAL": {
         "message": "Serial RX"
