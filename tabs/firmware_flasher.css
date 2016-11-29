@@ -80,6 +80,16 @@
     border-radius: 4px;
 }
 
+.tab-firmware_flasher .info .progress.actionRequired::-webkit-progress-bar {
+    background-color: #0081FF;
+    border-radius: 4px;
+}
+
+.tab-firmware_flasher .info .progress.actionRequired::-webkit-progress-value {
+    background-color: #0081FF;
+    border-radius: 4px;
+}
+
 .tab-firmware_flasher ul li {
     list-style: initial;
     list-style-type: circle;
