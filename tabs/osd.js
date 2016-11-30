@@ -595,8 +595,8 @@ TABS.osd.initialize = function (callback) {
           MSP.promise(MSPCodes.MSP_OSD_CONFIG)
           .then(function(info) {
             OSD.chooseFields();
-            // fc responsed with only 1 field: osd unsupported
-            if (info.length == 1) {
+            // fc responsed with short message: osd unsupported
+            if (info.length < 4) {
               $('.unsupported').fadeIn();
               return;
             }
