@@ -373,8 +373,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             serialRXtypes.push('IBUS');
         }
 
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.6.0"))  {
+        if (semver.gte(CONFIG.flightControllerVersion, "2.6.0"))  {
             serialRXtypes.push('JETIEXBUS');
+        }
+
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0"))  {
+            serialRXtypes.push('CRSF');
         }
 
         var serialRX_e = $('select.serialRX');
