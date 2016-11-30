@@ -67,7 +67,7 @@ var Features = function (config) {
 
         if (semver.gte(config.flightControllerVersion, "3.1.0")) {
             features.push(
-                {bit: 27, group: 'other', name: 'ESC_TELEMETRY'}
+                {bit: 27, group: 'other', name: 'ESC_SENSOR'}
             )
         }
     }

@@ -20,7 +20,7 @@ function MspHelper () {
     'RX_SERIAL': 6,
     'BLACKBOX': 7,
     'TELEMETRY_MAVLINK': 9,
-    'TELEMETRY_ESC': 10
+    'ESC_SENSOR': 10
   };
 }
 
