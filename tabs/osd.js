@@ -362,6 +362,24 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.GPS_SAT) + '14'
+    },
+    PID_ROLL: {
+      name: 'PID_ROLL',
+      default_position: 0x800 | (10 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: 'ROL  43  40  20'
+    },
+    PID_PITCH: {
+      name: 'PID_PITCH',
+      default_position: 0x800 | (11 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: 'PIT  58  50  22'
+    },
+    PID_YAW: {
+      name: 'PID_YAW',
+      default_position: 0x800 | (12 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: 'YAW  70  45  20'
     }
   }
 };
@@ -388,7 +406,14 @@ OSD.chooseFields = function () {
       F.GPS_SPEED,
       F.GPS_SATS,
       F.ALTITUDE
-    ]
+    ];
+    if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+      OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+        F.PID_ROLL,
+        F.PID_PITCH,
+        F.PID_YAW
+      ]);
+    }
   }
   // version 3.0.0
   else {
@@ -408,7 +433,7 @@ OSD.chooseFields = function () {
       F.MAH_DRAWN,
       F.CRAFT_NAME,
       F.ALTITUDE
-    ]
+    ];
   }
 };
 
