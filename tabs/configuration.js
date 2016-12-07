@@ -29,7 +29,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     function load_misc() {
         MSP.send_message(MSPCodes.MSP_MISC, false, false, load_acc_trim);
     }
-    
+
     function load_acc_trim() {
         MSP.send_message(MSPCodes.MSP_ACC_TRIM, false, false, load_arming_config);
     }
@@ -42,7 +42,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             next_callback();
         }
     }
-    
+
     function load_loop_time() {
         var next_callback = load_3d;
         if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
@@ -76,9 +76,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, next_callback);
         } else {
             next_callback();
-        }        
+        }
     }
-    
+
     function sensor_config() {
         var next_callback = load_sensor_alignment;
         if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
@@ -87,7 +87,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             next_callback();
         }
     }
-    
+
     function load_sensor_alignment() {
         var next_callback = load_name;
         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
@@ -96,9 +96,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             next_callback();
         }
     }
-    
+
     function load_name() {
-        var next_callback = load_html;
+        var next_callback = load_battery;
         if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
             MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
         } else {
@@ -106,7 +106,25 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
     }
 
-    
+    function load_battery() {
+        var next_callback = load_current;
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            MSP.send_message(MSPCodes.MSP_VOLTAGE_METER_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+    function load_current() {
+        var next_callback = load_html;
+        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+
     //Update Analog/Battery Data
     function load_analog() {
         MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
@@ -120,7 +138,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     load_config();
-    
+
     function process_html() {
         var mixer_list_e = $('select.mixerList');
         for (var i = 0; i < mixerList.length; i++) {
@@ -142,7 +160,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var features_e = $('.tab-configuration .features');
 
         BF_CONFIG.features.generateElements(features_e);
-        
+
         // translate to user-selected language
         localize();
 
@@ -156,13 +174,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'CW 180° flip',
             'CW 270° flip'
         ];
-        
-        
-        
+
+
+
         var orientation_gyro_e = $('select.gyroalign');
         var orientation_acc_e = $('select.accalign');
         var orientation_mag_e = $('select.magalign');
-        
+
 
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.tab-configuration .sensoralignment').hide();
@@ -176,16 +194,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             orientation_acc_e.val(SENSOR_ALIGNMENT.align_acc);
             orientation_mag_e.val(SENSOR_ALIGNMENT.align_mag);
         }
-        
-        // ESC protocols 
-        
+
+        // ESC protocols
+
         var escprotocols = [
             'PWM',
             'ONESHOT125',
             'ONESHOT42',
             'MULTISHOT'
         ];
-        
+
         if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
             escprotocols.push('BRUSHED');
         }
@@ -202,8 +220,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             esc_protocol_e.append('<option value="' + (i+1) + '">'+ escprotocols[i] + '</option>');
         }
         esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol+1);
-        
-        
+
+
         $('input[id="unsyncedPWMSwitch"]').prop('checked', PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0);
         $('input[name="unsyncedpwmfreq"]').val(PID_ADVANCED_CONFIG.motor_pwm_rate);
         if (PID_ADVANCED_CONFIG.use_unsyncedPwm) {
@@ -212,26 +230,26 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         else {
             $('div.unsyncedpwmfreq').hide();
         }
-        
+
         // Gyro and PID update
         var gyroFreq = [
             "8KHz",
             "4KHz",
-            "2.67KHz", 
+            "2.67KHz",
             "2KHz",
             "1.6KHz",
             "1.33KHz",
             "1.14KHz",
             "1KHz"
         ];
-        
+
         var gyro_select_e = $('select.gyroSyncDenom');
-                
+
         for (var i = 0; i < gyroFreq.length; i++) {
             gyro_select_e.append('<option value="'+(i+1)+'">'+gyroFreq[i]+'</option>');
         }
         gyro_select_e.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
- 
+
         var gyroDenom = PID_ADVANCED_CONFIG.gyro_sync_denom;
         var pidFreq = [
             8 / (gyroDenom * 1),
@@ -243,7 +261,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             8 / (gyroDenom * 7),
             8 / (gyroDenom * 8)
         ];
- 
+
         var pid_select_e = $('select.pidProcessDenom');
         for (var i = 0; i < pidFreq.length; i++) {
             var pidF = (1000 * pidFreq[i] / 10); // Could be done better
@@ -251,7 +269,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             pid_select_e.append('<option value="'+(i+1)+'">'+(pidF / 100).toString()+'KHz</option>');
         }
         pid_select_e.val(PID_ADVANCED_CONFIG.pid_process_denom);
-        
+
         $('select.gyroSyncDenom').change(function() {
            var gyroDenom = $('select.gyroSyncDenom').val();
            var newPidFreq = [
@@ -268,7 +286,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 var pidF = (1000 * newPidFreq[i] / 10); // Could be done better
                 pidF = pidF.toFixed(0);
                 $('select.pidProcessDenom option[value="'+(i+1)+'"]').text((pidF / 100).toString()+'KHz');}
-           
+
         });
 
         $('input[id="accHardwareSwitch"]').prop('checked', SENSOR_CONFIG.acc_hardware !== 1);
@@ -282,17 +300,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('.checkboxPwm').hide();
             $('.selectPidProcessDenom').hide();
         }
-        
+
         if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.2")) {
             $('.hardwareSelection').hide();
         }
 
         $('input[name="vesselName"]').val(CONFIG.name);
-        
+
         if (CONFIG.flightControllerIdentifier != "BTFL" || semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
             $('.miscSettings').hide();
         }
-         
+
 
 
         // generate GPS
@@ -328,13 +346,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         });
 
         gps_protocol_e.val(MISC.gps_type);
-        
-        
+
+
         var gps_baudrate_e = $('select.gps_baudrate');
         for (var i = 0; i < gpsBaudRates.length; i++) {
             gps_baudrate_e.append('<option value="' + gpsBaudRates[i] + '">' + gpsBaudRates[i] + '</option>');
         }
-    
+
         if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
             gps_baudrate_e.change(function () {
                 SERIAL_CONFIG.gpsBaudRate = parseInt($(this).val());
@@ -344,8 +362,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gps_baudrate_e.prop("disabled", true);
             gps_baudrate_e.parent().hide();
         }
-        
-        
+
+
         var gps_ubx_sbas_e = $('select.gps_ubx_sbas');
         for (var i = 0; i < gpsSbas.length; i++) {
             gps_ubx_sbas_e.append('<option value="' + i + '">' + gpsSbas[i] + '</option>');
@@ -410,28 +428,61 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // fill magnetometer
         $('input[name="mag_declination"]').val(MISC.mag_declination.toFixed(2));
 
-        //fill motor disarm params and FC loop time        
+        //fill motor disarm params and FC loop time
         if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
             $('input[name="autodisarmdelay"]').val(ARMING_CONFIG.auto_disarm_delay);
             $('input[id="disarmkillswitch"]').prop('checked', ARMING_CONFIG.disarm_kill_switch !== 0);
-            $('div.disarm').show();            
+            $('div.disarm').show();
 
             $('div.cycles').show();
         }
-        
+
         // fill throttle
         $('input[name="midrc"]').val(MISC.midrc);
         $('input[name="minthrottle"]').val(MISC.minthrottle);
         $('input[name="maxthrottle"]').val(MISC.maxthrottle);
         $('input[name="mincommand"]').val(MISC.mincommand);
-        
+
         // fill battery
+        var batteryMeterTypes = [
+            'None', //Do not show in GUI
+            'Onboard ADC',
+            'ESC Sensor',
+        ];
+
+        var batteryMeterType_e = $('select.batterymetertype');
+        for (i = 1; i < batteryMeterTypes.length; i++) {
+            batteryMeterType_e.append('<option value="' + i + '">' + batteryMeterTypes[i] + '</option>');
+        }
+
+        batteryMeterType_e.change(function () {
+            MISC.batterymetertype = parseInt($(this).val());
+        });
+        batteryMeterType_e.val(MISC.batterymetertype);
+
         $('input[name="mincellvoltage"]').val(MISC.vbatmincellvoltage);
         $('input[name="maxcellvoltage"]').val(MISC.vbatmaxcellvoltage);
         $('input[name="warningcellvoltage"]').val(MISC.vbatwarningcellvoltage);
         $('input[name="voltagescale"]').val(MISC.vbatscale);
 
         // fill current
+        var currentMeterTypes = [
+            'None', //Do not show in GUI
+            'Onboard ADC',
+            'Virtual',
+            'ESC Sensor',
+        ];
+
+        var currentMeterType_e = $('select.currentmetertype');
+        for (i = 1; i < currentMeterTypes.length; i++) {
+            currentMeterType_e.append('<option value="' + i + '">' + currentMeterTypes[i] + '</option>');
+        }
+
+        currentMeterType_e.change(function () {
+            BF_CONFIG.currentmetertype = parseInt($(this).val());
+        });
+        currentMeterType_e.val(BF_CONFIG.currentmetertype);
+
         $('input[name="currentscale"]').val(BF_CONFIG.currentscale);
         $('input[name="currentoffset"]').val(BF_CONFIG.currentoffset);
         $('input[name="multiwiicurrentoutput"]').prop('checked', MISC.multiwiicurrentoutput !== 0);
@@ -504,13 +555,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
             MISC.mag_declination = parseFloat($('input[name="mag_declination"]').val());
-            
+
             // motor disarm
             if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
                 ARMING_CONFIG.auto_disarm_delay = parseInt($('input[name="autodisarmdelay"]').val());
                 ARMING_CONFIG.disarm_kill_switch = $('input[id="disarmkillswitch"]').is(':checked') ? 1 : 0;
             }
-            
+
             MISC.midrc = parseInt($('input[name="midrc"]').val());
             MISC.minthrottle = parseInt($('input[name="minthrottle"]').val());
             MISC.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
@@ -535,7 +586,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             SENSOR_ALIGNMENT.align_gyro = parseInt(orientation_gyro_e.val());
             SENSOR_ALIGNMENT.align_acc = parseInt(orientation_acc_e.val());
             SENSOR_ALIGNMENT.align_mag = parseInt(orientation_mag_e.val());
-            
+
             PID_ADVANCED_CONFIG.fast_pwm_protocol = parseInt(esc_protocol_e.val()-1);
             PID_ADVANCED_CONFIG.use_unsyncedPwm = $('input[id="unsyncedPWMSwitch"]').is(':checked') ? 1 : 0;
             PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
@@ -578,7 +629,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                    MSP.send_message(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT), false, next_callback);
                 } else {
                    next_callback();
-                }     
+                }
             }
             function save_esc_protocol() {
                 var next_callback = save_acc_trim;
@@ -609,7 +660,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             function save_sensor_config() {
                 var next_callback = save_name;
-                
+
                 if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
                     SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
                     SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
@@ -621,11 +672,29 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_name() {
-                var next_callback = save_to_eeprom;
-                
+                var next_callback = save_battery;
+
                 if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
                     CONFIG.name = $.trim($('input[name="vesselName"]').val());
                     MSP.send_message(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_battery() {
+                var next_callback = save_current;
+                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_current() {
+                var next_callback = save_to_eeprom;
+                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }
@@ -663,7 +732,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             MSP.send_message(MSPCodes.MSP_SET_BF_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BF_CONFIG), false, save_serial_config);
-            
+
         });
 
         // status data pulled via separate timer with static speed

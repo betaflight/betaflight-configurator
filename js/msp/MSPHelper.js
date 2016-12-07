@@ -203,6 +203,21 @@ MspHelper.prototype.process_data = function(dataHandler) {
             MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
             MISC.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
             break;
+        case MSPCodes.MSP_VOLTAGE_METER_CONFIG:
+            MISC.vbatscale = data.readU8(); // 10-200
+            MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
+            MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
+            MISC.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
+            if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
+                MISC.batteryMeterType = data.readU8();
+            }
+            break;
+        case MSPCodes.MSP_CURRENT_METER_CONFIG:
+            BF_CONFIG.currentscale = data.readU16();
+            BF_CONFIG.currentoffset = data.readU16();
+            BF_CONFIG.currentmetertype = data.readU8();
+            BF_CONFIG.batterycapacity = data.readU16();
+            break;
         case MSPCodes.MSP_3D:
             _3D.deadband3d_low = data.readU16();
             _3D.deadband3d_high = data.readU16();
@@ -342,6 +357,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
         case MSPCodes.MSP_EEPROM_WRITE:
             console.log('Settings Saved in EEPROM');
             break;
+        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
+            console.log('Current Settings saved');
+            break;
+        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
+            console.log('Voltage config saved');
         case MSPCodes.MSP_DEBUG:
             for (var i = 0; i < 4; i++)
                 SENSOR_DATA.debug[i] = data.read16();
@@ -1006,7 +1026,21 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
                 .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
             break;
-
+        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
+            buffer.push8(MISC.vbatscale)
+                .push8(Math.round(MISC.vbatmincellvoltage * 10))
+                .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
+                .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
+                if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
+                    buffer.push8(MISC.batteryMeterType);
+                }
+            break;
+        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
+            buffer.push16(BF_CONFIG.currentscale)
+                .push16(BF_CONFIG.currentoffset)
+                .push8(BF_CONFIG.currentmetertype)
+                .push16(BF_CONFIG.batterycapacity)
+            break;
         case MSPCodes.MSP_SET_RX_CONFIG:
             buffer.push8(RX_CONFIG.serialrx_provider)
                 .push16(RX_CONFIG.maxcheck)

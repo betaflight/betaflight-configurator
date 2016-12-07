@@ -665,6 +665,9 @@
     "configurationBatteryCurrent": {
         "message": "Battery Current"
     },
+    "configurationBatteryMeterType": {
+        "message": "Battery Meter Type"
+    },
     "configurationBatteryMinimum": {
         "message": "Minimum Cell Voltage"
     },
@@ -676,6 +679,9 @@
     },
     "configurationBatteryScale": {
         "message": "Voltage Scale"
+    },
+    "configurationCurrentMeterType": {
+        "message": "Current Meter Type"
     },
     "configurationCurrent": {
         "message": "Current Sensor"

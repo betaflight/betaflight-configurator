@@ -295,6 +295,20 @@
     width: 30px;
 }
 
+.tab-configuration .batterymetertype {
+    border: 1px solid silver;
+    margin-right: 5px;
+    float: left;
+    width: 150px;
+}
+
+.tab-configuration .currentmetertype {
+    border: 1px solid silver;
+    margin-right: 5px;
+    float: left;
+    width: 150px;
+}
+
 .tab-configuration .rssi td:nth-child(2) {
     width: 30px;
 }
@@ -463,7 +477,7 @@
 }
 
 .tab-configuration .sensoralignment {
-    width: 50%; 
+    width: 50%;
     float: left;
 }
 
