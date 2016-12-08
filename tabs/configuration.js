@@ -456,8 +456,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         batteryMeterType_e.change(function () {
             MISC.batterymetertype = parseInt($(this).val());
+            checkDisableVbatControls();
         });
-        batteryMeterType_e.val(MISC.batterymetertype);
+        batteryMeterType_e.val(MISC.batterymetertype).change();
 
         $('input[name="mincellvoltage"]').val(MISC.vbatmincellvoltage);
         $('input[name="maxcellvoltage"]').val(MISC.vbatmaxcellvoltage);
@@ -479,8 +480,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         currentMeterType_e.change(function () {
             BF_CONFIG.currentmetertype = parseInt($(this).val());
+            checkDisableCurrentControls();
         });
-        currentMeterType_e.val(BF_CONFIG.currentmetertype);
+        currentMeterType_e.val(BF_CONFIG.currentmetertype).change();
 
         $('input[name="currentscale"]').val(BF_CONFIG.currentscale);
         $('input[name="currentoffset"]').val(BF_CONFIG.currentoffset);
@@ -525,6 +527,49 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }
 
+        function checkDisableVbatControls() {
+            if (BF_CONFIG.features.isEnabled('VBAT')) {
+                $('select.batterymetertype').prop('disabled', false);
+                if (MISC.batterymetertype == 1) {
+                    $('input[name="mincellvoltage"]').prop('disabled', true);
+                    $('input[name="maxcellvoltage"]').prop('disabled', true);
+                    $('input[name="warningcellvoltage"]').prop('disabled', true);
+                    $('input[name="voltagescale"]').prop('disabled', true);
+                } else {
+                    $('input[name="mincellvoltage"]').prop('disabled', false);
+                    $('input[name="maxcellvoltage"]').prop('disabled', false);
+                    $('input[name="warningcellvoltage"]').prop('disabled', false);
+                    $('input[name="voltagescale"]').prop('disabled', false);
+                }
+            } else {
+                $('select.batterymetertype').prop('disabled', true);
+                $('input[name="mincellvoltage"]').prop('disabled', true);
+                $('input[name="maxcellvoltage"]').prop('disabled', true);
+                $('input[name="warningcellvoltage"]').prop('disabled', true);
+                $('input[name="voltagescale"]').prop('disabled', true);
+            }
+        }
+
+        function checkDisableCurrentControls() {
+            if (BF_CONFIG.features.isEnabled('CURRENT_METER')) {
+                $('select.currentmetertype').prop('disabled', false);
+                if (BF_CONFIG.currentmetertype == 0 || BF_CONFIG.currentmetertype == 3) {
+                    $('input[name="currentscale"]').prop('disabled', true);
+                    $('input[name="currentoffset"]').prop('disabled', true);
+                    $('input[name="multiwiicurrentoutput"]').prop('disabled', true);
+                } else {
+                    $('input[name="currentscale"]').prop('disabled', false);
+                    $('input[name="currentoffset"]').prop('disabled', false);
+                    $('input[name="multiwiicurrentoutput"]').prop('disabled', false);
+                }
+            } else {
+                $('select.currentmetertype').prop('disabled', true);
+                $('input[name="currentscale"]').prop('disabled', true);
+                $('input[name="currentoffset"]').prop('disabled', true);
+                $('input[name="multiwiicurrentoutput"]').prop('disabled', true);
+            }
+        }
+
         $(features_e).filter('select').change(function () {
             var element = $(this);
 
@@ -535,7 +580,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 checkShowSerialRxBox();
             }
         });
+
+        $(features_e).filter('tbody.features.batteryVoltage').change(function() {
+            checkDisableVbatControls();
+        });
+
+        $(features_e).filter('tbody.features.batteryCurrent').change(function() {
+            checkDisableCurrentControls();
+        });
+
         checkShowSerialRxBox();
+        checkDisableVbatControls();
+        checkDisableCurrentControls();
 
         $("input[id='unsyncedPWMSwitch']").change(function() {
             if ($(this).is(':checked')) {
