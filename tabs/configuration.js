@@ -72,7 +72,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function esc_protocol() {
         var next_callback = sensor_config;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
             MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -81,7 +81,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function sensor_config() {
         var next_callback = load_sensor_alignment;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
             MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -99,7 +99,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_name() {
         var next_callback = load_battery;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
             MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
         } else {
             next_callback();
@@ -108,7 +108,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_battery() {
         var next_callback = load_current;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
             MSP.send_message(MSPCodes.MSP_VOLTAGE_METER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -117,7 +117,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_current() {
         var next_callback = load_html;
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
             MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -295,19 +295,19 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
 
         // Only show these sections for supported FW
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
             $('.selectProtocol').hide();
             $('.checkboxPwm').hide();
             $('.selectPidProcessDenom').hide();
         }
 
-        if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.lt(CONFIG.flightControllerVersion, "2.8.2")) {
             $('.hardwareSelection').hide();
         }
 
         $('input[name="vesselName"]').val(CONFIG.name);
 
-        if (CONFIG.flightControllerIdentifier != "BTFL" || semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
             $('.miscSettings').hide();
         }
 
@@ -445,13 +445,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         // fill battery
         var batteryMeterTypes = [
-            'None', //Do not show in GUI
             'Onboard ADC',
             'ESC Sensor',
         ];
 
         var batteryMeterType_e = $('select.batterymetertype');
-        for (i = 1; i < batteryMeterTypes.length; i++) {
+        for (i = 0; i < batteryMeterTypes.length; i++) {
             batteryMeterType_e.append('<option value="' + i + '">' + batteryMeterTypes[i] + '</option>');
         }
 
@@ -467,14 +466,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         // fill current
         var currentMeterTypes = [
-            'None', //Do not show in GUI
+            'None',
             'Onboard ADC',
             'Virtual',
             'ESC Sensor',
         ];
 
         var currentMeterType_e = $('select.currentmetertype');
-        for (i = 1; i < currentMeterTypes.length; i++) {
+        for (i = 0; i < currentMeterTypes.length; i++) {
             currentMeterType_e.append('<option value="' + i + '">' + currentMeterTypes[i] + '</option>');
         }
 
@@ -633,7 +632,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             function save_esc_protocol() {
                 var next_callback = save_acc_trim;
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
                     MSP.send_message(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG), false, next_callback);
                 } else {
                    next_callback();
@@ -651,7 +650,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_looptime_config() {
                 var next_callback = save_sensor_config;
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
                     FC_CONFIG.loopTime = PID_ADVANCED_CONFIG.gyro_sync_denom * 125;
                     MSP.send_message(MSPCodes.MSP_SET_LOOP_TIME, mspHelper.crunch(MSPCodes.MSP_SET_LOOP_TIME), false, next_callback);
                 } else {
@@ -661,7 +660,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             function save_sensor_config() {
                 var next_callback = save_name;
 
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
                     SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
                     SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
                     SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
@@ -674,7 +673,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             function save_name() {
                 var next_callback = save_battery;
 
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+                if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
                     CONFIG.name = $.trim($('input[name="vesselName"]').val());
                     MSP.send_message(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME), false, next_callback);
                 } else {
@@ -684,7 +683,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_battery() {
                 var next_callback = save_current;
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, next_callback);
                 } else {
                     next_callback();
@@ -693,7 +692,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_current() {
                 var next_callback = save_to_eeprom;
-                if (CONFIG.flightControllerIdentifier == "BTFL" && semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
                 } else {
                     next_callback();

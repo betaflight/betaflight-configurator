@@ -209,7 +209,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
             MISC.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
             if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
-                MISC.batteryMeterType = data.readU8();
+                MISC.batterymetertype = data.readU8();
             }
             break;
         case MSPCodes.MSP_CURRENT_METER_CONFIG:
@@ -1032,7 +1032,7 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
                 .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
                 if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
-                    buffer.push8(MISC.batteryMeterType);
+                    buffer.push8(MISC.batterymetertype);
                 }
             break;
         case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
