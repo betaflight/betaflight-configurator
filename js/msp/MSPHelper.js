@@ -886,8 +886,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
         case MSPCodes.MSP_SET_FILTER_CONFIG:
             console.log('Filter config set');
             break;
-        case MSPCodes.MSP_SET_ADVANCED_TUNING:
-            console.log('Advanced tuning parameters set');
+        case MSPCodes.MSP_SET_ADVANCED_CONFIG:
+            console.log('Advanced config parameters set');
+            break;
+        case MSPCodes.MSP_SET_SENSOR_CONFIG:
+            console.log('Sensor config parameters set');
             break;
         case MSPCodes.MSP_SET_SPECIAL_PARAMETERS:
             console.log('Special parameters set');
