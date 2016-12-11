@@ -1138,7 +1138,12 @@
     "adjustmentsFunction21": {
         "message": "RC Rate Yaw"
     },
-
+    "adjustmentsFunction22": {
+        "message": "D Setpoint"
+    },
+    "adjustmentsFunction23": {
+        "message": "D Setpoint Transition"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },
