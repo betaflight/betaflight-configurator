@@ -328,6 +328,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             SENSOR_ALIGNMENT.align_acc = data.readU8();
             SENSOR_ALIGNMENT.align_mag = data.readU8();
             break;
+        case MSPCodes.MSP_DISPLAYPORT:
+            console.log('Received \'MSP_DISPLAYPORT\' message, ignored.');
+            break;
         case MSPCodes.MSP_SET_RAW_RC:
             break;
         case MSPCodes.MSP_SET_PID:

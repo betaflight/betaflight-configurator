@@ -104,6 +104,8 @@ var MSPCodes = {
     MSP_UID:                        160,
     MSP_GPS_SV_INFO:                164,
 
+    MSP_DISPLAYPORT:                182,
+
     MSP_SET_RAW_RC:                 200,
     MSP_SET_RAW_GPS:                201, // Not used
     MSP_SET_PID:                    202,
