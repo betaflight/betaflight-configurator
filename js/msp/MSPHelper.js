@@ -213,8 +213,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
             }
             break;
         case MSPCodes.MSP_CURRENT_METER_CONFIG:
-            BF_CONFIG.currentscale = data.readU16();
-            BF_CONFIG.currentoffset = data.readU16();
+            BF_CONFIG.currentscale = data.read16();
+            BF_CONFIG.currentdiff adiffname  = data.read16();
             BF_CONFIG.currentmetertype = data.readU8();
             BF_CONFIG.batterycapacity = data.readU16();
             break;
