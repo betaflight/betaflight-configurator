@@ -8,7 +8,7 @@ TABS.onboard_logging = {
     blockSize: 128,
 
     BLOCK_SIZE: 4096,
-    VCP_BLOCK_SIZE: 512
+    VCP_BLOCK_SIZE: 4096
 };
 TABS.onboard_logging.initialize = function (callback) {
     var 
