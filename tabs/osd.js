@@ -380,6 +380,12 @@ OSD.constants = {
       default_position: 0x800 | (12 << 5) | 2, // 0x0800 | (y << 5) | x
       positionable: true,
       preview: 'YAW  70  45  20'
+    },
+    POWER: {
+      name: 'POWER',
+      default_position: (15 << 5) | 2,
+      positionable: true,
+      preview: '142W'
     }
   }
 };
@@ -411,7 +417,8 @@ OSD.chooseFields = function () {
       OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
         F.PID_ROLL,
         F.PID_PITCH,
-        F.PID_YAW
+        F.PID_YAW,
+        F.POWER
       ]);
     }
   }
