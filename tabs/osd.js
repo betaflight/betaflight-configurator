@@ -523,7 +523,7 @@ OSD.msp = {
     }
     d.display_items = [];
     // start at the offset from the other fields
-    while (view.offset < view.byteLength) {
+    while (view.offset < view.byteLength && d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
       var v = null;
       if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
         v = view.readU16();
