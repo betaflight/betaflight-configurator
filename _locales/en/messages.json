@@ -762,8 +762,8 @@
     "portsTelemetryOut": {
       "message": "Telemetry Output"
     },
-    "portsLogging": {
-        "message": "Logging"
+    "portsPeripherals": {
+        "message": "Peripherals"
     },
     "portsHelp": {
         "message": "<strong>Note:</strong> not all combinations are valid.  When the flight controller firmware detects this the serial port configuration will be reset."
@@ -811,9 +811,11 @@
         "message": "Serial RX"
     },
     "portsFunction_BLACKBOX": {
-        "message": "Blackbox"
+        "message": "Blackbox logging"
     },
-
+    "portsFunction_TBS_SMARTAUDIO": {
+        "message": "TBS SmartAudio"
+    },
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span style=\"color: red\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span style=\"color: red\">$1</span>, but this functionality requires requires <span style=\"color: #ffbb00\">$2</span>."
     },
