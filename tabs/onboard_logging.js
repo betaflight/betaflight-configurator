@@ -8,7 +8,8 @@ TABS.onboard_logging = {
     blockSize: 128,
 
     BLOCK_SIZE: 4096,
-    VCP_BLOCK_SIZE: 512
+    VCP_BLOCK_SIZE_3_0: 512,
+    VCP_BLOCK_SIZE: 4096
 };
 TABS.onboard_logging.initialize = function (callback) {
     var 
@@ -339,7 +340,11 @@ TABS.onboard_logging.initialize = function (callback) {
     function flash_save_begin() {
         if (GUI.connected_to) {
             if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
-                self.blockSize = self.VCP_BLOCK_SIZE;
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                    self.blockSize = self.VCP_BLOCK_SIZE;
+                } else {
+                    self.blockSize = self.VCP_BLOCK_SIZE_3_0;
+                }
             } else {
                 self.blockSize = self.BLOCK_SIZE;
             }
