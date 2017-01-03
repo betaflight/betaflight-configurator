@@ -295,7 +295,7 @@
     width: 30px;
 }
 
-.tab-configuration .batterymetertype {
+.tab-configuration select.batterymetertype {
     border: 1px solid silver;
     margin-right: 5px;
     float: left;

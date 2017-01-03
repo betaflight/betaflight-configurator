@@ -444,21 +444,25 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[name="mincommand"]').val(MISC.mincommand);
 
         // fill battery
-        var batteryMeterTypes = [
-            'Onboard ADC',
-            'ESC Sensor',
-        ];
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            var batteryMeterTypes = [
+                'Onboard ADC',
+                'ESC Sensor'
+            ];
 
-        var batteryMeterType_e = $('select.batterymetertype');
-        for (i = 0; i < batteryMeterTypes.length; i++) {
-            batteryMeterType_e.append('<option value="' + i + '">' + batteryMeterTypes[i] + '</option>');
+            var batteryMeterType_e = $('select.batterymetertype');
+            for (i = 0; i < batteryMeterTypes.length; i++) {
+                batteryMeterType_e.append('<option value="' + i + '">' + batteryMeterTypes[i] + '</option>');
+            }
+
+            batteryMeterType_e.change(function () {
+                MISC.batterymetertype = parseInt($(this).val());
+                checkDisableVbatControls();
+            });
+            batteryMeterType_e.val(MISC.batterymetertype).change();
+        } else {
+            $('div.batterymetertype').hide();
         }
-
-        batteryMeterType_e.change(function () {
-            MISC.batterymetertype = parseInt($(this).val());
-            checkDisableVbatControls();
-        });
-        batteryMeterType_e.val(MISC.batterymetertype).change();
 
         $('input[name="mincellvoltage"]').val(MISC.vbatmincellvoltage);
         $('input[name="maxcellvoltage"]').val(MISC.vbatmaxcellvoltage);
@@ -469,9 +473,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var currentMeterTypes = [
             'None',
             'Onboard ADC',
-            'Virtual',
-            'ESC Sensor',
+            'Virtual'
         ];
+
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            currentMeterTypes.push('ESC Sensor');
+        }
 
         var currentMeterType_e = $('select.currentmetertype');
         for (i = 0; i < currentMeterTypes.length; i++) {
@@ -528,25 +535,33 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         function checkDisableVbatControls() {
-            if (BF_CONFIG.features.isEnabled('VBAT')) {
-                $('select.batterymetertype').prop('disabled', false);
-                if (MISC.batterymetertype == 1) {
-                    $('input[name="mincellvoltage"]').prop('disabled', true);
-                    $('input[name="maxcellvoltage"]').prop('disabled', true);
-                    $('input[name="warningcellvoltage"]').prop('disabled', true);
-                    $('input[name="voltagescale"]').prop('disabled', true);
+            function disableBatteryControls(disabled) {
+                $('input[name="mincellvoltage"]').prop('disabled', disabled);
+                $('input[name="maxcellvoltage"]').prop('disabled', disabled);
+                $('input[name="warningcellvoltage"]').prop('disabled', disabled);
+                $('input[name="voltagescale"]').prop('disabled', disabled);
+            }
+
+            if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (BF_CONFIG.features.isEnabled('VBAT')) {
+                    $('select.batterymetertype').prop('disabled', false);
+
+                    if (MISC.batterymetertype == 1) {
+                        disableBatteryControls(true);
+                    } else {
+                        disableBatteryControls(false);
+                    }
                 } else {
-                    $('input[name="mincellvoltage"]').prop('disabled', false);
-                    $('input[name="maxcellvoltage"]').prop('disabled', false);
-                    $('input[name="warningcellvoltage"]').prop('disabled', false);
-                    $('input[name="voltagescale"]').prop('disabled', false);
+                    $('select.batterymetertype').prop('disabled', true);
+
+                    disableBatteryControls(true);
                 }
             } else {
-                $('select.batterymetertype').prop('disabled', true);
-                $('input[name="mincellvoltage"]').prop('disabled', true);
-                $('input[name="maxcellvoltage"]').prop('disabled', true);
-                $('input[name="warningcellvoltage"]').prop('disabled', true);
-                $('input[name="voltagescale"]').prop('disabled', true);
+                if (BF_CONFIG.features.isEnabled('VBAT')) {
+                    disableBatteryControls(false);
+                } else {
+                    disableBatteryControls(true);
+                }
             }
         }
 
