@@ -155,7 +155,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 RC_tuning.RC_YAW_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
                 if (semver.gte(CONFIG.flightControllerVersion, "2.9.1")) {
                     RC_tuning.rcYawRate = parseFloat((data.readU8() / 100).toFixed(2));
-                } else if (semver.lt(CONFIG.flightControllerVersion, "2.9.0")) {
+                } else {
                     RC_tuning.rcYawRate = 0;
                 }
             } else {
@@ -652,18 +652,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 ADVANCED_TUNING.pidMaxVelocityYaw = data.readU16();
             }
             break;
-        case MSPCodes.MSP_SPECIAL_PARAMETERS:
-            if (semver.lt(CONFIG.flightControllerVersion, "2.9.1")) {
-                if (semver.gte(CONFIG.flightControllerVersion, "2.8.0")) {
-                    RC_tuning.rcYawRate = parseFloat((data.readU8() / 100).toFixed(2));
-                    if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
-                        RX_CONFIG.airModeActivateThreshold = data.readU16();
-                        RX_CONFIG.rcSmoothInterval = data.readU8()
-                        SPECIAL_PARAMETERS.escDesyncProtection = data.readU16();
-                    }
-                }
-            }
-            break;
         case MSPCodes.MSP_SENSOR_CONFIG:
             SENSOR_CONFIG.acc_hardware = data.readU8();
             SENSOR_CONFIG.baro_hardware = data.readU8();
@@ -915,9 +903,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
             console.log('Sensor config parameters set');
-            break;
-        case MSPCodes.MSP_SET_SPECIAL_PARAMETERS:
-            console.log('Special parameters set');
             break;
         default:
             console.log('Unknown code detected: ' + code);
@@ -1183,16 +1168,6 @@ MspHelper.prototype.crunch = function(code) {
                    .push16(ADVANCED_TUNING.yaw_p_limit)
                    .push8(ADVANCED_TUNING.deltaMethod)
                    .push8(ADVANCED_TUNING.vbatPidCompensation);
-            }
-            break;
-        case MSPCodes.MSP_SET_SPECIAL_PARAMETERS:
-            if (semver.lt(CONFIG.flightControllerVersion, "2.9.1")) {
-                buffer.push8(Math.round(RC_tuning.rcYawRate * 100));
-                if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
-                    buffer.push16(RX_CONFIG.airModeActivateThreshold)
-                        .push8(RX_CONFIG.rcSmoothInterval)
-                        .push16(SPECIAL_PARAMETERS.escDesyncProtection);
-                }
             }
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:

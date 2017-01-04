@@ -71,8 +71,8 @@ var MSPCodes = {
     MSP_SET_PID_ADVANCED:           95,
     MSP_SENSOR_CONFIG:              96,
     MSP_SET_SENSOR_CONFIG:          97,
-    MSP_SPECIAL_PARAMETERS:         98,
-    MSP_SET_SPECIAL_PARAMETERS:     99,
+    // MSP_SPECIAL_PARAMETERS:         98, removed
+    //MSP_SET_SPECIAL_PARAMETERS:     99, removed
     MSP_IDENT:                      100, // Not used
     MSP_STATUS:                     101,
     MSP_RAW_IMU:                    102,
