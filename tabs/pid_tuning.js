@@ -25,10 +25,6 @@ TABS.pid_tuning.initialize = function (callback) {
         return MSP.promise(MSPCodes.MSP_PIDNAMES)
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_PID);
-    }).then(function () {
-        if (semver.gte(CONFIG.flightControllerVersion, "2.9.0") && semver.lt(CONFIG.flightControllerVersion, "2.9.1")) {
-          return MSP.promise(MSPCodes.MSP_SPECIAL_PARAMETERS);
-        }
     }).then(function() {
         if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
           return MSP.promise(MSPCodes.MSP_PID_ADVANCED);
@@ -844,10 +840,6 @@ TABS.pid_tuning.initialize = function (callback) {
                 return promise;
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
-            }).then(function () {
-                if (semver.gte(CONFIG.flightControllerVersion, "2.9.0") && semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
-                  return MSP.promise(MSPCodes.MSP_SET_SPECIAL_PARAMETERS, mspHelper.crunch(MSPCodes.MSP_SET_SPECIAL_PARAMETERS));
-                }
             }).then(function () {
                 if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
                   return MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));

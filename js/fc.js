@@ -39,7 +39,6 @@ var FAILSAFE_CONFIG;
 var RXFAIL_CONFIG;
 var PID_ADVANCED_CONFIG;
 var FILTER_CONFIG;
-var SPECIAL_PARAMETERS;
 var ADVANCED_TUNING;
 var SENSOR_CONFIG;
 
@@ -287,15 +286,11 @@ var FC = {
             pidMaxVelocityYaw:        0
         };
 
-        SPECIAL_PARAMETERS = {
-            escDesyncProtection:      0
-        };
-
         SENSOR_CONFIG = {
             acc_hardware:             0,
             baro_hardware:            0,
             mag_hardware:             0
-        }
+        };
 
         RX_CONFIG = {
             serialrx_provider:      0,
