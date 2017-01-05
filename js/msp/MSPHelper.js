@@ -617,6 +617,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             PID_ADVANCED_CONFIG.use_unsyncedPwm = data.readU8();
             PID_ADVANCED_CONFIG.fast_pwm_protocol = data.readU8();
             PID_ADVANCED_CONFIG.motor_pwm_rate = data.readU16();
+            if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+                PID_ADVANCED_CONFIG.digitalIdlePercent = data.readU16() / 100;
+            }
             break;
         case MSPCodes.MSP_FILTER_CONFIG:
             FILTER_CONFIG.gyro_soft_lpf_hz = data.readU8();
@@ -650,6 +653,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 ADVANCED_TUNING.itermThrottleGain = data.readU8();
                 ADVANCED_TUNING.pidMaxVelocity = data.readU16();
                 ADVANCED_TUNING.pidMaxVelocityYaw = data.readU16();
+            }
+            if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+                ADVANCED_TUNING.levelAngleLimit = data.readU8();
+                ADVANCED_TUNING.levelSensitivity = data.readU8();
             }
             break;
         case MSPCodes.MSP_SENSOR_CONFIG:
@@ -1130,6 +1137,9 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(PID_ADVANCED_CONFIG.use_unsyncedPwm)
                 .push8(PID_ADVANCED_CONFIG.fast_pwm_protocol)
                 .push16(PID_ADVANCED_CONFIG.motor_pwm_rate);
+            if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+                buffer.push16(PID_ADVANCED_CONFIG.digitalIdlePercent * 100);
+            }
             break;
         case MSPCodes.MSP_SET_FILTER_CONFIG:
             buffer.push8(FILTER_CONFIG.gyro_soft_lpf_hz)
@@ -1160,6 +1170,10 @@ MspHelper.prototype.crunch = function(code) {
                     .push8(ADVANCED_TUNING.itermThrottleGain)
                     .push16(ADVANCED_TUNING.pidMaxVelocity)
                     .push16(ADVANCED_TUNING.pidMaxVelocityYaw);
+                if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+                    buffer.push8(ADVANCED_TUNING.levelAngleLimit)
+                        .push8(ADVANCED_TUNING.levelSensitivity);
+                }
             }
             // only supports 1 version pre bf 3.0
             else {
