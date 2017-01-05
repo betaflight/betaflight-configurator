@@ -645,10 +645,10 @@
         "message": "This is the center value <span style=\"font-weight: bold\">for all RC channels</span>. Set this to the value that your transmitter sends when the stick is centered for a channel. To adjust the thrust at throttle mid position, change the 'Trottle MID' value on the PID Tuning tab."
     },
     "configurationThrottleMinimum": {
-        "message": "Minimum Throttle"
+        "message": "Motor Idle Percentage / Minimum Throttle"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "This is the 'idle' value that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Adjust this so the motors run as slow as possible while still running smoothly."
+        "message": "This is the 'idle' value and percentage of total throttle that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the percentage to gain more idle speed"
     },
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle"

@@ -224,6 +224,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         $('input[id="unsyncedPWMSwitch"]').prop('checked', PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0);
         $('input[name="unsyncedpwmfreq"]').val(PID_ADVANCED_CONFIG.motor_pwm_rate);
+        $('input[name="idlePercent"]').val(PID_ADVANCED_CONFIG.digitalIdlePercent);
+        if (PID_ADVANCED_CONFIG.fast_pwm_protocol > 4 ) {  // needs better approach
+            $('input[name="idlePercent"]').val(PID_ADVANCED_CONFIG.digitalIdlePercent);
+        } else {
+            var idlePercent = (1 - ((MISC.maxthrottle - MISC.minthrottle) / (MISC.maxthrottle - MISC.mincommand))) * 100;
+            $('input[name="idlePercent"]').val([idlePercent.toFixed(2)]);
+        }
         if (PID_ADVANCED_CONFIG.use_unsyncedPwm) {
             $('div.unsyncedpwmfreq').show();
         }
@@ -662,6 +669,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
             PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyro_select_e.val());
             PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pid_select_e.val());
+            if (PID_ADVANCED_CONFIG.fast_pwm_protocol > 4 ) {  // needs better approach
+                PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="idlePercent"]').val());
+            } else {
+                var idlePercent = 1 + (parseFloat($('input[name="idlePercent"]').val()) / 100);
+                MISC.minthrottle = idlePercent * MISC.mincommand;
+            }
 
             function save_serial_config() {
                 if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
