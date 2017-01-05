@@ -644,11 +644,17 @@
     "configurationMidRcHelp": {
         "message": "This is the center value <span style=\"font-weight: bold\">for all RC channels</span>. Set this to the value that your transmitter sends when the stick is centered for a channel. To adjust the thrust at throttle mid position, change the 'Trottle MID' value on the PID Tuning tab."
     },
+    "configurationDigitalIdlePercent": {
+        "message": "Motor Idle Throttle Value (percent)"
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "This is the 'idle' value in percent of maximum throttle that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the percent value to gain more idle speed."
+    },
     "configurationThrottleMinimum": {
-        "message": "Minimum Throttle"
+        "message": "Motor Idle Throttle Value (absolute / percent)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "This is the 'idle' value that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Adjust this so the motors run as slow as possible while still running smoothly."
+        "message": "This is the 'idle' value (absolute / as a percentage of the throttle range) that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the value or to gain more idle speed."
     },
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle"
@@ -1838,6 +1844,15 @@
     },
     "configurationPidProcessDenom": {
         "message": "PID loop frequency"
+    },
+    "configurationPidProcessDenomHelp": {
+        "message": "The maximum frequency for the PID loop is limited by the maximum frequency that updates can be sent by the chosen ESC / motor protocol."
+    },
+    "configurationGyroUse32kHz": {
+        "message": "Use 32 kHz gyro update frequency instead of 8 kHz"
+    },
+    "configurationGyroUse32kHzHelp": {
+        "message": "32 kHz gyro update frequency is only possible if the gyro chip supports it (currently MPU6500, MPU9250, and ICM20689 if connected over SPI). If in doubt, consult the specification for your board."
     },
     "configurationAccHardware": {
         "message": "Accelerometer"
