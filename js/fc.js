@@ -256,7 +256,9 @@ var FC = {
             pid_process_denom:      0,
             use_unsyncedPwm:        0,
             fast_pwm_protocol:      0,
-            motor_pwm_rate:         0
+            motor_pwm_rate:         0,
+            digitalIdlePercent:     0,
+            gyroUse32kHz:          0
         };
 
         FILTER_CONFIG = {
@@ -283,7 +285,9 @@ var FC = {
             toleranceBandReduction:   0,
             itermThrottleGain:        0,
             pidMaxVelocity:           0,
-            pidMaxVelocityYaw:        0
+            pidMaxVelocityYaw:        0,
+            levelAngleLimit:          0,
+            levelSensitivity:         0
         };
 
         SENSOR_CONFIG = {

@@ -1,6 +1,8 @@
 'use strict';
 
-TABS.configuration = {};
+TABS.configuration = {
+    DSHOT_PROTOCOL_MIN_VALUE: 5
+};
 
 TABS.configuration.initialize = function (callback, scrollPosition) {
     var self = this;
@@ -156,7 +158,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // select current mixer configuration
         mixer_list_e.val(BF_CONFIG.mixerConfiguration).change();
 
-        var radioGroups = [];
         var features_e = $('.tab-configuration .features');
 
         BF_CONFIG.features.generateElements(features_e);
@@ -175,12 +176,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'CW 270° flip'
         ];
 
-
-
         var orientation_gyro_e = $('select.gyroalign');
         var orientation_acc_e = $('select.accalign');
         var orientation_mag_e = $('select.magalign');
-
 
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.tab-configuration .sensoralignment').hide();
@@ -196,7 +194,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         // ESC protocols
-
         var escprotocols = [
             'PWM',
             'ONESHOT125',
@@ -221,78 +218,96 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
         esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol+1);
 
+        esc_protocol_e.change(function () {
+            if ($(this).val() - 1 >= self.DSHOT_PROTOCOL_MIN_VALUE) {
+                $('div.minthrottle').hide();
+                $('div.maxthrottle').hide();
+                $('div.mincommand').hide();
+
+                $('div.digitalIdlePercent').show();
+            } else {
+                $('div.minthrottle').show();
+                $('div.maxthrottle').show();
+                $('div.mincommand').show();
+
+                $('div.digitalIdlePercent').hide();
+            }
+        }).change();
 
         $('input[id="unsyncedPWMSwitch"]').prop('checked', PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0);
         $('input[name="unsyncedpwmfreq"]').val(PID_ADVANCED_CONFIG.motor_pwm_rate);
-        if (PID_ADVANCED_CONFIG.use_unsyncedPwm) {
-            $('div.unsyncedpwmfreq').show();
-        }
-        else {
-            $('div.unsyncedpwmfreq').hide();
-        }
+        $('input[name="digitalIdlePercent"]').val(PID_ADVANCED_CONFIG.digitalIdlePercent);
 
         // Gyro and PID update
-        var gyroFreq = [
-            "8KHz",
-            "4KHz",
-            "2.67KHz",
-            "2KHz",
-            "1.6KHz",
-            "1.33KHz",
-            "1.14KHz",
-            "1KHz"
-        ];
-
+        var gyroUse32kHz_e = $('input[id="gyroUse32kHz"]');
         var gyro_select_e = $('select.gyroSyncDenom');
+        var pid_select_e = $('select.pidProcessDenom');
 
-        for (var i = 0; i < gyroFreq.length; i++) {
-            gyro_select_e.append('<option value="'+(i+1)+'">'+gyroFreq[i]+'</option>');
+        var updateGyroDenom = function (gyroBaseFreq) {
+            var originalGyroDenom = gyro_select_e.val();
+
+            gyro_select_e.empty();
+
+            for (var i = 1; i <= 8; i++) {
+                gyro_select_e.append('<option value="' + i + '">' + ((gyroBaseFreq / i * 100).toFixed(0) / 100) + ' kHz</option>');
+            }
+
+            gyro_select_e.val(originalGyroDenom);
+
+            gyro_select_e.change();
+        };
+
+        if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
+            gyroUse32kHz_e.prop('checked', PID_ADVANCED_CONFIG.gyroUse32kHz !== 0);
+
+            gyroUse32kHz_e.change(function () {
+                var gyroBaseFreq;
+                if ($(this).is(':checked')) {
+                    gyroBaseFreq = 32;
+                } else {
+                    gyroBaseFreq = 8;
+                }
+
+                updateGyroDenom(gyroBaseFreq);
+            }).change();
+        } else {
+            $('div.gyroUse32kHz').hide();
+
+            updateGyroDenom(8);
         }
+
         gyro_select_e.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
 
-        var gyroDenom = PID_ADVANCED_CONFIG.gyro_sync_denom;
-        var pidFreq = [
-            8 / (gyroDenom * 1),
-            8 / (gyroDenom * 2),
-            8 / (gyroDenom * 3),
-            8 / (gyroDenom * 4),
-            8 / (gyroDenom * 5),
-            8 / (gyroDenom * 6),
-            8 / (gyroDenom * 7),
-            8 / (gyroDenom * 8)
-        ];
+        gyro_select_e.change(function () {
+            var originalPidDenom = pid_select_e.val();
 
-        var pid_select_e = $('select.pidProcessDenom');
-        for (var i = 0; i < pidFreq.length; i++) {
-            var pidF = (1000 * pidFreq[i] / 10); // Could be done better
-            pidF = pidF.toFixed(0);
-            pid_select_e.append('<option value="'+(i+1)+'">'+(pidF / 100).toString()+'KHz</option>');
-        }
+            var pidBaseFreq = 8;
+            if (semver.gte(CONFIG.apiVersion, "1.25.0") && gyroUse32kHz_e.is(':checked')) {
+                pidBaseFreq = 32;
+            }
+
+            pidBaseFreq = pidBaseFreq / parseInt($(this).val());
+
+            pid_select_e.empty();
+
+            for (var i = 1; i <= 8; i++) {
+                pid_select_e.append('<option value="' + i + '">' + ((pidBaseFreq / i * 100).toFixed(0) / 100) + ' kHz</option>');
+            }
+
+            if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+                for (var i = 9; i <= 16; i++) {
+                    pid_select_e.append('<option value="' + i + '">' + ((pidBaseFreq / i * 100).toFixed(0) / 100) + ' kHz</option>');
+                }
+            }
+
+            pid_select_e.val(originalPidDenom);
+        }).change();
+
         pid_select_e.val(PID_ADVANCED_CONFIG.pid_process_denom);
-
-        $('select.gyroSyncDenom').change(function() {
-           var gyroDenom = $('select.gyroSyncDenom').val();
-           var newPidFreq = [
-                8 / (gyroDenom * 1),
-                8 / (gyroDenom * 2),
-                8 / (gyroDenom * 3),
-                8 / (gyroDenom * 4),
-                8 / (gyroDenom * 5),
-                8 / (gyroDenom * 6),
-                8 / (gyroDenom * 7),
-                8 / (gyroDenom * 8)
-            ];
-           for (var i=0; i<newPidFreq.length;i++) {
-                var pidF = (1000 * newPidFreq[i] / 10); // Could be done better
-                pidF = pidF.toFixed(0);
-                $('select.pidProcessDenom option[value="'+(i+1)+'"]').text((pidF / 100).toString()+'KHz');}
-
-        });
 
         $('input[id="accHardwareSwitch"]').prop('checked', SENSOR_CONFIG.acc_hardware !== 1);
         $('input[id="baroHardwareSwitch"]').prop('checked', SENSOR_CONFIG.baro_hardware !== 1);
         $('input[id="magHardwareSwitch"]').prop('checked', SENSOR_CONFIG.mag_hardware !== 1);
-
 
         // Only show these sections for supported FW
         if (semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
@@ -310,8 +325,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         if (semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
             $('.miscSettings').hide();
         }
-
-
 
         // generate GPS
         var gpsProtocols = [
@@ -439,9 +452,29 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         // fill throttle
         $('input[name="midrc"]').val(MISC.midrc);
-        $('input[name="minthrottle"]').val(MISC.minthrottle);
+        var minThrottle_e = $('input[name="minthrottle"]');
+        minThrottle_e.val(MISC.minthrottle);
         $('input[name="maxthrottle"]').val(MISC.maxthrottle);
         $('input[name="mincommand"]').val(MISC.mincommand);
+
+        var idlePercent_e = $('input[name="idlePercent"]');
+        idlePercent_e.change(function () {
+            if (esc_protocol_e.val() - 1 < self.DSHOT_PROTOCOL_MIN_VALUE) {
+                var idlePercent = parseFloat($(this).val())
+                var minCommand = parseInt($('input[name="mincommand"]').val());
+                var maxThrottle = parseInt($('input[name="maxthrottle"]').val());
+
+                minThrottle_e.val(Math.trunc(minCommand + (maxThrottle - minCommand) * idlePercent / 100));
+            }
+        });
+
+        minThrottle_e.change(function () {
+            var minThrottle = parseInt($(this).val());
+            var minCommand = parseInt($('input[name="mincommand"]').val());
+            var maxThrottle = parseInt($('input[name="maxthrottle"]').val());
+
+            idlePercent_e.val(Math.trunc((minThrottle - minCommand) / (maxThrottle - minCommand) * 10000) / 100);
+        }).change();
 
         // fill battery
         if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
@@ -614,7 +647,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             } else {
                 $('div.unsyncedpwmfreq').hide();
             }
-        });
+        }).change();
 
         $('a.save').click(function () {
             // gather data that doesn't have automatic change event bound
@@ -662,6 +695,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
             PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyro_select_e.val());
             PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pid_select_e.val());
+            PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
+            if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
+                PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
+            }
 
             function save_serial_config() {
                 if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
@@ -732,7 +769,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 var next_callback = save_name;
 
                 if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
-                    SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
                     SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
                     SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
                     MSP.send_message(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG), false, next_callback);

@@ -90,16 +90,28 @@
                             <div class="helpicon cf_tip" i18n_title="configurationMidRcHelp"></div>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number digitalIdlePercent">
+                        <label>
+                            <div class="numberspacer">
+                                <input type="number" name="digitalIdlePercent" min="0.00" max="20.00" step="0.01"/>
+                            </div>
+                            <span i18n="configurationDigitalIdlePercent"></span>
+                            <div class="helpicon cf_tip" i18n_title="configurationDigitalIdlePercentHelp"></div>
+                        </label>
+                    </div>
+                    <div class="number minthrottle">
                         <label>
                             <div class="numberspacer">
                                 <input type="number" name="minthrottle" min="0" max="2000" />
+                            </div>
+                            <div class="numberspacer">
+                                <input type="number" name="idlePercent" min="0.00" max="20.00" step="0.01"/>
                             </div>
                             <span i18n="configurationThrottleMinimum"></span>
                             <div class="helpicon cf_tip" i18n_title="configurationThrottleMinimumHelp"></div>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number maxthrottle">
                         <label>
                             <div class="numberspacer">
                                 <input type="number" name="maxthrottle" min="0" max="2000" />
@@ -107,7 +119,7 @@
                             <span i18n="configurationThrottleMaximum"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number mincommand">
                         <label>
                             <div class="numberspacer">
                                 <input type="number" name="mincommand" min="0" max="2000" />
@@ -252,6 +264,14 @@
                             <p i18n="configurationLoopTimeHelp"></p>
                         </div>
                     </div>
+                    <div class="select gyroUse32kHz">
+                        <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                            <input type="checkbox" id="gyroUse32kHz" class="toggle" />
+                        </div>
+                        <label for="gyroUse32kHz"> <span class="freelabel" i18n="configurationGyroUse32kHz"></span>
+                        </label>
+                        <div class="helpicon cf_tip" i18n_title="configurationGyroUse32kHzHelp"></div>
+                    </div>
                     <div class="select">
                         <label>
                             <select class="gyroSyncDenom">
@@ -266,6 +286,7 @@
                                 <!-- list generated here -->
                             </select>
                             <span i18n="configurationPidProcessDenom"></span>
+                            <div class="helpicon cf_tip" i18n_title="configurationPidProcessDenomHelp"></div>
                         </label>
                     </div>
                     <div class="hardwareSelection">
