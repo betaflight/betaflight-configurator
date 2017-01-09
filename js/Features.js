@@ -20,7 +20,7 @@ var Features = function (config) {
         {bit: 14, group: 'rxMode', mode: 'select', name: 'RX_MSP'},
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
         {bit: 16, group: 'other', name: 'LED_STRIP'},
-        {bit: 17, group: 'other', name: 'DISPLAY'},
+        {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true},
         {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true}
     ];
 
