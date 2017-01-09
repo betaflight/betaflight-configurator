@@ -515,6 +515,9 @@
     "featureDISPLAY": {
         "message": "OLED Screen Display"
     },
+    "featureDISPLAYTip": {
+        "message": "If this feature is enabled, and no display device is connected (or the display device is not powered up), there will be a delay of approx. 10 seconds on every reboot of the flight controller."
+    },
     "featureONESHOT125": {
         "message": "ONESHOT ESC support"
     },
