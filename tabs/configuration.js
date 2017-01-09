@@ -209,6 +209,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             escprotocols.push('DSHOT150');
             escprotocols.push('DSHOT300');
             escprotocols.push('DSHOT600');
+
+            if (semver.gte(CONFIG.apiVersion, "1.26.0")) {
+                escprotocols.push('DSHOT900');
+                escprotocols.push('DSHOT1200');
+            }
         }
 
         var esc_protocol_e = $('select.escprotocol');
@@ -224,12 +229,15 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.minthrottle').hide();
                 $('div.maxthrottle').hide();
                 $('div.mincommand').hide();
+                $('div.checkboxPwm').hide();
+                $('div.unsyncedpwmfreq').hide();
 
                 $('div.digitalIdlePercent').show();
             } else {
                 $('div.minthrottle').show();
                 $('div.maxthrottle').show();
                 $('div.mincommand').show();
+                $('div.checkboxPwm').show();
 
                 $('div.digitalIdlePercent').hide();
             }
