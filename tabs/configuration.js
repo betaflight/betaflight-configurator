@@ -206,17 +206,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-            escprotocols.push('DSHOT600');
-            escprotocols.push('DSHOT300');
             escprotocols.push('DSHOT150');
+            escprotocols.push('DSHOT300');
+            escprotocols.push('DSHOT600');
         }
 
         var esc_protocol_e = $('select.escprotocol');
 
         for (var i = 0; i < escprotocols.length; i++) {
-            esc_protocol_e.append('<option value="' + (i+1) + '">'+ escprotocols[i] + '</option>');
+            esc_protocol_e.append('<option value="' + (i + 1) + '">'+ escprotocols[i] + '</option>');
         }
-        esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol+1);
+
+        esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
 
         esc_protocol_e.change(function () {
             if ($(this).val() - 1 >= self.DSHOT_PROTOCOL_MIN_VALUE) {

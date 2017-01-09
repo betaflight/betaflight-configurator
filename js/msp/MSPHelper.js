@@ -25,8 +25,29 @@ function MspHelper () {
   };
 }
 
+MspHelper.prototype.reorderPwmProtocols = function (protocol) {
+    var result = protocol;
+    if (semver.lt(CONFIG.apiVersion, "1.26.0")) {
+        switch (protocol) {
+            case 5:
+                result = 7;
+
+                break;
+            case 7:
+                result = 5;
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    return result;
+}
+
 MspHelper.prototype.process_data = function(dataHandler) {
     var self = this;
+
     var data = dataHandler.dataView; // DataView (allowing us to view arrayBuffer as struct/union)
     var code = dataHandler.code;
     if (!dataHandler.unsupported) switch (code) {
@@ -615,7 +636,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             PID_ADVANCED_CONFIG.gyro_sync_denom = data.readU8();
             PID_ADVANCED_CONFIG.pid_process_denom = data.readU8();
             PID_ADVANCED_CONFIG.use_unsyncedPwm = data.readU8();
-            PID_ADVANCED_CONFIG.fast_pwm_protocol = data.readU8();
+            PID_ADVANCED_CONFIG.fast_pwm_protocol = self.reorderPwmProtocols(data.readU8());
             PID_ADVANCED_CONFIG.motor_pwm_rate = data.readU16();
             if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
                 PID_ADVANCED_CONFIG.digitalIdlePercent = data.readU16() / 100;
@@ -1134,12 +1155,12 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(SENSOR_ALIGNMENT.align_gyro)
                 .push8(SENSOR_ALIGNMENT.align_acc)
                 .push8(SENSOR_ALIGNMENT.align_mag);
-            break
+            break;
         case MSPCodes.MSP_SET_ADVANCED_CONFIG:
             buffer.push8(PID_ADVANCED_CONFIG.gyro_sync_denom)
                 .push8(PID_ADVANCED_CONFIG.pid_process_denom)
                 .push8(PID_ADVANCED_CONFIG.use_unsyncedPwm)
-                .push8(PID_ADVANCED_CONFIG.fast_pwm_protocol)
+                .push8(self.reorderPwmProtocols(PID_ADVANCED_CONFIG.fast_pwm_protocol))
                 .push16(PID_ADVANCED_CONFIG.motor_pwm_rate);
             if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
                 buffer.push16(PID_ADVANCED_CONFIG.digitalIdlePercent * 100);
