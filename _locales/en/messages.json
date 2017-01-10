@@ -1855,10 +1855,10 @@
         "message": "The maximum frequency for the PID loop is limited by the maximum frequency that updates can be sent by the chosen ESC / motor protocol."
     },
     "configurationGyroUse32kHz": {
-        "message": "Use 32 kHz gyro update frequency instead of 8 kHz"
+        "message": "Enable gyro 32khz sampling mode"
     },
     "configurationGyroUse32kHzHelp": {
-        "message": "32 kHz gyro update frequency is only possible if the gyro chip supports it (currently MPU6500, MPU9250, and ICM20689 if connected over SPI). If in doubt, consult the specification for your board."
+        "message": "32 kHz gyro update frequency is only possible if the gyro chip supports it (currently MPU6500, MPU9250, and ICM20xxx if connected over SPI). If in doubt, consult the specification for your board."
     },
     "configurationAccHardware": {
         "message": "Accelerometer"
