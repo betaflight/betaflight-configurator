@@ -263,6 +263,13 @@ TABS.pid_tuning.initialize = function (callback) {
         } else {
             $('.pid_filter .gyroNotch2').hide();
         }
+
+        if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+            $('.pid_tuning input[name="angleLimit"]').val(ADVANCED_TUNING.levelAngleLimit);
+            $('.pid_tuning input[name="sensitivity"]').val(ADVANCED_TUNING.levelSensitivity);
+        } else {
+            $('.pid_sensitivity').hide();
+        }
     }
 
     function form_to_pid_and_rc() {
@@ -369,6 +376,10 @@ TABS.pid_tuning.initialize = function (callback) {
             }
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+            ADVANCED_TUNING.levelAngleLimit = parseInt($('.pid_tuning input[name="angleLimit"]').val());
+            ADVANCED_TUNING.levelSensitivity = parseInt($('.pid_tuning input[name="sensitivity"]').val());
+        }
     }
 
     function showAllPids() {
@@ -383,6 +394,7 @@ TABS.pid_tuning.initialize = function (callback) {
         if (have_sensor(CONFIG.activeSensors, 'acc')) {
             $('#pid_accel').show();
             $('#pid_level').show();
+            $('#pid_sensitivity').show();
         }
 
         var showTitle = false;
