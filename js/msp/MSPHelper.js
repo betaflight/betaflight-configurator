@@ -205,7 +205,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             }
             break;
         case MSPCodes.MSP_MISC: // 22 bytes
-            MISC.midrc = data.readU16();
+            RX_CONFIG.midrc = data.readU16();
             MISC.minthrottle = data.readU16(); // 0-2000
             MISC.maxthrottle = data.readU16(); // 0-2000
             MISC.mincommand = data.readU16(); // 0-2000
@@ -1029,7 +1029,7 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push16(FC_CONFIG.loopTime);
             break;
         case MSPCodes.MSP_SET_MISC:
-            buffer.push16(MISC.midrc)
+            buffer.push16(RX_CONFIG.midrc)
                 .push16(MISC.minthrottle)
                 .push16(MISC.maxthrottle)
                 .push16(MISC.mincommand)

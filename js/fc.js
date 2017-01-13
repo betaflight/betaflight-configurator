@@ -185,7 +185,6 @@ var FC = {
         };
 
         MISC = {
-            midrc:                  0,
             minthrottle:            0,
             maxthrottle:            0,
             mincommand:             0,

@@ -74,6 +74,7 @@ TABS.receiver.initialize = function (callback) {
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.deadband').hide();
         } else {
+            $('.deadband input[name="midrc"]').val(RX_CONFIG.midrc);
             $('.deadband input[name="yaw_deadband"]').val(RC_deadband.yaw_deadband);
             $('.deadband input[name="deadband"]').val(RC_deadband.deadband);
 
@@ -236,8 +237,9 @@ TABS.receiver.initialize = function (callback) {
 
         $('a.update').click(function () {
             if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-               RC_deadband.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
-               RC_deadband.deadband = parseInt($('.deadband input[name="deadband"]').val());
+                RX_CONFIG.midrc = parseInt($('.deadband input[name="midrc"]').val());
+                RC_deadband.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
+                RC_deadband.deadband = parseInt($('.deadband input[name="deadband"]').val());
             }
 
             // catch rc map

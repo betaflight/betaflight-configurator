@@ -641,12 +641,6 @@
     "configurationDisarmKillSwitch": {
         "message": "Disarm motors regardless of throttle value (When arming via AUX channel)"
     },
-    "configurationMidRc": {
-        "message": "Center value for RC channels"
-    },
-    "configurationMidRcHelp": {
-        "message": "This is the center value <span style=\"font-weight: bold\">for all RC channels</span>. Set this to the value that your transmitter sends when the stick is centered for a channel. To adjust the thrust at throttle mid position, change the 'Trottle MID' value on the PID Tuning tab."
-    },
     "configurationDigitalIdlePercent": {
         "message": "Motor Idle Throttle Value (percent)"
     },
@@ -978,6 +972,12 @@
     },
     "receiverThrottleExpo": {
         "message": "Throttle EXPO"
+    },
+    "receiverMidRc": {
+        "message": "Center value for RC channels"
+    },
+    "receiverMidRcHelp": {
+        "message": "This is the center value <span style=\"font-weight: bold\">for all RC channels</span>. Set this to the value that your transmitter sends when the stick is centered for a channel. To adjust the thrust at throttle mid position, change the 'Trottle MID' value on the PID Tuning tab."
     },
     "receiverDeadband": {
         "message": "RC Deadband"
