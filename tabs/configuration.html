@@ -82,15 +82,6 @@
                         </div>
                     </div>
                     <!--   -->
-                    <div class="number">
-                        <label>
-                            <div class="numberspacer">
-                                <input type="number" name="midrc" min="0" max="2000" />
-                            </div>
-                            <span i18n="configurationMidRc"></span>
-                            <div class="helpicon cf_tip" i18n_title="configurationMidRcHelp"></div>
-                        </label>
-                    </div>
                     <div class="number digitalIdlePercent">
                         <label>
                             <div class="numberspacer">
@@ -361,33 +352,33 @@
                             <!-- table generated here -->
                         </tbody>
                     </table>
-                    <div class="select batterymetertype">
+                    <div class="select batterymetertype vbatmonitoring">
                         <label>
                             <select class="batterymetertype"><!-- list generated here --></select>
                             <span i18n="configurationBatteryMeterType"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number vbatmonitoring">
                         <label> <input type="number" name="mincellvoltage" step="0.1" min="1" max="5" /> <span
                             i18n="configurationBatteryMinimum"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number vbatmonitoring">
                         <label> <input type="number" name="maxcellvoltage" step="0.1" min="1" max="5" /> <span
                             i18n="configurationBatteryMaximum"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number vbatmonitoring">
                         <label> <input type="number" name="warningcellvoltage" step="0.1" min="1" max="5" /> <span
                             i18n="configurationBatteryWarning"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number vbatmonitoring vbatCalibration">
                         <label> <input type="number" name="voltagescale" step="1" min="10" max="255" /> <span
                             i18n="configurationBatteryScale"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number vbatmonitoring">
                         <label> <input type="text" name="batteryvoltage" readonly class="disabled" /> <span
                             i18n="configurationBatteryVoltage"></span>
                         </label>
@@ -411,29 +402,29 @@
                             <!-- table generated here -->
                         </tbody>
                     </table>
-                    <div class="select">
+                    <div class="select currentMonitoring">
                         <label>
                             <select class="currentmetertype"><!-- list generated here --></select>
                             <span i18n="configurationCurrentMeterType"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number currentMonitoring currentCalibration">
                         <label> <input type="number" name="currentscale" step="1" min="-16000" max="16000" /> <span
                             i18n="configurationCurrentScale"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number currentMonitoring currentCalibration">
                         <label> <input type="number" name="currentoffset" step="1" min="-1600" max="16000" /> <span
                             i18n="configurationCurrentOffset"></span>
                         </label>
                     </div>
-                    <div class="number">
+                    <div class="number currentMonitoring currentOutput">
                         <label>
                         <input type="text" name="batterycurrent" readonly class="disabled" /> <span
                             i18n="configurationBatteryCurrent"></span>
                         </label>
                     </div>
-                    <div class="checkbox">
+                    <div class="checkbox currentMonitoring currentOutput">
                         <div class="numberspacer">
                             <input type="checkbox" name="multiwiicurrentoutput" class="toggle" />
                         </div>

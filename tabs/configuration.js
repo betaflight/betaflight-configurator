@@ -458,7 +458,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         // fill throttle
-        $('input[name="midrc"]').val(MISC.midrc);
         var minThrottle_e = $('input[name="minthrottle"]');
         minThrottle_e.val(MISC.minthrottle);
         $('input[name="maxthrottle"]').val(MISC.maxthrottle);
@@ -497,7 +496,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             batteryMeterType_e.change(function () {
                 MISC.batterymetertype = parseInt($(this).val());
-                checkDisableVbatControls();
+                checkUpdateVbatControls();
             });
             batteryMeterType_e.val(MISC.batterymetertype).change();
         } else {
@@ -527,7 +526,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         currentMeterType_e.change(function () {
             BF_CONFIG.currentmetertype = parseInt($(this).val());
-            checkDisableCurrentControls();
+            checkUpdateCurrentControls();
         });
         currentMeterType_e.val(BF_CONFIG.currentmetertype).change();
 
@@ -574,54 +573,43 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }
 
-        function checkDisableVbatControls() {
-            function disableBatteryControls(disabled) {
-                $('input[name="mincellvoltage"]').prop('disabled', disabled);
-                $('input[name="maxcellvoltage"]').prop('disabled', disabled);
-                $('input[name="warningcellvoltage"]').prop('disabled', disabled);
-                $('input[name="voltagescale"]').prop('disabled', disabled);
-            }
+        function checkUpdateVbatControls() {
+            if (BF_CONFIG.features.isEnabled('VBAT')) {
+                $('.vbatmonitoring').show();
 
-            if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-                if (BF_CONFIG.features.isEnabled('VBAT')) {
-                    $('select.batterymetertype').prop('disabled', false);
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                     $('select.batterymetertype').show();
 
-                    if (MISC.batterymetertype == 1) {
-                        disableBatteryControls(true);
-                    } else {
-                        disableBatteryControls(false);
-                    }
+                    if (MISC.batterymetertype !== 0) {
+                        $('.vbatCalibration').hide();
+                     }
                 } else {
-                    $('select.batterymetertype').prop('disabled', true);
-
-                    disableBatteryControls(true);
+                    $('select.batterymetertype').hide();
                 }
             } else {
-                if (BF_CONFIG.features.isEnabled('VBAT')) {
-                    disableBatteryControls(false);
-                } else {
-                    disableBatteryControls(true);
-                }
+                $('.vbatmonitoring').hide();
             }
         }
 
-        function checkDisableCurrentControls() {
+        function checkUpdateCurrentControls() {
             if (BF_CONFIG.features.isEnabled('CURRENT_METER')) {
-                $('select.currentmetertype').prop('disabled', false);
-                if (BF_CONFIG.currentmetertype == 0 || BF_CONFIG.currentmetertype == 3) {
-                    $('input[name="currentscale"]').prop('disabled', true);
-                    $('input[name="currentoffset"]').prop('disabled', true);
-                    $('input[name="multiwiicurrentoutput"]').prop('disabled', true);
-                } else {
-                    $('input[name="currentscale"]').prop('disabled', false);
-                    $('input[name="currentoffset"]').prop('disabled', false);
-                    $('input[name="multiwiicurrentoutput"]').prop('disabled', false);
+                $('.currentMonitoring').show();
+
+                switch(BF_CONFIG.currentmetertype) {
+                    case 0:
+                        $('.currentCalibration').hide();
+                        $('.currentOutput').hide();
+
+                        break;
+                    case 3:
+                        $('.currentCalibration').hide();
+                }
+
+                if (BF_CONFIG.currentmetertype !== 1 && BF_CONFIG.currentmetertype !== 2) {
+                    $('.currentCalibration').hide();
                 }
             } else {
-                $('select.currentmetertype').prop('disabled', true);
-                $('input[name="currentscale"]').prop('disabled', true);
-                $('input[name="currentoffset"]').prop('disabled', true);
-                $('input[name="multiwiicurrentoutput"]').prop('disabled', true);
+                $('.currentMonitoring').hide();
             }
         }
 
@@ -637,16 +625,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         });
 
         $(features_e).filter('tbody.features.batteryVoltage').change(function() {
-            checkDisableVbatControls();
+            checkUpdateVbatControls();
         });
 
         $(features_e).filter('tbody.features.batteryCurrent').change(function() {
-            checkDisableCurrentControls();
+            checkUpdateCurrentControls();
         });
 
         checkShowSerialRxBox();
-        checkDisableVbatControls();
-        checkDisableCurrentControls();
+        checkUpdateVbatControls();
+        checkUpdateCurrentControls();
 
         $("input[id='unsyncedPWMSwitch']").change(function() {
             if ($(this).is(':checked')) {
@@ -672,7 +660,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 ARMING_CONFIG.disarm_kill_switch = $('input[id="disarmkillswitch"]').is(':checked') ? 1 : 0;
             }
 
-            MISC.midrc = parseInt($('input[name="midrc"]').val());
             MISC.minthrottle = parseInt($('input[name="minthrottle"]').val());
             MISC.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
             MISC.mincommand = parseInt($('input[name="mincommand"]').val());
