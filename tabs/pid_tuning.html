@@ -210,13 +210,6 @@
                         </table>
                     </div>
                     <div id="pid_accel" class="gui_box grey topspacer pid_tuning">
-                        <table class="pid_titlebar">
-                            <tr>
-                                <th class="third" i18n="pidTuningName"></th>
-                                <th class="third" i18n="pidTuningStrength" style="width: 33%;"></th>
-                                <th class="third" i18n="pidTuningTransition" style="width: 33%;"></th>
-                            </tr>
-                        </table>
                         <table id="pid_level" class="pid_tuning">
                             <tr>
                                 <th colspan="3">
@@ -226,6 +219,15 @@
                                     </div>
                                 </th>
                             </tr>
+                        </table>
+                        <table class="pid_titlebar">
+                            <tr>
+                                <th class="third" i18n="pidTuningName"></th>
+                                <th class="third" i18n="pidTuningStrength" style="width: 33%;"></th>
+                                <th class="third" i18n="pidTuningTransition" style="width: 33%;"></th>
+                            </tr>
+                        </table>
+                        <table>
                             <tr class="ANGLE">
                                 <!-- 7 -->
                                 <td class="third" i18n="pidTuningAngle"></td>
@@ -237,6 +239,20 @@
                                 <td class="third" i18n="pidTuningHorizon"></td>
                                 <td class="third"><input type="number" name="i" step="1" min="0" max="255" /></td>
                                 <td class="third"><input type="number" name="d" step="1" min="0" max="255" /></td>
+                            </tr>
+                        </table>
+                        <table class="pid_titlebar pid_sensitivity">
+                            <tr>
+                                <th class="third"></th>
+                                <th class="third" i18n="pidTuningLevelAngleLimit" style="width: 33%;"></th>
+                                <th class="third" i18n="pidTuningLevelSensitivity" style="width: 33%;"></th>
+                            </tr>
+                        </table>
+                        <table id="pid_sensitivity" class="pid_tuning pid_sensitivity">
+                            <tr>
+                                <td class="third"></td>
+                                <td class="third"><input type="number" name="angleLimit" step="1" min="10" max="200" /></td>
+                                <td class="third"><input type="number" name="sensitivity" step="1" min="10" max="120" /></td>
                             </tr>
                         </table>
                     </div>
