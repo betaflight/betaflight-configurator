@@ -28,14 +28,23 @@ TABS.onboard_logging.initialize = function (callback) {
             load_html();
             return;
         }
-        
+
+        var load_name = function () {
+            var next_callback = load_html;
+            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+                MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
+            } else {
+                next_callback();
+            }
+        };
+
         MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, function() {
             if (semver.gte(CONFIG.flightControllerVersion, "1.8.0")) {
                 MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function() {
                     if (semver.gte(CONFIG.flightControllerVersion, "1.11.0")) {
                         MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function() {
                             MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function() { 
-                            	MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_html);
+                            	MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_name);
                             });
                         });
                     } else {
@@ -400,9 +409,14 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function prepare_file(onComplete) {
-        var 
-            date = new Date(),
-            filename = 'BLACKBOX_LOG_' + date.getFullYear()
+        var date = new Date();
+        var filename = 'BLACKBOX_LOG';
+
+        if (CONFIG.name && CONFIG.name.trim() !== '') {
+            filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
+        }
+
+        filename = filename + '_' + date.getFullYear()
                 + zeroPad(date.getMonth() + 1, 2)
                 + zeroPad(date.getDate(), 2)
                 + '_' + zeroPad(date.getHours(), 2)
