@@ -56,6 +56,7 @@ var BOARD_DEFINITIONS = [
     {name: 'SPRACINGF3', identifier: 'SRF3', vcp: false},
     {name: 'SPRACINGF3MINI', identifier: 'SRFM', vcp: true},
     {name: 'STM32F3DISCOVERY', identifier: 'SDF3', vcp: true},
+    {name: 'TINYFISH', identifier: 'TFSH', vcp: true},
     {name: 'VRRACE', identifier: 'VRRA', vcp: true},
     {name: 'X_RACERSPI', identifier: 'XRC3', vcp: false},
     {name: 'YUPIF4', identifier: 'YPF4', vcp: true},
