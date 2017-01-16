@@ -222,16 +222,6 @@
     float: left;
 }
 
-.tab-configuration .pidProcessDenom
- {
-    margin-bottom: 5px;
-    clear: left;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
-    width: 100%;
-    float: left;
-}
-
 .tab-configuration .number:last-child,
 .tab-configuration .select:last-child {
     border-bottom: none;
