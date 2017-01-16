@@ -21,7 +21,8 @@ function MspHelper () {
     'BLACKBOX': 7,
     'TELEMETRY_MAVLINK': 9,
     'ESC_SENSOR': 10,
-    'TBS_SMARTAUDIO': 11
+    'TBS_SMARTAUDIO': 11,
+    'IRC_TRAMP': 13
   };
 }
 
