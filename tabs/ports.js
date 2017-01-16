@@ -35,7 +35,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push({ name: 'TBS_SMARTAUDIO', groups: ['peripherals'], maxPorts: 1 });
     }
     
-    if (semver.gte(CONFIG.apiVersion, "1.28.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.27.0")) {
         functionRules.push({ name: 'IRC_TRAMP', groups: ['peripherals'], maxPorts: 1 });
     }
     for (var i = 0; i < functionRules.length; i++) {
