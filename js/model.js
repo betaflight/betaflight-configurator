@@ -5,6 +5,7 @@ var mixerList = [
     {name: 'Tricopter',        model: 'tricopter',  image: 'tri'},
     {name: 'Quad +',           model: 'quad_x',     image: 'quad_p'},
     {name: 'Quad X',           model: 'quad_x',     image: 'quad_x'},
+    {name: 'Quad X 1234',      model: 'quad_x',     image: 'quad_x_1234'},
     {name: 'Bicopter',         model: 'custom',     image: 'bicopter'},
     {name: 'Gimbal',           model: 'custom',     image: 'custom'},
     {name: 'Y6',               model: 'y6',         image: 'y6'},
@@ -26,8 +27,7 @@ var mixerList = [
     {name: 'A-tail Quad',      model: 'quad_atail', image: 'atail_quad'},
     {name: 'Custom',           model: 'custom',     image: 'custom'},
     {name: 'Custom Airplane',  model: 'custom',     image: 'custom'},
-    {name: 'Custom Tricopter', model: 'custom',     image: 'custom'},
-    {name: 'Quad X 1234',      model: 'quad_x',     image: 'quad_x'}
+    {name: 'Custom Tricopter', model: 'custom',     image: 'custom'}
 ];
 
 
