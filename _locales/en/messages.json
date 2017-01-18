@@ -648,16 +648,16 @@
         "message": "This is the 'idle' value in percent of maximum throttle that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the percent value to gain more idle speed."
     },
     "configurationThrottleMinimum": {
-        "message": "Motor Idle Throttle Value (absolute / percent)"
+        "message": "Minimum Throttle (Lowest ESC value when armed)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "This is the 'idle' value (absolute / as a percentage of the throttle range) that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the value or to gain more idle speed."
+        "message": "This is the 'idle' value that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the value or to gain more idle speed. Also raise the value in case of desyncs!"
     },
     "configurationThrottleMaximum": {
-        "message": "Maximum Throttle"
+        "message": "Maximum Throttle (Highest ESC value when armed)"
     },
     "configurationThrottleMinimumCommand": {
-        "message": "Minimum Command"
+        "message": "Minimum Command (ESC value when disarmed)"
     },
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."

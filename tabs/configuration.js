@@ -462,29 +462,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         // fill throttle
-        var minThrottle_e = $('input[name="minthrottle"]');
-        minThrottle_e.val(MISC.minthrottle);
+        $('input[name="minthrottle"]').val(MISC.minthrottle);
         $('input[name="maxthrottle"]').val(MISC.maxthrottle);
         $('input[name="mincommand"]').val(MISC.mincommand);
-
-        var idlePercent_e = $('input[name="idlePercent"]');
-        idlePercent_e.change(function () {
-            if (esc_protocol_e.val() - 1 < self.DSHOT_PROTOCOL_MIN_VALUE) {
-                var idlePercent = parseFloat($(this).val())
-                var minCommand = parseInt($('input[name="mincommand"]').val());
-                var maxThrottle = parseInt($('input[name="maxthrottle"]').val());
-
-                minThrottle_e.val(Math.trunc(minCommand + (maxThrottle - minCommand) * idlePercent / 100));
-            }
-        });
-
-        minThrottle_e.change(function () {
-            var minThrottle = parseInt($(this).val());
-            var minCommand = parseInt($('input[name="mincommand"]').val());
-            var maxThrottle = parseInt($('input[name="maxthrottle"]').val());
-
-            idlePercent_e.val(Math.trunc((minThrottle - minCommand) / (maxThrottle - minCommand) * 10000) / 100);
-        }).change();
 
         // fill battery
         if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
