@@ -319,15 +319,15 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         i = 0;
-        $('table.pid_tuning tr.ANGLE input').each(function () {
+        $('div.pid_tuning tr.ANGLE input').each(function () {
             PIDs[7][i++] = parseFloat($(this).val());
         });
-        $('table.pid_tuning tr.HORIZON input').each(function () {
+        $('div.pid_tuning tr.HORIZON input').each(function () {
             PIDs[7][i++] = parseFloat($(this).val());
         });
 
         i = 0;
-        $('table.pid_tuning tr.MAG input').each(function () {
+        $('div.pid_tuning tr.MAG input').each(function () {
             PIDs[8][i++] = parseFloat($(this).val());
         });
 
