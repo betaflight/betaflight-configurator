@@ -547,6 +547,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 checkShowDisarmDelay();
             }
         });
+
         checkShowDisarmDelay();
 
         function checkShowSerialRxBox() {
