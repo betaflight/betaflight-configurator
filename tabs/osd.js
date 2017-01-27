@@ -386,6 +386,18 @@ OSD.constants = {
       default_position: (15 << 5) | 2,
       positionable: true,
       preview: '142W'
+    },
+    PID_RATE_PROFILE: {
+      name: 'PID_RATE_PROFILE',
+      default_position: 0x800 | (13 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: '1-2'
+    },
+    BATTERY_WARNING: {
+      name: 'BATTERY_WARNING',
+      default_position: -1,
+      positionable: true,
+      preview: 'LOW VOLTAGE'
     }
   }
 };
@@ -420,6 +432,12 @@ OSD.chooseFields = function () {
         F.PID_YAW,
         F.POWER
       ]);
+      if (semver.gt(CONFIG.flightControllerVersion, "3.1.0")) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+          F.PID_RATE_PROFILE,
+          F.BATTERY_WARNING
+        ]);
+      }
     }
   }
   // version 3.0.0
