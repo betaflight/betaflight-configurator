@@ -34,10 +34,15 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push({ name: 'ESC_SENSOR', groups: ['sensors'], maxPorts: 1 });
         functionRules.push({ name: 'TBS_SMARTAUDIO', groups: ['peripherals'], maxPorts: 1 });
     }
-    
+
     if (semver.gte(CONFIG.apiVersion, "1.27.0")) {
         functionRules.push({ name: 'IRC_TRAMP', groups: ['peripherals'], maxPorts: 1 });
     }
+
+    if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
+        functionRules.push({ name: 'TELEMETRY_IBUS', groups: ['telemetry'], maxPorts: 1 });
+    }
+
     for (var i = 0; i < functionRules.length; i++) {
         functionRules[i].displayName = chrome.i18n.getMessage('portsFunction_' + functionRules[i].name);
     }
