@@ -250,13 +250,27 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var gyro_select_e = $('select.gyroSyncDenom');
         var pid_select_e = $('select.pidProcessDenom');
 
+         function addDenomOption(element, denom, baseFreq) {
+            element.append('<option value="' + denom + '">' + ((baseFreq / denom * 100).toFixed(0) / 100) + ' kHz</option>');
+        }
+
         var updateGyroDenom = function (gyroBaseFreq) {
             var originalGyroDenom = gyro_select_e.val();
 
             gyro_select_e.empty();
 
-            for (var i = 1; i <= 8; i++) {
-                gyro_select_e.append('<option value="' + i + '">' + ((gyroBaseFreq / i * 100).toFixed(0) / 100) + ' kHz</option>');
+            var denom = 1;
+            while (denom <= 8) {
+                addDenomOption(gyro_select_e, denom, gyroBaseFreq);
+                denom ++;
+            }
+
+            if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
+                while (denom <= 32) {
+                     addDenomOption(gyro_select_e, denom, gyroBaseFreq);
+
+                     denom ++;
+                }
             }
 
             gyro_select_e.val(originalGyroDenom);
@@ -297,13 +311,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             pid_select_e.empty();
 
-            for (var i = 1; i <= 8; i++) {
-                pid_select_e.append('<option value="' + i + '">' + ((pidBaseFreq / i * 100).toFixed(0) / 100) + ' kHz</option>');
+            var denom = 1;
+
+            while (denom <= 8) {
+                addDenomOption(pid_select_e, denom, pidBaseFreq);
+                denom ++;
             }
 
             if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
-                for (var i = 9; i <= 16; i++) {
-                    pid_select_e.append('<option value="' + i + '">' + ((pidBaseFreq / i * 100).toFixed(0) / 100) + ' kHz</option>');
+                while (denom <= 16) {
+                    addDenomOption(pid_select_e, denom, pidBaseFreq);
+
+                    denom ++;
                 }
             }
 
