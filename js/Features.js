@@ -74,19 +74,19 @@ var Features = function (config) {
 
     self._features = features;
     self._featureMask = 0;
-}
+};
 
 Features.prototype.getMask = function () {
     var self = this;
 
     return self._featureMask;
-}
+};
 
 Features.prototype.setMask = function (featureMask) {
     var self = this;
 
     self._featureMask = featureMask;
-}
+};
 
 Features.prototype.isEnabled = function (featureName) {
     var self = this;
@@ -97,7 +97,7 @@ Features.prototype.isEnabled = function (featureName) {
         }
     }
     return false;
-}
+};
 
 Features.prototype.generateElements = function (featuresElements) {
     var self = this;
@@ -105,15 +105,20 @@ Features.prototype.generateElements = function (featuresElements) {
     var listElements = [];
 
     for (var i = 0; i < self._features.length; i++) {
-        var row_e;
-
         var feature_tip_html = '';
         if (self._features[i].haveTip) {
             feature_tip_html = '<div class="helpicon cf_tip" i18n_title="feature' + self._features[i].name + 'Tip"></div>';
         }
 
+        var newElements = [];
         if (self._features[i].mode === 'select') {
-            row_e = $('<option class="feature" id="feature-'
+            if (listElements.length === 0) {
+                newElements.push($('<option class="feature" '
+                    + 'value="-1" '
+                    + 'i18n="featureNone" />'));
+            }
+
+            var newElement = $('<option class="feature" id="feature-'
                 + i
                 + '" name="'
                 + self._features[i].name
@@ -121,9 +126,10 @@ Features.prototype.generateElements = function (featuresElements) {
                 + self._features[i].bit
                 + '" i18n="feature' + self._features[i].name + '" />');
 
-            listElements.push(row_e);
+            newElements.push(newElement);
+            listElements.push(newElement);
         } else {
-            row_e = $('<tr><td><input class="feature toggle" id="feature-'
+            var newElement = $('<tr><td><input class="feature toggle" id="feature-'
                     + i
                     + '" name="'
                     + self._features[i].name
@@ -136,15 +142,17 @@ Features.prototype.generateElements = function (featuresElements) {
                     + '</label></td><td><span i18n="feature' + self._features[i].name + '"></span>'
                     + feature_tip_html + '</td></tr>');
 
-            var feature_e = row_e.find('input.feature');
+            var feature_e = newElement.find('input.feature');
 
             feature_e.prop('checked', bit_check(self._featureMask, self._features[i].bit));
             feature_e.data('bit', self._features[i].bit);
+
+            newElements.push(newElement);
         }
 
         featuresElements.each(function () {
             if ($(this).hasClass(self._features[i].group)) {
-                $(this).append(row_e);
+                $(this).append(newElements);
             }
         });
     }
@@ -156,7 +164,7 @@ Features.prototype.generateElements = function (featuresElements) {
 
         element.prop('selected', state);
     }
-}
+};
 
 Features.prototype.updateData = function (featureElement) {
     var self = this;
@@ -172,13 +180,15 @@ Features.prototype.updateData = function (featureElement) {
     } else if (featureElement.prop('localName') === 'select') {
         var controlElements = featureElement.children();
         var selectedBit = featureElement.val();
-        for (var i = 0; i < controlElements.length; i++) {
-            var bit = controlElements[i].value;
-            if (selectedBit === bit) {
-                self._featureMask = bit_set(self._featureMask, bit);
-            } else {
-                self._featureMask = bit_clear(self._featureMask, bit);
+        if (selectedBit !== -1) {
+            for (var i = 0; i < controlElements.length; i++) {
+                var bit = controlElements[i].value;
+                if (selectedBit === bit) {
+                    self._featureMask = bit_set(self._featureMask, bit);
+                } else {
+                    self._featureMask = bit_clear(self._featureMask, bit);
+                }
             }
         }
     }
-}
+};

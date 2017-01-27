@@ -457,7 +457,9 @@
     "initialSetupEepromSaved": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"
     },
-
+    "featureNone": {
+        "message": "&lt;Select One&gt;"
+    },
     "featureRX_PPM": {
         "message": "PPM RX input"
     },
