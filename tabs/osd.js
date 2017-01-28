@@ -432,7 +432,7 @@ OSD.chooseFields = function () {
         F.PID_YAW,
         F.POWER
       ]);
-      if (semver.gt(CONFIG.flightControllerVersion, "3.1.0")) {
+      if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
           F.PID_RATE_PROFILE,
           F.BATTERY_WARNING
