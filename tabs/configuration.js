@@ -143,8 +143,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function process_html() {
         var mixer_list_e = $('select.mixerList');
-        for (var i = 0; i < mixerList.length; i++) {
-            mixer_list_e.append('<option value="' + (i + 1) + '">' + mixerList[i].name + '</option>');
+        for (var selectIndex = 0; selectIndex < mixerList.length; selectIndex++) {
+            mixerList.forEach(function (mixerEntry, mixerIndex) {
+                if (mixerEntry.pos === selectIndex) {
+                    mixer_list_e.append('<option value="' + (mixerIndex + 1) + '">' + mixerEntry.name + '</option>');
+                }
+            });
         }
 
         mixer_list_e.change(function () {
