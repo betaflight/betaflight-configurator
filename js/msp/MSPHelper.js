@@ -1280,13 +1280,18 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
         }
 
         // Verify that the address of the memory returned matches what the caller asked for
-        if (chunkAddress == address) {
+        // also check to see if the packet had a crc error - if so, retry by
+        // returning an empty buffer to the callback
+        if ((chunkAddress == address) && (dataCompressionType != 255)) {
             /* Strip that address off the front of the reply and deliver it separately so the caller doesn't have to
              * figure out the reply format:
              */
             onDataCallback(address, new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize));
         } else {
             // Report error
+            if (dataCompressionType == 255) {
+		console.log('CRC error for address ' + address + ' - retrying');
+            }
             onDataCallback(address, null);
         }
     });
