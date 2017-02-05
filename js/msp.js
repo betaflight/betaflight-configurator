@@ -11,6 +11,7 @@ var MSP = {
     message_buffer_uint8_view:  null,
     message_checksum:           0,
     messageIsJumboFrame:        false,
+    
 
     callbacks:                  [],
     packet_error:               0,
@@ -109,14 +110,14 @@ var MSP = {
                     }
                     break;
                 case 9:
-                    if (this.message_checksum == data[i]) {
-                        // message received, store dataview
-                        this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
-                    } else {
+                    if (this.message_checksum != data[i]) {
                         console.log('code: ' + this.code + ' - crc failed');
-                        this.dataView = null;
                         this.packet_error++;
+                        if (this.code == MSPCodes.MSP_DATAFLASH_READ) {
+                            this.message_buffer_uint8_view[6] = 255;
+			}
                     }
+                    this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
                     // Reset variables
                     this.message_length_received = 0;
                     this.state = 0;
