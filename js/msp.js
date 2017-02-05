@@ -11,7 +11,6 @@ var MSP = {
     message_buffer_uint8_view:  null,
     message_checksum:           0,
     messageIsJumboFrame:        false,
-    
 
     callbacks:                  [],
     packet_error:               0,
@@ -113,6 +112,10 @@ var MSP = {
                     if (this.message_checksum != data[i]) {
                         console.log('code: ' + this.code + ' - crc failed');
                         this.packet_error++;
+                        
+                        // if this is a dataflash read packet then use
+                        // the compressionType byte as a flag to indicate
+                        // that a crc error occurred and the packet should retry
                         if (this.code == MSPCodes.MSP_DATAFLASH_READ) {
                             this.message_buffer_uint8_view[6] = 255;
 			}
