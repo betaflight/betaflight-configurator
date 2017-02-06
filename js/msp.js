@@ -11,6 +11,7 @@ var MSP = {
     message_buffer_uint8_view:  null,
     message_checksum:           0,
     messageIsJumboFrame:        false,
+    crcError:                   false,
 
     callbacks:                  [],
     packet_error:               0,
@@ -114,14 +115,16 @@ var MSP = {
                         this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
                     } else {
                         console.log('code: ' + this.code + ' - crc failed');
-                        this.dataView = null;
                         this.packet_error++;
+                        this.crcError = true;
+                        this.dataView = new DataView(new ArrayBuffer(0));
                     }
                     // Reset variables
                     this.message_length_received = 0;
                     this.state = 0;
                     this.messageIsJumboFrame = false;
                     this.notify();
+                    this.crcError = false;
                     break;
 
                 default:
@@ -144,10 +147,15 @@ var MSP = {
     clearListeners: function() {
         this.listeners = [];  
     },
-    send_message: function (code, data, callback_sent, callback_msp) {
+    send_message: function (code, data, callback_sent, callback_msp, callback_onerror) {
         var bufferOut,
             bufView;
 
+         if (callback_onerror === undefined) {
+             var callbackOnError = false;
+         } else {
+             var callbackOnError = true;
+         }
         // always reserve 6 bytes for protocol overhead !
         if (data) {
             var size = data.length + 6,
@@ -183,7 +191,7 @@ var MSP = {
             bufView[5] = bufView[3] ^ bufView[4]; // checksum
         }
 
-        var obj = {'code': code, 'requestBuffer': bufferOut, 'callback': (callback_msp) ? callback_msp : false, 'timer': false};
+        var obj = {'code': code, 'requestBuffer': bufferOut, 'callback': (callback_msp) ? callback_msp : false, 'timer': false, 'callbackOnError': callbackOnError};
 
         var requestExists = false;
         for (var i = 0; i < MSP.callbacks.length; i++) {
