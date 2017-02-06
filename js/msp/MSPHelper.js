@@ -52,7 +52,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
     var data = dataHandler.dataView; // DataView (allowing us to view arrayBuffer as struct/union)
     var code = dataHandler.code;
-    var crcError = dataHandler.crcError;
     if (!dataHandler.unsupported) switch (code) {
         case MSPCodes.MSP_STATUS:
             CONFIG.cycleTime = data.readU16();
@@ -958,7 +957,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             dataHandler.callbacks.splice(i, 1);
 
             // fire callback
-            if (callback) callback({'command': code, 'data': data, 'length': data.byteLength, 'crcError': crcError});
+            if (callback) callback({'command': code, 'data': data, 'length': data.byteLength});
         }
     }
 }
@@ -1280,17 +1279,14 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
             dataCompressionType = response.data.readU8();
         }
 
-        // Verify that the address of the memory returned matches what the caller asked for and there was not a CRC error
-        if ((chunkAddress == address) && !(response.crcError)) {
+        // Verify that the address of the memory returned matches what the caller asked for
+        if (chunkAddress == address) {
             /* Strip that address off the front of the reply and deliver it separately so the caller doesn't have to
              * figure out the reply format:
              */
             onDataCallback(address, new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize));
         } else {
             // Report error
-            if (response.crcError) {
-              console.log('CRC error for address ' + address + ' - retrying');
-            }
             onDataCallback(address, null);
         }
     });
