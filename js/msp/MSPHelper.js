@@ -1300,7 +1300,7 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
             console.log('CRC error for address ' + address + ' - retrying');
             onDataCallback(address, null);  // returning null to the callback forces a retry
         }
-    },true);
+    }, true);
 };
 
 MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {

@@ -151,7 +151,7 @@ var MSP = {
         var bufferOut,
             bufView;
 
-         if (callback_onerror === undefined) {
+         if (!callback_onerror) {
              var callbackOnError = false;
          } else {
              var callbackOnError = true;
