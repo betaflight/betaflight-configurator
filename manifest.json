@@ -22,7 +22,7 @@
     "pages": ["tabs/map.html"]
     },
          
-        "permissions": [
+    "permissions": [
         "https://maps.googleapis.com/*",    
         "https://*.github.com/",
         "https://*.githubusercontent.com/",
@@ -40,6 +40,11 @@
             {"vendorId": 1155, "productId": 57105}
         ]}
     ],
+    "sockets": {
+        "tcp": {
+            "connect": "*:*"
+        }
+    },
 
     "icons": {
         "128": "images/bf_icon_128.png"
