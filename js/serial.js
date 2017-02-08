@@ -23,8 +23,8 @@ var serial = {
         var testUrl = path.match(/^tcp:\/\/([A-Za-z0-9\.-]+)(?:\:(\d+))?$/)
         if (testUrl) {
             var ip = testUrl[1];
-            var port = testUrl[2] || self.connectionPort;
-            port = parseInt(self.connectionPort);
+            var port = testUrl[2] || 2323;
+            port = parseInt(port);
 
             console.log('connect to raw tcp:', ip + ':' + port)
             self.connectTcp(ip, port, options, callback);
