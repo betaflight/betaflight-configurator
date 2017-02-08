@@ -209,6 +209,20 @@ var serial = {
                         self.onReceiveError.addListener(function watch_for_on_receive_errors(info) {
                             console.error(info);
                             if (info.socketId != self.connectionId) return;
+
+                            // TODO: better error handle
+                            // error code: https://cs.chromium.org/chromium/src/net/base/net_error_list.h?sq=package:chromium&l=124
+                            switch (info.resultCode) {
+                                case -100: // CONNECTION_CLOSED
+                                case -102: // CONNECTION_REFUSED
+                                    if (GUI.connected_to || GUI.connecting_to) {
+                                        $('a.connect').click();
+                                    } else {
+                                        self.disconnect();
+                                    }
+                                    break;
+
+                            }
                         });
 
                         console.log(self.logHead + 'Connection opened with ID: ' + createInfo.socketId + ', url: ' + self.connectionIP + ':' + self.connectionPort);
@@ -294,6 +308,26 @@ var serial = {
 
             var sendFn = (self.connectionType == 'serial') ? chrome.serial.send : chrome.sockets.tcp.send;
             sendFn(self.connectionId, data, function (sendInfo) {
+                // tcp send error
+                if (self.connectionType == 'tcp' && sendInfo.resultCode < 0) {
+                    var error = 'system_error';
+
+                    // TODO: better error handle
+                    // error code: https://cs.chromium.org/chromium/src/net/base/net_error_list.h?sq=package:chromium&l=124
+                    switch (sendInfo.resultCode) {
+                        case -100: // CONNECTION_CLOSED
+                        case -102: // CONNECTION_REFUSED
+                            error = 'disconnected';
+                            break;
+
+                    }
+                    if (callback) callback({
+                         bytesSent: 0,
+                         error: error
+                    });
+                    return;
+                }
+
                 // track sent bytes for statistics
                 self.bytesSent += sendInfo.bytesSent;
 
