@@ -18,18 +18,11 @@ var serial = {
     logHead: 'SERIAL: ',
 
     connect: function (path, options, callback) {
-        var self = this;
-
         var testUrl = path.match(/^tcp:\/\/([A-Za-z0-9\.-]+)(?:\:(\d+))?$/)
         if (testUrl) {
-            var ip = testUrl[1];
-            var port = testUrl[2] || 2323;
-            port = parseInt(port);
-
-            console.log('connect to raw tcp:', ip + ':' + port)
-            self.connectTcp(ip, port, options, callback);
+            this.connectTcp(testUrl[1], testUrl[2], options, callback);
         } else {
-            self.connectSerial(path, options, callback);
+            this.connectSerial(path, options, callback);
         }
     },
     connectSerial: function (path, options, callback) {
@@ -174,6 +167,7 @@ var serial = {
         self.connectionType = 'tcp';
         self.logHead = 'SERIAL-TCP: ';
 
+        console.log('connect to raw tcp:', ip + ':' + port)
         chrome.sockets.tcp.create({}, function(createInfo) {
             console.log('chrome.sockets.tcp.create', createInfo)
             if (createInfo && !self.openCanceled) {
