@@ -18,11 +18,12 @@ var serial = {
     logHead: 'SERIAL: ',
 
     connect: function (path, options, callback) {
+        var self = this;
         var testUrl = path.match(/^tcp:\/\/([A-Za-z0-9\.-]+)(?:\:(\d+))?$/)
         if (testUrl) {
-            this.connectTcp(testUrl[1], testUrl[2], options, callback);
+            self.connectTcp(testUrl[1], testUrl[2], options, callback);
         } else {
-            this.connectSerial(path, options, callback);
+            self.connectSerial(path, options, callback);
         }
     },
     connectSerial: function (path, options, callback) {
