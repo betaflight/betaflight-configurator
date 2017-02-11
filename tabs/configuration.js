@@ -562,19 +562,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }
 
-        $('input.feature', features_e).change(function () {
-            var element = $(this);
-
-            BF_CONFIG.features.updateData(element);
-            updateTabList(BF_CONFIG.features);
-
-            if (element.attr('name') === 'MOTOR_STOP') {
-                checkShowDisarmDelay();
-            }
-        });
-
-        checkShowDisarmDelay();
-
         function checkShowSerialRxBox() {
             if (BF_CONFIG.features.isEnabled('RX_SERIAL')) {
                 $('div.serialRXBox').show();
@@ -623,28 +610,76 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }
 
+        function checkUpdateGpsControls() {
+            if (BF_CONFIG.features.isEnabled('GPS')) {
+                $('.gpsSettings').show();
+            } else {
+                $('.gpsSettings').hide();
+            }
+        }
+
+        function checkUpdate3dControls() {
+            if (BF_CONFIG.features.isEnabled('3D')) {
+                $('._3dSettings').show();
+            } else {
+                $('._3dSettings').hide();
+            }
+        }
+
+        $('input.feature', features_e).change(function () {
+            var element = $(this);
+
+            BF_CONFIG.features.updateData(element);
+            updateTabList(BF_CONFIG.features);
+
+            switch (element.attr('name')) {
+                case 'MOTOR_STOP':
+                    checkShowDisarmDelay();
+
+                    break;
+                case 'VBAT':
+                    checkUpdateVbatControls();
+
+                    break;
+                case 'CURRENT_METER':
+                    checkUpdateCurrentControls();
+
+                    break;
+                case 'GPS':
+                    checkUpdateGpsControls();
+
+                    break;
+                case '3D':
+                    checkUpdate3dControls();
+
+                    break;
+                default:
+                    break;
+            }
+        });
+
         $(features_e).filter('select').change(function () {
             var element = $(this);
 
             BF_CONFIG.features.updateData(element);
             updateTabList(BF_CONFIG.features);
 
-            if (element.attr('name') === 'rxMode') {
-                checkShowSerialRxBox();
+            switch (element.attr('name')) {
+                case 'rxMode':
+                    checkShowSerialRxBox();
+
+                    break;
+                default:
+                    break;
             }
         });
 
-        $(features_e).filter('tbody.features.batteryVoltage').change(function() {
-            checkUpdateVbatControls();
-        });
-
-        $(features_e).filter('tbody.features.batteryCurrent').change(function() {
-            checkUpdateCurrentControls();
-        });
-
+        checkShowDisarmDelay();
         checkShowSerialRxBox();
         checkUpdateVbatControls();
         checkUpdateCurrentControls();
+        checkUpdateGpsControls();
+        checkUpdate3dControls();
 
         $("input[id='unsyncedPWMSwitch']").change(function() {
             if ($(this).is(':checked')) {

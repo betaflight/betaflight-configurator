@@ -15,7 +15,7 @@ var Features = function (config) {
         {bit: 9, group: 'other', name: 'SONAR'},
         {bit: 10, group: 'other', name: 'TELEMETRY'},
         {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'},
-        {bit: 12, group: 'other', name: '3D'},
+        {bit: 12, group: '3D', name: '3D'},
         {bit: 13, group: 'rxMode', mode: 'select', name: 'RX_PARALLEL_PWM'},
         {bit: 14, group: 'rxMode', mode: 'select', name: 'RX_MSP'},
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
