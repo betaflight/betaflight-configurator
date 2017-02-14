@@ -3,7 +3,8 @@
 TABS.motors = {
     allowTestMode: false,
     feature3DEnabled: false,
-    feature3DSupported: false
+    feature3DSupported: false,
+    escProtocolIsDshot: false
 };
 TABS.motors.initialize = function (callback) {
     var self = this;
@@ -25,16 +26,24 @@ TABS.motors.initialize = function (callback) {
     }
     
     function load_3d() {
-        var next_callback = get_motor_data;
+        var next_callback = esc_protocol;
         if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
             self.feature3DSupported = true;
             MSP.send_message(MSPCodes.MSP_3D, false, false, next_callback);
         } else {
             next_callback();
         }
-        
     }
-    
+
+    function esc_protocol() {
+        var next_callback = get_motor_data;
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+            MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
     function get_motor_data() {
         update_arm_status();
         MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_html);
@@ -59,7 +68,7 @@ TABS.motors.initialize = function (callback) {
     function initDataArray(length) {
         var data = new Array(length);
         for (var i = 0; i < length; i++) {
-            data[i] = new Array();
+            data[i] = [];
             data[i].min = -1;
             data[i].max = 1;
         }
@@ -164,7 +173,6 @@ TABS.motors.initialize = function (callback) {
 
         var group = svg.select("g.data");
         var lines = group.selectAll("path").data(data, function (d, i) {return i;});
-        var newLines = lines.enter().append("path").attr("class", "line");
         lines.attr('d', graphHelpers.line);
     }
 
@@ -181,9 +189,15 @@ TABS.motors.initialize = function (callback) {
         if (self.feature3DEnabled && !self.feature3DSupported) {
             self.allowTestMode = false;
         }
-        
-        $('#motorsEnableTestMode').prop('checked', false);
-        $('#motorsEnableTestMode').prop('disabled', true);
+
+        if (PID_ADVANCED_CONFIG.fast_pwm_protocol >= TABS.configuration.DSHOT_PROTOCOL_MIN_VALUE) {
+            self.escProtocolIsDshot = true;
+        } else {
+            self.escProtocolIsDshot = false;
+        }
+
+        $('#motorsEnableTestMode').prop('checked', false)
+            .prop('disabled', true);
         
         update_model(BF_CONFIG.mixerConfiguration);
         
@@ -325,8 +339,8 @@ TABS.motors.initialize = function (callback) {
             ');
         }
 
-        $('div.sliders input').prop('min', MISC.mincommand);
-        $('div.sliders input').prop('max', MISC.maxthrottle);
+        $('div.sliders input').prop('min', MISC.mincommand)
+            .prop('max', MISC.maxthrottle);
         $('div.values li:not(:last)').text(MISC.mincommand);
         
         if(self.feature3DEnabled && self.feature3DSupported) {
@@ -405,17 +419,15 @@ TABS.motors.initialize = function (callback) {
         var motors_running = false;
 
         for (var i = 0; i < number_of_valid_outputs; i++) {
-            if( !self.feature3DEnabled ){
+            if (!self.feature3DEnabled) {
                 if (MOTOR_DATA[i] > MISC.mincommand) {
                     motors_running = true;
-                    break;
                 }
-            }else{
-                if( (MOTOR_DATA[i] < _3D.deadband3d_low) || (MOTOR_DATA[i] > _3D.deadband3d_high) ){
+            } else {
+                if ((MOTOR_DATA[i] < _3D.deadband3d_low) || (MOTOR_DATA[i] > _3D.deadband3d_high)) {
                     motors_running = true;
-                    break;
                 }
-            } 
+            }
         }
 
         if (motors_running) {
@@ -442,8 +454,8 @@ TABS.motors.initialize = function (callback) {
 
             // slide master slider if condition is valid
             if (master_value) {
-                $('div.sliders input.master').val(master_value);
-                $('div.sliders input.master').trigger('input');
+                $('div.sliders input.master').val(master_value)
+                    .trigger('input');
             }
         }
 
@@ -464,20 +476,33 @@ TABS.motors.initialize = function (callback) {
             MSP.send_message(MSPCodes.MSP_SERVO, false, false, update_ui);
         }
 
-        var full_block_scale = MISC.maxthrottle - MISC.mincommand;
+        var full_block_scale;
+        var motorOffset;
+        if (self.escProtocolIsDshot) {
+            full_block_scale = 1000;
+            motorOffset = 1000;
+        } else {
+            full_block_scale = MISC.maxthrottle - MISC.mincommand;
+            motorOffset = MISC.mincommand;
+        }
         
         function update_ui() {            
             var previousArmState = self.armed;                                   
             var block_height = $('div.m-block:first').height();
 
             for (var i = 0; i < MOTOR_DATA.length; i++) {
-                var data = MOTOR_DATA[i] - MISC.mincommand,
-                    margin_top = block_height - (data * (block_height / full_block_scale)).clamp(0, block_height),
-                    height = (data * (block_height / full_block_scale)).clamp(0, block_height),
-                    color = parseInt(data * 0.009);
+                var motorValue = MOTOR_DATA[i];
+                var barHeight = motorValue - motorOffset,
+                    margin_top = block_height - (barHeight * (block_height / full_block_scale)).clamp(0, block_height),
+                    height = (barHeight * (block_height / full_block_scale)).clamp(0, block_height),
+                    color = parseInt(barHeight * 0.009);
 
-                $('.motor-' + i + ' .label', motors_wrapper).text(MOTOR_DATA[i]);
-                $('.motor-' + i + ' .indicator', motors_wrapper).css({'margin-top' : margin_top + 'px', 'height' : height + 'px', 'background-color' : 'rgba(255,187,0,1.'+ color +')'});
+                $('.motor-' + i + ' .label', motors_wrapper).text(motorValue);
+                $('.motor-' + i + ' .indicator', motors_wrapper).css({
+                    'margin-top' : margin_top + 'px',
+                    'height' : height + 'px',
+                    'background-color' : 'rgba(255,187,0,1.'+ color +')'
+                });
             }
 
             // servo indicators are still using old (not flexible block scale), it will be changed in the future accordingly
@@ -495,8 +520,8 @@ TABS.motors.initialize = function (callback) {
             if (!self.allowTestMode) return;
             
             if (self.armed) {
-                $('#motorsEnableTestMode').prop('disabled', true);
-                $('#motorsEnableTestMode').prop('checked', false);
+                $('#motorsEnableTestMode').prop('disabled', true)
+                    .prop('checked', false);
             } else {
                 if (self.allowTestMode) {
                     $('#motorsEnableTestMode').prop('disabled', false);                    
