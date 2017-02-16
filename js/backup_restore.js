@@ -168,11 +168,10 @@ function configuration_backup(callback) {
         }];
 
         // generate timestamp for the backup file
-        var d = new Date(),
-            now = (d.getMonth() + 1) + '.' + d.getDate() + '.' + d.getFullYear() + '.' + d.getHours() + '.' + d.getMinutes();
+        var now = new Date().toISOString().split(".")[0];
 
         // create or load the file
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'betaflight_backup_' + now, accepts: accepts}, function (fileEntry) {
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'betaflight_backup_' + now + '.json', accepts: accepts}, function (fileEntry) {
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError.message);
                 return;
