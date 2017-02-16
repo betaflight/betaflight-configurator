@@ -435,11 +435,6 @@
                     <div class="spacer_box_title" i18n="configurationGPS"></div>
                 </div>
                 <div class="spacer_box">
-                    <div class="note">
-                        <div class="note_spacer">
-                            <p i18n="configurationGPSHelp"></p>
-                        </div>
-                    </div>
                     <table cellpadding="0" cellspacing="0">
                         <thead>
                             <tr>
@@ -452,28 +447,37 @@
                             <!-- table generated here -->
                         </tbody>
                     </table>
-                    <div class="line">
-                        <select class="gps_protocol">
-                            <!-- list generated here -->
-                        </select>
-                        <span i18n="configurationGPSProtocol"></span>
-                    </div>
-                    <div class="line">
-                        <select class="gps_baudrate">
-                            <!-- list generated here -->
-                        </select>
-                        <span i18n="configurationGPSBaudrate"></span>
-                    </div>
-                    <div class="line">
-                        <select class="gps_ubx_sbas">
-                            <!-- list generated here -->
-                        </select>
-                        <span i18n="configurationGPSubxSbas"></span>
-                    </div>
-                    <div class="number">
-                        <label> <input type="number" name="mag_declination" step="0.01" min="-180" max="180" />
-                        <span i18n="configurationMagDeclination"></span>
-                        </label>
+                    <div class="gpsSettings">
+                        <div class="spacer_box" style="padding-bottom:10px;">
+                            <div class="note">
+                                <div class="note_spacer">
+                                    <p i18n="configurationGPSHelp"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line">
+                            <select class="gps_protocol">
+                                <!-- list generated here -->
+                            </select>
+                            <span i18n="configurationGPSProtocol"></span>
+                        </div>
+                        <div class="line">
+                            <select class="gps_baudrate">
+                                <!-- list generated here -->
+                            </select>
+                            <span i18n="configurationGPSBaudrate"></span>
+                        </div>
+                        <div class="line">
+                            <select class="gps_ubx_sbas">
+                                <!-- list generated here -->
+                            </select>
+                            <span i18n="configurationGPSubxSbas"></span>
+                        </div>
+                        <div class="number">
+                            <label> <input type="number" name="mag_declination" step="0.01" min="-180" max="180" />
+                            <span i18n="configurationMagDeclination"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -482,25 +486,39 @@
                     <div class="spacer_box_title" i18n="configuration3d"></div>
                 </div>
                 <div class="spacer_box">
-                    <div class="number">
-                        <label> <input type="number" name="3ddeadbandlow" step="1" min="1425" max="1500" /> <span
-                            i18n="configuration3dDeadbandLow"></span>
-                        </label>
-                    </div>
-                    <div class="number">
-                        <label> <input type="number" name="3ddeadbandhigh" step="1" min="1500" max="1575" /> <span
-                            i18n="configuration3dDeadbandHigh"></span>
-                        </label>
-                    </div>
-                    <div class="number">
-                        <label> <input type="number" name="3dneutral" step="1" min="1475" max="1525" /> <span
-                            i18n="configuration3dNeutral"></span>
-                        </label>
-                    </div>
-                    <div class="number" >
-                        <label> <input type="number" name="3ddeadbandthrottle" step="1" min="0" max="1000" /> <span
-                            i18n="configuration3dDeadbandThrottle"></span>
-                        </label>
+                    <table cellpadding="0" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th i18n="configurationFeatureEnabled"></th>
+                            <th i18n="configurationFeatureDescription"></th>
+                            <th i18n="configurationFeatureName"></th>
+                        </tr>
+                        </thead>
+                        <tbody class="features 3D">
+                        <!-- table generated here -->
+                        </tbody>
+                    </table>
+                    <div class="_3dSettings">
+                        <div class="number">
+                            <label> <input type="number" name="3ddeadbandlow" step="1" min="1425" max="1500" /> <span
+                                i18n="configuration3dDeadbandLow"></span>
+                            </label>
+                        </div>
+                        <div class="number">
+                            <label> <input type="number" name="3ddeadbandhigh" step="1" min="1500" max="1575" /> <span
+                                i18n="configuration3dDeadbandHigh"></span>
+                            </label>
+                        </div>
+                        <div class="number">
+                            <label> <input type="number" name="3dneutral" step="1" min="1475" max="1525" /> <span
+                                i18n="configuration3dNeutral"></span>
+                            </label>
+                        </div>
+                        <div class="number" >
+                            <label> <input type="number" name="3ddeadbandthrottle" step="1" min="0" max="1000" /> <span
+                                i18n="configuration3dDeadbandThrottle"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
