@@ -1,8 +1,12 @@
 'use strict';
 
-var minRc = 1000;
-var midRc = 1500;
-var maxRc = 2000;
+var rcParams = () => {
+    if (PID_ADVANCED_CONFIG.fast_pwm_protocol >= TABS.configuration.DSHOT_PROTOCOL_MIN_VALUE) {
+        return { min: 1000, mid: RX_CONFIG.midrc, max: 2000 };
+    }
+
+    return { min: MISC.mincommand, mid: RX_CONFIG.midrc, max: MISC.maxthrottle };
+}
 
 var RateCurve = function (useLegacyCurve) {
     this.useLegacyCurve = useLegacyCurve;
@@ -13,11 +17,11 @@ var RateCurve = function (useLegacyCurve) {
     };
 
     this.rcCommand = function (rcData, rcRate, deadband) {
-        var tmp = Math.min(Math.max(Math.abs(rcData - midRc) - deadband, 0), 500);
+        var tmp = Math.min(Math.max(Math.abs(rcData - rcParams().mid) - deadband, 0), 500);
 
         var result = tmp * rcRate;
 
-        if (rcData < midRc) {
+        if (rcData < rcParams().mid) {
             result = -result;
         }
 
@@ -33,11 +37,11 @@ var RateCurve = function (useLegacyCurve) {
         context.translate(width / 2, height / 2);
 
         context.beginPath();
-        var rcData = minRc;
+        var rcData = rcParams().min;
         context.moveTo(-500, -canvasHeightScale * this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband));
         rcData = rcData + stepWidth;
-        while (rcData <= maxRc) {
-            context.lineTo(rcData - midRc, -canvasHeightScale * this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband));
+        while (rcData <= rcParams().max) {
+            context.lineTo(rcData - rcParams().mid, -canvasHeightScale * this.rcCommandRawToDegreesPerSecond(rcData, rate, rcRate, rcExpo, superExpoActive, deadband));
 
             rcData = rcData + stepWidth;
         }
@@ -124,7 +128,7 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 RateCurve.prototype.getMaxAngularVel = function (rate, rcRate, rcExpo, superExpoActive, deadband) {
     var maxAngularVel;
     if (!this.useLegacyCurve) {
-        maxAngularVel = this.rcCommandRawToDegreesPerSecond(maxRc, rate, rcRate, rcExpo, superExpoActive, deadband);
+        maxAngularVel = this.rcCommandRawToDegreesPerSecond(rcParams().max, rate, rcRate, rcExpo, superExpoActive, deadband);
     }
 
     return maxAngularVel;
