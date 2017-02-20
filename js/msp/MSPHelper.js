@@ -605,6 +605,17 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     RX_CONFIG.rcInterpolation = data.readU8();
                     RX_CONFIG.rcInterpolationInterval = data.readU8();
                     RX_CONFIG.airModeActivateThreshold = data.readU16();
+                    if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+                        RX_CONFIG.rxSpiProtocol = data.readU8();
+                        RX_CONFIG.rxSpiId = data.readU32();
+                        RX_CONFIG.rxSpiRfChannelCount = data.readU8();
+                        RX_CONFIG.fpvCamAngleDegrees = data.readU8();
+                    } else {
+                        RX_CONFIG.rxSpiProtocol = 0;
+                        RX_CONFIG.rxSpiId = 0;
+                        RX_CONFIG.rxSpiRfChannelCount = 0;
+                        RX_CONFIG.fpvCamAngleDegrees = 0;
+                    }
                 } else {
                     RX_CONFIG.rcInterpolation = 0;
                     RX_CONFIG.rcInterpolationInterval = 0;
@@ -1083,6 +1094,12 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push8(RX_CONFIG.rcInterpolation)
                     .push8(RX_CONFIG.rcInterpolationInterval)
                     .push16(RX_CONFIG.airModeActivateThreshold);
+                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+                    buffer.push8(RX_CONFIG.rxSpiProtocol)
+                        .push32(RX_CONFIG.rxSpiId)
+                        .push8(RX_CONFIG.rxSpiRfChannelCount)
+                        .push8(RX_CONFIG.fpvCamAngleDegrees);
+                }
             }
 
             break;

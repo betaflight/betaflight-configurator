@@ -638,13 +638,13 @@
         "message": "Magnetometer Declination [deg]"
     },
     "configurationAutoDisarmDelay": {
-        "message": "Disarm motors after set delay(Seconds) (Requires MOTOR_STOP feature)"
+        "message": "Disarm motors after set delay [seconds] (Requires MOTOR_STOP feature)"
     },
     "configurationDisarmKillSwitch": {
         "message": "Disarm motors regardless of throttle value (When arming via AUX channel)"
     },
     "configurationDigitalIdlePercent": {
-        "message": "Motor Idle Throttle Value (percent)"
+        "message": "Motor Idle Throttle Value [percent]"
     },
     "configurationDigitalIdlePercentHelp": {
         "message": "This is the 'idle' value in percent of maximum throttle that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the percent value to gain more idle speed."
@@ -722,7 +722,7 @@
         "message": "Flight Controller Loop Time"
     },
     "configurationCalculatedCyclesSec": {
-        "message": "Cycles/Sec (Hz)"
+        "message": "Cycles/Sec [Hz]"
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Note:</strong> Make sure your FC is capable to operate on these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance."
@@ -873,7 +873,7 @@
         "message": "Manual"
     },
     "receiverRcInterpolationInterval": {
-        "message": "RC Interpolating Interval (ms)"
+        "message": "RC Interpolation Interval [ms]"
     },
     "pidTuningPtermSetpoint": {
         "message": "D Setpoint transition"
@@ -900,7 +900,7 @@
         "message": "RC Rate"
     },
     "pidTuningMaxVel": {
-        "message": "Max Vel (deg/s)"
+        "message": "Max Vel [deg/s]"
     },
     "pidTuningRate": {
         "message": "Rate"
@@ -1707,25 +1707,25 @@
     "message": "Profile independent Filter Settings"
   },
   "pidTuningGyroLowpassFrequency": {
-    "message": "Gyro Soft Lowpass Frequency (Hz)"
+    "message": "Gyro Soft Lowpass Frequency [Hz]"
   },
   "pidTuningGyroLowpassFrequencyHelp": {
-    "message": "Gyro Soft Lowpass Frequency (Hz)"
+    "message": "Gyro Soft Lowpass Frequency [Hz]"
   },
   "pidTuningGyroNotch1Frequency": {
-      "message": "Gyro Notch Filter 1 Frequency (Hz)"
+      "message": "Gyro Notch Filter 1 Frequency [Hz]"
   },
   "pidTuningGyroNotch2Frequency": {
-      "message": "Gyro Notch Filter 2 Frequency (Hz)"
+      "message": "Gyro Notch Filter 2 Frequency [Hz]"
   },
   "pidTuningGyroNotchFrequencyHelp": {
     "message": "Gyro Notch Filter Frequency in Hz (0 means disabled)"
   },
   "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 1 Frequency (Hz)"
+        "message": "Gyro Notch Filter Cutoff 1 Frequency [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 2 Frequency (Hz)"
+        "message": "Gyro Notch Filter Cutoff 2 Frequency [Hz]"
     },
     "pidTuningGyroNotchCutoffHelp": {
     "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
@@ -1734,28 +1734,28 @@
     "message": "Filter Settings"
   },
   "pidTuningDTermLowpassFrequency": {
-    "message": "D Term Lowpass Frequency (Hz)"
+    "message": "D Term Lowpass Frequency [Hz]"
   },
   "pidTuningDTermLowpassFrequencyHelp": {
-    "message": "D Term Lowpass Frequency in Hz (0 means disabled)"
+    "message": "D Term Lowpass Frequency [Hz] (0 means disabled)"
   },
   "pidTuningDTermNotchFrequency": {
-    "message": "D Term Notch Filter Frequency (Hz)"
+    "message": "D Term Notch Filter Frequency [Hz]"
   },
   "pidTuningDTermNotchFrequencyHelp": {
-    "message": "D Term Notch Filter Frequency in Hz (0 means disabled)"
+    "message": "D Term Notch Filter Frequency [Hz] (0 means disabled)"
   },
   "pidTuningDTermNotchCutoff": {
-    "message": "D Term Notch Filter Cutoff (Hz)"
+    "message": "D Term Notch Filter Cutoff [Hz]"
   },
   "pidTuningDTermNotchCutoffHelp": {
     "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
   },
   "pidTuningYawLowpassFrequency": {
-    "message": "Yaw Lowpass Frequency (Hz)"
+    "message": "Yaw Lowpass Frequency [Hz]"
   },
   "pidTuningYawLowpassFrequencyHelp": {
-    "message": "Yaw Lowpass Frequency in Hz (Yaw axis can sometimes be noiser than the rest. This filter only affects the P of yaw)"
+    "message": "Yaw Lowpass Frequency [Hz] (Yaw axis can sometimes be noiser than the rest. This filter only affects the P of yaw)"
   },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensation"
@@ -1916,16 +1916,19 @@
     "pidTuningPidTuningTip": {
         "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise<br><b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting"
     },
-      "pidTuningRatesTip": {
+    "pidTuningRatesTip": {
         "message": "Play with the rates and see how those affect the stick curve"
     },
-      "configurationMisc": {
+    "configurationMisc": {
         "message": "Misc"
     },
-      "configurationVesselName": {
+    "configurationVesselName": {
         "message": "Craft name"
     },
-      "onboardLoggingBlackbox": {
+    "configurationFpvCamAngleDegrees": {
+        "message": "FPV Camera Angle [degrees]"
+    },
+    "onboardLoggingBlackbox": {
     	"message": "Blackbox logging device"
     },
       "onboardLoggingRateOfLogging": {
