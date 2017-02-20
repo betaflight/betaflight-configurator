@@ -305,7 +305,11 @@ var FC = {
             rx_max_usec:            0,
             rcInterpolation:        0,
             rcInterpolationInterval:0,
-            airModeActivateThreshold: 0
+            airModeActivateThreshold: 0,
+            rxSpiProtocol:          0,
+            rxSpiId:                0,
+            rxSpiRfChannelCount:    0,
+            fpvCamAngleDegrees:     0
         };
 
         FAILSAFE_CONFIG = {

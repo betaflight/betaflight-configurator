@@ -118,7 +118,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_current() {
-        var next_callback = load_html;
+        var next_callback = load_rx_config;
         if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
             MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
         } else {
@@ -126,6 +126,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
     }
 
+    function load_rx_config() {
+        var next_callback = load_html;
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+            MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
 
     //Update Analog/Battery Data
     function load_analog() {
@@ -353,6 +361,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         $('input[name="vesselName"]').val(CONFIG.name);
+
+
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+            $('input[name="fpvCamAngleDegrees"]').val(RX_CONFIG.fpvCamAngleDegrees);
+        } else {
+            $('div.fpvCamAngleDegrees').hide();
+        }
 
         if (semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
             $('.miscSettings').hide();
@@ -739,6 +754,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
             }
 
+            if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+                RX_CONFIG.fpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
+            }
+
             function save_serial_config() {
                 if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_CF_SERIAL_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CF_SERIAL_CONFIG), false, save_misc);
@@ -838,9 +857,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_current() {
-                var next_callback = save_to_eeprom;
+                var next_callback = save_rx_config;
                 if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_rx_config() {
+                var next_callback = save_to_eeprom;
+                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }
