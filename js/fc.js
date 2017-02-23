@@ -68,7 +68,6 @@ var FC = {
         BF_CONFIG = {
             mixerConfiguration:     0,
             features:               new Features(CONFIG),
-            serialrx_type:          0,
             board_align_roll:       0,
             board_align_pitch:      0,
             board_align_yaw:        0,
