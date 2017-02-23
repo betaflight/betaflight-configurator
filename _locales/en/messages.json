@@ -550,6 +550,9 @@
     "featureSUPEREXPO_RATES": {
         "message": "Super Expo Rates"
     },
+    "featureSDCARD": {
+        "message": "SDCard support (for logging)"
+    },
     "featureOSD": {
         "message": "On Screen Display"
     },

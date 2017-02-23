@@ -53,10 +53,16 @@ var Features = function (config) {
             );
         }
 
-        if (semver.gte(config.flightControllerVersion, "2.8.0") && !semver.gte(config.flightControllerVersion, "3.0.0")) {
-            features.push(
-                {bit: 23, group: 'pidTuning', name: 'SUPEREXPO_RATES'}
-            );
+        if (semver.gte(config.flightControllerVersion, "2.8.0")) {
+            if (!semver.gte(config.flightControllerVersion, "3.0.0")) {
+                features.push(
+                    {bit: 23, group: 'pidTuning', name: 'SUPEREXPO_RATES'}
+                );
+            } else {
+                features.push(
+                    {bit: 23, group: 'other', name: 'SDCARD'}
+                );
+            }
         }
 
         if (semver.gte(config.flightControllerVersion, "3.0.0")) {
