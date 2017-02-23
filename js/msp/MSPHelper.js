@@ -436,7 +436,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_BF_CONFIG:
                 BF_CONFIG.mixerConfiguration = data.readU8();
                 BF_CONFIG.features.setMask(data.readU32());
-                BF_CONFIG.serialrx_type = data.readU8();
+                RX_CONFIG.serialrx_provider = data.readU8();
                 BF_CONFIG.board_align_roll = data.read16(); // -180 - 360
                 BF_CONFIG.board_align_pitch = data.read16(); // -180 - 360
                 BF_CONFIG.board_align_yaw = data.read16(); // -180 - 360
@@ -989,7 +989,7 @@ MspHelper.prototype.crunch = function(code) {
             var featureMask = BF_CONFIG.features.getMask();
             buffer.push8(BF_CONFIG.mixerConfiguration)
                 .push32(featureMask)
-                .push8(BF_CONFIG.serialrx_type)
+                .push8(RX_CONFIG.serialrx_provider)
                 .push16(BF_CONFIG.board_align_roll)
                 .push16(BF_CONFIG.board_align_pitch)
                 .push16(BF_CONFIG.board_align_yaw)
