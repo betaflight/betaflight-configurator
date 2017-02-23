@@ -298,9 +298,12 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
 
 	var parseDescriptor = function(str) {
             // F303: "@Internal Flash  /0x08000000/128*0002Kg"
-            // F407: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
+            // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
+            // F72x: "@Internal Flash  /0x08000000/04*016Kg,01*64Kg,03*128Kg"
+            // F74x: "@Internal Flash  /0x08000000/04*032Kg,01*128Kg,03*256Kg"
             // split main into [location, start_addr, sectors]
-            var tmp1 = str.split('/');
+            var tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
+            var tmp1 = tmp0.split('/');
             if (tmp1.length != 3 || !tmp1[0].startsWith("@")) {
                 return null;
             }
