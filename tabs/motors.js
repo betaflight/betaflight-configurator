@@ -173,6 +173,8 @@ TABS.motors.initialize = function (callback) {
 
         var group = svg.select("g.data");
         var lines = group.selectAll("path").data(data, function (d, i) {return i;});
+
+        lines.enter().append("path").attr("class", "line");
         lines.attr('d', graphHelpers.line);
     }
 
