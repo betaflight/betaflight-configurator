@@ -292,22 +292,22 @@
         "message": "Developer"
     },
     "defaultSupport": {
-        "message": "For support please search the forums first or contact your vendor.<br /><br />"
+        "message": "For support please search the forums and wiki first or contact your vendor.<br /><br />"
     },
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups thread</a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"http://www.multiwii.com/forum/viewtopic.php?f=23&t=5149\" target=\"_blank\">MultiWii forums thread</a>"
+        "message": "<a href=\"http://betaflight.info\" target=\"_blank\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight Videos</a>"
     },
     "defaultSupport4": {
-        "message": "<a href=\"https://gitter.im/betaflight/betaflight\" target=\"_blank\">Betaflight on Gitter</a>"
+        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://gitter.im/betaflight/betaflight\" target=\"_blank\">Join on Gitter</a>"
+        "message": "<a href=\"http://betaflight.tk/slack\" target=\"_blank\">Betaflight devs on slack</a>"
     },
 
     "initialSetupBackupAndRestoreApiVersion": {
