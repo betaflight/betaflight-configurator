@@ -1,4 +1,4 @@
-.tab-motors .modelAndAccel {
+.tab-motors .modelAndGyro {
     float: left;
     width: 100%;
     margin-bottom: 0px;
@@ -9,7 +9,7 @@
     margin: 10px;
 }
 
-.tab-motors #accel {
+.tab-motors #gyro {
     float: left;
     width: calc(100% - 292px);
 }
