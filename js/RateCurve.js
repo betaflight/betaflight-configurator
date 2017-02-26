@@ -92,7 +92,7 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
         
         var expoPower;
         var rcRateConstant;
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             expoPower = 3;
             rcRateConstant = 200;
         } else {

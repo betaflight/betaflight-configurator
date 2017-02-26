@@ -75,7 +75,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 CONFIG.mode = data.readU32();
                 CONFIG.profile = data.readU8();
                 CONFIG.cpuload = data.readU16();
-                if (semver.gt(CONFIG.flightControllerVersion, "2.9.1")) {
+                if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
                     CONFIG.numProfiles = data.readU8();
                     CONFIG.rateProfile = data.readU8();
     
@@ -178,7 +178,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.10.0")) {
                     RC_tuning.RC_YAW_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
-                    if (semver.gte(CONFIG.flightControllerVersion, "2.9.1")) {
+                    if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
                         RC_tuning.rcYawRate = parseFloat((data.readU8() / 100).toFixed(2));
                     } else {
                         RC_tuning.rcYawRate = 0;
@@ -685,7 +685,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 ADVANCED_TUNING.yaw_p_limit = data.readU16();
                 ADVANCED_TUNING.deltaMethod = data.readU8();
                 ADVANCED_TUNING.vbatPidCompensation = data.readU8();
-                if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     ADVANCED_TUNING.ptermSetpointWeight = data.readU8();
                     ADVANCED_TUNING.dtermSetpointWeight = data.readU8();
                     ADVANCED_TUNING.toleranceBand = data.readU8();
@@ -1024,7 +1024,7 @@ MspHelper.prototype.crunch = function(code) {
             }
             if (semver.gte(CONFIG.apiVersion, "1.10.0")) {
                 buffer.push8(Math.round(RC_tuning.RC_YAW_EXPO * 100));
-                if (semver.gte(CONFIG.flightControllerVersion, "2.9.1")) {
+                if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
                     buffer.push8(Math.round(RC_tuning.rcYawRate * 100));
                 }
             }
@@ -1209,7 +1209,7 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:
-            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+            if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                 buffer.push16(ADVANCED_TUNING.rollPitchItermIgnoreRate)
                     .push16(ADVANCED_TUNING.yawItermIgnoreRate)
                     .push16(ADVANCED_TUNING.yaw_p_limit)
@@ -1284,7 +1284,7 @@ MspHelper.prototype.setRawRx = function(channels) {
 MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback) {
     var outData = [address & 0xFF, (address >> 8) & 0xFF, (address >> 16) & 0xFF, (address >> 24) & 0xFF];
 
-    if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
         outData = outData.concat([blockSize & 0xFF, (blockSize >> 8) & 0xFF]);
     }
 
@@ -1295,7 +1295,7 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
             var headerSize = 4;
             var dataSize = response.data.buffer.byteLength - headerSize;
             var dataCompressionType = 0;
-            if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                 headerSize = headerSize + 3;
                 dataSize = response.data.readU16();
                 dataCompressionType = response.data.readU8();

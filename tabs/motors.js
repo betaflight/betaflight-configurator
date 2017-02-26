@@ -37,7 +37,7 @@ TABS.motors.initialize = function (callback) {
 
     function esc_protocol() {
         var next_callback = get_motor_data;
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, next_callback);
         } else {
             next_callback();

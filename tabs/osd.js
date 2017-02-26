@@ -434,7 +434,7 @@ OSD.constants = {
 OSD.chooseFields = function () {
   var F = OSD.constants.ALL_DISPLAY_FIELDS;
   // version 3.0.1
-  if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+  if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
     OSD.constants.DISPLAY_FIELDS = [
       F.RSSI_VALUE,
       F.MAIN_BATT_VOLTAGE,
@@ -453,7 +453,7 @@ OSD.chooseFields = function () {
       F.GPS_SATS,
       F.ALTITUDE
     ];
-    if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
       OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
         F.PID_ROLL,
         F.PID_PITCH,
@@ -530,7 +530,7 @@ OSD.msp = {
     unpack: {
       position: function(bits, c) {
         var display_item = {};
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+        if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
           // size * y + x
           display_item.position = FONT.constants.SIZES.LINE * ((bits >> 5) & 0x001F) + (bits & 0x001F);
           display_item.isVisible = (bits & OSD.constants.VISIBLE) != 0;
@@ -545,7 +545,7 @@ OSD.msp = {
       position: function(display_item) {
         var isVisible = display_item.isVisible;
         var position = display_item.position;
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+        if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
           return (isVisible ? 0x0800 : 0) | (((position / FONT.constants.SIZES.LINE) & 0x001F) << 5) | (position % FONT.constants.SIZES.LINE);
         } else {
           return isVisible ? (position == -1 ? 0 : position): -1;
@@ -555,7 +555,7 @@ OSD.msp = {
   },
   encodeOther: function() {
     var result = [-1, OSD.data.video_system];
-    if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+    if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
       result.push8(OSD.data.unit_mode);
       // watch out, order matters! match the firmware
       result.push8(OSD.data.alarms.rssi.value);
@@ -578,7 +578,7 @@ OSD.msp = {
     d.compiled_in = view.readU8();
     d.video_system = view.readU8();
 
-    if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+    if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
       d.unit_mode = view.readU8();
       d.alarms = {};
       d.alarms['rssi'] = { display_name: 'Rssi', value: view.readU8() };
@@ -590,7 +590,7 @@ OSD.msp = {
     // start at the offset from the other fields
     while (view.offset < view.byteLength && d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
       var v = null;
-      if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+      if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
         v = view.readU16();
       } else {
         v = view.read16();
@@ -644,7 +644,7 @@ OSD.GUI.preview = {
     if (overflows_line < 0) {
       position += overflows_line;
     }
-    if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+    if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
       // unsigned now
     } else {
       if (position > OSD.data.display_size.total/2) {
@@ -723,7 +723,7 @@ TABS.osd.initialize = function (callback) {
               });
             });
 
-            if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
+            if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
               // units
               $('.units-container').show();
               var $unitMode = $('.units').empty();

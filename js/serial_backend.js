@@ -74,7 +74,7 @@ $(document).ready(function () {
                     // Reset various UI elements
                     $('span.i2c-error').text(0);
                     $('span.cycle-time').text(0);
-                    if (CONFIG.flightControllerVersion !== '' && semver.gte(CONFIG.flightControllerVersion, "3.0.0"))
+                    if (semver.gte(CONFIG.apiVersion, "1.20.0"))
                         $('span.cpu-load').text('');
 
                     // unlock port select & baud
@@ -271,12 +271,12 @@ function onConnect() {
 
         $('#tabs ul.mode-connected').show();
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.9.1")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         } else {
             MSP.send_message(MSPCodes.MSP_STATUS, false, false);
 
-            if (semver.gte(CONFIG.flightControllerVersion, "2.4.0")) {
+            if (CONFIG.flightControllerIdentifier === 'BTFL' && semver.gte(CONFIG.flightControllerVersion, "2.4.0")) {
                 CONFIG.numProfiles = 2;
                 $('.tab-pid_tuning select[name="profile"] .profile3').hide();
             } else {
@@ -460,10 +460,10 @@ function update_live_status() {
     
     if (GUI.active_tab != 'cli') {
         MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
-        if (semver.gte(CONFIG.flightControllerVersion, "2.9.1"))
-        	MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
+        if (semver.gte(CONFIG.apiVersion, "1.32.0"))
+            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         else
-        	MSP.send_message(MSPCodes.MSP_STATUS, false, false);
+            MSP.send_message(MSPCodes.MSP_STATUS, false, false);
         MSP.send_message(MSPCodes.MSP_ANALOG, false, false);
     }
     

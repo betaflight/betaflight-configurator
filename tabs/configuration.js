@@ -74,7 +74,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function esc_protocol() {
         var next_callback = sensor_config;
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -83,7 +83,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function sensor_config() {
         var next_callback = load_sensor_alignment;
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -101,7 +101,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_name() {
         var next_callback = load_battery;
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
         } else {
             next_callback();
@@ -110,7 +110,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_battery() {
         var next_callback = load_current;
-        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             MSP.send_message(MSPCodes.MSP_VOLTAGE_METER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -119,7 +119,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_current() {
         var next_callback = load_rx_config;
-        MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+            MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
     }
 
     function load_rx_config() {
@@ -209,11 +213,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'MULTISHOT'
         ];
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             escprotocols.push('BRUSHED');
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             escprotocols.push('DSHOT150');
             escprotocols.push('DSHOT300');
             escprotocols.push('DSHOT600');
@@ -343,13 +347,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[id="magHardwareSwitch"]').prop('checked', SENSOR_CONFIG.mag_hardware !== 1);
 
         // Only show these sections for supported FW
-        if (semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.lt(CONFIG.apiVersion, "1.16.0")) {
             $('.selectProtocol').hide();
             $('.checkboxPwm').hide();
             $('.selectPidProcessDenom').hide();
         }
 
-        if (semver.lt(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.lt(CONFIG.apiVersion, "1.16.0")) {
             $('.hardwareSelection').hide();
         }
 
@@ -362,7 +366,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('div.fpvCamAngleDegrees').hide();
         }
 
-        if (semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
             $('.miscSettings').hide();
         }
 
@@ -444,11 +448,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             serialRXtypes.push('IBUS');
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.6.0"))  {
+        if ((CONFIG.flightControllerIdentifier === 'BTFL' && semver.gte(CONFIG.flightControllerVersion, "2.6.0")) ||
+            (CONFIG.flightControllerIdentifier === 'CLFL' && semver.gte(CONFIG.apiVersion, "1.31.0"))) {
             serialRXtypes.push('JETIEXBUS');
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0"))  {
+        if (semver.gte(CONFIG.apiVersion, "1.31.0"))  {
             serialRXtypes.push('CRSF');
         }
 
@@ -504,7 +509,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[name="mincommand"]').val(MISC.mincommand);
 
         // fill battery
-        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             var batteryMeterTypes = [
                 'Onboard ADC',
                 'ESC Sensor'
@@ -536,7 +541,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'Virtual'
         ];
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             currentMeterTypes.push('ESC Sensor');
         }
 
@@ -586,7 +591,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             if (BF_CONFIG.features.isEnabled('VBAT')) {
                 $('.vbatmonitoring').show();
 
-                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                      $('select.batterymetertype').show();
 
                     if (MISC.batterymetertype !== 0) {
@@ -795,7 +800,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             function save_esc_protocol() {
                 var next_callback = save_acc_trim;
-                if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG), false, next_callback);
                 } else {
                    next_callback();
@@ -813,7 +818,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_looptime_config() {
                 var next_callback = save_sensor_config;
-                if (semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+                if (semver.lt(CONFIG.apiVersion, "1.16.0")) {
                     FC_CONFIG.loopTime = PID_ADVANCED_CONFIG.gyro_sync_denom * 125;
                     MSP.send_message(MSPCodes.MSP_SET_LOOP_TIME, mspHelper.crunch(MSPCodes.MSP_SET_LOOP_TIME), false, next_callback);
                 } else {
@@ -823,7 +828,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             function save_sensor_config() {
                 var next_callback = save_name;
 
-                if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+                if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
                     SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
                     SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
                     SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
@@ -836,7 +841,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             function save_name() {
                 var next_callback = save_battery;
 
-                if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     CONFIG.name = $.trim($('input[name="vesselName"]').val());
                     MSP.send_message(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME), false, next_callback);
                 } else {
@@ -846,7 +851,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_battery() {
                 var next_callback = save_current;
-                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, next_callback);
                 } else {
                     next_callback();
@@ -855,7 +860,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_current() {
                 var next_callback = save_rx_config;
-                MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
+                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
             }
 
             function save_rx_config() {

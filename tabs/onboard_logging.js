@@ -31,7 +31,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
         var load_name = function () {
             var next_callback = load_html;
-            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+            if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                 MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
             } else {
                 next_callback();
@@ -348,7 +348,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function flash_save_begin() {
         if (GUI.connected_to) {
             if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
-                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {
                     self.blockSize = self.VCP_BLOCK_SIZE_3_0;

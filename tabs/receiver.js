@@ -46,7 +46,7 @@ TABS.receiver.initialize = function (callback) {
 
     function load_rx_config() {
         var next_callback = load_html;
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -87,7 +87,7 @@ TABS.receiver.initialize = function (callback) {
 
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             $('select[name="rcInterpolation-select"]').val(RX_CONFIG.rcInterpolation);
             $('input[name="rcInterpolationInterval-number"]').val(RX_CONFIG.rcInterpolationInterval);
 
@@ -253,7 +253,7 @@ TABS.receiver.initialize = function (callback) {
             // catch rssi aux
             MISC.rssi_channel = parseInt($('select[name="rssi_channel"]').val());
 
-            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+            if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                 RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
                 RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
             }
@@ -273,7 +273,7 @@ TABS.receiver.initialize = function (callback) {
 
             function save_rx_config() {
                 var next_callback = save_to_eeprom;
-                if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
                 } else {
                     next_callback();
@@ -447,11 +447,19 @@ TABS.receiver.initModelPreview = function () {
     this.model = new Model($('.model_preview'), $('.model_preview canvas'));
 
     this.useSuperExpo = false;
-    if (semver.gte(CONFIG.flightControllerVersion, '2.8.0')) {
+    if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
         this.useSuperExpo = BF_CONFIG.features.isEnabled('SUPEREXPO_RATES');
     }
 
-    this.rateCurve = new RateCurve(CONFIG.flightControllerIdentifier !== 'BTFL' || semver.lt(CONFIG.flightControllerVersion, '2.8.0'));
+    var useOldRateCurve = false;
+    if (CONFIG.flightControllerIdentifier == 'CLFL' && semver.lt(CONFIG.apiVersion, '2.0.0') {
+        useOldRateCurve = true;
+    }
+    if (CONFIG.flightControllerIdentifier == 'BTFL' && semver.lt(CONFIG.flightControllerVersionn, '2.8.0') {
+        useOldRateCurve = true;
+    }
+        
+    this.rateCurve = new RateCurve(useOldRateCurve);
 
     $(window).on('resize', $.proxy(this.model.resize, this.model));
 };
@@ -485,7 +493,7 @@ TABS.receiver.cleanup = function (callback) {
 };
 
 TABS.receiver.updateRcInterpolationParameters = function () {
-    if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
         if ($('select[name="rcInterpolation-select"]').val() === '3') {
             $('.tab-receiver .rcInterpolationInterval').show();
         } else {

@@ -30,7 +30,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push(mavlinkFunctionRule);
     }
 
-    if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
         functionRules.push({ name: 'ESC_SENSOR', groups: ['sensors'], maxPorts: 1 });
         functionRules.push({ name: 'TBS_SMARTAUDIO', groups: ['peripherals'], maxPorts: 1 });
     }
@@ -57,7 +57,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         '250000'
     ];
 
-    if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
         mspBaudRates = mspBaudRates.concat(['500000', '1000000']);
     }
 
