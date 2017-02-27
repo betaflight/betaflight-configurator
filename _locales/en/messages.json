@@ -1249,7 +1249,12 @@
     "servosEepromSave": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"
     },
-
+    "motorsGyroscope": {
+        "message": "Gyroscope - "
+    },
+    "motorsGyroscopeReset": {
+        "message": "[Reset]"
+    },
     "gpsHead": {
         "message": "GPS"
     },

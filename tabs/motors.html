@@ -5,11 +5,11 @@
             <a id="button-documentation" href="https://github.com/betaflight/betaflight/releases" target="_blank"></a>
         </div>
         <div class="gui_box grey" style="margin-bottom: 15px;">
-            <div class="wrapper modelAndAccel">
+            <div class="wrapper modelAndGyro">
                 <div class="mixerPreview">
                     <img src="./resources/motor_order/custom.svg" />
                 </div>
-                <svg id="accel">
+                <svg id="gyro">
                <g class="grid x" transform="translate(40, 120)"></g>
                <g class="grid y" transform="translate(40, 10)"></g>
                <g class="data" transform="translate(41, 10)"></g>
@@ -18,12 +18,13 @@
             </svg>
                 <div class="plot_control">
                     <div class="title">
-                        Accelerometer - <a class="reset_accel_max" href="#" title="Reset overtime maximum">[Reset]</a>
+                        <span class="title" i18n="motorsGyroscope"/>
+                        <a class="reset_gyro_max" href="#" title="Reset overtime maximum" i18n="motorsGyroscopeReset"/>
                     </div>
                     <dl>
                         <dt i18n="sensorsRefresh"></dt>
                         <dd class="rate">
-                            <select name="accel_refresh_rate">
+                            <select name="gyro_refresh_rate">
                                 <option value="10">10 ms</option>
                                 <option value="20" selected="selected">20 ms</option>
                                 <option value="30">30 ms</option>
@@ -37,15 +38,15 @@
                         </dd>
                         <dt i18n="sensorsScale"></dt>
                         <dd class="scale">
-                            <select name="accel_scale">
-                                <option value="0.05">0.05</option>
-                                <option value="0.1">0.1</option>
-                                <option value="0.2">0.2</option>
-                                <option value="0.3">0.3</option>
-                                <option value="0.4">0.4</option>
-                                <option value="0.5">0.5</option>
-                                <option value="1">1</option>
-                                <option value="2" selected="selected">2</option>
+                            <select name="gyro_scale">
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="300">300</option>
+                                <option value="400">400</option>
+                                <option value="500">500</option>
+                                <option value="1000">1000</option>
+                                <option value="2000" selected="selected">2000</option>
                             </select>
                         </dd>
                         <dt>X:</dt>
