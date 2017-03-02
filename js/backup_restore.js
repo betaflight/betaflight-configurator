@@ -168,6 +168,9 @@ function configuration_backup(callback) {
 
         var filename = generateFilename(prefix, suffix);
 
+        // replace invalid filesystem characters
+        now = now.replace(new RegExp(':', 'g'), '_');
+
         // create or load the file
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: [{ extensions: [suffix] }]}, function (fileEntry) {
             if (chrome.runtime.lastError) {
