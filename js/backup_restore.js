@@ -164,7 +164,7 @@ function configuration_backup(callback) {
         var chosenFileEntry = null;
 
         var accepts = [{
-            extensions: ['txt']
+            extensions: ['json']
         }];
 
         // generate timestamp for the backup file
