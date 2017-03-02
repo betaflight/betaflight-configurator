@@ -170,6 +170,9 @@ function configuration_backup(callback) {
         // generate timestamp for the backup file
         var now = new Date().toISOString().split(".")[0];
 
+        // replace invalid filesystem characters
+        now = now.replace(new RegExp(':', 'g'), '_');
+
         // create or load the file
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'betaflight_backup_' + now + '.json', accepts: accepts}, function (fileEntry) {
             if (chrome.runtime.lastError) {
