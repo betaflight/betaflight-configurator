@@ -301,16 +301,6 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     // IO related methods
-    function zeroPad(value, width) {
-        value = "" + value;
-        
-        while (value.length < width) {
-            value = "0" + value;
-        }
-        
-        return value;
-    }
-    
     function flash_save_cancel() {
         saveCancelled = true;
     }
@@ -409,23 +399,13 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function prepare_file(onComplete) {
-        var date = new Date();
-        var filename = 'BLACKBOX_LOG';
+        var suffix = 'BFL';
+        var prefix = 'BLACKBOX_LOG';
 
-        if (CONFIG.name && CONFIG.name.trim() !== '') {
-            filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
-        }
+        var filename = generateFilename(prefix, suffix);
 
-        filename = filename + '_' + date.getFullYear()
-                + zeroPad(date.getMonth() + 1, 2)
-                + zeroPad(date.getDate(), 2)
-                + '_' + zeroPad(date.getHours(), 2)
-                + zeroPad(date.getMinutes(), 2) 
-                + zeroPad(date.getSeconds(), 2)
-                + '.BFL';
-        
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, 
-                accepts: [{extensions: ['BFL']}]}, function(fileEntry) {
+                accepts: [{extensions: [suffix]}]}, function(fileEntry) {
             var error = chrome.runtime.lastError;
             
             if (error) {
