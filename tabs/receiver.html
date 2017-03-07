@@ -35,27 +35,39 @@
             <div class="gui_box tunings grey" style="float: right;">
                 <table class="deadband" width="100%">
                     <tr>
-                        <th i18n="receiverDeadband"></th>
-                        <th i18n="receiverYawDeadband"></th>
+                        <th i18n="receiverMidRc">
+                        </th>
+                        <th i18n="receiverDeadband">
+                        </th>
+                        <th i18n="receiverYawDeadband">
+                        </th>
                     </tr>
                     <tr>
                         <td>
-                            <div class="cf_tip" i18n_title="receiverHelpDeadband">
-                                <input type="number" name="deadband" step="1" min="0" max="32" />
+                            <div class="numberspacer">
+                                <input type="number" name="midrc" min="1200" max="1700" />
+                                <div class="helpicon cf_tip" i18n_title="receiverMidRcHelp"></div>
                             </div>
                         </td>
                         <td>
-                            <div class="cf_tip" i18n_title="receiverHelpYawDeadband">
-                                <input type="number" name="yaw_deadband" step="1" min="0" max="100" />
+                            <div>
+                                <input type="number" name="deadband" step="1" min="0" max="32" />
+                                <div class="helpicon cf_tip" i18n_title="receiverHelpDeadband"></div>
                             </div>
                         </td>
+                        <td>
+                            <div>
+                                <input type="number" name="yaw_deadband" step="1" min="0" max="100" />
+                                <div class="helpicon cf_tip" i18n_title="receiverHelpYawDeadband"></div>
+                            </div>
+                       </td>
                     </tr>
                 </table>
             </div>
             <div class="gui_box grey tunings topspacer rcInterpolation">
                 <table class="rcInterpolation" width="100%">
                     <tr>
-                        <th colspan=2 i18n="receiverRcInterpolation"></th>
+                        <th colspan="2" i18n="receiverRcInterpolation"></th>
                     </tr>
                      <tr class="rcInterpolation">
                         <td>
@@ -71,7 +83,7 @@
                                 <label>
                                     <span i18n="receiverRcInterpolation"></span>
                                 </label>
-                                <div class="helpicon cf_tip" i18n_title="receiverRcInterpolationHelp"></div>
+                                <div class="helpicon cf_tip" i18n_title="receiverRcInterpolationHelp" style="margin-top:0px;"></div>
                             </div>
                         </td>
                     </tr>

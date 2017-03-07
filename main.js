@@ -414,6 +414,7 @@ function bytesToSize(bytes) {
 function isExpertModeEnabled() {
     return $('input[name="expertModeCheckbox"]').is(':checked');
 }
+
 function updateTabList(features) {
     if (features.isEnabled('GPS') && isExpertModeEnabled()) {
         $('#tabs ul.mode-connected li.tab_gps').show();
@@ -475,3 +476,32 @@ function updateTabList(features) {
         $('#tabs ul.mode-connected li.tab_osd').hide();
     }
 }
+
+function zeroPad(value, width) {
+    value = "" + value;
+
+    while (value.length < width) {
+        value = "0" + value;
+    }
+
+    return value;
+}
+
+function generateFilename(prefix, suffix) {
+    var date = new Date();
+    var filename = prefix;
+
+    if (CONFIG && CONFIG.name && CONFIG.name.trim() !== '') {
+        filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
+    }
+
+    filename = filename + '_' + date.getFullYear()
+        + zeroPad(date.getMonth() + 1, 2)
+        + zeroPad(date.getDate(), 2)
+        + '_' + zeroPad(date.getHours(), 2)
+        + zeroPad(date.getMinutes(), 2)
+        + zeroPad(date.getSeconds(), 2);
+
+    return filename + '.' + suffix;
+}
+

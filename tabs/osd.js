@@ -286,8 +286,8 @@ OSD.constants = {
       positionable: true,
       preview: 'ARMED'
     },
-    DIASRMED: {
-      name: 'DIASRMED',
+    DISARMED: {
+      name: 'DISARMED',
       default_position: -109,
       positionable: true,
       preview: 'DISARMED'
@@ -362,6 +362,42 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.GPS_SAT) + '14'
+    },
+    PID_ROLL: {
+      name: 'PID_ROLL',
+      default_position: 0x800 | (10 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: 'ROL  43  40  20'
+    },
+    PID_PITCH: {
+      name: 'PID_PITCH',
+      default_position: 0x800 | (11 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: 'PIT  58  50  22'
+    },
+    PID_YAW: {
+      name: 'PID_YAW',
+      default_position: 0x800 | (12 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: 'YAW  70  45  20'
+    },
+    POWER: {
+      name: 'POWER',
+      default_position: (15 << 5) | 2,
+      positionable: true,
+      preview: '142W'
+    },
+    PID_RATE_PROFILE: {
+      name: 'PID_RATE_PROFILE',
+      default_position: 0x800 | (13 << 5) | 2, // 0x0800 | (y << 5) | x
+      positionable: true,
+      preview: '1-2'
+    },
+    BATTERY_WARNING: {
+      name: 'BATTERY_WARNING',
+      default_position: -1,
+      positionable: true,
+      preview: 'LOW VOLTAGE'
     }
   }
 };
@@ -388,7 +424,21 @@ OSD.chooseFields = function () {
       F.GPS_SPEED,
       F.GPS_SATS,
       F.ALTITUDE
-    ]
+    ];
+    if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+      OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+        F.PID_ROLL,
+        F.PID_PITCH,
+        F.PID_YAW,
+        F.POWER
+      ]);
+      if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+          F.PID_RATE_PROFILE,
+          F.BATTERY_WARNING
+        ]);
+      }
+    }
   }
   // version 3.0.0
   else {
@@ -401,14 +451,14 @@ OSD.chooseFields = function () {
       F.VTX_CHANNEL,
       F.VOLTAGE_WARNING,
       F.ARMED,
-      F.DIASRMED,
+      F.DISARMED,
       F.ARTIFICIAL_HORIZON,
       F.HORIZON_SIDEBARS,
       F.CURRENT_DRAW,
       F.MAH_DRAWN,
       F.CRAFT_NAME,
       F.ALTITUDE
-    ]
+    ];
   }
 };
 
@@ -498,7 +548,7 @@ OSD.msp = {
     }
     d.display_items = [];
     // start at the offset from the other fields
-    while (view.offset < view.byteLength) {
+    while (view.offset < view.byteLength && d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
       var v = null;
       if (semver.gte(CONFIG.flightControllerVersion, "3.0.1")) {
         v = view.readU16();
@@ -595,7 +645,8 @@ TABS.osd.initialize = function (callback) {
           MSP.promise(MSPCodes.MSP_OSD_CONFIG)
           .then(function(info) {
             OSD.chooseFields();
-            if (!info.length) {
+            // fc responsed with short message: osd unsupported
+            if (info.length < 4) {
               $('.unsupported').fadeIn();
               return;
             }
@@ -605,7 +656,7 @@ TABS.osd.initialize = function (callback) {
             // show Betaflight logo in preview
             var $previewLogo = $('.preview-logo').empty();
             $previewLogo.append(
-              $('<label for="preview-logo">Logo:</label><input type="checkbox" name="preview-logo" class="togglesmall"></input>')
+              $('<label for="preview-logo">Logo: </label><input type="checkbox" name="preview-logo" class="togglesmall"></input>')
               .attr('checked', OSD.data.preview_logo)
               .change(function(e) {
                 OSD.data.preview_logo = $(this).attr('checked') == undefined;

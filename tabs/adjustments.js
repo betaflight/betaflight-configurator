@@ -38,8 +38,8 @@ TABS.adjustments.initialize = function (callback) {
         // update selected slot
         //
         
-        var channelList = $(newAdjustment).find('.adjustmentSlot .slot');
-        channelList.val(adjustmentRange.slotIndex);
+        var adjustmentList = $(newAdjustment).find('.adjustmentSlot .slot');
+        adjustmentList.val(adjustmentRange.slotIndex);
 
         //
         // populate source channel select box
@@ -69,16 +69,17 @@ TABS.adjustments.initialize = function (callback) {
         // populate function channel select box
         //
 
-        var channelList = $(newAdjustment).find('.functionSwitchChannel .channel');
-        var channelOptionTemplate = $(channelList).find('option');
-        channelOptionTemplate.remove();
-        for (var channelIndex = 0; channelIndex < auxChannelCount; channelIndex++) {
-            var channelOption = channelOptionTemplate.clone();
-            channelOption.text('AUX ' + (channelIndex + 1));
-            channelOption.val(channelIndex);
-            channelList.append(channelOption);
+        var switchList = $(newAdjustment).find('.functionSwitchChannel .channel');
+        var switchOptionTemplate = $(switchList).find('option');
+        switchOptionTemplate.remove();
+        var switchOption;
+        for (var switchIndex = 0; switchIndex < auxChannelCount; switchIndex++) {
+            switchOption = switchOptionTemplate.clone();
+            switchOption.text('AUX ' + (switchIndex + 1));
+            switchOption.val(switchIndex);
+            switchList.append(switchOption);
         }
-        channelList.val(adjustmentRange.auxSwitchChannelIndex);
+        switchList.val(adjustmentRange.auxSwitchChannelIndex);
 
         //
         // configure range
@@ -88,9 +89,8 @@ TABS.adjustments.initialize = function (callback) {
                 'min': [  900 ],
                 'max': [ 2100 ]
             };
-        
-        var defaultRangeValues = [1300, 1700];
-        var rangeValues = defaultRangeValues;
+
+        var rangeValues = [1300, 1700];
         if (adjustmentRange.range != undefined) {
             rangeValues = [adjustmentRange.range.start, adjustmentRange.range.end];
         }
@@ -105,11 +105,10 @@ TABS.adjustments.initialize = function (callback) {
             connect: true,
             range: channel_range,
             format: wNumb({
-                decimals: 0,
+                decimals: 0
             })
         });
 
-        var elementName =  '#adjustment-' + adjustmentIndex;
         $(newAdjustment).find('.channel-slider').Link('lower').to($(newAdjustment).find('.lowerLimitValue'));
         $(newAdjustment).find('.channel-slider').Link('upper').to($(newAdjustment).find('.upperLimitValue'));
 
@@ -156,7 +155,7 @@ TABS.adjustments.initialize = function (callback) {
 
         var auxChannelCount = RC.active_channels - 4;
 
-        var modeTableBodyElement = $('.tab-adjustments .adjustments tbody') 
+        var modeTableBodyElement = $('.tab-adjustments .adjustments tbody');
         for (var adjustmentIndex = 0; adjustmentIndex < ADJUSTMENT_RANGES.length; adjustmentIndex++) {
             var newAdjustment = addAdjustment(adjustmentIndex, ADJUSTMENT_RANGES[adjustmentIndex], auxChannelCount);
             modeTableBodyElement.append(newAdjustment);
@@ -197,7 +196,7 @@ TABS.adjustments.initialize = function (callback) {
                             end: rangeValues[1]
                         },
                         adjustmentFunction: parseInt($(this).find('.functionSelection .function').val()),
-                        auxSwitchChannelIndex: parseInt($(this).find('.functionSwitchChannel .channel').val()),
+                        auxSwitchChannelIndex: parseInt($(this).find('.functionSwitchChannel .channel').val())
                     };
                     ADJUSTMENT_RANGES.push(adjustmentRange);
                 } else {
@@ -273,12 +272,14 @@ TABS.adjustments.cleanup = function (callback) {
 };
 
 TABS.adjustments.adjust_template = function () {
-    var availableFunctionCount = 21; // Available in betaflight 2.9
-    if (semver.gte(CONFIG.flightControllerVersion, '3.1.0')) {
-        availableFunctionCount += 1; // RC rate Yaw added to 3.1.0
+    var availableFunctionCount;
+    if (semver.lt(CONFIG.flightControllerVersion, '3.1.0')) {
+        availableFunctionCount = 21; // Available in betaflight 2.9
+    } else {
+        availableFunctionCount = 24; // RC rate Yaw / D setpoint / D setpoint transition added to 3.1.0
     }
     var template = $('#tab-adjustments-templates .adjustments .adjustment');
     var functionList = $(template).find('.functionSelection .function');
-    var functionListOptions = $(functionList).find('option').slice(0,availableFunctionCount);;
+    var functionListOptions = $(functionList).find('option').slice(0,availableFunctionCount);
     functionList.empty().append(functionListOptions);
 };

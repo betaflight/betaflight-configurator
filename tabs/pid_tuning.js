@@ -25,10 +25,6 @@ TABS.pid_tuning.initialize = function (callback) {
         return MSP.promise(MSPCodes.MSP_PIDNAMES)
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_PID);
-    }).then(function () {
-        if (semver.gte(CONFIG.flightControllerVersion, "2.9.0") && semver.lt(CONFIG.flightControllerVersion, "2.9.1")) {
-          return MSP.promise(MSPCodes.MSP_SPECIAL_PARAMETERS);
-        }
     }).then(function() {
         if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
           return MSP.promise(MSPCodes.MSP_PID_ADVANCED);
@@ -267,6 +263,13 @@ TABS.pid_tuning.initialize = function (callback) {
         } else {
             $('.pid_filter .gyroNotch2').hide();
         }
+
+        if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+            $('.pid_tuning input[name="angleLimit"]').val(ADVANCED_TUNING.levelAngleLimit);
+            $('.pid_tuning input[name="sensitivity"]').val(ADVANCED_TUNING.levelSensitivity);
+        } else {
+            $('.pid_sensitivity').hide();
+        }
     }
 
     function form_to_pid_and_rc() {
@@ -316,15 +319,15 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         i = 0;
-        $('table.pid_tuning tr.ANGLE input').each(function () {
+        $('div.pid_tuning tr.ANGLE input').each(function () {
             PIDs[7][i++] = parseFloat($(this).val());
         });
-        $('table.pid_tuning tr.HORIZON input').each(function () {
+        $('div.pid_tuning tr.HORIZON input').each(function () {
             PIDs[7][i++] = parseFloat($(this).val());
         });
 
         i = 0;
-        $('table.pid_tuning tr.MAG input').each(function () {
+        $('div.pid_tuning tr.MAG input').each(function () {
             PIDs[8][i++] = parseFloat($(this).val());
         });
 
@@ -339,7 +342,7 @@ TABS.pid_tuning.initialize = function (callback) {
         RC_tuning.rcYawRate = parseFloat($('.pid_tuning input[name="rc_rate_yaw"]').val());
 
         RC_tuning.throttle_MID = parseFloat($('.throttle input[name="mid"]').val());
-        RC_tuning.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val())
+        RC_tuning.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val());
 
         RC_tuning.dynamic_THR_PID = parseFloat($('.tpa input[name="tpa"]').val());
         RC_tuning.dynamic_THR_breakpoint = parseInt($('.tpa input[name="tpa-breakpoint"]').val());
@@ -373,6 +376,10 @@ TABS.pid_tuning.initialize = function (callback) {
             }
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+            ADVANCED_TUNING.levelAngleLimit = parseInt($('.pid_tuning input[name="angleLimit"]').val());
+            ADVANCED_TUNING.levelSensitivity = parseInt($('.pid_tuning input[name="sensitivity"]').val());
+        }
     }
 
     function showAllPids() {
@@ -387,6 +394,7 @@ TABS.pid_tuning.initialize = function (callback) {
         if (have_sensor(CONFIG.activeSensors, 'acc')) {
             $('#pid_accel').show();
             $('#pid_level').show();
+            $('#pid_sensitivity').show();
         }
 
         var showTitle = false;
@@ -612,45 +620,52 @@ TABS.pid_tuning.initialize = function (callback) {
 
         var pidController_e = $('select[name="controller"]');
 
-        var pidControllerList;
+        if (semver.lt(CONFIG.flightControllerVersion, "3.1.0")) {
+            var pidControllerList;
 
-        if (semver.lt(CONFIG.apiVersion, "1.14.0")) {
-            pidControllerList = [
-                { name: "MultiWii (Old)"},
-                { name: "MultiWii (rewrite)"},
-                { name: "LuxFloat"},
-                { name: "MultiWii (2.3 - latest)"},
-                { name: "MultiWii (2.3 - hybrid)"},
-                { name: "Harakiri"}
-            ]
-        } else if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
-            pidControllerList = [
-                { name: "Legacy"},
-                { name: "Betaflight"},
-            ]
+
+            if (semver.lt(CONFIG.apiVersion, "1.14.0")) {
+                pidControllerList = [
+                    {name: "MultiWii (Old)"},
+                    {name: "MultiWii (rewrite)"},
+                    {name: "LuxFloat"},
+                    {name: "MultiWii (2.3 - latest)"},
+                    {name: "MultiWii (2.3 - hybrid)"},
+                    {name: "Harakiri"}
+                ]
+            } else if (semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
+                pidControllerList = [
+                    {name: ""},
+                    {name: "Integer"},
+                    {name: "Float"}
+                ]
+            } else {
+                pidControllerList = [
+                    {name: "Legacy"},
+                    {name: "Betaflight"}
+                ]
+            }
+
+            for (var i = 0; i < pidControllerList.length; i++) {
+                pidController_e.append('<option value="' + (i) + '">' + pidControllerList[i].name + '</option>');
+            }
+
+            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
+                pidController_e.val(PID.controller);
+
+                self.updatePidControllerParameters();
+            } else {
+                GUI.log(chrome.i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion]));
+
+                pidController_e.empty();
+                pidController_e.append('<option value="">Unknown</option>');
+
+                pidController_e.prop('disabled', true);
+            }
         } else {
-            pidControllerList = [
-                { name: ""},
-                { name: "Integer"},
-                { name: "Float"},
-            ]
-        }
+            $('.tab-pid_tuning div.controller').hide();
 
-        for (var i = 0; i < pidControllerList.length; i++) {
-            pidController_e.append('<option value="' + (i) + '">' + pidControllerList[i].name + '</option>');
-        }
-
-        if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
-            pidController_e.val(PID.controller);
-
-			self.updatePidControllerParameters();
-        } else {
-            GUI.log(chrome.i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion]));
-
-            pidController_e.empty();
-            pidController_e.append('<option value="">Unknown</option>');
-
-            pidController_e.prop('disabled', true);
+            self.updatePidControllerParameters();
         }
 
         if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
@@ -743,7 +758,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     updateNeeded = false;
                 }
             }, 0);
-        };
+        }
 
         // UI Hooks
         // curves
@@ -814,11 +829,13 @@ TABS.pid_tuning.initialize = function (callback) {
             });
         }
 
-        pidController_e.change(function () {
-            self.setDirty(true);
+        if (semver.lt(CONFIG.flightControllerVersion, "3.1.0")) {
+            pidController_e.change(function () {
+                self.setDirty(true);
 
-			self.updatePidControllerParameters();
-        });
+                self.updatePidControllerParameters();
+            });
+        }
 
         // update == save.
         $('a.update').click(function () {
@@ -828,17 +845,13 @@ TABS.pid_tuning.initialize = function (callback) {
             Promise.resolve(true)
             .then(function () {
                 var promise;
-                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
+                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion) && semver.lt(CONFIG.flightControllerVersion, "3.1.0")) {
                     PID.controller = pidController_e.val();
                     promise = MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
                 }
                 return promise;
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
-            }).then(function () {
-                if (semver.gte(CONFIG.flightControllerVersion, "2.9.0") && semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
-                  return MSP.promise(MSPCodes.MSP_SET_SPECIAL_PARAMETERS, mspHelper.crunch(MSPCodes.MSP_SET_SPECIAL_PARAMETERS));
-                }
             }).then(function () {
                 if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
                   return MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
@@ -939,21 +952,21 @@ TABS.pid_tuning.refresh = function (callback) {
             callback();
         }
     });
-}
+};
 
 TABS.pid_tuning.setProfile = function () {
     var self = this;
 
     self.currentProfile = CONFIG.profile;
     $('.tab-pid_tuning select[name="profile"]').val(self.currentProfile);
-}
+};
 
 TABS.pid_tuning.setRateProfile = function () {
     var self = this;
 
     self.currentRateProfile = CONFIG.rateProfile;
     $('.tab-pid_tuning select[name="rate_profile"]').val(self.currentRateProfile);
-}
+};
 
 TABS.pid_tuning.setDirty = function (isDirty) {
     var self = this;
@@ -963,7 +976,7 @@ TABS.pid_tuning.setDirty = function (isDirty) {
     if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
         $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', isDirty);
     }
-}
+};
 
 TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
     var self = this;
@@ -1004,7 +1017,7 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
             }
         }
     }
-}
+};
 
 TABS.pid_tuning.checkRC = function() {
     // Function monitors for change in the primary axes rc received data and returns true if a change is detected.
@@ -1023,24 +1036,22 @@ TABS.pid_tuning.checkRC = function() {
 };
 
 TABS.pid_tuning.updatePidControllerParameters = function () {
-    if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
-        if ($('.tab-pid_tuning select[name="controller"]').val() === '0') {
-            $('.pid_tuning .YAW_JUMP_PREVENTION').show();
+    if (semver.gte(CONFIG.flightControllerVersion, "3.0.0") && semver.lt(CONFIG.flightControllerVersion, "3.1.0") && $('.tab-pid_tuning select[name="controller"]').val() === '0') {
+        $('.pid_tuning .YAW_JUMP_PREVENTION').show();
 
-            $('#pid-tuning .delta').show();
+        $('#pid-tuning .delta').show();
 
-            $('#pid-tuning .ptermSetpoint').hide();
-            $('#pid-tuning .dtermSetpoint').hide();
-        } else {
-            $('.pid_tuning .YAW_JUMP_PREVENTION').hide();
+        $('#pid-tuning .ptermSetpoint').hide();
+        $('#pid-tuning .dtermSetpoint').hide();
+    } else {
+        $('.pid_tuning .YAW_JUMP_PREVENTION').hide();
 
-            $('#pid-tuning .ptermSetpoint').show();
-            $('#pid-tuning .dtermSetpoint').show();
+        $('#pid-tuning .ptermSetpoint').show();
+        $('#pid-tuning .dtermSetpoint').show();
 
-            $('#pid-tuning .delta').hide();
-        }
+        $('#pid-tuning .delta').hide();
     }
-}
+};
 
 TABS.pid_tuning.updateRatesLabels = function() {
     var self = this;
@@ -1051,7 +1062,8 @@ TABS.pid_tuning.updateRatesLabels = function() {
             context.fillStyle = color || '#000000' ;
             context.textAlign = align || 'center';
             context.fillText(axisLabel, x, y);
-        }
+        };
+
         var drawBalloonLabel = function(context, axisLabel, x, y, align, colors, dirty) {
 
             /**
@@ -1138,7 +1150,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
             // and add the label
             drawAxisLabel(context, axisLabel, x + (width/2), y + (height + fontSize)/2 - 4, 'center', colors.text);
 
-        }
+        };
 
         const BALLOON_COLORS = {
             roll    : {color: 'rgba(255,128,128,0.4)', border: 'rgba(255,128,128,0.6)', text: '#000000'},
@@ -1190,10 +1202,10 @@ TABS.pid_tuning.updateRatesLabels = function() {
             currentValues = [];
         }
 
-        stickContext.lineWidth = 1 * lineScale;
+        stickContext.lineWidth = lineScale;
 
         // use a custom scale so that the text does not appear stretched
-        stickContext.scale(textScale,1);
+        stickContext.scale(textScale, 1);
 
         // add the maximum range label
         drawAxisLabel(stickContext, maxAngularVel.toFixed(0) + ' deg/s', ((curveWidth / 2) - 10) / textScale, parseInt(stickContext.font)*1.2, 'right');

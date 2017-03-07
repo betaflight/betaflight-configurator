@@ -120,13 +120,6 @@
     line-height: 20px;
 }
 
-.tab-configuration .serialRX {
-    width: 100%;
-    height: 68px;
-    border: 1px solid silver;
-    margin-bottom: 5px;
-}
-
 .tab-configuration .current .checkbox {
     margin-top: 0px;
     float: left;
@@ -229,16 +222,6 @@
     float: left;
 }
 
-.tab-configuration .pidProcessDenom
- {
-    margin-bottom: 5px;
-    clear: left;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
-    width: 100%;
-    float: left;
-}
-
 .tab-configuration .number:last-child,
 .tab-configuration .select:last-child {
     border-bottom: none;
@@ -286,17 +269,12 @@
 }
 
 .tab-configuration .gps .gui_box, .tab-configuration .other .gui_box {
-    min-height: 263px;
     float: left;
     margin-bottom: 10px;
 }
 
 .tab-configuration .current .gui_box {
     float: left;
-}
-
-.tab-configuration .rxprovider {
-    min-height: 184px;
 }
 
 .tab-configuration .current td:nth-child(2) {
@@ -307,6 +285,20 @@
     width: 30px;
 }
 
+.tab-configuration select.batterymetertype {
+    border: 1px solid silver;
+    margin-right: 5px;
+    float: left;
+    width: 150px;
+}
+
+.tab-configuration .currentmetertype {
+    border: 1px solid silver;
+    margin-right: 5px;
+    float: left;
+    width: 150px;
+}
+
 .tab-configuration .rssi td:nth-child(2) {
     width: 30px;
 }
@@ -314,6 +306,18 @@
 .tab-configuration .rxFailsafe td:nth-child(2) {
     width: 30px;
 }
+
+.tab-configuration .serialRXBox {
+    padding-top: 0px;
+}
+
+.tab-configuration .serialRX, .rxMode {
+    border: 1px solid silver;
+    width: 230px;
+    float: left;
+    margin-right: 15px;
+}
+
 
 .tab-configuration .gps td:nth-child(2) {
     width: 38px;
@@ -338,12 +342,6 @@
     width: 90%;
     height: 90%;
     padding: 5%;
-}
-
-.tab-configuration .rxMode tr:last-child td {
-    border-bottom: 0px;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
 }
 
 .tab-configuration .gui_box {
@@ -469,7 +467,7 @@
 }
 
 .tab-configuration .sensoralignment {
-    width: 50%; 
+    width: 50%;
     float: left;
 }
 
@@ -515,15 +513,11 @@
         min-height: 296px;
         float: left;
     }
-    .tab-configuration .rxprovider {
-        min-height: 190px;
-    }
     .tab-configuration .board .gui_box, .tab-configuration .acc .gui_box {
         min-height: 137px;
         float: left;
     }
     .tab-configuration .gps .gui_box, .tab-configuration .other .gui_box {
-        min-height: 259px;
         float: left;
     }
     .tab-configuration .current .gui_box {

@@ -8,7 +8,8 @@ TABS.onboard_logging = {
     blockSize: 128,
 
     BLOCK_SIZE: 4096,
-    VCP_BLOCK_SIZE: 512
+    VCP_BLOCK_SIZE_3_0: 512,
+    VCP_BLOCK_SIZE: 4096
 };
 TABS.onboard_logging.initialize = function (callback) {
     var 
@@ -27,14 +28,23 @@ TABS.onboard_logging.initialize = function (callback) {
             load_html();
             return;
         }
-        
+
+        var load_name = function () {
+            var next_callback = load_html;
+            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+                MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
+            } else {
+                next_callback();
+            }
+        };
+
         MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, function() {
             if (semver.gte(CONFIG.flightControllerVersion, "1.8.0")) {
                 MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function() {
                     if (semver.gte(CONFIG.flightControllerVersion, "1.11.0")) {
                         MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function() {
                             MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function() { 
-                            	MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_html);
+                            	MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_name);
                             });
                         });
                     } else {
@@ -291,16 +301,6 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     // IO related methods
-    function zeroPad(value, width) {
-        value = "" + value;
-        
-        while (value.length < width) {
-            value = "0" + value;
-        }
-        
-        return value;
-    }
-    
     function flash_save_cancel() {
         saveCancelled = true;
     }
@@ -339,7 +339,11 @@ TABS.onboard_logging.initialize = function (callback) {
     function flash_save_begin() {
         if (GUI.connected_to) {
             if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
-                self.blockSize = self.VCP_BLOCK_SIZE;
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                    self.blockSize = self.VCP_BLOCK_SIZE;
+                } else {
+                    self.blockSize = self.VCP_BLOCK_SIZE_3_0;
+                }
             } else {
                 self.blockSize = self.BLOCK_SIZE;
             }
@@ -395,14 +399,13 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function prepare_file(onComplete) {
-        var 
-            date = new Date(),
-            filename = 'blackbox_log_' + date.getFullYear() + '-'  + zeroPad(date.getMonth() + 1, 2) + '-' 
-                + zeroPad(date.getDate(), 2) + '_' + zeroPad(date.getHours(), 2) + zeroPad(date.getMinutes(), 2) 
-                + zeroPad(date.getSeconds(), 2);
-        
+        var suffix = 'BFL';
+        var prefix = 'BLACKBOX_LOG';
+
+        var filename = generateFilename(prefix, suffix);
+
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, 
-                accepts: [{extensions: ['TXT']}]}, function(fileEntry) {
+                accepts: [{extensions: [suffix]}]}, function(fileEntry) {
             var error = chrome.runtime.lastError;
             
             if (error) {

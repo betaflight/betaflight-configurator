@@ -2,34 +2,33 @@
 
 // generate mixer
 var mixerList = [
-    {name: 'Tricopter',        model: 'tricopter',  image: 'tri'},
-    {name: 'Quad +',           model: 'quad_x',     image: 'quad_p'},
-    {name: 'Quad X',           model: 'quad_x',     image: 'quad_x'},
-    {name: 'Bicopter',         model: 'custom',     image: 'bicopter'},
-    {name: 'Gimbal',           model: 'custom',     image: 'custom'},
-    {name: 'Y6',               model: 'y6',         image: 'y6'},
-    {name: 'Hex +',            model: 'hex_plus',   image: 'hex_p'},
-    {name: 'Flying Wing',      model: 'custom',     image: 'flying_wing'},
-    {name: 'Y4',               model: 'y4',         image: 'y4'},
-    {name: 'Hex X',            model: 'hex_x',      image: 'hex_x'},
-    {name: 'Octo X8',          model: 'custom',     image: 'octo_x8'},
-    {name: 'Octo Flat +',      model: 'custom',     image: 'octo_flat_p'},
-    {name: 'Octo Flat X',      model: 'custom',     image: 'octo_flat_x'},
-    {name: 'Airplane',         model: 'custom',     image: 'airplane'},
-    {name: 'Heli 120',         model: 'custom',     image: 'custom'},
-    {name: 'Heli 90',          model: 'custom',     image: 'custom'},
-    {name: 'V-tail Quad',      model: 'quad_vtail', image: 'vtail_quad'},
-    {name: 'Hex H',            model: 'custom',     image: 'custom'},
-    {name: 'PPM to SERVO',     model: 'custom',     image: 'custom'},
-    {name: 'Dualcopter',       model: 'custom',     image: 'custom'},
-    {name: 'Singlecopter',     model: 'custom',     image: 'custom'},
-    {name: 'A-tail Quad',      model: 'quad_atail', image: 'atail_quad'},
-    {name: 'Custom',           model: 'custom',     image: 'custom'},
-    {name: 'Custom Airplane',  model: 'custom',     image: 'custom'},
-    {name: 'Custom Tricopter', model: 'custom',     image: 'custom'},
-    {name: 'Quad X 1234',      model: 'quad_x',     image: 'quad_x'}
+    {name: 'Tricopter',        pos: 3,  model: 'tricopter',  image: 'tri'},
+    {name: 'Quad +',           pos: 2,  model: 'quad_x',     image: 'quad_p'},
+    {name: 'Quad X',           pos: 0,  model: 'quad_x',     image: 'quad_x'},
+    {name: 'Bicopter',         pos: 16, model: 'custom',     image: 'bicopter'},
+    {name: 'Gimbal',           pos: 4,  model: 'custom',     image: 'custom'},
+    {name: 'Y6',               pos: 20, model: 'y6',         image: 'y6'},
+    {name: 'Hex +',            pos: 5,  model: 'hex_plus',   image: 'hex_p'},
+    {name: 'Flying Wing',      pos: 10, model: 'custom',     image: 'flying_wing'},
+    {name: 'Y4',               pos: 19, model: 'y4',         image: 'y4'},
+    {name: 'Hex X',            pos: 6,  model: 'hex_x',      image: 'hex_x'},
+    {name: 'Octo X8',          pos: 21, model: 'custom',     image: 'octo_x8'},
+    {name: 'Octo Flat +',      pos: 8,  model: 'custom',     image: 'octo_flat_p'},
+    {name: 'Octo Flat X',      pos: 9,  model: 'custom',     image: 'octo_flat_x'},
+    {name: 'Airplane',         pos: 11, model: 'custom',     image: 'airplane'},
+    {name: 'Heli 120',         pos: 12, model: 'custom',     image: 'custom'},
+    {name: 'Heli 90',          pos: 13, model: 'custom',     image: 'custom'},
+    {name: 'V-tail Quad',      pos: 17, model: 'quad_vtail', image: 'vtail_quad'},
+    {name: 'Hex H',            pos: 7,  model: 'custom',     image: 'custom'},
+    {name: 'PPM to SERVO',     pos: 22, model: 'custom',     image: 'custom'},
+    {name: 'Dualcopter',       pos: 15, model: 'custom',     image: 'custom'},
+    {name: 'Singlecopter',     pos: 14, model: 'custom',     image: 'custom'},
+    {name: 'A-tail Quad',      pos: 18, model: 'quad_atail', image: 'atail_quad'},
+    {name: 'Custom',           pos: 23, model: 'custom',     image: 'custom'},
+    {name: 'Custom Airplane',  pos: 24, model: 'custom',     image: 'custom'},
+    {name: 'Custom Tricopter', pos: 25, model: 'custom',     image: 'custom'},
+    {name: 'Quad X 1234',      pos: 1,  model: 'quad_x',     image: 'quad_x_1234'}
 ];
-
 
 // 3D model
 var Model = function (wrapper, canvas) {
@@ -106,7 +105,7 @@ Model.prototype.canUseWebGLRenderer = function () {
     // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
     var detector_canvas = document.createElement('canvas');
 
-    return window.WebGLRenderingContext && (detector_canvas.getContext('webgl') || detector_canvas.getContext('experimental-webgl'))
+    return window.WebGLRenderingContext && (detector_canvas.getContext('webgl') || detector_canvas.getContext('experimental-webgl'));
 };
 
 Model.prototype.rotateTo = function (x, y, z) {

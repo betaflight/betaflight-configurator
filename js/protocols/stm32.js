@@ -748,25 +748,34 @@ STM32_protocol.prototype.upload_procedure = function (step) {
             GUI.interval_remove('STM32_timeout'); // stop STM32 timeout timer (everything is finished now)
 
             // close connection
-            serial.disconnect(function (result) {
-                PortUsage.reset();
+            if (serial.connectionId) {
+                serial.disconnect(self.cleanup);
+            } else {
+                self.cleanup();
+            }
 
-                // unlocking connect button
-                GUI.connect_lock = false;
-
-                // unlock some UI elements TODO needs rework
-                $('select[name="release"]').prop('disabled', false);
-
-                // handle timing
-                var timeSpent = new Date().getTime() - self.upload_time_start;
-
-                console.log('Script finished after: ' + (timeSpent / 1000) + ' seconds');
-
-                if (self.callback) self.callback();
-            });
             break;
     }
 };
+
+STM32_protocol.prototype.cleanup = function () {
+    PortUsage.reset();
+
+    // unlocking connect button
+    GUI.connect_lock = false;
+
+    // unlock some UI elements TODO needs rework
+    $('select[name="release"]').prop('disabled', false);
+
+    // handle timing
+    var timeSpent = new Date().getTime() - self.upload_time_start;
+
+    console.log('Script finished after: ' + (timeSpent / 1000) + ' seconds');
+
+    if (self.callback) {
+        self.callback();
+    }
+}
 
 // initialize object
 var STM32 = new STM32_protocol();

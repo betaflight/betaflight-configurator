@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "minimum_chrome_version": "38",
-    "version": "1.8.3",
+    "version": "1.9.3",
     "author": "Betaflight Squad",
     "name": "Betaflight - Configurator",
     "short_name": "Betaflight",
@@ -22,7 +22,7 @@
     "pages": ["tabs/map.html"]
     },
          
-        "permissions": [
+    "permissions": [
         "https://maps.googleapis.com/*",    
         "https://*.github.com/",
         "https://*.githubusercontent.com/",
@@ -41,6 +41,11 @@
             {"vendorId": 1155, "productId": 57105}
         ]}
     ],
+    "sockets": {
+        "tcp": {
+            "connect": "*:*"
+        }
+    },
 
     "icons": {
         "128": "images/bf_icon_128.png"

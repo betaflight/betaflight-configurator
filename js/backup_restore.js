@@ -163,16 +163,13 @@ function configuration_backup(callback) {
     function save() {
         var chosenFileEntry = null;
 
-        var accepts = [{
-            extensions: ['txt']
-        }];
+        var prefix = 'betaflight_backup';
+        var suffix = 'json';
 
-        // generate timestamp for the backup file
-        var d = new Date(),
-            now = (d.getMonth() + 1) + '.' + d.getDate() + '.' + d.getFullYear() + '.' + d.getHours() + '.' + d.getMinutes();
+        var filename = generateFilename(prefix, suffix);
 
         // create or load the file
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'betaflight_backup_' + now, accepts: accepts}, function (fileEntry) {
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: [{ extensions: [suffix] }]}, function (fileEntry) {
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError.message);
                 return;
@@ -239,7 +236,7 @@ function configuration_restore(callback) {
     var chosenFileEntry = null;
 
     var accepts = [{
-        extensions: ['txt']
+        extensions: ['json']
     }];
 
     // load up the file
@@ -286,6 +283,7 @@ function configuration_restore(callback) {
                         return;
                     }
 
+
                     // validate
                     if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.backupFileMinVersionAccepted)) {
                                                 
@@ -293,7 +291,13 @@ function configuration_restore(callback) {
                             GUI.log(chrome.i18n.getMessage('backupFileUnmigratable'));
                             return;
                         }
-                        
+
+                        if (configuration.BF_CONFIG.features._featureMask) {
+                            var features = new Features(CONFIG);
+                            features.setMask(configuration.BF_CONFIG.features._featureMask);
+                            configuration.BF_CONFIG.features = features;
+                        }
+
                         configuration_upload(configuration, callback);
                         
                     } else {

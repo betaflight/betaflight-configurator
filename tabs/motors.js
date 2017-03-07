@@ -3,7 +3,8 @@
 TABS.motors = {
     allowTestMode: false,
     feature3DEnabled: false,
-    feature3DSupported: false
+    feature3DSupported: false,
+    escProtocolIsDshot: false
 };
 TABS.motors.initialize = function (callback) {
     var self = this;
@@ -25,16 +26,24 @@ TABS.motors.initialize = function (callback) {
     }
     
     function load_3d() {
-        var next_callback = get_motor_data;
+        var next_callback = esc_protocol;
         if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
             self.feature3DSupported = true;
             MSP.send_message(MSPCodes.MSP_3D, false, false, next_callback);
         } else {
             next_callback();
         }
-        
     }
-    
+
+    function esc_protocol() {
+        var next_callback = get_motor_data;
+        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+            MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
     function get_motor_data() {
         update_arm_status();
         MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_html);
@@ -52,14 +61,14 @@ TABS.motors.initialize = function (callback) {
 
     function initSensorData() {
         for (var i = 0; i < 3; i++) {
-            SENSOR_DATA.accelerometer[i] = 0;
+            SENSOR_DATA.gyroscope[i] = 0;
         }
     }
 
     function initDataArray(length) {
         var data = new Array(length);
         for (var i = 0; i < length; i++) {
-            data[i] = new Array();
+            data[i] = [];
             data[i].min = -1;
             data[i].max = 1;
         }
@@ -164,7 +173,8 @@ TABS.motors.initialize = function (callback) {
 
         var group = svg.select("g.data");
         var lines = group.selectAll("path").data(data, function (d, i) {return i;});
-        var newLines = lines.enter().append("path").attr("class", "line");
+
+        lines.enter().append("path").attr("class", "line");
         lines.attr('d', graphHelpers.line);
     }
 
@@ -181,9 +191,15 @@ TABS.motors.initialize = function (callback) {
         if (self.feature3DEnabled && !self.feature3DSupported) {
             self.allowTestMode = false;
         }
-        
-        $('#motorsEnableTestMode').prop('checked', false);
-        $('#motorsEnableTestMode').prop('disabled', true);
+
+        if (PID_ADVANCED_CONFIG.fast_pwm_protocol >= TABS.configuration.DSHOT_PROTOCOL_MIN_VALUE) {
+            self.escProtocolIsDshot = true;
+        } else {
+            self.escProtocolIsDshot = false;
+        }
+
+        $('#motorsEnableTestMode').prop('checked', false)
+            .prop('disabled', true);
         
         update_model(BF_CONFIG.mixerConfiguration);
         
@@ -191,12 +207,10 @@ TABS.motors.initialize = function (callback) {
         initSensorData();
 
         // Setup variables
-        var samples_accel_i = 0,
-            accel_data = initDataArray(3),
-            accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]),
-            accel_max_read = [0, 0, 0],
-            accel_offset = [0, 0, 0],
-            accel_offset_established = false;
+        var samples_gyro_i = 0,
+            gyro_data = initDataArray(3),
+            gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2, 2]),
+            gyro_max_read = [0, 0, 0];
 
         var raw_data_text_ements = {
             x: [],
@@ -219,10 +233,10 @@ TABS.motors.initialize = function (callback) {
         });
 
         // set refresh speeds according to configuration saved in storage
-        chrome.storage.local.get('motors_tab_accel_settings', function (result) {
-            if (result.motors_tab_accel_settings) {
-                $('.tab-motors select[name="accel_refresh_rate"]').val(result.motors_tab_accel_settings.rate);
-                $('.tab-motors select[name="accel_scale"]').val(result.motors_tab_accel_settings.scale);
+        chrome.storage.local.get('motors_tab_gyro_settings', function (result) {
+            if (result.motors_tab_gyro_settings) {
+                $('.tab-motors select[name="gyro_refresh_rate"]').val(result.motors_tab_gyro_settings.rate);
+                $('.tab-motors select[name="gyro_scale"]').val(result.motors_tab_gyro_settings.scale);
 
                 // start polling data by triggering refresh rate change event
                 $('.tab-motors .rate select:first').change();
@@ -233,63 +247,54 @@ TABS.motors.initialize = function (callback) {
         });
 
         $('.tab-motors .rate select, .tab-motors .scale select').change(function () {
-            var rate = parseInt($('.tab-motors select[name="accel_refresh_rate"]').val(), 10);
-            var scale = parseFloat($('.tab-motors select[name="accel_scale"]').val());
+            var rate = parseInt($('.tab-motors select[name="gyro_refresh_rate"]').val(), 10);
+            var scale = parseFloat($('.tab-motors select[name="gyro_scale"]').val());
 
             // store current/latest refresh rates in the storage
-            chrome.storage.local.set({'motors_tab_accel_settings': {'rate': rate, 'scale': scale}});
+            chrome.storage.local.set({'motors_tab_gyro_settings': {'rate': rate, 'scale': scale}});
 
-            accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-scale, scale]);
+            gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-scale, scale]);
 
             // timer initialization
             GUI.interval_kill_all(['motor_and_status_pull']);
 
             GUI.interval_add('IMU_pull', function imu_data_pull() {
-                MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_accel_graph);
+                MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_gyro_graph);
             }, rate, true);
 
-            function update_accel_graph() {
-                if (!accel_offset_established) {
-                    for (var i = 0; i < 3; i++) {
-                        accel_offset[i] = SENSOR_DATA.accelerometer[i] * -1;
-                    }
-
-                    accel_offset_established = true;
-                }
-
-                var accel_with_offset = [
-                    accel_offset[0] + SENSOR_DATA.accelerometer[0],
-                    accel_offset[1] + SENSOR_DATA.accelerometer[1],
-                    accel_offset[2] + SENSOR_DATA.accelerometer[2]
+            function update_gyro_graph() {
+                var gyro = [
+                    SENSOR_DATA.gyroscope[0],
+                    SENSOR_DATA.gyroscope[1],
+                    SENSOR_DATA.gyroscope[2]
                 ];
 
-                updateGraphHelperSize(accelHelpers);
-                samples_accel_i = addSampleToData(accel_data, samples_accel_i, accel_with_offset);
-                drawGraph(accelHelpers, accel_data, samples_accel_i);
+                updateGraphHelperSize(gyroHelpers);
+                samples_gyro_i = addSampleToData(gyro_data, samples_gyro_i, gyro);
+                drawGraph(gyroHelpers, gyro_data, samples_gyro_i);
 
-                // Compute RMS of acceleration in displayed period of time
+                // Compute RMS of gyroscope readings in displayed period of time
                 // This is particularly useful for motor balancing as it 
                 // eliminates the need for external tools
                 var sum = 0.0;
-                for (var j = 0; j < accel_data.length; j++)
-                    for (var k = 0; k < accel_data[j].length; k++)
-                       sum += accel_data[j][k][1]*accel_data[j][k][1];
-                var rms = Math.sqrt(sum/(accel_data[0].length+accel_data[1].length+accel_data[2].length));
+                for (var j = 0; j < gyro_data.length; j++)
+                    for (var k = 0; k < gyro_data[j].length; k++)
+                       sum += gyro_data[j][k][1]*gyro_data[j][k][1];
+                var rms = Math.sqrt(sum/(gyro_data[0].length+gyro_data[1].length+gyro_data[2].length));
 
-                raw_data_text_ements.x[0].text(accel_with_offset[0].toFixed(2) + ' (' + accel_max_read[0].toFixed(2) + ')');
-                raw_data_text_ements.y[0].text(accel_with_offset[1].toFixed(2) + ' (' + accel_max_read[1].toFixed(2) + ')');
-                raw_data_text_ements.z[0].text(accel_with_offset[2].toFixed(2) + ' (' + accel_max_read[2].toFixed(2) + ')');
+                raw_data_text_ements.x[0].text(gyro[0].toFixed(2) + ' (' + gyro_max_read[0].toFixed(2) + ')');
+                raw_data_text_ements.y[0].text(gyro[1].toFixed(2) + ' (' + gyro_max_read[1].toFixed(2) + ')');
+                raw_data_text_ements.z[0].text(gyro[2].toFixed(2) + ' (' + gyro_max_read[2].toFixed(2) + ')');
                 raw_data_text_ements.rms[0].text(rms.toFixed(4));
 
                 for (var i = 0; i < 3; i++) {
-                    if (Math.abs(accel_with_offset[i]) > Math.abs(accel_max_read[i])) accel_max_read[i] = accel_with_offset[i];
+                    if (Math.abs(gyro[i]) > Math.abs(gyro_max_read[i])) gyro_max_read[i] = gyro[i];
                 }
             }
         });
 
         $('a.reset_accel_max').click(function () {
-            accel_max_read = [0, 0, 0];
-            accel_offset_established = false;
+            gyro_max_read = [0, 0, 0];
         });
 
         var number_of_valid_outputs = (MOTOR_DATA.indexOf(0) > -1) ? MOTOR_DATA.indexOf(0) : 8;
@@ -325,8 +330,8 @@ TABS.motors.initialize = function (callback) {
             ');
         }
 
-        $('div.sliders input').prop('min', MISC.mincommand);
-        $('div.sliders input').prop('max', MISC.maxthrottle);
+        $('div.sliders input').prop('min', MISC.mincommand)
+            .prop('max', MISC.maxthrottle);
         $('div.values li:not(:last)').text(MISC.mincommand);
         
         if(self.feature3DEnabled && self.feature3DSupported) {
@@ -405,17 +410,15 @@ TABS.motors.initialize = function (callback) {
         var motors_running = false;
 
         for (var i = 0; i < number_of_valid_outputs; i++) {
-            if( !self.feature3DEnabled ){
+            if (!self.feature3DEnabled) {
                 if (MOTOR_DATA[i] > MISC.mincommand) {
                     motors_running = true;
-                    break;
                 }
-            }else{
-                if( (MOTOR_DATA[i] < _3D.deadband3d_low) || (MOTOR_DATA[i] > _3D.deadband3d_high) ){
+            } else {
+                if ((MOTOR_DATA[i] < _3D.deadband3d_low) || (MOTOR_DATA[i] > _3D.deadband3d_high)) {
                     motors_running = true;
-                    break;
                 }
-            } 
+            }
         }
 
         if (motors_running) {
@@ -442,8 +445,8 @@ TABS.motors.initialize = function (callback) {
 
             // slide master slider if condition is valid
             if (master_value) {
-                $('div.sliders input.master').val(master_value);
-                $('div.sliders input.master').trigger('input');
+                $('div.sliders input.master').val(master_value)
+                    .trigger('input');
             }
         }
 
@@ -464,20 +467,33 @@ TABS.motors.initialize = function (callback) {
             MSP.send_message(MSPCodes.MSP_SERVO, false, false, update_ui);
         }
 
-        var full_block_scale = MISC.maxthrottle - MISC.mincommand;
+        var full_block_scale;
+        var motorOffset;
+        if (self.escProtocolIsDshot) {
+            full_block_scale = 1000;
+            motorOffset = 1000;
+        } else {
+            full_block_scale = MISC.maxthrottle - MISC.mincommand;
+            motorOffset = MISC.mincommand;
+        }
         
         function update_ui() {            
             var previousArmState = self.armed;                                   
             var block_height = $('div.m-block:first').height();
 
             for (var i = 0; i < MOTOR_DATA.length; i++) {
-                var data = MOTOR_DATA[i] - MISC.mincommand,
-                    margin_top = block_height - (data * (block_height / full_block_scale)).clamp(0, block_height),
-                    height = (data * (block_height / full_block_scale)).clamp(0, block_height),
-                    color = parseInt(data * 0.009);
+                var motorValue = MOTOR_DATA[i];
+                var barHeight = motorValue - motorOffset,
+                    margin_top = block_height - (barHeight * (block_height / full_block_scale)).clamp(0, block_height),
+                    height = (barHeight * (block_height / full_block_scale)).clamp(0, block_height),
+                    color = parseInt(barHeight * 0.009);
 
-                $('.motor-' + i + ' .label', motors_wrapper).text(MOTOR_DATA[i]);
-                $('.motor-' + i + ' .indicator', motors_wrapper).css({'margin-top' : margin_top + 'px', 'height' : height + 'px', 'background-color' : 'rgba(255,187,0,1.'+ color +')'});
+                $('.motor-' + i + ' .label', motors_wrapper).text(motorValue);
+                $('.motor-' + i + ' .indicator', motors_wrapper).css({
+                    'margin-top' : margin_top + 'px',
+                    'height' : height + 'px',
+                    'background-color' : 'rgba(255,187,0,1.'+ color +')'
+                });
             }
 
             // servo indicators are still using old (not flexible block scale), it will be changed in the future accordingly
@@ -495,8 +511,8 @@ TABS.motors.initialize = function (callback) {
             if (!self.allowTestMode) return;
             
             if (self.armed) {
-                $('#motorsEnableTestMode').prop('disabled', true);
-                $('#motorsEnableTestMode').prop('checked', false);
+                $('#motorsEnableTestMode').prop('disabled', true)
+                    .prop('checked', false);
             } else {
                 if (self.allowTestMode) {
                     $('#motorsEnableTestMode').prop('disabled', false);                    
