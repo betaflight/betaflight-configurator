@@ -293,7 +293,7 @@ TABS.motors.initialize = function (callback) {
             }
         });
 
-        $('a.reset_accel_max').click(function () {
+        $('a.reset_gyro_max').click(function () {
             gyro_max_read = [0, 0, 0];
         });
 
