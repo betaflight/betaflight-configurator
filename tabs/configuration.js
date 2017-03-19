@@ -241,15 +241,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.minthrottle').hide();
                 $('div.maxthrottle').hide();
                 $('div.mincommand').hide();
-                $('div.checkboxPwm').hide();
-                $('div.unsyncedpwmfreq').hide();
 
                 $('div.digitalIdlePercent').show();
             } else {
                 $('div.minthrottle').show();
                 $('div.maxthrottle').show();
                 $('div.mincommand').show();
-                $('div.checkboxPwm').show();
 
                 $('div.digitalIdlePercent').hide();
             }
