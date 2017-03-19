@@ -398,6 +398,12 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: 'LOW VOLTAGE'
+    },
+    AVG_CELL_VOLTAGE: {
+      name: 'AVG_CELL_VOLTAGE',
+      default_position: 12 << 5,
+      positionable: true,
+      preview: '3.98V'
     }
   }
 };
@@ -435,7 +441,8 @@ OSD.chooseFields = function () {
       if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
           F.PID_RATE_PROFILE,
-          F.BATTERY_WARNING
+          F.BATTERY_WARNING,
+          F.AVG_CELL_VOLTAGE
         ]);
       }
     }
