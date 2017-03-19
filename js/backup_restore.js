@@ -22,9 +22,7 @@ function configuration_backup(callback) {
     ];
 
     function update_profile_specific_data_list() {
-        if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
-            profileSpecificData.push(MSPCodes.MSP_CHANNEL_FORWARDING);
-         } else {            
+        if (semver.gt(CONFIG.apiVersion, "1.12.0")) {
             profileSpecificData.push(MSPCodes.MSP_SERVO_MIX_RULES);
         }
         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
@@ -71,7 +69,7 @@ function configuration_backup(callback) {
                         });
 
                         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                            configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, RC_deadband);
+                            configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, RC_DEADBAND_CONFIG);
                         }
                         codeKey = 0;
                         fetchingProfile++;
@@ -89,9 +87,7 @@ function configuration_backup(callback) {
     }
 
     var uniqueData = [
-        MSPCodes.MSP_MISC,
         MSPCodes.MSP_RX_MAP,
-        MSPCodes.MSP_BF_CONFIG,
         MSPCodes.MSP_CF_SERIAL_CONFIG,
         MSPCodes.MSP_LED_STRIP_CONFIG,
         MSPCodes.MSP_LED_COLORS
@@ -103,7 +99,7 @@ function configuration_backup(callback) {
             uniqueData.push(MSPCodes.MSP_ARMING_CONFIG);
         }
         if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-            uniqueData.push(MSPCodes.MSP_3D);
+            uniqueData.push(MSPCodes.MSP_MOTOR_3D_CONFIG);
         }
         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
             uniqueData.push(MSPCodes.MSP_SENSOR_ALIGNMENT);
@@ -128,9 +124,7 @@ function configuration_backup(callback) {
                     fetch_unique_data_item();
                 });
             } else {
-                configuration.MISC = jQuery.extend(true, {}, MISC);
                 configuration.RCMAP = jQuery.extend(true, [], RC_MAP);
-                configuration.BF_CONFIG = jQuery.extend(true, {}, BF_CONFIG);
                 configuration.SERIAL_CONFIG = jQuery.extend(true, {}, SERIAL_CONFIG);
                 configuration.LED_STRIP = jQuery.extend(true, [], LED_STRIP);
                 configuration.LED_COLORS = jQuery.extend(true, [], LED_COLORS);
@@ -143,13 +137,17 @@ function configuration_backup(callback) {
                     configuration.ARMING_CONFIG = jQuery.extend(true, {}, ARMING_CONFIG);
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-                    configuration._3D = jQuery.extend(true, {}, _3D);
+                    configuration.MOTOR_3D_CONFIG = jQuery.extend(true, {}, MOTOR_3D_CONFIG);
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
                     configuration.SENSOR_ALIGNMENT = jQuery.extend(true, {}, SENSOR_ALIGNMENT);
                     configuration.RX_CONFIG = jQuery.extend(true, {}, RX_CONFIG);
                     configuration.FAILSAFE_CONFIG = jQuery.extend(true, {}, FAILSAFE_CONFIG);
                     configuration.RXFAIL_CONFIG = jQuery.extend(true, [], RXFAIL_CONFIG);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                	configuration.RSSI_CONFIG = jQuery.extend(true, {}, RSSI_CONFIG);
+                    configuration.FEATURE_CONFIG = jQuery.extend(true, {}, FEATURE_CONFIG);
                 }
 
                 save();
@@ -163,13 +161,17 @@ function configuration_backup(callback) {
     function save() {
         var chosenFileEntry = null;
 
-        var prefix = 'betaflight_backup';
+        var prefix = CONFIG.flightControllerIdentifier + '_backup';
         var suffix = 'json';
 
         var filename = generateFilename(prefix, suffix);
 
+        var accepts = [{
+            extensions: [suffix]
+        }];
+
         // create or load the file
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: [{ extensions: [suffix] }]}, function (fileEntry) {
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function (fileEntry) {
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError.message);
                 return;
@@ -328,7 +330,7 @@ function configuration_restore(callback) {
         if (!compareVersions(migratedVersion, '0.59.1')) {
             
             // variable was renamed
-            configuration.MISC.rssi_channel = configuration.MISC.rssi_aux_channel;
+            configuration.RSSI_CONFIG.channel = configuration.MISC.rssi_aux_channel;
             configuration.MISC.rssi_aux_channel = undefined;
             
             migratedVersion = '0.59.1';
@@ -527,11 +529,11 @@ function configuration_restore(callback) {
         if (compareVersions(migratedVersion, '0.66.0') && !compareVersions(configuration.apiVersion, '1.14.0')) {
             // api 1.14 exposes 3D configuration
             
-            if (configuration._3D == undefined) {
-                configuration._3D = {
+            if (configuration.MOTOR_3D_CONFIG == undefined) {
+                configuration.MOTOR_3D_CONFIG = {
                     deadband3d_low:         1406,
                     deadband3d_high:        1514,
-                    neutral3d:              1460,
+                    neutral:              1460,
                     deadband3d_throttle:    50
                 };
             }
@@ -566,9 +568,9 @@ function configuration_restore(callback) {
                 configuration.RX_CONFIG = {
                     serialrx_provider:      0,
                     spektrum_sat_bind:      0,
-                    midrc:                  1500,
-                    mincheck:               1100,
-                    maxcheck:               1900,
+                    stick_center:                  1500,
+                    stick_min:               1100,
+                    stick_max:               1900,
                     rx_min_usec:            885,
                     rx_max_usec:            2115
                 };
@@ -607,8 +609,8 @@ function configuration_restore(callback) {
 
         if (compareVersions(migratedVersion, '1.2.0')) {
             // old version of the configurator incorrectly had a 'disabled' option for GPS SBAS mode.
-            if (MISC.gps_ubx_sbas < 0) {
-                MISC.gps_ubx_sbas = 0;
+            if (GPS_CONFIG.ublox_sbas < 0) {
+                GPS_CONFIG.ublox_sbas = 0;
             }
             migratedVersion = '1.2.0';
 
@@ -681,7 +683,7 @@ function configuration_restore(callback) {
                     SERVO_RULES = configuration.profiles[profile].ServoRules;
                     MODE_RANGES = configuration.profiles[profile].ModeRanges;
                     ADJUSTMENT_RANGES = configuration.profiles[profile].AdjustmentRanges;
-                    RC_deadband = configuration.profiles[profile].RCdeadband;
+                    RC_DEADBAND_CONFIG = configuration.profiles[profile].RCdeadband;
                 }
 
                 function upload_using_specific_commands() {
@@ -729,9 +731,7 @@ function configuration_restore(callback) {
                 var codeKey = 0;
 
                 var uniqueData = [
-                    MSPCodes.MSP_SET_MISC,
                     MSPCodes.MSP_SET_RX_MAP,
-                    MSPCodes.MSP_SET_BF_CONFIG,
                     MSPCodes.MSP_SET_CF_SERIAL_CONFIG
                 ];
                 
@@ -741,30 +741,41 @@ function configuration_restore(callback) {
                         uniqueData.push(MSPCodes.MSP_SET_ARMING_CONFIG);
                     }
                     if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-                        uniqueData.push(MSPCodes.MSP_SET_3D);
+                        uniqueData.push(MSPCodes.MSP_SET_MOTOR_3D_CONFIG);
                     }
                     if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
                         uniqueData.push(MSPCodes.MSP_SET_SENSOR_ALIGNMENT);
                         uniqueData.push(MSPCodes.MSP_SET_RX_CONFIG);
                         uniqueData.push(MSPCodes.MSP_SET_FAILSAFE_CONFIG);
                     }
+                    if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                    	uniqueData.push(MSPCodes.MSP_SET_FEATURE_CONFIG);
+                    	uniqueData.push(MSPCodes.MSP_SET_MOTOR_CONFIG);
+                        uniqueData.push(MSPCodes.MSP_SET_GPS_CONFIG);
+                        uniqueData.push(MSPCodes.MSP_SET_COMPASS_CONFIG);
+                        uniqueData.push(MSPCodes.MSP_SET_RSSI_CONFIG);
+                    }
                 }
                 
                 function load_objects() {
                     MISC = configuration.MISC;
                     RC_MAP = configuration.RCMAP;
-                    BF_CONFIG = configuration.BF_CONFIG;
                     SERIAL_CONFIG = configuration.SERIAL_CONFIG;
                     LED_STRIP = configuration.LED_STRIP;
                     LED_COLORS = configuration.LED_COLORS;
                     LED_MODE_COLORS = configuration.LED_MODE_COLORS;
                     ARMING_CONFIG = configuration.ARMING_CONFIG;
                     FC_CONFIG = configuration.FC_CONFIG;
-                    _3D = configuration._3D;
+                    MOTOR_3D_CONFIG = configuration.MOTOR_3D_CONFIG;
                     SENSOR_ALIGNMENT = configuration.SENSOR_ALIGNMENT;
                     RX_CONFIG = configuration.RX_CONFIG;
                     FAILSAFE_CONFIG = configuration.FAILSAFE_CONFIG;
                     RXFAIL_CONFIG = configuration.RXFAIL_CONFIG;
+                    FEATURE_CONFIG = configuration.FEATURE_CONFIG;
+                    MOTOR_CONFIG = configuration.MOTOR_CONFIG;
+                    GPS_CONFIG = configuration.GPS_CONFIG;
+                    COMPASS_CONFIG = configuration.COMPASS_CONFIG;
+                    RSSI_CONFIG = configuration.RSSI_CONFIG;
                 }
 
                 function send_unique_data_item() {

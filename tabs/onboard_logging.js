@@ -4,7 +4,6 @@ var
     sdcardTimer;
 
 TABS.onboard_logging = {
-    available: false,
     blockSize: 128,
 
     BLOCK_SIZE: 4096,
@@ -21,39 +20,17 @@ TABS.onboard_logging.initialize = function (callback) {
     }
 
     if (CONFIGURATOR.connectionValid) {
-        // Blackbox was introduced in 1.5.0, dataflash API was introduced in 1.8.0, BLACKBOX/SDCARD MSP APIs in 1.11.0
-        TABS.onboard_logging.available = semver.gte(CONFIG.flightControllerVersion, "1.5.0");
-        
-        if (!TABS.onboard_logging.available) {
-            load_html();
-            return;
-        }
 
-        var load_name = function () {
-            var next_callback = load_html;
-            if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-                MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
-            } else {
-                next_callback();
-            }
-        };
-
-        MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, function() {
-            if (semver.gte(CONFIG.flightControllerVersion, "1.8.0")) {
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function() {
-                    if (semver.gte(CONFIG.flightControllerVersion, "1.11.0")) {
-                        MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function() {
-                            MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function() { 
-                            	MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_name);
-                            });
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, function() {
+            MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function() {
+                MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function() {
+                    MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function() { 
+                        MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function() {
+                            MSP.send_message(MSPCodes.MSP_NAME, false, false, load_html);
                         });
-                    } else {
-                        load_html();
-                    }
+                    });
                 });
-            } else {
-                load_html();
-            }
+            });
         });
     }
     
@@ -109,11 +86,8 @@ TABS.onboard_logging.initialize = function (callback) {
              * 
              * The best we can do on those targets is check the BLACKBOX feature bit to identify support for Blackbox instead.
              */
-            if (BLACKBOX.supported || DATAFLASH.supported 
-                    || semver.gte(CONFIG.flightControllerVersion, "1.5.0") && semver.lte(CONFIG.flightControllerVersion, "1.10.0") && BF_CONFIG.features.isEnabled('BLACKBOX')) {
+            if ((BLACKBOX.supported || DATAFLASH.supported) && FEATURE_CONFIG.features.isEnabled('BLACKBOX')) {
                 blackboxSupport = 'yes';
-            } else if (semver.gte(CONFIG.flightControllerVersion, "1.5.0") && semver.lte(CONFIG.flightControllerVersion, "1.10.0")) {
-                blackboxSupport = 'maybe';
             } else {
                 blackboxSupport = 'no';
             }

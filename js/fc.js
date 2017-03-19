@@ -1,8 +1,11 @@
 'use strict';
 
 // define all the global variables that are uses to hold FC state
-var CONFIG;
-var BF_CONFIG;
+var CONFIG; // FIXME rename to STATUS
+var FEATURE_CONFIG;
+//var BF_CONFIG; // FIXME remove all references to this and delete it
+var MIXER_CONFIG;
+var BOARD_ALIGNMENT_CONFIG;
 var LED_STRIP;
 var LED_COLORS;
 var LED_MODE_COLORS;
@@ -24,15 +27,25 @@ var MOTOR_DATA;
 var SERVO_DATA;
 var GPS_DATA;
 var ANALOG;
+var VOLTAGE_METERS;
+var VOLTAGE_METER_CONFIGS;
+var CURRENT_METERS;
+var CURRENT_METER_CONFIGS;
+var BATTERY_STATE;
+var BATTERY_CONFIG;
 var ARMING_CONFIG;
 var FC_CONFIG;
-var MISC;
-var _3D;
+var MOTOR_CONFIG;
+var GPS_CONFIG;
+var COMPASS_CONFIG;
+var RSSI_CONFIG;
+//var MISC; // FIXME remove all references to this and delete it
+var MOTOR_3D_CONFIG;
 var DATAFLASH;
 var SDCARD;
 var BLACKBOX;
 var TRANSPONDER;
-var RC_deadband;
+var RC_DEADBAND_CONFIG;
 var SENSOR_ALIGNMENT;
 var RX_CONFIG;
 var FAILSAFE_CONFIG;
@@ -64,18 +77,33 @@ var FC = {
             numProfiles:   3,
             rateProfile:   0
         };
-
-        BF_CONFIG = {
-            mixerConfiguration:     0,
-            features:               new Features(CONFIG),
-            board_align_roll:       0,
-            board_align_pitch:      0,
-            board_align_yaw:        0,
-            currentscale:           0,
-            currentoffset:          0,
-            currentmetertype:       0,
-            batterycapacity:        0,
+        
+        FEATURE_CONFIG = {
+            features: 0,
         };
+        
+        MIXER_CONFIG = {
+            mixer:                  0,
+        }; 
+
+        BOARD_ALIGNMENT_CONFIG = {
+            roll:                   0,
+            pitch:                  0,
+            yaw:                    0,
+        };
+        
+        // FIXME remove all references to this and delete it
+//        BF_CONFIG = {
+//            mixer:     0,
+//            features:               new Features(CONFIG),
+//            board_align_roll:       0,
+//            board_align_pitch:      0,
+//            board_align_yaw:        0,
+//            currentscale:           0,
+//            currentoffset:          0,
+//            currentMeterSource:       0,
+//            batterycapacity:        0,
+//        };
 
         LED_STRIP = [];
         LED_COLORS = [];
@@ -171,9 +199,24 @@ var FC = {
             mAhdrawn:   0,
             rssi:       0,
             amperage:   0,
-            last_received_timestamp: Date.now()
+            last_received_timestamp: Date.now() // FIXME this code lies, it's never been received at this point
         };
 
+        VOLTAGE_METERS = [];
+        VOLTAGE_METER_CONFIGS = [];
+        CURRENT_METERS = [];
+        CURRENT_METER_CONFIGS = [];
+        
+        BATTERY_STATE = {};
+        BATTERY_CONFIG = {
+            vbatmincellvoltage:     0,
+            vbatmaxcellvoltage:     0,
+            vbatwarningcellvoltage: 0,
+            capacity:               0,
+            voltageMeterSource:     0,
+            currentMeterSource:     0
+        };
+        
         ARMING_CONFIG = {
             auto_disarm_delay:      0,
             disarm_kill_switch:     0
@@ -182,31 +225,50 @@ var FC = {
         FC_CONFIG = {
             loopTime: 0
         };
-
-        MISC = {
+        
+        MOTOR_CONFIG = {
             minthrottle:            0,
             maxthrottle:            0,
             mincommand:             0,
-            failsafe_throttle:      0,
-            gps_type:               0,
-            gps_baudrate:           0,
-            gps_ubx_sbas:           0,
-            multiwiicurrentoutput:  0,
-            rssi_channel:           0,
-            placeholder2:           0,
+        };
+        
+        GPS_CONFIG = {
+            provider:               0,
+            ublox_sbas:             0,
+        };
+        
+        COMPASS_CONFIG = {
             mag_declination:        0, // not checked
-            vbatscale:              0,
-            vbatmincellvoltage:     0,
-            vbatmaxcellvoltage:     0,
-            vbatwarningcellvoltage: 0,
-            batterymetertype:       1, // 1=ADC, 2=ESC
         };
 
-        _3D = {
+        RSSI_CONFIG = {
+            channel:                0,
+        };
+
+        // FIXME remove all references to this and delete it
+//        MISC = {
+//            minthrottle:            0,
+//            maxthrottle:            0,
+//            mincommand:             0,
+//            failsafe_throttle:      0,
+//            gps_type:               0,
+//            gps_baudrate:           0,
+//            gps_ubx_sbas:           0,
+//            multiwiicurrentoutput:  0,
+//            rssi_channel:           0,
+//            placeholder2:           0,
+//            mag_declination:        0, // not checked
+//            vbatscale:              0,
+//            vbatmincellvoltage:     0,
+//            vbatmaxcellvoltage:     0,
+//            vbatwarningcellvoltage: 0,
+//            batterymetertype:       1, // 1=ADC, 2=ESC
+//        };
+        
+        MOTOR_3D_CONFIG = {
             deadband3d_low:         0,
             deadband3d_high:        0,
-            neutral3d:              0,
-            deadband3d_throttle:    0
+            neutral:              0,
         };
 
         DATAFLASH = {
@@ -237,10 +299,11 @@ var FC = {
             data: []
         };
 
-        RC_deadband = {
+        RC_DEADBAND_CONFIG = {
             deadband:               0,
             yaw_deadband:           0,
-            alt_hold_deadband:      0
+            alt_hold_deadband:      0,
+            deadband3d_throttle:    0
         };
 
         SENSOR_ALIGNMENT = {
@@ -296,9 +359,9 @@ var FC = {
 
         RX_CONFIG = {
             serialrx_provider:      0,
-            maxcheck:               0,
-            midrc:                  0,
-            mincheck:               0,
+            stick_max:               0,
+            stick_center:                  0,
+            stick_min:               0,
             spektrum_sat_bind:      0,
             rx_min_usec:            0,
             rx_max_usec:            0,

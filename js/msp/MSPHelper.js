@@ -52,6 +52,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
     var data = dataHandler.dataView; // DataView (allowing us to view arrayBuffer as struct/union)
     var code = dataHandler.code;
+    if (code === 0) {
+        debugger;
+    }
     var crcError = dataHandler.crcError;
     if (!crcError) {
         if (!dataHandler.unsupported) switch (code) {
@@ -148,12 +151,96 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SONAR:
                 SENSOR_DATA.sonar = data.read32();
                 break;
-            case MSPCodes.MSP_ANALOG:
+                            case MSPCodes.MSP_ANALOG:
                 ANALOG.voltage = data.readU8() / 10.0;
                 ANALOG.mAhdrawn = data.readU16();
                 ANALOG.rssi = data.readU16(); // 0-1023
                 ANALOG.amperage = data.read16() / 100; // A
                 ANALOG.last_received_timestamp = Date.now();
+                break;
+//            case MSPCodes.MSP_VOLTAGE_METERS:
+//                VOLTAGE_METERS = [];
+//                for (var i = 0; i < (message_length); i++) {
+//                    var voltageMeter = {};
+//                    voltageMeter.voltage = data.readU8() / 10.0;
+//                    
+//                    VOLTAGE_METERS.push(voltageMeter)
+//                }
+//                break;
+//            case MSPCodes.MSP_CURRENT_METERS:
+//                CURRENT_METERS = [];
+//                for (var i = 0; i < (message_length / 6); i++) {
+//                    var amperageMeter = {};
+//                    amperageMeter.amperage = data.read16() / 1000; // A
+//                    offset += 2;
+//                    amperageMeter.mAhDrawn = data.readU32(); // A
+//                    offset += 4;
+//                    
+//                    CURRENT_METERS.push(amperageMeter);
+//                }
+//                break;
+            case MSPCodes.MSP_BATTERY_STATE:
+                BATTERY_STATE.cellCount = data.readU8();
+                BATTERY_STATE.capacity = data.readU16(); // mAh
+                
+                BATTERY_STATE.voltage = data.readU8() / 10.0; // V
+                BATTERY_STATE.mAhDrawn = data.readU16(); // mAh
+                BATTERY_STATE.amperage = data.readU16() / 100; // A
+                break;
+                
+            case MSPCodes.MSP_VOLTAGE_METER_CONFIG:
+                VOLTAGE_METER_CONFIGS = [];
+                var voltage_meter_count = data.readU8();
+                
+                for (var i = 0; i < voltage_meter_count; i++) {
+                    var subframe_length = data.readU8();
+                    if (subframe_length != 5) {
+                        for (var j = 0; j < subframe_length; j++) {
+                            data.readU8();
+                        }
+                    } else {
+                        var voltageMeterConfig = {};
+                        voltageMeterConfig.id = data.readU8();
+                        voltageMeterConfig.sensorType = data.readU8();
+                        voltageMeterConfig.vbatscale = data.readU8();
+                        voltageMeterConfig.vbatresdivval = data.readU8();
+                        voltageMeterConfig.vbatresdivmultiplier = data.readU8();
+                        
+                        VOLTAGE_METER_CONFIGS.push(voltageMeterConfig);
+                    }
+                }
+                break;
+            case MSPCodes.MSP_CURRENT_METER_CONFIG:
+                var offset = 0;
+                CURRENT_METER_CONFIGS = [];
+                var current_meter_count = data.readU8();
+                for (var i = 0; i < current_meter_count; i++) {
+                    var currentMeterConfig = {};
+                    var subframe_length = data.readU8();
+                    
+                    if (subframe_length != 6) {
+                        for (var j = 0; j < subframe_length; j++) {
+                            data.readU8();
+                        }
+                    } else {
+                        currentMeterConfig.id = data.readU8();
+                        currentMeterConfig.sensorType = data.readU8();
+                        currentMeterConfig.scale = data.readU16();
+                        currentMeterConfig.offset = data.readU16();
+                        
+                        CURRENT_METER_CONFIGS.push(currentMeterConfig);
+                    }
+                }
+                break;
+                
+            case MSPCodes.MSP_BATTERY_CONFIG:
+                BATTERY_CONFIG.vbatmincellvoltage = data.readU8() / 10; // 10-50
+                BATTERY_CONFIG.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
+                BATTERY_CONFIG.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
+                BATTERY_CONFIG.capacity = data.readU16();
+                BATTERY_CONFIG.voltageMeterSource = data.readU8();
+                BATTERY_CONFIG.currentMeterSource = data.readU8();
+                
                 break;
             case MSPCodes.MSP_RC_TUNING:
                 RC_tuning.RC_RATE = parseFloat((data.readU8() / 100).toFixed(2));
@@ -203,53 +290,47 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     ARMING_CONFIG.disarm_kill_switch = data.readU8();
                 }
                 break;
-            case MSPCodes.MSP_LOOP_TIME:
-                if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
-                    FC_CONFIG.loopTime = data.readU16();
-                }
+            case MSPCodes.MSP_MOTOR_CONFIG:
+                MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
+                MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
+                MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
                 break;
-            case MSPCodes.MSP_MISC: // 22 bytes
-                RX_CONFIG.midrc = data.readU16();
-                MISC.minthrottle = data.readU16(); // 0-2000
-                MISC.maxthrottle = data.readU16(); // 0-2000
-                MISC.mincommand = data.readU16(); // 0-2000
-                MISC.failsafe_throttle = data.readU16(); // 1000-2000
-                MISC.gps_type = data.readU8();
-                MISC.gps_baudrate = data.readU8();
-                MISC.gps_ubx_sbas = data.readU8();
-                MISC.multiwiicurrentoutput = data.readU8();
-                MISC.rssi_channel = data.readU8();
-                MISC.placeholder2 = data.readU8();
-                if (semver.lt(CONFIG.apiVersion, "1.18.0"))
-                    MISC.mag_declination = data.read16() / 10; // -1800-1800
-                else
-                    MISC.mag_declination = data.read16() / 100; // -18000-18000
-                MISC.vbatscale = data.readU8(); // 10-200
-                MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
-                MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
-                MISC.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
+            case MSPCodes.MSP_COMPASS_CONFIG:
+                COMPASS_CONFIG.mag_declination = data.read16() / 100; // -18000-18000
                 break;
-            case MSPCodes.MSP_VOLTAGE_METER_CONFIG:
-                MISC.vbatscale = data.readU8(); // 10-200
-                MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
-                MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
-                MISC.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
-                if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
-                    MISC.batterymetertype = data.readU8();
-                }
+            case MSPCodes.MSP_GPS_CONFIG:
+                GPS_CONFIG.provider = data.readU8();
+                GPS_CONFIG.ublox_sbas = data.readU8();
                 break;
-            case MSPCodes.MSP_CURRENT_METER_CONFIG:
-                BF_CONFIG.currentscale = data.read16();
-                BF_CONFIG.currentoffset = data.read16();
-                BF_CONFIG.currentmetertype = data.readU8();
-                BF_CONFIG.batterycapacity = data.readU16();
+            case MSPCodes.MSP_RSSI_CONFIG:
+                RSSI_CONFIG.channel = data.readU8();
                 break;
-            case MSPCodes.MSP_3D:
-                _3D.deadband3d_low = data.readU16();
-                _3D.deadband3d_high = data.readU16();
-                _3D.neutral3d = data.readU16();
+//            case MSPCodes.MSP_MISC:
+//                RX_CONFIG.stick_center = data.readU16();
+//                MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
+//                MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
+//                MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
+//                MISC.failsafe_throttle = data.readU16(); // 1000-2000
+//                GPS_CONFIG.provider = data.readU8();
+//                GPS_CONFIG.baudrate = data.readU8();
+//                GPS_CONFIG.ublox_sbas = data.readU8();
+//                MISC.multiwiicurrentoutput = data.readU8();
+//                MISC.placeholder2 = data.readU8();
+//                if (semver.lt(CONFIG.apiVersion, "1.18.0"))
+//                    COMPASS_CONFIG.mag_declination = data.read16() / 10; // -1800-1800
+//                else
+//                    COMPASS_CONFIG.mag_declination = data.read16() / 100; // -18000-18000
+//                MISC.vbatscale = data.readU8(); // 10-200
+//                BATTERY_CONFIG.vbatmincellvoltage = data.readU8() / 10; // 10-50
+//                BATTERY_CONFIG.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
+//                BATTERY_CONFIG.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
+//                break;
+            case MSPCodes.MSP_MOTOR_3D_CONFIG:
+                MOTOR_3D_CONFIG.deadband3d_low = data.readU16();
+                MOTOR_3D_CONFIG.deadband3d_high = data.readU16();
+                MOTOR_3D_CONFIG.neutral = data.readU16();
                 if (semver.lt(CONFIG.apiVersion, "1.17.0")) {
-                    _3D.deadband3d_throttle = data.readU16();
+                    RC_DEADBAND_CONFIG.deadband3d_throttle = data.readU16();
                 }
                 break;
             case MSPCodes.MSP_BOXNAMES:
@@ -341,12 +422,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
             case MSPCodes.MSP_RC_DEADBAND:
-                RC_deadband.deadband = data.readU8();
-                RC_deadband.yaw_deadband = data.readU8();
-                RC_deadband.alt_hold_deadband = data.readU8();
+                RC_DEADBAND_CONFIG.deadband = data.readU8();
+                RC_DEADBAND_CONFIG.yaw_deadband = data.readU8();
+                RC_DEADBAND_CONFIG.alt_hold_deadband = data.readU8();
     
                 if (semver.gte(CONFIG.apiVersion, "1.17.0")) {
-                    _3D.deadband3d_throttle = data.readU16();
+                    RC_DEADBAND_CONFIG.deadband3d_throttle = data.readU16();
                 }
                 break;
             case MSPCodes.MSP_SENSOR_ALIGNMENT:
@@ -371,8 +452,20 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_MAG_CALIBRATION:
                 console.log('Mag calibration executed');
                 break;
-            case MSPCodes.MSP_SET_MISC:
-                console.log('MISC Configuration saved');
+            case MSPCodes.MSP_SET_MOTOR_CONFIG:
+                console.log('Motor Configuration saved');
+                break;
+            case MSPCodes.MSP_SET_GPS_CONFIG:
+                console.log('GPS Configuration saved');
+                break;
+            case MSPCodes.MSP_SET_RSSI_CONFIG:
+                console.log('RSSI Configuration saved');
+                break;
+//            case MSPCodes.MSP_SET_MISC:
+//                console.log('MISC Configuration saved');
+//                break;
+            case MSPCodes.MSP_SET_FEATURE_CONFIG:
+                console.log('Features saved');
                 break;
             case MSPCodes.MSP_RESET_CONF:
                 console.log('Settings Reset');
@@ -387,7 +480,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('Settings Saved in EEPROM');
                 break;
             case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
-                console.log('Current Settings saved');
+                console.log('Amperage Settings saved');
                 break;
             case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
                 console.log('Voltage config saved');
@@ -433,20 +526,33 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_RX_MAP:
                 console.log('RCMAP saved');
                 break;
-            case MSPCodes.MSP_BF_CONFIG:
-                BF_CONFIG.mixerConfiguration = data.readU8();
-                BF_CONFIG.features.setMask(data.readU32());
-                RX_CONFIG.serialrx_provider = data.readU8();
-                BF_CONFIG.board_align_roll = data.read16(); // -180 - 360
-                BF_CONFIG.board_align_pitch = data.read16(); // -180 - 360
-                BF_CONFIG.board_align_yaw = data.read16(); // -180 - 360
-                BF_CONFIG.currentscale = data.read16();
-                BF_CONFIG.currentoffset = data.read16();
-    
-                updateTabList(BF_CONFIG.features);
-    
+            case MSPCodes.MSP_MIXER_CONFIG:
+                MIXER_CONFIG.mixer = data.readU8();
                 break;
-            case MSPCodes.MSP_SET_BF_CONFIG:
+                
+          case MSPCodes.MSP_FEATURE_CONFIG:
+              FEATURE_CONFIG.features.setMask(data.readU32());
+              
+              updateTabList(FEATURE_CONFIG.features);
+              break;
+              
+//            case MSPCodes.MSP_BF_CONFIG:
+//                MIXER_CONFIG.mixer = data.readU8();
+//                FEATURE_CONFIG.features.setMask(data.readU32());
+//                RX_CONFIG.serialrx_provider = data.readU8();
+//                BOARD_ALIGNMENT_CONFIG.roll = data.read16(); // -180 - 360
+//                BOARD_ALIGNMENT_CONFIG.pitch = data.read16(); // -180 - 360
+//                BOARD_ALIGNMENT_CONFIG.yaw = data.read16(); // -180 - 360
+//                BF_CONFIG.currentscale = data.read16();
+//                BF_CONFIG.currentoffset = data.read16();
+//    
+//                updateTabList(FEATURE_CONFIG.features);
+//    
+//                break;
+            case MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG:
+                BOARD_ALIGNMENT_CONFIG.roll = data.read16(); // -180 - 360
+                BOARD_ALIGNMENT_CONFIG.pitch = data.read16(); // -180 - 360
+                BOARD_ALIGNMENT_CONFIG.yaw = data.read16(); // -180 - 360
                 break;
             case MSPCodes.MSP_SET_REBOOT:
                 console.log('Reboot request accepted');
@@ -582,22 +688,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
     
-            case MSPCodes.MSP_CHANNEL_FORWARDING:
-                for (var i = 0; i < data.byteLength && i < SERVO_CONFIG.length; i ++) {
-                    var channelIndex = data.readU8();
-                    if (channelIndex < 255) {
-                        SERVO_CONFIG[i].indexOfChannelToForward = channelIndex;
-                    } else {
-                        SERVO_CONFIG[i].indexOfChannelToForward = undefined;
-                    }
-                }
-                break;
-    
             case MSPCodes.MSP_RX_CONFIG:
                 RX_CONFIG.serialrx_provider = data.readU8();
-                RX_CONFIG.maxcheck = data.readU16();
-                RX_CONFIG.midrc = data.readU16();
-                RX_CONFIG.mincheck = data.readU16();
+                RX_CONFIG.stick_max = data.readU16();
+                RX_CONFIG.stick_center = data.readU16();
+                RX_CONFIG.stick_min = data.readU16();
                 RX_CONFIG.spektrum_sat_bind = data.readU8();
                 RX_CONFIG.rx_min_usec = data.readU16();
                 RX_CONFIG.rx_max_usec = data.readU16();
@@ -907,7 +1002,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_RESET_CURR_PID:
                 console.log('Current PID profile reset');
                 break;
-            case MSPCodes.MSP_SET_3D:
+            case MSPCodes.MSP_SET_MOTOR_3D_CONFIG:
                 console.log('3D settings saved');
                 break;
             case MSPCodes.MSP_SET_RC_DEADBAND:
@@ -985,16 +1080,25 @@ MspHelper.prototype.crunch = function(code) {
     var buffer = [];
     var self = this;
     switch (code) {
-        case MSPCodes.MSP_SET_BF_CONFIG:
-            var featureMask = BF_CONFIG.features.getMask();
-            buffer.push8(BF_CONFIG.mixerConfiguration)
-                .push32(featureMask)
-                .push8(RX_CONFIG.serialrx_provider)
-                .push16(BF_CONFIG.board_align_roll)
-                .push16(BF_CONFIG.board_align_pitch)
-                .push16(BF_CONFIG.board_align_yaw)
-                .push16(BF_CONFIG.currentscale)
-                .push16(BF_CONFIG.currentoffset);
+        case MSPCodes.MSP_SET_FEATURE_CONFIG:
+            var featureMask = FEATURE_CONFIG.features.getMask();
+            buffer.push32(featureMask);
+            break;
+//        case MSPCodes.MSP_SET_BF_CONFIG:
+//            var featureMask = FEATURE_CONFIG.features.getMask();
+//            buffer.push8(MIXER_CONFIG.mixer)
+//                .push32(featureMask)
+//                .push8(RX_CONFIG.serialrx_provider)
+//                .push16(BOARD_ALIGNMENT_CONFIG.roll)
+//                .push16(BOARD_ALIGNMENT_CONFIG.pitch)
+//                .push16(BOARD_ALIGNMENT_CONFIG.yaw)
+//                .push16(BF_CONFIG.currentscale)
+//                .push16(BF_CONFIG.currentoffset);
+//            break;
+        case MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG:
+            buffer.push16(BOARD_ALIGNMENT_CONFIG.roll)
+                .push16(BOARD_ALIGNMENT_CONFIG.pitch)
+                .push16(BOARD_ALIGNMENT_CONFIG.yaw);
             break;
         case MSPCodes.MSP_SET_PID_CONTROLLER:
             buffer.push8(PID.controller);
@@ -1042,51 +1146,71 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(ARMING_CONFIG.auto_disarm_delay)
                 .push8(ARMING_CONFIG.disarm_kill_switch);
             break;
-        case MSPCodes.MSP_SET_LOOP_TIME:
-            buffer.push16(FC_CONFIG.loopTime);
+        case MSPCodes.MSP_SET_MOTOR_CONFIG:
+            buffer.push16(MOTOR_CONFIG.minthrottle)
+                .push16(MOTOR_CONFIG.maxthrottle)
+                .push16(MOTOR_CONFIG.mincommand);
+                break;
+        case MSPCodes.MSP_SET_GPS_CONFIG:
+            buffer.push8(GPS_CONFIG.provider)
+                .push8(GPS_CONFIG.ublox_sbas);
             break;
-        case MSPCodes.MSP_SET_MISC:
-            buffer.push16(RX_CONFIG.midrc)
-                .push16(MISC.minthrottle)
-                .push16(MISC.maxthrottle)
-                .push16(MISC.mincommand)
-                .push16(MISC.failsafe_throttle)
-                .push8(MISC.gps_type)
-                .push8(MISC.gps_baudrate)
-                .push8(MISC.gps_ubx_sbas)
-                .push8(MISC.multiwiicurrentoutput)
-                .push8(MISC.rssi_channel)
-                .push8(MISC.placeholder2);
-            if (semver.lt(CONFIG.apiVersion, "1.18.0")) {
-                buffer.push16(Math.round(MISC.mag_declination * 10));
-            } else {
-                buffer.push16(Math.round(MISC.mag_declination * 100));
-            }
-            buffer.push8(MISC.vbatscale)
-                .push8(Math.round(MISC.vbatmincellvoltage * 10))
-                .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
-                .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
+        case MSPCodes.MSP_SET_COMPASS_CONFIG:
+            buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));
             break;
-        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
-            buffer.push8(MISC.vbatscale)
-                .push8(Math.round(MISC.vbatmincellvoltage * 10))
-                .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
-                .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
-                if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
-                    buffer.push8(MISC.batterymetertype);
-                }
+        case MSPCodes.MSP_SET_RSSI_CONFIG:
+            buffer.push8(RSSI_CONFIG.channel);
             break;
-        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
-            buffer.push16(BF_CONFIG.currentscale)
-                .push16(BF_CONFIG.currentoffset)
-                .push8(BF_CONFIG.currentmetertype)
-                .push16(BF_CONFIG.batterycapacity)
+//        case MSPCodes.MSP_SET_MISC:
+//            buffer.push16(RX_CONFIG.stick_center)
+//                .push16(MOTOR_CONFIG.minthrottle)
+//                .push16(MOTOR_CONFIG.maxthrottle)
+//                .push16(MOTOR_CONFIG.mincommand)
+//                .push16(MISC.failsafe_throttle)
+//                .push8(GPS_CONFIG.provider)
+//                .push8(GPS_CONFIG.baudrate)
+//                .push8(GPS_CONFIG.ublox_sbas)
+//                .push8(MISC.multiwiicurrentoutput)
+//                .push8(RSSI_CONFIG.channel)
+//                .push8(MISC.placeholder2);
+//            if (semver.lt(CONFIG.apiVersion, "1.18.0")) {
+//                buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 10));
+//            } else {
+//                buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));
+//            }
+//            buffer.push8(MISC.vbatscale)
+//                .push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
+//                .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
+//                .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10));
+//            break;
+        case MSPCodes.MSP_SET_BATTERY_CONFIG:
+            buffer.push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
+                .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
+                .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10))
+                .push16(BATTERY_CONFIG.batterycapacity)
+                .push8(BATTERY_CONFIG.voltageMeterSource)
+                .push8(BATTERY_CONFIG.currentMeterSource);
             break;
+//        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
+//            buffer.push8(MISC.vbatscale)
+//                .push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
+//                .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
+//                .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10));
+//                if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
+//                    buffer.push8(BATTERY_CONFIG.voltageMeterSource);
+//                }
+//            break;
+//        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
+//            buffer.push16(BF_CONFIG.currentscale)
+//                .push16(BF_CONFIG.currentoffset)
+//                .push8(BATTERY_CONFIG.currentMeterSource)
+//                .push16(BF_CONFIG.batterycapacity)
+//            break;
         case MSPCodes.MSP_SET_RX_CONFIG:
             buffer.push8(RX_CONFIG.serialrx_provider)
-                .push16(RX_CONFIG.maxcheck)
-                .push16(RX_CONFIG.midrc)
-                .push16(RX_CONFIG.mincheck)
+                .push16(RX_CONFIG.stick_max)
+                .push16(RX_CONFIG.stick_center)
+                .push16(RX_CONFIG.stick_min)
                 .push8(RX_CONFIG.spektrum_sat_bind)
                 .push16(RX_CONFIG.rx_min_usec)
                 .push16(RX_CONFIG.rx_max_usec);
@@ -1156,21 +1280,21 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
 
-        case MSPCodes.MSP_SET_3D:
-            buffer.push16(_3D.deadband3d_low)
-                .push16(_3D.deadband3d_high)
-                .push16(_3D.neutral3d);
+        case MSPCodes.MSP_SET_MOTOR_3D_CONFIG:
+            buffer.push16(MOTOR_3D_CONFIG.deadband3d_low)
+                .push16(MOTOR_3D_CONFIG.deadband3d_high)
+                .push16(MOTOR_3D_CONFIG.neutral);
             if (semver.lt(CONFIG.apiVersion, "1.17.0")) {
-                buffer.push16(_3D.deadband3d_throttle);
+                buffer.push16(RC_DEADBAND_CONFIG.deadband3d_throttle);
             }
             break;
 
         case MSPCodes.MSP_SET_RC_DEADBAND:
-            buffer.push8(RC_deadband.deadband)
-                .push8(RC_deadband.yaw_deadband)
-                .push8(RC_deadband.alt_hold_deadband);
+            buffer.push8(RC_DEADBAND_CONFIG.deadband)
+                .push8(RC_DEADBAND_CONFIG.yaw_deadband)
+                .push8(RC_DEADBAND_CONFIG.alt_hold_deadband);
             if (semver.gte(CONFIG.apiVersion, "1.17.0")) {
-                buffer.push16(_3D.deadband3d_throttle);
+                buffer.push16(RC_DEADBAND_CONFIG.deadband3d_throttle);
             }
             break;
 

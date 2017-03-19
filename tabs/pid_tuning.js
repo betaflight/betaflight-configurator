@@ -34,19 +34,7 @@ TABS.pid_tuning.initialize = function (callback) {
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     }).then(function() {
-        var promise = true;
-        if (CONFIG.flightControllerIdentifier === "BTFL" && semver.gte(CONFIG.apiVersion, "1.16.0")) {
-            promise = MSP.promise(MSPCodes.MSP_BF_CONFIG);
-        }
-
-        return promise;
-    }).then(function() {
-        var promise = true;
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-            promise = MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-        }
-
-        return promise;
+        return MSP.promise(MSPCodes.MSP_RC_DEADBAND);
     }).then(function() {
         $('#content').load("./tabs/pid_tuning.html", process_html);
     });
@@ -236,7 +224,7 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")
-            || semver.gte(CONFIG.apiVersion, "1.16.0") && BF_CONFIG.features.isEnabled('SUPEREXPO_RATES')) {
+            || semver.gte(CONFIG.apiVersion, "1.16.0") && FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES')) {
             $('#pid-tuning .rate').text(chrome.i18n.getMessage("pidTuningSuperRate"));
         } else {
             $('#pid-tuning .rate').text(chrome.i18n.getMessage("pidTuningRate"));
@@ -351,7 +339,7 @@ TABS.pid_tuning.initialize = function (callback) {
         FILTER_CONFIG.yaw_lpf_hz = parseInt($('.pid_filter input[name="yawLowpassFrequency"]').val());
 
         if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
-            BF_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
+            FEATURE_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
@@ -407,7 +395,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('#pid_mag').show();
             showTitle = true;
         }
-        if (BF_CONFIG.features.isEnabled('GPS')) {
+        if (FEATURE_CONFIG.features.isEnabled('GPS')) {
             $('#pid_gps').show();
             showTitle = true;
         }
@@ -470,7 +458,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
     function process_html() {
         if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
-            BF_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
+            FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
         } else {
             $('.tab-pid_tuning .pidTuningFeatures').hide();
         }
@@ -487,9 +475,9 @@ TABS.pid_tuning.initialize = function (callback) {
             rc_rate_yaw: RC_tuning.rcYawRate,
             rc_expo:     RC_tuning.RC_EXPO,
             rc_yaw_expo: RC_tuning.RC_YAW_EXPO,
-            superexpo:   BF_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
-            deadband: RC_deadband.deadband,
-            yawDeadband: RC_deadband.yaw_deadband
+            superexpo:   FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
+            deadband: RC_DEADBAND_CONFIG.deadband,
+            yawDeadband: RC_DEADBAND_CONFIG.yaw_deadband
         };
 
         if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
@@ -853,19 +841,11 @@ TABS.pid_tuning.initialize = function (callback) {
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
             }).then(function () {
-                if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
-                  return MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
-                }
+              return MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
             }).then(function () {
-                if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
-                    return MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-                }
+                return MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
-            }).then(function () {
-                if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
-                    return MSP.promise(MSPCodes.MSP_SET_BF_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BF_CONFIG));
-                }
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             }).then(function () {

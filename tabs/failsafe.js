@@ -34,33 +34,31 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     }
 
     function get_rc_data() {
-        MSP.send_message(MSPCodes.MSP_RC, false, false, load_config);
+        MSP.send_message(MSPCodes.MSP_RC, false, false, load_feature_config);
     }
 
-    // BEGIN Support for pre API version 1.15.0
-    function load_config() {
-        MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, load_misc);
+    function load_feature_config() {
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, load_motor_config);
     }
 
-    function load_misc() {
-        MSP.send_message(MSPCodes.MSP_MISC, false, false, load_html);
+    function load_motor_config() {
+        MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, load_compass_config);
     }
-    // END (Support for pre API version 1.15.0
+    
+    function load_compass_config() {
+        MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, load_gps_config);
+    }
+    
+    function load_gps_config() {
+        MSP.send_message(MSPCodes.MSP_GPS_CONFIG, false, false, load_html);
+    }
 
     function load_html() {
         $('#content').load("./tabs/failsafe.html", process_html);
     }
 
-    var apiVersionGte1_15_0 = semver.gte(CONFIG.apiVersion, "1.15.0");
 
-    // Uncomment next line for testing older functionality on newer API version
-    //apiVersionGte1_15_0 = false;
-
-    if(apiVersionGte1_15_0) {
-        load_rx_config();
-    } else {
-        load_config();
-    }
+    load_rx_config();
 
     function process_html() {
         // fill stage 2 fields
@@ -72,243 +70,220 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             }
         }
         
-        // Conditionally hide the old or the new control pane's
-        if(apiVersionGte1_15_0) {
-            var oldPane = $('div.oldpane');
-            oldPane.prop("disabled", true);
-            oldPane.hide();
-        } else {
-            var newPane = $('div.newpane');
-            newPane.prop("disabled", true);
-            newPane.hide();
+        // FIXME cleanup oldpane html and css
+        var oldPane = $('div.oldpane');
+        oldPane.prop("disabled", true);
+        oldPane.hide();
+
+        // generate labels for assigned aux modes
+        var auxAssignment = [],
+            i,
+            element;
+
+        for (var channelIndex = 0; channelIndex < RC.active_channels - 4; channelIndex++) {
+            auxAssignment.push("");
         }
 
-        if (apiVersionGte1_15_0) {
-            // generate labels for assigned aux modes
-            var auxAssignment = [],
-                i,
-                element;
+        for (var modeIndex = 0; modeIndex < AUX_CONFIG.length; modeIndex++) {
 
-            for (var channelIndex = 0; channelIndex < RC.active_channels - 4; channelIndex++) {
-                auxAssignment.push("");
-            }
+            var modeId = AUX_CONFIG_IDS[modeIndex];
 
-            for (var modeIndex = 0; modeIndex < AUX_CONFIG.length; modeIndex++) {
+            // scan mode ranges to find assignments
+            for (var modeRangeIndex = 0; modeRangeIndex < MODE_RANGES.length; modeRangeIndex++) {
+                var modeRange = MODE_RANGES[modeRangeIndex];
 
-                var modeId = AUX_CONFIG_IDS[modeIndex];
-
-                // scan mode ranges to find assignments
-                for (var modeRangeIndex = 0; modeRangeIndex < MODE_RANGES.length; modeRangeIndex++) {
-                    var modeRange = MODE_RANGES[modeRangeIndex];
-
-                    if (modeRange.id != modeId) {
-                        continue;
-                    }
-
-                    var range = modeRange.range;
-                    if (!(range.start < range.end)) {
-                        continue; // invalid!
-                    }
-
-                    auxAssignment[modeRange.auxChannelIndex] += "<span class=\"modename\">" + AUX_CONFIG[modeIndex] + "</span>";
+                if (modeRange.id != modeId) {
+                    continue;
                 }
-            }
 
-            // generate full channel list
-            var channelNames = [
-                    chrome.i18n.getMessage('controlAxisRoll'),
-                    chrome.i18n.getMessage('controlAxisPitch'),
-                    chrome.i18n.getMessage('controlAxisYaw'),
-                    chrome.i18n.getMessage('controlAxisThrottle')
-                ],
-                fullChannels_e = $('div.activechannellist'),
-                aux_index = 1,
-                aux_assignment_index = 0;
-
-            for (i = 0; i < RXFAIL_CONFIG.length; i++) {
-                if (i < channelNames.length) {
-                    fullChannels_e.append('\
-                        <div class="number">\
-                            <div class="channelprimary">\
-                                <span>' + channelNames[i] + '</span>\
-                            </div>\
-                            <div class="cf_tip channelsetting" title="' + chrome.i18n.getMessage("failsafeChannelFallbackSettingsAuto") + '">\
-                                <select class="aux_set" id="' + i + '">\
-                                    <option value="0">Auto</option>\
-                                    <option value="1">Hold</option>\
-                                </select>\
-                            </div>\
-                        </div>\
-                    ');
-                } else {
-                    fullChannels_e.append('\
-                        <div class="number">\
-                            <div class="channelauxiliary">\
-                                <span class="channelname">' + chrome.i18n.getMessage("controlAxisAux" + (aux_index++)) + '</span>\
-                                ' + auxAssignment[aux_assignment_index++] + '\
-                            </div>\
-                            <div class="cf_tip channelsetting" title="' + chrome.i18n.getMessage("failsafeChannelFallbackSettingsHold") + '">\
-                                <select class="aux_set" id="' + i + '">\
-                                    <option value="1">Hold</option>\
-                                    <option value="2">Set</option>\
-                                </select>\
-                            </div>\
-                            <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" id="' + i + '"/></div>\
-                        </div>\
-                    ');
+                var range = modeRange.range;
+                if (!(range.start < range.end)) {
+                    continue; // invalid!
                 }
+
+                auxAssignment[modeRange.auxChannelIndex] += "<span class=\"modename\">" + AUX_CONFIG[modeIndex] + "</span>";
             }
-
-            var channel_mode_array = [];
-            $('.number', fullChannels_e).each(function () {
-                channel_mode_array.push($('select.aux_set' , this));
-            });
-
-            var channel_value_array = [];
-            $('.number', fullChannels_e).each(function () {
-                channel_value_array.push($('input[name="aux_value"]' , this));
-            });
-
-            var channelMode = $('select.aux_set');
-            var channelValue = $('input[name="aux_value"]');
-
-            // UI hooks
-            channelMode.change(function () {
-                var currentMode = parseInt($(this).val());
-                var i = parseInt($(this).prop("id"));
-                RXFAIL_CONFIG[i].mode = currentMode;
-                if (currentMode == 2) {
-                    channel_value_array[i].prop("disabled", false);
-                    channel_value_array[i].show();
-                } else {
-                    channel_value_array[i].prop("disabled", true);
-                    channel_value_array[i].hide();
-                }
-            });
-
-            // UI hooks
-            channelValue.change(function () {
-                var i = parseInt($(this).prop("id"));
-                RXFAIL_CONFIG[i].value = parseInt($(this).val());
-            });
-
-            // for some odd reason chrome 38+ changes scroll according to the touched select element
-            // i am guessing this is a bug, since this wasn't happening on 37
-            // code below is a temporary fix, which we will be able to remove in the future (hopefully)
-            $('#content').scrollTop((scrollPosition) ? scrollPosition : 0);
-
-            // fill stage 1 Valid Pulse Range Settings
-            $('input[name="rx_min_usec"]').val(RX_CONFIG.rx_min_usec);
-            $('input[name="rx_max_usec"]').val(RX_CONFIG.rx_max_usec);
-
-            // fill fallback settings (mode and value) for all channels
-            for (i = 0; i < RXFAIL_CONFIG.length; i++) {
-                channel_value_array[i].val(RXFAIL_CONFIG[i].value);
-                channel_mode_array[i].val(RXFAIL_CONFIG[i].mode);
-                channel_mode_array[i].change();
-            }
-
-            BF_CONFIG.features.generateElements($('.tab-failsafe .featuresNew'));
-
-            var failsafeFeature = $('input[name="FAILSAFE"]');
-            failsafeFeature.change(function () {
-                toggleStage2($(this).is(':checked'));
-            });
-            toggleStage2(BF_CONFIG.features.isEnabled('FAILSAFE'));
-
-            $('input[name="failsafe_throttle"]').val(FAILSAFE_CONFIG.failsafe_throttle);
-            $('input[name="failsafe_off_delay"]').val(FAILSAFE_CONFIG.failsafe_off_delay);
-            $('input[name="failsafe_throttle_low_delay"]').val(FAILSAFE_CONFIG.failsafe_throttle_low_delay);
-            $('input[name="failsafe_delay"]').val(FAILSAFE_CONFIG.failsafe_delay);
-
-            // set stage 2 failsafe procedure
-            $('input[type="radio"].procedure').change(function () {
-                var element = $(this),
-                    checked = element.is(':checked'),
-                    id = element.attr('id');
-                switch(id) {
-                    case 'drop':
-                        if (checked) {
-                            $('input[name="failsafe_throttle"]').prop("disabled", true);
-                            $('input[name="failsafe_off_delay"]').prop("disabled", true);
-                        }
-                        break;
-
-                    case 'land':
-                        if (checked) {
-                            $('input[name="failsafe_throttle"]').prop("disabled", false);
-                            $('input[name="failsafe_off_delay"]').prop("disabled", false);
-                        }
-                        break;
-                }
-            });
-
-            switch(FAILSAFE_CONFIG.failsafe_procedure) {
-                default:
-                case 0:
-                    element = $('input[id="land"]') ;
-                    element.prop('checked', true);
-                    element.change();
-                    break;
-                case 1:
-                    element = $('input[id="drop"]');
-                    element.prop('checked', true);
-                    element.change();
-                    break;
-            }
-
-            // set stage 2 kill switch option
-            $('input[name="failsafe_kill_switch"]').prop('checked', FAILSAFE_CONFIG.failsafe_kill_switch);
-
-        } else {
-            BF_CONFIG.features.generateElements($('.tab-failsafe .featuresOld'));
-            // fill failsafe_throttle field (pre API 1.15.0)
-            $('input[name="failsafe_throttle_old"]').val(MISC.failsafe_throttle);
         }
+
+        // generate full channel list
+        var channelNames = [
+                chrome.i18n.getMessage('controlAxisRoll'),
+                chrome.i18n.getMessage('controlAxisPitch'),
+                chrome.i18n.getMessage('controlAxisYaw'),
+                chrome.i18n.getMessage('controlAxisThrottle')
+            ],
+            fullChannels_e = $('div.activechannellist'),
+            aux_index = 1,
+            aux_assignment_index = 0;
+
+        for (i = 0; i < RXFAIL_CONFIG.length; i++) {
+            if (i < channelNames.length) {
+                fullChannels_e.append('\
+                    <div class="number">\
+                        <div class="channelprimary">\
+                            <span>' + channelNames[i] + '</span>\
+                        </div>\
+                        <div class="cf_tip channelsetting" title="' + chrome.i18n.getMessage("failsafeChannelFallbackSettingsAuto") + '">\
+                            <select class="aux_set" id="' + i + '">\
+                                <option value="0">Auto</option>\
+                                <option value="1">Hold</option>\
+                            </select>\
+                        </div>\
+                    </div>\
+                ');
+            } else {
+                fullChannels_e.append('\
+                    <div class="number">\
+                        <div class="channelauxiliary">\
+                            <span class="channelname">' + chrome.i18n.getMessage("controlAxisAux" + (aux_index++)) + '</span>\
+                            ' + auxAssignment[aux_assignment_index++] + '\
+                        </div>\
+                        <div class="cf_tip channelsetting" title="' + chrome.i18n.getMessage("failsafeChannelFallbackSettingsHold") + '">\
+                            <select class="aux_set" id="' + i + '">\
+                                <option value="1">Hold</option>\
+                                <option value="2">Set</option>\
+                            </select>\
+                        </div>\
+                        <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="' + i + '"/></div>\
+                    </div>\
+                ');
+            }
+        }
+
+        var channel_mode_array = [];
+        $('.number', fullChannels_e).each(function () {
+            channel_mode_array.push($('select.aux_set' , this));
+        });
+
+        var channel_value_array = [];
+        $('.number', fullChannels_e).each(function () {
+            channel_value_array.push($('input[name="aux_value"]' , this));
+        });
+
+        var channelMode = $('select.aux_set');
+        var channelValue = $('input[name="aux_value"]');
+
+        // UI hooks
+        channelMode.change(function () {
+            var currentMode = parseInt($(this).val());
+            var i = parseInt($(this).prop("id"));
+            RXFAIL_CONFIG[i].mode = currentMode;
+            if (currentMode == 2) {
+                channel_value_array[i].prop("disabled", false);
+                channel_value_array[i].show();
+            } else {
+                channel_value_array[i].prop("disabled", true);
+                channel_value_array[i].hide();
+            }
+        });
+
+        // UI hooks
+        channelValue.change(function () {
+            var i = parseInt($(this).prop("id"));
+            RXFAIL_CONFIG[i].value = parseInt($(this).val());
+        });
+
+        // for some odd reason chrome 38+ changes scroll according to the touched select element
+        // i am guessing this is a bug, since this wasn't happening on 37
+        // code below is a temporary fix, which we will be able to remove in the future (hopefully)
+        $('#content').scrollTop((scrollPosition) ? scrollPosition : 0);
+
+        // fill stage 1 Valid Pulse Range Settings
+        $('input[name="rx_min_usec"]').val(RX_CONFIG.rx_min_usec);
+        $('input[name="rx_max_usec"]').val(RX_CONFIG.rx_max_usec);
+
+        // fill fallback settings (mode and value) for all channels
+        for (i = 0; i < RXFAIL_CONFIG.length; i++) {
+            channel_value_array[i].val(RXFAIL_CONFIG[i].value);
+            channel_mode_array[i].val(RXFAIL_CONFIG[i].mode);
+            channel_mode_array[i].change();
+        }
+
+        FEATURE_CONFIG.features.generateElements($('.tab-failsafe .featuresNew'));
+
+        var failsafeFeature = $('input[name="FAILSAFE"]');
+        failsafeFeature.change(function () {
+            toggleStage2($(this).is(':checked'));
+        });
+        toggleStage2(FEATURE_CONFIG.features.isEnabled('FAILSAFE'));
+
+        $('input[name="failsafe_throttle"]').val(FAILSAFE_CONFIG.failsafe_throttle);
+        $('input[name="failsafe_off_delay"]').val(FAILSAFE_CONFIG.failsafe_off_delay);
+        $('input[name="failsafe_throttle_low_delay"]').val(FAILSAFE_CONFIG.failsafe_throttle_low_delay);
+        $('input[name="failsafe_delay"]').val(FAILSAFE_CONFIG.failsafe_delay);
+
+        // set stage 2 failsafe procedure
+        $('input[type="radio"].procedure').change(function () {
+            var element = $(this),
+                checked = element.is(':checked'),
+                id = element.attr('id');
+            switch(id) {
+                case 'drop':
+                    if (checked) {
+                        $('input[name="failsafe_throttle"]').prop("disabled", true);
+                        $('input[name="failsafe_off_delay"]').prop("disabled", true);
+                    }
+                    break;
+
+                case 'land':
+                    if (checked) {
+                        $('input[name="failsafe_throttle"]').prop("disabled", false);
+                        $('input[name="failsafe_off_delay"]').prop("disabled", false);
+                    }
+                    break;
+            }
+        });
+
+        switch(FAILSAFE_CONFIG.failsafe_procedure) {
+            default:
+            case 0:
+                element = $('input[id="land"]') ;
+                element.prop('checked', true);
+                element.change();
+                break;
+            case 1:
+                element = $('input[id="drop"]');
+                element.prop('checked', true);
+                element.change();
+                break;
+        }
+
+        // set stage 2 kill switch option
+        $('input[name="failsafe_kill_switch"]').prop('checked', FAILSAFE_CONFIG.failsafe_kill_switch);
+
 
         $('a.save').click(function () {
             // gather data that doesn't have automatic change event bound
 
-            BF_CONFIG.features.updateData($('input[name="FAILSAFE"]'));
+            FEATURE_CONFIG.features.updateData($('input[name="FAILSAFE"]'));
 
-            if(apiVersionGte1_15_0) {
-                RX_CONFIG.rx_min_usec = parseInt($('input[name="rx_min_usec"]').val());
-                RX_CONFIG.rx_max_usec = parseInt($('input[name="rx_max_usec"]').val());
+            RX_CONFIG.rx_min_usec = parseInt($('input[name="rx_min_usec"]').val());
+            RX_CONFIG.rx_max_usec = parseInt($('input[name="rx_max_usec"]').val());
 
-                FAILSAFE_CONFIG.failsafe_throttle = parseInt($('input[name="failsafe_throttle"]').val());
-                FAILSAFE_CONFIG.failsafe_off_delay = parseInt($('input[name="failsafe_off_delay"]').val());
-                FAILSAFE_CONFIG.failsafe_throttle_low_delay = parseInt($('input[name="failsafe_throttle_low_delay"]').val());
-                FAILSAFE_CONFIG.failsafe_delay = parseInt($('input[name="failsafe_delay"]').val());
+            FAILSAFE_CONFIG.failsafe_throttle = parseInt($('input[name="failsafe_throttle"]').val());
+            FAILSAFE_CONFIG.failsafe_off_delay = parseInt($('input[name="failsafe_off_delay"]').val());
+            FAILSAFE_CONFIG.failsafe_throttle_low_delay = parseInt($('input[name="failsafe_throttle_low_delay"]').val());
+            FAILSAFE_CONFIG.failsafe_delay = parseInt($('input[name="failsafe_delay"]').val());
 
-                if( $('input[id="land"]').is(':checked')) {
-                    FAILSAFE_CONFIG.failsafe_procedure = 0;
-                } else if( $('input[id="drop"]').is(':checked')) {
-                    FAILSAFE_CONFIG.failsafe_procedure = 1;
-                }
-
-                FAILSAFE_CONFIG.failsafe_kill_switch = $('input[name="failsafe_kill_switch"]').is(':checked') ? 1 : 0;
-            } else {
-                // get failsafe_throttle field value (pre API 1.15.0)
-                MISC.failsafe_throttle = parseInt($('input[name="failsafe_throttle_old"]').val());
+            if( $('input[id="land"]').is(':checked')) {
+                FAILSAFE_CONFIG.failsafe_procedure = 0;
+            } else if( $('input[id="drop"]').is(':checked')) {
+                FAILSAFE_CONFIG.failsafe_procedure = 1;
             }
+
+            FAILSAFE_CONFIG.failsafe_kill_switch = $('input[name="failsafe_kill_switch"]').is(':checked') ? 1 : 0;
 
             function save_failssafe_config() {
                 MSP.send_message(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG), false, save_rxfail_config);
             }
 
             function save_rxfail_config() {
-                mspHelper.sendRxFailConfig(save_bf_config);
+                mspHelper.sendRxFailConfig(save_feature_config);
             }
 
-            function save_bf_config() {
-                MSP.send_message(MSPCodes.MSP_SET_BF_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BF_CONFIG), false, save_to_eeprom);
+            function save_feature_config() {
+                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, save_to_eeprom);
             }
-
-            // BEGIN pre API 1.15.0 save functions
-            function save_misc() {
-                MSP.send_message(MSPCodes.MSP_SET_MISC, mspHelper.crunch(MSPCodes.MSP_SET_MISC), false, save_to_eeprom);
-            }
-            // END pre API 1.15.0 save functions
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
@@ -341,11 +316,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 }
             }
 
-            if(apiVersionGte1_15_0) {
-                MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, save_failssafe_config);
-            } else {
-                MSP.send_message(MSPCodes.MSP_SET_BF_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BF_CONFIG), false, save_misc);
-            }
+            MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, save_failssafe_config);
         });
 
         // translate to user-selected language

@@ -292,7 +292,7 @@
     width: 150px;
 }
 
-.tab-configuration .currentmetertype {
+.tab-configuration .currentMeterSource {
     border: 1px solid silver;
     margin-right: 5px;
     float: left;

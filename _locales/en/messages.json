@@ -667,14 +667,17 @@
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
-    "configurationBatteryVoltage": {
-        "message": "Battery Voltage"
+    "configurationBattery": {
+        "message": "Battery"
     },
-    "configurationBatteryCurrent": {
-        "message": "Battery Current"
+    "configurationVoltage": {
+        "message": "Voltage"
     },
-    "configurationBatteryMeterType": {
-        "message": "Battery Meter Type"
+    "configurationCurrent": {
+        "message": "Current"
+    },
+    "configurationBatteryVoltageMeterSource": {
+        "message": "Voltage Meter Source"
     },
     "configurationBatteryMinimum": {
         "message": "Minimum Cell Voltage"
@@ -688,8 +691,8 @@
     "configurationBatteryScale": {
         "message": "Voltage Scale"
     },
-    "configurationCurrentMeterType": {
-        "message": "Current Meter Type"
+    "configurationBatteryCurrentMeterSource": {
+        "message": "Current Meter Source"
     },
     "configurationCurrent": {
         "message": "Current Sensor"
@@ -700,11 +703,8 @@
     "configurationCurrentOffset": {
         "message": "Offset in millivolt steps"
     },
-    "configurationBatteryMultiwiiCurrent": {
-        "message": "Enable support for legacy Multiwii MSP current output"
-    },
     "configuration3d": {
-        "message": "3D"
+        "message": "3D ESC/Motor Features"
     },
     "configuration3dDeadbandLow": {
         "message": "3D Deadband Low"
@@ -984,11 +984,23 @@
     "receiverThrottleExpo": {
         "message": "Throttle EXPO"
     },
-    "receiverMidRc": {
-        "message": "Center value for RC channels"
+    "receiverStickMin": {
+        "message": "Stick Min"
     },
-    "receiverMidRcHelp": {
-        "message": "This is the center value <span style=\"font-weight: bold\">for all RC channels</span>. Set this to the value that your transmitter sends when the stick is centered for a channel. To adjust the thrust at throttle mid position, change the 'Trottle MID' value on the PID Tuning tab."
+    "receiverHelpStickMin": {
+        "message": "The value (in us) used to determine if a stick is low."
+    },
+    "receiverStickCenter": {
+        "message": "Stick Center"
+    },
+    "receiverHelpStickCenter": {
+        "message": "The value (in us) used to determine if a stick is centered."
+    },
+    "receiverStickMax": {
+        "message": "Stick Max"
+    },
+    "receiverHelpStickMax": {
+        "message": "The value (in us) used to determine if a stick is high."
     },
     "receiverDeadband": {
         "message": "RC Deadband"
@@ -996,12 +1008,18 @@
     "receiverHelpDeadband": {
         "message": "These are values (in us) by how much RC input can be different before it's considered valid. For transmitters with jitter on outputs, this value can be increased if rc inputs twitch while idle."
     },
-    "receiverHelpYawDeadband": {
-        "message": "These are values (in us) by how much RC input can be different before it's considered valid. For transmitters with jitter on outputs, this value can be increased if rc inputs twitch while idle. <strong>This setting is for Yaw only.</strong>"
-    },
     "receiverYawDeadband": {
         "message": "Yaw Deadband"
     },
+    "receiverHelpYawDeadband": {
+        "message": "These are values (in us) by how much RC input can be different before it's considered valid. For transmitters with jitter on outputs, this value can be increased if rc inputs twitch while idle. <strong>This setting is for Yaw only.</strong>"
+    },    
+    "recevier3dDeadbandThrottle": {
+        "message": "3D Throttle Deadband"
+    },
+    "receiverHelp3dDeadbandThrottle": {
+        "message": "These are values (in us).  To widen the neutral zone increased the value. <strong>This setting is for 3D throttle only.</strong>"
+    },    
     "receiverChannelMap": {
         "message": "Channel Map"
     },
@@ -1948,10 +1966,13 @@
     "pidTuningRatesTip": {
         "message": "Play with the rates and see how those affect the stick curve"
     },
-    "configurationMisc": {
-        "message": "Misc"
+    "configurationCamera": {
+        "message": "Camera"
     },
-    "configurationVesselName": {
+    "configurationPersonalization": {
+        "message": "Personalization"
+    },
+    "craftName": {
         "message": "Craft name"
     },
     "configurationFpvCamAngleDegrees": {

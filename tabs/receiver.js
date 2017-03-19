@@ -15,24 +15,19 @@ TABS.receiver.initialize = function (callback) {
     }
 
     function get_rc_data() {
-        MSP.send_message(MSPCodes.MSP_RC, false, false, get_rc_tuning_data);
+        MSP.send_message(MSPCodes.MSP_RC, false, false, get_rssi_config);
     }
 
-    function get_rc_tuning_data() {
-        MSP.send_message(MSPCodes.MSP_RC_TUNING, false, false, get_bt_config_data);
+    function get_rssi_config() {
+        MSP.send_message(MSPCodes.MSP_RSSI_CONFIG, false, false, get_rc_tuning);
     }
 
-    function get_bt_config_data() {
-        MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, get_rc_map);
+    function get_rc_tuning() {
+        MSP.send_message(MSPCodes.MSP_RC_TUNING, false, false, get_rc_map);
     }
 
     function get_rc_map() {
-        MSP.send_message(MSPCodes.MSP_RX_MAP, false, false, load_config);
-    }
-
-    // Fetch features so we can check if RX_MSP is enabled:
-    function load_config() {
-        MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, load_rc_configs);
+        MSP.send_message(MSPCodes.MSP_RX_MAP, false, false, load_rc_configs);
     }
 
     function load_rc_configs() {
@@ -57,7 +52,7 @@ TABS.receiver.initialize = function (callback) {
         $('#content').load("./tabs/receiver.html", process_html);
     }
 
-    MSP.send_message(MSPCodes.MSP_MISC, false, false, get_rc_data);
+    MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, get_rc_data);
 
     function process_html() {
         // translate to user-selected language
@@ -74,9 +69,9 @@ TABS.receiver.initialize = function (callback) {
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.deadband').hide();
         } else {
-            $('.deadband input[name="midrc"]').val(RX_CONFIG.midrc);
-            $('.deadband input[name="yaw_deadband"]').val(RC_deadband.yaw_deadband);
-            $('.deadband input[name="deadband"]').val(RC_deadband.deadband);
+            $('.deadband input[name="yaw_deadband"]').val(RC_DEADBAND_CONFIG.yaw_deadband);
+            $('.deadband input[name="deadband"]').val(RC_DEADBAND_CONFIG.deadband);
+            $('.deadband input[name="3ddeadbandthrottle"]').val(RC_DEADBAND_CONFIG.deadband3d_throttle);
 
             $('.deadband input[name="deadband"]').change(function () {
                 this.deadband = parseInt($(this).val());
@@ -84,7 +79,14 @@ TABS.receiver.initialize = function (callback) {
             $('.deadband input[name="yaw_deadband"]').change(function () {
                 this.yawDeadband = parseInt($(this).val());
             }).change();
-
+        }
+        
+        if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
+            $('.sticks').hide();
+        } else {
+            $('.sticks input[name="stick_min"]').val(RX_CONFIG.stick_min);
+            $('.sticks input[name="stick_center"]').val(RX_CONFIG.stick_center);
+            $('.sticks input[name="stick_max"]').val(RX_CONFIG.stick_max);
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
@@ -226,7 +228,7 @@ TABS.receiver.initialize = function (callback) {
             rssi_channel_e.append('<option value="' + i + '">' + i + '</option>');
         }
 
-        $('select[name="rssi_channel"]').val(MISC.rssi_channel);
+        $('select[name="rssi_channel"]').val(RSSI_CONFIG.channel);
 
         var rateHeight = TABS.receiver.rateChartHeight;
 
@@ -237,9 +239,12 @@ TABS.receiver.initialize = function (callback) {
 
         $('a.update').click(function () {
             if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                RX_CONFIG.midrc = parseInt($('.deadband input[name="midrc"]').val());
-                RC_deadband.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
-                RC_deadband.deadband = parseInt($('.deadband input[name="deadband"]').val());
+                RX_CONFIG.stick_max = parseInt($('.sticks input[name="stick_max"]').val());
+                RX_CONFIG.stick_center = parseInt($('.sticks input[name="stick_center"]').val());
+                RX_CONFIG.stick_min = parseInt($('.sticks input[name="stick_min"]').val());
+                RC_DEADBAND_CONFIG.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
+                RC_DEADBAND_CONFIG.deadband = parseInt($('.deadband input[name="deadband"]').val());
+                RC_DEADBAND_CONFIG.deadband3d_throttle = ($('.deadband input[name="3ddeadbandthrottle"]').val());
             }
 
             // catch rc map
@@ -251,15 +256,16 @@ TABS.receiver.initialize = function (callback) {
             }
 
             // catch rssi aux
-            MISC.rssi_channel = parseInt($('select[name="rssi_channel"]').val());
+            RSSI_CONFIG.channel = parseInt($('select[name="rssi_channel"]').val());
+
 
             if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                 RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
                 RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
             }
 
-            function save_misc() {
-                MSP.send_message(MSPCodes.MSP_SET_MISC, mspHelper.crunch(MSPCodes.MSP_SET_MISC), false, save_rc_configs);
+            function save_rssi_config() {
+                MSP.send_message(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG), false, save_rc_configs);
             }
 
             function save_rc_configs() {
@@ -286,7 +292,7 @@ TABS.receiver.initialize = function (callback) {
                 });
             }
 
-            MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_misc);
+            MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_rssi_config);
         });
 
         $("a.sticks").click(function() {
@@ -316,7 +322,7 @@ TABS.receiver.initialize = function (callback) {
         });
 
         // Only show the MSP control sticks if the MSP Rx feature is enabled
-        $(".sticks_btn").toggle(BF_CONFIG.features.isEnabled('RX_MSP'));
+        $(".sticks_btn").toggle(FEATURE_CONFIG.features.isEnabled('RX_MSP'));
 
         $('select[name="rx_refresh_rate"]').change(function () {
             var plot_update_rate = parseInt($(this).val(), 10);
@@ -448,7 +454,7 @@ TABS.receiver.initModelPreview = function () {
 
     this.useSuperExpo = false;
     if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
-        this.useSuperExpo = BF_CONFIG.features.isEnabled('SUPEREXPO_RATES');
+        this.useSuperExpo = FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES');
     }
 
     var useOldRateCurve = false;

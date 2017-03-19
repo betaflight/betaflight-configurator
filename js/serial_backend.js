@@ -267,24 +267,11 @@ function onConnect() {
     $('#tabs ul.mode-connected-cli').show();
     
     if (CONFIG.flightControllerVersion !== '') {
-        BF_CONFIG.features = new Features(CONFIG);
+        FEATURE_CONFIG.features = new Features(CONFIG);
 
         $('#tabs ul.mode-connected').show();
 
-        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
-        } else {
-            MSP.send_message(MSPCodes.MSP_STATUS, false, false);
-
-            if (CONFIG.flightControllerIdentifier === 'BTFL' && semver.gte(CONFIG.flightControllerVersion, "2.4.0")) {
-                CONFIG.numProfiles = 2;
-                $('.tab-pid_tuning select[name="profile"] .profile3').hide();
-            } else {
-                CONFIG.numProfiles = 3;
-                $('.tab-pid_tuning select[name="rate_profile"]').hide();
-            }
-        }
-    
+        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
         startLiveDataRefreshTimer();
@@ -492,13 +479,13 @@ function update_live_status() {
        }
     }
     if (ANALOG != undefined) {
-    var nbCells = Math.floor(ANALOG.voltage / MISC.vbatmaxcellvoltage) + 1;   
+    var nbCells = Math.floor(ANALOG.voltage / BATTERY_CONFIG.vbatmaxcellvoltage) + 1;   
     if (ANALOG.voltage == 0)
            nbCells = 1;
    
-       var min = MISC.vbatmincellvoltage * nbCells;
-       var max = MISC.vbatmaxcellvoltage * nbCells;
-       var warn = MISC.vbatwarningcellvoltage * nbCells;
+       var min = BATTERY_CONFIG.vbatmincellvoltage * nbCells;
+       var max = BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
+       var warn = BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
        
        $(".battery-status").css({
           width: ((ANALOG.voltage - min) / (max - min) * 100) + "%",

@@ -13,17 +13,7 @@ TABS.servos.initialize = function (callback) {
     }
 
     function get_servo_mix_rules() {
-        MSP.send_message(MSPCodes.MSP_SERVO_MIX_RULES, false, false, get_channel_forwarding);
-    }
-
-    function get_channel_forwarding() {
-        var nextFunction = get_rc_data;
-        
-        if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
-            MSP.send_message(MSPCodes.MSP_CHANNEL_FORWARDING, false, false, nextFunction);
-        } else { 
-            nextFunction();
-        }
+        MSP.send_message(MSPCodes.MSP_SERVO_MIX_RULES, false, false, get_rc_data);
     }
 
     function get_rc_data() {

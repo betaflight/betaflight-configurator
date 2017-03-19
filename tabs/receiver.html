@@ -27,45 +27,65 @@
                     <select class="hybrid_helper"
                         name="rcmap_helper">
                         <option value="AETR1234">Default</option>
-                        <option value="AETR1234">Futaba / Hitec</option>
-                        <option value="TAER1234">JR / Spektrum / Graupner</option>
+                        <option value="AETR1234">FrSky / Futaba / Hitec</option>
+                        <option value="TAER1234">Spektrum / Graupner / JR</option>
                     </select>
                 </div>
             </div>
             <div class="gui_box tunings grey" style="float: right;">
-                <table class="deadband" width="100%">
+                <table class="sticks">
                     <tr>
-                        <th i18n="receiverMidRc">
-                        </th>
-                        <th i18n="receiverDeadband">
-                        </th>
-                        <th i18n="receiverYawDeadband">
-                        </th>
+                        <th i18n="receiverStickMin"></th>
+                        <th i18n="receiverStickCenter"></th>
+                        <th i18n="receiverStickMax"></th>
                     </tr>
                     <tr>
                         <td>
-                            <div class="numberspacer">
-                                <input type="number" name="midrc" min="1200" max="1700" />
-                                <div class="helpicon cf_tip" i18n_title="receiverMidRcHelp"></div>
+                            <div class="cf_tip" i18n_title="receiverHelpStickMin">
+                                <input type="number" name="stick_min" min="1000" max="1200" />
                             </div>
                         </td>
                         <td>
-                            <div>
+                            <div class="cf_tip" i18n_title="receiverHelpStickCenter">
+                                <input type="number" name="stick_center" min="1401" max="1599" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="cf_tip" i18n_title="receiverHelpStickMax">
+                                <input type="number" name="stick_max" min="1800" max="2000" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="gui_box tunings grey" style="float: right;">
+                <table class="deadband">
+                    <tr>
+                        <th i18n="receiverDeadband"></th>
+                        <th i18n="receiverYawDeadband"></th>
+                        <th i18n="recevier3dDeadbandThrottle"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="cf_tip" i18n_title="receiverHelpDeadband">
                                 <input type="number" name="deadband" step="1" min="0" max="32" />
-                                <div class="helpicon cf_tip" i18n_title="receiverHelpDeadband"></div>
                             </div>
                         </td>
                         <td>
-                            <div>
+                            <div class="cf_tip" i18n_title="receiverHelpYawDeadband">
                                 <input type="number" name="yaw_deadband" step="1" min="0" max="100" />
-                                <div class="helpicon cf_tip" i18n_title="receiverHelpYawDeadband"></div>
                             </div>
-                       </td>
+                        </td>
+                        <td>
+                            <div class="cf_tip" i18n_title="receiverHelp3dDeadbandThrottle">
+                                <input type="number" name="3ddeadbandthrottle" step="1" min="0" max="1000" />
+                            </div>
+                        </td>
                     </tr>
                 </table>
             </div>
             <div class="gui_box grey tunings topspacer rcInterpolation">
-                <table class="rcInterpolation" width="100%">
+                <table class="rcInterpolation">
                     <tr>
                         <th colspan="2" i18n="receiverRcInterpolation"></th>
                     </tr>
