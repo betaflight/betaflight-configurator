@@ -119,11 +119,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_current() {
         var next_callback = load_rx_config;
-        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-            MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
-        } else {
-            next_callback();
-        }
+        MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
     }
 
     function load_rx_config() {
@@ -855,11 +851,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_current() {
                 var next_callback = save_rx_config;
-                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
-                } else {
-                    next_callback();
-                }
+                MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
             }
 
             function save_rx_config() {
