@@ -98,13 +98,13 @@ var MSPCodes = {
     MSP_WP:                         118, // Not used
     MSP_BOXIDS:                     119,
     MSP_SERVO_CONFIGURATIONS:       120,
-    MSP_MOTOR_3D_CONFIG:                         124,
+    MSP_MOTOR_3D_CONFIG:            124,
     MSP_RC_DEADBAND:                125,
     MSP_SENSOR_ALIGNMENT:           126,
     MSP_LED_STRIP_MODECOLOR:        127,
 
     MSP_VOLTAGE_METERS:             128,
-    MSP_CURRENT_METERS:            129,
+    MSP_CURRENT_METERS:             129,
     MSP_BATTERY_STATE:              130,
     MSP_MOTOR_CONFIG:               131,
     MSP_GPS_CONFIG:                 132,
@@ -131,7 +131,7 @@ var MSPCodes = {
     MSP_SET_HEADING:                211, // Not used
     MSP_SET_SERVO_CONFIGURATION:    212,
     MSP_SET_MOTOR:                  214,
-    MSP_SET_MOTOR_3D_CONFIG:                     217,
+    MSP_SET_MOTOR_3D_CONFIG:        217,
     MSP_SET_RC_DEADBAND:            218,
     MSP_SET_RESET_CURR_PID:         219,
     MSP_SET_SENSOR_ALIGNMENT:       220,

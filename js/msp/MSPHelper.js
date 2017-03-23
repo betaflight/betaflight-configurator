@@ -377,8 +377,24 @@ MspHelper.prototype.process_data = function(dataHandler) {
     
             case MSPCodes.MSP_SERVO_CONFIGURATIONS:
                 SERVO_CONFIG = []; // empty the array as new data is coming in
+                if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                    if (data.byteLength % 12 == 0) {
+                        for (var i = 0; i < data.byteLength; i += 12) {
+                            var arr = {
+                                'min':                      data.readU16(),
+                                'max':                      data.readU16(),
+                                'middle':                   data.readU16(),
+                                'rate':                     data.read8(),
+                                'angleAtMin':               -90,
+                                'angleAtMax':               90,
+                                'indexOfChannelToForward':  data.readU8(),
+                                'reversedInputSources':     data.readU32()
+                            };
     
-                if (semver.gte(CONFIG.apiVersion, "1.12.0")) {
+                            SERVO_CONFIG.push(arr);
+                        }
+                    }
+                } else if (semver.gte(CONFIG.apiVersion, "1.12.0")) {
                     if (data.byteLength % 14 == 0) {
                         for (var i = 0; i < data.byteLength; i += 14) {
                             var arr = {
@@ -1479,9 +1495,12 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
                 .push16(servoConfiguration.min)
                 .push16(servoConfiguration.max)
                 .push16(servoConfiguration.middle)
-                .push8(servoConfiguration.rate)
-                .push8(servoConfiguration.angleAtMin)
-                .push8(servoConfiguration.angleAtMax);
+                .push8(servoConfiguration.rate);
+            
+            if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                buffer.push8(servoConfiguration.angleAtMin)
+                    .push8(servoConfiguration.angleAtMax);
+            }
 
             var out = servoConfiguration.indexOfChannelToForward;
             if (out == undefined) {
