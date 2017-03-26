@@ -1380,6 +1380,18 @@
     "blackboxButtonSave": {
         "message": "Save and reboot"
     },
+    "blackboxLoggingNone": {
+        "message": "No Logging"
+    },
+    "blackboxLoggingFlash": {
+        "message": "Onboard Flash"
+    },
+    "blackboxLoggingSdCard": {
+        "message": "SD Card"
+    },
+    "blackboxLoggingSerial": {
+        "message": "Serial Port"
+    },
 
     "serialLoggingSupportedNote": {
         "message": "You can log to an external logging device (such as an OpenLog or compatible clone) by using a serial port. Configure the port on the Ports tab."

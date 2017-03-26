@@ -458,12 +458,6 @@ function updateTabList(features) {
         $('#tabs ul.mode-connected li.tab_logging').hide();
     }
 
-    if (features.isEnabled('BLACKBOX')) {
-        $('#tabs ul.mode-connected li.tab_onboard_logging').show();
-    } else {
-        $('#tabs ul.mode-connected li.tab_onboard_logging').hide();
-    }
-
     if (features.isEnabled('TRANSPONDER')) {
         $('#tabs ul.mode-connected li.tab_transponder').show();
     } else {
