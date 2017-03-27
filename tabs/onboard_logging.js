@@ -140,21 +140,32 @@ TABS.onboard_logging.initialize = function (callback) {
                 $('.tab-onboard_logging a.save-flash-cancel').click(flash_save_cancel);
                 $('.tab-onboard_logging a.save-flash-dismiss').click(dismiss_saving_dialog);
             }
-            
+
+            var deviceSelect = $(".blackboxDevice select");
+            var loggingRatesSelect = $(".blackboxRate select");
+
             if (BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
-                    var rate = $(".blackboxRate select").val().split('/');
+                    var rate = loggingRatesSelect.val().split('/');
                     
                     BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
                     BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
-                    BLACKBOX.blackboxDevice = parseInt($(".blackboxDevice select").val(), 10);
+                    BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
                     
                     MSP.send_message(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG), false, save_to_eeprom);
                 });
             }
             
-            populateLoggingRates();
-            populateDevices();
+            populateLoggingRates(loggingRatesSelect);
+            populateDevices(deviceSelect);
+
+            deviceSelect.change(function() {
+                if ($(this).val() === "0") {
+                    $("div.blackboxRate").hide();
+                } else {
+                    $("div.blackboxRate").show();
+                }
+            }).change();
             
             update_html();
             
@@ -162,8 +173,8 @@ TABS.onboard_logging.initialize = function (callback) {
         });
     }
     
-    function populateDevices() {
-        var deviceSelect = $(".blackboxDevice select").empty();
+    function populateDevices(deviceSelect) {
+        deviceSelect.empty();
         
         deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
         if (DATAFLASH.ready) {
@@ -177,7 +188,7 @@ TABS.onboard_logging.initialize = function (callback) {
         deviceSelect.val(BLACKBOX.blackboxDevice);
     }
     
-    function populateLoggingRates() {
+    function populateLoggingRates(loggingRatesSelect) {
         
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
         var 
@@ -192,8 +203,7 @@ TABS.onboard_logging.initialize = function (callback) {
                  {num: 1, denom: 8},
                  {num: 1, denom: 16},
                  {num: 1, denom: 32}
-            ],
-            loggingRatesSelect = $(".blackboxRate select");
+            ];
 
         var pidRate = 8000 / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom; 
         for (var i = 0; i < loggingRates.length; i++) {
