@@ -16,7 +16,7 @@ TABS.onboard_logging.initialize = function (callback) {
         self = this,
         saveCancelled, eraseCancelled;
 
-    if (GUI.active_tab != 'onboard_logging') {
+    if (GUI.active_tab !== 'onboard_logging') {
         GUI.active_tab = 'onboard_logging';
     }
 
@@ -58,7 +58,7 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function gcd(a, b) {
-        if (b == 0)
+        if (b === 0)
             return a;
         
         return gcd(b, a % b);
@@ -125,9 +125,9 @@ TABS.onboard_logging.initialize = function (callback) {
                 .toggleClass("sdcard-supported", SDCARD.supported)
                 .toggleClass("blackbox-config-supported", BLACKBOX.supported)
                 
-                .toggleClass("blackbox-supported", blackboxSupport == 'yes')
-                .toggleClass("blackbox-maybe-supported", blackboxSupport == 'maybe')
-                .toggleClass("blackbox-unsupported", blackboxSupport == 'no');
+                .toggleClass("blackbox-supported", blackboxSupport === 'yes')
+                .toggleClass("blackbox-maybe-supported", blackboxSupport === 'maybe')
+                .toggleClass("blackbox-unsupported", blackboxSupport === 'no');
 
             if (dataflashPresent) {
                 // UI hooks
@@ -140,21 +140,32 @@ TABS.onboard_logging.initialize = function (callback) {
                 $('.tab-onboard_logging a.save-flash-cancel').click(flash_save_cancel);
                 $('.tab-onboard_logging a.save-flash-dismiss').click(dismiss_saving_dialog);
             }
-            
+
+            var deviceSelect = $(".blackboxDevice select");
+            var loggingRatesSelect = $(".blackboxRate select");
+
             if (BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
-                    var rate = $(".blackboxRate select").val().split('/');
+                    var rate = loggingRatesSelect.val().split('/');
                     
                     BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
                     BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
-                    BLACKBOX.blackboxDevice = parseInt($(".blackboxDevice select").val(), 10);
+                    BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
                     
                     MSP.send_message(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG), false, save_to_eeprom);
                 });
             }
             
-            populateLoggingRates();
-            populateDevices();
+            populateLoggingRates(loggingRatesSelect);
+            populateDevices(deviceSelect);
+
+            deviceSelect.change(function() {
+                if ($(this).val() === "0") {
+                    $("div.blackboxRate").hide();
+                } else {
+                    $("div.blackboxRate").show();
+                }
+            }).change();
             
             update_html();
             
@@ -162,22 +173,22 @@ TABS.onboard_logging.initialize = function (callback) {
         });
     }
     
-    function populateDevices() {
-        var
-            deviceSelect = $(".blackboxDevice select").empty();
+    function populateDevices(deviceSelect) {
+        deviceSelect.empty();
         
-        deviceSelect.append('<option value="0">Serial port</option>');
+        deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
         if (DATAFLASH.ready) {
-            deviceSelect.append('<option value="1">On-board dataflash chip</option>');
+            deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
         }
         if (SDCARD.supported) {
-            deviceSelect.append('<option value="2">On-board SD card slot</option>');
+            deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
         }
-        
+        deviceSelect.append('<option value="3">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
+
         deviceSelect.val(BLACKBOX.blackboxDevice);
     }
     
-    function populateLoggingRates() {
+    function populateLoggingRates(loggingRatesSelect) {
         
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
         var 
@@ -191,17 +202,15 @@ TABS.onboard_logging.initialize = function (callback) {
                  {num: 1, denom: 7},
                  {num: 1, denom: 8},
                  {num: 1, denom: 16},
-                 {num: 1, denom: 32},
-            ],
-            loggingRatesSelect = $(".blackboxRate select");
-        
-        var addedCurrentValue = false;
+                 {num: 1, denom: 32}
+            ];
+
         var pidRate = 8000 / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom; 
         for (var i = 0; i < loggingRates.length; i++) {
         	var loggingRate = Math.round(pidRate / loggingRates[i].denom);
         	var loggingRateUnit = " Hz";
-        	if (loggingRate != Infinity) {
-                if (gcd(loggingRate, 1000)==1000) {
+        	if (loggingRate !== Infinity) {
+                if (gcd(loggingRate, 1000) === 1000) {
                     loggingRate /= 1000;
                     loggingRateUnit = " KHz";	
                 }
@@ -260,12 +269,12 @@ TABS.onboard_logging.initialize = function (callback) {
         update_bar_width($(".tab-onboard_logging .sdcard-other"), SDCARD.totalSizeKB - SDCARD.freeSizeKB, SDCARD.totalSizeKB, "Unavailable space", true);
         update_bar_width($(".tab-onboard_logging .sdcard-free"), SDCARD.freeSizeKB, SDCARD.totalSizeKB, "Free space for logs", true);
 
-        $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", DATAFLASH.usedSize == 0);
+        $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", DATAFLASH.usedSize === 0);
         
         $(".tab-onboard_logging")
-            .toggleClass("sdcard-error", SDCARD.state == MSP.SDCARD_STATE_FATAL)
-            .toggleClass("sdcard-initializing", SDCARD.state == MSP.SDCARD_STATE_CARD_INIT || SDCARD.state == MSP.SDCARD_STATE_FS_INIT)
-            .toggleClass("sdcard-ready", SDCARD.state == MSP.SDCARD_STATE_READY);
+            .toggleClass("sdcard-error", SDCARD.state === MSP.SDCARD_STATE_FATAL)
+            .toggleClass("sdcard-initializing", SDCARD.state === MSP.SDCARD_STATE_CARD_INIT || SDCARD.state === MSP.SDCARD_STATE_FS_INIT)
+            .toggleClass("sdcard-ready", SDCARD.state === MSP.SDCARD_STATE_READY);
         
         switch (SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
@@ -358,7 +367,7 @@ TABS.onboard_logging.initialize = function (callback) {
                     show_saving_dialog();
                     
                     function onChunkRead(chunkAddress, chunkDataView) {
-                        if (chunkDataView != null) {
+                        if (chunkDataView !== null) {
                             // Did we receive any data?
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
@@ -411,7 +420,7 @@ TABS.onboard_logging.initialize = function (callback) {
             if (error) {
                 console.error(error.message);
                 
-                if (error.message != "User cancelled") {
+                if (error.message !== "User cancelled") {
                     GUI.log(chrome.i18n.getMessage('dataflashFileWriteFailed'));
                 }
                 return;
