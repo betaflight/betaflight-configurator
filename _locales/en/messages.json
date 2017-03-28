@@ -1172,6 +1172,9 @@
     "adjustmentsFunction23": {
         "message": "D Setpoint Transition"
     },
+    "adjustmentsFunction24": {
+        "message": "Horizon Strength Adjustment"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },
