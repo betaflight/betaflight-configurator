@@ -296,7 +296,9 @@ var FC = {
 
         TRANSPONDER = {
             supported: false,
-            data: []
+            data: [],
+            provider: 0,
+            providers: []
         };
 
         RC_DEADBAND_CONFIG = {

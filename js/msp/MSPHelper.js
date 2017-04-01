@@ -986,9 +986,38 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log("Blackbox config saved");
                 break;
             case MSPCodes.MSP_TRANSPONDER_CONFIG:
-                TRANSPONDER.supported = (data.readU8() & 1) != 0;
+                var bytesRemaining = data.byteLength;
+                if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                    var providerCount = data.readU8();
+                    bytesRemaining--;
+                    
+                    TRANSPONDER.supported = providerCount > 0;
+                    TRANSPONDER.providers = [];
+                    
+                    for (var i = 0; i < providerCount; i++) {
+                        var provider = {
+                            id: data.readU8(),
+                            dataLength: data.readU8()
+                        };
+                        bytesRemaining -= 2;
+                        
+                        TRANSPONDER.providers.push(provider);
+                    }
+                    TRANSPONDER.provider = data.readU8();
+                    bytesRemaining--;
+                    
+                } else {
+                    TRANSPONDER.supported = (data.readU8() & 1) != 0;
+                    bytesRemaining--;
+                    
+                    // only ILAP was supported prior to 1.33.0
+                    TRANSPONDER.providers = [{
+                        id: 1, // ILAP 
+                        dataLength: 6  
+                    }];
+                    TRANSPONDER.provider = TRANSPONDER.providers[0].id;
+                }
                 TRANSPONDER.data = [];
-                var bytesRemaining = data.byteLength - 1;
                 for (var i = 0; i < bytesRemaining; i++) {
                     TRANSPONDER.data.push(data.readU8());
                 }
@@ -1256,6 +1285,9 @@ MspHelper.prototype.crunch = function(code) {
             break;
 
         case MSPCodes.MSP_SET_TRANSPONDER_CONFIG:
+            if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                buffer.push8(TRANSPONDER.provider); // 
+            }
             for (var i = 0; i < TRANSPONDER.data.length; i++) {
                 buffer.push8(TRANSPONDER.data[i]);
             }
