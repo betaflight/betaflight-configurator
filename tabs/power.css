@@ -1,0 +1,80 @@
+#tab-power-templates {
+    display: none;
+}
+
+.tab-power td.configuration {
+    padding-top: 5px;
+    text-align: left;
+    width: 50%;
+    padding-left: 20px;
+}
+
+.tab-power .battery-state .configuration {
+    border-bottom: 0px;
+}
+
+.tab-power td.value {
+    text-align: left;
+    width: 20%;
+}
+
+.tab-power .number input {
+    width: 50px;
+    padding-left: 3px;
+    height: 20px;
+    line-height: 20px;
+    text-align: left;
+    border: 1px solid silver;
+    border-radius: 3px;
+    margin-right: 11px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+
+.tab-power .spacer_box {
+    padding-bottom: 10px;
+    float: left;
+    width: calc(100% - 20px);
+}
+
+.tab-power .number,
+.tab-power .select
+ {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    float: left;
+}
+
+.tab-power .battery-configuration select {
+    border: 1px solid silver;
+    margin-right: 5px;
+    float: left;
+    width: 150px;
+}
+
+.tab-power .number:last-child,
+.tab-power .select:last-child {
+    border-bottom: none;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.tab-power .require-support {
+    display: none;
+}
+
+.tab-power.supported .require-support {
+    display: block;
+}
+
+.tab-power .require-upgrade {
+    display: block;
+}
+
+.tab-power.supported .require-upgrade {
+    display: none;
+}

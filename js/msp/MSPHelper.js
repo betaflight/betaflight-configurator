@@ -158,27 +158,29 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 ANALOG.amperage = data.read16() / 100; // A
                 ANALOG.last_received_timestamp = Date.now();
                 break;
-//            case MSPCodes.MSP_VOLTAGE_METERS:
-//                VOLTAGE_METERS = [];
-//                for (var i = 0; i < (message_length); i++) {
-//                    var voltageMeter = {};
-//                    voltageMeter.voltage = data.readU8() / 10.0;
-//                    
-//                    VOLTAGE_METERS.push(voltageMeter)
-//                }
-//                break;
-//            case MSPCodes.MSP_CURRENT_METERS:
-//                CURRENT_METERS = [];
-//                for (var i = 0; i < (message_length / 6); i++) {
-//                    var amperageMeter = {};
-//                    amperageMeter.amperage = data.read16() / 1000; // A
-//                    offset += 2;
-//                    amperageMeter.mAhDrawn = data.readU32(); // A
-//                    offset += 4;
-//                    
-//                    CURRENT_METERS.push(amperageMeter);
-//                }
-//                break;
+            case MSPCodes.MSP_VOLTAGE_METERS:
+                VOLTAGE_METERS = [];
+                var voltageMeterLength = 2;
+                for (var i = 0; i < (data.byteLength / voltageMeterLength); i++) {
+                    var voltageMeter = {};
+                    voltageMeter.id = data.readU8();
+                    voltageMeter.voltage = data.readU8() / 10.0;
+                    
+                    VOLTAGE_METERS.push(voltageMeter)
+                }
+                break;
+            case MSPCodes.MSP_CURRENT_METERS:
+                CURRENT_METERS = [];
+                var currentMeterLength = 5;
+                for (var i = 0; i < (data.byteLength / currentMeterLength); i++) {
+                    var currentMeter = {};
+                    currentMeter.id = data.readU8();
+                    currentMeter.mAhDrawn = data.readU16(); // mAh
+                    currentMeter.amperage = data.readU16() / 1000; // A
+                    
+                    CURRENT_METERS.push(currentMeter);
+                }
+                break;
             case MSPCodes.MSP_BATTERY_STATE:
                 BATTERY_STATE.cellCount = data.readU8();
                 BATTERY_STATE.capacity = data.readU16(); // mAh
@@ -1232,7 +1234,7 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
                 .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
                 .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10))
-                .push16(BATTERY_CONFIG.batterycapacity)
+                .push16(BATTERY_CONFIG.capacity)
                 .push8(BATTERY_CONFIG.voltageMeterSource)
                 .push8(BATTERY_CONFIG.currentMeterSource);
             break;

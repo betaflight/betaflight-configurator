@@ -100,6 +100,9 @@
     "tabOsd": {
         "message": "OSD"
     },
+    "tabPower": {
+        "message": "Power & Battery"
+    },
     "tabGPS": {
         "message": "GPS"
     },
@@ -555,6 +558,9 @@
     },
     "featureOSD": {
         "message": "On Screen Display"
+    },
+    "featureVTX": {
+        "message": "Video Transmitter"
     },
     "featureFAILSAFE": {
         "message": "Enable Failsafe Stage 2"
@@ -1885,6 +1891,128 @@
     "failsafeKillSwitchHelp": {
         "message": "Set this option to make the failsafe switch, configured in the modes tab, act as a direct kill switch, bypassing the selected failsafe procedure. <strong>Note:</strong> Arming is blocked with the failsafe kill switch in the ON position"
     },
+        "powerFirmwareUpgradeRequired": {
+        "message": "Firmware upgrade <span style=\"color: red\">required</span>.  Battery/Amperage/Voltage configurations using API &lt; 1.22.0 is not supported."
+    },
+
+    "powerButtonSave": {
+        "message": "Save"
+    },
+
+    "powerVoltageHead": {
+        "message": "Voltage"
+    },
+    "powerVoltageValue": {
+        "message": "$1 V"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
+    },    
+    "powerVoltageId10": {
+        "message": "Battery"
+    },
+    "powerVoltageId20": {
+        "message": "5V"
+    },
+    "powerVoltageId30": {
+        "message": "9V"
+    },
+    "powerVoltageId40": {
+        "message": "12V"
+    },
+    "powerVoltageId50": {
+        "message": "ESC Combined"
+    },
+    "powerVoltageId60": {
+        "message": "ESC Motor 1"
+    },
+    "powerVoltageId61": {
+        "message": "ESC Motor 2"
+    },
+    "powerVoltageId62": {
+        "message": "ESC Motor 3"
+    },
+    "powerVoltageId63": {
+        "message": "ESC Motor 4"
+    },
+    "powerVoltageId80": {
+        "message": "Cell 1"
+    },
+    "powerVoltageId81": {
+        "message": "Cell 2"
+    },
+    "powerVoltageId82": {
+        "message": "Cell 3"
+    },
+    "powerVoltageId83": {
+        "message": "Cell 4"
+    },
+    "powerVoltageId84": {
+        "message": "Cell 5"
+    },
+    "powerVoltageId85": {
+        "message": "Cell 6"
+    },
+    
+
+    "powerVoltageScale": {
+        "message": "Scale"
+    },
+    "powerVoltageDivider": {
+        "message": "Divider Value"
+    },
+    "powerVoltageMultiplier": {
+        "message": "Multiplier Value"
+    },
+
+    "powerAmperageHead": {
+        "message": "Amperage"
+    },
+    "powerAmperageId10": {
+        "message": "Battery"
+    },
+    "powerAmperageId50": {
+        "message": "ESC Combined"
+    },
+    "powerAmperageId80": {
+        "message": "Virtual"
+    },
+    "powerMahValue": {
+        "message": "$1 mAh"
+    },
+    
+    "powerAmperageScale": {
+        "message": "Scale the output voltage to milliamps [1/10th mV/A]"
+    },
+    "powerAmperageOffset": {
+        "message": "Offset in millivolt steps"
+    },
+    
+    "powerBatteryHead": {
+        "message": "Battery"
+    },
+    "powerBatteryConnected": {
+        "message": "Connected"
+    },
+    "powerBatteryConnectedValueYes": {
+        "message": "Yes (Cells: $1)"
+    },
+    "powerBatteryConnectedValueNo": {
+        "message": "No"
+    },
+    "powerBatteryVoltage": {
+        "message": "Voltage"
+    },
+    "powerBatteryCurrentDrawn": {
+        "message": "mAh used"
+    },
+    "powerBatteryAmperage": {
+        "message": "Amperage"
+    },
+    "powerBatteryCapacity": {
+        "message": "Capacity (mAh)"
+    },
+
     "mainHelpArmed": {
         "message": "Motor Arming"
     },

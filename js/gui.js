@@ -21,6 +21,7 @@ var GUI_control = function () {
         'failsafe',
         'transponder',
         'osd',
+        'power',
         'adjustments',
         'auxiliary',
         'cli',

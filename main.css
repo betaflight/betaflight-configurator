@@ -811,6 +811,19 @@ li.active .ic_transponder {
     background-image: url(images/icons/icon_osd_white.svg);
 }
 
+.ic_power {
+    background-image: url(images/icons/cf_icon_power_grey.svg);
+    background-position-y: 9px;
+}
+
+.ic_power:hover {
+    background-image: url(images/icons/cf_icon_power_white.svg);
+}
+
+li.active .ic_power {
+    background-image: url(images/icons/cf_icon_power_white.svg);
+}
+
 /* SPARE Tab-Icons */
 .ic_failsafe {
     background-image: url(images/icons/cf_icon_failsafe_grey.svg);
