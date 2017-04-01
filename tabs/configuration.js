@@ -106,36 +106,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_name() {
-        var next_callback = load_battery;
+        var next_callback = load_rx_config;
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
-        } else {
-            next_callback();
-        }
-    }
-
-    function load_battery() {
-        var next_callback = load_voltage;
-        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-            MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false, next_callback);
-        } else {
-            next_callback();
-        }
-    }
-
-    function load_voltage() {
-        var next_callback = load_current;
-        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-            MSP.send_message(MSPCodes.MSP_VOLTAGE_METER_CONFIG, false, false, next_callback);
-        } else {
-            next_callback();
-        }
-    }
-
-    function load_current() {
-        var next_callback = load_rx_config;
-        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-            MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -148,14 +121,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         } else {
             next_callback();
         }
-    }
-
-    //Update Analog/Battery Data
-    function load_analog() {
-        MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
-	    $('input[name="batteryvoltage"]').val([ANALOG.voltage.toFixed(1)]);
-	    $('input[name="batterycurrent"]').val([ANALOG.amperage.toFixed(2)]);
-            });
     }
 
     function load_html() {
@@ -523,67 +488,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[name="maxthrottle"]').val(MOTOR_CONFIG.maxthrottle);
         $('input[name="mincommand"]').val(MOTOR_CONFIG.mincommand);
 
-        // fill battery
-        if (semver.lt(CONFIG.apiVersion, "1.33.0")) {
-            $('div.battery').hide();
-        } else {
-            var batteryMeterTypes = [
-                'None',
-                'Onboard ADC',
-                'ESC Sensor'
-            ];
-
-            var batteryMeterType_e = $('select.batterymetertype');
-            for (i = 0; i < batteryMeterTypes.length; i++) {
-                batteryMeterType_e.append('<option value="' + i + '">' + batteryMeterTypes[i] + '</option>');
-            }
-
-            batteryMeterType_e.change(function () {
-                BATTERY_CONFIG.voltageMeterSource = parseInt($(this).val());
-                checkUpdateVbatControls();
-            });
-            batteryMeterType_e.val(BATTERY_CONFIG.voltageMeterSource).change();
-
-            $('input[name="mincellvoltage"]').val(BATTERY_CONFIG.vbatmincellvoltage);
-            $('input[name="maxcellvoltage"]').val(BATTERY_CONFIG.vbatmaxcellvoltage);
-            $('input[name="warningcellvoltage"]').val(BATTERY_CONFIG.vbatwarningcellvoltage);
-
-        
-            // FIXME move
-            //$('input[name="voltagescale"]').val(MISC.vbatscale);
-    
-            // fill current
-            var currentMeterTypes = [
-                'None',
-                'Onboard ADC',
-                'Virtual',
-                'ESC Sensor'
-            ];
-    
-            var currentMeterType_e = $('select.currentMeterSource');
-            for (i = 0; i < currentMeterTypes.length; i++) {
-                currentMeterType_e.append('<option value="' + i + '">' + currentMeterTypes[i] + '</option>');
-            }
-    
-            currentMeterType_e.change(function () {
-                BATTERY_CONFIG.currentMeterSource = parseInt($(this).val());
-                checkUpdateCurrentControls();
-            });
-            currentMeterType_e.val(BATTERY_CONFIG.currentMeterSource).change();
-    
-            // FIXME this is a hack - just for display purposes until the battery code is moved to a new tab. 
-            var meter = CURRENT_METER_CONFIGS[0];
-            
-            var currentScale_e = $('input[name="currentscale"]');
-            currentScale_e.val(meter.scale);
-            currentScale_e.prop("disabled", true);
-            
-            var currentOffset_e = $('input[name="currentoffset"]');
-            currentOffset_e.val(meter.offset);
-            currentOffset_e.prop("disabled", true);
-
-        }
-
         //fill 3D
         if (semver.lt(CONFIG.apiVersion, "1.14.0")) {
             $('.tab-configuration ._3d').hide();
@@ -607,48 +511,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.serialRXBox').show();
             } else {
                 $('div.serialRXBox').hide();
-            }
-        }
-
-        function checkUpdateVbatControls() {
-            // FIXME move
-            if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-                $('.battery').show();
-                $('select.batterymetertype').show();
-
-                if (BATTERY_CONFIG.voltageMeterSource !== 0) {
-                    $('.vbatCalibration').hide();
-                }
-            } else {
-                $('.battery').hide();
-            }
-        }
-
-        function checkUpdateCurrentControls() {
-            // FIXME move
-            if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-                $('.currentMonitoring').show();
-
-                switch(BATTERY_CONFIG.currentMeterSource) {
-                    case 1: // ADC
-                        $('.currentCalibration').show();
-                        $('.currentOutput').show();
-
-                        break;
-                        
-                    case 0: // None
-                    case 2: // Virtual / FIXME not supported yet
-                        $('.currentCalibration').hide();
-                        $('.currentOutput').hide();
-                        break;
-                        
-                    case 3: // ESC
-                        $('.currentCalibration').hide();
-                        $('.currentOutput').show();
-                        break;
-                }
-            } else {
-                $('.currentMonitoring').hide();
             }
         }
 
@@ -677,24 +539,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             switch (element.attr('name')) {
                 case 'MOTOR_STOP':
                     checkShowDisarmDelay();
-
                     break;
-                case 'VBAT':
-                    checkUpdateVbatControls();
 
-                    break;
-                case 'CURRENT_METER':
-                    checkUpdateCurrentControls();
-
-                    break;
                 case 'GPS':
                     checkUpdateGpsControls();
-
                     break;
+                    
                 case '3D':
                     checkUpdate3dControls();
-
                     break;
+                    
                 default:
                     break;
             }
@@ -718,8 +572,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         checkShowDisarmDelay();
         checkShowSerialRxBox();
-        checkUpdateVbatControls();
-        checkUpdateCurrentControls();
         checkUpdateGpsControls();
         checkUpdate3dControls();
 
@@ -750,20 +602,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
             MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
             MOTOR_CONFIG.mincommand = parseInt($('input[name="mincommand"]').val());
-
-            if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
-                BATTERY_CONFIG.vbatmincellvoltage = parseFloat($('input[name="mincellvoltage"]').val());
-                BATTERY_CONFIG.vbatmaxcellvoltage = parseFloat($('input[name="maxcellvoltage"]').val());
-                BATTERY_CONFIG.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
-                
-                // FIXME move
-                //MISC.vbatscale = parseInt($('input[name="voltagescale"]').val());
-    
-                // FIXME this is a hack 
-                var meter = CURRENT_METER_CONFIGS[0];
-                meter.currentscale = parseInt($('input[name="currentscale"]').val());
-                meter.currentoffset = parseInt($('input[name="currentoffset"]').val());
-            }
 
             if(semver.gte(CONFIG.apiVersion, "1.14.0")) {
                 MOTOR_3D_CONFIG.deadband3d_low = parseInt($('input[name="3ddeadbandlow"]').val());
@@ -854,43 +692,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_rx_config() {
-                var next_callback = save_battery;
+                var next_callback = save_to_eeprom;
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }
             }
-
-            function save_battery() {
-                var next_callback = save_to_eeprom;
-                if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG), false, next_callback);
-                } else {
-                    next_callback();
-                }
-            }
-
-            // FIXME voltage/current configuation saving not implemented for >= 1.33.0 and broken/disabled for <= 1.33.0
-            
-//            function save_voltage() {
-//                var next_callback = save_current;
-//                if (semver.lt(CONFIG.apiVersion, "1.33.0")) {
-//                    MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, next_callback);
-//                } else {
-//                    next_callback();
-//                }
-//            }
-//
-//            function save_current() {
-//                var next_callback = save_to_eeprom;
-//                if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-//                    MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
-//                } else {
-//                    next_callback();
-//                }
-//            }
-
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
@@ -930,7 +738,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         GUI.interval_add('status_pull', function status_pull() {
             MSP.send_message(MSPCodes.MSP_STATUS);
         }, 250, true);
-        GUI.interval_add('config_load_analog', load_analog, 250, true); // 4 fps
         GUI.content_ready(callback);
     }
 };

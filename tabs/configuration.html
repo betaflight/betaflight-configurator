@@ -379,7 +379,6 @@
                     <span i18n="configurationSerialRX"></span>
                 </div>
             </div>
-        
         </div>
         <div class="rightWrapper rssi">
             <div class="gui_box grey" style="margin-bottom:20px;">
@@ -405,85 +404,7 @@
         </div>
         <div class="clear-both"></div>
 
-        <!-- FIXME move current voltage battery to new tab -->
-        <div class="leftWrapper current voltage battery">
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationBattery"></div>
-                </div>
-                <div class="spacer_box">
-                    <div class="select batterymetertype vbatmonitoring">
-                        <label>
-                            <select class="batterymetertype"><!-- list generated here --></select>
-                            <span i18n="configurationBatteryVoltageMeterSource"></span>
-                        </label>
-                    </div>
-                    <div class="select currentMonitoring">
-                        <label>
-                            <select class="currentMeterSource"><!-- list generated here --></select>
-                            <span i18n="configurationBatteryCurrentMeterSource"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="mincellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryMinimum"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="maxcellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryMaximum"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="warningcellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryWarning"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationVoltage"></div>
-                </div>
-                <div class="spacer_box">
-                    <!-- FIXME move
-                    <div class="number vbatmonitoring vbatCalibration">
-                        <label> <input type="number" name="voltagescale" step="1" min="10" max="255" /> <span
-                            i18n="configurationBatteryScale"></span>
-                        </label>
-                    </div>
-                    -->
-                    <div class="number vbatmonitoring">
-                        <label> <input type="text" name="batteryvoltage" readonly class="disabled" /> <span
-                            i18n="configurationVoltage"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationCurrent"></div>
-                </div>
-                <div class="spacer_box">
-                    <div class="number currentMonitoring currentCalibration">
-                        <label> <input type="number" name="currentscale" step="1" min="-16000" max="16000" /> <span
-                            i18n="configurationCurrentScale"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentCalibration">
-                        <label> <input type="number" name="currentoffset" step="1" min="-1600" max="16000" /> <span
-                            i18n="configurationCurrentOffset"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentOutput">
-                        <label> <input type="text" name="batterycurrent" readonly class="disabled" /> <span
-                            i18n="configurationBatteryCurrent"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="rightWrapper gps">
+        <div class="leftWrapper gps">
             <div class="gui_box grey gps">
                 <div class="gui_box_titlebar">
                     <div class="spacer_box_title" i18n="configurationGPS"></div>

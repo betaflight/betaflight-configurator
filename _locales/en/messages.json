@@ -673,42 +673,6 @@
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
-    "configurationBattery": {
-        "message": "Battery"
-    },
-    "configurationVoltage": {
-        "message": "Voltage"
-    },
-    "configurationCurrent": {
-        "message": "Current"
-    },
-    "configurationBatteryVoltageMeterSource": {
-        "message": "Voltage Meter Source"
-    },
-    "configurationBatteryMinimum": {
-        "message": "Minimum Cell Voltage"
-    },
-    "configurationBatteryMaximum": {
-        "message": "Maximum Cell Voltage"
-    },
-    "configurationBatteryWarning": {
-        "message": "Warning Cell Voltage"
-    },
-    "configurationBatteryScale": {
-        "message": "Voltage Scale"
-    },
-    "configurationBatteryCurrentMeterSource": {
-        "message": "Current Meter Source"
-    },
-    "configurationCurrent": {
-        "message": "Current Sensor"
-    },
-    "configurationCurrentScale": {
-        "message": "Scale the output voltage to milliamps [1/10th mV/A]"
-    },
-    "configurationCurrentOffset": {
-        "message": "Offset in millivolt steps"
-    },
     "configuration3d": {
         "message": "3D ESC/Motor Features"
     },
@@ -1891,14 +1855,28 @@
     "failsafeKillSwitchHelp": {
         "message": "Set this option to make the failsafe switch, configured in the modes tab, act as a direct kill switch, bypassing the selected failsafe procedure. <strong>Note:</strong> Arming is blocked with the failsafe kill switch in the ON position"
     },
-        "powerFirmwareUpgradeRequired": {
-        "message": "Firmware upgrade <span style=\"color: red\">required</span>.  Battery/Amperage/Voltage configurations using API &lt; 1.22.0 is not supported."
-    },
-
+    
     "powerButtonSave": {
         "message": "Save"
     },
-
+    "powerFirmwareUpgradeRequired": {
+        "message": "Firmware upgrade <span style=\"color: red\">required</span>.  Battery/Amperage/Voltage configurations using API &lt; 1.22.0 is not supported."
+    },
+    "powerBatteryVoltageMeterSource": {
+        "message": "Voltage Meter Source"
+    },
+    "powerBatteryCurrentMeterSource": {
+        "message": "Current Meter Source"
+    },
+    "powerBatteryMinimum": {
+        "message": "Minimum Cell Voltage"
+    },
+    "powerBatteryMaximum": {
+        "message": "Maximum Cell Voltage"
+    },
+    "powerBatteryWarning": {
+        "message": "Warning Cell Voltage"
+    },
     "powerVoltageHead": {
         "message": "Voltage"
     },
