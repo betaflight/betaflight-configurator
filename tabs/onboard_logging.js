@@ -86,7 +86,7 @@ TABS.onboard_logging.initialize = function (callback) {
              * 
              * The best we can do on those targets is check the BLACKBOX feature bit to identify support for Blackbox instead.
              */
-            if ((BLACKBOX.supported || DATAFLASH.supported) && FEATURE_CONFIG.features.isEnabled('BLACKBOX')) {
+            if ((BLACKBOX.supported || DATAFLASH.supported) && (semver.gte(CONFIG.apiVersion, "1.33.0") || FEATURE_CONFIG.features.isEnabled('BLACKBOX'))) {
                 blackboxSupport = 'yes';
             } else {
                 blackboxSupport = 'no';
@@ -149,15 +149,25 @@ TABS.onboard_logging.initialize = function (callback) {
     
     function populateDevices(deviceSelect) {
         deviceSelect.empty();
-        
-        deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
-        if (DATAFLASH.ready) {
-            deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+
+        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
+            if (DATAFLASH.ready) {
+                deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+            }
+            if (SDCARD.supported) {
+                deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+            }
+            deviceSelect.append('<option value="3">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
+        } else {
+            deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
+            if (DATAFLASH.ready) {
+                deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+            }
+            if (SDCARD.supported) {
+                deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+            }
         }
-        if (SDCARD.supported) {
-            deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
-        }
-        deviceSelect.append('<option value="3">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
 
         deviceSelect.val(BLACKBOX.blackboxDevice);
     }
