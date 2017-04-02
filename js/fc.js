@@ -1,9 +1,8 @@
 'use strict';
 
 // define all the global variables that are uses to hold FC state
-var CONFIG; // FIXME rename to STATUS
+var CONFIG;
 var FEATURE_CONFIG;
-//var BF_CONFIG; // FIXME remove all references to this and delete it
 var MIXER_CONFIG;
 var BOARD_ALIGNMENT_CONFIG;
 var LED_STRIP;
@@ -39,7 +38,6 @@ var MOTOR_CONFIG;
 var GPS_CONFIG;
 var COMPASS_CONFIG;
 var RSSI_CONFIG;
-//var MISC; // FIXME remove all references to this and delete it
 var MOTOR_3D_CONFIG;
 var DATAFLASH;
 var SDCARD;
@@ -92,19 +90,6 @@ var FC = {
             yaw:                    0,
         };
         
-        // FIXME remove all references to this and delete it
-//        BF_CONFIG = {
-//            mixer:     0,
-//            features:               new Features(CONFIG),
-//            board_align_roll:       0,
-//            board_align_pitch:      0,
-//            board_align_yaw:        0,
-//            currentscale:           0,
-//            currentoffset:          0,
-//            currentMeterSource:       0,
-//            batterycapacity:        0,
-//        };
-
         LED_STRIP = [];
         LED_COLORS = [];
         LED_MODE_COLORS = [];
@@ -244,26 +229,6 @@ var FC = {
         RSSI_CONFIG = {
             channel:                0,
         };
-
-        // FIXME remove all references to this and delete it
-//        MISC = {
-//            minthrottle:            0,
-//            maxthrottle:            0,
-//            mincommand:             0,
-//            failsafe_throttle:      0,
-//            gps_type:               0,
-//            gps_baudrate:           0,
-//            gps_ubx_sbas:           0,
-//            multiwiicurrentoutput:  0,
-//            rssi_channel:           0,
-//            placeholder2:           0,
-//            mag_declination:        0, // not checked
-//            vbatscale:              0,
-//            vbatmincellvoltage:     0,
-//            vbatmaxcellvoltage:     0,
-//            vbatwarningcellvoltage: 0,
-//            batterymetertype:       1, // 1=ADC, 2=ESC
-//        };
         
         MOTOR_3D_CONFIG = {
             deadband3d_low:         0,
