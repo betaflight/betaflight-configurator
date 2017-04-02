@@ -25,6 +25,7 @@ SYM.PB_FULL = 0x8B;
 SYM.PB_EMPTY = 0x8D;
 SYM.PB_END = 0x8E;
 SYM.PB_CLOSE = 0x8F;
+SYM.BATTERY = 0x96;
 
 var FONT = FONT || {};
 
@@ -246,7 +247,7 @@ OSD.constants = {
       name: 'MAIN_BATT_VOLTAGE',
       default_position: -29,
       positionable: true,
-      preview: FONT.symbol(SYM.VOLT) + '16.8'
+      preview: FONT.symbol(SYM.BATTERY) + '16.8' + FONT.symbol(SYM.VOLT)
     },
     RSSI_VALUE: {
       name: 'RSSI_VALUE',
@@ -276,7 +277,7 @@ OSD.constants = {
       name: 'VTX_CHANNEL',
       default_position: 1,
       positionable: true,
-      preview: 'CH:1'
+      preview: 'R:2'
     },
     VOLTAGE_WARNING: {
       name: 'VOLTAGE_WARNING',
@@ -327,7 +328,7 @@ OSD.constants = {
       name: 'CRAFT_NAME',
       default_position: -77,
       positionable: true,
-      preview: '[CRAFT_NAME]'
+      preview: 'CRAFT_NAME'
     },
     ALTITUDE: {
       name: 'ALTITUDE',
@@ -341,13 +342,13 @@ OSD.constants = {
       name: 'ONTIME',
       default_position: -1,
       positionable: true,
-      preview: FONT.symbol(SYM.ON_M) + '  4:11'
+      preview: FONT.symbol(SYM.ON_M) + '05:42'
     },
     FLYTIME: {
       name: 'FLYTIME',
       default_position: -1,
       positionable: true,
-      preview: FONT.symbol(SYM.FLY_M) + '  4:11'
+      preview: FONT.symbol(SYM.FLY_M) + '04:11'
     },
     FLYMODE: {
       name: 'FLYMODE',
@@ -407,7 +408,7 @@ OSD.constants = {
       name: 'AVG_CELL_VOLTAGE',
       default_position: 12 << 5,
       positionable: true,
-      preview: '3.98V'
+      preview: FONT.symbol(SYM.BATTERY) + '3.98' + FONT.symbol(SYM.VOLT)
     },
     PITCH_ANGLE: {
       name: 'PITCH_ANGLE',
