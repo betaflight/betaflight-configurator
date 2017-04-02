@@ -271,6 +271,9 @@ function onConnect() {
 
         $('#tabs ul.mode-connected').show();
 
+        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
+        }
         MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
