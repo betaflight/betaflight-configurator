@@ -221,7 +221,7 @@ function onOpen(openInfo) {
                                         $('#tabs ul.mode-connected .tab_setup a').click();
                                     });
                                 });
-                            });
+                            }
                         });
                     } else {
                         GUI.show_modal(chrome.i18n.getMessage('warningTitle'),
