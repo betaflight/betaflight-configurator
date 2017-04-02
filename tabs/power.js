@@ -44,7 +44,7 @@ TABS.power.initialize = function (callback) {
         $('#content').load("./tabs/power.html", process_html);
     }
     
-    this.supported = semver.gte(CONFIG.apiVersion, "1.22.0");
+    this.supported = semver.gte(CONFIG.apiVersion, "1.33.0");
 
     if (!this.supported) {
         load_html();
