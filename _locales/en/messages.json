@@ -712,6 +712,12 @@
     "configurationGPSubxSbas": {
         "message": "Ground Assistance Type"
     },
+    "configurationGPSAutoBaud": {
+        "message": "Auto Baud"
+    },
+    "configurationGPSAutoConfig": {
+        "message": "Auto Config"
+    },
     "configurationGPSHelp": {
         "message": "<strong>Note:</strong> Remember to configure a Serial Port (via Ports tab) when using GPS feature."
     },

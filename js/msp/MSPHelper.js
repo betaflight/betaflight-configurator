@@ -329,6 +329,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_GPS_CONFIG:
                 GPS_CONFIG.provider = data.readU8();
                 GPS_CONFIG.ublox_sbas = data.readU8();
+                if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+                    GPS_CONFIG.auto_config = data.readU8();
+                    GPS_CONFIG.auto_baud = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
                 RSSI_CONFIG.channel = data.readU8();
@@ -1213,6 +1217,10 @@ MspHelper.prototype.crunch = function(code) {
         case MSPCodes.MSP_SET_GPS_CONFIG:
             buffer.push8(GPS_CONFIG.provider)
                 .push8(GPS_CONFIG.ublox_sbas);
+            if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+                buffer.push8(GPS_CONFIG.auto_config)
+                    .push8(GPS_CONFIG.auto_baud);
+            }
             break;
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
             buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));

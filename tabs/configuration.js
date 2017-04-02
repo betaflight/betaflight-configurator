@@ -408,6 +408,15 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         gps_protocol_e.val(GPS_CONFIG.provider);
 
+        $('input[name="gps_auto_baud"]').prop('checked', GPS_CONFIG.auto_baud == 1);
+        $('input[name="gps_auto_config"]').prop('checked', GPS_CONFIG.auto_config == 1);
+        if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+            $('.select.gps_auto_baud').show();
+            $('.select.gps_auto_config').show();
+        } else {
+            $('.select.gps_auto_baud').hide();
+            $('.select.gps_auto_config').hide();
+        }
 
         var gps_baudrate_e = $('select.gps_baudrate');
         for (var i = 0; i < gpsBaudRates.length; i++) {
@@ -690,6 +699,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_gps_config() {
+                if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+                    GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
+                    GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
+                }
+
                 var next_callback = save_compass_config;
                 if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG), false, next_callback);
@@ -736,11 +750,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_sensor_config() {
-                var next_callback = save_name;
-
                 SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
                 SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
                 SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
+                
+                var next_callback = save_name;
                 MSP.send_message(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG), false, next_callback);
             }
 

@@ -232,6 +232,8 @@ var FC = {
         GPS_CONFIG = {
             provider:               0,
             ublox_sbas:             0,
+            auto_config:            0,
+            auto_baud:              0,
         };
         
         COMPASS_CONFIG = {
