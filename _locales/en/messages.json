@@ -839,9 +839,6 @@
     "receiverRcInterpolationIntervalHelp": {
         "message": "Interpolation interval for manual RC interpolation mode in milliseconds"
     },
-    "receiverRcInterpolation": {
-        "message": "RC Interpolation"
-    },
     "receiverRcInterpolationOff": {
         "message": "Off"
     },
@@ -1182,23 +1179,47 @@
     "transponderNotSupported": {
         "message": "Your flight controller's firmware does not support transponder functionality."
     },
-    "transponderHelp": {
-        "message": "Configure your transponder code here.  Note: Only valid codes will be recognised by race timing systems.  Valid transponder codes can be obtained from <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a>."
-    },
     "transponderInformation": {
         "message": "Transponders systems allow race organizers to time your laps.  The transponder is fitted to your aircraft and when your aircraft passes the timing gate the track-side receiver registers your code and records your laptime.  When fitting an IR based transponder your should ensure that it points outward from your aircraft towards the track-side receivers and that the light beam is not obstructed by your airframe, battery-straps, cables, propellers, etc."
     },
-    "transponderConfiguration": {
-        "message": "Configuration"
+    "transponderConfigurationType": {
+        "message": "Transponder type"
     },
-    "transponderData": {
+    "transponderType0": {
+        "message": "None"
+    },
+    "transponderType1": {
+        "message": "iLap"
+    },
+    "transponderType2": {
+        "message": "aRCiTimer"
+    },
+    "transponderConfiguration1": {
+        "message": "Configuration iLap"
+    },
+    "transponderConfiguration2": {
+        "message": "Configuration aRCiTimer"
+    },
+    "transponderData1": {
         "message": "Data"
     },
-    "transponderDataHelp": {
+    "transponderData2": {
+        "message": "Transponder ID"
+    },
+    "transponderDataHelp1": {
         "message": "Hexadecimal digits only, 0-9, A-F"
+    },
+    "transponderHelp1": {
+        "message": "Configure your transponder code here.  Note: Only valid codes will be recognised by race timing systems.  Valid transponder codes can be obtained from <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a>."
+    },
+    "transponderHelp2": {
+        "message": "For more information please visit <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer site</a>"
     },
     "transponderButtonSave": {
         "message": "Save"
+    },
+    "transponderButtonSaveReboot": {
+        "message": "Save and Reboot"
     },
     "transponderDataInvalid": {
         "message": "Transponder data is <span style=\"color: red\">invalid</span>"
