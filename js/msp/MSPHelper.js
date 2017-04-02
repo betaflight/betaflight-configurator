@@ -1052,6 +1052,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_MOTOR_3D_CONFIG:
                 console.log('3D settings saved');
                 break;
+            case MSPCodes.MSP_SET_MIXER_CONFIG:
+                console.log('Mixer config saved');
+                break;
             case MSPCodes.MSP_SET_RC_DEADBAND:
                 console.log('Rc controls settings saved');
                 break;
@@ -1130,6 +1133,9 @@ MspHelper.prototype.crunch = function(code) {
         case MSPCodes.MSP_SET_FEATURE_CONFIG:
             var featureMask = FEATURE_CONFIG.features.getMask();
             buffer.push32(featureMask);
+            break;
+          case MSPCodes.MSP_SET_MIXER_CONFIG:
+            buffer.push8(MIXER_CONFIG.mixer)
             break;
 //        case MSPCodes.MSP_SET_BF_CONFIG:
 //            var featureMask = FEATURE_CONFIG.features.getMask();

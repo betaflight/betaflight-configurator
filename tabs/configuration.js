@@ -633,8 +633,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_feature_config() {
-                var next_callback = save_board_alignment_config;
+                var next_callback = save_mixer_config;
                 MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, next_callback);
+            }
+
+            function save_mixer_config() {
+                var next_callback = save_board_alignment_config;
+                MSP.send_message(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG), false, next_callback);
             }
 
             function save_board_alignment_config() {
