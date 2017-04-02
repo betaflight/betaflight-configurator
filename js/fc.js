@@ -34,6 +34,7 @@ var BATTERY_STATE;
 var BATTERY_CONFIG;
 var ARMING_CONFIG;
 var FC_CONFIG;
+var MISC; // DEPRECATED
 var MOTOR_CONFIG;
 var GPS_CONFIG;
 var COMPASS_CONFIG;
@@ -211,6 +212,17 @@ var FC = {
             loopTime: 0
         };
         
+        MISC = {
+            // DEPRECATED = only used to store values that are written back to the fc as-is, do NOT use for any other purpose
+            failsafe_throttle:      0,
+            gps_baudrate:           0,
+            multiwiicurrentoutput:  0,
+            placeholder2:           0,
+            vbatscale:              0,
+            vbatmincellvoltage:     0,
+            vbatmaxcellvoltage:     0,
+            vbatwarningcellvoltage: 0,
+        };
         MOTOR_CONFIG = {
             minthrottle:            0,
             maxthrottle:            0,

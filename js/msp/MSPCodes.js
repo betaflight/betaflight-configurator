@@ -44,8 +44,8 @@ var MSPCodes = {
     MSP_SET_ARMING_CONFIG:          62,
     MSP_RX_MAP:                     64,
     MSP_SET_RX_MAP:                 65,
-    //MSP_BF_CONFIG:                  66, // DEPRECATED
-    //MSP_SET_BF_CONFIG:              67, // DEPRECATED
+    MSP_BF_CONFIG:                  66, // DEPRECATED
+    MSP_SET_BF_CONFIG:              67, // DEPRECATED
     MSP_SET_REBOOT:                 68,
     MSP_BF_BUILD_INFO:              69, // Not used
     MSP_DATAFLASH_SUMMARY:          70,
@@ -92,7 +92,7 @@ var MSPCodes = {
     MSP_RC_TUNING:                  111,
     MSP_PID:                        112,
     //MSP_BOX:                        113, // DEPRECATED 
-    //MSP_MISC:                       114, // DEPRECATED
+    MSP_MISC:                       114, // DEPRECATED
     MSP_BOXNAMES:                   116,
     MSP_PIDNAMES:                   117,
     MSP_WP:                         118, // Not used
@@ -124,7 +124,7 @@ var MSPCodes = {
     MSP_SET_RC_TUNING:              204,
     MSP_ACC_CALIBRATION:            205,
     MSP_MAG_CALIBRATION:            206,
-    //MSP_SET_MISC:                   207, // DEPRECATED
+    MSP_SET_MISC:                   207, // DEPRECATED
     MSP_RESET_CONF:                 208,
     MSP_SET_WP:                     209, // Not used
     MSP_SELECT_SETTING:             210,

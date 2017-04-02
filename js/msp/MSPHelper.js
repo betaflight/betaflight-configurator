@@ -151,7 +151,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SONAR:
                 SENSOR_DATA.sonar = data.read32();
                 break;
-                            case MSPCodes.MSP_ANALOG:
+            case MSPCodes.MSP_ANALOG:
                 ANALOG.voltage = data.readU8() / 10.0;
                 ANALOG.mAhdrawn = data.readU16();
                 ANALOG.rssi = data.readU16(); // 0-1023
@@ -292,6 +292,32 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     ARMING_CONFIG.disarm_kill_switch = data.readU8();
                 }
                 break;
+            case MSPCodes.MSP_LOOP_TIME:
+                if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
+                    FC_CONFIG.loopTime = data.readU16();
+                }
+                break;
+            case MSPCodes.MSP_MISC: // 22 bytes
+                RX_CONFIG.midrc = data.readU16();
+                MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
+                MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
+                MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
+                MISC.failsafe_throttle = data.readU16(); // 1000-2000
+                GPS_CONFIG.provider = data.readU8();
+                MISC.gps_baudrate = data.readU8();
+                GPS_CONFIG.ublox_sbas = data.readU8();
+                MISC.multiwiicurrentoutput = data.readU8();
+                RSSI_CONFIG.channel = data.readU8();
+                MISC.placeholder2 = data.readU8();
+                if (semver.lt(CONFIG.apiVersion, "1.18.0"))
+                    COMPASS_CONFIG.mag_declination = data.read16() / 10; // -1800-1800
+                else
+                    COMPASS_CONFIG.mag_declination = data.read16() / 100; // -18000-18000
+                MISC.vbatscale = data.readU8(); // was MISC.vbatscale - 10-200
+                MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
+                MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
+                MISC.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
+                break;                
             case MSPCodes.MSP_MOTOR_CONFIG:
                 MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
                 MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
@@ -1153,6 +1179,31 @@ MspHelper.prototype.crunch = function(code) {
         case MSPCodes.MSP_SET_ARMING_CONFIG:
             buffer.push8(ARMING_CONFIG.auto_disarm_delay)
                 .push8(ARMING_CONFIG.disarm_kill_switch);
+            break;
+        case MSPCodes.MSP_SET_LOOP_TIME:
+            buffer.push16(FC_CONFIG.loopTime);
+            break;
+        case MSPCodes.MSP_SET_MISC:
+            buffer.push16(RX_CONFIG.midrc)
+                .push16(MOTOR_CONFIG.minthrottle)
+                .push16(MOTOR_CONFIG.maxthrottle)
+                .push16(MOTOR_CONFIG.mincommand)
+                .push16(MISC.failsafe_throttle)
+                .push8(GPS_CONFIG.provider)
+                .push8(MISC.gps_baudrate)
+                .push8(GPS_CONFIG.ublox_sbas)
+                .push8(MISC.multiwiicurrentoutput)
+                .push8(RSSI_CONFIG.channel)
+                .push8(MISC.placeholder2);
+            if (semver.lt(CONFIG.apiVersion, "1.18.0")) {
+                buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 10));
+            } else {
+                buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));
+            }
+            buffer.push8(MISC.vbatscale)
+                .push8(Math.round(MISC.vbatmincellvoltage * 10))
+                .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
+                .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
             break;
         case MSPCodes.MSP_SET_MOTOR_CONFIG:
             buffer.push16(MOTOR_CONFIG.minthrottle)
