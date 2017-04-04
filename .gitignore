@@ -1,4 +1,9 @@
-.DS_store
+bower_components/
+build/
+cache/
+dist/
 nbproject/
-.idea
+node_modules/
 
+.DS_store
+.idea

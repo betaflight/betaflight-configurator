@@ -1,59 +1,38 @@
-# Betaflight Configurator
+# Native Betaflight Configurator
 
 ![Betaflight](http://static.rcgroups.net/forums/attachments/6/1/0/3/7/6/a9088900-228-bf_logo.jpg)
 
-Betaflight Configurator is a crossplatform configuration tool for the Betaflight flight control system.
+The Native Betaflight Configurator is a crossplatform configuration tool for the Betaflight flight control system that does not require Chrome to run.
 
-It runs as an app within Google Chrome and allows you to configure the Betaflight software running on any [supported Betaflight target](https://github.com/betaflight/betaflight/tree/master/src/main/target).
-
-Various types of aircraft are supported by the tool and by Betaflight, e.g. quadcopters, hexacopters, octocopters and fixed-wing aircraft.
-
-## Authors
-
-Betaflight Configurator is a [fork](#credits) of the Cleanflight Configurator with support for Betaflight instead of Cleanflight.
-
-This configurator is the only configurator with support for Betaflight specific features. It will likely require that you run the latest firmware on the flight controller.
-If you are experiencing any problems please make sure you are running the [latest firmware version](https://github.com/betaflight/betaflight/releases/).
 
 ## Installation
 
-### Via chrome webstore
+Download the latest version of the app from the releases page.
 
-[![available in the Chrome web store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/betaflight-configurator/kdaghagfopacdngbohiknlhcocjccjao)
+### Developers
 
-1. Visit [Chrome web store](https://chrome.google.com/webstore/detail/betaflight-configurator/kdaghagfopacdngbohiknlhcocjccjao)
-2. Click **+ Free**
+1. Clone the repo and `cd` into the new directory
+2. Install [node.js](https://nodejs.org/en/download/) then `npm install && npm start`
 
-Please note - the application will automatically update itself when new versions are released.  Please ensure you maintain configuration backups as described in the Betaflight documentation.
+The default bower task, started by running `npm start`, will watch the source directories and rebuild on changes.
 
-### Alternative way
+#### Building For Release
 
-1. Clone the repo to any local directory or download it as zip
-2. Start Chromium or Google Chrome and go to tools -> extension
-3. Check the "Developer mode" checkbox
-4. Click on load unpacked extension and point it to the Betaflight Configurator directory (for example D:/betaflight-configurator)
+Run `npm run release` and the `build` folder will be populated with the supported platforms' binaries.
 
-## How to use
+#### npm tasks
 
-You can find the Betaflight Configurator icon in your application tab "Apps"
+`npm run [script name]` reads `package.json`'s `scripts` key and the following tasks perform these functions:
 
-## Notes
+ - `start`: runs the `build` and `app` tasks at the same time
+ - `build`: executes the default `gulp.js` task, as specified in the `gulpfile.js`, to build any compiled and minified assets in the app
+ - `app`: runs the [nw.js](https://github.com/nwjs/nw.js) app in development mode
+ - `release`: compiles the binary versions of the app as specified in the `release` gulp task
+ - `clean`: cleans all binary versions of the app
 
-### WebGL
+## Linux users
 
-Make sure Settings -> System -> "User hardware acceleration when available" is checked to achieve the best performance
-
-### Linux users
-
-Dont forget to add your user into dialout group "sudo usermod -aG dialout YOUR_USERNAME" for serial access
-
-### Linux / MacOSX users
-
-If you have 3D model animation problems, enable "Override software rendering list" in Chrome flags chrome://flags/#ignore-gpu-blacklist
-
-## Support
-
-If you need help your please use the multiwii or rcgroups forums or visit the IRC channel before raising issues in the issue trackers.
+Dont forget to add your user into dialout group "sudo usermod -aG dialout YOUR_USERNAME" for serial access (TODO: confirm, is this still necessary?)
 
 ### Issue trackers
 
@@ -65,16 +44,10 @@ For Betaflight firmware issues raise them here
 
 https://github.com/betaflight/betaflight/issues
 
-## Technical details
-
-The configurator is based on chrome.serial API running on Google Chrome/Chromium core.
-
-## Developers
-
-We accept clean and reasonable patches, submit them!
-
 ## Credits
 
-ctn - primary author and maintainer of Baseflight Configurator from which Cleanflight Configurator project was forked.
+Native Betaflight Configurator is a fork of the BetaFlight configurator with native support without requiring chrome.
 
-Hydra -  author and maintainer of Cleanflight Configurator from which this project was forked.
+Upstream changes will continue to be merged into this project.
+
+Many thanks to developers of the BetaFlight, CleanFlight and the BaseFlight configurators.
