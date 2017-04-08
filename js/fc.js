@@ -74,7 +74,8 @@ var FC = {
             accelerometerTrims: [0, 0],
             name:          '',
             numProfiles:   3,
-            rateProfile:   0
+            rateProfile:   0,
+            boardType:     0,
         };
         
         FEATURE_CONFIG = {

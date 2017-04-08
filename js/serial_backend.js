@@ -263,8 +263,31 @@ function onConnect() {
     GUI.timeout_remove('connecting'); // kill connecting timer
     $('div#connectbutton a.connect_state').text(chrome.i18n.getMessage('disconnect')).addClass('active');
     $('div#connectbutton a.connect').addClass('active');
+    
     $('#tabs ul.mode-disconnected').hide();
     $('#tabs ul.mode-connected-cli').show();
+    
+
+    // show only appropriate tabs
+    $('#tabs ul.mode-connected li').hide();
+    $('#tabs ul.mode-connected li').filter(function (index) { 
+        var classes = $(this).attr("class").split(/\s+/); 
+        var found = false;
+        $.each(GUI.allowedTabs, function (index, value) {
+            var tabName = "tab_" + value;
+            if ($.inArray(tabName, classes) >= 0) {
+                found = true;
+            }
+        });
+
+        if (CONFIG.boardType == 0) {
+            if (classes.indexOf("osd-required") >= 0) {
+                found = false;
+            }
+        }
+        
+        return found;
+    }).show();
     
     if (CONFIG.flightControllerVersion !== '') {
         FEATURE_CONFIG.features = new Features(CONFIG);
@@ -277,7 +300,9 @@ function onConnect() {
         MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
-        startLiveDataRefreshTimer();
+        if (CONFIG.boardType == 0 || CONFIG.boardType == 2) {
+            startLiveDataRefreshTimer();
+        }
     }
     
     var sensor_state = $('#sensor-status');
@@ -349,7 +374,7 @@ function sensor_status(sensors_detected) {
         $('.accicon', e_sensor_status).removeClass('active');
     }
 
-    if (true) { // Gyro status is not reported by FC
+    if (CONFIG.boardType == 0 || CONFIG.boardType == 2) { // Gyro status is not reported by FC 
         $('.gyro', e_sensor_status).addClass('on');
         $('.gyroicon', e_sensor_status).addClass('active');
     } else {

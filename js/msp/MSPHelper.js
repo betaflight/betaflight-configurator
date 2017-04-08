@@ -611,6 +611,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 CONFIG.boardIdentifier = identifier;
                 CONFIG.boardVersion = data.readU16();
+                if (semver.gte(CONFIG.apiVersion, "1.35.0")) {
+                    CONFIG.boardType = data.readU8();
+                } else {
+                    CONFIG.boardType = 0;
+                }
+
                 break;
     
             case MSPCodes.MSP_NAME:
