@@ -192,6 +192,10 @@ TABS.power.initialize = function (callback) {
             'None',
             'Onboard ADC',
         ];
+        
+        if (haveFc) {
+            batteryMeterTypes.push('ESC Sensor');
+        }
 
         if (haveFc) {
             batteryMeterTypes.push('ESC Sensor');
