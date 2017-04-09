@@ -73,6 +73,9 @@
     "tabSetup": {
         "message": "Setup"
     },
+    "tabSetupOSD": {
+        "message": "OSD Setup"
+    },
     "tabConfiguration": {
         "message": "Configuration"
     },
@@ -2056,6 +2059,30 @@
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
+    
+    "osdSetupHead": {
+        "message": "Info"
+    },
+    "osdSetupVideoMode": {
+        "message": "Video Mode"
+    },
+    "osdSetupCameraConnected": {
+        "message": "Camera Connected"
+    },
+    "osdSetupCameraConnectedValueYes": {
+        "message": "Yes"
+    },
+    "osdSetupCameraConnectedValueNo": {
+        "message": "No"
+    },
+    
+    "osdSetupResetText": {
+        "message": "Reset OSD to default"
+    },
+    "osdSetupButtonReset": {
+        "message": "Reset Settings"
+    },
+    
 
     "mainHelpArmed": {
         "message": "Motor Arming"

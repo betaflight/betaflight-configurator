@@ -42,12 +42,11 @@ var GUI_control = function () {
         'servos',
     ];
     this.defaultAllowedOSDTabsWhenConnected = [
-        'setup',
+        'setup_osd',
         'osd',
         'power',
         'sensors',
         'transponder',
-        'cli',
     ];
     this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 

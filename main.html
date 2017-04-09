@@ -9,6 +9,7 @@
     <link type="text/css" rel="stylesheet" href="./js/libraries/flightindicators.css"/>
     <link type="text/css" rel="stylesheet" href="./tabs/landing.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./tabs/setup.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./tabs/setup_osd.css" media="all" />
     <link type="text/css" rel="stylesheet" href="./tabs/help.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./tabs/ports.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./tabs/configuration.css" media="all"/>
@@ -70,6 +71,7 @@
     <script type="text/javascript" src="./main.js"></script>
     <script type="text/javascript" src="./tabs/landing.js"></script>
     <script type="text/javascript" src="./tabs/setup.js"></script>
+    <script type="text/javascript" src="./tabs/setup_osd.js"></script>
     <script type="text/javascript" src="./tabs/help.js"></script>
     <script type="text/javascript" src="./tabs/ports.js"></script>
     <script type="text/javascript" src="./tabs/configuration.js"></script>
@@ -215,6 +217,8 @@
             </ul>
             <ul class="mode-connected">
                 <li class="tab_setup"><a href="#" i18n="tabSetup" class="tabicon ic_setup" title="Setup"></a></li>
+                <li class="tab_setup_osd"><a href="#" i18n="tabSetupOSD" class="tabicon ic_setup" title="OSD Setup"></a></li>
+                
                 <li class="tab_ports"><a href="#" i18n="tabPorts" class="tabicon ic_ports" title="Ports"></a></li>
                 <li class="tab_configuration"><a href="#" i18n="tabConfiguration" class="tabicon ic_config"
                                                  title="Configuration"></a></li>
@@ -244,14 +248,14 @@
                                            title="Tethered Logging"></a></li>
                 <li class="tab_onboard_logging"><a href="#" i18n="tabOnboardLogging" class="tabicon ic_data"
                                                    title="Onboard Logging"></a></li>
-            </ul>
-            <ul class="mode-connected-cli">
-                <li class="tab_cli"><a href="#" i18n="tabCLI" class="tabicon ic_cli" title="CLI"></a></li>
                 <!-- spare icons
                 <li class=""><a href="#"class="tabicon ic_mission">Mission (spare icon)</a></li>
                 <li class=""><a href="#"class="tabicon ic_advanced">Advanced (spare icon)</a></li>
                 <li class=""><a href="#"class="tabicon ic_wizzard">Wizzard (spare icon)</a></li>
                 -->
+            </ul>
+            <ul class="mode-connected mode-connected-cli">
+                <li class="tab_cli"><a href="#" i18n="tabCLI" class="tabicon ic_cli" title="CLI"></a></li>
             </ul>
         </div>
         <div class="clear-both"></div>
