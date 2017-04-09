@@ -141,11 +141,16 @@ TABS.power.initialize = function (callback) {
         $('input[name="warningcellvoltage"]').val(BATTERY_CONFIG.vbatwarningcellvoltage);
         $('input[name="capacity"]').val(BATTERY_CONFIG.capacity);
 
+        var haveFc = (semver.lt(CONFIG.apiVersion, "1.35.0") || (CONFIG.boardType == 0 || CONFIG.boardType == 2));
+        
         var batteryMeterTypes = [
             'None',
             'Onboard ADC',
-            'ESC Sensor'
         ];
+        
+        if (haveFc) {
+            batteryMeterTypes.push('ESC Sensor');
+        }
 
         var batteryMeterType_e = $('select.batterymetersource');
         for (var i = 0; i < batteryMeterTypes.length; i++) {
@@ -161,9 +166,12 @@ TABS.power.initialize = function (callback) {
         var currentMeterTypes = [
             'None',
             'Onboard ADC',
-            'Virtual',
-            'ESC Sensor'
         ];
+
+        if (haveFc) {
+            currentMeterTypes.push('Virtual');
+            currentMeterTypes.push('ESC Sensor');
+        }
 
         var currentMeterType_e = $('select.currentmetersource');
         for (var i = 0; i < currentMeterTypes.length; i++) {
