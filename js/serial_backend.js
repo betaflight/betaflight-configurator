@@ -61,12 +61,11 @@ $(document).ready(function () {
                     GUI.tab_switch_cleanup();
                     GUI.tab_switch_in_progress = false;
 
+                    var wasConnected = CONFIGURATOR.connectionValid;
+                    
                     serial.disconnect(onClosed);
 
-                    var wasConnected = CONFIGURATOR.connectionValid;
-
                     GUI.connected_to = false;
-                    CONFIGURATOR.connectionValid = false;
                     GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
                     MSP.disconnect_cleanup();
                     PortUsage.reset();
@@ -339,6 +338,9 @@ function onClosed(result) {
     battery.hide();
     
     MSP.clearListeners();
+    
+    CONFIGURATOR.connectionValid = false;
+    CONFIGURATOR.cliActive = false;
 }
 
 function read_serial(info) {
