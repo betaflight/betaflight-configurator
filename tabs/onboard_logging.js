@@ -392,8 +392,9 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function prepare_file(onComplete) {
-        var suffix = 'BFL';
+        
         var prefix = 'BLACKBOX_LOG';
+        var suffix = 'BBL';
 
         var filename = generateFilename(prefix, suffix);
 

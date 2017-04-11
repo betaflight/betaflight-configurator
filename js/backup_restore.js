@@ -161,7 +161,7 @@ function configuration_backup(callback) {
     function save() {
         var chosenFileEntry = null;
 
-        var prefix = CONFIG.flightControllerIdentifier + '_backup';
+        var prefix = 'backup';
         var suffix = 'json';
 
         var filename = generateFilename(prefix, suffix);

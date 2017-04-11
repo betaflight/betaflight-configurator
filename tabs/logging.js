@@ -230,7 +230,7 @@ TABS.logging.initialize = function (callback) {
 
     function prepare_file() {
         
-        var prefix = CONFIG.flightControllerIdentifier + '_log';
+        var prefix = 'log';
         var suffix = 'csv';
 
         var filename = generateFilename(prefix, suffix);
