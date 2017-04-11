@@ -5,15 +5,18 @@ TABS.transponder = {
     available: false
 };
 
-TABS.transponder.initialize = function (callback, scrollPosition) {
+TABS.transponder.initialize = function(callback, scrollPosition) {
 
-    var dataTypes = {
-        NONE : 0,
-        TEXT : 1,
-        LIST : 2,
+    let _persistentInputValues = {};
+
+    let dataTypes = {
+        NONE: 0,
+        TEXT: 1,
+        LIST: 2,
     };
 
-    var transponderConfigurations = {
+    // CONFIGURATION HERE FOR ADD NEW TRANSPONDER
+    let transponderConfigurations = {
         0: {
             dataType: dataTypes.NONE // empty
         }, //NONE
@@ -23,29 +26,30 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
         2: {
             dataType: dataTypes.LIST, // <select>...</select>
             dataOptions: {
-                'ID 1' : 'E00370FC0FFE07E0FF',
-                'ID 2' : '007C003EF800FC0FFE',
-                'ID 3' : 'F8811FF8811FFFC7FF',
-                'ID 4' : '007C003EF81F800FFE',
-                'ID 5' : 'F00FFF00FFF00FF0FF',
-                'ID 6' : '007CF0C1071F7C00F0',
-                'ID 7' : 'E003F03F00FF03F0C1',
-                'ID 8' : '00FC0FFE071F3E00FE',
-                'ID 9' : 'E083BFF00F9E38C0FF',
+                'ID 1': 'E00370FC0FFE07E0FF',
+                'ID 2': '007C003EF800FC0FFE',
+                'ID 3': 'F8811FF8811FFFC7FF',
+                'ID 4': '007C003EF81F800FFE',
+                'ID 5': 'F00FFF00FFF00FF0FF',
+                'ID 6': '007CF0C1071F7C00F0',
+                'ID 7': 'E003F03F00FF03F0C1',
+                'ID 8': '00FC0FFE071F3E00FE',
+                'ID 9': 'E083BFF00F9E38C0FF',
             }
         }, //arcitimer
     };
+    /////////////////////////////////////////////
 
-    if (GUI.active_tab != 'transponder') {
+    if ( GUI.active_tab != 'transponder' ) {
         GUI.active_tab = 'transponder';
         googleAnalytics.sendAppView('Transponder');
     }
     // transponder supported added in MSP API Version 1.16.0
-    if (CONFIG) {
+    if ( CONFIG ) {
         TABS.transponder.available = semver.gte(CONFIG.apiVersion, "1.16.0");
     }
     //////////////
-    if (!TABS.transponder.available) {
+    if ( !TABS.transponder.available ) {
         load_html();
         return;
     }
@@ -57,8 +61,11 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
     //HELPERS
     // Convert a hex string to a byte array
     function hexToBytes(hex) {
-        for (var bytes = [], c = 0; c < hex.length; c += 2)
+        var bytes = [];
+        for ( let c = 0; c < hex.length; c += 2 ) {
             bytes.push(~parseInt(hex.substr(c, 2), 16));
+        }
+
         return bytes;
     }
 
@@ -69,15 +76,17 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
 
     // Convert a byte array to a hex string
     function bytesToHex(bytes) {
-        for (var hex = [], i = 0; i < bytes.length; i++) {
+        var hex = [];
+        for ( let i = 0; i < bytes.length; i++ ) {
             hex.push(pad(((~bytes[i]) & 0xFF).toString(16), 2));
         }
         return hex.join("").toUpperCase();
     }
+
     /////////////
 
-    function fillByTransponderProviders(transponderProviders, transponderProviderID, toggleTransponderType){
-        var transponderTypeSelect = $('#transponder_type_select');
+    function fillByTransponderProviders(transponderProviders, transponderProviderID, toggleTransponderType) {
+        let transponderTypeSelect = $('#transponder_type_select');
         transponderTypeSelect.attr('data-defaultValue', transponderProviderID);
         transponderTypeSelect.off('change').change(toggleTransponderType);
         transponderTypeSelect.html('');
@@ -87,10 +96,10 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
             $('<option>').attr('value', 0).html(chrome.i18n.getMessage("transponderType0")) // NONE
         );
 
-        for(var transponderProvidersKey in transponderProviders){
-            var transponderProvider = transponderProviders[transponderProvidersKey];
+        for ( let transponderProvidersKey in transponderProviders ) {
+            let transponderProvider = transponderProviders[transponderProvidersKey];
 
-            if(transponderProvider.hasOwnProperty('id')){
+            if ( transponderProvider.hasOwnProperty('id') ) {
                 transponderTypeSelect.append(
                     $('<option>').attr('value', transponderProvider.id).html(chrome.i18n.getMessage("transponderType" + transponderProvider.id))
                 );
@@ -106,49 +115,46 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
         $('#transponderConfiguration').hide();
         $('#transponderHelpBox').hide();
 
-        if(!transponderProvider){
+        if ( !transponderProvider ) {
             return;
         }
 
-        var innerBlock  = $('<div>').addClass('spacer_box');
-        var dataBlock   = $('<div>').addClass('text');
-        var textspacer  = $('<div>').addClass('textspacer');
-        var tileBox     = $('<div>').addClass('gui_box_titlebar');
-        var title       = $('<div>').addClass('spacer_box_title').html(chrome.i18n.getMessage("transponderData" + transponderProvider.id));
-        var dataHelp    = $('<span>').addClass('dataHelp').html(chrome.i18n.getMessage("transponderDataHelp" + transponderProvider.id));
+        let template = $('#transponder-configuration-template').clone();
+
+        template.find('.spacer_box_title').html(chrome.i18n.getMessage("transponderData" + transponderProvider.id));
+        template.find('.dataHelp').html(chrome.i18n.getMessage("transponderDataHelp" + transponderProvider.id));
 
 
-        if(chrome.i18n.getMessage("transponderHelp" + transponderProvider.id).length){
+        if ( chrome.i18n.getMessage("transponderHelp" + transponderProvider.id).length ) {
             $('#transponderHelp').html(chrome.i18n.getMessage("transponderHelp" + transponderProvider.id));
             $('#transponderHelpBox').show();
         }
 
-        var transponderConfiguration = transponderConfigurations[transponderProvider.id];
-        var dataInput = null;
+        let transponderConfiguration = transponderConfigurations[transponderProvider.id];
+        let dataInput = null;
 
-        switch (transponderConfiguration.dataType) {
+        switch ( transponderConfiguration.dataType ) {
 
             case dataTypes.TEXT:
                 dataInput = $('<input>').attr('type', 'text').attr('maxlength', parseInt(transponderProvider.dataLength) * 2);
-                if(!clearValue){
+                if ( !clearValue ) {
                     dataInput.val(data);
-                }else{
-                    dataInput.val('');
+                } else {
+                    dataInput.val(_persistentInputValues[transponderProvider.id] || '');
                 }
-
 
                 break;
             case dataTypes.LIST:
                 dataInput = $('<select>');
-                for (var dataOptionsKey in transponderConfiguration.dataOptions) {
-                    var dataOptions = transponderConfiguration.dataOptions[dataOptionsKey];
+                for ( let dataOptionsKey in transponderConfiguration.dataOptions ) {
+                    let dataOptions = transponderConfiguration.dataOptions[dataOptionsKey];
                     dataInput.append($('<option>').val(dataOptions).html(dataOptionsKey));
                 }
 
-                if(dataInput.find("option[value='"+data+"']").length > 0 && !clearValue){
+                if ( dataInput.find("option[value='" + data + "']").length > 0 && !clearValue ) {
                     dataInput.val(data);
-                }else{
-                    dataInput.val('');
+                } else {
+                    dataInput.val(_persistentInputValues[transponderProvider.id] || '');
                 }
 
                 break;
@@ -156,92 +162,87 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
                 return;
         }
 
-        var changedInputValue = function(){
-            var dataString = $(this).val();
-            var hexRegExp = new RegExp('[0-9a-fA-F]{' + (transponderProvider.dataLength * 2) + '}', 'gi');
+        if ( !clearValue ) {
+            _persistentInputValues[transponderProvider.id] = data;
+        }
 
-            if (!dataString.match(hexRegExp)) {
+        let changedInputValue = function() {
+            let dataString = $(this).val();
+            let hexRegExp = new RegExp('[0-9a-fA-F]{' + (transponderProvider.dataLength * 2) + '}', 'gi');
+
+            if ( !dataString.match(hexRegExp) ) {
                 TRANSPONDER.data = [];
-            }else{
+            } else {
                 TRANSPONDER.data = hexToBytes(dataString);
             }
-
+            _persistentInputValues[transponderProvider.id] = dataString;
         };
 
         dataInput.change(changedInputValue).keyup(changedInputValue);
-
-        tileBox.append(title);
-
-        textspacer.append(dataInput);
-        dataBlock.append(dataHelp);
-        dataBlock.append(textspacer);
-        innerBlock.append(dataBlock);
-        $('#transponderConfiguration').append(tileBox).append(innerBlock).show();
+        template.find('.input_block').html(dataInput);
+        $('#transponder-configuration').html(template.show());
     }
 
     /**
      * this function is called from select click scope
      */
-    function toggleTransponderType(){
+    function toggleTransponderType() {
 
         TRANSPONDER.provider = $(this).val();
-        var defaultProvider = $(this).attr('data-defaultValue');
-        if(defaultProvider == $(this).val())
-        {
+        let defaultProvider = $(this).attr('data-defaultValue');
+        if ( defaultProvider == $(this).val() ) {
             $('.save_reboot').hide();
             $('.save_no_reboot').show();
-        }else{
+        } else {
             $('.save_no_reboot').hide();
             $('.save_reboot').show();
         }
 
-        var clearValue = true
-        buildDataBlockForTransponderProviders(TRANSPONDER.providers.find(function(provider){
+        let clearValue = true;
+        buildDataBlockForTransponderProviders(TRANSPONDER.providers.find(function(provider) {
             return provider.id == TRANSPONDER.provider;
         }), bytesToHex(TRANSPONDER.data), clearValue);
     }
 
-    
+
     MSP.send_message(MSPCodes.MSP_TRANSPONDER_CONFIG, false, false, load_html);
 
     function process_html() {
-
         $(".tab-transponder").toggleClass("transponder-supported", TABS.transponder.available && TRANSPONDER.supported);
-
 
         localize();
 
-        if (TABS.transponder.available && TRANSPONDER.providers.length > 0) {
+        if ( TABS.transponder.available && TRANSPONDER.providers.length > 0 ) {
 
             fillByTransponderProviders(TRANSPONDER.providers, TRANSPONDER.provider, toggleTransponderType);
-            buildDataBlockForTransponderProviders(TRANSPONDER.providers.find(function(provider){
+            buildDataBlockForTransponderProviders(TRANSPONDER.providers.find(function(provider) {
                 return provider.id == TRANSPONDER.provider;
             }), bytesToHex(TRANSPONDER.data));
 
 
-            $('a.save').click(function () {
-                var _this = this;
+            $('a.save').click(function() {
+                let _this = this;
 
                 function save_transponder_data() {
                     MSP.send_message(MSPCodes.MSP_SET_TRANSPONDER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_TRANSPONDER_CONFIG), false, save_to_eeprom);
                 }
 
                 function save_to_eeprom() {
-                    MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function(){
+                    MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
                         GUI.log(chrome.i18n.getMessage('transponderEepromSaved'));
-                        if($(_this).hasClass('reboot')){
-                            GUI.tab_switch_cleanup(function () {
+                        if ( $(_this).hasClass('reboot') ) {
+                            GUI.tab_switch_cleanup(function() {
                                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialize);
                             });
                         }
                     });
                 }
 
-                if(TRANSPONDER.data.length != TRANSPONDER.providers.find(function(provider){
+                if ( TRANSPONDER.data.length !== TRANSPONDER.providers.find(function(provider) {
                         return provider.id == TRANSPONDER.provider;
-                    }).dataLength){
+                    }).dataLength ) {
                     GUI.log(chrome.i18n.getMessage('transponderDataInvalid'));
-                }else{
+                } else {
                     save_transponder_data();
                 }
             });
@@ -249,14 +250,14 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
 
         function reinitialize() {
             GUI.log(chrome.i18n.getMessage('deviceRebooting'));
-            if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
+            if ( BOARD.find_board_definition(CONFIG.boardIdentifier).vcp ) {
                 $('a.connect').click();
                 GUI.timeout_add('start_connection', function start_connection() {
                     $('a.connect').click();
                 }, 2500);
             } else {
                 GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                    MSP.send_message(MSPCodes.MSP_IDENT, false, false, function () {
+                    MSP.send_message(MSPCodes.MSP_IDENT, false, false, function() {
                         GUI.log(chrome.i18n.getMessage('deviceReady'));
                         TABS.configuration.initialize(false, $('#content').scrollTop());
                     });
@@ -268,6 +269,6 @@ TABS.transponder.initialize = function (callback, scrollPosition) {
     }
 };
 
-TABS.transponder.cleanup = function (callback) {
-    if (callback) callback();
+TABS.transponder.cleanup = function(callback) {
+    if ( callback ) callback();
 };

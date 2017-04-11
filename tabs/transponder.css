@@ -1,3 +1,7 @@
+#tab-transponder-templates {
+    display: none;
+}
+
 .tab-transponder .spacer_box {
     padding-bottom: 10px;
     float: left;
@@ -72,4 +76,12 @@
 
 .tab-transponder.transponder-supported .require-transponder-supported {
     display: block;
+}
+
+.textspacer-small {
+    margin-bottom: 15px;
+}
+
+.tab-transponder select {
+    min-width: 100px;
 }
