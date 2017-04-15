@@ -208,7 +208,7 @@ TABS.cli.sendLine = function (line, callback) {
 }
 
 TABS.cli.cleanup = function (callback) {
-    if (!CONFIGURATOR.connectionValid || !CONFIGURATOR.cliValid) {
+    if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive)) {
         if (callback) callback();
         return;
     }

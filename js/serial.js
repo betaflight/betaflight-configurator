@@ -1,6 +1,7 @@
 'use strict';
 
 var serial = {
+	connected:       false,
     connectionId:    false,
     openRequested:   false,
     openCanceled:    false,
@@ -38,6 +39,7 @@ var serial = {
             }
 
             if (connectionInfo && !self.openCanceled) {
+	            self.connected = true;
                 self.connectionId = connectionInfo.connectionId;
                 self.bitrate = connectionInfo.bitrate;
                 self.bytesReceived = 0;
@@ -187,6 +189,7 @@ var serial = {
 
                 console.log('onConnectedCallback', result)
                 if(result == 0) {
+                    self.connected = true;
                     chrome.sockets.tcp.setNoDelay(createInfo.socketId, true, function (noDelayResult){
                         if (chrome.runtime.lastError) {
                             console.error('setNoDelay', chrome.runtime.lastError.message);
@@ -221,7 +224,6 @@ var serial = {
                         });
 
                         console.log(self.logHead + 'Connection opened with ID: ' + createInfo.socketId + ', url: ' + self.connectionIP + ':' + self.connectionPort);
-
                         if (callback) callback(createInfo);
                     });
                 } else {
@@ -235,6 +237,7 @@ var serial = {
     },
     disconnect: function (callback) {
         var self = this;
+        self.connected = false;
 
         if (self.connectionId) {
             self.emptyOutputBuffer();
@@ -300,9 +303,27 @@ var serial = {
             // store inside separate variables in case array gets destroyed
             var data = self.outputBuffer[0].data,
                 callback = self.outputBuffer[0].callback;
+            
+            if (!self.connected) {
+                console.log('attempting to send when disconnected');
+                if (callback) callback({
+                    bytesSent: 0,
+                    error: 'undefined'
+               });
+               return;
+            }
 
             var sendFn = (self.connectionType == 'serial') ? chrome.serial.send : chrome.sockets.tcp.send;
             sendFn(self.connectionId, data, function (sendInfo) {
+                if (sendInfo === undefined) {
+                    console.log('undefined send error');
+                    if (callback) callback({
+                        bytesSent: 0,
+                        error: 'undefined'
+                   });
+                   return;
+                }
+                
                 // tcp send error
                 if (self.connectionType == 'tcp' && sendInfo.resultCode < 0) {
                     var error = 'system_error';
