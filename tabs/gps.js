@@ -4,7 +4,7 @@ TABS.gps = {};
 TABS.gps.initialize = function (callback) {
     var self = this;
 
-    if (GUI.active_tab != 'gps') {
+    if (GUI.active_tab !== 'gps') {
         GUI.active_tab = 'gps';
     }
 
@@ -48,7 +48,7 @@ TABS.gps.initialize = function (callback) {
             var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
 
             $('.GPS_info td.fix').html((GPS_DATA.fix) ? chrome.i18n.getMessage('gpsFixTrue') : chrome.i18n.getMessage('gpsFixFalse'));
-            $('.GPS_info td.alt').text(GPS_DATA.alt + ' m');
+            $('.GPS_info td.alt').text((GPS_DATA.alt / 10) + ' m');
             $('.GPS_info td.lat a').prop('href', url).text(lat.toFixed(4) + ' deg');
             $('.GPS_info td.lon a').prop('href', url).text(lon.toFixed(4) + ' deg');
             $('.GPS_info td.speed').text(GPS_DATA.speed + ' cm/s');
@@ -70,7 +70,7 @@ TABS.gps.initialize = function (callback) {
             var message = {
                 action: 'center',
                 lat: lat,
-                lon: lon,
+                lon: lon
             };
 
             var frame = document.getElementById('map');
@@ -133,7 +133,7 @@ TABS.gps.initialize = function (callback) {
         $('#zoom_in').click(function() {
             console.log('zoom in');
             var message = {
-                action: 'zoom_in',
+                action: 'zoom_in'
             };
             frame.contentWindow.postMessage(message, '*');
         });
