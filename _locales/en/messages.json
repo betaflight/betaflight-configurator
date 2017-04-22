@@ -167,10 +167,13 @@
         "message": "No configuration received within <span style=\"color: red\">10 seconds</span>, communication <span style=\"color: red\">failed</span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "This firmware version is <span style=\"color: red\">not supported</span>. Please upgrade to firmware that supports api version <strong>$1</strong> or higher. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention."
+        "message": "This firmware version is <span style=\"color: red\">not supported</span>. Please upgrade to firmware that supports api version <strong>$1</strong> or higher. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
     },
     "firmwareTypeNotSupported": {
-        "message": "Non - Betaflight firmware is <span style=\"color: red\">not supported</span>. Please note that this tool is designed to support the advanced features of the Betaflight firmware, and does not support use with other types of firmware, except for in CLI mode."
+        "message": "Non - Cleanflight/Betaflight firmware is <span style=\"color: red\">not supported</span>, except for CLI mode."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "The firmware on this device needs upgrading to a newer version. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
     },
 
     "tabSwitchConnectionRequired": {
