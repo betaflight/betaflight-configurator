@@ -735,10 +735,10 @@
     },
 
     "portsIdentifier": {
-      "message": "Port Identifier"
+      "message": "Identifier"
     },
     "portsConfiguration": {
-      "message": "Configuration"
+      "message": "Configuration/MSP"
     },
     "portsSerialRx": {
       "message": "Serial Rx"
@@ -791,6 +791,18 @@
     "portsFunction_TELEMETRY_SMARTPORT": {
         "message": "SmartPort"
     },
+    "portsFunction_TELEMETRY_IBUS": {
+        "message": "iBUS"
+    },
+    "portsFunction_TELEMETRY_JETIXBUS": {
+        "message": "JETIXBUS"
+    },
+    "portsFunction_TELEMETRY_CRSF": {
+        "message": "CRSF"
+    },
+    "portsFunction_TELEMETRY_SRXL": {
+        "message": "SRXL"
+    },
     "portsFunction_ESC_SENSOR": {
         "message": "ESC"
     },
@@ -805,9 +817,6 @@
     },
     "portsFunction_IRC_TRAMP": {
         "message": "IRC Tramp"
-    },
-    "portsFunction_TELEMETRY_IBUS": {
-        "message": "iBUS Telemetry"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span style=\"color: red\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span style=\"color: red\">$1</span>, but this functionality requires requires <span style=\"color: #ffbb00\">$2</span>."
