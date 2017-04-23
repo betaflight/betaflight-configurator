@@ -478,6 +478,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             serialRXtypes.push('TARGET_CUSTOM');
         }
 
+        if (semver.gte(CONFIG.flightControllerVersion, "3.2.0"))  {
+            serialRXtypes.push('TARGET_CUSTOM');
+        }
+
         var serialRX_e = $('select.serialRX');
         for (var i = 0; i < serialRXtypes.length; i++) {
             serialRX_e.append('<option value="' + i + '">' + serialRXtypes[i] + '</option>');
