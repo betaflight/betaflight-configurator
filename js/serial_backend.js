@@ -210,7 +210,7 @@ function onOpen(openInfo) {
 
                                         // continue as usually
                                         CONFIGURATOR.connectionValid = true;
-                                        GUI.allowedTabs = GUI.defaultAllowedTabsWhenConnected.slice();
+                                        GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
                                         if (semver.lt(CONFIG.apiVersion, "1.4.0")) {
                                             GUI.allowedTabs.splice(GUI.allowedTabs.indexOf('led_strip'), 1);
                                         }
@@ -220,7 +220,7 @@ function onOpen(openInfo) {
                                         $('#tabs ul.mode-connected .tab_setup a').click();
                                     });
                                 });
-                            }
+                            });
                         });
                     } else {
                         GUI.show_modal(chrome.i18n.getMessage('warningTitle'),
