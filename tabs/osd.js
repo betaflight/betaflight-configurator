@@ -404,6 +404,18 @@ OSD.constants = {
       default_position: 12 << 5,
       positionable: true,
       preview: '3.98V'
+    },
+    PITCH_ANGLE: {
+      name: 'PITCH_ANGLE',
+      default_position: -1,
+      positionable: true,
+      preview: '-00.0'
+    },
+    ROLL_ANGLE: {
+      name: 'ROLL_ANGLE',
+      default_position: -1,
+      positionable: true,
+      preview: '-00.0'
     }
   }
 };
@@ -444,6 +456,12 @@ OSD.chooseFields = function () {
           F.BATTERY_WARNING,
           F.AVG_CELL_VOLTAGE
         ]);
+        if (semver.gte(CONFIG.apiVersion, "1.35.0")) {
+          OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.PITCH_ANGLE,
+            F.ROLL_ANGLE
+          ]);
+        }
       }
     }
   }
