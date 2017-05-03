@@ -142,7 +142,7 @@ TABS.setup.initialize = function (callback) {
             		configuration_backup(function () {
                         GUI.log(chrome.i18n.getMessage('initialSetupBackupSuccess'));
                     });
-            	}
+            	});
             }
         });
 
