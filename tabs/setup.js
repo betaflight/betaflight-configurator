@@ -137,9 +137,13 @@ TABS.setup.initialize = function (callback) {
                 return;
             }
 
-            configuration_backup(function () {
-                GUI.log(chrome.i18n.getMessage('initialSetupBackupSuccess'));
-            });
+            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+            	MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
+            		configuration_backup(function () {
+                        GUI.log(chrome.i18n.getMessage('initialSetupBackupSuccess'));
+                    });
+            	}
+            }
         });
 
         $('#content .restore').click(function () {
