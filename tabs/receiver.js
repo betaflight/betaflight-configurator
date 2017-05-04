@@ -367,7 +367,7 @@ TABS.receiver.initialize = function (callback) {
                 }
 
                 // Remove old data from array
-                while (RX_plot_data[0].length > 300) {
+                while (RX_plot_data.length > 300) {
                     for (var i = 0; i < RX_plot_data.length; i++) {
                         RX_plot_data[i].shift();
                     }

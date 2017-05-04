@@ -533,7 +533,7 @@ function configuration_restore(callback) {
                 configuration.MOTOR_3D_CONFIG = {
                     deadband3d_low:         1406,
                     deadband3d_high:        1514,
-                    neutral:              1460,
+                    neutral:                1460,
                     deadband3d_throttle:    50
                 };
             }
@@ -568,9 +568,9 @@ function configuration_restore(callback) {
                 configuration.RX_CONFIG = {
                     serialrx_provider:      0,
                     spektrum_sat_bind:      0,
-                    stick_center:                  1500,
-                    stick_min:               1100,
-                    stick_max:               1900,
+                    stick_center:           1500,
+                    stick_min:              1100,
+                    stick_max:              1900,
                     rx_min_usec:            885,
                     rx_max_usec:            2115
                 };

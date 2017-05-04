@@ -293,6 +293,7 @@ function onConnect() {
 
         $('#tabs ul.mode-connected').show();
 
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
         if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
             MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
         }

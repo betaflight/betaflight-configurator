@@ -470,13 +470,11 @@ function updateTabList(features) {
     } else {
         $('#tabs ul.mode-connected li.tab_transponder').hide();
     }
-/* FIXME this approach doesn't work for OSD SLAVE boards as they don't have an 'OSD' feature.
     if (features.isEnabled('OSD')) {
         $('#tabs ul.mode-connected li.tab_osd').show();
     } else {
         $('#tabs ul.mode-connected li.tab_osd').hide();
     }
-*/
 }
 
 function zeroPad(value, width) {
