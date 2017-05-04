@@ -20,7 +20,11 @@ SYM.MAH = 0x07;
 SYM.METRE = 0xC;
 SYM.FEET = 0xF;
 SYM.GPS_SAT = 0x1F;
-
+SYM.PB_START = 0x8A;
+SYM.PB_FULL = 0x8B;
+SYM.PB_EMPTY = 0x8D;
+SYM.PB_END = 0x8E;
+SYM.PB_CLOSE = 0x8F;
 
 var FONT = FONT || {};
 
@@ -416,6 +420,12 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: '-00.0'
+    },
+    MAIN_BATT_USAGE: {
+      name: 'MAIN_BATT_USAGE',
+      default_position: -17,
+      positionable: true,
+      preview: FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_CLOSE)
     }
   }
 };
@@ -461,6 +471,11 @@ OSD.chooseFields = function () {
             F.PITCH_ANGLE,
             F.ROLL_ANGLE
           ]);
+          if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+              F.MAIN_BATT_USAGE
+            ]);
+          }
         }
       }
     }
