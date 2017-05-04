@@ -471,12 +471,12 @@ OSD.chooseFields = function () {
             F.PITCH_ANGLE,
             F.ROLL_ANGLE
           ]);
+          if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+              F.MAIN_BATT_USAGE
+            ]);
+          }
         }
-      }
-      if (semver.gte(CONFIG.flightControllerVersion, "3.2.0")) {
-        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-          F.MAIN_BATT_USAGE
-        ]);
       }
     }
   }
