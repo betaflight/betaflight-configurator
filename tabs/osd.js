@@ -952,6 +952,7 @@ TABS.osd.initialize = function (callback) {
         // font upload
         $('a.flash_font').click(function () {
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
+                $('a.flash_font').addClass('disabled');
                 $('.progressLabel').text('Uploading...');
                 FONT.upload($('.progress').val(0)).then(function() {
                     var msg = 'Uploaded all ' + FONT.data.characters.length + ' characters';
