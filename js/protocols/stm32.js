@@ -302,8 +302,10 @@ STM32_protocol.prototype.verify_chip_signature = function (signature) {
         case 0x444: // not tested
             console.log('Chip recognized as F0 STM32F050xx');
             break;
-        case 0x413: // not tested
+        case 0x413:
             console.log('Chip recognized as F4 STM32F40xxx/41xxx');
+            this.available_flash_size =  0x100000;
+            this.page_size = 0x20000;
             break;
         case 0x419: // not tested
             console.log('Chip recognized as F4 STM32F427xx/437xx, STM32F429xx/439xx');
