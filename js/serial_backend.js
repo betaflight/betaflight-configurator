@@ -208,6 +208,14 @@ function onOpen(openInfo) {
 
                                     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
                                         GUI.log(chrome.i18n.getMessage('uniqueDeviceIdReceived', [CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16)]));
+                                        Raven.setExtraContext({
+                                            api: { version: CONFIG.apiVersion },
+                                            fc: {
+                                                id: CONFIG.flightControllerIdentifier,
+                                                version: CONFIG.flightControllerVersion,
+                                                built_at: CONFIG.buildInfo
+                                            }
+                                        });
 
                                         // continue as usually
                                         CONFIGURATOR.connectionValid = true;

@@ -29,9 +29,10 @@ Please note - the application will automatically update itself when new versions
 ### Alternative way
 
 1. Clone the repo to any local directory or download it as zip
-2. Start Chromium or Google Chrome and go to tools -> extension
-3. Check the "Developer mode" checkbox
-4. Click on load unpacked extension and point it to the Betaflight Configurator directory (for example D:/betaflight-configurator)
+2. Install [node.js](https://nodejs.org/en/download/) then `cd` into the new directory and run `npm install && npm start`
+3. Start Chromium or Google Chrome and go to tools -> extension
+4. Check the "Developer mode" checkbox
+5. Click on load unpacked extension and point it to the Betaflight Configurator directory (for example D:/betaflight-configurator)
 
 ## How to use
 

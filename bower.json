@@ -1,0 +1,32 @@
+{
+  "name": "betaflight-configurator",
+  "authors": [
+    "BetaFlight Dev Squad"
+  ],
+  "description": "",
+  "main": "main.html",
+  "license": "GPLv3",
+  "homepage": "https://github.com/betaflight/betaflight-configurator",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "cryptojslib": "^3.1.2",
+    "raven-js": "^3.7.0",
+    "jquery": "jQuery#2.1.4",
+    "jquery-ui": "1.11.4",
+    "d3": "3.5.6",
+    "nouislider": "^9.0.0",
+    "bluebird": "^3.4.6",
+    "jbox": "^0.3.2",
+    "switchery": "^0.8.1",
+    "jquery-flight-indicators": "^1.0.3",
+    "jquery-debounce": "^1.0.6",
+    "inflection": "^1.10.0"
+  }
+}
