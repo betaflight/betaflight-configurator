@@ -28,6 +28,7 @@
         "https://*.githubusercontent.com/",
         "http://*.baseflight.net/",
         "https://*.amazonaws.com/",
+        "https://*.sentry.io/",
         "serial",
         "usb",
         "storage",
