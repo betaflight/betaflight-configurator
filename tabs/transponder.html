@@ -1,10 +1,12 @@
 <div class="tab-transponder toolbar_fixed_bottom">
     <div class="content_wrapper">
+
         <div class="tab_title" i18n="tabTransponder">Transponder</div>
+
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="https://github.com/betaflight/betaflight/releases" target="_blank"></a>
         </div>
-        
+
         <div class="require-transponder-unsupported note">
             <div class="note_spacer">
                 <p i18n="transponderNotSupported"></p>
@@ -12,41 +14,67 @@
         </div>
 
         <div class="require-transponder-supported">
-            
-            <div class="note" style="margin-bottom: 20px;">
-                <div class="note_spacer">
-                    <p i18n="transponderHelp"></p>
-                </div>
-            </div>
-            
             <div class="gui_box grey">
                 <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="transponderConfiguration"></div>
+                    <div class="spacer_box_title" i18n="transponderConfigurationType"></div>
                 </div>
+
                 <div class="spacer_box">
-                    <div class="text transponderData">
-                        <div class="textspacer" >
-                            <input type="text" name="data" spellcheck="false"/>
+                    <div class="radio transponderType">
+                        <div class="textspacer-small">
+                            <select id="transponder_type_select">
+
+                            </select>
                         </div>
-                        <label for="failsafe_feature_new"><span i18n="transponderData"></span>
-                        </label>
-                        <div class="helpicon cf_tip" i18n_title="transponderDataHelp"></div>
                     </div>
+
+                    <div id="transponderHelpBox">
+                        <div class="clear-both"></div>
+                        <div class="note">
+                            <div class="note_spacer">
+                                <p id="transponderHelp"></p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="clear-both"></div>
+
+            <div id="transponder-configuration" class="gui_box grey">
+
+            </div>
+
         </div>
-        
+        <div class="clear-both"></div>
         <div class="note">
             <div class="note_spacer">
                 <p i18n="transponderInformation"></p>
             </div>
         </div>
-        
+
     </div>
+
     <div class="content_toolbar require-transponder-supported">
-        <div class="btn save_btn">
+        <div class="btn save_btn save_no_reboot">
             <a class="save" href="#" i18n="transponderButtonSave"></a>
+        </div>
+        <div class="btn save_btn save_reboot" style="display: none">
+            <a class="save reboot" href="#" i18n="transponderButtonSaveReboot"></a>
+        </div>
+    </div>
+</div>
+
+<div id="tab-transponder-templates">
+    <div id="transponder-configuration-template">
+        <div class="gui_box_titlebar">
+            <div class="spacer_box_title"></div>
+        </div>
+        <div class="spacer_box">
+            <div class="text"><span class="dataHelp"></span>
+                <div class="input_block textspacer">
+
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -149,9 +149,16 @@ $(document).ready(function () {
                     case 'osd':
                         TABS.osd.initialize(content_ready);
                         break;
+                    case 'power':
+                        TABS.power.initialize(content_ready);
+                        break;
                     case 'setup':
                         TABS.setup.initialize(content_ready);
                         break;
+                    case 'setup_osd':
+                        TABS.setup_osd.initialize(content_ready);
+                        break;
+                        
                     case 'configuration':
                         TABS.configuration.initialize(content_ready);
                         break;
@@ -228,8 +235,8 @@ $(document).ready(function () {
                         chrome.storage.local.set({'permanentExpertMode': checked});
 
                         $('input[name="expertModeCheckbox"]').prop('checked', checked).change();
-                        if (BF_CONFIG) {
-                            updateTabList(BF_CONFIG.features);
+                        if (FEATURE_CONFIG) {
+                            updateTabList(FEATURE_CONFIG.features);
                         }
 
                     }).change();
@@ -362,8 +369,8 @@ $(document).ready(function () {
         }
 
         $('input[name="expertModeCheckbox"]').change(function () {
-            if (BF_CONFIG) {
-                updateTabList(BF_CONFIG.features);
+            if (FEATURE_CONFIG) {
+                updateTabList(FEATURE_CONFIG.features);
             }
         }).change();
     });
@@ -463,7 +470,6 @@ function updateTabList(features) {
     } else {
         $('#tabs ul.mode-connected li.tab_transponder').hide();
     }
-
     if (features.isEnabled('OSD')) {
         $('#tabs ul.mode-connected li.tab_osd').show();
     } else {
@@ -485,8 +491,13 @@ function generateFilename(prefix, suffix) {
     var date = new Date();
     var filename = prefix;
 
-    if (CONFIG && CONFIG.name && CONFIG.name.trim() !== '') {
-        filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
+    if (CONFIG) {
+        if (CONFIG.flightControllerIdentifier) {
+        	filename = CONFIG.flightControllerIdentifier + '_' + filename; 	
+        }
+        if(CONFIG.name && CONFIG.name.trim() !== '') {
+        	filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
+        }
     }
 
     filename = filename + '_' + date.getFullYear()

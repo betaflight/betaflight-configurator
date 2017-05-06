@@ -72,8 +72,22 @@
     display: none;
 }
 
+/* margin required when cell contents wrap */
+.tab-ports .ports select {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.tab-ports .ports select[name=function-peripherals],
+.tab-ports .ports select[name=function-telemetry] {
+    max-width: 110px;
+}
+
+.tab-ports .ports td {
+    text-align: center;
+}
+
 .tab-ports .ports thead td {
-    text-align: left;
     white-space: nowrap;
     padding: 5px 7px;
     background-color: #828885;
@@ -81,6 +95,7 @@
 }
 
 .tab-ports .ports thead td:first-child {
+    text-align: left;
     border-top-left-radius: 5px;
     border-left: 0px;
 }

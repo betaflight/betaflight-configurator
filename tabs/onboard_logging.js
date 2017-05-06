@@ -4,7 +4,6 @@ var
     sdcardTimer;
 
 TABS.onboard_logging = {
-    available: false,
     blockSize: 128,
 
     BLOCK_SIZE: 4096,
@@ -21,39 +20,17 @@ TABS.onboard_logging.initialize = function (callback) {
     }
 
     if (CONFIGURATOR.connectionValid) {
-        // Blackbox was introduced in 1.5.0, dataflash API was introduced in 1.8.0, BLACKBOX/SDCARD MSP APIs in 1.11.0
-        TABS.onboard_logging.available = semver.gte(CONFIG.flightControllerVersion, "1.5.0");
-        
-        if (!TABS.onboard_logging.available) {
-            load_html();
-            return;
-        }
 
-        var load_name = function () {
-            var next_callback = load_html;
-            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
-                MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
-            } else {
-                next_callback();
-            }
-        };
-
-        MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, function() {
-            if (semver.gte(CONFIG.flightControllerVersion, "1.8.0")) {
-                MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function() {
-                    if (semver.gte(CONFIG.flightControllerVersion, "1.11.0")) {
-                        MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function() {
-                            MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function() { 
-                            	MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_name);
-                            });
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, function() {
+            MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function() {
+                MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function() {
+                    MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function() { 
+                        MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function() {
+                            MSP.send_message(MSPCodes.MSP_NAME, false, false, load_html);
                         });
-                    } else {
-                        load_html();
-                    }
+                    });
                 });
-            } else {
-                load_html();
-            }
+            });
         });
     }
     
@@ -109,11 +86,8 @@ TABS.onboard_logging.initialize = function (callback) {
              * 
              * The best we can do on those targets is check the BLACKBOX feature bit to identify support for Blackbox instead.
              */
-            if (BLACKBOX.supported || DATAFLASH.supported 
-                    || semver.gte(CONFIG.flightControllerVersion, "1.5.0") && semver.lte(CONFIG.flightControllerVersion, "1.10.0") && BF_CONFIG.features.isEnabled('BLACKBOX')) {
+            if ((BLACKBOX.supported || DATAFLASH.supported) && (semver.gte(CONFIG.apiVersion, "1.33.0") || FEATURE_CONFIG.features.isEnabled('BLACKBOX'))) {
                 blackboxSupport = 'yes';
-            } else if (semver.gte(CONFIG.flightControllerVersion, "1.5.0") && semver.lte(CONFIG.flightControllerVersion, "1.10.0")) {
-                blackboxSupport = 'maybe';
             } else {
                 blackboxSupport = 'no';
             }
@@ -175,15 +149,25 @@ TABS.onboard_logging.initialize = function (callback) {
     
     function populateDevices(deviceSelect) {
         deviceSelect.empty();
-        
-        deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
-        if (DATAFLASH.ready) {
-            deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+
+        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
+            if (DATAFLASH.ready) {
+                deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+            }
+            if (SDCARD.supported) {
+                deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+            }
+            deviceSelect.append('<option value="3">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
+        } else {
+            deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
+            if (DATAFLASH.ready) {
+                deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+            }
+            if (SDCARD.supported) {
+                deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+            }
         }
-        if (SDCARD.supported) {
-            deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
-        }
-        deviceSelect.append('<option value="3">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
 
         deviceSelect.val(BLACKBOX.blackboxDevice);
     }
@@ -348,7 +332,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function flash_save_begin() {
         if (GUI.connected_to) {
             if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
-                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {
                     self.blockSize = self.VCP_BLOCK_SIZE_3_0;
@@ -408,8 +392,9 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function prepare_file(onComplete) {
-        var suffix = 'BFL';
+        
         var prefix = 'BLACKBOX_LOG';
+        var suffix = 'BBL';
 
         var filename = generateFilename(prefix, suffix);
 

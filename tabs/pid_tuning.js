@@ -26,7 +26,7 @@ TABS.pid_tuning.initialize = function (callback) {
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_PID);
     }).then(function() {
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
           return MSP.promise(MSPCodes.MSP_PID_ADVANCED);
         }
     }).then(function() {
@@ -34,26 +34,14 @@ TABS.pid_tuning.initialize = function (callback) {
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     }).then(function() {
-        var promise = true;
-        if (CONFIG.flightControllerIdentifier === "BTFL" && semver.gte(CONFIG.flightControllerVersion, "2.8.0")) {
-            promise = MSP.promise(MSPCodes.MSP_BF_CONFIG);
-        }
-
-        return promise;
-    }).then(function() {
-        var promise = true;
-        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-            promise = MSP.promise(MSPCodes.MSP_RC_DEADBAND);
-        }
-
-        return promise;
+        return MSP.promise(MSPCodes.MSP_RC_DEADBAND);
     }).then(function() {
         $('#content').load("./tabs/pid_tuning.html", process_html);
     });
 
     function pid_and_rc_to_form() {
         self.setProfile();
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             self.setRateProfile();
         }
 
@@ -216,15 +204,15 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning input[name="rc_expo"]').attr("rowspan", "3");
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('input[id="vbatpidcompensation"]').prop('checked', ADVANCED_TUNING.vbatPidCompensation !== 0);
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('#pid-tuning .delta select').val(ADVANCED_TUNING.deltaMethod);
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, '2.9.0')) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('.pid_tuning input[name="rc_rate_yaw"]').val(RC_tuning.rcYawRate.toFixed(2));
             $('.pid_filter input[name="gyroLowpassFrequency"]').val(FILTER_CONFIG.gyro_soft_lpf_hz);
             $('.pid_filter input[name="dtermLowpassFrequency"]').val(FILTER_CONFIG.dterm_lpf_hz);
@@ -235,14 +223,14 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning input[name="rc_rate_yaw"]').hide();
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")
-            || semver.gte(CONFIG.flightControllerVersion, "2.8.0") && BF_CONFIG.features.isEnabled('SUPEREXPO_RATES')) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")
+            || semver.gte(CONFIG.apiVersion, "1.16.0") && FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES')) {
             $('#pid-tuning .rate').text(chrome.i18n.getMessage("pidTuningSuperRate"));
         } else {
             $('#pid-tuning .rate').text(chrome.i18n.getMessage("pidTuningRate"));
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, '3.0.0')) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             $('.pid_filter input[name="gyroNotch1Frequency"]').val(FILTER_CONFIG.gyro_soft_notch_hz_1);
             $('.pid_filter input[name="gyroNotch1Cutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff_1);
             $('.pid_filter input[name="dTermNotchFrequency"]').val(FILTER_CONFIG.dterm_notch_hz);
@@ -257,7 +245,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter .newFilter').hide();
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, '3.0.1')) {
+        if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
             $('.pid_filter input[name="gyroNotch2Frequency"]').val(FILTER_CONFIG.gyro_soft_notch_hz_2);
             $('.pid_filter input[name="gyroNotch2Cutoff"]').val(FILTER_CONFIG.gyro_soft_notch_cutoff_2);
         } else {
@@ -350,19 +338,19 @@ TABS.pid_tuning.initialize = function (callback) {
         FILTER_CONFIG.dterm_lpf_hz = parseInt($('.pid_filter input[name="dtermLowpassFrequency"]').val());
         FILTER_CONFIG.yaw_lpf_hz = parseInt($('.pid_filter input[name="yawLowpassFrequency"]').val());
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.0") && !semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
-            BF_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
+        if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
+            FEATURE_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             ADVANCED_TUNING.vbatPidCompensation = $('input[id="vbatpidcompensation"]').is(':checked') ? 1 : 0;
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             ADVANCED_TUNING.deltaMethod = $('#pid-tuning .delta select').val();
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, '3.0.0')) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             ADVANCED_TUNING.ptermSetpointWeight = parseInt($('input[name="ptermSetpoint-number"]').val() * 100);
             ADVANCED_TUNING.dtermSetpointWeight = parseInt($('input[name="dtermSetpoint-number"]').val() * 100);
 
@@ -370,7 +358,7 @@ TABS.pid_tuning.initialize = function (callback) {
             FILTER_CONFIG.gyro_soft_notch_cutoff_1 = parseInt($('.pid_filter input[name="gyroNotch1Cutoff"]').val());
             FILTER_CONFIG.dterm_notch_hz = parseInt($('.pid_filter input[name="dTermNotchFrequency"]').val());
             FILTER_CONFIG.dterm_notch_cutoff = parseInt($('.pid_filter input[name="dTermNotchCutoff"]').val());
-            if (semver.gte(CONFIG.flightControllerVersion, '3.0.1')) {
+            if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
                 FILTER_CONFIG.gyro_soft_notch_hz_2 = parseInt($('.pid_filter input[name="gyroNotch2Frequency"]').val());
                 FILTER_CONFIG.gyro_soft_notch_cutoff_2 = parseInt($('.pid_filter input[name="gyroNotch2Cutoff"]').val());
             }
@@ -407,7 +395,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('#pid_mag').show();
             showTitle = true;
         }
-        if (BF_CONFIG.features.isEnabled('GPS')) {
+        if (FEATURE_CONFIG.features.isEnabled('GPS')) {
             $('#pid_gps').show();
             showTitle = true;
         }
@@ -447,7 +435,7 @@ TABS.pid_tuning.initialize = function (callback) {
     }
 
     var useLegacyCurve = false;
-    if (!semver.gte(CONFIG.flightControllerVersion, "2.8.0")) {
+    if (!semver.gte(CONFIG.apiVersion, "1.16.0")) {
         useLegacyCurve = true;
     }
 
@@ -469,8 +457,8 @@ TABS.pid_tuning.initialize = function (callback) {
     }
 
     function process_html() {
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.0") && !semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
-            BF_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
+        if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
+            FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
         } else {
             $('.tab-pid_tuning .pidTuningFeatures').hide();
         }
@@ -487,9 +475,9 @@ TABS.pid_tuning.initialize = function (callback) {
             rc_rate_yaw: RC_tuning.rcYawRate,
             rc_expo:     RC_tuning.RC_EXPO,
             rc_yaw_expo: RC_tuning.RC_YAW_EXPO,
-            superexpo:   BF_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
-            deadband: RC_deadband.deadband,
-            yawDeadband: RC_deadband.yaw_deadband
+            superexpo:   FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
+            deadband: RC_DEADBAND_CONFIG.deadband,
+            yawDeadband: RC_DEADBAND_CONFIG.yaw_deadband
         };
 
         if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
@@ -497,11 +485,11 @@ TABS.pid_tuning.initialize = function (callback) {
             self.currentRates.pitch_rate = RC_tuning.roll_pitch_rate;
         }
 
-        if (semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+        if (semver.lt(CONFIG.apiVersion, "1.16.0")) {
             self.currentRates.rc_rate_yaw = self.currentRates.rc_rate;
         }
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             self.currentRates.superexpo = true;
         }
 
@@ -566,7 +554,7 @@ TABS.pid_tuning.initialize = function (callback) {
             });
         });
 
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             $('.tab-pid_tuning select[name="rate_profile"]').change(function () {
                 self.currentRateProfile = parseInt($(this).val());
                 self.updating = true;
@@ -603,7 +591,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('#pid-tuning .dtermSetpoint').hide();
         }
         
-        if (!semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (!semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('#pid-tuning .delta').hide();
             $('.tab-pid_tuning .note').hide();
 		}
@@ -620,7 +608,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         var pidController_e = $('select[name="controller"]');
 
-        if (semver.lt(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.lt(CONFIG.apiVersion, "1.31.0")) {
             var pidControllerList;
 
 
@@ -633,7 +621,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     {name: "MultiWii (2.3 - hybrid)"},
                     {name: "Harakiri"}
                 ]
-            } else if (semver.lt(CONFIG.flightControllerVersion, "3.0.0")) {
+            } else if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
                 pidControllerList = [
                     {name: ""},
                     {name: "Integer"},
@@ -707,7 +695,7 @@ TABS.pid_tuning.initialize = function (callback) {
                         updateNeeded = true;
                     }
 
-                    if (targetElement.attr('name') === 'rc_rate' && semver.lt(CONFIG.flightControllerVersion, "2.8.1")) {
+                    if (targetElement.attr('name') === 'rc_rate' && semver.lt(CONFIG.apiVersion, "1.16.0")) {
                         self.currentRates.rc_rate_yaw = targetValue;
                     }
 
@@ -823,13 +811,13 @@ TABS.pid_tuning.initialize = function (callback) {
             }
         });
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('#pid-tuning .delta select').change(function() {
                 self.setDirty(true);
             });
         }
 
-        if (semver.lt(CONFIG.flightControllerVersion, "3.1.0")) {
+        if (semver.lt(CONFIG.apiVersion, "1.31.0")) {
             pidController_e.change(function () {
                 self.setDirty(true);
 
@@ -845,7 +833,7 @@ TABS.pid_tuning.initialize = function (callback) {
             Promise.resolve(true)
             .then(function () {
                 var promise;
-                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion) && semver.lt(CONFIG.flightControllerVersion, "3.1.0")) {
+                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion) && semver.lt(CONFIG.apiVersion, "1.31.0")) {
                     PID.controller = pidController_e.val();
                     promise = MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
                 }
@@ -853,19 +841,11 @@ TABS.pid_tuning.initialize = function (callback) {
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
             }).then(function () {
-                if (semver.gte(CONFIG.flightControllerVersion, "2.8.2")) {
-                  return MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
-                }
+              return MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
             }).then(function () {
-                if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
-                    return MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-                }
+                return MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
-            }).then(function () {
-                if (semver.gte(CONFIG.flightControllerVersion, "2.8.0")) {
-                    return MSP.promise(MSPCodes.MSP_SET_BF_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BF_CONFIG));
-                }
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             }).then(function () {
@@ -973,7 +953,7 @@ TABS.pid_tuning.setDirty = function (isDirty) {
 
     self.dirty = isDirty;
     $('.tab-pid_tuning select[name="profile"]').prop('disabled', isDirty);
-    if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
         $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', isDirty);
     }
 };
@@ -982,7 +962,7 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
     var self = this;
 
     if (GUI.active_tab === 'pid_tuning') {
-        if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")
             && CONFIG.numProfiles === 2) {
             $('.tab-pid_tuning select[name="profile"] .profile3').hide();
         }
@@ -996,7 +976,7 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
             }
 
             var changedRateProfile = false;
-            if (semver.gte(CONFIG.flightControllerVersion, "3.0.0")
+            if (semver.gte(CONFIG.apiVersion, "1.20.0")
                 && updateRateProfile
                 && self.currentRateProfile !== CONFIG.rateProfile) {
                 self.setRateProfile();
@@ -1036,7 +1016,7 @@ TABS.pid_tuning.checkRC = function() {
 };
 
 TABS.pid_tuning.updatePidControllerParameters = function () {
-    if (semver.gte(CONFIG.flightControllerVersion, "3.0.0") && semver.lt(CONFIG.flightControllerVersion, "3.1.0") && $('.tab-pid_tuning select[name="controller"]').val() === '0') {
+    if (semver.gte(CONFIG.apiVersion, "1.20.0") && semver.lt(CONFIG.apiVersion, "1.31.0") && $('.tab-pid_tuning select[name="controller"]').val() === '0') {
         $('.pid_tuning .YAW_JUMP_PREVENTION').show();
 
         $('#pid-tuning .delta').show();

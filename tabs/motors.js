@@ -12,40 +12,29 @@ TABS.motors.initialize = function (callback) {
     self.armed = false;
     self.feature3DSupported = false;
     self.allowTestMode = true;
+    self.feature3DSupported = true;
     
     if (GUI.active_tab != 'motors') {
         GUI.active_tab = 'motors';
     }
 
     function get_arm_status() {
-        MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_config);
+        MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_feature_config);
     }
     
-    function load_config() {
-        MSP.send_message(MSPCodes.MSP_BF_CONFIG, false, false, load_3d);
+    function load_feature_config() {
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, load_motor_3d_config);
     }
     
-    function load_3d() {
-        var next_callback = esc_protocol;
-        if (semver.gte(CONFIG.apiVersion, "1.14.0")) {
-            self.feature3DSupported = true;
-            MSP.send_message(MSPCodes.MSP_3D, false, false, next_callback);
-        } else {
-            next_callback();
-        }
+    function load_motor_3d_config() {
+        MSP.send_message(MSPCodes.MSP_MOTOR_3D_CONFIG, false, false, load_esc_protocol);
     }
 
-    function esc_protocol() {
-        var next_callback = get_motor_data;
-        if (semver.gte(CONFIG.flightControllerVersion, "2.8.1")) {
-            MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, next_callback);
-        } else {
-            next_callback();
-        }
+    function load_esc_protocol() {
+        MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_motor_data);
     }
 
-    function get_motor_data() {
-        update_arm_status();
+    function load_motor_data() {
         MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_html);
     }
 
@@ -53,7 +42,7 @@ TABS.motors.initialize = function (callback) {
         $('#content').load("./tabs/motors.html", process_html);
     }
 
-    MSP.send_message(MSPCodes.MSP_MISC, false, false, get_arm_status);
+    MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, get_arm_status);
 
     function update_arm_status() {
         self.armed = bit_check(CONFIG.mode, 0);
@@ -185,8 +174,10 @@ TABS.motors.initialize = function (callback) {
     function process_html() {
         // translate to user-selected language
         localize();
+        
+        update_arm_status();
 
-        self.feature3DEnabled = BF_CONFIG.features.isEnabled('3D');
+        self.feature3DEnabled = FEATURE_CONFIG.features.isEnabled('3D');
 
         if (self.feature3DEnabled && !self.feature3DSupported) {
             self.allowTestMode = false;
@@ -201,7 +192,7 @@ TABS.motors.initialize = function (callback) {
         $('#motorsEnableTestMode').prop('checked', false)
             .prop('disabled', true);
         
-        update_model(BF_CONFIG.mixerConfiguration);
+        update_model(MIXER_CONFIG.mixer);
         
         // Always start with default/empty sensor data array, clean slate all
         initSensorData();
@@ -330,19 +321,19 @@ TABS.motors.initialize = function (callback) {
             ');
         }
 
-        $('div.sliders input').prop('min', MISC.mincommand)
-            .prop('max', MISC.maxthrottle);
-        $('div.values li:not(:last)').text(MISC.mincommand);
+        $('div.sliders input').prop('min', MOTOR_CONFIG.mincommand)
+            .prop('max', MOTOR_CONFIG.maxthrottle);
+        $('div.values li:not(:last)').text(MOTOR_CONFIG.mincommand);
         
         if(self.feature3DEnabled && self.feature3DSupported) {
             //Arbitrary sanity checks
             //Note: values may need to be revisited
-            if(_3D.neutral3d > 1575 || _3D.neutral3d < 1425)
-                _3D.neutral3d = 1500;
+            if(MOTOR_3D_CONFIG.neutral > 1575 || MOTOR_3D_CONFIG.neutral < 1425)
+                MOTOR_3D_CONFIG.neutral = 1500;
                 
-            $('div.sliders input').val(_3D.neutral3d);
+            $('div.sliders input').val(MOTOR_3D_CONFIG.neutral);
         } else {
-            $('div.sliders input').val(MISC.mincommand); 
+            $('div.sliders input').val(MOTOR_CONFIG.mincommand); 
         }
 
         if(self.allowTestMode){ 
@@ -397,9 +388,9 @@ TABS.motors.initialize = function (callback) {
 
                 // change all values to default
                 if (self.feature3DEnabled && self.feature3DSupported) {
-                    $('div.sliders input').val(_3D.neutral3d);
+                    $('div.sliders input').val(MOTOR_3D_CONFIG.neutral);
                 } else {
-                    $('div.sliders input').val(MISC.mincommand);
+                    $('div.sliders input').val(MOTOR_CONFIG.mincommand);
                 }
 
                 $('div.sliders input').trigger('input');             
@@ -411,11 +402,11 @@ TABS.motors.initialize = function (callback) {
 
         for (var i = 0; i < number_of_valid_outputs; i++) {
             if (!self.feature3DEnabled) {
-                if (MOTOR_DATA[i] > MISC.mincommand) {
+                if (MOTOR_DATA[i] > MOTOR_CONFIG.mincommand) {
                     motors_running = true;
                 }
             } else {
-                if ((MOTOR_DATA[i] < _3D.deadband3d_low) || (MOTOR_DATA[i] > _3D.deadband3d_high)) {
+                if ((MOTOR_DATA[i] < MOTOR_3D_CONFIG.deadband3d_low) || (MOTOR_DATA[i] > MOTOR_3D_CONFIG.deadband3d_high)) {
                     motors_running = true;
                 }
             }
@@ -473,8 +464,8 @@ TABS.motors.initialize = function (callback) {
             full_block_scale = 1000;
             motorOffset = 1000;
         } else {
-            full_block_scale = MISC.maxthrottle - MISC.mincommand;
-            motorOffset = MISC.mincommand;
+            full_block_scale = MOTOR_CONFIG.maxthrottle - MOTOR_CONFIG.mincommand;
+            motorOffset = MOTOR_CONFIG.mincommand;
         }
         
         function update_ui() {            

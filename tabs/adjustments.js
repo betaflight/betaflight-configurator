@@ -273,7 +273,7 @@ TABS.adjustments.cleanup = function (callback) {
 
 TABS.adjustments.adjust_template = function () {
     var availableFunctionCount;
-    if (semver.lt(CONFIG.flightControllerVersion, '3.1.0')) {
+    if (semver.lt(CONFIG.apiVersion, "1.31.0")) {
         availableFunctionCount = 21; // Available in betaflight 2.9
     } else {
         availableFunctionCount = 24; // RC rate Yaw / D setpoint / D setpoint transition added to 3.1.0

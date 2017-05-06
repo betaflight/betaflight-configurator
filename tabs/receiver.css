@@ -164,6 +164,7 @@
     border-right: 1px solid silver;
 }
 .tab-receiver .tunings table {
+    width: 100%;
     border-collapse: collapse;
 }
 

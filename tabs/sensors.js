@@ -185,17 +185,26 @@ TABS.sensors.initialize = function (callback) {
 
         // disable graphs for sensors that are missing
         var checkboxes = $('.tab-sensors .info .checkboxes input');
-        if (!have_sensor(CONFIG.activeSensors, 'acc')) {
-            checkboxes.eq(1).prop('disabled', true);
-        }
-        if (!have_sensor(CONFIG.activeSensors, 'mag')) {
-            checkboxes.eq(2).prop('disabled', true);
-        }
-        if (!have_sensor(CONFIG.activeSensors, 'baro')) {
-            checkboxes.eq(3).prop('disabled', true);
-        }
-        if (!have_sensor(CONFIG.activeSensors, 'sonar')) {
-            checkboxes.eq(4).prop('disabled', true);
+        checkboxes.parent().show();
+        
+        if (CONFIG.boardType == 0 || CONFIG.boardType == 2) { 
+            if (!have_sensor(CONFIG.activeSensors, 'acc')) {
+                checkboxes.eq(1).prop('disabled', true);
+            }
+            if (!have_sensor(CONFIG.activeSensors, 'mag')) {
+                checkboxes.eq(2).prop('disabled', true);
+            }
+            if (!have_sensor(CONFIG.activeSensors, 'baro')) {
+                checkboxes.eq(3).prop('disabled', true);
+            }
+            if (!have_sensor(CONFIG.activeSensors, 'sonar')) {
+                checkboxes.eq(4).prop('disabled', true);
+            }
+        } else {
+            for (var i = 0; i <= 4; i++) {
+                checkboxes.eq(i).prop('disabled', true);
+                checkboxes.eq(i).parent().hide();
+            }
         }
 
         $('.tab-sensors .info .checkboxes input').change(function () {

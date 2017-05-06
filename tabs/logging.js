@@ -229,8 +229,18 @@ TABS.logging.initialize = function (callback) {
         fileWriter = null;
 
     function prepare_file() {
+        
+        var prefix = 'log';
+        var suffix = 'csv';
+
+        var filename = generateFilename(prefix, suffix);
+
+        var accepts = [{
+            extensions: [suffix],
+        }];
+
         // create or load the file
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'betaflight_data_log', accepts: [{extensions: ['csv']}]}, function(entry) {
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
             if (!entry) {
                 console.log('No file selected');
                 return;

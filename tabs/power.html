@@ -1,0 +1,167 @@
+<div class="tab-power toolbar_fixed_bottom">
+    <div class="content_wrapper initialstyle">
+        <!-- should be the first DIV on each tab -->
+        <div class="cf_column spacerbottom">
+            <div class="tab_title" i18n="tabPower">Power</div>
+            <div class="cf_doc_version_bt">
+                <a id="button-documentation" href="" target="_blank"></a>
+            </div>
+        </div>
+        <div class="require-support">
+            <div class="gui_box grey">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="powerBatteryHead"></div>
+                </div>
+                <div class="spacer_box battery">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                        <tbody class="battery-state">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="gui_box grey">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="powerVoltageHead"></div>
+                </div>
+                <div class="spacer_box">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                        <tbody class="voltage-meters">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="gui_box grey">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="powerAmperageHead"></div>
+                </div>
+                <div class="spacer_box">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                        <tbody class="amperage-meters">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="note require-upgrade">
+            <div class="note_spacer">
+                <p i18n="powerFirmwareUpgradeRequired"></p>
+            </div>
+        </div>
+    </div>
+    <div class="content_toolbar">
+        <div class="btn save_btn">
+            <a class="save" href="#" i18n="powerButtonSave"></a>
+        </div>
+    </div>
+</div>
+
+<div id="tab-power-templates">
+    <table class="voltage-meters">
+        <tbody>
+            <tr class="voltage-meter">
+                <td class="label"></td>
+                <td class="value"></td>
+                <td class="configuration"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="amperage-meters">
+        <tbody>
+            <tr class="amperage-meter">
+                <td class="label"></td>
+                <td class="value"></td>
+                <td class="configuration"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="battery-states">
+        <tbody class="battery-state">
+            <tr class="connection-state">
+                <td i18n="powerBatteryConnected"></td>
+                <td class="value">?</td>
+                <td class="configuration" rowspan="4"></td>
+            </tr>
+            <tr class="voltage">
+                <td i18n="powerBatteryVoltage"></td>
+                <td class="value"></td>
+            </tr>
+            <tr class="mah-drawn">
+                <td i18n="powerBatteryCurrentDrawn"></td>
+                <td class="value"></td>
+            </tr>
+            <tr class="amperage">
+                <td i18n="powerBatteryAmperage"></td>
+                <td class="value"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="battery-configuration">
+        <div class="select vbatmonitoring">
+            <label>
+                <select class="batterymetersource"><!-- list generated here --></select>
+                <span i18n="powerBatteryVoltageMeterSource"></span>
+            </label>
+        </div>
+        <div class="select currentMonitoring">
+            <label>
+                <select class="currentmetersource"><!-- list generated here --></select>
+                <span i18n="powerBatteryCurrentMeterSource"></span>
+            </label>
+        </div>
+
+        <div class="number">
+            <label> <input type="number" name="mincellvoltage" step="0.1" min="1" max="5" /> <span
+                i18n="powerBatteryMinimum"></span>
+            </label>
+        </div>
+        <div class="number">
+            <label> <input type="number" name="maxcellvoltage" step="0.1" min="1" max="5" /> <span
+                i18n="powerBatteryMaximum"></span>
+            </label>
+        </div>
+        <div class="number">
+            <label> <input type="number" name="warningcellvoltage" step="0.1" min="1" max="5" /> <span
+                i18n="powerBatteryWarning"></span>
+            </label>
+        </div>
+        <div class="number">
+            <label> <input type="number" name="capacity" step="1" min="0" max="65535" /> <span
+                i18n="powerBatteryCapacity"></span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="voltage-configuration">
+        <div class="number">
+            <label> <input type="number" name="vbatscale" step="1" min="10" max="255" /> <span
+                i18n="powerVoltageScale"></span>
+            </label>
+        </div>
+        <div class="number">
+            <label> <input type="number" name="vbatresdivval" step="1" min="1" max="255" /> <span
+                i18n="powerVoltageDivider"></span>
+            </label>
+        </div>
+        <div class="number">
+            <label> <input type="number" name="vbatresdivmultiplier" step="1" min="1" max="255" /> <span
+                i18n="powerVoltageMultiplier"></span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="amperage-configuration">
+        <div class="number">
+            <label> <input type="number" name="amperagescale" step="1" min="-1000" max="1500" /> <span
+                i18n="powerAmperageScale"></span>
+            </label>
+        </div>
+        <div class="number">
+            <label> <input type="number" name="amperageoffset" step="1" min="0" max="3300" /> <span
+                i18n="powerAmperageOffset"></span>
+            </label>
+        </div>
+    </div>    
+</div>

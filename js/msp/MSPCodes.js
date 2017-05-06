@@ -11,21 +11,26 @@ var MSPCodes = {
     MSP_NAME:                       10,
     MSP_SET_NAME:                   11,
 
-    MSP_CHANNEL_FORWARDING:         32,
-    MSP_SET_CHANNEL_FORWARDING:     33,
+    MSP_BATTERY_CONFIG:             32,
+    MSP_SET_BATTERY_CONFIG:         33,
     MSP_MODE_RANGES:                34,
     MSP_SET_MODE_RANGE:             35,
-
+    MSP_FEATURE_CONFIG:             36,
+    MSP_SET_FEATURE_CONFIG:         37,
+    MSP_BOARD_ALIGNMENT_CONFIG:     38,
+    MSP_SET_BOARD_ALIGNMENT_CONFIG: 39,
     MSP_CURRENT_METER_CONFIG:       40,
     MSP_SET_CURRENT_METER_CONFIG:   41,
-
+    MSP_MIXER_CONFIG:               42,
+    MSP_SET_MIXER_CONFIG:           43,
     MSP_RX_CONFIG:                  44,
     MSP_SET_RX_CONFIG:              45,
     MSP_LED_COLORS:                 46,
     MSP_SET_LED_COLORS:             47,
     MSP_LED_STRIP_CONFIG:           48,
     MSP_SET_LED_STRIP_CONFIG:       49,
-
+    MSP_RSSI_CONFIG:                50,
+    MSP_SET_RSSI_CONFIG:            51,
     MSP_ADJUSTMENT_RANGES:          52,
     MSP_SET_ADJUSTMENT_RANGE:       53,
     MSP_CF_SERIAL_CONFIG:           54,
@@ -39,8 +44,8 @@ var MSPCodes = {
     MSP_SET_ARMING_CONFIG:          62,
     MSP_RX_MAP:                     64,
     MSP_SET_RX_MAP:                 65,
-    MSP_BF_CONFIG:                  66,
-    MSP_SET_BF_CONFIG:              67,
+    MSP_BF_CONFIG:                  66, // DEPRECATED
+    MSP_SET_BF_CONFIG:              67, // DEPRECATED
     MSP_SET_REBOOT:                 68,
     MSP_BF_BUILD_INFO:              69, // Not used
     MSP_DATAFLASH_SUMMARY:          70,
@@ -71,9 +76,9 @@ var MSPCodes = {
     MSP_SET_PID_ADVANCED:           95,
     MSP_SENSOR_CONFIG:              96,
     MSP_SET_SENSOR_CONFIG:          97,
-    // MSP_SPECIAL_PARAMETERS:         98, removed
-    //MSP_SET_SPECIAL_PARAMETERS:     99, removed
-    MSP_IDENT:                      100, // Not used
+    //MSP_SPECIAL_PARAMETERS:         98, // DEPRECATED
+    //MSP_SET_SPECIAL_PARAMETERS:     99, // DEPRECATED
+    //MSP_IDENT:                      100, // DEPRECTED
     MSP_STATUS:                     101,
     MSP_RAW_IMU:                    102,
     MSP_SERVO:                      103,
@@ -86,18 +91,24 @@ var MSPCodes = {
     MSP_ANALOG:                     110,
     MSP_RC_TUNING:                  111,
     MSP_PID:                        112,
-    MSP_BOX:                        113, // Not used
-    MSP_MISC:                       114,
-    MSP_MOTOR_PINS:                 115, // Not used
+    //MSP_BOX:                        113, // DEPRECATED 
+    MSP_MISC:                       114, // DEPRECATED
     MSP_BOXNAMES:                   116,
     MSP_PIDNAMES:                   117,
     MSP_WP:                         118, // Not used
     MSP_BOXIDS:                     119,
     MSP_SERVO_CONFIGURATIONS:       120,
-    MSP_3D:                         124,
+    MSP_MOTOR_3D_CONFIG:            124,
     MSP_RC_DEADBAND:                125,
     MSP_SENSOR_ALIGNMENT:           126,
     MSP_LED_STRIP_MODECOLOR:        127,
+
+    MSP_VOLTAGE_METERS:             128,
+    MSP_CURRENT_METERS:             129,
+    MSP_BATTERY_STATE:              130,
+    MSP_MOTOR_CONFIG:               131,
+    MSP_GPS_CONFIG:                 132,
+    MSP_COMPASS_CONFIG:             133,
 
     MSP_STATUS_EX:                  150,
 
@@ -109,22 +120,25 @@ var MSPCodes = {
     MSP_SET_RAW_RC:                 200,
     MSP_SET_RAW_GPS:                201, // Not used
     MSP_SET_PID:                    202,
-    MSP_SET_BOX:                    203,
+    //MSP_SET_BOX:                    203, // DEPRECATED
     MSP_SET_RC_TUNING:              204,
     MSP_ACC_CALIBRATION:            205,
     MSP_MAG_CALIBRATION:            206,
-    MSP_SET_MISC:                   207,
+    MSP_SET_MISC:                   207, // DEPRECATED
     MSP_RESET_CONF:                 208,
     MSP_SET_WP:                     209, // Not used
     MSP_SELECT_SETTING:             210,
-    MSP_SET_HEAD:                   211, // Not used
+    MSP_SET_HEADING:                211, // Not used
     MSP_SET_SERVO_CONFIGURATION:    212,
     MSP_SET_MOTOR:                  214,
-    MSP_SET_3D:                     217,
+    MSP_SET_MOTOR_3D_CONFIG:        217,
     MSP_SET_RC_DEADBAND:            218,
     MSP_SET_RESET_CURR_PID:         219,
     MSP_SET_SENSOR_ALIGNMENT:       220,
     MSP_SET_LED_STRIP_MODECOLOR:    221,
+    MSP_SET_MOTOR_CONFIG:           222,
+    MSP_SET_GPS_CONFIG:             223,
+    MSP_SET_COMPASS_CONFIG:         224,
 
     MSP_SET_ACC_TRIM:               239,
     MSP_ACC_TRIM:                   240,

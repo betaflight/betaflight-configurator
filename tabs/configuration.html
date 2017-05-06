@@ -121,7 +121,8 @@
             </div>
         </div>
         <div class="clear-both"></div>
-        <div class="leftWrapper board">
+        
+        <div class="leftWrapper board acc">
             <div class="gui_box grey">
                 <div class="gui_box_titlebar">
                     <div class="spacer_box_title" i18n="configurationBoardAlignment"></div>
@@ -179,8 +180,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="rightWrapper acc">
             <div class="gui_box grey">
                 <div class="gui_box_titlebar">
                     <div class="spacer_box_title" i18n="configurationAccelTrims"></div>
@@ -199,50 +198,47 @@
                 </div>
             </div>
         </div>
-        <div class="clear-both"></div>
-        <div class="leftWrapper">
-            <div class="gui_box grey" style="margin-bottom:20px;">
+        <div class="rightWrapper 3d">
+            <div class="gui_box grey">
                 <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationReceiver"></div>
-                </div>
-                <div class="spacer_box" style="padding-bottom:15px;">
-                    <select class="features rxMode" name="rxMode">
-                        <!-- list generated here -->
-                    </select>
-                    <span i18n="configurationReceiverMode"></span>
-                </div>
-                <div class="serialRXBox spacer_box" style="padding-bottom:10px;">
-                    <div class="note spacerbottom">
-                        <div class="note_spacer">
-                            <p i18n="configurationSerialRXHelp"></p>
-                        </div>
-                    </div>
-                    <select class="serialRX">
-                        <!-- list generated here -->
-                    </select>
-                    <span i18n="configurationSerialRX"></span>
-                </div>
-            </div>
-            <div class="gui_box grey" style="margin-bottom:20px;">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationRSSI"></div>
-                    <div class="helpicon cf_tip" i18n_title="configurationRSSIHelp"></div>
+                    <div class="spacer_box_title" i18n="configuration3d"></div>
                 </div>
                 <div class="spacer_box">
                     <table cellpadding="0" cellspacing="0">
                         <thead>
-                            <tr>
-                                <th i18n="configurationFeatureEnabled"></th>
-                                <th i18n="configurationFeatureDescription"></th>
-                                <th i18n="configurationFeatureName"></th>
-                            </tr>
+                        <tr>
+                            <th i18n="configurationFeatureEnabled"></th>
+                            <th i18n="configurationFeatureDescription"></th>
+                            <th i18n="configurationFeatureName"></th>
+                        </tr>
                         </thead>
-                        <tbody class="features rssi">
+                        <tbody class="features 3D">
                             <!-- table generated here -->
                         </tbody>
                     </table>
+                    <div class="_3dSettings">
+                        <div class="number">
+                            <label> <input type="number" name="3ddeadbandlow" step="1" min="1250" max="1600" /> <span
+                                i18n="configuration3dDeadbandLow"></span>
+                            </label>
+                        </div>
+                        <div class="number">
+                            <label> <input type="number" name="3ddeadbandhigh" step="1" min="1400" max="1750" /> <span
+                                i18n="configuration3dDeadbandHigh"></span>
+                            </label>
+                        </div>
+                        <div class="number">
+                            <label> <input type="number" name="3dneutral" step="1" min="1400" max="1600" /> <span
+                                i18n="configuration3dNeutral"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="clear-both"></div>
+        
+        <div class="leftWrapper">
             <div class="gui_box grey" style="margin-bottom:20px;">
                 <div class="gui_box_titlebar">
                     <div class="spacer_box_title" i18n="configurationSystem"></div>
@@ -306,6 +302,32 @@
                     </div>
                 </div>
             </div>
+            <div class="gui_box grey miscSettings" style="margin-top:10px;">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="configurationPersonalization"></div>
+                </div>
+                <div class="spacer_box">
+                    <div class="number">
+                        <label> <input type="text" name="craftName" maxlength="32" style="width:100px;"/> <span
+                            i18n="craftName"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="gui_box grey miscSettings" style="margin-top:10px;">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="configurationCamera"></div>
+                </div>
+                <div class="spacer_box">
+                    <div class="number fpvCamAngleDegrees">
+                        <label> <input type="number" name="fpvCamAngleDegrees" step="1" min="0" max="50" /> <span
+                                i18n="configurationFpvCamAngleDegrees"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rightWrapper featuresOther">
             <div class="gui_box grey">
                 <div class="gui_box_titlebar">
                     <div class="spacer_box_title" i18n="configurationFeatures"></div>
@@ -331,106 +353,59 @@
                 </div>
             </div>
         </div>
-        <div class="rightWrapper current voltage">
-            <div class="gui_box grey">
+        <div class="clear-both"></div>
+
+        <!-- FIXME move receiver and RSSI to receiver tab -->
+        <div class="leftWrapper receiver">
+                    <div class="gui_box grey" style="margin-bottom:20px;">
                 <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationBatteryVoltage"></div>
+                    <div class="spacer_box_title" i18n="configurationReceiver"></div>
                 </div>
-                <div class="spacer_box">
-                    <table cellpadding="0" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th i18n="configurationFeatureEnabled"></th>
-                                <th i18n="configurationFeatureDescription"></th>
-                                <th i18n="configurationFeatureName"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="features batteryVoltage">
-                            <!-- table generated here -->
-                        </tbody>
-                    </table>
-                    <div class="select batterymetertype vbatmonitoring">
-                        <label>
-                            <select class="batterymetertype"><!-- list generated here --></select>
-                            <span i18n="configurationBatteryMeterType"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="mincellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryMinimum"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="maxcellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryMaximum"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="warningcellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryWarning"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring vbatCalibration">
-                        <label> <input type="number" name="voltagescale" step="1" min="10" max="255" /> <span
-                            i18n="configurationBatteryScale"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="text" name="batteryvoltage" readonly class="disabled" /> <span
-                            i18n="configurationBatteryVoltage"></span>
-                        </label>
-                    </div>
+                <div class="spacer_box" style="padding-bottom:15px;">
+                    <select class="features rxMode" name="rxMode">
+                        <!-- list generated here -->
+                    </select>
+                    <span i18n="configurationReceiverMode"></span>
                 </div>
-            </div>
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationCurrent"></div>
-                </div>
-                <div class="spacer_box">
-                    <table cellpadding="0" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th i18n="configurationFeatureEnabled"></th>
-                                <th i18n="configurationFeatureDescription"></th>
-                                <th i18n="configurationFeatureName"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="features batteryCurrent">
-                            <!-- table generated here -->
-                        </tbody>
-                    </table>
-                    <div class="select currentMonitoring">
-                        <label>
-                            <select class="currentmetertype"><!-- list generated here --></select>
-                            <span i18n="configurationCurrentMeterType"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentCalibration">
-                        <label> <input type="number" name="currentscale" step="1" min="-16000" max="16000" /> <span
-                            i18n="configurationCurrentScale"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentCalibration">
-                        <label> <input type="number" name="currentoffset" step="1" min="-1600" max="16000" /> <span
-                            i18n="configurationCurrentOffset"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentOutput">
-                        <label>
-                        <input type="text" name="batterycurrent" readonly class="disabled" /> <span
-                            i18n="configurationBatteryCurrent"></span>
-                        </label>
-                    </div>
-                    <div class="checkbox currentMonitoring currentOutput">
-                        <div class="numberspacer">
-                            <input type="checkbox" name="multiwiicurrentoutput" class="toggle" />
+                <div class="serialRXBox spacer_box" style="padding-bottom:10px;">
+                    <div class="note spacerbottom">
+                        <div class="note_spacer">
+                            <p i18n="configurationSerialRXHelp"></p>
                         </div>
-                        <label> <span i18n="configurationBatteryMultiwiiCurrent"></span>
-                        </label>
                     </div>
+                    <select class="serialRX">
+                        <!-- list generated here -->
+                    </select>
+                    <span i18n="configurationSerialRX"></span>
                 </div>
             </div>
-            <div class="gui_box grey gps" style="margin-top:10px;">
+        </div>
+        <div class="rightWrapper rssi">
+            <div class="gui_box grey" style="margin-bottom:20px;">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="configurationRSSI"></div>
+                    <div class="helpicon cf_tip" i18n_title="configurationRSSIHelp"></div>
+                </div>
+                <div class="spacer_box">
+                    <table cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th i18n="configurationFeatureEnabled"></th>
+                                <th i18n="configurationFeatureDescription"></th>
+                                <th i18n="configurationFeatureName"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="features rssi">
+                            <!-- table generated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear-both"></div>
+
+        <div class="leftWrapper gps">
+            <div class="gui_box grey gps">
                 <div class="gui_box_titlebar">
                     <div class="spacer_box_title" i18n="configurationGPS"></div>
                 </div>
@@ -467,6 +442,22 @@
                             </select>
                             <span i18n="configurationGPSBaudrate"></span>
                         </div>
+                        <div class="select gps_auto_baud">
+                            <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                                <input type="checkbox" name="gps_auto_baud" class="toggle" />
+                            </div>
+                            <label for="gps_auto_baud"> <span class="freelabel"
+                                i18n="configurationGPSAutoBaud"></span>
+                            </label>
+                        </div>
+                        <div class="select gps_auto_config">
+                            <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                                <input type="checkbox" name="gps_auto_config" class="toggle" />
+                            </div>
+                            <label for="gps_auto_config"> <span class="freelabel"
+                                i18n="configurationGPSAutoConfig"></span>
+                            </label>
+                        </div>
                         <div class="line">
                             <select class="gps_ubx_sbas">
                                 <!-- list generated here -->
@@ -481,66 +472,7 @@
                     </div>
                 </div>
             </div>
-            <div class="gui_box grey" style="margin-top:10px;">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configuration3d"></div>
-                </div>
-                <div class="spacer_box">
-                    <table cellpadding="0" cellspacing="0">
-                        <thead>
-                        <tr>
-                            <th i18n="configurationFeatureEnabled"></th>
-                            <th i18n="configurationFeatureDescription"></th>
-                            <th i18n="configurationFeatureName"></th>
-                        </tr>
-                        </thead>
-                        <tbody class="features 3D">
-                        <!-- table generated here -->
-                        </tbody>
-                    </table>
-                    <div class="_3dSettings">
-                        <div class="number">
-                            <label> <input type="number" name="3ddeadbandlow" step="1" min="1425" max="1500" /> <span
-                                i18n="configuration3dDeadbandLow"></span>
-                            </label>
-                        </div>
-                        <div class="number">
-                            <label> <input type="number" name="3ddeadbandhigh" step="1" min="1500" max="1575" /> <span
-                                i18n="configuration3dDeadbandHigh"></span>
-                            </label>
-                        </div>
-                        <div class="number">
-                            <label> <input type="number" name="3dneutral" step="1" min="1475" max="1525" /> <span
-                                i18n="configuration3dNeutral"></span>
-                            </label>
-                        </div>
-                        <div class="number" >
-                            <label> <input type="number" name="3ddeadbandthrottle" step="1" min="0" max="1000" /> <span
-                                i18n="configuration3dDeadbandThrottle"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="gui_box grey miscSettings" style="margin-top:10px;">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationMisc"></div>
-                </div>
-                <div class="spacer_box">
-                    <div class="number">
-                        <label> <input type="text" name="vesselName" maxlength="32" style="width:100px;"/> <span
-                            i18n="configurationVesselName"></span>
-                        </label>
-                    </div>
-                    <div class="number fpvCamAngleDegrees">
-                        <label> <input type="number" name="fpvCamAngleDegrees" step="1" min="0" max="50" /> <span
-                                i18n="configurationFpvCamAngleDegrees"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
         </div>
-        <div class="clear-both"></div>
         <div class="clear-both"></div>
     </div>
     <div class="content_toolbar">

@@ -61,12 +61,11 @@ $(document).ready(function () {
                     GUI.tab_switch_cleanup();
                     GUI.tab_switch_in_progress = false;
 
+                    var wasConnected = CONFIGURATOR.connectionValid;
+                    
                     serial.disconnect(onClosed);
 
-                    var wasConnected = CONFIGURATOR.connectionValid;
-
                     GUI.connected_to = false;
-                    CONFIGURATOR.connectionValid = false;
                     GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
                     MSP.disconnect_cleanup();
                     PortUsage.reset();
@@ -74,7 +73,7 @@ $(document).ready(function () {
                     // Reset various UI elements
                     $('span.i2c-error').text(0);
                     $('span.cycle-time').text(0);
-                    if (CONFIG.flightControllerVersion !== '' && semver.gte(CONFIG.flightControllerVersion, "3.0.0"))
+                    if (semver.gte(CONFIG.apiVersion, "1.20.0"))
                         $('span.cpu-load').text('');
 
                     // unlock port select & baud
@@ -211,7 +210,7 @@ function onOpen(openInfo) {
 
                                         // continue as usually
                                         CONFIGURATOR.connectionValid = true;
-                                        GUI.allowedTabs = GUI.defaultAllowedTabsWhenConnected.slice();
+                                        GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
                                         if (semver.lt(CONFIG.apiVersion, "1.4.0")) {
                                             GUI.allowedTabs.splice(GUI.allowedTabs.indexOf('led_strip'), 1);
                                         }
@@ -263,31 +262,47 @@ function onConnect() {
     GUI.timeout_remove('connecting'); // kill connecting timer
     $('div#connectbutton a.connect_state').text(chrome.i18n.getMessage('disconnect')).addClass('active');
     $('div#connectbutton a.connect').addClass('active');
+    
     $('#tabs ul.mode-disconnected').hide();
     $('#tabs ul.mode-connected-cli').show();
     
+
+    // show only appropriate tabs
+    $('#tabs ul.mode-connected li').hide();
+    $('#tabs ul.mode-connected li').filter(function (index) { 
+        var classes = $(this).attr("class").split(/\s+/); 
+        var found = false;
+        $.each(GUI.allowedTabs, function (index, value) {
+            var tabName = "tab_" + value;
+            if ($.inArray(tabName, classes) >= 0) {
+                found = true;
+            }
+        });
+
+        if (CONFIG.boardType == 0) {
+            if (classes.indexOf("osd-required") >= 0) {
+                found = false;
+            }
+        }
+        
+        return found;
+    }).show();
+    
     if (CONFIG.flightControllerVersion !== '') {
-        BF_CONFIG.features = new Features(CONFIG);
+        FEATURE_CONFIG.features = new Features(CONFIG);
 
         $('#tabs ul.mode-connected').show();
 
-        if (semver.gte(CONFIG.flightControllerVersion, "2.9.1")) {
-            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
-        } else {
-            MSP.send_message(MSPCodes.MSP_STATUS, false, false);
-
-            if (semver.gte(CONFIG.flightControllerVersion, "2.4.0")) {
-                CONFIG.numProfiles = 2;
-                $('.tab-pid_tuning select[name="profile"] .profile3').hide();
-            } else {
-                CONFIG.numProfiles = 3;
-                $('.tab-pid_tuning select[name="rate_profile"]').hide();
-            }
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
+        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
         }
-    
+        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
-        startLiveDataRefreshTimer();
+        if (CONFIG.boardType == 0 || CONFIG.boardType == 2) {
+            startLiveDataRefreshTimer();
+        }
     }
     
     var sensor_state = $('#sensor-status');
@@ -324,6 +339,10 @@ function onClosed(result) {
     battery.hide();
     
     MSP.clearListeners();
+    
+    CONFIGURATOR.connectionValid = false;
+    CONFIGURATOR.cliValid = false;
+    CONFIGURATOR.cliActive = false;
 }
 
 function read_serial(info) {
@@ -359,7 +378,7 @@ function sensor_status(sensors_detected) {
         $('.accicon', e_sensor_status).removeClass('active');
     }
 
-    if (true) { // Gyro status is not reported by FC
+    if (CONFIG.boardType == 0 || CONFIG.boardType == 2) { // Gyro status is not reported by FC 
         $('.gyro', e_sensor_status).addClass('on');
         $('.gyroicon', e_sensor_status).addClass('active');
     } else {
@@ -460,10 +479,10 @@ function update_live_status() {
     
     if (GUI.active_tab != 'cli') {
         MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
-        if (semver.gte(CONFIG.flightControllerVersion, "2.9.1"))
-        	MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
+        if (semver.gte(CONFIG.apiVersion, "1.32.0"))
+            MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         else
-        	MSP.send_message(MSPCodes.MSP_STATUS, false, false);
+            MSP.send_message(MSPCodes.MSP_STATUS, false, false);
         MSP.send_message(MSPCodes.MSP_ANALOG, false, false);
     }
     
@@ -492,13 +511,13 @@ function update_live_status() {
        }
     }
     if (ANALOG != undefined) {
-    var nbCells = Math.floor(ANALOG.voltage / MISC.vbatmaxcellvoltage) + 1;   
+    var nbCells = Math.floor(ANALOG.voltage / BATTERY_CONFIG.vbatmaxcellvoltage) + 1;   
     if (ANALOG.voltage == 0)
            nbCells = 1;
    
-       var min = MISC.vbatmincellvoltage * nbCells;
-       var max = MISC.vbatmaxcellvoltage * nbCells;
-       var warn = MISC.vbatwarningcellvoltage * nbCells;
+       var min = BATTERY_CONFIG.vbatmincellvoltage * nbCells;
+       var max = BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
+       var warn = BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
        
        $(".battery-status").css({
           width: ((ANALOG.voltage - min) / (max - min) * 100) + "%",

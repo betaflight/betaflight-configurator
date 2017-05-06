@@ -1,3 +1,4 @@
+
 'use strict';
 
 var TABS = {}; // filled by individual tab js file
@@ -12,15 +13,18 @@ var GUI_control = function () {
     this.operating_system;
     this.interval_array = [];
     this.timeout_array = [];
+    
     this.defaultAllowedTabsWhenDisconnected = [
         'landing',
         'firmware_flasher',
         'help'
     ];
-    this.defaultAllowedTabsWhenConnected = [
+    this.defaultAllowedFCTabsWhenConnected = [
+        'setup',
         'failsafe',
         'transponder',
         'osd',
+        'power',
         'adjustments',
         'auxiliary',
         'cli',
@@ -36,7 +40,13 @@ var GUI_control = function () {
         'receiver',
         'sensors',
         'servos',
-        'setup'
+    ];
+    this.defaultAllowedOSDTabsWhenConnected = [
+        'setup_osd',
+        'osd',
+        'power',
+        'sensors',
+        'transponder',
     ];
     this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 

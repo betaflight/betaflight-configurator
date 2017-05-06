@@ -11,7 +11,7 @@
             <p class="note">Note that some flight controllers have an onboard <a href="https://www.youtube.com/watch?v=ikKH_6SQ-Tk" target="_blank">MinimOSD</a> that can be flashed and configured with <a href="https://github.com/ShikOfTheRa/scarab-osd/releases/latest" target="_blank">scarab-osd</a>, however the MinimOSD cannot be configured through this interface.</p>
         </div>
         <div class="supported hide">
-            <div class="cf_column third_left elements">
+            <div class="cf_column third_left elements requires-osd-feature">
                 <div class="spacer_right">
                     <div class="gui_box grey">
                         <div
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="cf_column twothird">
-                <div class="gui_box grey preview" style="float: left;">
+                <div class="gui_box grey preview requires-osd-feature" style="float: left;">
                     <div class="gui_box_titlebar image">
                         <div class="spacer_box_title">
                           Preview <span>(drag to change position)</span><span class="preview-logo cf_tip" title="Show or hide the logo in the preview window. This will not change any settings on the flight controller."></span>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="cf_column third_right" style="width: calc(100% - 377px);">
-                    <div class="gui_box grey">
+                    <div class="gui_box grey requires-max7456">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">Video
                                 Format
@@ -52,7 +52,7 @@
                             <div class="video-types"></div>
                         </div>
                     </div>
-                    <div class="gui_box grey units-container" style="display:none;">
+                    <div class="gui_box grey units-container requires-osd-feature" style="display:none;">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">Units
                             </div>
@@ -61,7 +61,7 @@
                             <div class="units"></div>
                         </div>
                     </div>
-                    <div class="gui_box grey alarms-container" style="display:none;">
+                    <div class="gui_box grey alarms-container requires-osd-feature" style="display:none;">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">
                               Alarms
@@ -117,10 +117,10 @@
                 </div>
             </div>
             <div class="content_toolbar supported hide" style="left:0;">
-                <div class="btn">
+                <div class="btn save">
                     <a class="active save" href="#" >Save</a>
                 </div>
-                <div class="btn">
+                <div class="btn requires-max7456">
                     <a class="fonts" id="fontmanager" href="#" >Font Manager</a>
                 </div>
             </div>

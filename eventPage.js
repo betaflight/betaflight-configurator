@@ -19,7 +19,7 @@ function startApplication() {
             // save connectionId in separate variable before createdWindow.contentWindow is destroyed
             var connectionId = createdWindow.contentWindow.serial.connectionId,
                 valid_connection = createdWindow.contentWindow.CONFIGURATOR.connectionValid,
-                mincommand = createdWindow.contentWindow.MISC.mincommand;
+                mincommand = createdWindow.contentWindow.MOTOR_CONFIG.mincommand;
 
             if (connectionId && valid_connection) {
                 // code below is handmade MSP message (without pretty JS wrapper), it behaves exactly like MSP.send_message

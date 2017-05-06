@@ -35,7 +35,7 @@ var Features = function (config) {
         );
     }
 
-    if (semver.gte(config.apiVersion, "1.15.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
         features.push(
             {bit: 8, group: 'rxFailsafe', name: 'FAILSAFE', haveTip: true}
         );
@@ -45,21 +45,21 @@ var Features = function (config) {
         );
     }
 
-    if (semver.gte(config.apiVersion, "1.16.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
         features.push(
             {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true}
         );
     }
 
     if (config.flightControllerVersion !== '') {
-        if (semver.gte(config.flightControllerVersion, "2.8.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             features.push(
                 {bit: 22, group: 'other', name: 'AIRMODE'}
             );
         }
 
-        if (semver.gte(config.flightControllerVersion, "2.8.0")) {
-            if (!semver.gte(config.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
+            if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
                 features.push(
                     {bit: 23, group: 'pidTuning', name: 'SUPEREXPO_RATES'}
                 );
@@ -70,13 +70,14 @@ var Features = function (config) {
             }
         }
 
-        if (semver.gte(config.flightControllerVersion, "3.0.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             features.push(
-                {bit: 18, group: 'other', name: 'OSD'}
+                {bit: 18, group: 'other', name: 'OSD'},
+                {bit: 24, group: 'other', name: 'VTX'}
             );
         }
 
-        if (semver.gte(config.flightControllerVersion, "3.1.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             features.push(
                 {bit: 27, group: 'other', name: 'ESC_SENSOR'}
             )

@@ -148,6 +148,9 @@ var MSP = {
         this.listeners = [];  
     },
     send_message: function (code, data, callback_sent, callback_msp, callback_onerror) {
+        if (code === undefined) {
+            debugger;
+        }
         var bufferOut,
             bufView;
 
