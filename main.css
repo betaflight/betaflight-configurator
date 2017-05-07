@@ -1155,7 +1155,7 @@ dialog {
     background-color: #FFFFFF;
     float: left;
     width: calc(100% - 2px);
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     font-family: 'open_sansregular', Arial;
 }
 
