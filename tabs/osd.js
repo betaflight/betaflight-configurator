@@ -384,7 +384,7 @@ OSD.constants = {
       name: 'DEBUG',
       default_position: -1,
       positionable: true,
-      preview: 'GDB     0     0     0     0'
+      preview: 'DBG     0     0     0     0'
     },
     PID_ROLL: {
       name: 'PID_ROLL',
