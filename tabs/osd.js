@@ -277,7 +277,7 @@ OSD.constants = {
       name: 'VTX_CHANNEL',
       default_position: 1,
       positionable: true,
-      preview: 'R:2'
+      preview: 'R:2:1'
     },
     VOLTAGE_WARNING: {
       name: 'VOLTAGE_WARNING',
@@ -367,6 +367,24 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.GPS_SAT) + '14'
+    },
+    GPS_LON: {
+      name: 'GPS_LON',
+      default_position: -1,
+      positionable: true,
+      preview: '-00.0'
+    },
+    GPS_LAT: {
+      name: 'GPS_LAT',
+      default_position: -1,
+      positionable: true,
+      preview: '-00.0'
+    },
+    DEBUG: {
+      name: 'DEBUG',
+      default_position: -1,
+      positionable: true,
+      preview: 'DBG     0     0     0     0'
     },
     PID_ROLL: {
       name: 'PID_ROLL',
@@ -467,15 +485,22 @@ OSD.chooseFields = function () {
           F.BATTERY_WARNING,
           F.AVG_CELL_VOLTAGE
         ]);
-        if (semver.gte(CONFIG.apiVersion, "1.35.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
           OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-            F.PITCH_ANGLE,
-            F.ROLL_ANGLE
+            F.GPS_LON,
+            F.GPS_LAT,
+            F.DEBUG
           ]);
-          if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+          if (semver.gte(CONFIG.apiVersion, "1.35.0")) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-              F.MAIN_BATT_USAGE
+              F.PITCH_ANGLE,
+              F.ROLL_ANGLE
             ]);
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+              OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                F.MAIN_BATT_USAGE
+              ]);
+            }
           }
         }
       }
