@@ -979,7 +979,7 @@ TABS.osd.initialize = function (callback) {
           if (!$(this).data('font-file')) { return; }
           $fontPicker.removeClass('active');
           $(this).addClass('active');
-          $.get('/resources/osd/' + $(this).data('font-file') + '.mcm', function(data) {
+          $.get('./resources/osd/' + $(this).data('font-file') + '.mcm', function(data) {
             FONT.parseMCMFontFile(data);
             FONT.preview($preview);
             updateOsdView();
