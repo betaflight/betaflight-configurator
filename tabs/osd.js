@@ -676,7 +676,7 @@ OSD.GUI.preview = {
   onDrop: function(e) {
     var ev = e.originalEvent;
     var position = $(this).removeAttr('style').data('position');
-    var field_id = parseInt(ev.dataTransfer.getData('text'))
+    var field_id = parseInt(ev.dataTransfer.getData('text/plain'))
     var display_item = OSD.data.display_items[field_id];
     var overflows_line = FONT.constants.SIZES.LINE - ((position % FONT.constants.SIZES.LINE) + display_item.preview.length);
     if (overflows_line < 0) {
@@ -931,7 +931,7 @@ TABS.osd.initialize = function (callback) {
                 var field = OSD.data.preview[i][0];
                 var charCode = OSD.data.preview[i][1];
               }
-              var $img = $('<div class="char"><img src='+FONT.draw(charCode)+'></img></div>')
+              var $img = $('<div class="char" draggable><img src='+FONT.draw(charCode)+'></img></div>')
                 .on('mouseenter', OSD.GUI.preview.onMouseEnter)
                 .on('mouseleave', OSD.GUI.preview.onMouseLeave)
                 .on('dragover', OSD.GUI.preview.onDragOver)
