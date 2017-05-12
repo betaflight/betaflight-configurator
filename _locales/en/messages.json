@@ -289,7 +289,7 @@
         "message": "The Betaflight wiki is a great resource for information, it can be found <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\">here</a>."
     },
     "defaultDocumentation2": {
-        "message": "The release notes for the firmware can be read at github releases page, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\">here</a>."
+        "message": "The release notes for the firmware can be read at GitHub releases page, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\">here</a>."
     },
     "defaultSupportHead": {
         "message": "Support"
@@ -320,7 +320,7 @@
     },
 
     "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span style=\"color: red\">Backup and restore functionality disabled.</span>  You have firmware with API version <span style=\"color: red\">$1</span>, backup and restore requires <span style=\"color: #ffbb00\">$2</span>.  Please backup your settings via the CLI, see Betaflight documentation for procedure."
+        "message": "<span style=\"color: red\">Backup and restore functionality disabled.</span> You have firmware with API version <span style=\"color: red\">$1</span>, backup and restore requires <span style=\"color: #ffbb00\">$2</span>.  Please backup your settings via the CLI, see Betaflight documentation for procedure."
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
@@ -704,7 +704,7 @@
         "message": "Cycles/Sec [Hz]"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Note:</strong> Make sure your FC is capable to operate on these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance."
+        "message": "<strong>Note:</strong> Make sure your FC is able to operate at these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1006,7 +1006,7 @@
         "message": "3D Throttle Deadband"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": "These are values (in us).  To widen the neutral zone increased the value. <strong>This setting is for 3D throttle only.</strong>"
+        "message": "These are values (in us). To widen the neutral zone increased the value. <strong>This setting is for 3D throttle only.</strong>"
     },    
     "receiverChannelMap": {
         "message": "Channel Map"
@@ -1288,12 +1288,6 @@
     "motorsGyroscopeReset": {
         "message": "[Reset]"
     },
-    "motorsGyroscope": {
-        "message": "Gyroscope - "
-    },
-    "motorsGyroscopeReset": {
-        "message": "[Reset]"
-    },
     "gpsHead": {
         "message": "GPS"
     },
@@ -1458,7 +1452,7 @@
         "message": "Confirm dataflash erase"
     },
     "dataflashConfirmEraseNote": {
-        "message": "This will erase any Blackbox logs or other data contained in the dataflash which will take about 20 seconds, are you sure?"
+        "message": "This will erase any Blackbox logs or other data contained in the dataflash. It should take about 20 seconds, are you sure?"
     },
     "dataflashSavingTitle": {
         "message": "Saving dataflash to file"
@@ -1544,7 +1538,7 @@
         "message": "Select firmware version for your board."
     },
     "firmwareFlasherNoRebootDescription": {
-        "message": "Enable if you powered your FC while the bootloader pins are jumpered or have your FC's BOOT button pressed."
+        "message": "Enable if your FC is in boot mode. i.e. if you powered on your FC with the bootloader pins jumped or whilst holding your FC's BOOT button."
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Flash on connect"
@@ -1601,7 +1595,7 @@
         "message": "Flash Firmware"
     },
     "firmwareFlasherGithubInfoHead": {
-        "message": "Github Firmware Info"
+        "message": "GitHub Firmware Info"
     },
     "firmwareFlasherCommiter": {
         "message": "Committer:"
@@ -1880,7 +1874,7 @@
         "message": "Delay for turning off the Motors during Failsafe [1 = 0.1 sec.]"
     },
     "failsafeOffDelayHelp": {
-        "message": "Time to stay in landing mode untill the motors are turned off and the craft is disarmed"
+        "message": "Time to stay in landing mode until the motors are turned off and the craft is disarmed"
     },
     "failsafeSubTitle1": {
         "message": "Stage 2 - Failsafe Procedure"
@@ -1895,7 +1889,7 @@
         "message": "Failsafe Kill Switch (setup Failsafe in Modes Tab)"
     },
     "failsafeKillSwitchHelp": {
-        "message": "Set this option to make the failsafe switch, configured in the modes tab, act as a direct kill switch, bypassing the selected failsafe procedure. <strong>Note:</strong> Arming is blocked with the failsafe kill switch in the ON position"
+        "message": "Set this option to make the failsafe switch (Modes Tab) act as a direct kill switch, bypassing the selected failsafe procedure. <strong>Note:</strong> Arming is blocked with the failsafe kill switch in the ON position"
     },
     
     "powerButtonSave": {
@@ -2130,7 +2124,7 @@
         "message": "ESC/Motor protocol"
     },
     "configurationEscProtocolHelp": {
-        "message": "Select here your motor protocol. <br>Make sure to verify product site of your ESC to what protocol is supported. <br> <b>Be carefull using DSHOT900 and DSHOT1200 as not many ESC's support it!</b>"
+        "message": "Select your motor protocol. <br>Make sure to verify the protocol is supported by your ESC, this information should be on the makers website. <br> <b>Be carefull using DSHOT900 and DSHOT1200 as not many ESC's support it!</b>"
     },
     "configurationunsyndePwm": {
         "message": "Motor PWM speed Separated from PID speed"
