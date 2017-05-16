@@ -60,3 +60,7 @@
 .tab-cli .window .wrapper {
     white-space: pre-wrap;
 }
+
+.tab-cli .save {
+    color: white;
+}
