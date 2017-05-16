@@ -5,7 +5,8 @@ TABS.cli = {
     'currentLine': "",
     'sequenceElements': 0,
     lineDelayMs: 15,
-    profileSwitchDelayMs: 100
+    profileSwitchDelayMs: 100,
+    outputHistory: ""
 };
 
 TABS.cli.initialize = function (callback) {
@@ -15,6 +16,8 @@ TABS.cli.initialize = function (callback) {
         GUI.active_tab = 'cli';
     }
     
+    self.outputHistory = "";
+
     $('#content').load("./tabs/cli.html", function () {
         // translate to user-selected language
         localize();
@@ -22,6 +25,42 @@ TABS.cli.initialize = function (callback) {
         CONFIGURATOR.cliActive = true;
 
         var textarea = $('.tab-cli textarea');
+
+        $('.tab-cli .save').click(function() {
+
+            var prefix = 'cli';
+            var suffix = 'txt';
+
+            var filename = generateFilename(prefix, suffix);
+
+            var accepts = [{
+                extensions: [suffix],
+            }];
+
+            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
+                if (chrome.runtime.lastError) {
+                    console.error(chrome.runtime.lastError.message);
+                    return;
+                }
+
+                if (!entry) {
+                    console.log('No file selected');
+                    return;
+                }
+
+                entry.createWriter(function(writer) {
+                    writer.onerror = function (){
+                        console.error('Failed to write file');
+                    };
+                    writer.onwriteend = function(e) {
+                        console.log('write complete');
+                    };
+                    writer.write(new Blob([self.outputHistory], {type: 'text/plain'}));
+                },function (){
+                    console.error('Failed to get file writer');
+                });
+            });
+        });
 
         textarea.keypress(function (event) {
             if (event.which == 13) { // enter
@@ -153,6 +192,7 @@ TABS.cli.read = function (readInfo) {
                         text += String.fromCharCode(data[i]);
                         this.currentLine += String.fromCharCode(data[i]);
                 }
+                this.outputHistory += String.fromCharCode(data[i])
             }
             if (this.currentLine == 'Rebooting') {
                 CONFIGURATOR.cliActive = false;
