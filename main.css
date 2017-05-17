@@ -1072,6 +1072,7 @@ dialog {
 .toolbar_fixed_bottom .content_toolbar {
     position: absolute;
     bottom: 0;
+    left: 0;
     z-index: 2000; /* for fancy toggle buttons */
 }
 

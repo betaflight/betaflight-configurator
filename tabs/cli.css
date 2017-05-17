@@ -3,7 +3,7 @@
 }
 
 .tab-cli .content_wrapper {
-    height: calc(100% - 50px);
+    height: calc(100% - 92px);
 }
 
 .tab-cli p {
@@ -64,3 +64,15 @@
 .tab-cli .save {
     color: white;
 }
+
+@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+
+.tab-cli .content_wrapper {
+    height: calc(100% - 87px);
+}
+.tab-cli .content_toolbar {
+    margin-top: 5px;
+}
+
+}
+
