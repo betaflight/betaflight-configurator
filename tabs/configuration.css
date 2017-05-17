@@ -1,5 +1,5 @@
 .tab-configuration table {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     width: 100%;
     float: left;
 }
@@ -264,7 +264,6 @@
 }
 
 .tab-configuration .board .gui_box, .tab-configuration .acc .gui_box {
-    min-height: 137px;
     float: left;
 }
 
@@ -492,6 +491,15 @@
     width:90px;
 }
 
+.tab-configuration ._3dSettings {
+    margin-top: 10px; 
+    float: left; 
+    width: 100%;
+}
+
+.tab-configuration .gpsSettings .note {
+    margin-top: 10px; 
+}
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
     .tab-configuration .gui_box span {
@@ -514,7 +522,6 @@
         float: left;
     }
     .tab-configuration .board .gui_box, .tab-configuration .acc .gui_box {
-        min-height: 137px;
         float: left;
     }
     .tab-configuration .gps .gui_box, .tab-configuration .other .gui_box {
