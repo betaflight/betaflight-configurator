@@ -445,6 +445,12 @@ OSD.constants = {
       default_position: -17,
       positionable: true,
       preview: FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_CLOSE)
+    },
+    ARMED_TIME: {
+      name: 'ARMED_TIME',
+      default_position: -1,
+      positionable: true,
+      preview: FONT.symbol(SYM.FLY_M) + '02:07'
     }
   }
 };
@@ -498,7 +504,8 @@ OSD.chooseFields = function () {
             ]);
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
               OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                F.MAIN_BATT_USAGE
+                F.MAIN_BATT_USAGE,
+                F.ARMED_TIME
               ]);
             }
           }
