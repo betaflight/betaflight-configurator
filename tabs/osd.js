@@ -217,7 +217,8 @@ OSD.initData = function() {
     display_items: [],
     last_positions: {},
     preview_logo: true,
-    preview: []
+    preview: [],
+    tooltips: []
   };
 };
 OSD.initData();
@@ -248,12 +249,14 @@ OSD.constants = {
   ALL_DISPLAY_FIELDS: {
     MAIN_BATT_VOLTAGE: {
       name: 'MAIN_BATT_VOLTAGE',
+      desc: 'osdDescElementMainBattVoltage',
       default_position: -29,
       positionable: true,
       preview: FONT.symbol(SYM.BATTERY) + '16.8' + FONT.symbol(SYM.VOLT)
     },
     RSSI_VALUE: {
       name: 'RSSI_VALUE',
+      desc: 'osdDescElementRssiValue',
       default_position: -59,
       positionable: true,
       preview: FONT.symbol(SYM.RSSI) + '99'
@@ -266,6 +269,7 @@ OSD.constants = {
     },
     THROTTLE_POSITION: {
       name: 'THROTTLE_POSITION',
+      desc: 'osdDescElementThrottlePosition',
       default_position: -9,
       positionable: true,
       preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + ' 69'
@@ -290,51 +294,60 @@ OSD.constants = {
     },
     ARMED: {
       name: 'ARMED',
+      desc: 'osdDescElementArmed',
       default_position: -107,
       positionable: true,
       preview: 'ARMED'
     },
     DISARMED: {
       name: 'DISARMED',
+      desc: 'osdDescElementDisarmed',
       default_position: -109,
       positionable: true,
       preview: 'DISARMED'
     },
     CROSSHAIRS: {
       name: 'CROSSHAIRS',
+      desc: 'osdDescElementCrosshairs',
       default_position: -1,
       positionable: false
     },
     ARTIFICIAL_HORIZON: {
       name: 'ARTIFICIAL_HORIZON',
+      desc: 'osdDescElementArtificialHorizon',
       default_position: -1,
       positionable: false
     },
     HORIZON_SIDEBARS: {
       name: 'HORIZON_SIDEBARS',
+      desc: 'osdDescElementHorizonSidebars',
       default_position: -1,
       positionable: false
     },
     CURRENT_DRAW: {
       name: 'CURRENT_DRAW',
+      desc: 'osdDescElementCurrentDraw',
       default_position: -23,
       positionable: true,
       preview: FONT.symbol(SYM.AMP) + '42.0'
     },
     MAH_DRAWN: {
       name: 'MAH_DRAWN',
+      desc: 'osdDescElementMahDrawn',
       default_position: -18,
       positionable: true,
       preview: FONT.symbol(SYM.MAH) + '690'
     },
     CRAFT_NAME: {
       name: 'CRAFT_NAME',
+      desc: 'osdDescElementCraftName',
       default_position: -77,
       positionable: true,
       preview: 'CRAFT_NAME'
     },
     ALTITUDE: {
       name: 'ALTITUDE',
+      desc: 'osdDescElementAltitude',
       default_position: 62,
       positionable: true,
       preview: function(osd_data) {
@@ -343,114 +356,133 @@ OSD.constants = {
     },
     ONTIME: {
       name: 'ONTIME',
+      desc: 'osdDescElementOnTime',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.ON_M) + '05:42'
     },
     FLYTIME: {
       name: 'FLYTIME',
+      desc: 'osdDescElementFlyTime',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.FLY_M) + '04:11'
     },
     FLYMODE: {
       name: 'FLYMODE',
+      desc: 'osdDescElementFlyMode',
       default_position: -1,
       positionable: true,
       preview: 'STAB'
     },
     GPS_SPEED: {
       name: 'GPS_SPEED',
+      desc: 'osdDescElementGPSSpeed',
       default_position: -1,
       positionable: true,
       preview: '40'
     },
     GPS_SATS: {
       name: 'GPS_SATS',
+      desc: 'osdDescElementGPSSats',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.GPS_SAT) + '14'
     },
     GPS_LON: {
       name: 'GPS_LON',
+      desc: 'osdDescElementGPSLon',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_SOUTH) + '00.00000000'
     },
     GPS_LAT: {
       name: 'GPS_LAT',
+      desc: 'osdDescElementGPSLat',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_EAST) + '00.00000000'
     },
     DEBUG: {
       name: 'DEBUG',
+      desc: 'osdDescElementDebug',
       default_position: -1,
       positionable: true,
       preview: 'DBG     0     0     0     0'
     },
     PID_ROLL: {
       name: 'PID_ROLL',
+      desc: 'osdDescElementPIDRoll',
       default_position: 0x800 | (10 << 5) | 2, // 0x0800 | (y << 5) | x
       positionable: true,
       preview: 'ROL  43  40  20'
     },
     PID_PITCH: {
       name: 'PID_PITCH',
+      desc: 'osdDescElementPIDPitch',
       default_position: 0x800 | (11 << 5) | 2, // 0x0800 | (y << 5) | x
       positionable: true,
       preview: 'PIT  58  50  22'
     },
     PID_YAW: {
       name: 'PID_YAW',
+      desc: 'osdDescElementPIDYaw',
       default_position: 0x800 | (12 << 5) | 2, // 0x0800 | (y << 5) | x
       positionable: true,
       preview: 'YAW  70  45  20'
     },
     POWER: {
       name: 'POWER',
+      desc: 'osdDescElementPower',
       default_position: (15 << 5) | 2,
       positionable: true,
       preview: '142W'
     },
     PID_RATE_PROFILE: {
       name: 'PID_RATE_PROFILE',
+      desc: 'osdDescElementPIDRateProfile',
       default_position: 0x800 | (13 << 5) | 2, // 0x0800 | (y << 5) | x
       positionable: true,
       preview: '1-2'
     },
     BATTERY_WARNING: {
       name: 'BATTERY_WARNING',
+      desc: 'osdDescElementBatteryWarning',
       default_position: -1,
       positionable: true,
       preview: 'LOW VOLTAGE'
     },
     AVG_CELL_VOLTAGE: {
       name: 'AVG_CELL_VOLTAGE',
+      desc: 'osdDescElementAvgCellVoltage',
       default_position: 12 << 5,
       positionable: true,
       preview: FONT.symbol(SYM.BATTERY) + '3.98' + FONT.symbol(SYM.VOLT)
     },
     PITCH_ANGLE: {
       name: 'PITCH_ANGLE',
+      desc: 'osdDescElementPitchAngle',
       default_position: -1,
       positionable: true,
       preview: '-00.0'
     },
     ROLL_ANGLE: {
       name: 'ROLL_ANGLE',
+      desc: 'osdDescElementRollAngle',
       default_position: -1,
       positionable: true,
       preview: '-00.0'
     },
     MAIN_BATT_USAGE: {
       name: 'MAIN_BATT_USAGE',
+      desc: 'osdDescElementMainBattUsage',
       default_position: -17,
       positionable: true,
       preview: FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_CLOSE)
     },
     ARMED_TIME: {
       name: 'ARMED_TIME',
+      desc: 'osdDescElementArmedTime',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.FLY_M) + '02:07'
@@ -470,41 +502,50 @@ OSD.constants = {
         }
     }    
   },
-
   ALL_STATISTIC_FIELDS: {
     MAX_SPEED: {
-      name: 'MAX_SPEED'
+      name: 'MAX_SPEED',
+      desc: 'osdDescStatMaxSpeed'
     },
     MIN_BATTERY: {
-      name: 'MIN_BATTERY'
+      name: 'MIN_BATTERY',
+      desc: 'osdDescStatMinBattery'
     },
     MIN_RSSI: {
-      name: 'MIN_RSSI'
+      name: 'MIN_RSSI',
+      desc: 'osdDescStatMinRssi'
     },
     MAX_CURRENT: {
-      name: 'MAX_CURRENT'
+      name: 'MAX_CURRENT',
+      desc: 'osdDescStatMaxCurrent'
     },
     USED_MAH: {
-      name: 'USED_MAH'
+      name: 'USED_MAH',
+      desc: 'osdDescStatUsedMah'
     },
     MAX_ALTITUDE: {
-      name: 'MAX_ALTITUDE'
+      name: 'MAX_ALTITUDE',
+      desc: 'osdDescStatMaxAltitude'
     },
     BLACKBOX: {
-      name: 'BLACKBOX'
+      name: 'BLACKBOX',
+      desc: 'osdDescStatBlackbox'
     },
     END_BATTERY: {
-      name: 'END_BATTERY'
+      name: 'END_BATTERY',
+      desc: 'osdDescStatEndBattery'
     },
     FLYTIME: {
-      name: 'FLY_TIME'
+      name: 'FLY_TIME',
+      desc: 'osdDescStatFlyTime'
     },
     ARMEDTIME: {
-      name: 'ARMED_TIME'
+      name: 'ARMED_TIME',
+      desc: 'osdDescStatArmedTime'
     },
     MAX_DISTANCE: {
-        name: 'MAX_DISTANCE'
-    }    
+      name: 'MAX_DISTANCE'
+    }
   }
 };
 
@@ -725,6 +766,7 @@ OSD.msp = {
       var c = OSD.constants.DISPLAY_FIELDS[j];
       d.display_items.push($.extend({
         name: c.name,
+        desc: c.desc,
         index: j,
         positionable: c.positionable,
         preview: typeof(c.preview) === 'function' ? c.preview(d) : c.preview
@@ -739,6 +781,7 @@ OSD.msp = {
         var c = OSD.constants.STATISTIC_FIELDS[j];
         d.stat_items.push({
           name: c.name,
+          desc: c.desc,
           index: j,
           enabled: v === 1
         });
@@ -913,6 +956,14 @@ TABS.osd.initialize = function (callback) {
                   if (!field.name) { continue; }
 
                   var $field = $('<div class="stat-field field-'+field.index+'"/>');
+                  var desc = null;
+                  if (field.desc && field.desc.length) {
+                    desc = chrome.i18n.getMessage(field.desc);
+                  }
+                  if (desc && desc.length) {
+                    $field[0].classList.add('osd_tip');
+                    $field.attr('title', desc);
+                  }
                   $field.append(
                     $('<input type="checkbox" name="'+field.name+'" class="togglesmall"></input>')
                     .data('field', field)
@@ -949,6 +1000,14 @@ TABS.osd.initialize = function (callback) {
 
               var checked = field.isVisible ? 'checked' : '';
               var $field = $('<div class="display-field field-'+field.index+'"/>');
+              var desc = null;
+              if (field.desc && field.desc.length) {
+                desc = chrome.i18n.getMessage(field.desc);
+              }
+              if (desc && desc.length) {
+                $field[0].classList.add('osd_tip');
+                $field.attr('title', desc);
+              }
               $field.append(
                 $('<input type="checkbox" name="'+field.name+'" class="togglesmall"></input>')
                 .data('field', field)
@@ -1085,6 +1144,25 @@ TABS.osd.initialize = function (callback) {
                 $row = $('<div class="row"/>');
               }
             }
+
+            // Remove last tooltips
+            for (var tt of OSD.data.tooltips) {
+              tt.destroy();
+            }
+            OSD.data.tooltips = [];
+
+            // Generate tooltips for OSD elements
+            $('.osd_tip').each(function() {
+                OSD.data.tooltips.push($(this).jBox('Tooltip', {
+                    delayOpen: 100,
+                    delayClose: 100,
+                    position: {
+                        x: 'right',
+                        y: 'center'
+                    },
+                    outside: 'x'
+                    }));
+            });
           });
         };
 
