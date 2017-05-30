@@ -211,6 +211,7 @@ OSD.initData = function() {
     video_system: null,
     unit_mode: null,
     alarms: [],
+    stat_items: [],
     display_items: [],
     last_positions: {},
     preview_logo: true,
@@ -445,6 +446,45 @@ OSD.constants = {
       default_position: -17,
       positionable: true,
       preview: FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_CLOSE)
+    },
+    ARMED_TIME: {
+      name: 'ARMED_TIME',
+      default_position: -1,
+      positionable: true,
+      preview: FONT.symbol(SYM.FLY_M) + '02:07'
+    }
+  },
+
+  ALL_STATISTIC_FIELDS: {
+    MAX_SPEED: {
+      name: 'MAX_SPEED'
+    },
+    MIN_BATTERY: {
+      name: 'MIN_BATTERY'
+    },
+    MIN_RSSI: {
+      name: 'MIN_RSSI'
+    },
+    MAX_CURRENT: {
+      name: 'MAX_CURRENT'
+    },
+    USED_MAH: {
+      name: 'USED_MAH'
+    },
+    MAX_ALTITUDE: {
+      name: 'MAX_ALTITUDE'
+    },
+    BLACKBOX: {
+      name: 'BLACKBOX'
+    },
+    END_BATTERY: {
+      name: 'END_BATTERY'
+    },
+    FLYTIME: {
+      name: 'FLY_TIME'
+    },
+    ARMEDTIME: {
+      name: 'ARMED_TIME'
     }
   }
 };
@@ -498,7 +538,8 @@ OSD.chooseFields = function () {
             ]);
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
               OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                F.MAIN_BATT_USAGE
+                F.MAIN_BATT_USAGE,
+                F.ARMED_TIME
               ]);
             }
           }
@@ -526,6 +567,22 @@ OSD.chooseFields = function () {
       F.ALTITUDE
     ];
   }
+
+  // Choose ststistic fields
+  // Nothing much to do here, I'm preempting there being new statistics
+  F = OSD.constants.ALL_STATISTIC_FIELDS;
+  OSD.constants.STATISTIC_FIELDS = [
+    F.MAX_SPEED,
+    F.MIN_BATTERY,
+    F.MIN_RSSI,
+    F.MAX_CURRENT,
+    F.USED_MAH,
+    F.MAX_ALTITUDE,
+    F.BLACKBOX,
+    F.END_BATTERY,
+    F.FLYTIME,
+    F.ARMEDTIME
+  ];
 };
 
 OSD.updateDisplaySize = function() {
@@ -591,10 +648,17 @@ OSD.msp = {
     }
     return result;
   },
-  encode: function(display_item) {
+  encodeLayout: function(display_item) {
     var buffer = [];
     buffer.push8(display_item.index);
     buffer.push16(this.helpers.pack.position(display_item));
+    return buffer;
+  },
+  encodeStatistics: function(stat_item) {
+    var buffer = [];
+    buffer.push8(stat_item.index);
+    buffer.push16(stat_item.enabled);
+    buffer.push8(0);
     return buffer;
   },
   // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled
@@ -624,8 +688,9 @@ OSD.msp = {
     d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(CONFIG.apiVersion, "1.34.0");
 
     d.display_items = [];
-    
-    // start at the offset from the other fields
+    d.stat_items = [];
+
+    // Parse display element positions
     while (view.offset < view.byteLength && d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
       var v = null;
       if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
@@ -642,6 +707,21 @@ OSD.msp = {
         preview: typeof(c.preview) === 'function' ? c.preview(d) : c.preview
       }, this.helpers.unpack.position(v, c)));
     }
+
+    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+      // Parse statistics display enable
+      while (view.offset < view.byteLength && d.stat_items.length < OSD.constants.STATISTIC_FIELDS.length) {
+        var v = view.readU8();
+        var j = d.stat_items.length;
+        var c = OSD.constants.STATISTIC_FIELDS[j];
+        d.stat_items.push({
+          name: c.name,
+          index: j,
+          enabled: v === 1
+        });
+      }
+    }
+
     OSD.updateDisplaySize();
   }
 };
@@ -800,8 +880,36 @@ TABS.osd.initialize = function (callback) {
                 var $input = $('<label/>').append(alarmInput);
                 $alarms.append($input);
               }
+
+              // Post flight status
+              if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                $('.stats-container').show();
+                var $statsFields = $('.post-flight-stats').empty();
+
+                for (let field of OSD.data.stat_items) {
+                  if (!field.name) { continue; }
+
+                  var $field = $('<div class="stat-field field-'+field.index+'"/>');
+                  $field.append(
+                    $('<input type="checkbox" name="'+field.name+'" class="togglesmall"></input>')
+                    .data('field', field)
+                    .attr('checked', field.enabled)
+                    .change(function(e) {
+                      var field = $(this).data('field');
+                      field.enabled = !field.enabled;
+                      MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeStatistics(field))
+                      .then(function() {
+                        updateOsdView();
+                      });
+                    })
+                  );
+                  $field.append('<label for="'+field.name+'" class="char-label">'+inflection.titleize(field.name)+'</label>');
+
+                  $statsFields.append($field);
+                }
+              }
             }
-            
+
             if (!OSD.data.state.haveMax7456Video) {
               $('.requires-max7456').hide();
             }
@@ -831,7 +939,7 @@ TABS.osd.initialize = function (callback) {
                   } else {
                     $position.hide();
                   }
-                  MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encode(field))
+                  MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(field))
                   .then(function() {
                     updateOsdView();
                   });
@@ -847,7 +955,7 @@ TABS.osd.initialize = function (callback) {
                     var field = $(this).data('field');
                     var position = parseInt($(this).val());
                     field.position = position;
-                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encode(field))
+                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(field))
                     .then(function() {
                       updateOsdView();
                     });
