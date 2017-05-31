@@ -539,7 +539,8 @@ OSD.chooseFields = function () {
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
               OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                 F.MAIN_BATT_USAGE,
-                F.ARMED_TIME
+                F.ARMED_TIME,
+                F.DISARMED
               ]);
             }
           }
