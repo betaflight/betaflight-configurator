@@ -355,19 +355,19 @@ button {
   top: .8em;
 }
 
-.tab-osd .display-field {
+.tab-osd .switchable-field {
   padding: 3px;
   border: 1px solid transparent;
   border-bottom: 1px solid #ddd;
 }
 
-.tab-osd .display-field.mouseover {
+.tab-osd .switchable-field.mouseover {
   background: #fff;
   border: 1px solid #ccc;
   font-weight: 800;
 }
 
-.tab-osd .display-field input {
+.tab-osd .switchable-field input {
   float: right;
   width: 50px;
   border-radius: 3px;
@@ -378,12 +378,12 @@ button {
 
 }
 
-.tab-osd .display-field label {
+.tab-osd .switchable-field label {
   margin-left: 5px;
 
 }
 
-.tab-osd .display-fields {
+.tab-osd .switchable-fields {
   float: left;
   margin-top: 5px;
   margin-bottom: 8px;
@@ -406,7 +406,7 @@ button {
 }
 
 
-.tab-osd .display-field:last-child {
+.tab-osd .switchable-field:last-child {
   border-bottom: 0px;
 }
 

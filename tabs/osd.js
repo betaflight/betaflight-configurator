@@ -950,12 +950,12 @@ TABS.osd.initialize = function (callback) {
               // Post flight status
               if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 $('.stats-container').show();
-                var $statsFields = $('.post-flight-stats').empty();
+                var $statsFields = $('#post-flight-stat-fields').empty();
 
                 for (let field of OSD.data.stat_items) {
                   if (!field.name) { continue; }
 
-                  var $field = $('<div class="stat-field field-'+field.index+'"/>');
+                  var $field = $('<div class="switchable-field field-'+field.index+'"/>');
                   var desc = null;
                   if (field.desc && field.desc.length) {
                     desc = chrome.i18n.getMessage(field.desc);
@@ -993,13 +993,13 @@ TABS.osd.initialize = function (callback) {
             }
 
             // display fields on/off and position
-            var $displayFields = $('.display-fields').empty();
+            var $displayFields = $('#element-fields').empty();
             for (let field of OSD.data.display_items) {
               // versioning related, if the field doesn't exist at the current flight controller version, just skip it
               if (!field.name) { continue; }
 
               var checked = field.isVisible ? 'checked' : '';
-              var $field = $('<div class="display-field field-'+field.index+'"/>');
+              var $field = $('<div class="switchable-field field-'+field.index+'"/>');
               var desc = null;
               if (field.desc && field.desc.length) {
                 desc = chrome.i18n.getMessage(field.desc);
