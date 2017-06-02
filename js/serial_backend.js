@@ -208,16 +208,15 @@ function onOpen(openInfo) {
                                     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
                                         GUI.log(chrome.i18n.getMessage('uniqueDeviceIdReceived', [CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16)]));
 
-                                        // continue as usually
-                                        CONFIGURATOR.connectionValid = true;
-                                        GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
-                                        if (semver.lt(CONFIG.apiVersion, "1.4.0")) {
-                                            GUI.allowedTabs.splice(GUI.allowedTabs.indexOf('led_strip'), 1);
+                                        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
+                                            MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
+                                                GUI.log(chrome.i18n.getMessage('craftNameReceived', [CONFIG.name]));
+
+                                                finishOpen();
+                                            });
+                                        } else {
+                                            finishOpen();
                                         }
-
-                                        onConnect();
-
-                                        $('#tabs ul.mode-connected .tab_setup a').click();
                                     });
                                 });
                             });
@@ -249,6 +248,18 @@ function onOpen(openInfo) {
         // reset data
         $('div#connectbutton a.connect').data("clicks", false);
     }
+}
+
+function finishOpen() {
+    CONFIGURATOR.connectionValid = true;
+    GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
+    if (semver.lt(CONFIG.apiVersion, "1.4.0")) {
+        GUI.allowedTabs.splice(GUI.allowedTabs.indexOf('led_strip'), 1);
+    }
+
+    onConnect();
+
+    $('#tabs ul.mode-connected .tab_setup a').click();
 }
 
 function connectCli() {
