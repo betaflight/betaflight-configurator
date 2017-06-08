@@ -26,6 +26,8 @@ SYM.PB_EMPTY = 0x8D;
 SYM.PB_END = 0x8E;
 SYM.PB_CLOSE = 0x8F;
 SYM.BATTERY = 0x96;
+SYM.ARROW_SOUTH=0x60;
+SYM.ARROW_EAST=0x64;
 
 var FONT = FONT || {};
 
@@ -373,13 +375,13 @@ OSD.constants = {
       name: 'GPS_LON',
       default_position: -1,
       positionable: true,
-      preview: '-00.0'
+      preview: FONT.symbol(SYM.ARROW_SOUTH) + '00.00'
     },
     GPS_LAT: {
       name: 'GPS_LAT',
       default_position: -1,
       positionable: true,
-      preview: '-00.0'
+      preview: FONT.symbol(SYM.ARROW_EAST) + '00.00'
     },
     DEBUG: {
       name: 'DEBUG',
