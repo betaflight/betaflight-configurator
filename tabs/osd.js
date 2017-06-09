@@ -375,13 +375,13 @@ OSD.constants = {
       name: 'GPS_LON',
       default_position: -1,
       positionable: true,
-      preview: FONT.symbol(SYM.ARROW_SOUTH) + '00.00'
+      preview: FONT.symbol(SYM.ARROW_SOUTH) + '00.00000000'
     },
     GPS_LAT: {
       name: 'GPS_LAT',
       default_position: -1,
       positionable: true,
-      preview: FONT.symbol(SYM.ARROW_EAST) + '00.00'
+      preview: FONT.symbol(SYM.ARROW_EAST) + '00.00000000'
     },
     DEBUG: {
       name: 'DEBUG',
