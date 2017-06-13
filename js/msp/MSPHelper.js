@@ -825,7 +825,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 var ledDirectionLetters =       ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
                 var ledFunctionLetters =        ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l']; // in LSB bit order
                 var ledBaseFunctionLetters =    ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
-                var ledOverlayLetters =         ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
+                if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+                    var ledOverlayLetters =     ['t', 'o', 'b', 'w', 'i', 'w']; // in LSB bit
+                } else {
+                    var ledOverlayLetters =     ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
+                }
 
 
                 var ledCount = data.byteLength / 7; // v1.4.0 and below incorrectly reported 4 bytes per led.
@@ -1658,7 +1662,11 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
         var ledDirectionLetters =        ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
         var ledFunctionLetters =         ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l']; // in LSB bit order
         var ledBaseFunctionLetters =     ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
-        var ledOverlayLetters =          ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
+        if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+            var ledOverlayLetters =      ['t', 'o', 'b', 'w', 'i', 'w']; // in LSB bit
+        } else {
+            var ledOverlayLetters =      ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
+        }
 
         var buffer = [];
 
