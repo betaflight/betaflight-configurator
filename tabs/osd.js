@@ -501,7 +501,10 @@ OSD.constants = {
     },
     ARMEDTIME: {
       name: 'ARMED_TIME'
-    }
+    },
+    MAX_DISTANCE: {
+        name: 'MAX_DISTANCE'
+    }    
   }
 };
 
@@ -600,7 +603,8 @@ OSD.chooseFields = function () {
     F.BLACKBOX,
     F.END_BATTERY,
     F.FLYTIME,
-    F.ARMEDTIME
+    F.ARMEDTIME,
+    F.MAX_DISTANCE
   ];
 };
 
