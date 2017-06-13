@@ -1,14 +1,14 @@
 .tab-led-strip .content_wrapper {
     position: relative !important;
 }
-    
+
 .tab-led-strip .help {
     padding: 10px;
     background-color: #ffcb18;
     margin-bottom: 10px;
 }
 
-    
+
 .tab-led-strip .section {
     color: #565656;
     margin: 20px 0 5px 0;
@@ -90,6 +90,7 @@
 
 .tab-led-strip .gPoint.function-s .overlay-s,
 .tab-led-strip .gPoint.function-w .overlay-w,
+.tab-led-strip .gPoint.function-v .overlay-v,
 .tab-led-strip .gPoint.function-i .overlay-i,
 .tab-led-strip .gPoint.function-t .overlay-t,
 .tab-led-strip .gPoint.function-o .overlay-o,
@@ -104,6 +105,12 @@
     background-image: radial-gradient(1px at 8px 50% , red 0%, red 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
     margin-top: -30px;
     margin-left: -9px;
+}
+
+.tab-led-strip .gPoint.function-v .overlay-v {
+    background-image: radial-gradient(1px at 8px 50% , black 0%, black 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+    margin-top: -6px;
+    margin-left: 4px;
 }
 
 .tab-led-strip .gPoint.function-i .overlay-i {

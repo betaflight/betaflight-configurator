@@ -54,11 +54,11 @@
             <button class="funcClear">Clear selected</button>
             <button class="funcClearAll">Clear ALL</button>
 
-            <div class="section">LED Functions</div>
-            
-            
+            <div class="section" i18n="ledStripFunctionSection"></div>
+
+
             <div class="select">
-                <span class="color_section">Function</span>
+                <span class="color_section" i18n="ledStripFunctionTitle"></span>
                 <select class="functionSelect">
                     <option value="">None</option>
                     <option value="function-c" class="">Color</option>
@@ -70,10 +70,10 @@
                     <option value="function-r" class="">Ring</option>
                 </select>
             </div>
-            
+
 
             <div class="modifiers">
-                <span class="color_section">Color modifier</span>
+                <span class="color_section" i18n="ledStripColorModifierTitle"></span>
                 <div class="checkbox">
                     <input type="checkbox" name="ThrottleHue" class="toggle function-t" />
                     <label>
@@ -91,43 +91,47 @@
                             <option value="10" class="">Aux7</option>
                             <option value="11" class="">Aux8</option>
                         </select>
-                        <span class="labelSelect">Throttle</span>
+                        <span class="labelSelect" i18n="ledStripThrottleFunction"></span>
                     </label>
                 </div>
-                
+
                 <div class="checkbox extra_functions20">
                     <input type="checkbox" name="LarsonScanner" class="toggle function-o" />
-                    <label> <span>Larson scanner</span></label>
+                    <label> <span i18n="ledStripVtxFunction"></span></label>
                 </div>
             </div>
-            
+
             <div class="blinkers extra_functions20">
-                <span class="color_section">Blink</span>
+                <span class="color_section" i18n="ledStripBlinkTitle"></span>
                 <div class="checkbox blinkOverlay">
                     <input type="checkbox" name="blink" class="toggle function-b" />
-                    <label> <span>Blink always</span></label>
+                    <label> <span i18n="ledStripBlinkAlwaysOverlay"></span></label>
                 </div>
                 <div class="checkbox landingBlinkOverlay">
                     <input type="checkbox" name="landingBlink" class="toggle function-n" />
-                    <label> <span>Blink on landing</span></label>
+                    <label> <span i18n="ledStripBlinkLandingOverlay"></span></label>
                 </div>
             </div>
-                        
+
             <div class="overlays">
-                <span class="color_section">Overlay</span>
+                <span class="color_section" i18n="ledStripOverlayTitle"></span>
                 <div class="checkbox warningOverlay">
                     <input type="checkbox" name="Warnings" class="toggle function-w" />
-                    <label> <span>Warnings</span></label>
+                    <label> <span i18n="ledStripWarningsOverlay"></span></label>
                 </div>
                 <div class="checkbox indicatorOverlay">
                     <input type="checkbox" name="Indicator" class="toggle function-i" />
-                    <label> <span>Indicator (uses position on matrix)</span></label>
+                    <label> <span i18n="ledStripIndecatorOverlay"></span></label>
+                </div>
+                <div class="checkbox vtxOverlay">
+                    <input type="checkbox" name="Vtx" class="toggle function-v" />
+                    <label> <span i18n="ledStripVtxOverlay"></span></label>
                 </div>
             </div>
-            
+
             <div class="mode_colors">
                 <div class="section">Mode colors</div>
-                
+
                 <select class="modeSelect">
                     <option value="0">Orientation</option>
                     <option value="1">Headfree</option>
@@ -144,7 +148,7 @@
                 <button class="mode_color-0-4 dir-u">U</button>
                 <button class="mode_color-0-5 dir-d">D</button>
             </div>
-            
+
             <div class="section">LED Orientation ('Modes &amp; Orientation') and Color</div>
             <div class="directions">
                 <button class="dir-n">N</button>
@@ -154,7 +158,7 @@
                 <button class="dir-u">U</button>
                 <button class="dir-d">D</button>
             </div>
-            
+
             <div class="colors">
                 <button class="color-0" title="black">0</button>
                 <button class="color-1" title="white">1</button>
@@ -185,7 +189,7 @@
                 <button class="mode_color-6-6" title="orange">GPS: no lock</button>
                 <button class="mode_color-6-7" title="green">GPS: locked</button>
             </div>
-            
+
             <div class="section">LED Strip Wiring</div>
             <div class="wiringMode">
                 <button class="funcWire w100">Wire Ordering Mode</button>
@@ -196,11 +200,11 @@
             </div>
             <p>LEDs without wire ordering number will not be saved.</p>
         </div>
-        
+
         <div class="colorControls">
 
         </div>
-        
+
         <div class="clear-both"></div>
     </div>
     <div class="content_toolbar">

@@ -1004,13 +1004,13 @@
     },
     "receiverHelpYawDeadband": {
         "message": "These are values (in us) by how much RC input can be different before it's considered valid. For transmitters with jitter on outputs, this value can be increased if rc inputs twitch while idle. <strong>This setting is for Yaw only.</strong>"
-    },    
+    },
     "recevier3dDeadbandThrottle": {
         "message": "3D Throttle Deadband"
     },
     "receiverHelp3dDeadbandThrottle": {
         "message": "These are values (in us). To widen the neutral zone increased the value. <strong>This setting is for 3D throttle only.</strong>"
-    },    
+    },
     "receiverChannelMap": {
         "message": "Channel Map"
     },
@@ -1370,7 +1370,7 @@
         "message": "CLI reboot detected"
     },
     "cliSaveToFileBtn": {
-        "message": "Save to File"  
+        "message": "Save to File"
     },
     "loggingNote": {
         "message": "Data will be logged in this tab <span style=\"color: red\">only</span>, leaving the tab will <span style=\"color: red\">cancel</span> logging and application will return to its normal <strong>\"configurator\"</strong> state.<br /> You are free to select the global update period, data will be written into the log file every <strong>1</strong> second for performance reasons."
@@ -1651,6 +1651,42 @@
     "ledStripEepromSaved": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"
     },
+    "ledStripVtxOverlay": {
+        "message": "VTX (uses vtx frequency to assign color)"
+    },
+    "ledStripFunctionSection": {
+      "message": "LED Functions"
+    },
+    "ledStripFunctionTitle": {
+      "message": "Function"
+    },
+    "ledStripColorModifierTitle": {
+      "message": "Color modifier"
+    },
+    "ledStripThrottleFunction": {
+      "message": "Throttle"
+    },
+    "ledStripVtxFunction": {
+      "message": "Larson scanner"
+    },
+    "ledStripBlinkTitle": {
+      "message": "Blink"
+    },
+    "ledStripBlinkAlwaysOverlay": {
+      "message": "Blink always"
+    },
+    "ledStripBlinkLandingOverlay": {
+      "message": "Blink on landing"
+    },
+    "ledStripOverlayTitle": {
+      "message": "Overlay"
+    },
+    "ledStripWarningsOverlay": {
+      "message": "Warnings"
+    },
+    "ledStripIndecatorOverlay": {
+      "message": "Indicator (uses position on matrix)"
+    },
 
     "controlAxisRoll": {
         "message": "Roll"
@@ -1896,7 +1932,7 @@
     "failsafeKillSwitchHelp": {
         "message": "Set this option to make the failsafe switch (Modes Tab) act as a direct kill switch, bypassing the selected failsafe procedure. <strong>Note:</strong> Arming is blocked with the failsafe kill switch in the ON position"
     },
-    
+
     "powerButtonSave": {
         "message": "Save"
     },
@@ -1926,7 +1962,7 @@
     },
     "powerAmperageValue": {
         "message": "$1 A"
-    },    
+    },
     "powerVoltageId10": {
         "message": "Battery"
     },
@@ -1996,7 +2032,7 @@
     "powerVoltageId85": {
         "message": "Cell 6"
     },
-    
+
 
     "powerVoltageScale": {
         "message": "Scale"
@@ -2059,14 +2095,14 @@
     "powerMahValue": {
         "message": "$1 mAh"
     },
-    
+
     "powerAmperageScale": {
         "message": "Scale the output voltage to milliamps [1/10th mV/A]"
     },
     "powerAmperageOffset": {
         "message": "Offset in millivolt steps"
     },
-    
+
     "powerBatteryHead": {
         "message": "Battery"
     },
@@ -2091,7 +2127,7 @@
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
-    
+
     "osdSetupHead": {
         "message": "Info"
     },
@@ -2107,14 +2143,14 @@
     "osdSetupCameraConnectedValueNo": {
         "message": "No"
     },
-    
+
     "osdSetupResetText": {
         "message": "Reset OSD to default"
     },
     "osdSetupButtonReset": {
         "message": "Reset Settings"
     },
-    
+
 
     "mainHelpArmed": {
         "message": "Motor Arming"
