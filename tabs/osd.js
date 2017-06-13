@@ -454,7 +454,21 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.FLY_M) + '02:07'
-    }
+    },
+    HOME_DIR: {
+        name: 'HOME_DIRECTION',
+        default_position: -1,        
+        positionable: true,
+        preview: FONT.symbol(SYM.ARROW_SOUTH + 2)
+    },
+    HOME_DIST: {
+        name: 'HOME_DISTANCE',
+        default_position: -1,        
+        positionable: true,
+        preview:  function(osd_data) {
+            return '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE)
+        }
+    }    
   },
 
   ALL_STATISTIC_FIELDS: {
@@ -542,7 +556,9 @@ OSD.chooseFields = function () {
               OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                 F.MAIN_BATT_USAGE,
                 F.ARMED_TIME,
-                F.DISARMED
+                F.DISARMED,
+                F.HOME_DIR,
+                F.HOME_DIST
               ]);
             }
           }
