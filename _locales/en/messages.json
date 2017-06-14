@@ -2201,7 +2201,7 @@
         "message": "Profile"
     },
     "pidTuningProfileTip": {
-        "message": "Up to 3 (2 for some controllers) different profiles can be stored on the flight controller. The profiles include all the settings on this tab. Once in the field, simple stick commands (see online instructions) can be used to switch between the profiles."
+        "message": "Up to 3 (2 for some controllers) different pid profiles can be stored on the flight controller. The pid profiles include pid, d setpoint and angle/horizon settings on this tab. Once in the field, simple stick commands (see online instructions) can be used to switch between the profiles."
     },
     "pidTuningRateProfile": {
         "message": "Rateprofile"
