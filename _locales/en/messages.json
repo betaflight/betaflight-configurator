@@ -2151,6 +2151,130 @@
         "message": "Reset Settings"
     },
 
+    "osdDescElementMainBattVoltage": {
+        "message": "Instantaneous main battery voltage (flashes when below alarm threshold)"
+    },
+    "osdDescElementRssiValue": {
+        "message": "Instantaneous RSSI value (flashes when below alarm threshold)"
+    },
+    "osdDescElementThrottlePosition": {
+        "message": "Current throttle channel value"
+    },
+    "osdDescElementArmed": {
+        "message": "Textual armed message"
+    },
+    "osdDescElementDisarmed": {
+        "message": "Textual disarmed message"
+    },
+    "osdDescElementCrosshairs": {
+        "message": "Center of screen crosshair"
+    },
+    "osdDescElementArtificialHorizon": {
+        "message": "Graphical artificial horizon indicator"
+    },
+    "osdDescElementHorizonSidebars": {
+        "message": "Sidebars around artificial horizon indicator"
+    },
+    "osdDescElementCurrentDraw": {
+        "message": "Instantaneous battery current draw"
+    },
+    "osdDescElementMahDrawn": {
+        "message": "Total battery capacity used"
+    },
+    "osdDescElementCraftName": {
+        "message": "Craft name as set in Configuration tab"
+    },
+    "osdDescElementAltitude": {
+        "message": "Current altitude (flashes when above alarm threshold)"
+    },
+    "osdDescElementOnTime": {
+        "message": "Total time the craft has been powered on"
+    },
+    "osdDescElementFlyTime": {
+        "message": "Total time the craft has been armed in the current power cycle (flashes when above alarm threshold)"
+    },
+    "osdDescElementFlyMode": {
+        "message": "Current flight mode"
+    },
+    "osdDescElementGPSSpeed": {
+        "message": "GPS provided speed"
+    },
+    "osdDescElementGPSSats": {
+        "message": "Number of satellites providing GPS fix"
+    },
+    "osdDescElementGPSLon": {
+        "message": "GPS longitude"
+    },
+    "osdDescElementGPSLat": {
+        "message": "GPS latitude"
+    },
+    "osdDescElementDebug": {
+        "message": "Debug variables"
+    },
+    "osdDescElementPIDRoll": {
+        "message": "Roll axis PID gains"
+    },
+    "osdDescElementPIDPitch": {
+        "message": "Pitch axis PID gains"
+    },
+    "osdDescElementPIDYaw": {
+        "message": "Yaw axis PID gains"
+    },
+    "osdDescElementPower": {
+        "message": "Instantaneous electrical power consumption"
+    },
+    "osdDescElementPIDRateProfile": {
+        "message": "Numerical display of the active PID and rate profiles"
+    },
+    "osdDescElementBatteryWarning": {
+        "message": "Warning text that appears when the battery voltage falls below warning threshold"
+    },
+    "osdDescElementAvgCellVoltage": {
+        "message": "Average cell voltage (main battery voltage / cell count)"
+    },
+    "osdDescElementPitchAngle": {
+        "message": "Numerical pitch angle in degrees"
+    },
+    "osdDescElementRollAngle": {
+        "message": "Numerical roll angle in degrees"
+    },
+    "osdDescElementMainBattUsage": {
+        "message": "Graphical representation of battery capacity usage"
+    },
+    "osdDescElementArmedTime": {
+        "message": "Time since the craft was last armed"
+    },
+
+    "osdDescStatMaxSpeed": {
+        "message": "Maximum recorded speed"
+    },
+    "osdDescStatMinBattery": {
+        "message": "Minimum recorded main battery voltage"
+    },
+    "osdDescStatMinRssi": {
+        "message": "Minimum recorded RSSI"
+    },
+    "osdDescStatMaxCurrent": {
+        "message": "Maximum recorded current draw"
+    },
+    "osdDescStatUsedMah": {
+        "message": "Battery capacity used"
+    },
+    "osdDescStatMaxAltitude": {
+        "message": "Maximum recorded altitude"
+    },
+    "osdDescStatBlackbox": {
+        "message": "Percentage of total blackbox use"
+    },
+    "osdDescStatEndBattery": {
+        "message": "Battery voltage at time of disarm"
+    },
+    "osdDescStatFlyTime": {
+        "message": "Total time craft has been armed on current power cycle"
+    },
+    "osdDescStatArmedTime": {
+        "message": "Time since craft was last armed"
+    },
 
     "mainHelpArmed": {
         "message": "Motor Arming"
