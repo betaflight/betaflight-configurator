@@ -17,11 +17,6 @@
             "persistent": false
         }
     },
-
-    "sandbox": {
-    "pages": ["tabs/map.html"]
-    },
-         
     "permissions": [
         "https://maps.googleapis.com/*",    
         "https://*.github.com/",
@@ -38,12 +33,21 @@
         "alwaysOnTopWindows",
         {"usbDevices": [
             {"vendorId": 1155, "productId": 57105}
-        ]}
+        ]},
+        "webview"
     ],
     "sockets": {
         "tcp": {
             "connect": "*:*"
         }
+    },
+    "webview": {
+        "partitions": [
+            {
+                "name": "map",
+                "accessible_resources" : ["tabs/map.html", "tabs/map.js", "/images/icons/cf_icon_position.png"]
+            }
+        ]
     },
 
     "icons": {

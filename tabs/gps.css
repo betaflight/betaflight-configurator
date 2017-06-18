@@ -58,6 +58,11 @@
     float: left;
 }
 
+.tab-gps #loadmap .map {
+    width: 100%;
+    float: left;
+    height: 400px;
+}
 
 .tab-gps #loadmap .controls {
     width: 100%;
@@ -135,6 +140,10 @@ progress[value]::-webkit-progress-value {
 
 .tab-gps .gps_map {
     height: 403px;
+}
+
+.tabs-gps #loadmap .map {
+    height: 343px;
 }
 
 }
