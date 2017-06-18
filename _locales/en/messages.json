@@ -1372,6 +1372,7 @@
     "cliSaveToFileBtn": {
         "message": "Save to File"
     },
+    
     "loggingNote": {
         "message": "Data will be logged in this tab <span style=\"color: red\">only</span>, leaving the tab will <span style=\"color: red\">cancel</span> logging and application will return to its normal <strong>\"configurator\"</strong> state.<br /> You are free to select the global update period, data will be written into the log file every <strong>1</strong> second for performance reasons."
     },
@@ -1650,6 +1651,42 @@
     },
     "ledStripEepromSaved": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"
+    },
+    "ledStripVtxOverlay": {
+        "message": "VTX (uses vtx frequency to assign color)"
+    },
+    "ledStripFunctionSection": {
+      "message": "LED Functions"
+    },
+    "ledStripFunctionTitle": {
+      "message": "Function"
+    },
+    "ledStripColorModifierTitle": {
+      "message": "Color modifier"
+    },
+    "ledStripThrottleFunction": {
+      "message": "Throttle"
+    },
+    "ledStripVtxFunction": {
+      "message": "Larson scanner"
+    },
+    "ledStripBlinkTitle": {
+      "message": "Blink"
+    },
+    "ledStripBlinkAlwaysOverlay": {
+      "message": "Blink always"
+    },
+    "ledStripBlinkLandingOverlay": {
+      "message": "Blink on landing"
+    },
+    "ledStripOverlayTitle": {
+      "message": "Overlay"
+    },
+    "ledStripWarningsOverlay": {
+      "message": "Warnings"
+    },
+    "ledStripIndecatorOverlay": {
+      "message": "Indicator (uses position on matrix)"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"
