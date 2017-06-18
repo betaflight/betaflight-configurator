@@ -529,6 +529,13 @@ OSD.constants = {
                    FONT.symbol(SYM.HEADING_LINE)         + FONT.symbol(SYM.HEADING_N)    + FONT.symbol(SYM.HEADING_LINE) + 
                    FONT.symbol(SYM.HEADING_DIVIDED_LINE) + FONT.symbol(SYM.HEADING_LINE) + FONT.symbol(SYM.HEADING_E) 
         }
+    },
+    WARNINGS: {
+      name: 'WARNINGS',
+      desc: 'osdDescElementWarnings',
+      default_position: -1,
+      positionable: true,
+      preview: 'LOW VOLTAGE'
     }        
   },
   ALL_STATISTIC_FIELDS: {
@@ -611,7 +618,7 @@ OSD.chooseFields = function () {
       if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
           F.PID_RATE_PROFILE,
-          F.BATTERY_WARNING,
+          semver.gte(CONFIG.apiVersion, "1.36.0") ? F.WARNINGS : F.BATTERY_WARNING,
           F.AVG_CELL_VOLTAGE
         ]);
         if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
