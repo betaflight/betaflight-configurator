@@ -2275,6 +2275,9 @@
     "osdDescStatArmedTime": {
         "message": "Time since craft was last armed"
     },
+    "osdDescElementWarnings": {
+        "message": "Alerts (e.g. low battery) and warnings for potential problems (e.g. critically low battery), and visual beeper."
+    },
 
     "mainHelpArmed": {
         "message": "Motor Arming"
