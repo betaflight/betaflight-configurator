@@ -35,6 +35,7 @@ SYM.HEADING_N=0x18;
 SYM.HEADING_S=0x19;
 SYM.HEADING_E=0x1A;
 SYM.HEADING_W=0x1B;
+SYM.TEMP_C = 0x0E;
 
 var FONT = FONT || {};
 
@@ -496,12 +497,14 @@ OSD.constants = {
     },
     HOME_DIR: {
       name: 'HOME_DIRECTION',
+      desc: 'osdDescElementHomeDirection',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_SOUTH + 2)
     },
     HOME_DIST: {
       name: 'HOME_DISTANCE',
+      desc: 'osdDescElementHomeDistance',
       default_position: -1,
       positionable: true,
       preview:  function(osd_data) {
@@ -510,25 +513,28 @@ OSD.constants = {
     },
     NUMERICAL_HEADING: {
       name: 'NUMERICAL_HEADING',
+      desc: 'osdDescElementNumericalHeading',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_EAST) + '90'
     },
     NUMERICAL_VARIO: {
       name: 'NUMERICAL_VARIO',
+      desc: 'osdDescElementNumericalVario',
       default_position: -1,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_NORTH) + '8.7'
     },
     COMPASS_BAR: {
-        name: 'COMPASS_BAR',
-        default_position: -1,        
-        positionable: true,
-        preview:  function(osd_data) {
-            return FONT.symbol(SYM.HEADING_W)            + FONT.symbol(SYM.HEADING_LINE) + FONT.symbol(SYM.HEADING_DIVIDED_LINE) + 
-                   FONT.symbol(SYM.HEADING_LINE)         + FONT.symbol(SYM.HEADING_N)    + FONT.symbol(SYM.HEADING_LINE) + 
-                   FONT.symbol(SYM.HEADING_DIVIDED_LINE) + FONT.symbol(SYM.HEADING_LINE) + FONT.symbol(SYM.HEADING_E) 
-        }
+      name: 'COMPASS_BAR',
+      desc: 'osdDescElementCompassBar',
+      default_position: -1,
+      positionable: true,
+      preview:  function(osd_data) {
+        return FONT.symbol(SYM.HEADING_W)            + FONT.symbol(SYM.HEADING_LINE) + FONT.symbol(SYM.HEADING_DIVIDED_LINE) +
+               FONT.symbol(SYM.HEADING_LINE)         + FONT.symbol(SYM.HEADING_N)    + FONT.symbol(SYM.HEADING_LINE) +
+               FONT.symbol(SYM.HEADING_DIVIDED_LINE) + FONT.symbol(SYM.HEADING_LINE) + FONT.symbol(SYM.HEADING_E)
+      }
     },
     WARNINGS: {
       name: 'WARNINGS',
@@ -536,7 +542,21 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: 'LOW VOLTAGE'
-    }        
+    },
+    ESC_TEMPERATURE: {
+      name: 'ESC_TEMPERATURE',
+      desc: 'osdDescElementEscTemperature',
+      default_position: -1,
+      positionable: true,
+      preview: FONT.symbol(SYM.TEMP_C) + '45'
+    },
+    ESC_RPM: {
+      name: 'ESC_RPM',
+      desc: 'osdDescElementEscRpm',
+      default_position: -1,
+      positionable: true,
+      preview: '226000'
+    }
   },
   ALL_STATISTIC_FIELDS: {
     MAX_SPEED: {
@@ -580,7 +600,12 @@ OSD.constants = {
       desc: 'osdDescStatArmedTime'
     },
     MAX_DISTANCE: {
-      name: 'MAX_DISTANCE'
+      name: 'MAX_DISTANCE',
+      desc: 'osdDescStatMaxDistance'
+    },
+    BLACKBOX_LOG_NUMBER: {
+      name: 'BLACKBOX_LOG_NUMBER',
+      desc: 'osdDescStatBlackboxLogNumber'
     }
   }
 };
@@ -641,7 +666,9 @@ OSD.chooseFields = function () {
                 F.HOME_DIST,
                 F.NUMERICAL_HEADING,
                 F.NUMERICAL_VARIO,
-                F.COMPASS_BAR
+                F.COMPASS_BAR,
+                F.ESC_TEMPERATURE,
+                F.ESC_RPM
               ]);
             }
           }
@@ -684,7 +711,8 @@ OSD.chooseFields = function () {
     F.END_BATTERY,
     F.FLYTIME,
     F.ARMEDTIME,
-    F.MAX_DISTANCE
+    F.MAX_DISTANCE,
+    F.BLACKBOX_LOG_NUMBER
   ];
 };
 
