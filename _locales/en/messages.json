@@ -2281,6 +2281,30 @@
     "osdDescElementArmedTime": {
         "message": "Time since the craft was last armed"
     },
+    "osdDescElementWarnings": {
+        "message": "Alerts (e.g. low battery) and warnings for potential problems (e.g. critically low battery), and visual beeper."
+    },
+    "osdDescElementEscTemperature": {
+        "message": "Temperature reported by ESC telemetry"
+    },
+    "osdDescElementEscRpm": {
+        "message": "RPM reported by ESC telemetry"
+    },
+    "osdDescElementHomeDirection": {
+        "message": "Arrow showing direction to home position"
+    },
+    "osdDescElementHomeDistance": {
+        "message": "Distance to home position (in either feet or metre based on unit system setting)"
+    },
+    "osdDescElementNumericalHeading": {
+        "message": "Numerical readout of current heading in degrees"
+    },
+    "osdDescElementNumericalVario": {
+        "message": "Numerical readout of vertical speed (in either feet or metre based on unit system setting)"
+    },
+    "osdDescElementCompassBar": {
+        "message": "Graphical compass bar showing current heading"
+    },
 
     "osdDescStatMaxSpeed": {
         "message": "Maximum recorded speed"
@@ -2312,8 +2336,11 @@
     "osdDescStatArmedTime": {
         "message": "Time since craft was last armed"
     },
-    "osdDescElementWarnings": {
-        "message": "Alerts (e.g. low battery) and warnings for potential problems (e.g. critically low battery), and visual beeper."
+    "osdDescStatMaxDistance": {
+        "message": "Maximum distance from home location"
+    },
+    "osdDescStatBlackboxLogNumber": {
+        "message": "Log number for this flights Blackbox log"
     },
 
     "mainHelpArmed": {
