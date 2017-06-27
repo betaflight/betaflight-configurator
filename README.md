@@ -28,10 +28,15 @@ Please note - the application will automatically update itself when new versions
 
 ### Alternative way
 
-1. Clone the repo to any local directory or download it as zip
-2. Start Chromium or Google Chrome and go to tools -> extension
-3. Check the "Developer mode" checkbox
-4. Click on load unpacked extension and point it to the Betaflight Configurator directory (for example D:/betaflight-configurator)
+1. Clone the repo to any local directory or download it as zip.
+2. Extract to a folder and not the folder.
+3. Start Google Chrome.
+4. Click the 3-dots on the far right of the URL bar.
+5. Select Settings
+6. On the left of the screen select Extensions.
+7. Check the Developer Mode checkbox.
+8. Click on load unpacked extension.
+9. Point it to the folder you extracted the zip to.
 
 ## How to use
 
