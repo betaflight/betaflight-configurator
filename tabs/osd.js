@@ -223,6 +223,7 @@ OSD.initData = function() {
     alarms: [],
     stat_items: [],
     display_items: [],
+    timers: [],
     last_positions: {},
     preview_logo: true,
     preview: [],
@@ -230,6 +231,28 @@ OSD.initData = function() {
   };
 };
 OSD.initData();
+
+OSD.generateTimerPreview = function(osd_data, timer_index) {
+  var preview = '';
+  switch (osd_data.timers[timer_index].src) {
+    case 0:
+      preview += FONT.symbol(SYM.ON_M);
+      break;
+    case 1:
+    case 2:
+      preview += FONT.symbol(SYM.FLY_M);
+      break;
+  }
+  switch (osd_data.timers[timer_index].precision) {
+    case 0:
+      preview += '00:00';
+      break;
+    case 1:
+      preview += '00:00.00';
+      break;
+  }
+  return preview;
+};
 
 OSD.constants = {
   VISIBLE: 0x0800,
@@ -249,6 +272,15 @@ OSD.constants = {
   UNIT_TYPES: [
     'IMPERIAL',
     'METRIC'
+  ],
+  TIMER_TYPES: [
+    'ON TIME',
+    'TOTAL ARMED TIME',
+    'LAST ARMED TIME'
+  ],
+  TIMER_PRECISION: [
+    'SECOND',
+    'HUNDREDTH'
   ],
   AHISIDEBARWIDTHPOSITION: 7,
   AHISIDEBARHEIGHTPOSITION: 3,
@@ -556,7 +588,25 @@ OSD.constants = {
       default_position: -1,
       positionable: true,
       preview: '226000'
-    }
+    },
+    TIMER_1: {
+      name: 'TIMER_1',
+      desc: 'osdDescElementTimer1',
+      default_position: -1,
+      positionable: true,
+      preview: function(osd_data) {
+        return OSD.generateTimerPreview(osd_data, 0);
+      }
+    },
+    TIMER_2: {
+      name: 'TIMER_2',
+      desc: 'osdDescElementTimer2',
+      default_position: -1,
+      positionable: true,
+      preview: function(osd_data) {
+        return OSD.generateTimerPreview(osd_data, 1);
+      }
+    },
   },
   ALL_STATISTIC_FIELDS: {
     MAX_SPEED: {
@@ -606,6 +656,14 @@ OSD.constants = {
     BLACKBOX_LOG_NUMBER: {
       name: 'BLACKBOX_LOG_NUMBER',
       desc: 'osdDescStatBlackboxLogNumber'
+    },
+    TIMER_1: {
+      name: 'TIMER_1',
+      desc: 'osdDescStatTimer1'
+    },
+    TIMER_2: {
+      name: 'TIMER_2',
+      desc: 'osdDescStatTimer2'
     }
   }
 };
@@ -620,9 +678,22 @@ OSD.chooseFields = function () {
       F.MAIN_BATT_VOLTAGE,
       F.CROSSHAIRS,
       F.ARTIFICIAL_HORIZON,
-      F.HORIZON_SIDEBARS,
-      F.ONTIME,
-      F.FLYTIME,
+      F.HORIZON_SIDEBARS
+    ];
+
+    if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+      OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+        F.ONTIME,
+        F.FLYTIME
+      ]);
+    } else {
+      OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+        F.TIMER_1,
+        F.TIMER_2
+      ]);
+    }
+
+    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
       F.FLYMODE,
       F.CRAFT_NAME,
       F.THROTTLE_POSITION,
@@ -632,7 +703,7 @@ OSD.chooseFields = function () {
       F.GPS_SPEED,
       F.GPS_SATS,
       F.ALTITUDE
-    ];
+    ]);
     if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
       OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
         F.PID_ROLL,
@@ -660,7 +731,6 @@ OSD.chooseFields = function () {
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
               OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                 F.MAIN_BATT_USAGE,
-                F.ARMED_TIME,
                 F.DISARMED,
                 F.HOME_DIR,
                 F.HOME_DIST,
@@ -709,8 +779,8 @@ OSD.chooseFields = function () {
     F.MAX_ALTITUDE,
     F.BLACKBOX,
     F.END_BATTERY,
-    F.FLYTIME,
-    F.ARMEDTIME,
+    F.TIMER_1,
+    F.TIMER_2,
     F.MAX_DISTANCE,
     F.BLACKBOX_LOG_NUMBER
   ];
@@ -753,6 +823,14 @@ OSD.msp = {
           display_item.isVisible = bits !== -1;
         }
         return display_item;
+      },
+      timer: function(bits, c) {
+        var timer = {
+          src: bits & 0x0F,
+          precision: (bits >> 4) & 0x0F,
+          alarm: (bits >> 8) & 0xFF
+        };
+        return timer;
       }
     },
     pack: {
@@ -764,6 +842,9 @@ OSD.msp = {
         } else {
           return isVisible ? (position == -1 ? 0 : position): -1;
         }
+      },
+      timer: function(timer) {
+        return (timer.src & 0x0F) | ((timer.precision & 0x0F) << 4) | ((timer.alarm & 0xFF ) << 8);
       }
     }
   },
@@ -774,7 +855,12 @@ OSD.msp = {
       // watch out, order matters! match the firmware
       result.push8(OSD.data.alarms.rssi.value);
       result.push16(OSD.data.alarms.cap.value);
-      result.push16(OSD.data.alarms.time.value);
+      if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+        result.push16(OSD.data.alarms.time.value);
+      } else {
+        // This value is unused by the firmware with configurable timers
+        result.push16(0);
+      }
       result.push16(OSD.data.alarms.alt.value);
     }
     return result;
@@ -792,12 +878,17 @@ OSD.msp = {
     buffer.push8(0);
     return buffer;
   },
+  encodeTimer: function(timer) {
+    var buffer = [-2, timer.index];
+    buffer.push16(this.helpers.pack.timer(timer));
+    return buffer;
+  },
   // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled
   decode: function(payload) {
     var view = payload.data;
     var d = OSD.data;
     d.flags = view.readU8();
-    
+
     if (d.flags > 0) {
       if (payload.length > 1) {
         d.video_system = view.readU8();
@@ -806,20 +897,26 @@ OSD.msp = {
           d.alarms = {};
           d.alarms['rssi'] = { display_name: 'Rssi', value: view.readU8() };
           d.alarms['cap']= { display_name: 'Capacity', value: view.readU16() };
-          d.alarms['time'] = { display_name: 'Minutes', value: view.readU16() };
+          if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+            d.alarms['time'] = { display_name: 'Minutes', value: view.readU16() };
+          } else {
+            // This value is unused in configurable timers
+            view.readU16();
+          }
           d.alarms['alt'] = { display_name: 'Altitude', value: view.readU16() };
         }
       }
     }
-    
+
     d.state = {};
-    d.state.haveSomeOsd = (d.flags != 0) 
+    d.state.haveSomeOsd = (d.flags != 0)
     d.state.haveMax7456Video = bit_check(d.flags, 4) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
     d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
     d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(CONFIG.apiVersion, "1.34.0");
 
     d.display_items = [];
     d.stat_items = [];
+    d.timers = [];
 
     // Parse display element positions
     while (view.offset < view.byteLength && d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
@@ -836,12 +933,16 @@ OSD.msp = {
         desc: c.desc,
         index: j,
         positionable: c.positionable,
-        preview: typeof(c.preview) === 'function' ? c.preview(d) : c.preview
+        preview: c.preview
       }, this.helpers.unpack.position(v, c)));
     }
 
     if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
       // Parse statistics display enable
+      var expectedStatsCount = view.readU8();
+      if (expectedStatsCount != OSD.constants.STATISTIC_FIELDS.length) {
+        console.error("Firmware is transmitting a different number of statistics (" + expectedStatsCount + ") to what the configurator is expecting (" + OSD.constants.STATISTIC_FIELDS.length + ")");
+      }
       while (view.offset < view.byteLength && d.stat_items.length < OSD.constants.STATISTIC_FIELDS.length) {
         var v = view.readU8();
         var j = d.stat_items.length;
@@ -852,6 +953,35 @@ OSD.msp = {
           index: j,
           enabled: v === 1
         });
+        expectedStatsCount--;
+      }
+      // Read all the data for any statistics we don't know about
+      while (expectedStatsCount > 0) {
+        view.readU8();
+        expectedStatsCount--;
+      }
+
+      // Parse configurable timers
+      var expectedTimersCount = view.readU8();
+      while (view.offset < view.byteLength) {
+        var v = view.readU16();
+        var j = d.timers.length;
+        d.timers.push($.extend({
+          index: j,
+        }, this.helpers.unpack.timer(v, c)));
+        expectedTimersCount--;
+      }
+      // Read all the data for any timers we don't know about
+      while (expectedTimersCount > 0) {
+        view.readU16();
+        expectedTimersCount--;
+      }
+    }
+
+    // Generate OSD element previews that are defined by a function
+    for (let item of d.display_items) {
+      if (typeof(item.preview) === 'function') {
+        item.preview = item.preview(d);
       }
     }
 
@@ -1014,8 +1144,65 @@ TABS.osd.initialize = function (callback) {
                 $alarms.append($input);
               }
 
-              // Post flight status
               if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                // Timers
+                $('.timers-container').show();
+                var $timers = $('#timer-fields').empty();
+                for (let tim of OSD.data.timers) {
+                  var $timerConfig = $('<div class="switchable-field field-' + tim.index + '"/>');
+
+                  // Timer number
+                  $timerConfig.append('<span>' + (tim.index + 1) + '</span>');
+
+                  // Source
+                  var src = $('<select class="timer-option osd_tip" id="' + tim.index + '"></select>');
+                  src.attr('title', chrome.i18n.getMessage('osdTimerSourceTooltip'));
+                  OSD.constants.TIMER_TYPES.forEach(function(e, i) {
+                    src.append('<option value="' + i + '">' + e + '</option>');
+                  });
+                  src[0].selectedIndex = tim.src;
+                  src.blur(function(e) {
+                    OSD.data.timers[$(this)[0].id].src = $(this)[0].selectedIndex;
+                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[$(this)[0].id]))
+                    .then(function() {
+                      updateOsdView();
+                    });
+                  });
+                  $timerConfig.append(src);
+
+                  // Precision
+                  var precision = $('<select class="timer-option osd_tip" id="' + tim.index + '"></select>');
+                  precision.attr('title', chrome.i18n.getMessage('osdTimerPrecisionTooltip'));
+                  OSD.constants.TIMER_PRECISION.forEach(function(e, i) {
+                    precision.append('<option value="' + i + '">' + e + '</option>');
+                  });
+                  precision[0].selectedIndex = tim.precision;
+                  precision.blur(function(e) {
+                    OSD.data.timers[$(this)[0].id].precision = $(this)[0].selectedIndex;
+                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[$(this)[0].id]))
+                    .then(function() {
+                      updateOsdView();
+                    });
+                  });
+                  $timerConfig.append(precision);
+
+                  // Alarm
+                  var alarm = $('<input class="timer-option osd_tip" name="alarm" type="number" min=0 id="' + tim.index + '"/>');
+                  alarm.attr('title', chrome.i18n.getMessage('osdTimerAlarmTooltip'));
+                  alarm[0].value = tim.alarm;
+                  alarm.blur(function(e) {
+                    OSD.data.timers[$(this)[0].id].alarm = $(this)[0].value;
+                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[$(this)[0].id]))
+                    .then(function() {
+                      updateOsdView();
+                    });
+                  });
+                  $timerConfig.append(alarm);
+
+                  $timers.append($timerConfig);
+                }
+
+                // Post flight statistics
                 $('.stats-container').show();
                 var $statsFields = $('#post-flight-stat-fields').empty();
 
