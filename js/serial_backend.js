@@ -442,19 +442,13 @@ function have_sensor(sensors_detected, sensor_code) {
             return bit_check(sensors_detected, 3);
         case 'sonar':
             return bit_check(sensors_detected, 4);
-    }
-
-    if (bit_check(sensors_detected, 5)) {
-        switch (sensor_code) {
         case 'gyro':
-            return bit_check(sensors_detected, 6);
-        }
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                return bit_check(sensors_detected, 5);
+            } else {
+                return true;
+            }
     }
-
-    if (sensor_code == 'gyro) {
-        return true;
-    }
-
     return false;
 }
 
