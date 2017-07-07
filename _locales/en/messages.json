@@ -2320,6 +2320,12 @@
     "osdDescElementCompassBar": {
         "message": "Graphical compass bar showing current heading"
     },
+    "osdDescElementTimer1" : {
+        "message": "Shows the value of timer 1"
+    },
+    "osdDescElementTimer2" : {
+        "message": "Shows the value of timer 2"
+    },
 
     "osdDescStatMaxSpeed": {
         "message": "Maximum recorded speed"
@@ -2356,6 +2362,22 @@
     },
     "osdDescStatBlackboxLogNumber": {
         "message": "Log number for this flights Blackbox log"
+    },
+    "osdDescStatTimer1": {
+        "message": "Value of timer 1 at time of disarming"
+    },
+    "osdDescStatTimer2": {
+        "message": "Value of timer 2 at time of disarming"
+    },
+
+    "osdTimerSourceTooltip": {
+        "message": "Select the timer source, this controls the duration/event that the timer measures"
+    },
+    "osdTimerPrecisionTooltip": {
+        "message": "Select the timer precision, this controls to what precision the time is reported in"
+    },
+    "osdTimerAlarmTooltip": {
+        "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"
     },
 
     "mainHelpArmed": {

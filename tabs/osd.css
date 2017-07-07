@@ -375,12 +375,10 @@ button {
   padding:2px;
   margin-top: -2px;
   display: none;
-
 }
 
 .tab-osd .switchable-field label {
   margin-left: 5px;
-
 }
 
 .tab-osd .switchable-fields {
@@ -388,7 +386,6 @@ button {
   margin-top: 5px;
   margin-bottom: 8px;
   width: 100%;
-
 }
 
 .spacer_box_title span {
@@ -425,33 +422,37 @@ button {
 }
 
 .tab-osd .alarms label {
-    display: block;
-    width:100%;
-    border-bottom: 1px solid #ddd;
-    margin-top:5px;
-    padding-bottom: 5px
-    }
-    
+  display: block;
+  width:100%;
+  border-bottom: 1px solid #ddd;
+  margin-top:5px;
+  padding-bottom: 5px
+}
+
 .tab-osd .alarms label:last-child {
-    border-bottom: none;
-    padding-bottom: 0px
-    }
-    
+  border-bottom: none;
+  padding-bottom: 0px
+}
+
 .tab-osd .alarms input {
-    width: 55px;
-    padding-left: 3px;
-    height: 18px;
-    line-height: 20px;
-    text-align: left;
-    border: 1px solid silver;
-    border-radius: 3px;
-    margin-right: 11px;
-    font-size: 11px;
-    font-weight: normal;    
-    }
+  width: 55px;
+  padding-left: 3px;
+  height: 18px;
+  line-height: 20px;
+  text-align: left;
+  border: 1px solid silver;
+  border-radius: 3px;
+  margin-right: 11px;
+  font-size: 11px;
+  font-weight: normal;
+}
 
-
-
+.timer-option {
+  float: none !important;
+  padding: 2px;
+  margin-left: 10px;
+  display: inline !important;
+}
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
   .tab-osd .content_wrapper {
