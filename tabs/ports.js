@@ -43,8 +43,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push({ name: 'TELEMETRY_IBUS', groups: ['telemetry'], maxPorts: 1 });
     }
 
-    // support configure RunCam Split
-    if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
         functionRules.push({ name: 'RUNCAM_SPLIT_CONTROL', groups: ['peripherals'], maxPorts: 1 });
     }
 
