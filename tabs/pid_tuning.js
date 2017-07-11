@@ -448,11 +448,11 @@ TABS.pid_tuning.initialize = function (callback) {
         return maxAngularVel;
     }
 
-    function drawCurve(rate, rcRate, rcExpo, useSuperExpo, maxAngularVel, deadband, colour, yOffset, context) {
+    function drawCurve(rate, rcRate, rcExpo, useSuperExpo, deadband, maxAngularVel, colour, yOffset, context) {
         context.save();
         context.strokeStyle = colour;
         context.translate(0, yOffset);
-        self.rateCurve.draw(rate, rcRate, rcExpo, useSuperExpo, maxAngularVel, deadband, context);
+        self.rateCurve.draw(rate, rcRate, rcExpo, useSuperExpo, deadband, maxAngularVel, context);
         context.restore();
     }
 
