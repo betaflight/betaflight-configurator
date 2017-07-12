@@ -261,8 +261,11 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             $('.profile select[name="dtermFilterType"]').val(FILTER_CONFIG.dterm_filter_type);
+            $('.antigravity input[name="itermThrottleThreshold"]').val(ADVANCED_TUNING.itermThrottleThreshold);
+            $('.antigravity input[name="itermAcceleratorGain"]').val(ADVANCED_TUNING.itermAcceleratorGain / 1000);
         } else {
             $('.dtermfiltertype').hide();
+            $('.antigravity').hide();
         }
     }
 
@@ -377,6 +380,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             FILTER_CONFIG.dterm_filter_type = $('.profile select[name="dtermFilterType"]').val();
+            ADVANCED_TUNING.itermThrottleThreshold = parseInt($('.antigravity input[name="itermThrottleThreshold"]').val());
+            ADVANCED_TUNING.itermAcceleratorGain = parseInt($('.antigravity input[name="itermAcceleratorGain"]').val() * 1000);
         }
     }
 

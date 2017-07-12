@@ -810,10 +810,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     ADVANCED_TUNING.itermThrottleGain = data.readU8();
                     ADVANCED_TUNING.pidMaxVelocity = data.readU16();
                     ADVANCED_TUNING.pidMaxVelocityYaw = data.readU16();
-                }
-                if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
-                    ADVANCED_TUNING.levelAngleLimit = data.readU8();
-                    ADVANCED_TUNING.levelSensitivity = data.readU8();
+                    if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
+                        ADVANCED_TUNING.levelAngleLimit = data.readU8();
+                        ADVANCED_TUNING.levelSensitivity = data.readU8();
+                    }
+                    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                        ADVANCED_TUNING.itermThrottleThreshold = data.readU16();
+                        ADVANCED_TUNING.itermAcceleratorGain = data.readU16();
+                    }
                 }
                 break;
             case MSPCodes.MSP_SENSOR_CONFIG:
@@ -1413,6 +1417,10 @@ MspHelper.prototype.crunch = function(code) {
                 if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
                     buffer.push8(ADVANCED_TUNING.levelAngleLimit)
                         .push8(ADVANCED_TUNING.levelSensitivity);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    buffer.push16(ADVANCED_TUNING.itermThrottleThreshold)
+                        .push16(ADVANCED_TUNING.itermAcceleratorGain);
                 }
             }
             // only supports 1 version pre bf 3.0

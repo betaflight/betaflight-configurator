@@ -545,7 +545,7 @@
         "message": "Configure via the BlackBox tab after enabling."
     },
     "featureESC_SENSOR": {
-        "message": "Use KISS ESC 24A telemetry as sensor"
+        "message": "Use KISS/BLHeli_32 ESC telemetry as sensor"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Forward aux channels to servo outputs"
@@ -570,6 +570,12 @@
     },
     "featureVTX": {
         "message": "Video Transmitter"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "Temporary boost I-Term on high throttle changes"
+    },
+    "featureDYNAMIC_FILTER": {
+        "message": "Dynamic gyro notch filtering"
     },
     "featureFAILSAFE": {
         "message": "Enable Failsafe Stage 2"
@@ -842,6 +848,14 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Profile independent PID Controller Settings"
     },
+
+    "pidTuningAntiGravityGain": {
+        "message": "Anti Gravity Gain"
+    },
+    "pidTuningAntiGravityThres": {
+        "message": "Anti Gravity Threshold"
+    },
+
     "pidTuningPidSettings": {
         "message": "PID Controller Settings"
     },

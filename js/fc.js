@@ -331,6 +331,8 @@ var FC = {
             pidMaxVelocityYaw:          0,
             levelAngleLimit:            0,
             levelSensitivity:           0,
+            itermThrottleThreshold:     0,
+            itermAcceleratorGain:       0,
         };
 
         SENSOR_CONFIG = {
