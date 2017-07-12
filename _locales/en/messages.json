@@ -741,19 +741,19 @@
     },
 
     "portsIdentifier": {
-      "message": "Identifier"
+        "message": "Identifier"
     },
     "portsConfiguration": {
-      "message": "Configuration/MSP"
+        "message": "Configuration/MSP"
     },
     "portsSerialRx": {
-      "message": "Serial Rx"
+        "message": "Serial Rx"
     },
     "portsSensorIn": {
-      "message": "Sensor Input"
+        "message": "Sensor Input"
     },
     "portsTelemetryOut": {
-      "message": "Telemetry Output"
+        "message": "Telemetry Output"
     },
     "portsPeripherals": {
         "message": "Peripherals"
@@ -921,10 +921,10 @@
         "message": "Frequency"
     },
     "pidTuningRatesCurve": {
-	    "message": "Rates"
+        "message": "Rates"
     },
     "throttle": {
-	    "message": "Throttle"
+        "message": "Throttle"
     },
     "pidTuningButtonSave": {
         "message": "Save"
@@ -1239,13 +1239,13 @@
     "transponderHelp2": {
         "message": "For more information please visit <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer site</a>"
     },
-	"transponderDataHelp3": {
+    "transponderDataHelp3": {
         "message": "Choose ERLT ID 0-63"
     },
     "transponderHelp3": {
         "message": "For more information please visit <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer site</a>"
     },
-	"transponderButtonSave": {
+    "transponderButtonSave": {
         "message": "Save"
     },
     "transponderButtonSaveReboot": {
@@ -1387,7 +1387,7 @@
     "cliSaveToFileBtn": {
         "message": "Save to File"
     },
-    
+
     "loggingNote": {
         "message": "Data will be logged in this tab <span style=\"color: red\">only</span>, leaving the tab will <span style=\"color: red\">cancel</span> logging and application will return to its normal <strong>\"configurator\"</strong> state.<br /> You are free to select the global update period, data will be written into the log file every <strong>1</strong> second for performance reasons."
     },
@@ -1671,73 +1671,73 @@
         "message": "VTX (uses vtx frequency to assign color)"
     },
     "ledStripFunctionSection": {
-      "message": "LED Functions"
+        "message": "LED Functions"
     },
     "ledStripFunctionTitle": {
-      "message": "Function"
+        "message": "Function"
     },
     "ledStripColorModifierTitle": {
-      "message": "Color modifier"
+        "message": "Color modifier"
     },
     "ledStripThrottleFunction": {
-      "message": "Throttle"
+        "message": "Throttle"
     },
     "ledStripVtxFunction": {
-      "message": "Larson scanner"
+        "message": "Larson scanner"
     },
     "ledStripBlinkTitle": {
-      "message": "Blink"
+        "message": "Blink"
     },
     "ledStripBlinkAlwaysOverlay": {
-      "message": "Blink always"
+        "message": "Blink always"
     },
     "ledStripBlinkLandingOverlay": {
-      "message": "Blink on landing"
+        "message": "Blink on landing"
     },
     "ledStripOverlayTitle": {
-      "message": "Overlay"
+        "message": "Overlay"
     },
     "ledStripWarningsOverlay": {
-      "message": "Warnings"
+        "message": "Warnings"
     },
     "ledStripIndecatorOverlay": {
-      "message": "Indicator (uses position on matrix)"
+        "message": "Indicator (uses position on matrix)"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (uses vtx frequency to assign color)"
     },
     "ledStripFunctionSection": {
-      "message": "LED Functions"
+        "message": "LED Functions"
     },
     "ledStripFunctionTitle": {
-      "message": "Function"
+        "message": "Function"
     },
     "ledStripColorModifierTitle": {
-      "message": "Color modifier"
+        "message": "Color modifier"
     },
     "ledStripThrottleFunction": {
-      "message": "Throttle"
+        "message": "Throttle"
     },
     "ledStripVtxFunction": {
-      "message": "Larson scanner"
+        "message": "Larson scanner"
     },
     "ledStripBlinkTitle": {
-      "message": "Blink"
+        "message": "Blink"
     },
     "ledStripBlinkAlwaysOverlay": {
-      "message": "Blink always"
+        "message": "Blink always"
     },
     "ledStripBlinkLandingOverlay": {
-      "message": "Blink on landing"
+        "message": "Blink on landing"
     },
     "ledStripOverlayTitle": {
-      "message": "Overlay"
+        "message": "Overlay"
     },
     "ledStripWarningsOverlay": {
-      "message": "Warnings"
+        "message": "Warnings"
     },
     "ledStripIndecatorOverlay": {
-      "message": "Indicator (uses position on matrix)"
+        "message": "Indicator (uses position on matrix)"
     },
 
     "controlAxisRoll": {
@@ -1849,60 +1849,66 @@
     "pidTuningLevelHelp": {
         "message": "The values below change the behaviour of the ANGLE and HORIZON flight modes. Different PID controllers handle the values differently. Please check the documentation."
     },
-  "pidTuningNonProfileFilterSettings": {
-    "message": "Profile independent Filter Settings"
-  },
-  "pidTuningGyroLowpassFrequency": {
-    "message": "Gyro Soft Lowpass Frequency [Hz]"
-  },
-  "pidTuningGyroLowpassFrequencyHelp": {
-    "message": "Gyro Soft Lowpass Frequency [Hz]"
-  },
-  "pidTuningGyroNotch1Frequency": {
-      "message": "Gyro Notch Filter 1 Frequency [Hz]"
-  },
-  "pidTuningGyroNotch2Frequency": {
-      "message": "Gyro Notch Filter 2 Frequency [Hz]"
-  },
-  "pidTuningGyroNotchFrequencyHelp": {
-    "message": "Gyro Notch Filter Frequency in Hz (0 means disabled)"
-  },
-  "pidTuningGyroNotch1Cutoff": {
+    "pidTuningNonProfileFilterSettings": {
+        "message": "Profile independent Filter Settings"
+    },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "Gyro Soft Lowpass Frequency [Hz]"
+    },
+    "pidTuningGyroLowpassFrequencyHelp": {
+        "message": "Gyro Soft Lowpass Frequency [Hz]"
+    },
+    "pidTuningGyroNotch1Frequency": {
+        "message": "Gyro Notch Filter 1 Frequency [Hz]"
+    },
+    "pidTuningGyroNotch2Frequency": {
+        "message": "Gyro Notch Filter 2 Frequency [Hz]"
+    },
+    "pidTuningGyroNotchFrequencyHelp": {
+        "message": "Gyro Notch Filter Frequency in Hz (0 means disabled)"
+    },
+    "pidTuningGyroNotch1Cutoff": {
         "message": "Gyro Notch Filter Cutoff 1 Frequency [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
         "message": "Gyro Notch Filter Cutoff 2 Frequency [Hz]"
     },
     "pidTuningGyroNotchCutoffHelp": {
-    "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
-  },
-  "pidTuningFilterSettings": {
-    "message": "Filter Settings"
-  },
-  "pidTuningDTermLowpassFrequency": {
-    "message": "D Term Lowpass Frequency [Hz]"
-  },
-  "pidTuningDTermLowpassFrequencyHelp": {
-    "message": "D Term Lowpass Frequency [Hz] (0 means disabled)"
-  },
-  "pidTuningDTermNotchFrequency": {
-    "message": "D Term Notch Filter Frequency [Hz]"
-  },
-  "pidTuningDTermNotchFrequencyHelp": {
-    "message": "D Term Notch Filter Frequency [Hz] (0 means disabled)"
-  },
-  "pidTuningDTermNotchCutoff": {
-    "message": "D Term Notch Filter Cutoff [Hz]"
-  },
-  "pidTuningDTermNotchCutoffHelp": {
-    "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
-  },
-  "pidTuningYawLowpassFrequency": {
-    "message": "Yaw Lowpass Frequency [Hz]"
-  },
-  "pidTuningYawLowpassFrequencyHelp": {
-    "message": "Yaw Lowpass Frequency [Hz] (Yaw axis can sometimes be noiser than the rest. This filter only affects the P of yaw)"
-  },
+        "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
+    },
+    "pidTuningFilterSettings": {
+        "message": "Filter Settings"
+    },
+    "pidTuningDTermLowpassType": {
+        "message": "D-Term Lowpass Filter"
+    },
+    "pidTuningDTermLowpassTypeTip": {
+        "message": "Select D-Term lowpass filter type to use. Default is BIQUAD"
+    },
+    "pidTuningDTermLowpassFrequency": {
+        "message": "D Term Lowpass Frequency [Hz]"
+    },
+    "pidTuningDTermLowpassFrequencyHelp": {
+        "message": "D Term Lowpass Frequency [Hz] (0 means disabled)"
+    },
+    "pidTuningDTermNotchFrequency": {
+        "message": "D Term Notch Filter Frequency [Hz]"
+    },
+    "pidTuningDTermNotchFrequencyHelp": {
+        "message": "D Term Notch Filter Frequency [Hz] (0 means disabled)"
+    },
+    "pidTuningDTermNotchCutoff": {
+        "message": "D Term Notch Filter Cutoff [Hz]"
+    },
+    "pidTuningDTermNotchCutoffHelp": {
+        "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
+    },
+    "pidTuningYawLowpassFrequency": {
+        "message": "Yaw Lowpass Frequency [Hz]"
+    },
+    "pidTuningYawLowpassFrequencyHelp": {
+        "message": "Yaw Lowpass Frequency [Hz] (Yaw axis can sometimes be noiser than the rest. This filter only affects the P of yaw)"
+    },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensation"
     },
@@ -2474,22 +2480,22 @@
         "message": "FPV Camera Angle [degrees]"
     },
     "onboardLoggingBlackbox": {
-    	"message": "Blackbox logging device"
+        "message": "Blackbox logging device"
     },
-      "onboardLoggingRateOfLogging": {
-    	"message": "Blackbox logging rate"
+    "onboardLoggingRateOfLogging": {
+        "message": "Blackbox logging rate"
     },
-      "onboardLoggingSerialLogger": {
-    	"message": "Outboard serial logging device"
+    "onboardLoggingSerialLogger": {
+        "message": "Outboard serial logging device"
     },
-      "onboardLoggingFlashLogger": {
-    	"message": "Onboard dataflash chip"
+    "onboardLoggingFlashLogger": {
+        "message": "Onboard dataflash chip"
     },
-      "onboardLoggingEraseInProgress": {
-    	"message": "Erase in progress, please wait..."
+    "onboardLoggingEraseInProgress": {
+        "message": "Erase in progress, please wait..."
     },
-      "onboardLoggingOnboardSDCard": {
-    	"message": "Onboard SD card"
+    "onboardLoggingOnboardSDCard": {
+        "message": "Onboard SD card"
     }
 
 

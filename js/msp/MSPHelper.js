@@ -788,6 +788,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         FILTER_CONFIG.gyro_soft_notch_hz_2 = data.readU16();
                         FILTER_CONFIG.gyro_soft_notch_cutoff_2 = data.readU16();
                     }
+                    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                        FILTER_CONFIG.dterm_filter_type = data.readU8();
+                    }
                 }
                 break;
             case MSPCodes.MSP_SET_PID_ADVANCED:
@@ -1387,6 +1390,9 @@ MspHelper.prototype.crunch = function(code) {
                 if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
                     buffer.push16(FILTER_CONFIG.gyro_soft_notch_hz_2)
                         .push16(FILTER_CONFIG.gyro_soft_notch_cutoff_2)
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    buffer.push8(FILTER_CONFIG.dterm_filter_type);
                 }
             }
             break;
