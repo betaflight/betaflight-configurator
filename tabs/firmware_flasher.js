@@ -341,19 +341,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                             if (String($('div#port-picker #port').val()) != '0') {
                                 var port = String($('div#port-picker #port').val()),
                                     baud;
-
-                                switch (GUI.operating_system) {
-                                    case 'Windows':
-                                    case 'MacOS':
-                                    case 'ChromeOS':
-                                    case 'Linux':
-                                    case 'UNIX':
-                                        baud = 921600;
-                                        break;
-
-                                    default:
-                                        baud = 115200;
-                                }
+                                baud = 115200;
 
                                 if ($('input.updating').is(':checked')) {
                                     options.no_reboot = true;
