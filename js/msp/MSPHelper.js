@@ -1245,22 +1245,47 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(BATTERY_CONFIG.voltageMeterSource)
                 .push8(BATTERY_CONFIG.currentMeterSource);
             break;
-// FIXME - Needs updating before it can be used.
-//        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
-//            buffer.push8(MISC.vbatscale)
-//                .push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
-//                .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
-//                .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10));
-//                if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
-//                    buffer.push8(BATTERY_CONFIG.voltageMeterSource);
-//                }
-//            break;
-//        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
-//            buffer.push16(BF_CONFIG.currentscale)
-//                .push16(BF_CONFIG.currentoffset)
-//                .push8(BATTERY_CONFIG.currentMeterSource)
-//                .push16(BF_CONFIG.batterycapacity)
-//            break;
+
+        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                buffer.push8(VOLTAGE_METER_CONFIGS.length)
+                for (var i = 0; i < VOLTAGE_METER_CONFIGS.length; i++) {
+                    buffer.push8(4) // subframe length
+                        .push8(VOLTAGE_METER_CONFIGS[i].id)
+                        .push8(VOLTAGE_METER_CONFIGS[i].vbatscale)
+                        .push8(VOLTAGE_METER_CONFIGS[i].vbatresdivval)
+                        .push8(VOLTAGE_METER_CONFIGS[i].vbatresdivmultiplier);
+                }
+            }
+            else {
+                buffer
+                    .push8(MISC.vbatscale)
+                    .push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
+                    .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
+                    .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10));
+                    if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
+                        buffer.push8(BATTERY_CONFIG.voltageMeterSource);
+                    }
+            }
+           break;
+        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                buffer.push8(CURRENT_METER_CONFIGS.length)
+                for (var i = 0; i < CURRENT_METER_CONFIGS.length; i++) {
+                    buffer.push8(5) // subframe length
+                        .push8(CURRENT_METER_CONFIGS[i].id)
+                        .push16(CURRENT_METER_CONFIGS[i].scale)
+                        .push16(CURRENT_METER_CONFIGS[i].offset);
+                }
+            }
+            else {
+                buffer.push16(BF_CONFIG.currentscale)
+                    .push16(BF_CONFIG.currentoffset)
+                    .push8(BATTERY_CONFIG.currentMeterSource)
+                    .push16(BF_CONFIG.batterycapacity)
+            }
+            break;
+
         case MSPCodes.MSP_SET_RX_CONFIG:
             buffer.push8(RX_CONFIG.serialrx_provider)
                 .push16(RX_CONFIG.stick_max)

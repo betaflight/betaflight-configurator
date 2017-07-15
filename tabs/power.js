@@ -24,7 +24,7 @@ TABS.power.initialize = function (callback) {
     function load_current_meters() {
         MSP.send_message(MSPCodes.MSP_CURRENT_METERS, false, false, load_current_meter_configs);
     }
-    
+
     function load_current_meter_configs() {
         MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, load_voltage_meter_configs);
     }
@@ -36,7 +36,7 @@ TABS.power.initialize = function (callback) {
     function load_battery_state() {
         MSP.send_message(MSPCodes.MSP_BATTERY_STATE, false, false, load_battery_config);
     }
-    
+
     function load_battery_config() {
         MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false, load_html);
     }
@@ -44,7 +44,7 @@ TABS.power.initialize = function (callback) {
     function load_html() {
         $('#content').load("./tabs/power.html", process_html);
     }
-    
+
     this.supported = semver.gte(CONFIG.apiVersion, "1.33.0");
 
     if (!this.supported) {
@@ -61,94 +61,113 @@ TABS.power.initialize = function (callback) {
         $(".tab-power").addClass("supported");
 
         // voltage meters
-        
+
         var template = $('#tab-power-templates .voltage-meters .voltage-meter');
-        var destination = $('.tab-power .voltage-meters'); 
-        
+        var destination = $('.tab-power .voltage-meters');
+
+        if (BATTERY_CONFIG.voltageMeterSource == 0)
+            $('.boxVoltageConfiguration').hide();
+
         for (var index = 0; index < VOLTAGE_METERS.length; index++) {
             var meterElement = template.clone();
             $(meterElement).attr('id', 'voltage-meter-' + index);
-            
+
             var message = chrome.i18n.getMessage('powerVoltageId' + VOLTAGE_METERS[index].id);
             $(meterElement).find('.label').text(message)
             destination.append(meterElement);
+
+            meterElement.hide();
+            if ((BATTERY_CONFIG.voltageMeterSource == 1 && VOLTAGE_METERS[index].id == 10)  // TODO: replace hardcoded constants
+                || (BATTERY_CONFIG.voltageMeterSource == 2 && VOLTAGE_METERS[index].id >= 50)) {
+                meterElement.show();
+            }
         }
-        
+
         var template = $('#tab-power-templates .voltage-configuration');
         for (var index = 0; index < VOLTAGE_METER_CONFIGS.length; index++) {
             var destination = $('#voltage-meter-' + index + ' .configuration');
             var element = template.clone();
-            
-            var attributeNames = ["vbatscale", "vbatresdivval", "vbatresdivmultiplier"]; 
+
+            var attributeNames = ["vbatscale", "vbatresdivval", "vbatresdivmultiplier"];
             for (let attributeName of attributeNames) {
                 $(element).find('input[name="' + attributeName + '"]').attr('name', attributeName + '-' + index);
             }
             destination.append(element);
-            
-            $('input[name="vbatscale-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatscale).attr('disabled','disabled');
-            $('input[name="vbatresdivval-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatresdivval).attr('disabled','disabled');
-            $('input[name="vbatresdivmultiplier-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatresdivmultiplier).attr('disabled','disabled');
+
+            $('input[name="vbatscale-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatscale);
+            $('input[name="vbatresdivval-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatresdivval);
+            $('input[name="vbatresdivmultiplier-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatresdivmultiplier);
         }
 
         // amperage meters
 
         var template = $('#tab-power-templates .amperage-meters .amperage-meter');
-        var destination = $('.tab-power .amperage-meters'); 
-        
+        var destination = $('.tab-power .amperage-meters');
+
+        if (BATTERY_CONFIG.currentMeterSource == 0)
+            $('.boxAmperageConfiguration').hide();
+
         for (var index = 0; index < CURRENT_METERS.length; index++) {
             var meterElement = template.clone();
             $(meterElement).attr('id', 'amperage-meter-' + index);
-            
+
             var message = chrome.i18n.getMessage('powerAmperageId' + CURRENT_METERS[index].id);
             $(meterElement).find('.label').text(message)
             destination.append(meterElement);
+
+            meterElement.hide();
+            if ((BATTERY_CONFIG.currentMeterSource == 1 && CURRENT_METERS[index].id == 10)              // TODO: replace constants
+                || (BATTERY_CONFIG.currentMeterSource == 2 && CURRENT_METERS[index].id == 80)
+                || (BATTERY_CONFIG.currentMeterSource == 3 && CURRENT_METERS[index].id >= 50 && CURRENT_METERS[index].id < 80)) {
+                meterElement.show();
+            }
         }
-        
+
         var template = $('#tab-power-templates .amperage-configuration');
         for (var index = 0; index < CURRENT_METER_CONFIGS.length; index++) {
             var destination = $('#amperage-meter-' + index + ' .configuration');
             var element = template.clone();
-            
-            var attributeNames = ["amperagescale", "amperageoffset"]; 
+
+            var attributeNames = ["amperagescale", "amperageoffset"];
             for (let attributeName of attributeNames) {
                 $(element).find('input[name="' + attributeName + '"]').attr('name', attributeName + '-' + index);
             }
             destination.append(element);
-            
-            $('input[name="amperagescale-' + index + '"]').val(CURRENT_METER_CONFIGS[index].scale).attr('disabled','disabled');
-            $('input[name="amperageoffset-' + index + '"]').val(CURRENT_METER_CONFIGS[index].offset).attr('disabled','disabled');
+
+            $('input[name="amperagescale-' + index + '"]').val(CURRENT_METER_CONFIGS[index].scale);
+            $('input[name="amperageoffset-' + index + '"]').val(CURRENT_METER_CONFIGS[index].offset);
         }
-        
-        
+
+
         // battery
-        
-        var template = $('#tab-power-templates .battery-states .battery-state');
+
+        var template = $('#tab-power-templates .battery-state .battery-state');
         var destination = $('.tab-power .battery-state');
         var element = template.clone();
         $(element).find('.connection-state').attr('id', 'battery-connection-state');
         $(element).find('.voltage').attr('id', 'battery-voltage');
         $(element).find('.mah-drawn').attr('id', 'battery-mah-drawn');
         $(element).find('.amperage').attr('id', 'battery-amperage');
-            
+
         destination.append(element.children());
 
         var template = $('#tab-power-templates .battery-configuration');
         var destination = $('.tab-power .battery .configuration');
         var element = template.clone();
         destination.append(element);
-            
+
         $('input[name="mincellvoltage"]').val(BATTERY_CONFIG.vbatmincellvoltage);
         $('input[name="maxcellvoltage"]').val(BATTERY_CONFIG.vbatmaxcellvoltage);
         $('input[name="warningcellvoltage"]').val(BATTERY_CONFIG.vbatwarningcellvoltage);
         $('input[name="capacity"]').val(BATTERY_CONFIG.capacity);
 
         var haveFc = (semver.lt(CONFIG.apiVersion, "1.35.0") || (CONFIG.boardType == 0 || CONFIG.boardType == 2));
-        
+
         var batteryMeterTypes = [
             'None',
             'Onboard ADC',
         ];
-        
+
         if (haveFc) {
             batteryMeterTypes.push('ESC Sensor');
         }
@@ -184,8 +203,8 @@ TABS.power.initialize = function (callback) {
         });
         currentMeterType_e.val(BATTERY_CONFIG.currentMeterSource).change();
 
-        
-        
+
+
         function get_slow_data() {
             MSP.send_message(MSPCodes.MSP_VOLTAGE_METERS, false, false, function () {
                 for (var i = 0; i < VOLTAGE_METERS.length; i++) {
@@ -202,11 +221,11 @@ TABS.power.initialize = function (callback) {
                     element.text(chrome.i18n.getMessage('powerAmperageValue', [CURRENT_METERS[i].amperage.toFixed(2)]));
                 }
             });
-            
+
             MSP.send_message(MSPCodes.MSP_BATTERY_STATE, false, false, function () {
                 var elementPrefix = '#battery';
                 var element;
-                    
+
                 element = $(elementPrefix + '-connection-state .value');
                 element.text(BATTERY_STATE.cellCount > 0 ? chrome.i18n.getMessage('powerBatteryConnectedValueYes', [BATTERY_STATE.cellCount]) : chrome.i18n.getMessage('powerBatteryConnectedValueNo'));
                 element = $(elementPrefix + '-voltage .value');
@@ -218,41 +237,37 @@ TABS.power.initialize = function (callback) {
             });
 
         }
-        
+
         $('a.save').click(function () {
-        
-            /* FIXME update for api 1.33.0
+
             for (var index = 0; index < VOLTAGE_METER_CONFIGS.length; index++) {
                 VOLTAGE_METER_CONFIGS[index].vbatscale = parseInt($('input[name="vbatscale-' + index + '"]').val());
                 VOLTAGE_METER_CONFIGS[index].vbatresdivval = parseInt($('input[name="vbatresdivval-' + index + '"]').val());
                 VOLTAGE_METER_CONFIGS[index].vbatresdivmultiplier = parseInt($('input[name="vbatresdivmultiplier-' + index + '"]').val());
             }
-            
+
             for (var index = 0; index < CURRENT_METER_CONFIGS.length; index++) {
                 CURRENT_METER_CONFIGS[index].scale = parseInt($('input[name="amperagescale-' + index + '"]').val());
                 CURRENT_METER_CONFIGS[index].offset = parseInt($('input[name="amperageoffset-' + index + '"]').val());
             }
-            */
-                
+
             BATTERY_CONFIG.vbatmincellvoltage = parseFloat($('input[name="mincellvoltage"]').val());
             BATTERY_CONFIG.vbatmaxcellvoltage = parseFloat($('input[name="maxcellvoltage"]').val());
             BATTERY_CONFIG.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
             BATTERY_CONFIG.capacity = parseInt($('input[name="capacity"]').val());
 
-            /* FIXME update for api 1.33.0
+            function save_battery_config() {
+                MSP.send_message(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG), false, save_voltage_config);
+            }
+
             function save_voltage_config() {
-                MSP.sendVoltageMeterConfigs(save_amperage_config);
+                MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, save_amperage_config);
             }
 
             function save_amperage_config() {
-                MSP.sendAmperageMeterConfigs(save_battery_config);
+                MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, save_to_eeprom);
             }
-            */
 
-            function save_battery_config() {
-                MSP.send_message(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG), false, save_to_eeprom);
-            }
-            
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, save_completed);
             }
@@ -268,13 +283,13 @@ TABS.power.initialize = function (callback) {
 
         GUI.interval_add('setup_data_pull_slow', get_slow_data, 200, true); // 5hz
     }
-    
+
     function process_html() {
         update_ui();
-        
+
         // translate to user-selected language
         localize();
-        
+
         GUI.content_ready(callback);
     }
 };

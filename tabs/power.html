@@ -1,5 +1,5 @@
 <div class="tab-power toolbar_fixed_bottom">
-    <div class="content_wrapper initialstyle">
+    <div class="content_wrapper">
         <!-- should be the first DIV on each tab -->
         <div class="cf_column spacerbottom">
             <div class="tab_title" i18n="tabPower">Power</div>
@@ -7,47 +7,90 @@
                 <a id="button-documentation" href="" target="_blank"></a>
             </div>
         </div>
-        <div class="require-support">
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="powerBatteryHead"></div>
-                </div>
-                <div class="spacer_box battery">
-                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
-                        <tbody class="battery-state">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="powerVoltageHead"></div>
-                </div>
-                <div class="spacer_box">
-                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
-                        <tbody class="voltage-meters">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="powerAmperageHead"></div>
-                </div>
-                <div class="spacer_box">
-                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
-                        <tbody class="amperage-meters">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+
+        <table style="width:100%">
+            <tr>
+                <td>
+                    <div class="leftWrapper">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="powerBatteryHead"></div>
+                            </div>
+                            <div class="spacer_box battery">
+                                <table border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                                    <tbody class="battery-config">
+                                        <td class="configuration" rowspan="4"></td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rightWrapper">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="powerStateHead"></div>
+                            </div>
+                            <div class="spacer_box battery">
+                                <table border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                                    <tbody class="battery-state">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width:100%">
+            <tr>
+                <td>
+                    <div class="leftWrapper">
+                        <div class="gui_box grey boxVoltageConfiguration">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="powerVoltageHead"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                                    <tbody class="voltage-meters">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+
+        <table style="width:100%">
+            <tr>
+                <td>
+                    <div class="leftWrapper">
+                        <div class="gui_box grey boxAmperageConfiguration">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="powerAmperageHead"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="cf_table">
+                                    <tbody class="amperage-meters">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+
         <div class="note require-upgrade">
             <div class="note_spacer">
                 <p i18n="powerFirmwareUpgradeRequired"></p>
             </div>
         </div>
     </div>
+
     <div class="content_toolbar">
         <div class="btn save_btn">
             <a class="save" href="#" i18n="powerButtonSave"></a>
@@ -65,7 +108,7 @@
             </tr>
         </tbody>
     </table>
-    
+
     <table class="amperage-meters">
         <tbody>
             <tr class="amperage-meter">
@@ -75,13 +118,12 @@
             </tr>
         </tbody>
     </table>
-    
-    <table class="battery-states">
+
+    <table class="battery-state">
         <tbody class="battery-state">
             <tr class="connection-state">
                 <td i18n="powerBatteryConnected"></td>
                 <td class="value">?</td>
-                <td class="configuration" rowspan="4"></td>
             </tr>
             <tr class="voltage">
                 <td i18n="powerBatteryVoltage"></td>
@@ -97,7 +139,7 @@
             </tr>
         </tbody>
     </table>
-    
+
     <div class="battery-configuration">
         <div class="select vbatmonitoring">
             <label>
@@ -133,7 +175,7 @@
             </label>
         </div>
     </div>
-    
+
     <div class="voltage-configuration">
         <div class="number">
             <label> <input type="number" name="vbatscale" step="1" min="10" max="255" /> <span
@@ -151,7 +193,7 @@
             </label>
         </div>
     </div>
-    
+
     <div class="amperage-configuration">
         <div class="number">
             <label> <input type="number" name="amperagescale" step="1" min="-1000" max="1500" /> <span
@@ -163,5 +205,5 @@
                 i18n="powerAmperageOffset"></span>
             </label>
         </div>
-    </div>    
+    </div>
 </div>
