@@ -393,7 +393,6 @@ OSD.constants = {
       preview: function(osd_data) {
         return OSD.generateCraftName(osd_data, 1);
       }
-      //preview: 'c'
     },
     ALTITUDE: {
       name: 'ALTITUDE',
