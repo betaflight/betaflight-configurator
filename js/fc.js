@@ -77,21 +77,21 @@ var FC = {
             rateProfile:                0,
             boardType:                  0,
         };
-        
+
         FEATURE_CONFIG = {
             features:                   0,
         };
-        
+
         MIXER_CONFIG = {
             mixer:                      0,
-        }; 
+        };
 
         BOARD_ALIGNMENT_CONFIG = {
             roll:                       0,
             pitch:                      0,
             yaw:                        0,
         };
-        
+
         LED_STRIP =                     [];
         LED_COLORS =                    [];
         LED_MODE_COLORS =               [];
@@ -192,7 +192,7 @@ var FC = {
         VOLTAGE_METER_CONFIGS =         [];
         CURRENT_METERS =                [];
         CURRENT_METER_CONFIGS =         [];
-        
+
         BATTERY_STATE = {};
         BATTERY_CONFIG = {
             vbatmincellvoltage:         0,
@@ -202,7 +202,7 @@ var FC = {
             voltageMeterSource:         0,
             currentMeterSource:         0,
         };
-        
+
         ARMING_CONFIG = {
             auto_disarm_delay:          0,
             disarm_kill_switch:         0,
@@ -211,7 +211,7 @@ var FC = {
         FC_CONFIG = {
             loopTime:                   0
         };
-        
+
         MISC = {
             // DEPRECATED = only used to store values that are written back to the fc as-is, do NOT use for any other purpose
             failsafe_throttle:          0,
@@ -228,14 +228,14 @@ var FC = {
             maxthrottle:                0,
             mincommand:                 0,
         };
-        
+
         GPS_CONFIG = {
             provider:                   0,
             ublox_sbas:                 0,
             auto_config:                0,
             auto_baud:                  0,
         };
-        
+
         COMPASS_CONFIG = {
             mag_declination:            0,
         };
@@ -243,7 +243,7 @@ var FC = {
         RSSI_CONFIG = {
             channel:                    0,
         };
-        
+
         MOTOR_3D_CONFIG = {
             deadband3d_low:             0,
             deadband3d_high:            0,
@@ -313,6 +313,9 @@ var FC = {
             dterm_notch_cutoff:         0,
             gyro_soft_notch_hz_2:       0,
             gyro_soft_notch_cutoff_2:   0,
+            enable_gyro_soft_notch_1:   0,
+            enable_gyro_soft_notch_2:   0,
+            enable_dterm_notch:         0,
         };
 
         ADVANCED_TUNING = {
