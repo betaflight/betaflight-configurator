@@ -427,6 +427,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- FILTER SUBTAB -->
+
             <div class="subtab-filter" style="display: none;">
                 <div class="clear-both"></div>
                 <div class="note topspacer" style="margin-top: 0px;">
@@ -452,6 +455,18 @@
                                             <span i18n="pidTuningGyroLowpassFrequency"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningGyroLowpassFrequencyHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="switchGyroNotch1">
+                                <td style="text-align: right;">
+                                    <input type="checkbox" id="gyroNotch1Enabled" class="toggle" />
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningGyroNotch1Enable"></span>
+                                        </label>
                                     </div>
                                 </td>
                             </tr>
@@ -481,6 +496,18 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="switchGyroNotch2">
+                                <td style="text-align: right;">
+                                    <input type="checkbox" id="gyroNotch2Enabled" class="toggle" />
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningGyroNotch2Enable"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            <tr>
                             <tr class="newFilter gyroNotch2">
                                 <td>
                                     <input type="number" class="nonProfile" name="gyroNotch2Frequency" step="1" min="0" max="16000"/>
@@ -529,6 +556,18 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="switchDTermNotch">
+                                <td style="text-align: right;">
+                                    <input type="checkbox" id="dtermNotchEnabled" class="toggle" />
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDTermNotchEnable"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            <tr>
                             <tr class="newFilter">
                                 <td>
                                     <input type="number" name="dTermNotchFrequency" step="1" min="0" max="16000"/>

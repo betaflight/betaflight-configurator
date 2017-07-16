@@ -1387,7 +1387,7 @@
     "cliSaveToFileBtn": {
         "message": "Save to File"
     },
-    
+
     "loggingNote": {
         "message": "Data will be logged in this tab <span style=\"color: red\">only</span>, leaving the tab will <span style=\"color: red\">cancel</span> logging and application will return to its normal <strong>\"configurator\"</strong> state.<br /> You are free to select the global update period, data will be written into the log file every <strong>1</strong> second for performance reasons."
     },
@@ -1858,14 +1858,20 @@
   "pidTuningGyroLowpassFrequencyHelp": {
     "message": "Gyro Soft Lowpass Frequency [Hz]"
   },
+  "pidTuningGyroNotch1Enable": {
+      "message": "Enable Gyro Notch Filter 1"
+  },
   "pidTuningGyroNotch1Frequency": {
       "message": "Gyro Notch Filter 1 Frequency [Hz]"
+  },
+  "pidTuningGyroNotch2Enable": {
+      "message": "Enable Gyro Notch Filter 2"
   },
   "pidTuningGyroNotch2Frequency": {
       "message": "Gyro Notch Filter 2 Frequency [Hz]"
   },
   "pidTuningGyroNotchFrequencyHelp": {
-    "message": "Gyro Notch Filter Frequency in Hz (0 means disabled)"
+    "message": "Gyro Notch Filter Frequency in Hz"
   },
   "pidTuningGyroNotch1Cutoff": {
         "message": "Gyro Notch Filter Cutoff 1 Frequency [Hz]"
@@ -1884,6 +1890,9 @@
   },
   "pidTuningDTermLowpassFrequencyHelp": {
     "message": "D Term Lowpass Frequency [Hz] (0 means disabled)"
+  },
+  "pidTuningDTermNotchEnable": {
+    "message": "Enable D Term Notch Filter"
   },
   "pidTuningDTermNotchFrequency": {
     "message": "D Term Notch Filter Frequency [Hz]"

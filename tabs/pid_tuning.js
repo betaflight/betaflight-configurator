@@ -258,6 +258,34 @@ TABS.pid_tuning.initialize = function (callback) {
         } else {
             $('.pid_sensitivity').hide();
         }
+
+        $('input[id="gyroNotch1Enabled"]').change(function() {
+            FILTER_CONFIG.enable_gyro_soft_notch_1 = $(this).is(':checked') ? 1 : 0;
+            $('.pid_filter input[name="gyroNotch1Frequency"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_1);
+            $('.pid_filter input[name="gyroNotch1Cutoff"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_1);
+        });
+
+        $('input[id="gyroNotch2Enabled"]').change(function() {
+            FILTER_CONFIG.enable_gyro_soft_notch_2 = $(this).is(':checked') ? 1 : 0;
+            $('.pid_filter input[name="gyroNotch2Frequency"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_2);
+            $('.pid_filter input[name="gyroNotch2Cutoff"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_2);
+        });
+
+        $('input[id="dtermNotchEnabled"]').change(function() {
+            FILTER_CONFIG.enable_dterm_notch = $(this).is(':checked') ? 1 : 0;
+            $('.pid_filter input[name="dTermNotchFrequency"]').attr('disabled', !FILTER_CONFIG.enable_dterm_notch);
+            $('.pid_filter input[name="dTermNotchCutoff"]').attr('disabled', !FILTER_CONFIG.enable_dterm_notch);
+        });
+
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.enable_gyro_soft_notch_1 != 0).change();
+            $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.enable_gyro_soft_notch_2 != 0).change();
+            $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.enable_dterm_notch != 0).change();
+        } else {
+            $('.switchGyroNotch1').hide();
+            $('.switchGyroNotch2').hide();
+            $('.switchDTermNotch').hide();
+        }
     }
 
     function form_to_pid_and_rc() {
@@ -590,7 +618,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('#pid-tuning .ptermSetpoint').hide();
             $('#pid-tuning .dtermSetpoint').hide();
         }
-        
+
         if (!semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('#pid-tuning .delta').hide();
             $('.tab-pid_tuning .note').hide();
