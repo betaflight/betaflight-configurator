@@ -337,7 +337,7 @@ var FC = {
             dterm_notch_cutoff:         0,
             gyro_soft_notch_hz_2:       0,
             gyro_soft_notch_cutoff_2:   0,
-            dterm_filter_type:         0,
+            dterm_filter_type:          0,
         };
 
         ADVANCED_TUNING = {
