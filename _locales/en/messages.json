@@ -661,6 +661,12 @@
     "configurationMagDeclination": {
         "message": "Magnetometer Declination [deg]"
     },
+    "configurationReverseMotorSwitch": {
+        "message": "Reverse motor direction"
+    },
+       "configurationReverseMotorSwitchHelp": {
+        "message": "Enabling this will reverse the motor direction in Betaflight. You must reverse the ESCs as well. CAUTION: Make sure you test this with PROPS OFF!"
+    },
     "configurationAutoDisarmDelay": {
         "message": "Disarm motors after set delay [seconds] (Requires MOTOR_STOP feature)"
     },

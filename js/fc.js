@@ -84,7 +84,8 @@ var FC = {
 
         MIXER_CONFIG = {
             mixer:                      0,
-        };
+            reverseMotorDir:            0,
+        }; 
 
         BOARD_ALIGNMENT_CONFIG = {
             roll:                       0,

@@ -163,12 +163,24 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             });
         }
 
+        function refreshMixerPreview() {
+            var mixer = MIXER_CONFIG.mixer
+            var reverse = MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
+
+            $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
+        };
+
+        var reverseMotorSwitch_e = $('#reverseMotorSwitch');
+
+        reverseMotorSwitch_e.change(function() {
+            MIXER_CONFIG.reverseMotorDir = $(this).prop('checked') ? 1 : 0;
+            refreshMixerPreview();
+        });
+        reverseMotorSwitch_e.prop('checked', MIXER_CONFIG.reverseMotorDir != 0).change();
+
         mixer_list_e.change(function () {
-            var val = parseInt($(this).val());
-
-            MIXER_CONFIG.mixer = val;
-
-            $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[val - 1].image + '.svg');
+            MIXER_CONFIG.mixer = parseInt($(this).val());
+            refreshMixerPreview();
         });
 
         // select current mixer configuration
