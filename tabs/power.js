@@ -261,11 +261,19 @@ TABS.power.initialize = function (callback) {
             }
 
             function save_voltage_config() {
-                MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, save_amperage_config);
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    mspHelper.sendVoltageConfig(save_amperage_config);
+                } else {
+                    MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, save_amperage_config);
+                }
             }
 
             function save_amperage_config() {
-                MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, save_to_eeprom);
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    mspHelper.sendCurrentConfig(save_to_eeprom);
+                } else {
+                    MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, save_to_eeprom);
+                }
             }
 
             function save_to_eeprom() {

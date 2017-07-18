@@ -2016,7 +2016,7 @@
         "message": "$1 A"
     },
     "powerVoltageId10": {
-        "message": "Onboard ADC"
+        "message": "Battery"
     },
     "powerVoltageId20": {
         "message": "5V"
@@ -2100,7 +2100,7 @@
         "message": "Amperage Meter"
     },
     "powerAmperageId10": {
-        "message": "Onboard ADC"
+        "message": "Battery"
     },
     "powerAmperageId50": {
         "message": "ESC Combined"
