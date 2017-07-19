@@ -201,11 +201,16 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
         FEATURE_CONFIG.features.generateElements($('.tab-failsafe .featuresNew'));
 
-        var failsafeFeature = $('input[name="FAILSAFE"]');
-        failsafeFeature.change(function () {
-            toggleStage2($(this).is(':checked'));
-        });
-        toggleStage2(FEATURE_CONFIG.features.isEnabled('FAILSAFE'));
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+          $('tbody.rxFailsafe').hide();
+          toggleStage2(true);
+        } else {
+          var failsafeFeature = $('input[name="FAILSAFE"]');
+          failsafeFeature.change(function () {
+              toggleStage2($(this).is(':checked'));
+          });
+          toggleStage2(FEATURE_CONFIG.features.isEnabled('FAILSAFE'));
+        }
 
         $('input[name="failsafe_throttle"]').val(FAILSAFE_CONFIG.failsafe_throttle);
         $('input[name="failsafe_off_delay"]').val(FAILSAFE_CONFIG.failsafe_off_delay);
