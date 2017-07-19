@@ -1245,22 +1245,25 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(BATTERY_CONFIG.voltageMeterSource)
                 .push8(BATTERY_CONFIG.currentMeterSource);
             break;
-// FIXME - Needs updating before it can be used.
-//        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
-//            buffer.push8(MISC.vbatscale)
-//                .push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
-//                .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
-//                .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10));
-//                if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
-//                    buffer.push8(BATTERY_CONFIG.voltageMeterSource);
-//                }
-//            break;
-//        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
-//            buffer.push16(BF_CONFIG.currentscale)
-//                .push16(BF_CONFIG.currentoffset)
-//                .push8(BATTERY_CONFIG.currentMeterSource)
-//                .push16(BF_CONFIG.batterycapacity)
-//            break;
+        case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
+            if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+                buffer.push8(MISC.vbatscale)
+                    .push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
+                    .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
+                    .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10));
+                    if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
+                        buffer.push8(BATTERY_CONFIG.voltageMeterSource);
+                    }
+            }
+           break;
+        case MSPCodes.MSP_SET_CURRENT_METER_CONFIG:
+            if (semver.lt(CONFIG.apiVersion, "1.36.0"))  {
+                buffer.push16(BF_CONFIG.currentscale)
+                    .push16(BF_CONFIG.currentoffset)
+                    .push8(BATTERY_CONFIG.currentMeterSource)
+                    .push16(BF_CONFIG.batterycapacity)
+            }
+            break;
         case MSPCodes.MSP_SET_RX_CONFIG:
             buffer.push8(RX_CONFIG.serialrx_provider)
                 .push16(RX_CONFIG.stick_max)
@@ -1643,6 +1646,68 @@ MspHelper.prototype.sendAdjustmentRanges = function(onCompleteCallback) {
         MSP.send_message(MSPCodes.MSP_SET_ADJUSTMENT_RANGE, buffer, false, nextFunction);
     }
 };
+
+MspHelper.prototype.sendVoltageConfig = function(onCompleteCallback) {
+
+    var nextFunction = send_next_voltage_config;
+
+    var configIndex = 0;
+    
+    if (VOLTAGE_METER_CONFIGS.length == 0) {
+        onCompleteCallback();
+    } else {
+        send_next_voltage_config();
+    }
+
+    function send_next_voltage_config() {
+        var buffer = [];
+
+        buffer.push8(VOLTAGE_METER_CONFIGS[configIndex].id)
+            .push8(VOLTAGE_METER_CONFIGS[configIndex].vbatscale)
+            .push8(VOLTAGE_METER_CONFIGS[configIndex].vbatresdivval)
+            .push8(VOLTAGE_METER_CONFIGS[configIndex].vbatresdivmultiplier);
+
+        // prepare for next iteration
+        configIndex++;
+        if (configIndex == VOLTAGE_METER_CONFIGS.length) {
+            nextFunction = onCompleteCallback;
+        }
+
+        MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, buffer, false, nextFunction);
+    }
+
+}
+
+MspHelper.prototype.sendCurrentConfig = function(onCompleteCallback) {
+
+    var nextFunction = send_next_current_config;
+
+    var configIndex = 0;
+    
+    if (CURRENT_METER_CONFIGS.length == 0) {
+        onCompleteCallback();
+    } else {
+        send_next_current_config();
+    }
+
+    function send_next_current_config() {
+        var buffer = [];
+
+        buffer.push8(CURRENT_METER_CONFIGS[configIndex].id)
+            .push16(CURRENT_METER_CONFIGS[configIndex].scale)
+            .push16(CURRENT_METER_CONFIGS[configIndex].offset);
+
+        // prepare for next iteration
+        configIndex++;
+        if (configIndex == CURRENT_METER_CONFIGS.length) {
+            nextFunction = onCompleteCallback;
+        }
+
+        MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, buffer, false, nextFunction);
+    }
+
+}
+
 
 MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
 

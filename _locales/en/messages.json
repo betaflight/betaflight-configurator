@@ -2007,7 +2007,7 @@
         "message": "Warning Cell Voltage"
     },
     "powerVoltageHead": {
-        "message": "Voltage"
+        "message": "Voltage Meter"
     },
     "powerVoltageValue": {
         "message": "$1 V"
@@ -2097,7 +2097,7 @@
     },
 
     "powerAmperageHead": {
-        "message": "Amperage"
+        "message": "Amperage Meter"
     },
     "powerAmperageId10": {
         "message": "Battery"
@@ -2149,14 +2149,17 @@
     },
 
     "powerAmperageScale": {
-        "message": "Scale the output voltage to milliamps [1/10th mV/A]"
+        "message": "Scale"
     },
     "powerAmperageOffset": {
-        "message": "Offset in millivolt steps"
+        "message": "Offset in milliampere steps"
     },
 
     "powerBatteryHead": {
         "message": "Battery"
+    },
+    "powerStateHead": {
+        "message": "Power State"
     },
     "powerBatteryConnected": {
         "message": "Connected"
