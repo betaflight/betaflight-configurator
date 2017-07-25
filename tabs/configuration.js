@@ -16,7 +16,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_beeper_config() {
-        MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, load_serial_config);
+        var next_callback = load_serial_config;
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
     }
 
     function load_serial_config() {
@@ -187,7 +192,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var destination = $('.beepers .beeper-configuration');
         var beeper_e = $('.tab-configuration .beepers');
 
-        BEEPER_CONFIG.beepers.generateElements(template, destination);
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            BEEPER_CONFIG.beepers.generateElements(template, destination);
+        } else {
+            beeper_e.hide();
+        }
 
         // translate to user-selected language
         localize();
@@ -686,7 +695,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_beeper_config() {
-                MSP.send_message(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG), false, save_misc);
+                var next_callback = save_misc;
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
             }
 
             function save_misc() {
