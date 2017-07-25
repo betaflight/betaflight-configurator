@@ -24,7 +24,8 @@ function MspHelper () {
     'TBS_SMARTAUDIO': 11,
     'TELEMETRY_IBUS': 12,
     'IRC_TRAMP': 13,
-    'RUNCAM_SPLIT_CONTROL': 14 // support communitate with RunCam Split
+    'RUNCAM_SPLIT_CONTROL': 14, // support communitate with RunCam Split
+    'FURIOUS_STEALTH': 15
   };
 }
 

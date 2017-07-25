@@ -45,6 +45,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
     if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
         functionRules.push({ name: 'RUNCAM_SPLIT_CONTROL', groups: ['peripherals'], maxPorts: 1 });
+        functionRules.push({ name: 'FURIOUS_STEALTH', groups: ['peripherals'], maxPorts: 1 });
     }
 
     for (var i = 0; i < functionRules.length; i++) {
