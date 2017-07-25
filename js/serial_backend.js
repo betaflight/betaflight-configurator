@@ -301,6 +301,7 @@ function onConnect() {
     
     if (CONFIG.flightControllerVersion !== '') {
         FEATURE_CONFIG.features = new Features(CONFIG);
+        BEEPER_CONFIG.beepers = new Beepers(CONFIG);
 
         $('#tabs ul.mode-connected').show();
 

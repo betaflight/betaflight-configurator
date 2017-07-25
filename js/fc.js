@@ -3,6 +3,7 @@
 // define all the global variables that are uses to hold FC state
 var CONFIG;
 var FEATURE_CONFIG;
+var BEEPER_CONFIG;
 var MIXER_CONFIG;
 var BOARD_ALIGNMENT_CONFIG;
 var LED_STRIP;
@@ -82,6 +83,10 @@ var FC = {
             features:                   0,
         };
 
+        BEEPER_CONFIG = {
+            beepers:                    0,
+        };
+        
         MIXER_CONFIG = {
             mixer:                      0,
         };

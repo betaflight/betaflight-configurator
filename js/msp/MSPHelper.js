@@ -492,6 +492,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_FEATURE_CONFIG:
                 console.log('Features saved');
                 break;
+            case MSPCodes.MSP_SET_BEEPER_CONFIG:
+                console.log('Beeper Configuration saved');
+                break;
             case MSPCodes.MSP_RESET_CONF:
                 console.log('Settings Reset');
                 break;
@@ -560,6 +563,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FEATURE_CONFIG.features.setMask(data.readU32());
 
                 updateTabList(FEATURE_CONFIG.features);
+                break;
+
+            case MSPCodes.MSP_BEEPER_CONFIG:
+                BEEPER_CONFIG.beepers.setMask(data.readU32());
                 break;
 
             case MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG:
@@ -1147,7 +1154,11 @@ MspHelper.prototype.crunch = function(code) {
             var featureMask = FEATURE_CONFIG.features.getMask();
             buffer.push32(featureMask);
             break;
-          case MSPCodes.MSP_SET_MIXER_CONFIG:
+        case MSPCodes.MSP_SET_BEEPER_CONFIG:
+            var beeperMask = BEEPER_CONFIG.beepers.getMask();
+            buffer.push32(beeperMask);
+            break;
+        case MSPCodes.MSP_SET_MIXER_CONFIG:
             buffer.push8(MIXER_CONFIG.mixer)
             break;
         case MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG:

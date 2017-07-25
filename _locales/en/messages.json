@@ -688,6 +688,66 @@
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
+    "configurationBeeper": {
+        "message": "Beeper Configuration"
+    },
+    "beeperGYRO_CALIBRATED": {
+        "message": "Beeps when gyro has been calibrated"
+    },
+    "beeperRX_LOST": {
+        "message": "Beeps when TX is turned off or signal lost (repeat until TX is okay)"
+    },
+    "beeperRX_LOST_LANDING": {
+        "message": "Beeps SOS when armed and TX is turned off or signal lost (autolanding/autodisarm)"
+    },
+    "beeperDISARMING": {
+        "message": "Beep when disarming the flightcontroller"
+    },
+    "beeperARMING": {
+        "message": "Beep when arming the flightcontroller"
+    },
+    "beeperARMING_GPS_FIX": {
+        "message": "Beep a special tone when arming the board and GPS has fix"
+    },
+    "beeperBAT_CRIT_LOW": {
+        "message": "Longer warning beeps when battery is critically low (repeats)"
+    },
+    "beeperBAT_LOW": {
+        "message": "Warning beeps when battery is getting low (repeats)"
+    },
+    "beeperGPS_STATUS": {
+        "message": ""
+    },
+    "beeperRX_SET": {
+        "message": "Beeps when aux channel is set for beep or beep sequence how many satellites has found if GPS enabled"
+    },
+    "beeperDISARM_REPEAT": {
+        "message": "Beeps sounded while stick held in disarm position"
+    },
+    "beeperACC_CALIBRATION": {
+        "message": "Accelerometer inflight calibration completed confirmation"
+    },
+    "beeperACC_CALIBRATION_FAIL": {
+        "message": "Accelerometer inflight calibration failed"
+    },
+    "beeperREADY_BEEP": {
+        "message": "Ring a tone when GPS is locked and ready"
+    },
+    "beeperMULTI_BEEPS": {
+        "message": ""
+    },
+    "beeperARMED": {
+        "message": "Warning beeps when board is armed (repeats until board is disarmed or throttle is increased)"
+    },
+    "beeperSYSTEM_INIT": {
+        "message": "Initialisation beeps when board is powered on"
+    },
+    "beeperUSB": {
+        "message": "Beep when flight controller is powered from USB. Turn this off when you don't want the beeper on the workbench"
+    },
+    "beeperBLACKBOX_ERASE": {
+        "message": "Beep when blackbox erase completes"
+    },
     "configuration3d": {
         "message": "3D ESC/Motor Features"
     },
@@ -1720,43 +1780,6 @@
     "ledStripIndecatorOverlay": {
         "message": "Indicator (uses position on matrix)"
     },
-    "ledStripVtxOverlay": {
-        "message": "VTX (uses vtx frequency to assign color)"
-    },
-    "ledStripFunctionSection": {
-        "message": "LED Functions"
-    },
-    "ledStripFunctionTitle": {
-        "message": "Function"
-    },
-    "ledStripColorModifierTitle": {
-        "message": "Color modifier"
-    },
-    "ledStripThrottleFunction": {
-        "message": "Throttle"
-    },
-    "ledStripVtxFunction": {
-        "message": "Larson scanner"
-    },
-    "ledStripBlinkTitle": {
-        "message": "Blink"
-    },
-    "ledStripBlinkAlwaysOverlay": {
-        "message": "Blink always"
-    },
-    "ledStripBlinkLandingOverlay": {
-        "message": "Blink on landing"
-    },
-    "ledStripOverlayTitle": {
-        "message": "Overlay"
-    },
-    "ledStripWarningsOverlay": {
-        "message": "Warnings"
-    },
-    "ledStripIndecatorOverlay": {
-        "message": "Indicator (uses position on matrix)"
-    },
-
     "controlAxisRoll": {
         "message": "Roll"
     },

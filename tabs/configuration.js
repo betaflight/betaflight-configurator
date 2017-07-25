@@ -12,7 +12,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_config() {
-        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, load_serial_config);
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, load_beeper_config);
+    }
+
+    function load_beeper_config() {
+        MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, load_serial_config);
     }
 
     function load_serial_config() {
@@ -177,6 +181,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var features_e = $('.tab-configuration .features');
 
         FEATURE_CONFIG.features.generateElements(features_e);
+
+        // Beeper
+        var template = $('.beepers .beeper-template');
+        var destination = $('.beepers .beeper-configuration');
+        var beeper_e = $('.tab-configuration .beepers');
+
+        BEEPER_CONFIG.beepers.generateElements(template, destination);
 
         // translate to user-selected language
         localize();
@@ -602,6 +613,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         });
 
+        $('input.beeper', beeper_e).change(function () {
+            var element = $(this);
+            BEEPER_CONFIG.beepers.updateData(element);
+        });        
+
         checkShowDisarmDelay();
         checkShowSerialRxBox();
         checkUpdateGpsControls();
@@ -665,8 +681,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_feature_config() {
-                var next_callback = save_misc;
+                var next_callback = save_beeper_config;
                 MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, next_callback);
+            }
+
+            function save_beeper_config() {
+                MSP.send_message(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG), false, save_misc);
             }
 
             function save_misc() {
