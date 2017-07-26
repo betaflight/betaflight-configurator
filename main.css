@@ -1859,9 +1859,8 @@ input {
     margin-right: 0;
 }
 
-#portsinput {
-    margin-top: 0;
-    margin-right: 0;
+#port-picker {
+    clear: right;
 }
 
 #sensor-status,
@@ -1870,21 +1869,11 @@ input {
     margin-right: 10px;
 }
 
-#logo {
-    height: 26px;
-    width: 100px;
-    margin-left: 5px;
-    margin-top: 5px;
+#portsinput {
+    margin-top: 0;
+    margin-right: 0;
 }
 
-#logo .logo_text {
-    left: 105px;
-    top: 4px;
-}
-
-#port-picker {
-    clear: right;
-}
 
 .connect_controls {
     left: 0px;
@@ -1893,8 +1882,20 @@ input {
     margin-left: 10px;
 }
 
+#logo {
+    height: 45px;
+    width: 175px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+#logo .logo_text {
+    left: 50px;
+    top: 30px;
+}
+
 .content_toolbar {
-    padding: 10px 0 20px 0;
+    padding: 5px 0;
 }
 
 .properties {
@@ -1907,6 +1908,5 @@ input {
 
 .properties dd {
     width: 300px;
-    height: auto;
 }
 }
