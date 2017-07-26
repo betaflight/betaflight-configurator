@@ -1854,8 +1854,43 @@ input {
 
 @media only screen and (max-width: 800px) {
 
+#dataflash_wrapper_global {
+    margin-top: 0;
+    margin-right: 0;
+}
+
+#portsinput {
+    margin-top: 0;
+    margin-right: 0;
+}
+
+#sensor-status,
+#quad-status_wrapper {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+#logo {
+    height: 26px;
+    width: 100px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+#logo .logo_text {
+    left: 105px;
+    top: 4px;
+}
+
 #port-picker {
     clear: right;
+}
+
+.connect_controls {
+    left: 0px;
+    top: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .content_toolbar {
