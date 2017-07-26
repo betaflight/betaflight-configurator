@@ -10,8 +10,8 @@ function startApplication() {
         id: 'main-window',
         frame: 'chrome',
         innerBounds: {
-            minWidth: 1024,
-            minHeight: 550
+            minWidth: 700,
+            minHeight: 400
         }
     }, function (createdWindow) {
         createdWindow.onClosed.addListener(function () {

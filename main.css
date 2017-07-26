@@ -1851,3 +1851,27 @@ input {
 }
 
 }
+
+@media only screen and (max-width: 800px) {
+
+#port-picker {
+    clear: right;
+}
+
+.content_toolbar {
+    padding: 10px 0 20px 0;
+}
+
+.properties {
+    width: 600px;
+}
+
+.properties dl {
+    width: 150px;
+}
+
+.properties dd {
+    width: 300px;
+    height: auto;
+}
+}
