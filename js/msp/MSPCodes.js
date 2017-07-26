@@ -117,6 +117,8 @@ var MSPCodes = {
 
     MSP_DISPLAYPORT:                182,
 
+    MSP_COPY_PROFILE:               183,
+
     MSP_BEEPER_CONFIG:              184,
     MSP_SET_BEEPER_CONFIG:          185,
 

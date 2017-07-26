@@ -1021,6 +1021,24 @@
     "pidTuningControllerHead": {
         "message": "PID Controller"
     },
+    "pidTuningCopyProfile": {
+        "message": "Copy profile values"
+    },
+    "pidTuningCopyRateProfile": {
+        "message": "Copy rateprofile values"
+    },
+    "dialogCopyProfileTitle": {
+        "message": "Copy Profile Values"
+    },
+    "dialogCopyProfileNote": {
+        "message": "All values on the destination profile will be wiped and overwritten"
+    },
+    "dialogCopyProfileConfirm": {
+        "message": "Copy"
+    },
+    "dialogCopyProfileClose": {
+        "message": "Cancel"
+    },
     "pidTuningResetProfile": {
         "message": "Reset all profile values"
     },

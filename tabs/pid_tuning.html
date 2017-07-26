@@ -43,6 +43,12 @@
                 <div class="default_btn resetbt">
                     <a href="#" id="resetProfile" i18n="pidTuningResetProfile"></a>
                 </div>
+                <div class="default_btn copyrateprofilebtn">
+                    <a href="#" id="copyRateProfile" i18n="pidTuningCopyRateProfile"></a>
+                </div>
+                <div class="default_btn copyprofilebtn">
+                    <a href="#" id="copyProfile" i18n="pidTuningCopyProfile"></a>
+                </div>
             </div>
         </div>
         <div class="tab_container" style="background-color: #fff;">
@@ -617,4 +623,29 @@
             <a class="refresh" href="#" i18n="pidTuningButtonRefresh"></a>
         </div>
     </div>
+
+    <dialog class="dialogCopyProfile">
+        <h3 i18n="dialogCopyProfileTitle"></h3>
+        <div class="content">
+            <div i18n="dialogCopyProfileNote" style="margin-top: 10px"></div>
+
+            <div class="contentProfile" style="margin-top:20px;">
+                <div>
+                    Copy values from current profile to <select class="selectProfile"></select>
+                </div>
+            </div>
+
+            <div class="contentRateProfile" style="margin-top:20px;">
+                <div>
+                    Copy values from current rateprofile to <select class="selectRateProfile"></select>
+                </div>
+            </div>
+
+        </div>
+        <div class="buttons">
+            <a href="#" class="dialogCopyProfile-confirmbtn regular-button" i18n="dialogCopyProfileConfirm"></a>
+            <a href="#" class="dialogCopyProfile-cancelbtn regular-button" i18n="dialogCopyProfileClose"></a> 
+        </div>
+    </dialog>
+
 </div>

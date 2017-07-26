@@ -1137,6 +1137,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_SENSOR_CONFIG:
                 console.log('Sensor config parameters set');
                 break;
+            case MSPCodes.MSP_COPY_PROFILE:
+                console.log('Copy profile');
+                break;
             default:
                 console.log('Unknown code detected: ' + code);
         } else {
@@ -1488,6 +1491,12 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(BLACKBOX.blackboxDevice)
                 .push8(BLACKBOX.blackboxRateNum)
                 .push8(BLACKBOX.blackboxRateDenom);
+            break;
+
+        case MSPCodes.MSP_COPY_PROFILE:
+            buffer.push8(COPY_PROFILE.type)
+                .push8(COPY_PROFILE.dstProfile)
+                .push8(COPY_PROFILE.srcProfile)
             break;
 
         default:
