@@ -554,6 +554,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_MIXER_CONFIG:
                 MIXER_CONFIG.mixer = data.readU8();
+                MIXER_CONFIG.reverseMotorDir = data.readU8();
                 break;
 
             case MSPCodes.MSP_FEATURE_CONFIG:
@@ -1149,6 +1150,7 @@ MspHelper.prototype.crunch = function(code) {
             break;
           case MSPCodes.MSP_SET_MIXER_CONFIG:
             buffer.push8(MIXER_CONFIG.mixer)
+                .push8(MIXER_CONFIG.reverseMotorDir);
             break;
         case MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG:
             buffer.push16(BOARD_ALIGNMENT_CONFIG.roll)
