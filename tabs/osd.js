@@ -254,6 +254,13 @@ OSD.generateTimerPreview = function(osd_data, timer_index) {
   return preview;
 };
 
+OSD.generateCraftName = function(osd_data) {
+    var preview = 'CRAFT_NAME';
+    if (CONFIG.name != '')
+        preview = CONFIG.name.toUpperCase();
+    return preview;
+}
+
 OSD.constants = {
   VISIBLE: 0x0800,
   VIDEO_TYPES: [
@@ -383,7 +390,9 @@ OSD.constants = {
       desc: 'osdDescElementCraftName',
       default_position: -77,
       positionable: true,
-      preview: 'CRAFT_NAME'
+      preview: function(osd_data) {
+        return OSD.generateCraftName(osd_data, 1);
+      }
     },
     ALTITUDE: {
       name: 'ALTITUDE',
