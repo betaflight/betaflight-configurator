@@ -326,6 +326,24 @@
                                 </td>
                         </table>
                     </div>
+
+                    <div class="antigravity topspacer tpa">
+                        <table class="cf">
+                            <thead>
+                                <tr>
+                                    <th i18n="pidTuningAntiGravityGain"></th>
+                                    <th i18n="pidTuningAntiGravityThres"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="height: 35px;">
+                                    <td><input type="number" name="itermAcceleratorGain" step="0.1" min="1" max="30" /></td>
+                                    <td><input type="number" name="itermThrottleThreshold" step="10" min="20" max="1000" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                     <div class="gui_box grey topspacer">
                         <table class="pid_titlebar">
                             <thead>
@@ -434,6 +452,21 @@
                         <p i18n="tuningHelp"></p>
                     </div>
                 </div>
+
+                <div class="dtermfiltertype cf_column twothird">
+                    <div class="profile single-field" style="width:200px; margin-bottom: 0px;">
+                        <div class="helpicon cf_tip" i18n_title="pidTuningDTermLowpassTypeTip" style="margin-top: 5px;"></div>
+                        <div class="head" i18n="pidTuningDTermLowpassType"></div>
+                        <div class="bottomarea">
+                            <select name="dtermFilterType">
+                                <option value="0" class="PT1">PT1</option>
+                                <option value="1" class="BIQUAD">BIQUAD</option>
+                                <option value="2" class="FIR">FIR</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="cf_column twothird">
                     <div class="gui_box grey topspacer pid_filter">
                         <table class="pid_titlebar new_rates">

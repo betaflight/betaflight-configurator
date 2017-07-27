@@ -258,6 +258,15 @@ TABS.pid_tuning.initialize = function (callback) {
         } else {
             $('.pid_sensitivity').hide();
         }
+
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            $('.profile select[name="dtermFilterType"]').val(FILTER_CONFIG.dterm_filter_type);
+            $('.antigravity input[name="itermThrottleThreshold"]').val(ADVANCED_TUNING.itermThrottleThreshold);
+            $('.antigravity input[name="itermAcceleratorGain"]').val(ADVANCED_TUNING.itermAcceleratorGain / 1000);
+        } else {
+            $('.dtermfiltertype').hide();
+            $('.antigravity').hide();
+        }
     }
 
     function form_to_pid_and_rc() {
@@ -367,6 +376,12 @@ TABS.pid_tuning.initialize = function (callback) {
         if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
             ADVANCED_TUNING.levelAngleLimit = parseInt($('.pid_tuning input[name="angleLimit"]').val());
             ADVANCED_TUNING.levelSensitivity = parseInt($('.pid_tuning input[name="sensitivity"]').val());
+        }
+
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            FILTER_CONFIG.dterm_filter_type = $('.profile select[name="dtermFilterType"]').val();
+            ADVANCED_TUNING.itermThrottleThreshold = parseInt($('.antigravity input[name="itermThrottleThreshold"]').val());
+            ADVANCED_TUNING.itermAcceleratorGain = parseInt($('.antigravity input[name="itermAcceleratorGain"]').val() * 1000);
         }
     }
 
@@ -590,7 +605,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('#pid-tuning .ptermSetpoint').hide();
             $('#pid-tuning .dtermSetpoint').hide();
         }
-        
+
         if (!semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('#pid-tuning .delta').hide();
             $('.tab-pid_tuning .note').hide();

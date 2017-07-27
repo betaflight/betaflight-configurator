@@ -80,7 +80,14 @@ var Features = function (config) {
         if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             features.push(
                 {bit: 27, group: 'other', name: 'ESC_SENSOR'}
-            )
+            );
+        }
+
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            features.push(
+                {bit: 28, group: 'other', name: 'ANTI_GRAVITY'},
+                {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'}
+            );
         }
     }
 
