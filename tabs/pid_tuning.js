@@ -833,66 +833,72 @@ TABS.pid_tuning.initialize = function (callback) {
 
         var selectProfileValues = { "0": "Profile 1", "1": "Profile 2", "2": "Profile 3" };
         var selectRateProfileValues = { "0": "Rateprofile 1", "1": "Rateprofile 2", "2": "Rateprofile 3" };
+        
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
 
-        var selectProfile = $('.selectProfile');
-        var selectRateProfile = $('.selectRateProfile');
+            var selectProfile = $('.selectProfile');
+            var selectRateProfile = $('.selectRateProfile');
 
-        $.each(selectProfileValues, function(key, value) {
-            if (key != CONFIG.profile)
-                selectProfile.append(new Option(value, key));
-        });
-        $.each(selectRateProfileValues, function(key, value) {
-            if (key != CONFIG.rateProfile)
-                selectRateProfile.append(new Option(value, key));
-        });
+            $.each(selectProfileValues, function(key, value) {
+                if (key != CONFIG.profile)
+                    selectProfile.append(new Option(value, key));
+            });
+            $.each(selectRateProfileValues, function(key, value) {
+                if (key != CONFIG.rateProfile)
+                    selectRateProfile.append(new Option(value, key));
+            });
 
-        $('.copyprofilebtn').click(function() {
-            $('.dialogCopyProfile').find('.contentProfile').show();
-            $('.dialogCopyProfile').find('.contentRateProfile').hide();
-            dialogCopyProfileMode = DIALOG_MODE_PROFILE;
-            dialogCopyProfile.showModal(); 
-        });
+            $('.copyprofilebtn').click(function() {
+                $('.dialogCopyProfile').find('.contentProfile').show();
+                $('.dialogCopyProfile').find('.contentRateProfile').hide();
+                dialogCopyProfileMode = DIALOG_MODE_PROFILE;
+                dialogCopyProfile.showModal(); 
+            });
 
-        $('.copyrateprofilebtn').click(function() {
-            $('.dialogCopyProfile').find('.contentProfile').hide();
-            $('.dialogCopyProfile').find('.contentRateProfile').show();
-            dialogCopyProfileMode = DIALOG_MODE_RATEPROFILE;
-            dialogCopyProfile.showModal(); 
-        });
+            $('.copyrateprofilebtn').click(function() {
+                $('.dialogCopyProfile').find('.contentProfile').hide();
+                $('.dialogCopyProfile').find('.contentRateProfile').show();
+                dialogCopyProfileMode = DIALOG_MODE_RATEPROFILE;
+                dialogCopyProfile.showModal(); 
+            });
 
-        $('.dialogCopyProfile-cancelbtn').click(function() {
-            dialogCopyProfile.close(); 
-        });
-
-        $('.dialogCopyProfile-confirmbtn').click(function() {
-            switch(dialogCopyProfileMode) {
-                case DIALOG_MODE_PROFILE:
-                    COPY_PROFILE.type = DIALOG_MODE_PROFILE;    // 0 = pid profile
-                    COPY_PROFILE.dstProfile = parseInt(selectProfile.val());
-                    COPY_PROFILE.srcProfile = CONFIG.profile;
-
-                    MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
-
-                    break;
-                
-                case DIALOG_MODE_RATEPROFILE:
-                    COPY_PROFILE.type = DIALOG_MODE_RATEPROFILE;    // 1 = rate profile
-                    COPY_PROFILE.dstProfile = parseInt(selectRateProfile.val());
-                    COPY_PROFILE.srcProfile = CONFIG.profile;
-
-                    MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
-
-                    break;
-
-                default:
-                    close_dialog();
-                    break;
-            }
-
-            function close_dialog() {
+            $('.dialogCopyProfile-cancelbtn').click(function() {
                 dialogCopyProfile.close(); 
-            }
-        });
+            });
+
+            $('.dialogCopyProfile-confirmbtn').click(function() {
+                switch(dialogCopyProfileMode) {
+                    case DIALOG_MODE_PROFILE:
+                        COPY_PROFILE.type = DIALOG_MODE_PROFILE;    // 0 = pid profile
+                        COPY_PROFILE.dstProfile = parseInt(selectProfile.val());
+                        COPY_PROFILE.srcProfile = CONFIG.profile;
+
+                        MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
+
+                        break;
+                    
+                    case DIALOG_MODE_RATEPROFILE:
+                        COPY_PROFILE.type = DIALOG_MODE_RATEPROFILE;    // 1 = rate profile
+                        COPY_PROFILE.dstProfile = parseInt(selectRateProfile.val());
+                        COPY_PROFILE.srcProfile = CONFIG.profile;
+
+                        MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
+
+                        break;
+
+                    default:
+                        close_dialog();
+                        break;
+                }
+
+                function close_dialog() {
+                    dialogCopyProfile.close(); 
+                }
+            });
+        } else {
+            $('.copyprofilebtn').hide();
+            $('.copyrateprofilebtn').hide();
+        }
 
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('#pid-tuning .delta select').change(function() {
