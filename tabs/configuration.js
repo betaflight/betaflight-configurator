@@ -12,7 +12,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_config() {
-        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, load_serial_config);
+        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, load_beeper_config);
+    }
+
+    function load_beeper_config() {
+        var next_callback = load_serial_config;
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
     }
 
     function load_serial_config() {
@@ -189,6 +198,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var features_e = $('.tab-configuration .features');
 
         FEATURE_CONFIG.features.generateElements(features_e);
+
+        // Beeper
+        var template = $('.beepers .beeper-template');
+        var destination = $('.beepers .beeper-configuration');
+        var beeper_e = $('.tab-configuration .beepers');
+
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            BEEPER_CONFIG.beepers.generateElements(template, destination);
+        } else {
+            beeper_e.hide();
+        }
 
         // translate to user-selected language
         localize();
@@ -614,6 +634,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         });
 
+        $('input.beeper', beeper_e).change(function () {
+            var element = $(this);
+            BEEPER_CONFIG.beepers.updateData(element);
+        });        
+
         checkShowDisarmDelay();
         checkShowSerialRxBox();
         checkUpdateGpsControls();
@@ -677,8 +702,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_feature_config() {
-                var next_callback = save_misc;
+                var next_callback = save_beeper_config;
                 MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, next_callback);
+            }
+
+            function save_beeper_config() {
+                var next_callback = save_misc;
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
             }
 
             function save_misc() {

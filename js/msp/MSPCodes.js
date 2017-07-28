@@ -76,9 +76,8 @@ var MSPCodes = {
     MSP_SET_PID_ADVANCED:           95,
     MSP_SENSOR_CONFIG:              96,
     MSP_SET_SENSOR_CONFIG:          97,
-    //MSP_SPECIAL_PARAMETERS:         98, // DEPRECATED
-    //MSP_SET_SPECIAL_PARAMETERS:     99, // DEPRECATED
-    //MSP_IDENT:                      100, // DEPRECTED
+    MSP_CAMERA_CONTROL:             98,
+
     MSP_STATUS:                     101,
     MSP_RAW_IMU:                    102,
     MSP_SERVO:                      103,
@@ -116,6 +115,9 @@ var MSPCodes = {
     MSP_GPS_SV_INFO:                164,
 
     MSP_DISPLAYPORT:                182,
+
+    MSP_BEEPER_CONFIG:              184,
+    MSP_SET_BEEPER_CONFIG:          185,
 
     MSP_SET_RAW_RC:                 200,
     MSP_SET_RAW_GPS:                201, // Not used
