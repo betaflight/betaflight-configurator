@@ -174,12 +174,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         function refreshMixerPreview() {
             var mixer = MIXER_CONFIG.mixer
-            var reverse = MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
-
+            var reverse = "";
+            
+            if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+                MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
+            }
+            
             $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
         };
 
         var reverseMotorSwitch_e = $('#reverseMotorSwitch');
+        var reverseMotor_e = $('.reverseMotor');
 
         reverseMotorSwitch_e.change(function() {
             MIXER_CONFIG.reverseMotorDir = $(this).prop('checked') ? 1 : 0;
@@ -208,6 +213,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             BEEPER_CONFIG.beepers.generateElements(template, destination);
         } else {
             beeper_e.hide();
+            reverseMotor_e.hide();
         }
 
         // translate to user-selected language
