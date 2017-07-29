@@ -171,6 +171,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
             case MSPCodes.MSP_CURRENT_METERS:
+
                 CURRENT_METERS = [];
                 var currentMeterLength = 5;
                 for (var i = 0; i < (data.byteLength / currentMeterLength); i++) {
@@ -192,46 +193,63 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_VOLTAGE_METER_CONFIG:
-                VOLTAGE_METER_CONFIGS = [];
-                var voltage_meter_count = data.readU8();
+                if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+                    MISC.vbatscale = data.readU8(); // 10-200
+                    MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
+                    MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
+                    MISC.vbatwarningcellvoltage = data.readU8() / 10; // 10-50
+                    if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
+                        MISC.batterymetertype = data.readU8();
+                    }
+                } else {
+                    VOLTAGE_METER_CONFIGS = [];
+                    var voltage_meter_count = data.readU8();
 
-                for (var i = 0; i < voltage_meter_count; i++) {
-                    var subframe_length = data.readU8();
-                    if (subframe_length != 5) {
-                        for (var j = 0; j < subframe_length; j++) {
-                            data.readU8();
+                    for (var i = 0; i < voltage_meter_count; i++) {
+                        var subframe_length = data.readU8();
+                        if (subframe_length != 5) {
+                            for (var j = 0; j < subframe_length; j++) {
+                                data.readU8();
+                            }
+                        } else {
+                            var voltageMeterConfig = {};
+                            voltageMeterConfig.id = data.readU8();
+                            voltageMeterConfig.sensorType = data.readU8();
+                            voltageMeterConfig.vbatscale = data.readU8();
+                            voltageMeterConfig.vbatresdivval = data.readU8();
+                            voltageMeterConfig.vbatresdivmultiplier = data.readU8();
+
+                            VOLTAGE_METER_CONFIGS.push(voltageMeterConfig);
                         }
-                    } else {
-                        var voltageMeterConfig = {};
-                        voltageMeterConfig.id = data.readU8();
-                        voltageMeterConfig.sensorType = data.readU8();
-                        voltageMeterConfig.vbatscale = data.readU8();
-                        voltageMeterConfig.vbatresdivval = data.readU8();
-                        voltageMeterConfig.vbatresdivmultiplier = data.readU8();
-
-                        VOLTAGE_METER_CONFIGS.push(voltageMeterConfig);
                     }
                 }
                 break;
             case MSPCodes.MSP_CURRENT_METER_CONFIG:
-                var offset = 0;
-                CURRENT_METER_CONFIGS = [];
-                var current_meter_count = data.readU8();
-                for (var i = 0; i < current_meter_count; i++) {
-                    var currentMeterConfig = {};
-                    var subframe_length = data.readU8();
+                if (semver.lt(CONFIG.apiVersion, "1.36.0"))  {
+                    BF_CONFIG.currentscale = data.read16();
+                    BF_CONFIG.currentoffset = data.read16();
+                    BF_CONFIG.currentmetertype = data.readU8();
+                    BF_CONFIG.batterycapacity = data.readU16();
+                } else {
+                    var offset = 0;
+                    CURRENT_METER_CONFIGS = [];
+                    var current_meter_count = data.readU8();
+                    for (var i = 0; i < current_meter_count; i++) {
+                        var currentMeterConfig = {};
+                        var subframe_length = data.readU8();
 
-                    if (subframe_length != 6) {
-                        for (var j = 0; j < subframe_length; j++) {
-                            data.readU8();
+                        if (subframe_length != 6) {
+                            for (var j = 0; j < subframe_length; j++) {
+                                data.readU8();
+                            }
+                        } else {
+                            currentMeterConfig.id = data.readU8();
+                            currentMeterConfig.sensorType = data.readU8();
+                            currentMeterConfig.scale = data.readU16();
+                            currentMeterConfig.offset = data.readU16();
+
+                            CURRENT_METER_CONFIGS.push(currentMeterConfig);
                         }
-                    } else {
-                        currentMeterConfig.id = data.readU8();
-                        currentMeterConfig.sensorType = data.readU8();
-                        currentMeterConfig.scale = data.readU16();
-                        currentMeterConfig.offset = data.readU16();
-
-                        CURRENT_METER_CONFIGS.push(currentMeterConfig);
                     }
                 }
                 break;
@@ -1273,11 +1291,11 @@ MspHelper.prototype.crunch = function(code) {
         case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
             if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
                 buffer.push8(MISC.vbatscale)
-                    .push8(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 10))
-                    .push8(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 10))
-                    .push8(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 10));
+                    .push8(Math.round(MISC.vbatmincellvoltage * 10))
+                    .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
+                    .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
                     if (semver.gte(CONFIG.apiVersion, "1.23.0")) {
-                        buffer.push8(BATTERY_CONFIG.voltageMeterSource);
+                        buffer.push8(MISC.batterymetertype);
                     }
             }
            break;
@@ -1285,7 +1303,7 @@ MspHelper.prototype.crunch = function(code) {
             if (semver.lt(CONFIG.apiVersion, "1.36.0"))  {
                 buffer.push16(BF_CONFIG.currentscale)
                     .push16(BF_CONFIG.currentoffset)
-                    .push8(BATTERY_CONFIG.currentMeterSource)
+                    .push8(BF_CONFIG.currentmetertype)
                     .push16(BF_CONFIG.batterycapacity)
             }
             break;

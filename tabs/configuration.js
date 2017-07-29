@@ -1,7 +1,8 @@
 'use strict';
 
 TABS.configuration = {
-    DSHOT_PROTOCOL_MIN_VALUE: 5
+    DSHOT_PROTOCOL_MIN_VALUE: 5,
+    SHOW_OLD_BATTERY_CONFIG: false
 };
 
 TABS.configuration.initialize = function (callback, scrollPosition) {
@@ -9,6 +10,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     if (GUI.active_tab != 'configuration') {
         GUI.active_tab = 'configuration';
+    }
+
+    if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+        //Show old battery configuration for pre-BF-3.2
+        self.SHOW_OLD_BATTERY_CONFIG = true;
+    } else {
+        self.SHOW_OLD_BATTERY_CONFIG = false;
     }
 
     function load_config() {
@@ -140,12 +148,38 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_name() {
         var next_callback = load_rx_config;
+
+        if (self.SHOW_OLD_BATTERY_CONFIG) {
+            next_callback = load_battery;
+        }
+
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             MSP.send_message(MSPCodes.MSP_NAME, false, false, next_callback);
         } else {
             next_callback();
         }
     }
+
+    // -----------------------------------------------
+    // Remove this when we officily retire BF 3.1.x
+    function load_battery() {
+        var next_callback = load_current;
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            MSP.send_message(MSPCodes.MSP_VOLTAGE_METER_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+    function load_current() {
+        var next_callback = load_rx_config;
+        if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+            MSP.send_message(MSPCodes.MSP_CURRENT_METER_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+    // -----------------------------------------------
 
     function load_rx_config() {
         var next_callback = load_html;
@@ -558,6 +592,105 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[name="maxthrottle"]').val(MOTOR_CONFIG.maxthrottle);
         $('input[name="mincommand"]').val(MOTOR_CONFIG.mincommand);
 
+        // -----------------------------------------------
+        // Remove this when we officily retire BF 3.1.x
+        // fill battery
+        if (self.SHOW_OLD_BATTERY_CONFIG) {
+            if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                var batteryMeterTypes = [
+                    'Onboard ADC',
+                    'ESC Sensor'
+                ];
+
+                var batteryMeterType_e = $('select.batterymetertype');
+                for (i = 0; i < batteryMeterTypes.length; i++) {
+                    batteryMeterType_e.append('<option value="' + i + '">' + batteryMeterTypes[i] + '</option>');
+                }
+
+                batteryMeterType_e.change(function () {
+                    MISC.batterymetertype = parseInt($(this).val());
+                    checkUpdateVbatControls();
+                });
+                batteryMeterType_e.val(MISC.batterymetertype).change();
+            } else {
+                $('div.batterymetertype').hide();
+            }
+
+            $('input[name="mincellvoltage"]').val(MISC.vbatmincellvoltage);
+            $('input[name="maxcellvoltage"]').val(MISC.vbatmaxcellvoltage);
+            $('input[name="warningcellvoltage"]').val(MISC.vbatwarningcellvoltage);
+            $('input[name="voltagescale"]').val(MISC.vbatscale);
+
+            // fill current
+            var currentMeterTypes = [
+                'None',
+                'Onboard ADC',
+                'Virtual'
+            ];
+
+            if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                currentMeterTypes.push('ESC Sensor');
+            }
+
+            var currentMeterType_e = $('select.currentmetertype');
+            for (i = 0; i < currentMeterTypes.length; i++) {
+                currentMeterType_e.append('<option value="' + i + '">' + currentMeterTypes[i] + '</option>');
+            }
+
+            currentMeterType_e.change(function () {
+                BF_CONFIG.currentmetertype = parseInt($(this).val());
+                checkUpdateCurrentControls();
+            });
+            currentMeterType_e.val(BF_CONFIG.currentmetertype).change();
+
+            $('input[name="currentscale"]').val(BF_CONFIG.currentscale);
+            $('input[name="currentoffset"]').val(BF_CONFIG.currentoffset);
+            $('input[name="multiwiicurrentoutput"]').prop('checked', MISC.multiwiicurrentoutput !== 0);
+        } else {
+            $('.oldBatteryConfig').hide();
+        }
+
+        function checkUpdateVbatControls() {
+            if (FEATURE_CONFIG.features.isEnabled('VBAT')) {
+                $('.vbatmonitoring').show();
+
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                     $('select.batterymetertype').show();
+
+                    if (MISC.batterymetertype !== 0) {
+                        $('.vbatCalibration').hide();
+                     }
+                } else {
+                    $('select.batterymetertype').hide();
+                }
+            } else {
+                $('.vbatmonitoring').hide();
+            }
+        }
+
+        function checkUpdateCurrentControls() {
+            if (FEATURE_CONFIG.features.isEnabled('CURRENT_METER')) {
+                $('.currentMonitoring').show();
+
+                switch(BF_CONFIG.currentmetertype) {
+                    case 0:
+                        $('.currentCalibration').hide();
+                        $('.currentOutput').hide();
+
+                        break;
+                    case 3:
+                        $('.currentCalibration').hide();
+                }
+
+                if (BF_CONFIG.currentmetertype !== 1 && BF_CONFIG.currentmetertype !== 2) {
+                    $('.currentCalibration').hide();
+                }
+            } else {
+                $('.currentMonitoring').hide();
+            }
+        }
+        // ------------------------------------------------
+
         //fill 3D
         if (semver.lt(CONFIG.apiVersion, "1.14.0")) {
             $('.tab-configuration ._3d').hide();
@@ -611,6 +744,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     checkShowDisarmDelay();
                     break;
 
+                case 'VBAT':
+                    if (self.SHOW_OLD_BATTERY_CONFIG) {
+                        checkUpdateVbatControls();
+                    }
+
+                    break;
+                case 'CURRENT_METER':
+                    if (self.SHOW_OLD_BATTERY_CONFIG) {
+                        checkUpdateCurrentControls();
+                    }
+
                 case 'GPS':
                     checkUpdateGpsControls();
                     break;
@@ -650,6 +794,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         checkUpdateGpsControls();
         checkUpdate3dControls();
 
+        if (self.SHOW_OLD_BATTERY_CONFIG) {
+            checkUpdateVbatControls();
+            checkUpdateCurrentControls();
+        }
+
         $("input[id='unsyncedPWMSwitch']").change(function() {
             if ($(this).is(':checked')) {
                 $('div.unsyncedpwmfreq').show();
@@ -677,6 +826,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
             MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
             MOTOR_CONFIG.mincommand = parseInt($('input[name="mincommand"]').val());
+
+            if(self.SHOW_OLD_BATTERY_CONFIG) {
+                MISC.vbatmincellvoltage = parseFloat($('input[name="mincellvoltage"]').val());
+                MISC.vbatmaxcellvoltage = parseFloat($('input[name="maxcellvoltage"]').val());
+                MISC.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
+                MISC.vbatscale = parseInt($('input[name="voltagescale"]').val());
+
+                BF_CONFIG.currentscale = parseInt($('input[name="currentscale"]').val());
+                BF_CONFIG.currentoffset = parseInt($('input[name="currentoffset"]').val());
+                MISC.multiwiicurrentoutput = $('input[name="multiwiicurrentoutput"]').is(':checked') ? 1 : 0;
+            }
 
             if(semver.gte(CONFIG.apiVersion, "1.14.0")) {
                 MOTOR_3D_CONFIG.deadband3d_low = parseInt($('input[name="3ddeadbandlow"]').val());
@@ -812,9 +972,34 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             function save_name() {
                 var next_callback = save_rx_config;
 
+                if(self.SHOW_OLD_BATTERY_CONFIG) {
+                    next_callback = save_battery;
+                }
+
                 CONFIG.name = $.trim($('input[name="craftName"]').val());
                 MSP.send_message(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME), false, next_callback);
             }
+
+            // -----------------------------------------------
+            // Remove this when we officily retire BF 3.1.x
+            function save_battery() {
+                var next_callback = save_current;
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_current() {
+                var next_callback = save_rx_config;
+                if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+            // -----------------------------------------------
 
             function save_rx_config() {
                 var next_callback = save_to_eeprom;

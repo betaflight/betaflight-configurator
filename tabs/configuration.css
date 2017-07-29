@@ -291,11 +291,19 @@
     width: 150px;
 }
 
-.tab-configuration .currentMeterSource {
+.tab-configuration .currentmetertype {
     border: 1px solid silver;
     margin-right: 5px;
     float: left;
     width: 150px;
+}
+
+.tab-configuration .vbatmonitoring {
+    margin-top: 5px;
+}
+
+.tab-configuration .currentMonitoring {
+    margin-top: 5px;
 }
 
 .tab-configuration .rssi td:nth-child(2) {

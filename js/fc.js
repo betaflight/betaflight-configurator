@@ -2,6 +2,7 @@
 
 // define all the global variables that are uses to hold FC state
 var CONFIG;
+var BF_CONFIG;          // Remove when we officialy retire BF 3.1
 var FEATURE_CONFIG;
 var BEEPER_CONFIG;
 var MIXER_CONFIG;
@@ -77,6 +78,13 @@ var FC = {
             numProfiles:                3,
             rateProfile:                0,
             boardType:                  0,
+        };
+
+        BF_CONFIG = {
+            currentscale:           0,
+            currentoffset:          0,
+            currentmetertype:       0,
+            batterycapacity:        0,
         };
 
         FEATURE_CONFIG = {
@@ -228,6 +236,7 @@ var FC = {
             vbatmincellvoltage:         0,
             vbatmaxcellvoltage:         0,
             vbatwarningcellvoltage:     0,
+            batterymetertype:           1, // 1=ADC, 2=ESC
         };
         MOTOR_CONFIG = {
             minthrottle:                0,
