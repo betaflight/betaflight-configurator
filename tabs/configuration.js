@@ -176,7 +176,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             var mixer = MIXER_CONFIG.mixer
             var reverse = "";
             
-            if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 reverse = MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
             }
             

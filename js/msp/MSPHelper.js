@@ -557,7 +557,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_MIXER_CONFIG:
                 MIXER_CONFIG.mixer = data.readU8();
-                if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     MIXER_CONFIG.reverseMotorDir = data.readU8();
                 }
                 break;
@@ -1163,7 +1163,7 @@ MspHelper.prototype.crunch = function(code) {
             break;
         case MSPCodes.MSP_SET_MIXER_CONFIG:
             buffer.push8(MIXER_CONFIG.mixer)
-            if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 buffer.push8(MIXER_CONFIG.reverseMotorDir);
             }
             break;
