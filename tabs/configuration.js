@@ -177,7 +177,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             var reverse = "";
             
             if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
-                MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
+                reverse = MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
             }
             
             $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');

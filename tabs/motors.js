@@ -167,8 +167,14 @@ TABS.motors.initialize = function (callback) {
         lines.attr('d', graphHelpers.line);
     }
 
-    function update_model(val) {
-        $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[val - 1].image + '.svg');
+    function update_model(mixer) {
+        var reverse = "";
+        
+        if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+            reverse = MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
+        }
+        
+        $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
     }
     
     function process_html() {
