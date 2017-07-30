@@ -292,15 +292,9 @@ TABS.pid_tuning.initialize = function (callback) {
                 .attr('disabled', !checked);
         });
 
-        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-            $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_1 != 0).change();
-            $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_2 != 0).change();
-            $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.dterm_notch_cutoff != 0).change();
-        } else {
-            $('.switchGyroNotch1').hide();
-            $('.switchGyroNotch2').hide();
-            $('.switchDTermNotch').hide();
-        }
+        $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_1 != 0).change();
+        $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_2 != 0).change();
+        $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.dterm_notch_cutoff != 0).change();
     }
 
     function form_to_pid_and_rc() {
