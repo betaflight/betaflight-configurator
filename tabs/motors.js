@@ -42,7 +42,14 @@ TABS.motors.initialize = function (callback) {
         $('#content').load("./tabs/motors.html", process_html);
     }
 
-    MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, get_arm_status);
+    // Get information from Betaflight
+    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+        // BF 3.2.0+
+        MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, get_arm_status);
+    } else {
+        // BF 3.1.x or older
+        MSP.send_message(MSPCodes.MSP_MISC, false, false, get_arm_status);
+    }
 
     function update_arm_status() {
         self.armed = bit_check(CONFIG.mode, 0);
@@ -167,8 +174,14 @@ TABS.motors.initialize = function (callback) {
         lines.attr('d', graphHelpers.line);
     }
 
-    function update_model(val) {
-        $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[val - 1].image + '.svg');
+    function update_model(mixer) {
+        var reverse = "";
+        
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            reverse = MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
+        }
+        
+        $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
     }
     
     function process_html() {

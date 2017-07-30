@@ -470,10 +470,17 @@ function updateTabList(features) {
     } else {
         $('#tabs ul.mode-connected li.tab_transponder').hide();
     }
+
     if (features.isEnabled('OSD')) {
         $('#tabs ul.mode-connected li.tab_osd').show();
     } else {
         $('#tabs ul.mode-connected li.tab_osd').hide();
+    }
+
+    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+        $('#tabs ul.mode-connected li.tab_power').show();
+    } else {
+        $('#tabs ul.mode-connected li.tab_power').hide();
     }
 }
 
