@@ -31,7 +31,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="spacer_box">
+                            <div class="spacer_box reverseMotor">
                                 <div class="checkbox" style="border-top: 1px solid #ddd; padding-top: 5px;">
                                     <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
                                         <input type="checkbox" id="reverseMotorSwitch" class="toggle" />
@@ -530,11 +530,10 @@
             </tr>
             <tr class="oldBatteryConfig">
                 <td style="width:calc(50%);vertical-align:top;">
-                    <!-- ROW 4 - LEFT PANE - ONLY NEEDED FOR BATTERY/CURRENT PART FOR PRE BF3.2 -->
+                    <!-- ROW 4 - LEFT PANE -->
 
-                    <!-- -------------------------------------------------------- -->
-                    <!-- Remove this part when we officialy retire BF 3.1.x       -->
-                    <div class="rightWrapper current voltage">
+                    <!-- BATTERY CONFIG FOR PRE BF 3.2 -->
+                    <div class="voltage">
                         <div class="gui_box grey">
                             <div class="gui_box_titlebar">
                                 <div class="spacer_box_title" i18n="configurationBatteryVoltage"></div>
@@ -585,7 +584,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="gui_box grey">
+                    </div>
+
+                </td>
+                <td style="width:calc(50%);vertical-align:top;">
+                    <!-- ROW 4 - RIGHT PANE -->
+
+                    <!-- CURRENT CONFIG FOR PRE BF 3.2 -->
+                    <div class="current">
+                       <div class="gui_box grey">
                             <div class="gui_box_titlebar">
                                 <div class="spacer_box_title" i18n="configurationCurrent"></div>
                             </div>
@@ -633,17 +640,17 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                    <!-- -------------------------------------------------------- -->
 
                 </td>
             </tr>
-            <tr>
+            <tr class="beepers">
                 <td style="width:calc(100%)" colspan="2">
                     <!-- ROW 4 - FULL WIDTH PANE -->
             
                     <!-- BEEPER -->
-                    <div class="leftWrapper beepers" style="width: calc(100% - 20px);">
+                    <div class="beepers" style="width: calc(100%);">
                         <div class="gui_box grey" style="margin-top:10px;">
                             <div class="gui_box_titlebar">
                                 <div class="spacer_box_title" i18n="configurationBeeper"></div>
@@ -668,150 +675,11 @@
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
 
                 </td>
             </tr>
         </table>
 
-=======
-                </div>
-            </div>
-            <div class="clear-both"></div>
-        </div>
-        
-
-        <!-- -------------------------------------------------------- -->
-        <!-- Remove this part when we officialy retire BF 3.1.x       -->
-        <div class="rightWrapper current voltage oldBatteryConfig">
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationBatteryVoltage"></div>
-                </div>
-                <div class="spacer_box">
-                    <table cellpadding="0" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th i18n="configurationFeatureEnabled"></th>
-                                <th i18n="configurationFeatureDescription"></th>
-                                <th i18n="configurationFeatureName"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="features batteryVoltage">
-                            <!-- table generated here -->
-                        </tbody>
-                    </table>
-                    <div class="select batterymetertype vbatmonitoring">
-                        <label>
-                            <select class="batterymetertype"><!-- list generated here --></select>
-                            <span i18n="configurationBatteryMeterType"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="mincellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryMinimum"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="maxcellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryMaximum"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="number" name="warningcellvoltage" step="0.1" min="1" max="5" /> <span
-                            i18n="configurationBatteryWarning"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring vbatCalibration">
-                        <label> <input type="number" name="voltagescale" step="1" min="10" max="255" /> <span
-                            i18n="configurationBatteryScale"></span>
-                        </label>
-                    </div>
-                    <div class="number vbatmonitoring">
-                        <label> <input type="text" name="batteryvoltage" readonly class="disabled" /> <span
-                            i18n="configurationBatteryVoltage"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="gui_box grey">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationCurrent"></div>
-                </div>
-                <div class="spacer_box">
-                    <table cellpadding="0" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th i18n="configurationFeatureEnabled"></th>
-                                <th i18n="configurationFeatureDescription"></th>
-                                <th i18n="configurationFeatureName"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="features batteryCurrent">
-                            <!-- table generated here -->
-                        </tbody>
-                    </table>
-                    <div class="select currentMonitoring">
-                        <label>
-                            <select class="currentmetertype"><!-- list generated here --></select>
-                            <span i18n="configurationCurrentMeterType"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentCalibration">
-                        <label> <input type="number" name="currentscale" step="1" min="-16000" max="16000" /> <span
-                            i18n="configurationCurrentScale"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentCalibration">
-                        <label> <input type="number" name="currentoffset" step="1" min="-1600" max="16000" /> <span
-                            i18n="configurationCurrentOffset"></span>
-                        </label>
-                    </div>
-                    <div class="number currentMonitoring currentOutput">
-                        <label>
-                        <input type="text" name="batterycurrent" readonly class="disabled" /> <span
-                            i18n="configurationBatteryCurrent"></span>
-                        </label>
-                    </div>
-                    <div class="checkbox currentMonitoring currentOutput">
-                        <div class="numberspacer">
-                            <input type="checkbox" name="multiwiicurrentoutput" class="toggle" />
-                        </div>
-                        <label> <span i18n="configurationBatteryMultiwiiCurrent"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- -------------------------------------------------------- -->
-
-        <div class="leftWrapper beepers" style="width: calc(100% - 20px);">
-            <div class="gui_box grey" style="margin-top:10px;">
-                <div class="gui_box_titlebar">
-                    <div class="spacer_box_title" i18n="configurationBeeper"></div>
-                </div>
-                <div class="spacer_box">
-                    <table cellpadding="0" cellspacing="0">
-                        <tbody class="beeper-configuration" id="noline">
-                            <tr class="beeper-template" style="display:none">
-                                <td>
-                                    <input class="beeper toggle" id="" name="" title="" type="checkbox" />
-                                </td>
-                                <td>
-                                    <label for=""></label>
-                                </td>
-                                <td>
-                                    <span i18n=""></span>
-                                </td>
-                            </tr>
-                            <!-- table generated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="clear-both"></div>
->>>>>>> Several fixes for compatibility with BF 3.1.x
         <div class="content_toolbar">
             <div class="btn save_btn">
                 <a class="save" href="#" i18n="configurationButtonSave"></a>

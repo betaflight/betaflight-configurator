@@ -160,8 +160,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
     }
 
-    // -----------------------------------------------
-    // Remove this when we officily retire BF 3.1.x
     function load_battery() {
         var next_callback = load_current;
         if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
@@ -178,8 +176,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         } else {
             next_callback();
         }
-    }
-    // -----------------------------------------------
+    }   
 
     function load_rx_config() {
         var next_callback = load_html;
@@ -592,8 +589,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[name="maxthrottle"]').val(MOTOR_CONFIG.maxthrottle);
         $('input[name="mincommand"]').val(MOTOR_CONFIG.mincommand);
 
-        // -----------------------------------------------
-        // Remove this when we officily retire BF 3.1.x
         // fill battery
         if (self.SHOW_OLD_BATTERY_CONFIG) {
             if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
@@ -689,7 +684,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('.currentMonitoring').hide();
             }
         }
-        // ------------------------------------------------
 
         //fill 3D
         if (semver.lt(CONFIG.apiVersion, "1.14.0")) {
@@ -980,8 +974,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 MSP.send_message(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME), false, next_callback);
             }
 
-            // -----------------------------------------------
-            // Remove this when we officily retire BF 3.1.x
             function save_battery() {
                 var next_callback = save_current;
                 if (semver.gte(CONFIG.flightControllerVersion, "3.1.0")) {
@@ -999,7 +991,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     next_callback();
                 }
             }
-            // -----------------------------------------------
 
             function save_rx_config() {
                 var next_callback = save_to_eeprom;

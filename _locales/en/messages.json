@@ -2480,8 +2480,6 @@
     "configurationMagHardware": {
         "message": "Magnetometer (if supported)"
     },
-    // ---------------------------------------------
-    // Remove this when we officialy retire BF 3.1.x
     "configurationBatteryVoltage": {
         "message": "Battery Voltage"
     },
@@ -2518,7 +2516,6 @@
     "configurationBatteryMultiwiiCurrent": {
         "message": "Enable support for legacy Multiwii MSP current output"
     },
-    // --------------------------------------------- END
     "pidTuningProfile": {
         "message": "Profile"
     },
