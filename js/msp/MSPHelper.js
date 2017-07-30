@@ -826,11 +826,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
                         FILTER_CONFIG.gyro_soft_notch_hz_2 = data.readU16();
                         FILTER_CONFIG.gyro_soft_notch_cutoff_2 = data.readU16();
-                        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                            FILTER_CONFIG.enable_gyro_soft_notch_1 = data.readU8();
-                            FILTER_CONFIG.enable_gyro_soft_notch_2 = data.readU8();
-                            FILTER_CONFIG.enable_dterm_notch = data.readU8();
-                        }
                     }
                     if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                         FILTER_CONFIG.dterm_filter_type = data.readU8();
@@ -1454,11 +1449,6 @@ MspHelper.prototype.crunch = function(code) {
                 if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
                     buffer.push16(FILTER_CONFIG.gyro_soft_notch_hz_2)
                         .push16(FILTER_CONFIG.gyro_soft_notch_cutoff_2)
-                    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                        buffer.push8(FILTER_CONFIG.enable_gyro_soft_notch_1)
-                            .push8(FILTER_CONFIG.enable_gyro_soft_notch_2)
-                            .push8(FILTER_CONFIG.enable_dterm_notch);
-                    }
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     buffer.push8(FILTER_CONFIG.dterm_filter_type);

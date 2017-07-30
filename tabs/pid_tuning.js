@@ -259,7 +259,6 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_sensitivity').hide();
         }
 
-<<<<<<< HEAD
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             $('.profile select[name="dtermFilterType"]').val(FILTER_CONFIG.dterm_filter_type);
             $('.antigravity input[name="itermThrottleThreshold"]').val(ADVANCED_TUNING.itermThrottleThreshold);
@@ -267,34 +266,40 @@ TABS.pid_tuning.initialize = function (callback) {
         } else {
             $('.dtermfiltertype').hide();
             $('.antigravity').hide();
-=======
+        }
+
         $('input[id="gyroNotch1Enabled"]').change(function() {
-            FILTER_CONFIG.enable_gyro_soft_notch_1 = $(this).is(':checked') ? 1 : 0;
-            $('.pid_filter input[name="gyroNotch1Frequency"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_1);
-            $('.pid_filter input[name="gyroNotch1Cutoff"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_1);
+            var checked = $(this).is(':checked');
+            $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? DEFAULT.gyro_soft_notch_hz_1 : 0)
+                .attr('disabled', !checked);
+            $('.pid_filter input[name="gyroNotch1Cutoff"]').val($(this).is(':checked') ? DEFAULT.gyro_soft_notch_cutoff_1 : 0)
+                .attr('disabled', !checked);
         });
 
         $('input[id="gyroNotch2Enabled"]').change(function() {
-            FILTER_CONFIG.enable_gyro_soft_notch_2 = $(this).is(':checked') ? 1 : 0;
-            $('.pid_filter input[name="gyroNotch2Frequency"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_2);
-            $('.pid_filter input[name="gyroNotch2Cutoff"]').attr('disabled', !FILTER_CONFIG.enable_gyro_soft_notch_2);
+            var checked = $(this).is(':checked');
+            $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? DEFAULT.gyro_soft_notch_hz_2 : 0)
+                .attr('disabled', !checked);
+            $('.pid_filter input[name="gyroNotch2Cutoff"]').val(checked ? DEFAULT.gyro_soft_notch_cutoff_2 : 0)
+                .attr('disabled', !checked);
         });
 
         $('input[id="dtermNotchEnabled"]').change(function() {
-            FILTER_CONFIG.enable_dterm_notch = $(this).is(':checked') ? 1 : 0;
-            $('.pid_filter input[name="dTermNotchFrequency"]').attr('disabled', !FILTER_CONFIG.enable_dterm_notch);
-            $('.pid_filter input[name="dTermNotchCutoff"]').attr('disabled', !FILTER_CONFIG.enable_dterm_notch);
+            var checked = $(this).is(':checked');
+            $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? DEFAULT.dterm_notch_hz : 0)
+                .attr('disabled', !checked);
+            $('.pid_filter input[name="dTermNotchCutoff"]').val(checked ? DEFAULT.dterm_notch_cutoff : 0)
+                .attr('disabled', !checked);
         });
 
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-            $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.enable_gyro_soft_notch_1 != 0).change();
-            $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.enable_gyro_soft_notch_2 != 0).change();
-            $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.enable_dterm_notch != 0).change();
+            $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_1 != 0).change();
+            $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_2 != 0).change();
+            $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.dterm_notch_cutoff != 0).change();
         } else {
             $('.switchGyroNotch1').hide();
             $('.switchGyroNotch2').hide();
             $('.switchDTermNotch').hide();
->>>>>>> Added switches to turn on/off gyro notch 1/2 and dterm notch filters
         }
     }
 
