@@ -120,11 +120,14 @@ TABS.onboard_logging.initialize = function (callback) {
 
             if (BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
-                    var rate = loggingRatesSelect.val().split('/');
-                    
-                    BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
-                    BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
-                    BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
+                    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                        BLACKBOX.blackboxPDenom = loggingRatesSelect.val();
+                    } else {
+                        var rate = loggingRatesSelect.val().split('/');
+                        BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
+                        BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
+                        BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
+                    }
                     
                     MSP.send_message(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG), false, save_to_eeprom);
                 });
@@ -175,35 +178,60 @@ TABS.onboard_logging.initialize = function (callback) {
     function populateLoggingRates(loggingRatesSelect) {
         
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
-        var 
+        var loggingRates = [];
+        var pidRate = 8000 / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom; 
+
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             loggingRates = [
-                 {num: 1, denom: 1},
-                 {num: 1, denom: 2},
-                 {num: 1, denom: 3},
-                 {num: 1, denom: 4},
-                 {num: 1, denom: 5},
-                 {num: 1, denom: 6},
-                 {num: 1, denom: 7},
-                 {num: 1, denom: 8},
-                 {num: 1, denom: 16},
-                 {num: 1, denom: 32}
+                {text: "Disabled", hz: 0,     p_denom: 0},
+                {text: "500 Hz",   hz: 500,   p_denom: 16},
+                {text: "1 kHz",    hz: 1000,  p_denom: 32},
+                {text: "1.5 kHz",  hz: 1500,  p_denom: 48},
+                {text: "2 kHz",    hz: 2000,  p_denom: 64},
+                {text: "4 kHz",    hz: 4000,  p_denom: 128},
+                {text: "8 kHz",    hz: 8000,  p_denom: 256},   
+                {text: "16 kHz",   hz: 16000, p_denom: 512},
+                {text: "32 kHz",   hz: 32000, p_denom: 1024},         
             ];
 
-        var pidRate = 8000 / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom; 
-        for (var i = 0; i < loggingRates.length; i++) {
-        	var loggingRate = Math.round(pidRate / loggingRates[i].denom);
-        	var loggingRateUnit = " Hz";
-        	if (loggingRate !== Infinity) {
-                if (gcd(loggingRate, 1000) === 1000) {
-                    loggingRate /= 1000;
-                    loggingRateUnit = " KHz";	
+            $.each(loggingRates, function(index, item) {
+                if (pidRate >= item.hz || item.hz == 0) {
+                    loggingRatesSelect.append(new Option(item.text, item.p_denom));
                 }
-            }
-            loggingRatesSelect.append('<option value="' + loggingRates[i].num + '/' + loggingRates[i].denom + '">' 
-                + loggingRate + loggingRateUnit + ' (' + Math.round(loggingRates[i].num / loggingRates[i].denom * 100) + '%)</option>');
-            
+            });
+
+            loggingRatesSelect.val(BLACKBOX.blackboxPDenom);
         }
-        loggingRatesSelect.val(BLACKBOX.blackboxRateNum + '/' + BLACKBOX.blackboxRateDenom);
+        else {
+            loggingRates = [
+                    {num: 1, denom: 1},
+                    {num: 1, denom: 2},
+                    {num: 1, denom: 3},
+                    {num: 1, denom: 4},
+                    {num: 1, denom: 5},
+                    {num: 1, denom: 6},
+                    {num: 1, denom: 7},
+                    {num: 1, denom: 8},
+                    {num: 1, denom: 16},
+                    {num: 1, denom: 32}
+                ];
+
+            
+            for (var i = 0; i < loggingRates.length; i++) {
+                var loggingRate = Math.round(pidRate / loggingRates[i].denom);
+                var loggingRateUnit = " Hz";
+                if (loggingRate !== Infinity) {
+                    if (gcd(loggingRate, 1000) === 1000) {
+                        loggingRate /= 1000;
+                        loggingRateUnit = " KHz";	
+                    }
+                }
+                loggingRatesSelect.append('<option value="' + loggingRates[i].num + '/' + loggingRates[i].denom + '">' 
+                    + loggingRate + loggingRateUnit + ' (' + Math.round(loggingRates[i].num / loggingRates[i].denom * 100) + '%)</option>');
+                
+            }
+            loggingRatesSelect.val(BLACKBOX.blackboxRateNum + '/' + BLACKBOX.blackboxRateDenom);
+        }
     }
     
     function formatFilesizeKilobytes(kilobytes) {
