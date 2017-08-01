@@ -42,7 +42,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             var unsortedTargets = [];
             releaseData.forEach(function(release){
                 release.assets.forEach(function(asset){
-                    var targetFromFilenameExpression = /betaflight_([\d.]+)?_?([^.]+)\.(.*)/;
+                    var targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
                     var match = targetFromFilenameExpression.exec(asset.name);
 
                     if ((!showDevReleases && release.prerelease) || !match) {
@@ -65,7 +65,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                 var version = matchVersionFromTag[1];
 
                 release.assets.forEach(function(asset){
-                    var targetFromFilenameExpression = /betaflight_([\d.]+)?_?([^.]+)\.(.*)/;
+                    var targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
                     var match = targetFromFilenameExpression.exec(asset.name);
 
                     if ((!showDevReleases && release.prerelease) || !match) {
@@ -73,7 +73,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     }
 
                     var target = match[2];
-                    var format = match[3];
+                    var format = match[4];
 
                     if (format != 'hex') {
                         return;
