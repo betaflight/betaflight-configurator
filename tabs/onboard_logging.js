@@ -363,10 +363,7 @@ TABS.onboard_logging.initialize = function (callback) {
     
     function flash_save_begin() {
         if (GUI.connected_to) {
-            if (GUI.operating_system == "MacOS") {
-                // Address Chrome for macOS issue with large serial reads
-                self.blockSize = self.VCP_BLOCK_SIZE_3_0;
-            } else if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
+            if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
                 if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {
