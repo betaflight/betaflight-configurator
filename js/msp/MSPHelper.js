@@ -1529,6 +1529,11 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
         outData = outData.concat([blockSize & 0xFF, (blockSize >> 8) & 0xFF]);
     }
 
+    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+        // Allow compression
+        outData = outData.concat([1]);
+    }
+
     MSP.send_message(MSPCodes.MSP_DATAFLASH_READ, outData, false, function(response) {
         if (!response.crcError) {
             var chunkAddress = response.data.readU32();
@@ -1547,7 +1552,18 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
                 /* Strip that address off the front of the reply and deliver it separately so the caller doesn't have to
                  * figure out the reply format:
                  */
-                onDataCallback(address, new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize));
+                if (dataCompressionType == 0) {
+                    onDataCallback(address, new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize), dataSize);
+                } else if (dataCompressionType == 1) {
+                    // Read compressed char count to avoid decoding stray bit sequences as bytes
+                    var compressedCharCount = response.data.readU16();
+
+                    // Compressed format uses 2 additional bytes as a pseudo-header to denote the number of uncompressed bytes
+                    var compressedArray = new Uint8Array(response.data.buffer, response.data.byteOffset + headerSize + 2, dataSize - 2);
+                    var decompressedArray = huffmanDecodeBuf(compressedArray, compressedCharCount, defaultHuffmanTree, defaultHuffmanLenIndex);
+
+                    onDataCallback(address, new DataView(decompressedArray.buffer), dataSize);
+                }
             } else {
                 // Report address error
                 console.log('Expected address ' + address + ' but received ' + chunkAddress + ' - retrying');

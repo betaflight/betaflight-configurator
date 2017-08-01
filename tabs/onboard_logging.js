@@ -338,10 +338,13 @@ TABS.onboard_logging.initialize = function (callback) {
         $(".dataflash-saving")[0].close();
     }
     
-    function mark_saving_dialog_done(startTime, totalBytes) {
+    function mark_saving_dialog_done(startTime, totalBytes, totalBytesCompressed) {
         var totalTime = (new Date().getTime() - startTime) / 1000;
         console.log('Received ' + totalBytes + ' bytes in ' + totalTime.toFixed(2) + 's ('
             + (totalBytes / totalTime / 1024).toFixed(2) + 'kB / s) with block size ' + self.blockSize + '.');
+        if (totalBytesCompressed) {
+            console.log('Compressed into', totalBytesCompressed, 'bytes with mean compression factor of', totalBytes / totalBytesCompressed);
+        }
 
 
         $(".dataflash-saving").addClass("done");
@@ -359,7 +362,10 @@ TABS.onboard_logging.initialize = function (callback) {
     
     function flash_save_begin() {
         if (GUI.connected_to) {
-            if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
+            if (GUI.operating_system == "MacOS") {
+                // Address Chrome for macOS issue with large serial reads
+                self.blockSize = self.VCP_BLOCK_SIZE_3_0;
+            } else if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
                 if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {
@@ -375,14 +381,16 @@ TABS.onboard_logging.initialize = function (callback) {
                 
                 prepare_file(function(fileWriter) {
                     var nextAddress = 0;
+                    var totalBytesCompressed = 0;
                     
                     show_saving_dialog();
                     
-                    function onChunkRead(chunkAddress, chunkDataView) {
+                    function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
                         if (chunkDataView !== null) {
                             // Did we receive any data?
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
+                                totalBytesCompressed += bytesCompressed;
                                 
                                 $(".dataflash-saving progress").attr("value", nextAddress / maxBytes * 100);
 
@@ -393,7 +401,7 @@ TABS.onboard_logging.initialize = function (callback) {
                                         if (saveCancelled) {
                                             dismiss_saving_dialog();
                                         } else {
-                                            mark_saving_dialog_done(startTime, nextAddress);
+                                            mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                         }
                                     } else {
                                         mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
@@ -403,7 +411,7 @@ TABS.onboard_logging.initialize = function (callback) {
                                 fileWriter.write(blob);
                             } else {
                                 // A zero-byte block indicates end-of-file, so we're done
-                                mark_saving_dialog_done(startTime, nextAddress);
+                                mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                             }
                         } else {
                             // There was an error with the received block (address didn't match the one we asked for), retry
