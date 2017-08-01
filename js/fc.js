@@ -286,6 +286,7 @@ var FC = {
             blackboxDevice:             0,
             blackboxRateNum:            1,
             blackboxRateDenom:          1,
+            blackboxPDenom:             0,
         };
 
         TRANSPONDER = {

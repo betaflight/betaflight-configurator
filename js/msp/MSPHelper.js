@@ -1024,6 +1024,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 BLACKBOX.blackboxDevice = data.readU8();
                 BLACKBOX.blackboxRateNum = data.readU8();
                 BLACKBOX.blackboxRateDenom = data.readU8();
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    BLACKBOX.blackboxPDenom = data.readU16();
+                }
                 break;
             case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
                 console.log("Blackbox config saved");
@@ -1488,6 +1491,9 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(BLACKBOX.blackboxDevice)
                 .push8(BLACKBOX.blackboxRateNum)
                 .push8(BLACKBOX.blackboxRateDenom);
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                buffer.push16(BLACKBOX.blackboxPDenom);
+            }
             break;
 
         default:
