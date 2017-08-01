@@ -1553,7 +1553,7 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
                  * figure out the reply format:
                  */
                 if (dataCompressionType == 0) {
-                    onDataCallback(address, new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize), dataSize);
+                    onDataCallback(address, new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize));
                 } else if (dataCompressionType == 1) {
                     // Read compressed char count to avoid decoding stray bit sequences as bytes
                     var compressedCharCount = response.data.readU16();
