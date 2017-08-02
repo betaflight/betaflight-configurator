@@ -121,13 +121,14 @@ TABS.onboard_logging.initialize = function (callback) {
             if (BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
                     if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                        BLACKBOX.blackboxPDenom = loggingRatesSelect.val();
+                        BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     } else {
                         var rate = loggingRatesSelect.val().split('/');
                         BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
                         BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
-                        BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
                     }
+
+                    BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
                     
                     MSP.send_message(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG), false, save_to_eeprom);
                 });
@@ -362,10 +363,7 @@ TABS.onboard_logging.initialize = function (callback) {
     
     function flash_save_begin() {
         if (GUI.connected_to) {
-            if (GUI.operating_system == "MacOS") {
-                // Address Chrome for macOS issue with large serial reads
-                self.blockSize = self.VCP_BLOCK_SIZE_3_0;
-            } else if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
+            if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
                 if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {
