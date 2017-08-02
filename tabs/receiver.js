@@ -110,7 +110,9 @@ TABS.receiver.initialize = function (callback) {
             bar_container = $('.tab-receiver .bars'),
             aux_index = 1;
 
-        for (var i = 0; i < RC.active_channels; i++) {
+        var num_bars = (RC.active_channels > 0) ? RC.active_channels : 8;
+
+        for (var i = 0; i < num_bars; i++) {
             var name;
             if (i < bar_names.length) {
                 name = bar_names[i];
@@ -124,7 +126,7 @@ TABS.receiver.initialize = function (callback) {
                     <li class="meter">\
                         <div class="meter-bar">\
                             <div class="label"></div>\
-                            <div class="fill">\
+                            <div class="fill' + (RC.active_channels == 0 ? 'disabled' : '') + '">\
                                 <div class="label"></div>\
                             </div>\
                         </div>\
