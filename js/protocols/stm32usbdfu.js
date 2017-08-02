@@ -669,47 +669,15 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
             break;
         case 2:
             // erase
-            if (self.options.erase_chip) {
-                // full chip erase
-                console.log('Executing global chip erase');
-                $('span.progressLabel').text('Erasing ...');
-
-                self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x41], function () {
-                    self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                        if (data[4] == self.state.dfuDNBUSY) { // completely normal
-                            var delay = data[1] | (data[2] << 8) | (data[3] << 16);
-                            var startTime = (Date.now() / 1000 | 0);
-                            var check = function () {
-                                self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                                    if (data[4] == self.state.dfuDNLOAD_IDLE) {
-                                        self.progress_bar_e.val(100);
-                                        self.upload_procedure(4);
-                                    } else {
-                                        var currentTime = (Date.now() / 1000 | 0);
-                                        if ((currentTime - startTime) < 20) {
-                                            self.progress_bar_e.val((currentTime - startTime) / 20 * 100);
-                                            setTimeout(check, delay);
-                                        } else {
-                                            console.log('Failed to execute global chip erase');
-                                            self.upload_procedure(99);
-                                        }
-                                    }
-                                });
-                            };
-                            setTimeout(check, delay);
-                        } else {
-                            console.log('Failed to initiate global chip erase');
-                            self.upload_procedure(99);
-                        }
-                    });
-                });
-            } else {
-                // local erase
-
                 // find out which pages to erase
                 var erase_pages = [];
                 for (var i = 0; i < self.flash_layout.sectors.length; i++) {
                     for (var j = 0; j < self.flash_layout.sectors[i].num_pages; j++) {
+                        if (self.options.erase_chip) {
+                            // full chip erase
+                            erase_pages.push({'sector': i, 'page': j});
+                        } else {
+                            // local erase
                         var page_start = self.flash_layout.sectors[i].start_address + j * self.flash_layout.sectors[i].page_size;
                         var page_end = page_start + self.flash_layout.sectors[i].page_size - 1;
                         for (var k = 0; k < self.hex.data.length; k++) {
@@ -726,8 +694,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                             }
                         }
                     }
+                  }
                 }
-
                 $('span.progressLabel').text('Erasing ...');
                 console.log('Executing local chip erase'); 
 
@@ -777,7 +745,6 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
                 // start
                 erase_page();
-            }
             break;
 
         case 4:
