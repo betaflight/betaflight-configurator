@@ -32,8 +32,8 @@ Please note - the application will automatically update itself when new versions
 2. Extract to a folder and not the folder.
 3. Start Google Chrome.
 4. Click the 3-dots on the far right of the URL bar.
-5. Select Settings
-6. On the left of the screen select Extensions.
+5. Select "More Tools"
+6. Select "Extensions"
 7. Check the Developer Mode checkbox.
 8. Click on load unpacked extension.
 9. Point it to the folder you extracted the zip to.
