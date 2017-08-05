@@ -416,8 +416,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                 'max':                      data.readU16(),
                                 'middle':                   data.readU16(),
                                 'rate':                     data.read8(),
-                                'angleAtMin':               -90,
-                                'angleAtMax':               90,
                                 'indexOfChannelToForward':  data.readU8(),
                                 'reversedInputSources':     data.readU32()
                             };
@@ -1614,7 +1612,7 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
                 .push16(servoConfiguration.middle)
                 .push8(servoConfiguration.rate);
 
-            if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            if (semver.lt(CONFIG.apiVersion, "1.33.0")) {
                 buffer.push8(servoConfiguration.angleAtMin)
                     .push8(servoConfiguration.angleAtMax);
             }
