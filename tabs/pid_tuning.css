@@ -548,6 +548,18 @@
     float: right;
 }
 
+.tab-pid_tuning .copyprofilebtn {
+    width: 150px;
+    float: right;
+    margin-right:10px;
+}
+
+.tab-pid_tuning .copyrateprofilebtn {
+    width: 150px;
+    float: right;
+    margin-right:10px;
+}
+
 .tab-pid_tuning .right {
     float: right;
 }
@@ -752,4 +764,62 @@ width: 40%;
     border-bottom-left-radius: 8px;
     border-top: 0px solid silver;
      background: #f9f9f9;
+}
+
+.tab-pid_tuning dialog {
+    width: 40em;
+    border-radius: 5px;
+}
+
+.tab-pid_tuning dialog .buttons {
+    position: static;
+    margin-top: 2em;
+}
+
+.tab-pid_tuning dialog h3 {
+    margin-bottom: 0.5em;
+}
+
+.tab-pid_tuning .regular-button {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 10px;
+    background-color: #ffbb00;
+    border-radius: 3px;
+    border: 1px solid #dba718;
+    color: #000;
+    font-family: 'open_sansbold', Arial;
+    font-size: 12px;
+    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    display: inline-block;
+    cursor: pointer;
+    transition: all ease 0.2s;
+    padding: 0px;
+    padding-left: 9px;
+    padding-right: 9px;
+    line-height: 28px;
+}
+.tab-pid_tuning .regular-button:hover {
+    background-color: #ffcc3e;
+    transition: all ease 0.2s;
+}
+.tab-pid_tuning .regular-button:active {
+    background-color: #ffcc3e;
+    transition: all ease 0.0s;
+    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+}
+.tab-pid_tuning .regular-button.disabled {
+    cursor: default;
+    color: #fff;
+    background-color: #AFAFAF;
+    border: 1px solid #AFAFAF;
+    pointer-events: none;
+    text-shadow: none;
+    opacity: 0.5;
+}
+
+.tab-pid_tuning dialog select {
+    border: 1px solid silver;
+    margin-left: 5px;
+    width: 120px;
 }

@@ -55,6 +55,7 @@ var PID_ADVANCED_CONFIG;
 var FILTER_CONFIG;
 var ADVANCED_TUNING;
 var SENSOR_CONFIG;
+var COPY_PROFILE;
 
 var FC = {
     resetState: function() {
@@ -81,12 +82,18 @@ var FC = {
         };
 
         BF_CONFIG = {
-            currentscale:           0,
-            currentoffset:          0,
-            currentmetertype:       0,
-            batterycapacity:        0,
+            currentscale:               0,
+            currentoffset:              0,
+            currentmetertype:           0,
+            batterycapacity:            0,
         };
 
+        COPY_PROFILE = {
+            type:                       0,
+            dstProfile:                 0,
+            srcProfile:                 0,
+        };
+        
         FEATURE_CONFIG = {
             features:                   0,
         };
