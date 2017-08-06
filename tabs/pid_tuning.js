@@ -560,9 +560,13 @@ TABS.pid_tuning.initialize = function (callback) {
         $('.tab-pid_tuning select[name="profile"]').change(function () {
             self.currentProfile = parseInt($(this).val());
             self.updating = true;
+            $(this).prop('disabled', 'true');
             MSP.promise(MSPCodes.MSP_SELECT_SETTING, [self.currentProfile]).then(function () {
                 self.refresh(function () {
                     self.updating = false;
+                    
+                    $('.tab-pid_tuning select[name="profile"]').prop('disabled', 'false');
+                    CONFIG.profile = self.currentProfile;
 
                     GUI.log(chrome.i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
                 });
@@ -573,9 +577,13 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.tab-pid_tuning select[name="rate_profile"]').change(function () {
                 self.currentRateProfile = parseInt($(this).val());
                 self.updating = true;
+                $(this).prop('disabled', 'true');
                 MSP.promise(MSPCodes.MSP_SELECT_SETTING, [self.currentRateProfile + self.RATE_PROFILE_MASK]).then(function () {
                     self.refresh(function () {
                         self.updating = false;
+
+                        $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', 'false');
+                        CONFIG.rateProfile = self.currentRateProfile;
 
                         GUI.log(chrome.i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
                     });
@@ -1003,10 +1011,12 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
                 self.refresh(function () {
                     if (changedProfile) {
                         GUI.log(chrome.i18n.getMessage('pidTuningReceivedProfile', [CONFIG.profile + 1]));
+                        CONFIG.profile = self.currentProfile;
                     }
 
                     if (changedRateProfile) {
                         GUI.log(chrome.i18n.getMessage('pidTuningReceivedRateProfile', [CONFIG.rateProfile + 1]));
+                        CONFIG.rateProfile = self.currentRateProfile
                     }
                 });
             }
