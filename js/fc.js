@@ -78,6 +78,7 @@ var FC = {
             numProfiles:                3,
             rateProfile:                0,
             boardType:                  0,
+            armingDisableFlags:         0,
         };
 
         BF_CONFIG = {

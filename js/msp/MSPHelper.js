@@ -83,6 +83,18 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     CONFIG.numProfiles = data.readU8();
                     CONFIG.rateProfile = data.readU8();
 
+                    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                      // Read flight mode flags
+                      var byteCount = data.readU8();
+                      for (var i = 0; i < byteCount; i++) {
+                        data.readU8();
+                      }
+
+                      // Read arming disable flags
+                      data.readU8(); // Flag count
+                      CONFIG.armingDisableFlags = data.readU32();
+                    }
+
                     TABS.pid_tuning.checkUpdateProfile(true);
                 }
 

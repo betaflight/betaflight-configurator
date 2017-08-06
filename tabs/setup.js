@@ -156,6 +156,7 @@ TABS.setup.initialize = function (callback) {
             bat_mah_drawn_e = $('.bat-mah-drawn'),
             bat_mah_drawing_e = $('.bat-mah-drawing'),
             rssi_e = $('.rssi'),
+            arming_disable_flags_e = $('.arming-disable-flags'),
             gpsFix_e = $('.gpsFix'),
             gpsSats_e = $('.gpsSats'),
             gpsLat_e = $('.gpsLat'),
@@ -164,8 +165,14 @@ TABS.setup.initialize = function (callback) {
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading');
 
+        if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+            arming_disable_flags_e.hide();
+        }
+
         function get_slow_data() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
+            MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
+                arming_disable_flags_e.text(CONFIG.armingDisableFlags == 0 ? chrome.i18n.getMessage('initialSetupArmingAllowed') : CONFIG.armingDisableFlags.toString(2));
+            });
 
             MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
                 bat_voltage_e.text(chrome.i18n.getMessage('initialSetupBatteryValue', [ANALOG.voltage]));
