@@ -436,6 +436,12 @@
     "initialSetupRSSIValue": {
         "message": "$1 %"
     },
+    "initialSetupArmingDisableFlags": {
+        "message": "Arming Disable Flags:"
+    },
+    "initialSetupArmingAllowed": {
+        "message": "Arming Allowed"
+    },
     "initialSetupGPSHead": {
         "message": "GPS"
     },
