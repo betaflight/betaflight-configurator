@@ -48,15 +48,21 @@ TABS.cli.initialize = function (callback) {
                     return;
                 }
 
-                entry.createWriter(function(writer) {
+                entry.createWriter(function (writer) {
                     writer.onerror = function (){
                         console.error('Failed to write file');
                     };
-                    writer.onwriteend = function(e) {
-                        console.log('write complete');
-                    };
-                    writer.write(new Blob([self.outputHistory], {type: 'text/plain'}));
-                },function (){
+
+                    writer.onwriteend = function () {
+                        if (writer.length === 0) {
+                            writer.write(new Blob([self.outputHistory], {type: 'text/plain'}));
+                        } else {
+                            console.log('write complete');
+                        };
+                    }
+
+                    writer.truncate(0);
+                }, function (){
                     console.error('Failed to get file writer');
                 });
             });
