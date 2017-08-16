@@ -58,7 +58,7 @@ If you have 3D model animation problems, enable "Override software rendering lis
 
 ## Support
 
-If you need help your please use the multiwii or rcgroups forums or visit the IRC channel before raising issues in the issue trackers.
+If you need help please reach out on the [betaflightgroup](https://betaflightgroup.slack.com) slack channel before raising issues on github. Register and [request slack access here](http://www.betaflight.tk)).
 
 ### Issue trackers
 
