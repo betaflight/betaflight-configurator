@@ -58,7 +58,7 @@ If you have 3D model animation problems, enable "Override software rendering lis
 
 ## Support
 
-If you need help please reach out on the [betaflightgroup slack channel](https://betaflightgroup.slack.com) before raising issues on github. 
+If you need help please reach out on the [betaflightgroup slack channel](http://www.betaflight.tk) before raising issues on github. 
 
 ### Issue trackers
 
