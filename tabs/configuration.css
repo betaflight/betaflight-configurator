@@ -500,8 +500,14 @@
 }
 
 .tab-configuration ._3dSettings {
-    margin-top: 10px; 
-    float: left; 
+    margin-top: 10px;
+    float: left;
+    width: 100%;
+}
+
+.tab-configuration ._smallAngle {
+    margin-top: 10px;
+    float: left;
     width: 100%;
 }
 

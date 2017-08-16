@@ -679,6 +679,12 @@
     "configurationAccelTrimPitch": {
         "message": "Accelerometer Pitch Trim"
     },
+    "configurationArming": {
+        "message": "Arming"
+    },
+    "configurationArmingHelp": {
+        "message": "Some Arming options may require accelerometer be enabled"
+    },
     "configurationMagDeclination": {
         "message": "Magnetometer Declination [deg]"
     },
@@ -2595,6 +2601,12 @@
     },
     "configurationMagHardware": {
         "message": "Magnetometer (if supported)"
+    },
+    "configurationSmallAngle": {
+        "message": "Maximum ARM Angle [degrees]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "Craft will not ARM if tilted more than specified number of degrees. Only applies if accelerometer is enabled. Setting to 180 will effectivly disable check"
     },
     "configurationBatteryVoltage": {
         "message": "Battery Voltage"
