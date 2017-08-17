@@ -184,7 +184,7 @@
 #changelog .button {
     transform: rotate(270deg);
     top: 50px;
-    right: 215px;
+    right: 229px;
     position: absolute;
     background: #ffbb00;
     border-radius: 5px 5px 0 0;
@@ -237,4 +237,20 @@
 
 #changelog .log p {
     margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 800px) {
+    
+.tab-landing .logowrapper {
+    width: 600px;
+}
+
+.tab-landing .logowrapper img {
+    width: 300px;
+    height: auto;
+}
+
+#changelog .button {
+    right: 229px;
+}
 }

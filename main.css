@@ -1851,3 +1851,62 @@ input {
 }
 
 }
+
+@media only screen and (max-width: 800px) {
+
+#dataflash_wrapper_global {
+    margin-top: 0;
+    margin-right: 0;
+}
+
+#port-picker {
+    clear: right;
+}
+
+#sensor-status,
+#quad-status_wrapper {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+#portsinput {
+    margin-top: 0;
+    margin-right: 0;
+}
+
+
+.connect_controls {
+    left: 0px;
+    top: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#logo {
+    height: 45px;
+    width: 175px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+#logo .logo_text {
+    left: 50px;
+    top: 30px;
+}
+
+.content_toolbar {
+    padding: 5px 0;
+}
+
+.properties {
+    width: 600px;
+}
+
+.properties dl {
+    width: 150px;
+}
+
+.properties dd {
+    width: 300px;
+}
+}

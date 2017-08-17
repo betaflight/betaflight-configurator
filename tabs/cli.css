@@ -76,3 +76,10 @@
 
 }
 
+@media only screen and (max-width: 800px) {
+
+.tab-cli .backdrop {
+    width: 300px;
+    height: auto;
+}
+}

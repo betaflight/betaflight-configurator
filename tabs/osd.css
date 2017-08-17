@@ -454,8 +454,19 @@ button {
   display: inline !important;
 }
 
+#fontmanagercontent {
+  width:600px;
+}
+
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
   .tab-osd .content_wrapper {
     height: calc(100% - 30px);
   }
+}
+
+@media only screen and (max-width: 800px) {
+
+#fontmanagercontent {
+  width:300px;
+}
 }
