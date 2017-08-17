@@ -1164,49 +1164,61 @@ TABS.osd.initialize = function (callback) {
                   $timerConfig.append('<span>' + (tim.index + 1) + '</span>');
 
                   // Source
-                  var src = $('<select class="timer-option osd_tip" id="' + tim.index + '"></select>');
-                  src.attr('title', chrome.i18n.getMessage('osdTimerSourceTooltip'));
+                  var sourceSpan = $('<span class="osd_tip"></span>');
+                  sourceSpan.attr('title', chrome.i18n.getMessage('osdTimerSourceTooltip'));
+                  sourceSpan.append('<label for="timerSource_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerSource') + '</label>');
+                  var src = $('<select class="timer-option" id="timerSource_' + tim.index + '"></select>');
                   OSD.constants.TIMER_TYPES.forEach(function(e, i) {
                     src.append('<option value="' + i + '">' + e + '</option>');
                   });
                   src[0].selectedIndex = tim.src;
                   src.blur(function(e) {
-                    OSD.data.timers[$(this)[0].id].src = $(this)[0].selectedIndex;
-                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[$(this)[0].id]))
+                    var idx = $(this)[0].id.split("_")[1];
+                    OSD.data.timers[idx].src = $(this)[0].selectedIndex;
+                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
                     .then(function() {
                       updateOsdView();
                     });
                   });
-                  $timerConfig.append(src);
+                  sourceSpan.append(src);
+                  $timerConfig.append(sourceSpan);
 
                   // Precision
-                  var precision = $('<select class="timer-option osd_tip" id="' + tim.index + '"></select>');
-                  precision.attr('title', chrome.i18n.getMessage('osdTimerPrecisionTooltip'));
+                  var precisionSpan = $('<span class="osd_tip"></span>');
+                  precisionSpan.attr('title', chrome.i18n.getMessage('osdTimerPrecisionTooltip'));
+                  precisionSpan.append('<label for="timerPrec_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerPrecision') + '</label>');
+                  var precision = $('<select class="timer-option osd_tip" id="timerPrec_' + tim.index + '"></select>');
                   OSD.constants.TIMER_PRECISION.forEach(function(e, i) {
                     precision.append('<option value="' + i + '">' + e + '</option>');
                   });
                   precision[0].selectedIndex = tim.precision;
                   precision.blur(function(e) {
-                    OSD.data.timers[$(this)[0].id].precision = $(this)[0].selectedIndex;
-                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[$(this)[0].id]))
+                    var idx = $(this)[0].id.split("_")[1];
+                    OSD.data.timers[idx].precision = $(this)[0].selectedIndex;
+                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
                     .then(function() {
                       updateOsdView();
                     });
                   });
-                  $timerConfig.append(precision);
+                  precisionSpan.append(precision);
+                  $timerConfig.append(precisionSpan);
 
                   // Alarm
-                  var alarm = $('<input class="timer-option osd_tip" name="alarm" type="number" min=0 id="' + tim.index + '"/>');
-                  alarm.attr('title', chrome.i18n.getMessage('osdTimerAlarmTooltip'));
+                  var alarmSpan = $('<span class="osd_tip"></span>');
+                  alarmSpan.attr('title', chrome.i18n.getMessage('osdTimerAlarmTooltip'));
+                  alarmSpan.append('<label for="timerAlarm_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerAlarm') + '</label>');
+                  var alarm = $('<input class="timer-option osd_tip" name="alarm" type="number" min=0 id="timerAlarm_' + tim.index + '"/>');
                   alarm[0].value = tim.alarm;
                   alarm.blur(function(e) {
-                    OSD.data.timers[$(this)[0].id].alarm = $(this)[0].value;
-                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[$(this)[0].id]))
+                    var idx = $(this)[0].id.split("_")[1];
+                    OSD.data.timers[idx].alarm = $(this)[0].value;
+                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeTimer(OSD.data.timers[idx]))
                     .then(function() {
                       updateOsdView();
                     });
                   });
-                  $timerConfig.append(alarm);
+                  alarmSpan.append(alarm);
+                  $timerConfig.append(alarmSpan);
 
                   $timers.append($timerConfig);
                 }

@@ -2458,11 +2458,20 @@
         "message": "Value of timer 2 at time of disarming"
     },
 
+    "osdTimerSource": {
+      "message": "Source:"
+    },
     "osdTimerSourceTooltip": {
         "message": "Select the timer source, this controls the duration/event that the timer measures"
     },
+    "osdTimerPrecision": {
+      "message": "Precision:"
+    },
     "osdTimerPrecisionTooltip": {
         "message": "Select the timer precision, this controls to what precision the time is reported in"
+    },
+    "osdTimerAlarm": {
+      "message": "Alarm:"
     },
     "osdTimerAlarmTooltip": {
         "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"

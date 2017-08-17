@@ -450,8 +450,12 @@ button {
 .timer-option {
   float: none !important;
   padding: 2px;
-  margin-left: 10px;
   display: inline !important;
+}
+
+.timers-container label {
+  margin-left: 15px !important;
+  margin-right: 5px !important;
 }
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
