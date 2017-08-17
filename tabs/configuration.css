@@ -314,11 +314,11 @@
     width: 30px;
 }
 
-.tab-configuration .serialRXBox {
+.tab-configuration .serialRXBox, .spiRxBox {
     padding-top: 0px;
 }
 
-.tab-configuration .serialRX, .rxMode {
+.tab-configuration .serialRX, .spiRx, .rxMode {
     border: 1px solid silver;
     width: 230px;
     float: left;

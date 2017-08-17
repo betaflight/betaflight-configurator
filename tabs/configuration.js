@@ -558,6 +558,32 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // select current serial RX type
         serialRX_e.val(RX_CONFIG.serialrx_provider);
 
+        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+            var spiRxTypes = [
+                'NRF24_V202_250K',
+                'NRF24_V202_1M',
+                'NRF24_SYMA_X',
+                'NRF24_SYMA_X5C',
+                'NRF24_CX10',
+                'CX10A',
+                'NRF24_H8_3D',
+                'NRF24_INAV',
+                'FRSKY_D'
+            ];
+
+            var spiRx_e = $('select.spiRx');
+            for (var i = 0; i < spiRxTypes.length; i++) {
+                spiRx_e.append('<option value="' + i + '">' + spiRxTypes[i] + '</option>');
+            }
+
+            spiRx_e.change(function () {
+                RX_CONFIG.rxSpiProtocol = parseInt($(this).val());
+            });
+
+            // select current serial RX type
+            spiRx_e.val(RX_CONFIG.rxSpiProtocol);
+            }
+
         // for some odd reason chrome 38+ changes scroll according to the touched select element
         // i am guessing this is a bug, since this wasn't happening on 37
         // code below is a temporary fix, which we will be able to remove in the future (hopefully)
@@ -711,6 +737,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }
 
+        function checkShowSpiRxBox() {
+            if (FEATURE_CONFIG.features.isEnabled('RX_SPI')) {
+                $('div.spiRxBox').show();
+            } else {
+                $('div.spiRxBox').hide();
+            }
+        }
+
         function checkUpdateGpsControls() {
             if (FEATURE_CONFIG.features.isEnabled('GPS')) {
                 $('.gpsSettings').show();
@@ -771,6 +805,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             switch (element.attr('name')) {
                 case 'rxMode':
                     checkShowSerialRxBox();
+                    checkShowSpiRxBox();
 
                     break;
                 default:
@@ -785,6 +820,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         checkShowDisarmDelay();
         checkShowSerialRxBox();
+        checkShowSpiRxBox();
         checkUpdateGpsControls();
         checkUpdate3dControls();
 
