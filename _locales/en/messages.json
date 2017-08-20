@@ -683,7 +683,10 @@
         "message": "Disarm motors after set delay [seconds] (Requires MOTOR_STOP feature)"
     },
     "configurationDisarmKillSwitch": {
-        "message": "Disarm motors regardless of throttle value (When arming via AUX channel)"
+        "message": "Disarm motors regardless of throttle value (When ARM is configured in Modes tab via AUX channel)"
+    },
+    "configurationDisarmKillSwitchHelp": {
+        "message": "Arming is always disabled when the throttle is not low. Be careful as you could disarm accidentally with a switch while flying with this option active."
     },
     "configurationDigitalIdlePercent": {
         "message": "Motor Idle Throttle Value [percent]"
