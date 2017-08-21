@@ -1823,16 +1823,16 @@
         "message": "Indicator (uses position on matrix)"
     },
     "controlAxisRoll": {
-        "message": "Roll[A]"
+        "message": "Roll"
     },
     "controlAxisPitch": {
-        "message": "Pitch[E]"
+        "message": "Pitch"
     },
     "controlAxisYaw": {
-        "message": "Yaw[R]"
+        "message": "Yaw"
     },
     "controlAxisThrottle": {
-        "message": "Throttle[T]"
+        "message": "Throttle"
     },
     "controlAxisAux1": {
         "message": "AUX 1"
