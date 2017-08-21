@@ -226,8 +226,9 @@ TABS.receiver.initialize = function (callback) {
         // rssi
         var rssi_channel_e = $('select[name="rssi_channel"]');
         rssi_channel_e.append('<option value="0">Disabled</option>');
-        for (var i = 1; i < RC.active_channels + 1; i++) {
-            rssi_channel_e.append('<option value="' + i + '">' + i + '</option>');
+        //1-4 reserved for Roll Pitch Yaw & Throttle, starting at 5
+        for (var i = 5; i < RC.active_channels + 1; i++) {
+            rssi_channel_e.append('<option value="' + i + '">' + chrome.i18n.getMessage("controlAxisAux" + (i-4)) + '</option>');
         }
 
         $('select[name="rssi_channel"]').val(RSSI_CONFIG.channel);
