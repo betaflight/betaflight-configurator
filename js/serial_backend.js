@@ -196,6 +196,7 @@ function onOpen(openInfo) {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
 
                             GUI.log(chrome.i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
+                            updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier);
 
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
 
@@ -204,6 +205,7 @@ function onOpen(openInfo) {
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
 
                                     GUI.log(chrome.i18n.getMessage('boardInfoReceived', [CONFIG.boardIdentifier, CONFIG.boardVersion]));
+                                    updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, CONFIG.boardIdentifier);
 
                                     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
                                         GUI.log(chrome.i18n.getMessage('uniqueDeviceIdReceived', [CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16)]));
@@ -337,6 +339,8 @@ function onClosed(result) {
     $('#tabs ul.mode-connected').hide();
     $('#tabs ul.mode-connected-cli').hide();
     $('#tabs ul.mode-disconnected').show();
+
+    updateStatusBarVersion();
 
     var sensor_state = $('#sensor-status');
     sensor_state.hide();

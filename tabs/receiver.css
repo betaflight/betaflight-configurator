@@ -38,12 +38,12 @@
 
 .tab-receiver .bars .name {
     padding: 0 10px 0 0;
-    width: 50px;
+    width: 60px;
     text-align: right;
 }
 
 .tab-receiver .bars .meter {
-    width: calc(100% - 60px);
+    width: calc(100% - 70px);
 }
 
 .tab-receiver .bars .meter-bar {

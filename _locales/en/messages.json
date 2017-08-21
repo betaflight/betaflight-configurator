@@ -207,6 +207,15 @@
     "fcInfoReceived": {
         "message": "Flight controller info, identifier: <strong>$1</strong>, version: <strong>$2</strong>"
     },
+    "versionLabelHardware": {
+        "message": "Board"
+    },
+    "versionLabelFirmware": {
+        "message": "Firmware"
+    },
+    "versionLabelConfigurator": {
+        "message": "Configurator"
+    },
 
     "notifications_app_just_updated_to_version": {
         "message": "Application just updated to version: $1"
@@ -1823,16 +1832,16 @@
         "message": "Indicator (uses position on matrix)"
     },
     "controlAxisRoll": {
-        "message": "Roll[A]"
+        "message": "Roll [A]"
     },
     "controlAxisPitch": {
-        "message": "Pitch[E]"
+        "message": "Pitch [E]"
     },
     "controlAxisYaw": {
-        "message": "Yaw[R]"
+        "message": "Yaw [R]"
     },
     "controlAxisThrottle": {
-        "message": "Throttle[T]"
+        "message": "Throttle [T]"
     },
     "controlAxisAux1": {
         "message": "AUX 1"
