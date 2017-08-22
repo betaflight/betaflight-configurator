@@ -1156,6 +1156,14 @@ TABS.osd.initialize = function (callback) {
             content: $('#fontmanagercontent')
         });
 
+        $('.elements-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpElements'));
+        $('.videomode-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpVideoMode'));
+        $('.units-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpUnits'));
+        $('.timers-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpTimers'));
+        $('.alarms-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpAlarms'));
+        $('.stats-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpStats'));
+        $('.warnings-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpWarnings'));
+
         // 2 way binding... sorta
         function updateOsdView() {
           // ask for the OSD config data

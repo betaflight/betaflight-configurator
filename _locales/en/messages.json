@@ -2593,6 +2593,28 @@
         "message": "Warns when flip over after crash mode is activated"
     },
 
+    "osdSectionHelpElements": {
+        "message": "Enable or disable OSD elements."
+    },
+    "osdSectionHelpVideoMode": {
+        "message": "Set the expected video mode of the camera (typically this can be left on AUTO, if you have difficulties then set this to match the camera output)."
+    },
+    "osdSectionHelpUnits": {
+        "message": "Sets the unit system used for numeric readouts."
+    },
+    "osdSectionHelpTimers": {
+        "message": "Configure flight timers."
+    },
+    "osdSectionHelpAlarms": {
+        "message": "Set the thresholds used for OSD elements with alarm states."
+    },
+    "osdSectionHelpStats": {
+        "message": "Set the values dispalyed on the post flight statistics screen."
+    },
+    "osdSectionHelpWarnings": {
+        "message": "Enable or disable warnings that are shown on the WARNINGS element."
+    },
+
     "mainHelpArmed": {
         "message": "Motor Arming"
     },
