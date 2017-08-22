@@ -9,8 +9,8 @@ $(document).ready(function () {
         'Chrome: <strong>' + window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1") + '</strong>, ' +
         'Configurator: <strong>' + chrome.runtime.getManifest().version + '</strong>');
 
-    $('#status-bar .version').text(chrome.runtime.getManifest().version);
     $('#logo .version').text(chrome.runtime.getManifest().version);
+    updateStatusBarVersion();
 
     // notification messages for various operating systems
     switch (GUI.operating_system) {
@@ -517,3 +517,18 @@ function generateFilename(prefix, suffix) {
     return filename + '.' + suffix;
 }
 
+function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {
+    var versionText = '';
+
+    if (hardwareId) {
+        versionText = versionText + chrome.i18n.getMessage('versionLabelHardware') + ': ' + hardwareId + ', ';
+    }
+
+    if (firmwareVersion) {
+        versionText = versionText + chrome.i18n.getMessage('versionLabelFirmware') + ': ' + firmwareId + ' ' + firmwareVersion + ', ';
+    }
+
+    versionText = versionText + chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + chrome.runtime.getManifest().version;
+
+    $('#status-bar .version').text(versionText);
+}
