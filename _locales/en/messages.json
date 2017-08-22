@@ -2344,6 +2344,9 @@
     "osdSetupCraftNameTitle": {
         "message": "Craft Name"
     },
+    "osdSetupWarningsTitle": {
+        "message": "Warnings"
+    },
     "osdSetupFontPresets": {
         "message": "Font presets:"
     },
@@ -2569,6 +2572,25 @@
     },
     "osdTimerAlarmTooltip": {
         "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"
+    },
+
+    "osdWarningArmingDisabled": {
+        "message": "Reports the most severe reason for not arming"
+    },
+    "osdWarningBatteryNotFull": {
+        "message": "Alerts when a battery is connected that is not fully charged"
+    },
+    "osdWarningBatteryWarning": {
+        "message": "Alerts when the battery voltage falls below warning threshold"
+    },
+    "osdWarningBatteryCritical": {
+        "message": "Alters when the battery voltage falls below the minimum average cell voltage"
+    },
+    "osdWarningVisualBeeper": {
+        "message": "Shows a visualisation of the beeper (shows as 4 asterisks)"
+    },
+    "osdWarningCrashFlipMode": {
+        "message": "Warns when flip over after crash mode is activated"
     },
 
     "mainHelpArmed": {
