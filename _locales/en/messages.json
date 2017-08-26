@@ -647,7 +647,7 @@
         "message": "<strong>Note:</strong> The SPI RX provider will only work if the required hardware is on board or connected to an SPI bus."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>Note:</strong> Some of the features of the firmware are not shown in this list any more, because they have been moved to other places in the configurator."
+        "message": "<strong>Note:</strong> Not all features are supported by all flight controllers. If you enable a specific feature, and it is disabled after you hit 'Save and Reboot', it means that this feature is not supported on your board."
     },
     "configurationBoardAlignment": {
         "message": "Board and Sensor Alignment"
