@@ -308,7 +308,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                     });
                 }
 
-                if ( TRANSPONDER.data.length !== TRANSPONDER.providers.find(function(provider) {
+                if (TRANSPONDER.provider !== "0" && TRANSPONDER.data.length !== TRANSPONDER.providers.find(function(provider) {
                         return provider.id == TRANSPONDER.provider;
                     }).dataLength ) {
                     GUI.log(chrome.i18n.getMessage('transponderDataInvalid'));
