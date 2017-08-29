@@ -267,6 +267,34 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.dtermfiltertype').hide();
             $('.antigravity').hide();
         }
+
+        $('input[id="gyroNotch1Enabled"]').change(function() {
+            var checked = $(this).is(':checked');
+            $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? DEFAULT.gyro_soft_notch_hz_1 : 0)
+                .attr('disabled', !checked);
+            $('.pid_filter input[name="gyroNotch1Cutoff"]').val($(this).is(':checked') ? DEFAULT.gyro_soft_notch_cutoff_1 : 0)
+                .attr('disabled', !checked);
+        });
+
+        $('input[id="gyroNotch2Enabled"]').change(function() {
+            var checked = $(this).is(':checked');
+            $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? DEFAULT.gyro_soft_notch_hz_2 : 0)
+                .attr('disabled', !checked);
+            $('.pid_filter input[name="gyroNotch2Cutoff"]').val(checked ? DEFAULT.gyro_soft_notch_cutoff_2 : 0)
+                .attr('disabled', !checked);
+        });
+
+        $('input[id="dtermNotchEnabled"]').change(function() {
+            var checked = $(this).is(':checked');
+            $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? DEFAULT.dterm_notch_hz : 0)
+                .attr('disabled', !checked);
+            $('.pid_filter input[name="dTermNotchCutoff"]').val(checked ? DEFAULT.dterm_notch_cutoff : 0)
+                .attr('disabled', !checked);
+        });
+
+        $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_1 != 0).change();
+        $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_2 != 0).change();
+        $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.dterm_notch_cutoff != 0).change();
     }
 
     function form_to_pid_and_rc() {

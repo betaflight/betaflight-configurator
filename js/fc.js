@@ -56,6 +56,7 @@ var FILTER_CONFIG;
 var ADVANCED_TUNING;
 var SENSOR_CONFIG;
 var COPY_PROFILE;
+var DEFAULT;
 
 var FC = {
     resetState: function() {
@@ -337,7 +338,7 @@ var FC = {
             dterm_notch_cutoff:         0,
             gyro_soft_notch_hz_2:       0,
             gyro_soft_notch_cutoff_2:   0,
-            dterm_filter_type:         0,
+            dterm_filter_type:          0,
         };
 
         ADVANCED_TUNING = {
@@ -392,5 +393,14 @@ var FC = {
         };
 
         RXFAIL_CONFIG = [];
+
+        DEFAULT = {
+            gyro_soft_notch_cutoff_1:       300,
+            gyro_soft_notch_hz_1:           400,
+            gyro_soft_notch_cutoff_2:       200,
+            gyro_soft_notch_hz_2:           300,
+            dterm_notch_cutoff:             160,
+            dterm_notch_hz:                 260,
+        };
     }
 };

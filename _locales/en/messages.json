@@ -1949,14 +1949,20 @@
     "pidTuningGyroLowpassFrequencyHelp": {
         "message": "Gyro Soft Lowpass Frequency [Hz]"
     },
+    "pidTuningGyroNotch1Enable": {
+        "message": "Enable Gyro Notch Filter 1"
+    },
     "pidTuningGyroNotch1Frequency": {
         "message": "Gyro Notch Filter 1 Frequency [Hz]"
+    },
+    "pidTuningGyroNotch2Enable": {
+        "message": "Enable Gyro Notch Filter 2"
     },
     "pidTuningGyroNotch2Frequency": {
         "message": "Gyro Notch Filter 2 Frequency [Hz]"
     },
     "pidTuningGyroNotchFrequencyHelp": {
-        "message": "Gyro Notch Filter Frequency in Hz (0 means disabled)"
+        "message": "Gyro Notch Filter Frequency in Hz"
     },
     "pidTuningGyroNotch1Cutoff": {
         "message": "Gyro Notch Filter Cutoff 1 Frequency [Hz]"
@@ -1970,17 +1976,14 @@
     "pidTuningFilterSettings": {
         "message": "Filter Settings"
     },
-    "pidTuningDTermLowpassType": {
-        "message": "D-Term Lowpass Filter"
-    },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "Select D-Term lowpass filter type to use. Default is BIQUAD"
-    },
     "pidTuningDTermLowpassFrequency": {
         "message": "D Term Lowpass Frequency [Hz]"
     },
     "pidTuningDTermLowpassFrequencyHelp": {
         "message": "D Term Lowpass Frequency [Hz] (0 means disabled)"
+    },
+    "pidTuningDTermNotchEnable": {
+        "message": "Enable D Term Notch Filter"
     },
     "pidTuningDTermNotchFrequency": {
         "message": "D Term Notch Filter Frequency [Hz]"
