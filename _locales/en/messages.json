@@ -2635,14 +2635,17 @@
     },
     "onboardLoggingOnboardSDCard": {
         "message": "Onboard SD card"
+    },
+    "dialogConfirmResetTitle": {
+        "message": "Confirm"
+    },
+    "dialogConfirmResetNote": {
+        "message": "WARNING: Are you sure you want to reset ALL settings to default?"
+    },
+    "dialogConfirmResetConfirm": {
+        "message": "Reset"
+    },
+    "dialogConfirmResetClose": {
+        "message": "Cancel"
     }
-
-
-
-
-
-
-
-
-
 }
