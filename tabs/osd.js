@@ -1159,14 +1159,18 @@ TABS.osd.initialize = function (callback) {
                 var $timers = $('#timer-fields').empty();
                 for (let tim of OSD.data.timers) {
                   var $timerConfig = $('<div class="switchable-field field-' + tim.index + '"/>');
+                  var timerTable = $('<table />');
+                  $timerConfig.append(timerTable);
+                  var timerTableRow = $('<tr />');
+                  timerTable.append(timerTableRow);
 
                   // Timer number
-                  $timerConfig.append('<span>' + (tim.index + 1) + '</span>');
+                  timerTableRow.append('<td>' + (tim.index + 1) + '</td>');
 
                   // Source
-                  var sourceSpan = $('<span class="osd_tip"></span>');
-                  sourceSpan.attr('title', chrome.i18n.getMessage('osdTimerSourceTooltip'));
-                  sourceSpan.append('<label for="timerSource_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerSource') + '</label>');
+                  var sourceTimerTableData = $('<td class="osd_tip"></td>');
+                  sourceTimerTableData.attr('title', chrome.i18n.getMessage('osdTimerSourceTooltip'));
+                  sourceTimerTableData.append('<label for="timerSource_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerSource') + '</label>');
                   var src = $('<select class="timer-option" id="timerSource_' + tim.index + '"></select>');
                   OSD.constants.TIMER_TYPES.forEach(function(e, i) {
                     src.append('<option value="' + i + '">' + e + '</option>');
@@ -1180,13 +1184,15 @@ TABS.osd.initialize = function (callback) {
                       updateOsdView();
                     });
                   });
-                  sourceSpan.append(src);
-                  $timerConfig.append(sourceSpan);
+                  sourceTimerTableData.append(src);
+                  timerTableRow.append(sourceTimerTableData);
 
                   // Precision
-                  var precisionSpan = $('<span class="osd_tip"></span>');
-                  precisionSpan.attr('title', chrome.i18n.getMessage('osdTimerPrecisionTooltip'));
-                  precisionSpan.append('<label for="timerPrec_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerPrecision') + '</label>');
+                  timerTableRow = $('<tr />');
+                  timerTable.append(timerTableRow);
+                  var precisionTimerTableData = $('<td class="osd_tip"></td>');
+                  precisionTimerTableData.attr('title', chrome.i18n.getMessage('osdTimerPrecisionTooltip'));
+                  precisionTimerTableData.append('<label for="timerPrec_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerPrecision') + '</label>');
                   var precision = $('<select class="timer-option osd_tip" id="timerPrec_' + tim.index + '"></select>');
                   OSD.constants.TIMER_PRECISION.forEach(function(e, i) {
                     precision.append('<option value="' + i + '">' + e + '</option>');
@@ -1200,13 +1206,16 @@ TABS.osd.initialize = function (callback) {
                       updateOsdView();
                     });
                   });
-                  precisionSpan.append(precision);
-                  $timerConfig.append(precisionSpan);
+                  precisionTimerTableData.append(precision);
+                  timerTableRow.append('<td></td>');
+                  timerTableRow.append(precisionTimerTableData);
 
                   // Alarm
-                  var alarmSpan = $('<span class="osd_tip"></span>');
-                  alarmSpan.attr('title', chrome.i18n.getMessage('osdTimerAlarmTooltip'));
-                  alarmSpan.append('<label for="timerAlarm_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerAlarm') + '</label>');
+                  timerTableRow = $('<tr />');
+                  timerTable.append(timerTableRow);
+                  var alarmTimerTableData = $('<td class="osd_tip"></td>');
+                  alarmTimerTableData.attr('title', chrome.i18n.getMessage('osdTimerAlarmTooltip'));
+                  alarmTimerTableData.append('<label for="timerAlarm_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerAlarm') + '</label>');
                   var alarm = $('<input class="timer-option osd_tip" name="alarm" type="number" min=0 id="timerAlarm_' + tim.index + '"/>');
                   alarm[0].value = tim.alarm;
                   alarm.blur(function(e) {
@@ -1217,8 +1226,9 @@ TABS.osd.initialize = function (callback) {
                       updateOsdView();
                     });
                   });
-                  alarmSpan.append(alarm);
-                  $timerConfig.append(alarmSpan);
+                  alarmTimerTableData.append(alarm);
+                  timerTableRow.append('<td></td>');
+                  timerTableRow.append(alarmTimerTableData);
 
                   $timers.append($timerConfig);
                 }
