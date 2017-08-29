@@ -107,7 +107,18 @@ TABS.setup.initialize = function (callback) {
             }
         });
 
+        var dialogConfirmReset = $('.dialogConfirmReset')[0];
+
         $('a.resetSettings').click(function () {
+            dialogConfirmReset.showModal();
+        });
+
+        $('.dialogConfirmReset-cancelbtn').click(function() {
+            dialogConfirmReset.close();
+        });
+
+        $('.dialogConfirmReset-confirmbtn').click(function() {
+            dialogConfirmReset.close();
             MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
                 GUI.log(chrome.i18n.getMessage('initialSetupSettingsRestored'));
 

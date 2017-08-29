@@ -257,3 +257,55 @@
     height: 100%;
 
 }
+
+.tab-setup .regular-button {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 10px;
+    background-color: #ffbb00;
+    border-radius: 3px;
+    border: 1px solid #dba718;
+    color: #000;
+    font-family: 'open_sansbold', Arial;
+    font-size: 12px;
+    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    display: inline-block;
+    cursor: pointer;
+    transition: all ease 0.2s;
+    padding: 0px;
+    padding-left: 9px;
+    padding-right: 9px;
+    line-height: 28px;
+}
+.tab-setup .regular-button:hover {
+    background-color: #ffcc3e;
+    transition: all ease 0.2s;
+}
+.tab-setup .regular-button:active {
+    background-color: #ffcc3e;
+    transition: all ease 0.0s;
+    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+}
+.tab-setup .regular-button.disabled {
+    cursor: default;
+    color: #fff;
+    background-color: #AFAFAF;
+    border: 1px solid #AFAFAF;
+    pointer-events: none;
+    text-shadow: none;
+    opacity: 0.5;
+}
+
+.tab-setup dialog {
+    width: 40em;
+    border-radius: 5px;
+}
+
+.tab-setup dialog .buttons {
+    position: static;
+    margin-top: 2em;
+}
+
+.tab-setup dialog h3 {
+    margin-bottom: 0.5em;
+}
