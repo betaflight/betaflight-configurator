@@ -499,7 +499,8 @@ TABS.pid_tuning.initialize = function (callback) {
         context.restore();
     }
 
-    function process_html() {
+    function process_html() 
+    {
         if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
             FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
         } else {
@@ -534,6 +535,11 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             self.currentRates.superexpo = true;
+        }
+
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            $('.pid_tuning input[name="sensitivity"]').hide();
+            $('.pid_tuning .levelSensitivityHeader').empty();
         }
 
         $('.tab-pid_tuning .tab_container .pid').on('click', function () {
