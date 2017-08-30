@@ -53,21 +53,29 @@ TABS.power.initialize = function (callback) {
         load_status();
     }
 
-    function update_ui() {
-        if (!TABS.power.supported) {
-            $(".tab-power").removeClass("supported");
-            return;
-        }
-        $(".tab-power").addClass("supported");
-
+    function updateDisplay(voltageDataSource, currentDataSource) {
         // voltage meters
+
+        if (BATTERY_CONFIG.voltageMeterSource == 0) {
+            $('.boxVoltageConfiguration').hide();
+        } else {
+            $('.boxVoltageConfiguration').show();
+        }
+
+        if (!voltageDataSource) {
+            voltageDataSource = [];
+            for (var index = 0; index < VOLTAGE_METER_CONFIGS.length; index++) {
+                voltageDataSource[index] = {
+                    vbatscale: parseInt($('input[name="vbatscale-' + index + '"]').val()),
+                    vbatresdivval: parseInt($('input[name="vbatresdivval-' + index + '"]').val()),
+                    vbatresdivmultiplier: parseInt($('input[name="vbatresdivmultiplier-' + index + '"]').val())
+                };
+            }
+        }
 
         var template = $('#tab-power-templates .voltage-meters .voltage-meter');
         var destination = $('.tab-power .voltage-meters');
-
-        if (BATTERY_CONFIG.voltageMeterSource == 0)
-            $('.boxVoltageConfiguration').hide();
-
+        destination.empty();
         for (var index = 0; index < VOLTAGE_METERS.length; index++) {
             var meterElement = template.clone();
             $(meterElement).attr('id', 'voltage-meter-' + index);
@@ -94,19 +102,30 @@ TABS.power.initialize = function (callback) {
             }
             destination.append(element);
 
-            $('input[name="vbatscale-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatscale);
-            $('input[name="vbatresdivval-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatresdivval);
-            $('input[name="vbatresdivmultiplier-' + index + '"]').val(VOLTAGE_METER_CONFIGS[index].vbatresdivmultiplier);
+            $('input[name="vbatscale-' + index + '"]').val(voltageDataSource[index].vbatscale);
+            $('input[name="vbatresdivval-' + index + '"]').val(voltageDataSource[index].vbatresdivval);
+            $('input[name="vbatresdivmultiplier-' + index + '"]').val(voltageDataSource[index].vbatresdivmultiplier);
         }
 
         // amperage meters
+        if (BATTERY_CONFIG.currentMeterSource == 0) {
+            $('.boxAmperageConfiguration').hide();
+        } else {
+            $('.boxAmperageConfiguration').show();
+        }
 
+        if (!currentDataSource) {
+            currentDataSource = [];
+            for (var index = 0; index < CURRENT_METER_CONFIGS.length; index++) {
+                currentDataSource[index] = {
+                    scale: parseInt($('input[name="amperagescale-' + index + '"]').val()),
+                    offset: parseInt($('input[name="amperageoffset-' + index + '"]').val())
+                };
+            }
+        }
         var template = $('#tab-power-templates .amperage-meters .amperage-meter');
         var destination = $('.tab-power .amperage-meters');
-
-        if (BATTERY_CONFIG.currentMeterSource == 0)
-            $('.boxAmperageConfiguration').hide();
-
+        destination.empty();
         for (var index = 0; index < CURRENT_METERS.length; index++) {
             var meterElement = template.clone();
             $(meterElement).attr('id', 'amperage-meter-' + index);
@@ -134,13 +153,19 @@ TABS.power.initialize = function (callback) {
             }
             destination.append(element);
 
-            $('input[name="amperagescale-' + index + '"]').val(CURRENT_METER_CONFIGS[index].scale);
-            $('input[name="amperageoffset-' + index + '"]').val(CURRENT_METER_CONFIGS[index].offset);
+            $('input[name="amperagescale-' + index + '"]').val(currentDataSource[index].scale);
+            $('input[name="amperageoffset-' + index + '"]').val(currentDataSource[index].offset);
         }
+    }
 
+    function initDisplay() {
+        if (!TABS.power.supported) {
+            $(".tab-power").removeClass("supported");
+            return;
+        }
+        $(".tab-power").addClass("supported");
 
-        // battery
-
+       // battery
         var template = $('#tab-power-templates .battery-state .battery-state');
         var destination = $('.tab-power .battery-state');
         var element = template.clone();
@@ -173,14 +198,10 @@ TABS.power.initialize = function (callback) {
         }
 
         var batteryMeterType_e = $('select.batterymetersource');
+
         for (var i = 0; i < batteryMeterTypes.length; i++) {
             batteryMeterType_e.append('<option value="' + i + '">' + batteryMeterTypes[i] + '</option>');
         }
-
-        batteryMeterType_e.change(function () {
-            BATTERY_CONFIG.voltageMeterSource = parseInt($(this).val());
-        });
-        batteryMeterType_e.val(BATTERY_CONFIG.voltageMeterSource).change();
 
         // fill current
         var currentMeterTypes = [
@@ -194,16 +215,28 @@ TABS.power.initialize = function (callback) {
         }
 
         var currentMeterType_e = $('select.currentmetersource');
+
         for (var i = 0; i < currentMeterTypes.length; i++) {
             currentMeterType_e.append('<option value="' + i + '">' + currentMeterTypes[i] + '</option>');
         }
 
+        updateDisplay(VOLTAGE_METER_CONFIGS, CURRENT_METER_CONFIGS);
+
+        var batteryMeterType_e = $('select.batterymetersource');
+        batteryMeterType_e.val(BATTERY_CONFIG.voltageMeterSource);
+        batteryMeterType_e.change(function () {
+            BATTERY_CONFIG.voltageMeterSource = parseInt($(this).val());
+
+            updateDisplay();
+        });
+
+        var currentMeterType_e = $('select.currentmetersource');
+        currentMeterType_e.val(BATTERY_CONFIG.currentMeterSource);
         currentMeterType_e.change(function () {
             BATTERY_CONFIG.currentMeterSource = parseInt($(this).val());
+
+            updateDisplay();
         });
-        currentMeterType_e.val(BATTERY_CONFIG.currentMeterSource).change();
-
-
 
         function get_slow_data() {
             MSP.send_message(MSPCodes.MSP_VOLTAGE_METERS, false, false, function () {
@@ -239,7 +272,6 @@ TABS.power.initialize = function (callback) {
         }
 
         $('a.save').click(function () {
-
             for (var index = 0; index < VOLTAGE_METER_CONFIGS.length; index++) {
                 VOLTAGE_METER_CONFIGS[index].vbatscale = parseInt($('input[name="vbatscale-' + index + '"]').val());
                 VOLTAGE_METER_CONFIGS[index].vbatresdivval = parseInt($('input[name="vbatresdivval-' + index + '"]').val());
@@ -293,7 +325,7 @@ TABS.power.initialize = function (callback) {
     }
 
     function process_html() {
-        update_ui();
+        initDisplay();
 
         // translate to user-selected language
         localize();

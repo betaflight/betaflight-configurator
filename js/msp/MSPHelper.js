@@ -257,8 +257,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         } else {
                             currentMeterConfig.id = data.readU8();
                             currentMeterConfig.sensorType = data.readU8();
-                            currentMeterConfig.scale = data.readU16();
-                            currentMeterConfig.offset = data.readU16();
+                            currentMeterConfig.scale = data.read16();
+                            currentMeterConfig.offset = data.read16();
 
                             CURRENT_METER_CONFIGS.push(currentMeterConfig);
                         }
