@@ -674,7 +674,16 @@ OSD.constants = {
       name: 'TIMER_2',
       desc: 'osdDescStatTimer2'
     }
-  }
+  },
+  FONT_TYPES: [
+    { file: "default", name: "Default" },
+    { file: "bold", name: "Bold" },
+    { file: "large", name: "Large" },
+    { file: "extra_large", name: "Extra Large" },
+    { file: "betaflight", name: "Betaflight" },
+    { file: "digital", name: "Digital" },
+    { file: "clarity", name: "Clarity" }
+  ]
 };
 
 // Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
@@ -1055,6 +1064,19 @@ TABS.osd.initialize = function (callback) {
     }
 
     $('#content').load("./tabs/osd.html", function () {
+
+        // Generate font type buttons
+        var fontbuttons = $('.fontbuttons');
+        OSD.constants.FONT_TYPES.forEach(function(e, i) {
+          var button = $('<button>', {
+            "data-font-file": e.file,
+            text: e.name 
+          });
+          fontbuttons.append($(button));
+        });
+
+        fontbuttons.append($('<button>', { class: "load_font_file", i18n: "osdSetupOpenFont" }));
+
         // translate to user-selected language
         localize();
 

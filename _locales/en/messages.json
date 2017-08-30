@@ -2282,7 +2282,66 @@
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"
     },
-
+    "osdSetupTitle": {
+        "message": "OSD"
+    },
+    "osdSetupPreviewHelp": {
+        "message": "<strong>Note:</strong> OSD preview may not show the actual font that is installed on the flight controller."
+    },
+    "osdSetupUnsupportedNote1": {
+        "message": "Your flight controller isn't responding to OSD commands. This probably means that it does not have an integrated BetaFlight OSD."
+    },
+    "osdSetupUnsupportedNote2": {
+        "message": "Note that some flight controllers have an onboard <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a> that can be flashed and configured with <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, however the MinimOSD cannot be configured through this interface."
+    },
+    "osdSetupElementsTitle": {
+        "message": "Elements"
+    },
+    "osdSetupPreviewTitle": {
+        "message": "Preview (drag to change position)"
+    },
+    "osdSetupPreviewTitleTip": {
+        "message": "Show or hide the logo in the preview window. This will not change any settings on the flight controller."
+    },
+    "osdSetupVideoFormatTitle": {
+        "message": "Video Format"
+    },
+    "osdSetupUnitsTitle": {
+        "message": "Units"
+    },
+    "osdSetupTimersTitle": {
+        "message": "Timers"
+    },
+    "osdSetupAlarmsTitle": {
+        "message": "Alarms"
+    },
+    "osdSetupStatsTitle": {
+        "message": "Post Flight Statistics"
+    },
+    "osdSetupVtxTitle": {
+        "message": "VTX Settings"
+    },
+    "osdSetupCraftNameTitle": {
+        "message": "Craft Name"
+    },
+    "osdSetupFontPresets": {
+        "message": "Font presets:"
+    },
+    "osdSetupOpenFont": {
+        "message": "Open Font File"
+    },
+    "osdSetupUploadFont": {
+        "message": "Upload Font"
+    },
+    "osdSetupSave": {
+        "message": "Save"
+    },
+    "osdSetupFontManager": {
+        "message": "Font Manager"
+    },
+    "osdSetupUncheckAll": {
+        "message": "Uncheck all"
+    },
     "osdSetupHead": {
         "message": "Info"
     },
