@@ -499,8 +499,7 @@ TABS.pid_tuning.initialize = function (callback) {
         context.restore();
     }
 
-    function process_html() 
-    {
+    function process_html() {
         if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
             FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
         } else {
