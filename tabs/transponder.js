@@ -162,9 +162,11 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
         transponderTypeSelect.html('');
 
         //build radio buttons
-        transponderTypeSelect.append(
-            $('<option>').attr('value', 0).html(chrome.i18n.getMessage("transponderType0")) // NONE
-        );
+        if (transponderProviders.length > 1) {
+            transponderTypeSelect.append(
+                $('<option>').attr('value', 0).html(chrome.i18n.getMessage("transponderType0")) // NONE
+            );
+        }
 
         for ( let transponderProvidersKey in transponderProviders ) {
             let transponderProvider = transponderProviders[transponderProvidersKey];
