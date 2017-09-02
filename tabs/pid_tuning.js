@@ -536,6 +536,11 @@ TABS.pid_tuning.initialize = function (callback) {
             self.currentRates.superexpo = true;
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            $('.pid_tuning input[name="sensitivity"]').hide();
+            $('.pid_tuning .levelSensitivityHeader').empty();
+        }
+
         $('.tab-pid_tuning .tab_container .pid').on('click', function () {
             $('.tab-pid_tuning .subtab-pid').show();
             $('.tab-pid_tuning .subtab-filter').hide();
