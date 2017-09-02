@@ -617,7 +617,7 @@ function configuration_restore(callback) {
             appliedMigrationsCount++;
         }
 
-        if (!compareVersions(migratedVersion, '1.3.1')) {
+        if (compareVersions(migratedVersion, '1.3.1')) {
             
             // LED_COLORS & LED_MODE_COLORS support was added.
             if (!configuration.LED_COLORS) {
