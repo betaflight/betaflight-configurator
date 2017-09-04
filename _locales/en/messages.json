@@ -1976,6 +1976,12 @@
     "pidTuningFilterSettings": {
         "message": "Filter Settings"
     },
+    "pidTuningDTermLowpassType": {
+        "message": "D-Term Lowpass Filter"
+    },
+    "pidTuningDTermLowpassTypeTip": {
+        "message": "Select D-Term lowpass filter type to use. Default is BIQUAD"
+    },
     "pidTuningDTermLowpassFrequency": {
         "message": "D Term Lowpass Frequency [Hz]"
     },
