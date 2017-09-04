@@ -397,8 +397,8 @@ var FC = {
         DEFAULT = {
             gyro_soft_notch_cutoff_1:       300,
             gyro_soft_notch_hz_1:           400,
-            gyro_soft_notch_cutoff_2:       200,
-            gyro_soft_notch_hz_2:           300,
+            gyro_soft_notch_cutoff_2:       100,
+            gyro_soft_notch_hz_2:           200,
             dterm_notch_cutoff:             160,
             dterm_notch_hz:                 260,
         };
