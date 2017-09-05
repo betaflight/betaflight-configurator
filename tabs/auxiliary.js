@@ -36,28 +36,16 @@ TABS.auxiliary.initialize = function (callback) {
         return false;
     }
 
-    function adjustRunCamSplitBoxNameWithModeID(modeId, originalModeName) {
-        switch (modeId) {
-            case 32: // BOXCAMERA1
-                return "CAMERA WI-FI";
-            case 33: // BOXCAMERA2
-                return "CAMERA POWER";
-            case 34: // BOXCAMERA3
-                return "CAMERA CHANGE MODE"
-            default:
-                return originalModeName;
-        }
+    function localizeBoxNameWithModeID(modeId, originalModeName) {
+        var modeText = chrome.i18n.getMessage('modeId' + modeId);
+        return modeText == '' ? originalModeName : modeText;
     }
 
     function createMode(modeIndex, modeId) {
         var modeTemplate = $('#tab-auxiliary-templates .mode');
         var newMode = modeTemplate.clone();
         
-        var modeName = AUX_CONFIG[modeIndex];
-        // if user choose the runcam split at peripheral column, then adjust the boxname(BOXCAMERA1, BOXCAMERA2, BOXCAMERA3)
-        if (isPeripheralSelected("RUNCAM_SPLIT_CONTROL")) {
-            modeName = adjustRunCamSplitBoxNameWithModeID(modeId, modeName);
-        }
+        var modeName = localizeBoxNameWithModeID(modeId, AUX_CONFIG[modeIndex]);
 
         $(newMode).attr('id', 'mode-' + modeIndex);
         $(newMode).find('.name').text(modeName);
