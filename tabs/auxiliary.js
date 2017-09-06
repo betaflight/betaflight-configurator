@@ -15,7 +15,11 @@ TABS.auxiliary.initialize = function (callback) {
     }
 
     function get_rc_data() {
-        MSP.send_message(MSPCodes.MSP_RC, false, false, load_html);
+        MSP.send_message(MSPCodes.MSP_RC, false, false, get_serial_config);
+    }
+
+    function get_serial_config() {
+        MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, load_html);
     }
 
     function load_html() {
@@ -39,11 +43,11 @@ TABS.auxiliary.initialize = function (callback) {
     function adjustRunCamSplitBoxNameWithModeID(modeId, originalModeName) {
         switch (modeId) {
             case 32: // BOXCAMERA1
-                return "CAMERA WI-FI";
+                return chrome.i18n.getMessage('modeCameraWifi');
             case 33: // BOXCAMERA2
-                return "CAMERA POWER";
+                return chrome.i18n.getMessage('modeCameraPower');
             case 34: // BOXCAMERA3
-                return "CAMERA CHANGE MODE"
+                return chrome.i18n.getMessage('modeCameraChangeMode');
             default:
                 return originalModeName;
         }

@@ -2709,5 +2709,14 @@
     },
     "dialogConfirmResetClose": {
         "message": "Cancel"
+    },
+    "modeCameraWifi": {
+        "message": "CAMERA WI-FI"
+    },
+    "modeCameraPower": {
+        "message": "CAMERA POWER"
+    },
+    "modeCameraChangeMode": {
+        "message": "CAMERA CHANGE MODE"
     }
 }
