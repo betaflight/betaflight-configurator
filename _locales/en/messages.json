@@ -2710,13 +2710,13 @@
     "dialogConfirmResetClose": {
         "message": "Cancel"
     },
-    "modeId32": {
+    "modeCameraWifi": {
         "message": "CAMERA WI-FI"
     },
-    "modeId33": {
+    "modeCameraPower": {
         "message": "CAMERA POWER"
     },
-    "modeId34": {
+    "modeCameraChangeMode": {
         "message": "CAMERA CHANGE MODE"
     }
 }

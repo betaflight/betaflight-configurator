@@ -15,7 +15,11 @@ TABS.auxiliary.initialize = function (callback) {
     }
 
     function get_rc_data() {
-        MSP.send_message(MSPCodes.MSP_RC, false, false, load_html);
+        MSP.send_message(MSPCodes.MSP_RC, false, false, get_serial_config);
+    }
+
+    function get_serial_config() {
+        MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, load_html);
     }
 
     function load_html() {
@@ -36,16 +40,28 @@ TABS.auxiliary.initialize = function (callback) {
         return false;
     }
 
-    function localizeBoxNameWithModeID(modeId, originalModeName) {
-        var modeText = chrome.i18n.getMessage('modeId' + modeId);
-        return modeText == '' ? originalModeName : modeText;
+    function adjustRunCamSplitBoxNameWithModeID(modeId, originalModeName) {
+        switch (modeId) {
+            case 32: // BOXCAMERA1
+                return chrome.i18n.getMessage('modeCameraWifi');
+            case 33: // BOXCAMERA2
+                return chrome.i18n.getMessage('modeCameraPower');
+            case 34: // BOXCAMERA3
+                return chrome.i18n.getMessage('modeCameraChangeMode');
+            default:
+                return originalModeName;
+        }
     }
 
     function createMode(modeIndex, modeId) {
         var modeTemplate = $('#tab-auxiliary-templates .mode');
         var newMode = modeTemplate.clone();
         
-        var modeName = localizeBoxNameWithModeID(modeId, AUX_CONFIG[modeIndex]);
+        var modeName = AUX_CONFIG[modeIndex];
+        // if user choose the runcam split at peripheral column, then adjust the boxname(BOXCAMERA1, BOXCAMERA2, BOXCAMERA3)
+        if (isPeripheralSelected("RUNCAM_SPLIT_CONTROL")) {
+            modeName = adjustRunCamSplitBoxNameWithModeID(modeId, modeName);
+        }
 
         $(newMode).attr('id', 'mode-' + modeIndex);
         $(newMode).find('.name').text(modeName);
