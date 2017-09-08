@@ -272,7 +272,7 @@ TABS.pid_tuning.initialize = function (callback) {
             var checked = $(this).is(':checked');
             $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? DEFAULT.gyro_soft_notch_hz_1 : 0)
                 .attr('disabled', !checked);
-            $('.pid_filter input[name="gyroNotch1Cutoff"]').val($(this).is(':checked') ? DEFAULT.gyro_soft_notch_cutoff_1 : 0)
+            $('.pid_filter input[name="gyroNotch1Cutoff"]').val(checked ? DEFAULT.gyro_soft_notch_cutoff_1 : 0)
                 .attr('disabled', !checked);
         });
 
