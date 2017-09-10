@@ -376,14 +376,18 @@ OSD.constants = {
       desc: 'osdDescElementCurrentDraw',
       default_position: -23,
       positionable: true,
-      preview: FONT.symbol(SYM.AMP) + '42.0'
+      preview: function() {
+        return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 42.00' + FONT.symbol(SYM.AMP) : FONT.symbol(SYM.AMP) + '42.0';
+      }
     },
     MAH_DRAWN: {
       name: 'MAH_DRAWN',
       desc: 'osdDescElementMahDrawn',
       default_position: -18,
       positionable: true,
-      preview: FONT.symbol(SYM.MAH) + '690'
+      preview: function() {
+        return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 690' + FONT.symbol(SYM.MAH) : FONT.symbol(SYM.MAH) + '690';
+      }
     },
     CRAFT_NAME: {
       name: 'CRAFT_NAME',
