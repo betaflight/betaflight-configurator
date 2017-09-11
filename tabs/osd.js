@@ -489,7 +489,9 @@ OSD.constants = {
       desc: 'osdDescElementPower',
       default_position: (15 << 5) | 2,
       positionable: true,
-      preview: '142W'
+      preview: function() {
+        return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 142W' : '142W';
+      }
     },
     PID_RATE_PROFILE: {
       name: 'PID_RATE_PROFILE',
