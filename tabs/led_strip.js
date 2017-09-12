@@ -464,6 +464,9 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
                                 switch (letter) {
                                 case 't':
+                                    if (isFadingActive('function-' + f))
+                                        p.addClass('function-' + letter);
+                                    break;
                                 case 'o':
                                 case 's':
                                     if (areModifiersActive('function-' + f))
@@ -740,6 +743,15 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         return false;
     }
 
+    function isFadingActive(activeFunction) {
+        switch (activeFunction) {
+            case "function-c":
+                return true;
+            break;
+        }
+        return false;
+    }
+
     function areOverlaysActive(activeFunction) {
         if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
             switch (activeFunction) {
@@ -841,6 +853,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         // set color modifiers (check-boxes) visibility
         $('.overlays').hide();
         $('.modifiers').hide();
+        $('.fading').hide();
         $('.blinkers').hide();
         $('.warningOverlay').hide();
         $('.vtxOverlay').hide();
@@ -850,6 +863,9 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         if (areModifiersActive(activeFunction))
             $('.modifiers').show();
+
+        if (isFadingActive(activeFunction))
+            $('.fading').show();
 
         if (areBlinkersActive(activeFunction))
             $('.blinkers').show();

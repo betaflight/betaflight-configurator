@@ -230,7 +230,8 @@
 
 .tab-led-strip .overlays,
 .tab-led-strip .blinkers,
-.tab-led-strip .modifiers {
+.tab-led-strip .modifiers,
+.tab-led-strip .fading {
     display: inline-block;
 }
 
