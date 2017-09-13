@@ -1104,22 +1104,22 @@
         "message": "Throttle EXPO"
     },
     "receiverStickMin": {
-        "message": "Stick Min"
+        "message": "'Stick Low' Threshold"
     },
     "receiverHelpStickMin": {
-        "message": "The value (in us) used to determine if a stick is low."
+        "message": "The maximum value (in us) for a stick to be recognised as low / left for command input (MIN_CHECK)."
     },
     "receiverStickCenter": {
         "message": "Stick Center"
     },
     "receiverHelpStickCenter": {
-        "message": "The value (in us) used to determine if a stick is centered."
+        "message": "The value (in us) used to determine if a stick is centered (MID_RC)."
     },
     "receiverStickMax": {
-        "message": "Stick Max"
+        "message": "'Stick High' Threshold"
     },
     "receiverHelpStickMax": {
-        "message": "The value (in us) used to determine if a stick is high."
+        "message": "The minimum value (in us) for a stick to be recognised as high / right for command input (MAX_CHECK)."
     },
     "receiverDeadband": {
         "message": "RC Deadband"
