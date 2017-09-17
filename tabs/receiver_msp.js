@@ -9,8 +9,8 @@ var
     channelMSPIndexes = {
         roll: 0,
         pitch: 1,
-        yaw: 2,
-        throttle: 3,
+        throttle: 2,
+        yaw: 3,
         aux1: 4,
         aux2: 5,
         aux3: 6,
