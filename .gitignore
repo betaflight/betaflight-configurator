@@ -1,4 +1,6 @@
 .DS_store
 nbproject/
 .idea
+.project
+.settings/
 
