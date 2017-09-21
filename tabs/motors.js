@@ -14,6 +14,7 @@ TABS.motors = {
         },
         // These are translated into proper Dshot values on the flight controller
         DSHOT_DISARMED_VALUE: 1000,
+		DSHOT_3D_MIN_VALUE: 1001,
         DSHOT_MAX_VALUE: 2000,
         DSHOT_3D_NEUTRAL: 1500
 };
@@ -404,11 +405,15 @@ TABS.motors.initialize = function (callback) {
         var rangeMin;
         var rangeMax;
         var neutral3d;
-        if (self.escProtocolIsDshot) {
+        if (self.escProtocolIsDshot && !self.feature3DEnabled) {
             rangeMin = self.DSHOT_DISARMED_VALUE;
             rangeMax = self.DSHOT_MAX_VALUE;
-            neutral3d = self.DSHOT_3D_NEUTRAL;
-        } else {
+            neutral3d = self.DSHOT_3D_NEUTRAL; // unused ?
+        } else if(self.escProtocolIsDshot && self.feature3DEnabled) {
+            rangeMin = self.DSHOT_3D_MIN_VALUE;
+            rangeMax = self.DSHOT_MAX_VALUE;
+			neutral3d = self.DSHOT_3D_NEUTRAL;
+		} else {
             rangeMin = MOTOR_CONFIG.mincommand;
             rangeMax = MOTOR_CONFIG.maxthrottle;
             //Arbitrary sanity checks
