@@ -30,7 +30,11 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     }
 
     function get_box_ids() {
-        MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, get_rc_data);
+        MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, get_ports_config);
+    }
+
+    function get_ports_config() {
+        MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, get_rc_data);
     }
 
     function get_rc_data() {
@@ -100,8 +104,12 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 if (!(range.start < range.end)) {
                     continue; // invalid!
                 }
+                
+                // Search for the real name if it belongs to a peripheral
+                var modeName = AUX_CONFIG[modeIndex];                
+                modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
-                auxAssignment[modeRange.auxChannelIndex] += "<span class=\"modename\">" + AUX_CONFIG[modeIndex] + "</span>";
+                auxAssignment[modeRange.auxChannelIndex] += "<span class=\"modename\">" + modeName + "</span>";                
             }
         }
 

@@ -28,40 +28,13 @@ TABS.auxiliary.initialize = function (callback) {
 
     MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, get_mode_ranges);
 
-    // return true if user has choose a special peripheral
-    function isPeripheralSelected(peripheralName) {
-        for (var portIndex = 0; portIndex < SERIAL_CONFIG.ports.length; portIndex++) {
-            var serialPort = SERIAL_CONFIG.ports[portIndex];
-            if (serialPort.functions.indexOf(peripheralName) >= 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    function adjustRunCamSplitBoxNameWithModeID(modeId, originalModeName) {
-        switch (modeId) {
-            case 32: // BOXCAMERA1
-                return chrome.i18n.getMessage('modeCameraWifi');
-            case 33: // BOXCAMERA2
-                return chrome.i18n.getMessage('modeCameraPower');
-            case 34: // BOXCAMERA3
-                return chrome.i18n.getMessage('modeCameraChangeMode');
-            default:
-                return originalModeName;
-        }
-    }
-
     function createMode(modeIndex, modeId) {
         var modeTemplate = $('#tab-auxiliary-templates .mode');
         var newMode = modeTemplate.clone();
         
-        var modeName = AUX_CONFIG[modeIndex];
-        // if user choose the runcam split at peripheral column, then adjust the boxname(BOXCAMERA1, BOXCAMERA2, BOXCAMERA3)
-        if (isPeripheralSelected("RUNCAM_SPLIT_CONTROL")) {
-            modeName = adjustRunCamSplitBoxNameWithModeID(modeId, modeName);
-        }
+        var modeName = AUX_CONFIG[modeIndex];        
+        // Adjust the name of the box if a peripheral is selected
+        modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
         $(newMode).attr('id', 'mode-' + modeIndex);
         $(newMode).find('.name').text(modeName);
