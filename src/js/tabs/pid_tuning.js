@@ -1093,8 +1093,14 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
 
     if (GUI.active_tab === 'pid_tuning') {
         if (semver.gte(CONFIG.apiVersion, "1.20.0")
-            && CONFIG.numProfiles === 2) {
-            $('.tab-pid_tuning select[name="profile"] .profile3').hide();
+                && CONFIG.numProfiles === 2) {
+                $('.tab-pid_tuning select[name="profile"] .profile3').hide();
+        }
+
+        if (semver.lt(CONFIG.apiVersion, "1.37.0")) {
+            $('.tab-pid_tuning select[name="rate_profile"] .RateProfile4').hide();
+            $('.tab-pid_tuning select[name="rate_profile"] .RateProfile5').hide();
+            $('.tab-pid_tuning select[name="rate_profile"] .RateProfile6').hide();
         }
 
         if (!self.updating && !self.dirty) {
