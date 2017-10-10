@@ -1153,6 +1153,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_COPY_PROFILE:
                 console.log('Copy profile');
                 break;
+            case MSPCodes.MSP_ARMING_DISABLE:
+                console.log('Arming disable');
+                break;
             default:
                 console.log('Unknown code detected: ' + code);
         } else {
@@ -1512,9 +1515,17 @@ MspHelper.prototype.crunch = function(code) {
         case MSPCodes.MSP_COPY_PROFILE:
             buffer.push8(COPY_PROFILE.type)
                 .push8(COPY_PROFILE.dstProfile)
-                .push8(COPY_PROFILE.srcProfile)
+                .push8(COPY_PROFILE.srcProfile);
             break;
-
+        case MSPCodes.MSP_ARMING_DISABLE:
+            var value;
+            if (CONFIG.arming_disabled) {
+                value = 1;
+            } else {
+                value = 0;
+            }
+            buffer.push8(value);
+            break;
         default:
             return false;
     }

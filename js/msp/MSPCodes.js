@@ -77,6 +77,7 @@ var MSPCodes = {
     MSP_SENSOR_CONFIG:              96,
     MSP_SET_SENSOR_CONFIG:          97,
     //MSP_SPECIAL_PARAMETERS:         98, // DEPRECATED
+    MSP_ARMING_DISABLE:             99,
     //MSP_SET_SPECIAL_PARAMETERS:     99, // DEPRECATED
     //MSP_IDENT:                      100, // DEPRECTED
     MSP_STATUS:                     101,
