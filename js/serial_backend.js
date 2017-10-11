@@ -60,42 +60,21 @@ $(document).ready(function () {
                     GUI.interval_kill_all();
                     GUI.tab_switch_cleanup();
                     GUI.tab_switch_in_progress = false;
-
-                    var wasConnected = CONFIGURATOR.connectionValid;
                     
-                    serial.disconnect(onClosed);
+                    if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                        CONFIG.arming_disabled = false;
+                        
+                        MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, false, false, function () {
+                            GUI.log(chrome.i18n.getMessage('armingEnabled'));
 
-                    GUI.connected_to = false;
-                    GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
-                    MSP.disconnect_cleanup();
-                    PortUsage.reset();
-
-                    // Reset various UI elements
-                    $('span.i2c-error').text(0);
-                    $('span.cycle-time').text(0);
-                    if (semver.gte(CONFIG.apiVersion, "1.20.0"))
-                        $('span.cpu-load').text('');
-
-                    // unlock port select & baud
-                    $('div#port-picker #port').prop('disabled', false);
-                    if (!GUI.auto_connect) $('div#port-picker #baud').prop('disabled', false);
-
-                    // reset connect / disconnect button
-                    $('div.connect_controls a.connect').removeClass('active');
-                    $('div.connect_controls a.connect_state').text(chrome.i18n.getMessage('connect'));
-                   
-                    // reset active sensor indicators
-                    sensor_status(0);
-
-                    if (wasConnected) {
-                        // detach listeners and remove element data
-                        $('#content').empty();
-                    }
-
-                    $('#tabs .tab_landing a').click();
+                            finishClose(clicks);
+                        });
+                    } else {
+                        finishClose(clicks);
+                    }   
                 }
-
-                $(this).data("clicks", !clicks);
+                
+                $(this).data("clicks", !clicks);   
             }
         }
     });
@@ -143,7 +122,40 @@ $(document).ready(function () {
     PortUsage.initialize();
 });
 
+function finishClose(clicks) {  
+    var wasConnected = CONFIGURATOR.connectionValid;
+    
+    serial.disconnect(onClosed);
 
+    MSP.disconnect_cleanup();
+    PortUsage.reset();
+
+    GUI.connected_to = false;
+    GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
+    // Reset various UI elements
+    $('span.i2c-error').text(0);
+    $('span.cycle-time').text(0);
+    if (semver.gte(CONFIG.apiVersion, "1.20.0"))
+        $('span.cpu-load').text('');
+
+    // unlock port select & baud
+    $('div#port-picker #port').prop('disabled', false);
+    if (!GUI.auto_connect) $('div#port-picker #baud').prop('disabled', false);
+
+    // reset connect / disconnect button
+    $('div.connect_controls a.connect').removeClass('active');
+    $('div.connect_controls a.connect_state').text(chrome.i18n.getMessage('connect'));
+   
+    // reset active sensor indicators
+    sensor_status(0);
+
+    if (wasConnected) {
+        // detach listeners and remove element data
+        $('#content').empty();
+    }
+
+    $('#tabs .tab_landing a').click();
+}
 
 
 function onOpen(openInfo) {
@@ -214,7 +226,17 @@ function onOpen(openInfo) {
                                             MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
                                                 GUI.log(chrome.i18n.getMessage('craftNameReceived', [CONFIG.name]));
 
-                                                finishOpen();
+                                                if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                                                    CONFIG.arming_disabled = true;
+                                                    
+                                                    MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, false, false, function () {
+                                                        GUI.log(chrome.i18n.getMessage('armingDisabled'));
+
+                                                        finishOpen();
+                                                    });
+                                                } else {
+                                                    finishOpen();
+                                                }
                                             });
                                         } else {
                                             finishOpen();
