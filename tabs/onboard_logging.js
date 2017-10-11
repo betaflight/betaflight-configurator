@@ -156,7 +156,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
             deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
-            if (DATAFLASH.ready) {
+            if (DATAFLASH.supported) {
                 deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
             }
             if (SDCARD.supported) {
