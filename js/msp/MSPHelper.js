@@ -1000,7 +1000,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (data.byteLength >= 13) {
                     var flags = data.readU8();
                     DATAFLASH.ready = (flags & 1) != 0;
-                    DATAFLASH.supported = (flags & 2) != 0 || DATAFLASH.ready;
+                    DATAFLASH.supported = (flags & 2) != 0;
                     DATAFLASH.sectors = data.readU32();
                     DATAFLASH.totalSize = data.readU32();
                     DATAFLASH.usedSize = data.readU32();
