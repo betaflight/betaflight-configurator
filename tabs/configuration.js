@@ -609,6 +609,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             $('div.cycles').show();
         }
+        if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
+            $('input[id="configurationSmallAngle"]').val(ARMING_CONFIG.small_angle);
+            if (SENSOR_CONFIG.acc_hardware !== 1) {
+              $('._smallAngle').show();
+            } else {
+              $('._smallAngle').hide();
+            }
+        }
 
         // fill throttle
         $('input[name="minthrottle"]').val(MOTOR_CONFIG.minthrottle);
@@ -796,6 +804,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         });
 
+        $('input[id="accHardwareSwitch"]').change(function() {
+            if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
+              var checked = $(this).is(':checked');
+              if (checked) {
+                $('._smallAngle').show()
+              } else {
+                $('._smallAngle').hide()
+              }
+            }
+        });
+
         $(features_e).filter('select').change(function () {
             var element = $(this);
 
@@ -851,6 +870,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
                 ARMING_CONFIG.auto_disarm_delay = parseInt($('input[name="autodisarmdelay"]').val());
                 ARMING_CONFIG.disarm_kill_switch = $('input[id="disarmkillswitch"]').is(':checked') ? 1 : 0;
+            }
+            if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
             }
 
             MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
