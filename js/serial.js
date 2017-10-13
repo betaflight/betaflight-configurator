@@ -118,6 +118,8 @@ var serial = {
                             break;
                             
                         case 'device_lost':
+                            CONFIG.arming_disabled = false;
+
                             if (GUI.connected_to || GUI.connecting_to) {
                                 $('a.connect').click();
                             } else {
