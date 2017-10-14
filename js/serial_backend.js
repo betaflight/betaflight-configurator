@@ -61,22 +61,22 @@ $(document).ready(function () {
                     GUI.tab_switch_cleanup();
                     GUI.tab_switch_in_progress = false;
                     
-                    if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                    if (semver.gte(CONFIG.apiVersion, "1.37.0") && CONFIG.arming_disabled) {
                         CONFIG.arming_disabled = false;
                         
                         MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, false, false, function () {
                             GUI.log(chrome.i18n.getMessage('armingEnabled'));
 
-                            finishClose(clicks);
+                            finishClose();
                         });
                     } else {
-                        finishClose(clicks);
+                        finishClose();
                     }   
                 }
-                
-                $(this).data("clicks", !clicks);   
+
+                $(this).data("clicks", !clicks);
             }
-        }
+       }
     });
 
     // auto-connect
@@ -122,7 +122,7 @@ $(document).ready(function () {
     PortUsage.initialize();
 });
 
-function finishClose(clicks) {  
+function finishClose() {
     var wasConnected = CONFIGURATOR.connectionValid;
     
     serial.disconnect(onClosed);
