@@ -182,7 +182,19 @@ TABS.setup.initialize = function (callback) {
 
         function get_slow_data() {
             MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                arming_disable_flags_e.text(CONFIG.armingDisableFlags == 0 ? chrome.i18n.getMessage('initialSetupArmingAllowed') : CONFIG.armingDisableFlags.toString(2));
+                var armingString = '';
+                if (CONFIG.armingDisableFlags == 0) {
+                  armingString = chrome.i18n.getMessage('initialSetupArmingAllowed');
+                } else {
+                  var flagIndicies = [];
+                  for (var i = 0; i < 32; i++) {
+                    if (CONFIG.armingDisableFlags & (1 << i)) {
+                      flagIndicies.push(i);
+                    }
+                  }
+                  armingString = flagIndicies;
+                }
+                arming_disable_flags_e.text(armingString);
             });
 
             MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
