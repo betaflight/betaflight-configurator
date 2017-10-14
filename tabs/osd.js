@@ -1532,6 +1532,12 @@ TABS.osd.initialize = function (callback) {
             }
         });
 
+        //Switch all elements
+        $('input#switch-all').change(function () {
+            var new_state = $(this).is(':checked');
+            $('#element-fields input[type=checkbox]').prop('checked', new_state).change();
+        })
+
         $(document).on('click', 'span.progressLabel a.save_font', function () {
             chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'baseflight', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
                 if (chrome.runtime.lastError) {

@@ -316,6 +316,10 @@
   background: rgba(255,255,255,0.4);
 }
 
+.tab-osd .switch-all-elements {
+  float: right;
+}
+
 .tab-osd .preview .char[draggable="true"] {
   cursor: move;
 }
