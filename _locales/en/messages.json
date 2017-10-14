@@ -457,6 +457,9 @@
     "initialSetupArmingAllowed": {
         "message": "Arming Allowed"
     },
+    "initialSetupArmingDisableFlagsTooltip": {
+        "message": "List of flags indicating why arming is currently not allowed. Please refer to the Wiki for a description of what these flags mean."
+    },
     "initialSetupGPSHead": {
         "message": "GPS"
     },
