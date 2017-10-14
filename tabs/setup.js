@@ -59,6 +59,9 @@ TABS.setup.initialize = function (callback) {
 
         self.initializeInstruments();
 
+
+        $('#arming-disable-flag-row').attr('title', chrome.i18n.getMessage('initialSetupArmingDisableFlagsTooltip'));
+
         // UI Hooks
         $('a.calibrateAccel').click(function () {
             var self = $(this);
