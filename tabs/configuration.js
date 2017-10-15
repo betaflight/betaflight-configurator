@@ -309,16 +309,22 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
 
         esc_protocol_e.change(function () {
+            //hide not used setting for DSHOT protocol
             if ($(this).val() - 1 >= self.DSHOT_PROTOCOL_MIN_VALUE) {
                 $('div.minthrottle').hide();
                 $('div.maxthrottle').hide();
                 $('div.mincommand').hide();
+                $('div.checkboxPwm').hide();
+                $('div.unsyncedpwmfreq').hide();
 
                 $('div.digitalIdlePercent').show();
             } else {
                 $('div.minthrottle').show();
                 $('div.maxthrottle').show();
                 $('div.mincommand').show();
+                $('div.checkboxPwm').show();
+                //trigger change unsyncedPWMSwitch to show/hide Motor PWM freq input
+                $("input[id='unsyncedPWMSwitch']").change();
 
                 $('div.digitalIdlePercent').hide();
             }
