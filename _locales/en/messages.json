@@ -2312,6 +2312,9 @@
     "osdSetupElementsTitle": {
         "message": "Elements"
     },
+    "osdSetupElementsSwitchAll": {
+      "message": "Switch all"
+    },
     "osdSetupPreviewTitle": {
         "message": "Preview (drag to change position)"
     },

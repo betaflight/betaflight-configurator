@@ -18,7 +18,13 @@
                     <div class="spacer_right">
                         <div class="gui_box grey">
                             <div class="gui_box_titlebar" style="margin-bottom: 0px;">
-                                <div class="spacer_box_title" i18n="osdSetupElementsTitle" />
+                                <div class="spacer_box_title">
+                                    <span i18n="osdSetupElementsTitle" />
+                                    <span class="switch-all-elements">
+                                        <label for="switch-all"><span i18n="osdSetupElementsSwitchAll" />: </label>
+                                        <input type="checkbox" checked id="switch-all" name="switch-all" class="togglesmall"></input>
+                                    </span>
+                                </div>
                             </div>
                             <div class="spacer_box">
                                 <div id="element-fields" class="switchable-fields"></div>

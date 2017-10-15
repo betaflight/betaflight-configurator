@@ -1532,6 +1532,23 @@ TABS.osd.initialize = function (callback) {
             }
         });
 
+        //Switch all elements
+        $('input#switch-all').change(function () {
+            var new_state = $(this).is(':checked');
+
+            var updateList = [];
+            $('#element-fields input[type=checkbox]').each(function () {
+                var field = $(this).data('field');
+                field.isVisible = new_state;
+
+                updateList.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(field)));
+            })
+
+            Promise.all(updateList).then(function () {
+                updateOsdView();
+            });
+        })
+
         $(document).on('click', 'span.progressLabel a.save_font', function () {
             chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'baseflight', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
                 if (chrome.runtime.lastError) {
