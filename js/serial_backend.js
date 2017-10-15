@@ -36,7 +36,13 @@ $(document).ready(function () {
     $('div.connect_controls a.connect').click(function () {
         if (GUI.connect_lock != true) { // GUI control overrides the user control
 
-            var clicks = $(this).data('clicks');
+            var thisElement = $(this);
+            var clicks = thisElement.data('clicks');
+
+            var toggleStatus = function() {
+                thisElement.data("clicks", !clicks);
+            };
+
             var selected_baud = parseInt($('div#port-picker #baud').val());
             var selected_port = $('div#port-picker #port option:selected').data().isManual ?
                     $('#port-override').val() :
@@ -55,6 +61,8 @@ $(document).ready(function () {
 
 
                     serial.connect(selected_port, {bitrate: selected_baud}, onOpen);
+
+                    toggleStatus();
                 } else {
                     GUI.timeout_kill_all();
                     GUI.interval_kill_all();
@@ -67,14 +75,12 @@ $(document).ready(function () {
                         MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, false, false, function () {
                             GUI.log(chrome.i18n.getMessage('armingEnabled'));
 
-                            finishClose();
+                            finishClose(toggleStatus);
                         });
                     } else {
-                        finishClose();
+                        finishClose(toggleStatus);
                     }   
                 }
-
-                $(this).data("clicks", !clicks);
             }
        }
     });
@@ -113,8 +119,6 @@ $(document).ready(function () {
             }
 
             chrome.storage.local.set({'auto_connect': GUI.auto_connect});
-            
-
         });
     });
 
@@ -122,7 +126,7 @@ $(document).ready(function () {
     PortUsage.initialize();
 });
 
-function finishClose() {
+function finishClose(finishedCallback) {
     var wasConnected = CONFIGURATOR.connectionValid;
     
     serial.disconnect(onClosed);
@@ -155,6 +159,8 @@ function finishClose() {
     }
 
     $('#tabs .tab_landing a').click();
+
+    finishedCallback();
 }
 
 
