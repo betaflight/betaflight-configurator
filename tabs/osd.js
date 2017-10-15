@@ -1535,7 +1535,18 @@ TABS.osd.initialize = function (callback) {
         //Switch all elements
         $('input#switch-all').change(function () {
             var new_state = $(this).is(':checked');
-            $('#element-fields input[type=checkbox]').prop('checked', new_state).change();
+
+            var updateList = [];
+            $('#element-fields input[type=checkbox]').each(function () {
+                var field = $(this).data('field');
+                field.isVisible = new_state;
+
+                updateList.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(field)));
+            })
+
+            Promise.all(updateList).then(function () {
+                updateOsdView();
+            });
         })
 
         $(document).on('click', 'span.progressLabel a.save_font', function () {
