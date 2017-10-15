@@ -315,6 +315,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.maxthrottle').hide();
                 $('div.mincommand').hide();
                 $('div.checkboxPwm').hide();
+                //disable unsyncedPWMSwitch to hide Motor PWM frequency input
+                $('input[id="unsyncedPWMSwitch"]').prop('checked', false).change()
 
                 $('div.digitalIdlePercent').show();
             } else {
