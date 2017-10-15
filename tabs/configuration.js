@@ -315,8 +315,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.maxthrottle').hide();
                 $('div.mincommand').hide();
                 $('div.checkboxPwm').hide();
-                //disable unsyncedPWMSwitch to hide Motor PWM frequency input
-                $('input[id="unsyncedPWMSwitch"]').prop('checked', false).change()
+                $('div.unsyncedpwmfreq').hide();
 
                 $('div.digitalIdlePercent').show();
             } else {
@@ -324,6 +323,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.maxthrottle').show();
                 $('div.mincommand').show();
                 $('div.checkboxPwm').show();
+                //trigger change unsyncedPWMSwitch to show/hide Motor PWM freq input
+                $("input[id='unsyncedPWMSwitch']").change();
 
                 $('div.digitalIdlePercent').hide();
             }
