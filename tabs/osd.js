@@ -1307,11 +1307,12 @@ TABS.osd.initialize = function (callback) {
 
             // display fields on/off and position
             var $displayFields = $('#element-fields').empty();
+            var enabledCount = 0;
             for (let field of OSD.data.display_items) {
               // versioning related, if the field doesn't exist at the current flight controller version, just skip it
               if (!field.name) { continue; }
+              if (field.isVisible) { enabledCount++; }
 
-              var checked = field.isVisible ? 'checked' : '';
               var $field = $('<div class="switchable-field field-'+field.index+'"/>');
               var desc = null;
               if (field.desc && field.desc.length) {
@@ -1359,6 +1360,10 @@ TABS.osd.initialize = function (callback) {
               }
               $displayFields.append($field);
             }
+            //Set Switch all checkbox defaults based on the majority of the switches
+            var checked = enabledCount >= (OSD.data.display_items.length / 2);
+            $('input#switch-all').prop('checked', checked).change();
+
             GUI.switchery();
             // buffer the preview
             OSD.data.preview = [];
@@ -1533,7 +1538,10 @@ TABS.osd.initialize = function (callback) {
         });
 
         //Switch all elements
-        $('input#switch-all').change(function () {
+        $('input#switch-all').change(function (event) {
+            //if we just change value based on the majority of the switches
+            if (event.isTrigger) return;
+
             var new_state = $(this).is(':checked');
 
             var updateList = [];
