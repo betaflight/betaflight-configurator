@@ -14,7 +14,7 @@ function isPeripheralSelected(peripheralName) {
 
 // Adjust the real name for a modeId. Useful if it belongs to a peripheral
 function adjustBoxNameIfPeripheralWithModeID(modeId, defaultName) {
-    if (isPeripheralSelected("RUNCAM_SPLIT_CONTROL")) {
+    if (isPeripheralSelected("RUNCAM_DEVICE_CONTROL")) {
         switch (modeId) {
         case 32: // BOXCAMERA1
             return chrome.i18n.getMessage('modeCameraWifi');
