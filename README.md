@@ -42,6 +42,24 @@ Please note - the application will automatically update itself when new versions
 
 You can find the Betaflight Configurator icon in your application tab "Apps"
 
+## Native app build via NW.js
+
+Linux build is disabled currently because of unmet dependecies with some distros, it can be enabled in the `gulpfile.js`.
+
+### Development
+
+1. Install node.js
+2. Change to project folder and run `npm install`
+3. Run `npm start`
+
+### App build and release
+
+The tasks are defined in `gulpfile.js` and can be run either via `gulp task-name` (if the command is in PATH or via `../node_modules/gulp/bin/gulp.js task-name':
+
+* **dist** copies all the JS and CSS files in the `./dist` folder
+* **apps** builds the apps in the `./apps` folder
+* **release** zips up the apps into individual archives in the `./apps` folder. Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app.
+
 ## Notes
 
 ### WebGL

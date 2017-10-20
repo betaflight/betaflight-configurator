@@ -3,4 +3,8 @@ nbproject/
 .idea
 .project
 .settings/
-
+node_modules/
+npm-debug.log
+cache/
+apps/
+dist/

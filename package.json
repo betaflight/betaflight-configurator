@@ -1,0 +1,38 @@
+{
+    "name": "betaflight-configurator",
+    "description": "Betaflight Configurator",
+    "version": "3.2.2",
+    "main": "main.html",
+    "default_locale": "en",
+    "scripts": {
+        "start": "node_modules/gulp/bin/gulp.js dist && node_modules/nw/bin/nw ."
+    },
+    "window": {
+        "title": "Betaflight Configurator",
+        "icon": "images/inav_icon_128.png",
+        "toolbar": true,
+        "width": 1280,
+        "height": 800
+    },
+    "repository": {
+        "type": "git",
+        "url": "github.com/betaflight/betaflight-configurator"
+    },
+    "author": "iNavFlight",
+    "license": "GPL-3.0",
+    "dependencies": {
+        "archiver": "^2.0.3",
+        "bluebird": "3.4.1",
+        "del": "^3.0.0",
+        "gulp": "~3.9.1",
+        "gulp-concat": "~2.6.1",
+        "inflection": "1.12.0",
+        "jquery": "2.1.4",
+        "jquery-ui-npm": "1.12.0",
+        "nw": "^0.25.4-sdk",
+        "nw-builder": "^3.4.1",
+        "run-sequence": "^2.2.0",
+        "temp": "^0.8.3",
+        "three": "0.72.0"
+    }
+}
