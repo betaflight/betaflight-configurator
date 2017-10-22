@@ -11,6 +11,7 @@ $(document).ready(function () {
 
     $('#logo .version').text(chrome.runtime.getManifest().version);
     updateStatusBarVersion();
+    updateTopBarVersion();
 
     // notification messages for various operating systems
     switch (GUI.operating_system) {
@@ -158,7 +159,7 @@ $(document).ready(function () {
                     case 'setup_osd':
                         TABS.setup_osd.initialize(content_ready);
                         break;
-                        
+
                     case 'configuration':
                         TABS.configuration.initialize(content_ready);
                         break;
@@ -500,7 +501,7 @@ function generateFilename(prefix, suffix) {
 
     if (CONFIG) {
         if (CONFIG.flightControllerIdentifier) {
-        	filename = CONFIG.flightControllerIdentifier + '_' + filename; 	
+        	filename = CONFIG.flightControllerIdentifier + '_' + filename;
         }
         if(CONFIG.name && CONFIG.name.trim() !== '') {
         	filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
@@ -515,6 +516,19 @@ function generateFilename(prefix, suffix) {
         + zeroPad(date.getSeconds(), 2);
 
     return filename + '.' + suffix;
+}
+
+function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
+    var versionText = chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + chrome.runtime.getManifest().version + '<br />';
+
+    if (firmwareVersion) {
+        versionText += chrome.i18n.getMessage('versionLabelFirmware') + ': ' + firmwareId + ' ' + firmwareVersion;
+        if (hardwareId) {
+           versionText += ' (Target: ' + hardwareId + ')';
+        }
+    }
+
+    $('#logo .logo_text').html(versionText);
 }
 
 function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {
