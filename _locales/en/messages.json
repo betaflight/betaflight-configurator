@@ -213,8 +213,8 @@
     "fcInfoReceived": {
         "message": "Flight controller info, identifier: <strong>$1</strong>, version: <strong>$2</strong>"
     },
-    "versionLabelHardware": {
-        "message": "Board"
+    "versionLabelTarget": {
+        "message": "Target"
     },
     "versionLabelFirmware": {
         "message": "Firmware"
