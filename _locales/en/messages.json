@@ -571,7 +571,7 @@
     "featureRX_SPI": {
         "message": "SPI RX support"
     },
-   "featureESC_SENSOR": {
+    "featureESC_SENSOR": {
         "message": "Use KISS/BLHeli_32 ESC telemetry as sensor"
     },
     "featureCHANNEL_FORWARDING": {
@@ -1203,7 +1203,9 @@
     "auxiliaryEepromSaved": {
         "message": "EEPROM <span style=\"color: #ffbb00\">saved</span>"
     },
-
+    "auxiliaryAutoChannelSelect": {
+      "message": "AUTO"
+    },
     "adjustmentsHelp": {
         "message": "Configure adjustment switches.  See the 'in-flight adjustments' section of the manual for details.  The changes that adjustment functions make are not saved automatically.  There are 4 slots.  Each switch used to concurrently make adjustments requires exclusive use of a slot."
     },
