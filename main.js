@@ -518,15 +518,28 @@ function generateFilename(prefix, suffix) {
     return filename + '.' + suffix;
 }
 
-function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
-    var versionText = chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + chrome.runtime.getManifest().version + '<br />';
+function getFirmwareVersion(firmwareVersion, firmwareId, hardwareId) {
+    var versionText = '';
 
     if (firmwareVersion) {
         versionText += chrome.i18n.getMessage('versionLabelFirmware') + ': ' + firmwareId + ' ' + firmwareVersion;
+
         if (hardwareId) {
-           versionText += ' (Target: ' + hardwareId + ')';
+           versionText += ' (' + chrome.i18n.getMessage('versionLabelTarget') + ': ' + hardwareId + ')';
         }
     }
+
+    return versionText;
+}
+
+function getConfiguratorVersion() {
+    return chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + chrome.runtime.getManifest().version;
+}
+
+function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
+    var versionText = getConfiguratorVersion() + '<br />';
+
+    versionText = versionText + getFirmwareVersion(firmwareVersion, firmwareId, hardwareId);
 
     $('#logo .logo_text').html(versionText);
 }
@@ -534,15 +547,13 @@ function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
 function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {
     var versionText = '';
 
-    if (hardwareId) {
-        versionText = versionText + chrome.i18n.getMessage('versionLabelHardware') + ': ' + hardwareId + ', ';
+    versionText = versionText + getFirmwareVersion(firmwareVersion, firmwareId, hardwareId);
+
+    if (versionText !== '') {
+        versionText = versionText + ', ';
     }
 
-    if (firmwareVersion) {
-        versionText = versionText + chrome.i18n.getMessage('versionLabelFirmware') + ': ' + firmwareId + ' ' + firmwareVersion + ', ';
-    }
-
-    versionText = versionText + chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + chrome.runtime.getManifest().version;
+    versionText = versionText + getConfiguratorVersion();
 
     $('#status-bar .version').text(versionText);
 }
