@@ -5,7 +5,8 @@ TABS.auxiliary = {};
 TABS.auxiliary.initialize = function (callback) {
     GUI.active_tab_ref = this;
     GUI.active_tab = 'auxiliary';
-    
+    var prevChannelsValues = null;
+
     function get_mode_ranges() {
         MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, get_box_ids);
     }
@@ -49,19 +50,26 @@ TABS.auxiliary.initialize = function (callback) {
     }
     
     function configureRangeTemplate(auxChannelCount) {
-
         var rangeTemplate = $('#tab-auxiliary-templates .range');
         
         var channelList = $(rangeTemplate).find('.channel');
         var channelOptionTemplate = $(channelList).find('option');
         channelOptionTemplate.remove();
+
+        //add value to autodetect channel
+        var channelOption = channelOptionTemplate.clone();
+        channelOption.text(chrome.i18n.getMessage('auxiliaryAutoChannelSelect'));
+        channelOption.val(-1);
+        channelList.append(channelOption);
+
         for (var channelIndex = 0; channelIndex < auxChannelCount; channelIndex++) {
             var channelOption = channelOptionTemplate.clone();
             channelOption.text('AUX ' + (channelIndex + 1));
             channelOption.val(channelIndex);
             channelList.append(channelOption);
         }
-        channelList.val(0);
+
+        channelOptionTemplate.val(-1);
     }
     
     function addRangeToMode(modeElement, auxChannelIndex, range) {
@@ -112,13 +120,11 @@ TABS.auxiliary.initialize = function (callback) {
             var rangeElement = $(this).data('rangeElement');
             rangeElement.remove();
         });
-        
-        $(rangeElement).find('.channel').val(auxChannelIndex);
 
+        $(rangeElement).find('.channel').val(auxChannelIndex);
     }
 
     function process_html() {
-
         var auxChannelCount = RC.active_channels - 4;
 
         configureRangeTemplate(auxChannelCount);
@@ -147,29 +153,11 @@ TABS.auxiliary.initialize = function (callback) {
             }
 
         }
-
-        function findFirstUnusedChannel(modeElement) {
-            var auxChannelIndexCandidates = [];
-            for (var auxChannelIndex = 0; auxChannelIndex < auxChannelCount; auxChannelIndex++) {
-                auxChannelIndexCandidates.push(auxChannelIndex);
-            }
-            
-            $(modeElement).find('.channel').each( function() {
-                var valueToRemove = $(this).val();
-                auxChannelIndexCandidates = auxChannelIndexCandidates.filter(function(item) {
-                    return item != valueToRemove;
-                });
-            });
-            
-            return auxChannelIndexCandidates[0];
-        }
         
         $('a.addRange').click(function () {
             var modeElement = $(this).data('modeElement');
-            
-            var firstUnusedChannel = findFirstUnusedChannel(modeElement);
-            
-            addRangeToMode(modeElement, firstUnusedChannel);
+            //auto select AUTO option
+            addRangeToMode(modeElement, -1);
         });
                 
         // translate to user-selected language
@@ -271,12 +259,51 @@ TABS.auxiliary.initialize = function (callback) {
                 }
             }
 
+            auto_select_channel(RC.channels);
+
             var auxChannelCount = RC.active_channels - 4;
 
             for (var i = 0; i < (auxChannelCount); i++) {
                 box_highlight(i, RC.channels[i + 4]);
                 update_marker(i, RC.channels[i + 4]);
-            }           
+            }
+        }
+
+        /**
+         * Autodetect channel based on maximum deference with previous value
+         * minimum value to autodetect is 100 - to prevent auto select RSSI channel
+         * @param RC_channels
+         */
+        function auto_select_channel(RC_channels) {
+            var auto_option = $('.tab-auxiliary select.channel option[value="-1"]:selected');
+            if (auto_option.length === 0) {
+                prevChannelsValues = null;
+                return;
+            }
+
+            var fillPrevChannelsValues = function () {
+                prevChannelsValues = RC_channels.slice(0); //clone array
+            }
+
+            if (!prevChannelsValues || RC_channels.length === 0) return fillPrevChannelsValues();
+
+            var diff_array = RC_channels.map(function(currentValue, index) {
+                return Math.abs(prevChannelsValues[index] - currentValue);
+            });
+
+            var largest = diff_array.reduce(function(x,y){
+                return (x > y) ? x : y;
+            }, 0);
+
+            //minimum change to autoselect is 100
+            if (largest < 100) return fillPrevChannelsValues();
+
+            var indexOfMaxValue = diff_array.indexOf(largest);
+            if (indexOfMaxValue >= 4){ //set channel
+                auto_option.parent().val(indexOfMaxValue - 4);
+            }
+
+            return fillPrevChannelsValues();
         }
 
         // update ui instantly on first load
