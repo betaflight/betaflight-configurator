@@ -365,7 +365,7 @@
         "message": "Restore"
     },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span style=\"color: red\">not</span> included - See 'dump' cli command"
+        "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span style=\"color: red\">not</span> included - See 'diff all' cli command"
     },
     "initialSetupBackupSuccess": {
         "message": "Backup saved <span style=\"color: #ffbb00\">successfully</span>"
