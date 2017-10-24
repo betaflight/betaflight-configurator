@@ -319,7 +319,7 @@ OSD.constants = {
       desc: 'osdDescElementThrottlePosition',
       default_position: -9,
       positionable: true,
-      preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + ' 69'
+      preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + '69'
     },
     CPU_LOAD: {
       name: 'CPU_LOAD',
@@ -433,7 +433,7 @@ OSD.constants = {
       desc: 'osdDescElementGPSSpeed',
       default_position: -1,
       positionable: true,
-      preview: '40'
+      preview: ' 40K'
     },
     GPS_SATS: {
       name: 'GPS_SATS',
