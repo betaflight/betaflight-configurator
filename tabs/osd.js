@@ -19,7 +19,8 @@ SYM.AMP = 0x9A;
 SYM.MAH = 0x07;
 SYM.METRE = 0xC;
 SYM.FEET = 0xF;
-SYM.GPS_SAT = 0x1F;
+SYM.GPS_SAT_L = 0x1E;
+SYM.GPS_SAT_R = 0x1F;
 SYM.PB_START = 0x8A;
 SYM.PB_FULL = 0x8B;
 SYM.PB_EMPTY = 0x8D;
@@ -440,7 +441,7 @@ OSD.constants = {
       desc: 'osdDescElementGPSSats',
       default_position: -1,
       positionable: true,
-      preview: FONT.symbol(SYM.GPS_SAT) + '14'
+      preview: FONT.symbol(SYM.GPS_SAT_L) + FONT.symbol(SYM.GPS_SAT_R) + '14'
     },
     GPS_LON: {
       name: 'GPS_LON',
