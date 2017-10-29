@@ -2261,6 +2261,9 @@
     "powerAmperageId80": {
         "message": "Virtual"
     },
+    "powerAmperageId90": {
+        "message": "MSP"
+    },
     "powerMahValue": {
         "message": "$1 mAh"
     },

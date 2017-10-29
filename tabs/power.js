@@ -212,6 +212,10 @@ TABS.power.initialize = function (callback) {
         if (haveFc) {
             currentMeterTypes.push('Virtual');
             currentMeterTypes.push('ESC Sensor');
+            
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                currentMeterTypes.push('MSP Sensor/OSD Slave');
+            }
         }
 
         var currentMeterType_e = $('select.currentmetersource');
