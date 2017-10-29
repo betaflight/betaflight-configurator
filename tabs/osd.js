@@ -223,6 +223,7 @@ OSD.initData = function() {
     unit_mode: null,
     alarms: [],
     stat_items: [],
+    warnings: [],
     display_items: [],
     timers: [],
     last_positions: {},
@@ -682,6 +683,32 @@ OSD.constants = {
       desc: 'osdDescStatTimer2'
     }
   },
+  ALL_WARNINGS: {
+    ARMING_DISABLED: {
+      name: 'ARMING_DISABLED',
+      desc: 'osdWarningArmingDisabled'
+    },
+    BATTERY_NOT_FULL: {
+      name: 'BATTERY_NOT_FULL',
+      desc: 'osdWarningBatteryNotFull'
+    },
+    BATTERY_WARNING: {
+      name: 'BATTERY_WARNING',
+      desc: 'osdWarningBatteryWarning'
+    },
+    BATTERY_CRITICAL: {
+      name: 'BATTERY_CRITICAL',
+      desc: 'osdWarningBatteryCritical'
+    },
+    VISUAL_BEEPER: {
+      name: 'VISUAL_BEEPER',
+      desc: 'osdWarningVisualBeeper'
+    },
+    CRASH_FLIP_MODE: {
+      name: 'CRASH_FLIP_MODE',
+      desc: 'osdWarningCrashFlipMode'
+    }
+  },
   FONT_TYPES: [
     { file: "default", name: "Default" },
     { file: "bold", name: "Bold" },
@@ -809,6 +836,18 @@ OSD.chooseFields = function () {
     F.MAX_DISTANCE,
     F.BLACKBOX_LOG_NUMBER
   ];
+
+  // Choose warnings
+  // Nothing much to do here, I'm preempting there being new warnings
+  F = OSD.constants.ALL_WARNINGS;
+  OSD.constants.WARNINGS = [
+    F.ARMING_DISABLED,
+    F.BATTERY_NOT_FULL,
+    F.BATTERY_WARNING,
+    F.BATTERY_CRITICAL,
+    F.VISUAL_BEEPER,
+    F.CRASH_FLIP_MODE
+  ];
 };
 
 OSD.updateDisplaySize = function() {
@@ -887,6 +926,16 @@ OSD.msp = {
         result.push16(0);
       }
       result.push16(OSD.data.alarms.alt.value);
+      if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+        var warningFlags = 0;
+        for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
+          if (OSD.data.warnings[i].enabled) {
+            warningFlags |= (1 << i);
+          }
+        }
+        console.log(warningFlags);
+        result.push16(warningFlags);
+      }
     }
     return result;
   },
@@ -941,6 +990,7 @@ OSD.msp = {
 
     d.display_items = [];
     d.stat_items = [];
+    d.warnings = [];
     d.timers = [];
 
     // Parse display element positions
@@ -988,7 +1038,7 @@ OSD.msp = {
 
       // Parse configurable timers
       var expectedTimersCount = view.readU8();
-      while (view.offset < view.byteLength) {
+      while (view.offset < view.byteLength && expectedTimersCount > 0) {
         var v = view.readU16();
         var j = d.timers.length;
         d.timers.push($.extend({
@@ -1000,6 +1050,14 @@ OSD.msp = {
       while (expectedTimersCount > 0) {
         view.readU16();
         expectedTimersCount--;
+      }
+
+      // Parse enabled warnings
+      if (view.offset + 2 <= view.byteLength) {
+        var warningFlags = view.readU16();
+        for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
+          d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled: (warningFlags & (1 << i)) != 0 }));
+        }
       }
     }
 
@@ -1097,6 +1155,14 @@ TABS.osd.initialize = function (callback) {
             title: 'OSD Font Manager',
             content: $('#fontmanagercontent')
         });
+
+        $('.elements-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpElements'));
+        $('.videomode-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpVideoMode'));
+        $('.units-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpUnits'));
+        $('.timers-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpTimers'));
+        $('.alarms-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpAlarms'));
+        $('.stats-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpStats'));
+        $('.warnings-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpWarnings'));
 
         // 2 way binding... sorta
         function updateOsdView() {
@@ -1294,6 +1360,40 @@ TABS.osd.initialize = function (callback) {
                   $field.append('<label for="'+field.name+'" class="char-label">'+inflection.titleize(field.name)+'</label>');
 
                   $statsFields.append($field);
+                }
+
+                // Warnings
+                $('.warnings-container').show();
+                var $warningFields = $('#warnings-fields').empty();
+
+                for (let field of OSD.data.warnings) {
+                  if (!field.name) { continue; }
+
+                  var $field = $('<div class="switchable-field field-'+field.index+'"/>');
+                  var desc = null;
+                  if (field.desc && field.desc.length) {
+                    desc = chrome.i18n.getMessage(field.desc);
+                  }
+                  if (desc && desc.length) {
+                    $field[0].classList.add('osd_tip');
+                    $field.attr('title', desc);
+                  }
+                  $field.append(
+                    $('<input type="checkbox" name="'+field.name+'" class="togglesmall"></input>')
+                    .data('field', field)
+                    .attr('checked', field.enabled)
+                    .change(function(e) {
+                      var field = $(this).data('field');
+                      field.enabled = !field.enabled;
+                      MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
+                      .then(function() {
+                        updateOsdView();
+                      });
+                    })
+                  );
+                  $field.append('<label for="'+field.name+'" class="char-label">'+inflection.titleize(field.name)+'</label>');
+
+                  $warningFields.append($field);
                 }
               }
             }
