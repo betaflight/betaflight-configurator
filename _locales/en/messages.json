@@ -2587,7 +2587,7 @@
         "message": "Alerts when the battery voltage falls below warning threshold"
     },
     "osdWarningBatteryCritical": {
-        "message": "Alters when the battery voltage falls below the minimum average cell voltage"
+        "message": "Alerts when the battery voltage falls below the minimum average cell voltage"
     },
     "osdWarningVisualBeeper": {
         "message": "Shows a visualisation of the beeper (shows as 4 asterisks)"
