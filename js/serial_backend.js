@@ -72,7 +72,7 @@ $(document).ready(function () {
                     if (semver.gte(CONFIG.apiVersion, "1.37.0") && CONFIG.arming_disabled) {
                         CONFIG.arming_disabled = false;
 
-                        MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, false, false, function () {
+                        MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
                             GUI.log(chrome.i18n.getMessage('armingEnabled'));
 
                             finishClose(toggleStatus);
@@ -237,7 +237,7 @@ function onOpen(openInfo) {
                                                 if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
                                                     CONFIG.arming_disabled = true;
 
-                                                    MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, false, false, function () {
+                                                    MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
                                                         GUI.log(chrome.i18n.getMessage('armingDisabled'));
 
                                                         finishOpen();
