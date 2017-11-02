@@ -39,7 +39,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     function load_board_alignment_config() {
         MSP.send_message(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG, false, false, load_rc_map);
     }
-    
+
     function load_rc_map() {
         MSP.send_message(MSPCodes.MSP_RX_MAP, false, false, load_mixer_config);
     }
@@ -60,7 +60,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             next_callback();
         }
     }
-    
+
     function load_compass_config() {
         var next_callback = load_gps_config;
         if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
@@ -69,7 +69,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             next_callback();
         }
     }
-    
+
     function load_gps_config() {
         var next_callback = load_acc_trim;
         if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
@@ -91,7 +91,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             next_callback();
         }
     }
-    
+
     function load_arming_config() {
         var next_callback = load_3d;
         if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
@@ -176,7 +176,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         } else {
             next_callback();
         }
-    }   
+    }
 
     function load_rx_config() {
         var next_callback = load_html;
@@ -206,11 +206,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         function refreshMixerPreview() {
             var mixer = MIXER_CONFIG.mixer
             var reverse = "";
-            
+
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 reverse = MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
             }
-            
+
             $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
         };
 
@@ -615,12 +615,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             $('div.cycles').show();
         }
+
+        $('._smallAngle').hide();
         if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
             $('input[id="configurationSmallAngle"]').val(ARMING_CONFIG.small_angle);
             if (SENSOR_CONFIG.acc_hardware !== 1) {
               $('._smallAngle').show();
-            } else {
-              $('._smallAngle').hide();
             }
         }
 
@@ -800,11 +800,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 case 'GPS':
                     checkUpdateGpsControls();
                     break;
-                    
+
                 case '3D':
                     checkUpdate3dControls();
                     break;
-                    
+
                 default:
                     break;
             }
@@ -841,7 +841,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input.beeper', beeper_e).change(function () {
             var element = $(this);
             BEEPER_CONFIG.beepers.updateData(element);
-        });        
+        });
 
         checkShowDisarmDelay();
         checkShowSerialRxBox();
@@ -1022,7 +1022,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
                 SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
                 SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
-                
+
                 var next_callback = save_name;
                 MSP.send_message(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG), false, next_callback);
             }
@@ -1095,7 +1095,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     },1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
                 }
             }
-            
+
             save_serial_config();
         });
 
