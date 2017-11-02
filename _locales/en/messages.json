@@ -2269,10 +2269,10 @@
     },
 
     "powerAmperageScale": {
-        "message": "Scale"
+        "message": "Scale [1/10th mV/A]"
     },
     "powerAmperageOffset": {
-        "message": "Offset in milliampere steps"
+        "message": "Offset [mV]"
     },
 
     "powerBatteryHead": {
