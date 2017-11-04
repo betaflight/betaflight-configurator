@@ -5,8 +5,14 @@
 function configuration_backup(callback) {
     var activeProfile = null;
 
+    var version = chrome.runtime.getManifest().version;
+
+    if (version.indexOf(".") === -1) {
+        version = version + ".0.0";
+    }
+
     var configuration = {
-        'generatedBy': chrome.runtime.getManifest().version,
+        'generatedBy': version,
         'apiVersion': CONFIG.apiVersion,
         'profiles': [],
     };
@@ -110,6 +116,13 @@ function configuration_backup(callback) {
         if (semver.gte(CONFIG.apiVersion, "1.19.0")) {
             uniqueData.push(MSPCodes.MSP_LED_STRIP_MODECOLOR);
         }
+        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            uniqueData.push(MSPCodes.MSP_MOTOR_CONFIG);
+            uniqueData.push(MSPCodes.MSP_RSSI_CONFIG);
+            uniqueData.push(MSPCodes.MSP_GPS_CONFIG);
+            uniqueData.push(MSPCodes.MSP_COMPASS_CONFIG);
+            uniqueData.push(MSPCodes.MSP_FEATURE_CONFIG);
+        }
     }
     
     update_unique_data_list();
@@ -148,6 +161,9 @@ function configuration_backup(callback) {
                 if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
                 	configuration.RSSI_CONFIG = jQuery.extend(true, {}, RSSI_CONFIG);
                     configuration.FEATURE_CONFIG = jQuery.extend(true, {}, FEATURE_CONFIG);
+                    configuration.MOTOR_CONFIG = jQuery.extend(true, {}, MOTOR_CONFIG);
+                    configuration.GPS_CONFIG = jQuery.extend(true, {}, GPS_CONFIG);
+                    configuration.COMPASS_CONFIG = jQuery.extend(true, {}, COMPASS_CONFIG);
                 }
 
                 save();
@@ -289,15 +305,15 @@ function configuration_restore(callback) {
                     // validate
                     if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.backupFileMinVersionAccepted)) {
                                                 
-                        if (!migrate(configuration)) {
+                        if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
                             GUI.log(chrome.i18n.getMessage('backupFileUnmigratable'));
                             return;
                         }
 
-                        if (configuration.BF_CONFIG.features._featureMask) {
+                        if (configuration.FEATURE_CONFIG.features._featureMask) {
                             var features = new Features(CONFIG);
-                            features.setMask(configuration.BF_CONFIG.features._featureMask);
-                            configuration.BF_CONFIG.features = features;
+                            features.setMask(configuration.FEATURE_CONFIG.features._featureMask);
+                            configuration.FEATURE_CONFIG.features = features;
                         }
 
                         configuration_upload(configuration, callback);
@@ -448,6 +464,7 @@ function configuration_restore(callback) {
                 ports: ports 
             };
             
+            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -466,6 +483,8 @@ function configuration_restore(callback) {
                     disarm_kill_switch:     1
                 };
             }
+
+            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -506,6 +525,7 @@ function configuration_restore(callback) {
             
             migratedVersion = '0.66.0';
 
+            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -522,6 +542,8 @@ function configuration_restore(callback) {
                 }
                 configuration.profiles[profileIndex].PID.controller = newPidControllerIndex;
             }
+
+            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -537,6 +559,8 @@ function configuration_restore(callback) {
                     deadband3d_throttle:    50
                 };
             }
+
+            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -604,6 +628,7 @@ function configuration_restore(callback) {
                 }
             }
 
+            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -614,6 +639,7 @@ function configuration_restore(callback) {
             }
             migratedVersion = '1.2.0';
 
+            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -628,6 +654,7 @@ function configuration_restore(callback) {
             }
 
             migratedVersion = '1.3.1';
+
             GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
