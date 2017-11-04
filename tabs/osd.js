@@ -926,13 +926,11 @@ OSD.msp = {
         result.push16(0);
       }
       result.push16(OSD.data.alarms.alt.value);
-      if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+      if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
         var warningFlags = 0;
-        if(OSD.constants.WARNINGS.length === OSD.data.warnings.length){
-          for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
-            if (OSD.data.warnings[i].enabled) {
-              warningFlags |= (1 << i);
-            }
+        for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
+          if (OSD.data.warnings[i].enabled) {
+            warningFlags |= (1 << i);
           }
         }
         console.log(warningFlags);
