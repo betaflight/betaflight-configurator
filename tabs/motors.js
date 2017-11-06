@@ -531,7 +531,7 @@ TABS.motors.initialize = function (callback) {
 
         if (motors_running) {
             if (!self.armed) {
-                $('#motorsEnableTestMode').prop('checked', true);
+                $('#motorsEnableTestMode').prop('checked', true).change();
             }
             // motors are running adjust sliders to current values
 
