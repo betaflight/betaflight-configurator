@@ -8,7 +8,7 @@ TABS.receiver = {
 };
 
 TABS.receiver.initialize = function (callback) {
-    var self = this;
+    var tab = this;
 
     if (GUI.active_tab != 'receiver') {
         GUI.active_tab = 'receiver';
@@ -74,10 +74,10 @@ TABS.receiver.initialize = function (callback) {
             $('.deadband input[name="3ddeadbandthrottle"]').val(RC_DEADBAND_CONFIG.deadband3d_throttle);
 
             $('.deadband input[name="deadband"]').change(function () {
-                this.deadband = parseInt($(this).val());
+                tab.deadband = parseInt($(this).val());
             }).change();
             $('.deadband input[name="yaw_deadband"]').change(function () {
-                this.yawDeadband = parseInt($(this).val());
+                tab.yawDeadband = parseInt($(this).val());
             }).change();
         }
         
@@ -94,7 +94,7 @@ TABS.receiver.initialize = function (callback) {
             $('input[name="rcInterpolationInterval-number"]').val(RX_CONFIG.rcInterpolationInterval);
 
             $('select[name="rcInterpolation-select"]').change(function () {
-                self.updateRcInterpolationParameters();
+                tab.updateRcInterpolationParameters();
             }).change();
         } else {
             $('.tab-receiver div.rcInterpolation').hide();
@@ -152,7 +152,7 @@ TABS.receiver.initialize = function (callback) {
         });
 
         // correct inner label margin on window resize (i don't know how we could do this in css)
-        self.resize = function () {
+        tab.resize = function () {
             var containerWidth = $('.meter:first', bar_container).width(),
                 labelWidth = $('.meter .label:first', bar_container).width(),
                 margin = (containerWidth / 2) - (labelWidth / 2);
@@ -162,7 +162,7 @@ TABS.receiver.initialize = function (callback) {
             }
         };
 
-        $(window).on('resize', self.resize).resize(); // trigger so labels get correctly aligned on creation
+        $(window).on('resize', tab.resize).resize(); // trigger so labels get correctly aligned on creation
 
         // handle rcmap & rssi aux channel
         var RC_MAP_Letters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
@@ -432,11 +432,11 @@ TABS.receiver.initialize = function (callback) {
         });
 
         // Setup model for preview
-        self.initModelPreview();
-        self.renderModel();
+        tab.initModelPreview();
+        tab.renderModel();
 
         // TODO: Combine two polls together
-        GUI.interval_add('receiver_pull_for_model_preview', self.getRecieverData, 33, false);
+        GUI.interval_add('receiver_pull_for_model_preview', tab.getRecieverData, 33, false);
 
         // status data pulled via separate timer with static speed
         GUI.interval_add('status_pull', function status_pull() {
