@@ -1,7 +1,7 @@
 {
     "name": "betaflight-configurator",
-    "description": "Betaflight Configurator",
-    "version": "3.2.2",
+    "description": "Crossplatform configuration tool for Betaflight flight control system.",
+    "version": "10.0.0",
     "main": "main.html",
     "default_locale": "en",
     "scripts": {
@@ -9,7 +9,7 @@
     },
     "window": {
         "title": "Betaflight Configurator",
-        "icon": "images/inav_icon_128.png",
+        "icon": "images/bf_icon_128.png",
         "toolbar": true,
         "width": 1280,
         "height": 800
@@ -18,7 +18,7 @@
         "type": "git",
         "url": "github.com/betaflight/betaflight-configurator"
     },
-    "author": "iNavFlight",
+    "author": "The Betaflight open source project.",
     "license": "GPL-3.0",
     "dependencies": {
         "archiver": "^2.0.3",
