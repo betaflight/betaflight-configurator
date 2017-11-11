@@ -5,7 +5,6 @@ var Features = function (config) {
 
     var features = [
         {bit: 0, group: 'rxMode', mode: 'select', name: 'RX_PPM'},
-        {bit: 1, group: 'batteryVoltage', name: 'VBAT'},
         {bit: 2, group: 'other', name: 'INFLIGHT_ACC_CAL'},
         {bit: 3, group: 'rxMode', mode: 'select', name: 'RX_SERIAL'},
         {bit: 4, group: 'esc', name: 'MOTOR_STOP'},
@@ -14,7 +13,6 @@ var Features = function (config) {
         {bit: 7, group: 'gps', name: 'GPS', haveTip: true},
         {bit: 9, group: 'other', name: 'SONAR'},
         {bit: 10, group: 'other', name: 'TELEMETRY'},
-        {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'},
         {bit: 12, group: '3D', name: '3D'},
         {bit: 13, group: 'rxMode', mode: 'select', name: 'RX_PARALLEL_PWM'},
         {bit: 14, group: 'rxMode', mode: 'select', name: 'RX_MSP'},
@@ -35,11 +33,7 @@ var Features = function (config) {
         );
     }
 
-    if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-        features.push(
-            {bit: 8, group: 'rxFailsafe', name: 'FAILSAFE', haveTip: true}
-        );
-    } else {
+    if (semver.gte(CONFIG.apiVersion, "1.15.0") && !semver.gte(CONFIG.apiVersion, "1.36.0")) {
         features.push(
             {bit: 8, group: 'rxFailsafe', name: 'FAILSAFE', haveTip: true}
         );
@@ -88,6 +82,13 @@ var Features = function (config) {
             features.push(
                 {bit: 28, group: 'other', name: 'ANTI_GRAVITY'},
                 {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'}
+            );
+        }
+
+        if (!semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            features.push(
+                {bit: 1, group: 'batteryVoltage', name: 'VBAT'},
+                {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'},
             );
         }
     }
