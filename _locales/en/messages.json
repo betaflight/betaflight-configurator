@@ -2493,6 +2493,12 @@
     "osdDescElementEscRpm": {
         "message": "RPM reported by ESC telemetry"
     },
+    "osdDescElementRtcDateTime": {
+        "message": "Real time clock date / time"
+    },
+    "osdDescElementAdjustmentRange": {
+        "message": "Currently active adjustment range setting and value"
+    },
     "osdDescElementHomeDirection": {
         "message": "Arrow showing direction to home position"
     },
