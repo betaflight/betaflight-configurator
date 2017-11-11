@@ -600,12 +600,26 @@ OSD.constants = {
       preview: FONT.symbol(SYM.TEMP_C) + '45'
     },
     ESC_RPM: {
-      name: 'ESC_RPM',
-      desc: 'osdDescElementEscRpm',
-      default_position: -1,
-      positionable: true,
-      preview: '226000'
-    },
+        name: 'ESC_RPM',
+        desc: 'osdDescElementEscRpm',
+        default_position: -1,
+        positionable: true,
+        preview: '226000'
+      },
+      RTC_DATE_TIME: {
+          name: 'RTC_DATE_TIME',
+          desc: 'osdDescElementRtcDateTime',
+          default_position: -1,
+          positionable: true,
+          preview: '2017-11-11 16:20:00'
+      },
+      ADJUSTMENT_RANGE: {
+          name: 'ADJUSTMENT_RANGE',
+          desc: 'osdDescElementAdjustmentRange',
+          default_position: -1,
+          positionable: true,
+          preview: 'PITCH/ROLL P: 42'
+      },
     TIMER_1: {
       name: 'TIMER_1',
       desc: 'osdDescElementTimer1',
@@ -792,6 +806,12 @@ OSD.chooseFields = function () {
                 F.ESC_TEMPERATURE,
                 F.ESC_RPM
               ]);
+              if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                  OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                    F.RTC_DATE_TIME,
+                    F.ADJUSTMENT_RANGE
+                  ]);
+              }
             }
           }
         }
