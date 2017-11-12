@@ -14,6 +14,7 @@ var runSequence = require('run-sequence');
 
 var distDir = './dist/';
 var appsDir = './apps/';
+var debugDir = './debug/';
 
 function get_task_name(key) {
     return 'build-' + key.replace(/([A-Z])/g, function ($1) { return "-" + $1.toLowerCase(); });
@@ -162,7 +163,7 @@ gulp.task('apps', ['dist'], function (done) {
     var builder = new NwBuilder({
         files: './dist/**/*',
         buildDir: appsDir,
-        platforms: ['osx64', 'win32'], // 'linux64' not working currently.
+        platforms: ['osx64', 'win32', 'linux64'],
         flavor: 'normal',
         macIcns: './images/bf_icon.icns',
         macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
@@ -175,7 +176,28 @@ gulp.task('apps', ['dist'], function (done) {
             done();
             return;
         }
-        // Package apps as .zip files
+        done();
+    });
+});
+
+// Create debug app directories in ./debug
+gulp.task('debug-linux', ['dist'], function (done) {
+    var builder = new NwBuilder({
+        files: './dist/**/*',
+        buildDir: debugDir,
+        platforms: ['linux64'],
+        flavor: 'sdk',
+        macIcns: './images/bf_icon.icns',
+        macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
+        winIco: './images/bf_icon.ico',
+    });
+    builder.on('log', console.log);
+    builder.build(function (err) {
+        if (err) {
+            console.log("Error building NW apps:" + err);
+            done();
+            return;
+        }
         done();
     });
 });
@@ -235,8 +257,7 @@ gulp.task('release-macos', function () {
 
 // Create distributable .zip files in ./apps
 gulp.task('release', function () {
-    // TODO: Linux
-    return runSequence('apps', 'release-macos', 'release-windows');
+    return runSequence('apps', 'release-macos', 'release-windows', 'release-linux');
 });
 
 gulp.task('default', ['apps']);
