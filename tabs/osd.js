@@ -639,6 +639,13 @@ OSD.constants = {
       }
     },
   },
+  UNKNOWN_DISPLAY_FIELD: {
+      name: 'UNKNOWN_',
+      desc: 'osdDescElementUnknown',
+      default_position: -1,
+      positionable: true,
+      preview: 'UNKNOWN '
+  },
   ALL_STATISTIC_FIELDS: {
     MAX_SPEED: {
       name: 'MAX_SPEED',
@@ -981,6 +988,9 @@ OSD.msp = {
   decode: function(payload) {
     var view = payload.data;
     var d = OSD.data;
+
+    var displayItemsCountActual = OSD.constants.DISPLAY_FIELDS.length;
+
     d.flags = view.readU8();
 
     if (d.flags > 0) {
@@ -994,9 +1004,14 @@ OSD.msp = {
           if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
             d.alarms['time'] = { display_name: 'Minutes', value: view.readU16() };
           } else {
-            // This value is unused in configurable timers
-            view.readU16();
+              // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
+              view.readU8();
+              var tmp = view.readU8();
+              if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                  displayItemsCountActual = tmp;
+              }
           }
+
           d.alarms['alt'] = { display_name: 'Altitude', value: view.readU16() };
         }
       }
@@ -1014,7 +1029,7 @@ OSD.msp = {
     d.timers = [];
 
     // Parse display element positions
-    while (view.offset < view.byteLength && d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
+    while (view.offset < view.byteLength && d.display_items.length < displayItemsCountActual) {
       var v = null;
       if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
         v = view.readU16();
@@ -1022,13 +1037,20 @@ OSD.msp = {
         v = view.read16();
       }
       var j = d.display_items.length;
-      var c = OSD.constants.DISPLAY_FIELDS[j];
+      var c;
+      var suffix;
+      if (d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
+          c = OSD.constants.DISPLAY_FIELDS[j];
+      } else {
+          c = OSD.constants.UNKNOWN_DISPLAY_FIELD;
+          suffix = "" + (1 + d.display_items.length - OSD.constants.DISPLAY_FIELDS.length);
+      }
       d.display_items.push($.extend({
-        name: c.name,
+        name: suffix ? c.name + suffix : c.name,
         desc: c.desc,
         index: j,
         positionable: c.positionable,
-        preview: c.preview
+        preview: suffix ? c.preview + suffix : c.preview
       }, this.helpers.unpack.position(v, c)));
     }
 
