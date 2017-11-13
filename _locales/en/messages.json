@@ -1001,7 +1001,7 @@
         "message": "D Setpoint Weight"
     },
     "pidTuningPtermSetpointHelp": {
-        "message": "This parameter determines the transient behaviour setpoint weight on stick return (only from version 3.0.1). The lower the value gets the more smooth end of flips or rolls will be."
+        "message": "With this parameter, D Setpoint Weight can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Setpoint Weight is kept constant at its configured value. When the stick is positioned below that point, Setpoint Weight is reduced proportionally, reaching 0 at the stick center position.<br> Value of 1 gives maximum smoothing effect, while value of 0 keeps the Setpoint Weight fixed at its configured value over the whole stick range."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "This parameter determines the stick accelerating effect within derivative component.<br> Value of 0 equals to old Measuemenent method where D only tracks gyro, while value of 1 equals to old Error method with equal gyro and stick tracking ratio.<br> Lower value equals to slower/smoother stick response, while higher value provides more stick acceleration response.<br> Note that RC interpolation is recommended to be enabled with higher values to prevent control kicks making noise."
