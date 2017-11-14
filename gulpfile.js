@@ -24,7 +24,7 @@ gulp.task('clean', function () { return del(['./dist/**'], { force: true }); });
 
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
-gulp.task('dist-build', [], function () {
+gulp.task('dist', ['clean'], function () {
     var distSources = [
         // CSS files
         './main.css',
@@ -154,10 +154,6 @@ gulp.task('dist-build', [], function () {
         .pipe(gulp.dest(distDir));
 });
 
-gulp.task('dist', function () {
-    return runSequence('clean', 'dist-build');
-});
-
 // Create app directories in ./apps
 gulp.task('apps', ['dist'], function (done) {
     var builder = new NwBuilder({
@@ -256,8 +252,8 @@ gulp.task('release-macos', function () {
 });
 
 // Create distributable .zip files in ./apps
-gulp.task('release', function () {
-    return runSequence('apps', 'release-macos', 'release-windows', 'release-linux');
+gulp.task('release', ['apps'], function () {
+    return runSequence('release-macos', 'release-windows', 'release-linux');
 });
 
 gulp.task('default', ['apps']);
