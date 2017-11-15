@@ -606,20 +606,27 @@ OSD.constants = {
         positionable: true,
         preview: '226000'
       },
-      RTC_DATE_TIME: {
-          name: 'RTC_DATE_TIME',
-          desc: 'osdDescElementRtcDateTime',
-          default_position: -1,
-          positionable: true,
-          preview: '2017-11-11 16:20:00'
-      },
-      ADJUSTMENT_RANGE: {
-          name: 'ADJUSTMENT_RANGE',
-          desc: 'osdDescElementAdjustmentRange',
-          default_position: -1,
-          positionable: true,
-          preview: 'PITCH/ROLL P: 42'
-      },
+    REMAINING_TIME_ESTIMATE: {
+        name: 'REMAINING_TIME_ESTIMATE',
+        desc: 'osdDescElementRemaningTimeEstimate',
+        default_position: -1,
+        positionable: true,
+        preview: '01:13'
+    },
+    RTC_DATE_TIME: {
+        name: 'RTC_DATE_TIME',
+        desc: 'osdDescElementRtcDateTime',
+        default_position: -1,
+        positionable: true,
+        preview: '2017-11-11 16:20:00'
+    },
+    ADJUSTMENT_RANGE: {
+        name: 'ADJUSTMENT_RANGE',
+        desc: 'osdDescElementAdjustmentRange',
+        default_position: -1,
+        positionable: true,
+        preview: 'PITCH/ROLL P: 42'
+    },
     TIMER_1: {
       name: 'TIMER_1',
       desc: 'osdDescElementTimer1',
@@ -815,6 +822,7 @@ OSD.chooseFields = function () {
               ]);
               if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
                   OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                    F.REMAINING_TIME_ESTIMATE,
                     F.RTC_DATE_TIME,
                     F.ADJUSTMENT_RANGE
                   ]);
