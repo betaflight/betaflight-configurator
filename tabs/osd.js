@@ -1007,7 +1007,7 @@ OSD.msp = {
               // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
               view.readU8();
               var tmp = view.readU8();
-              if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+              if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
                   displayItemsCountActual = tmp;
               }
           }
