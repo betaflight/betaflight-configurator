@@ -167,7 +167,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_ANALOG:
                 ANALOG.voltage = data.readU8() / 10.0;
                 ANALOG.mAhdrawn = data.readU16();
-                ANALOG.rssi = data.readU16(); // 0-1023
+                var rssi = data.readU16();
+                if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                    var rssiType = (rssi & 0xf800) >> 11; // Encoding if RSSI is used, and if it's set by MSP
+                    rssi = rssi & 0x07ff; // Specified range [0, 1023], max range [0, 2047]
+                }
+                ANALOG.rssi = rssi;
                 ANALOG.amperage = data.read16() / 100; // A
                 ANALOG.last_received_timestamp = Date.now();
                 break;
