@@ -2793,10 +2793,10 @@
         "message": "Cancel"
     },
     "modeCameraWifi": {
-        "message": "CAMERA WI-FI"
+        "message": "CAMERA WI-FI BUTTON"
     },
     "modeCameraPower": {
-        "message": "CAMERA POWER"
+        "message": "CAMERA POWER BUTTON"
     },
     "modeCameraChangeMode": {
         "message": "CAMERA CHANGE MODE"
