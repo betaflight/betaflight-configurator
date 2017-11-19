@@ -702,6 +702,10 @@ OSD.constants = {
     TIMER_2: {
       name: 'TIMER_2',
       desc: 'osdDescStatTimer2'
+    },
+    RTC_DATE_TIME: {
+      name: 'RTC_DATE_TIME',
+      desc: 'osdDescStatRtcDateTime'
     }
   },
   ALL_WARNINGS: {
@@ -863,6 +867,11 @@ OSD.chooseFields = function () {
     F.MAX_DISTANCE,
     F.BLACKBOX_LOG_NUMBER
   ];
+  if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+    OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+      F.RTC_DATE_TIME
+    ]);
+  }
 
   // Choose warnings
   // Nothing much to do here, I'm preempting there being new warnings

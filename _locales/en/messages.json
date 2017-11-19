@@ -2566,6 +2566,9 @@
     "osdDescStatTimer2": {
         "message": "Value of timer 2 at time of disarming"
     },
+    "osdDescStatRtcDateTime": {
+        "message": "Date and time from real time clock"
+    },
 
     "osdTimerSource": {
       "message": "Source:"
