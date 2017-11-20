@@ -59,7 +59,6 @@ $(document).ready(function () {
                     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
                     $('div.connect_controls a.connect_state').text(chrome.i18n.getMessage('connecting'));
 
-
                     serial.connect(selected_port, {bitrate: selected_baud}, onOpen);
 
                     toggleStatus();
@@ -69,17 +68,11 @@ $(document).ready(function () {
                     GUI.tab_switch_cleanup();
                     GUI.tab_switch_in_progress = false;
 
-                    if (semver.gte(CONFIG.apiVersion, "1.37.0") && CONFIG.arming_disabled) {
-                        CONFIG.arming_disabled = false;
-
-                        MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
-                            GUI.log(chrome.i18n.getMessage('armingEnabled'));
-
-                            finishClose(toggleStatus);
-                        });
-                    } else {
+                    function onFinishCallback() {
                         finishClose(toggleStatus);
                     }
+
+                    mspHelper.setArmingEnabled(true, onFinishCallback);
                 }
             }
        }
@@ -234,17 +227,8 @@ function onOpen(openInfo) {
                                             MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
                                                 GUI.log(chrome.i18n.getMessage('craftNameReceived', [CONFIG.name]));
 
-                                                if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
-                                                    CONFIG.arming_disabled = true;
-
-                                                    MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
-                                                        GUI.log(chrome.i18n.getMessage('armingDisabled'));
-
-                                                        finishOpen();
-                                                    });
-                                                } else {
-                                                    finishOpen();
-                                                }
+                                                CONFIG.arming_disabled = false;
+                                                mspHelper.setArmingEnabled(false, finishOpen);
                                             });
                                         } else {
                                             finishOpen();

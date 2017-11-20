@@ -2022,6 +2022,28 @@ MspHelper.prototype.sendRxFailConfig = function(onCompleteCallback) {
     }
 }
 
+MspHelper.prototype.setArmingEnabled = function(doEnable, onCompleteCallback) {
+    if (semver.gte(CONFIG.apiVersion, "1.37.0") && (doEnable === CONFIG.arming_disabled)) {
+        CONFIG.arming_disabled = !doEnable;
+
+        MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
+            if (doEnable) {
+                GUI.log(chrome.i18n.getMessage('armingEnabled'));
+            } else {
+                GUI.log(chrome.i18n.getMessage('armingDisabled'));
+            }
+
+            if (onCompleteCallback) {
+                onCompleteCallback();
+            }
+        });
+    } else {
+        if (onCompleteCallback) {
+            onCompleteCallback();
+        }
+    }
+}
+
 MSP.SDCARD_STATE_NOT_PRESENT = 0; //TODO, move these to better place
 MSP.SDCARD_STATE_FATAL       = 1;
 MSP.SDCARD_STATE_CARD_INIT   = 2;
