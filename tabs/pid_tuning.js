@@ -274,7 +274,6 @@ TABS.pid_tuning.initialize = function (callback) {
             var cutoff = FILTER_CONFIG.gyro_soft_notch_cutoff_1 > 0 ? FILTER_CONFIG.gyro_soft_notch_cutoff_1 : DEFAULT.gyro_soft_notch_cutoff_1;
             
             $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? hz : 0).attr('disabled', !checked);
-            $('.pid_filter input[name="gyroNotch1Cutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked);
         });
 
         $('input[id="gyroNotch2Enabled"]').change(function() {
@@ -283,7 +282,6 @@ TABS.pid_tuning.initialize = function (callback) {
             var cutoff = FILTER_CONFIG.gyro_soft_notch_cutoff_2 > 0 ? FILTER_CONFIG.gyro_soft_notch_cutoff_2 : DEFAULT.gyro_soft_notch_cutoff_2;
 
             $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? hz : 0).attr('disabled', !checked);
-            $('.pid_filter input[name="gyroNotch2Cutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked);
         });
 
         $('input[id="dtermNotchEnabled"]').change(function() {
@@ -292,12 +290,11 @@ TABS.pid_tuning.initialize = function (callback) {
             var cutoff = FILTER_CONFIG.dterm_notch_cutoff > 0 ? FILTER_CONFIG.dterm_notch_cutoff : DEFAULT.dterm_notch_cutoff;
 
             $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? hz : 0).attr('disabled', !checked);
-            $('.pid_filter input[name="dTermNotchCutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked);
         });
 
-        $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_1 != 0).change();
-        $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_cutoff_2 != 0).change();
-        $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.dterm_notch_cutoff != 0).change();
+        $('input[id="gyroNotch1Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_hz_1 != 0).change();
+        $('input[id="gyroNotch2Enabled"]').prop('checked', FILTER_CONFIG.gyro_soft_notch_hz_2 != 0).change();
+        $('input[id="dtermNotchEnabled"]').prop('checked', FILTER_CONFIG.dterm_notch_hz != 0).change();
     }
 
     function form_to_pid_and_rc() {
