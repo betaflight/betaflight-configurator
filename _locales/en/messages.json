@@ -2520,6 +2520,9 @@
     "osdDescElementTimer2" : {
         "message": "Shows the value of timer 2"
     },
+    "osdDescElementRemaningTimeEstimate" : {
+        "message": "Estimate of flight time remaning"
+    },
     "osdDescElementUnknown" : {
         "message": "Unknown element (details to be added in a future release)"
     },
