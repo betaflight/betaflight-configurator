@@ -9,3 +9,4 @@ cache/
 apps/
 dist/
 debug/
+release/
