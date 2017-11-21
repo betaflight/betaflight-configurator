@@ -210,8 +210,7 @@ TABS.motors.initialize = function (callback) {
             self.escProtocolIsDshot = false;
         }
 
-        $('#motorsEnableTestMode').prop('checked', false)
-        .prop('disabled', true);
+        $('#motorsEnableTestMode').prop('checked', false);
 
         update_model(MIXER_CONFIG.mixer);
 
@@ -461,10 +460,8 @@ TABS.motors.initialize = function (callback) {
             }
         }
 
-        setSlidersDefault();
-
-        $('#motorsEnableTestMode').change(function () {
-            if ($(this).is(':checked')) {
+        function setSlidersEnabled(isEnabled) {
+            if (isEnabled && !self.armed) {
                 $('div.sliders input').slice(0, number_of_valid_outputs).prop('disabled', false);
 
                 // unlock master slider
@@ -477,6 +474,18 @@ TABS.motors.initialize = function (callback) {
             }
 
             $('div.sliders input').trigger('input');
+        }
+
+        setSlidersDefault();
+
+        $('#motorsEnableTestMode').change(function () {
+            var enabled = $(this).is(':checked');
+
+            setSlidersEnabled(enabled);
+
+            $('div.sliders input').trigger('input');
+
+            mspHelper.setArmingEnabled(enabled);
         }).change();
 
         var buffering_set_motor = [],
@@ -530,9 +539,8 @@ TABS.motors.initialize = function (callback) {
         }
 
         if (motors_running) {
-            if (!self.armed) {
-                $('#motorsEnableTestMode').prop('checked', true).change();
-            }
+            $('#motorsEnableTestMode').prop('checked', true).change();
+
             // motors are running adjust sliders to current values
 
             var sliders = $('div.sliders input:not(.master)');
@@ -607,15 +615,9 @@ TABS.motors.initialize = function (callback) {
             //keep the following here so at least we get a visual cue of our motor setup
             update_arm_status();
 
-            if (self.armed) {
-                $('#motorsEnableTestMode').prop('disabled', true)
-                .prop('checked', false);
-            } else {
-                $('#motorsEnableTestMode').prop('disabled', false);
-            }
-
             if (previousArmState != self.armed) {
                 console.log('arm state change detected');
+
                 $('#motorsEnableTestMode').change();
             }
         }
