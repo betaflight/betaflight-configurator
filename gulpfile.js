@@ -15,6 +15,7 @@ var runSequence = require('run-sequence');
 var distDir = './dist/';
 var appsDir = './apps/';
 var debugDir = './debug/';
+var releaseDir = './release/';
 
 function get_task_name(key) {
     return 'build-' + key.replace(/([A-Z])/g, function ($1) { return "-" + $1.toLowerCase(); });
@@ -206,7 +207,7 @@ function get_release_filename(platform, ext) {
 gulp.task('release-windows', function () {
     var pkg = require('./package.json');
     var src = path.join(appsDir, pkg.name, 'win32');
-    var output = fs.createWriteStream(path.join(appsDir, get_release_filename('win32', 'zip')));
+    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('win32', 'zip')));
     var archive = archiver('zip', {
         zlib: { level: 9 }
     });
@@ -220,7 +221,7 @@ gulp.task('release-windows', function () {
 gulp.task('release-linux', function () {
     var pkg = require('./package.json');
     var src = path.join(appsDir, pkg.name, 'linux64');
-    var output = fs.createWriteStream(path.join(appsDir, get_release_filename('linux64', 'zip')));
+    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('linux64', 'zip')));
     var archive = archiver('zip', {
         zlib: { level: 9 }
     });
@@ -239,7 +240,7 @@ gulp.task('release-macos', function () {
         var sign_cmd = 'codesign --verbose --force --sign "' + process.env.CODESIGN_IDENTITY + '" ' + src;
         child_process.execSync(sign_cmd);
     }
-    var output = fs.createWriteStream(path.join(appsDir, get_release_filename('macOS', 'zip')));
+    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('macOS', 'zip')));
     var archive = archiver('zip', {
         zlib: { level: 9 }
     });
@@ -253,6 +254,14 @@ gulp.task('release-macos', function () {
 
 // Create distributable .zip files in ./apps
 gulp.task('release', ['apps'], function () {
+    fs.mkdir(releaseDir, "0775", function(err) {
+        if (err) {
+            if (err.code !== 'EEXIST') {
+                throw err;
+            }
+        }
+    });
+
     return runSequence('release-macos', 'release-windows', 'release-linux');
 });
 
