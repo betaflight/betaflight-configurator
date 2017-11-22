@@ -33,6 +33,7 @@
         "nw-builder": "^3.4.1",
         "run-sequence": "^2.2.0",
         "temp": "^0.8.3",
-        "three": "0.72.0"
+        "three": "0.72.0",
+        "gulp-appdmg": "1.0.3"
     }
 }

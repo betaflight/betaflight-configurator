@@ -49,16 +49,33 @@ Linux build is disabled currently because of unmet dependecies with some distros
 ### Development
 
 1. Install node.js
-2. Change to project folder and run `npm install`
-3. Run `npm start`
+2. Change to project folder and run `npm install`.
+3. Run `npm start`.
 
 ### App build and release
 
-The tasks are defined in `gulpfile.js` and can be run either via `gulp task-name` (if the command is in PATH or via `../node_modules/gulp/bin/gulp.js task-name':
+The tasks are defined in `gulpfile.js` and can be run either via `gulp <task-name>` (if the command is in PATH or via `../node_modules/gulp/bin/gulp.js <task-name>`:
 
-* **dist** copies all the JS and CSS files in the `./dist` folder
-* **apps** builds the apps in the `./apps` folder
-* **release** zips up the apps into individual archives in the `./apps` folder. Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app.
+1. Optional, install gulp `npm install --global gulp-cli`.
+2. Run `gulp <taskname> [[platform] [platform] ...]`.
+
+List of possible values of `<task-name>`:
+* **dist** copies all the JS and CSS files in the `./dist` folder.
+* **apps** builds the apps in the `./apps` folder [1].
+* **debug** builds debug version of the apps in the `./debug` folder [1].
+* **release** zips up the apps into individual archives in the `./release` folder [1]. 
+
+[1] Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app (build for specific platform to avoid errors).
+
+#### Build or release app for one specific platform
+To build or release only for one specific platform you can append the plaform after the `task-name`.
+If no platform is provided, all the platforms will be done in sequence.
+
+* **MacOS** use `gulp <task-name> --osx64`
+* **Linux** use `gulp <task-name> --linux64`
+* **Windows** use `gulp <task-name> --win32`
+
+You can also use multiple platforms e.g. `gulp <taskname> --osx64 --linux64`.
 
 ## Notes
 

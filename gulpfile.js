@@ -17,15 +17,65 @@ var appsDir = './apps/';
 var debugDir = './debug/';
 var releaseDir = './release/';
 
-function get_task_name(key) {
-    return 'build-' + key.replace(/([A-Z])/g, function ($1) { return "-" + $1.toLowerCase(); });
+// -----------------
+// Helper functions
+// -----------------
+
+// Get platform from commandline args
+// #
+// # gulp <task> --osx64         to execute task only for macOS platform (--osx64, --win32 or --linux64)
+// # 
+function get_platform_from_args() {
+    var supportedPlatforms = ['osx64', 'win32', 'linux64'];
+    var platforms = [];
+    if (process.argv.length > 3) {
+        for (var i = 3; i < process.argv.length; i++) {
+            var arg = process.argv[i].split('-')[2];
+            if (supportedPlatforms.indexOf(arg) > -1) {
+                platforms.push(arg);
+            }
+            else {
+                console.log('Unknown platform: ' + arg);
+                process.exit();
+            }
+        }
+        return platforms;
+    }  
+    return supportedPlatforms;
 }
 
-gulp.task('clean', function () { return del(['./dist/**'], { force: true }); });
+function get_release_filename(platform, ext) {
+    var pkg = require('./package.json');
+    return 'Betaflight-Configurator_' + platform + '_' + pkg.version + '.' + ext;
+}
+
+// -----------------
+// Tasks
+// -----------------
+
+gulp.task('clean', function () { 
+    return runSequence('clean-dist', 'clean-apps', 'clean-debug', 'clean-release');
+});
+
+gulp.task('clean-dist', function () { 
+    return del([distDir + '**'], { force: true }); 
+});
+
+gulp.task('clean-apps', function () { 
+    return del([appsDir + '**'], { force: true }); 
+});
+
+gulp.task('clean-debug', function () { 
+    return del([debugDir + '**'], { force: true }); 
+});
+
+gulp.task('clean-release', function () { 
+    return del([releaseDir + '**'], { force: true }); 
+});
 
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
-gulp.task('dist', ['clean'], function () {
+gulp.task('dist', ['clean-dist'], function () {
     var distSources = [
         // CSS files
         './main.css',
@@ -155,12 +205,15 @@ gulp.task('dist', ['clean'], function () {
         .pipe(gulp.dest(distDir));
 });
 
-// Create app directories in ./apps
-gulp.task('apps', ['dist'], function (done) {
+// Create runable app directories in ./apps
+gulp.task('apps', ['dist', 'clean-apps'], function (done) {
+    var platform = get_platform_from_args();
+    console.log('Building app for platform(s): ' + platform);
+
     var builder = new NwBuilder({
         files: './dist/**/*',
         buildDir: appsDir,
-        platforms: ['osx64', 'win32', 'linux64'],
+        platforms: platform,
         flavor: 'normal',
         macIcns: './images/bf_icon.icns',
         macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
@@ -169,20 +222,24 @@ gulp.task('apps', ['dist'], function (done) {
     builder.on('log', console.log);
     builder.build(function (err) {
         if (err) {
-            console.log("Error building NW apps:" + err);
-            done();
-            return;
+            console.log('Error building NW apps: ' + err);
+            runSequence('clean-apps', function() {
+                process.exit(1);
+            });
         }
         done();
     });
 });
 
 // Create debug app directories in ./debug
-gulp.task('debug-linux', ['dist'], function (done) {
+gulp.task('debug', ['dist', 'clean-debug'], function (done) {
+    var platform = get_platform_from_args();
+    console.log('Building debug for platform: ' + platform);
+
     var builder = new NwBuilder({
         files: './dist/**/*',
         buildDir: debugDir,
-        platforms: ['linux64'],
+        platforms: platform,
         flavor: 'sdk',
         macIcns: './images/bf_icon.icns',
         macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
@@ -191,20 +248,17 @@ gulp.task('debug-linux', ['dist'], function (done) {
     builder.on('log', console.log);
     builder.build(function (err) {
         if (err) {
-            console.log("Error building NW apps:" + err);
-            done();
-            return;
+            console.log('Error building NW apps: ' + err);
+            runSequence('clean-debug', function() {
+                process.exit(1);
+            });
         }
         done();
     });
 });
 
-function get_release_filename(platform, ext) {
-    var pkg = require('./package.json');
-    return 'Betaflight-Configurator_' + platform + '_' + pkg.version + '.' + ext;
-}
-
-gulp.task('release-windows', function () {
+// Create distribution package for windows platform
+function release_win32() {
     var pkg = require('./package.json');
     var src = path.join(appsDir, pkg.name, 'win32');
     var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('win32', 'zip')));
@@ -216,9 +270,10 @@ gulp.task('release-windows', function () {
     archive.pipe(output);
     archive.directory(src, 'Betaflight Configurator');
     return archive.finalize();
-});
+}
 
-gulp.task('release-linux', function () {
+// Create distribution package for linux platform
+function release_linux64() {
     var pkg = require('./package.json');
     var src = path.join(appsDir, pkg.name, 'linux64');
     var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('linux64', 'zip')));
@@ -230,31 +285,32 @@ gulp.task('release-linux', function () {
     archive.pipe(output);
     archive.directory(src, 'Betaflight Configurator');
     return archive.finalize();
-});
+}
 
-gulp.task('release-macos', function () {
+// Create distribution package for macOS platform
+function release_osx64() {
+    var appdmg = require('gulp-appdmg');
     var pkg = require('./package.json');
-    var src = path.join(appsDir, pkg.name, 'osx64', pkg.name + '.app');
-    // Check if we want to sign the .app bundle
-    if (process.env.CODESIGN_IDENTITY) {
-        var sign_cmd = 'codesign --verbose --force --sign "' + process.env.CODESIGN_IDENTITY + '" ' + src;
-        child_process.execSync(sign_cmd);
-    }
-    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('macOS', 'zip')));
-    var archive = archiver('zip', {
-        zlib: { level: 9 }
-    });
-    archive.on('warning', function (err) { throw err; });
-    archive.on('error', function (err) { throw err; });
-    archive.pipe(output);
-    console.log("Archiving MacOS app at " + src);
-    archive.directory(src, 'Betaflight Configurator.app');
-    return archive.finalize();
-});
 
-// Create distributable .zip files in ./apps
-gulp.task('release', ['apps'], function () {
-    fs.mkdir(releaseDir, "0775", function(err) {
+    return gulp.src([])
+        .pipe(appdmg({
+            target: path.join(releaseDir, get_release_filename('macOS', 'dmg')),
+            background: path.join(__dirname, 'images/dmg-background.png'),
+            basepath: path.join(appsDir, pkg.name, 'osx64'),
+            specification: {
+                'title': 'Betaflight Configurator',
+                'contents': [
+                    { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
+                    { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'Betaflight Configurator.app' }
+                ]
+            }
+        })
+    );
+}
+
+// Create distributable .zip files in ./release
+gulp.task('release', ['apps', 'clean-release'], function () {
+    fs.mkdir(releaseDir, '0775', function(err) {
         if (err) {
             if (err.code !== 'EEXIST') {
                 throw err;
@@ -262,7 +318,30 @@ gulp.task('release', ['apps'], function () {
         }
     });
 
-    return runSequence('release-macos', 'release-windows', 'release-linux');
+    var platform = get_platform_from_args();
+    console.log('Building release for platform: ' + platform);
+
+    if (platform.length == 1) {
+        switch (platform[0]) {
+            case 'osx64':
+                return release_osx64();
+                break;
+            case 'linux64':
+                return release_linux64();
+                break;
+            case 'win32':
+                return release_win32();
+                break;
+            default:
+                console.log('Unknown platform');
+                break;
+        }
+    }
+    else {
+        release_osx64();
+        release_linux64();
+        release_win32();
+    }
 });
 
 gulp.task('default', ['apps']);
