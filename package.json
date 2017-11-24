@@ -1,39 +1,51 @@
 {
-    "name": "betaflight-configurator",
-    "description": "Crossplatform configuration tool for Betaflight flight control system.",
-    "version": "10.0.0-RC1",
-    "main": "main.html",
-    "default_locale": "en",
-    "scripts": {
-        "start": "node_modules/gulp/bin/gulp.js dist && node_modules/nw/bin/nw ."
-    },
-    "window": {
-        "title": "Betaflight Configurator",
-        "icon": "images/bf_icon_128.png",
-        "toolbar": true,
-        "width": 1280,
-        "height": 800
-    },
-    "repository": {
-        "type": "git",
-        "url": "github.com/betaflight/betaflight-configurator"
-    },
-    "author": "The Betaflight open source project.",
-    "license": "GPL-3.0",
-    "dependencies": {
-        "archiver": "^2.0.3",
-        "bluebird": "3.4.1",
-        "del": "^3.0.0",
-        "gulp": "~3.9.1",
-        "gulp-concat": "~2.6.1",
-        "inflection": "1.12.0",
-        "jquery": "2.1.4",
-        "jquery-ui-npm": "1.12.0",
-        "nw": "^0.25.4-sdk",
-        "nw-builder": "^3.4.1",
-        "run-sequence": "^2.2.0",
-        "temp": "^0.8.3",
-        "three": "0.72.0",
-        "gulp-appdmg": "1.0.3"
+  "name": "betaflight-configurator",
+  "description": "Crossplatform configuration tool for Betaflight flight control system.",
+  "version": "10.0.0-RC2",
+  "main": "main.html",
+  "default_locale": "en",
+  "scripts": {
+    "start": "node_modules/gulp/bin/gulp.js dist && node_modules/nw/bin/nw .",
+    "_postinstall": "node ./node_modules/platform-dependent-modules/cli.js",
+    "postinstall": "npm run _postinstall"
+  },
+  "window": {
+    "title": "Betaflight Configurator",
+    "icon": "images/bf_icon_128.png",
+    "toolbar": true,
+    "width": 1280,
+    "height": 800
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/betaflight/betaflight-configurator"
+  },
+  "author": "The Betaflight open source project.",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "bluebird": "3.4.1",
+    "jquery": "2.1.4",
+    "nw": "^0.25.4-sdk",
+    "three": "0.72.0"
+  },
+  "devDependencies": {
+    "archiver": "^2.0.3",
+    "del": "^3.0.0",
+    "gulp": "~3.9.1",
+    "gulp-concat": "~2.6.1",
+    "inflection": "1.12.0",
+    "jquery-ui-npm": "1.12.0",
+    "nw-builder": "^3.4.1",
+    "os": "^0.1.1",
+    "platform-dependent-modules": "0.0.14",
+    "run-sequence": "^2.2.0",
+    "temp": "^0.8.3"
+  },
+  "config": {
+    "platformDependentModules": {
+      "darwin": [
+        "gulp-appdmg@1.0.3"
+      ]
     }
+  }
 }
