@@ -14,11 +14,11 @@ var Beepers = function (config) {
         {bit: 7, name: 'BAT_LOW', visible: true},
         {bit: 8, name: 'GPS_STATUS', visible: false}, // do not show
         {bit: 9, name: 'RX_SET', visible: true},
-        {bit: 10, name: 'DISARM_REPEAT', visible: true},
-        {bit: 11, name: 'ACC_CALIBRATION', visible: true},
-        {bit: 12, name: 'ACC_CALIBRATION_FAIL', visible: true},
-        {bit: 13, name: 'READY_BEEP', visible: true},
-        {bit: 14, name: 'MULTI_BEEPS', visible: false}, // do not show
+        {bit: 10, name: 'ACC_CALIBRATION', visible: true},
+        {bit: 11, name: 'ACC_CALIBRATION_FAIL', visible: true},
+        {bit: 12, name: 'READY_BEEP', visible: true},
+        {bit: 13, name: 'MULTI_BEEPS', visible: false}, // do not show
+        {bit: 14, name: 'DISARM_REPEAT', visible: true},
         {bit: 15, name: 'ARMED', visible: true},
         {bit: 16, name: 'SYSTEM_INIT', visible: true},
         {bit: 17, name: 'USB', visible: true},
@@ -72,7 +72,7 @@ Beepers.prototype.generateElements = function (template, destination) {
 
             label_e.attr('for', 'beeper-' + i);
             label_e.text(self._beepers[i].name);
-            
+
             span_e.attr('i18n', 'beeper' + self._beepers[i].name);
 
             element.show();
