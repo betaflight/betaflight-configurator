@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "minimum_chrome_version": "38",
     "version": "10.0.0",
-    "version_name": "10.0.0-RC2",
+    "version_name": "10.0.0-rc3",
     "author": "Betaflight Squad",
     "name": "Betaflight - Configurator",
     "short_name": "Betaflight",
