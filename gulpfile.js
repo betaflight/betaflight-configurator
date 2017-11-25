@@ -322,7 +322,8 @@ function release_osx64() {
                     { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
                     { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'Betaflight Configurator.app' }
                 ]
-            }
+            },
+            format: 'UDB0'
         })
     );
 }
