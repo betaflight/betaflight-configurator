@@ -342,9 +342,13 @@ gulp.task('release', ['apps', 'clean-release'], function () {
 
     if (platforms.indexOf('linux64') !== -1) {
         release_linux64();
-    } else if (platforms.indexOf('osx64') !== -1) {
+    }
+
+    if (platforms.indexOf('osx64') !== -1) {
         release_osx64();
-    } else if (platforms.indexOf('win32') !== -1) {
+    }
+
+    if (platforms.indexOf('win32') !== -1) {
         release_win32();
     }
 });
