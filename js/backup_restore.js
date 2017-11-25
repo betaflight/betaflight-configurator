@@ -5,7 +5,7 @@
 function configuration_backup(callback) {
     var activeProfile = null;
 
-    var version = chrome.runtime.getManifest().version;
+    var version = getManifestVersion();
 
     if (version.indexOf(".") === -1) {
         version = version + ".0.0";
