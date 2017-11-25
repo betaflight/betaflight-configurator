@@ -314,15 +314,22 @@ function release_osx64() {
     return gulp.src([])
         .pipe(appdmg({
             target: path.join(releaseDir, get_release_filename('macOS', 'dmg')),
-            background: path.join(__dirname, 'images/dmg-background.png'),
             basepath: path.join(appsDir, pkg.name, 'osx64'),
             specification: {
-                'title': 'Betaflight Configurator',
-                'contents': [
+                title: 'Betaflight Configurator',
+                contents: [
                     { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
                     { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'Betaflight Configurator.app' }
-                ]
-            }
+                ],
+                background: path.join(__dirname, 'images/dmg-background.png'),
+                format: 'UDZO',
+                window: {
+                    size: {
+                        width: 638,
+                        height: 479
+                    }
+                }
+            },
         })
     );
 }
