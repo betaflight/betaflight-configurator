@@ -1,5 +1,7 @@
 'use strict';
 
+var pkg = require('./package.json');
+
 var child_process = require('child_process');
 var fs = require('fs');
 var path = require('path');
@@ -11,6 +13,7 @@ var NwBuilder = require('nw-builder');
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var runSequence = require('run-sequence');
+var os = require('os');
 
 var distDir = './dist/';
 var appsDir = './apps/';
@@ -23,29 +26,48 @@ var releaseDir = './release/';
 
 // Get platform from commandline args
 // #
-// # gulp <task> --osx64         to execute task only for macOS platform (--osx64, --win32 or --linux64)
+// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --osx64, or --win32)
 // # 
-function get_platform_from_args() {
-    var supportedPlatforms = ['osx64', 'win32', 'linux64'];
+function getPlatforms() {
+    var supportedPlatforms = ['linux64', 'osx64', 'win32'];
     var platforms = [];
-    if (process.argv.length > 3) {
-        for (var i = 3; i < process.argv.length; i++) {
-            var arg = process.argv[i].split('-')[2];
-            if (supportedPlatforms.indexOf(arg) > -1) {
-                platforms.push(arg);
-            }
-            else {
-                console.log('Unknown platform: ' + arg);
-                process.exit();
-            }
+    var regEx = /--(\w+)/;
+    for (var i = 3; i < process.argv.length; i++) {
+        var arg = process.argv[i].match(regEx)[1];
+        if (supportedPlatforms.indexOf(arg) > -1) {
+             platforms.push(arg);
+        } else {
+             console.log('Unknown platform: ' + arg);
+             process.exit();
         }
-        return platforms;
     }  
-    return supportedPlatforms;
+
+    if (platforms.length === 0) {
+        switch (os.platform()) {
+        case 'darwin':
+            platforms.push('osx64');
+
+            break;
+        case 'linux':
+            platforms.push('linux64');
+
+            break;
+        case 'win32':
+            platform.push('win32');
+
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    console.log('Building for platform(s): ' + platforms + '.');
+
+    return platforms;
 }
 
 function get_release_filename(platform, ext) {
-    var pkg = require('./package.json');
     return 'Betaflight-Configurator_' + platform + '_' + pkg.version + '.' + ext;
 }
 
@@ -207,13 +229,13 @@ gulp.task('dist', ['clean-dist'], function () {
 
 // Create runable app directories in ./apps
 gulp.task('apps', ['dist', 'clean-apps'], function (done) {
-    var platform = get_platform_from_args();
-    console.log('Building app for platform(s): ' + platform);
+    var platforms = getPlatforms();
+    console.log('Release build.');
 
     var builder = new NwBuilder({
         files: './dist/**/*',
         buildDir: appsDir,
-        platforms: platform,
+        platforms: platforms,
         flavor: 'normal',
         macIcns: './images/bf_icon.icns',
         macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
@@ -233,13 +255,13 @@ gulp.task('apps', ['dist', 'clean-apps'], function (done) {
 
 // Create debug app directories in ./debug
 gulp.task('debug', ['dist', 'clean-debug'], function (done) {
-    var platform = get_platform_from_args();
-    console.log('Building debug for platform: ' + platform);
+    var platforms = getPlatforms();
+    console.log('Debug build.');
 
     var builder = new NwBuilder({
         files: './dist/**/*',
         buildDir: debugDir,
-        platforms: platform,
+        platforms: platforms,
         flavor: 'sdk',
         macIcns: './images/bf_icon.icns',
         macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
@@ -259,7 +281,6 @@ gulp.task('debug', ['dist', 'clean-debug'], function (done) {
 
 // Create distribution package for windows platform
 function release_win32() {
-    var pkg = require('./package.json');
     var src = path.join(appsDir, pkg.name, 'win32');
     var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('win32', 'zip')));
     var archive = archiver('zip', {
@@ -274,7 +295,6 @@ function release_win32() {
 
 // Create distribution package for linux platform
 function release_linux64() {
-    var pkg = require('./package.json');
     var src = path.join(appsDir, pkg.name, 'linux64');
     var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('linux64', 'zip')));
     var archive = archiver('zip', {
@@ -290,7 +310,6 @@ function release_linux64() {
 // Create distribution package for macOS platform
 function release_osx64() {
     var appdmg = require('gulp-appdmg');
-    var pkg = require('./package.json');
 
     return gulp.src([])
         .pipe(appdmg({
@@ -318,30 +337,16 @@ gulp.task('release', ['apps', 'clean-release'], function () {
         }
     });
 
-    var platform = get_platform_from_args();
-    console.log('Building release for platform: ' + platform);
+    var platforms = getPlatforms();
+    console.log('Packing release.');
 
-    if (platform.length == 1) {
-        switch (platform[0]) {
-            case 'osx64':
-                return release_osx64();
-                break;
-            case 'linux64':
-                return release_linux64();
-                break;
-            case 'win32':
-                return release_win32();
-                break;
-            default:
-                console.log('Unknown platform');
-                break;
-        }
-    }
-    else {
-        release_osx64();
+    if (platforms.indexOf('linux64') !== -1) {
         release_linux64();
+    } else if (platforms.indexOf('osx64') !== -1) {
+        release_osx64();
+    } else if (platforms.indexOf('win32') !== -1) {
         release_win32();
     }
 });
 
-gulp.task('default', ['apps']);
+gulp.task('default', ['debug']);
