@@ -8,7 +8,7 @@
     "start": "node_modules/gulp/bin/gulp.js dist && node_modules/nw/bin/nw .",
     "_postinstall": "node ./node_modules/platform-dependent-modules/cli.js",
     "postinstall": "npm run _postinstall",
-    "gulp" : "gulp"
+    "gulp": "gulp"
   },
   "window": {
     "title": "Betaflight Configurator",

@@ -53,7 +53,7 @@ function getPlatforms() {
 
             break;
         case 'win32':
-            platform.push('win32');
+            platforms.push('win32');
 
             break;
 
