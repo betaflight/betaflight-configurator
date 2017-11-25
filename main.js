@@ -7,9 +7,9 @@ $(document).ready(function () {
     // alternative - window.navigator.appVersion.match(/Chrome\/([0-9.]*)/)[1];
     GUI.log('Running - OS: <strong>' + GUI.operating_system + '</strong>, ' +
         'Chrome: <strong>' + window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1") + '</strong>, ' +
-        'Configurator: <strong>' + chrome.runtime.getManifest().version + '</strong>');
+        'Configurator: <strong>' + getManifestVersion() + '</strong>');
 
-    $('#logo .version').text(chrome.runtime.getManifest().version);
+    $('#logo .version').text(getManifestVersion());
     updateStatusBarVersion();
     updateTopBarVersion();
 
@@ -378,7 +378,7 @@ $(document).ready(function () {
 });
 
 function notifyOutdatedVersion(version) {
-    if (semver.lt(chrome.runtime.getManifest().version, version)) {
+    if (semver.lt(getManifestVersion(), version)) {
         GUI.log('You are using an old version of ' + chrome.runtime.getManifest().name + '. Version ' + version + ' is available online with possible improvements and fixes.');
     }
 }
@@ -533,7 +533,7 @@ function getFirmwareVersion(firmwareVersion, firmwareId, hardwareId) {
 }
 
 function getConfiguratorVersion() {
-    return chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + chrome.runtime.getManifest().version;
+    return chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + getManifestVersion();
 }
 
 function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
@@ -556,4 +556,17 @@ function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {
     versionText = versionText + getConfiguratorVersion();
 
     $('#status-bar .version').text(versionText);
+}
+
+function getManifestVersion(manifest) {
+    if (!manifest) {
+        manifest = chrome.runtime.getManifest();
+    }
+
+    var version = manifest.version_name;
+    if (!version) {
+        version = manifest.version;
+    }
+
+    return version;
 }
