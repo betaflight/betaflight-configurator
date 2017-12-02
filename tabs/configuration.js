@@ -581,6 +581,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 'FRSKY_D'
             ];
 
+            if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                spiRxTypes.push(
+                    'FRSKY_X',
+                    'A7105_FLYSKY',
+                    'A7105_FLYSKY_2A'
+                );
+            }
+
             var spiRx_e = $('select.spiRx');
             for (var i = 0; i < spiRxTypes.length; i++) {
                 spiRx_e.append('<option value="' + i + '">' + spiRxTypes[i] + '</option>');
