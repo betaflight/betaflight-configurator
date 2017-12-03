@@ -202,6 +202,7 @@ gulp.task('dist', ['clean-dist'], function () {
         './js/RateCurve.js',
         './js/Features.js',
         './js/Beepers.js',
+        './js/release_checker.js',
         './tabs/adjustments.js',
         './tabs/auxiliary.js',
         './tabs/cli.js',

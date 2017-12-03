@@ -325,8 +325,7 @@ GUI_control.prototype.show_modal = function (title, message) {
     var popup = new jBox('Modal', {
         title: title,
         content: message,
-        closeButton: 'title',
-        closeOnClick: 'box'
+        closeButton: 'title'
     });
 
     popup.open();

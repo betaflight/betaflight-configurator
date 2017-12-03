@@ -5,11 +5,11 @@
     "warningTitle": {
         "message": "Warning"
     },
+    "noticeTitle": {
+        "message": "Notice"
+    },
     "options_title": {
         "message": "Application Options"
-    },
-    "options_receive_app_notifications": {
-        "message": "Receive desktop <strong>notification</strong> when application updates"
     },
     "connect": {
         "message": "Connect"
@@ -34,6 +34,12 @@
     },
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Show update notifications for unstable versions of the configurator"
+    },
+    "configuratorUpdateNotice": {
+        "message": "You are using an outdated version of the <b>Betaflight Configurator</b>.<br>Version <b>$1</b> is available online, please visit <a href=\"$2\" target=\"_blank\">the release page</a> to download and install the latest version with fixes and improvements.<br>Please close the configurator window before updating."
     },
     "deviceRebooting": {
         "message": "Device - <span style=\"color: red\">Rebooting</span>"
