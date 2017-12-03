@@ -28,35 +28,7 @@ $(document).ready(function () {
             break;
     }
 
-    // check for newer releases online to inform people in case they are running an old release
-
-    chrome.storage.local.get(['lastVersionChecked', 'lastVersionAvailableOnline'], function (result) {
-        if (typeof result.lastVersionChecked === undefined || ($.now() - result.lastVersionChecked) > 3600 * 1000) {
-            try {
-                var url = 'https://api.github.com/repos/betaflight/betaflight-configurator/tags';
-                $.get(url).done(function (data) {
-                    var versions = data.sort(function (v1, v2) {
-                        try {
-                            return semver.compare(v2.name, v1.name);
-                        } catch (e) {
-                            return false;
-                        }
-                    });
-                    chrome.storage.local.set({
-                        'lastVersionChecked': $.now(),
-                        'lastVersionAvailableOnline': versions[0].name
-                    }, function (result) {
-                        console.log("Latest version available online: " + versions[0].name);
-                    });
-                    notifyOutdatedVersion(versions[0].name);
-                });
-            } catch (e) {
-                // Just to catch and supress warnings if no internet connection is available
-            }
-        } else if (result.lastVersionAvailableOnline) {
-            notifyOutdatedVersion(result.lastVersionAvailableOnline);
-        }
-    });
+    checkForConfiguratorUpdates();
 
     chrome.storage.local.get('logopen', function (result) {
         if (result.logopen) {
@@ -212,19 +184,6 @@ $(document).ready(function () {
                 // translate to user-selected language
                 localize();
 
-                // if notifications are enabled, or wasn't set, check the notifications checkbox
-                chrome.storage.local.get('update_notify', function (result) {
-                    if (typeof result.update_notify === 'undefined' || result.update_notify) {
-                        $('div.notifications input').prop('checked', true);
-                    }
-
-                    $('div.notifications input').change(function () {
-                        var check = $(this).is(':checked');
-
-                        chrome.storage.local.set({'update_notify': check});
-                    });
-                });
-
                 chrome.storage.local.get('permanentExpertMode', function (result) {
                     if (result.permanentExpertMode) {
                         $('div.permanentExpertMode input').prop('checked', true);
@@ -241,6 +200,21 @@ $(document).ready(function () {
                         }
 
                     }).change();
+                });
+
+                chrome.storage.local.get('checkForConfiguratorUnstableVersions', function (result) {
+                    $('div.checkForConfiguratorUnstableVersions input').change(function () {
+                        var checked = $(this).is(':checked');
+
+                        chrome.storage.local.set({'checkForConfiguratorUnstableVersions': checked});
+
+                        $('input[name="checkForConfiguratorUnstableVersions"]').prop('checked', checked).change();
+                        checkForConfiguratorUpdates();
+                    });
+
+                    if (result.checkForConfiguratorUnstableVersions) {
+                        $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
+                    }
                 });
 
                 function close_and_cleanup(e) {
@@ -377,10 +351,36 @@ $(document).ready(function () {
     });
 });
 
-function notifyOutdatedVersion(version) {
-    if (semver.lt(getManifestVersion(), version)) {
-        GUI.log('You are using an old version of ' + chrome.runtime.getManifest().name + '. Version ' + version + ' is available online with possible improvements and fixes.');
-    }
+function checkForConfiguratorUpdates() {
+    var releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');
+
+    releaseChecker.loadReleaseData(notifyOutdatedVersion);
+}
+
+function notifyOutdatedVersion(releaseData) {
+    chrome.storage.local.get('checkForConfiguratorUnstableVersions', function (result) {
+        var showUnstableReleases = false;
+        if (result.checkForConfiguratorUnstableVersions) {
+            showUnstableReleases = true;
+        }
+         var versions = releaseData.filter(function (version) {
+             var semVerVersion = semver.parse(version.tag_name);
+             if (semVerVersion && (showUnstableReleases || semVerVersion.prerelease.length === 0)) {
+                 return version;
+             }
+         }).sort(function (v1, v2) {
+            try {
+                return semver.compare(v2.tag_name, v1.tag_name);
+            } catch (e) {
+                return false;
+            }
+        });
+
+        if (versions.length > 0 && semver.lt(getManifestVersion(), versions[0].tag_name)) {
+            GUI.show_modal(chrome.i18n.getMessage('noticeTitle'), chrome.i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+            GUI.log(chrome.i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+        }
+    });
 }
 
 function update_packet_error(caller) {
