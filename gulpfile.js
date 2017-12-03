@@ -67,6 +67,27 @@ function getPlatforms() {
     return platforms;
 }
 
+function getRunDebugAppCommand() {
+    switch (os.platform()) {
+    case 'darwin':
+        return 'open ' + path.join(debugDir, pkg.name, 'osx64', pkg.name + '.app');
+
+        break;
+    case 'linux':
+        return path.join(debugDir, pkg.name, 'linux64', pkg.name);
+
+        break;
+    case 'win32':
+        return path.join(debugDir, pkg.name, 'win32', pkg.name + '.exe');
+
+        break;
+
+    default:
+    return '';
+        break;
+    }
+}
+
 function get_release_filename(platform, ext) {
     return 'Betaflight-Configurator_' + platform + '_' + pkg.version + '.' + ext;
 }
@@ -275,6 +296,10 @@ gulp.task('debug', ['dist', 'clean-debug'], function (done) {
                 process.exit(1);
             });
         }
+        var exec = require('child_process').exec;
+        var run = getRunDebugAppCommand();
+        console.log('Starting debug app (' + run + ')...');
+        exec(run);
         done();
     });
 });

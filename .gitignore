@@ -10,3 +10,6 @@ apps/
 dist/
 debug/
 release/
+
+# artefacts for Visual Studio Code
+/.vscode/
