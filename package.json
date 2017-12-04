@@ -24,16 +24,13 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "dependencies": {
-    "bluebird": "3.4.1",
-    "jquery": "2.1.4",
-    "nw": "^0.25.4-sdk",
-    "three": "0.72.0"
   },
   "devDependencies": {
     "archiver": "^2.0.3",
     "del": "^3.0.0",
     "gulp": "~3.9.1",
     "gulp-concat": "~2.6.1",
+    "gulp-install": "^1.1.0",
     "inflection": "1.12.0",
     "jquery-ui-npm": "1.12.0",
     "nw-builder": "^3.4.1",
