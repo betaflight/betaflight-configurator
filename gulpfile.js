@@ -12,6 +12,7 @@ var NwBuilder = require('nw-builder');
 
 var gulp = require('gulp');
 var concat = require('gulp-concat');
+var install = require("gulp-install");
 var runSequence = require('run-sequence');
 var os = require('os');
 
@@ -163,9 +164,6 @@ gulp.task('dist', ['clean-dist'], function () {
         './js/libraries/jquery.nouislider.pips.min.css',
         './js/libraries/switchery/switchery.css',
         './js/libraries/jquery.nouislider.min.css',
-        './node_modules/jquery-ui-npm/jquery-ui.min.css',
-        './node_modules/jquery-ui-npm/jquery-ui.theme.min.css',
-        './node_modules/jquery-ui-npm/jquery-ui.structure.min.css',
 
         // JavaScript
         './js/libraries/q.js',
@@ -251,7 +249,10 @@ gulp.task('dist', ['clean-dist'], function () {
         './resources/motor_order/*.svg',
     ];
     return gulp.src(distSources, { base: '.' })
-        .pipe(gulp.dest(distDir));
+        .pipe(gulp.dest(distDir))
+        .pipe(install({
+            npm: '--production --ignore-scripts'
+        }));;
 });
 
 // Create runable app directories in ./apps
