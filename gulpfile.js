@@ -26,9 +26,9 @@ var releaseDir = './release/';
 
 // Get platform from commandline args
 // #
-// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --osx64, or --win32)
+// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --osx64, or --win32 --chromeos)
 // # 
-function getPlatforms() {
+function getPlatforms(includeChromeOs) {
     var supportedPlatforms = ['linux64', 'osx64', 'win32'];
     var platforms = [];
     var regEx = /--(\w+)/;
@@ -36,6 +36,10 @@ function getPlatforms() {
         var arg = process.argv[i].match(regEx)[1];
         if (supportedPlatforms.indexOf(arg) > -1) {
              platforms.push(arg);
+        } else if (arg === 'chromeos') {
+            if (includeChromeOs) {
+                platforms.push(arg);
+            }
         } else {
              console.log('Unknown platform: ' + arg);
              process.exit();
@@ -83,7 +87,8 @@ function getRunDebugAppCommand() {
         break;
 
     default:
-    return '';
+        return '';
+
         break;
     }
 }
@@ -333,6 +338,20 @@ function release_linux64() {
     return archive.finalize();
 }
 
+// Create distribution package for chromeos platform
+function release_chromeos() {
+    var src = distDir;
+    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('chromeos', 'zip')));
+    var archive = archiver('zip', {
+        zlib: { level: 9 }
+    });
+    archive.on('warning', function (err) { throw err; });
+    archive.on('error', function (err) { throw err; });
+    archive.pipe(output);
+    archive.directory(src, false);
+    return archive.finalize();
+}
+
 // Create distribution package for macOS platform
 function release_osx64() {
     var appdmg = require('gulp-appdmg');
@@ -370,8 +389,12 @@ gulp.task('release', ['apps', 'clean-release'], function () {
         }
     });
 
-    var platforms = getPlatforms();
+    var platforms = getPlatforms(true);
     console.log('Packing release.');
+
+    if (platforms.indexOf('chromeos') !== -1) {
+        release_chromeos();
+    }
 
     if (platforms.indexOf('linux64') !== -1) {
         release_linux64();
