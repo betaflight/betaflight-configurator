@@ -382,8 +382,23 @@ function notifyOutdatedVersion(releaseData) {
         });
 
         if (versions.length > 0 && semver.lt(getManifestVersion(), versions[0].tag_name)) {
-            GUI.show_modal(chrome.i18n.getMessage('noticeTitle'), chrome.i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
             GUI.log(chrome.i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+
+            var dialog = $('.dialogConfiguratorUpdate')[0];
+
+            $('.dialogConfiguratorUpdate-content').html(chrome.i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+
+            $('.dialogConfiguratorUpdate-closebtn').click(function() {
+                dialog.close();
+            });
+
+            $('.dialogConfiguratorUpdate-websitebtn').click(function() {
+                dialog.close();
+
+                window.open(versions[0].html_url);
+            });
+
+            dialog.showModal();
         }
     });
 }

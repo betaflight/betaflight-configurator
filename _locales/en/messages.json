@@ -23,6 +23,9 @@
     "autoConnect": {
         "message": "Auto-Connect"
     },
+    "close": {
+        "message": "Close"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
     },
@@ -40,6 +43,9 @@
     },
     "configuratorUpdateNotice": {
         "message": "You are using an outdated version of the <b>Betaflight Configurator</b>.<br>Version <b>$1</b> is available online, please visit <a href=\"$2\" target=\"_blank\">the release page</a> to download and install the latest version with fixes and improvements.<br>Please close the configurator window before updating."
+    },
+    "configuratorUpdateWebsite": {
+        "message": "Go to Release Website"
     },
     "deviceRebooting": {
         "message": "Device - <span style=\"color: red\">Rebooting</span>"
