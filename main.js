@@ -28,7 +28,9 @@ $(document).ready(function () {
             break;
     }
 
-    checkForConfiguratorUpdates();
+    if (GUI.operating_system !== 'ChromeOS') {
+        checkForConfiguratorUpdates();
+    }
 
     chrome.storage.local.get('logopen', function (result) {
         if (result.logopen) {
@@ -202,20 +204,23 @@ $(document).ready(function () {
                     }).change();
                 });
 
-                chrome.storage.local.get('checkForConfiguratorUnstableVersions', function (result) {
-                    $('div.checkForConfiguratorUnstableVersions input').change(function () {
-                        var checked = $(this).is(':checked');
+                if (GUI.operating_system !== 'ChromeOS') {
+                    chrome.storage.local.get('checkForConfiguratorUnstableVersions', function (result) {
+                        if (result.checkForConfiguratorUnstableVersions) {
+                            $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
+                        }
 
-                        chrome.storage.local.set({'checkForConfiguratorUnstableVersions': checked});
+                        $('div.checkForConfiguratorUnstableVersions input').change(function () {
+                            var checked = $(this).is(':checked');
 
-                        $('input[name="checkForConfiguratorUnstableVersions"]').prop('checked', checked).change();
-                        checkForConfiguratorUpdates();
+                            chrome.storage.local.set({'checkForConfiguratorUnstableVersions': checked});
+
+                            checkForConfiguratorUpdates();
+                        });
                     });
-
-                    if (result.checkForConfiguratorUnstableVersions) {
-                        $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
-                    }
-                });
+                } else {
+                    $('div.checkForConfiguratorUnstableVersions').hide();
+                }
 
                 function close_and_cleanup(e) {
                     if (e.type == 'click' && !$.contains($('div#options-window')[0], e.target) || e.type == 'keyup' && e.keyCode == 27) {
