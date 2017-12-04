@@ -23,8 +23,7 @@
   },
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "archiver": "^2.0.3",
     "del": "^3.0.0",
