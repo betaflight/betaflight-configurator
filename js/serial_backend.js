@@ -238,15 +238,29 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        GUI.show_modal(chrome.i18n.getMessage('warningTitle'),
-                            chrome.i18n.getMessage('firmwareTypeNotSupported'));
+                        var dialog = $('.dialogConnectWarning')[0];
+
+                        $('.dialogConnectWarning-content').html(chrome.i18n.getMessage('firmwareTypeNotSupported'));
+
+                        $('.dialogConnectWarning-closebtn').click(function() {
+                            dialog.close();
+                        });
+
+                        dialog.showModal();
 
                         connectCli();
                     }
                 });
             } else {
-                GUI.show_modal(chrome.i18n.getMessage('warningTitle'),
-                    chrome.i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.apiVersionAccepted]));
+                var dialog = $('.dialogConnectWarning')[0];
+
+                $('.dialogConnectWarning-content').html(chrome.i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.apiVersionAccepted]));
+
+                $('.dialogConnectWarning-closebtn').click(function() {
+                    dialog.close();
+                });
+
+                dialog.showModal();
 
                 connectCli();
             }
