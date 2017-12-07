@@ -30,7 +30,7 @@ var releaseDir = './release/';
 // # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --osx64, or --win32 --chromeos)
 // # 
 function getPlatforms(includeChromeOs) {
-    var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32'];
+    var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32','win64'];
     var platforms = [];
     var regEx = /--(\w+)/;
     for (var i = 3; i < process.argv.length; i++) {
@@ -48,22 +48,12 @@ function getPlatforms(includeChromeOs) {
     }  
 
     if (platforms.length === 0) {
-        switch (os.platform()) {
-        case 'darwin':
-            platforms.push('osx64');
-
-            break;
-        case 'linux':
-            platforms.push('linux64');
-
-            break;
-        case 'win32':
-            platforms.push('win32');
-
-            break;
-
-        default:
-            break;
+        var defaultPlatform = getDefaultPlatform();
+        if (supportedPlatforms.indexOf(defaultPlatform) > -1) {
+            platforms.push(defaultPlatform);
+        } else {
+            console.log('Compatible platform not detected, you must specify one as parameter');
+            process.exit();
         }
     }
 
@@ -72,24 +62,47 @@ function getPlatforms(includeChromeOs) {
     return platforms;
 }
 
-function getRunDebugAppCommand() {
+// Gets the default platform to be used
+function getDefaultPlatform() {
+    var defaultPlatform;
     switch (os.platform()) {
     case 'darwin':
-        return 'open ' + path.join(debugDir, pkg.name, 'osx64', pkg.name + '.app');
+        defaultPlatform = 'osx64';
 
         break;
+    case 'linux':
+        defaultPlatform = 'linux64';
+
+        break;
+    case 'win32':
+        defaultPlatform = 'win32';
+
+        break;
+        
+    default:
+        defaultPlatform = '';
+    
+        break;
+    }
+    return defaultPlatform;
+}
+
+function getRunDebugAppCommand(arch) {
+    switch (arch) {
+    case 'osx64':
+        return 'open ' + path.join(debugDir, pkg.name, arch, pkg.name + '.app');
+
+        break;
+
     case 'linux64':
-        return path.join(debugDir, pkg.name, 'linux64', pkg.name);
-
-        break;
-            
     case 'linux32':
-        return path.join(debugDir, pkg.name, 'linux32', pkg.name);
+        return path.join(debugDir, pkg.name, arch, pkg.name);
 
         break;
 
     case 'win32':
-        return path.join(debugDir, pkg.name, 'win32', pkg.name + '.exe');
+    case 'win64':
+        return path.join(debugDir, pkg.name, arch, pkg.name + '.exe');
 
         break;
 
@@ -313,46 +326,22 @@ gulp.task('debug', ['dist', 'clean-debug'], function (done) {
                 process.exit(1);
             });
         }
-        var exec = require('child_process').exec;
-        var run = getRunDebugAppCommand();
-        console.log('Starting debug app (' + run + ')...');
-        exec(run);
+        var exec = require('child_process').exec;    
+        if (platforms.length === 1) {
+            var run = getRunDebugAppCommand(platforms[0]);
+            console.log('Starting debug app (' + run + ')...');
+            exec(run);
+        } else {
+            console.log('More than one platform specified, not starting debug app');
+        }        
         done();
     });
 });
 
-// Create distribution package for windows platform
-function release_win32() {
-    var src = path.join(appsDir, pkg.name, 'win32');
-    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('win32', 'zip')));
-    var archive = archiver('zip', {
-        zlib: { level: 9 }
-    });
-    archive.on('warning', function (err) { throw err; });
-    archive.on('error', function (err) { throw err; });
-    archive.pipe(output);
-    archive.directory(src, 'Betaflight Configurator');
-    return archive.finalize();
-}
-
-// Create distribution package for linux64 platform
-function release_linux64() {
-    var src = path.join(appsDir, pkg.name, 'linux64');
-    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('linux64', 'zip')));
-    var archive = archiver('zip', {
-        zlib: { level: 9 }
-    });
-    archive.on('warning', function (err) { throw err; });
-    archive.on('error', function (err) { throw err; });
-    archive.pipe(output);
-    archive.directory(src, 'Betaflight Configurator');
-    return archive.finalize();
-}
-
-// Create distribution package for linux platform
-function release_linux32() {
-    var src = path.join(appsDir, pkg.name, 'linux64');
-    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('linux32', 'zip')));
+// Create distribution package for windows and linux platforms
+function release(arch) {
+    var src = path.join(appsDir, pkg.name, arch);
+    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename(arch, 'zip')));
     var archive = archiver('zip', {
         zlib: { level: 9 }
     });
@@ -422,11 +411,11 @@ gulp.task('release', ['apps', 'clean-release'], function () {
     }
 
     if (platforms.indexOf('linux64') !== -1) {
-        release_linux64();
+        release('linux64');
     }
 
     if (platforms.indexOf('linux32') !== -1) {
-        release_linux32();
+        release('linux32');
     }
         
     if (platforms.indexOf('osx64') !== -1) {
@@ -434,7 +423,11 @@ gulp.task('release', ['apps', 'clean-release'], function () {
     }
 
     if (platforms.indexOf('win32') !== -1) {
-        release_win32();
+        release('win32');
+    }
+    
+    if (platforms.indexOf('win64') !== -1) {
+        release('win64');
     }
 });
 
