@@ -1308,7 +1308,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
 
         if(RC.channels[0] && RC.channels[1] && RC.channels[2]) {
             currentValues.push(self.rateCurve.drawStickPosition(RC.channels[0], self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, stickContext, '#FF8080') + ' deg/s');
-            currentValues.push(self.rateCurve.drawStickPosition(RC.channels[1], self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, stickContext, '#80FF80') + ' deg/s');
+            currentValues.push(self.rateCurve.drawStickPosition(RC.channels[1], self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, stickContext, '#80FF80') + ' deg/s');
             currentValues.push(self.rateCurve.drawStickPosition(RC.channels[2], self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, maxAngularVel, stickContext, '#8080FF') + ' deg/s');
         } else {
             currentValues = [];
