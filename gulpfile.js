@@ -122,6 +122,10 @@ gulp.task('clean-release', function () {
     return del([releaseDir + '**'], { force: true }); 
 });
 
+gulp.task('clean-cache', function () { 
+    return del(['./cache/**'], { force: true }); 
+});
+
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
 gulp.task('dist', ['clean-dist'], function () {
