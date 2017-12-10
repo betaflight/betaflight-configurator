@@ -84,7 +84,7 @@ var serial = {
                             }
                             break;
 
-                        case 'break':
+                        //case 'break':
                             // This occurs on F1 boards with old firmware during reboot
                         case 'overrun':
                             // wait 50 ms and attempt recovery
@@ -117,6 +117,7 @@ var serial = {
                             // TODO
                             break;
                             
+                        case 'break': // This seems to be the error that is thrown under NW.js in Windows when the device reboots after typing 'exit' in CLI
                         case 'device_lost':
                             CONFIG.arming_disabled = false;
 
