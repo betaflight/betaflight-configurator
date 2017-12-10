@@ -27,10 +27,10 @@ var releaseDir = './release/';
 
 // Get platform from commandline args
 // #
-// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --osx64, or --win32 --chromeos)
+// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --osx64, or --win32 --chromeos)
 // # 
 function getPlatforms(includeChromeOs) {
-    var supportedPlatforms = ['linux64', 'osx64', 'win32'];
+    var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32'];
     var platforms = [];
     var regEx = /--(\w+)/;
     for (var i = 3; i < process.argv.length; i++) {
@@ -78,10 +78,16 @@ function getRunDebugAppCommand() {
         return 'open ' + path.join(debugDir, pkg.name, 'osx64', pkg.name + '.app');
 
         break;
-    case 'linux':
+    case 'linux64':
         return path.join(debugDir, pkg.name, 'linux64', pkg.name);
 
         break;
+            
+    case 'linux32':
+        return path.join(debugDir, pkg.name, 'linux32', pkg.name);
+
+        break;
+
     case 'win32':
         return path.join(debugDir, pkg.name, 'win32', pkg.name + '.exe');
 
@@ -329,10 +335,24 @@ function release_win32() {
     return archive.finalize();
 }
 
-// Create distribution package for linux platform
+// Create distribution package for linux64 platform
 function release_linux64() {
     var src = path.join(appsDir, pkg.name, 'linux64');
     var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('linux64', 'zip')));
+    var archive = archiver('zip', {
+        zlib: { level: 9 }
+    });
+    archive.on('warning', function (err) { throw err; });
+    archive.on('error', function (err) { throw err; });
+    archive.pipe(output);
+    archive.directory(src, 'Betaflight Configurator');
+    return archive.finalize();
+}
+
+// Create distribution package for linux platform
+function release_linux32() {
+    var src = path.join(appsDir, pkg.name, 'linux64');
+    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('linux32', 'zip')));
     var archive = archiver('zip', {
         zlib: { level: 9 }
     });
@@ -405,6 +425,10 @@ gulp.task('release', ['apps', 'clean-release'], function () {
         release_linux64();
     }
 
+    if (platforms.indexOf('linux32') !== -1) {
+        release_linux32();
+    }
+        
     if (platforms.indexOf('osx64') !== -1) {
         release_osx64();
     }
