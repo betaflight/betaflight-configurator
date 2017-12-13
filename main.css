@@ -110,6 +110,14 @@ input[type="number"]::-webkit-inner-spin-button {
     margin-bottom: 20px;
 }
 
+.message-positive {
+    color: #ffbb00;
+}
+
+.message-negative {
+    color: red;
+}
+
 .headerbar {
     height:110px;
     width:100%;
