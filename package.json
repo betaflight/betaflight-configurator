@@ -12,7 +12,8 @@
     "gulp": "gulp"
   },
   "window": {
-    "show": false
+    "show": false,
+    "icon": "images/bf_icon_128.png"
   },
   "repository": {
     "type": "git",
