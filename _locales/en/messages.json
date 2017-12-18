@@ -38,6 +38,24 @@
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
     },
+    "sensorStatusGyro": {
+        "message": "Gyroscope"
+    },
+    "sensorStatusAccel": {
+        "message": "Accelerometer"
+    },
+    "sensorStatusMag": {
+        "message": "Magnetometer"
+    },
+    "sensorStatusBaro": {
+        "message": "Barometer"
+    },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
+    "sensorStatusSonar": {
+        "message": "Sonar / Range finder"
+    },
     "checkForConfiguratorUnstableVersions": {
         "message": "Show update notifications for unstable versions of the configurator"
     },
@@ -305,6 +323,9 @@
     },
     "defaultDonateText": {
         "message": "This utility is fully <strong>open source</strong> and is available free of charge to all <strong>Betaflight</strong> users.<br />If you found the Betaflight or Betaflight configurator useful, please consider <strong>supporting</strong> its development by donating."
+    },
+    "defaultDonate": {
+        "message": "Donate"
     },
     "defaultSponsorsHead": {
         "message": "Sponsors"
@@ -1503,6 +1524,59 @@
         "message": "Signal Strength"
     },
 
+    "motorNumber1":{
+        "message": "Motor - 1"
+    },
+    "motorNumber2":{
+        "message": "Motor - 2"
+    },
+    "motorNumber3":{
+        "message": "Motor - 3"
+    },
+    "motorNumber4":{
+        "message": "Motor - 4"
+    },
+    "motorNumber5":{
+        "message": "Motor - 5"
+    },
+    "motorNumber6":{
+        "message": "Motor - 6"
+    },
+    "motorNumber7":{
+        "message": "Motor - 7"
+    },
+    "motorNumber8":{
+        "message": "Motor - 8"
+    },
+
+    "servoNumber1":{
+        "message": "Servo - 1"
+    },
+    "servoNumber2":{
+        "message": "Servo - 2"
+    },
+    "servoNumber3":{
+        "message": "Servo - 3"
+    },
+    "servoNumber4":{
+        "message": "Servo - 4"
+    },
+    "servoNumber5":{
+        "message": "Servo - 5"
+    },
+    "servoNumber6":{
+        "message": "Servo - 6"
+    },
+    "servoNumber7":{
+        "message": "Servo - 7"
+    },
+    "servoNumber8":{
+        "message": "Servo - 8"
+    },
+    
+    "motorsResetMaximum":{
+        "message": "Reset overtime maximum"
+    },
     "motorsMaster": {
         "message": "Master"
     },
@@ -1730,12 +1804,18 @@
     "firmwareFlasherFlashDevelopmentFirmwareDescription": {
         "message": "Flash most recent (untested) development firmware."
     },
+    "firmwareFlasherManualPort": {
+        "message": "Port"
+    },
     "firmwareFlasherManualBaud": {
         "message": "Manual baud rate"
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "Manual selection of baud rate for boards that don't support the default speed or for flashing via bluetooth.<br /><span class=\"message-negative\">Note:</span> Not used when flashing via USB DFU"
     },
+    "firmwareFlasherBaudRate": {
+        "message": "Baud Rate"
+    },    
     "firmwareFlasherShowDevelopmentReleases":{
         "message": "Show unstable releases"
     },
@@ -1853,6 +1933,48 @@
     },
     "ledStripIndecatorOverlay": {
         "message": "Indicator (uses position on matrix)"
+    },
+    "colorBlack": {
+        "message": "black"
+    },
+    "colorWhite": {
+        "message": "white"
+    },
+    "colorRed": {
+        "message": "red"
+    },
+    "colorOrange": {
+        "message": "orange"
+    },
+    "colorYellow": {
+        "message": "yellow"
+    },
+    "colorLimeGreen": {
+        "message": "lime green"
+    },
+    "colorGreen": {
+        "message": "green"
+    },
+    "colorMintGreen": {
+        "message": "mint green"
+    },
+    "colorCyan": {
+        "message": "cyan"
+    },
+    "colorLightBlue": {
+        "message": "light blue"
+    },
+    "colorBlue": {
+        "message": "blue"
+    },
+    "colorDarkViolet": {
+        "message": "dark violet"
+    },
+    "colorMagenta": {
+        "message": "magenta"
+    },
+    "colorDeepPink": {
+        "message": "deep pink"
     },
     "controlAxisRoll": {
         "message": "Roll [A]"
