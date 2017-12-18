@@ -27,10 +27,10 @@ var releaseDir = './release/';
 
 // Get platform from commandline args
 // #
-// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --osx64, or --win32 --chromeos)
+// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --osx64, --osx32, --win32, --win64, or --chromeos)
 // # 
 function getPlatforms(includeChromeOs) {
-    var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32','win64'];
+    var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'osx32', 'win32','win64'];
     var platforms = [];
     var regEx = /--(\w+)/;
     for (var i = 3; i < process.argv.length; i++) {
@@ -52,7 +52,7 @@ function getPlatforms(includeChromeOs) {
         if (supportedPlatforms.indexOf(defaultPlatform) > -1) {
             platforms.push(defaultPlatform);
         } else {
-            console.log('Compatible platform not detected, you must specify one as parameter');
+            console.log(`Your current platform (${os.platform()}) is not a supported build platform. Please specify platform to build for on the command line.`);
             process.exit();
         }
     }
