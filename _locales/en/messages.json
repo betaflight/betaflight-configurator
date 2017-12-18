@@ -164,6 +164,13 @@
         "message": "Modes"
     },
 
+    "logActionHide": {
+        "message": "Hide Log"
+    },
+    "logActionShow": {
+        "message": "Show Log"
+    },
+
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> opened with ID: $1"
     },
@@ -303,6 +310,9 @@
         "message": "Welcome to <strong>Betaflight - Configurator</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
     },
 
+    "defaultWelcomeHead": {
+        "message": "Hardware"
+    },
     "defaultWelcomeText": {
         "message": "The application supports all hardware that can run Betaflight. Check flash tab for full list of hardware.<br><br> <a href=\"https://chrome.google.com/webstore/detail/betaflight-blackbox-explo/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Download Betaflight Blackbox</a><br /><br />The firmware source code can be downloaded from <a href=\"https://github.com/betaflight/betaflight\" title=\"www.github.com\" target=\"_blank\">here</a><br />The newest binary firmware image is available <a href=\"https://github.com/betaflight/betaflight/releases\" title=\"www.github.com\" target=\"_blank\">here</a><br /><br />Latest <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">CP210x Drivers</a> can be downloaded from <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">here</a><br />Latest <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">STM USB VCP Drivers</a> can be downloaded from <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">here</a><br />Latest <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">Zadig</a> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">here</a><br />"
     },
@@ -312,6 +322,9 @@
     "defaultContributingText": {
         "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>Answering other users questions on the forums and IRC.</li><li>Contributing code to the firmware and configurator - new features, fixes, improvements</li><li>Testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">new features/fixes</a> and providing feedback.</li><li>Helping out with <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">issues and commenting on feature requests</a>.</li><li></li></ul>"
     },
+    "defaultChangelogAction": {
+        "message": "Changelog"
+    },    
     "defaultChangelogHead": {
         "message": "Configurator - Changelog"
     },
@@ -384,6 +397,9 @@
     },
     "initialSetupCalibrateMagText": {
         "message": "Move multirotor at least <strong>360</strong> degrees on all axis of rotation, you have 30 seconds to perform this task"
+    },
+    "initialSetupButtonCalibratingText": {
+        "message": "Calibrating..."
     },
     "initialSetupButtonReset": {
         "message": "Reset Settings"
@@ -711,6 +727,9 @@
     },
     "configurationSensorAlignmentMag": {
         "message": "MAG Alignment"
+    },
+    "configurationSensorAlignmentDefaultOption": {
+       "message": "Default"
     },
     "configurationAccelTrims": {
         "message": "Accelerometer Trim"
@@ -1190,11 +1209,17 @@
     "receiverChannelMap": {
         "message": "Channel Map"
     },
+    "receiverChannelDefaultOption": {
+        "message": "Default"
+    },
     "receiverChannelMapTitle": {
         "message": "You can define your own channel map by clicking inside the box"
     },
     "receiverRssiChannel": {
         "message": "RSSI Channel"
+    },
+    "receiverRssiChannelDisabledOption": {
+        "message": "Disabled"
     },
     "receiverRefreshRateTitle": {
         "message": "Graph refresh rate"
@@ -1523,7 +1548,16 @@
     "gpsSignalStr": {
         "message": "Signal Strength"
     },
+    "gpsSignalSatId": {
+        "message": "Sat ID"
+    },
+    "gpsSignalQty": {
+        "message": "Qty"
+    },
 
+    "motorsText":{
+        "message": "Motors"
+    },
     "motorNumber1":{
         "message": "Motor - 1"
     },
@@ -1549,6 +1583,9 @@
         "message": "Motor - 8"
     },
 
+    "servosText":{
+        "message": "Servos"
+    },
     "servoNumber1":{
         "message": "Servo - 1"
     },
@@ -1573,9 +1610,18 @@
     "servoNumber8":{
         "message": "Servo - 8"
     },
-    
+
+    "motorsResetMaximumButton":{
+        "message": "Reset"
+    },
     "motorsResetMaximum":{
         "message": "Reset overtime maximum"
+    },
+    "motorsSensorGyroSelect":{
+        "message": "gyro"
+    },
+    "motorsSensorAccelSelect":{
+        "message": "accel"
     },
     "motorsMaster": {
         "message": "Master"
@@ -1595,6 +1641,42 @@
     },
     "sensorsScale": {
         "message": "Scale:"
+    },
+    "sensorsGyroSelect": {
+        "message": "Gyroscope"
+    },
+    "sensorsAccelSelect": {
+        "message": "Accelerometer"
+    },
+    "sensorsMagSelect": {
+        "message": "Magnetometer"
+    },
+    "sensorsBaroSelect": {
+        "message": "Barometer"
+    },
+    "sensorsSonarSelect": {
+        "message": "Sonar"
+    },
+    "sensorsDebugSelect": {
+        "message": "Debug"
+    },
+    "sensorsGyroTitle": {
+        "message": "Gyroscope - deg/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Accelerometer - g"
+    },
+    "sensorsMagTitle": {
+        "message": "Magnetometer - Ga"
+    },
+    "sensorsBaroTitle": {
+        "message": "Barometer - meters"
+    },
+    "sensorsSonarTitle": {
+        "message": "Sonar - cm"
+    },
+    "sensorsDebugTitle": {
+        "message": "Debug 0"
     },
 
     "cliInfo": {
@@ -1679,6 +1761,18 @@
         "message": "Flight logs can be recorded to your flight controller's onboard SD card slot."
     },
 
+    "dataflashUsedSpace": {
+        "message": "Used space"
+    },
+    "dataflashFreeSpace": {
+        "message": "Free space"
+    },
+    "dataflashUnavSpace": {
+        "message": "Unavailable space"
+    },
+    "dataflashLogsSpace": {
+        "message": "Free space for logs"
+    },    
     "dataflashNote": {
         "message": "Flight logs can be recorded to your flight controller's onboard dataflash chip."
     },
@@ -1724,6 +1818,25 @@
     "dataflashFileWriteFailed": {
         "message": "Failed to write to the file you selected, are the permissions on that folder okay?"
     },
+    
+    "sdcardStatusNoCard": {
+        "message": "No card inserted"
+    },    
+    "sdcardStatusReboot": {
+        "message": "Fatal error<br>Reboot to retry"
+    },    
+    "sdcardStatusReady": {
+        "message": "Card ready"
+    },    
+    "sdcardStatusStarting": {
+        "message": "Card starting..."
+    },    
+    "sdcardStatusFileSystem": {
+        "message": "Filesystem starting..."
+    },    
+    "sdcardStatusUnknown": {
+        "message": "Unknown state $1"
+    },    
 
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release info"
