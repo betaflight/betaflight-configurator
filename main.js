@@ -5,9 +5,7 @@ $(document).ready(function () {
     localize();
 
     // alternative - window.navigator.appVersion.match(/Chrome\/([0-9.]*)/)[1];
-    GUI.log('Running - OS: <strong>' + GUI.operating_system + '</strong>, ' +
-        'Chrome: <strong>' + window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1") + '</strong>, ' +
-        'Configurator: <strong>' + getManifestVersion() + '</strong>');
+    GUI.log(chrome.i18n.getMessage('infoVersions',[GUI.operating_system, window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"), getManifestVersion()]));
 
     $('#logo .version').text(getManifestVersion());
     updateStatusBarVersion();

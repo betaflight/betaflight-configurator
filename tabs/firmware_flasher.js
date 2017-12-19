@@ -237,7 +237,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         $('a.load_remote_file').click(function (evt) {
 
             if ($('select[name="firmware_version"]').val() == "0") {
-                GUI.log("<b>No firmware selected to load</b>");
+                GUI.log(chrome.i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
                 return;
             }
 
@@ -322,7 +322,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 STM32.connect(port, baud, parsed_hex, options);
                             } else {
                                 console.log('Please select valid serial port');
-                                GUI.log('<span style="color: red">Please select valid serial port</span>');
+                                GUI.log(chrome.i18n.getMessage('firmwareFlasherNoValidPort'));
                             }
                         } else {
                             STM32DFU.connect(usbDevices.STM32DFU, parsed_hex, options);
@@ -373,7 +373,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log('You don\'t have <span style="color: red">write permissions</span> for this file');
+                            GUI.log(chrome.i18n.getMessage('firmwareFlasherWritePermissions'));
                         }
                     });
                 });
@@ -442,7 +442,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         var port = result[0];
 
                         if (!GUI.connect_lock) {
-                            GUI.log('Detected: <strong>' + port + '</strong> - triggering flash on connect');
+                            GUI.log(chrome.i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
                             console.log('Detected: ' + port + ' - triggering flash on connect');
 
                             // Trigger regular Flashing sequence
@@ -450,7 +450,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 $('a.flash_firmware').click();
                             }, 100); // timeout so bus have time to initialize after being detected by the system
                         } else {
-                            GUI.log('Detected <strong>' + port + '</strong> - previous device still flashing, please replug to try again');
+                            GUI.log(chrome.i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
                         }
 
                         // Since current port_detected request was consumed, create new one

@@ -213,6 +213,9 @@
         "message": "The firmware on this device needs upgrading to a newer version. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
     },
 
+    "infoVersions": {
+        "message" : "Running - OS: <strong>$1</strong>, Chrome: <strong>$2</strong>, Configurator: <strong>$3</strong>"
+    },
     "tabSwitchConnectionRequired": {
         "message": "You need to <strong>connect</strong> before you can view any of the tabs."
     },
@@ -1676,7 +1679,7 @@
         "message": "Sonar - cm"
     },
     "sensorsDebugTitle": {
-        "message": "Debug 0"
+        "message": "Debug"
     },
 
     "cliInfo": {
@@ -2000,6 +2003,21 @@
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Failed to load remote firmware"
+    },
+    "firmwareFlasherNoFirmwareSelected": {
+        "message": "<b>No firmware selected to load</b>"
+    },
+    "firmwareFlasherNoValidPort": {
+        "message": "<span class=\"message-negative\">Please select valid serial port</span>"
+    },
+    "firmwareFlasherWritePermissions": {
+        "message": "You don't have <span class=\"message-negative\">write permissions</span> for this file"
+    },
+    "firmwareFlasherFlashTrigger": {
+        "message": "Detected: <strong>$1</strong> - triggering flash on connect"
+    },
+    "firmwareFlasherPreviousDevice": {
+        "message": "Detected: <strong>$1</strong> - previous device still flashing, please replug to try again"
     },
 
     "ledStripHelp": {
@@ -2878,6 +2896,12 @@
     },
     "osdSectionHelpWarnings": {
         "message": "Enable or disable warnings that are shown on the WARNINGS element."
+    },
+    "osdSettingsSaved": {
+        "message": "OSD settings saved"
+    },
+    "osdWritePermissions": {
+        "message": "You don't have <span class=\"message-negative\">write permissions</span> for this file"
     },
 
     "mainHelpArmed": {
