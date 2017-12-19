@@ -276,11 +276,11 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function update_html() {
-        update_bar_width($(".tab-onboard_logging .dataflash-used"), DATAFLASH.usedSize, DATAFLASH.totalSize, "Used space", false);
-        update_bar_width($(".tab-onboard_logging .dataflash-free"), DATAFLASH.totalSize - DATAFLASH.usedSize, DATAFLASH.totalSize, "Free space", false);
+        update_bar_width($(".tab-onboard_logging .dataflash-used"), DATAFLASH.usedSize, DATAFLASH.totalSize, chrome.i18n.getMessage('dataflashUsedSpace'), false);
+        update_bar_width($(".tab-onboard_logging .dataflash-free"), DATAFLASH.totalSize - DATAFLASH.usedSize, DATAFLASH.totalSize, chrome.i18n.getMessage('dataflashFreeSpace'), false);
 
-        update_bar_width($(".tab-onboard_logging .sdcard-other"), SDCARD.totalSizeKB - SDCARD.freeSizeKB, SDCARD.totalSizeKB, "Unavailable space", true);
-        update_bar_width($(".tab-onboard_logging .sdcard-free"), SDCARD.freeSizeKB, SDCARD.totalSizeKB, "Free space for logs", true);
+        update_bar_width($(".tab-onboard_logging .sdcard-other"), SDCARD.totalSizeKB - SDCARD.freeSizeKB, SDCARD.totalSizeKB, chrome.i18n.getMessage('dataflashUnavSpace'), true);
+        update_bar_width($(".tab-onboard_logging .sdcard-free"), SDCARD.freeSizeKB, SDCARD.totalSizeKB, chrome.i18n.getMessage('dataflashLogsSpace'), true);
 
         $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", DATAFLASH.usedSize === 0);
         
@@ -291,22 +291,22 @@ TABS.onboard_logging.initialize = function (callback) {
         
         switch (SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
-                $(".sdcard-status").text("No card inserted");
+                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusNoCard'));
             break;
             case MSP.SDCARD_STATE_FATAL:
-                $(".sdcard-status").html("Fatal error<br>Reboot to retry");
+                $(".sdcard-status").html(chrome.i18n.getMessage('sdcardStatusReboot'));
             break;
             case MSP.SDCARD_STATE_READY:
-                $(".sdcard-status").text("Card ready");
+                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusReady'));
             break;
             case MSP.SDCARD_STATE_CARD_INIT:
-                $(".sdcard-status").text("Card starting...");
+                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusStarting'));
             break;
             case MSP.SDCARD_STATE_FS_INIT:
-                $(".sdcard-status").text("Filesystem starting...");
+                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusFileSystem'));
             break;
             default:
-                $(".sdcard-status").text("Unknown state " + SDCARD.state);
+                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusUnknown',[SDCARD.state]));
         }
         
         if (SDCARD.supported && !sdcardTimer) {

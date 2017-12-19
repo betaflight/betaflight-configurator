@@ -339,7 +339,7 @@ $(document).ready(function () {
 
             state = true;
         }
-        $(this).text(state ? 'Hide Log' : 'Show Log');
+        $(this).text(state ? chrome.i18n.getMessage('logActionHide') : chrome.i18n.getMessage('logActionShow'));
         $(this).data('state', state);
     });
 
