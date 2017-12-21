@@ -1653,7 +1653,7 @@ TABS.osd.initialize = function (callback) {
         $('a.save').click(function() {
           var self = this;
           MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-          GUI.log('OSD settings saved');
+          GUI.log(chrome.i18n.getMessage('osdSettingsSaved'));
           var oldText = $(this).text();
           $(this).html("Saved");
           setTimeout(function () {
@@ -1761,7 +1761,7 @@ TABS.osd.initialize = function (callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log('You don\'t have <span style="color: red">write permissions</span> for this file');
+                            GUI.log(chrome.i18n.getMessage('osdWritePermissions'));
                         }
                     });
                 });
