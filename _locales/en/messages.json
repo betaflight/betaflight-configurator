@@ -2,6 +2,10 @@
     "translation_version": {
         "message": "0"
     },
+    "windowTitle": {
+        "message": "Betaflight Configurator",
+        "description": "Title of the application window, usually not translated"
+    },
     "warningTitle": {
         "message": "Warning"
     },
