@@ -66,7 +66,7 @@ var Features = function (config) {
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             features.push(
-                {bit: 18, group: 'other', name: 'OSD'},
+                {bit: 18, group: 'other', name: 'OSD'}
             );
             if (!semver.gte(CONFIG.apiVersion, "1.35.0")) {
               features.push(
@@ -92,7 +92,7 @@ var Features = function (config) {
         if (!semver.gte(CONFIG.apiVersion, "1.36.0")) {
             features.push(
                 {bit: 1, group: 'batteryVoltage', name: 'VBAT'},
-                {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'},
+                {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'}
             );
         }
     }
