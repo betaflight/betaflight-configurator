@@ -9,7 +9,6 @@ function startApplication() {
     chrome.app.window.create('main.html', {
         id: 'main-window',
         frame: 'chrome',
-        title: chrome.i18n.getMessage('windowTitle'),
         innerBounds: {
             minWidth: 1024,
             minHeight: 550
