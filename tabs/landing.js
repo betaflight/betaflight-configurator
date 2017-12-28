@@ -28,7 +28,7 @@ TABS.landing.initialize = function (callback) {
                 $("#content").addClass('log_open');
                 state = true;
             }
-            $(this).text(state ? 'Close' : 'Changelog');
+            $(this).text(state ? chrome.i18n.getMessage('close') : chrome.i18n.getMessage('defaultChangelogAction'));
             $(this).data('state2', state);
         });
 
