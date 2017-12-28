@@ -2380,8 +2380,32 @@
     "powerBatteryVoltageMeterSource": {
         "message": "Voltage Meter Source"
     },
+    "powerBatteryVoltageMeterTypeNone": {
+        "message": "None"
+    },
+    "powerBatteryVoltageMeterTypeAdc": {
+        "message": "Onboard ADC"
+    },
+    "powerBatteryVoltageMeterTypeEsc": {
+        "message": "ESC Sensor"
+    },
     "powerBatteryCurrentMeterSource": {
         "message": "Current Meter Source"
+    },
+    "powerBatteryCurrentMeterTypeNone": {
+        "message": "None"
+    },
+    "powerBatteryCurrentMeterTypeAdc": {
+        "message": "Onboard ADC"
+    },
+    "powerBatteryCurrentMeterTypeVirtual": {
+        "message": "Virtual"
+    },
+    "powerBatteryCurrentMeterTypeEsc": {
+        "message": "ESC Sensor"
+    },
+    "powerBatteryCurrentMeterTypeMsp": {
+        "message": "MSP Sensor/OSD Slave"
     },
     "powerBatteryMinimum": {
         "message": "Minimum Cell Voltage"

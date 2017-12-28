@@ -189,12 +189,12 @@ TABS.power.initialize = function (callback) {
         var haveFc = (semver.lt(CONFIG.apiVersion, "1.35.0") || (CONFIG.boardType == 0 || CONFIG.boardType == 2));
 
         var batteryMeterTypes = [
-            'None',
-            'Onboard ADC',
+            chrome.i18n.getMessage('powerBatteryVoltageMeterTypeNone'),
+            chrome.i18n.getMessage('powerBatteryVoltageMeterTypeAdc'),
         ];
 
         if (haveFc) {
-            batteryMeterTypes.push('ESC Sensor');
+            batteryMeterTypes.push(chrome.i18n.getMessage('powerBatteryVoltageMeterTypeEsc'));
         }
 
         var batteryMeterType_e = $('select.batterymetersource');
@@ -205,16 +205,16 @@ TABS.power.initialize = function (callback) {
 
         // fill current
         var currentMeterTypes = [
-            'None',
-            'Onboard ADC',
+            chrome.i18n.getMessage('powerBatteryCurrentMeterTypeNone'),
+            chrome.i18n.getMessage('powerBatteryCurrentMeterTypeAdc'),
         ];
 
         if (haveFc) {
-            currentMeterTypes.push('Virtual');
-            currentMeterTypes.push('ESC Sensor');
+            currentMeterTypes.push(chrome.i18n.getMessage('powerBatteryCurrentMeterTypeVirtual'));
+            currentMeterTypes.push(chrome.i18n.getMessage('powerBatteryCurrentMeterTypeEsc'));
             
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                currentMeterTypes.push('MSP Sensor/OSD Slave');
+                currentMeterTypes.push(chrome.i18n.getMessage('powerBatteryCurrentMeterTypeMsp'));
             }
         }
 
