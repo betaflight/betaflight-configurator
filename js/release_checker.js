@@ -19,7 +19,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
         var cachedReleaseLastUpdate = result[self._releaseLastUpdateTag];
         if (!cacheReleaseData || !cachedReleaseLastUpdate || releaseDataTimestamp - cachedReleaseLastUpdate > 3600 * 1000) {
             $.get(self._releaseUrl, function (releaseData) {
-                GUI.log(`Loaded release information for ${self._releaseName} from GitHub.`);
+                GUI.log(chrome.i18n.getMessage('releaseCheckLoaded',[self._releaseName]));
 
                 var data = {};
                 data[self._releaseDataTag] = releaseData
@@ -32,13 +32,13 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
                 if (data['responseJSON']) {
                     message = data['responseJSON'].message;
                 }
-                GUI.log(`<b>GitHub query for ${self._releaseName} releases failed, using cached information. Reason: <code>${message}</code></b>`);
+                GUI.log(chrome.i18n.getMessage('releaseCheckFailed',[self._releaseName,message]));
             
                 self._processReleaseData(cacheReleaseData, processFunction);
             });
         } else {
             if (cacheReleaseData) {
-                GUI.log(`Using cached release information for ${self._releaseName} releases.`);
+                GUI.log(chrome.i18n.getMessage('releaseCheckCached',[self._releaseName]));
             }
 
             self._processReleaseData(cacheReleaseData, processFunction);
@@ -51,7 +51,7 @@ ReleaseChecker.prototype._processReleaseData = function (releaseData, processFun
     if (releaseData) {
         processFunction(releaseData);
     } else {
-        GUI.log(`No release information available for ${self._releaseName}.`);
+        GUI.log(chrome.i18n.getMessage('releaseCheckNoInfo',[self._releaseName]));
 
         processFunction();
     }

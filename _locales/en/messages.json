@@ -220,6 +220,18 @@
     "infoVersions": {
         "message" : "Running - OS: <strong>$1</strong>, Chrome: <strong>$2</strong>, Configurator: <strong>$3</strong>"
     },
+    "releaseCheckLoaded": {
+        "message" : "Loaded release information for $1 from GitHub."
+    },
+    "releaseCheckFailed": {
+        "message" : "<b>GitHub query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
+    },
+    "releaseCheckCached": {
+        "message" : "Using cached release information for $1 releases."
+    },
+    "releaseCheckNoInfo": {
+        "message" : "No release information available for $1."
+    },
     "tabSwitchConnectionRequired": {
         "message": "You need to <strong>connect</strong> before you can view any of the tabs."
     },
@@ -331,7 +343,7 @@
     },
     "defaultChangelogAction": {
         "message": "Changelog"
-    },    
+    },
     "defaultChangelogHead": {
         "message": "Configurator - Changelog"
     },
