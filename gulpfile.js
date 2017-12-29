@@ -9,6 +9,7 @@ var path = require('path');
 var archiver = require('archiver');
 var del = require('del');
 var NwBuilder = require('nw-builder');
+var makensis = require('makensis');
 
 var gulp = require('gulp');
 var concat = require('gulp-concat');
@@ -338,7 +339,37 @@ gulp.task('debug', ['dist', 'clean-debug'], function (done) {
     });
 });
 
-// Create distribution package for windows and linux platforms
+// Create installer package for windows platforms
+function releaseWin(arch) {
+
+    // Create the output directory, with write permissions
+    fs.mkdir(releaseDir, '0775', function(err) {
+        if (err) {
+            if (err.code !== 'EEXIST') {
+                throw err;
+            }
+        }
+    });
+    
+    // Parameters passed to the installer script
+    const options = {
+            verbose: 2,
+            define: {
+                'VERSION': pkg.version,
+                'PLATFORM': arch,
+                'DEST_FOLDER': releaseDir
+            }
+        }
+    var output = makensis.compileSync('./assets/windows/installer.nsi', options);
+    
+    if (output.status === 0) {
+        console.log('Installer finished for platform: ' + arch);
+    } else {
+        console.error('Installer for platform ' + arch + ' finished with error ' + output.status + ': ' + output.stderr);
+    }
+}
+
+// Create distribution package (zip) for windows and linux platforms
 function release(arch) {
     var src = path.join(appsDir, pkg.name, arch);
     var output = fs.createWriteStream(path.join(releaseDir, get_release_filename(arch, 'zip')));
@@ -423,11 +454,11 @@ gulp.task('release', ['apps', 'clean-release'], function () {
     }
 
     if (platforms.indexOf('win32') !== -1) {
-        release('win32');
+        releaseWin('win32');
     }
     
     if (platforms.indexOf('win64') !== -1) {
-        release('win64');
+        releaseWin('win64');
     }
 });
 
