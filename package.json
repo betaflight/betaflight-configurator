@@ -34,7 +34,8 @@
     "os": "^0.1.1",
     "platform-dependent-modules": "0.0.14",
     "run-sequence": "^2.2.0",
-    "temp": "^0.8.3"
+    "temp": "^0.8.3",
+    "makensis": "^0.9.0"
   },
   "config": {
     "platformDependentModules": {
