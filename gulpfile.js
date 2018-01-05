@@ -6,15 +6,18 @@ var child_process = require('child_process');
 var fs = require('fs');
 var path = require('path');
 
-var archiver = require('archiver');
+var zip = require('gulp-zip');
 var del = require('del');
 var NwBuilder = require('nw-builder');
 var makensis = require('makensis');
+var deb = require('gulp-debian');
 
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var install = require("gulp-install");
+var rename = require('gulp-rename');
 var runSequence = require('run-sequence');
+var mergeStream = require('merge-stream');
 var os = require('os');
 
 var distDir = './dist/';
@@ -316,7 +319,9 @@ gulp.task('apps', ['dist', 'clean-apps'], function (done) {
                     process.exit(1);
                 });
             }
-            done();
+	        runSequence('post-build', function() {
+    	        done();
+        	});
         });
     } else {
         console.log('No platform suitable for the apps task')
@@ -324,6 +329,30 @@ gulp.task('apps', ['dist', 'clean-apps'], function (done) {
     }
 });
 
+gulp.task('post-build', function (done) {
+
+    var platforms = getPlatforms();
+
+    var merged = mergeStream();
+
+    if (platforms.indexOf('linux32') != -1) {
+        // Copy Ubuntu launcher scripts to destination dir
+        var launcherDir = path.join(appsDir, pkg.name, 'linux32');
+        console.log('Copy Ubuntu launcher scripts to ' + launcherDir);
+        merged.add(gulp.src('assets/linux/**')
+            .pipe(gulp.dest(launcherDir)));
+    }
+
+    if (platforms.indexOf('linux64') != -1) {
+        // Copy Ubuntu launcher scripts to destination dir
+        var launcherDir = path.join(appsDir, pkg.name, 'linux64');        
+        console.log('Copy Ubuntu launcher scripts to ' + launcherDir);        
+        merged.add(gulp.src('assets/linux/**')
+            .pipe(gulp.dest(launcherDir)));
+    }
+
+    return merged.isEmpty() ? done() : merged;
+});
 // Create debug app directories in ./debug
 gulp.task('debug', ['dist', 'clean-debug'], function (done) {
     var platforms = getPlatforms();
@@ -392,30 +421,63 @@ function release_win(arch) {
 
 // Create distribution package (zip) for windows and linux platforms
 function release(arch) {
-    var src = path.join(appsDir, pkg.name, arch);
-    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename(arch, 'zip')));
-    var archive = archiver('zip', {
-        zlib: { level: 9 }
-    });
-    archive.on('warning', function (err) { throw err; });
-    archive.on('error', function (err) { throw err; });
-    archive.pipe(output);
-    archive.directory(src, 'Betaflight Configurator');
-    return archive.finalize();
+    var src = path.join(appsDir, pkg.name, arch, '**');
+    var output = get_release_filename(arch, 'zip');
+
+    console.log('zip package started: ' + arch);
+    return gulp.src(src, {base: path.join(appsDir, pkg.name, arch) })
+               .pipe(rename(function(actualPath){ actualPath.dirname = path.join('Betaflight Configurator', actualPath.dirname) }))    
+               .pipe(zip(output))
+               .pipe(gulp.dest(releaseDir));
+}
+
+function release_deb(arch) {
+
+    var debArch;
+    
+    switch (arch) {
+    case 'linux32':
+        debArch = 'i386';
+        break;
+    case 'linux64':
+        debArch = 'amd64';
+        break;
+    default:
+        console.error("Deb package error, arch: " + arch);
+        process.exit(1);
+        break;
+    }
+
+    console.log("Debian package started arch: " + arch);
+
+    return gulp.src([path.join(appsDir, pkg.name, arch, '*')])
+        .pipe(deb({
+             package: pkg.name,
+             version: pkg.version,
+             section: 'base',
+             priority: 'optional',
+             architecture: debArch,
+             maintainer: pkg.author,
+             description: pkg.description,
+             postinst: ['xdg-desktop-menu install /opt/betaflight/betaflight-configurator/betaflight-configurator.desktop /opt/betaflight/betaflight-configurator/betaflight-configurator-english.desktop'],
+             prerm: ['xdg-desktop-menu uninstall betaflight-configurator.desktop betaflight-configurator-english.desktop'],
+             depends: 'libgconf-2-4',
+             changelog: [],
+             _target: 'opt/betaflight/betaflight-configurator',
+             _out: releaseDir,
+             _clean: true
+    }));
 }
 
 // Create distribution package for chromeos platform
 function release_chromeos() {
-    var src = distDir;
-    var output = fs.createWriteStream(path.join(releaseDir, get_release_filename('chromeos', 'zip')));
-    var archive = archiver('zip', {
-        zlib: { level: 9 }
-    });
-    archive.on('warning', function (err) { throw err; });
-    archive.on('error', function (err) { throw err; });
-    archive.pipe(output);
-    archive.directory(src, false);
-    return archive.finalize();
+    var src = distDir + '/**';
+    var output = get_release_filename('chromeos', 'zip');
+
+    console.log('chromeos package started');
+    return gulp.src(src)
+               .pipe(zip(output))
+               .pipe(gulp.dest(releaseDir));
 }
 
 // Create distribution package for macOS platform
@@ -446,7 +508,7 @@ function release_osx64() {
 }
 
 // Create distributable .zip files in ./release
-gulp.task('release', ['apps', 'clean-release'], function () {
+gulp.task('release', ['apps', 'clean-release'], function (done) {
     fs.mkdir(releaseDir, '0775', function(err) {
         if (err) {
             if (err.code !== 'EEXIST') {
@@ -458,20 +520,24 @@ gulp.task('release', ['apps', 'clean-release'], function () {
     var platforms = getPlatforms();
     console.log('Packing release.');
 
+    var merged = mergeStream();
+    
     if (platforms.indexOf('chromeos') !== -1) {
-        release_chromeos();
+        merged.add(release_chromeos());
     }
 
     if (platforms.indexOf('linux64') !== -1) {
-        release('linux64');
+        merged.add(release('linux64'));
+        merged.add(release_deb('linux64'));
     }
 
     if (platforms.indexOf('linux32') !== -1) {
-        release('linux32');
+        merged.add(release('linux32'));
+        merged.add(release_deb('linux32'));
     }
         
     if (platforms.indexOf('osx64') !== -1) {
-        release_osx64();
+        merged.add(release_osx64());
     }
 
     if (platforms.indexOf('win32') !== -1) {
@@ -481,6 +547,8 @@ gulp.task('release', ['apps', 'clean-release'], function () {
     if (platforms.indexOf('win64') !== -1) {
         release_win('win64');
     }
+    
+    return merged.isEmpty() ? done() : merged;
 });
 
 gulp.task('default', ['debug']);
