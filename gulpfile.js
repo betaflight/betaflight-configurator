@@ -30,18 +30,14 @@ var releaseDir = './release/';
 // #
 // # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --osx64, --win32, --win64, or --chromeos)
 // # 
-function getPlatforms(includeChromeOs) {
-    var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32','win64'];
+function getPlatforms() {
+    var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32','win64', 'chromeos'];
     var platforms = [];
     var regEx = /--(\w+)/;
     for (var i = 3; i < process.argv.length; i++) {
         var arg = process.argv[i].match(regEx)[1];
         if (supportedPlatforms.indexOf(arg) > -1) {
              platforms.push(arg);
-        } else if (arg === 'chromeos') {
-            if (includeChromeOs) {
-                platforms.push(arg);
-            }
         } else {
              console.log('Unknown platform: ' + arg);
              process.exit();
@@ -53,12 +49,17 @@ function getPlatforms(includeChromeOs) {
         if (supportedPlatforms.indexOf(defaultPlatform) > -1) {
             platforms.push(defaultPlatform);
         } else {
-            console.log(`Your current platform (${os.platform()}) is not a supported build platform. Please specify platform to build for on the command line.`);
+            console.error(`Your current platform (${os.platform()}) is not a supported build platform. Please specify platform to build for on the command line.`);
             process.exit();
         }
     }
 
-    console.log('Building for platform(s): ' + platforms + '.');
+    if (platforms.length > 0) {
+        console.log('Building for platform(s): ' + platforms + '.');
+    } else {
+        console.error('No suitables platforms found.');
+        process.exit();
+    }
 
     return platforms;
 }
@@ -86,6 +87,13 @@ function getDefaultPlatform() {
         break;
     }
     return defaultPlatform;
+}
+
+function removeItem(platforms, item) {
+    var index = platforms.indexOf(item);
+    if (index >= 0) {
+        platforms.splice(index, 1);
+    }
 }
 
 function getRunDebugAppCommand(arch) {
@@ -282,61 +290,73 @@ gulp.task('dist', ['clean-dist'], function () {
 // Create runable app directories in ./apps
 gulp.task('apps', ['dist', 'clean-apps'], function (done) {
     var platforms = getPlatforms();
-    console.log('Release build.');
+    removeItem(platforms, 'chromeos');
+    console.log('Apps build.');
 
-    var builder = new NwBuilder({
-        files: './dist/**/*',
-        buildDir: appsDir,
-        platforms: platforms,
-        flavor: 'normal',
-        macIcns: './images/bf_icon.icns',
-        macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
-        winIco: './images/bf_icon.ico',
-    });
-    builder.on('log', console.log);
-    builder.build(function (err) {
-        if (err) {
-            console.log('Error building NW apps: ' + err);
-            runSequence('clean-apps', function() {
-                process.exit(1);
-            });
-        }
+    if (platforms.length > 0) {
+        var builder = new NwBuilder({
+            files: './dist/**/*',
+            buildDir: appsDir,
+            platforms: platforms,
+            flavor: 'normal',
+            macIcns: './images/bf_icon.icns',
+            macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
+            winIco: './images/bf_icon.ico',
+        });
+        builder.on('log', console.log);
+        builder.build(function (err) {
+            if (err) {
+                console.log('Error building NW apps: ' + err);
+                runSequence('clean-apps', function() {
+                    process.exit(1);
+                });
+            }
+            done();
+        });
+    } else {
+        console.log('No platform suitable for the apps task')
         done();
-    });
+    }
 });
 
 // Create debug app directories in ./debug
 gulp.task('debug', ['dist', 'clean-debug'], function (done) {
     var platforms = getPlatforms();
+    removeItem(platforms, 'chromeos');
     console.log('Debug build.');
 
-    var builder = new NwBuilder({
-        files: './dist/**/*',
-        buildDir: debugDir,
-        platforms: platforms,
-        flavor: 'sdk',
-        macIcns: './images/bf_icon.icns',
-        macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
-        winIco: './images/bf_icon.ico',
-    });
-    builder.on('log', console.log);
-    builder.build(function (err) {
-        if (err) {
-            console.log('Error building NW apps: ' + err);
-            runSequence('clean-debug', function() {
-                process.exit(1);
-            });
-        }
-        var exec = require('child_process').exec;    
-        if (platforms.length === 1) {
-            var run = getRunDebugAppCommand(platforms[0]);
-            console.log('Starting debug app (' + run + ')...');
-            exec(run);
-        } else {
-            console.log('More than one platform specified, not starting debug app');
-        }        
+    if (platforms.length > 0) {
+        var builder = new NwBuilder({
+            files: './dist/**/*',
+            buildDir: debugDir,
+            platforms: platforms,
+            flavor: 'sdk',
+            macIcns: './images/bf_icon.icns',
+            macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
+            winIco: './images/bf_icon.ico',
+        });
+        builder.on('log', console.log);
+        builder.build(function (err) {
+            if (err) {
+                console.log('Error building NW apps: ' + err);
+                runSequence('clean-debug', function() {
+                    process.exit(1);
+                });
+            }
+            var exec = require('child_process').exec;    
+            if (platforms.length === 1) {
+                var run = getRunDebugAppCommand(platforms[0]);
+                console.log('Starting debug app (' + run + ')...');
+                exec(run);
+            } else {
+                console.log('More than one platform specified, not starting debug app');
+            }        
+            done();
+        });
+    } else {
+        console.error('No platform suitable for the debug task')
         done();
-    });
+    }
 });
 
 // Create installer package for windows platforms
@@ -434,7 +454,7 @@ gulp.task('release', ['apps', 'clean-release'], function () {
         }
     });
 
-    var platforms = getPlatforms(true);
+    var platforms = getPlatforms();
     console.log('Packing release.');
 
     if (platforms.indexOf('chromeos') !== -1) {
