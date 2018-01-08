@@ -81,7 +81,7 @@ You can also use multiple platforms e.g. `gulp <taskname> --osx64 --linux64`.
 
 Betaflight Configurator has been translated to several languages. The application will be shown in your system language if a translation into this language is available. You can help [translating the application into your language](http://betaflight.oneskyapp.com).
 
-If you prefer to have the application in english, you can execute the program from the command line with the parameter `--lang=en` or you can create a script or a shortcut with this parameter included.
+If you prefer to have the application in english, you can execute the program from the command line adding a parameter `--lang=en` (for Windows systems) or adding a `LANGUAGE=en` before the name of the program (for Linux systems, for example `LANGUAGE=en ./betaflight-configurator`). You can create a script or a shortcut with this parameter included.
 
 ## Notes
 
