@@ -30,12 +30,12 @@
     "gulp-install": "^1.1.0",
     "inflection": "1.12.0",
     "jquery-ui-npm": "1.12.0",
+    "makensis": "^0.9.0",
     "nw-builder": "^3.4.1",
     "os": "^0.1.1",
     "platform-dependent-modules": "0.0.14",
     "run-sequence": "^2.2.0",
-    "temp": "^0.8.3",
-    "makensis": "^0.9.0"
+    "temp": "^0.8.3"
   },
   "config": {
     "platformDependentModules": {

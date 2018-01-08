@@ -340,7 +340,7 @@ gulp.task('debug', ['dist', 'clean-debug'], function (done) {
 });
 
 // Create installer package for windows platforms
-function releaseWin(arch) {
+function release_win(arch) {
 
     // Create the output directory, with write permissions
     fs.mkdir(releaseDir, '0775', function(err) {
@@ -454,11 +454,11 @@ gulp.task('release', ['apps', 'clean-release'], function () {
     }
 
     if (platforms.indexOf('win32') !== -1) {
-        releaseWin('win32');
+        release_win('win32');
     }
     
     if (platforms.indexOf('win64') !== -1) {
-        releaseWin('win64');
+        release_win('win64');
     }
 });
 

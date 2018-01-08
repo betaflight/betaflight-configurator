@@ -1,4 +1,6 @@
 !include "MUI2.nsh"
+!include "FileFunc.nsh"
+!include "LogicLib.nsh"
 
 # Receives variables from the command line
 # ${VERSION} - Version to generate (x.y.z)
@@ -11,7 +13,7 @@
 !define COMPANY_NAME          "The Betaflight open source project."
 !define GROUP_NAME            "Betaflight"
 !define FOLDER_NAME           "Betaflight-Configurator"
-!define FILE_NAME_INSTALLER   "betaflight-configurator-installer-${VERSION}-${PLATFORM}.exe"
+!define FILE_NAME_INSTALLER   "betaflight-configurator-installer_${VERSION}_${PLATFORM}.exe"
 !define FILE_NAME_UNINSTALLER "uninstall-betaflight-configurator.exe"
 !define FILE_NAME_EXECUTABLE  "betaflight-configurator.exe"
 !define LICENSE               "..\..\LICENSE"
@@ -50,11 +52,20 @@ OutFile "..\..\${DEST_FOLDER}\${FILE_NAME_INSTALLER}"
 !insertmacro MUI_LANGUAGE "Korean"
 !insertmacro MUI_LANGUAGE "Spanish"
 
+# default install dir, readed from registry from latest installation
+InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "InstallLocation"
+
 # default section start
 Section
 
-    # delete the installed files
-    RMDir /r $INSTDIR
+    # remove the older version
+    ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+            "InstallLocation"
+ 
+    ${If} $R0 != ""
+        # delete the installed files of the older version
+        RMDir /r $R0
+    ${EndIf}
 
     # define the path to which the installer should install
     SetOutPath $INSTDIR
@@ -71,6 +82,27 @@ Section
     CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME} (English).lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}" "--lang=en"
     CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${APP_NAME}.lnk" "$INSTDIR\${FILE_NAME_UNINSTALLER}"
     CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}"
+    
+    # include in add/remove programs
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+                "Publisher" "${COMPANY_NAME}"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+                "DisplayName" "${APP_NAME}"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+                "DisplayIcon" "$\"$INSTDIR\${FILE_NAME_EXECUTABLE}$\""
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+                "UninstallString" "$\"$INSTDIR\${FILE_NAME_UNINSTALLER}$\""
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+                "InstallLocation" "$INSTDIR"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+                "DisplayVersion" "${VERSION}"
+
+    # estimate the size
+    ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+    IntFmt $0 "0x%08X" $0
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+                "EstimatedSize" "$0"
+
 
 SectionEnd
 
@@ -83,9 +115,12 @@ Section "Uninstall"
     # delete the shortcuts
     Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME}.lnk"
     Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME} (English).lnk"
-    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${APP_NAME}.lnk"    
+    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${APP_NAME}.lnk"
     RMDir "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}"
     RMDir "$SMPROGRAMS\${GROUP_NAME}"
     Delete "$DESKTOP\${APP_NAME}.lnk"
+    
+    # remove from add/remove programs
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
 
 SectionEnd
