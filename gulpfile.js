@@ -490,11 +490,11 @@ gulp.task('release', ['apps', 'clean-release'], function (done) {
     }
 
     if (platforms.indexOf('win32') !== -1) {
-        return release_win('win32');
+        release_win('win32');
     }
     
     if (platforms.indexOf('win64') !== -1) {
-        return release_win('win64');
+        release_win('win64');
     }
 
     return merged.isEmpty() ? done() : merged;
