@@ -413,7 +413,7 @@ function release_win(arch) {
 
 // Create distribution package (zip) for windows and linux platforms
 function release(arch) {
-    var src = path.join(appsDir, pkg.name, arch + '/**');
+    var src = path.join(appsDir, pkg.name, arch, '**');
     var output = get_release_filename(arch, 'zip');
 
     return gulp.src(src)
@@ -423,7 +423,7 @@ function release(arch) {
 
 // Create distribution package for chromeos platform
 function release_chromeos() {
-    var src = path.join(distDir + '/**');
+    var src = path.join(distDir, '**');
     var output = get_release_filename('chromeos', 'zip');
 
     return gulp.src(src)
@@ -490,11 +490,11 @@ gulp.task('release', ['apps', 'clean-release'], function (done) {
     }
 
     if (platforms.indexOf('win32') !== -1) {
-        merged.add(releaseWin('win32'));
+        return release_win('win32');
     }
     
     if (platforms.indexOf('win64') !== -1) {
-        merged.add(releaseWin('win64'));
+        return release_win('win64');
     }
 
     return merged.isEmpty() ? done() : merged;
