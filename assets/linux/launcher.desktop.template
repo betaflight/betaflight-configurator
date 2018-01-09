@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Betaflight Configurator
+Exec=sh -c "$(dirname %k)/betaflight-configurator"
+Icon=
+Terminal=false
+Type=Application
