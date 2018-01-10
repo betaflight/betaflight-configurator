@@ -1,29 +1,27 @@
 'use strict';
 
-var pkg = require('./package.json');
+const pkg = require('./package.json');
 
-var child_process = require('child_process');
-var fs = require('fs');
-var path = require('path');
+const child_process = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-var zip = require('gulp-zip');
-var del = require('del');
-var NwBuilder = require('nw-builder');
-var makensis = require('makensis');
-var deb = require('gulp-debian');
+const zip = require('gulp-zip');
+const del = require('del');
+const NwBuilder = require('nw-builder');
+const makensis = require('makensis');
+const deb = require('gulp-debian');
 
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var install = require("gulp-install");
-var rename = require('gulp-rename');
-var runSequence = require('run-sequence');
-var mergeStream = require('merge-stream');
-var os = require('os');
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const install = require("gulp-install");
+const rename = require('gulp-rename');
+const os = require('os');
 
-var distDir = './dist/';
-var appsDir = './apps/';
-var debugDir = './debug/';
-var releaseDir = './release/';
+const DIST_DIR = './dist/';
+const APPS_DIR = './apps/';
+const DEBUG_DIR = './debug/';
+const RELEASE_DIR = './release/';
 
 var nwBuilderOptions = {
     version: '0.27.4',
@@ -33,6 +31,40 @@ var nwBuilderOptions = {
     winIco: './images/bf_icon.ico'
 };
 
+//-----------------
+//Pre tasks operations
+//-----------------
+const SELECTED_PLATFORMS = getInputPlatforms();
+
+//-----------------
+//Tasks
+//-----------------
+
+gulp.task('clean', gulp.parallel(clean_dist, clean_apps, clean_debug, clean_release));
+
+gulp.task('clean-dist', clean_dist);
+
+gulp.task('clean-apps', clean_apps);
+
+gulp.task('clean-debug', clean_debug);
+
+gulp.task('clean-release', clean_release);
+
+gulp.task('clean-cache', clean_cache);
+
+var distBuild = gulp.series(clean_dist, dist);
+gulp.task('dist', distBuild);
+
+var appsBuild = gulp.series(gulp.parallel(clean_apps, distBuild), apps, gulp.parallel(listPostBuildTasks(APPS_DIR)));
+gulp.task('apps', appsBuild);
+
+var debugBuild = gulp.series(gulp.parallel(clean_debug, distBuild), debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)), start_debug)
+gulp.task('debug', debugBuild);
+
+var releaseBuild = gulp.series(gulp.parallel(clean_release, appsBuild), gulp.parallel(listReleaseTasks()));
+gulp.task('release', releaseBuild);
+
+gulp.task('default', debugBuild);
 
 // -----------------
 // Helper functions
@@ -42,7 +74,7 @@ var nwBuilderOptions = {
 // #
 // # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --osx64, --win32, --win64, or --chromeos)
 // # 
-function getPlatforms() {
+function getInputPlatforms() {
     var supportedPlatforms = ['linux64', 'linux32', 'osx64', 'win32','win64', 'chromeos'];
     var platforms = [];
     var regEx = /--(\w+)/;
@@ -101,6 +133,11 @@ function getDefaultPlatform() {
     return defaultPlatform;
 }
 
+
+function getPlatforms() {
+    return SELECTED_PLATFORMS.slice();
+}
+
 function removeItem(platforms, item) {
     var index = platforms.indexOf(item);
     if (index >= 0) {
@@ -111,19 +148,19 @@ function removeItem(platforms, item) {
 function getRunDebugAppCommand(arch) {
     switch (arch) {
     case 'osx64':
-        return 'open ' + path.join(debugDir, pkg.name, arch, pkg.name + '.app');
+        return 'open ' + path.join(DEBUG_DIR, pkg.name, arch, pkg.name + '.app');
 
         break;
 
     case 'linux64':
     case 'linux32':
-        return path.join(debugDir, pkg.name, arch, pkg.name);
+        return path.join(DEBUG_DIR, pkg.name, arch, pkg.name);
 
         break;
 
     case 'win32':
     case 'win64':
-        return path.join(debugDir, pkg.name, arch, pkg.name + '.exe');
+        return path.join(DEBUG_DIR, pkg.name, arch, pkg.name + '.exe');
 
         break;
 
@@ -134,41 +171,33 @@ function getRunDebugAppCommand(arch) {
     }
 }
 
-function get_release_filename(platform, ext) {
-    return 'Betaflight-Configurator_' + platform + '_' + pkg.version + '.' + ext;
+function getReleaseFilename(platform, ext) {
+    return 'betaflight-configurator_' + pkg.version + '_' + platform + '.' + ext;
 }
 
-// -----------------
-// Tasks
-// -----------------
+function clean_dist() { 
+    return del([DIST_DIR + '**'], { force: true }); 
+};
 
-gulp.task('clean', function () { 
-    return runSequence('clean-dist', 'clean-apps', 'clean-debug', 'clean-release');
-});
+function clean_apps() { 
+    return del([APPS_DIR + '**'], { force: true }); 
+};
 
-gulp.task('clean-dist', function () { 
-    return del([distDir + '**'], { force: true }); 
-});
+function clean_debug() { 
+    return del([DEBUG_DIR + '**'], { force: true }); 
+};
 
-gulp.task('clean-apps', function () { 
-    return del([appsDir + '**'], { force: true }); 
-});
+function clean_release() { 
+    return del([RELEASE_DIR + '**'], { force: true }); 
+};
 
-gulp.task('clean-debug', function () { 
-    return del([debugDir + '**'], { force: true }); 
-});
-
-gulp.task('clean-release', function () { 
-    return del([releaseDir + '**'], { force: true }); 
-});
-
-gulp.task('clean-cache', function () { 
+function clean_cache() { 
     return del(['./cache/**'], { force: true }); 
-});
+};
 
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
-gulp.task('dist', ['clean-dist'], function () {
+function dist() {
     var distSources = [
         // CSS files
         './main.css',
@@ -293,148 +322,162 @@ gulp.task('dist', ['clean-dist'], function () {
         './resources/motor_order/*.svg',
     ];
     return gulp.src(distSources, { base: '.' })
-        .pipe(gulp.dest(distDir))
+        .pipe(gulp.dest(DIST_DIR))
         .pipe(install({
             npm: '--production --ignore-scripts'
         }));;
-});
+};
 
 // Create runable app directories in ./apps
-gulp.task('apps', ['dist', 'clean-apps'], function (done) {
+function apps(done) {
     var platforms = getPlatforms();
     removeItem(platforms, 'chromeos');
-    console.log('Apps build.');
 
-    if (platforms.length > 0) {
-        var builder = new NwBuilder(Object.assign({
-            buildDir: appsDir,
-            platforms: platforms,
-            flavor: 'normal'
-        }, nwBuilderOptions));
-        builder.on('log', console.log);
-        builder.build(function (err) {
-            if (err) {
-                console.log('Error building NW apps: ' + err);
-                runSequence('clean-apps', function() {
-                    process.exit(1);
-                });
-            }
-	        runSequence('post-build', function() {
-    	        done();
-        	});
-        });
-    } else {
-        console.log('No platform suitable for the apps task')
-        done();
-    }
-});
+    buildNWApps(platforms, 'normal', APPS_DIR, done);
+};
 
-gulp.task('post-build', function (done) {
+function listPostBuildTasks(folder, done) {
 
     var platforms = getPlatforms();
 
-    var merged = mergeStream();
+    var postBuildTasks = [];
 
     if (platforms.indexOf('linux32') != -1) {
-        // Copy Ubuntu launcher scripts to destination dir
-        var launcherDir = path.join(appsDir, pkg.name, 'linux32');
-        console.log('Copy Ubuntu launcher scripts to ' + launcherDir);
-        merged.add(gulp.src('assets/linux/**')
-            .pipe(gulp.dest(launcherDir)));
+        postBuildTasks.push(function post_build_linux32(done){ return post_build('linux32', folder, done) });
     }
 
     if (platforms.indexOf('linux64') != -1) {
-        // Copy Ubuntu launcher scripts to destination dir
-        var launcherDir = path.join(appsDir, pkg.name, 'linux64');        
-        console.log('Copy Ubuntu launcher scripts to ' + launcherDir);        
-        merged.add(gulp.src('assets/linux/**')
-            .pipe(gulp.dest(launcherDir)));
+        postBuildTasks.push(function post_build_linux64(done){ return post_build('linux64', folder, done) });
     }
 
-    return merged.isEmpty() ? done() : merged;
-});
+    // We need to return at least one task, if not gulp will throw an error
+    if (postBuildTasks.length == 0) {
+        postBuildTasks.push(function post_build_none(done){ done() });
+    }
+    return postBuildTasks;
+}
+
+function post_build(arch, folder, done) {
+
+    if ((arch =='linux32') || (arch == 'linux64')) {
+        // Copy Ubuntu launcher scripts to destination dir
+        var launcherDir = path.join(folder, pkg.name, arch);
+        console.log('Copy Ubuntu launcher scripts to ' + launcherDir);
+        return gulp.src('assets/linux/**')
+                   .pipe(gulp.dest(launcherDir));
+    }
+
+    return done();
+}
+
 // Create debug app directories in ./debug
-gulp.task('debug', ['dist', 'clean-debug'], function (done) {
+function debug(done) {
     var platforms = getPlatforms();
     removeItem(platforms, 'chromeos');
-    console.log('Debug build.');
+
+    buildNWApps(platforms, 'sdk', DEBUG_DIR, done);
+}
+
+function buildNWApps(platforms, flavor, dir, done) {
 
     if (platforms.length > 0) {
         var builder = new NwBuilder(Object.assign({
-            buildDir: debugDir,
+            buildDir: dir,
             platforms: platforms,
-            flavor: 'sdk'
+            flavor: flavor
         }, nwBuilderOptions));
         builder.on('log', console.log);
         builder.build(function (err) {
             if (err) {
                 console.log('Error building NW apps: ' + err);
-                runSequence('clean-debug', function() {
-                    process.exit(1);
-                });
+                clean_debug();
+                process.exit(1);
             }
-            var exec = require('child_process').exec;    
-            if (platforms.length === 1) {
-                var run = getRunDebugAppCommand(platforms[0]);
-                console.log('Starting debug app (' + run + ')...');
-                exec(run);
-            } else {
-                console.log('More than one platform specified, not starting debug app');
-            }        
             done();
         });
     } else {
-        console.error('No platform suitable for the debug task')
+        console.log('No platform suitable for NW Build')
         done();
     }
-});
+}
+
+
+function start_debug(done) {
+
+    var platforms = getPlatforms();
+
+    var exec = require('child_process').exec;    
+    if (platforms.length === 1) {
+        var run = getRunDebugAppCommand(platforms[0]);
+        console.log('Starting debug app (' + run + ')...');
+        exec(run);
+    } else {
+        console.log('More than one platform specified, not starting debug app');
+    }
+    done();
+}
 
 // Create installer package for windows platforms
-function release_win(arch) {
+function release_win(arch, done) {
 
     // Create the output directory, with write permissions
-    fs.mkdir(releaseDir, '0775', function(err) {
+    fs.mkdir(RELEASE_DIR, '0775', function(err) {
         if (err) {
             if (err.code !== 'EEXIST') {
                 throw err;
             }
         }
     });
-    
+
     // Parameters passed to the installer script
     const options = {
             verbose: 2,
             define: {
                 'VERSION': pkg.version,
                 'PLATFORM': arch,
-                'DEST_FOLDER': releaseDir
+                'DEST_FOLDER': RELEASE_DIR
             }
         }
+
     var output = makensis.compileSync('./assets/windows/installer.nsi', options);
-    
-    if (output.status === 0) {
-        console.log('Installer finished for platform: ' + arch);
-    } else {
+
+    if (output.status !== 0) {
         console.error('Installer for platform ' + arch + ' finished with error ' + output.status + ': ' + output.stderr);
     }
+
+    done();
 }
 
 // Create distribution package (zip) for windows and linux platforms
-function release(arch) {
-    var src = path.join(appsDir, pkg.name, arch, '**');
-    var output = get_release_filename(arch, 'zip');
+function release_zip(arch) {
+    var src = path.join(APPS_DIR, pkg.name, arch, '**');
+    var output = getReleaseFilename(arch, 'zip');
+    var base = path.join(APPS_DIR, pkg.name, arch);
 
-    console.log('zip package started: ' + arch);
-    return gulp.src(src, {base: path.join(appsDir, pkg.name, arch) })
-               .pipe(rename(function(actualPath){ actualPath.dirname = path.join('Betaflight Configurator', actualPath.dirname) }))    
-               .pipe(zip(output))
-               .pipe(gulp.dest(releaseDir));
+    return compressFiles(src, base, output, 'Betaflight Configurator');
+}
+
+// Create distribution package for chromeos platform
+function release_chromeos() {
+    var src = path.join(DIST_DIR, '**');
+    var output = getReleaseFilename('chromeos', 'zip');
+    var base = DIST_DIR;
+
+    return compressFiles(src, base, output, '.');
+}
+
+// Compress files from srcPath, using basePath, to outputFile in the RELEASE_DIR
+function compressFiles(srcPath, basePath, outputFile, zipFolder) {
+    return gulp.src(srcPath, { base: basePath })
+               .pipe(rename(function(actualPath){ actualPath.dirname = path.join(zipFolder, actualPath.dirname) }))
+               .pipe(zip(outputFile))
+               .pipe(gulp.dest(RELEASE_DIR));
 }
 
 function release_deb(arch) {
 
     var debArch;
-    
+
     switch (arch) {
     case 'linux32':
         debArch = 'i386';
@@ -448,9 +491,7 @@ function release_deb(arch) {
         break;
     }
 
-    console.log("Debian package started arch: " + arch);
-
-    return gulp.src([path.join(appsDir, pkg.name, arch, '*')])
+    return gulp.src([path.join(APPS_DIR, pkg.name, arch, '*')])
         .pipe(deb({
              package: pkg.name,
              version: pkg.version,
@@ -464,20 +505,9 @@ function release_deb(arch) {
              depends: 'libgconf-2-4',
              changelog: [],
              _target: 'opt/betaflight/betaflight-configurator',
-             _out: releaseDir,
+             _out: RELEASE_DIR,
              _clean: true
     }));
-}
-
-// Create distribution package for chromeos platform
-function release_chromeos() {
-    var src = distDir + '/**';
-    var output = get_release_filename('chromeos', 'zip');
-
-    console.log('chromeos package started');
-    return gulp.src(src)
-               .pipe(zip(output))
-               .pipe(gulp.dest(releaseDir));
 }
 
 // Create distribution package for macOS platform
@@ -486,8 +516,8 @@ function release_osx64() {
 
     return gulp.src([])
         .pipe(appdmg({
-            target: path.join(releaseDir, get_release_filename('macOS', 'dmg')),
-            basepath: path.join(appsDir, pkg.name, 'osx64'),
+            target: path.join(RELEASE_DIR, getReleaseFilename('macOS', 'dmg')),
+            basepath: path.join(APPS_DIR, pkg.name, 'osx64'),
             specification: {
                 title: 'Betaflight Configurator',
                 contents: [
@@ -507,48 +537,38 @@ function release_osx64() {
     );
 }
 
-// Create distributable .zip files in ./release
-gulp.task('release', ['apps', 'clean-release'], function (done) {
-    fs.mkdir(releaseDir, '0775', function(err) {
-        if (err) {
-            if (err.code !== 'EEXIST') {
-                throw err;
-            }
-        }
-    });
+// Create a list of the gulp tasks to execute for release
+function listReleaseTasks(done) {
 
     var platforms = getPlatforms();
-    console.log('Packing release.');
 
-    var merged = mergeStream();
-    
+    var releaseTasks = [];
+
     if (platforms.indexOf('chromeos') !== -1) {
-        merged.add(release_chromeos());
+        releaseTasks.push(release_chromeos);
     }
 
     if (platforms.indexOf('linux64') !== -1) {
-        merged.add(release('linux64'));
-        merged.add(release_deb('linux64'));
+        releaseTasks.push(function release_linux64_zip(){ return release_zip('linux64') });
+        releaseTasks.push(function release_linux64_deb(){ return release_deb('linux64') });
     }
 
     if (platforms.indexOf('linux32') !== -1) {
-        merged.add(release('linux32'));
-        merged.add(release_deb('linux32'));
+        releaseTasks.push(function release_linux32_zip(){ return release_zip('linux32') });
+        releaseTasks.push(function release_linux32_deb(){ return release_deb('linux32') });
     }
-        
+
     if (platforms.indexOf('osx64') !== -1) {
-        merged.add(release_osx64());
+        releaseTasks.push(release_osx64);
     }
 
     if (platforms.indexOf('win32') !== -1) {
-        release_win('win32');
+        releaseTasks.push(function release_win32(done){ return release_win('win32', done) });
     }
     
     if (platforms.indexOf('win64') !== -1) {
-        release_win('win64');
+        releaseTasks.push(function release_win64(done){ return release_win('win64', done) });
     }
-    
-    return merged.isEmpty() ? done() : merged;
-});
 
-gulp.task('default', ['debug']);
+    return releaseTasks;
+}
