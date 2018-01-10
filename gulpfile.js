@@ -22,6 +22,15 @@ var appsDir = './apps/';
 var debugDir = './debug/';
 var releaseDir = './release/';
 
+var nwBuilderOptions = {
+    version: '0.27.4',
+    files: './dist/**/*',
+    macIcns: './images/bf_icon.icns',
+    macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
+    winIco: './images/bf_icon.ico'
+};
+
+
 // -----------------
 // Helper functions
 // -----------------
@@ -294,15 +303,11 @@ gulp.task('apps', ['dist', 'clean-apps'], function (done) {
     console.log('Apps build.');
 
     if (platforms.length > 0) {
-        var builder = new NwBuilder({
-            files: './dist/**/*',
+        var builder = new NwBuilder(Object.assign({
             buildDir: appsDir,
             platforms: platforms,
-            flavor: 'normal',
-            macIcns: './images/bf_icon.icns',
-            macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
-            winIco: './images/bf_icon.ico',
-        });
+            flavor: 'normal'
+        }, nwBuilderOptions));
         builder.on('log', console.log);
         builder.build(function (err) {
             if (err) {
@@ -326,15 +331,11 @@ gulp.task('debug', ['dist', 'clean-debug'], function (done) {
     console.log('Debug build.');
 
     if (platforms.length > 0) {
-        var builder = new NwBuilder({
-            files: './dist/**/*',
+        var builder = new NwBuilder(Object.assign({
             buildDir: debugDir,
             platforms: platforms,
-            flavor: 'sdk',
-            macIcns: './images/bf_icon.icns',
-            macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
-            winIco: './images/bf_icon.ico',
-        });
+            flavor: 'sdk'
+        }, nwBuilderOptions));
         builder.on('log', console.log);
         builder.build(function (err) {
             if (err) {
