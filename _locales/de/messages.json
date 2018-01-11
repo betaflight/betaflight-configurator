@@ -2,6 +2,10 @@
     "translation_version": {
         "message": "0"
     },
+    "windowTitle": {
+        "message": "Betaflight Configurator",
+        "description": "Title of the application window, usually not translated"
+    },
     "warningTitle": {
         "message": "Warnung"
     },
@@ -37,6 +41,24 @@
     },
     "permanentExpertMode": {
         "message": "Expertenmodus dauerhaft aktivieren"
+    },
+    "sensorStatusGyro": {
+        "message": "Gyro"
+    },
+    "sensorStatusAccel": {
+        "message": "Beschleunigungssensor"
+    },
+    "sensorStatusMag": {
+        "message": "Magnetometer"
+    },
+    "sensorStatusBaro": {
+        "message": "Barometer"
+    },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
+    "sensorStatusSonar": {
+        "message": "Sonar \/ Entfernungsmesser"
     },
     "checkForConfiguratorUnstableVersions": {
         "message": "Zeige Updateinformationen f\u00fcr experimentelle Versionen des Konfigurators"
@@ -140,6 +162,12 @@
     "tabAuxiliary": {
         "message": "Modi"
     },
+    "logActionHide": {
+        "message": "Log verbergen"
+    },
+    "logActionShow": {
+        "message": "Log zeigen"
+    },
     "serialPortOpened": {
         "message": "Serieller Port<span class=\"message-positive\">erfolgreich<\/span> ge\u00f6ffnet mit ID: $1"
     },
@@ -178,6 +206,21 @@
     },
     "firmwareUpgradeRequired": {
         "message": "Die Firmware auf dem Ger\u00e4t muss geupdatet werden. Vor dem Update bitte ein Backup in der Kommandozeile machen. Eine Anleitung dazu ist in der Dokumentation zu finden. \n<br \/>Alternativ bitte eine alte Version des Konfiugrators downloaden"
+    },
+    "infoVersions": {
+        "message": "Betriebssystem: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Konfigurator: <strong>$3<\/strong>"
+    },
+    "releaseCheckLoaded": {
+        "message": "Lade Github Information f\u00fcr Version $1."
+    },
+    "releaseCheckFailed": {
+        "message": "<b>Einholen der Informationen f\u00fcr $1 fehlgeschlagen. Gepufferte Informationen werden benutzt. Grund: <code>$2<\/code><\/b>"
+    },
+    "releaseCheckCached": {
+        "message": "Nutze gepufferte Informationen f\u00fcr Version $1"
+    },
+    "releaseCheckNoInfo": {
+        "message": "Keine Informationen f\u00fcr Version $1 verf\u00fcgbar."
     },
     "tabSwitchConnectionRequired": {
         "message": "Bitte vor dem Zugriff auf die Tabs ein Ger\u00e4t <strong>verbinden<\/strong>"
@@ -269,6 +312,9 @@
     "defaultWelcomeIntro": {
         "message": "Willkommen im <strong> Betaflight - Konfigurator <\/strong>, einer Anwendung daf\u00fcr gemacht um Updates, Konfiguration und Tuning deines Flugcontrollers zu erleichtern."
     },
+    "defaultWelcomeHead": {
+        "message": "Hardware"
+    },
     "defaultWelcomeText": {
         "message": "Die Anwendung unterst\u00fctzt alle Hardware auf der Betaflight laufen kann. Bitte Firmware Flash Tab pr\u00fcfen f\u00fcr eine vollst\u00e4ndige Liste .<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Download Betaflight Blackbox<\/a><br \/><br \/>Der Firmware Quelltext kann  <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">hier<\/a> heruntergeladen werden<br \/>Die neuesten Bin\u00e4rdateien gibt es <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">hier<\/a><br \/><br \/>Neuste <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x Drivers<\/a> k\u00f6nnen  <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">hier<\/a> heruntergeladen werden.<br \/>Neueste  <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> gibt es<a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">hier<\/a><br \/>Aktuelle  <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> Versionen f\u00fcr Windows gibt es  <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">hier<\/a><br \/>"
     },
@@ -276,7 +322,10 @@
         "message": "Mitmachen"
     },
     "defaultContributingText": {
-        "message": "Wenn du Betaflight besser machen willst kannst du uns in auf viele Art und Weisen helfen:<br \/>\n<ul><li>Beantworte die Fragen anderen User in Foren und Gruppen<\/li><li>Trage zum Code der Firmware und des Konfigurators bei<\/li><li>Teste und liefere uns Feedback<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">f\u00fcr neue Versionen\/fixes<\/a>\n <\/li><li>Hilf uns in dem du auf <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">Fehler und \u00c4nderungsw\u00fcnsche antwortest<\/a>.<\/li><li><\/li><\/ul>"
+        "message": "Wenn du helfen willst Betaflight noch besser zu machen kannst du das auf mehrere Arten machen. <br \/><ul><li>Beantworte Fragen andere Benutzer in Foren oder im IRC.<\/li><li>Steuere Code f\u00fcr neue Firmwares und den Konfiguration bei - neue Funktionen, Bugfixes oder Verbesserungen.<\/li><li>Teste <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">neue Funktionen<\/a> und gibt uns Feedback.<\/li><li>Hilf uns bei <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">Problemen und Funktionsw\u00fcnschen<\/a>.<\/li><li>Hilf mit den <a href=\"http:\/\/betaflight.oneskyapp.com\" target=\"_blank\">Konfigurator zu \u00fcbersetzen<\/a><\/li><li><\/li><\/ul>"
+    },
+    "defaultChangelogAction": {
+        "message": "Changelog"
     },
     "defaultChangelogHead": {
         "message": "Konfigurator - Changelog"
@@ -289,6 +338,9 @@
     },
     "defaultDonateText": {
         "message": "Dieses Programm ist komplett <strong> Open Source<\/strong> and f\u00fcr alle <strong>Betaflight<\/strong> Benutzer kostenlos verf\u00fcgbar. Falls der Konfigurator hilfreich ist, bitte denke dar\u00fcber nach das Projekt mit einer Spende zu <strong>unterst\u00fctzen<\/strong>"
+    },
+    "defaultDonate": {
+        "message": "Spenden"
     },
     "defaultSponsorsHead": {
         "message": "Sponsoren"
@@ -346,6 +398,9 @@
     },
     "initialSetupCalibrateMagText": {
         "message": "Multirotor mindestens <strong>360<\/strong> Grad um alle Achsen drehen. Es verbleiben 30 Sekunden daf\u00fcr"
+    },
+    "initialSetupButtonCalibratingText": {
+        "message": "kalibriere..."
     },
     "initialSetupButtonReset": {
         "message": "Einstellungen z\u00fcrcksetzen"
@@ -673,6 +728,9 @@
     },
     "configurationSensorAlignmentMag": {
         "message": "MAG Ausrichtung"
+    },
+    "configurationSensorAlignmentDefaultOption": {
+        "message": "Standard"
     },
     "configurationAccelTrims": {
         "message": "Beschleunigungssensor Trimmung"
@@ -1148,11 +1206,17 @@
     "receiverChannelMap": {
         "message": "Kanalzuordnung"
     },
+    "receiverChannelDefaultOption": {
+        "message": "Standard"
+    },
     "receiverChannelMapTitle": {
         "message": "Es kann eine eigene Kanalzuordnung erstellt werden, klicke daf\u00fcr in das Feld"
     },
     "receiverRssiChannel": {
         "message": "RSSI Kanal"
+    },
+    "receiverRssiChannelDisabledOption": {
+        "message": "deaktiviert"
     },
     "receiverRefreshRateTitle": {
         "message": "Graph Update Rate"
@@ -1478,6 +1542,78 @@
     "gpsSignalStr": {
         "message": "Signal St\u00e4rke"
     },
+    "gpsSignalSatId": {
+        "message": "Sat ID"
+    },
+    "gpsSignalQty": {
+        "message": "Qualit\u00e4t"
+    },
+    "motorsText": {
+        "message": "Motoren"
+    },
+    "motorNumber1": {
+        "message": "Motor - 1"
+    },
+    "motorNumber2": {
+        "message": "Motor - 2"
+    },
+    "motorNumber3": {
+        "message": "Motor - 3"
+    },
+    "motorNumber4": {
+        "message": "Motor - 4"
+    },
+    "motorNumber5": {
+        "message": "Motor - 5"
+    },
+    "motorNumber6": {
+        "message": "Motor - 6"
+    },
+    "motorNumber7": {
+        "message": "Motor - 7"
+    },
+    "motorNumber8": {
+        "message": "Motor - 8"
+    },
+    "servosText": {
+        "message": "Servos"
+    },
+    "servoNumber1": {
+        "message": "Servo - 1"
+    },
+    "servoNumber2": {
+        "message": "Servo - 2"
+    },
+    "servoNumber3": {
+        "message": "Servo - 3"
+    },
+    "servoNumber4": {
+        "message": "Servo - 4"
+    },
+    "servoNumber5": {
+        "message": "Servo - 5"
+    },
+    "servoNumber6": {
+        "message": "Servo - 6"
+    },
+    "servoNumber7": {
+        "message": "Servo - 7"
+    },
+    "servoNumber8": {
+        "message": "Servo - 8"
+    },
+    "motorsResetMaximumButton": {
+        "message": "zur\u00fccksetzen"
+    },
+    "motorsResetMaximum": {
+        "message": "max. Zeit\u00fcberschreitung zur\u00fccksetzen"
+    },
+    "motorsSensorGyroSelect": {
+        "message": "Gyro"
+    },
+    "motorsSensorAccelSelect": {
+        "message": "Beschleunigungssensor"
+    },
     "motorsMaster": {
         "message": "Master"
     },
@@ -1495,6 +1631,42 @@
     },
     "sensorsScale": {
         "message": "Skala:"
+    },
+    "sensorsGyroSelect": {
+        "message": "Gyroskop"
+    },
+    "sensorsAccelSelect": {
+        "message": "Beschleunigungssensor"
+    },
+    "sensorsMagSelect": {
+        "message": "Magnetometer"
+    },
+    "sensorsBaroSelect": {
+        "message": "Barometer"
+    },
+    "sensorsSonarSelect": {
+        "message": "Sonar"
+    },
+    "sensorsDebugSelect": {
+        "message": "Debug"
+    },
+    "sensorsGyroTitle": {
+        "message": "Gyro - Grad \/ Sekunde"
+    },
+    "sensorsAccelTitle": {
+        "message": "Beschleunigungssensor - G"
+    },
+    "sensorsMagTitle": {
+        "message": "Magnetometer - Ga"
+    },
+    "sensorsBaroTitle": {
+        "message": "Barometer - Meter"
+    },
+    "sensorsSonarTitle": {
+        "message": "Sonar - CM"
+    },
+    "sensorsDebugTitle": {
+        "message": "Debug"
     },
     "cliInfo": {
         "message": "<strong>Hinweis<\/strong>: Wenn der CLI Tab verlassen wird oder trennen geklickt wird wird <strong>automatisch<\/strong> ein <strong>exit<\/strong> Befehl an das Board geschickt. Mit der neusten Firmware macht das Board automatisch einen <span class=\"message-negative\">Neustart<\/span> nicht gesicherte Einstellungen gehen damit <span class=\"message-negative\">verloren<\/span>."
@@ -1574,6 +1746,18 @@
     "sdcardNote": {
         "message": "Fluglogs k\u00f6nnen nicht auf der SD Karte gespeichert werden"
     },
+    "dataflashUsedSpace": {
+        "message": "genutzer Speicher"
+    },
+    "dataflashFreeSpace": {
+        "message": "feier Speicher"
+    },
+    "dataflashUnavSpace": {
+        "message": "nicht verf\u00fcgbarer Speicher"
+    },
+    "dataflashLogsSpace": {
+        "message": "Speicher f\u00fcr Logs verf\u00fcgbar machen"
+    },
     "dataflashNote": {
         "message": "Fluglogs k\u00f6nnen auf dem internen Speicher gespeichert werden"
     },
@@ -1618,6 +1802,24 @@
     },
     "dataflashFileWriteFailed": {
         "message": "Speichern fehlgeschlagen, bitte sicherstellen das die Schreibberechtigungen gegeben sind."
+    },
+    "sdcardStatusNoCard": {
+        "message": "Keine Karte eingesetzt"
+    },
+    "sdcardStatusReboot": {
+        "message": "Schwerer Fehler <br> Neustarten um es noch einmal zu versuchen"
+    },
+    "sdcardStatusReady": {
+        "message": "Karte bereit"
+    },
+    "sdcardStatusStarting": {
+        "message": "Karte startet..."
+    },
+    "sdcardStatusFileSystem": {
+        "message": "Dateisystem startet..."
+    },
+    "sdcardStatusUnknown": {
+        "message": "Unbekannter Status $1"
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Update Info"
@@ -1697,11 +1899,17 @@
     "firmwareFlasherFlashDevelopmentFirmwareDescription": {
         "message": "Neueste (ungetestete) Entwicklerfirmware flashen."
     },
+    "firmwareFlasherManualPort": {
+        "message": "Port"
+    },
     "firmwareFlasherManualBaud": {
         "message": "Manuelle Baudrate"
     },
     "firmwareFlasherManualBaudDescription": {
         "message": "Manuelle Auswahl der Baudrate f\u00fcr FCs, die nicht mit der Standardrate funktionieren, oder f\u00fcrs flashen via Bluetooth.<br \/><span class=\"message-negative\">Hinweis:<\/span> Wird beim flashen via USB-DFU NICHT verwendet"
+    },
+    "firmwareFlasherBaudRate": {
+        "message": "Baud Rate"
     },
     "firmwareFlasherShowDevelopmentReleases": {
         "message": "Instabile Versionen anzeigen"
@@ -1775,6 +1983,21 @@
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Fehler beim laden der Online-Firmware"
     },
+    "firmwareFlasherNoFirmwareSelected": {
+        "message": "<b>Keine Firmware zum flashen ausgew\u00e4hlt<\/b>"
+    },
+    "firmwareFlasherNoValidPort": {
+        "message": "<span class=\"message-negative\">Bitte g\u00fcltigen seriellen Port ausw\u00e4hlen<\/span>"
+    },
+    "firmwareFlasherWritePermissions": {
+        "message": "Keine <span class=\"message-negative\">Schreibrechte<\/span> f\u00fcr diese Datei"
+    },
+    "firmwareFlasherFlashTrigger": {
+        "message": "<strong>$1<\/strong> gefunden - flashe beim anstecken"
+    },
+    "firmwareFlasherPreviousDevice": {
+        "message": "<strong>$1<\/strong> erkannt. Ger\u00e4t flasht noch, bitte neu anstecken und nochmals versuchen"
+    },
     "ledStripHelp": {
         "message": "Der Flugcontrollerm kann Farben und Effekte f\u00fcr LED Leisten Steuern.<br \/>Konfigurieren LEDs sowie die Verkabelung auf dem Raster und bringe dann die LEDs entsprechend an."
     },
@@ -1819,6 +2042,48 @@
     },
     "ledStripIndecatorOverlay": {
         "message": "Indikator (nutzt die Position auf der Matrix)"
+    },
+    "colorBlack": {
+        "message": "schwarz"
+    },
+    "colorWhite": {
+        "message": "weiss"
+    },
+    "colorRed": {
+        "message": "rot"
+    },
+    "colorOrange": {
+        "message": "orange"
+    },
+    "colorYellow": {
+        "message": "gelb"
+    },
+    "colorLimeGreen": {
+        "message": "hellgr\u00fcn"
+    },
+    "colorGreen": {
+        "message": "gr\u00fcn"
+    },
+    "colorMintGreen": {
+        "message": "mint gr\u00fcn"
+    },
+    "colorCyan": {
+        "message": "t\u00fcrkis"
+    },
+    "colorLightBlue": {
+        "message": "hell blau"
+    },
+    "colorBlue": {
+        "message": "blau"
+    },
+    "colorDarkViolet": {
+        "message": "dunkel lila"
+    },
+    "colorMagenta": {
+        "message": "magenta"
+    },
+    "colorDeepPink": {
+        "message": "Pink"
     },
     "controlAxisRoll": {
         "message": "Roll [A]"
@@ -2087,8 +2352,32 @@
     "powerBatteryVoltageMeterSource": {
         "message": "Voltmeter Quelle"
     },
+    "powerBatteryVoltageMeterTypeNone": {
+        "message": "Keine"
+    },
+    "powerBatteryVoltageMeterTypeAdc": {
+        "message": "Onboard Spannungmessung"
+    },
+    "powerBatteryVoltageMeterTypeEsc": {
+        "message": "Sensoren der Regler"
+    },
     "powerBatteryCurrentMeterSource": {
         "message": "Amperemeter Quelle"
+    },
+    "powerBatteryCurrentMeterTypeNone": {
+        "message": "Keine"
+    },
+    "powerBatteryCurrentMeterTypeAdc": {
+        "message": "Onboard Spannungmessung"
+    },
+    "powerBatteryCurrentMeterTypeVirtual": {
+        "message": "virtuell"
+    },
+    "powerBatteryCurrentMeterTypeEsc": {
+        "message": "Sensoren der Regler"
+    },
+    "powerBatteryCurrentMeterTypeMsp": {
+        "message": "MSP Sensor\/OSD Slave"
     },
     "powerBatteryMinimum": {
         "message": "Minimale Zellspannung"
@@ -2596,6 +2885,12 @@
     },
     "osdSectionHelpWarnings": {
         "message": "Warnungen aktivieren oder deaktivieren die angezeigt werden."
+    },
+    "osdSettingsSaved": {
+        "message": "OSD Einstellungen gespeichert"
+    },
+    "osdWritePermissions": {
+        "message": "Keine <span class=\"message-negative\">Schreibrechte<\/span> f\u00fcr diese Datei"
     },
     "mainHelpArmed": {
         "message": "Motor Arming"
