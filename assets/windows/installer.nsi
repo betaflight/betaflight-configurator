@@ -26,15 +26,11 @@ BrandingText "${COMPANY_NAME}"
 !define MUI_ICON ".\bf_installer_icon.ico"
 !define MUI_UNICON ".\bf_uninstaller_icon.ico"
 
+# Request rights user level
+RequestExecutionLevel highest
+
 # define the resulting installer's name:
 OutFile "..\..\${DEST_FOLDER}\${FILE_NAME_INSTALLER}"
-
-# set the default installation directory
-!if ${PLATFORM} == 'win64'
-    InstallDir "$PROGRAMFILES64\${GROUP_NAME}\${FOLDER_NAME}\" 
-!else
-    InstallDir "$PROGRAMFILES\${GROUP_NAME}\${FOLDER_NAME}\"
-!endif
 
 # app dialogs
 !insertmacro MUI_PAGE_WELCOME
@@ -52,19 +48,62 @@ OutFile "..\..\${DEST_FOLDER}\${FILE_NAME_INSTALLER}"
 !insertmacro MUI_LANGUAGE "Korean"
 !insertmacro MUI_LANGUAGE "Spanish"
 
-# default install dir, readed from registry from latest installation
-InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "InstallLocation"
+Function .onInit
+
+    # Check if older version
+    ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+            "InstallLocation"
+
+    ${If} $R0 != ""
+        StrCpy $INSTDIR $R0
+    ${Else}
+
+        # Check if older version without administrative rights
+        ReadRegStr $R1 HKCU "Software\${GROUP_NAME}\${APP_NAME}" \
+            "InstallLocation"
+
+        ${If} $R1 != ""
+            StrCpy $INSTDIR $R1
+        ${Else}
+
+            # New version, select default folder
+            UserInfo::GetAccountType
+            Pop $R2
+            
+            ${If} $R2 == "Admin"
+                # set the default installation directory
+                !if ${PLATFORM} == 'win64'
+                        StrCpy $INSTDIR "$PROGRAMFILES64\${GROUP_NAME}\${FOLDER_NAME}\" 
+                !else
+                        StrCpy $INSTDIR "$PROGRAMFILES\${GROUP_NAME}\${FOLDER_NAME}\" 
+                !endif
+            ${Else}
+                StrCpy $INSTDIR "$DOCUMENTS\${GROUP_NAME}\${FOLDER_NAME}\"
+            ${Endif}
+        ${Endif}
+    ${Endif}
+
+FunctionEnd
 
 # default section start
 Section
 
-    # remove the older version
-    ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    # remove the older version, users with admin rights
+    ReadRegStr $R3 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
             "InstallLocation"
- 
-    ${If} $R0 != ""
+
+    ${If} $R3 != ""
         # delete the installed files of the older version
-        RMDir /r $R0
+        RMDir /r $R3
+    ${Else}
+        # remove the older version, users without admin rights
+        ReadRegStr $R4 HKCU "Software\${GROUP_NAME}\${APP_NAME}" \
+            "InstallLocation"
+
+        ${If} $R4 != ""
+            # delete the installed files of the older version
+            RMDir /r $R4
+        ${EndIf}
     ${EndIf}
 
     # define the path to which the installer should install
@@ -82,7 +121,7 @@ Section
     CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME} (English).lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}" "--lang=en"
     CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${APP_NAME}.lnk" "$INSTDIR\${FILE_NAME_UNINSTALLER}"
     CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}"
-    
+
     # include in add/remove programs
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
                 "Publisher" "${COMPANY_NAME}"
@@ -96,6 +135,10 @@ Section
                 "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
                 "DisplayVersion" "${VERSION}"
+
+    # include for users without admin rights
+    WriteRegStr HKCU "Software\${GROUP_NAME}\${APP_NAME}" \
+                "InstallLocation" "$INSTDIR"
 
     # estimate the size
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
@@ -119,8 +162,10 @@ Section "Uninstall"
     RMDir "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}"
     RMDir "$SMPROGRAMS\${GROUP_NAME}"
     Delete "$DESKTOP\${APP_NAME}.lnk"
-    
+
     # remove from add/remove programs
     DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
+    DeleteRegKey HKCU "Software\${GROUP_NAME}\${APP_NAME}"
+    DeleteRegKey /ifempty HKCU "Software\${GROUP_NAME}"
 
 SectionEnd
