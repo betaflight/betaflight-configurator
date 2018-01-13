@@ -845,7 +845,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 ADVANCED_TUNING.deltaMethod = data.readU8();
                 ADVANCED_TUNING.vbatPidCompensation = data.readU8();
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-                    ADVANCED_TUNING.ptermSetpointWeight = data.readU8();
+                    ADVANCED_TUNING.dtermSetpointTransition = data.readU8();
                     ADVANCED_TUNING.dtermSetpointWeight = data.readU8();
                     ADVANCED_TUNING.toleranceBand = data.readU8();
                     ADVANCED_TUNING.toleranceBandReduction = data.readU8();
@@ -1471,7 +1471,7 @@ MspHelper.prototype.crunch = function(code) {
                     .push16(ADVANCED_TUNING.yaw_p_limit)
                     .push8(ADVANCED_TUNING.deltaMethod)
                     .push8(ADVANCED_TUNING.vbatPidCompensation)
-                    .push8(ADVANCED_TUNING.ptermSetpointWeight)
+                    .push8(ADVANCED_TUNING.dtermSetpointTransition)
                     .push8(ADVANCED_TUNING.dtermSetpointWeight)
                     .push8(ADVANCED_TUNING.toleranceBand)
                     .push8(ADVANCED_TUNING.toleranceBandReduction)
