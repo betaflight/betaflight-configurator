@@ -1,6 +1,7 @@
 !include "MUI2.nsh"
 !include "FileFunc.nsh"
 !include "LogicLib.nsh"
+!include "UnInst.nsh"
 
 # Receives variables from the command line
 # ${VERSION} - Version to generate (x.y.z)
@@ -26,6 +27,9 @@ BrandingText "${COMPANY_NAME}"
 !define MUI_ICON ".\bf_installer_icon.ico"
 !define MUI_UNICON ".\bf_uninstaller_icon.ico"
 
+#Define uninstall list name
+!define UninstName "UninstallBF"
+
 # Request rights user level
 RequestExecutionLevel highest
 
@@ -48,6 +52,7 @@ OutFile "..\..\${DEST_FOLDER}\${FILE_NAME_INSTALLER}"
 !insertmacro MUI_LANGUAGE "Korean"
 !insertmacro MUI_LANGUAGE "Spanish"
 
+# detect default install folder
 Function .onInit
 
     # Check if older version
@@ -102,18 +107,34 @@ Section
 
         ${If} $R4 != ""
             # delete the installed files of the older version
-            RMDir /r $R4
+            !insertmacro INST_DELETE $R4 "${UninstName}"
+
+            # remove installation folder if empty
+            RMDir "$INSTDIR"
+
         ${EndIf}
     ${EndIf}
 
+    # if the registry entries did not exist, we ignore the errors
+    ClearErrors
+
     # define the path to which the installer should install
     SetOutPath $INSTDIR
+
+    # create an exclusion list for the uninstaller
+    !insertmacro UNINSTALLER_DATA_BEGIN
 
     # specify the files to go in the output path
     File /r ${SOURCE_FILES}
 
     # create the uninstaller
     WriteUninstaller "$INSTDIR\${FILE_NAME_UNINSTALLER}"
+
+    # change uninstall list name
+    !insertmacro UNINST_NAME "unins000BF"
+ 
+    # store uninstaller data
+    !insertmacro UNINSTALLER_DATA_END
 
     # create shortcuts in the start menu and on the desktop
     CreateDirectory "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}"    
@@ -152,8 +173,14 @@ SectionEnd
 # create a section to define what the uninstaller does
 Section "Uninstall"
 
-    # delete the installed files
-    RMDir /r $INSTDIR
+    # terminate uninstaller if the .dat file does not exist
+    !define UNINST_TERMINATE
+ 
+    # delete files
+    !insertmacro UNINST_DELETE "$INSTDIR" "${UninstName}"
+ 
+    # remove installation folder if it is empty
+    RMDir "$INSTDIR"
 
     # delete the shortcuts
     Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME}.lnk"
@@ -163,7 +190,7 @@ Section "Uninstall"
     RMDir "$SMPROGRAMS\${GROUP_NAME}"
     Delete "$DESKTOP\${APP_NAME}.lnk"
 
-    # remove from add/remove programs
+    # remove from registry
     DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
     DeleteRegKey HKCU "Software\${GROUP_NAME}\${APP_NAME}"
     DeleteRegKey /ifempty HKCU "Software\${GROUP_NAME}"
