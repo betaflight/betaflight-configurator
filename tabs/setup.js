@@ -192,7 +192,7 @@ TABS.setup.initialize = function (callback) {
                   var flagIndicies = [];
                   for (var i = 0; i < 32; i++) {
                     if (CONFIG.armingDisableFlags & (1 << i)) {
-                      flagIndicies.push(i);
+                      flagIndicies.push(i + 1);
                     }
                   }
                   armingString = flagIndicies;
