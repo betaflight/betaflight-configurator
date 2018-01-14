@@ -2831,6 +2831,9 @@
     "osdDescElementUnknown" : {
         "message": "Unknown element (details to be added in a future release)"
     },
+    "osdDescElementCoreTemperature": {
+        "message": "Temperature of the STM32 MCU core"
+    },
 
     "osdDescStatMaxSpeed": {
         "message": "Maximum recorded speed"

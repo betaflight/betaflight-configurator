@@ -256,6 +256,21 @@ OSD.generateTimerPreview = function(osd_data, timer_index) {
   return preview;
 };
 
+OSD.generateTemperaturePreview = function(osd_data, temperature) {
+  var preview = '';
+  switch (osd_data.unit_mode) {
+    case 0:
+      temperature *= (9.0 / 5.0);
+      temperature += 32.0;
+      preview += Math.floor(temperature) + 'F'
+      break;
+    case 1:
+      preview += temperature + 'C'
+      break;
+  }
+  return preview;
+}
+
 OSD.generateCraftName = function(osd_data) {
     var preview = 'CRAFT_NAME';
     if (CONFIG.name != '')
@@ -645,6 +660,15 @@ OSD.constants = {
         return OSD.generateTimerPreview(osd_data, 1);
       }
     },
+    CORE_TEMPERATURE: {
+      name: 'CORE_TEMPERATURE',
+      desc: 'osdDescElementCoreTemperature',
+      default_position: -1,
+      positionable: true,
+      preview: function(osd_data) {
+        return OSD.generateTemperaturePreview(osd_data, 33);
+      }
+    }
   },
   UNKNOWN_DISPLAY_FIELD: {
       name: 'UNKNOWN_',
@@ -828,7 +852,8 @@ OSD.chooseFields = function () {
                   OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                     F.REMAINING_TIME_ESTIMATE,
                     F.RTC_DATE_TIME,
-                    F.ADJUSTMENT_RANGE
+                    F.ADJUSTMENT_RANGE,
+                    F.CORE_TEMPERATURE
                   ]);
               }
             }
