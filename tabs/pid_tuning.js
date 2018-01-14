@@ -236,8 +236,8 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter input[name="dTermNotchFrequency"]').val(FILTER_CONFIG.dterm_notch_hz);
             $('.pid_filter input[name="dTermNotchCutoff"]').val(FILTER_CONFIG.dterm_notch_cutoff);
 
-            $('input[name="ptermSetpoint-number"]').val(ADVANCED_TUNING.ptermSetpointWeight / 100);
-            $('input[name="ptermSetpoint-range"]').val(ADVANCED_TUNING.ptermSetpointWeight / 100);
+            $('input[name="dtermSetpointTransition-number"]').val(ADVANCED_TUNING.dtermSetpointTransition / 100);
+            $('input[name="dtermSetpointTransition-range"]').val(ADVANCED_TUNING.dtermSetpointTransition / 100);
 
             $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
             $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
@@ -388,7 +388,7 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-            ADVANCED_TUNING.ptermSetpointWeight = parseInt($('input[name="ptermSetpoint-number"]').val() * 100);
+            ADVANCED_TUNING.dtermSetpointTransition = parseInt($('input[name="dtermSetpointTransition-number"]').val() * 100);
             ADVANCED_TUNING.dtermSetpointWeight = parseInt($('input[name="dtermSetpoint-number"]').val() * 100);
 
             FILTER_CONFIG.gyro_soft_notch_hz_1 = parseInt($('.pid_filter input[name="gyroNotch1Frequency"]').val());
@@ -623,13 +623,13 @@ TABS.pid_tuning.initialize = function (callback) {
                 });
             });
 
-            var ptermNumberElement = $('input[name="ptermSetpoint-number"]');
-            var ptermRangeElement = $('input[name="ptermSetpoint-range"]');
-            ptermNumberElement.change(function () {
-                ptermRangeElement.val($(this).val());
+            var dtermTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
+            var dtermTransitionRangeElement = $('input[name="dtermSetpointTransition-range"]');
+            dtermTransitionNumberElement.change(function () {
+                dtermTransitionRangeElement.val($(this).val());
             });
-            ptermRangeElement.change(function () {
-                ptermNumberElement.val($(this).val());
+            dtermTransitionRangeElement.change(function () {
+                dtermTransitionNumberElement.val($(this).val());
             });
 
             var dtermNumberElement = $('input[name="dtermSetpoint-number"]');
@@ -643,7 +643,7 @@ TABS.pid_tuning.initialize = function (callback) {
         } else {
             $('.tab-pid_tuning .rate_profile').hide();
 
-            $('#pid-tuning .ptermSetpoint').hide();
+            $('#pid-tuning .dtermSetpointTransition').hide();
             $('#pid-tuning .dtermSetpoint').hide();
         }
 
@@ -1153,12 +1153,12 @@ TABS.pid_tuning.updatePidControllerParameters = function () {
 
         $('#pid-tuning .delta').show();
 
-        $('#pid-tuning .ptermSetpoint').hide();
+        $('#pid-tuning .dtermSetpointTransition').hide();
         $('#pid-tuning .dtermSetpoint').hide();
     } else {
         $('.pid_tuning .YAW_JUMP_PREVENTION').hide();
 
-        $('#pid-tuning .ptermSetpoint').show();
+        $('#pid-tuning .dtermSetpointTransition').show();
         $('#pid-tuning .dtermSetpoint').show();
 
         $('#pid-tuning .delta').hide();

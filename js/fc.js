@@ -348,7 +348,7 @@ var FC = {
             yaw_p_limit:                0,
             deltaMethod:                0,
             vbatPidCompensation:        0,
-            ptermSetpointWeight:        0,
+            dtermSetpointTransition:    0,
             dtermSetpointWeight:        0,
             toleranceBand:              0,
             toleranceBandReduction:     0,

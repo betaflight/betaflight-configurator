@@ -1065,13 +1065,13 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolation Interval [ms]"
     },
-    "pidTuningPtermSetpoint": {
+    "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
     },
-    "pidTuningPtermSetpointHelp": {
+    "pidTuningDtermSetpointTransitionHelp": {
         "message": "With this parameter, D Setpoint Weight can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Setpoint Weight is kept constant at its configured value. When the stick is positioned below that point, Setpoint Weight is reduced proportionally, reaching 0 at the stick center position.<br> Value of 1 gives maximum smoothing effect, while value of 0 keeps the Setpoint Weight fixed at its configured value over the whole stick range."
     },
     "pidTuningDtermSetpointHelp": {
