@@ -24,6 +24,12 @@
     "disconnect": {
         "message": "Disconnect"
     },
+    "portsSelectManual": {
+        "message": "Manual Selection"
+    },
+    "portOverrideText": {
+        "message": "Port:"
+    },    
     "autoConnect": {
         "message": "Auto-Connect"
     },
