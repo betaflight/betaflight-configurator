@@ -24,6 +24,12 @@
     "disconnect": {
         "message": "Desconectar"
     },
+    "portsSelectManual": {
+        "message": "Selecci\u00f3n Manual"
+    },
+    "portOverrideText": {
+        "message": "Puerto:"
+    },
     "autoConnect": {
         "message": "Auto-Conectar"
     },
@@ -508,7 +514,7 @@
         "message": "Armado Permitido"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "Lista de banderas que indican porque el armado no est\u00e1 actualmente permitido. Por favor consulta la Wiki para una descripci\u00f3n de lo que estas banderas significan."
+        "message": "Lista de banderas indicando por qu\u00e9 el armado no est\u00e1 actualmente permitido. El primer y m\u00e1s importante valor corresponde al n\u00famero de pitidos de aviso que suenan cuando se intenta el armado. Por favor consulta la Wiki ('Arming Sequence & Safety') para una descripci\u00f3n de lo que estas banderas significan."
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -1044,13 +1050,13 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalo de Interpolaci\u00f3n RC [ms]"
     },
-    "pidTuningPtermSetpoint": {
+    "pidTuningDtermSetpointTransition": {
         "message": "Punto de Ajuste de Transici\u00f3n de D"
     },
     "pidTuningDtermSetpoint": {
         "message": "Punto de Ajuste de Peso de D"
     },
-    "pidTuningPtermSetpointHelp": {
+    "pidTuningDtermSetpointTransitionHelp": {
         "message": "Con este par\u00e1metro, el Punto de Ajuste de Peso de D puede reducirse cuando las palancas est\u00e1n cerca del centro, lo cual provoca que el fin de los flips y rolls sea m\u00e1s suave.<br>El valor representa un punto del movimiento de la palanca: 0 - palanca centrada, 1 - completamente desplazada. Cuando la palanca est\u00e1 por encima de ese punto, el Punto de Ajuste de Peso se mantiene constante constante en el valor configurado. Cuando la palanca se coloca debajo de ese punto, el Punto de Ajuste de Peso se reduce proporcionalmente, llegando a 0 en la posici\u00f3n central de la palanca. <br> El valor de 1 da el m\u00e1ximo efecto de suavizado, mientras que el valor de 0 mantiene el Punto de Ajuste de Peso fijo en su valor configurado sobre el total rango de la palanca."
     },
     "pidTuningDtermSetpointHelp": {
