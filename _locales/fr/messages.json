@@ -24,6 +24,12 @@
     "disconnect": {
         "message": "D\u00e9connecter"
     },
+    "portsSelectManual": {
+        "message": "Choisir"
+    },
+    "portOverrideText": {
+        "message": "Port:"
+    },
     "autoConnect": {
         "message": "Connexion Automatique"
     },
@@ -508,7 +514,7 @@
         "message": "Armement autoris\u00e9"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "Liste des param\u00e8tres emp\u00eachant actuellement l'armement. Veuillez vous r\u00e9f\u00e9rer au Wiki pour une explication de ces param\u00e8tres."
+        "message": "Liste des param\u00e8tres emp\u00eachant actuellement l'armement. La premi\u00e8re valeur qui est la plus importante correspond aux bips entendus lors d'une tentative d'armement. Veuillez vous r\u00e9f\u00e9rer au Wiki (page 'Arming Sequence & Safety') pour obtenir la description de ces param\u00e8tres."
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -1044,14 +1050,14 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalle d'interpolation RC [ms]"
     },
-    "pidTuningPtermSetpoint": {
+    "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
     },
-    "pidTuningPtermSetpointHelp": {
-        "message": "Ce param\u00e8tre permet de r\u00e9duire le D Setpoint Weight lorsque les sticks sont pr\u00eats du centre. Les flips et les rolls sont plus souples sur la fin.<br \/> La valeur est une d\u00e9riv\u00e9e du stick. 0 - le stick renvoie sa 'vraie' valeur, 1 - la valeur est d\u00e9cal\u00e9e. Lorsque le stick est au dessus de ce point, Setpoint Weight est maintenu \u00e0 sa valeur. D\u00e8s que le stick passe dessous, Setpoint Weight est r\u00e9duit proportionnellement jusqu'\u00e0 0 lorsqu'il atteint le centre.<br \/> 1 donne le plus d'effet souplesse, alors que 0 maintient la valeur Setpoint Weight le long de toute la course du stick."
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Avec ce param\u00e8tre, le D Setpoint Weight peut \u00eatre r\u00e9duit sur le centre des sticks, r\u00e9sultant sur des flips et des rolls plus doux en fin de mouvement. <br> La valeur repr\u00e9sente le point de d\u00e9viation du stick: 0 - stick centr\u00e9, 1 - d\u00e9viation maximale. Lorsque le stick est au-dessus de ce point, le Setpoint Weight est constamment \u00e0 la valeur configur\u00e9e. Lorsque le stick est en-dessous de ce point, le Setpoint Weight est proportionnellement r\u00e9duit atteignant 0 sticks centr\u00e9s.<br> La valeur 1 donnera un effet maximal de douceur, tandis que la valeur 0 gardera le Setpoint Weight sur toute la plage des sticks \u00e0 la valeur configur\u00e9e."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Ce param\u00e8tre d\u00e9termine l'effet acc\u00e9l\u00e9rateur de stick de la d\u00e9riv\u00e9e.<br \/>0 revient \u00e0 l'ancienne m\u00e9thode o\u00f9 D suivait les infos du gyro, 1 \u00e9value l'\u00e9cart entre la valeur demand\u00e9e par le stick et celle obtenue par le gyro.<br \/>Avec une valeur faible le stick est plus lent\/souple, avec une valeur \u00e9lev\u00e9e le stick est de plus en plus r\u00e9actif.<br \/>Note: avec une valeur \u00e9lev\u00e9e, il est recommand\u00e9 d'utilise l'interpolation RC afin de limiter les accoups et du bruit (dans le gyro)."
