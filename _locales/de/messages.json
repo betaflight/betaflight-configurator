@@ -24,6 +24,12 @@
     "disconnect": {
         "message": "Trennen"
     },
+    "portsSelectManual": {
+        "message": "manuelle Auswahl"
+    },
+    "portOverrideText": {
+        "message": "Port:"
+    },
     "autoConnect": {
         "message": "Automatisch verbinden"
     },
@@ -508,7 +514,7 @@
         "message": "Arming erlaubt"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "Liste der Gr\u00fcnde warum das armen nicht m\u00f6glich ist. Bitte im Wiki schauen was hier die Ursache f\u00fcr die Gr\u00fcnde ist."
+        "message": "Anzeige der Gr\u00fcnde warum der Quad nicht gearmt werden kann. Der erste und wichtigste wird gleichzeig mit einer Piesper Sequenz angezeigt. Bitte Wiki pr\u00fcfen f\u00fcr L\u00f6sungen und Beschreibungen was die Gr\u00fcnde genau bedeuten."
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -1044,14 +1050,14 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolationsinterval (ms)"
     },
-    "pidTuningPtermSetpoint": {
-        "message": "D Setpoint \u00dcbergang"
+    "pidTuningDtermSetpointTransition": {
+        "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Gewichtung"
     },
-    "pidTuningPtermSetpointHelp": {
-        "message": "Gibt an in wie weit die Setpoint Gewichtung ged\u00e4mpft wird, sobald man den Stick wieder richtung Gimbal Zentrum bewegt. 0 hei\u00dft Mitte und 1 voller Ausschlag. Verringere diesen Wert um z.B ein Zur\u00fcckfedern nach schnellen Flips oder Rolls zu verhindern,"
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Mit diesem Parameter kann man D Setpoint Weight an der Mittelstellung der Sticks reduzieren und damit weichere Enden von Flips und Rolls erreichen.<br> Der Wert bedeutet eine Auslenkung des Sticks von 0 - mittig bis 1 - voller Ausschlag. Wenn der Stick weiter ausgelenkt ist als dieser Wert, hat Setpoint Weight seinen eingestellten Wert. Wenn der Stick weniger ausgelenkt ist, wird Setpoint Weight proportional reduziert und erreicht 0 in der Nullstellung des Sticks.<br> Ein Wert von 1 ergibt den maximalen Gl\u00e4ttungseffekt, ein Wert von 0 h\u00e4lt Setpoint Weight \u00fcber den gesammten Steuerbereich auf seinem eingestellten Wert."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Gibt an wie hart der PID Controller bei Eingaben der Sticks vom Zentrum weg reagieren soll. 0 bedeutet das es keinen Unterschied zwischen Stick Eingaben und Abweichungen durch die Umgebung (z.B. Wind gibt). Kleinere Werte f\u00fchren zu einem sauberen und \"smootheren\" Quad, h\u00f6here Werte f\u00fchren zu einem direkterem Fluggef\u00fchl. <br \/> Bei hohen Werten wird der Einsatz der RC Interpolation empfohlen um ein \u00dcberreagieren zu verhindern."
