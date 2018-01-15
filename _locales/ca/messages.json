@@ -24,6 +24,12 @@
     "disconnect": {
         "message": "Desconnectar"
     },
+    "portsSelectManual": {
+        "message": "Selecci\u00f3 Manual"
+    },
+    "portOverrideText": {
+        "message": "Port:"
+    },
     "autoConnect": {
         "message": "Auto-Connectar"
     },
@@ -508,7 +514,7 @@
         "message": "Armat perm\u00e8s"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "Llista de flags indicant perqu\u00e8 l'armat no est\u00e0 perm\u00e8s actualment. Mira la Wiki per veure la descripci\u00f3 d'aquests flags."
+        "message": "Llista de flags indicant perqu\u00e8 l'armat no est\u00e0 perm\u00e8s actualment. El primer valor i el m\u00e9s important correspon al n\u00famero de sons d'av\u00eds quan s'intenta armar. Mira la Wiki (p\u00e0gina 'Arming Sequence & Safety') per veure la descripci\u00f3 d'aquests flags."
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -1044,14 +1050,14 @@
     "receiverRcInterpolationInterval": {
         "message": "Interval d'Interpolaci\u00f3 RC [ms]"
     },
-    "pidTuningPtermSetpoint": {
+    "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
     },
-    "pidTuningPtermSetpointHelp": {
-        "message": "Amb aquest par\u00e0metre, el D Setpoint Weight es pot reduir a prop del centre dels sticks, del qual en resulta un final de flips i rolls m\u00e9s suau.<br> El valor representa un punt de desviaci\u00f3 de l'stick: 0 - stick centrat, 1 - m\u00e0xima desviaci\u00f3. Quan l'stick es troba per sobre d'aquest punt, el Setpoint Weight es mant\u00e9 constant en aquest valor configurat. Quan l'stick es troba per sota d'aquest punt, el Setpoint Weight es redueix proporcionalment, arribant a 0 quan l'stick est\u00e0 centrat.<br> Un valor d'1 dona el m\u00e0xim efecte de suavitat, mentre que un valor de 0 mant\u00e9 el Setpoint Weight fixat al valor configurat durant tot el rang de l'stick."
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Amb aquest par\u00e0metre, D Setpoint Weight pot ser redu\u00eft al centre dels sticks, que resulta en flips i rolls m\u00e9s suaus.<br> El valor representa la desciaci\u00f3 de l'stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick est\u00e0 per sobre d'aquest punt, Setpoint Weight es mant\u00e9 constant al valor configurat. Quan l'stick est\u00e0 per sota d'aquest punt, Setpoint Weight \u00e9s redu\u00eft proporcionalment, arribant a 0 a la posici\u00f3 central de l'stick.<br> El valor 1 dona el m\u00e0xim valor suavitzant, mentre el valor 0 mant\u00e9 el Setpoint Weight fixat a\u00f1 valor configurat durant tot el recorregut de l'sctick."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Aquest par\u00e0metre determina l'efecte d'acceleraci\u00f3 de l'stick en el component derivat.<br> El valor de 0 \u00e9s igual a l'anterior m\u00e8tode de mesura on D nom\u00e9s fa el seguiment del gir\u00f2scop, mentre que el valor d'1 \u00e9s igual al m\u00e8tode antic d'error amb la r\u00e0tio de seguiment de gir i stick igual.<br> Valor inferior \u00e9s igual a una resposta d'stick m\u00e9s lenta\/m\u00e9s suau, mentre que un valor m\u00e9s alt proporciona m\u00e9s resposta d'acceleraci\u00f3 d'stick.<br> es recomana que la interpolaci\u00f3 RC estigui activada amb valors m\u00e9s alts, per evitar que els cops de control facin soroll."
