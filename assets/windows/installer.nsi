@@ -28,7 +28,7 @@ BrandingText "${COMPANY_NAME}"
 !define MUI_UNICON ".\bf_uninstaller_icon.ico"
 
 #Define uninstall list name
-!define UninstName "UninstallBF"
+!define UninstName "uninbf00"
 
 # Request rights user level
 RequestExecutionLevel highest
@@ -99,7 +99,11 @@ Section
 
     ${If} $R3 != ""
         # delete the installed files of the older version
-        RMDir /r $R3
+        !insertmacro INST_DELETE $R3 "${UninstName}"
+
+        # remove installation folder if empty
+        RMDir "$R3"
+
     ${Else}
         # remove the older version, users without admin rights
         ReadRegStr $R4 HKCU "Software\${GROUP_NAME}\${APP_NAME}" \
@@ -110,7 +114,7 @@ Section
             !insertmacro INST_DELETE $R4 "${UninstName}"
 
             # remove installation folder if empty
-            RMDir "$INSTDIR"
+            RMDir "$R4"
 
         ${EndIf}
     ${EndIf}
@@ -130,9 +134,6 @@ Section
     # create the uninstaller
     WriteUninstaller "$INSTDIR\${FILE_NAME_UNINSTALLER}"
 
-    # change uninstall list name
-    !insertmacro UNINST_NAME "unins000BF"
- 
     # store uninstaller data
     !insertmacro UNINSTALLER_DATA_END
 
