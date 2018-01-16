@@ -24,22 +24,19 @@
   "dependencies": {},
   "devDependencies": {
     "del": "^3.0.0",
-    "gulp": "~3.9.1",
+    "gulp": "~4.0.0",
     "gulp-concat": "~2.6.1",
-    "gulp-debian": "~0.1.6",
+    "gulp-debian": "~0.1.7",
     "gulp-install": "^1.1.0",
     "gulp-rename": "~1.2.2",
     "gulp-zip": "^4.1.0",
     "inflection": "1.12.0",
     "jquery-ui-npm": "1.12.0",
     "makensis": "^0.9.0",
-    "merge-stream": "^1.0.1",
     "nw-builder": "^3.4.1",
     "os": "^0.1.1",
     "platform-dependent-modules": "0.0.14",
-    "run-sequence": "^2.2.0",
-    "temp": "^0.8.3",
-    "title-case": "^2.1.0"
+    "temp": "^0.8.3"
   },
   "config": {
     "platformDependentModules": {
