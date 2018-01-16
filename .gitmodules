@@ -1,0 +1,3 @@
+[submodule "assets/windows/NsisMultiUser"]
+	path = assets/windows/NsisMultiUser
+	url = https://github.com/Drizin/NsisMultiUser.git

@@ -1,4 +1,8 @@
-!include "MUI2.nsh"
+!addplugindir /x86-ansi ".\NsisMultiUser\Plugins\x86-ansi\"
+!addplugindir /x86-unicode ".\NsisMultiUser\Plugins\x86-unicode\"
+
+!addincludedir ".\NsisMultiUser\Include\"
+
 !include "FileFunc.nsh"
 !include "LogicLib.nsh"
 !include "UnInst.nsh"
@@ -10,17 +14,17 @@
 
 # Some definitions
 !define SOURCE_FILES          "..\..\apps\betaflight-configurator\${PLATFORM}\*"
-!define APP_NAME              "Betaflight Configurator"
+!define PRODUCT_NAME          "Betaflight Configurator"
 !define COMPANY_NAME          "The Betaflight open source project."
 !define GROUP_NAME            "Betaflight"
 !define FOLDER_NAME           "Betaflight-Configurator"
-!define FILE_NAME_INSTALLER   "betaflight-configurator-installer_${VERSION}_${PLATFORM}.exe"
+!define PROGEXE               "betaflight-configurator-installer_${VERSION}_${PLATFORM}.exe"
 !define FILE_NAME_UNINSTALLER "uninstall-betaflight-configurator.exe"
 !define FILE_NAME_EXECUTABLE  "betaflight-configurator.exe"
 !define LICENSE               "..\..\LICENSE"
 
 
-Name "${APP_NAME}"
+Name "${PRODUCT_NAME}"
 BrandingText "${COMPANY_NAME}"
 
 # set the icon
@@ -30,19 +34,41 @@ BrandingText "${COMPANY_NAME}"
 #Define uninstall list name
 !define UninstName "UninstallBF"
 
-# Request rights user level
-RequestExecutionLevel highest
+!define MULTIUSER_INSTALLMODE_ALLOW_ELEVATION 1
+!define MULTIUSER_INSTALLMODE_ALLOW_BOTH_INSTALLATIONS 0
+!define MULTIUSER_INSTALLMODE_INSTDIR "${FOLDER_NAME}"
+!define MULTIUSER_INSTALLMODE_INSTALL_REGISTRY_KEY "${FOLDER_NAME}"
+!define MULTIUSER_INSTALLMODE_UNINSTALL_REGISTRY_KEY "${FOLDER_NAME}"
+!define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_VALUENAME "UninstallString"
+!define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_VALUENAME "InstallLocation"
+
+!include "NsisMultiUser.nsh" 
+
+!include "MUI2.nsh"
+!include "UAC.nsh"
+!include "LogicLib.nsh"
 
 # define the resulting installer's name:
-OutFile "..\..\${DEST_FOLDER}\${FILE_NAME_INSTALLER}"
+OutFile "..\..\${DEST_FOLDER}\${PROGEXE}"
 
 # app dialogs
+!insertmacro MULTIUSER_PAGE_INSTALLMODE
+!insertmacro MULTIUSER_UNPAGE_INSTALLMODE
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE ${LICENSE}
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 
-!define MUI_FINISHPAGE_RUN "$INSTDIR\${FILE_NAME_EXECUTABLE}"
+;!define MUI_FINISHPAGE_RUN "$INSTDIR\${FILE_NAME_EXECUTABLE}"
+
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_FUNCTION LaunchApplication
+
+Function LaunchApplication ; Launching your app as the current user:
+    SetOutPath $INSTDIR
+    ; Needs the ShellExecAsUser plugin from http://nsis.sourceforge.net/ShellExecAsUser_plug-in
+    ShellExecAsUser::ShellExecAsUser "" "$INSTDIR\${FILE_NAME_EXECUTABLE}" ""
+FunctionEnd
 
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_LANGUAGE "English"
@@ -56,7 +82,7 @@ OutFile "..\..\${DEST_FOLDER}\${FILE_NAME_INSTALLER}"
 Function .onInit
 
     # Check if older version
-    ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
             "InstallLocation"
 
     ${If} $R0 != ""
@@ -64,7 +90,7 @@ Function .onInit
     ${Else}
 
         # Check if older version without administrative rights
-        ReadRegStr $R1 HKCU "Software\${GROUP_NAME}\${APP_NAME}" \
+        ReadRegStr $R1 HKCU "Software\${GROUP_NAME}\${PRODUCT_NAME}" \
             "InstallLocation"
 
         ${If} $R1 != ""
@@ -88,13 +114,18 @@ Function .onInit
         ${Endif}
     ${Endif}
 
+    !insertmacro MULTIUSER_INIT
+FunctionEnd
+
+Function un.onInit
+	!insertmacro MULTIUSER_UNINIT
 FunctionEnd
 
 # default section start
 Section
 
     # remove the older version, users with admin rights
-    ReadRegStr $R3 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    ReadRegStr $R3 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
             "InstallLocation"
 
     ${If} $R3 != ""
@@ -102,7 +133,7 @@ Section
         RMDir /r $R3
     ${Else}
         # remove the older version, users without admin rights
-        ReadRegStr $R4 HKCU "Software\${GROUP_NAME}\${APP_NAME}" \
+        ReadRegStr $R4 HKCU "Software\${GROUP_NAME}\${PRODUCT_NAME}" \
             "InstallLocation"
 
         ${If} $R4 != ""
@@ -138,36 +169,36 @@ Section
 
     # create shortcuts in the start menu and on the desktop
     CreateDirectory "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}"    
-    CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME}.lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}"
-    CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME} (English).lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}" "--lang=en"
-    CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${APP_NAME}.lnk" "$INSTDIR\${FILE_NAME_UNINSTALLER}"
-    CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}"
+    CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}"
+    CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${PRODUCT_NAME} (English).lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}" "--lang=en"
+    CreateShortCut "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\${FILE_NAME_UNINSTALLER}"
+    CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${FILE_NAME_EXECUTABLE}"
 
     # include in add/remove programs
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
                 "Publisher" "${COMPANY_NAME}"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
-                "DisplayName" "${APP_NAME}"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
+                "DisplayName" "${PRODUCT_NAME}"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
                 "DisplayIcon" "$\"$INSTDIR\${FILE_NAME_EXECUTABLE}$\""
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
                 "UninstallString" "$\"$INSTDIR\${FILE_NAME_UNINSTALLER}$\""
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
                 "InstallLocation" "$INSTDIR"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
                 "DisplayVersion" "${VERSION}"
 
     # include for users without admin rights
-    WriteRegStr HKCU "Software\${GROUP_NAME}\${APP_NAME}" \
+    WriteRegStr HKCU "Software\${GROUP_NAME}\${PRODUCT_NAME}" \
                 "InstallLocation" "$INSTDIR"
 
     # estimate the size
     ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
     IntFmt $0 "0x%08X" $0
-    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" \
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" \
                 "EstimatedSize" "$0"
 
-
+    !insertmacro MULTIUSER_RegistryAddInstallInfo
 SectionEnd
 
 # create a section to define what the uninstaller does
@@ -183,16 +214,17 @@ Section "Uninstall"
     RMDir "$INSTDIR"
 
     # delete the shortcuts
-    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME}.lnk"
-    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${APP_NAME} (English).lnk"
-    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${APP_NAME}.lnk"
+    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${PRODUCT_NAME}.lnk"
+    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\${PRODUCT_NAME} (English).lnk"
+    Delete "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}\Uninstall ${PRODUCT_NAME}.lnk"
     RMDir "$SMPROGRAMS\${GROUP_NAME}\${FOLDER_NAME}"
     RMDir "$SMPROGRAMS\${GROUP_NAME}"
-    Delete "$DESKTOP\${APP_NAME}.lnk"
+    Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
 
     # remove from registry
-    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
-    DeleteRegKey HKCU "Software\${GROUP_NAME}\${APP_NAME}"
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
+    DeleteRegKey HKCU "Software\${GROUP_NAME}\${PRODUCT_NAME}"
     DeleteRegKey /ifempty HKCU "Software\${GROUP_NAME}"
 
+    !insertmacro MULTIUSER_RegistryRemoveInstallInfo
 SectionEnd
