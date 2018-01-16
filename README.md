@@ -6,7 +6,7 @@ Betaflight Configurator is a crossplatform configuration tool for the Betaflight
 
 It runs as an app within Google Chrome and allows you to configure the Betaflight software running on any [supported Betaflight target](https://github.com/betaflight/betaflight/tree/master/src/main/target).
 
-There is also now a standalone version available, since Google Chrome Apps are getting deprecated on platforms that aren't Chrome OS. [Downloads are available in Releases.](https://github.com/betaflight/betaflight-configurator)
+There is also now a standalone version available, since Google Chrome Apps are getting deprecated on platforms that aren't Chrome OS. [Downloads are available in Releases.](https://github.com/betaflight/betaflight-configurator/releases)
 
 Various types of aircraft are supported by the tool and by Betaflight, e.g. quadcopters, hexacopters, octocopters and fixed-wing aircraft.
 
@@ -21,7 +21,7 @@ If you are experiencing any problems please make sure you are running the [lates
 
 ### Standalone
 
-Download the installer from [Releases.](https://github.com/betaflight/betaflight-configurator)
+Download the installer from [Releases.](https://github.com/betaflight/betaflight-configurator/releases)
 
 ### Via Chrome Web Store
 
