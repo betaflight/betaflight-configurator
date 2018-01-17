@@ -506,6 +506,7 @@ function release_deb(arch) {
              changelog: [],
              _target: 'opt/betaflight/betaflight-configurator',
              _out: RELEASE_DIR,
+             _copyright: 'assets/linux/copyright',
              _clean: true
     }));
 }
