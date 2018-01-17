@@ -420,14 +420,8 @@ function start_debug(done) {
 // Create installer package for windows platforms
 function release_win(arch, done) {
 
-    // Create the output directory, with write permissions
-    fs.mkdir(RELEASE_DIR, '0775', function(err) {
-        if (err) {
-            if (err.code !== 'EEXIST') {
-                throw err;
-            }
-        }
-    });
+    // The makensis does not generate the folder correctly, manually
+    createDirIfNotExists(RELEASE_DIR);
 
     // Parameters passed to the installer script
     const options = {
@@ -514,7 +508,11 @@ function release_deb(arch) {
 function release_osx64() {
     var appdmg = require('gulp-appdmg');
 
-    return gulp.src([])
+    // The appdmg does not generate the folder correctly, manually
+    createDirIfNotExists(RELEASE_DIR);
+
+    // The src pipe is not used
+    return gulp.src(['.'])
         .pipe(appdmg({
             target: path.join(RELEASE_DIR, getReleaseFilename('macOS', 'dmg')),
             basepath: path.join(APPS_DIR, pkg.name, 'osx64'),
@@ -535,6 +533,17 @@ function release_osx64() {
             },
         })
     );
+}
+
+// Create the dir directory, with write permissions
+function createDirIfNotExists(dir) {
+    fs.mkdir(dir, '0775', function(err) {
+        if (err) {
+            if (err.code !== 'EEXIST') {
+                throw err;
+            }
+        }
+    });
 }
 
 // Create a list of the gulp tasks to execute for release
