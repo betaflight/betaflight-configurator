@@ -19,6 +19,14 @@
     "type": "git",
     "url": "github.com/betaflight/betaflight-configurator"
   },
+  "webview": {
+    "partitions": [
+      {
+        "name": "map",
+        "accessible_resources" : ["tabs/map.html", "tabs/map.js", "/images/icons/cf_icon_position.png"]
+      }
+    ]
+  },
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "dependencies": {},
