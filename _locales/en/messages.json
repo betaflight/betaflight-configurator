@@ -193,6 +193,9 @@
     "serialPortClosedFail": {
         "message": "<span class=\"message-negative\">Failed</span> to close serial port"
     },
+    "serialUnrecoverable" : {
+        "message": "Unrecoverable <span class=\"message-negative\">failure</span> of serial connection, disconnecting..."
+    },
 
     "usbDeviceOpened": {
         "message": "USB device <span class=\"message-positive\">successfully</span> opened with ID: $1"
@@ -921,7 +924,7 @@
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
     },
-    "configurationSpiRx": {
+    "configurationSpiRX": {
         "message": "SPI Bus Receiver Provider"
     },
     "configurationEepromSaved": {
@@ -1959,6 +1962,9 @@
     },
     "firmwareFlasherShowDevelopmentReleasesDescription":{
         "message": "Show Release-Candidates and Development Releases."
+    },
+    "firmwareFlasherOptionLoading": {
+        "message": "Loading ..."
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Choose a Firmware / Board"
