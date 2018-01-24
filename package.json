@@ -3,7 +3,7 @@
   "description": "Crossplatform configuration tool for Betaflight flight control system.",
   "version": "10.2.0",
   "main": "main_nwjs.html",
-  "bg-script": "eventPage.js",
+  "bg-script": "js/eventPage.js",
   "default_locale": "en",
   "scripts": {
     "start": "node node_modules/gulp/bin/gulp.js debug",

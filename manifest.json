@@ -13,7 +13,7 @@
 
     "app": {
         "background": {
-            "scripts": ["eventPage.js"],
+            "scripts": ["js/eventPage.js"],
             "persistent": false
         }
     },

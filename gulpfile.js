@@ -52,7 +52,7 @@ gulp.task('clean-release', clean_release);
 
 gulp.task('clean-cache', clean_cache);
 
-var distBuild = gulp.series(clean_dist, dist);
+var distBuild = gulp.series(clean_dist, dist_src, dist_locale, dist_libraries, dist_resources);
 gulp.task('dist', distBuild);
 
 var appsBuild = gulp.series(gulp.parallel(clean_apps, distBuild), apps, gulp.parallel(listPostBuildTasks(APPS_DIR)));
@@ -197,63 +197,41 @@ function clean_cache() {
 
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
-function dist() {
+function dist_src() {
     var distSources = [
         // CSS files
-        './src/main.css',
-        './src/tabs/power.css',
-        './src/tabs/firmware_flasher.css',
-        './src/tabs/onboard_logging.css',
-        './src/tabs/receiver.css',
-        './src/tabs/cli.css',
-        './src/tabs/servos.css',
-        './src/tabs/adjustments.css',
-        './src/tabs/configuration.css',
-        './src/tabs/auxiliary.css',
-        './src/tabs/pid_tuning.css',
-        './src/tabs/transponder.css',
-        './src/tabs/gps.css',
-        './src/tabs/led_strip.css',
-        './src/tabs/sensors.css',
-        './src/tabs/osd.css',
-        './src/tabs/motors.css',
-        './src/tabs/receiver_msp.css',
-        './src/tabs/logging.css',
-        './src/tabs/landing.css',
-        './src/tabs/setup_osd.css',
-        './src/tabs/help.css',
-        './src/tabs/failsafe.css',
-        './src/tabs/ports.css',
-        './src/tabs/setup.css',
+        './src/css/main.css',
+        './src/css/tabs/power.css',
+        './src/css/tabs/firmware_flasher.css',
+        './src/css/tabs/onboard_logging.css',
+        './src/css/tabs/receiver.css',
+        './src/css/tabs/cli.css',
+        './src/css/tabs/servos.css',
+        './src/css/tabs/adjustments.css',
+        './src/css/tabs/configuration.css',
+        './src/css/tabs/auxiliary.css',
+        './src/css/tabs/pid_tuning.css',
+        './src/css/tabs/transponder.css',
+        './src/css/tabs/gps.css',
+        './src/css/tabs/led_strip.css',
+        './src/css/tabs/sensors.css',
+        './src/css/tabs/osd.css',
+        './src/css/tabs/motors.css',
+        './src/css/tabs/receiver_msp.css',
+        './src/css/tabs/logging.css',
+        './src/css/tabs/landing.css',
+        './src/css/tabs/setup_osd.css',
+        './src/css/tabs/help.css',
+        './src/css/tabs/failsafe.css',
+        './src/css/tabs/ports.css',
+        './src/css/tabs/setup.css',
         './src/css/opensans_webfontkit/fonts.css',
         './src/css/dropdown-lists/css/style_lists.css',
         './src/css/font-awesome/css/font-awesome.min.css',
-        './src/js/libraries/flightindicators.css',
-        './src/js/libraries/jbox/jBox.css',
-        './src/js/libraries/jbox/themes/NoticeBorder.css',
-        './src/js/libraries/jbox/themes/ModalBorder.css',
-        './src/js/libraries/jbox/themes/TooltipDark.css',
-        './src/js/libraries/jbox/themes/TooltipBorder.css',
-        './src/js/libraries/jquery.nouislider.pips.min.css',
-        './src/js/libraries/switchery/switchery.css',
-        './src/js/libraries/jquery.nouislider.min.css',
+        './src/css/font-awesome/fonts/*',
+        './src/css/opensans_webfontkit/*.{eot,svg,ttf,woff,woff2}',
 
-        // JavaScript
-        './src/js/libraries/q.js',
-        './src/js/libraries/jquery-2.1.4.min.js',
-        './src/js/libraries/jquery-ui-1.11.4.min.js',
-        './src/js/libraries/d3.min.js',
-        './src/js/libraries/jquery.nouislider.all.min.js',
-        './src/js/libraries/three/three.min.js',
-        './src/js/libraries/three/Projector.js',
-        './src/js/libraries/three/CanvasRenderer.js',
-        './src/js/libraries/jquery.flightindicators.js',
-        './src/js/libraries/semver.js',
-        './src/js/libraries/jbox/jBox.min.js',
-        './src/js/libraries/switchery/switchery.js',
-        './src/js/libraries/bluebird.min.js',
-        './src/js/libraries/jquery.ba-throttle-debounce.min.js',
-        './src/js/libraries/inflection.min.js',
+        // JS files
         './src/js/injected_methods.js',
         './src/js/data_storage.js',
         './src/js/workers/hex_parser.js',
@@ -279,54 +257,61 @@ function dist() {
         './src/js/Features.js',
         './src/js/Beepers.js',
         './src/js/release_checker.js',
-        './src/tabs/adjustments.js',
-        './src/tabs/auxiliary.js',
-        './src/tabs/cli.js',
-        './src/tabs/configuration.js',
-        './src/tabs/failsafe.js',
-        './src/tabs/firmware_flasher.js',
-        './src/tabs/gps.js',
-        './src/tabs/help.js',
-        './src/tabs/landing.js',
-        './src/tabs/led_strip.js',
-        './src/tabs/logging.js',
-        './src/tabs/map.js',
-        './src/tabs/motors.js',
-        './src/tabs/onboard_logging.js',
-        './src/tabs/osd.js',
-        './src/tabs/pid_tuning.js',
-        './src/tabs/ports.js',
-        './src/tabs/power.js',
-        './src/tabs/receiver.js',
-        './src/tabs/receiver_msp.js',
-        './src/tabs/sensors.js',
-        './src/tabs/servos.js',
-        './src/tabs/setup.js',
-        './src/tabs/setup_osd.js',
-        './src/tabs/transponder.js',
-        './src/main.js',
+        './src/js/tabs/adjustments.js',
+        './src/js/tabs/auxiliary.js',
+        './src/js/tabs/cli.js',
+        './src/js/tabs/configuration.js',
+        './src/js/tabs/failsafe.js',
+        './src/js/tabs/firmware_flasher.js',
+        './src/js/tabs/gps.js',
+        './src/js/tabs/help.js',
+        './src/js/tabs/landing.js',
+        './src/js/tabs/led_strip.js',
+        './src/js/tabs/logging.js',
+        './src/js/tabs/map.js',
+        './src/js/tabs/motors.js',
+        './src/js/tabs/onboard_logging.js',
+        './src/js/tabs/osd.js',
+        './src/js/tabs/pid_tuning.js',
+        './src/js/tabs/ports.js',
+        './src/js/tabs/power.js',
+        './src/js/tabs/receiver.js',
+        './src/js/tabs/receiver_msp.js',
+        './src/js/tabs/sensors.js',
+        './src/js/tabs/servos.js',
+        './src/js/tabs/setup.js',
+        './src/js/tabs/setup_osd.js',
+        './src/js/tabs/transponder.js',
+        './src/js/main.js',
+        './src/js/eventPage.js',
 
-        // everything else
-        './src/eventPage.js',
+        // Src
         './src/*.html',
         './src/tabs/*.html',
         './src/images/**/*',
-        './src/_locales/**/*',
-        './src/css/font-awesome/fonts/*',
-        './src/css/opensans_webfontkit/*.{eot,svg,ttf,woff,woff2}',
-        './src/resources/*.json',
-        './src/resources/models/*',
-        './src/resources/osd/*.mcm',
-        './src/resources/motor_order/*.svg',
     ];
+
     return gulp.src(distSources, { base: 'src' })
         .pipe(gulp.src('manifest.json', { passthrougth: true }))
         .pipe(gulp.src('package.json', { passthrougth: true }))
-        .pipe(gulp.dest(DIST_DIR))
-        .pipe(install({
-            npm: '--production --ignore-scripts'
-        }));;
+        .pipe(gulp.src('changelog.html', { passthrougth: true }))
+        .pipe(gulp.dest(DIST_DIR));
 };
+
+function dist_locale() {
+    return gulp.src('./locales/**/*', { base: 'locales'})
+        .pipe(gulp.dest(DIST_DIR + '_locales'));
+}
+
+function dist_libraries() {
+    return gulp.src('./libraries/**/*', { base: '.'})
+        .pipe(gulp.dest(DIST_DIR + 'js'));
+}
+
+function dist_resources() {
+    return gulp.src('./resources/**/*', { base: '.'})
+        .pipe(gulp.dest(DIST_DIR));
+}
 
 // Create runable app directories in ./apps
 function apps(done) {

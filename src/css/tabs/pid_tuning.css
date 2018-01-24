@@ -56,7 +56,7 @@
     margin: 0 2px 0px 0;
     border: 1px solid silver;
     border-radius: 3px;
-    background-image: url(../images/paper.jpg);
+    background-image: url(../../images/paper.jpg);
     background-size: 200%;
     background-position: center;
 }
@@ -208,7 +208,7 @@
     min-width: 250px;
     border: 1px solid silver;
     border-radius: 3px;
-    background-image: url(../images/paper.jpg);
+    background-image: url(../../images/paper.jpg);
     background-size: 200%;
     background-position: center;
 }
@@ -657,7 +657,7 @@
 }
 
 .tab-pid_tuning .bracket {
-    background-image: url(/images/icons/icon_bracket.svg);
+    background-image: url(../../images/icons/icon_bracket.svg);
     background-repeat: no-repeat;
     height: 35px;
     width: 14px;
@@ -677,7 +677,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url(../images/paper.jpg);
+    background-image: url(../../images/paper.jpg);
     background-size: 100%;
     background-position: center;
     border: 1px solid silver;
