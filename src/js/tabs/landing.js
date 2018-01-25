@@ -10,7 +10,7 @@ TABS.landing.initialize = function (callback) {
 
     $('#content').load("./tabs/landing.html", function () {
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         // load changelog content
         $('#changelog .log').load('./changelog.html');
@@ -28,7 +28,7 @@ TABS.landing.initialize = function (callback) {
                 $("#content").addClass('log_open');
                 state = true;
             }
-            $(this).text(state ? chrome.i18n.getMessage('close') : chrome.i18n.getMessage('defaultChangelogAction'));
+            $(this).text(state ? i18n.getMessage('close') : i18n.getMessage('defaultChangelogAction'));
             $(this).data('state2', state);
         });
 

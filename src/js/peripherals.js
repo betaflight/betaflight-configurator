@@ -17,11 +17,11 @@ function adjustBoxNameIfPeripheralWithModeID(modeId, defaultName) {
     if (isPeripheralSelected("RUNCAM_DEVICE_CONTROL")) {
         switch (modeId) {
         case 32: // BOXCAMERA1
-            return chrome.i18n.getMessage('modeCameraWifi');
+            return i18n.getMessage('modeCameraWifi');
         case 33: // BOXCAMERA2
-            return chrome.i18n.getMessage('modeCameraPower');
+            return i18n.getMessage('modeCameraPower');
         case 34: // BOXCAMERA3
-            return chrome.i18n.getMessage('modeCameraChangeMode');
+            return i18n.getMessage('modeCameraChangeMode');
         default:
             return defaultName;
         }

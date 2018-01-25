@@ -66,7 +66,7 @@ var serial = {
                                                 self.failed = 0;
                                             } else {
                                                 console.log('SERIAL: Connection did not recover from last onReceiveError, disconnecting');
-                                                GUI.log(chrome.i18n.getMessage('serialUnrecoverable'));
+                                                GUI.log(i18n.getMessage('serialUnrecoverable'));
 
                                                 if (GUI.connected_to || GUI.connecting_to) {
                                                     $('a.connect').click();
@@ -96,7 +96,7 @@ var serial = {
                                             if (info.paused) {
                                                 // assume unrecoverable, disconnect
                                                 console.log('SERIAL: Connection did not recover from ' + self.error + ' condition, disconnecting');
-                                                GUI.log(chrome.i18n.getMessage('serialUnrecoverable'));
+                                                GUI.log(i18n.getMessage('serialUnrecoverable'));
     
                                                 if (GUI.connected_to || GUI.connecting_to) {
                                                     $('a.connect').click();

@@ -225,9 +225,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")
             || semver.gte(CONFIG.apiVersion, "1.16.0") && FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES')) {
-            $('#pid-tuning .rate').text(chrome.i18n.getMessage("pidTuningSuperRate"));
+            $('#pid-tuning .rate').text(i18n.getMessage("pidTuningSuperRate"));
         } else {
-            $('#pid-tuning .rate').text(chrome.i18n.getMessage("pidTuningRate"));
+            $('#pid-tuning .rate').text(i18n.getMessage("pidTuningRate"));
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
@@ -507,7 +507,7 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         // Local cache of current rates
         self.currentRates = {
@@ -563,11 +563,11 @@ TABS.pid_tuning.initialize = function (callback) {
             if (!self.showAllPids) {
                 hideUnusedPids();
 
-                showAllButton.text(chrome.i18n.getMessage("pidTuningShowAllPids"));
+                showAllButton.text(i18n.getMessage("pidTuningShowAllPids"));
             } else {
                 showAllPids();
 
-                showAllButton.text(chrome.i18n.getMessage("pidTuningHideUnusedPids"));
+                showAllButton.text(i18n.getMessage("pidTuningHideUnusedPids"));
             }
         }
 
@@ -585,7 +585,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 self.refresh(function () {
                     self.updating = false;
 
-                    GUI.log(chrome.i18n.getMessage('pidTuningProfileReset'));
+                    GUI.log(i18n.getMessage('pidTuningProfileReset'));
                 });
             });
         });
@@ -601,7 +601,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('.tab-pid_tuning select[name="profile"]').prop('disabled', 'false');
                     CONFIG.profile = self.currentProfile;
 
-                    GUI.log(chrome.i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
+                    GUI.log(i18n.getMessage('pidTuningLoadedProfile', [self.currentProfile + 1]));
                 });
             });
         });
@@ -618,7 +618,7 @@ TABS.pid_tuning.initialize = function (callback) {
                         $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', 'false');
                         CONFIG.rateProfile = self.currentRateProfile;
 
-                        GUI.log(chrome.i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
+                        GUI.log(i18n.getMessage('pidTuningLoadedRateProfile', [self.currentRateProfile + 1]));
                     });
                 });
             });
@@ -699,7 +699,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
                 self.updatePidControllerParameters();
             } else {
-                GUI.log(chrome.i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion]));
+                GUI.log(i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion]));
 
                 pidController_e.empty();
                 pidController_e.append('<option value="">Unknown</option>');
@@ -854,7 +854,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('a.refresh').click(function () {
             self.refresh(function () {
-                GUI.log(chrome.i18n.getMessage('pidTuningDataRefreshed'));
+                GUI.log(i18n.getMessage('pidTuningDataRefreshed'));
             });
         });
 
@@ -982,7 +982,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 self.updating = false;
                 self.setDirty(false);
 
-                GUI.log(chrome.i18n.getMessage('pidTuningEepromSaved'));
+                GUI.log(i18n.getMessage('pidTuningEepromSaved'));
             });
         });
 
@@ -1117,12 +1117,12 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
             if (changedProfile || changedRateProfile) {
                 self.refresh(function () {
                     if (changedProfile) {
-                        GUI.log(chrome.i18n.getMessage('pidTuningReceivedProfile', [CONFIG.profile + 1]));
+                        GUI.log(i18n.getMessage('pidTuningReceivedProfile', [CONFIG.profile + 1]));
                         CONFIG.profile = self.currentProfile;
                     }
 
                     if (changedRateProfile) {
-                        GUI.log(chrome.i18n.getMessage('pidTuningReceivedRateProfile', [CONFIG.rateProfile + 1]));
+                        GUI.log(i18n.getMessage('pidTuningReceivedRateProfile', [CONFIG.rateProfile + 1]));
                         CONFIG.rateProfile = self.currentRateProfile
                     }
                 });

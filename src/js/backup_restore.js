@@ -306,7 +306,7 @@ function configuration_restore(callback) {
                     if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.backupFileMinVersionAccepted)) {
                                                 
                         if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
-                            GUI.log(chrome.i18n.getMessage('backupFileUnmigratable'));
+                            GUI.log(i18n.getMessage('backupFileUnmigratable'));
                             return;
                         }
 
@@ -319,7 +319,7 @@ function configuration_restore(callback) {
                         configuration_upload(configuration, callback);
                         
                     } else {
-                        GUI.log(chrome.i18n.getMessage('backupFileIncompatible'));
+                        GUI.log(i18n.getMessage('backupFileIncompatible'));
                     }
 
                     
@@ -341,7 +341,7 @@ function configuration_restore(callback) {
     function migrate(configuration) {
         var appliedMigrationsCount = 0;
         var migratedVersion = configuration.generatedBy;
-        GUI.log(chrome.i18n.getMessage('configMigrationFrom', [migratedVersion]));
+        GUI.log(i18n.getMessage('configMigrationFrom', [migratedVersion]));
         
         if (!compareVersions(migratedVersion, '0.59.1')) {
             
@@ -350,7 +350,7 @@ function configuration_restore(callback) {
             configuration.MISC.rssi_aux_channel = undefined;
             
             migratedVersion = '0.59.1';
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -362,7 +362,7 @@ function configuration_restore(callback) {
             }
             
             migratedVersion = '0.60.1';
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -377,7 +377,7 @@ function configuration_restore(callback) {
             }
             
             migratedVersion = '0.61.0';
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -408,7 +408,7 @@ function configuration_restore(callback) {
             }
             
             migratedVersion = '0.63.0';
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -464,7 +464,7 @@ function configuration_restore(callback) {
                 ports: ports 
             };
             
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -484,7 +484,7 @@ function configuration_restore(callback) {
                 };
             }
 
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -525,7 +525,7 @@ function configuration_restore(callback) {
             
             migratedVersion = '0.66.0';
 
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -543,7 +543,7 @@ function configuration_restore(callback) {
                 configuration.profiles[profileIndex].PID.controller = newPidControllerIndex;
             }
 
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -560,7 +560,7 @@ function configuration_restore(callback) {
                 };
             }
 
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
@@ -628,7 +628,7 @@ function configuration_restore(callback) {
                 }
             }
 
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -639,7 +639,7 @@ function configuration_restore(callback) {
             }
             migratedVersion = '1.2.0';
 
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
 
@@ -655,12 +655,12 @@ function configuration_restore(callback) {
 
             migratedVersion = '1.3.1';
 
-            GUI.log(chrome.i18n.getMessage('configMigratedTo', [migratedVersion]));
+            GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
         
         if (appliedMigrationsCount > 0) {
-            GUI.log(chrome.i18n.getMessage('configMigrationSuccessful', [appliedMigrationsCount]));
+            GUI.log(i18n.getMessage('configMigrationSuccessful', [appliedMigrationsCount]));
         }        
         return true;
     }
@@ -852,7 +852,7 @@ function configuration_restore(callback) {
             }
 
             function reboot() {
-                GUI.log(chrome.i18n.getMessage('eeprom_saved_ok'));
+                GUI.log(i18n.getMessage('eeprom_saved_ok'));
 
                 GUI.tab_switch_cleanup(function() {
                     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialize);
@@ -860,11 +860,11 @@ function configuration_restore(callback) {
             }
 
             function reinitialize() {
-                GUI.log(chrome.i18n.getMessage('deviceRebooting'));
+                GUI.log(i18n.getMessage('deviceRebooting'));
 
                 GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
                     MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                        GUI.log(chrome.i18n.getMessage('deviceReady'));
+                        GUI.log(i18n.getMessage('deviceReady'));
                         if (callback) callback();
                     });
                 }, 1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts

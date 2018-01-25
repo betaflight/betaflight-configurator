@@ -1,7 +1,7 @@
 'use strict';
 var mspHelper;
 
-$(document).ready(function () {
+function initializeSerialBackend() {
 
     GUI.updateManualPortVisibility = function(){
         var selected_port = $('div#port-picker #port option:selected');
@@ -48,7 +48,7 @@ $(document).ready(function () {
                     $('#port-override').val() :
                     String($('div#port-picker #port').val());
             if (selected_port === 'DFU') {
-                GUI.log(chrome.i18n.getMessage('dfu_connect_message'));
+                GUI.log(i18n.getMessage('dfu_connect_message'));
             }
             else if (selected_port != '0') {
                 if (!clicks) {
@@ -57,7 +57,7 @@ $(document).ready(function () {
 
                     // lock port select & baud while we are connecting / connected
                     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
-                    $('div.connect_controls a.connect_state').text(chrome.i18n.getMessage('connecting'));
+                    $('div.connect_controls a.connect_state').text(i18n.getMessage('connecting'));
 
                     serial.connect(selected_port, {bitrate: selected_baud}, onOpen);
 
@@ -85,7 +85,7 @@ $(document).ready(function () {
             GUI.auto_connect = true;
 
             $('input.auto_connect').prop('checked', true);
-            $('input.auto_connect, span.auto_connect').prop('title', chrome.i18n.getMessage('autoConnectEnabled'));
+            $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectEnabled'));
 
             $('select#baud').val(115200).prop('disabled', true);
         } else {
@@ -93,7 +93,7 @@ $(document).ready(function () {
             GUI.auto_connect = false;
 
             $('input.auto_connect').prop('checked', false);
-            $('input.auto_connect, span.auto_connect').prop('title', chrome.i18n.getMessage('autoConnectDisabled'));
+            $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
         }
 
         // bind UI hook to auto-connect checkbos
@@ -102,11 +102,11 @@ $(document).ready(function () {
 
             // update title/tooltip
             if (GUI.auto_connect) {
-                $('input.auto_connect, span.auto_connect').prop('title', chrome.i18n.getMessage('autoConnectEnabled'));
+                $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectEnabled'));
 
                 $('select#baud').val(115200).prop('disabled', true);
             } else {
-                $('input.auto_connect, span.auto_connect').prop('title', chrome.i18n.getMessage('autoConnectDisabled'));
+                $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
 
                 if (!GUI.connected_to && !GUI.connecting_to) $('select#baud').prop('disabled', false);
             }
@@ -117,7 +117,7 @@ $(document).ready(function () {
 
     PortHandler.initialize();
     PortUsage.initialize();
-});
+}
 
 function finishClose(finishedCallback) {
     var wasConnected = CONFIGURATOR.connectionValid;
@@ -141,7 +141,7 @@ function finishClose(finishedCallback) {
 
     // reset connect / disconnect button
     $('div.connect_controls a.connect').removeClass('active');
-    $('div.connect_controls a.connect_state').text(chrome.i18n.getMessage('connect'));
+    $('div.connect_controls a.connect_state').text(i18n.getMessage('connect'));
 
     // reset active sensor indicators
     sensor_status(0);
@@ -165,7 +165,7 @@ function onOpen(openInfo) {
         // reset connecting_to
         GUI.connecting_to = false;
 
-        GUI.log(chrome.i18n.getMessage('serialPortOpened', [openInfo.connectionId]));
+        GUI.log(i18n.getMessage('serialPortOpened', [openInfo.connectionId]));
 
         // save selected port with chrome.storage if the port differs
         chrome.storage.local.get('last_used_port', function (result) {
@@ -185,7 +185,7 @@ function onOpen(openInfo) {
         // disconnect after 10 seconds with error if we don't get IDENT data
         GUI.timeout_add('connecting', function () {
             if (!CONFIGURATOR.connectionValid) {
-                GUI.log(chrome.i18n.getMessage('noConfigurationReceived'));
+                GUI.log(i18n.getMessage('noConfigurationReceived'));
 
                 $('div.connect_controls a.connect').click(); // disconnect
             }
@@ -198,7 +198,7 @@ function onOpen(openInfo) {
 
         // request configuration data
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
-            GUI.log(chrome.i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
+            GUI.log(i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
 
             if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.apiVersionAccepted)) {
 
@@ -206,26 +206,26 @@ function onOpen(openInfo) {
                     if (CONFIG.flightControllerIdentifier === 'BTFL') {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
 
-                            GUI.log(chrome.i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
+                            GUI.log(i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
                             updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier);
                             updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier);
 
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
 
-                                GUI.log(chrome.i18n.getMessage('buildInfoReceived', [CONFIG.buildInfo]));
+                                GUI.log(i18n.getMessage('buildInfoReceived', [CONFIG.buildInfo]));
 
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
 
-                                    GUI.log(chrome.i18n.getMessage('boardInfoReceived', [CONFIG.boardIdentifier, CONFIG.boardVersion]));
+                                    GUI.log(i18n.getMessage('boardInfoReceived', [CONFIG.boardIdentifier, CONFIG.boardVersion]));
                                     updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, CONFIG.boardIdentifier);
                                     updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, CONFIG.boardIdentifier);
 
                                     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
-                                        GUI.log(chrome.i18n.getMessage('uniqueDeviceIdReceived', [CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16)]));
+                                        GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16)]));
 
                                         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                                             MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
-                                                GUI.log(chrome.i18n.getMessage('craftNameReceived', [CONFIG.name]));
+                                                GUI.log(i18n.getMessage('craftNameReceived', [CONFIG.name]));
 
                                                 CONFIG.arming_disabled = false;
                                                 mspHelper.setArmingEnabled(false, finishOpen);
@@ -240,7 +240,7 @@ function onOpen(openInfo) {
                     } else {
                         var dialog = $('.dialogConnectWarning')[0];
 
-                        $('.dialogConnectWarning-content').html(chrome.i18n.getMessage('firmwareTypeNotSupported'));
+                        $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareTypeNotSupported'));
 
                         $('.dialogConnectWarning-closebtn').click(function() {
                             dialog.close();
@@ -254,7 +254,7 @@ function onOpen(openInfo) {
             } else {
                 var dialog = $('.dialogConnectWarning')[0];
 
-                $('.dialogConnectWarning-content').html(chrome.i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.apiVersionAccepted]));
+                $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.apiVersionAccepted]));
 
                 $('.dialogConnectWarning-closebtn').click(function() {
                     dialog.close();
@@ -267,9 +267,9 @@ function onOpen(openInfo) {
         });
     } else {
         console.log('Failed to open serial port');
-        GUI.log(chrome.i18n.getMessage('serialPortOpenFail'));
+        GUI.log(i18n.getMessage('serialPortOpenFail'));
 
-        $('div#connectbutton a.connect_state').text(chrome.i18n.getMessage('connect'));
+        $('div#connectbutton a.connect_state').text(i18n.getMessage('connect'));
         $('div#connectbutton a.connect').removeClass('active');
 
         // unlock port select & baud
@@ -301,7 +301,7 @@ function connectCli() {
 
 function onConnect() {
     GUI.timeout_remove('connecting'); // kill connecting timer
-    $('div#connectbutton a.connect_state').text(chrome.i18n.getMessage('disconnect')).addClass('active');
+    $('div#connectbutton a.connect_state').text(i18n.getMessage('disconnect')).addClass('active');
     $('div#connectbutton a.connect').addClass('active');
 
     $('#tabs ul.mode-disconnected').hide();
@@ -359,9 +359,9 @@ function onConnect() {
 
 function onClosed(result) {
     if (result) { // All went as expected
-        GUI.log(chrome.i18n.getMessage('serialPortClosedOk'));
+        GUI.log(i18n.getMessage('serialPortClosedOk'));
     } else { // Something went wrong
-        GUI.log(chrome.i18n.getMessage('serialPortClosedFail'));
+        GUI.log(i18n.getMessage('serialPortClosedFail'));
     }
 
     $('#tabs ul.mode-connected').hide();
@@ -449,7 +449,7 @@ function sensor_status(sensors_detected) {
 
     if (have_sensor(sensors_detected, 'gps')) {
         $('.gps', e_sensor_status).addClass('on');
-	$('.gpsicon', e_sensor_status).addClass('active');
+    $('.gpsicon', e_sensor_status).addClass('active');
     } else {
         $('.gps', e_sensor_status).removeClass('on');
         $('.gpsicon', e_sensor_status).removeClass('active');

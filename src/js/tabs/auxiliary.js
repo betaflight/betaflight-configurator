@@ -58,7 +58,7 @@ TABS.auxiliary.initialize = function (callback) {
 
         //add value to autodetect channel
         var channelOption = channelOptionTemplate.clone();
-        channelOption.text(chrome.i18n.getMessage('auxiliaryAutoChannelSelect'));
+        channelOption.text(i18n.getMessage('auxiliaryAutoChannelSelect'));
         channelOption.val(-1);
         channelList.append(channelOption);
 
@@ -161,7 +161,7 @@ TABS.auxiliary.initialize = function (callback) {
         });
                 
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         // UI Hooks
         $('a.save').click(function () {
@@ -211,7 +211,7 @@ TABS.auxiliary.initialize = function (callback) {
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    GUI.log(chrome.i18n.getMessage('auxiliaryEepromSaved'));
+                    GUI.log(i18n.getMessage('auxiliaryEepromSaved'));
                 });
             }
         });

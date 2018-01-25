@@ -181,7 +181,7 @@ TABS.sensors.initialize = function (callback) {
 
     $('#content').load("./tabs/sensors.html", function load_html() {
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         // disable graphs for sensors that are missing
         var checkboxes = $('.tab-sensors .info .checkboxes input');

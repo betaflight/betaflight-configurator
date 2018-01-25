@@ -164,7 +164,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
         //build radio buttons
         if (transponderProviders.length > 1) {
             transponderTypeSelect.append(
-                $('<option>').attr('value', 0).html(chrome.i18n.getMessage("transponderType0")) // NONE
+                $('<option>').attr('value', 0).html(i18n.getMessage("transponderType0")) // NONE
             );
         }
 
@@ -173,7 +173,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
             if ( transponderProvider.hasOwnProperty('id') ) {
                 transponderTypeSelect.append(
-                    $('<option>').attr('value', transponderProvider.id).html(chrome.i18n.getMessage("transponderType" + transponderProvider.id))
+                    $('<option>').attr('value', transponderProvider.id).html(i18n.getMessage("transponderType" + transponderProvider.id))
                 );
             }
         }
@@ -193,12 +193,12 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
         let template = $('#transponder-configuration-template').clone();
 
-        template.find('.spacer_box_title').html(chrome.i18n.getMessage("transponderData" + transponderProvider.id));
-        template.find('.dataHelp').html(chrome.i18n.getMessage("transponderDataHelp" + transponderProvider.id));
+        template.find('.spacer_box_title').html(i18n.getMessage("transponderData" + transponderProvider.id));
+        template.find('.dataHelp').html(i18n.getMessage("transponderDataHelp" + transponderProvider.id));
 
 
-        if ( chrome.i18n.getMessage("transponderHelp" + transponderProvider.id).length ) {
-            $('#transponderHelp').html(chrome.i18n.getMessage("transponderHelp" + transponderProvider.id));
+        if ( i18n.getMessage("transponderHelp" + transponderProvider.id).length ) {
+            $('#transponderHelp').html(i18n.getMessage("transponderHelp" + transponderProvider.id));
             $('#transponderHelpBox').show();
         }
 
@@ -282,7 +282,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
     function process_html() {
         $(".tab-transponder").toggleClass("transponder-supported", TABS.transponder.available && TRANSPONDER.supported);
 
-        localize();
+        i18n.localizePage();
 
         if ( TABS.transponder.available && TRANSPONDER.providers.length > 0 ) {
 
@@ -301,7 +301,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
                 function save_to_eeprom() {
                     MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
-                        GUI.log(chrome.i18n.getMessage('transponderEepromSaved'));
+                        GUI.log(i18n.getMessage('transponderEepromSaved'));
                         if ( $(_this).hasClass('reboot') ) {
                             GUI.tab_switch_cleanup(function() {
                                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialize);
@@ -313,7 +313,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                 if (TRANSPONDER.provider !== "0" && TRANSPONDER.data.length !== TRANSPONDER.providers.find(function(provider) {
                         return provider.id == TRANSPONDER.provider;
                     }).dataLength ) {
-                    GUI.log(chrome.i18n.getMessage('transponderDataInvalid'));
+                    GUI.log(i18n.getMessage('transponderDataInvalid'));
                 } else {
                     save_transponder_data();
                 }
@@ -321,7 +321,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
         }
 
         function reinitialize() {
-            GUI.log(chrome.i18n.getMessage('deviceRebooting'));
+            GUI.log(i18n.getMessage('deviceRebooting'));
             if ( BOARD.find_board_definition(CONFIG.boardIdentifier).vcp ) {
                 $('a.connect').click();
                 GUI.timeout_add('start_connection', function start_connection() {
@@ -330,7 +330,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
             } else {
                 GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
                     MSP.send_message(MSPCodes.MSP_IDENT, false, false, function() {
-                        GUI.log(chrome.i18n.getMessage('deviceReady'));
+                        GUI.log(i18n.getMessage('deviceReady'));
                         TABS.configuration.initialize(false, $('#content').scrollTop());
                     });
                 }, 1500);

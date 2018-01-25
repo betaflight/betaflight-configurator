@@ -67,7 +67,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
     function process_html() {
 
-        localize();
+        i18n.localizePage();
 
         // Build Grid
         var theHTML = [];
@@ -591,7 +591,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function() {
-                    GUI.log(chrome.i18n.getMessage('ledStripEepromSaved'));
+                    GUI.log(i18n.getMessage('ledStripEepromSaved'));
                 });
             }
 

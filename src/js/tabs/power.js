@@ -80,7 +80,7 @@ TABS.power.initialize = function (callback) {
             var meterElement = template.clone();
             $(meterElement).attr('id', 'voltage-meter-' + index);
 
-            var message = chrome.i18n.getMessage('powerVoltageId' + VOLTAGE_METERS[index].id);
+            var message = i18n.getMessage('powerVoltageId' + VOLTAGE_METERS[index].id);
             $(meterElement).find('.label').text(message)
             destination.append(meterElement);
 
@@ -130,7 +130,7 @@ TABS.power.initialize = function (callback) {
             var meterElement = template.clone();
             $(meterElement).attr('id', 'amperage-meter-' + index);
 
-            var message = chrome.i18n.getMessage('powerAmperageId' + CURRENT_METERS[index].id);
+            var message = i18n.getMessage('powerAmperageId' + CURRENT_METERS[index].id);
             $(meterElement).find('.label').text(message)
             destination.append(meterElement);
 
@@ -189,12 +189,12 @@ TABS.power.initialize = function (callback) {
         var haveFc = (semver.lt(CONFIG.apiVersion, "1.35.0") || (CONFIG.boardType == 0 || CONFIG.boardType == 2));
 
         var batteryMeterTypes = [
-            chrome.i18n.getMessage('powerBatteryVoltageMeterTypeNone'),
-            chrome.i18n.getMessage('powerBatteryVoltageMeterTypeAdc'),
+            i18n.getMessage('powerBatteryVoltageMeterTypeNone'),
+            i18n.getMessage('powerBatteryVoltageMeterTypeAdc'),
         ];
 
         if (haveFc) {
-            batteryMeterTypes.push(chrome.i18n.getMessage('powerBatteryVoltageMeterTypeEsc'));
+            batteryMeterTypes.push(i18n.getMessage('powerBatteryVoltageMeterTypeEsc'));
         }
 
         var batteryMeterType_e = $('select.batterymetersource');
@@ -205,16 +205,16 @@ TABS.power.initialize = function (callback) {
 
         // fill current
         var currentMeterTypes = [
-            chrome.i18n.getMessage('powerBatteryCurrentMeterTypeNone'),
-            chrome.i18n.getMessage('powerBatteryCurrentMeterTypeAdc'),
+            i18n.getMessage('powerBatteryCurrentMeterTypeNone'),
+            i18n.getMessage('powerBatteryCurrentMeterTypeAdc'),
         ];
 
         if (haveFc) {
-            currentMeterTypes.push(chrome.i18n.getMessage('powerBatteryCurrentMeterTypeVirtual'));
-            currentMeterTypes.push(chrome.i18n.getMessage('powerBatteryCurrentMeterTypeEsc'));
+            currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeVirtual'));
+            currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeEsc'));
             
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                currentMeterTypes.push(chrome.i18n.getMessage('powerBatteryCurrentMeterTypeMsp'));
+                currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeMsp'));
             }
         }
 
@@ -247,7 +247,7 @@ TABS.power.initialize = function (callback) {
                 for (var i = 0; i < VOLTAGE_METERS.length; i++) {
                     var elementName = '#voltage-meter-' + i + ' .value';
                     var element = $(elementName);
-                    element.text(chrome.i18n.getMessage('powerVoltageValue', [VOLTAGE_METERS[i].voltage]));
+                    element.text(i18n.getMessage('powerVoltageValue', [VOLTAGE_METERS[i].voltage]));
                 }
             });
 
@@ -255,7 +255,7 @@ TABS.power.initialize = function (callback) {
                 for (var i = 0; i < CURRENT_METERS.length; i++) {
                     var elementName = '#amperage-meter-' + i + ' .value';
                     var element = $(elementName);
-                    element.text(chrome.i18n.getMessage('powerAmperageValue', [CURRENT_METERS[i].amperage.toFixed(2)]));
+                    element.text(i18n.getMessage('powerAmperageValue', [CURRENT_METERS[i].amperage.toFixed(2)]));
                 }
             });
 
@@ -264,13 +264,13 @@ TABS.power.initialize = function (callback) {
                 var element;
 
                 element = $(elementPrefix + '-connection-state .value');
-                element.text(BATTERY_STATE.cellCount > 0 ? chrome.i18n.getMessage('powerBatteryConnectedValueYes', [BATTERY_STATE.cellCount]) : chrome.i18n.getMessage('powerBatteryConnectedValueNo'));
+                element.text(BATTERY_STATE.cellCount > 0 ? i18n.getMessage('powerBatteryConnectedValueYes', [BATTERY_STATE.cellCount]) : i18n.getMessage('powerBatteryConnectedValueNo'));
                 element = $(elementPrefix + '-voltage .value');
-                element.text(chrome.i18n.getMessage('powerVoltageValue', [BATTERY_STATE.voltage]));
+                element.text(i18n.getMessage('powerVoltageValue', [BATTERY_STATE.voltage]));
                 element = $(elementPrefix + '-mah-drawn .value');
-                element.text(chrome.i18n.getMessage('powerMahValue', [BATTERY_STATE.mAhDrawn]));
+                element.text(i18n.getMessage('powerMahValue', [BATTERY_STATE.mAhDrawn]));
                 element = $(elementPrefix + '-amperage .value');
-                element.text(chrome.i18n.getMessage('powerAmperageValue', [BATTERY_STATE.amperage]));
+                element.text(i18n.getMessage('powerAmperageValue', [BATTERY_STATE.amperage]));
             });
 
         }
@@ -317,7 +317,7 @@ TABS.power.initialize = function (callback) {
             }
 
             function save_completed() {
-                GUI.log(chrome.i18n.getMessage('configurationEepromSaved'));
+                GUI.log(i18n.getMessage('configurationEepromSaved'));
 
                 TABS.power.initialize();
             }
@@ -332,7 +332,7 @@ TABS.power.initialize = function (callback) {
         initDisplay();
 
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         GUI.content_ready(callback);
     }
