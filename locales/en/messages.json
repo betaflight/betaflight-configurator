@@ -48,6 +48,31 @@
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
     },
+    "userLanguageSelect": {
+        "message": "Language (need to restart the application for the changes to take effect)"
+    },
+    "language_default": {
+        "message": "Default"
+    },
+    "language_ca": {
+        "message": "Catalan"
+    },
+    "language_de": {
+        "message": "German"
+    },
+    "language_en": {
+        "message": "English"
+    },
+    "language_es": {
+        "message": "Spanish"
+    },
+    "language_fr": {
+        "message": "French"
+    },
+    "language_ko": {
+        "message": "Korean"
+    },
+
     "sensorStatusGyro": {
         "message": "Gyroscope"
     },
