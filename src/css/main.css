@@ -45,7 +45,7 @@ a.disabled {
     height: 14px;
     width: 14px;
     opacity: 0.2;
-    background-image: url(images/icons/cf_icon_info_grey.svg);
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
     background-size: contain;
     background-position: center;
     transition: none;
@@ -53,7 +53,7 @@ a.disabled {
 
 .helpicon:hover {
     opacity: 0.9;
-    background-image: url(images/icons/cf_icon_info_green.svg);
+    background-image: url(../images/icons/cf_icon_info_green.svg);
     transition: none;
 }
 
@@ -130,7 +130,7 @@ input[type="number"]::-webkit-inner-spin-button {
     float: left;
     height: 70px;
     z-index: 0;
-    background-image: url("images/light-wide-2.svg");
+    background-image: url(../images/light-wide-2.svg);
     background-repeat: no-repeat;
     width: 340px;
     background-position: left center;
@@ -237,7 +237,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .gyroicon {
-    background-image: url(images/icons/sensor_gyro_off.png);
+    background-image: url(../images/icons/sensor_gyro_off.png);
     background-size: 43px;
     background-position: top;
     background-repeat: no-repeat;
@@ -250,13 +250,13 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .gyroicon.active {
-    background-image: url(images/icons/sensor_gyro_on.png);
+    background-image: url(../images/icons/sensor_gyro_on.png);
     color: #61d514;
     color: #818181;
 }
 
 .accicon {
-    background-image: url(images/icons/sensor_acc_off.png);
+    background-image: url(../images/icons/sensor_acc_off.png);
     background-size: 40px;
     background-position: -5px 2px;
     background-repeat: no-repeat;
@@ -269,13 +269,13 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .accicon.active {
-    background-image: url(images/icons/sensor_acc_on.png);
+    background-image: url(../images/icons/sensor_acc_on.png);
     color: #61d514;
     color: #818181;
 }
 
 .magicon {
-    background-image: url(images/icons/sensor_mag_off.png);
+    background-image: url(../images/icons/sensor_mag_off.png);
     background-size: 42px;
     background-position: -5px 2px;
     background-repeat: no-repeat;
@@ -288,12 +288,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .magicon.active {
-    background-image: url(images/icons/sensor_mag_on.png);
+    background-image: url(../images/icons/sensor_mag_on.png);
     color: #818181;
 }
 
 .gpsicon {
-    background-image: url(images/icons/sensor_sat_off.png);
+    background-image: url(../images/icons/sensor_sat_off.png);
     background-size: 42px;
     background-position: -5px 2px;
     background-repeat: no-repeat;
@@ -306,12 +306,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .gpsicon.active {
-    background-image: url(images/icons/sensor_sat_on.png);
+    background-image: url(../images/icons/sensor_sat_on.png);
     color: #818181;
 }
 
 .baroicon {
-    background-image: url(images/icons/sensor_baro_off.png);
+    background-image: url(../images/icons/sensor_baro_off.png);
     background-size: 40px;
     background-position: -5px 2px;
     background-repeat: no-repeat;
@@ -324,12 +324,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .baroicon.active {
-    background-image: url(images/icons/sensor_baro_on.png);
+    background-image: url(../images/icons/sensor_baro_on.png);
     color: #818181;
 }
 
 .sonaricon {
-    background-image: url(images/icons/sensor_sonar_off.png);
+    background-image: url(../images/icons/sensor_sonar_off.png);
     background-size: 41px;
     background-position: -4px 1px;
     background-repeat: no-repeat;
@@ -342,7 +342,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .sonaricon.active {
-    background-image: url(images/icons/sensor_sonar_on.png);
+    background-image: url(../images/icons/sensor_sonar_on.png);
     color: #818181;
 }
 
@@ -369,7 +369,7 @@ input[type="number"]::-webkit-inner-spin-button {
     height: 20px;
     margin-top: 10px;
     margin-right: 10px;
-    background-image: url('./images/CF_settings_white.svg');
+    background-image: url(../images/CF_settings_white.svg);
     background-position: -1px -1px;
     background-repeat: no-repeat;
     opacity: 0.4;
@@ -424,7 +424,7 @@ input[type="number"]::-webkit-inner-spin-button {
     top: 113px;
     height: 27px;
     width: 27px;
-    background-image: url(images/icons/scroll.svg);
+    background-image: url(../images/icons/scroll.svg);
     background-repeat: no-repeat;
     background-size: 100%;
     opacity: 0.0;
@@ -583,309 +583,309 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* Tab-Icons */
 .ic_setup {
-    background-image: url(images/icons/cf_icon_setup_grey.svg);
+    background-image: url(../images/icons/cf_icon_setup_grey.svg);
 }
 
 .ic_setup:hover {
-    background-image: url(images/icons/cf_icon_setup_white.svg);
+    background-image: url(../images/icons/cf_icon_setup_white.svg);
 }
 
 li.active .ic_setup {
-    background-image: url(images/icons/cf_icon_setup_white.svg);
+    background-image: url(../images/icons/cf_icon_setup_white.svg);
 }
 
 .ic_ports {
-    background-image: url(images/icons/cf_icon_ports_grey.svg);
+    background-image: url(../images/icons/cf_icon_ports_grey.svg);
 }
 
 .ic_ports:hover {
-    background-image: url(images/icons/cf_icon_ports_white.svg);
+    background-image: url(../images/icons/cf_icon_ports_white.svg);
 }
 
 li.active .ic_ports {
-    background-image: url(images/icons/cf_icon_ports_white.svg);
+    background-image: url(../images/icons/cf_icon_ports_white.svg);
 }
 
 .ic_config {
-    background-image: url(images/icons/cf_icon_config_grey.svg);
+    background-image: url(../images/icons/cf_icon_config_grey.svg);
 }
 
 .ic_config:hover {
-    background-image: url(images/icons/cf_icon_config_white.svg);
+    background-image: url(../images/icons/cf_icon_config_white.svg);
 }
 
 li.active .ic_config {
-    background-image: url(images/icons/cf_icon_config_white.svg);
+    background-image: url(../images/icons/cf_icon_config_white.svg);
 }
 
 .ic_pid {
-    background-image: url(images/icons/cf_icon_pid_grey.svg);
+    background-image: url(../images/icons/cf_icon_pid_grey.svg);
 }
 
 .ic_pid:hover {
-    background-image: url(images/icons/cf_icon_pid_white.svg);
+    background-image: url(../images/icons/cf_icon_pid_white.svg);
 }
 
 li.active .ic_pid {
-    background-image: url(images/icons/cf_icon_pid_white.svg);
+    background-image: url(../images/icons/cf_icon_pid_white.svg);
 }
 
 .ic_rx {
-    background-image: url(images/icons/cf_icon_rx_grey.svg);
+    background-image: url(../images/icons/cf_icon_rx_grey.svg);
 }
 
 .ic_rx:hover {
-    background-image: url(images/icons/cf_icon_rx_white.svg);
+    background-image: url(../images/icons/cf_icon_rx_white.svg);
 }
 
 li.active .ic_rx {
-    background-image: url(images/icons/cf_icon_rx_white.svg);
+    background-image: url(../images/icons/cf_icon_rx_white.svg);
 }
 
 .ic_modes {
-    background-image: url(images/icons/cf_icon_modes_grey.svg);
+    background-image: url(../images/icons/cf_icon_modes_grey.svg);
 }
 
 .ic_modes:hover {
-    background-image: url(images/icons/cf_icon_modes_white.svg);
+    background-image: url(../images/icons/cf_icon_modes_white.svg);
 }
 
 li.active .ic_modes {
-    background-image: url(images/icons/cf_icon_modes_white.svg);
+    background-image: url(../images/icons/cf_icon_modes_white.svg);
 }
 
 .ic_adjust {
-    background-image: url(images/icons/cf_icon_adjust_grey.svg);
+    background-image: url(../images/icons/cf_icon_adjust_grey.svg);
 }
 
 .ic_adjust:hover {
-    background-image: url(images/icons/cf_icon_adjust_white.svg);
+    background-image: url(../images/icons/cf_icon_adjust_white.svg);
 }
 
 li.active .ic_adjust {
-    background-image: url(images/icons/cf_icon_adjust_white.svg);
+    background-image: url(../images/icons/cf_icon_adjust_white.svg);
 }
 
 .ic_servo {
-    background-image: url(images/icons/cf_icon_servo_grey.svg);
+    background-image: url(../images/icons/cf_icon_servo_grey.svg);
 }
 
 .ic_servo:hover {
-    background-image: url(images/icons/cf_icon_servo_white.svg);
+    background-image: url(../images/icons/cf_icon_servo_white.svg);
 }
 
 li.active .ic_servo {
-    background-image: url(images/icons/cf_icon_servo_white.svg);
+    background-image: url(../images/icons/cf_icon_servo_white.svg);
 }
 
 .ic_gps {
-    background-image: url(images/icons/cf_icon_gps_grey.svg);
+    background-image: url(../images/icons/cf_icon_gps_grey.svg);
 }
 
 .ic_gps:hover {
-    background-image: url(images/icons/cf_icon_gps_white.svg);
+    background-image: url(../images/icons/cf_icon_gps_white.svg);
 }
 
 li.active .ic_gps {
-    background-image: url(images/icons/cf_icon_gps_white.svg);
+    background-image: url(../images/icons/cf_icon_gps_white.svg);
 }
 
 .ic_led {
-    background-image: url(images/icons/cf_icon_led_grey.svg);
+    background-image: url(../images/icons/cf_icon_led_grey.svg);
 }
 
 .ic_led:hover {
-    background-image: url(images/icons/cf_icon_led_white.svg);
+    background-image: url(../images/icons/cf_icon_led_white.svg);
 }
 
 li.active .ic_led {
-    background-image: url(images/icons/cf_icon_led_white.svg);
+    background-image: url(../images/icons/cf_icon_led_white.svg);
 }
 
 .ic_sensors {
-    background-image: url(images/icons/cf_icon_sensors_grey.svg);
+    background-image: url(../images/icons/cf_icon_sensors_grey.svg);
 }
 
 .ic_sensors:hover {
-    background-image: url(images/icons/cf_icon_sensors_white.svg);
+    background-image: url(../images/icons/cf_icon_sensors_white.svg);
 }
 
 li.active .ic_sensors {
-    background-image: url(images/icons/cf_icon_sensors_white.svg);
+    background-image: url(../images/icons/cf_icon_sensors_white.svg);
 }
 
 .ic_log {
-    background-image: url(images/icons/cf_icon_log_grey.svg);
+    background-image: url(../images/icons/cf_icon_log_grey.svg);
 }
 
 .ic_log:hover {
-    background-image: url(images/icons/cf_icon_log_white.svg);
+    background-image: url(../images/icons/cf_icon_log_white.svg);
 }
 
 li.active .ic_log {
-    background-image: url(images/icons/cf_icon_log_white.svg);
+    background-image: url(../images/icons/cf_icon_log_white.svg);
 }
 
 .ic_data {
-    background-image: url(images/icons/cf_icon_data_grey.svg);
+    background-image: url(../images/icons/cf_icon_data_grey.svg);
 }
 
 .ic_data:hover {
-    background-image: url(images/icons/cf_icon_data_white.svg);
+    background-image: url(../images/icons/cf_icon_data_white.svg);
 }
 
 li.active .ic_data {
-    background-image: url(images/icons/cf_icon_data_white.svg);
+    background-image: url(../images/icons/cf_icon_data_white.svg);
 }
 
 .ic_cli {
-    background-image: url(images/icons/cf_icon_cli_grey.svg);
+    background-image: url(../images/icons/cf_icon_cli_grey.svg);
 }
 
 .ic_cli:hover {
-    background-image: url(images/icons/cf_icon_cli_white.svg);
+    background-image: url(../images/icons/cf_icon_cli_white.svg);
 }
 
 li.active .ic_cli {
-    background-image: url(images/icons/cf_icon_cli_white.svg);
+    background-image: url(../images/icons/cf_icon_cli_white.svg);
 }
 
 .ic_motor {
-    background-image: url(images/icons/cf_icon_motor_grey.svg);
+    background-image: url(../images/icons/cf_icon_motor_grey.svg);
 }
 
 .ic_motor:hover {
-    background-image: url(images/icons/cf_icon_motor_white.svg);
+    background-image: url(../images/icons/cf_icon_motor_white.svg);
 }
 
 li.active .ic_motor {
-    background-image: url(images/icons/cf_icon_motor_white.svg);
+    background-image: url(../images/icons/cf_icon_motor_white.svg);
 }
 
 .ic_welcome {
-    background-image: url(images/icons/cf_icon_welcome_grey.svg);
+    background-image: url(../images/icons/cf_icon_welcome_grey.svg);
 }
 
 .ic_welcome:hover {
-    background-image: url(images/icons/cf_icon_welcome_white.svg);
+    background-image: url(../images/icons/cf_icon_welcome_white.svg);
 }
 
 li.active .ic_welcome {
-    background-image: url(images/icons/cf_icon_welcome_white.svg);
+    background-image: url(../images/icons/cf_icon_welcome_white.svg);
 }
 
 .ic_help {
-    background-image: url(images/icons/cf_icon_help_grey.svg);
+    background-image: url(../images/icons/cf_icon_help_grey.svg);
 }
 
 .ic_help:hover {
-    background-image: url(images/icons/cf_icon_help_white.svg);
+    background-image: url(../images/icons/cf_icon_help_white.svg);
 }
 
 li.active .ic_help {
-    background-image: url(images/icons/cf_icon_help_white.svg);
+    background-image: url(../images/icons/cf_icon_help_white.svg);
 }
 
 .ic_flasher {
-    background-image: url(images/icons/cf_icon_flasher_grey.svg);
+    background-image: url(../images/icons/cf_icon_flasher_grey.svg);
 }
 
 .ic_flasher:hover {
-    background-image: url(images/icons/cf_icon_flasher_white.svg);
+    background-image: url(../images/icons/cf_icon_flasher_white.svg);
 }
 
 li.active .ic_flasher {
-    background-image: url(images/icons/cf_icon_flasher_white.svg);
+    background-image: url(../images/icons/cf_icon_flasher_white.svg);
 }
 
 .ic_transponder {
-    background-image: url(images/icons/cf_icon_transponder_grey.svg);
+    background-image: url(../images/icons/cf_icon_transponder_grey.svg);
 }
 
 .ic_transponder:hover {
-    background-image: url(images/icons/cf_icon_transponder_white.svg);
+    background-image: url(../images/icons/cf_icon_transponder_white.svg);
 }
 
 li.active .ic_transponder {
-    background-image: url(images/icons/cf_icon_transponder_white.svg);
+    background-image: url(../images/icons/cf_icon_transponder_white.svg);
 }
 
 .ic_osd {
-    background-image: url(images/icons/icon_osd.svg);
+    background-image: url(../images/icons/icon_osd.svg);
     background-position-y: 4px;
 }
 
 .ic_osd:hover, li.active .ic_osd {
-    background-image: url(images/icons/icon_osd_white.svg);
+    background-image: url(../images/icons/icon_osd_white.svg);
 }
 
 .ic_power {
-    background-image: url(images/icons/cf_icon_power_grey.svg);
+    background-image: url(../images/icons/cf_icon_power_grey.svg);
     background-position-y: 9px;
 }
 
 .ic_power:hover {
-    background-image: url(images/icons/cf_icon_power_white.svg);
+    background-image: url(../images/icons/cf_icon_power_white.svg);
 }
 
 li.active .ic_power {
-    background-image: url(images/icons/cf_icon_power_white.svg);
+    background-image: url(../images/icons/cf_icon_power_white.svg);
 }
 
 /* SPARE Tab-Icons */
 .ic_failsafe {
-    background-image: url(images/icons/cf_icon_failsafe_grey.svg);
+    background-image: url(../images/icons/cf_icon_failsafe_grey.svg);
 }
 
 .ic_failsafe:hover {
-    background-image: url(images/icons/cf_icon_failsafe_white.svg);
+    background-image: url(../images/icons/cf_icon_failsafe_white.svg);
 }
 
 li.active .ic_failsafe {
-    background-image: url(images/icons/cf_icon_failsafe_white.svg);
+    background-image: url(../images/icons/cf_icon_failsafe_white.svg);
 }
 .ic_backup {
-    background-image: url(images/icons/cf_icon_backup_grey.svg);
+    background-image: url(../images/icons/cf_icon_backup_grey.svg);
 }
 .ic_backup:hover {
-    background-image: url(images/icons/cf_icon_backup_white.svg);
+    background-image: url(../images/icons/cf_icon_backup_white.svg);
 }
 
 li.active .ic_backup {
-    background-image: url(images/icons/cf_icon_backup_white.svg);
+    background-image: url(../images/icons/cf_icon_backup_white.svg);
 }
 
 .ic_wizzard {
-    background-image: url(images/icons/cf_icon_wizard_grey.svg);
+    background-image: url(../images/icons/cf_icon_wizard_grey.svg);
 }
 .ic_wizzard:hover {
-    background-image: url(images/icons/cf_icon_wizard_white.svg);
+    background-image: url(../images/icons/cf_icon_wizard_white.svg);
 }
 
 li.active .ic_wizard {
-    background-image: url(images/icons/cf_icon_wizard_white.svg);
+    background-image: url(../images/icons/cf_icon_wizard_white.svg);
 }
 
 .ic_advanced {
-    background-image: url(images/icons/cf_icon_advanced_grey.svg);
+    background-image: url(../images/icons/cf_icon_advanced_grey.svg);
 }
 .ic_advanced:hover {
-    background-image: url(images/icons/cf_icon_advanced_white.svg);
+    background-image: url(../images/icons/cf_icon_advanced_white.svg);
 }
 
 li.active .ic_advanced {
-    background-image: url(images/icons/cf_icon_advanced_white.svg);
+    background-image: url(../images/icons/cf_icon_advanced_white.svg);
 }
 
 .ic_mission {
-    background-image: url(images/icons/cf_icon_mission_grey.svg);
+    background-image: url(../images/icons/cf_icon_mission_grey.svg);
 }
 .ic_mission:hover {
-    background-image: url(images/icons/cf_icon_mission_white.svg);
+    background-image: url(../images/icons/cf_icon_mission_white.svg);
 }
 
 li.active .ic_mission {
-    background-image: url(images/icons/cf_icon_mission_white.svg);
+    background-image: url(../images/icons/cf_icon_mission_white.svg);
 }
 
 #content {
@@ -946,7 +946,7 @@ li.active .ic_mission {
 .data-loading {
     width: 100%;
     height: 100%;
-    background-image: url('../images/loading-spin.svg');
+    background-image: url(../images/loading-spin.svg);
     background-repeat: no-repeat;
     background-position: center 45%;
 }
@@ -1461,7 +1461,7 @@ dialog {
 .connect_b a.connect {
     background-color: #ffbb00;
     border: 1px solid #dba718;
-    background-image: url(images/icons/cf_icon_usb2_white.svg);
+    background-image: url(../images/icons/cf_icon_usb2_white.svg);
     background-repeat: no-repeat;
     background-size: 44px;
     background-position: center 6px;
@@ -1475,7 +1475,7 @@ dialog {
 .connect_b a.connect.active {
     background-color: #e60000;
     border: 1px solid #fe0000;
-    background-image: url(images/icons/cf_icon_usb1_white.svg);
+    background-image: url(../images/icons/cf_icon_usb1_white.svg);
     transition: none;
 }
 
@@ -1695,7 +1695,7 @@ dialog {
 }
 
 .battery-icon {
-    background-image: url(images/icons/cf_icon_bat_grey.svg);
+    background-image: url(../images/icons/cf_icon_bat_grey.svg);
     background-size: contain;
     background-position: center;
     display: inline-block;
@@ -1723,14 +1723,14 @@ dialog {
 }
 
 .armedicon {
-    background-image: url(images/icons/cf_icon_armed_grey.svg);
+    background-image: url(../images/icons/cf_icon_armed_grey.svg);
 }
 .failsafeicon {
-    background-image: url(images/icons/cf_icon_failsafe_grey.svg);
+    background-image: url(../images/icons/cf_icon_failsafe_grey.svg);
 }
 
 .linkicon {
-    background-image: url(images/icons/cf_icon_link_grey.svg);
+    background-image: url(../images/icons/cf_icon_link_grey.svg);
 }
 
 .bottomStatusIcons {

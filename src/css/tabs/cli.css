@@ -20,7 +20,7 @@
     background-color: rgba(0, 0, 0, 0.75);
     margin-top: 0px;
     height: calc(100% - 90px); /* - (p, textarea) */
-    background-image: url("../images/light-wide-1.svg");
+    background-image: url("../../images/light-wide-1.svg");
     background-repeat: no-repeat;
     background-position: 50% 80%;
     background-size: 600px;

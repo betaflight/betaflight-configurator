@@ -248,7 +248,7 @@
 	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
 	width: 90px;
     height: 90px;
-    background-image: url(/images/icons/cf_icon_sdcard.svg);
+    background-image: url(../../images/icons/cf_icon_sdcard.svg);
     background-position: 21px 20px;
     background-size: 50px 50px;
     background-repeat: no-repeat;

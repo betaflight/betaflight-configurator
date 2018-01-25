@@ -26,9 +26,9 @@ const RELEASE_DIR = './release/';
 var nwBuilderOptions = {
     version: '0.27.4',
     files: './dist/**/*',
-    macIcns: './images/bf_icon.icns',
+    macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
-    winIco: './images/bf_icon.ico'
+    winIco: './src/images/bf_icon.ico'
 };
 
 //-----------------
@@ -52,7 +52,7 @@ gulp.task('clean-release', clean_release);
 
 gulp.task('clean-cache', clean_cache);
 
-var distBuild = gulp.series(clean_dist, dist);
+var distBuild = gulp.series(clean_dist, dist_src, dist_locale, dist_libraries, dist_resources);
 gulp.task('dist', distBuild);
 
 var appsBuild = gulp.series(gulp.parallel(clean_apps, distBuild), apps, gulp.parallel(listPostBuildTasks(APPS_DIR)));
@@ -197,136 +197,121 @@ function clean_cache() {
 
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
-function dist() {
+function dist_src() {
     var distSources = [
         // CSS files
-        './main.css',
-        './tabs/power.css',
-        './tabs/firmware_flasher.css',
-        './tabs/onboard_logging.css',
-        './tabs/receiver.css',
-        './tabs/cli.css',
-        './tabs/servos.css',
-        './tabs/adjustments.css',
-        './tabs/configuration.css',
-        './tabs/auxiliary.css',
-        './tabs/pid_tuning.css',
-        './tabs/transponder.css',
-        './tabs/gps.css',
-        './tabs/led_strip.css',
-        './tabs/sensors.css',
-        './tabs/osd.css',
-        './tabs/motors.css',
-        './tabs/receiver_msp.css',
-        './tabs/logging.css',
-        './tabs/landing.css',
-        './tabs/setup_osd.css',
-        './tabs/help.css',
-        './tabs/failsafe.css',
-        './tabs/ports.css',
-        './tabs/setup.css',
-        './css/opensans_webfontkit/fonts.css',
-        './css/dropdown-lists/css/style_lists.css',
-        './css/font-awesome/css/font-awesome.min.css',
-        './js/libraries/flightindicators.css',
-        './js/libraries/jbox/jBox.css',
-        './js/libraries/jbox/themes/NoticeBorder.css',
-        './js/libraries/jbox/themes/ModalBorder.css',
-        './js/libraries/jbox/themes/TooltipDark.css',
-        './js/libraries/jbox/themes/TooltipBorder.css',
-        './js/libraries/jquery.nouislider.pips.min.css',
-        './js/libraries/switchery/switchery.css',
-        './js/libraries/jquery.nouislider.min.css',
+        './src/css/main.css',
+        './src/css/tabs/power.css',
+        './src/css/tabs/firmware_flasher.css',
+        './src/css/tabs/onboard_logging.css',
+        './src/css/tabs/receiver.css',
+        './src/css/tabs/cli.css',
+        './src/css/tabs/servos.css',
+        './src/css/tabs/adjustments.css',
+        './src/css/tabs/configuration.css',
+        './src/css/tabs/auxiliary.css',
+        './src/css/tabs/pid_tuning.css',
+        './src/css/tabs/transponder.css',
+        './src/css/tabs/gps.css',
+        './src/css/tabs/led_strip.css',
+        './src/css/tabs/sensors.css',
+        './src/css/tabs/osd.css',
+        './src/css/tabs/motors.css',
+        './src/css/tabs/receiver_msp.css',
+        './src/css/tabs/logging.css',
+        './src/css/tabs/landing.css',
+        './src/css/tabs/setup_osd.css',
+        './src/css/tabs/help.css',
+        './src/css/tabs/failsafe.css',
+        './src/css/tabs/ports.css',
+        './src/css/tabs/setup.css',
+        './src/css/opensans_webfontkit/fonts.css',
+        './src/css/dropdown-lists/css/style_lists.css',
+        './src/css/font-awesome/css/font-awesome.min.css',
+        './src/css/font-awesome/fonts/*',
+        './src/css/opensans_webfontkit/*.{eot,svg,ttf,woff,woff2}',
 
-        // JavaScript
-        './js/libraries/q.js',
-        './js/libraries/jquery-2.1.4.min.js',
-        './js/libraries/jquery-ui-1.11.4.min.js',
-        './js/libraries/d3.min.js',
-        './js/libraries/jquery.nouislider.all.min.js',
-        './js/libraries/three/three.min.js',
-        './js/libraries/three/Projector.js',
-        './js/libraries/three/CanvasRenderer.js',
-        './js/libraries/jquery.flightindicators.js',
-        './js/libraries/semver.js',
-        './js/libraries/jbox/jBox.min.js',
-        './js/libraries/switchery/switchery.js',
-        './js/libraries/bluebird.min.js',
-        './js/libraries/jquery.ba-throttle-debounce.min.js',
-        './js/libraries/inflection.min.js',
-        './js/injected_methods.js',
-        './js/data_storage.js',
-        './js/workers/hex_parser.js',
-        './js/fc.js',
-        './js/port_handler.js',
-        './js/port_usage.js',
-        './js/serial.js',
-        './js/gui.js',
-        './js/huffman.js',
-        './js/default_huffman_tree.js',
-        './js/model.js',
-        './js/serial_backend.js',
-        './js/msp/MSPCodes.js',
-        './js/msp.js',
-        './js/msp/MSPHelper.js',
-        './js/backup_restore.js',
-        './js/peripherals.js',
-        './js/protocols/stm32.js',
-        './js/protocols/stm32usbdfu.js',
-        './js/localization.js',
-        './js/boards.js',
-        './js/RateCurve.js',
-        './js/Features.js',
-        './js/Beepers.js',
-        './js/release_checker.js',
-        './tabs/adjustments.js',
-        './tabs/auxiliary.js',
-        './tabs/cli.js',
-        './tabs/configuration.js',
-        './tabs/failsafe.js',
-        './tabs/firmware_flasher.js',
-        './tabs/gps.js',
-        './tabs/help.js',
-        './tabs/landing.js',
-        './tabs/led_strip.js',
-        './tabs/logging.js',
-        './tabs/map.js',
-        './tabs/motors.js',
-        './tabs/onboard_logging.js',
-        './tabs/osd.js',
-        './tabs/pid_tuning.js',
-        './tabs/ports.js',
-        './tabs/power.js',
-        './tabs/receiver.js',
-        './tabs/receiver_msp.js',
-        './tabs/sensors.js',
-        './tabs/servos.js',
-        './tabs/setup.js',
-        './tabs/setup_osd.js',
-        './tabs/transponder.js',
-        './main.js',
+        // JS files
+        './src/js/injected_methods.js',
+        './src/js/data_storage.js',
+        './src/js/workers/hex_parser.js',
+        './src/js/fc.js',
+        './src/js/port_handler.js',
+        './src/js/port_usage.js',
+        './src/js/serial.js',
+        './src/js/gui.js',
+        './src/js/huffman.js',
+        './src/js/default_huffman_tree.js',
+        './src/js/model.js',
+        './src/js/serial_backend.js',
+        './src/js/msp/MSPCodes.js',
+        './src/js/msp.js',
+        './src/js/msp/MSPHelper.js',
+        './src/js/backup_restore.js',
+        './src/js/peripherals.js',
+        './src/js/protocols/stm32.js',
+        './src/js/protocols/stm32usbdfu.js',
+        './src/js/localization.js',
+        './src/js/boards.js',
+        './src/js/RateCurve.js',
+        './src/js/Features.js',
+        './src/js/Beepers.js',
+        './src/js/release_checker.js',
+        './src/js/tabs/adjustments.js',
+        './src/js/tabs/auxiliary.js',
+        './src/js/tabs/cli.js',
+        './src/js/tabs/configuration.js',
+        './src/js/tabs/failsafe.js',
+        './src/js/tabs/firmware_flasher.js',
+        './src/js/tabs/gps.js',
+        './src/js/tabs/help.js',
+        './src/js/tabs/landing.js',
+        './src/js/tabs/led_strip.js',
+        './src/js/tabs/logging.js',
+        './src/js/tabs/map.js',
+        './src/js/tabs/motors.js',
+        './src/js/tabs/onboard_logging.js',
+        './src/js/tabs/osd.js',
+        './src/js/tabs/pid_tuning.js',
+        './src/js/tabs/ports.js',
+        './src/js/tabs/power.js',
+        './src/js/tabs/receiver.js',
+        './src/js/tabs/receiver_msp.js',
+        './src/js/tabs/sensors.js',
+        './src/js/tabs/servos.js',
+        './src/js/tabs/setup.js',
+        './src/js/tabs/setup_osd.js',
+        './src/js/tabs/transponder.js',
+        './src/js/main.js',
+        './src/js/eventPage.js',
 
-        // everything else
-        './package.json', // For NW.js
-        './manifest.json', // For Chrome app
-        './eventPage.js',
-        './*.html',
-        './tabs/*.html',
-        './images/**/*',
-        './_locales/**/*',
-        './css/font-awesome/fonts/*',
-        './css/opensans_webfontkit/*.{eot,svg,ttf,woff,woff2}',
-        './resources/*.json',
-        './resources/models/*',
-        './resources/osd/*.mcm',
-        './resources/motor_order/*.svg',
+        // Src
+        './src/*.html',
+        './src/tabs/*.html',
+        './src/images/**/*',
     ];
-    return gulp.src(distSources, { base: '.' })
-        .pipe(gulp.dest(DIST_DIR))
-        .pipe(install({
-            npm: '--production --ignore-scripts'
-        }));;
+
+    return gulp.src(distSources, { base: 'src' })
+        .pipe(gulp.src('manifest.json', { passthrougth: true }))
+        .pipe(gulp.src('package.json', { passthrougth: true }))
+        .pipe(gulp.src('changelog.html', { passthrougth: true }))
+        .pipe(gulp.dest(DIST_DIR));
 };
+
+function dist_locale() {
+    return gulp.src('./locales/**/*', { base: 'locales'})
+        .pipe(gulp.dest(DIST_DIR + '_locales'));
+}
+
+function dist_libraries() {
+    return gulp.src('./libraries/**/*', { base: '.'})
+        .pipe(gulp.dest(DIST_DIR + 'js'));
+}
+
+function dist_resources() {
+    return gulp.src('./resources/**/*', { base: '.'})
+        .pipe(gulp.dest(DIST_DIR));
+}
 
 // Create runable app directories in ./apps
 function apps(done) {
@@ -523,7 +508,7 @@ function release_osx64() {
                     { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
                     { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'Betaflight Configurator.app' }
                 ],
-                background: path.join(__dirname, 'images/dmg-background.png'),
+                background: path.join(__dirname, 'assets/osx/dmg-background.png'),
                 format: 'UDZO',
                 window: {
                     size: {

@@ -419,7 +419,7 @@ button {
   /* please don't copy the generic background image from another project
    * and replace the one that @nathantsoi took :)
    */
-  background: url(/images/osd-bg-1.jpg);
+  background: url(../../images/osd-bg-1.jpg);
   background-size: cover;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
