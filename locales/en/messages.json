@@ -802,7 +802,7 @@
         "message": "Minimum Throttle (Lowest ESC value when armed)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "This is the 'idle' value that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the value or to gain more idle speed. Also raise the value in case of desyncs!"
+        "message": "This is the 'idle' value that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the value to gain more idle speed. Also raise the value in case of desyncs!"
     },
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle (Highest ESC value when armed)"
@@ -1022,7 +1022,7 @@
         "message": "RunCam Device"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires requires <span class=\"message-positive\">$2</span>."
+        "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires <span class=\"message-positive\">$2</span>."
     },
     "pidTuningSubTabPid": {
         "message": "PID Settings"
