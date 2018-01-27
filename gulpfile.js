@@ -295,7 +295,10 @@ function dist_src() {
         .pipe(gulp.src('manifest.json', { passthrougth: true }))
         .pipe(gulp.src('package.json', { passthrougth: true }))
         .pipe(gulp.src('changelog.html', { passthrougth: true }))
-        .pipe(gulp.dest(DIST_DIR));
+        .pipe(gulp.dest(DIST_DIR))
+        .pipe(install({
+            npm: '--production --ignore-scripts'
+        }));
 };
 
 function dist_locale() {
