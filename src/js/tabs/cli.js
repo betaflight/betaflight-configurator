@@ -20,7 +20,7 @@ TABS.cli.initialize = function (callback) {
 
     $('#content').load("./tabs/cli.html", function () {
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         CONFIGURATOR.cliActive = true;
 
@@ -203,8 +203,8 @@ TABS.cli.read = function (readInfo) {
             if (this.currentLine == 'Rebooting') {
                 CONFIGURATOR.cliActive = false;
                 CONFIGURATOR.cliValid = false;
-                GUI.log(chrome.i18n.getMessage('cliReboot'));
-                GUI.log(chrome.i18n.getMessage('deviceRebooting'));
+                GUI.log(i18n.getMessage('cliReboot'));
+                GUI.log(i18n.getMessage('deviceRebooting'));
 
                 if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) { // VCP-based flight controls may crash old drivers, we catch and reconnect
                     $('a.connect').click();
@@ -215,7 +215,7 @@ TABS.cli.read = function (readInfo) {
 
                     GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
                         MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                            GUI.log(chrome.i18n.getMessage('deviceReady'));
+                            GUI.log(i18n.getMessage('deviceReady'));
                             if (!GUI.tab_switch_in_progress) {
                                 $('#tabs ul.mode-connected .tab_setup a').click();
                             }
@@ -231,7 +231,7 @@ TABS.cli.read = function (readInfo) {
     }
 
     if (!CONFIGURATOR.cliValid && this.validateText.indexOf('CLI') != -1) {
-        GUI.log(chrome.i18n.getMessage('cliEnter'));
+        GUI.log(i18n.getMessage('cliEnter'));
         CONFIGURATOR.cliValid = true;
         this.validateText = "";
     }

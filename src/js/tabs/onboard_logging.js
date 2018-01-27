@@ -46,7 +46,7 @@ TABS.onboard_logging.initialize = function (callback) {
     }
 
     function reboot() {
-        GUI.log(chrome.i18n.getMessage('configurationEepromSaved'));
+        GUI.log(i18n.getMessage('configurationEepromSaved'));
 
         GUI.tab_switch_cleanup(function() {
             MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialize);
@@ -54,7 +54,7 @@ TABS.onboard_logging.initialize = function (callback) {
     }
 
     function reinitialize() {
-        GUI.log(chrome.i18n.getMessage('deviceRebooting'));
+        GUI.log(i18n.getMessage('deviceRebooting'));
 
         if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) { // VCP-based flight controls may crash old drivers, we catch and reconnect
             $('a.connect').click();
@@ -65,7 +65,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
             GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
                 MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                    GUI.log(chrome.i18n.getMessage('deviceReady'));
+                    GUI.log(i18n.getMessage('deviceReady'));
                     TABS.onboard_logging.initialize(false, $('#content').scrollTop());
                 });
             },1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
@@ -75,7 +75,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function load_html() {
         $('#content').load("./tabs/onboard_logging.html", function() {
             // translate to user-selected language
-            localize();
+            i18n.localizePage();
            
             var 
                 dataflashPresent = DATAFLASH.totalSize > 0,
@@ -155,21 +155,21 @@ TABS.onboard_logging.initialize = function (callback) {
         deviceSelect.empty();
 
         if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
-            deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingNone') + '</option>');
+            deviceSelect.append('<option value="0">' + i18n.getMessage('blackboxLoggingNone') + '</option>');
             if (DATAFLASH.supported) {
-                deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+                deviceSelect.append('<option value="1">' + i18n.getMessage('blackboxLoggingFlash') + '</option>');
             }
             if (SDCARD.supported) {
-                deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+                deviceSelect.append('<option value="2">' + i18n.getMessage('blackboxLoggingSdCard') + '</option>');
             }
-            deviceSelect.append('<option value="3">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
+            deviceSelect.append('<option value="3">' + i18n.getMessage('blackboxLoggingSerial') + '</option>');
         } else {
-            deviceSelect.append('<option value="0">' + chrome.i18n.getMessage('blackboxLoggingSerial') + '</option>');
+            deviceSelect.append('<option value="0">' + i18n.getMessage('blackboxLoggingSerial') + '</option>');
             if (DATAFLASH.ready) {
-                deviceSelect.append('<option value="1">' + chrome.i18n.getMessage('blackboxLoggingFlash') + '</option>');
+                deviceSelect.append('<option value="1">' + i18n.getMessage('blackboxLoggingFlash') + '</option>');
             }
             if (SDCARD.supported) {
-                deviceSelect.append('<option value="2">' + chrome.i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+                deviceSelect.append('<option value="2">' + i18n.getMessage('blackboxLoggingSdCard') + '</option>');
             }
         }
 
@@ -276,11 +276,11 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function update_html() {
-        update_bar_width($(".tab-onboard_logging .dataflash-used"), DATAFLASH.usedSize, DATAFLASH.totalSize, chrome.i18n.getMessage('dataflashUsedSpace'), false);
-        update_bar_width($(".tab-onboard_logging .dataflash-free"), DATAFLASH.totalSize - DATAFLASH.usedSize, DATAFLASH.totalSize, chrome.i18n.getMessage('dataflashFreeSpace'), false);
+        update_bar_width($(".tab-onboard_logging .dataflash-used"), DATAFLASH.usedSize, DATAFLASH.totalSize, i18n.getMessage('dataflashUsedSpace'), false);
+        update_bar_width($(".tab-onboard_logging .dataflash-free"), DATAFLASH.totalSize - DATAFLASH.usedSize, DATAFLASH.totalSize, i18n.getMessage('dataflashFreeSpace'), false);
 
-        update_bar_width($(".tab-onboard_logging .sdcard-other"), SDCARD.totalSizeKB - SDCARD.freeSizeKB, SDCARD.totalSizeKB, chrome.i18n.getMessage('dataflashUnavSpace'), true);
-        update_bar_width($(".tab-onboard_logging .sdcard-free"), SDCARD.freeSizeKB, SDCARD.totalSizeKB, chrome.i18n.getMessage('dataflashLogsSpace'), true);
+        update_bar_width($(".tab-onboard_logging .sdcard-other"), SDCARD.totalSizeKB - SDCARD.freeSizeKB, SDCARD.totalSizeKB, i18n.getMessage('dataflashUnavSpace'), true);
+        update_bar_width($(".tab-onboard_logging .sdcard-free"), SDCARD.freeSizeKB, SDCARD.totalSizeKB, i18n.getMessage('dataflashLogsSpace'), true);
 
         $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", DATAFLASH.usedSize === 0);
         
@@ -291,22 +291,22 @@ TABS.onboard_logging.initialize = function (callback) {
         
         switch (SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
-                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusNoCard'));
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusNoCard'));
             break;
             case MSP.SDCARD_STATE_FATAL:
-                $(".sdcard-status").html(chrome.i18n.getMessage('sdcardStatusReboot'));
+                $(".sdcard-status").html(i18n.getMessage('sdcardStatusReboot'));
             break;
             case MSP.SDCARD_STATE_READY:
-                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusReady'));
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusReady'));
             break;
             case MSP.SDCARD_STATE_CARD_INIT:
-                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusStarting'));
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusStarting'));
             break;
             case MSP.SDCARD_STATE_FS_INIT:
-                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusFileSystem'));
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusFileSystem'));
             break;
             default:
-                $(".sdcard-status").text(chrome.i18n.getMessage('sdcardStatusUnknown',[SDCARD.state]));
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusUnknown',[SDCARD.state]));
         }
         
         if (SDCARD.supported && !sdcardTimer) {
@@ -440,7 +440,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 console.error(error.message);
                 
                 if (error.message !== "User cancelled") {
-                    GUI.log(chrome.i18n.getMessage('dataflashFileWriteFailed'));
+                    GUI.log(i18n.getMessage('dataflashFileWriteFailed'));
                 }
                 return;
             }
@@ -461,7 +461,7 @@ TABS.onboard_logging.initialize = function (callback) {
             }, function (e) {
                 // File is not readable or does not exist!
                 console.error(e);
-                GUI.log(chrome.i18n.getMessage('dataflashFileWriteFailed'));
+                GUI.log(i18n.getMessage('dataflashFileWriteFailed'));
             });
         });
     }

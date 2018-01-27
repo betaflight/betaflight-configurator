@@ -136,7 +136,7 @@ TABS.servos.initialize = function (callback) {
             function save_to_eeprom() {
                 if (save_configuration_to_eeprom) {
                     MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                        GUI.log(chrome.i18n.getMessage('servosEepromSave'));
+                        GUI.log(i18n.getMessage('servosEepromSave'));
                     });
                 }
             }
@@ -169,7 +169,7 @@ TABS.servos.initialize = function (callback) {
         update_ui();
 
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
         
         // status data pulled via separate timer with static speed
         GUI.interval_add('status_pull', function () {

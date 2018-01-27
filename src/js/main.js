@@ -1,27 +1,23 @@
 'use strict';
 
-// Open new windows in external browser
-try {
-    var gui = require('nw.gui');
+openNewWindowsInExternalBrowser();
 
-    //Get the current window
-    var win = gui.Window.get();
-
-    //Listen to the new window event
-    win.on('new-win-policy', function (frame, url, policy) {
-      gui.Shell.openExternal(url);
-      policy.ignore();
-    });
-} catch (ex) {
-    console.log("require does not exist, maybe inside chrome");
-}
-
+//Asynchronous configuration to be done.
+//When finish the startProcess() function must be called 
 $(document).ready(function () {
+    i18n.init(function() {
+        startProcess();
+        initializeSerialBackend();
+    });
+});
+
+//Process to execute to real start the app
+function startProcess() {
     // translate to user-selected language
-    localize();
+    i18n.localizePage();
 
     // alternative - window.navigator.appVersion.match(/Chrome\/([0-9.]*)/)[1];
-    GUI.log(chrome.i18n.getMessage('infoVersions',[GUI.operating_system, window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"), getManifestVersion()]));
+    GUI.log(i18n.getMessage('infoVersions',[GUI.operating_system, window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"), getManifestVersion()]));
 
     $('#logo .version').text(getManifestVersion());
     updateStatusBarVersion();
@@ -73,17 +69,17 @@ $(document).ready(function () {
             var tabName = $(self).text();
 
             if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
-                GUI.log(chrome.i18n.getMessage('tabSwitchConnectionRequired'));
+                GUI.log(i18n.getMessage('tabSwitchConnectionRequired'));
                 return;
             }
 
             if (GUI.connect_lock) { // tab switching disabled while operation is in progress
-                GUI.log(chrome.i18n.getMessage('tabSwitchWaitForOperation'));
+                GUI.log(i18n.getMessage('tabSwitchWaitForOperation'));
                 return;
             }
 
             if (GUI.allowedTabs.indexOf(tab) < 0) {
-                GUI.log(chrome.i18n.getMessage('tabSwitchUpgradeRequired', [tabName]));
+                GUI.log(i18n.getMessage('tabSwitchUpgradeRequired', [tabName]));
                 return;
             }
 
@@ -198,7 +194,7 @@ $(document).ready(function () {
 
             $('div#options-window').load('./tabs/options.html', function () {
                 // translate to user-selected language
-                localize();
+                i18n.localizePage();
 
                 chrome.storage.local.get('permanentExpertMode', function (result) {
                     if (result.permanentExpertMode) {
@@ -353,7 +349,7 @@ $(document).ready(function () {
 
             state = true;
         }
-        $(this).text(state ? chrome.i18n.getMessage('logActionHide') : chrome.i18n.getMessage('logActionShow'));
+        $(this).text(state ? i18n.getMessage('logActionHide') : i18n.getMessage('logActionShow'));
         $(this).data('state', state);
     });
 
@@ -368,7 +364,7 @@ $(document).ready(function () {
             }
         }).change();
     });
-});
+}
 
 function checkForConfiguratorUpdates() {
     var releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');
@@ -396,11 +392,11 @@ function notifyOutdatedVersion(releaseData) {
         });
 
         if (versions.length > 0 && semver.lt(getManifestVersion(), versions[0].tag_name)) {
-            GUI.log(chrome.i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+            GUI.log(i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
 
             var dialog = $('.dialogConfiguratorUpdate')[0];
 
-            $('.dialogConfiguratorUpdate-content').html(chrome.i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+            $('.dialogConfiguratorUpdate-content').html(i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
 
             $('.dialogConfiguratorUpdate-closebtn').click(function() {
                 dialog.close();
@@ -535,10 +531,10 @@ function generateFilename(prefix, suffix) {
 
     if (CONFIG) {
         if (CONFIG.flightControllerIdentifier) {
-        	filename = CONFIG.flightControllerIdentifier + '_' + filename;
+            filename = CONFIG.flightControllerIdentifier + '_' + filename;
         }
         if(CONFIG.name && CONFIG.name.trim() !== '') {
-        	filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
+            filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
         }
     }
 
@@ -556,10 +552,10 @@ function getFirmwareVersion(firmwareVersion, firmwareId, hardwareId) {
     var versionText = '';
 
     if (firmwareVersion) {
-        versionText += chrome.i18n.getMessage('versionLabelFirmware') + ': ' + firmwareId + ' ' + firmwareVersion;
+        versionText += i18n.getMessage('versionLabelFirmware') + ': ' + firmwareId + ' ' + firmwareVersion;
 
         if (hardwareId) {
-           versionText += ' (' + chrome.i18n.getMessage('versionLabelTarget') + ': ' + hardwareId + ')';
+           versionText += ' (' + i18n.getMessage('versionLabelTarget') + ': ' + hardwareId + ')';
         }
     }
 
@@ -567,7 +563,7 @@ function getFirmwareVersion(firmwareVersion, firmwareId, hardwareId) {
 }
 
 function getConfiguratorVersion() {
-    return chrome.i18n.getMessage('versionLabelConfigurator') + ': ' + getManifestVersion();
+    return i18n.getMessage('versionLabelConfigurator') + ': ' + getManifestVersion();
 }
 
 function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
@@ -603,4 +599,22 @@ function getManifestVersion(manifest) {
     }
 
     return version;
+}
+
+function openNewWindowsInExternalBrowser() {
+ // Open new windows in external browser
+    try {
+        var gui = require('nw.gui');
+
+        //Get the current window
+        var win = gui.Window.get();
+
+        //Listen to the new window event
+        win.on('new-win-policy', function (frame, url, policy) {
+          gui.Shell.openExternal(url);
+          policy.ignore();
+        });
+    } catch (ex) {
+        console.warn("require does not exist, maybe inside chrome");
+    }
 }

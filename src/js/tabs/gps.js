@@ -28,7 +28,7 @@ TABS.gps.initialize = function (callback) {
     
     function process_html() {
         // translate to user-selected languageconsole.log('Online');
-        localize();
+        i18n.localizePage();
 
         function get_raw_gps_data() {
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, get_comp_gps_data);
@@ -47,7 +47,7 @@ TABS.gps.initialize = function (callback) {
             var lon = GPS_DATA.lon / 10000000;
             var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
 
-            $('.GPS_info td.fix').html((GPS_DATA.fix) ? chrome.i18n.getMessage('gpsFixTrue') : chrome.i18n.getMessage('gpsFixFalse'));
+            $('.GPS_info td.fix').html((GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
             $('.GPS_info td.alt').text((GPS_DATA.alt / 10) + ' m');
             $('.GPS_info td.lat a').prop('href', url).text(lat.toFixed(4) + ' deg');
             $('.GPS_info td.lon a').prop('href', url).text(lon.toFixed(4) + ' deg');

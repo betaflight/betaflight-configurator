@@ -110,12 +110,12 @@ function localizeAxisNames() {
         var 
             gimbal = gimbalElems.get(gimbalIndex);
         
-        $(".gimbal-label-vert", gimbal).text(chrome.i18n.getMessage("controlAxis" + gimbals[gimbalIndex][0]));
-        $(".gimbal-label-horz", gimbal).text(chrome.i18n.getMessage("controlAxis" + gimbals[gimbalIndex][1]));
+        $(".gimbal-label-vert", gimbal).text(i18n.getMessage("controlAxis" + gimbals[gimbalIndex][0]));
+        $(".gimbal-label-horz", gimbal).text(i18n.getMessage("controlAxis" + gimbals[gimbalIndex][1]));
     }
     
     for (var sliderIndex = 0; sliderIndex < 4; sliderIndex++) {
-        $(".slider-label", sliderElems.get(sliderIndex)).text(chrome.i18n.getMessage("controlAxisAux" + (sliderIndex + 1)));
+        $(".slider-label", sliderElems.get(sliderIndex)).text(i18n.getMessage("controlAxisAux" + (sliderIndex + 1)));
     }
 }
 

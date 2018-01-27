@@ -20,11 +20,11 @@ var PortUsage = {
             this.previous_sent = serial.bytesSent;
 
             // update UI
-            $('span.port_usage_down').text(chrome.i18n.getMessage('statusbar_usage_download', [port_usage_down]));
-            $('span.port_usage_up').text(chrome.i18n.getMessage('statusbar_usage_upload', [port_usage_up]));
+            $('span.port_usage_down').text(i18n.getMessage('statusbar_usage_download', [port_usage_down]));
+            $('span.port_usage_up').text(i18n.getMessage('statusbar_usage_upload', [port_usage_up]));
         } else {
-            $('span.port_usage_down').text(chrome.i18n.getMessage('statusbar_usage_download', [0]));
-            $('span.port_usage_up').text(chrome.i18n.getMessage('statusbar_usage_upload', [0]));
+            $('span.port_usage_down').text(i18n.getMessage('statusbar_usage_download', [0]));
+            $('span.port_usage_up').text(i18n.getMessage('statusbar_usage_upload', [0]));
         }
     },
     reset: function() {

@@ -33,11 +33,11 @@ TABS.setup_osd.initialize = function (callback) {
         ];
 
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         $('a.resetSettings').click(function () {
             MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
-                GUI.log(chrome.i18n.getMessage('initialSetupSettingsRestored'));
+                GUI.log(i18n.getMessage('initialSetupSettingsRestored'));
 
                 GUI.tab_switch_cleanup(function () {
                     TABS.setup_osd.initialize();
@@ -55,7 +55,7 @@ TABS.setup_osd.initialize = function (callback) {
                 element.text(osdVideoMode);
                 
                 element = $('.camera-connected');
-                element.text(OSD_VIDEO_STATE.camera_connected ? chrome.i18n.getMessage('osdSetupCameraConnectedValueYes') : chrome.i18n.getMessage('osdSetupCameraConnectedValueNo'));
+                element.text(OSD_VIDEO_STATE.camera_connected ? i18n.getMessage('osdSetupCameraConnectedValueYes') : i18n.getMessage('osdSetupCameraConnectedValueNo'));
             });
             */
         }

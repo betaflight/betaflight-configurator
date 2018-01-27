@@ -1227,7 +1227,7 @@ TABS.osd.initialize = function (callback) {
         fontbuttons.append($('<button>', { class: "load_font_file", i18n: "osdSetupOpenFont" }));
 
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         // Open modal window
         OSD.GUI.jbox = new jBox('Modal', {
@@ -1240,13 +1240,13 @@ TABS.osd.initialize = function (callback) {
             content: $('#fontmanagercontent')
         });
 
-        $('.elements-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpElements'));
-        $('.videomode-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpVideoMode'));
-        $('.units-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpUnits'));
-        $('.timers-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpTimers'));
-        $('.alarms-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpAlarms'));
-        $('.stats-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpStats'));
-        $('.warnings-container div.cf_tip').attr('title', chrome.i18n.getMessage('osdSectionHelpWarnings'));
+        $('.elements-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpElements'));
+        $('.videomode-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpVideoMode'));
+        $('.units-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpUnits'));
+        $('.timers-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpTimers'));
+        $('.alarms-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpAlarms'));
+        $('.stats-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpStats'));
+        $('.warnings-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpWarnings'));
 
         // 2 way binding... sorta
         function updateOsdView() {
@@ -1348,8 +1348,8 @@ TABS.osd.initialize = function (callback) {
 
                   // Source
                   var sourceTimerTableData = $('<td class="osd_tip"></td>');
-                  sourceTimerTableData.attr('title', chrome.i18n.getMessage('osdTimerSourceTooltip'));
-                  sourceTimerTableData.append('<label for="timerSource_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerSource') + '</label>');
+                  sourceTimerTableData.attr('title', i18n.getMessage('osdTimerSourceTooltip'));
+                  sourceTimerTableData.append('<label for="timerSource_' + tim.index + '" class="char-label">' + i18n.getMessage('osdTimerSource') + '</label>');
                   var src = $('<select class="timer-option" id="timerSource_' + tim.index + '"></select>');
                   OSD.constants.TIMER_TYPES.forEach(function(e, i) {
                     src.append('<option value="' + i + '">' + e + '</option>');
@@ -1370,8 +1370,8 @@ TABS.osd.initialize = function (callback) {
                   timerTableRow = $('<tr />');
                   timerTable.append(timerTableRow);
                   var precisionTimerTableData = $('<td class="osd_tip"></td>');
-                  precisionTimerTableData.attr('title', chrome.i18n.getMessage('osdTimerPrecisionTooltip'));
-                  precisionTimerTableData.append('<label for="timerPrec_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerPrecision') + '</label>');
+                  precisionTimerTableData.attr('title', i18n.getMessage('osdTimerPrecisionTooltip'));
+                  precisionTimerTableData.append('<label for="timerPrec_' + tim.index + '" class="char-label">' + i18n.getMessage('osdTimerPrecision') + '</label>');
                   var precision = $('<select class="timer-option osd_tip" id="timerPrec_' + tim.index + '"></select>');
                   OSD.constants.TIMER_PRECISION.forEach(function(e, i) {
                     precision.append('<option value="' + i + '">' + e + '</option>');
@@ -1393,8 +1393,8 @@ TABS.osd.initialize = function (callback) {
                   timerTableRow = $('<tr />');
                   timerTable.append(timerTableRow);
                   var alarmTimerTableData = $('<td class="osd_tip"></td>');
-                  alarmTimerTableData.attr('title', chrome.i18n.getMessage('osdTimerAlarmTooltip'));
-                  alarmTimerTableData.append('<label for="timerAlarm_' + tim.index + '" class="char-label">' + chrome.i18n.getMessage('osdTimerAlarm') + '</label>');
+                  alarmTimerTableData.attr('title', i18n.getMessage('osdTimerAlarmTooltip'));
+                  alarmTimerTableData.append('<label for="timerAlarm_' + tim.index + '" class="char-label">' + i18n.getMessage('osdTimerAlarm') + '</label>');
                   var alarm = $('<input class="timer-option osd_tip" name="alarm" type="number" min=0 id="timerAlarm_' + tim.index + '"/>');
                   alarm[0].value = tim.alarm;
                   alarm.blur(function(e) {
@@ -1422,7 +1422,7 @@ TABS.osd.initialize = function (callback) {
                   var $field = $('<div class="switchable-field field-'+field.index+'"/>');
                   var desc = null;
                   if (field.desc && field.desc.length) {
-                    desc = chrome.i18n.getMessage(field.desc);
+                    desc = i18n.getMessage(field.desc);
                   }
                   if (desc && desc.length) {
                     $field[0].classList.add('osd_tip');
@@ -1456,7 +1456,7 @@ TABS.osd.initialize = function (callback) {
                   var $field = $('<div class="switchable-field field-'+field.index+'"/>');
                   var desc = null;
                   if (field.desc && field.desc.length) {
-                    desc = chrome.i18n.getMessage(field.desc);
+                    desc = i18n.getMessage(field.desc);
                   }
                   if (desc && desc.length) {
                     $field[0].classList.add('osd_tip');
@@ -1501,7 +1501,7 @@ TABS.osd.initialize = function (callback) {
               var $field = $('<div class="switchable-field field-'+field.index+'"/>');
               var desc = null;
               if (field.desc && field.desc.length) {
-                desc = chrome.i18n.getMessage(field.desc);
+                desc = i18n.getMessage(field.desc);
               }
               if (desc && desc.length) {
                 $field[0].classList.add('osd_tip');
@@ -1678,7 +1678,7 @@ TABS.osd.initialize = function (callback) {
         $('a.save').click(function() {
           var self = this;
           MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
-          GUI.log(chrome.i18n.getMessage('osdSettingsSaved'));
+          GUI.log(i18n.getMessage('osdSettingsSaved'));
           var oldText = $(this).text();
           $(this).html("Saved");
           setTimeout(function () {
@@ -1786,7 +1786,7 @@ TABS.osd.initialize = function (callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log(chrome.i18n.getMessage('osdWritePermissions'));
+                            GUI.log(i18n.getMessage('osdWritePermissions'));
                         }
                     });
                 });

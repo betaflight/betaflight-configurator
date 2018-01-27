@@ -162,7 +162,7 @@ TABS.adjustments.initialize = function (callback) {
         }
         
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         // UI Hooks
         $('a.save').click(function () {
@@ -215,7 +215,7 @@ TABS.adjustments.initialize = function (callback) {
             
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    GUI.log(chrome.i18n.getMessage('adjustmentsEepromSaved'));
+                    GUI.log(i18n.getMessage('adjustmentsEepromSaved'));
                 });
             }
 

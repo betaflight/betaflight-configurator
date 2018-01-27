@@ -56,7 +56,7 @@ TABS.receiver.initialize = function (callback) {
 
     function process_html() {
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         chrome.storage.local.get('rx_refresh_rate', function (result) {
             if (result.rx_refresh_rate) {
@@ -102,10 +102,10 @@ TABS.receiver.initialize = function (callback) {
 
         // generate bars
         var bar_names = [
-                chrome.i18n.getMessage('controlAxisRoll'),
-                chrome.i18n.getMessage('controlAxisPitch'),
-                chrome.i18n.getMessage('controlAxisYaw'),
-                chrome.i18n.getMessage('controlAxisThrottle')
+                i18n.getMessage('controlAxisRoll'),
+                i18n.getMessage('controlAxisPitch'),
+                i18n.getMessage('controlAxisYaw'),
+                i18n.getMessage('controlAxisThrottle')
             ],
             bar_container = $('.tab-receiver .bars'),
             aux_index = 1;
@@ -117,7 +117,7 @@ TABS.receiver.initialize = function (callback) {
             if (i < bar_names.length) {
                 name = bar_names[i];
             } else {
-                name = chrome.i18n.getMessage("controlAxisAux" + (aux_index++));
+                name = i18n.getMessage("controlAxisAux" + (aux_index++));
             }
 
             bar_container.append('\
@@ -225,10 +225,10 @@ TABS.receiver.initialize = function (callback) {
 
         // rssi
         var rssi_channel_e = $('select[name="rssi_channel"]');
-        rssi_channel_e.append('<option value="0">' + chrome.i18n.getMessage("receiverRssiChannelDisabledOption") + '</option>');
+        rssi_channel_e.append('<option value="0">' + i18n.getMessage("receiverRssiChannelDisabledOption") + '</option>');
         //1-4 reserved for Roll Pitch Yaw & Throttle, starting at 5
         for (var i = 5; i < RC.active_channels + 1; i++) {
-            rssi_channel_e.append('<option value="' + i + '">' + chrome.i18n.getMessage("controlAxisAux" + (i-4)) + '</option>');
+            rssi_channel_e.append('<option value="' + i + '">' + i18n.getMessage("controlAxisAux" + (i-4)) + '</option>');
         }
 
         $('select[name="rssi_channel"]').val(RSSI_CONFIG.channel);
@@ -291,7 +291,7 @@ TABS.receiver.initialize = function (callback) {
 
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    GUI.log(chrome.i18n.getMessage('receiverEepromSaved'));
+                    GUI.log(i18n.getMessage('receiverEepromSaved'));
                 });
             }
 

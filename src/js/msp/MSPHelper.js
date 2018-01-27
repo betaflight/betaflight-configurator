@@ -101,7 +101,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 sensor_status(CONFIG.activeSensors);
                 $('span.i2c-error').text(CONFIG.i2cError);
                 $('span.cycle-time').text(CONFIG.cycleTime);
-                $('span.cpu-load').text(chrome.i18n.getMessage('statusbar_cpu_load', [CONFIG.cpuload]));
+                $('span.cpu-load').text(i18n.getMessage('statusbar_cpu_load', [CONFIG.cpuload]));
                 break;
 
             case MSPCodes.MSP_RAW_IMU:
@@ -2028,9 +2028,9 @@ MspHelper.prototype.setArmingEnabled = function(doEnable, onCompleteCallback) {
 
         MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
             if (doEnable) {
-                GUI.log(chrome.i18n.getMessage('armingEnabled'));
+                GUI.log(i18n.getMessage('armingEnabled'));
             } else {
-                GUI.log(chrome.i18n.getMessage('armingDisabled'));
+                GUI.log(i18n.getMessage('armingDisabled'));
             }
 
             if (onCompleteCallback) {

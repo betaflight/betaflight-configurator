@@ -1,5 +1,7 @@
 /*
     If an id is also specified and a window with a matching id has been shown before, the remembered bounds of the window will be used instead.
+
+    In this JS we cannot use the i18n wrapper used in the rest of the application (it is not available). We must remain with the chrome one.
 */
 'use strict';
 

@@ -37,10 +37,10 @@ TABS.firmware_flasher.initialize = function (callback) {
             } else {
                 var boards_e = $('select[name="board"]').empty();
                 var showDevReleases = ($('input.show_development_releases').is(':checked'));
-                boards_e.append($("<option value='0'>{0}</option>".format(chrome.i18n.getMessage('firmwareFlasherOptionLabelSelectBoard'))));
+                boards_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectBoard'))));
 
                 var versions_e = $('select[name="firmware_version"]').empty();
-                versions_e.append($("<option value='0'>{0}</option>".format(chrome.i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
+                versions_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
 
                 var releases = {};
                 var sortedTargets = [];
@@ -128,7 +128,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         };
 
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         // bind events
         $('input.show_development_releases').click(function () {
@@ -141,16 +141,16 @@ TABS.firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 $('.progress').val(0).removeClass('valid invalid');
-                $('span.progressLabel').text(chrome.i18n.getMessage('firmwareFlasherLoadFirmwareFile'));
+                $('span.progressLabel').text(i18n.getMessage('firmwareFlasherLoadFirmwareFile'));
                 $('div.git_info').slideUp();
                 $('div.release_info').slideUp();
                 $('a.flash_firmware').addClass('disabled');
 
                 var versions_e = $('select[name="firmware_version"]').empty();
                 if(target == 0) {
-                    versions_e.append($("<option value='0'>{0}</option>".format(chrome.i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
+                    versions_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
                 } else {
-                    versions_e.append($("<option value='0'>{0} {1}</option>".format(chrome.i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
+                    versions_e.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
                 }
 
                 TABS.firmware_flasher.releases[target].forEach(function(descriptor) {
@@ -208,7 +208,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
                                         $('span.progressLabel').text('Loaded Local Firmware: (' + parsed_hex.bytes_total + ' bytes)');
                                     } else {
-                                        $('span.progressLabel').text(chrome.i18n.getMessage('firmwareFlasherHexCorrupted'));
+                                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherHexCorrupted'));
                                     }
                                 });
                             }
@@ -237,7 +237,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         $('a.load_remote_file').click(function (evt) {
 
             if ($('select[name="firmware_version"]').val() == "0") {
-                GUI.log(chrome.i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
+                GUI.log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
                 return;
             }
 
@@ -266,29 +266,29 @@ TABS.firmware_flasher.initialize = function (callback) {
                         $('div.release_info').slideDown();
 
                     } else {
-                        $('span.progressLabel').text(chrome.i18n.getMessage('firmwareFlasherHexCorrupted'));
+                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherHexCorrupted'));
                     }
                 });
             }
 
             function failed_to_load() {
-                $('span.progressLabel').text(chrome.i18n.getMessage('firmwareFlasherFailedToLoadOnlineFirmware'));
+                $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFailedToLoadOnlineFirmware'));
                 $('a.flash_firmware').addClass('disabled');
                 $("a.load_remote_file").removeClass('disabled');
-                $("a.load_remote_file").text(chrome.i18n.getMessage('firmwareFlasherButtonLoadOnline'));
+                $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
             }
 
             var summary = $('select[name="firmware_version"] option:selected').data('summary');
             if (summary) { // undefined while list is loading or while running offline
-                $("a.load_remote_file").text(chrome.i18n.getMessage('firmwareFlasherButtonDownloading'));
+                $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonDownloading'));
                 $("a.load_remote_file").addClass('disabled');
                 $.get(summary.url, function (data) {
                     process_hex(data, summary);
                     $("a.load_remote_file").removeClass('disabled');
-                    $("a.load_remote_file").text(chrome.i18n.getMessage('firmwareFlasherButtonLoadOnline'));
+                    $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
                 }).fail(failed_to_load);
             } else {
-                $('span.progressLabel').text(chrome.i18n.getMessage('firmwareFlasherFailedToLoadOnlineFirmware'));
+                $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFailedToLoadOnlineFirmware'));
             }
         });
 
@@ -322,13 +322,13 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 STM32.connect(port, baud, parsed_hex, options);
                             } else {
                                 console.log('Please select valid serial port');
-                                GUI.log(chrome.i18n.getMessage('firmwareFlasherNoValidPort'));
+                                GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
                             }
                         } else {
                             STM32DFU.connect(usbDevices.STM32DFU, parsed_hex, options);
                         }
                     } else {
-                        $('span.progressLabel').text(chrome.i18n.getMessage('firmwareFlasherFirmwareNotLoaded'));
+                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFirmwareNotLoaded'));
                     }
                 }
             }
@@ -373,7 +373,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                             });
                         } else {
                             console.log('You don\'t have write permissions for this file, sorry.');
-                            GUI.log(chrome.i18n.getMessage('firmwareFlasherWritePermissions'));
+                            GUI.log(i18n.getMessage('firmwareFlasherWritePermissions'));
                         }
                     });
                 });
@@ -442,7 +442,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         var port = result[0];
 
                         if (!GUI.connect_lock) {
-                            GUI.log(chrome.i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
+                            GUI.log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
                             console.log('Detected: ' + port + ' - triggering flash on connect');
 
                             // Trigger regular Flashing sequence
@@ -450,7 +450,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 $('a.flash_firmware').click();
                             }, 100); // timeout so bus have time to initialize after being detected by the system
                         } else {
-                            GUI.log(chrome.i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
+                            GUI.log(i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
                         }
 
                         // Since current port_detected request was consumed, create new one

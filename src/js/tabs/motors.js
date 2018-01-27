@@ -198,7 +198,7 @@ TABS.motors.initialize = function (callback) {
 
     function process_html() {
         // translate to user-selected language
-        localize();
+        i18n.localizePage();
 
         update_arm_status();
 
