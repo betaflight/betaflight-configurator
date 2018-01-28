@@ -13,6 +13,7 @@ $(document).ready(function () {
 
 //Process to execute to real start the app
 function startProcess() {
+
     // translate to user-selected language
     i18n.localizePage();
 
@@ -232,6 +233,29 @@ function startProcess() {
                     $('div.checkForConfiguratorUnstableVersions').hide();
                 }
 
+                chrome.storage.local.get('userLanguageSelect', function (result) {
+
+                    var userLanguage_e = $('div.userLanguage select');
+                    var languagesAvailables = i18n.getLanguagesAvailables();
+                    userLanguage_e.append('<option value="DEFAULT">' + i18n.getMessage('language_default') + '</option>');
+                    userLanguage_e.append('<option disabled>------</option>');
+                    languagesAvailables.forEach(function(element) {
+                        var languageName = i18n.getMessage('language_' + element);
+                        userLanguage_e.append('<option value="' + element + '">' + languageName + '</option>');
+                    });
+                    
+                    if (result.userLanguageSelect) {
+                        userLanguage_e.val(result.userLanguageSelect);
+                    }
+                    
+                    userLanguage_e.change(function () {
+                        var languageSelected = $(this).val();
+
+                        // Select the new language, a restart is required
+                        chrome.storage.local.set({'userLanguageSelect': languageSelected});
+                    });
+                });
+
                 function close_and_cleanup(e) {
                     if (e.type == 'click' && !$.contains($('div#options-window')[0], e.target) || e.type == 'keyup' && e.keyCode == 27) {
                         $(document).unbind('click keyup', close_and_cleanup);
@@ -364,7 +388,7 @@ function startProcess() {
             }
         }).change();
     });
-}
+};
 
 function checkForConfiguratorUpdates() {
     var releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');
@@ -602,7 +626,6 @@ function getManifestVersion(manifest) {
 }
 
 function openNewWindowsInExternalBrowser() {
- // Open new windows in external browser
     try {
         var gui = require('nw.gui');
 
@@ -615,6 +638,6 @@ function openNewWindowsInExternalBrowser() {
           policy.ignore();
         });
     } catch (ex) {
-        console.warn("require does not exist, maybe inside chrome");
+        console.log("require does not exist, maybe inside chrome");
     }
 }

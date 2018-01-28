@@ -6,33 +6,36 @@
 
 var i18n = {}
 
+const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'ko'];
+
 /**
  * Functions that depend on the i18n framework
  */
 i18n.init = function(cb) {
 
-    var defaultLocale = window.navigator.userLanguage || window.navigator.language;
+    getStoredUserLocale(function(userLanguage){
 
-    i18next
-        .use(i18nextXHRBackend)
-        .init({
-            lng: defaultLocale,
-            getAsync: false,
-            debug: true,
-            ns: ['messages'],
-            defaultNS:['messages'],
-            fallbackLng: 'en',
-            backend: { loadPath: '/_locales/{{lng}}/{{ns}}.json' }
-            }, function(err, t) {
-                if (err !== undefined) {
-                    console.error('Error loading i18n ' + err);
-                } else {
-                    console.log('i18n system loaded');
-                }
-                if (cb !== undefined) {
-                    cb();
-                }
-        });
+        i18next
+            .use(i18nextXHRBackend)
+            .init({
+                lng: userLanguage,
+                getAsync: false,
+                debug: true,
+                ns: ['messages'],
+                defaultNS:['messages'],
+                fallbackLng: 'en',
+                backend: { loadPath: '/_locales/{{lng}}/{{ns}}.json' }
+                }, function(err, t) {
+                    if (err !== undefined) {
+                        console.error('Error loading i18n ' + err);
+                    } else {
+                        console.log('i18n system loaded');
+                    }
+                    if (cb !== undefined) {
+                        cb();
+                    }
+            });
+    });
 }
 
 i18n.getMessage = function(messageID, parameters) {
@@ -43,10 +46,12 @@ i18n.getMessage = function(messageID, parameters) {
             translatedString = translatedString.replace('$' + (index + 1), element);
         });
     }
-    
-    return translatedString;
 
-    
+    return translatedString;
+}
+
+i18n.getLanguagesAvailables = function() {
+    return languagesAvailables;
 }
 
 /**
@@ -92,4 +97,29 @@ i18n.localizePage = function() {
     });
 
     return localized;
+}
+
+/*
+ * Reads the chrome config, if DEFAULT or there is no config stored,
+ * returns the current locale to the callback
+ */
+function getStoredUserLocale(cb) {
+    chrome.storage.local.get('userLanguageSelect', function (result) {
+        var userLanguage = 'DEFAULT';
+        if (result.userLanguageSelect) {
+            userLanguage = result.userLanguageSelect
+        } 
+
+        userLanguage = getValidLocale(userLanguage);
+
+        cb(userLanguage);
+    })
+}
+
+function getValidLocale(userLocale) {
+
+    if (userLocale == 'DEFAULT') {
+        userLocale = window.navigator.userLanguage || window.navigator.language;
+    } 
+    return userLocale;
 }
