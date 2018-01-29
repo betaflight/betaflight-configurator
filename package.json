@@ -38,6 +38,7 @@
     "i18next-xhr-backend": "^1.5.1"
   },
   "devDependencies": {
+    "command-exists": "^1.2.2",
     "del": "^3.0.0",
     "gulp": "~4.0.0",
     "gulp-concat": "~2.6.1",
@@ -51,6 +52,7 @@
     "nw-builder": "^3.4.1",
     "os": "^0.1.1",
     "platform-dependent-modules": "0.0.14",
+    "rpm-builder": "^0.6.1",
     "temp": "^0.8.3"
   },
   "config": {
