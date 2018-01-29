@@ -237,6 +237,78 @@
     "usbDeviceUdevNotice": {
         "message": "Are <strong>udev rules</strong> installed correctly? See docs for instructions"
     },
+    "stm32UsbDfuNotFound": {
+        "message": "USB DFU not found"
+    },
+    "stm32TimedOut": {
+        "message": "STM32 - timed out, programming: FAILED"
+    },
+    "stm32WrongResponse": {
+        "message": "STM32 Communication failed, wrong response, expected: $1 (0x$2) received: $3 (0x$4)"
+    },
+    "stm32ContactingBootloader": {
+        "message": "Contacting bootloader ..."
+    },
+    "stm32ContactingBootloaderFailed": {
+        "message": "Communication with bootloader failed"
+    },
+    "stm32ResponseBootloaderFailed": {
+        "message": "No response from the bootloader, programming: FAILED"
+    },
+    "stm32GlobalEraseExtended": {
+        "message": "Executing global chip erase (via extended erase) ..."
+    },
+    "stm32LocalEraseExtended": {
+        "message": "Executing local erase (via extended erase) ..."
+    },
+    "stm32GlobalErase": {
+        "message": "Executing global chip erase ..."
+    },
+    "stm32LocalErase": {
+        "message": "Executing local erase ..."
+    },
+    "stm32Erase": {
+        "message": "Erasing ..."
+    },
+    "stm32Flashing": {
+        "message": "Flashing ..."
+    },
+    "stm32Verifying": {
+        "message": "Verifying ..."
+    },
+    "stm32ProgrammingSuccessful": {
+        "message": "Programming: SUCCESSFUL"
+    },
+    "stm32ProgrammingFailed": {
+        "message": "Programming: FAILED"
+    },
+    "stm32AddressLoadFailed": {
+        "message": "Address load for option bytes sector failed. Very likely due to read protection."
+    },
+    "stm32AddressLoadSuccess": {
+        "message": "Address load for option bytes sector succeeded."
+    },
+    "stm32AddressLoadUnknown": {
+        "message": "Address load for option bytes sector failed with unknown error. Aborting."
+    },
+    "stm32NotReadProtected": {
+        "message": "Read protection not active"
+    },
+    "stm32ReadProtected": {
+        "message": "Board seems read protected. Unprotecting. Do not disconnect/unplug!"
+    },
+    "stm32UnprotectSuccessful": {
+        "message": "Unprotect successful."
+    },
+    "stm32UnprotectUnplug": {
+        "message": "ACTION REQUIRED: Unplug and re-connect flight controller in DFU mode to try flashing again!"
+    },
+    "stm32UnprotectFailed": {
+        "message": "Failed to unprotect board"
+    },
+    "stm32UnprotectInitFailed": {
+        "message": "Failed to initiate unprotect routine"
+    },
 
     "noConfigurationReceived": {
         "message": "No configuration received within <span class=\"message-negative\">10 seconds</span>, communication <span class=\"message-negative\">failed</span>"

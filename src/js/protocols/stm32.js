@@ -81,7 +81,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
                 self.initialize();
             } else {
-                GUI.log('<span style="color: red">Failed</span> to open serial port');
+                GUI.log(i18n.getMessage('serialPortOpenFail'));
             }
         });
     } else {
@@ -113,7 +113,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                                                 self.initialize();
                                             } else {
                                                 GUI.connect_lock = false;
-                                                GUI.log('<span style="color: red">Failed</span> to open serial port');
+                                                GUI.log(i18n.getMessage('serialPortOpenFail'));
                                             }
                                         });
                                     }
@@ -125,7 +125,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                     });
                 });
             } else {
-                GUI.log('<span style="color: red">Failed</span> to open serial port');
+                GUI.log(i18n.getMessage('serialPortOpenFail'));
             }
         });
     }
@@ -160,7 +160,7 @@ STM32_protocol.prototype.initialize = function () {
         } else {
             console.log('STM32 - timed out, programming failed ...');
 
-            $('span.progressLabel').text('STM32 - timed out, programming: FAILED');
+            $('span.progressLabel').text(i18n.getMessage('stm32TimedOut'));
             self.progress_bar_e.addClass('invalid');
 
             // protocol got stuck, clear timer and disconnect
@@ -243,7 +243,7 @@ STM32_protocol.prototype.verify_response = function (val, data) {
     if (val != data[0]) {
         var message = 'STM32 Communication failed, wrong response, expected: ' + val + ' (0x' + val.toString(16) + ') received: ' + data[0] + ' (0x' + data[0].toString(16) + ')';
         console.error(message);
-        $('span.progressLabel').text(message);
+        $('span.progressLabel').text(i18n.getMessage('stm32WrongResponse',[val, val.toString(16), data[0], data[0].toString(16)]));
         self.progress_bar_e.addClass('invalid');
 
         // disconnect
@@ -356,7 +356,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
     switch (step) {
         case 1:
             // initialize serial interface on the MCU side, auto baud rate settings
-            $('span.progressLabel').text('Contacting bootloader ...');
+            $('span.progressLabel').text(i18n.getMessage('stm32ContactingBootloader'));
 
             var send_counter = 0;
             GUI.interval_add('stm32_initialize_mcu', function () { // 200 ms interval (just in case mcu was already initialized), we need to break the 2 bytes command requirement
@@ -368,7 +368,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                         // proceed to next step
                         self.upload_procedure(2);
                     } else {
-                        $('span.progressLabel').text('Communication with bootloader failed');
+                        $('span.progressLabel').text(i18n.getMessage('stm32ContactingBootloaderFailed'));
                         self.progress_bar_e.addClass('invalid');
 
                         GUI.interval_remove('stm32_initialize_mcu');
@@ -382,7 +382,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                     // stop retrying, its too late to get any response from MCU
                     console.log('STM32 - no response from bootloader, disconnecting');
 
-                    $('span.progressLabel').text('No response from the bootloader, programming: FAILED');
+                    $('span.progressLabel').text(i18n.getMessage('stm32ResponseBootloaderFailed'));
                     self.progress_bar_e.addClass('invalid');
 
                     GUI.interval_remove('stm32_initialize_mcu');
@@ -435,7 +435,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
             
                     var message = 'Executing global chip erase (via extended erase)';
                     console.log(message);
-                    $('span.progressLabel').text(message + ' ...');
+                    $('span.progressLabel').text(i18n.getMessage('stm32GlobalEraseExtended'));
     
                     self.send([self.command.extended_erase, 0xBB], 1, function (reply) {
                         if (self.verify_response(self.status.ACK, reply)) {
@@ -451,7 +451,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                 } else {
                     var message = 'Executing local erase (via extended erase)'; 
                     console.log(message);
-                    $('span.progressLabel').text(message + ' ...');
+                    $('span.progressLabel').text(i18n.getMessage('stm32LocalEraseExtended'));
 
                     self.send([self.command.extended_erase, 0xBB], 1, function (reply) {
                         if (self.verify_response(self.status.ACK, reply)) {
@@ -503,7 +503,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
             if (self.options.erase_chip) {
                 var message = 'Executing global chip erase' ;
                 console.log(message);
-                $('span.progressLabel').text(message + ' ...');
+                $('span.progressLabel').text(i18n.getMessage('stm32GlobalErase'));
 
                 self.send([self.command.erase, 0xBC], 1, function (reply) { // 0x43 ^ 0xFF
                     if (self.verify_response(self.status.ACK, reply)) {
@@ -519,7 +519,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
             } else {
                 var message = 'Executing local erase'; 
                 console.log(message);
-                $('span.progressLabel').text(message + ' ...');
+                $('span.progressLabel').text(i18n.getMessage('stm32LocalErase'));
 
                 self.send([self.command.erase, 0xBC], 1, function (reply) { // 0x43 ^ 0xFF
                     if (self.verify_response(self.status.ACK, reply)) {
@@ -552,7 +552,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
         case 5:
             // upload
             console.log('Writing data ...');
-            $('span.progressLabel').text('Flashing ...');
+            $('span.progressLabel').text(i18n.getMessage('stm32Flashing'));
 
             var blocks = self.hex.data.length - 1,
                 flashing_block = 0,
@@ -627,7 +627,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
         case 6:
             // verify
             console.log('Verifying data ...');
-            $('span.progressLabel').text('Verifying ...');
+            $('span.progressLabel').text(i18n.getMessage('stm32Verifying'));
 
             var blocks = self.hex.data.length - 1,
                 reading_block = 0,
@@ -699,7 +699,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
 
                         if (verify) {
                             console.log('Programming: SUCCESSFUL');
-                            $('span.progressLabel').text('Programming: SUCCESSFUL');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
 
                             // update progress bar
                             self.progress_bar_e.addClass('valid');
@@ -708,7 +708,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                             self.upload_procedure(7);
                         } else {
                             console.log('Programming: FAILED');
-                            $('span.progressLabel').text('Programming: FAILED');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
 
                             // update progress bar
                             self.progress_bar_e.addClass('invalid');

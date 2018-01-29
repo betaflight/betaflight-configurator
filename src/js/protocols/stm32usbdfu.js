@@ -95,7 +95,7 @@ STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) 
             self.openDevice(result[0]);
         } else {
             console.log('USB DFU not found');
-            GUI.log('USB DFU not found');
+            GUI.log(i18n.getMessage('stm32UsbDfuNotFound'));
         }
     });
 };
@@ -541,8 +541,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
 		var unprotect = function() {
 			console.log('Initiate read unprotect');
-			GUI.log('Chip seems read protected. Initiating read unprotect');
-			$('span.progressLabel').text('Board seems read protected. Unprotecting. Do not disconnect/unplug!');
+			GUI.log(i18n.getMessage('stm32ReadProtected'));
+			$('span.progressLabel').text(i18n.getMessage('stm32ReadProtected'));
 			self.progress_bar_e.addClass('actionRequired');
 
 			self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x92], function () { // 0x92 initiates read unprotect
@@ -563,14 +563,15 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 		                        self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data, error) { // should stall/disconnect
 						if(error) { // we encounter an error, but this is expected. should be a stall.
 							console.log('Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.');
-							GUI.log('Unprotect successful. ACTION REQUIRED: Unplug and re-connect flight controller in DFU mode to try flashing again!');
-							$('span.progressLabel').text('ACTION REQUIRED: Unplug and re-connect flight controller in DFU mode to try flashing again!');
+							GUI.log(i18n.getMessage('stm32UnprotectSuccessful'));
+							GUI.log(i18n.getMessage('stm32UnprotectUnplug'));
+							$('span.progressLabel').text(i18n.getMessage('stm32UnprotectUnplug'));
 							self.progress_bar_e.val(0);
 							self.progress_bar_e.addClass('actionRequired');
 						} else { // unprotecting the flight controller did not work. It did not reboot.
 		                                	console.log('Failed to execute unprotect memory command');
-							GUI.log('Failed to unprotect chip');
-							$('span.progressLabel').text('Failed to unprotect board');
+							GUI.log(i18n.getMessage('stm32UnprotectFailed'));
+							$('span.progressLabel').text(i18n.getMessage('stm32UnprotectFailed'));
 							self.progress_bar_e.addClass('invalid');
 							console.log(data);
 		                                	self.upload_procedure(99);
@@ -579,8 +580,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 		                    }, incr); 
 		                } else {
 		                    console.log('Failed to initiate unprotect memory command');
-				    GUI.log('Failed to initiate unprotect routine');
-				    $('span.progressLabel').text('Failed to initate unprotect');
+				    GUI.log(i18n.getMessage('stm32UnprotectInitFailed'));
+				    $('span.progressLabel').text(i18n.getMessage('stm32UnprotectInitFailed'));
 				    self.progress_bar_e.addClass('invalid');
 		                    self.upload_procedure(99);
 		                }
@@ -601,7 +602,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 				if (data[4] == self.state.dfuUPLOAD_IDLE && ob_data.length == self.chipInfo.option_bytes.total_size) {
 					console.log('Option bytes read successfully');
 					console.log('Chip does not appear read protected');
-					GUI.log('Read protection not active');
+					GUI.log(i18n.getMessage('stm32NotReadProtected'));
 					// it is pretty safe to continue to erase flash
 					self.clearStatus(function() {
 						self.upload_procedure(2);
@@ -645,22 +646,22 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 	            });
 		}
 
-		var initReadOB = function (loadAddressResponse) {
-		    // contrary to what is in the docs. Address load should in theory work even if read protection is active
-		    // if address load fails with this specific error though, it is very likely bc of read protection
-		    if(loadAddressResponse[4] == self.state.dfuERROR && loadAddressResponse[0] == self.status.errVENDOR) {
-		        // read protected
-			GUI.log('Address load for option bytes sector failed. Very likely due to read protection.');
-                        self.clearStatus(unprotect);
-			return;
-	            } else if(loadAddressResponse[4] == self.state.dfuDNLOAD_IDLE) {
-			console.log('Address load for option bytes sector succeeded.');
-			self.clearStatus(tryReadOB);
-		    } else {
-			GUI.log('Address load for option bytes sector failed with unknown error. Aborting.');
-			self.upload_procedure(99);
-		    }
-		}
+            var initReadOB = function (loadAddressResponse) {
+                // contrary to what is in the docs. Address load should in theory work even if read protection is active
+                // if address load fails with this specific error though, it is very likely bc of read protection
+                if(loadAddressResponse[4] == self.state.dfuERROR && loadAddressResponse[0] == self.status.errVENDOR) {
+                    // read protected
+                    GUI.log(i18n.getMessage('stm32AddressLoadFailed'));
+                    self.clearStatus(unprotect);
+                    return;
+                } else if(loadAddressResponse[4] == self.state.dfuDNLOAD_IDLE) {
+                    console.log('Address load for option bytes sector succeeded.');
+                    self.clearStatus(tryReadOB);
+                } else {
+                    GUI.log(i18n.getMessage('stm32AddressLoadUnknown'));
+                    self.upload_procedure(99);
+                }
+            }
 
 	        self.clearStatus(function () {
 			// load address fails if read protection is active unlike as stated in the docs
@@ -696,7 +697,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     }
                   }
                 }
-                $('span.progressLabel').text('Erasing ...');
+                $('span.progressLabel').text(i18n.getMessage('stm32Erase'));
                 console.log('Executing local chip erase'); 
 
                 var page = 0;
@@ -751,7 +752,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
             // upload
             // we dont need to clear the state as we are already using DFU_DNLOAD
             console.log('Writing data ...');
-            $('span.progressLabel').text('Flashing ...');
+            $('span.progressLabel').text(i18n.getMessage('stm32Flashing'));
 
             var blocks = self.hex.data.length - 1;
             var flashing_block = 0;
@@ -823,7 +824,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
         case 5:
             // verify
             console.log('Verifying data ...');
-            $('span.progressLabel').text('Verifying ...');
+            $('span.progressLabel').text(i18n.getMessage('stm32Verifying'));
 
             var blocks = self.hex.data.length - 1;
             var reading_block = 0;
@@ -890,7 +891,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
                         if (verify) {
                             console.log('Programming: SUCCESSFUL');
-                            $('span.progressLabel').text('Programming: SUCCESSFUL');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
 
                             // update progress bar
                             self.progress_bar_e.addClass('valid');
@@ -899,7 +900,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                             self.upload_procedure(6);
                         } else {
                             console.log('Programming: FAILED');
-                            $('span.progressLabel').text('Programming: FAILED');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
 
                             // update progress bar
                             self.progress_bar_e.addClass('invalid');
