@@ -42,6 +42,9 @@ i18n.getMessage = function(messageID, parameters) {
     var translatedString =  i18next.t(messageID + '.message');
 
     if (parameters !== undefined) {
+        if (parameters.constructor !== Array) {
+            parameters = [parameters];
+        }
         parameters.forEach(function(element, index) {
             translatedString = translatedString.replace('$' + (index + 1), element);
         });
