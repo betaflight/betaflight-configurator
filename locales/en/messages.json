@@ -55,22 +55,22 @@
         "message": "Default"
     },
     "language_ca": {
-        "message": "Catalan"
+        "message": "Catal\u00e0 (ca)"
     },
     "language_de": {
-        "message": "German"
+        "message": "Deutsch (de)"
     },
     "language_en": {
-        "message": "English"
+        "message": "English (en)"
     },
     "language_es": {
-        "message": "Spanish"
+        "message": "Espa\u00f1ol (es)"
     },
     "language_fr": {
-        "message": "French"
+        "message": "Fran\u00e7ais (fr)"
     },
     "language_ko": {
-        "message": "Korean"
+        "message": "\ud55c\uad6d\uc5b4 (ko)"
     },
 
     "sensorStatusGyro": {
