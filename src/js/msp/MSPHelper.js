@@ -24,7 +24,8 @@ function MspHelper () {
     'TBS_SMARTAUDIO': 11,
     'TELEMETRY_IBUS': 12,
     'IRC_TRAMP': 13,
-    'RUNCAM_DEVICE_CONTROL': 14 // support communitate with RunCam Device
+    'RUNCAM_DEVICE_CONTROL': 14, // support communitate with RunCam Device
+    'LIDAR_TF': 15
   };
 }
 
