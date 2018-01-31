@@ -919,6 +919,15 @@
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
+    "configurationDshotBeeper": {
+        "message": "DSHOT Beacon Configuration"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Use DSHOT beacon (use motors to sound beeps when disarmed)"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "Beacon Tone"
+    },
     "configurationBeeper": {
         "message": "Beeper Configuration"
     },
