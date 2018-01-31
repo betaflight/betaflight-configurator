@@ -6,7 +6,7 @@
 
 var i18n = {}
 
-const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'ko'];
+const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'ko', 'zh_CN'];
 
 /**
  * Functions that depend on the i18n framework

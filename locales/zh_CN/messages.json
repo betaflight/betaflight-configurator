@@ -1,0 +1,3180 @@
+{
+    "language_ca": {
+        "message": "Catal\u00e0 (ca)"
+    },
+    "language_de": {
+        "message": "Deutsch (de)"
+    },
+    "language_en": {
+        "message": "English (en)"
+    },
+    "language_es": {
+        "message": "Espa\u00f1ol (es)"
+    },
+    "language_fr": {
+        "message": "Fran\u00e7ais (fr)"
+    },
+    "language_ko": {
+        "message": "\ud55c\uad6d\uc5b4 (ko)"
+    },
+    "translation_version": {
+        "message": "0"
+    },
+    "windowTitle": {
+        "message": "Betaflight Configurator",
+        "description": "Title of the application window, usually not translated"
+    },
+    "warningTitle": {
+        "message": "\u8b66\u544a"
+    },
+    "noticeTitle": {
+        "message": "\u6ce8\u610f"
+    },
+    "options_title": {
+        "message": "\u7a0b\u5e8f\u9009\u9879"
+    },
+    "connect": {
+        "message": "\u8fde\u63a5"
+    },
+    "connecting": {
+        "message": "\u8fde\u63a5\u4e2d"
+    },
+    "disconnect": {
+        "message": "\u65ad\u5f00\u8fde\u63a5"
+    },
+    "portsSelectManual": {
+        "message": "\u624b\u52a8\u8fde\u63a5\u4e32\u53e3"
+    },
+    "portOverrideText": {
+        "message": "\u4e32\u53e3"
+    },
+    "autoConnect": {
+        "message": "\u81ea\u52a8\u8fde\u63a5"
+    },
+    "close": {
+        "message": "\u5173\u95ed"
+    },
+    "autoConnectEnabled": {
+        "message": "\u81ea\u52a8\u8fde\u63a5\uff1a\u5f00\u542f-\u5f53\u53d1\u73b0\u65b0\u7684\u4e32\u53e3\uff0c\u5730\u9762\u7ad9\u5c06\u4f1a\u81ea\u52a8\u8fde\u63a5\u65b0\u7684\u4e32\u53e3"
+    },
+    "autoConnectDisabled": {
+        "message": "\u81ea\u52a8\u8fde\u63a5\uff1a \u5173\u95ed - \u7528\u6237\u4ece\u5217\u8868\u4e2d\u9009\u7740\u6b63\u786e\u7684\u4e32\u53e3\uff0c\u7136\u540e\u70b9\u201c\u8fde\u63a5\u201d"
+    },
+    "expertMode": {
+        "message": "\u5f00\u542f\u9ad8\u7ea7\u6a21\u5f0f"
+    },
+    "permanentExpertMode": {
+        "message": "\u9ed8\u8ba4\u5f00\u542f\u9ad8\u7ea7\u6a21\u5f0f"
+    },
+    "userLanguageSelect": {
+        "message": "\u8bed\u8a00 \uff08\u9700\u8981\u91cd\u542f\u5e94\u7528\u624d\u80fd\u751f\u6548\uff09"
+    },
+    "language_default": {
+        "message": "\u9ed8\u8ba4"
+    },
+    "sensorStatusGyro": {
+        "message": "\u9640\u87ba\u4eea"
+    },
+    "sensorStatusAccel": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1"
+    },
+    "sensorStatusMag": {
+        "message": "\u78c1\u573a\u8ba1"
+    },
+    "sensorStatusBaro": {
+        "message": "\u9ad8\u5ea6\u8ba1"
+    },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
+    "sensorStatusSonar": {
+        "message": "\u58f0\u5450 \/ \u6d4b\u8ddd\u8ba1"
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "\u663e\u793a\u5730\u9762\u7ad9\u6d4b\u8bd5\u7248\u672c\u66f4\u65b0\u63d0\u793a"
+    },
+    "configuratorUpdateNotice": {
+        "message": "\u4f60\u6b63\u5728\u4f7f\u7528\u65e7\u7248\u672c\u7684 <b> Betaflight\u5730\u9762\u7ad9 <\/b>\u3002<br> \u7248\u672c<b>$1<\/b>\u5df2\u7ecf\u5728\u7f51\u4e0a\u53d1\u5e03\u3002\u8bf7\u5230 <a href=\"$2\" target=\"_blank\">\u53d1\u5e03\u9875\u9762<\/a>\u4e0b\u8f7d\u5b89\u88c5\u6700\u65b0\u7684\u5730\u9762\u7ad9\uff0c<br>\u66f4\u65b0\u4e4b\u524d\u8bf7\u5173\u95ed\u5730\u9762\u7ad9."
+    },
+    "configuratorUpdateWebsite": {
+        "message": "\u6253\u5f00\u7248\u672c\u53d1\u5e03\u7f51\u7ad9"
+    },
+    "deviceRebooting": {
+        "message": "\u98de\u63a7 - <span class=\"message-negative\">\u91cd\u542f<\/span>"
+    },
+    "deviceReady": {
+        "message": "\u98de\u63a7 - <span class=\"message-positive\">\u5c31\u7eea<\/span>"
+    },
+    "backupFileIncompatible": {
+        "message": "\u4e0a\u4e00\u7248\u672c\u5730\u9762\u7ad9\u751f\u6210\u7684\u5907\u4efd\u6587\u4ef6\u548c\u76ee\u524d\u7248\u672c\u7684\u5730\u9762\u7ad9\u4e0d\u517c\u5bb9"
+    },
+    "backupFileUnmigratable": {
+        "message": "\u4e0a\u4e00\u7248\u672c\u5730\u9762\u7ad9\u751f\u6210\u7684\u5907\u4efd\u6587\u4ef6\u4e0d\u80fd\u79fb\u690d\u5230\u76ee\u524d\u7248\u672c\u7684\u5730\u9762\u7ad9"
+    },
+    "configMigrationFrom": {
+        "message": "\u6b63\u5728\u79fb\u690d\u5730\u9762\u7ad9\u8bbe\u7f6e\u6587\u4ef6: $1"
+    },
+    "configMigratedTo": {
+        "message": "\u5730\u9762\u7ad9\u8bbe\u7f6e\u6587\u4ef6\u79fb\u690d\u6210\u529f"
+    },
+    "configMigrationSuccessful": {
+        "message": "\u8bbe\u7f6e\u6587\u4ef6\u79fb\u690d\u5b8c\u6210\uff0c\u5730\u9762\u7ad9\u4f7f\u7528\u8bbe\u7f6e\u6587\u4ef6\u3002"
+    },
+    "tabFirmwareFlasher": {
+        "message": "\u70e7\u5f55\u56fa\u4ef6"
+    },
+    "tabLanding": {
+        "message": "\u6b22\u8fce"
+    },
+    "tabHelp": {
+        "message": "\u8bbe\u7f6e\u6587\u6863 & \u652f\u6301"
+    },
+    "tabSetup": {
+        "message": "\u8bbe\u7f6e"
+    },
+    "tabSetupOSD": {
+        "message": "OSD \u8bbe\u7f6e"
+    },
+    "tabConfiguration": {
+        "message": "\u914d\u7f6e"
+    },
+    "tabPorts": {
+        "message": "\u4e32\u53e3"
+    },
+    "tabPidTuning": {
+        "message": "PID \u8c03\u8282"
+    },
+    "tabReceiver": {
+        "message": "\u63a5\u6536\u673a"
+    },
+    "tabModeSelection": {
+        "message": "\u98de\u884c\u6a21\u5f0f\u9009\u9879"
+    },
+    "tabServos": {
+        "message": "\u8235\u673a"
+    },
+    "tabFailsafe": {
+        "message": "\u5931\u63a7\u4fdd\u62a4"
+    },
+    "tabTransponder": {
+        "message": "\u6bd4\u8d5b\u5708\u6570\u53d1\u5c04\u5668"
+    },
+    "tabOsd": {
+        "message": "OSD"
+    },
+    "tabPower": {
+        "message": "\u52a8\u529b & \u7535\u6c60"
+    },
+    "tabGPS": {
+        "message": "GPS"
+    },
+    "tabMotorTesting": {
+        "message": "\u7535\u673a"
+    },
+    "tabLedStrip": {
+        "message": "LED \u706f\u5e26"
+    },
+    "tabRawSensorData": {
+        "message": "\u4f20\u611f\u5668"
+    },
+    "tabCLI": {
+        "message": "CLI(\u547d\u4ee4\u884c)"
+    },
+    "tabLogging": {
+        "message": "\u65e5\u5fd7"
+    },
+    "tabOnboardLogging": {
+        "message": "\u9ed1\u5323\u5b50"
+    },
+    "tabAdjustments": {
+        "message": "\u8c03\u6574"
+    },
+    "tabAuxiliary": {
+        "message": "\u6a21\u5f0f"
+    },
+    "logActionHide": {
+        "message": "\u9690\u85cf\u8bb0\u5f55"
+    },
+    "logActionShow": {
+        "message": "\u663e\u793a\u8bb0\u5f55"
+    },
+    "serialPortOpened": {
+        "message": "\u4e32\u53e3<span class=\"message-positive\">\u6210\u529f<\/span> \u6253\u5f00 ID: $1"
+    },
+    "serialPortOpenFail": {
+        "message": "<span class=\"message-negative\">\u6253\u5f00\u5931\u8d25<\/span>"
+    },
+    "serialPortClosedOk": {
+        "message": "\u4e32\u53e3 <span class=\"message-positive\">\u6210\u529f<\/span> \u5173\u95ed"
+    },
+    "serialPortClosedFail": {
+        "message": "<span class=\"message-negative\">\u5173\u95ed<\/span> \u5931\u8d25"
+    },
+    "serialUnrecoverable": {
+        "message": "\u4e0d\u53ef\u4ee5\u6062\u590d\uff0c\u4e32\u53e3\u8fde\u63a5 <span class=\"message-negative\">\u9519\u8bef<\/span> \u65ad\u5f00\u8fde\u63a5"
+    },
+    "usbDeviceOpened": {
+        "message": "USB \u8bbe\u5907<span class=\"message-positive\">\u6210\u529f<\/span> \u4f7f\u7528ID :$1"
+    },
+    "usbDeviceOpenFail": {
+        "message": "<span class=\"message-negative\">\u5931\u8d25<\/span>\u6253\u5f00USB\u8bbe\u5907!"
+    },
+    "usbDeviceClosed": {
+        "message": "USB \u8bbe\u5907<span class=\"message-positive\">\u6210\u529f<\/span> \u5173\u95ed"
+    },
+    "usbDeviceCloseFail": {
+        "message": "<span class=\"message-negative\">\u5931\u8d25<\/span>\u5173\u95edUSB\u8bbe\u5907"
+    },
+    "usbDeviceUdevNotice": {
+        "message": "<strong>udev rules<\/strong>\u6709\u6ca1\u6709\u6b63\u786e\u5b89\u88c5? \u8be6\u7ec6\u4fe1\u606f\u67e5\u9605docs."
+    },
+    "stm32UsbDfuNotFound": {
+        "message": "\u672a\u627e\u5230USB DFU"
+    },
+    "stm32TimedOut": {
+        "message": "STM32 - \u8d85\u65f6\uff0c\u70e7\u5f55\u5931\u8d25"
+    },
+    "stm32WrongResponse": {
+        "message": "STM32 \u901a\u4fe1\u5931\u8d25\uff0c\u9519\u8bef\u7684\u54cd\u5e94\u3002\u5e94\u4e3a\uff1a$1 (0x$2) \u5b9e\u9645\u6536\u5230: $3 (0x$4)"
+    },
+    "stm32ContactingBootloader": {
+        "message": "\u5c1d\u8bd5\u8fde\u63a5\u5f15\u5bfc\u7a0b\u5e8f"
+    },
+    "stm32ContactingBootloaderFailed": {
+        "message": "\u5f15\u5bfc\u7a0b\u5e8f\u901a\u4fe1\u5931\u8d25"
+    },
+    "stm32ResponseBootloaderFailed": {
+        "message": "\u5f15\u5bfc\u7a0b\u5e8f\u65e0\u54cd\u5e94\uff0c\u70e7\u5f55\u5931\u8d25"
+    },
+    "stm32GlobalEraseExtended": {
+        "message": "\u6b63\u5728\u6267\u884c\u5168\u5c40\u82af\u7247\u64e6\u9664\uff08\u901a\u8fc7\u6269\u5c55\u64e6\u9664\uff09\u2026\u2026"
+    },
+    "stm32LocalEraseExtended": {
+        "message": "\u6b63\u5728\u6267\u884c\u672c\u5730\u64e6\u9664\uff08\u901a\u8fc7\u6269\u5c55\u64e6\u9664\uff09\u2026\u2026"
+    },
+    "stm32GlobalErase": {
+        "message": "\u6b63\u5728\u6267\u884c\u5168\u5c40\u64e6\u9664\u2026\u2026"
+    },
+    "stm32LocalErase": {
+        "message": "\u6b63\u5728\u6267\u884c\u672c\u5730\u64e6\u9664\u2026\u2026"
+    },
+    "stm32Erase": {
+        "message": "\u6b63\u5728\u64e6\u9664\u2026\u2026"
+    },
+    "stm32Flashing": {
+        "message": "\u6b63\u5728\u70e7\u5f55\u2026\u2026"
+    },
+    "stm32Verifying": {
+        "message": "\u6b63\u5728\u9a8c\u8bc1\u2026\u2026"
+    },
+    "stm32ProgrammingSuccessful": {
+        "message": "\u70e7\u5f55\u6210\u529f"
+    },
+    "stm32ProgrammingFailed": {
+        "message": "\u70e7\u5f55\u5931\u8d25"
+    },
+    "stm32AddressLoadFailed": {
+        "message": "\u5b9a\u4f4d\u9009\u9879\u5b57\u8282\u6247\u533a\u5931\u8d25\u3002\u5f88\u53ef\u80fd\u56e0\u4e3a\u8bfb\u4fdd\u62a4\u3002"
+    },
+    "stm32AddressLoadSuccess": {
+        "message": "\u5b9a\u4f4d\u9009\u9879\u5b57\u8282\u6247\u533a\u6210\u529f\u3002"
+    },
+    "stm32AddressLoadUnknown": {
+        "message": "\u56e0\u672a\u77e5\u9519\u8bef\uff0c\u5b9a\u4f4d\u9009\u9879\u5b57\u8282\u6247\u533a\u5931\u8d25\u3002\u6b63\u5728\u4e2d\u6b62\u3002"
+    },
+    "stm32NotReadProtected": {
+        "message": "\u8bfb\u4fdd\u62a4\u672a\u542f\u7528"
+    },
+    "stm32ReadProtected": {
+        "message": "\u98de\u63a7\u677f\u4f3c\u4e4e\u6709\u8bfb\u4fdd\u62a4\u3002\u6b63\u5728\u89e3\u9664\u4fdd\u62a4\u3002\u4e0d\u8981\u65ad\u5f00\u8fde\u63a5\/\u62d4\u51fa\u63d2\u5934\uff01"
+    },
+    "stm32UnprotectSuccessful": {
+        "message": "\u89e3\u9664\u4fdd\u62a4\u6210\u529f"
+    },
+    "stm32UnprotectUnplug": {
+        "message": "\u8bf7\u62d4\u51fa\u98de\u63a7\u5e76\u4e14\u4ee5DFU\u6a21\u5f0f\u91cd\u65b0\u8fde\u63a5\u98de\u63a7\u4ee5\u91cd\u65b0\u5c1d\u8bd5\u70e7\u5f55\uff01"
+    },
+    "stm32UnprotectFailed": {
+        "message": "\u89e3\u9664\u4fdd\u62a4\u5931\u8d25"
+    },
+    "stm32UnprotectInitFailed": {
+        "message": "\u521d\u59cb\u5316\u89e3\u9664\u4fdd\u62a4\u7a0b\u5e8f\u5931\u8d25"
+    },
+    "noConfigurationReceived": {
+        "message": "<span class=\"message-negative\">10\u79d2<\/span>\u5185\u6ca1\u6709\u63a5\u6536\u5230\u914d\u7f6e\u4fe1\u606f\uff0c\u98de\u63a7\u901a\u4fe1 <span class=\"message-negative\"> \u5931\u8d25<\/span>"
+    },
+    "firmwareVersionNotSupported": {
+        "message": "<span class=\"message-negative\">Betaflight configutator\u4e0d\u652f\u6301<\/span>\u8be5\u56fa\u4ef6\u7248\u672c . \u8bf7\u66f4\u65b0\u5230Betaflight \u652f\u6301\u7684\u56fa\u4ef6\u7248\u672c<strong>$1<\/strong> \u6216\u8005\u66f4\u9ad8. \u66f4\u65b0\u56fa\u4ef6\u4e4b\u524d\uff0c\u4f7f\u7528CLI \u6765\u5907\u4efd\u8bbe\u7f6e.\u5177\u4f53\u64cd\u4f5c\u4fe1\u606f\u8bf7\u53c2\u8003Betaflight\u6587\u6863.<br \/>\u5982\u679c\u4e0d\u60f3\u66f4\u65b0\u5230\u6700\u65b0\u7684\u56fa\u4ef6\uff0c\u53ef\u4ee5\u4f7f\u7528\u652f\u6301\u8be5\u56fa\u4ef6\u7684configurator \u6765\u8bbe\u7f6e\u4f7f\u7528\u3002"
+    },
+    "firmwareTypeNotSupported": {
+        "message": "\u8be5\u56fa\u4ef6\u7248\u672c\u7684Betaflight configurator <span class=\"message-negative\">\u4e0d\u652f\u6301<\/span>,\u53ea\u80fd\u4f7f\u7528CLI\u6a21\u5f0f."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "\u98de\u63a7\u56fa\u4ef6\u9700\u8981\u66f4\u65b0\u5230\u65b0\u7684\u7248\u672c\uff0c\u4f7f\u7528CLI \u6765\u5907\u4efd\u8bbe\u7f6e.\u5177\u4f53\u64cd\u4f5c\u4fe1\u606f\u8bf7\u53c2\u8003Betaflight\u6587\u6863.<br \/>\u5982\u679c\u4e0d\u60f3\u66f4\u65b0\u5230\u6700\u65b0\u7684\u56fa\u4ef6\uff0c\u53ef\u4ee5\u4f7f\u7528\u652f\u6301\u8be5\u56fa\u4ef6\u7684configurator \u6765\u8bbe\u7f6e\u4f7f\u7528\u3002"
+    },
+    "infoVersions": {
+        "message": "\u8fd0\u884c- OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurator: <strong>$3<\/strong"
+    },
+    "releaseCheckLoaded": {
+        "message": "\u4eceGithub \u8f7d\u5165$1\u53d1\u5e03\u4fe1\u606f"
+    },
+    "releaseCheckFailed": {
+        "message": "\u4eceGithub\u83b7\u53d6$1\u53d1\u5e03\u7248\u672c\u5931\u8d25\uff0c\u8f7d\u5165\u539f\u7248\u672c\u4fe1\u606f\u3002 \u5931\u8d25\u539f\u56e0\uff1a<code>$2<\/code><\/b>"
+    },
+    "releaseCheckCached": {
+        "message": "\u4f7f\u7528\u7f13\u5b58\u7684$1\u7248\u672c\u4fe1\u606f"
+    },
+    "releaseCheckNoInfo": {
+        "message": "\u627e\u4e0d\u5230$1\u53d1\u5e03\u4fe1\u606f"
+    },
+    "tabSwitchConnectionRequired": {
+        "message": "\u5148 <strong>\u8fde\u63a5<\/strong>\uff0c\u624d\u80fd\u663e\u793a\u4efb\u4f55\u9875\u9762\u4fe1\u606f"
+    },
+    "tabSwitchWaitForOperation": {
+        "message": "<span class=\"message-negative\">\u4e0d\u80fd<\/span> \u6267\u884c\u76ee\u524d\u64cd\u4f5c, \u8bf7\u7b49\u5f85\u4e0a\u4e00\u4e2a\u64cd\u4f5c\u5b8c\u6210"
+    },
+    "tabSwitchUpgradeRequired": {
+        "message": "<strong>\u9700\u8981\u66f4\u65b0<\/strong>\u5230\u6700\u65b0\u7248\u672cBetaflight\u56fa\u4ef6\u624d\u80fd\u4f7f\u7528$1\u9875\u9762"
+    },
+    "firmwareVersion": {
+        "message": "\u56fa\u4ef6\u7248\u672c\uff1a<strong>$1<\/strong>"
+    },
+    "apiVersionReceived": {
+        "message": "MultiWii API \u7248\u672c <strong>$1<\/strong>"
+    },
+    "uniqueDeviceIdReceived": {
+        "message": "Unique device ID: <strong>0x$1<\/strong>"
+    },
+    "craftNameReceived": {
+        "message": "\u98de\u884c\u5668\u540d\u79f0: <strong>$1<\/strong>"
+    },
+    "armingDisabled": {
+        "message": "<strong>\u4e0d\u80fd\u89e3\u9501<\/strong>"
+    },
+    "armingEnabled": {
+        "message": "<strong>\u53ef\u4ee5\u89e3\u9501<\/strong>"
+    },
+    "boardInfoReceived": {
+        "message": "\u98de\u63a7: <strong>$1<\/strong>, \u7248\u672c: <strong>$2<\/strong>"
+    },
+    "buildInfoReceived": {
+        "message": "\u8fd0\u884c\u7248\u672c\u53d1\u5e03\u65f6\u95f4\uff1a <strong>$1<\/strong>"
+    },
+    "fcInfoReceived": {
+        "message": "\u98de\u63a7\u4fe1\u606f\u8bc6\u522b\u540d: <strong>$1<\/strong>, \u7248\u672c: <strong>$2<\/strong>"
+    },
+    "versionLabelTarget": {
+        "message": "\u98de\u63a7\u677f\u56fa\u4ef6"
+    },
+    "versionLabelFirmware": {
+        "message": "\u56fa\u4ef6"
+    },
+    "versionLabelConfigurator": {
+        "message": "Configurator"
+    },
+    "notifications_app_just_updated_to_version": {
+        "message": "\u7a0b\u5e8f\u5df2\u7ecf\u66f4\u65b0\u5230\u7248\u672c: $1"
+    },
+    "notifications_click_here_to_start_app": {
+        "message": "\u5355\u51fb\u8fd9\u91cc\u8fd0\u884c\u7a0b\u5e8f"
+    },
+    "statusbar_port_utilization": {
+        "message": "\u4f7f\u7528\u7684\u4e32\u53e3\uff1a"
+    },
+    "statusbar_usage_download": {
+        "message": "\u4e0b\u884c: $1%"
+    },
+    "statusbar_usage_upload": {
+        "message": "\u4e0a\u884c: $1%"
+    },
+    "statusbar_packet_error": {
+        "message": "\u6570\u636e\u5305\u9519\u8bef"
+    },
+    "statusbar_i2c_error": {
+        "message": "I2C \u9519\u8bef:"
+    },
+    "statusbar_cycle_time": {
+        "message": "\u5faa\u73af\u65f6\u95f4:"
+    },
+    "statusbar_cpu_load": {
+        "message": "CPU \u4f7f\u7528\u7387: $1%"
+    },
+    "dfu_connect_message": {
+        "message": "\u8bf7\u4f7f\u7528\u56fa\u4ef6\u70e7\u5199\u9875\u9762\u6765\u6253\u5f00DFU\u8bbe\u5907"
+    },
+    "dfu_erased_kilobytes": {
+        "message": "\u64e6\u9664$1 kB \u95ea\u5b58 <span class=\"message-positive\">\u6210\u529f<\/span>"
+    },
+    "dfu_device_flash_info": {
+        "message": "\u68c0\u6d4b\u5230$1 kiB \u7684\u82af\u7247"
+    },
+    "dfu_error_image_size": {
+        "message": "<span class=\"message-negative\">Error<\/span>: \u56fa\u4ef6\u6587\u4ef6\u5927\u4e8e\u98de\u63a7\u82af\u7247\u7684\u95ea\u5b58\u3002\u56fa\u4ef6\u5927\u5c0f: $1 kiB, \u9650\u5236= $2 kiB"
+    },
+    "eeprom_saved_ok": {
+        "message": "EEPROM <span class=\"message-positive\">\u4fdd\u5b58\u6210\u529f<\/span>"
+    },
+    "defaultWelcomeIntro": {
+        "message": "\u6b22\u8fce\u4f7f\u7528<strong>Betaflight - Configurator<\/strong>,\u4e13\u4e3a\u7b80\u5316\u56fa\u952e\u5347\u7ea7\uff0c\u8bbe\u7f6e\u548c\u8c03\u6574\u98de\u63a7."
+    },
+    "defaultWelcomeHead": {
+        "message": "\u786c\u4ef6"
+    },
+    "defaultWelcomeText": {
+        "message": "\u672c\u5e94\u7528\u652f\u6301\u6240\u6709\u80fd\u8fd0\u884cbetaflight\u7684\u98de\u63a7\u3002\u5728\u201d\u56fa\u4ef6\u70e7\u5199\u201c\u9875\u9762\u67e5\u770b\u6240\u6709\u652f\u6301\u7684\u98de\u63a7\u5217\u8868.<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Download Betaflight Blackbox<\/a><br \/><br \/>\u56fa\u4ef6\u6e90\u4ee3\u7801\u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc\u4e0b\u8f7d <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">here<\/a><br \/>\u6700\u65b0\u53d1\u5e03\u5df2\u7f16\u8bd1\u7684\u56fa\u4ef6\u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc\u4e0b\u8f7d<a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">here<\/a><br \/><br \/>\u6700\u65b0\u7684 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x \u9a71\u52a8<\/a>  <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">here<\/a><br \/>\u6700\u65b0\u7684 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> \u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc \u4e0b\u8f7d<a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">here<\/a><br \/>\u6700\u65b0\u7684 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a>\u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc\u4e0b\u8f7d<a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">here<\/a><br \/>"
+    },
+    "defaultContributingHead": {
+        "message": "\u53c2\u4e0e\u5f00\u53d1"
+    },
+    "defaultContributingText": {
+        "message": "\u5982\u679c\u4f60\u60f3\u5e2e\u52a9betaflight\u5f00\u53d1\u51fa\u66f4\u597d\u7684\u98de\u63a7\u56fa\u4ef6\uff0c\u4f60\u53ef\u4ee5\u901a\u8fc7:<br \/><ul><li>\u5728\u8bba\u575b\u548cIRC\u91cc\u5e2e\u52a9\u56de\u7b54\u5176\u4ed6\u7528\u6237\u7684\u95ee\u9898\u3002<\/li><li> \u53c2\u4e0e\u7a0b\u5e8f\u56fa\u4ef6\u548cconfigurator\u5f00\u53d1\uff0c\u4f8b\u5982-\u589e\u52a0\u65b0\u529f\u80fd\uff0c\u89e3\u51b3\u6f0f\u6d1e\u3002\u6539\u5584\u4ee3\u7801<\/li><li>\u548c\u6d4b\u8bd5<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">\u65b0\u529f\u80fd\u548c\u4fee\u8865\u6f0f\u6d1e<\/a>\u548c\u63d0\u4f9b\u6d4b\u8bd5\u53cd\u9988<\/li><li>\u5e2e\u52a9 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">\u6d4b\u8bd5\u5b9e\u73b0\u65b0\u529f\u80fd<\/a>. <\/li><li>\u5728\u8fd9\u91cc <a href=\"http:\/\/betaflight.oneskyapp.com\" target=\"_blank\">\u5e2e\u52a9\u7ffb\u8bd1configurator <\/a>\u5230\u4f60\u4f7f\u7528\u7684\u8bed\u8a00.<\/li><li><\/li><\/ul>"
+    },
+    "defaultChangelogAction": {
+        "message": "\u66f4\u65b0\u65e5\u5fd7"
+    },
+    "defaultChangelogHead": {
+        "message": "Configurator - \u66f4\u65b0\u65e5\u5fd7"
+    },
+    "defaultButtonFirmwareFlasher": {
+        "message": "\u56fa\u4ef6\u70e7\u5199"
+    },
+    "defaultDonateHead": {
+        "message": "\u5f00\u6e90\/\u6350\u8d60\u8bf4\u660e"
+    },
+    "defaultDonateText": {
+        "message": "\u8fd9\u662f\u4e00\u4e2a\u5b8c\u5168<strong>\u5f00\u6e90 <\/strong> \uff0c\u4e3a<strong>\u6240\u6709betaflight<\/strong>\u517c\u5bb9\u7684\u98de\u63a7\u63d0\u4f9b\u514d\u8d39\u7684configurator\u548c\u4ee3\u7801\u3002<br \/>\u5982\u679c\u4f60\u89c9\u5f97Betaflight\u548cbetaflight configurator\u5bf9\u4f60\u6709\u5f88\u5927\u5e2e\u52a9\u3002<strong>\u8bf7\u8003\u8651\u652f\u6301\u548c\u6350\u8d60<\/strong> \u7ed9\u6211\u4eec\u5f00\u53d1\u56e2\u961f"
+    },
+    "defaultDonate": {
+        "message": "\u6350\u8d60"
+    },
+    "defaultSponsorsHead": {
+        "message": "\u8d5e\u52a9\u5546"
+    },
+    "defaultDocumentationHead": {
+        "message": "\u6587\u6863\/\u624b\u518c"
+    },
+    "defaultDocumentation": {
+        "message": "Betaflight\u7684\u6587\u6863\u548c\u53d1\u5e03\u8bf4\u660e\u53ef\u4ee5\u5728wiki\u91cc\u9762\u627e\u5230<br \/><br \/>"
+    },
+    "defaultDocumentation1": {
+        "message": "\u5b66\u4e60Betaflight\u6700\u597d\u7684\u8d44\u6e90\u662f\u4f7f\u7528Betaflight wiki\u3002 \u53ef\u4ee5\u70b9\u51fb <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\" target=\"_blank\">\u8fd9\u91cc<\/a>."
+    },
+    "defaultDocumentation2": {
+        "message": "\u6700\u65b0\u53d1\u5e03\u7248\u672c\u7684\u4fe1\u606f\u53ef\u4ee5\u5728<a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\">\u8fd9\u91cc\u627e\u5230<\/a>."
+    },
+    "defaultSupportHead": {
+        "message": "\u652f\u6301"
+    },
+    "defaultSupportSubline1": {
+        "message": "\u652f\u6301\u8d44\u6e90"
+    },
+    "defaultSupportSubline2": {
+        "message": "\u5f00\u53d1\u8005"
+    },
+    "defaultSupport": {
+        "message": "\u5982\u679c\u9700\u8981\u98de\u63a7\u652f\u6301\uff0c\u8bf7\u5148\u641c\u7d22\u8bba\u575b\u6216\u8005\u54a8\u8be2\u98de\u63a7\u7684\u751f\u4ea7\u5546\u3002<br \/><br \/>"
+    },
+    "defaultSupport1": {
+        "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups thread<\/a>"
+    },
+    "defaultSupport2": {
+        "message": "<a href=\"http:\/\/betaflight.info\" target=\"_blank\">Betaflight Wiki<\/a>"
+    },
+    "defaultSupport3": {
+        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight \u8bbe\u7f6e\u6559\u7a0b\u89c6\u9891<\/a>"
+    },
+    "defaultSupport4": {
+        "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">Betaflight \u5f00\u53d1 slack<\/a>"
+    },
+    "initialSetupBackupAndRestoreApiVersion": {
+        "message": "<span class=\"message-negative\">\u5907\u4efd\u548c\u6062\u590d\u529f\u80fd\u4e0d\u53ef\u7528.<\/span> \u98de\u63a7\u56fa\u4ef6\u7684 API version <span class=\"message-negative\">$1<\/span>, \u6fc0\u6d3b\u5907\u4efd\u548c\u6062\u590d\u9700\u8981<span class=\"message-positive\">$2<\/span>. \u8bf7\u4f7f\u7528CLI\u6765\u5907\u4efd\u98de\u63a7\u7684\u8bbe\u7f6e\uff0c\u8be6\u7ec6\u4fe1\u606f\u8bf7\u67e5\u9605Betaflight\u6587\u6863"
+    },
+    "initialSetupButtonCalibrateAccel": {
+        "message": "\u6821\u51c6\u52a0\u901f\u5ea6\u8ba1"
+    },
+    "initialSetupCalibrateAccelText": {
+        "message": "\u628a\u98de\u63a7\u6216\u8005\u98de\u673a\u653e<strong>\u6c34\u5e73\u7684<\/strong>,\u6267\u884c\u6821\u51c6\u52a0\u901f\u5ea6\u8ba1,\u98de\u63a7\u6216\u8005\u98de\u673a\u5728\u6821\u51c6\u8fc7\u7a0b\u4e2d,\u8bf7\u4e0d\u8981\u79fb\u52a8\u98de\u63a7\u6216\u8005\u98de\u673a"
+    },
+    "initialSetupButtonCalibrateMag": {
+        "message": "\u6821\u51c6\u78c1\u573a\u8ba1"
+    },
+    "initialSetupCalibrateMagText": {
+        "message": "\u572830\u79d2\u89c4\u5b9a\u65f6\u95f4\u5185\u5b8c\u62103 \u4e2a\u8f74\uff08XYZ\uff09\u81f3\u5c11<strong>360\u5ea6<\/strong> \u8f6c\u52a8\uff0c\u6765\u6821\u51c6\u78c1\u573a\u8ba1\u3002"
+    },
+    "initialSetupButtonCalibratingText": {
+        "message": "\u6821\u51c6\u4e2d"
+    },
+    "initialSetupButtonReset": {
+        "message": "\u91cd\u7f6e\u8bbe\u7f6e"
+    },
+    "initialSetupResetText": {
+        "message": "\u6062\u590d<strong>\u9ed8\u8ba4\u8bbe\u7f6e<\/strong>"
+    },
+    "initialSetupButtonBackup": {
+        "message": "\u5907\u4efd"
+    },
+    "initialSetupButtonRestore": {
+        "message": "\u6062\u590d"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "<strong>\u5907\u4efd<\/strong> \u4f60\u7684\u8bbe\u7f6e\u4ee5\u9632configurator\u51fa\u73b0\u65e0\u53cd\u5e94\u610f\u5916 \uff0c<strong>CLI<\/strong>\u8bbe\u7f6e <span class=\"message-negative\">\u6ca1\u6709<\/span> \u5305\u62ec - \u4f7f\u7528 'dump' CLI \u547d\u4ee4\u67e5\u770b"
+    },
+    "initialSetupBackupSuccess": {
+        "message": "\u5907\u4efd\u4fdd\u5b58<span class=\"message-positive\">\u6210\u529f<\/span>"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "\u914d\u7f6e\u6062\u590d<span class=\"message-positive\">\u6210\u529f<\/span>"
+    },
+    "initialSetupButtonResetZaxis": {
+        "message": "\u91cd\u7f6eZ \u8f74\uff0c\u8865\u507f: 0 \u5ea6"
+    },
+    "initialSetupButtonResetZaxisValue": {
+        "message": "\u91cd\u7f6eZ \u8f74\uff0c\u8865\u507f: : $1 \u5ea6"
+    },
+    "initialSetupMixerHead": {
+        "message": "\u6df7\u63a7 \u6a21\u5f0f"
+    },
+    "initialSetupThrottleHead": {
+        "message": "\u6cb9\u95e8\u8bbe\u7f6e"
+    },
+    "initialSetupMinimum": {
+        "message": "\u6700\u5c0f\u503c"
+    },
+    "initialSetupMaximum": {
+        "message": "\u6700\u5927\u503c"
+    },
+    "initialSetupFailsafe": {
+        "message": "\u5931\u63a7\u4fdd\u62a4"
+    },
+    "initialSetupMinCommand": {
+        "message": "\u6700\u5c0f\u6cb9\u95e8"
+    },
+    "initialSetupBatteryHead": {
+        "message": "\u7535\u6c60"
+    },
+    "initialSetupMinCellV": {
+        "message": "\u6bcf\u8282\u7535\u6c60\u6700\u5c0f\u7535\u538b"
+    },
+    "initialSetupMaxCellV": {
+        "message": "\u6bcf\u8282\u7535\u6c60\u6700\u5927\u7535\u538b"
+    },
+    "initialSetupVoltageScale": {
+        "message": "\u7535\u538b\u8ba1\u6bd4\u4f8b"
+    },
+    "initialSetupAccelTrimsHead": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1\u5fae\u8c03"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
+    "initialSetupMagHead": {
+        "message": "\u78c1\u573a\u8ba1"
+    },
+    "initialSetupDeclination": {
+        "message": "\u504f\u5dee"
+    },
+    "initialSetupInfoHead": {
+        "message": "\u4fe1\u606f"
+    },
+    "initialSetupBattery": {
+        "message": "\u7535\u6c60\u7535\u538b"
+    },
+    "initialSetupBatteryValue": {
+        "message": "$1 V"
+    },
+    "initialSetupDrawn": {
+        "message": "\u4f7f\u7528\u5bb9\u91cf"
+    },
+    "initialSetupDrawing": {
+        "message": "\u7535\u6d41"
+    },
+    "initialSetupBatteryMahValue": {
+        "message": "$1 mAh"
+    },
+    "initialSetupBatteryAValue": {
+        "message": "$1 A"
+    },
+    "initialSetupRSSI": {
+        "message": "RSSI"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 %"
+    },
+    "initialSetupArmingDisableFlags": {
+        "message": "\u7981\u6b62\u5f00\u9501\u6570\u5b57\uff1a"
+    },
+    "initialSetupArmingAllowed": {
+        "message": "\u5141\u8bb8\u5f00\u9501"
+    },
+    "initialSetupArmingDisableFlagsTooltip": {
+        "message": "\u5217\u51fa\u6240\u6709\u5f71\u54cd\u5f00\u9501\u7684\u6807\u5fd7\u6570\u5b57\u3002\u5f53\u5c1d\u8bd5\u5f00\u9501\u65f6\uff0c\u8702\u9e23\u5668\u63d0\u793a\u97f3\u54cd\u7684\u6b21\u6570\u5bf9\u5e94\uff0c\u7b2c\u4e00\u4e2a\u4e5f\u662f\u6700\u4e3b\u8981\u7684\u4e00\u4e2a\u6570\u5b57\u3002\u5173\u4e8e\u5f00\u9501\u6b65\u9aa4\u548c\u5b89\u5168\u63aa\u65bd\u8bf7\u53c2\u9605Wiki\u6587\u6863\u627e\u51fa\u6570\u5b57\u5bf9\u5e94\u7684\u539f\u56e0"
+    },
+    "initialSetupGPSHead": {
+        "message": "GPS"
+    },
+    "initialSetupInstrumentsHead": {
+        "message": "\u4eea\u8868"
+    },
+    "initialSetupButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "initialSetupModel": {
+        "message": "\u6a21\u578b:$1"
+    },
+    "initialSetupAttitude": {
+        "message": "$1 \u5ea6"
+    },
+    "initialSetupAccelCalibStarted": {
+        "message": "\u5f00\u59cb\u52a0\u901f\u5ea6\u8ba1\u6821\u51c6"
+    },
+    "initialSetupAccelCalibEnded": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1\u6821\u51c6 <span class=\"message-positive\">\u5b8c\u6210<\/span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "\u78c1\u573a\u8ba1\u6821\u51c6"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "\u78c1\u573a\u8ba1\u6821\u51c6 <span class=\"message-positive\">\u5b8c\u6210<\/span>"
+    },
+    "initialSetupSettingsRestored": {
+        "message": "\u6062\u590d\u5230<strong>\u9ed8\u8ba4<\/strong>\u8bbe\u7f6e"
+    },
+    "initialSetupEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u4fdd\u5b58\u6210\u529f<\/span>"
+    },
+    "featureNone": {
+        "message": "&lt;\u8bf7\u9009\u62e9&gt;"
+    },
+    "featureRX_PPM": {
+        "message": "PPM \u63a5\u53d7\u673a"
+    },
+    "featureVBAT": {
+        "message": "\u7535\u6c60\u7535\u538b\u68c0\u6d4b"
+    },
+    "featureINFLIGHT_ACC_CAL": {
+        "message": "\u5b9e\u65f6\u6c34\u5e73\u6821\u51c6"
+    },
+    "featureRX_SERIAL": {
+        "message": "\u4e32\u884c\u6570\u5b57\u63a5\u6536\u673a\uff08SPEKSAT, SBUS, SUMD\uff09"
+    },
+    "featureMOTOR_STOP": {
+        "message": "\u5f00\u9501\u4e0d\u8f6c\u52a8\u7535\u673a"
+    },
+    "featureSERVO_TILT": {
+        "message": "\u8235\u673a\u4e91\u53f0"
+    },
+    "featureSOFTSERIAL": {
+        "message": "\u6fc0\u6d3b\u57fa\u4e8eCPU \u7684\u6a21\u62df\u4e32\u53e3"
+    },
+    "featureSOFTSERIALTip": {
+        "message": "\u5f00\u542f\u540e\uff0c\u8bf7\u5728\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u4e32\u53e3"
+    },
+    "featureGPS": {
+        "message": "\u7528GPS \u505a\u5bfc\u822a\u548c\u9065\u611f\u6570\u636e"
+    },
+    "featureGPSTip": {
+        "message": "\u8bf7\u5148\u8bbe\u7f6e\u4e32\u53e3"
+    },
+    "featureSONAR": {
+        "message": "\u58f0\u5450"
+    },
+    "featureTELEMETRY": {
+        "message": "\u9065\u63a7\u9065\u8f93\u51fa"
+    },
+    "featureCURRENT_METER": {
+        "message": "\u68c0\u6d4b\u7535\u6c60\u7535\u6d41"
+    },
+    "feature3D": {
+        "message": "3D \u6a21\u5f0f\uff08\u9700\u8981\u53ef\u4ee5\u53cd\u5411\u7535\u8c03\u652f\u6301\uff09"
+    },
+    "featureRX_PARALLEL_PWM": {
+        "message": "PWM \u63a5\u6536\u673a\uff08\u6bcf\u4e2a\u901a\u9053\u90fd\u9700\u8981\u63a5\u7ebf\uff09"
+    },
+    "featureRX_MSP": {
+        "message": "MSP \u63a5\u6536\u673a\u8f93\u5165\uff08\u901a\u8fc7MSP \u7aef\u53e3 \u63a7\u5236\uff09"
+    },
+    "featureRSSI_ADC": {
+        "message": "\u6a21\u62dfRSSI \u8f93\u5165"
+    },
+    "featureLED_STRIP": {
+        "message": "\u652f\u6301\u5f69\u8272 RGB LED\u706f\u5e26"
+    },
+    "featureDISPLAY": {
+        "message": "OLED \u663e\u793a\u5c4f"
+    },
+    "featureDISPLAYTip": {
+        "message": "\u5982\u679c\u5f00\u542f\u8fd9\u4e2a\u529f\u80fd\uff0c\u98de\u63a7\u6ca1\u6709\u68c0\u6d4b\u5230\u663e\u793a\u5c4f\uff0c\u98de\u63a7\u91cd\u542f\u4f1a\u5ef6\u65f6\u5927\u698210\u79d2\u949f"
+    },
+    "featureONESHOT125": {
+        "message": "ONESHOT \u7535\u8c03\u652f\u6301"
+    },
+    "featureONESHOT125Tip": {
+        "message": "\u5f00\u59cb\u4e4b\u524d\uff0c\u8bf7\u65ad\u5f00\u62c6\u4e0b\u87ba\u65cb\u6868\uff0c\u548c\u62d4\u6389\u7535\u6c60"
+    },
+    "featureBLACKBOX": {
+        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55\u5668"
+    },
+    "featureBLACKBOXTip": {
+        "message": "\u6253\u5f00\u540e\uff0c\u8bf7\u5728\u9ed1\u5323\u5b50\u9875\u9762\u8bbe\u7f6e"
+    },
+    "featureRX_SPI": {
+        "message": "SPI \u63a5\u6536\u673a\u652f\u6301"
+    },
+    "featureESC_SENSOR": {
+        "message": "\u4f7f\u7528KISS\/BLHELI_32 ESC\u505a\u4f20\u611f\u5668"
+    },
+    "featureCHANNEL_FORWARDING": {
+        "message": "\u76f4\u8fde AUX \u901a\u9053\u5230\u8235\u673a\u8f93\u51fa"
+    },
+    "featureTRANSPONDER": {
+        "message": "\u6bd4\u8d5b\u5e94\u7b54\u5668"
+    },
+    "featureTRANSPONDERTip": {
+        "message": "\u5f00\u542f\u540e\uff0c\u8bf7\u5728\u6bd4\u8d5b\u5e94\u7b54\u5668\u9875\u9762\u8bbe\u7f6e"
+    },
+    "featureAIRMODE": {
+        "message": "\u6c38\u4e45\u6253\u5f00Airmode"
+    },
+    "featureSUPEREXPO_RATES": {
+        "message": "Super Expo Rates"
+    },
+    "featureSDCARD": {
+        "message": "\u652f\u6301SD\u5361\uff08\u8bb0\u5f55\uff09"
+    },
+    "featureOSD": {
+        "message": "OSD"
+    },
+    "featureVTX": {
+        "message": "\u56fe\u4f20"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "\u5927\u6cb9\u95e8\u77ac\u65f6\u589e\u5927 I \u503c\u53d8\u5316"
+    },
+    "featureDYNAMIC_FILTER": {
+        "message": "\u52a8\u6001\u9640\u87ba\u8282\u70b9\u6ee4\u6ce2"
+    },
+    "featureFAILSAFE": {
+        "message": "\u6253\u5f00\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4"
+    },
+    "featureFAILSAFEOld": {
+        "message": "\u6253\u5f00\u5931\u63a7\u4fdd\u62a4"
+    },
+    "featureFAILSAFETip": {
+        "message": "<strong>\u6ce8\u610f:<\/strong> \u5f53\u6253\u5f00\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4, \u98de\u63a7\u5c06\u4f7f\u7528<strong>\u81ea\u52a8<\/strong> \u5931\u63a7\u4fdd\u62a4\u8bbe\u7f6e\uff0c\u5ffd\u7565\u7528\u6237\u8bbe\u7f6e\u7684 \u901a\u9053(roll, Pitch, Yaw and Throttle)\u6570\u636e"
+    },
+    "featureFAILSAFEOldTip": {
+        "message": "\u5f53\u63a5\u6536\u673a\u4fe1\u53f7\u4e22\u5931\uff0c\u4f7f\u7528\u5931\u63a7\u4fdd\u62a4\u8bbe\u5b9a"
+    },
+    "configurationFeatureEnabled": {
+        "message": "\u6253\u5f00"
+    },
+    "configurationFeatureName": {
+        "message": "\u529f\u80fd"
+    },
+    "configurationFeatureDescription": {
+        "message": "\u8bf4\u660e"
+    },
+    "configurationMixer": {
+        "message": "\u6df7\u63a7"
+    },
+    "configurationFeatures": {
+        "message": "\u5176\u4ed6\u529f\u80fd"
+    },
+    "configurationReceiver": {
+        "message": "\u63a5\u6536\u673a"
+    },
+    "configurationReceiverMode": {
+        "message": "\u63a5\u6536\u673a\u6a21\u5f0f"
+    },
+    "configurationRSSI": {
+        "message": "RSSI\uff08\u63a5\u6536\u673a\u4fe1\u53f7\u5f3a\u5ea6\uff09"
+    },
+    "configurationRSSIHelp": {
+        "message": "RSSI\u662f\u63a5\u6536\u673a\u8f93\u51fa\u7684\u63a5\u53d7\u4fe1\u53f7\u7684\u5f3a\u5ea6\u4fe1\u606f\u3002\u8be5\u4fe1\u53f7\u5c06\u4f1a\u975e\u5e38\u6709\u7528\u5f53\u4f60\u98de\u51fa\u9065\u63a7\u8303\u56f4\u6216\u8005\u53d7\u5230\u65e0\u7ebf\u5e72\u6270"
+    },
+    "configurationEscFeatures": {
+        "message": "\u7535\u8c03\/\u7535\u673a\u529f\u80fd"
+    },
+    "configurationFeaturesHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong> \u4e0d\u662f\u6240\u6709\u7684\u529f\u80fd\u90fd\u80fd\u540c\u65f6\u6253\u5f00\uff0c\u6709\u7684\u529f\u80fd\u65f6\u4e92\u76f8\u51b2\u7a81\u7684\uff0c \u5f53\u98de\u63a7\u68c0\u6d4b\u5230\u6709\u51b2\u7a81\u7684\u529f\u80fd\u3002\u98de\u63a7\u5c06\u4f1a\u5173\u95ed\u8be5\u529f\u80fd<br \/><strong>\u6ce8\u610f:<\/strong>  <span class=\"message-negative\">\u5148<\/span> \u8bbe\u7f6e\u4e32\u53e3\uff0c\u5728\u6253\u5f00\u9700\u8981\u7528\u5230\u4e32\u53e3\u7684\u529f\u80fd"
+    },
+    "configurationSerialRXHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong>\u5f00\u542fRX_SERIAL \u529f\u80fd\u65f6\uff0c\u8bf7\u5728\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u76f8\u5e94\u7684\u4e32\u53e3\uff0c\u548c\u9009\u62e9 Serial Receiver Provider."
+    },
+    "configurationSpiRxHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong> SPI \u63a5\u6536\u673a\u9700\u8981\u677f\u8f7d\u786c\u4ef6\u8fde\u63a5\u5230SPI \u63a5\u53e3"
+    },
+    "configurationOtherFeaturesHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong>\u4e0d\u662f\u6240\u6709\u98de\u63a7\u90fd\u80fd\u6253\u5f00\u6240\u6709\u7684\u529f\u80fd.\u5982\u679c\u4f60\u6253\u5f00\u4e86\u67d0\u4e2a\u529f\u80fd\uff0c\u5f53\u4f60\u4fdd\u5b58\u98de\u63a7\u91cd\u542f\u4ee5\u540e\uff0c\u529f\u80fd\u7f16\u7a0b\u5173\u95ed\u3002\u8bf4\u660e\u4f60\u7684\u98de\u63a7\u4e0d\u652f\u6301\u8be5\u529f\u80fd"
+    },
+    "configurationBoardAlignment": {
+        "message": "\u98de\u63a7\u548c\u4f20\u611f\u5668\u65b9\u5411"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "\u6a2a\u6eda \u5ea6"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "\u4fef\u4ef0 \u5ea6"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "\u65b9\u5411 \u5ea6"
+    },
+    "configurationSensorAlignmentGyro": {
+        "message": "\u9640\u87ba\u4eea\u65b9\u5411"
+    },
+    "configurationSensorAlignmentAcc": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1 \u65b9\u5411"
+    },
+    "configurationSensorAlignmentMag": {
+        "message": "\u78c1\u573a\u8ba1\u65b9\u5411"
+    },
+    "configurationSensorAlignmentDefaultOption": {
+        "message": "\u9ed8\u8ba4"
+    },
+    "configurationAccelTrims": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1\u5fae\u8c03"
+    },
+    "configurationAccelTrimRoll": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1\u6a2a\u6eda\u5fae\u8c03"
+    },
+    "configurationAccelTrimPitch": {
+        "message": "\u52a0\u901f\u5ea6\u4fef\u4ef0\u5fae\u8c03"
+    },
+    "configurationArming": {
+        "message": "\u6b63\u5728\u5f00\u9501"
+    },
+    "configurationArmingHelp": {
+        "message": "\u67d0\u4e9b\u5f00\u9501\u9009\u9879\u53ef\u80fd\u9700\u8981\u5f00\u542f\u52a0\u901f\u5ea6\u8ba1"
+    },
+    "configurationMagDeclination": {
+        "message": "\u78c1\u573a\u8ba1\u4fee\u6b63[\u5ea6]"
+    },
+    "configurationReverseMotorSwitch": {
+        "message": "\u53cd\u8f6c\u7535\u673a\u8f6c\u5411"
+    },
+    "configurationReverseMotorSwitchHelp": {
+        "message": "\u6253\u5f00\u8fd9\u4e2a\u529f\u80fd\uff0c\u5c06\u4f1a"
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "[seconds]\u4ee5\u540e\u4e0a\u9501\u7535\u673a\uff08\u9700\u8981\u529f\u80fd\uff09"
+    },
+    "configurationDisarmKillSwitch": {
+        "message": "\u4e0a\u9501\u7535\u673a\uff0c\u4e0d\u7ba1\u6cb9\u95e8\u4f4d\u7f6e\uff08\u5982\u679c\u4f60\u6a21\u5f0f\u9875\u9762\u91cc\u8bbe\u7f6e\u4e86\u89e3\u9501\u5f00\u5173\uff09"
+    },
+    "configurationDisarmKillSwitchHelp": {
+        "message": "\u5f53\u68c0\u6d4b\u5230\u6cb9\u95e8\u4f4d\u7f6e\u4e0d\u662f\u6700\u4f4e\uff0c\u4e0a\u9501\u7535\u673a\u3002\u6ce8\u610f\uff1a\u5f53\u6fc0\u6d3b\u8fd9\u4e2a\u9009\u9879,\u6709\u53ef\u80fd\u4f1a\u5728\u98de\u884c\u4e2d\u610f\u5916\u7684\u901a\u8fc7\u5f00\u5173\u89e6\u53d1\u4e0a\u9501\u3002"
+    },
+    "configurationDigitalIdlePercent": {
+        "message": "\u7535\u673a\u6020\u901f\u6570\u503c[%]"
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "\u8fd9\u91cc\u7684\u201d\u6020\u901f\u201c\u503c\u6307\u7684\u6700\u5927\u6cb9\u95e8\u7684\u767e\u5206\u6bd4\u3002\u5f53\u98de\u63a7\u5f00\u9501\uff0c\u5e76\u4e14\u6cb9\u95e8\u5728\u6700\u5c0f\u4f4d\u7f6e\u65f6\u3002\u98de\u63a7\u53d1\u8fd9\u4e2a\u6570\u503c\u5230\u7535\u8c03\u3002\u589e\u52a0\u8fd9\u4e2a\u767e\u5206\u6bd4\uff0c\u4f1a\u589e\u52a0\u6020\u901f\u7535\u673a\u7684\u8f6c\u901f\u3002"
+    },
+    "configurationThrottleMinimum": {
+        "message": "\u6700\u5c0f\u6cb9\u95e8\uff08\u4e0a\u9501\u65f6\u98de\u63a7\u8f93\u51fa\u7ed9\u7535\u8c03\u7684\u6700\u4f4e\u7684\u6cb9\u95e8\u6570\u503c\uff09"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "\u8fd9\u91cc\u7684\u201d\u6020\u901f\u201c\u503c\u6307\u7684\u5f53\u98de\u63a7\u5f00\u9501\uff0c\u5e76\u4e14\u6cb9\u95e8\u5728\u6700\u5c0f\u4f4d\u7f6e\u65f6\u3002\u98de\u63a7\u53d1\u8fd9\u4e2a\u6570\u503c\u5230\u7535\u8c03\u3002\u589e\u52a0\u8fd9\u4e2a\u6570\u503c\uff0c\u4f1a\u589e\u52a0\u6020\u901f\u7535\u673a\u7684\u8f6c\u901f"
+    },
+    "configurationThrottleMaximum": {
+        "message": "\u6700\u5927\u6cb9\u95e8\u503c\uff08\u98de\u63a7\u53d1\u7ed9\u7535\u8c03\u7684\u6700\u5927\u503c\uff09"
+    },
+    "configurationThrottleMinimumCommand": {
+        "message": "\u6700\u5c0f\u547d\u4ee4\u7535\u8c03\u6570\u503c(\u4e0a\u9501\u65f6\uff0c\u98de\u63a7\u53d1\u7ed9\u7535\u8c03\u7684\u6570\u503c)"
+    },
+    "configurationThrottleMinimumCommandHelp": {
+        "message": "\u8fd9\u4e2a\u6570\u503c\u662f\u98de\u63a7\u4e0a\u9501\u7535\u673a\u65f6\u5019\u53d1\u7ed9\u7535\u8c03\u6570\u503c\u3002\u5982\u679c\u9ed8\u8ba4\u6570\u503c\u4e0a\u9501\u65f6\u5019\u7535\u673a\u4e0d\u505c\u8f6c\uff0c\u964d\u4f4e\u4f4e\u8fd9\u4e2a\u6570\u503c\uff08\u5927\u591a\u6570\u7535\u8c03\u4f1a\u57281000\u505c\u6b62\u7535\u673a\u8f6c\u52a8\uff09"
+    },
+    "configurationBeeper": {
+        "message": "\u8702\u9e23\u5668\u8bbe\u7f6e"
+    },
+    "beeperGYRO_CALIBRATED": {
+        "message": "beeps \u5f53\u9640\u87ba\u5df2\u7ecf\u6821\u51c6\uff0c\u6fc0\u6d3b\u8702\u9e23\u5668"
+    },
+    "beeperRX_LOST": {
+        "message": "beeps \u5f53\u68c0\u6d4b\u5230\u9065\u63a7\u673a\u5173\u95ed\u6216\u8005\u4e22\u5931\u63a5\u6536\u673a\u4fe1\u53f7\uff08\u91cd\u590d\u76f4\u5230\u63a5\u6536\u5230\u9065\u63a7\u5668\u4fe1\u53f7\uff09"
+    },
+    "beeperRX_LOST_LANDING": {
+        "message": "beep sos \u58f0\u97f3\uff0c \u98de\u63a7\u89e3\u9501\uff0c\u5e76\u68c0\u6d4b\u5230\u9065\u63a7\u4fe1\u53f7\u4e22\u5931"
+    },
+    "beeperDISARMING": {
+        "message": "beep \u5f53\u4e0a\u9501\u98de\u63a7"
+    },
+    "beeperARMING": {
+        "message": "beep \u5f53\u98de\u63a7\u89e3\u9501\u65f6"
+    },
+    "beeperARMING_GPS_FIX": {
+        "message": "beep \u7279\u5b9a\u7684\u58f0\u97f3 \u5f53\u98de\u63a7\u89e3\u9501\u5e76\u4e14GPS \u9501\u5b9a\u536b\u661f"
+    },
+    "beeperBAT_CRIT_LOW": {
+        "message": "\u6301\u7eed beeps \u957f\u8b66\u544a\u8702\u9e23\u58f0\u97f3\uff0c \u5f53\u68c0\u6d4b\u5230\u7535\u6c60\u7535\u538b\u592a\u4f4e"
+    },
+    "beeperBAT_LOW": {
+        "message": "beeps\u8b66\u544a\u8702\u9e23\u97f3\uff0c\u5f53\u68c0\u6d4b\u5230\u7535\u6c60\u7535\u538b\u504f\u4f4e"
+    },
+    "beeperGPS_STATUS": {
+        "message": ""
+    },
+    "beeperRX_SET": {
+        "message": "beeps \u5f53\u4f7f\u7528\u5f00\u5173\u901a\u9053\u6fc0\u6d3b\u8702\u9e23\u5668\u3002 \u6216\u8005\u5f53GPS\u529f\u80fd\u6253\u5f00\uff0cbeeps \u987a\u5e8f\u7684\u58f0\u97f3\u63d0\u793a\u63a5\u6536\u5230\u7684\u536b\u661f\u6570"
+    },
+    "beeperDISARM_REPEAT": {
+        "message": "beeps \u5f53\u9065\u611f\u6253\u5230\u4e0a\u9501\u4f4d\u7f6e"
+    },
+    "beeperACC_CALIBRATION": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1\u98de\u884c\u4e2d\u6821\u51c6\u5b8c\u6210\u786e\u8ba4"
+    },
+    "beeperACC_CALIBRATION_FAIL": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1\u98de\u884c\u4e2d\u6821\u51c6\u5931\u8d25"
+    },
+    "beeperREADY_BEEP": {
+        "message": "\u53d1\u51fa\u94c3\u58f0\uff0c\u5f53GPS\u9501\u5b9a\uff0c\u51c6\u5907\u5bfc\u822a"
+    },
+    "beeperMULTI_BEEPS": {
+        "message": ""
+    },
+    "beeperARMED": {
+        "message": "\u6301\u7eed\u53d1\u51fa\u8b66\u544a\u97f3\uff0c\u5f53\u98de\u63a7\u5f00\u9501\uff08\u77e5\u9053\u4e0a\u9501\uff0c\u6216\u8005\u4e0a\u63a8\u6cb9\u95e8\uff09"
+    },
+    "beeperSYSTEM_INIT": {
+        "message": "\u5f53\u4e0a\u7535\u662f\uff0c\u53d1\u51fa\u521d\u59cb\u5316\u58f0\u97f3\u3002"
+    },
+    "beeperUSB": {
+        "message": "\u5982\u679c\u4e0d\u60f3\u8702\u9e23\u5668\u5728\u4f7f\u7528USB\u65f6\u5019\u53d1\u51fa\u58f0\u97f3\uff0c\u5173\u6389\u8fd9\u4e2a\u9009\u9879"
+    },
+    "beeperBLACKBOX_ERASE": {
+        "message": "beep\uff0c\u5f53\u9ed1\u5323\u5b50\u64e6\u9664\u5b8c\u6210 "
+    },
+    "configuration3d": {
+        "message": "3D \u7535\u8c03\/\u7535\u673a\u529f\u80fd"
+    },
+    "configuration3dDeadbandLow": {
+        "message": "3D \u901a\u9053\u6b7b\u533a\u4f4e"
+    },
+    "configuration3dDeadbandHigh": {
+        "message": "3D \u901a\u9053\u6b7b\u533a\u9ad8"
+    },
+    "configuration3dNeutral": {
+        "message": "3D \u4e2d\u4f4d"
+    },
+    "configuration3dDeadbandThrottle": {
+        "message": "3D \u6b7b\u533a\u6cb9\u95e8"
+    },
+    "configurationSystem": {
+        "message": "\u7cfb\u7edf\u8bbe\u7f6e"
+    },
+    "configurationLoopTime": {
+        "message": "\u98de\u63a7\u5faa\u73af\u65f6\u95f4"
+    },
+    "configurationCalculatedCyclesSec": {
+        "message": "\u5faa\u73af\/\u79d2[Hz]"
+    },
+    "configurationLoopTimeHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong>\u786e\u5b9a\u4f60\u7684\u98de\u63a7\u53ef\u4ee5\u8fd0\u884c\u8fd9\u901f\u5ea6\uff0c\u68c0\u67e5CPU\u7684\u5faa\u73af\u65f6\u95f4\u7a33\u5b9a\u6027\u3002\u6539\u53d8\u901f\u5ea6\u53ef\u80fd\u9700\u8981\u91cd\u65b0\u8c03\u6574PID. \u63d0\u793a:\u5173\u95ed\u52a0\u901f\u5ea6\u8ba1\u548c\u5176\u4ed6\u4f20\u611f\u5668\u53ef\u4ee5\u8ba9cpu\u8fd0\u884c\u66f4\u5feb"
+    },
+    "configurationGPS": {
+        "message": "GPS"
+    },
+    "configurationGPSProtocol": {
+        "message": "\u534f\u8bae"
+    },
+    "configurationGPSBaudrate": {
+        "message": "\u6ce2\u7279\u7387"
+    },
+    "configurationGPSubxSbas": {
+        "message": "\u5730\u9762\u8f85\u52a9\u7c7b\u578b"
+    },
+    "configurationGPSAutoBaud": {
+        "message": "\u81ea\u52a8\u6ce2\u7279\u7387"
+    },
+    "configurationGPSAutoConfig": {
+        "message": "\u81ea\u52a8\u8bbe\u7f6e"
+    },
+    "configurationGPSHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong>\u5982\u679c\u8981\u4f7f\u7528GPS\uff0c\u5148\u8bbe\u7f6e\u7528\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u4e32\u53e3"
+    },
+    "configurationSerialRX": {
+        "message": "\u4e32\u884c\u6570\u5b57\u63a5\u6536\u673a\u54c1\u724c"
+    },
+    "configurationSpiRX": {
+        "message": "SPI \u603b\u7ebf\u63a5\u53e3\u63a5\u6536\u673a\u63d0\u4f9b\u8005"
+    },
+    "configurationEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u4fdd\u5b58<\/span>"
+    },
+    "configurationButtonSave": {
+        "message": "\u4fdd\u5b58\u548c\u91cd\u542f"
+    },
+    "portsIdentifier": {
+        "message": "\u6807\u8bc6\u7b26"
+    },
+    "portsConfiguration": {
+        "message": "\u8bbe\u7f6e\/MSP"
+    },
+    "portsSerialRx": {
+        "message": "\u4e32\u884c\u6570\u5b57\u63a5\u6536\u673a"
+    },
+    "portsSensorIn": {
+        "message": "\u4f20\u611f\u5668\u8f93\u5165"
+    },
+    "portsTelemetryOut": {
+        "message": "\u9065\u63a7\u9065\u611f\u8f93\u51fa"
+    },
+    "portsPeripherals": {
+        "message": "\u5916\u56f4\u8bbe\u5907"
+    },
+    "portsHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong> \u4e0d\u662f\u6240\u6709\u7684\u7ec4\u5408\u53ef\u4ee5\u540c\u65f6\u5de5\u4f5c\uff0c\u5982\u679c\u98de\u63a7\u68c0\u67e5\u5230\u67d0\u7ec4\u5408\u4e0d\u80fd\u540c\u65f6\u5de5\u4f5c\u3002\u98de\u63a7\u5c06\u4f1a\u91cd\u7f6e\u4e32\u53e3\u8bbe\u7f6e."
+    },
+    "portsMSPHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong> \u4e0d<span class=\"message-negative\">\u8981<\/span> \u5173\u95ed\u7b2c\u4e00\u4e2a\u4e32\u53e3\u7684MSP\u9009\u9879\uff0c\u5982\u679c\u4f60\u5173\u95ed\u4e86\u7b2c\u4e00\u4e2a\u4e32\u53e3\u7684MSP\uff0c \u4f60\u53ef\u80fd\u9700\u8981\u91cd\u65b0\u70e7\u5199\u56fa\u4ef6\u548c\u6e05\u7a7a\u6240\u6709\u4fdd\u5b58\u7684\u8bbe\u7f6e"
+    },
+    "portsFirmwareUpgradeRequired": {
+        "message": "\u56fa\u4ef6\u5347\u7ea7 <span class=\"message-negative\">\u9700\u8981<\/span>.\u4e32\u53e3\u8bbe\u7f6e&lt;1.8.0\u4e0d\u652f\u6301"
+    },
+    "portsButtonSave": {
+        "message": "\u4fdd\u5b58\u548c\u91cd\u542f"
+    },
+    "portsTelemetryDisabled": {
+        "message": "\u5173\u95ed"
+    },
+    "portsFunction_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_GPS": {
+        "message": "GPS"
+    },
+    "portsFunction_TELEMETRY_FRSKY": {
+        "message": "Frsky"
+    },
+    "portsFunction_TELEMETRY_HOTT": {
+        "message": "HoTT"
+    },
+    "portsFunction_TELEMETRY_LTM": {
+        "message": "LTM"
+    },
+    "portsFunction_TELEMETRY_MAVLINK": {
+        "message": "MAVLink"
+    },
+    "portsFunction_TELEMETRY_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_TELEMETRY_SMARTPORT": {
+        "message": "SmartPort"
+    },
+    "portsFunction_TELEMETRY_IBUS": {
+        "message": "iBUS"
+    },
+    "portsFunction_TELEMETRY_JETIXBUS": {
+        "message": "JETIXBUS"
+    },
+    "portsFunction_TELEMETRY_CRSF": {
+        "message": "CRSF"
+    },
+    "portsFunction_TELEMETRY_SRXL": {
+        "message": "SRXL"
+    },
+    "portsFunction_ESC_SENSOR": {
+        "message": "\u7535\u8c03"
+    },
+    "portsFunction_RX_SERIAL": {
+        "message": "\u4e32\u884c\u63a5\u6536\u673a"
+    },
+    "portsFunction_BLACKBOX": {
+        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55"
+    },
+    "portsFunction_TBS_SMARTAUDIO": {
+        "message": "\u9ed1\u5c71\u7f8a \u56fe\u4f20"
+    },
+    "portsFunction_IRC_TRAMP": {
+        "message": "IRC Tramp"
+    },
+    "portsFunction_RUNCAM_DEVICE_CONTROL": {
+        "message": "RunCam \u8bbe\u5907"
+    },
+    "pidTuningUpgradeFirmwareToChangePidController": {
+        "message": "<span class=\"message-negative\">\u8c03\u6574PID \u63a7\u5236\u5668\u4e0d\u53ef\u7528, \u4f60\u53ef\u4ee5\u901a\u8fc7CLI \u6765\u8c03\u6574.<\/span> \u56fa\u4ef6 API \u7248\u672c<span class=\"message-negative\">$1<\/span>,\u529f\u80fd\u9700\u8981 <span class=\"message-positive\">$2<\/span>."
+    },
+    "pidTuningSubTabPid": {
+        "message": "PID \u8bbe\u7f6e"
+    },
+    "pidTuningSubTabFilter": {
+        "message": "\u6ee4\u6ce2\u5668\u8bbe\u7f6e"
+    },
+    "pidTuningShowAllPids": {
+        "message": "\u663e\u793a\u6240\u6709PID"
+    },
+    "pidTuningHideUnusedPids": {
+        "message": "\u9690\u85cf\u6ca1\u6709\u7528\u5230\u7684PID"
+    },
+    "pidTuningNonProfilePidSettings": {
+        "message": "\u914d\u7f6e\u6587\u4ef6\u72ec\u7acb\u7684PID\u8bbe\u7f6e"
+    },
+    "pidTuningAntiGravityGain": {
+        "message": "\u53cd\u91cd\u529b\u589e\u76ca"
+    },
+    "pidTuningAntiGravityThres": {
+        "message": "\u53cd\u91cd\u529b\u6781\u9650\u503c"
+    },
+    "pidTuningPidSettings": {
+        "message": "PID \u63a7\u5236\u5668\u8bbe\u7f6e"
+    },
+    "receiverRcInterpolation": {
+        "message": "RC \u63d2\u503c"
+    },
+    "receiverRcInterpolationHelp": {
+        "message": "\u7531\u4e8e\u9065\u63a7\u8bbe\u5907\u8fd0\u884c\u901f\u5ea6\u6ca1\u6709\u98de\u63a7PID\u8fd0\u884c\u901f\u5ea6\u5feb\uff0c\u5728PID \u66f4\u65b0\u7684\u65f6\u5019\u6709\u53ef\u80fd\u4ea7\u751f\u9065\u63a7\u4fe1\u53f7\u7a7a\u5f53\u3002 \u6253\u5f00\u9065\u63a7\u4fe1\u53f7\u63d2\u503c\u4fe1\u53f7\u4f1a\u5728\u65e0\u9065\u63a7\u4fe1\u53f7\u7684\u7a7a\u6863\u63d2\u5165\u9065\u63a7\u4fe1\u53f7\u8f93\u5165\uff0c\u4f1a\u5f97\u5230\u66f4\u52a0\u987a\u6ed1\u7684P\u548cD\u63a7\u5236\u3002"
+    },
+    "receiverRcInterpolationIntervalHelp": {
+        "message": "\u624b\u52a8\u7684\u9065\u63a7\u4fe1\u53f7\u63d2\u503c\u65f6\u5dee\u6a21\u5f0f \u6beb\u79d2"
+    },
+    "receiverRcInterpolationOff": {
+        "message": "\u5173\u95ed"
+    },
+    "receiverRcInterpolationDefault": {
+        "message": "\u9884\u8c03\u53c2\u6570"
+    },
+    "receiverRcInterpolationAuto": {
+        "message": "\u81ea\u52a8"
+    },
+    "receiverRcInterpolationManual": {
+        "message": "\u624b\u52a8"
+    },
+    "receiverRcInterpolationInterval": {
+        "message": "\u9065\u63a7\u4fe1\u53f7\u63d2\u503c\u95f4\u9699[\u6beb\u79d2]"
+    },
+    "pidTuningDtermSetpointTransition": {
+        "message": "D \u5b9a\u4f4d\u70b9\u8f6c\u6362"
+    },
+    "pidTuningDtermSetpoint": {
+        "message": "D \u5b9a\u4f4d\u70b9\u6bd4\u91cd"
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "With this parameter, D Setpoint Weight can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Setpoint Weight is kept constant at its configured value. When the stick is positioned below that point, Setpoint Weight is reduced proportionally, reaching 0 at the stick center position.<br> Value of 1 gives maximum smoothing effect, while value of 0 keeps the Setpoint Weight fixed at its configured value over the whole stick range."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "This parameter determines the stick accelerating effect within derivative component.<br> Value of 0 equals to old Measuemenent method where D only tracks gyro, while value of 1 equals to old Error method with equal gyro and stick tracking ratio.<br> Lower value equals to slower\/smoother stick response, while higher value provides more stick acceleration response.<br> Note that RC interpolation is recommended to be enabled with higher values to prevent control kicks making noise."
+    },
+    "pidTuningProportional": {
+        "message": "\u6bd4\u4f8b\u5355\u5143"
+    },
+    "pidTuningIntegral": {
+        "message": "\u79ef\u5206\u5355\u5143"
+    },
+    "pidTuningDerivative": {
+        "message": "\u5fae\u5206\u5355\u5143"
+    },
+    "pidTuningRcRate": {
+        "message": "RC Rate"
+    },
+    "pidTuningMaxVel": {
+        "message": "\u6700\u5927\u89d2\u901f\u5ea6 [\u5ea6\/\u79d2]"
+    },
+    "pidTuningRate": {
+        "message": "Rate"
+    },
+    "pidTuningSuperRate": {
+        "message": "Super Rate"
+    },
+    "pidTuningRatesPreview": {
+        "message": "Rates \u9884\u89c8"
+    },
+    "pidTuningRcExpo": {
+        "message": "RC Expo"
+    },
+    "pidTuningTPA": {
+        "message": "TPA"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "TPA \u65ad\u70b9"
+    },
+    "pidTuningFilter": {
+        "message": "\u6ee4\u6ce2\u5668"
+    },
+    "pidTuningFilterFrequency": {
+        "message": "\u9891\u7387"
+    },
+    "pidTuningRatesCurve": {
+        "message": "Rates"
+    },
+    "throttle": {
+        "message": "\u6cb9\u95e8"
+    },
+    "pidTuningButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "pidTuningButtonRefresh": {
+        "message": "\u5237\u65b0"
+    },
+    "pidTuningProfileHead": {
+        "message": "\u914d\u7f6e\u6587\u4ef6"
+    },
+    "pidTuningControllerHead": {
+        "message": "PID \u63a7\u5236\u5668"
+    },
+    "pidTuningCopyProfile": {
+        "message": "\u590d\u5236\u914d\u7f6e\u6587\u4ef6\u503c"
+    },
+    "pidTuningCopyRateProfile": {
+        "message": "\u590d\u5236rate\u914d\u7f6e\u6587\u4ef6\u503c"
+    },
+    "dialogCopyProfileTitle": {
+        "message": "\u590d\u5236\u914d\u7f6e\u6587\u4ef6\u503c"
+    },
+    "dialogCopyProfileNote": {
+        "message": "\u6240\u6709\u76ee\u6807\u914d\u7f6e\u6587\u4ef6\u7684\u6570\u503c\u5c06\u4f1a\u64e6\u9664\u548c\u6539\u5199"
+    },
+    "dialogCopyProfileConfirm": {
+        "message": "\u590d\u5236"
+    },
+    "dialogCopyProfileClose": {
+        "message": "\u53d6\u6d88"
+    },
+    "pidTuningResetProfile": {
+        "message": "\u91cd\u7f6e\u6240\u6709\u914d\u7f6e\u6587\u4ef6"
+    },
+    "pidTuningProfileReset": {
+        "message": "\u52a0\u8f7d\u9ed8\u8ba4\u914d\u7f6e\u6587\u4ef6"
+    },
+    "pidTuningReceivedProfile": {
+        "message": "\u5f53\u524d\u98de\u63a7\u914d\u7f6e\u6587\u4ef6: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningReceivedRateProfile": {
+        "message": "\u5f53\u524d\u98de\u63a7rate\u914d\u7f6e\u6587\u4ef6\uff1a<strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningLoadedProfile": {
+        "message": "\u52a0\u8f7d\u914d\u7f6e: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningLoadedRateProfile": {
+        "message": "\u52a0\u8f7d rate\u914d\u7f6e\u6587\u4ef6: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningDataRefreshed": {
+        "message": "PID \u6570\u636e<strong>\u5237\u65b0<\/strong>"
+    },
+    "pidTuningEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u4ee5\u4fdd\u5b58<\/span>"
+    },
+    "receiverHelp": {
+        "message": "\u8bf7\u9605\u8bfb\u6587\u6863\u501f\u624b\u673a\u90e8\u5206\uff0c\u914d\u7f6e\u4e32\u53e3\uff08\u5982\u679c\u9700\u8981\uff09\uff0c\u63a5\u6536\u673a\u6a21\u5f0f\uff08serial\/ppm\/pwm\uff09,\u4e32\u53e3\u63a5\u6536\u673a\u5382\u5bb6\uff0c\u7ed1\u5b9a\u63a5\u6536\u673a\uff0c\u8bbe\u7f6e\u901a\u9053\u6620\u5c04\uff0c\u914d\u7f6e\u6240\u6709\u901a\u9053\u6700\u5927\u548c\u6700\u5c0f\u503c\u4ece~1000 \u5230~2000.\u8bbe\u7f6e\u548c\u4fee\u6b63\u4e2d\u70b9\u5024\uff08\u4e00\u822c\u4e3a1500\uff09\uff0c\u914d\u7f6e\u6447\u6746\u6b7b\u533a\uff0c\u67e5\u770b\u548c\u9a8c\u8bc1\u54e5\u54e5\u901a\u5bfc\u81f4\u662f\u5426\u6709\u9650\u6216\u8005\u8d85\u51fa\u8303\u56f4\u3002.<br \/><span class=\"message-negative\">\u91cd\u8981:<\/span> \u5728\u98de\u884c\u4e4b\u524d\uff0c\u8bf7\u9605\u8bfb\u6587\u6863\u5931\u63a7\u4fdd\u62a4\u90e8\u5206\uff0c\u5e76\u4e14\u8bbe\u7f6e\u597d\u5931\u63a7\u4fdd\u62a4"
+    },
+    "tuningHelp": {
+        "message": "<b> \u8c03\u8bd5\u6280\u5de7<\/b><br \/><span class=\"message-negative\">\u91cd\u8981:<\/span>\u5728\u7b2c\u4e00\u6b21\u98de\u884c\u65f6\u6ce8\u610f\u7535\u673a\u6e29\u5ea6\u3002\u6ee4\u6ce2\u503c\u8d8a\u9ad8\uff0c\u98de\u884c\u6548\u679c\u53ef\u80fd\u8d8a\u597d\uff0c\u4f46\u662f\u4f1a\u4f7f\u7535\u673a\u4ea7\u751f\u66f4\u5bf9\u7684\u566a\u58f0\uff08\u9707\u52a8\uff09\uff0c<br>100\u8d6b\u5179\u9ed8\u8ba4\u503c\u662f\u6700\u4f73\u7684\u6570\u503c\uff0c\u4f46\u662f\u4f60\u53ef\u4ee5\u5c1d\u8bd5\u5427Dterm\u548cGyro\u6ee4\u6ce2\u5668\u964d\u4f4e\u523050\u8d6b\u5179\u3002"
+    },
+    "receiverThrottleMid": {
+        "message": "\u6cb9\u95e8\u91cd\u70b9"
+    },
+    "receiverThrottleExpo": {
+        "message": "\u6cb9\u95e8\u66f2\u7ebf"
+    },
+    "receiverStickMin": {
+        "message": "'\u9065\u611f\u6700\u4f4e' \u9650\u5236\u503c"
+    },
+    "receiverHelpStickMin": {
+        "message": "\u6447\u6746\u6700\u5c0f\u503c\uff08\u6447\u6746\u6700\u4f4e\u70b9\u548c\u6447\u6746\u6700\u5de6\uff09\u7684\u6570\u503c \uff08\u5fae\u79d2\uff09\uff08\u5927\u4e8e\u8fd9\u4e2a\u503c\u98de\u63a7\u8ba4\u4e3a\u9065\u63a7\u4fe1\u53f7\u6b63\u5e38\uff09"
+    },
+    "receiverStickCenter": {
+        "message": "\u6447\u6746\u4e2d\u70b9"
+    },
+    "receiverHelpStickCenter": {
+        "message": "\u6447\u6746\u4e2d\u4f4d\u503c\uff08\u5fae\u79d2\uff09"
+    },
+    "receiverStickMax": {
+        "message": "\u6447\u6746\u6700\u5927\u503c"
+    },
+    "receiverHelpStickMax": {
+        "message": "\u6447\u6746\u6700\u5927\u503c\uff08\u6447\u6746\u6700\u9ad8\u548c\u6447\u6746\u6700\u53f3\uff09\u7684\u6570\u503c \uff08\u5fae\u79d2\uff09\uff08\u5c0f\u4e8e\u8fd9\u4e2a\u503c\u98de\u63a7\u8ba4\u4e3a\u9065\u63a7\u4fe1\u53f7\u6b63\u5e38\uff09"
+    },
+    "receiverDeadband": {
+        "message": "RC \u6b7b\u533a\u533a\u95f4"
+    },
+    "receiverHelpDeadband": {
+        "message": "\u9065\u63a7\u8f93\u5165\u591a\u5c11\u98de\u63a7\u624d\u8ba4\u4e3a\u662f\u6709\u6548\u503c\u3002\u5bf9\u4e8e\u8f93\u5165\u6709\u6296\u52a8\u7684\u9065\u63a7\u5668\uff0c\u53ef\u4ee5\u589e\u52a0\u8fd9\u4e2a\u503c\u3002"
+    },
+    "receiverYawDeadband": {
+        "message": "\u65b9\u5411\u901a\u9053 \u6b7b\u533a\u533a\u95f4"
+    },
+    "receiverHelpYawDeadband": {
+        "message": "\u9065\u63a7\u65b9\u5411\u901a\u9053\u8f93\u5165\u591a\u5c11\u624d\u88ab\u98de\u63a7\u8ba4\u4e3a\u662f\u6709\u6548\u503c\uff0c\u5bf9\u4e8e\u8f93\u5165\u6709\u6296\u52a8\u7684\u9065\u63a7\u5668\uff0c\u53ef\u4ee5\u589e\u52a0\u8fd9\u4e2a\u503c\u3002<strong>\u8fd9\u4e2a\u6570\u503c\u53ea\u5bf9\u65b9\u5411\u6447\u6746\u6709\u6548<\/strong>"
+    },
+    "recevier3dDeadbandThrottle": {
+        "message": "3D \u6cb9\u95e8\u6b7b\u533a"
+    },
+    "receiverHelp3dDeadbandThrottle": {
+        "message": "\u589e\u52a0\u8fd9\u4e2a\u503c\uff08\u6beb\u79d2\uff09\u4f1a\u589e\u52a03D \u6cb9\u95e8\u4e2d\u4f4d\u5bbd\u5ea6\u3002<strong>\u53ea\u5bf93D \u8bbe\u7f6e\u6cb9\u95e8\u6709\u6548<\/strong>"
+    },
+    "receiverChannelMap": {
+        "message": "\u901a\u9053\u6620\u5c04"
+    },
+    "receiverChannelDefaultOption": {
+        "message": "\u9ed8\u8ba4"
+    },
+    "receiverChannelMapTitle": {
+        "message": "\u4f60\u53ef\u4ee5\u901a\u8fc7\u9009\u62e9\u8fd9\u4e2a\u9009\u9879\u6765\u5b9a\u4e49\u4f60\u60f3\u8981\u7684\u6cb9\u95e8\u6620\u5c04"
+    },
+    "receiverRssiChannel": {
+        "message": "RSSI \u901a\u9053"
+    },
+    "receiverRssiChannelDisabledOption": {
+        "message": "\u5173\u95ed"
+    },
+    "receiverRefreshRateTitle": {
+        "message": "\u56fe\u5f62\u663e\u793a\u5237\u65b0\u7387"
+    },
+    "receiverButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "receiverButtonRefresh": {
+        "message": "\u5237\u65b0"
+    },
+    "receiverButtonSticks": {
+        "message": "\u63a7\u5236\u6447\u6746"
+    },
+    "receiverDataRefreshed": {
+        "message": "\u9065\u63a7\u4fe1\u53f7 <strong>\u5df2\u5237\u65b0<\/strong>"
+    },
+    "receiverEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+    },
+    "receiverModelPreview": {
+        "message": "\u9884\u89c8"
+    },
+    "auxiliaryHelp": {
+        "message": "\u4f7f\u7528\u9ec4\u8272\u533a\u57df\u6765\u5b9a\u4e49\u4f60\u60f3\u8981\u7684\u5f00\u5173\u901a\u9053\u548c\u60f3\u8bbe\u7f6e\u7684\u98de\u884c\u6a21\u5f0f\u3002\u6240\u9009\u7684\u901a\u9053\u9ec4\u8272\u5c0f\u5757\uff0c\u548c\u8bbe\u7f6e\u7684\u9ec4\u8272\u533a\u57df\u91cd\u5408\u65f6\uff0c\u6539\u6a21\u5f0f\u4f1a\u6fc0\u6d3b\uff0c\u540c\u65f6\u76f8\u5e94\u7684\u6a21\u5f0f\u4e5f\u4f1a\u53d8\u6210\u9ec4\u8272\uff0c\u4ee3\u8868\u8be5\u901a\u9053\u5f00\u5173\u5df2\u6fc0\u6d3b\u8be5\u6a21\u5f0f\u3002 \u8bbe\u7f6e\u5b8c\u6210\u8bf7\u901a\u8fc7\u53f3\u4e0b\u89d2\u4fdd\u5b58\u6309\u94ae\u6765\u4fdd\u5b58\u8bbe\u7f6e"
+    },
+    "auxiliaryMin": {
+        "message": "\u6700\u5c0f"
+    },
+    "auxiliaryMax": {
+        "message": "\u6700\u5927"
+    },
+    "auxiliaryAddRange": {
+        "message": "\u6dfb\u52a0\u8303\u56f4"
+    },
+    "auxiliaryButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "auxiliaryEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+    },
+    "auxiliaryAutoChannelSelect": {
+        "message": "\u81ea\u52a8"
+    },
+    "adjustmentsHelp": {
+        "message": "Configure adjustment switches. See the 'in-flight adjustments' section of the manual for details. The changes that adjustment functions make are not saved automatically. There are 4 slots. Each switch used to concurrently make adjustments requires exclusive use of a slot."
+    },
+    "adjustmentsExamples": {
+        "message": "\u4e3e\u4f8b"
+    },
+    "adjustmentsExample1": {
+        "message": "\u4f7f\u7528\u63d2\u69fd1 \u548cAUX1\u901a\u9053\u4e0a\u7684\u4e09\u6bb5\u5f00\u5173\u5728Pitch\/Roll P I D \u4e4b\u95f4\u9009\u62e9\uff0c\u4f7f\u7528AUX2\u901a\u9053\u7684\u4e09\u6bb5\u5f00\u5173\u6765\u4e0a\u4e0b\u589e\u5927\u548c\u51cf\u5c0f\u6570\u503c\uff08\u4fdd\u6301\u9ad8\uff0c\u6216\u8005\u4fdd\u6301\u4f4e\uff09"
+    },
+    "adjustmentsExample2": {
+        "message": "\u4f7f\u7528\u63d2\u69fd2 \u548cAUX4\u901a\u9053\u4e0a\u7684\u4e09\u6bb5\u5f00\u5173\u6765\u9009\u62e9 Rate \u914d\u7f6e\u6587\u4ef6"
+    },
+    "adjustmentsColumnEnable": {
+        "message": "\u5982\u679c\u6fc0\u6d3b"
+    },
+    "adjustmentsColumnUsingSlot": {
+        "message": "\u4f7f\u7528\u63d2\u69fd"
+    },
+    "adjustmentsColumnWhenChannel": {
+        "message": "\u5f53\u901a\u9053"
+    },
+    "adjustmentsColumnIsInRange": {
+        "message": "\u5728\u6307\u5b9a\u8303\u56f4\u65f6"
+    },
+    "adjustmentsColumnThenApplyFunction": {
+        "message": "\u6267\u884c"
+    },
+    "adjustmentsColumnViaChannel": {
+        "message": "\u901a\u8fc7\u901a\u9053"
+    },
+    "adjustmentsSlot0": {
+        "message": "\u63d2\u69fd1"
+    },
+    "adjustmentsSlot1": {
+        "message": "\u63d2\u69fd2"
+    },
+    "adjustmentsSlot2": {
+        "message": "\u63d2\u69fd3"
+    },
+    "adjustmentsSlot3": {
+        "message": "\u63d2\u69fd4"
+    },
+    "adjustmentsMin": {
+        "message": "\u6700\u5c0f"
+    },
+    "adjustmentsMax": {
+        "message": "\u6700\u5927"
+    },
+    "adjustmentsFunction0": {
+        "message": "\u4e0d\u53d8"
+    },
+    "adjustmentsFunction1": {
+        "message": "\u9065\u63a7Rate \u8c03\u6574"
+    },
+    "adjustmentsFunction2": {
+        "message": "\u9065\u63a7 \u66f2\u7ebf\u8c03\u6574"
+    },
+    "adjustmentsFunction3": {
+        "message": "\u6cb9\u95e8\u66f2\u7ebf\u8c03\u6574"
+    },
+    "adjustmentsFunction4": {
+        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda Rate \u8c03\u6574"
+    },
+    "adjustmentsFunction5": {
+        "message": "\u65b9\u5411Rate\u8c03\u6574"
+    },
+    "adjustmentsFunction6": {
+        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda P \u8c03\u6574"
+    },
+    "adjustmentsFunction7": {
+        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda I \u8c03\u6574"
+    },
+    "adjustmentsFunction8": {
+        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda D \u8c03\u6574"
+    },
+    "adjustmentsFunction9": {
+        "message": "\u65b9\u5411 P \u8c03\u6574"
+    },
+    "adjustmentsFunction10": {
+        "message": "\u65b9\u5411I\u8c03\u6574"
+    },
+    "adjustmentsFunction11": {
+        "message": "\u65b9\u5411D\u8c03\u6574"
+    },
+    "adjustmentsFunction12": {
+        "message": "Rate\u914d\u7f6e\u6587\u4ef6\u9009\u62e9"
+    },
+    "adjustmentsFunction13": {
+        "message": "\u4fef\u4ef0Rate"
+    },
+    "adjustmentsFunction14": {
+        "message": "\u6a2a\u6edaRate"
+    },
+    "adjustmentsFunction15": {
+        "message": "\u4fef\u4ef0P\u8c03\u6574"
+    },
+    "adjustmentsFunction16": {
+        "message": "\u4fef\u4ef0I\u8c03\u6574"
+    },
+    "adjustmentsFunction17": {
+        "message": "\u4fef\u4ef0D\u8c03\u6574"
+    },
+    "adjustmentsFunction18": {
+        "message": "\u6a2a\u6edaP\u8c03\u6574"
+    },
+    "adjustmentsFunction19": {
+        "message": "\u6a2a\u6edaI\u8c03\u6574"
+    },
+    "adjustmentsFunction20": {
+        "message": "\u6a2a\u6edaD\u8c03\u6574"
+    },
+    "adjustmentsFunction21": {
+        "message": "\u9065\u63a7\u65b9\u5411Rate"
+    },
+    "adjustmentsFunction22": {
+        "message": "D \u8bbe\u5b9a\u70b9"
+    },
+    "adjustmentsFunction23": {
+        "message": "D \u8bbe\u5b9a\u70b9\u8f6c\u6362"
+    },
+    "adjustmentsFunction24": {
+        "message": "\u6c34\u5e73\u6a21\u5f0f\u5f3a\u5ea6\u8c03\u6574"
+    },
+    "adjustmentsSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "adjustmentsEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+    },
+    "transponderNotSupported": {
+        "message": "\u8be5\u98de\u63a7\u4e0d\u652f\u6301\u6bd4\u8d5b\u6536\u53d1\u5668"
+    },
+    "transponderInformation": {
+        "message": "Transponders systems allow race organizers to time your laps. The transponder is fitted to your aircraft and when your aircraft passes the timing gate the track-side receiver registers your code and records your laptime. When fitting an IR based transponder your should ensure that it points outward from your aircraft towards the track-side receivers and that the light beam is not obstructed by your airframe, battery-straps, cables, propellers, etc."
+    },
+    "transponderConfigurationType": {
+        "message": "\u6bd4\u8d5b\u6536\u53d1\u5668\u7c7b\u522b"
+    },
+    "transponderType0": {
+        "message": "\u6ca1\u6709"
+    },
+    "transponderType1": {
+        "message": "iLap"
+    },
+    "transponderType2": {
+        "message": "aRCiTimer"
+    },
+    "transponderType3": {
+        "message": "ERLT"
+    },
+    "transponderConfiguration1": {
+        "message": "Configuration iLap"
+    },
+    "transponderConfiguration2": {
+        "message": "Configuration aRCiTimer"
+    },
+    "transponderConfiguration3": {
+        "message": "Configuration ERLT"
+    },
+    "transponderData1": {
+        "message": "\u6570\u636e"
+    },
+    "transponderData2": {
+        "message": "\u6bd4\u8d5b\u6536\u53d1\u5668 \u7f16\u53f7"
+    },
+    "transponderData3": {
+        "message": "\u6bd4\u8d5b\u6536\u53d1\u5668 \u7f16\u53f7"
+    },
+    "transponderDataHelp1": {
+        "message": "\u4ec5\u5341\u516d\u8fdb\u5236 \u6570\u5b57\uff0c0-9\uff0c A-F"
+    },
+    "transponderHelp1": {
+        "message": "Configure your transponder code here. Note: Only valid codes will be recognised by race timing systems. Valid transponder codes can be obtained from <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\">Seriously Pro<\/a>."
+    },
+    "transponderHelp2": {
+        "message": "For more information please visit <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer site<\/a>"
+    },
+    "transponderDataHelp3": {
+        "message": "Choose ERLT ID 0-63"
+    },
+    "transponderHelp3": {
+        "message": "For more information please visit <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer site<\/a>"
+    },
+    "transponderButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "transponderButtonSaveReboot": {
+        "message": "\u4fdd\u5b58\u5e76\u91cd\u542f"
+    },
+    "transponderDataInvalid": {
+        "message": "Transponder data is <span class=\"message-negative\">invalid<\/span>"
+    },
+    "transponderEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+    },
+    "servosFirmwareUpgradeRequired": {
+        "message": "\u8235\u673a\u652f\u6301\u8981\u6c42\u56fa\u4ef6\u7248\u672c\u5927\u4e8e1.10.0. \u548c\u98de\u63a7\u652f\u6301"
+    },
+    "servosChangeDirection": {
+        "message": "\u8bbe\u7f6e\u9065\u63a7\u5668\u901a\u9053\u53cd\u5411\u6765\u5339\u914d"
+    },
+    "servosName": {
+        "message": "\u540d\u5b57"
+    },
+    "servosMid": {
+        "message": "\u4e2d"
+    },
+    "servosMin": {
+        "message": "\u5c0f"
+    },
+    "servosMax": {
+        "message": "\u5927"
+    },
+    "servosAngleAtMin": {
+        "message": "\u6700\u5c0f\u89d2\u5ea6"
+    },
+    "servosAngleAtMax": {
+        "message": "\u6700\u5927\u89d2\u5ea6"
+    },
+    "servosDirectionAndRate": {
+        "message": "\u65b9\u5411\u548crate"
+    },
+    "servosLiveMode": {
+        "message": "\u6fc0\u6d3b\u5b9e\u65f6\u6a21\u5f0f"
+    },
+    "servosButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "servosNormal": {
+        "message": "\u6b63\u5e38"
+    },
+    "servosReverse": {
+        "message": "\u53cd\u5411"
+    },
+    "servosEepromSave": {
+        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+    },
+    "gpsHead": {
+        "message": "GPS"
+    },
+    "gpsMapHead": {
+        "message": "\u5f53\u524dGPS\u4f4d\u7f6e"
+    },
+    "gpsMapMessage1": {
+        "message": "\u8bf7\u68c0\u67e5\u7f51\u7edc\u8fde\u63a5"
+    },
+    "gpsMapMessage2": {
+        "message": "\u7b49\u5f85GPS\u9501\u5b9a\u536b\u661f"
+    },
+    "gps3dFix": {
+        "message": "GPS\u9501\u5b9a\u536b\u661f"
+    },
+    "gpsFixTrue": {
+        "message": "<span class=\"fixtrue\">\u51c6\u786e<\/span>"
+    },
+    "gpsFixFalse": {
+        "message": "<span class=\"fixfalse\">\u5931\u8d25<\/span>"
+    },
+    "gpsAltitude": {
+        "message": "\u9ad8\u5ea6\uff1a"
+    },
+    "gpsLat": {
+        "message": "\u7eac\u5ea6\uff1a"
+    },
+    "gpsLon": {
+        "message": "\u7ecf\u5ea6\uff1a"
+    },
+    "gpsSpeed": {
+        "message": "\u901f\u5ea6\uff1a"
+    },
+    "gpsSats": {
+        "message": "\u536b\u661f\u6570\uff1a"
+    },
+    "gpsDistToHome": {
+        "message": "\u79bb\u8d77\u98de\u4f4d\u7f6e\u8ddd\u79bb"
+    },
+    "gpsSignalStrHead": {
+        "message": "GPS \u4fe1\u53f7\u5f3a\u5ea6"
+    },
+    "gpsSignalStr": {
+        "message": "\u578b\u53f7\u5f3a\u5ea6"
+    },
+    "gpsSignalSatId": {
+        "message": "\u536b\u661f\u7f16\u53f7"
+    },
+    "gpsSignalQty": {
+        "message": "\u6570\u91cf"
+    },
+    "motorsText": {
+        "message": "\u7535\u673a"
+    },
+    "motorNumber1": {
+        "message": "\u7535\u673a-1"
+    },
+    "motorNumber2": {
+        "message": "\u7535\u673a-2"
+    },
+    "motorNumber3": {
+        "message": "\u7535\u673a-3"
+    },
+    "motorNumber4": {
+        "message": "\u7535\u673a-4"
+    },
+    "motorNumber5": {
+        "message": "\u7535\u673a-5"
+    },
+    "motorNumber6": {
+        "message": "\u7535\u673a-6"
+    },
+    "motorNumber7": {
+        "message": "\u7535\u673a-7"
+    },
+    "motorNumber8": {
+        "message": "\u7535\u673a-8"
+    },
+    "servosText": {
+        "message": "\u8235\u673a"
+    },
+    "servoNumber1": {
+        "message": "\u8235\u673a -1"
+    },
+    "servoNumber2": {
+        "message": "\u8235\u673a -2"
+    },
+    "servoNumber3": {
+        "message": "\u8235\u673a -3"
+    },
+    "servoNumber4": {
+        "message": "\u8235\u673a -4"
+    },
+    "servoNumber5": {
+        "message": "\u8235\u673a -5"
+    },
+    "servoNumber6": {
+        "message": "\u8235\u673a -6"
+    },
+    "servoNumber7": {
+        "message": "\u8235\u673a -7"
+    },
+    "servoNumber8": {
+        "message": "\u8235\u673a -8"
+    },
+    "motorsResetMaximumButton": {
+        "message": "\u91cd\u7f6e"
+    },
+    "motorsResetMaximum": {
+        "message": "\u91cd\u7f6e\u6700\u5927\u65f6\u95f4"
+    },
+    "motorsSensorGyroSelect": {
+        "message": "\u9640\u87ba\u8ba1"
+    },
+    "motorsSensorAccelSelect": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1"
+    },
+    "motorsMaster": {
+        "message": "\u603b\u63a7\u5236"
+    },
+    "motorsNotice": {
+        "message": "<strong>\u7535\u673a\u6d4b\u8bd5\u6a21\u5f0f\u6ce8\u610f:<\/strong><br \/>\u79fb\u52a8\u6ed1\u5757\u548c\u901a\u8fc7\u9065\u63a7\u89e3\u9501\u7535\u673a\u5c06\u4f1a<strong>\u8f6c\u52a8<\/strong>.<br \/>\u4e3a\u4e86\u9632\u6b62\u53d7\u4f24\u53d1\u751f\uff0c\u6d4b\u8bd5\u7535\u673a\u4e4b\u524d<strong class=\"message-negative\">\u8bf7\u62c6\u6389\u87ba\u65cb\u6868<\/strong> <br \/>"
+    },
+    "motorsEnableControl": {
+        "message": "\u5df2\u660e\u767d\u6253\u5f00\u7535\u673a\u6d4b\u8bd5\u7684\u98ce\u9669\uff0c\u5e76\u5df2\u62c6\u6389\u87ba\u65cb\u6868-\u542f\u52a8\u7535\u673a\u6d4b\u8bd5"
+    },
+    "sensorsInfo": {
+        "message": "\u8bf7\u6ce8\u610f\uff0c\u8bbe\u7f6e\u8fc7\u9ad8\u7684\u56fe\u5f62\u5237\u65b0\u7387\u4f1a\u66f4\u4f1a\u7f29\u77ed\u5c24\u5176\u662f\u7b14\u8bb0\u672c\u7535\u8111\u7684\u7535\u6c60\u4f7f\u7528\u65f6\u95f4<br \/>\u5efa\u8bae\u53ea\u6253\u5f00\u4f60\u611f\u5174\u8da3\u7684\u4f20\u611f\u5668\u7684\u56fe\u5f62\u663e\u793a\u548c\u5408\u7406\u7684\u5237\u65b0\u7387"
+    },
+    "sensorsRefresh": {
+        "message": "\u5237\u65b0\uff1a"
+    },
+    "sensorsScale": {
+        "message": "\u6bd4\u4f8b\uff1a"
+    },
+    "sensorsGyroSelect": {
+        "message": "\u9640\u87ba\u4eea"
+    },
+    "sensorsAccelSelect": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1"
+    },
+    "sensorsMagSelect": {
+        "message": "\u78c1\u573a\u8ba1"
+    },
+    "sensorsBaroSelect": {
+        "message": "\u9ad8\u5ea6\u8ba1"
+    },
+    "sensorsSonarSelect": {
+        "message": "\u58f0\u5450"
+    },
+    "sensorsDebugSelect": {
+        "message": "\u8c03\u8bd5"
+    },
+    "sensorsGyroTitle": {
+        "message": "\u9640\u87ba\u4eea - \u5ea6\/\u79d2"
+    },
+    "sensorsAccelTitle": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1 - G"
+    },
+    "sensorsMagTitle": {
+        "message": "\u78c1\u573a\u8ba1 - Ga"
+    },
+    "sensorsBaroTitle": {
+        "message": "\u9ad8\u5ea6\u8ba1 - \u7c73"
+    },
+    "sensorsSonarTitle": {
+        "message": "\u58f0\u5450 - \u5398\u7c73"
+    },
+    "sensorsDebugTitle": {
+        "message": "\u8c03\u8bd5"
+    },
+    "cliInfo": {
+        "message": "<strong>\u6ce8\u610f<\/strong>:\u9000\u51fa\u547d\u4ee4\u884c\u9875\u9762\u4f1a <strong>\u81ea\u52a8<\/strong> \u53d1\u9001\"<strong>exit<\/strong>\" \u547d\u4ee4\u5230\u98de\u63a7\u3002\u6700\u65b0\u7684\u56fa\u4ef6\u5c06\u4f1a\u4f7f\u98de\u63a7 <span class=\"message-negative\">\u91cd\u542f<\/span>\u6240\u6709\u6ca1\u6709\u4fdd\u5b58\u7684\u8bbe\u7f6e\u5c06\u4f1a <span class=\"message-negative\">\u4e22\u5931<\/span>."
+    },
+    "cliInputPlaceholder": {
+        "message": "\u5728\u8fd9\u91cc\u8f93\u5165\u547d\u4ee4"
+    },
+    "cliEnter": {
+        "message": "\u68c0\u6d4b\u5230\u547d\u4ee4\u884c\u6a21\u5f0f"
+    },
+    "cliReboot": {
+        "message": "\u68c0\u6d4b\u5230\u547d\u4ee4\u884c\u91cd\u542f\u547d\u4ee4"
+    },
+    "cliSaveToFileBtn": {
+        "message": "\u4fdd\u5b58\u5230\u6587\u4ef6"
+    },
+    "loggingNote": {
+        "message": "\u6570\u636e <span class=\"message-negative\">\u4ec5\u4ec5\u4f1a\u5728\u6b64\u9875\u9762\u8bb0\u5f55<\/span>,\u5173\u95ed\u6b64\u9875\u9762\u5c06\u4f1a <span class=\"message-negative\">\u53d6\u6d88<\/span>\u6570\u636e\u8bb0\u5f55\u3002\u5e76\u4e14\u5c06\u4f1a\u8fd4\u56de\u5e94\u7528<strong>\u201c\u666e\u901a\u914d\u7f6e\u201d<\/strong> \u72b6\u6001\u3002.<br \/> \u4f60\u53ef\u4ee5\u9009\u62e9\u5408\u9002\u7684\u5168\u5c40\u5237\u65b0\u7387\uff0c \u98de\u63a7\u51fa\u4e8e\u6027\u80fd\u8003\u8651\uff0c\u53ea\u4f1a\u6bcf <strong>1<\/strong> \u79d2\u5199\u5165\u65e5\u5fd7\u3002"
+    },
+    "loggingSamplesSaved": {
+        "message": "\u91c7\u6837\u5df2\u4fdd\u5b58"
+    },
+    "loggingLogSize": {
+        "message": "\u8bb0\u5f55\u5927\u5c0f\uff1a"
+    },
+    "loggingButtonLogFile": {
+        "message": "\u9009\u62e9\u8bb0\u5f55\u6587\u4ef6"
+    },
+    "loggingStart": {
+        "message": "\u5f00\u59cb\u8bb0\u5f55"
+    },
+    "loggingStop": {
+        "message": "\u505c\u6b62\u8bb0\u5f55"
+    },
+    "loggingBack": {
+        "message": "\u9000\u51fa\u8bb0\u5f55\/\u65ad\u5f00\u8fde\u63a5"
+    },
+    "loggingErrorNotConnected": {
+        "message": "\u8bf7\u5148<strong>\u8fde\u63a5<\/strong>"
+    },
+    "loggingErrorLogFile": {
+        "message": "\u8bf7\u9009\u62e9\u8bb0\u5f55\u6587\u4ef6"
+    },
+    "loggingErrorOneProperty": {
+        "message": "\u81f3\u5c11\u9700\u8981\u4e00\u4e2a\u6570\u636e\u96c6\u6765\u8bb0\u5f55"
+    },
+    "loggingAutomaticallyRetained": {
+        "message": "\u81ea\u52a8\u52a0\u8f7d\u4e0a\u4e00\u4e2a\u8bb0\u5f55\u6587\u4ef6: <strong>$1<\/strong>"
+    },
+    "blackboxNotSupported": {
+        "message": "\u8be5\u98de\u63a7\u56fa\u4ef6\u4e0d\u652f\u6301\u9ed1\u5323\u5b50"
+    },
+    "blackboxMaybeSupported": {
+        "message": "\u98de\u63a7\u56fa\u4ef6\u7248\u672c\u592a\u4f4e\u6765\u6253\u5f00\u8be5\u9875\u9762\uff0c\u6216\u8005\u9ed1\u5323\u5b50\u529f\u80fd\u6ca1\u6709\u5728\u8bbe\u7f6e\u9875\u9762\u6253\u5f00"
+    },
+    "blackboxConfiguration": {
+        "message": "\u9ed1\u5323\u5b50\u8bbe\u7f6e"
+    },
+    "blackboxButtonSave": {
+        "message": "\u4fdd\u5b58\u5e76\u91cd\u542f"
+    },
+    "blackboxLoggingNone": {
+        "message": "\u65e0\u8bb0\u5f55"
+    },
+    "blackboxLoggingFlash": {
+        "message": "\u677f\u8f7d\u95ea\u5b58"
+    },
+    "blackboxLoggingSdCard": {
+        "message": "SD \u5361"
+    },
+    "blackboxLoggingSerial": {
+        "message": "\u4e32\u53e3"
+    },
+    "serialLoggingSupportedNote": {
+        "message": "\u4f60\u53ef\u4ee5\u7528\u8fc7\u4e32\u53e3\u5916\u63a5\u8bb0\u5f55\u4eea\u5668\u8bb0\u5f55\uff08\u4f8b\u5982Openlog\uff09\uff0c\u5148\u901a\u8fc7\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u5728\u4f7f\u7528"
+    },
+    "sdcardNote": {
+        "message": "\u98de\u884c\u6570\u636e\u53ef\u4ee5\u4fdd\u5b58\u5230\u677f\u8f7d\u7684SD \u5361"
+    },
+    "dataflashUsedSpace": {
+        "message": "\u5df2\u7528\u7a7a\u95f4"
+    },
+    "dataflashFreeSpace": {
+        "message": "\u53ef\u7528\u7a7a\u95f4"
+    },
+    "dataflashUnavSpace": {
+        "message": "\u4e0d\u53ef\u7528\u7a7a\u95f4"
+    },
+    "dataflashLogsSpace": {
+        "message": "\u8bb0\u5f55\u53ef\u7528\u7a7a\u95f4"
+    },
+    "dataflashNote": {
+        "message": "\u98de\u884c\u6570\u636e\u53ef\u4ee5\u4fdd\u5b58\u5230\u677f\u8f7d\u7684\u95ea\u5b58\u5185"
+    },
+    "dataflashNotPresentNote": {
+        "message": "\u98de\u63a7\u4e0d\u77e5\u9053\u4efb\u4f55\u9ed1\u5323\u5b50\u8bbe\u5907"
+    },
+    "dataflashFirmwareUpgradeRequired": {
+        "message": "\u677f\u8f7d\u95ea\u5b58\u9700\u8981\u56fa\u4ef6\u7248\u672c\u5927\u4e8e1.8.0."
+    },
+    "dataflashButtonSaveFile": {
+        "message": "\u4fdd\u5b58\u95ea\u5b58\u6570\u636e\u5230\u6587\u4ef6"
+    },
+    "dataflashButtonErase": {
+        "message": "\u64e6\u9664\u95ea\u5b58"
+    },
+    "dataflashConfirmEraseTitle": {
+        "message": "\u786e\u8ba4\u64e6\u9664\u95ea\u5b58"
+    },
+    "dataflashConfirmEraseNote": {
+        "message": "\u5c06\u4f1a\u64e6\u9664\u95ea\u5b58\u91cc\u9762\u4fdd\u5b58\u7684\u6240\u6709\u6570\u636e\uff0c\u53ef\u80fd\u4f1a\u9700\u898120\u79d2\u5de6\u53f3\u6765\u64e6\u9664\u3002 \u786e\u5b9a\u64e6\u9664\uff1f"
+    },
+    "dataflashSavingTitle": {
+        "message": "\u6b63\u5728\u4fdd\u5b58\u95ea\u5b58\u6570\u636e\u5230\u6587\u4ef6"
+    },
+    "dataflashSavingNote": {
+        "message": "\u4fdd\u5b58\u95ea\u5b58\u6570\u636e\u5230\u6587\u4ef6\u53ef\u80fd\u4f1a\u8d85\u8fc7\u51e0\u5206\u949f\uff0c\u8bf7\u7b49\u5f85\u3002"
+    },
+    "dataflashSavingNoteAfter": {
+        "message": "\u4fdd\u5b58\u6210\u529f\uff0c\u70b9\u51fb \u201c\u786e\u8ba4\u201d \u7ee7\u7eed"
+    },
+    "dataflashButtonSaveCancel": {
+        "message": "\u53d6\u6d88"
+    },
+    "dataflashButtonSaveDismiss": {
+        "message": "\u786e\u8ba4"
+    },
+    "dataflashButtonEraseConfirm": {
+        "message": "\u64e6\u9664\u95ea\u5b58"
+    },
+    "dataflashButtonEraseCancel": {
+        "message": "\u53d6\u6d88"
+    },
+    "dataflashFileWriteFailed": {
+        "message": "\u5199\u5165\u6587\u4ef6\u5931\u8d25\uff0c\u8bf7\u786e\u8ba4\u6587\u4ef6\u548c\u6587\u4ef6\u5939\u6743\u9650"
+    },
+    "sdcardStatusNoCard": {
+        "message": "\u65e0SD \u5361"
+    },
+    "sdcardStatusReboot": {
+        "message": "\u9519\u8bef<br>\u91cd\u542f\u98de\u63a7\u518d\u8bd5"
+    },
+    "sdcardStatusReady": {
+        "message": "SD \u5361\u5c31\u7eea"
+    },
+    "sdcardStatusStarting": {
+        "message": "SD \u5361\u5c31\u7eea\u4e2d"
+    },
+    "sdcardStatusFileSystem": {
+        "message": "\u6587\u4ef6\u7cfb\u7edf\u5c31\u7eea\u4e2d"
+    },
+    "sdcardStatusUnknown": {
+        "message": "\u672a\u77e5\u72b6\u6001 $1"
+    },
+    "firmwareFlasherReleaseSummaryHead": {
+        "message": "\u53d1\u5e03\u4fe1\u606f"
+    },
+    "firmwareFlasherReleaseName": {
+        "message": "\u540d\u5b57\/\u7248\u672c\uff1a"
+    },
+    "firmwareFlasherReleaseVersionUrl": {
+        "message": "\u8bbf\u95ee\u53d1\u5e03\u4fe1\u606f\u9875\u9762"
+    },
+    "firmwareFlasherReleaseNotes": {
+        "message": "\u53d1\u5e03\u8bf4\u660e\uff1a"
+    },
+    "firmwareFlasherReleaseDate": {
+        "message": "\u65e5\u671f\uff1a"
+    },
+    "firmwareFlasherReleaseStatus": {
+        "message": "\u72b6\u6001\uff1a"
+    },
+    "firmwareFlasherReleaseTarget": {
+        "message": "\u98de\u63a7\u76ee\u6807"
+    },
+    "firmwareFlasherReleaseFile": {
+        "message": "\u4e8c\u8fdb\u5236"
+    },
+    "firmwareFlasherReleaseStatusReleaseCandidate": {
+        "message": "<span class=\"message-negative\">\u91cd\u8981: \u9009\u62e9\u7684\u56fa\u4ef6\u7248\u672c\u662f\u6d4b\u8bd5\u7248\u672c\uff0c\u5982\u679c\u53d1\u73b0\u4efb\u4f55\u95ee\u9898\uff0c\u8bf7\u7acb\u5373\u53cd\u9988\u7ed9\u5f00\u53d1\u8005<\/span>"
+    },
+    "firmwareFlasherReleaseFileUrl": {
+        "message": "\u624b\u52a8\u4e0b\u8f7d"
+    },
+    "firmwareFlasherTargetWarning": {
+        "message": "<span class=\"message-negative\">\u91cd\u8981<\/span>: \u8bf7\u9009\u62e9\u98de\u63a7\u5bf9\u5e94\u7684\u7248\u672c\u56fa\u4ef6\uff0c\u5982\u679c\u70e7\u5199\u9519\u8bef\u7684\u56fa\u4ef6\u5c06\u4f1a\u5bfc\u81f4 <span class=\"message-negative\">\u5f02\u5e38<\/span>."
+    },
+    "firmwareFlasherPath": {
+        "message": "\u8def\u5f84\uff1a"
+    },
+    "firmwareFlasherSize": {
+        "message": "\u5927\u5c0f\uff1a"
+    },
+    "firmwareFlasherStatus": {
+        "message": "\u72b6\u6001\uff1a"
+    },
+    "firmwareFlasherProgress": {
+        "message": "\u8fdb\u5ea6\uff1a"
+    },
+    "firmwareFlasherLoadFirmwareFile": {
+        "message": "\u8bf7\u8f7d\u5165\u56fa\u4ef6\u6587\u4ef6"
+    },
+    "firmwareFlasherNoReboot": {
+        "message": "\u65e0\u91cd\u542f\u987a\u5e8f"
+    },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "\u9009\u62e9\u6b63\u786e\u98de\u63a7\u540d\u5b57\u6765\u663e\u793a\u6700\u65b0\u53d1\u5e03\u7684\u56fa\u4ef6"
+    },
+    "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
+        "message": "\u9009\u62e9\u98de\u63a7\u56fa\u4ef6\u7248\u672c"
+    },
+    "firmwareFlasherNoRebootDescription": {
+        "message": "\u5982\u679c\u98de\u63a7\u7684boot\u5f15\u811a\u6216\u8005boot\u6309\u952e\u6309\u4e0b\uff0c\u8bf7\u9009\u62e9\u6b64\u9879"
+    },
+    "firmwareFlasherFlashOnConnect": {
+        "message": "\u5f53\u98de\u63a7\u8fde\u63a5\u65f6\uff0c\u81ea\u52a8\u66f4\u65b0\u56fa\u4ef6"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "\u5c1d\u8bd5\u81ea\u52a8\u66f4\u65b0\u98de\u63a7\u56fa\u4ef6\uff08\u5f53\u53d1\u73b0\u65b0\u7684\u4e32\u53e3\u8fde\u63a5\u4e0a\uff09"
+    },
+    "firmwareFlasherFullChipErase": {
+        "message": "\u64e6\u9664\u6574\u4e2a\u82af\u7247\uff08\u4f1a\u4e22\u5931\u6240\u6709\u4ee5\u524d\u7684\u98de\u63a7\u8bbe\u7f6e\uff09"
+    },
+    "firmwareFlasherFullChipEraseDescription": {
+        "message": "\u64e6\u9664\u6240\u6709\u98de\u63a7\u4e0a\u4ee5\u4fdd\u5b58\u7684\u8bbe\u7f6e"
+    },
+    "firmwareFlasherFlashDevelopmentFirmware": {
+        "message": "\u4f7f\u7528\u6d4b\u8bd5\u7248\u672c\u56fa\u4ef6"
+    },
+    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
+        "message": "\u70e7\u5199\u6700\u65b0\uff08\u6ca1\u6709\u7ecf\u8fc7\u6d4b\u8bd5\uff09\u56fa\u4ef6"
+    },
+    "firmwareFlasherManualPort": {
+        "message": "\u7aef\u53e3"
+    },
+    "firmwareFlasherManualBaud": {
+        "message": "\u624b\u52a8\u6ce2\u7279\u7387"
+    },
+    "firmwareFlasherManualBaudDescription": {
+        "message": "\u5982\u679c\u98de\u63a7\u4e0d\u652f\u6301\u9ed8\u8ba4\u70e7\u5199\u6570\u636e\uff0c\u6216\u8005\u901a\u8fc7\u84dd\u7259\u6a21\u5757\u6765\u70e7\u5199\uff0c\u53ef\u4ee5\u901a\u8fc7\u624b\u52a8\u8bbe\u7f6e\u6ce2\u7279\u7387\u3002<br \/><span class=\"message-negative\">\u6ce8\u610f:<\/span> \u540c\u65f6\u7528DFU \u6a21\u5f0f\u70e7\u5199\uff0c\u8be5\u9009\u9879\u65e0\u6548"
+    },
+    "firmwareFlasherBaudRate": {
+        "message": "\u6ce2\u7279\u7387"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "\u663e\u793a\u4e0d\u7a33\u5b9a\u56fa\u4ef6"
+    },
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
+        "message": "\u663e\u793a\u6d4b\u8bd5\u7248\u672c\u56fa\u4ef6"
+    },
+    "firmwareFlasherOptionLoading": {
+        "message": "\u52a0\u8f7d\u4e2d"
+    },
+    "firmwareFlasherOptionLabelSelectFirmware": {
+        "message": "\u9009\u62e9\u56fa\u4ef6\/\u98de\u63a7"
+    },
+    "firmwareFlasherOptionLabelSelectBoard": {
+        "message": "\u9009\u62e9\u98de\u63a7\u677f"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersion": {
+        "message": "\u9009\u62e9\u56fa\u4ef6\u7248\u672c"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
+        "message": "\u9009\u62e9\u56fa\u4ef6\u7248\u672c"
+    },
+    "firmwareFlasherButtonLoadLocal": {
+        "message": "\u52a0\u8f7d\u672c\u5730\u56fa\u4ef6"
+    },
+    "firmwareFlasherButtonLoadOnline": {
+        "message": "\u4ece\u7f51\u7edc\u52a0\u8f7d\u56fa\u4ef6"
+    },
+    "firmwareFlasherButtonDownloading": {
+        "message": "\u4e0b\u8f7d\u4e2d..."
+    },
+    "firmwareFlasherFlashFirmware": {
+        "message": "\u70e7\u5199\u56fa\u4ef6"
+    },
+    "firmwareFlasherGithubInfoHead": {
+        "message": "GitHub \u56fa\u4ef6\u4fe1\u606f"
+    },
+    "firmwareFlasherCommiter": {
+        "message": "\u63d0\u4ea4\u8005\uff1a"
+    },
+    "firmwareFlasherDate": {
+        "message": "\u65e5\u671f\uff1a"
+    },
+    "firmwareFlasherHash": {
+        "message": "Hash:"
+    },
+    "firmwareFlasherUrl": {
+        "message": "\u6253\u5f00Gihub\u67e5\u770b\u8be5\u56fa\u4ef6\u53d1\u5e03\u4fe1\u606f"
+    },
+    "firmwareFlasherMessage": {
+        "message": "\u4fe1\u606f\uff1a"
+    },
+    "firmwareFlasherWarningText": {
+        "message": "\u8bf7<span class=\"message-negative\">\u4e0d\u8981<\/span>\u5c1d\u8bd5\u70e7\u5199<strong>Betaflight\u4e0d\u652f\u6301\u7684\u98de\u63a7<\/strong>.\u70e7\u5199\u56fa\u4ef6\u8fc7\u7a0b\u4e2d\u5343\u4e07<br \/>\u4e0d<span class=\"message-negative\">\u8981<\/span> <strong>\u65ad\u5f00\u8fde\u63a5\u98de\u63a7\u8fde\u63a5<\/strong> <strong>\u548c\u5173\u95ed\u7535\u8111<\/strong><br \/><br \/><strong>\u6ce8\u610f: <\/strong>STM32 \u7684bootloader\u50a8\u5b58\u5728ROM\u4e2d\uff0c\u6240\u4ee5\u4e0d\u4f1a\u6709\u53d8\u7816\u53ef\u80fd\u3002<br \/><strong>\u6ce8\u610f: \u5728\u4f60\u6253\u5f00\u56fa\u4ef6\u70e7\u5199\u9875\u9762<\/strong><span class=\"message-negative\">\u81ea\u52a8\u8fde\u63a5<\/span>\u4e0d\u53ef\u7528.<br \/><strong>\u6ce8\u610f: <\/strong>\u70e7\u5199\u56fa\u4ef6\u4f1a\u5f15\u8d77\u98de\u63a7\u6e05\u7a7a\u4fdd\u5b58\u7684\u8bbe\u7f6e\uff0c\u8bf7\u52a1\u5fc5\u5317\u975e\u597d\u4f60\u7684\u6570\u636e<br \/><strong>\u6ce8\u610f:<\/strong>\u5982\u679c\u70e7\u5199\u9047\u5230\u95ee\u9898 <strong>\u5c1d\u8bd5\u62d4\u6389\u8fde\u63a5\u5230\u98de\u63a7\u7684\u6240\u6709\u8fde\u63a5\u7ebf<\/strong> \u7136\u540e\u5c1d\u8bd5\u91cd\u542f\uff0c\u66f4\u65b0chrome \uff0c\u5347\u7ea7\u9a71\u52a8\u3002.<br \/><strong>\u6ce8\u610f:<\/strong> \u5f53\u4f7f\u7528USB\u76f4\u8fde\uff08VCP\uff09\u7684\u98de\u63a7\uff0c\uff08\u5927\u591a\u6570\u65b0\u7684\u98de\u63a7\uff09\u8bf7\u4ed4\u7ec6\u9605\u8bfbBetaflight\u624b\u518cUSB flashing\u90e8\u5206\u7ae0\u8282\uff0c\u5e76\u786e\u4fdd\u9a71\u52a8\u548c\u8f6f\u4ef6\u5df2\u6b63\u786e\u5b89\u88c5"
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "<strong>\u98de\u63a7\u70e7\u5199\u5931\u8d25\u6062\u590d\/\u4e22\u5931\u6570\u636e\u8fde\u63a5<strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "\u5982\u679c\u98de\u63a7\u677f\u5931\u53bb\u901a\u4fe1\uff0c\u4f60\u53ef\u4ee5\u6309\u7167\u4ee5\u4e0b\u7684\u51e0\u4e2a\u6b65\u9aa4\u6765\u6062\u590d\uff1a<ul><li>\u5173\u95ed\u7535\u6e90<\/li><li>\u6253\u5f00'\u65e0\u91cd\u542f\u987a\u5e8f'\uff0c\u6253\u5f00\u2018\u64e6\u9664\u6574\u4e2a\u82af\u7247\u2018\u9009\u9879.<\/li><li>\u77ed\u63a5BOOT\u5f15\u811a\uff0c\u6216\u8005\u6309\u4f4fBOOT \u6309\u952e.<\/li><li>\u4e0a\u7535(\u5982\u679c\u64cd\u4f5c\u6b63\u786e\uff0c\u98de\u63a7\u677f\u5c06\u4e0d\u4f1a\u6709LED\u95ea\u70c1).<\/li><li>\u5982\u679c\u9700\u8981\u8bf7\u5b89\u88c5STM32 \u9a71\u52a8\u548cZadig if(\u53c2\u9605Betaflight manual<a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> \u90e8\u5206 ).<\/li><li>\u5173\u95edBefaflight\u8f6f\u4ef6\uff0c\u5173\u95ed\u6240\u6709Chrome\u5e94\u7528\uff0c\u7136\u540e\u91cd\u65b0\u542f\u52a8Betaflight.<\/li><li>\u91ca\u653eBOOT\u6309\u952e\uff0c\u5982\u679c\u98de\u63a7\u6709\u8be5\u6309\u952e.<\/li><li>\u70e7\u5199\u6b63\u786e\u7684\u56fa\u4ef6(\u53c2\u7167\u98de\u63a7\u5382\u5546\u5236\u5b9a\u7684\u98de\u63a7\u56fa\u4ef6).<\/li><li>\u5173\u95ed\u7535\u6e90.<\/li><li>\u79fb\u9664BOOT\u5f15\u811a\u7684\u77ed\u63a5.<\/li><li>\u4e0a\u7535(\u98de\u63a7LED \u5e94\u8be5\u4f1a\u95ea\u70c1).<\/li><li>\u6b63\u5e38\u8fde\u63a5.<\/li><\/ul>"
+    },
+    "firmwareFlasherButtonLeave": {
+        "message": "\u5173\u95ed\u56fa\u4ef6\u70e7\u5199"
+    },
+    "firmwareFlasherFirmwareNotLoaded": {
+        "message": "\u6ca1\u6709\u52a0\u8f7d\u56fa\u4ef6"
+    },
+    "firmwareFlasherHexCorrupted": {
+        "message": "HEX\u6587\u4ef6\u635f\u574f"
+    },
+    "firmwareFlasherRemoteFirmwareLoaded": {
+        "message": "<span class=\"message-positive\">\u56fa\u4ef6\u52a0\u8f7d\u6210\u529f, \u51c6\u5907\u70e7\u5f55<\/span>"
+    },
+    "firmwareFlasherFailedToLoadOnlineFirmware": {
+        "message": "\u52a0\u8f7d\u56fa\u4ef6\u5931\u8d25"
+    },
+    "firmwareFlasherNoFirmwareSelected": {
+        "message": "<b>\u6ca1\u6709\u627e\u5230\u9009\u62e9\u7684\u56fa\u4ef6<\/b>"
+    },
+    "firmwareFlasherNoValidPort": {
+        "message": "<span class=\"message-negative\">\u8bf7\u9009\u62e9\u6709\u6548\u7684\u4e32\u53e3<\/span>"
+    },
+    "firmwareFlasherWritePermissions": {
+        "message": "\u6ca1\u6709\u8be5\u6587\u4ef6 <span class=\"message-negative\">\u5199\u7684\u6743\u9650<\/span>"
+    },
+    "firmwareFlasherFlashTrigger": {
+        "message": "\u68c0\u6d4b\u5230\u98de\u63a7: <strong>$1<\/strong> - \u5f00\u59cb\u81ea\u52a8\u8fde\u63a5\u70e7\u5f55"
+    },
+    "firmwareFlasherPreviousDevice": {
+        "message": "\u68c0\u6d4b\u5230\u98de\u63a7\uff1a<strong>$1<\/strong> - \u56fa\u4ef6\u70e7\u5199\u6b63\u5728\u70e7\u5199\u98de\u63a7\uff0c\u8bf7\u91cd\u65b0\u63d2\u5165\u91cd\u8bd5"
+    },
+    "ledStripHelp": {
+        "message": "\u98de\u63a7\u53ef\u4ee5\u63a7\u5236\u5355\u72ec\u6216\u8005\u591a\u4e2aLED \u706f\u5e26\u3002.<br \/>\u5148\u8bbe\u7f6e\u7f51\u683c\u8bbe\u7f6eLED\uff0c\u7136\u540e\u914d\u7f6eLED\u5e03\u7ebf\u987a\u5e8f\uff0c\u6700\u540e\u6309\u7167\u7f51\u683c\u4e0aLED\u4f4d\u7f6e\u548c\u5e03\u7ebf\u987a\u5e8f\u5b89\u88c5\u5230\u98de\u673a\u4e0a\u3002\u6ca1\u6709\u8bbe\u7f6e\u5e03\u7ebf\u987a\u5e8f\u7684LED\u5c06\u65e0\u6cd5\u4fdd\u5b58.<br \/>"
+    },
+    "ledStripButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "ledStripEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+    },
+    "ledStripVtxOverlay": {
+        "message": "\u56fe\u4f20(\u4f7f\u7528\u56fe\u4f20\u9891\u7387\u6765\u8bbe\u7f6eLED\u989c\u8272)"
+    },
+    "ledStripFunctionSection": {
+        "message": "LED \u529f\u80fd"
+    },
+    "ledStripFunctionTitle": {
+        "message": "\u529f\u80fd"
+    },
+    "ledStripColorModifierTitle": {
+        "message": "\u989c\u8272\u4fee\u6539\u5668"
+    },
+    "ledStripThrottleFunction": {
+        "message": "\u6cb9\u95e8"
+    },
+    "ledStripVtxFunction": {
+        "message": "\u5de6\u53f3\u626b\u63cf"
+    },
+    "ledStripBlinkTitle": {
+        "message": "\u95ea\u70c1"
+    },
+    "ledStripBlinkAlwaysOverlay": {
+        "message": "\u6301\u7eed\u95ea\u70c1"
+    },
+    "ledStripBlinkLandingOverlay": {
+        "message": "\u7740\u9646\u95ea\u70c1"
+    },
+    "ledStripOverlayTitle": {
+        "message": "\u53e0\u52a0"
+    },
+    "ledStripWarningsOverlay": {
+        "message": "\u8b66\u544a"
+    },
+    "ledStripIndecatorOverlay": {
+        "message": "\u6307\u793a\u706f"
+    },
+    "colorBlack": {
+        "message": "\u9ed1\u8272"
+    },
+    "colorWhite": {
+        "message": "\u767d\u8272"
+    },
+    "colorRed": {
+        "message": "\u7ea2\u8272"
+    },
+    "colorOrange": {
+        "message": "\u6a58\u8272"
+    },
+    "colorYellow": {
+        "message": "\u9ec4\u8272"
+    },
+    "colorLimeGreen": {
+        "message": "\u6a59\u7eff\u8272"
+    },
+    "colorGreen": {
+        "message": "\u7eff\u8272"
+    },
+    "colorMintGreen": {
+        "message": "\u8584\u8377\u7eff"
+    },
+    "colorCyan": {
+        "message": "\u9752\u8272"
+    },
+    "colorLightBlue": {
+        "message": "\u6d45\u84dd\u8272"
+    },
+    "colorBlue": {
+        "message": "\u84dd\u8272"
+    },
+    "colorDarkViolet": {
+        "message": "\u6697\u7d2b\u8272"
+    },
+    "colorMagenta": {
+        "message": "\u54c1\u7ea2\u8272"
+    },
+    "colorDeepPink": {
+        "message": "\u6df1\u7c89\u7ea2"
+    },
+    "controlAxisRoll": {
+        "message": "\u6a2a\u6edaA"
+    },
+    "controlAxisPitch": {
+        "message": "\u4fef\u4ef0 E"
+    },
+    "controlAxisYaw": {
+        "message": "\u65b9\u5411 R"
+    },
+    "controlAxisThrottle": {
+        "message": "\u6cb9\u95e8 T"
+    },
+    "controlAxisAux1": {
+        "message": "AUX 1"
+    },
+    "controlAxisAux2": {
+        "message": "AUX 2"
+    },
+    "controlAxisAux3": {
+        "message": "AUX 3"
+    },
+    "controlAxisAux4": {
+        "message": "AUX 4"
+    },
+    "controlAxisAux5": {
+        "message": "AUX 5"
+    },
+    "controlAxisAux6": {
+        "message": "AUX 6"
+    },
+    "controlAxisAux7": {
+        "message": "AUX 7"
+    },
+    "controlAxisAux8": {
+        "message": "AUX 8"
+    },
+    "controlAxisAux9": {
+        "message": "AUX 9"
+    },
+    "controlAxisAux10": {
+        "message": "AUX 10"
+    },
+    "controlAxisAux11": {
+        "message": "AUX 11"
+    },
+    "controlAxisAux12": {
+        "message": "AUX 12"
+    },
+    "controlAxisAux13": {
+        "message": "AUX 13"
+    },
+    "controlAxisAux14": {
+        "message": "AUX 14"
+    },
+    "controlAxisAux15": {
+        "message": "AUX 15"
+    },
+    "controlAxisAux16": {
+        "message": "AUX 16"
+    },
+    "pidTuningBasic": {
+        "message": "\u57fa\u672c\/\u624b\u52a8\u6a21\u5f0f"
+    },
+    "pidTuningYawJumpPrevention": {
+        "message": "\u9632\u6b62\u65b9\u5411\u6447\u6746\u5f15\u8d77\u98de\u673a\u9ad8\u5ea6\u53d8\u5316"
+    },
+    "pidTuningYawJumpPreventionHelp": {
+        "message": "\u5728\u5b8c\u6210\u65b9\u5411\u6447\u6746\u52a8\u4f5c\u65f6\u4fdd\u6301\u98de\u673a\u9ad8\u5ea6\u4e0d\u53d8\uff0c\u6570\u503c\u8d8a\u5927\uff0c\u529f\u80fd\u4f5c\u7528\u8d8a\u5927\u3002"
+    },
+    "pidTuningRcExpoPower": {
+        "message": "RC \u66f2\u7ebf\u6743\u91cd"
+    },
+    "pidTuningRcExpoPowerHelp": {
+        "message": "The exponent that is used when calculating RC Expo. In Betaflight versions prior to 3.0, value is fixed at 3."
+    },
+    "pidTuningLevel": {
+        "message": "\u89d2\u5ea6\/\u6c34\u5e73"
+    },
+    "pidTuningAltitude": {
+        "message": "\u9ad8\u5ea6\u8ba1\u548c\u58f0\u5450\/\u9ad8\u5ea6"
+    },
+    "pidTuningMag": {
+        "message": "\u78c1\u573a\u8ba1\/\u671d\u5411"
+    },
+    "pidTuningGps": {
+        "message": "GPS\u5bfc\u822a"
+    },
+    "pidTuningStrength": {
+        "message": "\u5f3a\u5ea6"
+    },
+    "pidTuningTransition": {
+        "message": "\u8fc7\u6e21"
+    },
+    "pidTuningHorizon": {
+        "message": "\u6c34\u5e73\u6a21\u5f0f"
+    },
+    "pidTuningAngle": {
+        "message": "\u89d2\u5ea6\u6a21\u5f0f"
+    },
+    "pidTuningLevelAngleLimit": {
+        "message": "\u89d2\u5ea6\u9650\u5236"
+    },
+    "pidTuningLevelSensitivity": {
+        "message": "\u654f\u611f\u5ea6"
+    },
+    "pidTuningLevelHelp": {
+        "message": "\u4ee5\u4e0b\u503c\u5e94\u7528\u4e8e\u6c34\u5e73\u6a21\u5f0f\u548c\u89d2\u5ea6\u6a21\u5f0f\u3002\u4e0d\u540c\u7684PID\u63a7\u5236\u5668\u5bf9\u8be5\u503c\u7684\u8981\u6c42\u6570\u503c\u4f1a\u4e0d\u4e00\u6837\u3002\u8bf7\u53c2\u9605\u5177\u4f53\u6587\u6863\u8bf4\u660e"
+    },
+    "pidTuningNonProfileFilterSettings": {
+        "message": "\u72ec\u7acb\u4e0e\u914d\u7f6e\u6587\u4ef6\u7684\u6ee4\u6ce2\u5668\u8bbe\u7f6e"
+    },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "\u9640\u87ba\u4eea\u8f6f\u4ef6\u4f4e\u901a\u6ee4\u6ce2\u9891\u7387[Hz]"
+    },
+    "pidTuningGyroLowpassFrequencyHelp": {
+        "message": "\u9640\u87ba\u4eea\u8f6f\u4ef6\u4f4e\u901a\u6ee4\u6ce2\u9891\u7387[Hz]"
+    },
+    "pidTuningGyroNotch1Enable": {
+        "message": "\u6253\u5f00\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668 1"
+    },
+    "pidTuningGyroNotch1Frequency": {
+        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387[Hz]"
+    },
+    "pidTuningGyroNotch2Enable": {
+        "message": "\u6253\u5f00\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668 2"
+    },
+    "pidTuningGyroNotch2Frequency": {
+        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u56682 \u9891\u7387[Hz]"
+    },
+    "pidTuningGyroNotchFrequencyHelp": {
+        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387 Hz"
+    },
+    "pidTuningGyroNotch1Cutoff": {
+        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u73871 [Hz]"
+    },
+    "pidTuningGyroNotch2Cutoff": {
+        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u73872 [Hz]"
+    },
+    "pidTuningGyroNotchCutoffHelp": {
+        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u7387 Hz (\u8fd9\u662f\u9677\u6ce2\u6ee4\u6ce2\u5668\u5f00\u59cb\u9891\u7387\uff0c\u4e3e\u4f8b\uff0c\u5047\u5982\u9677\u6ce2\u6ee4\u6ce2\u5668\u8bbe\u7f6e160 \u548c\u9677\u6ce2\u9891\u7387\u5728260Hz\uff0c\u5728\u8303\u56f4160-360Hz\uff0c\u4e2d\u95f4\u9891\u7387\u8870\u51cf\u6700\u4e25\u91cd )"
+    },
+    "pidTuningFilterSettings": {
+        "message": "\u6ee4\u6ce2\u5668\u8bbe\u7f6e"
+    },
+    "pidTuningDTermLowpassType": {
+        "message": "D-term \u4f4e\u901a\u6ee4\u6ce2\u5668"
+    },
+    "pidTuningDTermLowpassTypeTip": {
+        "message": "\u9009\u62e9D-Term\u4f4e\u901a\u6ee4\u6ce2\u5668\u7c7b\u578b\uff0c\u9ed8\u8ba4BIQUAD"
+    },
+    "pidTuningDTermLowpassFrequency": {
+        "message": "D Term \u4f4e\u901a\u9891\u7387 [Hz]"
+    },
+    "pidTuningDTermLowpassFrequencyHelp": {
+        "message": "D Term \u4f4e\u901a\u9891\u7387  [Hz] (0 \u8868\u793a\u5173\u95ed)"
+    },
+    "pidTuningDTermNotchEnable": {
+        "message": "\u6253\u5f00 D Term \u9677\u6ce2\u6ee4\u6ce2\u5668"
+    },
+    "pidTuningDTermNotchFrequency": {
+        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387 [Hz]"
+    },
+    "pidTuningDTermNotchFrequencyHelp": {
+        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387 [Hz] (0 \u8868\u793a\u5173\u95ed)"
+    },
+    "pidTuningDTermNotchCutoff": {
+        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u7387 [Hz]"
+    },
+    "pidTuningDTermNotchCutoffHelp": {
+        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u7387 Hz (\u8fd9\u662f\u9677\u6ce2\u6ee4\u6ce2\u5668\u5f00\u59cb\u9891\u7387\uff0c\u4e3e\u4f8b\uff0c\u5047\u5982\u9677\u6ce2\u6ee4\u6ce2\u5668\u8bbe\u7f6e160 \u548c\u9677\u6ce2\u9891\u7387\u5728260Hz\uff0c\u5728\u8303\u56f4160-360Hz\uff0c\u4e2d\u95f4\u9891\u7387\u8870\u51cf\u6700\u4e25\u91cd )"
+    },
+    "pidTuningYawLowpassFrequency": {
+        "message": "\u65b9\u5411\u4f4e\u901a\u9891\u7387[Hz]"
+    },
+    "pidTuningYawLowpassFrequencyHelp": {
+        "message": "\u65b9\u5411\u4f4e\u901a\u9891\u7387[Hz](\u65b9\u5411\u8f74\u6709\u65f6\u5019\u4f1a\u6bd4\u5176\u4ed6\u8f74\u66f4\u5bb9\u6613\u53d7\u9707\u52a8\u566a\u97f3\u5e72\u6270\uff0c\u8fd9\u4e2a\u6ee4\u6ce2\u5668\u4ec5\u4ec5\u5f71\u54cd\u65b9\u5411\u7684P \u6570\u503c)"
+    },
+    "pidTuningVbatPidCompensation": {
+        "message": "\u7535\u6c60\u7535\u538bPID \u8865\u507f"
+    },
+    "pidTuningVbatPidCompensationHelp": {
+        "message": "\u5f53\u7535\u6c60\u7535\u538b\u53d8\u4f4e\u65f6\uff0c \u98de\u63a7\u81ea\u52a8\u589e\u52a0PID\u6570\u503c\u6765\u8865\u507f\u52a8\u529b\u7684\u635f\u5931\u3002\u8fd9\u4e2a\u529f\u80fd\u65e8\u5728\u66f4\u597d\u7684\u4fdd\u6301\u98de\u884c\u7279\u6027\u4e00\u81f4\u4e0d\u7ba1\u7535\u6c60\u662f\u6ee1\u7535\u8fd8\u662f\u7535\u6c60\u7535\u538b\u4f4e\u3002\u8fd9\u4e2a\u8865\u507f\u6570\u503c\u662f\u901a\u8fc7\u5728\u8bbe\u7f6e\u9875\u9762\u201c\u6700\u5927\u6bcf\u5757\u7535\u6c60\u7535\u538b\u201d \u6765\u8ba1\u7b97\u3002\u6b63\u786e\u7684\u8bbe\u7f6e\u6bcf\u5757\u7535\u6c60\u6700\u5927\u7535\u538b\u624d\u4f1a\u4f7f\u8be5\u529f\u80fd\u53d1\u6325\u5728\u5927\u4f5c\u7528\u3002"
+    },
+    "configHelp2": {
+        "message": "\u4efb\u610f\u65cb\u8f6c\u677f\u5b50\u5b89\u88c5\u89d2\u5ea6\uff0c\u5141\u8bb8\u98de\u63a7\u4efb\u610f\u952e\u5b89\u88c5\uff0c(\u6b63\u9762\uff0c\u4fa7\u9762\uff0c\u53cd\u9762\uff0c\u65cb\u8f6c)\u7b49\u7b49\u3002\u5f53\u4f7f\u7528\u5916\u90e8\u4f20\u611f\u5668\u65f6\uff0c\u8bf7\u4f7f\u7528\u4f20\u611f\u5668\u6821\u6b63(\u9640\u87ba\uff0c\u52a0\u901f\u5ea6\u8ba1\uff0c\u78c1\u573a\u8ba1)\u6765\u51b3\u5b9a\u4f20\u611f\u5668\u7684\u4f4d\u7f6e"
+    },
+    "failsafeFeaturesHelpOld": {
+        "message": "\u5931\u63a7\u4fdd\u62a4\u529f\u80fd\u4e00\u5927\u90e8\u5206\u6539\u5199\u3002\u8bf7\u4f7f\u7528Betaflight <strong>v1.12.0+<\/strong> \u6765\u8bbe\u7f6e\u66f4\u591a\u5931\u63a7\u4fdd\u62a4\u529f\u80fd"
+    },
+    "failsafePaneTitleOld": {
+        "message": "\u63a5\u6536\u673a\u5931\u63a7\u4fdd\u62a4"
+    },
+    "failsafeFeaturesHelpNew": {
+        "message": "\u5931\u63a7\u4fdd\u62a4\u6709\u4e24\u9636\u6bb5\u3002\u98de\u63a7\u5c06\u8fdb\u5165<strong>\u4e00\u9636\u5931\u63a7\u4fdd\u62a4<\/strong>\u5f53\u63a5\u6536\u673a\u901a\u9053\u6536\u5230\u65e0\u6548\u7684\u8109\u51b2\u957f\u5ea6\uff0c\u63a5\u6536\u673a\u51fa\u73b0\u5931\u63a7\u72b6\u6001\uff0c\u6216\u8005\u98de\u63a7\u6536\u4e0d\u5230\u63a5\u6536\u673a\u901a\u9053\u4fe1\u53f7\uff0c\u901a\u9053\u5c06\u4f1a\u5728<span class=\"message-negative\">\u6240\u6709\u901a\u9053<\/span>\u4f7f\u7528\u9884\u7f6e\u901a\u9053\u8bbe\u7f6e\u3002\u63d0\u4f9b\u77ed\u65f6\u95f4\u4e4b\u5185\u7684\u4fe1\u53f7\u6062\u590d\u3002\u98de\u63a7\u5c06\u8fdb\u5165<strong>\u4e8c\u4ef7\u5931\u63a7\u4fdd\u62a4<\/strong> \u5f53\u98de\u63a7<span class=\"message-negative\"> \u5f00\u9501<\/span>\u540e\uff0c\u98de\u63a7\u68c0\u6d4b\u5230\u9519\u8bef\u53d1\u751f\u65f6\u95f4\u8d85\u8fc7\u4e86\u8bbe\u7f6e\u7684\u65f6\u95f4\uff0c\u6240\u6709\u901a\u9053\u5c06\u4f1a\u4fdd\u6301\u5f53\u524d\u6570\u636e\uff0c\u76f4\u5230\u98de\u63a7\u91cd\u65b0\u542f\u52a8\u3002<br \/><strong>\u6ce8\u610f:<\/strong> \u5728\u98de\u63a7\u8fdb\u5165\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u4e4b\u524d\uff0c\u5982\u679cAUX \u901a\u9053\u51fa\u73b0\u65e0\u6548\u7684\u8109\u51b2\uff0c\u8be5\u901a\u9053\u4e00\u6837\u4f1a\u4f7f\u7528\u9884\u7f6e\u901a\u9053\u8bbe\u7f6e\u3002"
+    },
+    "failsafePulsrangeTitle": {
+        "message": "\u65e0\u6548\u8109\u51b2\u8303\u56f4\u8bbe\u7f6e"
+    },
+    "failsafePulsrangeHelp": {
+        "message": "\u8109\u51b2\u957f\u5ea6\u5c0f\u4e8e\u6700\u5c0f\uff0c\u6216\u8005\u8d85\u8fc7\u6700\u5927\uff0c\u90fd\u4f1a\u8ba4\u4e3a\u662f\u65e0\u6548\u8109\u51b2\u3002\u5c06\u4f1a\u5f15\u8d77\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u3002"
+    },
+    "failsafeRxMinUsecItem": {
+        "message": "\u6700\u5c0f\u957f\u5ea6"
+    },
+    "failsafeRxMaxUsecItem": {
+        "message": "\u6700\u5927\u957f\u5ea6"
+    },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "\u9884\u7f6e\u901a\u9053\u8bbe\u7f6e"
+    },
+    "failsafeChannelFallbackSettingsHelp": {
+        "message": "\u5f53\u8fdb\u5165\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u65f6\uff0c\u8fd9\u4e9b\u8bbe\u7f6e\u5c06\u4f1a\u5e94\u7528\u4e8e\u5355\u72ec\u65e0\u6548\u7684AUX \u901a\u9053\uff0c\u6216\u8005\u662f\u6240\u6709\u901a\u9053\u3002 <strong>\u6ce8\u610f:<\/strong>\u6570\u503c\u5c06\u4f1a\u5df2\u6bcf25\u5fae\u79d2\u4fdd\u5b58\uff0c\u5c0f\u4e8e25\u5fae\u79d2\u7684\u8bbe\u7f6e\u5c06\u4e0d\u4f1a\u4fdd\u5b58\u3002"
+    },
+    "failsafeChannelFallbackSettingsAuto": {
+        "message": "<strong>\u81ea\u52a8<\/strong> \u6307\u7684\u662f \u6a2a\u6eda\uff0c\u4fef\u4ef0\uff0c\u65b9\u5411\u56de\u4e2d\uff0c\u6cb9\u95e8\u6700\u4f4e\u3002 <strong>\u4fdd\u6301<\/strong> \u6307\u7684\u662f \u6240\u6709\u901a\u9053\u4fdd\u6301\u6700\u540e\u63a5\u6536\u5230\u7684\u63a5\u6536\u673a\u6709\u6548\u6570\u636e"
+    },
+    "failsafeChannelFallbackSettingsHold": {
+        "message": "<strong>\u4fdd\u6301<\/strong>\u6307\u7684\u662f\u6240\u6709\u901a\u9053\u4fdd\u6301\u6700\u540e\u63a5\u6536\u5230\u7684\u63a5\u6536\u673a\u6709\u6548\u6570\u636e<strong>Set<\/strong> means the value given here will be used"
+    },
+    "failsafeStageTwoSettingsTitle": {
+        "message": "\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4-\u8bbe\u7f6e"
+    },
+    "failsafeDelayItem": {
+        "message": "\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4\u4fe1\u53f7\u4e22\u5931\u68c0\u6d4b\u65f6\u95f4[1 = 0.1 \u79d2.]"
+    },
+    "failsafeDelayHelp": {
+        "message": "\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u7b49\u5f85\u4fe1\u53f7\u6062\u590d\u65f6\u95f4"
+    },
+    "failsafeThrottleLowItem": {
+        "message": "\u5931\u63a7\u4fdd\u62a4\u6700\u4f4e\u6cb9\u95e8\u5ef6\u65f6[1 = 0.1 \u79d2.]"
+    },
+    "failsafeThrottleLowHelp": {
+        "message": "\u4e0a\u9501\u7535\u673a\uff0c\u5f53\u6cb9\u95e8\u5728\u6700\u4f4e\u8d85\u8fc7\u6539\u65f6\u95f4"
+    },
+    "failsafeThrottleItem": {
+        "message": "\u964d\u843d\u65f6\u6cb9\u95e8\u5927\u5c0f"
+    },
+    "failsafeOffDelayItem": {
+        "message": "\u5931\u63a7\u4fdd\u62a4\u8fc7\u7a0b\u4e2d\u7535\u673a\u5173\u95ed\u5ef6\u65f6 [1 = 0.1 \u79d2.]"
+    },
+    "failsafeOffDelayHelp": {
+        "message": "\u4fdd\u6301\u964d\u843d\u6a21\u5f0f\u65f6\u95f4\uff0c\u77e5\u9053\u7535\u673a\u5173\u95ed\u6216\u8005\u98de\u63a7\u4e0a\u9501"
+    },
+    "failsafeSubTitle1": {
+        "message": "\u4e8c\u7ea7\u5931\u63a7\u4fdd\u62a4-\u5931\u63a7\u6267\u884c"
+    },
+    "failsafeProcedureItemSelect1": {
+        "message": "\u7740\u843d"
+    },
+    "failsafeProcedureItemSelect2": {
+        "message": "\u5760\u843d"
+    },
+    "failsafeKillSwitchItem": {
+        "message": "\u5f00\u5173\u5931\u63a7\u4fdd\u62a4(\u901a\u8fc7\u6a21\u5f0f\u9875\u9762\u8bbe\u7f6e\u5931\u63a7\u4fdd\u62a4\u5f00\u5173)"
+    },
+    "failsafeKillSwitchHelp": {
+        "message": "\u8bbe\u7f6e\u8fd9\u4e2a\u9009\u9879\u4f1a\u4f7f\u5931\u63a7\u4fdd\u62a4\u5f00\u5173(\u6a21\u5f0f\u9875\u9762\u8bbe\u7f6e)\u4f5c\u4e3a\u76f4\u63a5\u5173\u95ed\u5f00\u5173\uff0c\u5c06\u4f1a\u7ed5\u5f00\u6240\u6709\u7684\u5931\u63a7\u4fdd\u62a4\u68c0\u6d4b\u7a0b\u5e8f\u3002<strong>\u6ce8\u610f:<\/strong> \u5f53\u6253\u5f00\u5931\u63a7\u4fdd\u62a4\u5f00\u5173\u65f6\uff0c\u89e3\u9501\u5f00\u5173\u65e0\u6548"
+    },
+    "powerButtonSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "powerFirmwareUpgradeRequired": {
+        "message": "\u56fa\u4ef6\u66f4\u65b0 <span class=\"message-negative\">\u8981\u6c42<\/span>. \u7535\u6c60\u7535\u538b\u3001\u7535\u6d41\u901a\u8fc7API &lt; 1.33.0\u8bbe\u7f6e\u3002 (Betaflight \u7248\u672c&lt;= 3.17) \u5c06\u4e0d\u652f\u6301\u3002"
+    },
+    "powerBatteryVoltageMeterSource": {
+        "message": "\u7535\u538b\u4f20\u611f\u5668\u6765\u6e90"
+    },
+    "powerBatteryVoltageMeterTypeNone": {
+        "message": "\u6ca1\u6709"
+    },
+    "powerBatteryVoltageMeterTypeAdc": {
+        "message": "\u677f\u8f7d\u7535\u538b\u4f20\u611f\u5668"
+    },
+    "powerBatteryVoltageMeterTypeEsc": {
+        "message": "\u7535\u8c03\u7535\u538b\u4f20\u611f"
+    },
+    "powerBatteryCurrentMeterSource": {
+        "message": "\u7535\u6d41\u8ba1\u6765\u6e90"
+    },
+    "powerBatteryCurrentMeterTypeNone": {
+        "message": "\u6ca1\u6709"
+    },
+    "powerBatteryCurrentMeterTypeAdc": {
+        "message": "\u677f\u8f7d\u7535\u6d41\u4f20\u611f\u5668"
+    },
+    "powerBatteryCurrentMeterTypeVirtual": {
+        "message": "\u6a21\u62df\u7535\u6d41\u4f20\u611f\u5668"
+    },
+    "powerBatteryCurrentMeterTypeEsc": {
+        "message": "\u7535\u8c03\u7535\u6d41\u4f20\u611f\u5668"
+    },
+    "powerBatteryCurrentMeterTypeMsp": {
+        "message": "MSP \u4f20\u611f\u5668\/OSD \u4ece\u673a"
+    },
+    "powerBatteryMinimum": {
+        "message": "\u6700\u5c0f\u6bcf\u5757\u7535\u6c60\u7535\u538b"
+    },
+    "powerBatteryMaximum": {
+        "message": "\u6700\u5927\u6bcf\u5757\u7535\u6c60\u7535\u538b"
+    },
+    "powerBatteryWarning": {
+        "message": "\u8b66\u544a\u5757\u7535\u6c60\u7535\u538b"
+    },
+    "powerVoltageHead": {
+        "message": "\u7535\u538b\u8ba1"
+    },
+    "powerVoltageValue": {
+        "message": "$1 \u4f0f"
+    },
+    "powerAmperageValue": {
+        "message": "$1 \u5b89"
+    },
+    "powerVoltageId10": {
+        "message": "\u7535\u6c60"
+    },
+    "powerVoltageId20": {
+        "message": "5\u4f0f"
+    },
+    "powerVoltageId30": {
+        "message": "9\u4f0f"
+    },
+    "powerVoltageId40": {
+        "message": "12\u4f0f"
+    },
+    "powerVoltageId50": {
+        "message": "\u7535\u8c03\u7ec4\u5408"
+    },
+    "powerVoltageId60": {
+        "message": "\u7535\u8c03 \u7535\u673a 1"
+    },
+    "powerVoltageId61": {
+        "message": "\u7535\u8c03 \u7535\u673a 2"
+    },
+    "powerVoltageId62": {
+        "message": "\u7535\u673a\u7535\u8c03 3"
+    },
+    "powerVoltageId63": {
+        "message": "\u7535\u8c03 \u7535\u673a4"
+    },
+    "powerVoltageId64": {
+        "message": "\u7535\u8c03 \u7535\u673a 5"
+    },
+    "powerVoltageId65": {
+        "message": "\u7535\u8c03 \u7535\u673a 6"
+    },
+    "powerVoltageId66": {
+        "message": "\u7535\u8c03 \u7535\u673a 7"
+    },
+    "powerVoltageId67": {
+        "message": "\u7535\u8c03 \u7535\u673a 8"
+    },
+    "powerVoltageId68": {
+        "message": "\u7535\u8c03 \u7535\u673a 9"
+    },
+    "powerVoltageId69": {
+        "message": "\u7535\u8c03 \u7535\u673a 10"
+    },
+    "powerVoltageId70": {
+        "message": "\u7535\u8c03 \u7535\u673a 11"
+    },
+    "powerVoltageId71": {
+        "message": "\u7535\u8c03 \u7535\u673a 12"
+    },
+    "powerVoltageId80": {
+        "message": "\u7b2c\u4e00\u5757"
+    },
+    "powerVoltageId81": {
+        "message": "\u7b2c\u4e8c\u5757"
+    },
+    "powerVoltageId82": {
+        "message": "\u7b2c\u4e09\u5757"
+    },
+    "powerVoltageId83": {
+        "message": "\u7b2c\u56db\u5757"
+    },
+    "powerVoltageId84": {
+        "message": "\u7b2c\u4e94\u5757"
+    },
+    "powerVoltageId85": {
+        "message": "\u7b2c\u516d\u5757"
+    },
+    "powerVoltageScale": {
+        "message": "\u6bd4\u4f8b"
+    },
+    "powerVoltageDivider": {
+        "message": "\u7535\u963b\u5206\u538b\u5668 \u6570\u503c"
+    },
+    "powerVoltageMultiplier": {
+        "message": "\u500d\u6570"
+    },
+    "powerAmperageHead": {
+        "message": "\u7535\u6d41\u8ba1"
+    },
+    "powerAmperageId10": {
+        "message": "\u7535\u6c60"
+    },
+    "powerAmperageId50": {
+        "message": "\u7535\u8c03\u56de\u4f20\u7535\u538b"
+    },
+    "powerAmperageId60": {
+        "message": "\u7535\u8c03 \u7535\u673a 1"
+    },
+    "powerAmperageId61": {
+        "message": "\u7535\u8c03 \u7535\u673a 2"
+    },
+    "powerAmperageId62": {
+        "message": "\u7535\u8c03 \u7535\u673a 3"
+    },
+    "powerAmperageId63": {
+        "message": "\u7535\u8c03 \u7535\u673a 4"
+    },
+    "powerAmperageId64": {
+        "message": "\u7535\u8c03 \u7535\u673a 5"
+    },
+    "powerAmperageId65": {
+        "message": "\u7535\u8c03 \u7535\u673a 6"
+    },
+    "powerAmperageId66": {
+        "message": "\u7535\u8c03 \u7535\u673a 7"
+    },
+    "powerAmperageId67": {
+        "message": "\u7535\u8c03 \u7535\u673a 8"
+    },
+    "powerAmperageId68": {
+        "message": "\u7535\u8c03 \u7535\u673a 9"
+    },
+    "powerAmperageId69": {
+        "message": "\u7535\u8c03 \u7535\u673a 10"
+    },
+    "powerAmperageId70": {
+        "message": "\u7535\u8c03 \u7535\u673a 11"
+    },
+    "powerAmperageId71": {
+        "message": "\u7535\u8c03 \u7535\u673a 12"
+    },
+    "powerAmperageId80": {
+        "message": "\u6a21\u62df"
+    },
+    "powerAmperageId90": {
+        "message": "MSP"
+    },
+    "powerMahValue": {
+        "message": "$1 \u6beb\u5b89\u65f6"
+    },
+    "powerAmperageScale": {
+        "message": "\u6bd4\u4f8b[ \u6beb\u4f0f X 10 \/\u5b89]"
+    },
+    "powerAmperageOffset": {
+        "message": "\u8865\u507f [\u6beb\u4f0f]"
+    },
+    "powerBatteryHead": {
+        "message": "\u7535\u6c60"
+    },
+    "powerStateHead": {
+        "message": "\u529f\u7387\u72b6\u6001"
+    },
+    "powerBatteryConnected": {
+        "message": "\u8fde\u63a5"
+    },
+    "powerBatteryConnectedValueYes": {
+        "message": "\u786e\u5b9a(\u7535\u6c60\u5757\u6570: $1)"
+    },
+    "powerBatteryConnectedValueNo": {
+        "message": "\u5426\u5b9a"
+    },
+    "powerBatteryVoltage": {
+        "message": "\u7535\u538b"
+    },
+    "powerBatteryCurrentDrawn": {
+        "message": "\u4f7f\u7528\u6beb\u5b89\u65f6"
+    },
+    "powerBatteryAmperage": {
+        "message": "\u7535\u6d41"
+    },
+    "powerBatteryCapacity": {
+        "message": "\u5bb9\u91cf (\u6beb\u5b89\u65f6)"
+    },
+    "osdSetupTitle": {
+        "message": "OSD\u5c4f\u5e55\u53e0\u52a0\u663e\u793a"
+    },
+    "osdSetupPreviewHelp": {
+        "message": "<strong>\u6ce8\u610f:<\/strong> \u5c4f\u5e55\u663e\u793a\u9605\u89c8\u663e\u793a\u7684\u5b57\u4f53\uff0c\u6709\u53ef\u80fd\u548c\u5b9e\u9645OSD\u663e\u793a\u7684\u5b57\u4f53\u4e0d\u4e00\u6837."
+    },
+    "osdSetupUnsupportedNote1": {
+        "message": "\u98de\u63a7\u5bf9\u5c4f\u5e55\u663e\u793a\u529f\u80fd\u7684\u547d\u4ee4\u65e0\u53cd\u5e94\uff0c\u6709\u53ef\u80fd\u80fd\u98de\u63a7\u4e0d\u5e26\u677f\u8f7d\u5c4f\u5e55\u663e\u793a\u529f\u80fd\u3002"
+    },
+    "osdSetupUnsupportedNote2": {
+        "message": "\u6ce8\u610f\uff0c\u6709\u7684\u98de\u63a7\u5e26\u6709 <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a> \uff0c\u53ef\u4ee5\u901a\u8fc7<a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>\u6765\u70e7\u5f55\u548c\u8bbe\u7f6e,\u4f46\u662f\u8fd9\u6837\u7684\u98de\u63a7\u4e0d\u80fd\u901a\u8fc7\u8be5\u9875\u9762\u6765\u8bbe\u7f6e\u53c2\u6570"
+    },
+    "osdSetupElementsTitle": {
+        "message": "\u663e\u793a\u7684\u5355\u5143"
+    },
+    "osdSetupElementsSwitchAll": {
+        "message": "\u5173\u95ed\u6240\u6709"
+    },
+    "osdSetupPreviewTitle": {
+        "message": "\u9884\u89c8(\u53ef\u4ee5\u901a\u8fc7\u62d6\u62fd\u6765\u6539\u53d8\u5148\u8981\u7684\u4f4d\u7f6e)"
+    },
+    "osdSetupPreviewTitleTip": {
+        "message": "\u5728\u9884\u89c8\u7a97\u53e3\u663e\u793a \u6216\u8005 \u9690\u85cfBetalight logo\u3002\u8fd9\u9009\u9879\u4e0d\u4f1a\u6539\u53d8\u5c4f\u5e55\u663e\u793a\u7684\u4efb\u4f55\u8bbe\u7f6e"
+    },
+    "osdSetupVideoFormatTitle": {
+        "message": "\u89c6\u9891\u683c\u5f0f"
+    },
+    "osdSetupUnitsTitle": {
+        "message": "\u5355\u4f4d"
+    },
+    "osdSetupTimersTitle": {
+        "message": "\u8ba1\u65f6\u5668"
+    },
+    "osdSetupAlarmsTitle": {
+        "message": "\u8b66\u62a5"
+    },
+    "osdSetupStatsTitle": {
+        "message": "\u98de\u884c\u7edf\u8ba1\u6570\u636e"
+    },
+    "osdSetupVtxTitle": {
+        "message": "\u56fe\u4f20\u8bbe\u7f6e"
+    },
+    "osdSetupCraftNameTitle": {
+        "message": "\u98de\u884c\u5668\u540d\u5b57"
+    },
+    "osdSetupWarningsTitle": {
+        "message": "\u8b66\u544a"
+    },
+    "osdSetupFontPresets": {
+        "message": "\u9884\u7f6e\u5b57\u4f53"
+    },
+    "osdSetupOpenFont": {
+        "message": "\u6253\u5f00\u5b57\u4f53\u6587\u4ef6"
+    },
+    "osdSetupUploadFont": {
+        "message": "\u66f4\u65b0\u5b57\u4f53"
+    },
+    "osdSetupSave": {
+        "message": "\u4fdd\u5b58"
+    },
+    "osdSetupFontManager": {
+        "message": "\u5b57\u4f53\u7ba1\u7406\u5668"
+    },
+    "osdSetupUncheckAll": {
+        "message": "\u5168\u4e0d\u9009"
+    },
+    "osdSetupHead": {
+        "message": "\u4fe1\u606f"
+    },
+    "osdSetupVideoMode": {
+        "message": "\u89c6\u9891\u683c\u5f0f"
+    },
+    "osdSetupCameraConnected": {
+        "message": "\u6444\u50cf\u5934\u5df2\u8fde\u63a5"
+    },
+    "osdSetupCameraConnectedValueYes": {
+        "message": "\u786e\u8ba4"
+    },
+    "osdSetupCameraConnectedValueNo": {
+        "message": "\u5426\u8ba4"
+    },
+    "osdSetupResetText": {
+        "message": "\u91cd\u7f6eOSD\u5230\u9ed8\u8ba4\u8bbe\u7f6e"
+    },
+    "osdSetupButtonReset": {
+        "message": "\u91cd\u8bbe\u914d\u7f6e"
+    },
+    "osdDescElementMainBattVoltage": {
+        "message": "\u7535\u538b\u663e\u793a(\u7535\u538b\u4f4e\u4e8e\u8b66\u544a\u7535\u538b\uff0c\u5c06\u4f1a\u95ea\u70c1)"
+    },
+    "osdDescElementRssiValue": {
+        "message": "\u663e\u793aRSSI(\u63a5\u6536\u673a\u4fe1\u53f7\u5f3a\u5ea6\uff0c\u5f53\u4f4e\u4e8e\u8b66\u544a\u6570\u503c\u5c06\u4f1a\u95ea\u901f)"
+    },
+    "osdDescElementThrottlePosition": {
+        "message": "\u5f53\u524d\u6cb9\u95e8\u4f4d\u7f6e"
+    },
+    "osdDescElementArmed": {
+        "message": "\u663e\u793a\u89e3\u9501\u4fe1\u606f"
+    },
+    "osdDescElementDisarmed": {
+        "message": "\u663e\u793a\u4e0a\u9501\u4fe1\u606f"
+    },
+    "osdDescElementCrosshairs": {
+        "message": "\u5728\u4e2d\u95f4\u663e\u793a\u5341\u5b57\u5149\u6807"
+    },
+    "osdDescElementArtificialHorizon": {
+        "message": "\u663e\u793a\u6a21\u62df\u5730\u5e73\u7ebf"
+    },
+    "osdDescElementHorizonSidebars": {
+        "message": "\u5728\u6a21\u62df\u5730\u5e73\u7ebf\u65c1\u8fb9\u663e\u793a\u6a2a\u7ebf"
+    },
+    "osdDescElementCurrentDraw": {
+        "message": "\u7535\u6d41\u663e\u793a"
+    },
+    "osdDescElementMahDrawn": {
+        "message": "\u663e\u793a\u4f7f\u7528\u7535\u6c60\u7528\u91cf"
+    },
+    "osdDescElementCraftName": {
+        "message": "\u663e\u793a\u98de\u884c\u5668\u540d\u79f0(\u901a\u8fc7\u8bbe\u7f6e\u9875\u9762\u8bbe\u7f6e)"
+    },
+    "osdDescElementAltitude": {
+        "message": "\u663e\u793a\u9ad8\u5ea6(\u5f53\u5927\u4e8e\u8bbe\u7f6e\u7684\u8b66\u544a\u9ad8\u5ea6\u65f6\uff0c\u95ea\u70c1)"
+    },
+    "osdDescElementOnTime": {
+        "message": "\u663e\u793a\u603b\u4e0a\u7535\u65f6\u95f4"
+    },
+    "osdDescElementFlyTime": {
+        "message": "\u663e\u793a\u603b\u5f00\u9501\u65f6\u95f4"
+    },
+    "osdDescElementFlyMode": {
+        "message": "\u663e\u793a\u5f53\u524d\u98de\u884c\u6a21\u5f0f"
+    },
+    "osdDescElementGPSSpeed": {
+        "message": "\u663e\u793aGPS \u901f\u5ea6"
+    },
+    "osdDescElementGPSSats": {
+        "message": "\u663e\u793a\u536b\u661f\u6570"
+    },
+    "osdDescElementGPSLon": {
+        "message": "\u663e\u793aGPS \u7ecf\u5ea6"
+    },
+    "osdDescElementGPSLat": {
+        "message": "\u663e\u793aGPS \u7eac\u5ea6"
+    },
+    "osdDescElementDebug": {
+        "message": "\u663e\u793a\u8c03\u8bd5\u53d8\u91cf"
+    },
+    "osdDescElementPIDRoll": {
+        "message": "\u663e\u793a\u6a2a\u6eda PID \u6570\u503c"
+    },
+    "osdDescElementPIDPitch": {
+        "message": "\u663e\u793a\u4fef\u4ef0 PID \u6570\u503c"
+    },
+    "osdDescElementPIDYaw": {
+        "message": "\u663e\u793a\u65b9\u5411 PID \u6570\u503c"
+    },
+    "osdDescElementPower": {
+        "message": "\u663e\u793a\u7535\u673a\u8f93\u51fa\u603b\u529f\u7387"
+    },
+    "osdDescElementPIDRateProfile": {
+        "message": "\u663e\u793a\u5f53\u524d\u4f7f\u7528\u7684PID \u548crate\u914d\u7f6e\u6587\u4ef6"
+    },
+    "osdDescElementBatteryWarning": {
+        "message": "\u663e\u793a\u6587\u5b57\u8b66\u544a\u63d0\u793a\uff0c\u5f53\u68c0\u6d4b\u5230\u7535\u6c60\u7535\u538b\u5c0f\u4e8e\u8bbe\u7f6e\u7684\u62a5\u8b66\u7535\u538b"
+    },
+    "osdDescElementAvgCellVoltage": {
+        "message": "\u5e73\u5747\u6bcf\u5757\u7535\u6c60\u7535\u538b(\u603b\u7535\u6c60\u7535\u538b \/ \u4e32\u6570)"
+    },
+    "osdDescElementPitchAngle": {
+        "message": "\u663e\u793a\u4fef\u4ef0\u89d2\u5ea6"
+    },
+    "osdDescElementRollAngle": {
+        "message": "\u663e\u793a\u6a2a\u6eda\u89d2\u5ea6"
+    },
+    "osdDescElementMainBattUsage": {
+        "message": "\u56fe\u5f62\u663e\u793a\u7535\u6c60\u5bb9\u91cf"
+    },
+    "osdDescElementArmedTime": {
+        "message": "\u663e\u793a\u4ece\u4e0a\u6b21\u89e3\u9501\u603b\u65f6\u95f4"
+    },
+    "osdDescElementWarnings": {
+        "message": "\u663e\u793a\u8b66\u62a5(\u6bd4\u5982\u4f4e\u7535\u538b)\uff0c\u8b66\u544a(\u4e0d\u80fd\u5f00\u9501\u539f\u56e0\uff0c\u7535\u6c60\u7535\u538b\u592a\u4f4e)\u548c \u6a21\u62df\u8702\u9e23\u5668(4 \u4e2a\u95ea\u70c1 \u661f\u53f7)"
+    },
+    "osdDescElementEscTemperature": {
+        "message": "\u663e\u793a\u7535\u8c03\u56de\u4f20\u6e29\u5ea6"
+    },
+    "osdDescElementEscRpm": {
+        "message": "\u663e\u793a\u7535\u8c03\u56de\u4f20\u7535\u673a\u8f6c\u901f"
+    },
+    "osdDescElementRtcDateTime": {
+        "message": "\u663e\u793a\u65e5\u671f\/\u65f6\u95f4"
+    },
+    "osdDescElementAdjustmentRange": {
+        "message": "\u5f53\u524d\u6fc0\u6d3b\u8303\u56f4\u8bbe\u7f6e\u548c\u6570\u503c"
+    },
+    "osdDescElementHomeDirection": {
+        "message": "\u663e\u793a\u98de\u673a\u8d77\u98de\u65b9\u5411\u7bad\u5934"
+    },
+    "osdDescElementHomeDistance": {
+        "message": "\u663e\u793a\u79bb\u98de\u673a\u8d77\u98de\u4f4d\u7f6e\u8ddd\u79bb"
+    },
+    "osdDescElementNumericalHeading": {
+        "message": "\u663e\u793a\u98de\u884c\u671d\u5411\u89d2\u5ea6"
+    },
+    "osdDescElementNumericalVario": {
+        "message": "\u663e\u793a\u4e0a\u5347\u901f\u5ea6"
+    },
+    "osdDescElementCompassBar": {
+        "message": "\u56fe\u5f62\u663e\u793a\u98de\u884c\u65b9\u5411"
+    },
+    "osdDescElementTimer1": {
+        "message": "\u663e\u793a\u8ba1\u65f6\u56681"
+    },
+    "osdDescElementTimer2": {
+        "message": "\u663e\u793a\u8ba1\u65f6\u56682"
+    },
+    "osdDescElementRemaningTimeEstimate": {
+        "message": "\u9884\u8ba1\u5269\u4f59\u7535\u6c60\u98de\u884c\u65f6\u95f4"
+    },
+    "osdDescElementUnknown": {
+        "message": "\u672a\u77e5\u53c2\u6570"
+    },
+    "osdDescElementCoreTemperature": {
+        "message": "\u663e\u793a\u98de\u63a7\u4e3b\u82af\u7247\u6e29\u5ea6"
+    },
+    "osdDescStatMaxSpeed": {
+        "message": "\u6700\u5927\u8bb0\u5f55\u901f\u5ea6"
+    },
+    "osdDescStatMinBattery": {
+        "message": "\u6700\u5c0f\u7535\u6c60\u7535\u538b"
+    },
+    "osdDescStatMinRssi": {
+        "message": "\u6700\u5c0fRSSI\u503c"
+    },
+    "osdDescStatMaxCurrent": {
+        "message": "\u6700\u5927\u7535\u6d41"
+    },
+    "osdDescStatUsedMah": {
+        "message": "\u4f7f\u7528\u7535\u6c60\u5bb9\u91cf"
+    },
+    "osdDescStatMaxAltitude": {
+        "message": "\u6700\u5927\u9ad8\u5ea6"
+    },
+    "osdDescStatBlackbox": {
+        "message": "\u9ed1\u5323\u5b50\u4f7f\u7528\u767e\u5206\u6bd4"
+    },
+    "osdDescStatEndBattery": {
+        "message": "\u89e3\u9501\u65f6\u7535\u6c60\u7535\u538b"
+    },
+    "osdDescStatFlyTime": {
+        "message": "\u89e3\u9501\u603b\u65f6\u95f4"
+    },
+    "osdDescStatArmedTime": {
+        "message": "\u79bb\u4e0a\u4e00\u6b21\u89e3\u9501\u65f6\u95f4"
+    },
+    "osdDescStatMaxDistance": {
+        "message": "\u79bb\u8d77\u98de\u4f4d\u7f6e\u6700\u5927\u8ddd\u79bb"
+    },
+    "osdDescStatBlackboxLogNumber": {
+        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55\u6587\u4ef6\u7f16\u53f7"
+    },
+    "osdDescStatTimer1": {
+        "message": "\u4e0a\u9501\u65f6\u8ba1\u65f6\u56681\u6570\u503c"
+    },
+    "osdDescStatTimer2": {
+        "message": "\u4e0a\u9501\u65f6\u8ba1\u65f6\u56682\u6570\u503c"
+    },
+    "osdDescStatRtcDateTime": {
+        "message": "\u5b9e\u65f6\u65f6\u949f\u65f6\u95f4\u65e5\u671f"
+    },
+    "osdTimerSource": {
+        "message": "\u6765\u6e90"
+    },
+    "osdTimerSourceTooltip": {
+        "message": "\u9009\u62e9\u65f6\u949f\u6e90"
+    },
+    "osdTimerPrecision": {
+        "message": "\u7cbe\u5ea6"
+    },
+    "osdTimerPrecisionTooltip": {
+        "message": "\u9009\u62e9\u8ba1\u65f6\u5668\u7cbe\u5ea6\u3002\u63a7\u5236\u65f6\u95f4\u7cbe\u5ea6"
+    },
+    "osdTimerAlarm": {
+        "message": "\u8b66\u544a"
+    },
+    "osdTimerAlarmTooltip": {
+        "message": "\u8bbe\u7f6e\u8ba1\u65f6\u5668\u8b66\u62a5\u65f6\u95f4(\u5206\u949f)\u3002\u5f53\u8ba1\u65f6\u5668\u65f6\u95f4\u5927\u4e8e\u8bbe\u7f6e\u65f6\u95f4\uff0c\u5c06\u4f1a\u5728OSD\u4e0a\u9762\u95ea\u70c1"
+    },
+    "osdWarningArmingDisabled": {
+        "message": "\u663e\u793a\u5f15\u8d77\u4e0d\u89e3\u9501\u6700\u4e25\u91cd\u7684\u539f\u56e0"
+    },
+    "osdWarningBatteryNotFull": {
+        "message": "\u8b66\u62a5\u68c0\u6d4b\u5230\u7535\u6c60\u4e0d\u6ee1\u7535"
+    },
+    "osdWarningBatteryWarning": {
+        "message": "\u8b66\u62a5\uff0c\u5f53\u7535\u6c60\u7535\u538b\u4f4e\u4e8e\u8bbe\u7f6e\u8b66\u62a5\u7535\u538b"
+    },
+    "osdWarningBatteryCritical": {
+        "message": "\u8b66\u62a5, \u5f53\u7535\u6c60\u5757\u7535\u538b\u4f4e\u4e8e\u6700\u5c0f\u5e73\u5747\u7535\u6c60\u5757\u7535\u538b"
+    },
+    "osdWarningVisualBeeper": {
+        "message": "\u663e\u793a\u5c4f\u5e55\u6a21\u62df\u8702\u9e23\u5668\uff0c\u663e\u793a4\u4e2a\u661f\u53f7"
+    },
+    "osdWarningCrashFlipMode": {
+        "message": "\u8b66\u544a\uff0c\u5f53\u5760\u673a\u6a21\u5f0f\u6fc0\u6d3b\u5e76\u98de\u673a\u6210\u529f\u53cd\u8f6c\u5230\u6b63\u9762\u3002"
+    },
+    "osdSectionHelpElements": {
+        "message": "\u663e\u793a\u6216\u8005\u9690\u85cf OSD \u663e\u793a\u4fe1\u606f"
+    },
+    "osdSectionHelpVideoMode": {
+        "message": "\u8bbe\u7f6e\u6b63\u786e\u7684\u6444\u50cf\u5934\u89c6\u9891\u683c\u5f0f\u3002(\u5982\u679c\u4e0d\u77e5\u9053\u6444\u50cf\u5934\u89c6\u9891\u683c\u5f0f\uff0c\u53ef\u4ee5\u9009\u81ea\u52a8\u6a21\u5f0f)"
+    },
+    "osdSectionHelpUnits": {
+        "message": "\u8bbe\u7f6e\u5355\u4f4d"
+    },
+    "osdSectionHelpTimers": {
+        "message": "\u8bbe\u7f6e\u98de\u884c\u8ba1\u65f6\u5668"
+    },
+    "osdSectionHelpAlarms": {
+        "message": "\u8bbe\u7f6eOSD\u62a5\u8b66\u53c2\u6570"
+    },
+    "osdSectionHelpStats": {
+        "message": "\u8bbe\u7f6e\u98de\u884c\u4e0a\u9501\uff0c\u663e\u793a\u4fe1\u606f"
+    },
+    "osdSectionHelpWarnings": {
+        "message": "\u6253\u5f00\u6216\u8005\u5173\u95ed\u5e26\u6709\u8b66\u62a5\u7684\u4fe1\u606f"
+    },
+    "osdSettingsSaved": {
+        "message": "OSD \u8bbe\u7f6e\u5df2\u4fdd\u5b58"
+    },
+    "osdWritePermissions": {
+        "message": "\u8be5\u6587\u4ef6\u6ca1\u6709 <span class=\"message-negative\">\u5199\u6743\u9650<\/span>"
+    },
+    "mainHelpArmed": {
+        "message": "\u7535\u673a\u89e3\u9501"
+    },
+    "mainHelpFailsafe": {
+        "message": "\u5931\u63a7\u4fdd\u62a4\u6a21\u5f0f"
+    },
+    "mainHelpLink": {
+        "message": "\u4e32\u53e3\u8fde\u63a5\u72b6\u6001"
+    },
+    "configurationEscProtocol": {
+        "message": "\u7535\u8c03\/\u7535\u673a\u534f\u8bae"
+    },
+    "configurationEscProtocolHelp": {
+        "message": "\u9009\u62e9\u7535\u8c03\u534f\u8bae<br>\u8bf7\u786e\u5b9a\u4f7f\u7528\u7684\u7535\u8c03\u53ef\u4ee5\u4f7f\u7528\u9009\u62e9\u7684\u534f\u8bae\u3002\u5177\u4f53\u4fe1\u606f\u53ef\u4ee5\u53c2\u8003\u7535\u8c03\u751f\u4ea7\u5382\u5bb6\u4ea7\u54c1\u4fe1\u606f. <br> <b>\u9009\u62e9Dshot900 \u548c1200 \u65f6\u8bf7\u6ce8\u610f\uff0c\u76ee\u524d\u6ca1\u6709\u5f88\u591a\u7535\u8c03\u652f\u6301\u8fd9\u4e2a\u534f\u8bae!<\/b>"
+    },
+    "configurationunsyndePwm": {
+        "message": "\u7535\u673aPWM\u901f\u5ea6\u548cPID\u901f\u5ea6\u5206\u5f00"
+    },
+    "configurationUnsyncedPWMFreq": {
+        "message": "\u7535\u673aPWM \u9891\u7387"
+    },
+    "configurationGyroSyncDenom": {
+        "message": "\u9640\u87ba\u66f4\u65b0\u901f\u5ea6"
+    },
+    "configurationPidProcessDenom": {
+        "message": "PID \u5faa\u73af\u66f4\u65b0\u9891\u7387"
+    },
+    "configurationPidProcessDenomHelp": {
+        "message": "PID\u5faa\u73af\u7684\u66f4\u65b0\u7684\u6700\u5927\u9891\u7387\u53d6\u51b3\u4e8e\u6240\u9009\u7535\u673a\u3001\u7535\u8c03\u534f\u8bae\u51b3\u5b9a\u7684\u6700\u5927\u66f4\u65b0\u9891\u7387"
+    },
+    "configurationGyroUse32kHz": {
+        "message": "\u6253\u5f00\u9640\u87ba32k\u8d6b\u5179\u91c7\u6837"
+    },
+    "configurationGyroUse32kHzHelp": {
+        "message": "32k\u8d6b\u5179\u91c7\u6837\u53d6\u51b3\u4e8e\u6240\u4f7f\u7528\u9640\u87ba\u652f\u4e0d\u652f\u630132K\u91c7\u6837\u3002\u76ee\u524d\u652f\u6301\u9640\u87ba(\u901a\u8fc7SPI\u603b\u7ebf\u8fde\u63a5\u7684 MPU6500,MPU9250,\u548cICM20xxx )\u3002\u5982\u679c\u4e0d\u6e05\u695a\u4f60\u7684\u98de\u63a7\u652f\u4e0d\u652f\u6301\u3002\u53ef\u4ee5\u54a8\u8be2\u98de\u63a7\u751f\u5382\u5546"
+    },
+    "configurationAccHardware": {
+        "message": "\u52a0\u901f\u5ea6\u8ba1"
+    },
+    "configurationBaroHardware": {
+        "message": "\u9ad8\u5ea6\u8ba1(\u5982\u679c\u677f\u5b50\u652f\u6301)"
+    },
+    "configurationMagHardware": {
+        "message": "\u78c1\u573a\u8ba1(\u5982\u679c\u677f\u5b50\u652f\u6301)"
+    },
+    "configurationSmallAngle": {
+        "message": "\u6700\u5927\u5141\u8bb8\u89e3\u9501\u89d2\u5ea6[\u5ea6]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "\u98de\u63a7\u5c06\u4f1a\u4e0d\u5141\u8bb8\u89e3\u9501\uff0c\u5982\u679c\u98de\u673a\u503e\u659c\u7684\u89d2\u5ea6\u5927\u4e8e\u6307\u5b9a\u7684\u5141\u8bb8\u89e3\u9501\u89d2\u5ea6\u3002(\u4ec5\u9650\u4e8e\u52a0\u901f\u5ea6\u8ba1\u6253\u5f00\u60c5\u51b5\u4e0b)\u3002\u8bbe\u7f6e180\u5c06\u4f1a\u5173\u95ed\u8be5\u529f\u80fd"
+    },
+    "configurationBatteryVoltage": {
+        "message": "\u7535\u6c60\u7535\u538b"
+    },
+    "configurationBatteryCurrent": {
+        "message": "\u7535\u6c60\u7535\u6d41"
+    },
+    "configurationBatteryMeterType": {
+        "message": "\u7535\u6c60\u8ba1\u7c7b\u578b"
+    },
+    "configurationBatteryMinimum": {
+        "message": "\u6700\u5c0f\u7535\u6c60\u5757\u7535\u538b"
+    },
+    "configurationBatteryMaximum": {
+        "message": "\u6700\u5927\u7535\u6c60\u5757\u7535\u538b"
+    },
+    "configurationBatteryWarning": {
+        "message": "\u7535\u6c60\u5757\u8b66\u544a\u7535\u538b"
+    },
+    "configurationBatteryScale": {
+        "message": "\u7535\u538b\u8ba1\u6bd4\u4f8b"
+    },
+    "configurationCurrentMeterType": {
+        "message": "\u7535\u6d41\u8ba1\u7c7b\u578b"
+    },
+    "configurationCurrent": {
+        "message": "\u7535\u6d41\u4f20\u611f\u5668"
+    },
+    "configurationCurrentScale": {
+        "message": "\u7535\u6d41\u4f20\u611f\u5668\u8f93\u5165\u7535\u538b\u548c\u7535\u6d41\u6bd4\u4f8b[\u6beb\u4f0f x 10  \u6beb\u4f0f\/\u5b89]"
+    },
+    "configurationCurrentOffset": {
+        "message": "\u7535\u6d41\u8ba10\u8865\u507f (\u5355\u4f4d\u6beb\u4f0f)"
+    },
+    "configurationBatteryMultiwiiCurrent": {
+        "message": "\u6253\u5f00\u4f20\u7edfMultiwii MSP\u7535\u6d41\u8ba1\u8f93\u51fa"
+    },
+    "pidTuningProfile": {
+        "message": "\u914d\u7f6e\u6587\u4ef6"
+    },
+    "pidTuningProfileTip": {
+        "message": "\u98de\u63a7\u53ef\u4ee5\u4fdd\u5b583(\u6709\u7684\u53ea\u80fd2)\u4e2aPID\u914d\u7f6e\u6587\u4ef6\uff0cPID \u914d\u7f6e\u6587\u4ef6\u5305\u62ec\uff1apid\uff0c D \u8bbe\u7f6e\u70b9\uff0c\u89d2\u5ea6\u548c\u6c34\u54c1\u6a21\u5f0f\u9009\u62e9\u8bbe\u7f6e\u3002\u914d\u7f6e\u6587\u4ef6\u53ef\u4ee5\u901a\u8fc7\u9065\u63a7\u6447\u6746\u547d\u4ee4\u6765\u56de\u5207\u6362(\u5177\u4f53\u64cd\u4f5c\u53c2\u9605\u7f51\u4e0a\u6559\u7a0b)"
+    },
+    "pidTuningRateProfile": {
+        "message": "Rate\u914d\u7f6e\u6587\u4ef6"
+    },
+    "pidTuningRateProfileTip": {
+        "message": "\u98de\u63a7\u53ef\u4ee5\u4fdd\u5b583\u4e2a\u4e0d\u540c\u7684Rate\u914d\u7f6e\u6587\u4ef6\u3002 Rate\u914d\u7f6e\u6587\u4ef6\u5305\u62ec\uff1aRC rate\uff0c Rate\uff0cRC expo\uff0c\u6cb9\u95e8\uff0c\u548cTPA\u3002 \u914d\u7f6e\u6587\u4ef6\u53ef\u4ee5\u901a\u8fc7\u9065\u63a7\u6447\u6746\u547d\u4ee4\u6765\u56de\u5207\u6362(\u5177\u4f53\u64cd\u4f5c\u53c2\u9605\u7f51\u4e0a\u6559\u7a0b)\u3002\u4e5f\u53ef\u4ee5\u901a\u8fc7\u4e00\u4e2a3\u6bb5\u7684\u5f00\u5173\u6765\u9009\u7740\u4e0d\u540c\u7684\u914d\u7f6e\u6587\u4ef6"
+    },
+    "pidTuningDelta": {
+        "message": "\u5bfc\u6570"
+    },
+    "pidTuningDeltaError": {
+        "message": "\u9519\u8bef"
+    },
+    "pidTuningDeltaMeasurement": {
+        "message": "\u6d4b\u91cf\u6a21\u5f0f"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>\u8bef\u5dee\u5bfc\u6570\u6a21\u5f0f<\/b>\u63d0\u4f9b\u66f4\u52a0\u76f4\u63a5\u7684\u6447\u6746\u53cd\u5e94\uff0c\u9002\u5408\u98de\u6bd4\u8d5b<br><br><b>\u6d4b\u91cf\u5bfc\u6570\u6a21\u5f0f<\/b> \u63d0\u4f9b\u66f4\u5e73\u6ed1\u6447\u6746\u7684\u53cd\u5e94\uff0c\u9002\u5408\u98de\u82b1\u6837"
+    },
+    "pidTuningPidControllerTip": {
+        "message": "<b>\u4f20\u7edf vs Betaflight (\u6d6e\u70b9\u6570):<\/b> PID \u6bd4\u4f8b\u548cPID\u903b\u8f91\u5b8c\u5168\u4e00\u6837\u7684.\u4e24\u8005\u4e4b\u95f4\u66f4\u6362\u7406\u8bba\u4e0d\u9700\u8981\u91cd\u65b0\u8c03\u53c2. \u4f20\u7edf\u7684\u4e5f\u662fbetaflight\u5f00\u53d1\u8005\u53c2\u4e0e\u91cd\u65b0\u6539\u5199\uff0c\u4f46\u662f\u7528\u7684\u662f\u6574\u6570\u6765\u8ba1\u7b97. Betaflight PID \u7528\u7684\u662f\u6d6e\u70b9\u6570\u6765\u8ba1\u7b97\uff0c\u5e76\u4e14\u662f\u4e13\u95e8\u4e3a\u591a\u8f74\u98de\u884c\u5668\u8bbe\u7f6e<br> <b>\u6d6e\u70b9 vs \u6574\u6570:<\/b> PID \u6bd4\u4f8b\u548cPID\u903b\u8f91\u5b8c\u5168\u4e00\u6837\u7684. N\u4e24\u8005\u4e4b\u95f4\u66f4\u6362\u7406\u8bba\u4e0d\u9700\u8981\u91cd\u65b0\u8c03\u53c2. \u4f7f\u7528F1\u82af\u7247\u7684\u98de\u63a7\u7f3a\u4e4f\u677f\u8f7d\u7684FPU\uff0c\u6253\u5f00\u6d6e\u70b9\u8ba1\u7b97\u5c06\u4f1a\u589e\u52a0CPU\u8d1f\u8377\uff0c\u4f7f\u7528\u6574\u6570\u4f1a\u5f97\u5230\u66f4\u52a0\u597d\u7684\u8fd0\u884c\u6548\u679c\u3002\u4f46\u662f\u6d6e\u70b9\u8ba1\u7b97\u4f1a\u63d0\u4f9b\u7a0d\u5fae\u66f4\u52a0\u51c6\u786e\u7684\u8ba1\u7b97"
+    },
+    "pidTuningFilterTip": {
+        "message": "<b>\u9640\u87ba\u67d4\u5316\u6ee4\u6ce2\u5668:<\/b> \u9640\u87ba\u7684\u4f4e\u901a\u6ee4\u6ce2\u5668. \u6570\u503c\u8d8a\u5c0f\uff0c\u6ee4\u6ce2\u66f4\u4e25\u91cd.<br><b>D Term \u6ee4\u6ce2\u5668:<\/b>Dterm \u4f4e\u901a\u6ee4\u6ce2\u5668.\u4f1a\u5f71\u54cdD\u503c\u7684\u8c03\u53c2\uff0c\u6570\u503c\u8d8a\u5c0f\uff0c\u6ee4\u6ce2\u66f4\u4e25\u91cd. <br><b>\u65b9\u5411\u6ee4\u6ce2\u5668:<\/b> \u8fc7\u6ee4\u65b9\u5411\u8f93\u51fa.\u5bf9\u65b9\u5411\u8f74\u9707\u52a8\u6216\u8005\u566a\u58f0\u5f88\u4e25\u91cd\u4f1a\u6709\u5e2e\u52a9\u3002"
+    },
+    "pidTuningPidTuningTip": {
+        "message": "<b>\u6bd4\u4f8b P :<\/b> \u6570\u503c\u8d8a\u5927\uff0c\u98de\u673a\u4f1a\u8f93\u51fa\u8d8a\u5927\u529b\u91cf\u6765\u62b5\u6d88\u5916\u529b\u5f15\u8d77\u7684\u79fb\u52a8\uff0c\u8fc7\u5927\u4f1a\u5f15\u8d77\u9707\u8361 <br><b>\u79ef\u5206 I :<\/b>\u6570\u503c\u8d8a\u5927\uff0c\u5bf9\u4fdd\u6301\u98de\u673a\u59ff\u6001\u66f4\u597d\u3002\u4f46\u662f\u4e5f\u4f1a\u589e\u52a0\u98de\u673a\u5230\u8fbe\u9884\u5b9a\u89d2\u5ea6\u65f6\u95f4.<br><b>\u5bfc\u6570 D :<\/b> \u589e\u52a0\u56de\u4e2d\u65f6\u95f4\uff0c\u4f46\u662f\u4e5f\u4f1a\u589e\u52a0\u566a\u58f0<br><b>Rates and Expo<\/b>: Rates \u548cexpo \u5f71\u54cd\u8f6c\u52a8\u901f\u5ea6\u3002\u5f53\u4f60\u6253\u6ee1\u6447\u6746\u3002\u98de\u673a\u6700\u5927\u7ffb\u8f6c\u901f\u5ea6\u3002"
+    },
+    "pidTuningRatesTip": {
+        "message": "\u901a\u8fc7\u8bbe\u7f6erates\uff0c\u6765\u89c2\u5bdfRate\u662f\u600e\u6837\u5f71\u54cd\u6447\u6746\u7684\u66f2\u7ebf"
+    },
+    "configurationCamera": {
+        "message": "\u6444\u50cf\u5934"
+    },
+    "configurationPersonalization": {
+        "message": "\u4e2a\u6027\u5316"
+    },
+    "craftName": {
+        "message": "\u98de\u884c\u5668\u540d\u5b57"
+    },
+    "configurationFpvCamAngleDegrees": {
+        "message": "FPV\u6444\u50cf\u5934\u89d2\u5ea6[\u5ea6]"
+    },
+    "onboardLoggingBlackbox": {
+        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55\u88c5\u7f6e"
+    },
+    "onboardLoggingRateOfLogging": {
+        "message": "\u9ed1\u5323\u5b50\u51e0\u7387\u9891\u7387"
+    },
+    "onboardLoggingSerialLogger": {
+        "message": "\u5916\u63a5\u4e32\u53e3\u8bb0\u5f55\u4eea"
+    },
+    "onboardLoggingFlashLogger": {
+        "message": "\u677f\u8f7d\u95ea\u5b58"
+    },
+    "onboardLoggingEraseInProgress": {
+        "message": "\u6b63\u5728\u64e6\u9664\uff0c\u8bf7\u7a0d\u7b49\u3002\u3002\u3002"
+    },
+    "onboardLoggingOnboardSDCard": {
+        "message": "\u677f\u8f7dSD \u5361"
+    },
+    "dialogConfirmResetTitle": {
+        "message": "\u786e\u8ba4"
+    },
+    "dialogConfirmResetNote": {
+        "message": "\u8b66\u544a\uff1a\u786e\u5b9a\u8981\u91cd\u7f6e\u6240\u6709\u8bbe\u7f6e\u5230\u9ed8\u8ba4\u8bbe\u7f6e\uff1f"
+    },
+    "dialogConfirmResetConfirm": {
+        "message": "\u91cd\u7f6e"
+    },
+    "dialogConfirmResetClose": {
+        "message": "\u53d6\u6d88"
+    },
+    "modeCameraWifi": {
+        "message": "\u6444\u50cf\u5934WI-FI \u6309\u952e"
+    },
+    "modeCameraPower": {
+        "message": "\u6444\u50cf\u5934\u7535\u6e90\u6309\u952e"
+    },
+    "modeCameraChangeMode": {
+        "message": "\u6444\u50cf\u5934\u6539\u53d8\u6a21\u5f0f"
+    }
+}
