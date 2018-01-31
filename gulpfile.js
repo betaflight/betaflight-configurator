@@ -11,6 +11,8 @@ const del = require('del');
 const NwBuilder = require('nw-builder');
 const makensis = require('makensis');
 const deb = require('gulp-debian');
+const buildRpm = require('rpm-builder');
+const commandExistsSync = require('command-exists').sync;
 
 const gulp = require('gulp');
 const concat = require('gulp-concat');
@@ -323,6 +325,12 @@ function start_debug(done) {
 // Create installer package for windows platforms
 function release_win(arch, done) {
 
+    // Check if makensis exists
+    if (!commandExistsSync('makensis')) {
+        console.warn('makensis command not found, not generating win package for ' + arch);
+        return done();
+    }
+
     // The makensis does not generate the folder correctly, manually
     createDirIfNotExists(RELEASE_DIR);
 
@@ -371,21 +379,12 @@ function compressFiles(srcPath, basePath, outputFile, zipFolder) {
                .pipe(gulp.dest(RELEASE_DIR));
 }
 
-function release_deb(arch) {
+function release_deb(arch, done) {
 
-    var debArch;
-
-    switch (arch) {
-    case 'linux32':
-        debArch = 'i386';
-        break;
-    case 'linux64':
-        debArch = 'amd64';
-        break;
-    default:
-        console.error("Deb package error, arch: " + arch);
-        process.exit(1);
-        break;
+    // Check if dpkg-deb exists
+    if (!commandExistsSync('dpkg-deb')) {
+        console.warn('dpkg-deb command not found, not generating deb package for ' + arch);
+        return done();
     }
 
     return gulp.src([path.join(APPS_DIR, pkg.name, arch, '*')])
@@ -394,7 +393,7 @@ function release_deb(arch) {
              version: pkg.version,
              section: 'base',
              priority: 'optional',
-             architecture: debArch,
+             architecture: getLinuxPackageArch('deb', arch),
              maintainer: pkg.author,
              description: pkg.description,
              postinst: ['xdg-desktop-menu install /opt/betaflight/betaflight-configurator/betaflight-configurator.desktop'],
@@ -408,6 +407,68 @@ function release_deb(arch) {
     }));
 }
 
+function release_rpm(arch, done) {
+
+    // Check if dpkg-deb exists
+    if (!commandExistsSync('rpmbuild')) {
+        console.warn('rpmbuild command not found, not generating rpm package for ' + arch);
+        return done();
+    }
+
+    // The makensis does not generate the folder correctly, manually
+    createDirIfNotExists(RELEASE_DIR);
+
+    var options = {
+             name: pkg.name,
+             version: pkg.version,
+             buildArch: getLinuxPackageArch('rpm', arch),
+             vendor: pkg.author,
+             summary: pkg.description,
+             license: 'GNU General Public License v3.0',
+             requires: 'libgconf-2-4',
+             prefix: '/opt',
+             files:
+                 [ { cwd: path.join(APPS_DIR, pkg.name, arch),
+                     src: '**',
+                     dest: '/opt/betaflight/betaflight-configurator' } ],
+             postInstallScript: ['xdg-desktop-menu install /opt/betaflight/betaflight-configurator/betaflight-configurator.desktop'],
+             preUninstallScript: ['xdg-desktop-menu uninstall betaflight-configurator.desktop'],
+             tempDir: path.join(RELEASE_DIR,'tmp-rpm-build-' + arch),
+             keepTemp: false,
+             verbose: false,
+             rpmDest: RELEASE_DIR
+    };
+
+    buildRpm(options, function(err, rpm) {
+        if (err) {
+          console.error("Error generating rpm package: " + err);
+        }
+        done();
+    });
+}
+
+function getLinuxPackageArch(type, arch) {
+    var packArch;
+
+    switch (arch) {
+    case 'linux32':
+        packArch = 'i386';
+        break;
+    case 'linux64':
+        if (type == 'rpm') {
+            packArch = 'x86_64';
+        } else {
+            packArch = 'amd64';
+        }
+        break;
+    default:
+        console.error("Package error, arch: " + arch);
+        process.exit(1);
+        break;
+    }
+
+    return packArch;
+}
 // Create distribution package for macOS platform
 function release_osx64() {
     var appdmg = require('gulp-appdmg');
@@ -463,12 +524,14 @@ function listReleaseTasks(done) {
 
     if (platforms.indexOf('linux64') !== -1) {
         releaseTasks.push(function release_linux64_zip(){ return release_zip('linux64') });
-        releaseTasks.push(function release_linux64_deb(){ return release_deb('linux64') });
+        releaseTasks.push(function release_linux64_deb(done){ return release_deb('linux64', done) });
+        releaseTasks.push(function release_linux64_rpm(done){ return release_rpm('linux64', done) });
     }
 
     if (platforms.indexOf('linux32') !== -1) {
         releaseTasks.push(function release_linux32_zip(){ return release_zip('linux32') });
-        releaseTasks.push(function release_linux32_deb(){ return release_deb('linux32') });
+        releaseTasks.push(function release_linux32_deb(done){ return release_deb('linux32', done) });
+        releaseTasks.push(function release_linux32_rpm(done){ return release_rpm('linux32', done) });
     }
 
     if (platforms.indexOf('osx64') !== -1) {
@@ -478,7 +541,7 @@ function listReleaseTasks(done) {
     if (platforms.indexOf('win32') !== -1) {
         releaseTasks.push(function release_win32(done){ return release_win('win32', done) });
     }
-    
+
     if (platforms.indexOf('win64') !== -1) {
         releaseTasks.push(function release_win64(done){ return release_win('win64', done) });
     }
