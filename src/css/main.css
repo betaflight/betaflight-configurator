@@ -453,7 +453,7 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 110px;
     opacity: 0.15;
     background-size: 80%;
-    box-shadow: inset 0 0 5px #000000;
+    //box-shadow: inset 0 0 5px #000000;
     transition: all ease 0.3s;
 }
 

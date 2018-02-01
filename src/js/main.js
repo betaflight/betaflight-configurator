@@ -241,7 +241,7 @@ function startProcess() {
                     userLanguage_e.append('<option disabled>------</option>');
                     languagesAvailables.forEach(function(element) {
                         var languageName = i18n.getMessage('language_' + element);
-                        userLanguage_e.append('<option value="' + element + '">' + languageName + '</option>');
+                        userLanguage_e.append('<option value="' + element + '" lang="' + element + '">' + languageName + '</option>');
                     });
                     
                     if (result.userLanguageSelect) {

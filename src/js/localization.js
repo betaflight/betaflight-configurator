@@ -6,7 +6,7 @@
 
 var i18n = {}
 
-const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'ko', 'zh_CN'];
+const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'he', 'ko', 'zh_CN'];
 
 /**
  * Functions that depend on the i18n framework
@@ -57,6 +57,9 @@ i18n.getLanguagesAvailables = function() {
     return languagesAvailables;
 }
 
+i18n.getLanguageDirection = function() {
+    return i18next.dir();
+}
 /**
  * Helper functions, don't depend of the i18n framework
  */
@@ -70,6 +73,11 @@ i18n.localizePage = function() {
 
         return i18n.getMessage(messageID);
     };
+
+    if (i18n.getLanguageDirection() == 'rtl') {
+        $('html').attr('dir', 'rtl');
+        appendStyle('./css/reset-rtl.css');
+    }
 
     $('[i18n]:not(.i18n-replaced)').each(function() {
         var element = $(this);
@@ -125,4 +133,15 @@ function getValidLocale(userLocale) {
         userLocale = window.navigator.userLanguage || window.navigator.language;
     } 
     return userLocale;
+}
+
+function appendStyle(filepath) {
+    if ($('head link[href="' + filepath + '"]').length > 0)
+        return;
+
+    var ele = document.createElement('link');
+    ele.setAttribute("type", "text/css");
+    ele.setAttribute("rel", "Stylesheet");
+    ele.setAttribute("href", filepath);
+    $('head').append(ele);
 }
