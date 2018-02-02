@@ -415,7 +415,7 @@ function release_rpm(arch, done) {
         return done();
     }
 
-    // The makensis does not generate the folder correctly, manually
+    // The buildRpm does not generate the folder correctly, manually
     createDirIfNotExists(RELEASE_DIR);
 
     var options = {
@@ -429,7 +429,7 @@ function release_rpm(arch, done) {
              prefix: '/opt',
              files:
                  [ { cwd: path.join(APPS_DIR, pkg.name, arch),
-                     src: '**',
+                     src: '*',
                      dest: '/opt/betaflight/betaflight-configurator' } ],
              postInstallScript: ['xdg-desktop-menu install /opt/betaflight/betaflight-configurator/betaflight-configurator.desktop'],
              preUninstallScript: ['xdg-desktop-menu uninstall betaflight-configurator.desktop'],
