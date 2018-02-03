@@ -628,6 +628,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('div.cycles').show();
         }
 
+        if(semver.gte(CONFIG.apiVersion, "1.37.0") || !isExpertModeEnabled()) {
+            $('input[id="disarmkillswitch"]').prop('checked', true);
+            $('div.disarm').hide();
+        }
+
         $('._smallAngle').hide();
         if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
             $('input[id="configurationSmallAngle"]').val(ARMING_CONFIG.small_angle);
