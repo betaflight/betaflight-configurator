@@ -557,6 +557,56 @@ TABS.pid_tuning.initialize = function (callback) {
             $(this).addClass('active');
         });
 
+        
+        function loadProfilesList() {
+            var numberOfProfiles = 3;
+            if (semver.gte(CONFIG.apiVersion, "1.20.0")
+                 && CONFIG.numProfiles === 2) {
+                    numberOfProfiles = 2;
+            }
+
+            var profileElements = [];
+            for (var i=0; i<numberOfProfiles; i++) {
+                profileElements.push(i18n.getMessage("pidTuningProfileOption",[(i + 1)]));
+            }
+            return profileElements;
+        }
+
+        function loadRateProfilesList() {
+            var numberOfRateProfiles = 6;
+            if (semver.lt(CONFIG.apiVersion, "1.37.0")) {
+                numberOfRateProfiles = 3;
+            }
+
+            var rateProfileElements = [];
+            for (var i=0; i<numberOfRateProfiles; i++) {
+                rateProfileElements.push(i18n.getMessage("pidTuningRateProfileOption",[(i + 1)]));
+            }
+            return rateProfileElements;
+        }
+
+        // This vars are used here for populate the profile (and rate profile) selector AND in the copy profile (and rate profile) window
+        var selectRateProfileValues = loadRateProfilesList();
+        var selectProfileValues = loadProfilesList();
+        
+        function populateProfilesSelector(selectProfileValues) {
+            var profileSelect = $('select[name="profile"]');
+            selectProfileValues.forEach(function(value, key) {
+                profileSelect.append('<option value="' + key + '">' + value + '</option>');
+            });
+        }
+
+        populateProfilesSelector(selectProfileValues);
+
+        function populateRateProfilesSelector(selectRateProfileValues) {
+            var rateProfileSelect = $('select[name="rate_profile"]');
+            selectRateProfileValues.forEach(function(value, key) {
+                rateProfileSelect.append('<option value="' + key + '">' + value + '</option>');
+            });
+        }
+
+        populateRateProfilesSelector(selectRateProfileValues);
+
         var showAllButton = $('#showAllPids');
 
         function updatePidDisplay() {
@@ -872,9 +922,6 @@ TABS.pid_tuning.initialize = function (callback) {
         var DIALOG_MODE_RATEPROFILE = 1;
         var dialogCopyProfileMode;
 
-        var selectProfileValues = { "0": "Profile 1", "1": "Profile 2", "2": "Profile 3" };
-        var selectRateProfileValues = { "0": "Rateprofile 1", "1": "Rateprofile 2", "2": "Rateprofile 3" };
-        
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
 
             var selectProfile = $('.selectProfile');
@@ -1092,16 +1139,6 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
     var self = this;
 
     if (GUI.active_tab === 'pid_tuning') {
-        if (semver.gte(CONFIG.apiVersion, "1.20.0")
-                && CONFIG.numProfiles === 2) {
-                $('.tab-pid_tuning select[name="profile"] .profile3').hide();
-        }
-
-        if (semver.lt(CONFIG.apiVersion, "1.37.0")) {
-            $('.tab-pid_tuning select[name="rate_profile"] .RateProfile4').hide();
-            $('.tab-pid_tuning select[name="rate_profile"] .RateProfile5').hide();
-            $('.tab-pid_tuning select[name="rate_profile"] .RateProfile6').hide();
-        }
 
         if (!self.updating && !self.dirty) {
             var changedProfile = false;
