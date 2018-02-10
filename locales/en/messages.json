@@ -424,10 +424,10 @@
         "message": "Erased $1 kB of flash <span class=\"message-positive\">successfully</span>"
     },
     "dfu_device_flash_info": {
-        "message": "Detected device with total flash size $1 kiB"
+        "message": "Detected device with total flash size $1 KiB"
     },
     "dfu_error_image_size": {
-        "message": "<span class=\"message-negative\">Error</span>: Supplied image is larger then flash available on the chip! Image: $1 kiB, limit = $2 kiB"
+        "message": "<span class=\"message-negative\">Error</span>: Supplied image is larger then flash available on the chip! Image: $1 KiB, limit = $2 KiB"
     },
 
     "eeprom_saved_ok": {
