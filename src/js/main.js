@@ -429,7 +429,7 @@ function notifyOutdatedVersion(releaseData) {
             $('.dialogConfiguratorUpdate-websitebtn').click(function() {
                 dialog.close();
 
-                window.open(versions[0].html_url);
+                window.open(versions[0].html_url, '_blank');
             });
 
             dialog.showModal();
