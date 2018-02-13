@@ -485,7 +485,7 @@ TABS.motors.initialize = function (callback) {
 
             $('div.sliders input').trigger('input');
 
-            mspHelper.setArmingEnabled(enabled);
+            mspHelper.setArmingEnabled(enabled, enabled);
         }).change();
 
         var buffering_set_motor = [],

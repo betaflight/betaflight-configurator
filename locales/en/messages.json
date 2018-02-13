@@ -369,6 +369,12 @@
     "armingEnabled": {
         "message": "<strong>Arming Enabled</strong>"
     },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong>Runaway Takeoff Prevention temporarily Disabled</strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong>Runaway Takeoff Prevention Enabled</strong>"
+    },
     "boardInfoReceived": {
         "message": "Board: <strong>$1</strong>, version: <strong>$2</strong>"
     },
@@ -1768,10 +1774,10 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br />Moving the sliders or arming your craft with the transmitter will cause the motors to <strong>spin up</strong>.<br />In order to prevent injury <strong class=\"message-negative\">remove ALL propellers</strong> before using this feature.<br />"
+        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br />Moving the sliders or arming your craft with the transmitter will cause the motors to <strong>spin up</strong>.<br />In order to prevent injury <strong class=\"message-negative\">remove ALL propellers</strong> before using this feature.<br />Enabling motor test mode will also temporarily disable Runaway Takeoff Prevention, to stop it from disarming the craft when bench testing without propellers.<br />"
     },
     "motorsEnableControl": {
-        "message": "I understand the risks, propellers are removed - Enable motor control and arming."
+        "message": "<strong>I understand the risks</strong>, the propellers are removed - enable motor control and arming, and disable Runaway Takeoff Prevention."
     },
 
     "sensorsInfo": {

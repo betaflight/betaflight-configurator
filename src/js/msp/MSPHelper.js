@@ -1525,12 +1525,21 @@ MspHelper.prototype.crunch = function(code) {
             break;
         case MSPCodes.MSP_ARMING_DISABLE:
             var value;
-            if (CONFIG.arming_disabled) {
+            if (CONFIG.armingDisabled) {
                 value = 1;
             } else {
                 value = 0;
             }
             buffer.push8(value);
+
+            if (CONFIG.runawayTakeoffPreventionDisabled) {
+                value = 1;
+            } else {
+                value = 0;
+            }
+            // This will be ignored if `armingDisabled` is true
+            buffer.push8(value);
+
             break;
         default:
             return false;
@@ -2022,13 +2031,19 @@ MspHelper.prototype.sendRxFailConfig = function(onCompleteCallback) {
     }
 }
 
-MspHelper.prototype.setArmingEnabled = function(doEnable, onCompleteCallback) {
-    if (semver.gte(CONFIG.apiVersion, "1.37.0") && (doEnable === CONFIG.arming_disabled)) {
-        CONFIG.arming_disabled = !doEnable;
+MspHelper.prototype.setArmingEnabled = function(doEnable, disableRunawayTakeoffPrevention, onCompleteCallback) {
+    if (semver.gte(CONFIG.apiVersion, "1.37.0") && (CONFIG.armingDisabled === doEnable || CONFIG.runawayTakeoffPreventionDisabled !== disableRunawayTakeoffPrevention)) {
+        CONFIG.armingDisabled = !doEnable;
+        CONFIG.runawayTakeoffPreventionDisabled = disableRunawayTakeoffPrevention;
 
         MSP.send_message(MSPCodes.MSP_ARMING_DISABLE, mspHelper.crunch(MSPCodes.MSP_ARMING_DISABLE), false, function () {
             if (doEnable) {
                 GUI.log(i18n.getMessage('armingEnabled'));
+                if (disableRunawayTakeoffPrevention) {
+                    GUI.log(i18n.getMessage('runawayTakeoffPreventionDisabled'));
+                } else {
+                    GUI.log(i18n.getMessage('runawayTakeoffPreventionEnabled'));
+                }
             } else {
                 GUI.log(i18n.getMessage('armingDisabled'));
             }
