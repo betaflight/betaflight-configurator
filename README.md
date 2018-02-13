@@ -130,3 +130,5 @@ We accept clean and reasonable patches, submit them!
 ctn - primary author and maintainer of Baseflight Configurator from which Cleanflight Configurator project was forked.
 
 Hydra -  author and maintainer of Cleanflight Configurator from which this project was forked.
+
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/betaflight-configurator/localized.svg)](https://crowdin.com/project/betaflight-configurator)
