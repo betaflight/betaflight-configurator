@@ -104,6 +104,7 @@ var FC = {
 
         BEEPER_CONFIG = {
             beepers:                    0,
+            dshotBeaconTone:            0,
         };
         
         MIXER_CONFIG = {

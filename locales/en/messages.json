@@ -919,6 +919,15 @@
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
+    "configurationDshotBeeper": {
+        "message": "DSHOT Beacon Configuration"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Use DSHOT beacon (use motors to sound beeps when disarmed)"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "Beacon Tone"
+    },
     "configurationBeeper": {
         "message": "Beeper Configuration"
     },
@@ -1127,12 +1136,14 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "RunCam Device"
     },
-
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
     "pidTuningRateProfileOption": {
         "message": "Rateprofile $1"
+    },
+    "portsFunction_LIDAR_TF": {
+        "message": "Benewake LIDAR"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires <span class=\"message-positive\">$2</span>."
