@@ -35,7 +35,8 @@
   "license": "GPL-3.0",
   "dependencies": {
     "i18next": "^10.3.0",
-    "i18next-xhr-backend": "^1.5.1"
+    "i18next-xhr-backend": "^1.5.1",
+    "marked": "^0.3.12"
   },
   "devDependencies": {
     "command-exists": "^1.2.2",
