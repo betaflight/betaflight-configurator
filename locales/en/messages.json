@@ -1320,7 +1320,7 @@
         "message": "Please read receiver chapter of the documentation.  Configure serial port (if required), receiver mode (serial/ppm/pwm), provider (for serial receivers), bind receiver, set channel map, configure channel endpoints/range on TX so that all channels go from ~1000 to ~2000.  Set midpoint (default 1500), trim channels to 1500, configure stick deadband, verify behaviour when TX is off or out of range.<br /><span class=\"message-negative\">IMPORTANT:</span> Before flying read failsafe chapter of documentation and configure failsafe."
     },
     "tuningHelp": {
-        "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100hz is optimal, but for noiser setups you can try lowering Dterm filter to 50hz and possibly also the gyro filter."
+        "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -2405,7 +2405,7 @@
         "message": "Gyro Notch Filter Cutoff 2 Frequency [Hz]"
     },
     "pidTuningGyroNotchCutoffHelp": {
-        "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
+        "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch Hz of 260 it means the range is 160-360Hz with most attenuation around center)"
     },
     "pidTuningFilterSettings": {
         "message": "Filter Settings"
@@ -2435,7 +2435,7 @@
         "message": "D Term Notch Filter Cutoff [Hz]"
     },
     "pidTuningDTermNotchCutoffHelp": {
-        "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
+        "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch Hz of 260 it means the range is 160-360Hz with most attenuation around center)"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass Frequency [Hz]"
@@ -3120,7 +3120,7 @@
         "message": "The maximum frequency for the PID loop is limited by the maximum frequency that updates can be sent by the chosen ESC / motor protocol."
     },
     "configurationGyroUse32kHz": {
-        "message": "Enable gyro 32khz sampling mode"
+        "message": "Enable gyro 32kHz sampling mode"
     },
     "configurationGyroUse32kHzHelp": {
         "message": "32 kHz gyro update frequency is only possible if the gyro chip supports it (currently MPU6500, MPU9250, and ICM20xxx if connected over SPI). If in doubt, consult the specification for your board."
