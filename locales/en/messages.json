@@ -1401,6 +1401,13 @@
         "message": "Preview"
     },
 
+    "receiverMspWarningText": {
+        "message": "These sticks allow BetaFlight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br><br>This feature does not guarantee reliable control of your craft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Enable controls"
+    },
+
     "auxiliaryHelp": {
         "message": "Use ranges to define the switches on your transmitter and corresponding mode assignments.  A receiver channel that gives a reading between a range min/max will activate the mode.  Remember to save your settings using the Save button."
     },
