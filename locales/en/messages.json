@@ -82,23 +82,55 @@
         "message": "\u7b80\u4f53\u4e2d\u6587 (zh_CN)"
     },
 
+    "sensorDataFlashNotFound": {
+        "message": "No dataflash <br>chip found",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "Dataflash: free space",
+        "description": "Text of the dataflash image in the header of the page."
+    },
     "sensorStatusGyro": {
         "message": "Gyroscope"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Gyro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
         "message": "Accelerometer"
     },
+    "sensorStatusAccelShort": {
+        "message": "Accel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusMag": {
         "message": "Magnetometer"
+    },
+    "sensorStatusMagShort": {
+        "message": "Mag",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
         "message": "Barometer"
     },
+    "sensorStatusBaroShort": {
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusGPS": {
         "message": "GPS"
     },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusSonar": {
         "message": "Sonar / Range finder"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
         "message": "Show update notifications for unstable versions of the configurator"
