@@ -1,16 +1,16 @@
 <html>
 <head>
-<link type="text/css" rel="stylesheet" href="../css/opensans_webfontkit/fonts.css" media="all" />
+<link type="text/css" rel="stylesheet" href="/css/opensans_webfontkit/fonts.css" media="all" />
 <script type="text/javascript" src="/js/libraries/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="/js/libraries/jquery-ui-1.11.4.min.js"></script>
 <script type="text/javascript" src="/js/libraries/jquery.nouislider.all.min.js"></script>
 
-<script type="text/javascript" src="receiver_msp.js"></script>
+<script type="text/javascript" src="/js/tabs/receiver_msp.js"></script>
 
 <link type="text/css" rel="stylesheet" href="/js/libraries/jquery.nouislider.min.css">
 <link type="text/css" rel="stylesheet" href="/js/libraries/jquery.nouislider.pips.min.css">
 
-<link type="text/css" rel="stylesheet" href="receiver_msp.css" media="all" />
+<link type="text/css" rel="stylesheet" href="/css/tabs/receiver_msp.css" media="all" />
 </head>
 <body>
     <div class="control-gimbals">
@@ -49,16 +49,9 @@
         </div>
     </div>
     <div class="warning">
-        <p>
-            These sticks allow BetaFlight to be armed and tested without a transmitter or receiver being present.
-            However, <strong>this feature is not intended for flight and propellers must not be attached.</strong>
-        </p>
-        <p>
-            This feature does not guarantee reliable control of your craft. <strong>Serious injury is likely to
-                result if propellers are left on.</strong>
-        </p>
+        <p i18n="receiverMspWarningText"></p>
         <div class="button-enable btn">
-            <a class="button-enable" href="#">Enable controls</a>
+            <a class="button-enable" href="#" i18n="receiverMspEnableButton"></a>
         </div>
     </div>
 </body>

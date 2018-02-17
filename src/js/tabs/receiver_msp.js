@@ -31,14 +31,26 @@ var
     
     // First the vertical axis, then the horizontal:
     gimbals = [
-        ["throttle", "yaw"],
-        ["pitch", "roll"],
+        ["Throttle", "Yaw"],
+        ["Pitch", "Roll"],
     ],
     
     gimbalElems,
     sliderElems,
     
     enableTX = false;
+
+// This is a hack to get the i18n var of the parent, but the localizePage not works
+const i18n = opener.i18n;
+
+$(document).ready(function () {
+    $('[i18n]:not(.i18n-replaced)').each(function() {
+        var element = $(this);
+
+        element.html(i18n.getMessage(element.attr('i18n')));
+        element.addClass('i18n-replaced');
+    });
+})
 
 function transmitChannels() {
     var 
