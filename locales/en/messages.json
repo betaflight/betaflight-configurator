@@ -2786,6 +2786,15 @@
     "osdSetupOpenFont": {
         "message": "Open Font File"
     },
+    "osdSetupLogo": {
+        "message": "Logo in font:"
+    },
+    "osdSetupReplaceLogo": {
+        "message": "Replace Logo"
+    },
+    "osdSetupReplaceLogoHelp": {
+        "message": "Customized logo image has to be 288×72 pixels in size containing black and white pixels only on a completely green background."
+    },
     "osdSetupUploadFont": {
         "message": "Upload Font"
     },
