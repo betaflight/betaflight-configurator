@@ -173,9 +173,8 @@ var openLogoImage = function() {
             expectedHeight = FONT.constants.SIZES.CHAR_HEIGHT
               * FONT.constants.LOGO.TILES_NUM_VERT;
         if (img.width != expectedWidth || img.height != expectedHeight) {
-          reject("invalid image size; expected "
-                  + expectedWidth + "×" + expectedHeight + " instead of "
-                  + img.width + "×" + img.height);
+          reject(i18n.getMessage("osdSetupReplaceLogoImageSizeError", 
+                    [expectedWidth, expectedHeight, img.width, img.height]));
           return;
         }
         var canvas = document.createElement('canvas'),
@@ -188,7 +187,7 @@ var openLogoImage = function() {
             var rgbPixel = ctx.getImageData(x, y, 1, 1).data.slice(0, 3),
                 colorKey = rgbPixel.join("-");
             if (!FONT.constants.LOGO.MCM_COLORMAP[colorKey]) {
-              reject("invalid color palette");
+              reject(i18n.getMessage("osdSetupReplaceLogoImageColorsError"));
               return;
             }
           }            
@@ -1886,6 +1885,7 @@ TABS.osd.initialize = function (callback) {
                 FONT.logoPreview($logoPreview);
               }).catch(function(error) {
                 console.error("error loading image:", error);
+                GUI.log(error);
               });
             }
         });
