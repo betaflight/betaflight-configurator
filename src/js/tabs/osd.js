@@ -1834,7 +1834,7 @@ TABS.osd.initialize = function (callback) {
 
         // font preview window
         var $preview = $('.font-preview'),
-            $logoPreview = $('.logo-preview');
+            $logoPreview = $('#font-logo-preview');
 
         //  init structs once, also clears current font
         FONT.initData();

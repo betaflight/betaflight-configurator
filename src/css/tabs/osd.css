@@ -333,6 +333,16 @@
   height: 18px;
 }
 
+#font-logo-preview-container {
+  background:rgba(0, 255, 0, 0.4);
+  margin-bottom: 10px;
+}
+
+#font-logo-preview {
+  background:rgba(0, 255, 0, 1);
+  line-height: 0; 
+}
+
 .tab-osd .content_wrapper {
   height: calc(100% - 70px);
 }
