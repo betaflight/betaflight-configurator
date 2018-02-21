@@ -206,7 +206,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     if (parsed_hex) {
                                         $('a.flash_firmware').removeClass('disabled');
 
-                                        $('span.progressLabel').text('Loaded Local Firmware: (' + parsed_hex.bytes_total + ' bytes)');
+                                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total));
                                     } else {
                                         $('span.progressLabel').text(i18n.getMessage('firmwareFlasherHexCorrupted'));
                                     }
