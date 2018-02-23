@@ -47,23 +47,55 @@
     "language_default": {
         "message": "Noklusējuma"
     },
+    "sensorDataFlashNotFound": {
+        "message": "Datu atmiņas <br>čips nav atrasts",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "Datu atmiņa: brīva vieta",
+        "description": "Text of the dataflash image in the header of the page."
+    },
     "sensorStatusGyro": {
         "message": "Žiroskops"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Žiro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
         "message": "Akselerometrs"
     },
+    "sensorStatusAccelShort": {
+        "message": "Aksel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusMag": {
         "message": "Magnetometrs"
+    },
+    "sensorStatusMagShort": {
+        "message": "Mag",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
         "message": "Barometrs"
     },
+    "sensorStatusBaroShort": {
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusGPS": {
         "message": "GPS"
     },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusSonar": {
         "message": "Sonārs \/ Attāluma noteicējs"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
         "message": "Rādīt atjauninājumu paziņojumus priekš konfiguratora nestabilajām versijām"
@@ -405,7 +437,7 @@
         "message": "Šī aplikācija atbalsta visus kontrolierus uz kuriem var darboties Betaflight. Programmatora cilnē var skatīt atbalstāmo kontrolieru sarakstu.<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Lejuplādēt Betaflight Blackbox<\/a><br \/><br \/>Programmatūras izejas kods var tikt lejupielādēts <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">šeit<\/a><br \/>Jaunākais programmatūras binārais attēls ir pieejams <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">šeit<\/a><br \/><br \/>Jaunākais <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x Drivers<\/a> var tikt lejuplādēts <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">šeit<\/a><br \/>Jaunākais <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> var tikt lejuplādēts <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">šeit<\/a><br \/>Jaunākais <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> priekš Windows USB draivera instalācijas var tikt lejuplādēts <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">šeit<\/a><br \/>"
     },
     "defaultContributingHead": {
-        "message": "Veicināt"
+        "message": "Atbalstīt"
     },
     "defaultContributingText": {
         "message": "Ja jūs vēlaties padarīt Betaflight vēl labāku jūs varat palīdzēt daudzos veidos, ieskaitot:<br \/><ul><li>Atbildot uz citu lietotāju jautājumiem forumos un IRC.<\/li><li>Atbalstot programmatūras un konfiguratora kodu - jaunas iespējas, labojumi, uzlabojumi<\/li><li>Testējot <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">jaunās iespējas\/labojumus<\/a> sniedzot atsauksmes.<\/li><li>Palīdzot ar <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">problēmām un komentējot iespēju pieprasījumus<\/a>.<\/li><li>Sadarbojoties <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">tulkojot konfiguratora aplikāciju<\/a>jūsu valodā.<\/li><li><\/li><\/ul>"
@@ -1332,7 +1364,7 @@
         "message": "Atjaunot"
     },
     "receiverButtonSticks": {
-        "message": "Kontroles slēdži"
+        "message": "Kontroles sviras"
     },
     "receiverDataRefreshed": {
         "message": "RC pieregulēšanas dati <strong>atjaunoti<\/strong>"
@@ -1342,6 +1374,12 @@
     },
     "receiverModelPreview": {
         "message": "Priekšskatījums"
+    },
+    "receiverMspWarningText": {
+        "message": "Šīs sviras ļauj Betaflight būt atvizētam un notestētam bez raidītāja vai uztvērēja klātbūtnes. Tomēr, <strong>šī iespēja nav paredzēta lidošanai un propelleriem jābūt noņemtiem.<\/strong><br><br>Šī iespēja negarantē pilnvērtīgu gaisa kuģa vadību. <strong>Ir liela varbūtība, ka būs nopietnas traumas, ja propelleri paliks nenoņemti.<\/strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Ieslēgt vadību"
     },
     "auxiliaryHelp": {
         "message": "Izmantojiet robežas, lai nodefinētu slēdžus uz jūsu uztvērēja ar atbilstošo režīmu piesaisti. Uztvērēja kanāls, kas dos nolasījumus starp robežām min\/max, aktivizēs režīmu. Atceries saglabāt izmaiņas lietojot pogu Saglabāt."
@@ -1773,7 +1811,7 @@
         "message": "Atkļūdot"
     },
     "cliInfo": {
-        "message": "<strong>Piezīme<\/strong>: Pametot CLI cilni vai nospiežot Atvienoties <strong>automātiski<\/strong> sūtīs \"<strong>iziet<\/strong>\" uz plati.  ar pēdējo programmatūru tas liks kontrolierim <span class=\"message-negative\">pārstartēt<\/span> un nesaglabātās izmaiņas tiks<span class=\"message-negative\">zaudētas<\/span>."
+        "message": "<strong>Piezīme<\/strong>: Pametot CLI cilni vai nospiežot Atvienoties <strong>automātiski<\/strong> sūtīs \"<strong>iziet<\/strong>\" uz plati.  ar pēdējo programmatūru tas liks kontrolierim <span class=\"message-negative\">pārstartēt<\/span> un nesaglabātās izmaiņas tiks <span class=\"message-negative\">zaudētas<\/span>."
     },
     "cliInputPlaceholder": {
         "message": "Rakstiet jūsu komandu šeit"
@@ -2070,7 +2108,7 @@
         "message": "Lūdzu <span class=\"message-negative\">nemēģiniet<\/span> programmēt <strong>ne-Betaflight<\/strong> dzelžus ar šo programmatoru.<br \/> <span class=\"message-negative\">Nemēģiniet <\/span> <strong>atvienot<\/strong> plati vai <strong>slēgt ārā<\/strong> jūsu datoru kamēr programmējas.<br \/><br \/><strong>Piezīme: <\/strong>STM32 ielādētājs atrodas uz ROM atmiņas, to nav iespējams sabojāt.<br \/><strong>Piezīme: <\/strong><span class=\"message-negative\">Auto-savienojums<\/span> ir vienmēr izslēgts kamēr jūs esat programmatora cilnē.<br \/><strong>Piezīme: <\/strong>Pārliecinieties ka jums ir rezerves kopija; daži atjauninājumi var pilnībā notīrīt jūsu konfigurāciju.<br \/><strong>Piezīme:<\/strong> Ja jums ir sarežģījumi ar programmēšanu, no sākuma <strong>pamēģiniet atslēgt visu kabeļus no kontroliera<\/strong>, pamēģiniet pārstartēt, atjaunināt Chrome, atjaunināt draiverus.<br \/><strong>Piezīme:<\/strong> Kad programmējat plates kurām ir tiešs USB ligzdas savienojums (lielākoties jaunās plates), pārliecinieties, ka izlasījāt USB programmēšanas sadaļu no Betaflight manuāla, un esat pareizi instalējuši programmatūru un draiverus"
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Atjaunot \/ Pazaudēto savienojumu<\/strong>"
+        "message": "<strong>Atkopšanas \/ Zaudēja komunikāciju<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "Ja jums pazuda savienojums ar plati veiciet šos soļus, lai atjaunotu savienojumu: <ul><li>Atvienojiet no barošanas avota<\/li><li>Ieslēdziet 'Nepielietot restartu', Ieslēdziet 'Pilnīga kontroliera dzēšana'.<\/li><li>Savienojiet ielādes kontaktus vai turiet ielādes pogu.<\/li><li>Pieslēdziet barošanas avotam (LED aktīvi NEmirgos, ja viss ir izdarīts pareizi).<\/li><li>Ieinstalējiet visus STM32 draiverus un Zadig ja nepieciešams (skatīt <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Programmēšana<\/a> Betaflight manuāla sadaļā).<\/li><li>Aizveriet konfiguratoru, aizveriet visas Chrome ejošās instances, aizveriet visas Chrome aplikācijas, Pārstartējiet konfiguratoru.<\/li><li>Atlaidiet ielādes pogu ja tāda platei ir.<\/li><li> Saprogrammējiet ar pareizo programmatūru (pielietojiet specifisku datu ātrumu ja tāds ir norādīts plates manuāli).<\/li><li>Atvienojiet no barošanas avota.<\/li><li>Noņemiet ielādes savienotāju.<\/li><li>Pieslēdziet barošanas avotam (LED vajadzētu aktīvi mirgot).<\/li><li>Savienojieties kā parasti.<\/li><\/ul>"
@@ -2304,10 +2342,10 @@
         "message": "Profila neatkarīgo filtru iestatījumi"
     },
     "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Soft zemfrekvenču frekvence [Hz]"
+        "message": "Žiroskopa Soft zemfrekvenču frekvence [Hz]"
     },
     "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "Gyro Soft zemfrekvenču frekvence [Hz]"
+        "message": "Žiroskopa Soft zemfrekvenču frekvence [Hz]"
     },
     "pidTuningGyroNotch1Enable": {
         "message": "Ieslēgt žiroskopa joslas filtru 1"

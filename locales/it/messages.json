@@ -47,23 +47,55 @@
     "language_default": {
         "message": "Predefinito"
     },
+    "sensorDataFlashNotFound": {
+        "message": "Nessun chip per <br>flashare i dati trovato",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "DataFlash: spazio libero",
+        "description": "Text of the dataflash image in the header of the page."
+    },
     "sensorStatusGyro": {
         "message": "Giroscopio"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Gyro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
         "message": "Accelerometro"
     },
+    "sensorStatusAccelShort": {
+        "message": "Accel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusMag": {
         "message": "Magnetometro"
+    },
+    "sensorStatusMagShort": {
+        "message": "Mag",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
         "message": "Barometro"
     },
+    "sensorStatusBaroShort": {
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusGPS": {
         "message": "GPS"
     },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusSonar": {
         "message": "Sonar \/ telemetro"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
         "message": "Mostra notifiche per versioni beta del configuratore"
@@ -1342,6 +1374,12 @@
     },
     "receiverModelPreview": {
         "message": "Anteprima"
+    },
+    "receiverMspWarningText": {
+        "message": "Questi stick consentono a Betaflight di essere armato e testato senza un radiocomando o una ricevente. Tuttavia, <strong>questa funzionalità non deve essere usata per volare e le eliche devono essere rimosse.<\/strong> <br><br>Questa funzionalità non garantisce un controllo affidabile del vostro modello. <strong>Se le eliche non sono state rimosse si possono provocare GRAVI LESIONI o danni.<\/strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Abilita i controlli"
     },
     "auxiliaryHelp": {
         "message": "Attiva gli intervalli per definire gli switch sul tuo radiocomando ed i relativi modi di volo. Il canale della ricevente che dà una lettura compresa tra un intervallo min\/max attiverà il modo di volo. Ricordati di salvare le impostazioni premendo il pulsante Salva."
