@@ -25,7 +25,7 @@
         "name": "map",
         "accessible_resources": [
           "tabs/map.html",
-          "tabs/map.js",
+          "js/tabs/map.js",
           "/images/icons/cf_icon_position.png"
         ]
       }
