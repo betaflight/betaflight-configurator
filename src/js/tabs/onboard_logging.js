@@ -180,7 +180,7 @@ TABS.onboard_logging.initialize = function (callback) {
         
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
         var loggingRates = [];
-        var pidRate = 8000 / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom; 
+        var pidRate = 32000 / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom; 
 
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             loggingRates = [
