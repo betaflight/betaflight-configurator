@@ -36,7 +36,7 @@
         "message": "Connexion automatique: Désactivée - L'utilisateur doit sélectionner manuellement le port série et cliquer sur \"Connexion\"."
     },
     "expertMode": {
-        "message": "Activer le mode Expert"
+        "message": "Mode Expert"
     },
     "permanentExpertMode": {
         "message": "Activer le mode expert de façon permanente"
@@ -52,7 +52,7 @@
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "Données de flash: espace libre",
+        "message": "Blackbox: espace libre",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
@@ -179,7 +179,7 @@
         "message": "Moteurs"
     },
     "tabLedStrip": {
-        "message": "Bandeau de DEL"
+        "message": "Bandeau LED"
     },
     "tabRawSensorData": {
         "message": "Capteurs"
@@ -437,7 +437,7 @@
         "message": "L'application fonctionne avec toutes les cartes sous Betaflight. Consulter la liste dans la rubrique flash.<br><br><a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Télécharger Betaflight Blackbox<\/a><br \/><br \/>Le code source du firmware est à télécharger <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">ici<\/a><br \/>L'image du firmware la plus récente est <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">ici<\/a><br \/><br \/>Le dernier <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">pilote CP210x<\/a> est à télécharger <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">ici<\/a><br \/>Le dernier <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">pilote STM USB VCP<\/a>est à télécharger <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">ici<\/a><br \/>La dernière version de <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> (utilitaire windows pour les pilotes USB) est à télécharger <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">ici<\/a><br \/>"
     },
     "defaultContributingHead": {
-        "message": "Participant"
+        "message": "Participation"
     },
     "defaultContributingText": {
         "message": "Vous souhaitez participer à l'amélioration de Betaflight, plusieurs possibilités:<br \/><ul><li>Répondre aux question des autres utilisateurs sur les forums, IRC et Slack.<\/li><li>Participer au développement du firmware et du configurateur - nouvelles fonctionnalités, améliorations et résolutions de bugs<\/li><li>Tester <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">les nouvelles fonctionnalités\/résolutions de bugs<\/a> et transmettre des retours.<\/li><li>Aider <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">avec des idées, commentaires et des demandes de fonctionnalités<\/a>.<\/li><li>Collaborer <a href=\"<a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">\" target=\"_blank\">à traduire le configurateur <\/a> dans votre langue.<\/li><li><\/li><\/ul>"
@@ -1049,7 +1049,7 @@
         "message": "<strong>Note:<\/strong> toutes les options ne sont pas valides. Si le contrôleur détecte une erreur les ports série seront réinitialisés aux valeurs par défaut."
     },
     "portsMSPHelp": {
-        "message": "<strong>Note:<\/strong> NE <span class=\"message-negative\">PAS<\/span> désactiver MSP sur le premier port série sauf si vous savez exactement ce que vous faites.Vous pourriez être obligé de reflasher entièrement ."
+        "message": "<strong>Note:<\/strong> NE <span class=\"message-negative\">PAS<\/span> désactiver MSP sur le premier port série sauf si vous savez exactement ce que vous faites. Vous pourriez être obligé de reflasher entièrement ."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Mise à jour du microprogramme <span class=\"message-negative\">requise<\/span>. La configuration port série du microprogramme &lt; 1.8.0 n'est pas supportée."
@@ -1826,7 +1826,7 @@
         "message": "Les données sont enregistrées dans cet onglet <span class=\"message-negative\">uniquement<\/span>, quitter l'onglet  <span class=\"message-negative\">arrête<\/span> l'enregistrement et l'application retourne en <strong>\"configurateur\"<\/strong>.<br \/> Peu importe la période de rafraîchissement, les données sont écrites <strong>chaque<\/strong> seconde afin de préserver les performances."
     },
     "loggingSamplesSaved": {
-        "message": "Échantillons sauvegardés:"
+        "message": "Échantillons sauvés:"
     },
     "loggingLogSize": {
         "message": "Taille du Log:"
@@ -2116,6 +2116,9 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Microprogramme non chargé"
     },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Firmware local chargé: ($1 bytes)"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "Le fichier HEX semble corrompu"
     },
@@ -2141,16 +2144,44 @@
         "message": "Détecté: <strong>$1<\/strong> - périphérique toujours en cours de flash, merci de rebrancher pour un nouvel essai"
     },
     "ledStripHelp": {
-        "message": "Le contrôleur de vol peut piloter des LEDs RGB.<br \/>Configurez les LEDs sur la grille et câblez les LEDs en fonction de votre grille. Les LEDs sans ordres ne seront pas sauvegardées.<br \/>Double-click sur une couleur pour éditer sa valeur."
+        "message": "Le contrôleur de vol peut piloter des LEDs RGB.<br \/>Configurez les LEDs sur la grille et câblez les LEDs en fonction de votre grille. Les LEDs sans numéro ne seront pas sauvegardées.<br \/>Double-cliquer sur une couleur pour éditer sa valeur."
     },
     "ledStripButtonSave": {
         "message": "Sauvegarder"
+    },
+    "ledStripColorSetupTitle": {
+        "message": "Configurer la couleur",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "Restantes",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "Effacer la sélection",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "Tout effacer",
+        "description": "In the LED STRIP, clear all leds"
     },
     "ledStripEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">sauvegardée<\/span>"
     },
     "ledStripVtxOverlay": {
-        "message": "VTX (utiliser les fhz du Vtx pour assigner une couleur)"
+        "message": "VTX (couleur selon la fréquence vtx)"
     },
     "ledStripFunctionSection": {
         "message": "Fonctions LED"
@@ -2158,17 +2189,153 @@
     "ledStripFunctionTitle": {
         "message": "Fonction"
     },
+    "ledStripFunctionNoneOption": {
+        "message": "Aucune",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "Couleur",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "Modes &amp; Orientation",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Etat de l'armement",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "Batterie",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "Anneau",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripColorModifierTitle": {
         "message": "Modifier les couleurs"
     },
-    "ledStripThrottleFunction": {
-        "message": "Throttle"
+    "ledStripModeColorsTitle": {
+        "message": "Mode couleurs"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "Orientation",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Headfree",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizon",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Angle",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Mag",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Baro",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "N",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "E",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "S",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "O",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "H",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "B",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "Orientation des Leds ('Modes &amp; Orientation') et couleur",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "Couleurs spéciales",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Désarmé",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Armé",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "Animation",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "Arrière plan clignotant",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: aucun satellite",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: aucune accroche",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: attaché",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "Câblage de bande de LED",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "Mode commande par numéro",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "Effacer sélection",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "Tout effacer",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "Les LEDs sans numéro ne seront pas sauvegardées.",
+        "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
         "message": "Scanner Larson"
     },
     "ledStripBlinkTitle": {
-        "message": "Clignote"
+        "message": "Clignotement"
     },
     "ledStripBlinkAlwaysOverlay": {
         "message": "clignote en permanence"
@@ -2177,13 +2344,13 @@
         "message": "Clignoter lors du décollage"
     },
     "ledStripOverlayTitle": {
-        "message": "Recouvrir"
+        "message": "Priorité"
     },
     "ledStripWarningsOverlay": {
         "message": "Avertissements"
     },
     "ledStripIndecatorOverlay": {
-        "message": "Indicateur (utilise la position sur la matrice)"
+        "message": "Indicateur (position sur la matrice)"
     },
     "colorBlack": {
         "message": "noir"
@@ -2612,10 +2779,10 @@
         "message": "Echelle"
     },
     "powerVoltageDivider": {
-        "message": "Coefficient"
+        "message": "Coefficient diviseur"
     },
     "powerVoltageMultiplier": {
-        "message": "Coefficient"
+        "message": "Coefficient multiplicateur"
     },
     "powerAmperageHead": {
         "message": "Intensité"
@@ -2720,7 +2887,7 @@
         "message": "Elements"
     },
     "osdSetupElementsSwitchAll": {
-        "message": "Tout passer"
+        "message": "Tout"
     },
     "osdSetupPreviewTitle": {
         "message": "Aperçu (faites glisser pour changer de position)"
@@ -3047,7 +3214,7 @@
         "message": "Etat de liaison série"
     },
     "configurationEscProtocol": {
-        "message": "ESC\/moteur protocol"
+        "message": "Protocole ESC\/moteur"
     },
     "configurationEscProtocolHelp": {
         "message": "Sélectionnez votre protocole ESC. <br> Assurez-vous de vérifier que le protocole est pris en charge par votre ESC, cette information devrait être sur le site Web des fabricants. <br> <b> Soyez prudent en utilisant DSHOT900 et DSHOT1200 car peu d'ESC le supportent!<\/ b>"
@@ -3176,7 +3343,7 @@
         "message": "Stockage de la blackbox"
     },
     "onboardLoggingRateOfLogging": {
-        "message": "Blackbox fréquence d'enregistrement"
+        "message": "Fréquence d'enregistrement de la Blackbox"
     },
     "onboardLoggingSerialLogger": {
         "message": "Mémoire externalisée"
