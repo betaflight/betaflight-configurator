@@ -2119,6 +2119,9 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Programmatūra nav ielādēta"
     },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Ielādēta lokālā programmatūra: ($1 baiti)"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "Izskatās ka HEX fails ir bojāts"
     },
@@ -2149,6 +2152,34 @@
     "ledStripButtonSave": {
         "message": "Saglabāt"
     },
+    "ledStripColorSetupTitle": {
+        "message": "Krāsas iestatījums",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "Palika",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "Notīrīt atlasīto",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "Notīrīt visu",
+        "description": "In the LED STRIP, clear all leds"
+    },
     "ledStripEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
     },
@@ -2161,11 +2192,147 @@
     "ledStripFunctionTitle": {
         "message": "Funkcijas"
     },
+    "ledStripFunctionNoneOption": {
+        "message": "Neviens",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "Krāsa",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "Režīmi &amp; Orientācija",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Aktiviz. status",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "Akumulators",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "Aplis",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripColorModifierTitle": {
         "message": "Krāsu mainītājs"
     },
-    "ledStripThrottleFunction": {
-        "message": "Drosele"
+    "ledStripModeColorsTitle": {
+        "message": "Režīma krāsa"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "Orientācija",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Bez galvas",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizonts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Leņķis",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Mag",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Baro",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "N",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "E",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "S",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "W",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "U",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "D",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "LED orientācija ('Režīms &amp; Orientācija') un krāsa",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "Īpašās krāsas",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Deaktivēts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Aktivizēts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "Animācija",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "Mirgot fonā",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: nav sat.",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: nav fiks.",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: fiksēts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "LED lentas slēgums",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "Slēguma secības režīms",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "Notīrīt atlasīto",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "Notīriet VISU slēgumu",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "LED bez slēguma kārtas numura netiks saglabāts.",
+        "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
         "message": "Larson skeneris"
