@@ -182,7 +182,9 @@ TABS.onboard_logging.initialize = function (callback) {
         var loggingRates = [];
         var pidRateBase = 8000;
 
-        if (PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) pidRateBase = 32000;
+        if (PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
+            pidRateBase = 32000;
+        }
 
         var pidRate = pidRateBase / PID_ADVANCED_CONFIG.gyro_sync_denom / 
         PID_ADVANCED_CONFIG.pid_process_denom; 
