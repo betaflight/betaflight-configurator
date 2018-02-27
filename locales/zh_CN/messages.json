@@ -51,7 +51,7 @@
         "message": "简体中文 (zh_CN)"
     },
     "sensorDataFlashNotFound": {
-        "message": "没有找到 <br>闪存芯片",
+        "message": "没有找到<br>闪存芯片",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
@@ -359,10 +359,10 @@
         "message": "飞行器名称: <strong>$1<\/strong>"
     },
     "armingDisabled": {
-        "message": "<strong>不能解锁<\/strong>"
+        "message": "<strong>禁止解锁<\/strong>"
     },
     "armingEnabled": {
-        "message": "<strong>可以解锁<\/strong>"
+        "message": "<strong>允许解锁<\/strong>"
     },
     "runawayTakeoffPreventionDisabled": {
         "message": "<strong> 暂时禁用预防起飞失控 <\/strong>"
@@ -1220,7 +1220,7 @@
         "message": "TPA"
     },
     "pidTuningTPABreakPoint": {
-        "message": "TPA 拐点"
+        "message": "TPA 起始点"
     },
     "pidTuningFilter": {
         "message": "滤波器"
@@ -1760,13 +1760,13 @@
         "message": "加速度计"
     },
     "motorsMaster": {
-        "message": "总控制"
+        "message": "主控制"
     },
     "motorsNotice": {
-        "message": "<strong> 电机测试模式\/解除锁定提示：<\/strong> <br\/> 移动滑块或用遥控器解锁飞机会导致电机 <strong> 旋转 <\/strong>！ <br\/> 为了避免造成伤害，在使用此功能之前<strong class=\"message-negative\">卸下所有螺旋桨<\/strong>！ <br\/> 启用电机测试模式还将暂时禁用预防起飞失控，以避免在工作台上无螺旋桨测试时自动锁定电机。 <br\/>"
+        "message": "<strong> 电机测试模式\/解除锁定提示：<\/strong> <br\/> 移动滑块或用遥控器解锁飞机会导致电机 <strong> 旋转 <\/strong>！ <br\/> 为了避免造成伤害，在使用此功能之前<strong class=\"message-negative\">卸下所有螺旋桨<\/strong>！ <br\/> 启用电机测试模式还将暂时禁用[预防起飞失控]，以避免在工作台上无螺旋桨测试时自动锁定电机。 <br\/>"
     },
     "motorsEnableControl": {
-        "message": "<strong> 我已了解风险 <\/strong>， 螺旋桨已被拆除 - 启用电机控制和解锁，并禁用预防起飞失控。"
+        "message": "<strong> 我已了解风险 <\/strong>， 螺旋桨已被拆除 - 启用电机控制和解锁，并禁用[预防起飞失控]。"
     },
     "sensorsInfo": {
         "message": "请注意，设置过高的图形刷新率会更会缩短尤其是笔记本电脑的电池使用时间<br \/>建议只打开你感兴趣的传感器的图形显示和合理的刷新率"
@@ -2122,6 +2122,9 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "没有加载固件"
     },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "已加载本地固件: ($ 1 字节)"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX文件似乎已损坏"
     },
@@ -2147,10 +2150,38 @@
         "message": "检测到：<strong>$1<\/strong> - 仍在烧录前一个设备，请稍后重新插入再试一次。"
     },
     "ledStripHelp": {
-        "message": "飞控可以控制LED灯带上的每一个灯珠的颜色和效果。<br \/>配置灯珠的位置，连线的顺序，然后按位置将灯带接入。没有设置过接线顺序的LED设置不会被保存。<br \/>在一个颜色上双击可编辑HSV值。"
+        "message": "飞控可以控制LED灯带上的每一个灯珠的颜色和效果。<br \/>配置灯珠的位置，连线的顺序，然后按位置将灯带接入。没有设置过接线顺序的灯珠设置不会被保存。<br \/>在一个颜色上双击可编辑HSV值。"
     },
     "ledStripButtonSave": {
         "message": "保存"
+    },
+    "ledStripColorSetupTitle": {
+        "message": "颜色设置",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "剩余",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "清除已选定",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "全部清除",
+        "description": "In the LED STRIP, clear all leds"
     },
     "ledStripEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
@@ -2164,11 +2195,147 @@
     "ledStripFunctionTitle": {
         "message": "功能"
     },
+    "ledStripFunctionNoneOption": {
+        "message": "无",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "颜色",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "模式和方向",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "锁定状态",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "电池",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "环",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripColorModifierTitle": {
         "message": "颜色修改器"
     },
-    "ledStripThrottleFunction": {
-        "message": "油门"
+    "ledStripModeColorsTitle": {
+        "message": "模式颜色"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "方向",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "无头模式",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizon",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Angle",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "磁力仪",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "气压计",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "北",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "南",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "西",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "东",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "上",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "下",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "LED 方向（“模式和方向”）和颜色",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "特殊颜色",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "已锁定",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "已解锁",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "动画",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "闪烁背景",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: 无卫星",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: 未锁定",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: 已锁定",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "LED 灯带布线",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "布线模式",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "清除已选定",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "清除所有布线",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "没有布线序号的 LED 不会被保存。",
+        "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
         "message": "左右扫描"

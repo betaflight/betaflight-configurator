@@ -326,10 +326,10 @@
         "message": "GitHub로부터 $1에 대한 릴리즈 정보를 로드했습니다."
     },
     "releaseCheckFailed": {
-        "message": "<b>$1 릴리즈에 대한 GitHub 쿼리 실패, 캐쉬된 정보를 사용합니다. 이유: <code>$2<\/code><\/b>"
+        "message": "<b>$1 릴리즈에 대한 GitHub 쿼리 실패, 캐시된 정보를 사용합니다. 이유: <code>$2<\/code><\/b>"
     },
     "releaseCheckCached": {
-        "message": "$1 릴리즈에 대한 캐쉬된 릴리즈 정보를 사용합니다."
+        "message": "$1 릴리즈에 대한 캐시된 릴리즈 정보를 사용합니다."
     },
     "releaseCheckNoInfo": {
         "message": "$1에 사용할 수 있는 릴리즈 정보가 없습니다."
@@ -2119,6 +2119,9 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "펌웨어가 로드되지 않았습니다."
     },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "로드된 로컬 펌웨어: ($1 바이트)"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX 파일이 손상된 것으로 보입니다."
     },
@@ -2149,6 +2152,34 @@
     "ledStripButtonSave": {
         "message": "저장"
     },
+    "ledStripColorSetupTitle": {
+        "message": "색상 설정",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "남아있음",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "선택 지우기",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "모두 지우기",
+        "description": "In the LED STRIP, clear all leds"
+    },
     "ledStripEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
     },
@@ -2161,11 +2192,147 @@
     "ledStripFunctionTitle": {
         "message": "기능"
     },
+    "ledStripFunctionNoneOption": {
+        "message": "없음",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "색상",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "모드 &amp; 방향",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "암 상태",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "배터리",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "링",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripColorModifierTitle": {
         "message": "색상 수정"
     },
-    "ledStripThrottleFunction": {
-        "message": "스로틀"
+    "ledStripModeColorsTitle": {
+        "message": "모드 색상"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "방향",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "헤드프리",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "수평선",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "앵글",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Mag",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Baro",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "북",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "동",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "남",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "서",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "위",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "밑",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "LED 방향 ('모드 &amp; 방향') 및 색상",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "특별한 색상",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "디스아밍됨",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "아밍됨",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "애니메이션",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "깜박임 배경",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: 위성 없음",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: 약함",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: 양호",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "LED 스트립 배선",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "배선 순서 모드",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "선택 지우기",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "모든 배선 지우기",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "배선 순서 번호가 없는 LED는 저장되지 않습니다.",
+        "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
         "message": "라슨 스캐너"
@@ -2186,7 +2353,7 @@
         "message": "경고"
     },
     "ledStripIndecatorOverlay": {
-        "message": "지시자 (매트릭스의 위치 사용)"
+        "message": "표시기 (매트릭스의 위치 사용)"
     },
     "colorBlack": {
         "message": "검정"
