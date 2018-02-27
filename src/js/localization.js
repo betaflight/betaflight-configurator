@@ -123,6 +123,27 @@ function getValidLocale(userLocale) {
 
     if (userLocale == 'DEFAULT') {
         userLocale = window.navigator.userLanguage || window.navigator.language;
+        console.log('Detected locale ' + userLocale);
+
+        // The i18next can fallback automatically to the dialect, but needs to be used with hyphen and 
+        // we use underscore because the eventPage.js uses Chrome localization that needs underscore.
+        // If at some moment we get rid of the Chrome localization we can remove all of this
+        userLocale = userLocale.replace('-','_');
+        // Locale not found
+        if (languagesAvailables.indexOf(userLocale) == -1) {
+            // Is a composite locale?
+            var underscorePosition = userLocale.indexOf('_');
+            if (underscorePosition != -1) {                
+                userLocale = userLocale.substring(0, underscorePosition);
+                // Locale dialect fallback not found
+                if (languagesAvailables.indexOf(userLocale) == -1) {
+                    userLocale = 'en'; // Fallback language
+                }
+            } else {
+                userLocale = 'en';
+            }
+        }
     } 
+
     return userLocale;
 }
