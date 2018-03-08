@@ -57,6 +57,7 @@ FONT.initData = function() {
 };
 
 FONT.constants = {
+  MAX_CHAR_COUNT: 256,
   SIZES: {
     /** NVM ram size for one font char, actual character bytes **/
     MAX_NVM_FONT_CHAR_SIZE: 54,
@@ -74,7 +75,21 @@ FONT.constants = {
     1: 'rgba(255, 255, 255, 0)',
     // white
     2: 'rgba(255,255,255, 1)'
-  }
+  },
+  LOGO: {
+    TILES_NUM_HORIZ: 24,
+    TILES_NUM_VERT: 4,
+    MCM_COLORMAP: {
+        // background
+        '0-255-0': '01',
+        // black
+        '0-0-0': '00',
+        // white
+        '255-255-255': '10',
+        // fallback
+        'default': '01',
+    },
+  },
 };
 
 /**
@@ -123,7 +138,6 @@ FONT.parseMCMFontFile = function(data) {
   return FONT.data.characters;
 };
 
-
 FONT.openFontFile = function($preview) {
   return new Promise(function(resolve) {
     chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
@@ -147,6 +161,128 @@ FONT.openFontFile = function($preview) {
       });
     });
   });
+};
+
+// show a file open dialog and yield an Image object
+var openLogoImage = function() {
+    return new Promise(function(resolve, reject) {
+        var validateImage = function(img) {
+            return new Promise(function(resolve, reject) {
+                var expectedWidth = FONT.constants.SIZES.CHAR_WIDTH
+                        * FONT.constants.LOGO.TILES_NUM_HORIZ,
+                    expectedHeight = FONT.constants.SIZES.CHAR_HEIGHT
+                        * FONT.constants.LOGO.TILES_NUM_VERT;
+                if (img.width != expectedWidth || img.height != expectedHeight) {
+                    reject(i18n.getMessage("osdSetupReplaceLogoImageSizeError",
+                        [expectedWidth, expectedHeight, img.width, img.height]));
+                    return;
+                }
+                var canvas = document.createElement('canvas'),
+                    ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                for (var y = 0, Y = canvas.height; y < Y; y++) {
+                    for (var x = 0, X = canvas.width; x < X; x++) {
+                        var rgbPixel = ctx.getImageData(x, y, 1, 1).data.slice(0, 3),
+                            colorKey = rgbPixel.join("-");
+                        if (!FONT.constants.LOGO.MCM_COLORMAP[colorKey]) {
+                            reject(i18n.getMessage("osdSetupReplaceLogoImageColorsError"));
+                            return;
+                        }
+                    }
+                }
+                resolve();
+            });
+        };
+
+        chrome.fileSystem.chooseEntry({ type: 'openFile', accepts: [{ extensions: ['png', 'bmp'] }] }, function(fileEntry) {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                return;
+            }
+            var img = new Image();
+            img.onload = function() {
+                validateImage(img).then(function() {
+                    resolve(img);
+                }).catch(function(error) {
+                    console.error(error);
+                    reject(error);
+                });
+            };
+            img.onerror = function(error) {
+                reject(error);
+            };
+            fileEntry.file(function(file) {
+                img.src = "file://" + file.path;
+            });
+        });
+    });
+};
+
+// replaces the logo in the font based on an Image object
+FONT.replaceLogoFromImage = function(img) {
+    // takes image data from an ImageData object and returns an MCM symbol as an array of strings
+    var imageToCharacter = function(data) {
+        var char = [],
+            line = "";
+        for (var i = 0, I = data.length; i < I; i += 4) {
+            var rgbPixel = data.slice(i, i + 3),
+                colorKey = rgbPixel.join("-");
+            line += FONT.constants.LOGO.MCM_COLORMAP[colorKey]
+                || FONT.constants.LOGO.MCM_COLORMAP['default'];
+            if (line.length == 8) {
+                char.push(line);
+                line = "";
+            }
+        }
+        var fieldSize = FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE;
+        if (char.length < fieldSize) {
+            var pad = FONT.constants.LOGO.MCM_COLORMAP['default'].repeat(4);
+            for (var i = 0, I = fieldSize - char.length; i < I; i++)
+                char.push(pad);
+        }
+        return char;
+    };
+
+    // takes an OSD symbol as an array of strings and replaces the in-memory character at charAddress with it
+    var replaceChar = function(lines, charAddress) {
+        var characterBits = [];
+        var characterBytes = [];
+        for (var n = 0, N = lines.length; n < N; n++) {
+            var line = lines[n];
+            for (var y = 0; y < 8; y = y + 2) {
+                var v = parseInt(line.slice(y, y + 2), 2);
+                characterBits.push(v);
+            }
+            characterBytes.push(parseInt(line, 2));
+        }
+        FONT.data.characters[charAddress] = characterBits;
+        FONT.data.characters_bytes[charAddress] = characterBytes;
+        FONT.data.character_image_urls[charAddress] = null;
+        FONT.draw(charAddress);
+    };
+
+    // loop through an image and replace font symbols
+    var canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d'),
+        charAddr = SYM.LOGO;
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    for (var y = 0; y < FONT.constants.LOGO.TILES_NUM_VERT; y++) {
+        for (var x = 0; x < FONT.constants.LOGO.TILES_NUM_HORIZ; x++) {
+            var imageData = ctx.getImageData(
+                x * FONT.constants.SIZES.CHAR_WIDTH,
+                y * FONT.constants.SIZES.CHAR_HEIGHT,
+                FONT.constants.SIZES.CHAR_WIDTH,
+                FONT.constants.SIZES.CHAR_HEIGHT
+            ),
+                newChar = imageToCharacter(imageData.data);
+            replaceChar(newChar, charAddr);
+            charAddr++;
+        }
+    }
 };
 
 /**
@@ -208,6 +344,16 @@ FONT.preview = function($el) {
     var url = FONT.data.character_image_urls[i];
     $el.append('<img src="'+url+'" title="0x'+i.toString(16)+'"></img>');
   }
+};
+
+FONT.logoPreview = function($el) {
+    $el.empty()
+        .width(FONT.constants.LOGO.TILES_NUM_HORIZ * FONT.constants.SIZES.CHAR_WIDTH)
+        .height(FONT.constants.LOGO.TILES_NUM_VERT * FONT.constants.SIZES.CHAR_HEIGHT);
+    for (var i = SYM.LOGO, I = FONT.constants.MAX_CHAR_COUNT; i < I; i++) {
+        var url = FONT.data.character_image_urls[i];
+        $el.append('<img src="' + url + '" title="0x' + i.toString(16) + '"></img>');
+    }
 };
 
 FONT.symbol = function(hexVal) {
@@ -1232,7 +1378,7 @@ TABS.osd.initialize = function (callback) {
         // Open modal window
         OSD.GUI.jbox = new jBox('Modal', {
             width: 720,
-            height: 240,
+            height: 420,
             closeButton: 'title',
             animation: false,
             attach: $('#fontmanager'),
@@ -1687,7 +1833,8 @@ TABS.osd.initialize = function (callback) {
         });
 
         // font preview window
-        var $preview = $('.font-preview');
+        var $preview = $('.font-preview'),
+            $logoPreview = $('#font-logo-preview');
 
         //  init structs once, also clears current font
         FONT.initData();
@@ -1700,6 +1847,7 @@ TABS.osd.initialize = function (callback) {
           $.get('./resources/osd/' + $(this).data('font-file') + '.mcm', function(data) {
             FONT.parseMCMFontFile(data);
             FONT.preview($preview);
+            FONT.logoPreview($logoPreview);
             updateOsdView();
           });
         });
@@ -1711,6 +1859,7 @@ TABS.osd.initialize = function (callback) {
           $fontPicker.removeClass('active');
           FONT.openFontFile().then(function() {
             FONT.preview($preview);
+            FONT.logoPreview($logoPreview);
             updateOsdView();
           });
         });
@@ -1726,6 +1875,20 @@ TABS.osd.initialize = function (callback) {
                     $('.progressLabel').text(msg);
                 });
             }
+        });
+
+        // replace logo
+        $('a.replace_logo').click(function() {
+            if (GUI.connect_lock) { // button disabled while flashing is in progress
+                return;
+            }
+            openLogoImage().then(function(ctx) {
+                FONT.replaceLogoFromImage(ctx);
+                FONT.logoPreview($logoPreview);
+            }).catch(function(error) {
+                console.error("error loading image:", error);
+                GUI.log(error);
+            });
         });
 
         //Switch all elements
