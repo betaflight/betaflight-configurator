@@ -26,7 +26,7 @@ const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
 
 var nwBuilderOptions = {
-    version: '0.27.4',
+    version: '0.28.3',
     files: './dist/**/*',
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
