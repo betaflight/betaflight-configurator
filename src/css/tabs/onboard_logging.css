@@ -111,6 +111,11 @@
     border-radius: 4px;
 }
 
+.tab-onboard_logging .dataflash-free,
+.tab-onboard_logging .sdcard-free {
+    direction: rtl;
+}
+
 .tab-onboard_logging progress::-webkit-progress-bar {
     height: 24px;
     background-color: #eee;
