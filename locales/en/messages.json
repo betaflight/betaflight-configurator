@@ -1758,6 +1758,25 @@
         "message": "Qty"
     },
 
+    "motorsVoltage": {
+        "message": "Voltage:"
+    },
+    "motorsADrawing": {
+        "message": "Amperage:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Amp. drawn:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
+
     "motorsText":{
         "message": "Motors"
     },
