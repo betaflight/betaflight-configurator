@@ -592,6 +592,7 @@ function update_live_status() {
        }
 
        $(".battery-legend").text(ANALOG.voltage + " V");
+       $(".current-draw").text(ANALOG.amperage.toFixed(2) + " A")
     }
 
     statuswrapper.show();
