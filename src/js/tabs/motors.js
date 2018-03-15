@@ -230,6 +230,11 @@ TABS.motors.initialize = function (callback) {
         accel_offset = [0, 0, 0],
         accel_offset_established = false;
 
+        // cached elements
+        var motor_voltage_e = $('.motors-bat-voltage'),
+            motor_mah_drawing_e = $('.motors-bat-mah-drawing'),
+            motor_mah_drawn_e = $('.motors-bat-mah-drawn');
+            
 
         var raw_data_text_ements = {
                 x: [],
@@ -310,7 +315,7 @@ TABS.motors.initialize = function (callback) {
             var rate = parseInt($('.tab-motors select[name="rate"]').val(), 10);
             var scale = parseFloat($('.tab-motors select[name="scale"]').val());
 
-            GUI.interval_kill_all(['motor_and_status_pull']);
+            GUI.interval_kill_all(['motor_and_status_pull','motors_power_data_pull_slow']);
 
             switch(TABS.motors.sensor) {
             case "gyro":
@@ -392,6 +397,15 @@ TABS.motors.initialize = function (callback) {
                 raw_data_text_ements.rms[0].text(rms.toFixed(4));
             }
         });
+
+        // Amperage
+        function power_data_pull() {
+            motor_voltage_e.text(i18n.getMessage('motorsVoltageValue', [ANALOG.voltage]));
+            motor_mah_drawing_e.text(i18n.getMessage('motorsADrawingValue', [ANALOG.amperage.toFixed(2)]));
+            motor_mah_drawn_e.text(i18n.getMessage('motorsmAhDrawnValue', [ANALOG.mAhdrawn]));
+            
+        }
+        GUI.interval_add('motors_power_data_pull_slow', power_data_pull, 250, true); // 4 fps
 
         $('a.reset_max').click(function () {
             gyro_max_read = [0, 0, 0];
