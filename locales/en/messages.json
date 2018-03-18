@@ -2786,19 +2786,28 @@
     "osdSetupOpenFont": {
         "message": "Open Font File"
     },
-    "osdSetupLogo": {
-        "message": "Logo in font:"
+    "osdSetupCustomLogoTitle": {
+        "message": "Boot logo:"
     },
-    "osdSetupReplaceLogo": {
-        "message": "Replace Logo"
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "Select custom image&hellip;"
     },
-    "osdSetupReplaceLogoHelp": {
-        "message": "Customized logo image has to be 288×72 pixels in size containing black and white pixels only on a completely green background."
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "Custom image:"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Invalid image size; expected $1×$2 instead of $3×$4"
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Size must be $t(logoWidthPx)×$t(logoHeightPx) pixels"
     },
-    "osdSetupReplaceLogoImageColorsError": {
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "Must contain green, black and white pixels"
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "Click <b>$t(osdSetupUploadFont.message)</b> to persist custom logo"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Invalid image size: $1×$2 (expected $t(logoWidthPx)×$t(logoHeightPx))"
+    },
+    "osdSetupCustomLogoColorMapError": {
         "message": "The image contains an invalid color palette (only green, black and white are allowed)"
     },
     "osdSetupUploadFont": {

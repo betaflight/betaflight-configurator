@@ -76,20 +76,6 @@ FONT.constants = {
     // white
     2: 'rgba(255,255,255, 1)'
   },
-  LOGO: {
-    TILES_NUM_HORIZ: 24,
-    TILES_NUM_VERT: 4,
-    MCM_COLORMAP: {
-        // background
-        '0-255-0': '01',
-        // black
-        '0-0-0': '00',
-        // white
-        '255-255-255': '10',
-        // fallback
-        'default': '01',
-    },
-  },
 };
 
 /**
@@ -101,6 +87,8 @@ FONT.parseMCMFontFile = function(data) {
   FONT.data.characters.length = 0;
   FONT.data.characters_bytes.length = 0;
   FONT.data.character_image_urls.length = 0;
+  // reset logo image info when font data is changed
+  LogoManager.resetImageInfo();
   // make sure the font file is valid
   if (data.shift().trim() != 'MAX7456') {
     var msg = 'that font file doesnt have the MAX7456 header, giving up';
@@ -163,74 +151,25 @@ FONT.openFontFile = function($preview) {
   });
 };
 
-// show a file open dialog and yield an Image object
-var openLogoImage = function() {
-    return new Promise(function(resolve, reject) {
-        var validateImage = function(img) {
-            return new Promise(function(resolve, reject) {
-                var expectedWidth = FONT.constants.SIZES.CHAR_WIDTH
-                        * FONT.constants.LOGO.TILES_NUM_HORIZ,
-                    expectedHeight = FONT.constants.SIZES.CHAR_HEIGHT
-                        * FONT.constants.LOGO.TILES_NUM_VERT;
-                if (img.width != expectedWidth || img.height != expectedHeight) {
-                    reject(i18n.getMessage("osdSetupReplaceLogoImageSizeError",
-                        [expectedWidth, expectedHeight, img.width, img.height]));
-                    return;
-                }
-                var canvas = document.createElement('canvas'),
-                    ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                for (var y = 0, Y = canvas.height; y < Y; y++) {
-                    for (var x = 0, X = canvas.width; x < X; x++) {
-                        var rgbPixel = ctx.getImageData(x, y, 1, 1).data.slice(0, 3),
-                            colorKey = rgbPixel.join("-");
-                        if (!FONT.constants.LOGO.MCM_COLORMAP[colorKey]) {
-                            reject(i18n.getMessage("osdSetupReplaceLogoImageColorsError"));
-                            return;
-                        }
-                    }
-                }
-                resolve();
-            });
-        };
-
-        chrome.fileSystem.chooseEntry({ type: 'openFile', accepts: [{ extensions: ['png', 'bmp'] }] }, function(fileEntry) {
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                return;
-            }
-            var img = new Image();
-            img.onload = function() {
-                validateImage(img).then(function() {
-                    resolve(img);
-                }).catch(function(error) {
-                    console.error(error);
-                    reject(error);
-                });
-            };
-            img.onerror = function(error) {
-                reject(error);
-            };
-            fileEntry.file(function(file) {
-                img.src = "file://" + file.path;
-            });
-        });
-    });
-};
-
-// replaces the logo in the font based on an Image object
+/**
+ * Replaces the logo in the loaded font based on an image.
+ * 
+ * @param {HTMLImageElement} img
+ */
 FONT.replaceLogoFromImage = function(img) {
-    // takes image data from an ImageData object and returns an MCM symbol as an array of strings
+    /**
+     * Takes an ImageData object and returns an MCM symbol as an array of strings.
+     * 
+     * @param {ImageData} data
+     */
     var imageToCharacter = function(data) {
         var char = [],
             line = "";
         for (var i = 0, I = data.length; i < I; i += 4) {
             var rgbPixel = data.slice(i, i + 3),
                 colorKey = rgbPixel.join("-");
-            line += FONT.constants.LOGO.MCM_COLORMAP[colorKey]
-                || FONT.constants.LOGO.MCM_COLORMAP['default'];
+            line += LogoManager.constants.MCM_COLORMAP[colorKey]
+                || LogoManager.constants.MCM_COLORMAP['default'];
             if (line.length == 8) {
                 char.push(line);
                 line = "";
@@ -238,13 +177,12 @@ FONT.replaceLogoFromImage = function(img) {
         }
         var fieldSize = FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE;
         if (char.length < fieldSize) {
-            var pad = FONT.constants.LOGO.MCM_COLORMAP['default'].repeat(4);
+            var pad = LogoManager.constants.MCM_COLORMAP['default'].repeat(4);
             for (var i = 0, I = fieldSize - char.length; i < I; i++)
                 char.push(pad);
         }
         return char;
     };
-
     // takes an OSD symbol as an array of strings and replaces the in-memory character at charAddress with it
     var replaceChar = function(lines, charAddress) {
         var characterBits = [];
@@ -262,7 +200,6 @@ FONT.replaceLogoFromImage = function(img) {
         FONT.data.character_image_urls[charAddress] = null;
         FONT.draw(charAddress);
     };
-
     // loop through an image and replace font symbols
     var canvas = document.createElement('canvas'),
         ctx = canvas.getContext('2d'),
@@ -270,8 +207,8 @@ FONT.replaceLogoFromImage = function(img) {
     canvas.width = img.width;
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
-    for (var y = 0; y < FONT.constants.LOGO.TILES_NUM_VERT; y++) {
-        for (var x = 0; x < FONT.constants.LOGO.TILES_NUM_HORIZ; x++) {
+    for (var y = 0; y < LogoManager.constants.TILES_NUM_VERT; y++) {
+        for (var x = 0; x < LogoManager.constants.TILES_NUM_HORIZ; x++) {
             var imageData = ctx.getImageData(
                 x * FONT.constants.SIZES.CHAR_WIDTH,
                 y * FONT.constants.SIZES.CHAR_HEIGHT,
@@ -283,6 +220,220 @@ FONT.replaceLogoFromImage = function(img) {
             charAddr++;
         }
     }
+};
+
+var LogoManager = LogoManager || {
+    // DOM elements to cache
+    elements: {
+        $preview: "#font-logo-preview",
+        $uploadHint: "#font-logo-info-upload-hint",
+    },
+    constants: {
+        TILES_NUM_HORIZ: 24,
+        TILES_NUM_VERT: 4,
+        MCM_COLORMAP: {
+            // background
+            '0-255-0': '01',
+            // black
+            '0-0-0': '00',
+            // white
+            '255-255-255': '10',
+            // fallback
+            'default': '01',
+        },    
+    },
+    // config for logo image selection dialog
+    acceptFileTypes: [
+        { extensions: ['png', 'bmp'] }, 
+    ],
+};
+
+// custom logo image constraints
+LogoManager.constraints = {
+    // test for image size
+    imageSize: {
+        $el: "#font-logo-info-size",
+        // calculate logo image size at runtime as it may change conditionally in the future
+        expectedWidth: FONT.constants.SIZES.CHAR_WIDTH
+            * LogoManager.constants.TILES_NUM_HORIZ,
+        expectedHeight: FONT.constants.SIZES.CHAR_HEIGHT
+            * LogoManager.constants.TILES_NUM_VERT,
+        /**
+         * @param {HTMLImageElement} img
+         */
+        test: function(img) {
+            var constraint = LogoManager.constraints.imageSize;
+            if (img.width != constraint.expectedWidth 
+                || img.height != constraint.expectedHeight) {
+                GUI.log(i18n.getMessage("osdSetupCustomLogoImageSizeError", [
+                    img.width,
+                    img.height,
+                ]));
+                return false;
+            }
+            return true;
+        },
+    },
+    // test for pixel colors
+    colorMap: {
+        $el: "#font-logo-info-colors",
+        /**
+         * @param {HTMLImageElement} img
+         */
+        test: function(img) {
+            var canvas = document.createElement('canvas'),
+                ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            for (var y = 0, Y = canvas.height; y < Y; y++) {
+                for (var x = 0, X = canvas.width; x < X; x++) {
+                    var rgbPixel = ctx.getImageData(x, y, 1, 1).data.slice(0, 3),
+                        colorKey = rgbPixel.join("-");
+                    if (!LogoManager.constants.MCM_COLORMAP[colorKey]) {
+                        GUI.log(i18n.getMessage("osdSetupCustomLogoColorMapError"));
+                        return false;
+                    }
+                }
+            }
+            return true;
+        },
+    },
+};
+
+LogoManager.resetImageInfo = function() {
+    LogoManager.hideUploadHint();
+    Object.values(LogoManager.constraints).forEach(function(constraint) {
+        var $el = constraint.$el;
+        $el.toggleClass("message-negative", false);
+        $el.toggleClass("invalid", false);
+        $el.toggleClass("message-positive", false);
+        $el.toggleClass("valid", false);
+    });
+};
+
+LogoManager.showConstraintNotSatisfied = function(constraint) {
+    constraint.$el.toggleClass("message-negative", true);
+    constraint.$el.toggleClass("invalid", true);
+};
+
+LogoManager.showConstraintSatisfied = function(constraint) {
+    constraint.$el.toggleClass("message-positive", true);
+    constraint.$el.toggleClass("valid", true);
+};
+
+LogoManager.showUploadHint = function() {
+    LogoManager.elements.$uploadHint.show();
+};
+
+LogoManager.hideUploadHint = function() {
+    LogoManager.elements.$uploadHint.hide();
+};
+
+/**
+ * Show a file open dialog and resolve to an Image object.
+ * 
+ * @returns {Promise}
+ */
+LogoManager.openImage = function() {
+    return new Promise(function(resolve, reject) {
+        /**
+         * Validate image using defined constraints and display results on the UI.
+         * 
+         * @param {HTMLImageElement} img
+         */
+        var validateImage = function(img) {
+                return new Promise(function(resolve, reject) {
+                    LogoManager.resetImageInfo();
+                    for (var key in LogoManager.constraints) {
+                        if (!LogoManager.constraints.hasOwnProperty(key)) {
+                            continue;
+                        }
+                        var constraint = LogoManager.constraints[key],
+                            satisfied = constraint.test(img);
+                        if (satisfied) {
+                            LogoManager.showConstraintSatisfied(constraint);
+                        } else {
+                            LogoManager.showConstraintNotSatisfied(constraint);                        
+                            reject();
+                            return;
+                        }
+                    }
+                    resolve();
+                });
+            },
+            dialogOptions = { 
+                type: 'openFile', 
+                accepts: LogoManager.acceptFileTypes 
+            };
+
+        chrome.fileSystem.chooseEntry(dialogOptions, function(fileEntry) {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                return;
+            }
+            // load and validate selected image
+            var img = new Image();
+            img.onload = function() {
+                validateImage(img).then(function() {
+                    resolve(img);
+                }).catch(function(error) {
+                    reject(error);
+                });
+            };
+            img.onerror = function(error) {
+                reject(error);
+            };
+            fileEntry.file(function(file) {
+                img.src = "file://" + file.path;
+            });
+        });
+    });
+};
+
+/**
+ * Draw the logo using the loaded font data.
+ */
+LogoManager.drawPreview = function() {
+    var $el = LogoManager.elements.$preview;
+    $el.empty();
+    for (var i = SYM.LOGO, I = FONT.constants.MAX_CHAR_COUNT; i < I; i++) {
+        var url = FONT.data.character_image_urls[i];
+        $el.append('<img src="' + url + '" title="0x' + i.toString(16) + '"></img>');
+    }
+};
+
+/**
+ * Initialize Logo Manager UI.
+ */
+LogoManager.init = function() {
+    // cache DOM elements
+    Object.keys(LogoManager.elements).forEach(function(key) {
+        LogoManager.elements[key] = $(LogoManager.elements[key]);
+    });
+    Object.keys(LogoManager.constraints).forEach(function(key) {
+        LogoManager.constraints[key].$el = $(LogoManager.constraints[key].$el);
+    });
+    // resize logo preview area to match tile size
+    var logoWidthPx = LogoManager.constraints.imageSize.expectedWidth,
+        logoHeightPx = LogoManager.constraints.imageSize.expectedHeight;
+    LogoManager.elements.$preview
+        .width(logoWidthPx)
+        .height(logoHeightPx);
+    // inject logo size variables for dynamic translation strings
+    var takeFirst = obj => {
+        if (obj.hasOwnProperty("length") && 0 < obj.length) {
+            return obj[0];
+        } else {
+            return obj;
+        }
+    };
+    var lang = takeFirst(i18next.options.fallbackLng),
+        ns = takeFirst(i18next.options.defaultNS);
+    i18next.addResourceBundle(lang, ns, {
+        logoWidthPx: logoWidthPx,
+        logoHeightPx: logoHeightPx,
+    }, true, true);
 };
 
 /**
@@ -344,16 +495,6 @@ FONT.preview = function($el) {
     var url = FONT.data.character_image_urls[i];
     $el.append('<img src="'+url+'" title="0x'+i.toString(16)+'"></img>');
   }
-};
-
-FONT.logoPreview = function($el) {
-    $el.empty()
-        .width(FONT.constants.LOGO.TILES_NUM_HORIZ * FONT.constants.SIZES.CHAR_WIDTH)
-        .height(FONT.constants.LOGO.TILES_NUM_VERT * FONT.constants.SIZES.CHAR_HEIGHT);
-    for (var i = SYM.LOGO, I = FONT.constants.MAX_CHAR_COUNT; i < I; i++) {
-        var url = FONT.data.character_image_urls[i];
-        $el.append('<img src="' + url + '" title="0x' + i.toString(16) + '"></img>');
-    }
 };
 
 FONT.symbol = function(hexVal) {
@@ -1372,6 +1513,9 @@ TABS.osd.initialize = function (callback) {
 
         fontbuttons.append($('<button>', { class: "load_font_file", i18n: "osdSetupOpenFont" }));
 
+        // must invoke before localizePage() since it adds translation keys for expected logo size
+        LogoManager.init();
+
         // translate to user-selected language
         i18n.localizePage();
 
@@ -1383,7 +1527,10 @@ TABS.osd.initialize = function (callback) {
             animation: false,
             attach: $('#fontmanager'),
             title: 'OSD Font Manager',
-            content: $('#fontmanagercontent')
+            content: $('#fontmanagercontent'),
+            onOpen: function() {
+                LogoManager.resetImageInfo();
+            },
         });
 
         $('.elements-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpElements'));
@@ -1833,10 +1980,9 @@ TABS.osd.initialize = function (callback) {
         });
 
         // font preview window
-        var $preview = $('.font-preview'),
-            $logoPreview = $('#font-logo-preview');
+        var $preview = $('.font-preview');
 
-        //  init structs once, also clears current font
+        // init structs once, also clears current font
         FONT.initData();
 
         var $fontPicker = $('.fontbuttons button');
@@ -1847,7 +1993,7 @@ TABS.osd.initialize = function (callback) {
           $.get('./resources/osd/' + $(this).data('font-file') + '.mcm', function(data) {
             FONT.parseMCMFontFile(data);
             FONT.preview($preview);
-            FONT.logoPreview($logoPreview);
+            LogoManager.drawPreview();
             updateOsdView();
           });
         });
@@ -1859,9 +2005,9 @@ TABS.osd.initialize = function (callback) {
           $fontPicker.removeClass('active');
           FONT.openFontFile().then(function() {
             FONT.preview($preview);
-            FONT.logoPreview($logoPreview);
+            LogoManager.drawPreview();
             updateOsdView();
-          });
+          }).catch(error => console.error(error));
         });
 
         // font upload
@@ -1882,13 +2028,11 @@ TABS.osd.initialize = function (callback) {
             if (GUI.connect_lock) { // button disabled while flashing is in progress
                 return;
             }
-            openLogoImage().then(function(ctx) {
+            LogoManager.openImage().then(function(ctx) {
                 FONT.replaceLogoFromImage(ctx);
-                FONT.logoPreview($logoPreview);
-            }).catch(function(error) {
-                console.error("error loading image:", error);
-                GUI.log(error);
-            });
+                LogoManager.drawPreview();
+                LogoManager.showUploadHint();
+            }).catch(error => console.error(error));
         });
 
         //Switch all elements

@@ -336,11 +336,42 @@
 #font-logo-preview-container {
   background:rgba(0, 255, 0, 0.4);
   margin-bottom: 10px;
+  width: 50%;
+  float: left;
 }
 
 #font-logo-preview {
   background:rgba(0, 255, 0, 1);
-  line-height: 0; 
+  line-height: 0;
+  margin: auto;
+}
+
+#font-logo-info {
+  margin-left: 18px;
+  font-size: 125%;
+  line-height: 150%;
+  float: left;
+}
+
+#font-logo-info h3 {
+  margin-bottom: 0.2em;
+}
+
+#font-logo-info ul li:before {
+  content: '• ';
+}
+
+#font-logo-info ul li.valid:before {
+  content: '✔ ';
+}
+
+#font-logo-info ul li.invalid:before {
+  content: '🞨 ';
+}
+
+#font-logo-info #font-logo-info-upload-hint {
+  margin-top: 1em;
+  display: none;
 }
 
 .tab-osd .content_wrapper {
