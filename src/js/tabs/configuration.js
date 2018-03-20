@@ -576,7 +576,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.24.0"))  {
-            serialRXtypes.push('Spektrum Bidir SRXL');
+            serialRXtypes.push('SPEKTRUM2048/SRXL');
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.35.0"))  {
