@@ -53,6 +53,7 @@ OutFile "..\..\${DEST_FOLDER}\${FILE_NAME_INSTALLER}"
 !insertmacro MUI_LANGUAGE "Japanese"
 !insertmacro MUI_LANGUAGE "Korean"
 !insertmacro MUI_LANGUAGE "Latvian"
+!insertmacro MUI_LANGUAGE "Portuguese"
 !insertmacro MUI_LANGUAGE "SimpChinese"
 !insertmacro MUI_LANGUAGE "Spanish"
 
