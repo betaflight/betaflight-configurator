@@ -225,8 +225,8 @@ FONT.replaceLogoFromImage = function(img) {
 var LogoManager = LogoManager || {
     // DOM elements to cache
     elements: {
-        $preview: "#font-logo-preview",
-        $uploadHint: "#font-logo-info-upload-hint",
+        preview: "#font-logo-preview",
+        uploadHint: "#font-logo-info-upload-hint",
     },
     constants: {
         TILES_NUM_HORIZ: 24,
@@ -252,7 +252,7 @@ var LogoManager = LogoManager || {
 LogoManager.constraints = {
     // test for image size
     imageSize: {
-        $el: "#font-logo-info-size",
+        el: "#font-logo-info-size",
         // calculate logo image size at runtime as it may change conditionally in the future
         expectedWidth: FONT.constants.SIZES.CHAR_WIDTH
             * LogoManager.constants.TILES_NUM_HORIZ,
@@ -276,7 +276,7 @@ LogoManager.constraints = {
     },
     // test for pixel colors
     colorMap: {
-        $el: "#font-logo-info-colors",
+        el: "#font-logo-info-colors",
         /**
          * @param {HTMLImageElement} img
          */
@@ -301,24 +301,43 @@ LogoManager.constraints = {
     },
 };
 
+/**
+ * Initialize Logo Manager UI.
+ */
+LogoManager.init = function() {
+  // inject logo size variables for dynamic translation strings
+  i18n.addResources({
+      logoWidthPx: "" + LogoManager.constraints.imageSize.expectedWidth,
+      logoHeightPx: "" + LogoManager.constraints.imageSize.expectedHeight,
+  });
+  // find/cache DOM elements
+  Object.keys(LogoManager.elements).forEach(function(key) {
+    LogoManager.elements["$" + key] = $(LogoManager.elements[key]);
+  });
+  Object.keys(LogoManager.constraints).forEach(function(key) {
+      LogoManager.constraints[key].$el = $(LogoManager.constraints[key].el);
+  });
+  // resize logo preview area to match tile size
+  LogoManager.elements.$preview
+      .width(LogoManager.constraints.imageSize.expectedWidth)
+      .height(LogoManager.constraints.imageSize.expectedHeight);
+  LogoManager.resetImageInfo();
+};
+
 LogoManager.resetImageInfo = function() {
     LogoManager.hideUploadHint();
     Object.values(LogoManager.constraints).forEach(function(constraint) {
         var $el = constraint.$el;
-        $el.toggleClass("message-negative", false);
         $el.toggleClass("invalid", false);
-        $el.toggleClass("message-positive", false);
         $el.toggleClass("valid", false);
     });
 };
 
 LogoManager.showConstraintNotSatisfied = function(constraint) {
-    constraint.$el.toggleClass("message-negative", true);
     constraint.$el.toggleClass("invalid", true);
 };
 
 LogoManager.showConstraintSatisfied = function(constraint) {
-    constraint.$el.toggleClass("message-positive", true);
     constraint.$el.toggleClass("valid", true);
 };
 
@@ -395,45 +414,11 @@ LogoManager.openImage = function() {
  * Draw the logo using the loaded font data.
  */
 LogoManager.drawPreview = function() {
-    var $el = LogoManager.elements.$preview;
-    $el.empty();
+    var $el = LogoManager.elements.$preview.empty();
     for (var i = SYM.LOGO, I = FONT.constants.MAX_CHAR_COUNT; i < I; i++) {
         var url = FONT.data.character_image_urls[i];
         $el.append('<img src="' + url + '" title="0x' + i.toString(16) + '"></img>');
     }
-};
-
-/**
- * Initialize Logo Manager UI.
- */
-LogoManager.init = function() {
-    // cache DOM elements
-    Object.keys(LogoManager.elements).forEach(function(key) {
-        LogoManager.elements[key] = $(LogoManager.elements[key]);
-    });
-    Object.keys(LogoManager.constraints).forEach(function(key) {
-        LogoManager.constraints[key].$el = $(LogoManager.constraints[key].$el);
-    });
-    // resize logo preview area to match tile size
-    var logoWidthPx = LogoManager.constraints.imageSize.expectedWidth,
-        logoHeightPx = LogoManager.constraints.imageSize.expectedHeight;
-    LogoManager.elements.$preview
-        .width(logoWidthPx)
-        .height(logoHeightPx);
-    // inject logo size variables for dynamic translation strings
-    var takeFirst = obj => {
-        if (obj.hasOwnProperty("length") && 0 < obj.length) {
-            return obj[0];
-        } else {
-            return obj;
-        }
-    };
-    var lang = takeFirst(i18next.options.fallbackLng),
-        ns = takeFirst(i18next.options.defaultNS);
-    i18next.addResourceBundle(lang, ns, {
-        logoWidthPx: logoWidthPx,
-        logoHeightPx: logoHeightPx,
-    }, true, true);
 };
 
 /**
@@ -1528,9 +1513,6 @@ TABS.osd.initialize = function (callback) {
             attach: $('#fontmanager'),
             title: 'OSD Font Manager',
             content: $('#fontmanagercontent'),
-            onOpen: function() {
-                LogoManager.resetImageInfo();
-            },
         });
 
         $('.elements-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpElements'));

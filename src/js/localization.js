@@ -126,3 +126,10 @@ function getValidLocale(userLocale) {
     } 
     return userLocale;
 }
+
+i18n.addResources = function(bundle) {
+    var takeFirst = obj => obj.hasOwnProperty("length") && 0 < obj.length ? obj[0] : obj;
+    var lang = takeFirst(i18next.options.fallbackLng),
+        ns = takeFirst(i18next.options.defaultNS);
+    i18next.addResourceBundle(lang, ns, bundle, true, true);
+};

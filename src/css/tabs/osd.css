@@ -358,15 +358,23 @@
 }
 
 #font-logo-info ul li:before {
-  content: '• ';
+  content: '\2022\20';
+}
+
+#font-logo-info ul li.valid {
+  color: #00a011;
 }
 
 #font-logo-info ul li.valid:before {
-  content: '✔ ';
+  content: '\2714\20';
+}
+
+#font-logo-info ul li.invalid {
+  color: #a01100;
 }
 
 #font-logo-info ul li.invalid:before {
-  content: '🞨 ';
+  content: '\2715\20';
 }
 
 #font-logo-info #font-logo-info-upload-hint {
