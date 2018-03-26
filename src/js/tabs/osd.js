@@ -214,7 +214,11 @@ var openLogoImage = function() {
                 reject(error);
             };
             fileEntry.file(function(file) {
-                img.src = "file://" + file.path;
+                var fr = new FileReader();
+                fr.onload = function () {
+                    img.src = fr.result;
+                }
+                fr.readAsDataURL(file);
             });
         });
     });
