@@ -616,7 +616,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 spiRxTypes.push(
                     'FRSKY_X',
                     'A7105_FLYSKY',
-                    'A7105_FLYSKY_2A'
+                    'A7105_FLYSKY_2A',
+                    'NRF24_KN'
                 );
             }
 
