@@ -3274,6 +3274,10 @@
     "osdDescStatRtcDateTime": {
         "message": "Date and time from real time clock"
     },
+    "osdDescStatBattery": {
+        "message": "Voltage of the battery in real time"
+    },
+    
 
     "osdTimerSource": {
       "message": "Source:"
