@@ -1,7 +1,7 @@
 {
   "name": "betaflight-configurator",
   "description": "Crossplatform configuration tool for Betaflight flight control system.",
-  "version": "10.2.0",
+  "version": "10.3.0",
   "main": "main_nwjs.html",
   "bg-script": "js/eventPage.js",
   "default_locale": "en",
@@ -25,7 +25,7 @@
         "name": "map",
         "accessible_resources": [
           "tabs/map.html",
-          "tabs/map.js",
+          "js/tabs/map.js",
           "/images/icons/cf_icon_position.png"
         ]
       }
@@ -35,7 +35,8 @@
   "license": "GPL-3.0",
   "dependencies": {
     "i18next": "^10.3.0",
-    "i18next-xhr-backend": "^1.5.1"
+    "i18next-xhr-backend": "^1.5.1",
+    "marked": "^0.3.12"
   },
   "devDependencies": {
     "command-exists": "^1.2.2",

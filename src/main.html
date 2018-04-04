@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="./js/libraries/jbox/jBox.css"/>
     <script type="text/javascript" src="./node_modules/i18next/i18next.js"></script>
     <script type="text/javascript" src="./node_modules/i18next-xhr-backend/i18nextXHRBackend.js"></script>
+    <script type="text/javascript" src="./node_modules/marked/marked.min.js"></script>
     <script type="text/javascript" src="./js/libraries/q.js"></script>
     <script type="text/javascript" src="./js/libraries/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="./js/libraries/jquery-ui-1.11.4.min.js"></script>
@@ -155,10 +156,10 @@
         </div>
         <div class="header-wrapper">
             <div id="dataflash_wrapper_global">
-                <div class="noflash_global" align="center">No dataflash <br>chip found</div>
+                <div class="noflash_global" align="center" i18n="sensorDataFlashNotFound"></div>
                 <ul class="dataflash-contents_global">
                     <li class="dataflash-free_global">
-                        <div class="legend">Dataflash: free space</div>
+                        <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
                     </li>
                 </ul>
                 <div id="expertMode" align="center">
@@ -171,22 +172,22 @@
               <div id="sensor-status" class="sensor_state mode-connected">
                 <ul>
                     <li class="gyro" i18n_title="sensorStatusGyro">
-                        <div class="gyroicon">Gyro</div>
+                        <div class="gyroicon" i18n="sensorStatusGyroShort"></div>
                     </li>
                     <li class="accel" i18n_title="sensorStatusAccel">
-                        <div class="accicon">Accel</div>
+                        <div class="accicon" i18n="sensorStatusAccelShort"></div>
                     </li>
                     <li class="mag" i18n_title="sensorStatusMag">
-                        <div class="magicon">Mag</div>
+                        <div class="magicon" i18n="sensorStatusMagShort"></div>
                     </li>
                     <li class="baro" i18n_title="sensorStatusBaro">
-                        <div class="baroicon">Baro</div>
+                        <div class="baroicon" i18n="sensorStatusBaroShort"></div>
                     </li>
                     <li class="gps" i18n_title="sensorStatusGPS">
-                        <div class="gpsicon">GPS</div>
+                        <div class="gpsicon" i18n="sensorStatusGPSShort"></div>
                     </li>
                     <li class="sonar" i18n_title="sensorStatusSonar">
-                        <div class="sonaricon">Sonar</div>
+                        <div class="sonaricon" i18n="sensorStatusSonarShort"></div>
                     </li>
                 </ul>
             </div>
@@ -208,7 +209,7 @@
     <div class="clear-both"></div>
     <div id="log">
         <div class="logswitch">
-            <a href="#" id="showlog">Show Log</a>
+            <a href="#" id="showlog" i18n="logActionShow"></a>
         </div>
         <div id="scrollicon"></div>
         <div class="wrapper"></div>

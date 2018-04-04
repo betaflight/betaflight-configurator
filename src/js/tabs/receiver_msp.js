@@ -7,38 +7,50 @@ var
     
     // What's the index of each channel in the MSP channel list?
     channelMSPIndexes = {
-        roll: 0,
-        pitch: 1,
-        throttle: 2,
-        yaw: 3,
-        aux1: 4,
-        aux2: 5,
-        aux3: 6,
-        aux4: 7,
+        Roll: 0,
+        Pitch: 1,
+        Throttle: 2,
+        Yaw: 3,
+        Aux1: 4,
+        Aux2: 5,
+        Aux3: 6,
+        Aux4: 7,
     },
     
     // Set reasonable initial stick positions (Mode 2)
     stickValues = {
-        throttle: CHANNEL_MIN_VALUE,
-        pitch: CHANNEL_MID_VALUE,
-        roll: CHANNEL_MID_VALUE,
-        yaw: CHANNEL_MID_VALUE,
-        aux1: CHANNEL_MIN_VALUE,
-        aux2: CHANNEL_MIN_VALUE,
-        aux3: CHANNEL_MIN_VALUE,
-        aux4: CHANNEL_MIN_VALUE
+        Throttle: CHANNEL_MIN_VALUE,
+        Pitch: CHANNEL_MID_VALUE,
+        Roll: CHANNEL_MID_VALUE,
+        Yaw: CHANNEL_MID_VALUE,
+        Aux1: CHANNEL_MIN_VALUE,
+        Aux2: CHANNEL_MIN_VALUE,
+        Aux3: CHANNEL_MIN_VALUE,
+        Aux4: CHANNEL_MIN_VALUE
     },
     
     // First the vertical axis, then the horizontal:
     gimbals = [
-        ["throttle", "yaw"],
-        ["pitch", "roll"],
+        ["Throttle", "Yaw"],
+        ["Pitch", "Roll"],
     ],
     
     gimbalElems,
     sliderElems,
     
     enableTX = false;
+
+// This is a hack to get the i18n var of the parent, but the localizePage not works
+const i18n = opener.i18n;
+
+$(document).ready(function () {
+    $('[i18n]:not(.i18n-replaced)').each(function() {
+        var element = $(this);
+
+        element.html(i18n.getMessage(element.attr('i18n')));
+        element.addClass('i18n-replaced');
+    });
+})
 
 function transmitChannels() {
     var 
@@ -148,7 +160,7 @@ $(document).ready(function() {
     
     $(".slider", sliderElems).each(function(sliderIndex) {
         var 
-            initialValue = stickValues["aux" + (sliderIndex + 1)];
+            initialValue = stickValues["Aux" + (sliderIndex + 1)];
         
         $(this)
             .noUiSlider({
@@ -160,7 +172,7 @@ $(document).ready(function() {
             }).on('slide change set', function(e, value) {
                 value = Math.round(parseFloat(value));
                 
-                stickValues["aux" + (sliderIndex + 1)] = value;
+                stickValues["Aux" + (sliderIndex + 1)] = value;
                 
                 $(".tooltip", this).text(value);
             });

@@ -119,7 +119,8 @@ var serial = {
                             
                         case 'break': // This seems to be the error that is thrown under NW.js in Windows when the device reboots after typing 'exit' in CLI
                         case 'device_lost':
-                            CONFIG.arming_disabled = false;
+                            CONFIG.armingDisabled = false;
+                            CONFIG.runawayTakeoffPreventionDisabled = false;
 
                             if (GUI.connected_to || GUI.connecting_to) {
                                 $('a.connect').click();

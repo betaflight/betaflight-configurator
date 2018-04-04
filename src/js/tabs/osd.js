@@ -1,6 +1,7 @@
 'use strict';
 
 var SYM = SYM || {};
+SYM.BLANK = 0x20;
 SYM.VOLT = 0x06;
 SYM.RSSI = 0x01;
 SYM.AH_RIGHT = 0x02;
@@ -587,6 +588,7 @@ OSD.constants = {
       name: 'MAIN_BATT_VOLTAGE',
       desc: 'osdDescElementMainBattVoltage',
       default_position: -29,
+      draw_order: 20,
       positionable: true,
       preview: FONT.symbol(SYM.BATTERY) + '16.8' + FONT.symbol(SYM.VOLT)
     },
@@ -594,6 +596,7 @@ OSD.constants = {
       name: 'RSSI_VALUE',
       desc: 'osdDescElementRssiValue',
       default_position: -59,
+      draw_order: 30,
       positionable: true,
       preview: FONT.symbol(SYM.RSSI) + '99'
     },
@@ -607,6 +610,7 @@ OSD.constants = {
       name: 'THROTTLE_POSITION',
       desc: 'osdDescElementThrottlePosition',
       default_position: -9,
+      draw_order: 110,
       positionable: true,
       preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + '69'
     },
@@ -619,6 +623,7 @@ OSD.constants = {
     VTX_CHANNEL: {
       name: 'VTX_CHANNEL',
       default_position: 1,
+      draw_order: 120,
       positionable: true,
       preview: 'R:2:1'
     },
@@ -639,31 +644,88 @@ OSD.constants = {
       name: 'DISARMED',
       desc: 'osdDescElementDisarmed',
       default_position: -109,
+      draw_order: 280,
       positionable: true,
       preview: 'DISARMED'
     },
     CROSSHAIRS: {
       name: 'CROSSHAIRS',
       desc: 'osdDescElementCrosshairs',
-      default_position: -1,
-      positionable: false
+      default_position: 193,
+      draw_order: 40, 
+      positionable: function() {
+        return semver.gte(CONFIG.apiVersion, "1.38.0") ? true : false;
+      },
+      preview: FONT.symbol(SYM.AH_CENTER_LINE) + FONT.symbol(SYM.AH_CENTER) + FONT.symbol(SYM.AH_CENTER_LINE_RIGHT)
     },
     ARTIFICIAL_HORIZON: {
       name: 'ARTIFICIAL_HORIZON',
       desc: 'osdDescElementArtificialHorizon',
-      default_position: -1,
-      positionable: false
+      default_position: 194,
+      draw_order: 10,
+      positionable: function() {
+        return semver.gte(CONFIG.apiVersion, "1.38.0") ? true : false;
+      },
+      preview: function() {
+
+          var artificialHorizon = new Array();
+
+          for (var j = 1; j < 8; j++) {
+              for (var i = -4; i <= 4; i++) {
+
+                  var element;
+
+                  // Blank char to mark the size of the element
+                  if (j != 4) {
+                      element = {x: i, y : j, sym : SYM.BLANK};
+
+                  // Sample of horizon
+                  } else {
+                      element = {x: i, y : j, sym : SYM.AH_BAR9_0 + 4};
+                  }
+                  artificialHorizon.push(element);
+              }
+          }
+          return artificialHorizon;
+      }
     },
     HORIZON_SIDEBARS: {
       name: 'HORIZON_SIDEBARS',
       desc: 'osdDescElementHorizonSidebars',
-      default_position: -1,
-      positionable: false
+      default_position: 194,
+      draw_order: 50,
+      positionable: function() {
+        return semver.gte(CONFIG.apiVersion, "1.38.0") ? true : false;
+      },
+      preview: function(fieldPosition) {
+
+          var horizonSidebar = new Array();
+
+          var hudwidth  = OSD.constants.AHISIDEBARWIDTHPOSITION;
+          var hudheight = OSD.constants.AHISIDEBARHEIGHTPOSITION;
+          for (var i = -hudheight; i <= hudheight; i++) {
+              var element = {x: -hudwidth, y : i, sym : SYM.AH_DECORATION};
+              horizonSidebar.push(element);
+              
+              element = {x: hudwidth, y : i, sym : SYM.AH_DECORATION};
+              horizonSidebar.push(element);
+          }
+          
+          // AH level indicators
+          var element = {x: -hudwidth + 1, y : 0, sym : SYM.AH_LEFT};
+          horizonSidebar.push(element);
+
+          element = {x: hudwidth - 1, y : 0, sym : SYM.AH_RIGHT};
+          horizonSidebar.push(element);
+          
+          return horizonSidebar;
+      }
     },
     CURRENT_DRAW: {
       name: 'CURRENT_DRAW',
       desc: 'osdDescElementCurrentDraw',
       default_position: -23,
+      draw_order: 130,
       positionable: true,
       preview: function() {
         return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 42.00' + FONT.symbol(SYM.AMP) : FONT.symbol(SYM.AMP) + '42.0';
@@ -673,6 +735,7 @@ OSD.constants = {
       name: 'MAH_DRAWN',
       desc: 'osdDescElementMahDrawn',
       default_position: -18,
+      draw_order: 140,
       positionable: true,
       preview: function() {
         return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 690' + FONT.symbol(SYM.MAH) : FONT.symbol(SYM.MAH) + '690';
@@ -682,6 +745,7 @@ OSD.constants = {
       name: 'CRAFT_NAME',
       desc: 'osdDescElementCraftName',
       default_position: -77,
+      draw_order: 150,
       positionable: true,
       preview: function(osd_data) {
         return OSD.generateCraftName(osd_data, 1);
@@ -691,6 +755,7 @@ OSD.constants = {
       name: 'ALTITUDE',
       desc: 'osdDescElementAltitude',
       default_position: 62,
+      draw_order: 160,
       positionable: true,
       preview: function(osd_data) {
         return '399.7' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE)
@@ -714,6 +779,7 @@ OSD.constants = {
       name: 'FLYMODE',
       desc: 'osdDescElementFlyMode',
       default_position: -1,
+      draw_order: 90,
       positionable: true,
       preview: 'STAB'
     },
@@ -721,6 +787,7 @@ OSD.constants = {
       name: 'GPS_SPEED',
       desc: 'osdDescElementGPSSpeed',
       default_position: -1,
+      draw_order: 330,
       positionable: true,
       preview: ' 40K'
     },
@@ -728,6 +795,7 @@ OSD.constants = {
       name: 'GPS_SATS',
       desc: 'osdDescElementGPSSats',
       default_position: -1,
+      draw_order: 320,
       positionable: true,
       preview: FONT.symbol(SYM.GPS_SAT_L) + FONT.symbol(SYM.GPS_SAT_R) + '14'
     },
@@ -735,6 +803,7 @@ OSD.constants = {
       name: 'GPS_LON',
       desc: 'osdDescElementGPSLon',
       default_position: -1,
+      draw_order: 350,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_SOUTH) + '00.00000000'
     },
@@ -742,6 +811,7 @@ OSD.constants = {
       name: 'GPS_LAT',
       desc: 'osdDescElementGPSLat',
       default_position: -1,
+      draw_order: 340,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_EAST) + '00.00000000'
     },
@@ -749,6 +819,7 @@ OSD.constants = {
       name: 'DEBUG',
       desc: 'osdDescElementDebug',
       default_position: -1,
+      draw_order: 240,
       positionable: true,
       preview: 'DBG     0     0     0     0'
     },
@@ -756,6 +827,7 @@ OSD.constants = {
       name: 'PID_ROLL',
       desc: 'osdDescElementPIDRoll',
       default_position: 0x800 | (10 << 5) | 2, // 0x0800 | (y << 5) | x
+      draw_order: 170,
       positionable: true,
       preview: 'ROL  43  40  20'
     },
@@ -763,6 +835,7 @@ OSD.constants = {
       name: 'PID_PITCH',
       desc: 'osdDescElementPIDPitch',
       default_position: 0x800 | (11 << 5) | 2, // 0x0800 | (y << 5) | x
+      draw_order: 180,
       positionable: true,
       preview: 'PIT  58  50  22'
     },
@@ -770,6 +843,7 @@ OSD.constants = {
       name: 'PID_YAW',
       desc: 'osdDescElementPIDYaw',
       default_position: 0x800 | (12 << 5) | 2, // 0x0800 | (y << 5) | x
+      draw_order: 190,
       positionable: true,
       preview: 'YAW  70  45  20'
     },
@@ -777,6 +851,7 @@ OSD.constants = {
       name: 'POWER',
       desc: 'osdDescElementPower',
       default_position: (15 << 5) | 2,
+      draw_order: 200,
       positionable: true,
       preview: function() {
         return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 142W' : '142W';
@@ -786,13 +861,14 @@ OSD.constants = {
       name: 'PID_RATE_PROFILE',
       desc: 'osdDescElementPIDRateProfile',
       default_position: 0x800 | (13 << 5) | 2, // 0x0800 | (y << 5) | x
+      draw_order: 210,
       positionable: true,
       preview: '1-2'
     },
     BATTERY_WARNING: {
       name: 'BATTERY_WARNING',
       desc: 'osdDescElementBatteryWarning',
-      default_position: -1,
+      default_position: -1,      
       positionable: true,
       preview: 'LOW VOLTAGE'
     },
@@ -800,6 +876,7 @@ OSD.constants = {
       name: 'AVG_CELL_VOLTAGE',
       desc: 'osdDescElementAvgCellVoltage',
       default_position: 12 << 5,
+      draw_order: 230,
       positionable: true,
       preview: FONT.symbol(SYM.BATTERY) + '3.98' + FONT.symbol(SYM.VOLT)
     },
@@ -807,6 +884,7 @@ OSD.constants = {
       name: 'PITCH_ANGLE',
       desc: 'osdDescElementPitchAngle',
       default_position: -1,
+      draw_order: 250,
       positionable: true,
       preview: '-00.0'
     },
@@ -814,6 +892,7 @@ OSD.constants = {
       name: 'ROLL_ANGLE',
       desc: 'osdDescElementRollAngle',
       default_position: -1,
+      draw_order: 260,
       positionable: true,
       preview: '-00.0'
     },
@@ -821,6 +900,7 @@ OSD.constants = {
       name: 'MAIN_BATT_USAGE',
       desc: 'osdDescElementMainBattUsage',
       default_position: -17,
+      draw_order: 270,
       positionable: true,
       preview: FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_CLOSE)
     },
@@ -835,6 +915,7 @@ OSD.constants = {
       name: 'HOME_DIRECTION',
       desc: 'osdDescElementHomeDirection',
       default_position: -1,
+      draw_order: 370,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_SOUTH + 2)
     },
@@ -842,6 +923,7 @@ OSD.constants = {
       name: 'HOME_DISTANCE',
       desc: 'osdDescElementHomeDistance',
       default_position: -1,
+      draw_order: 360,
       positionable: true,
       preview:  function(osd_data) {
         return '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE)
@@ -851,6 +933,7 @@ OSD.constants = {
       name: 'NUMERICAL_HEADING',
       desc: 'osdDescElementNumericalHeading',
       default_position: -1,
+      draw_order: 290,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_EAST) + '90'
     },
@@ -858,6 +941,7 @@ OSD.constants = {
       name: 'NUMERICAL_VARIO',
       desc: 'osdDescElementNumericalVario',
       default_position: -1,
+      draw_order: 300,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_NORTH) + '8.7'
     },
@@ -865,6 +949,7 @@ OSD.constants = {
       name: 'COMPASS_BAR',
       desc: 'osdDescElementCompassBar',
       default_position: -1,
+      draw_order: 310,
       positionable: true,
       preview:  function(osd_data) {
         return FONT.symbol(SYM.HEADING_W)            + FONT.symbol(SYM.HEADING_LINE) + FONT.symbol(SYM.HEADING_DIVIDED_LINE) +
@@ -876,6 +961,7 @@ OSD.constants = {
       name: 'WARNINGS',
       desc: 'osdDescElementWarnings',
       default_position: -1,
+      draw_order: 220,
       positionable: true,
       preview: 'LOW VOLTAGE'
     },
@@ -883,6 +969,7 @@ OSD.constants = {
       name: 'ESC_TEMPERATURE',
       desc: 'osdDescElementEscTemperature',
       default_position: -1,
+      draw_order: 380,
       positionable: true,
       preview: FONT.symbol(SYM.TEMP_C) + '45'
     },
@@ -890,6 +977,7 @@ OSD.constants = {
         name: 'ESC_RPM',
         desc: 'osdDescElementEscRpm',
         default_position: -1,
+        draw_order: 390,
         positionable: true,
         preview: '226000'
       },
@@ -897,6 +985,7 @@ OSD.constants = {
         name: 'REMAINING_TIME_ESTIMATE',
         desc: 'osdDescElementRemaningTimeEstimate',
         default_position: -1,
+        draw_order: 80,
         positionable: true,
         preview: '01:13'
     },
@@ -904,6 +993,7 @@ OSD.constants = {
         name: 'RTC_DATE_TIME',
         desc: 'osdDescElementRtcDateTime',
         default_position: -1,
+        draw_order: 400,
         positionable: true,
         preview: '2017-11-11 16:20:00'
     },
@@ -911,6 +1001,7 @@ OSD.constants = {
         name: 'ADJUSTMENT_RANGE',
         desc: 'osdDescElementAdjustmentRange',
         default_position: -1,
+        draw_order: 410,
         positionable: true,
         preview: 'PITCH/ROLL P: 42'
     },
@@ -918,6 +1009,7 @@ OSD.constants = {
       name: 'TIMER_1',
       desc: 'osdDescElementTimer1',
       default_position: -1,
+      draw_order: 60,
       positionable: true,
       preview: function(osd_data) {
         return OSD.generateTimerPreview(osd_data, 0);
@@ -927,6 +1019,7 @@ OSD.constants = {
       name: 'TIMER_2',
       desc: 'osdDescElementTimer2',
       default_position: -1,
+      draw_order: 70,
       positionable: true,
       preview: function(osd_data) {
         return OSD.generateTimerPreview(osd_data, 1);
@@ -936,6 +1029,7 @@ OSD.constants = {
       name: 'CORE_TEMPERATURE',
       desc: 'osdDescElementCoreTemperature',
       default_position: -1,
+      draw_order: 420,
       positionable: true,
       preview: function(osd_data) {
         return OSD.generateTemperaturePreview(osd_data, 33);
@@ -1009,6 +1103,10 @@ OSD.constants = {
     RTC_DATE_TIME: {
       name: 'RTC_DATE_TIME',
       desc: 'osdDescStatRtcDateTime'
+    },
+    STAT_BATTERY: {
+      name: 'STAT_BATTERY',
+      desc: 'osdDescStatBattery'
     }
   },
   ALL_WARNINGS: {
@@ -1035,7 +1133,12 @@ OSD.constants = {
     CRASH_FLIP_MODE: {
       name: 'CRASH_FLIP_MODE',
       desc: 'osdWarningCrashFlipMode'
+    },
+    ESC_FAIL: {
+      name: 'OSD_WARNING_ESC_FAIL',
+      desc: 'osdWarningEscFail'
     }
+
   },
   FONT_TYPES: [
     { file: "default", name: "Default" },
@@ -1047,6 +1150,20 @@ OSD.constants = {
     { file: "clarity", name: "Clarity" }
   ]
 };
+
+OSD.searchLimitsElement = function(arrayElements) {
+    // Search minimum and maximum
+    var limits = {minX: 0, maxX: 0, minY:0, maxY: 0};
+
+    arrayElements.forEach(function(valor, indice, array) {
+        limits.minX = Math.min(valor.x, limits.minX);
+        limits.maxX = Math.max(valor.x, limits.maxX);
+        limits.minY = Math.min(valor.y, limits.minY);
+        limits.maxY = Math.max(valor.y, limits.maxY);
+    });
+
+    return limits;
+ }
 
 // Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
 OSD.chooseFields = function () {
@@ -1176,6 +1293,11 @@ OSD.chooseFields = function () {
     OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
       F.RTC_DATE_TIME
     ]);
+    if (semver.gte(CONFIG.apiVersion, "1.38.0")) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+          F.STAT_BATTERY
+        ]);
+    }
   }
 
   // Choose warnings
@@ -1189,6 +1311,11 @@ OSD.chooseFields = function () {
     F.VISUAL_BEEPER,
     F.CRASH_FLIP_MODE
   ];
+  if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+      OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+          F.ESC_FAIL
+      ]);
+    }
 };
 
 OSD.updateDisplaySize = function() {
@@ -1204,6 +1331,24 @@ OSD.updateDisplaySize = function() {
   };
 };
 
+OSD.drawByOrder = function(selectedPosition, field, charCode) {
+
+    // Check if there is other field at the same position
+    if (OSD.data.preview[selectedPosition] !== undefined) {
+        var oldField = OSD.data.preview[selectedPosition][0];
+        if (oldField != null) {
+            if (oldField.draw_order !== undefined) {
+                if ((field.draw_order === undefined) || (field.draw_order < oldField.draw_order)) {
+                    // Not overwrite old field
+                    return;
+                }
+            }
+        }
+    
+        // Default action, overwrite old field
+        OSD.data.preview[selectedPosition++] = [field, charCode];
+    }
+}
 
 OSD.msp = {
   /**
@@ -1363,6 +1508,7 @@ OSD.msp = {
         name: suffix ? c.name + suffix : c.name,
         desc: c.desc,
         index: j,
+        draw_order: c.draw_order,
         positionable: c.positionable,
         preview: suffix ? c.preview + suffix : c.preview
       }, this.helpers.unpack.position(v, c)));
@@ -1417,10 +1563,13 @@ OSD.msp = {
       }
     }
 
-    // Generate OSD element previews that are defined by a function
+    // Generate OSD element previews and positionable that are defined by a function
     for (let item of d.display_items) {
       if (typeof(item.preview) === 'function') {
         item.preview = item.preview(d);
+      }
+      if (typeof(item.positionable) === 'function') {
+          item.positionable = item.positionable(d);
       }
     }
 
@@ -1440,8 +1589,18 @@ OSD.GUI.preview = {
   },
   onDragStart: function(e) {
     var ev = e.originalEvent;
+
+    var display_item = OSD.data.display_items[$(ev.target).data('field').index];
+    var offsetX = 6;
+    var offsetY = 9;
+    if (display_item.preview.constructor === Array) {
+        var arrayElements = display_item.preview;
+        var limits = OSD.searchLimitsElement(arrayElements);
+        offsetX -= limits.minX*12;
+        offsetY -= limits.minY*12;
+    }
     ev.dataTransfer.setData("text/plain", $(ev.target).data('field').index);
-    ev.dataTransfer.setDragImage($(this).data('field').preview_img, 6, 9);
+    ev.dataTransfer.setDragImage($(this).data('field').preview_img, offsetX, offsetY);
   },
   onDragOver: function(e) {
     var ev = e.originalEvent;
@@ -1460,10 +1619,35 @@ OSD.GUI.preview = {
     var position = $(this).removeAttr('style').data('position');
     var field_id = parseInt(ev.dataTransfer.getData('text/plain'))
     var display_item = OSD.data.display_items[field_id];
-    var overflows_line = FONT.constants.SIZES.LINE - ((position % FONT.constants.SIZES.LINE) + display_item.preview.length);
-    if (overflows_line < 0) {
-      position += overflows_line;
+    
+    var overflows_line = 0;
+    // Standard preview, string type
+    if (display_item.preview.constructor !== Array) {
+        overflows_line = FONT.constants.SIZES.LINE - ((position % FONT.constants.SIZES.LINE) + display_item.preview.length);
+        if (overflows_line < 0) {
+            position += overflows_line;
+        }
+        
+    // Advanced preview, array type
+    } else {
+        var arrayElements = display_item.preview;
+        var limits = OSD.searchLimitsElement(arrayElements);
+        
+        var selectedPositionX = position % FONT.constants.SIZES.LINE;
+        var selectedPositionY = Math.trunc(position / FONT.constants.SIZES.LINE);
+        
+        if ((limits.minX < 0) && ((selectedPositionX + limits.minX) < 0)) {
+            position += Math.abs(selectedPositionX + limits.minX);
+        } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= FONT.constants.SIZES.LINE)) {
+            position -= (selectedPositionX + limits.maxX + 1) - FONT.constants.SIZES.LINE;
+        }
+        if ((limits.minY < 0) && ((selectedPositionY + limits.minY) < 0)) {
+            position += Math.abs(selectedPositionY + limits.minY)*FONT.constants.SIZES.LINE;
+        } else if ((limits.maxY > 0) && ((selectedPositionY + limits.maxY) >= OSD.data.display_size.y)) {
+            position -= (selectedPositionY + limits.maxY - OSD.data.display_size.y + 1)*FONT.constants.SIZES.LINE;
+        }
     }
+
     if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
       // unsigned now
     } else {
@@ -1846,53 +2030,75 @@ TABS.osd.initialize = function (callback) {
                     OSD.data.preview[i * 30 + j] = [{name: 'LOGO', positionable: false}, x++];
               }
             }
+
             // draw all the displayed items and the drag and drop preview images
             for(let field of OSD.data.display_items) {
-              if (!field.preview || !field.isVisible) { continue; }
-              var j = (field.position >= 0) ? field.position : field.position + OSD.data.display_size.total;
+
+              if (!field.preview || !field.isVisible) { 
+                  continue; 
+              }
+
+              var selectedPosition = (field.position >= 0) ? field.position : field.position + OSD.data.display_size.total;
+
               // create the preview image
               field.preview_img = new Image();
               var canvas = document.createElement('canvas');
               var ctx = canvas.getContext("2d");
-              // fill the screen buffer
-              for(var i = 0; i < field.preview.length; i++) {
-                var charCode = field.preview.charCodeAt(i);
-                OSD.data.preview[j++] = [field, charCode];
-                // draw the preview
-                var img = new Image();
-                img.src = FONT.draw(charCode);
-                ctx.drawImage(img, i*12, 0);
+              
+              // Standard preview, type String
+              if (field.preview.constructor !== Array) {
+                  
+                  
+                  // fill the screen buffer
+                  for(var i = 0; i < field.preview.length; i++) {
+                    
+                    // Add the character to the preview
+                    var charCode = field.preview.charCodeAt(i);
+                    OSD.drawByOrder(selectedPosition++, field, charCode);
+
+                    // Image used when "dragging" the element
+                    if (field.positionable) {
+                        var img = new Image();
+                        img.src = FONT.draw(charCode);
+                        ctx.drawImage(img, i*12, 0);
+                    }
+                  }
+              } else {
+                  var arrayElements = field.preview;
+
+                  // The array can have negative and positive positions, search limits...
+                  var limits = OSD.searchLimitsElement(arrayElements);
+
+                  var offsetX = 0;
+                  var offsetY = 0;
+                  if (limits.minX < 0) {
+                      offsetX = -limits.minX;
+                  }
+                  if (limits.minY < 0) {
+                      offsetY = -limits.minY;
+                  }
+
+                  for (var i=0; i < arrayElements.length; i++) {
+
+                   // Add the character to the preview
+                      var element = arrayElements[i];
+                      var charCode = element.sym;
+                      OSD.drawByOrder(selectedPosition + element.x + element.y*FONT.constants.SIZES.LINE, field, charCode);
+
+                      // Image used when "dragging" the element
+                      if (field.positionable) {
+                          var img = new Image();
+                          img.src = FONT.draw(charCode);
+                          ctx.drawImage(img, (element.x + offsetX)*12, (element.y + offsetY)*12);
+                      }
+                  }
               }
               field.preview_img.src = canvas.toDataURL('image/png');
-            // Required for NW.js - Otherwise the <img /> will
-            // consume drag/drop events.
-            field.preview_img.style.pointerEvents = 'none';
+              // Required for NW.js - Otherwise the <img /> will
+              //consume drag/drop events.
+              field.preview_img.style.pointerEvents = 'none';
             }
-            var centerishPosition = 194;
-            // artificial horizon
-            if ($('input[name="ARTIFICIAL_HORIZON"]').prop('checked')) {
-              for (var i = 0; i < 9; i++) {
-                OSD.data.preview[centerishPosition - 4 + i] = SYM.AH_BAR9_0 + 4;
-              }
-            }
-            // crosshairs
-            if ($('input[name="CROSSHAIRS"]').prop('checked')) {
-              OSD.data.preview[centerishPosition - 1] = SYM.AH_CENTER_LINE;
-              OSD.data.preview[centerishPosition + 1] = SYM.AH_CENTER_LINE_RIGHT;
-              OSD.data.preview[centerishPosition]     = SYM.AH_CENTER;
-            }
-            // sidebars
-            if ($('input[name="HORIZON_SIDEBARS"]').prop('checked')) {
-              var hudwidth  = OSD.constants.AHISIDEBARWIDTHPOSITION;
-              var hudheight = OSD.constants.AHISIDEBARHEIGHTPOSITION;
-              for (var i = -hudheight; i <= hudheight; i++) {
-                OSD.data.preview[centerishPosition - hudwidth + (i * FONT.constants.SIZES.LINE)] = SYM.AH_DECORATION;
-                OSD.data.preview[centerishPosition + hudwidth + (i * FONT.constants.SIZES.LINE)] = SYM.AH_DECORATION;
-              }
-              // AH level indicators
-              OSD.data.preview[centerishPosition-hudwidth+1] =  SYM.AH_LEFT;
-              OSD.data.preview[centerishPosition+hudwidth-1] =  SYM.AH_RIGHT;
-            }
+
             // render
             var $preview = $('.display-layout .preview').empty();
             var $row = $('<div class="row"/>');

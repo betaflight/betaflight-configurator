@@ -6,7 +6,7 @@
 
 var i18n = {}
 
-const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'ko', 'zh_CN'];
+const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'lv', 'pt', 'zh_CN'];
 
 /**
  * Functions that depend on the i18n framework
@@ -39,9 +39,19 @@ i18n.init = function(cb) {
 }
 
 i18n.getMessage = function(messageID, parameters) {
-    var translatedString =  i18next.t(messageID + '.message');
 
-    if (parameters !== undefined) {
+    var translatedString;
+
+    // Option 1, no parameters or Object as parameters (i18Next type parameters)
+    if ((parameters === undefined) || ((parameters.constructor !== Array) && (parameters instanceof Object))) {
+        translatedString =  i18next.t(messageID + '.message', parameters);
+
+    // Option 2: parameters as $1, $2, etc.
+    // (deprecated, from the old Chrome i18n
+    } else {
+
+        translatedString =  i18next.t(messageID + '.message');
+
         if (parameters.constructor !== Array) {
             parameters = [parameters];
         }
@@ -123,7 +133,28 @@ function getValidLocale(userLocale) {
 
     if (userLocale == 'DEFAULT') {
         userLocale = window.navigator.userLanguage || window.navigator.language;
+        console.log('Detected locale ' + userLocale);
+
+        // The i18next can fallback automatically to the dialect, but needs to be used with hyphen and 
+        // we use underscore because the eventPage.js uses Chrome localization that needs underscore.
+        // If at some moment we get rid of the Chrome localization we can remove all of this
+        userLocale = userLocale.replace('-','_');
+        // Locale not found
+        if (languagesAvailables.indexOf(userLocale) == -1) {
+            // Is a composite locale?
+            var underscorePosition = userLocale.indexOf('_');
+            if (underscorePosition != -1) {                
+                userLocale = userLocale.substring(0, underscorePosition);
+                // Locale dialect fallback not found
+                if (languagesAvailables.indexOf(userLocale) == -1) {
+                    userLocale = 'en'; // Fallback language
+                }
+            } else {
+                userLocale = 'en';
+            }
+        }
     } 
+
     return userLocale;
 }
 

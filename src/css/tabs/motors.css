@@ -108,6 +108,23 @@
     background-color: #00D800;
 }
 
+/* Power info */
+.tab-motors .power_info {
+    float: left;
+    margin-left: 1em;
+}
+
+.tab-motors .power_info .power_text {
+    font-weight: bold;
+}
+
+.tab-motors .power_info .power_value {
+    margin-right: 10px;
+    width: 50px;
+    display: inline-block;
+    text-align: right;
+}
+
 /*Motors*/
 
 .tab-motors svg {

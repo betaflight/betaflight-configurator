@@ -69,30 +69,74 @@
     "language_fr": {
         "message": "Fran\u00e7ais (fr)"
     },
+    "language_it": {
+        "message": "Italiano (it)"
+    },
+    "language_ja": {
+        "message": "\u65E5\u672C\u8A9E (ja)"
+    },
     "language_ko": {
         "message": "\ud55c\uad6d\uc5b4 (ko)"
     },
+    "language_lv": {
+        "message": "Latvie\u0161u (lv)"
+    },
+    "language_pt": {
+        "message": "Portugu\u00EAs (pt)"
+    },    
     "language_zh_CN": {
         "message": "\u7b80\u4f53\u4e2d\u6587 (zh_CN)"
     },
 
+    "sensorDataFlashNotFound": {
+        "message": "No dataflash <br>chip found",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "Dataflash: free space",
+        "description": "Text of the dataflash image in the header of the page."
+    },
     "sensorStatusGyro": {
         "message": "Gyroscope"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Gyro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
         "message": "Accelerometer"
     },
+    "sensorStatusAccelShort": {
+        "message": "Accel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusMag": {
         "message": "Magnetometer"
+    },
+    "sensorStatusMagShort": {
+        "message": "Mag",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
         "message": "Barometer"
     },
+    "sensorStatusBaroShort": {
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusGPS": {
         "message": "GPS"
     },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusSonar": {
         "message": "Sonar / Range finder"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
         "message": "Show update notifications for unstable versions of the configurator"
@@ -327,7 +371,8 @@
     },
 
     "infoVersions": {
-        "message" : "Running - OS: <strong>$1</strong>, Chrome: <strong>$2</strong>, Configurator: <strong>$3</strong>"
+        "message" : "Running - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "releaseCheckLoaded": {
         "message" : "Loaded release information for $1 from GitHub."
@@ -368,6 +413,12 @@
     },
     "armingEnabled": {
         "message": "<strong>Arming Enabled</strong>"
+    },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong>Runaway Takeoff Prevention temporarily Disabled</strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong>Runaway Takeoff Prevention Enabled</strong>"
     },
     "boardInfoReceived": {
         "message": "Board: <strong>$1</strong>, version: <strong>$2</strong>"
@@ -424,10 +475,10 @@
         "message": "Erased $1 kB of flash <span class=\"message-positive\">successfully</span>"
     },
     "dfu_device_flash_info": {
-        "message": "Detected device with total flash size $1 kiB"
+        "message": "Detected device with total flash size $1 KiB"
     },
     "dfu_error_image_size": {
-        "message": "<span class=\"message-negative\">Error</span>: Supplied image is larger then flash available on the chip! Image: $1 kiB, limit = $2 kiB"
+        "message": "<span class=\"message-negative\">Error</span>: Supplied image is larger then flash available on the chip! Image: $1 KiB, limit = $2 KiB"
     },
 
     "eeprom_saved_ok": {
@@ -448,7 +499,7 @@
         "message": "Contributing"
     },
     "defaultContributingText": {
-        "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>Answering other users questions on the forums and IRC.</li><li>Contributing code to the firmware and configurator - new features, fixes, improvements</li><li>Testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">new features/fixes</a> and providing feedback.</li><li>Helping out with <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">issues and commenting on feature requests</a>.</li><li>Collaborate by <a href=\"http://betaflight.oneskyapp.com\" target=\"_blank\">translating the configurator application</a> into your language.</li><li></li></ul>"
+        "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>Answering other users questions on the forums and IRC.</li><li>Contributing code to the firmware and configurator - new features, fixes, improvements</li><li>Testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">new features/fixes</a> and providing feedback.</li><li>Helping out with <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">issues and commenting on feature requests</a>.</li><li>Collaborate by <a href=\"https://crowdin.com/project/betaflight-configurator\" target=\"_blank\">translating the configurator application</a> into your language.</li><li></li></ul>"
     },
     "defaultChangelogAction": {
         "message": "Changelog"
@@ -913,6 +964,15 @@
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
+    "configurationDshotBeeper": {
+        "message": "DSHOT Beacon Configuration"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Use DSHOT beacon (use motors to sound beeps when disarmed)"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "Beacon Tone"
+    },
     "configurationBeeper": {
         "message": "Beeper Configuration"
     },
@@ -1121,12 +1181,14 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "RunCam Device"
     },
-
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
     "pidTuningRateProfileOption": {
         "message": "Rateprofile $1"
+    },
+    "portsFunction_LIDAR_TF": {
+        "message": "Benewake LIDAR"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires <span class=\"message-positive\">$2</span>."
@@ -1303,7 +1365,7 @@
         "message": "Please read receiver chapter of the documentation.  Configure serial port (if required), receiver mode (serial/ppm/pwm), provider (for serial receivers), bind receiver, set channel map, configure channel endpoints/range on TX so that all channels go from ~1000 to ~2000.  Set midpoint (default 1500), trim channels to 1500, configure stick deadband, verify behaviour when TX is off or out of range.<br /><span class=\"message-negative\">IMPORTANT:</span> Before flying read failsafe chapter of documentation and configure failsafe."
     },
     "tuningHelp": {
-        "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100hz is optimal, but for noiser setups you can try lowering Dterm filter to 50hz and possibly also the gyro filter."
+        "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -1382,6 +1444,13 @@
     },
     "receiverModelPreview": {
         "message": "Preview"
+    },
+
+    "receiverMspWarningText": {
+        "message": "These sticks allow Betaflight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br><br>This feature does not guarantee reliable control of your craft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Enable controls"
     },
 
     "auxiliaryHelp": {
@@ -1696,6 +1765,25 @@
         "message": "Qty"
     },
 
+    "motorsVoltage": {
+        "message": "Voltage:"
+    },
+    "motorsADrawing": {
+        "message": "Amperage:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Amp. drawn:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
+
     "motorsText":{
         "message": "Motors"
     },
@@ -1768,10 +1856,10 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br />Moving the sliders or arming your craft with the transmitter will cause the motors to <strong>spin up</strong>.<br />In order to prevent injury <strong class=\"message-negative\">remove ALL propellers</strong> before using this feature.<br />"
+        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br />Moving the sliders or arming your craft with the transmitter will cause the motors to <strong>spin up</strong>.<br />In order to prevent injury <strong class=\"message-negative\">remove ALL propellers</strong> before using this feature.<br />Enabling motor test mode will also temporarily disable Runaway Takeoff Prevention, to stop it from disarming the craft when bench testing without propellers.<br />"
     },
     "motorsEnableControl": {
-        "message": "I understand the risks, propellers are removed - Enable motor control and arming."
+        "message": "<strong>I understand the risks</strong>, the propellers are removed - enable motor control and arming, and disable Runaway Takeoff Prevention."
     },
 
     "sensorsInfo": {
@@ -2125,7 +2213,7 @@
         "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-Betaflight</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note: </strong>STM32 bootloader is stored in ROM, it cannot be bricked.<br /><strong>Note: </strong><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.<br /><strong>Note: </strong>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.<br /><strong>Note:</strong> If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade chrome, upgrade drivers.<br /><strong>Note:</strong> When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed"
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Recovery / Lost communication<strong>"
+        "message": "<strong>Recovery / Lost communication</strong>"
     },
     "firmwareFlasherRecoveryText": {
         "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">USB Flashing</a> section of Betaflight manual).</li><li>Close configurator, Close all running chrome instances, Close all Chrome apps, Restart Configurator.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
@@ -2135,6 +2223,9 @@
     },
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware not loaded"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Loaded Local Firmware: ($1 bytes)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
@@ -2167,6 +2258,34 @@
     "ledStripButtonSave": {
         "message": "Save"
     },
+    "ledStripColorSetupTitle": {
+        "message": "Color setup",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "Remaining",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "Clear selected",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "Clear ALL",
+        "description": "In the LED STRIP, clear all leds"
+    },
     "ledStripEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
@@ -2179,11 +2298,147 @@
     "ledStripFunctionTitle": {
         "message": "Function"
     },
+    "ledStripFunctionNoneOption": {
+        "message": "None",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "Color",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "Modes &amp; Orientation",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Arm State",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "Battery",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "Ring",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripColorModifierTitle": {
         "message": "Color modifier"
     },
-    "ledStripThrottleFunction": {
-        "message": "Throttle"
+    "ledStripModeColorsTitle": {
+        "message": "Mode colors"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "Orientation",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Headfree",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizon",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Angle",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Mag",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Baro",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "N",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "E",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "S",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "W",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "U",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "D",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "LED Orientation ('Modes &amp; Orientation') and Color",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "Special colors",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Disarmed",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Armed",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "Animation",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "Blink background",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: no sats",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: no lock",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: locked",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "LED Strip Wiring",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "Wire Ordering Mode",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "Clear selected",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "Clear ALL Wiring",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "LEDs without wire ordering number will not be saved.",
+        "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
         "message": "Larson scanner"
@@ -2388,7 +2643,7 @@
         "message": "Gyro Notch Filter Cutoff 2 Frequency [Hz]"
     },
     "pidTuningGyroNotchCutoffHelp": {
-        "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
+        "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch Hz of 260 it means the range is 160-360Hz with most attenuation around center)"
     },
     "pidTuningFilterSettings": {
         "message": "Filter Settings"
@@ -2418,7 +2673,7 @@
         "message": "D Term Notch Filter Cutoff [Hz]"
     },
     "pidTuningDTermNotchCutoffHelp": {
-        "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch hz of 260 it means the range is 160-360hz with most attenuation around center)"
+        "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch Hz of 260 it means the range is 160-360Hz with most attenuation around center)"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass Frequency [Hz]"
@@ -2810,6 +3065,12 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "The image contains an invalid color palette (only green, black and white are allowed)"
     },
+    "osdSetupReplaceLogoImageSizeError": {
+        "message": "Invalid image size; expected $1×$2 instead of $3×$4"
+    },
+    "osdSetupReplaceLogoImageColorsError": {
+        "message": "The image contains an invalid color palette (only green, black and white are allowed)"
+    },
     "osdSetupUploadFont": {
         "message": "Upload Font"
     },
@@ -3029,6 +3290,10 @@
     "osdDescStatRtcDateTime": {
         "message": "Date and time from real time clock"
     },
+    "osdDescStatBattery": {
+        "message": "Voltage of the battery in real time"
+    },
+    
 
     "osdTimerSource": {
       "message": "Source:"
@@ -3066,6 +3331,9 @@
     },
     "osdWarningCrashFlipMode": {
         "message": "Warns when flip over after crash mode is activated"
+    },
+    "osdWarningEscFail": {
+        "message": "Enumerates a list with the ESCs/motors that are failing (RPM or temperature are out of the configured threshold)"
     },
 
     "osdSectionHelpElements": {
@@ -3127,7 +3395,7 @@
         "message": "The maximum frequency for the PID loop is limited by the maximum frequency that updates can be sent by the chosen ESC / motor protocol."
     },
     "configurationGyroUse32kHz": {
-        "message": "Enable gyro 32khz sampling mode"
+        "message": "Enable gyro 32kHz sampling mode"
     },
     "configurationGyroUse32kHzHelp": {
         "message": "32 kHz gyro update frequency is only possible if the gyro chip supports it (currently MPU6500, MPU9250, and ICM20xxx if connected over SPI). If in doubt, consult the specification for your board."

@@ -18,7 +18,9 @@ function startProcess() {
     i18n.localizePage();
 
     // alternative - window.navigator.appVersion.match(/Chrome\/([0-9.]*)/)[1];
-    GUI.log(i18n.getMessage('infoVersions',[GUI.operating_system, window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"), getManifestVersion()]));
+    GUI.log(i18n.getMessage('infoVersions',{operatingSystem: GUI.operating_system, 
+                                            chromeVersion: window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"), 
+                                            configuratorVersion: getManifestVersion()}));
 
     $('#logo .version').text(getManifestVersion());
     updateStatusBarVersion();
@@ -429,7 +431,7 @@ function notifyOutdatedVersion(releaseData) {
             $('.dialogConfiguratorUpdate-websitebtn').click(function() {
                 dialog.close();
 
-                window.open(versions[0].html_url);
+                window.open(versions[0].html_url, '_blank');
             });
 
             dialog.showModal();

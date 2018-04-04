@@ -61,26 +61,28 @@ var DEFAULT;
 var FC = {
     resetState: function() {
         CONFIG = {
-            apiVersion:                 "0.0.0",
-            flightControllerIdentifier: '',
-            flightControllerVersion:    '',
-            version:                    0,
-            buildInfo:                  '',
-            multiType:                  0,
-            msp_version:                0, // not specified using semantic versioning
-            capability:                 0,
-            cycleTime:                  0,
-            i2cError:                   0,
-            activeSensors:              0,
-            mode:                       0,
-            profile:                    0,
-            uid:                        [0, 0, 0],
-            accelerometerTrims:         [0, 0],
-            name:                       '',
-            numProfiles:                3,
-            rateProfile:                0,
-            boardType:                  0,
-            armingDisableFlags:         0,
+            apiVersion:                       "0.0.0",
+            flightControllerIdentifier:       '',
+            flightControllerVersion:          '',
+            version:                          0,
+            buildInfo:                        '',
+            multiType:                        0,
+            msp_version:                      0, // not specified using semantic versioning
+            capability:                       0,
+            cycleTime:                        0,
+            i2cError:                         0,
+            activeSensors:                    0,
+            mode:                             0,
+            profile:                          0,
+            uid:                              [0, 0, 0],
+            accelerometerTrims:               [0, 0],
+            name:                             '',
+            numProfiles:                      3,
+            rateProfile:                      0,
+            boardType:                        0,
+            armingDisableFlags:               0,
+            armingDisabled:                   false,
+            runawayTakeoffPreventionDisabled: false,
         };
 
         BF_CONFIG = {
@@ -102,6 +104,7 @@ var FC = {
 
         BEEPER_CONFIG = {
             beepers:                    0,
+            dshotBeaconTone:            0,
         };
         
         MIXER_CONFIG = {

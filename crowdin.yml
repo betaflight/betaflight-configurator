@@ -1,0 +1,32 @@
+#
+# Files configuration
+#
+"preserve_hierarchy": false
+
+files: [
+ {
+  #
+  # Source files filter
+  # e.g. "/resources/en/*.json"
+  #
+  "source" : "/locales/en/messages.json",
+
+  #
+  # where translations live
+  # e.g. "/resources/%two_letters_code%/%original_file_name%"
+  #
+  "translation" : "/locales/%two_letters_code%/%original_file_name%",
+
+  #
+  # Often software projects have custom names for locale directories. crowdin-cli allows you to map your own languages to be understandable by Crowdin.
+  #
+  "languages_mapping" : {
+    "two_letters_code" : {
+      "es-ES" : "es",
+      "pt-PT" : "pt",
+      "sv-SE" : "sv",
+      "zh-CN" : "zh_CN"
+     }
+  }
+ }
+]

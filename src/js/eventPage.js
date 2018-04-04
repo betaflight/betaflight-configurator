@@ -14,9 +14,11 @@ function startApplication() {
         innerBounds: {
             minWidth: 1024,
             minHeight: 550
-        },
-        icon: 'images/bf_icon_128.png'
+        }
     }, function (createdWindow) {
+        if (getChromeVersion() >= 54) {
+            createdWindow.icon = 'images/bf_icon_128.png';
+        }
         createdWindow.onClosed.addListener(function () {
             // automatically close the port when application closes
             // save connectionId in separate variable before createdWindow.contentWindow is destroyed
@@ -121,4 +123,10 @@ function getManifestVersion(manifest) {
     }
 
     return version;
+}
+
+function getChromeVersion () {     
+    var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+
+    return raw ? parseInt(raw[2], 10) : false;
 }

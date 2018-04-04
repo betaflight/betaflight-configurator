@@ -1,478 +1,494 @@
 {
-    "language_ca": {
-        "message": "Catal\u00e0 (ca)"
-    },
-    "language_de": {
-        "message": "Deutsch (de)"
-    },
-    "language_en": {
-        "message": "English (en)"
-    },
-    "language_es": {
-        "message": "Espa\u00f1ol (es)"
-    },
-    "language_fr": {
-        "message": "Fran\u00e7ais (fr)"
-    },
-    "language_ko": {
-        "message": "\ud55c\uad6d\uc5b4 (ko)"
-    },
-    "translation_version": {
-        "message": "0"
-    },
-    "windowTitle": {
-        "message": "Betaflight Configurator",
-        "description": "Title of the application window, usually not translated"
-    },
     "warningTitle": {
-        "message": "\u8b66\u544a"
+        "message": "警告"
     },
     "noticeTitle": {
-        "message": "\u6ce8\u610f"
+        "message": "注意"
     },
     "options_title": {
-        "message": "\u7a0b\u5e8f\u9009\u9879"
+        "message": "选项"
     },
     "connect": {
-        "message": "\u8fde\u63a5"
+        "message": "连接"
     },
     "connecting": {
-        "message": "\u8fde\u63a5\u4e2d"
+        "message": "连接中"
     },
     "disconnect": {
-        "message": "\u65ad\u5f00\u8fde\u63a5"
+        "message": "断开连接"
     },
     "portsSelectManual": {
-        "message": "\u624b\u52a8\u8fde\u63a5\u4e32\u53e3"
+        "message": "手动选择"
     },
     "portOverrideText": {
-        "message": "\u4e32\u53e3"
+        "message": "端口："
     },
     "autoConnect": {
-        "message": "\u81ea\u52a8\u8fde\u63a5"
+        "message": "自动连接"
     },
     "close": {
-        "message": "\u5173\u95ed"
+        "message": "关闭"
     },
     "autoConnectEnabled": {
-        "message": "\u81ea\u52a8\u8fde\u63a5\uff1a\u5f00\u542f-\u5f53\u53d1\u73b0\u65b0\u7684\u4e32\u53e3\uff0c\u5730\u9762\u7ad9\u5c06\u4f1a\u81ea\u52a8\u8fde\u63a5\u65b0\u7684\u4e32\u53e3"
+        "message": "自动连接：开启 - 地面站会自动连接新发现的端口"
     },
     "autoConnectDisabled": {
-        "message": "\u81ea\u52a8\u8fde\u63a5\uff1a \u5173\u95ed - \u7528\u6237\u4ece\u5217\u8868\u4e2d\u9009\u7740\u6b63\u786e\u7684\u4e32\u53e3\uff0c\u7136\u540e\u70b9\u201c\u8fde\u63a5\u201d"
+        "message": "自动连接： 关闭 - 用户需从列表中选择正确的串口，手动点击 “连接”"
     },
     "expertMode": {
-        "message": "\u5f00\u542f\u9ad8\u7ea7\u6a21\u5f0f"
+        "message": "启用专家模式"
     },
     "permanentExpertMode": {
-        "message": "\u9ed8\u8ba4\u5f00\u542f\u9ad8\u7ea7\u6a21\u5f0f"
+        "message": "默认启用专家模式"
     },
     "userLanguageSelect": {
-        "message": "\u8bed\u8a00 \uff08\u9700\u8981\u91cd\u542f\u5e94\u7528\u624d\u80fd\u751f\u6548\uff09"
+        "message": "语言 （需要重启应用才能生效）"
     },
     "language_default": {
-        "message": "\u9ed8\u8ba4"
+        "message": "默认"
+    },
+    "language_zh_CN": {
+        "message": "简体中文 (zh_CN)"
+    },
+    "sensorDataFlashNotFound": {
+        "message": "没有找到<br>闪存芯片",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "闪存芯片：空闲空间",
+        "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
-        "message": "\u9640\u87ba\u4eea"
+        "message": "陀螺仪"
+    },
+    "sensorStatusGyroShort": {
+        "message": "陀螺仪",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1"
+        "message": "加速度计"
+    },
+    "sensorStatusAccelShort": {
+        "message": "加速度计",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
-        "message": "\u78c1\u573a\u8ba1"
+        "message": "磁力仪"
+    },
+    "sensorStatusMagShort": {
+        "message": "磁力仪",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
-        "message": "\u9ad8\u5ea6\u8ba1"
+        "message": "气压计"
+    },
+    "sensorStatusBaroShort": {
+        "message": "气压计",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusGPS": {
         "message": "GPS"
     },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
     "sensorStatusSonar": {
-        "message": "\u58f0\u5450 \/ \u6d4b\u8ddd\u8ba1"
+        "message": "声呐 \/ 测距计"
+    },
+    "sensorStatusSonarShort": {
+        "message": "声呐",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "\u663e\u793a\u5730\u9762\u7ad9\u6d4b\u8bd5\u7248\u672c\u66f4\u65b0\u63d0\u793a"
+        "message": "显示测试版本的配置程序更新提示"
     },
     "configuratorUpdateNotice": {
-        "message": "\u4f60\u6b63\u5728\u4f7f\u7528\u65e7\u7248\u672c\u7684 <b> Betaflight\u5730\u9762\u7ad9 <\/b>\u3002<br> \u7248\u672c<b>$1<\/b>\u5df2\u7ecf\u5728\u7f51\u4e0a\u53d1\u5e03\u3002\u8bf7\u5230 <a href=\"$2\" target=\"_blank\">\u53d1\u5e03\u9875\u9762<\/a>\u4e0b\u8f7d\u5b89\u88c5\u6700\u65b0\u7684\u5730\u9762\u7ad9\uff0c<br>\u66f4\u65b0\u4e4b\u524d\u8bf7\u5173\u95ed\u5730\u9762\u7ad9."
+        "message": "你正在使用旧版本的 <b> Betaflight地面站 <\/b>。<br> 版本<b>$1<\/b>已经在网上发布。请到 <a href=\"$2\" target=\"_blank\">发布页面<\/a>下载安装最新的地面站，<br>更新之前请关闭地面站."
     },
     "configuratorUpdateWebsite": {
-        "message": "\u6253\u5f00\u7248\u672c\u53d1\u5e03\u7f51\u7ad9"
+        "message": "打开版本发布网站"
     },
     "deviceRebooting": {
-        "message": "\u98de\u63a7 - <span class=\"message-negative\">\u91cd\u542f<\/span>"
+        "message": "飞控 - <span class=\"message-negative\">重启<\/span>"
     },
     "deviceReady": {
-        "message": "\u98de\u63a7 - <span class=\"message-positive\">\u5c31\u7eea<\/span>"
+        "message": "飞控 - <span class=\"message-positive\">就绪<\/span>"
     },
     "backupFileIncompatible": {
-        "message": "\u4e0a\u4e00\u7248\u672c\u5730\u9762\u7ad9\u751f\u6210\u7684\u5907\u4efd\u6587\u4ef6\u548c\u76ee\u524d\u7248\u672c\u7684\u5730\u9762\u7ad9\u4e0d\u517c\u5bb9"
+        "message": "上一版本地面站生成的备份文件和当前版本的地面站不兼容"
     },
     "backupFileUnmigratable": {
-        "message": "\u4e0a\u4e00\u7248\u672c\u5730\u9762\u7ad9\u751f\u6210\u7684\u5907\u4efd\u6587\u4ef6\u4e0d\u80fd\u79fb\u690d\u5230\u76ee\u524d\u7248\u672c\u7684\u5730\u9762\u7ad9"
+        "message": "上一版本地面站生成的备份文件不能移植到当前版本的地面站"
     },
     "configMigrationFrom": {
-        "message": "\u6b63\u5728\u79fb\u690d\u5730\u9762\u7ad9\u8bbe\u7f6e\u6587\u4ef6: $1"
+        "message": "正在移植地面站设置文件: $1"
     },
     "configMigratedTo": {
-        "message": "\u5730\u9762\u7ad9\u8bbe\u7f6e\u6587\u4ef6\u79fb\u690d\u6210\u529f"
+        "message": "地面站设置文件 $1 已移植"
     },
     "configMigrationSuccessful": {
-        "message": "\u8bbe\u7f6e\u6587\u4ef6\u79fb\u690d\u5b8c\u6210\uff0c\u5730\u9762\u7ad9\u4f7f\u7528\u8bbe\u7f6e\u6587\u4ef6\u3002"
+        "message": "设置文件移植完成，使用设置文件 $1。"
     },
     "tabFirmwareFlasher": {
-        "message": "\u70e7\u5f55\u56fa\u4ef6"
+        "message": "固件烧写工具"
     },
     "tabLanding": {
-        "message": "\u6b22\u8fce"
+        "message": "欢迎"
     },
     "tabHelp": {
-        "message": "\u8bbe\u7f6e\u6587\u6863 & \u652f\u6301"
+        "message": "设置文档 & 支持"
     },
     "tabSetup": {
-        "message": "\u8bbe\u7f6e"
+        "message": "设置"
     },
     "tabSetupOSD": {
-        "message": "OSD \u8bbe\u7f6e"
+        "message": "OSD 设置"
     },
     "tabConfiguration": {
-        "message": "\u914d\u7f6e"
+        "message": "配置"
     },
     "tabPorts": {
-        "message": "\u4e32\u53e3"
+        "message": "端口"
     },
     "tabPidTuning": {
-        "message": "PID \u8c03\u8282"
+        "message": "PID 调校"
     },
     "tabReceiver": {
-        "message": "\u63a5\u6536\u673a"
+        "message": "接收机"
     },
     "tabModeSelection": {
-        "message": "\u98de\u884c\u6a21\u5f0f\u9009\u9879"
+        "message": "飞行模式选项"
     },
     "tabServos": {
-        "message": "\u8235\u673a"
+        "message": "舵机"
     },
     "tabFailsafe": {
-        "message": "\u5931\u63a7\u4fdd\u62a4"
+        "message": "失控保护"
     },
     "tabTransponder": {
-        "message": "\u6bd4\u8d5b\u5708\u6570\u53d1\u5c04\u5668"
+        "message": "比赛应答器"
     },
     "tabOsd": {
-        "message": "OSD"
+        "message": "OSD 屏幕叠加显示"
     },
     "tabPower": {
-        "message": "\u52a8\u529b & \u7535\u6c60"
+        "message": "动力 & 电池"
     },
     "tabGPS": {
         "message": "GPS"
     },
     "tabMotorTesting": {
-        "message": "\u7535\u673a"
+        "message": "电机"
     },
     "tabLedStrip": {
-        "message": "LED \u706f\u5e26"
+        "message": "LED 灯带"
     },
     "tabRawSensorData": {
-        "message": "\u4f20\u611f\u5668"
+        "message": "传感器"
     },
     "tabCLI": {
-        "message": "CLI(\u547d\u4ee4\u884c)"
+        "message": "CLI(命令行)"
     },
     "tabLogging": {
-        "message": "\u65e5\u5fd7"
+        "message": "日志"
     },
     "tabOnboardLogging": {
-        "message": "\u9ed1\u5323\u5b50"
+        "message": "黑匣子"
     },
     "tabAdjustments": {
-        "message": "\u8c03\u6574"
+        "message": "调整"
     },
     "tabAuxiliary": {
-        "message": "\u6a21\u5f0f"
+        "message": "模式"
     },
     "logActionHide": {
-        "message": "\u9690\u85cf\u8bb0\u5f55"
+        "message": "隐藏日志"
     },
     "logActionShow": {
-        "message": "\u663e\u793a\u8bb0\u5f55"
+        "message": "显示日志"
     },
     "serialPortOpened": {
-        "message": "\u4e32\u53e3<span class=\"message-positive\">\u6210\u529f<\/span> \u6253\u5f00 ID: $1"
+        "message": "打开串口 <span class=\"message-positive\">成功<\/span> ID: $1"
     },
     "serialPortOpenFail": {
-        "message": "<span class=\"message-negative\">\u6253\u5f00\u5931\u8d25<\/span>"
+        "message": "打开串口 <span class=\"message-negative\">失败<\/span>"
     },
     "serialPortClosedOk": {
-        "message": "\u4e32\u53e3 <span class=\"message-positive\">\u6210\u529f<\/span> \u5173\u95ed"
+        "message": "关闭串口 <span class=\"message-positive\">成功<\/span>"
     },
     "serialPortClosedFail": {
-        "message": "<span class=\"message-negative\">\u5173\u95ed<\/span> \u5931\u8d25"
+        "message": "<span class=\"message-negative\">关闭<\/span> 失败"
     },
     "serialUnrecoverable": {
-        "message": "\u4e0d\u53ef\u4ee5\u6062\u590d\uff0c\u4e32\u53e3\u8fde\u63a5 <span class=\"message-negative\">\u9519\u8bef<\/span> \u65ad\u5f00\u8fde\u63a5"
+        "message": "串口连接<span class=\"message-negative\">故障<\/span>且无法恢复，正在断开连接……"
     },
     "usbDeviceOpened": {
-        "message": "USB \u8bbe\u5907<span class=\"message-positive\">\u6210\u529f<\/span> \u4f7f\u7528ID :$1"
+        "message": "打开 USB 设备<span class=\"message-positive\">成功<\/span> ID: $1"
     },
     "usbDeviceOpenFail": {
-        "message": "<span class=\"message-negative\">\u5931\u8d25<\/span>\u6253\u5f00USB\u8bbe\u5907!"
+        "message": "打开 USB 设备<span class=\"message-negative\">失败<\/span>！"
     },
     "usbDeviceClosed": {
-        "message": "USB \u8bbe\u5907<span class=\"message-positive\">\u6210\u529f<\/span> \u5173\u95ed"
+        "message": "关闭 USB 设备<span class=\"message-positive\">成功<\/span>"
     },
     "usbDeviceCloseFail": {
-        "message": "<span class=\"message-negative\">\u5931\u8d25<\/span>\u5173\u95edUSB\u8bbe\u5907"
+        "message": "关闭 USB 设备<span class=\"message-negative\">失败<\/span>"
     },
     "usbDeviceUdevNotice": {
-        "message": "<strong>udev rules<\/strong>\u6709\u6ca1\u6709\u6b63\u786e\u5b89\u88c5? \u8be6\u7ec6\u4fe1\u606f\u67e5\u9605docs."
+        "message": "<strong>udev rules<\/strong>有没有正确安装? 请在文档里查询指引。"
     },
     "stm32UsbDfuNotFound": {
-        "message": "\u672a\u627e\u5230USB DFU"
+        "message": "未找到 USB DFU"
     },
     "stm32TimedOut": {
-        "message": "STM32 - \u8d85\u65f6\uff0c\u70e7\u5f55\u5931\u8d25"
+        "message": "STM32 - 超时，烧录失败"
     },
     "stm32WrongResponse": {
-        "message": "STM32 \u901a\u4fe1\u5931\u8d25\uff0c\u9519\u8bef\u7684\u54cd\u5e94\u3002\u5e94\u4e3a\uff1a$1 (0x$2) \u5b9e\u9645\u6536\u5230: $3 (0x$4)"
+        "message": "STM32 通信失败，错误的响应。应为：$1 (0x$2) 实际收到: $3 (0x$4)"
     },
     "stm32ContactingBootloader": {
-        "message": "\u5c1d\u8bd5\u8fde\u63a5\u5f15\u5bfc\u7a0b\u5e8f"
+        "message": "尝试连接引导程序"
     },
     "stm32ContactingBootloaderFailed": {
-        "message": "\u5f15\u5bfc\u7a0b\u5e8f\u901a\u4fe1\u5931\u8d25"
+        "message": "引导程序通信失败"
     },
     "stm32ResponseBootloaderFailed": {
-        "message": "\u5f15\u5bfc\u7a0b\u5e8f\u65e0\u54cd\u5e94\uff0c\u70e7\u5f55\u5931\u8d25"
+        "message": "引导程序无响应，烧录失败"
     },
     "stm32GlobalEraseExtended": {
-        "message": "\u6b63\u5728\u6267\u884c\u5168\u5c40\u82af\u7247\u64e6\u9664\uff08\u901a\u8fc7\u6269\u5c55\u64e6\u9664\uff09\u2026\u2026"
+        "message": "正在执行全局芯片擦除（通过扩展擦除）……"
     },
     "stm32LocalEraseExtended": {
-        "message": "\u6b63\u5728\u6267\u884c\u672c\u5730\u64e6\u9664\uff08\u901a\u8fc7\u6269\u5c55\u64e6\u9664\uff09\u2026\u2026"
+        "message": "正在执行本地擦除（通过扩展擦除）……"
     },
     "stm32GlobalErase": {
-        "message": "\u6b63\u5728\u6267\u884c\u5168\u5c40\u64e6\u9664\u2026\u2026"
+        "message": "正在执行全局擦除……"
     },
     "stm32LocalErase": {
-        "message": "\u6b63\u5728\u6267\u884c\u672c\u5730\u64e6\u9664\u2026\u2026"
+        "message": "正在执行本地擦除……"
     },
     "stm32Erase": {
-        "message": "\u6b63\u5728\u64e6\u9664\u2026\u2026"
+        "message": "正在擦除……"
     },
     "stm32Flashing": {
-        "message": "\u6b63\u5728\u70e7\u5f55\u2026\u2026"
+        "message": "正在烧录……"
     },
     "stm32Verifying": {
-        "message": "\u6b63\u5728\u9a8c\u8bc1\u2026\u2026"
+        "message": "正在验证……"
     },
     "stm32ProgrammingSuccessful": {
-        "message": "\u70e7\u5f55\u6210\u529f"
+        "message": "烧录成功"
     },
     "stm32ProgrammingFailed": {
-        "message": "\u70e7\u5f55\u5931\u8d25"
+        "message": "烧录失败"
     },
     "stm32AddressLoadFailed": {
-        "message": "\u5b9a\u4f4d\u9009\u9879\u5b57\u8282\u6247\u533a\u5931\u8d25\u3002\u5f88\u53ef\u80fd\u56e0\u4e3a\u8bfb\u4fdd\u62a4\u3002"
+        "message": "定位选项字节扇区失败。很可能因为读保护。"
     },
     "stm32AddressLoadSuccess": {
-        "message": "\u5b9a\u4f4d\u9009\u9879\u5b57\u8282\u6247\u533a\u6210\u529f\u3002"
+        "message": "定位选项字节扇区成功。"
     },
     "stm32AddressLoadUnknown": {
-        "message": "\u56e0\u672a\u77e5\u9519\u8bef\uff0c\u5b9a\u4f4d\u9009\u9879\u5b57\u8282\u6247\u533a\u5931\u8d25\u3002\u6b63\u5728\u4e2d\u6b62\u3002"
+        "message": "因未知错误，定位选项字节扇区失败。正在中止。"
     },
     "stm32NotReadProtected": {
-        "message": "\u8bfb\u4fdd\u62a4\u672a\u542f\u7528"
+        "message": "读保护未启用"
     },
     "stm32ReadProtected": {
-        "message": "\u98de\u63a7\u677f\u4f3c\u4e4e\u6709\u8bfb\u4fdd\u62a4\u3002\u6b63\u5728\u89e3\u9664\u4fdd\u62a4\u3002\u4e0d\u8981\u65ad\u5f00\u8fde\u63a5\/\u62d4\u51fa\u63d2\u5934\uff01"
+        "message": "飞控板似乎有读保护。正在解除保护。不要断开连接\/拔出插头！"
     },
     "stm32UnprotectSuccessful": {
-        "message": "\u89e3\u9664\u4fdd\u62a4\u6210\u529f"
+        "message": "解除保护成功"
     },
     "stm32UnprotectUnplug": {
-        "message": "\u8bf7\u62d4\u51fa\u98de\u63a7\u5e76\u4e14\u4ee5DFU\u6a21\u5f0f\u91cd\u65b0\u8fde\u63a5\u98de\u63a7\u4ee5\u91cd\u65b0\u5c1d\u8bd5\u70e7\u5f55\uff01"
+        "message": "请拔出飞控并且以 DFU 模式重新连接飞控后重新尝试烧录！"
     },
     "stm32UnprotectFailed": {
-        "message": "\u89e3\u9664\u4fdd\u62a4\u5931\u8d25"
+        "message": "解除保护失败"
     },
     "stm32UnprotectInitFailed": {
-        "message": "\u521d\u59cb\u5316\u89e3\u9664\u4fdd\u62a4\u7a0b\u5e8f\u5931\u8d25"
+        "message": "解除保护程序初始化失败"
     },
     "noConfigurationReceived": {
-        "message": "<span class=\"message-negative\">10\u79d2<\/span>\u5185\u6ca1\u6709\u63a5\u6536\u5230\u914d\u7f6e\u4fe1\u606f\uff0c\u98de\u63a7\u901a\u4fe1 <span class=\"message-negative\"> \u5931\u8d25<\/span>"
+        "message": "<span class=\"message-negative\">10秒<\/span>内没有接收到配置信息，飞控通信 <span class=\"message-negative\"> 失败<\/span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "<span class=\"message-negative\">Betaflight configutator\u4e0d\u652f\u6301<\/span>\u8be5\u56fa\u4ef6\u7248\u672c . \u8bf7\u66f4\u65b0\u5230Betaflight \u652f\u6301\u7684\u56fa\u4ef6\u7248\u672c<strong>$1<\/strong> \u6216\u8005\u66f4\u9ad8. \u66f4\u65b0\u56fa\u4ef6\u4e4b\u524d\uff0c\u4f7f\u7528CLI \u6765\u5907\u4efd\u8bbe\u7f6e.\u5177\u4f53\u64cd\u4f5c\u4fe1\u606f\u8bf7\u53c2\u8003Betaflight\u6587\u6863.<br \/>\u5982\u679c\u4e0d\u60f3\u66f4\u65b0\u5230\u6700\u65b0\u7684\u56fa\u4ef6\uff0c\u53ef\u4ee5\u4f7f\u7528\u652f\u6301\u8be5\u56fa\u4ef6\u7684configurator \u6765\u8bbe\u7f6e\u4f7f\u7528\u3002"
+        "message": "<span class=\"message-negative\">Betaflight configutator不支持<\/span>该固件版本 . 请更新到Betaflight 支持的固件版本<strong>$1<\/strong> 或者更高. 更新固件之前，使用CLI 来备份设置.具体操作信息请参考Betaflight文档.<br \/>如果不想更新到最新的固件，可以使用支持该固件的configurator 来设置使用。"
     },
     "firmwareTypeNotSupported": {
-        "message": "\u8be5\u56fa\u4ef6\u7248\u672c\u7684Betaflight configurator <span class=\"message-negative\">\u4e0d\u652f\u6301<\/span>,\u53ea\u80fd\u4f7f\u7528CLI\u6a21\u5f0f."
+        "message": "该固件版本的Betaflight configurator <span class=\"message-negative\">不支持<\/span>,只能使用CLI模式."
     },
     "firmwareUpgradeRequired": {
-        "message": "\u98de\u63a7\u56fa\u4ef6\u9700\u8981\u66f4\u65b0\u5230\u65b0\u7684\u7248\u672c\uff0c\u4f7f\u7528CLI \u6765\u5907\u4efd\u8bbe\u7f6e.\u5177\u4f53\u64cd\u4f5c\u4fe1\u606f\u8bf7\u53c2\u8003Betaflight\u6587\u6863.<br \/>\u5982\u679c\u4e0d\u60f3\u66f4\u65b0\u5230\u6700\u65b0\u7684\u56fa\u4ef6\uff0c\u53ef\u4ee5\u4f7f\u7528\u652f\u6301\u8be5\u56fa\u4ef6\u7684configurator \u6765\u8bbe\u7f6e\u4f7f\u7528\u3002"
+        "message": "飞控固件需要更新到新的版本，使用CLI 来备份设置。具体操作信息请参考 Betaflight 文档。<br \/>如果不想更新到最新的固件，可以使用支持该固件的地面站来设置使用。"
     },
     "infoVersions": {
-        "message": "\u8fd0\u884c- OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurator: <strong>$3<\/strong"
+        "message": "运行- OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurator: <strong>$3<\/strong"
     },
     "releaseCheckLoaded": {
-        "message": "\u4eceGithub \u8f7d\u5165$1\u53d1\u5e03\u4fe1\u606f"
+        "message": "从Github 载入 $1 发布信息"
     },
     "releaseCheckFailed": {
-        "message": "\u4eceGithub\u83b7\u53d6$1\u53d1\u5e03\u7248\u672c\u5931\u8d25\uff0c\u8f7d\u5165\u539f\u7248\u672c\u4fe1\u606f\u3002 \u5931\u8d25\u539f\u56e0\uff1a<code>$2<\/code><\/b>"
+        "message": "<b>从 GitHub 获取 $1 发布版本失败，载入原版本信息。 失败原因：<code>$2<\/code><\/b>"
     },
     "releaseCheckCached": {
-        "message": "\u4f7f\u7528\u7f13\u5b58\u7684$1\u7248\u672c\u4fe1\u606f"
+        "message": "使用缓存的 $1 版本信息"
     },
     "releaseCheckNoInfo": {
-        "message": "\u627e\u4e0d\u5230$1\u53d1\u5e03\u4fe1\u606f"
+        "message": "找不到 $1 发布信息"
     },
     "tabSwitchConnectionRequired": {
-        "message": "\u5148 <strong>\u8fde\u63a5<\/strong>\uff0c\u624d\u80fd\u663e\u793a\u4efb\u4f55\u9875\u9762\u4fe1\u606f"
+        "message": "在查看任何页面信息之前，你需要先<strong>连接<\/strong>"
     },
     "tabSwitchWaitForOperation": {
-        "message": "<span class=\"message-negative\">\u4e0d\u80fd<\/span> \u6267\u884c\u76ee\u524d\u64cd\u4f5c, \u8bf7\u7b49\u5f85\u4e0a\u4e00\u4e2a\u64cd\u4f5c\u5b8c\u6210"
+        "message": "<span class=\"message-negative\">不能<\/span> 执行当前操作，请等待上一个操作完成……"
     },
     "tabSwitchUpgradeRequired": {
-        "message": "<strong>\u9700\u8981\u66f4\u65b0<\/strong>\u5230\u6700\u65b0\u7248\u672cBetaflight\u56fa\u4ef6\u624d\u80fd\u4f7f\u7528$1\u9875\u9762"
+        "message": "需要<strong>更新<\/strong>到最新版本的 Betaflight 固件才能使用 $1 页面"
     },
     "firmwareVersion": {
-        "message": "\u56fa\u4ef6\u7248\u672c\uff1a<strong>$1<\/strong>"
+        "message": "固件版本：<strong>$1<\/strong>"
     },
     "apiVersionReceived": {
-        "message": "MultiWii API \u7248\u672c <strong>$1<\/strong>"
+        "message": "MultiWii API 版本 <strong>$1<\/strong>"
     },
     "uniqueDeviceIdReceived": {
-        "message": "Unique device ID: <strong>0x$1<\/strong>"
+        "message": "唯一设备 ID: <strong>0x$1<\/strong>"
     },
     "craftNameReceived": {
-        "message": "\u98de\u884c\u5668\u540d\u79f0: <strong>$1<\/strong>"
+        "message": "飞行器名称: <strong>$1<\/strong>"
     },
     "armingDisabled": {
-        "message": "<strong>\u4e0d\u80fd\u89e3\u9501<\/strong>"
+        "message": "<strong>禁止解锁<\/strong>"
     },
     "armingEnabled": {
-        "message": "<strong>\u53ef\u4ee5\u89e3\u9501<\/strong>"
+        "message": "<strong>允许解锁<\/strong>"
+    },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong> 暂时禁用预防起飞失控 <\/strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong> 预防起飞失控已启用 <\/strong>"
     },
     "boardInfoReceived": {
-        "message": "\u98de\u63a7: <strong>$1<\/strong>, \u7248\u672c: <strong>$2<\/strong>"
+        "message": "飞控: <strong>$1<\/strong>, 版本: <strong>$2<\/strong>"
     },
     "buildInfoReceived": {
-        "message": "\u8fd0\u884c\u7248\u672c\u53d1\u5e03\u65f6\u95f4\uff1a <strong>$1<\/strong>"
+        "message": "当前固件发布时间： <strong>$1<\/strong>"
     },
     "fcInfoReceived": {
-        "message": "\u98de\u63a7\u4fe1\u606f\u8bc6\u522b\u540d: <strong>$1<\/strong>, \u7248\u672c: <strong>$2<\/strong>"
+        "message": "飞控信息，识别名: <strong>$1<\/strong>，版本: <strong>$2<\/strong>"
     },
     "versionLabelTarget": {
-        "message": "\u98de\u63a7\u677f\u56fa\u4ef6"
+        "message": "飞控型号"
     },
     "versionLabelFirmware": {
-        "message": "\u56fa\u4ef6"
+        "message": "固件"
     },
     "versionLabelConfigurator": {
-        "message": "Configurator"
+        "message": "配置程序"
     },
     "notifications_app_just_updated_to_version": {
-        "message": "\u7a0b\u5e8f\u5df2\u7ecf\u66f4\u65b0\u5230\u7248\u672c: $1"
+        "message": "程序已经更新到版本: $1"
     },
     "notifications_click_here_to_start_app": {
-        "message": "\u5355\u51fb\u8fd9\u91cc\u8fd0\u884c\u7a0b\u5e8f"
+        "message": "单击这里运行程序"
     },
     "statusbar_port_utilization": {
-        "message": "\u4f7f\u7528\u7684\u4e32\u53e3\uff1a"
+        "message": "端口利用率："
     },
     "statusbar_usage_download": {
-        "message": "\u4e0b\u884c: $1%"
+        "message": "下行: $1%"
     },
     "statusbar_usage_upload": {
-        "message": "\u4e0a\u884c: $1%"
+        "message": "上行: $1%"
     },
     "statusbar_packet_error": {
-        "message": "\u6570\u636e\u5305\u9519\u8bef"
+        "message": "数据包错误"
     },
     "statusbar_i2c_error": {
-        "message": "I2C \u9519\u8bef:"
+        "message": "I2C 错误:"
     },
     "statusbar_cycle_time": {
-        "message": "\u5faa\u73af\u65f6\u95f4:"
+        "message": "循环时间:"
     },
     "statusbar_cpu_load": {
-        "message": "CPU \u4f7f\u7528\u7387: $1%"
+        "message": "CPU 负载: $1%"
     },
     "dfu_connect_message": {
-        "message": "\u8bf7\u4f7f\u7528\u56fa\u4ef6\u70e7\u5199\u9875\u9762\u6765\u6253\u5f00DFU\u8bbe\u5907"
+        "message": "请使用固件烧写器来访问 DFU 设备"
     },
     "dfu_erased_kilobytes": {
-        "message": "\u64e6\u9664$1 kB \u95ea\u5b58 <span class=\"message-positive\">\u6210\u529f<\/span>"
+        "message": "擦除$1 kB 闪存 <span class=\"message-positive\">成功<\/span>"
     },
     "dfu_device_flash_info": {
-        "message": "\u68c0\u6d4b\u5230$1 kiB \u7684\u82af\u7247"
+        "message": "检测到闪存空间为 $1 KiB 的芯片"
     },
     "dfu_error_image_size": {
-        "message": "<span class=\"message-negative\">Error<\/span>: \u56fa\u4ef6\u6587\u4ef6\u5927\u4e8e\u98de\u63a7\u82af\u7247\u7684\u95ea\u5b58\u3002\u56fa\u4ef6\u5927\u5c0f: $1 kiB, \u9650\u5236= $2 kiB"
+        "message": "<span class=\"message-negative\">错误\/span>：固件文件大于飞控芯片的闪存。固件大小: $1 KiB，限制= $2 KiB"
     },
     "eeprom_saved_ok": {
-        "message": "EEPROM <span class=\"message-positive\">\u4fdd\u5b58\u6210\u529f<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "\u6b22\u8fce\u4f7f\u7528<strong>Betaflight - Configurator<\/strong>,\u4e13\u4e3a\u7b80\u5316\u56fa\u952e\u5347\u7ea7\uff0c\u8bbe\u7f6e\u548c\u8c03\u6574\u98de\u63a7."
+        "message": "欢迎使用<strong>Betaflight - 配置程序<\/strong>，为简化固件升级，设置和调校飞控而生的工具。"
     },
     "defaultWelcomeHead": {
-        "message": "\u786c\u4ef6"
+        "message": "硬件"
     },
     "defaultWelcomeText": {
-        "message": "\u672c\u5e94\u7528\u652f\u6301\u6240\u6709\u80fd\u8fd0\u884cbetaflight\u7684\u98de\u63a7\u3002\u5728\u201d\u56fa\u4ef6\u70e7\u5199\u201c\u9875\u9762\u67e5\u770b\u6240\u6709\u652f\u6301\u7684\u98de\u63a7\u5217\u8868.<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Download Betaflight Blackbox<\/a><br \/><br \/>\u56fa\u4ef6\u6e90\u4ee3\u7801\u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc\u4e0b\u8f7d <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">here<\/a><br \/>\u6700\u65b0\u53d1\u5e03\u5df2\u7f16\u8bd1\u7684\u56fa\u4ef6\u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc\u4e0b\u8f7d<a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">here<\/a><br \/><br \/>\u6700\u65b0\u7684 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x \u9a71\u52a8<\/a>  <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">here<\/a><br \/>\u6700\u65b0\u7684 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> \u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc \u4e0b\u8f7d<a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">here<\/a><br \/>\u6700\u65b0\u7684 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a>\u53ef\u4ee5\u70b9\u51fb\u8fd9\u91cc\u4e0b\u8f7d<a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">here<\/a><br \/>"
+        "message": "本应用支持所有能运行betaflight的飞控。在”固件烧写“页面查看所有支持的飞控列表。<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> 下载 Betaflight Blackbox Explorer<\/a><br \/><br \/>固件源代码可以点击 <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">这里<\/a> 下载<br \/>最新发布已编译的固件可以点击 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">这里<\/a> 下载<br \/><br \/>最新的 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x 驱动<\/a> 可以点击 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">这里<\/a> 下载 <br \/>最新的 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> 可以点击 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">这里<\/a> 下载<br \/>最新的 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a>可以点击 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">这里<\/a> 下载<br \/>"
     },
     "defaultContributingHead": {
-        "message": "\u53c2\u4e0e\u5f00\u53d1"
+        "message": "参与开发"
     },
     "defaultContributingText": {
-        "message": "\u5982\u679c\u4f60\u60f3\u5e2e\u52a9betaflight\u5f00\u53d1\u51fa\u66f4\u597d\u7684\u98de\u63a7\u56fa\u4ef6\uff0c\u4f60\u53ef\u4ee5\u901a\u8fc7:<br \/><ul><li>\u5728\u8bba\u575b\u548cIRC\u91cc\u5e2e\u52a9\u56de\u7b54\u5176\u4ed6\u7528\u6237\u7684\u95ee\u9898\u3002<\/li><li> \u53c2\u4e0e\u7a0b\u5e8f\u56fa\u4ef6\u548cconfigurator\u5f00\u53d1\uff0c\u4f8b\u5982-\u589e\u52a0\u65b0\u529f\u80fd\uff0c\u89e3\u51b3\u6f0f\u6d1e\u3002\u6539\u5584\u4ee3\u7801<\/li><li>\u548c\u6d4b\u8bd5<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">\u65b0\u529f\u80fd\u548c\u4fee\u8865\u6f0f\u6d1e<\/a>\u548c\u63d0\u4f9b\u6d4b\u8bd5\u53cd\u9988<\/li><li>\u5e2e\u52a9 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">\u6d4b\u8bd5\u5b9e\u73b0\u65b0\u529f\u80fd<\/a>. <\/li><li>\u5728\u8fd9\u91cc <a href=\"http:\/\/betaflight.oneskyapp.com\" target=\"_blank\">\u5e2e\u52a9\u7ffb\u8bd1configurator <\/a>\u5230\u4f60\u4f7f\u7528\u7684\u8bed\u8a00.<\/li><li><\/li><\/ul>"
+        "message": "如果你想帮助betaflight开发出更好的飞控固件，你可以通过:<br \/><ul><li>在论坛和IRC里帮助回答其他用户的问题。<\/li><li> 参与程序固件和configurator开发，例如-增加新功能，解决漏洞。改善代码<\/li><li>和测试<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">新功能和修补漏洞<\/a>和提供测试反馈<\/li><li>帮助 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">测试实现新功能<\/a>. <\/li><li>在这里 <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">帮助翻译configurator <\/a>到你使用的语言.<\/li><li><\/li><\/ul>"
     },
     "defaultChangelogAction": {
-        "message": "\u66f4\u65b0\u65e5\u5fd7"
+        "message": "更新日志"
     },
     "defaultChangelogHead": {
-        "message": "Configurator - \u66f4\u65b0\u65e5\u5fd7"
+        "message": "Configurator - 更新日志"
     },
     "defaultButtonFirmwareFlasher": {
-        "message": "\u56fa\u4ef6\u70e7\u5199"
+        "message": "固件烧写器"
     },
     "defaultDonateHead": {
-        "message": "\u5f00\u6e90\/\u6350\u8d60\u8bf4\u660e"
+        "message": "开源\/捐赠说明"
     },
     "defaultDonateText": {
-        "message": "\u8fd9\u662f\u4e00\u4e2a\u5b8c\u5168<strong>\u5f00\u6e90 <\/strong> \uff0c\u4e3a<strong>\u6240\u6709betaflight<\/strong>\u517c\u5bb9\u7684\u98de\u63a7\u63d0\u4f9b\u514d\u8d39\u7684configurator\u548c\u4ee3\u7801\u3002<br \/>\u5982\u679c\u4f60\u89c9\u5f97Betaflight\u548cbetaflight configurator\u5bf9\u4f60\u6709\u5f88\u5927\u5e2e\u52a9\u3002<strong>\u8bf7\u8003\u8651\u652f\u6301\u548c\u6350\u8d60<\/strong> \u7ed9\u6211\u4eec\u5f00\u53d1\u56e2\u961f"
+        "message": "这是一个完全<strong>开源 <\/strong>的工具 ，所有<strong>betaflight<\/strong>的用户都可免费使用。<br \/>如果你觉得Betaflight和betaflight configurator对你有很大帮助，请考虑通过捐赠来<strong>支持<\/strong>它们的开发。"
     },
     "defaultDonate": {
-        "message": "\u6350\u8d60"
+        "message": "捐赠"
     },
     "defaultSponsorsHead": {
-        "message": "\u8d5e\u52a9\u5546"
+        "message": "赞助商"
     },
     "defaultDocumentationHead": {
-        "message": "\u6587\u6863\/\u624b\u518c"
+        "message": "文档\/手册"
     },
     "defaultDocumentation": {
-        "message": "Betaflight\u7684\u6587\u6863\u548c\u53d1\u5e03\u8bf4\u660e\u53ef\u4ee5\u5728wiki\u91cc\u9762\u627e\u5230<br \/><br \/>"
+        "message": "Betaflight的文档和发布说明可以在wiki里面找到。<br \/><br \/>"
     },
     "defaultDocumentation1": {
-        "message": "\u5b66\u4e60Betaflight\u6700\u597d\u7684\u8d44\u6e90\u662f\u4f7f\u7528Betaflight wiki\u3002 \u53ef\u4ee5\u70b9\u51fb <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\" target=\"_blank\">\u8fd9\u91cc<\/a>."
+        "message": "学习Betaflight最好的资源是使用Betaflight wiki，它在 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\" target=\"_blank\">这里<\/a> 。"
     },
     "defaultDocumentation2": {
-        "message": "\u6700\u65b0\u53d1\u5e03\u7248\u672c\u7684\u4fe1\u606f\u53ef\u4ee5\u5728<a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\">\u8fd9\u91cc\u627e\u5230<\/a>."
+        "message": "最新发布版本的信息可以在 <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\">这里<\/a> 找到。"
     },
     "defaultSupportHead": {
-        "message": "\u652f\u6301"
+        "message": "支持"
     },
     "defaultSupportSubline1": {
-        "message": "\u652f\u6301\u8d44\u6e90"
+        "message": "支持资源"
     },
     "defaultSupportSubline2": {
-        "message": "\u5f00\u53d1\u8005"
+        "message": "开发者"
     },
     "defaultSupport": {
-        "message": "\u5982\u679c\u9700\u8981\u98de\u63a7\u652f\u6301\uff0c\u8bf7\u5148\u641c\u7d22\u8bba\u575b\u6216\u8005\u54a8\u8be2\u98de\u63a7\u7684\u751f\u4ea7\u5546\u3002<br \/><br \/>"
+        "message": "需要帮助时请先搜索论坛或者咨询飞控的生产商。<br \/><br \/>"
     },
     "defaultSupport1": {
         "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups thread<\/a>"
@@ -481,118 +497,118 @@
         "message": "<a href=\"http:\/\/betaflight.info\" target=\"_blank\">Betaflight Wiki<\/a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight \u8bbe\u7f6e\u6559\u7a0b\u89c6\u9891<\/a>"
+        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight 设置教程视频<\/a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">Betaflight \u5f00\u53d1 slack<\/a>"
+        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">Betaflight 开发 slack<\/a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">\u5907\u4efd\u548c\u6062\u590d\u529f\u80fd\u4e0d\u53ef\u7528.<\/span> \u98de\u63a7\u56fa\u4ef6\u7684 API version <span class=\"message-negative\">$1<\/span>, \u6fc0\u6d3b\u5907\u4efd\u548c\u6062\u590d\u9700\u8981<span class=\"message-positive\">$2<\/span>. \u8bf7\u4f7f\u7528CLI\u6765\u5907\u4efd\u98de\u63a7\u7684\u8bbe\u7f6e\uff0c\u8be6\u7ec6\u4fe1\u606f\u8bf7\u67e5\u9605Betaflight\u6587\u6863"
+        "message": "<span class=\"message-negative\">备份和恢复功能被禁用。<\/span>当前飞控固件的API版本为 <span class=\"message-negative\">$1<\/span>，而备份和恢复功能需要版本 <span class=\"message-positive\">$2<\/span>。请通过 CLI 命令行手工备份，具体操作流程请参阅 Betaflight 文档。"
     },
     "initialSetupButtonCalibrateAccel": {
-        "message": "\u6821\u51c6\u52a0\u901f\u5ea6\u8ba1"
+        "message": "校准加速度计"
     },
     "initialSetupCalibrateAccelText": {
-        "message": "\u628a\u98de\u63a7\u6216\u8005\u98de\u673a\u653e<strong>\u6c34\u5e73\u7684<\/strong>,\u6267\u884c\u6821\u51c6\u52a0\u901f\u5ea6\u8ba1,\u98de\u63a7\u6216\u8005\u98de\u673a\u5728\u6821\u51c6\u8fc7\u7a0b\u4e2d,\u8bf7\u4e0d\u8981\u79fb\u52a8\u98de\u63a7\u6216\u8005\u98de\u673a"
+        "message": "把飞控或者飞机<strong>水平<\/strong>放置，再执行加速度计校准。校准过程中切勿移动飞控或者飞机。"
     },
     "initialSetupButtonCalibrateMag": {
-        "message": "\u6821\u51c6\u78c1\u573a\u8ba1"
+        "message": "校准磁场计"
     },
     "initialSetupCalibrateMagText": {
-        "message": "\u572830\u79d2\u89c4\u5b9a\u65f6\u95f4\u5185\u5b8c\u62103 \u4e2a\u8f74\uff08XYZ\uff09\u81f3\u5c11<strong>360\u5ea6<\/strong> \u8f6c\u52a8\uff0c\u6765\u6821\u51c6\u78c1\u573a\u8ba1\u3002"
+        "message": "将飞行器在所有轴向上都移动至少<strong>360<\/strong>度，你有30秒的时间可供进行这项操作。"
     },
     "initialSetupButtonCalibratingText": {
-        "message": "\u6821\u51c6\u4e2d"
+        "message": "正在校准……"
     },
     "initialSetupButtonReset": {
-        "message": "\u91cd\u7f6e\u8bbe\u7f6e"
+        "message": "恢复默认设置"
     },
     "initialSetupResetText": {
-        "message": "\u6062\u590d<strong>\u9ed8\u8ba4\u8bbe\u7f6e<\/strong>"
+        "message": "恢复<strong>默认<\/strong>设置"
     },
     "initialSetupButtonBackup": {
-        "message": "\u5907\u4efd"
+        "message": "备份"
     },
     "initialSetupButtonRestore": {
-        "message": "\u6062\u590d"
+        "message": "恢复"
     },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>\u5907\u4efd<\/strong> \u4f60\u7684\u8bbe\u7f6e\u4ee5\u9632configurator\u51fa\u73b0\u65e0\u53cd\u5e94\u610f\u5916 \uff0c<strong>CLI<\/strong>\u8bbe\u7f6e <span class=\"message-negative\">\u6ca1\u6709<\/span> \u5305\u62ec - \u4f7f\u7528 'dump' CLI \u547d\u4ee4\u67e5\u770b"
+        "message": "<strong>备份<\/strong>你的设置以防意外丢失，注意<strong>CLI命令行<\/strong>设置 <span class=\"message-negative\">没有<\/span> 包括在内 - 具体请查阅 CLI 命令 'dump'"
     },
     "initialSetupBackupSuccess": {
-        "message": "\u5907\u4efd\u4fdd\u5b58<span class=\"message-positive\">\u6210\u529f<\/span>"
+        "message": "备份保存<span class=\"message-positive\">成功<\/span>"
     },
     "initialSetupRestoreSuccess": {
-        "message": "\u914d\u7f6e\u6062\u590d<span class=\"message-positive\">\u6210\u529f<\/span>"
+        "message": "配置恢复<span class=\"message-positive\">成功<\/span>"
     },
     "initialSetupButtonResetZaxis": {
-        "message": "\u91cd\u7f6eZ \u8f74\uff0c\u8865\u507f: 0 \u5ea6"
+        "message": "重置Z 轴，补偿: 0 度"
     },
     "initialSetupButtonResetZaxisValue": {
-        "message": "\u91cd\u7f6eZ \u8f74\uff0c\u8865\u507f: : $1 \u5ea6"
+        "message": "重置Z 轴，补偿: $1 度"
     },
     "initialSetupMixerHead": {
-        "message": "\u6df7\u63a7 \u6a21\u5f0f"
+        "message": "混控类型"
     },
     "initialSetupThrottleHead": {
-        "message": "\u6cb9\u95e8\u8bbe\u7f6e"
+        "message": "油门设置"
     },
     "initialSetupMinimum": {
-        "message": "\u6700\u5c0f\u503c"
+        "message": "最小值"
     },
     "initialSetupMaximum": {
-        "message": "\u6700\u5927\u503c"
+        "message": "最大值"
     },
     "initialSetupFailsafe": {
-        "message": "\u5931\u63a7\u4fdd\u62a4"
+        "message": "失控保护"
     },
     "initialSetupMinCommand": {
-        "message": "\u6700\u5c0f\u6cb9\u95e8"
+        "message": "最小油门"
     },
     "initialSetupBatteryHead": {
-        "message": "\u7535\u6c60"
+        "message": "电池"
     },
     "initialSetupMinCellV": {
-        "message": "\u6bcf\u8282\u7535\u6c60\u6700\u5c0f\u7535\u538b"
+        "message": "单芯最低电压"
     },
     "initialSetupMaxCellV": {
-        "message": "\u6bcf\u8282\u7535\u6c60\u6700\u5927\u7535\u538b"
+        "message": "单芯最高电压"
     },
     "initialSetupVoltageScale": {
-        "message": "\u7535\u538b\u8ba1\u6bd4\u4f8b"
+        "message": "电压计比例"
     },
     "initialSetupAccelTrimsHead": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1\u5fae\u8c03"
+        "message": "加速度计微调"
     },
     "initialSetupPitch": {
-        "message": "Pitch:"
+        "message": "俯仰"
     },
     "initialSetupRoll": {
-        "message": "Roll:"
+        "message": "横滚"
     },
     "initialSetupMagHead": {
-        "message": "\u78c1\u573a\u8ba1"
+        "message": "磁场计"
     },
     "initialSetupDeclination": {
-        "message": "\u504f\u5dee"
+        "message": "偏差"
     },
     "initialSetupInfoHead": {
-        "message": "\u4fe1\u606f"
+        "message": "信息"
     },
     "initialSetupBattery": {
-        "message": "\u7535\u6c60\u7535\u538b"
+        "message": "电池电压："
     },
     "initialSetupBatteryValue": {
         "message": "$1 V"
     },
     "initialSetupDrawn": {
-        "message": "\u4f7f\u7528\u5bb9\u91cf"
+        "message": "已用容量："
     },
     "initialSetupDrawing": {
-        "message": "\u7535\u6d41"
+        "message": "耗费电流："
     },
     "initialSetupBatteryMahValue": {
         "message": "$1 mAh"
@@ -601,448 +617,451 @@
         "message": "$1 A"
     },
     "initialSetupRSSI": {
-        "message": "RSSI"
+        "message": "RSSI："
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
     },
     "initialSetupArmingDisableFlags": {
-        "message": "\u7981\u6b62\u5f00\u9501\u6570\u5b57\uff1a"
+        "message": "禁止解锁标志："
     },
     "initialSetupArmingAllowed": {
-        "message": "\u5141\u8bb8\u5f00\u9501"
+        "message": "允许解锁"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "\u5217\u51fa\u6240\u6709\u5f71\u54cd\u5f00\u9501\u7684\u6807\u5fd7\u6570\u5b57\u3002\u5f53\u5c1d\u8bd5\u5f00\u9501\u65f6\uff0c\u8702\u9e23\u5668\u63d0\u793a\u97f3\u54cd\u7684\u6b21\u6570\u5bf9\u5e94\uff0c\u7b2c\u4e00\u4e2a\u4e5f\u662f\u6700\u4e3b\u8981\u7684\u4e00\u4e2a\u6570\u5b57\u3002\u5173\u4e8e\u5f00\u9501\u6b65\u9aa4\u548c\u5b89\u5168\u63aa\u65bd\u8bf7\u53c2\u9605Wiki\u6587\u6863\u627e\u51fa\u6570\u5b57\u5bf9\u5e94\u7684\u539f\u56e0"
+        "message": "禁止解锁标志列表。第一个也是最主要的值对应于当尝试解锁时蜂鸣器提示音的次数。具体每个标志所代表的含义请参阅 wiki ('Arming Sequence & Safety' 页) 。"
     },
     "initialSetupGPSHead": {
         "message": "GPS"
     },
     "initialSetupInstrumentsHead": {
-        "message": "\u4eea\u8868"
+        "message": "仪表"
     },
     "initialSetupButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "initialSetupModel": {
-        "message": "\u6a21\u578b:$1"
+        "message": "模型:$1"
     },
     "initialSetupAttitude": {
-        "message": "$1 \u5ea6"
+        "message": "$1 度"
     },
     "initialSetupAccelCalibStarted": {
-        "message": "\u5f00\u59cb\u52a0\u901f\u5ea6\u8ba1\u6821\u51c6"
+        "message": "开始加速度计校准"
     },
     "initialSetupAccelCalibEnded": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1\u6821\u51c6 <span class=\"message-positive\">\u5b8c\u6210<\/span>"
+        "message": "加速度计校准 <span class=\"message-positive\">完成<\/span>"
     },
     "initialSetupMagCalibStarted": {
-        "message": "\u78c1\u573a\u8ba1\u6821\u51c6"
+        "message": "磁场计校准"
     },
     "initialSetupMagCalibEnded": {
-        "message": "\u78c1\u573a\u8ba1\u6821\u51c6 <span class=\"message-positive\">\u5b8c\u6210<\/span>"
+        "message": "磁场计校准 <span class=\"message-positive\">完成<\/span>"
     },
     "initialSetupSettingsRestored": {
-        "message": "\u6062\u590d\u5230<strong>\u9ed8\u8ba4<\/strong>\u8bbe\u7f6e"
+        "message": "恢复到<strong>默认<\/strong>设置"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u4fdd\u5b58\u6210\u529f<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "featureNone": {
-        "message": "&lt;\u8bf7\u9009\u62e9&gt;"
+        "message": "&lt;请选择&gt;"
     },
     "featureRX_PPM": {
-        "message": "PPM \u63a5\u53d7\u673a"
+        "message": "PPM 接受机"
     },
     "featureVBAT": {
-        "message": "\u7535\u6c60\u7535\u538b\u68c0\u6d4b"
+        "message": "电池电压检测"
     },
     "featureINFLIGHT_ACC_CAL": {
-        "message": "\u5b9e\u65f6\u6c34\u5e73\u6821\u51c6"
+        "message": "实时水平校准"
     },
     "featureRX_SERIAL": {
-        "message": "\u4e32\u884c\u6570\u5b57\u63a5\u6536\u673a\uff08SPEKSAT, SBUS, SUMD\uff09"
+        "message": "串行数字接收机（SPEKSAT, SBUS, SUMD）"
     },
     "featureMOTOR_STOP": {
-        "message": "\u5f00\u9501\u4e0d\u8f6c\u52a8\u7535\u673a"
+        "message": "解锁时不要转动电机"
     },
     "featureSERVO_TILT": {
-        "message": "\u8235\u673a\u4e91\u53f0"
+        "message": "舵机云台"
     },
     "featureSOFTSERIAL": {
-        "message": "\u6fc0\u6d3b\u57fa\u4e8eCPU \u7684\u6a21\u62df\u4e32\u53e3"
+        "message": "启用软串口"
     },
     "featureSOFTSERIALTip": {
-        "message": "\u5f00\u542f\u540e\uff0c\u8bf7\u5728\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u4e32\u53e3"
+        "message": "开启后，请在串口页面设置串口。"
     },
     "featureGPS": {
-        "message": "\u7528GPS \u505a\u5bfc\u822a\u548c\u9065\u611f\u6570\u636e"
+        "message": "启用 GPS 导航"
     },
     "featureGPSTip": {
-        "message": "\u8bf7\u5148\u8bbe\u7f6e\u4e32\u53e3"
+        "message": "请先设置串口"
     },
     "featureSONAR": {
-        "message": "\u58f0\u5450"
+        "message": "声呐"
     },
     "featureTELEMETRY": {
-        "message": "\u9065\u63a7\u9065\u8f93\u51fa"
+        "message": "遥测输出"
     },
     "featureCURRENT_METER": {
-        "message": "\u68c0\u6d4b\u7535\u6c60\u7535\u6d41"
+        "message": "检测电池电流"
     },
     "feature3D": {
-        "message": "3D \u6a21\u5f0f\uff08\u9700\u8981\u53ef\u4ee5\u53cd\u5411\u7535\u8c03\u652f\u6301\uff09"
+        "message": "3D 模式（配合支持反向转动的电调使用）"
     },
     "featureRX_PARALLEL_PWM": {
-        "message": "PWM \u63a5\u6536\u673a\uff08\u6bcf\u4e2a\u901a\u9053\u90fd\u9700\u8981\u63a5\u7ebf\uff09"
+        "message": "PWM 接收机（每个通道都需要接线）"
     },
     "featureRX_MSP": {
-        "message": "MSP \u63a5\u6536\u673a\u8f93\u5165\uff08\u901a\u8fc7MSP \u7aef\u53e3 \u63a7\u5236\uff09"
+        "message": "MSP 接收机输入（通过MSP 端口 控制）"
     },
     "featureRSSI_ADC": {
-        "message": "\u6a21\u62dfRSSI \u8f93\u5165"
+        "message": "模拟RSSI 输入"
     },
     "featureLED_STRIP": {
-        "message": "\u652f\u6301\u5f69\u8272 RGB LED\u706f\u5e26"
+        "message": "彩色 RGB LED灯带"
     },
     "featureDISPLAY": {
-        "message": "OLED \u663e\u793a\u5c4f"
+        "message": "OLED 显示屏"
     },
     "featureDISPLAYTip": {
-        "message": "\u5982\u679c\u5f00\u542f\u8fd9\u4e2a\u529f\u80fd\uff0c\u98de\u63a7\u6ca1\u6709\u68c0\u6d4b\u5230\u663e\u793a\u5c4f\uff0c\u98de\u63a7\u91cd\u542f\u4f1a\u5ef6\u65f6\u5927\u698210\u79d2\u949f"
+        "message": "当启用该功能后，如果没有连接屏幕（或没有通电），则飞控的每次启动都会有10秒钟左右的延迟。"
     },
     "featureONESHOT125": {
-        "message": "ONESHOT \u7535\u8c03\u652f\u6301"
+        "message": "ONESHOT 电调支持"
     },
     "featureONESHOT125Tip": {
-        "message": "\u5f00\u59cb\u4e4b\u524d\uff0c\u8bf7\u65ad\u5f00\u62c6\u4e0b\u87ba\u65cb\u6868\uff0c\u548c\u62d4\u6389\u7535\u6c60"
+        "message": "开启前请务必拔掉电池，卸下螺旋桨。"
     },
     "featureBLACKBOX": {
-        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55\u5668"
+        "message": "黑匣子记录器"
     },
     "featureBLACKBOXTip": {
-        "message": "\u6253\u5f00\u540e\uff0c\u8bf7\u5728\u9ed1\u5323\u5b50\u9875\u9762\u8bbe\u7f6e"
+        "message": "打开后，请在黑匣子页面完成设置。"
     },
     "featureRX_SPI": {
-        "message": "SPI \u63a5\u6536\u673a\u652f\u6301"
+        "message": "SPI 接收机支持"
     },
     "featureESC_SENSOR": {
-        "message": "\u4f7f\u7528KISS\/BLHELI_32 ESC\u505a\u4f20\u611f\u5668"
+        "message": "使用 KISS\/BLHELI_32 电调的传感器"
     },
     "featureCHANNEL_FORWARDING": {
-        "message": "\u76f4\u8fde AUX \u901a\u9053\u5230\u8235\u673a\u8f93\u51fa"
+        "message": "转发 Aux 通道信号到舵机输出"
     },
     "featureTRANSPONDER": {
-        "message": "\u6bd4\u8d5b\u5e94\u7b54\u5668"
+        "message": "比赛应答器"
     },
     "featureTRANSPONDERTip": {
-        "message": "\u5f00\u542f\u540e\uff0c\u8bf7\u5728\u6bd4\u8d5b\u5e94\u7b54\u5668\u9875\u9762\u8bbe\u7f6e"
+        "message": "开启后，请在比赛应答器页面完成设置。"
     },
     "featureAIRMODE": {
-        "message": "\u6c38\u4e45\u6253\u5f00Airmode"
+        "message": "永久启用 Airmode"
     },
     "featureSUPEREXPO_RATES": {
         "message": "Super Expo Rates"
     },
     "featureSDCARD": {
-        "message": "\u652f\u6301SD\u5361\uff08\u8bb0\u5f55\uff09"
+        "message": "SD卡支持（记录用）"
     },
     "featureOSD": {
         "message": "OSD"
     },
     "featureVTX": {
-        "message": "\u56fe\u4f20"
+        "message": "图传"
     },
     "featureANTI_GRAVITY": {
-        "message": "\u5927\u6cb9\u95e8\u77ac\u65f6\u589e\u5927 I \u503c\u53d8\u5316"
+        "message": "油门剧烈变动时短暂提高 I 值"
     },
     "featureDYNAMIC_FILTER": {
-        "message": "\u52a8\u6001\u9640\u87ba\u8282\u70b9\u6ee4\u6ce2"
+        "message": "动态陷波滤波"
     },
     "featureFAILSAFE": {
-        "message": "\u6253\u5f00\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4"
+        "message": "启用二阶失控保护"
     },
     "featureFAILSAFEOld": {
-        "message": "\u6253\u5f00\u5931\u63a7\u4fdd\u62a4"
+        "message": "启用失控保护"
     },
     "featureFAILSAFETip": {
-        "message": "<strong>\u6ce8\u610f:<\/strong> \u5f53\u6253\u5f00\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4, \u98de\u63a7\u5c06\u4f7f\u7528<strong>\u81ea\u52a8<\/strong> \u5931\u63a7\u4fdd\u62a4\u8bbe\u7f6e\uff0c\u5ffd\u7565\u7528\u6237\u8bbe\u7f6e\u7684 \u901a\u9053(roll, Pitch, Yaw and Throttle)\u6570\u636e"
+        "message": "<strong>注意:<\/strong> 当禁用二阶失控保护时, 飞控将在所有通道（横滚、俯仰、方向、油门）都忽略用户预设值，转而使用<strong>自动<\/strong> 失控保护设置。"
     },
     "featureFAILSAFEOldTip": {
-        "message": "\u5f53\u63a5\u6536\u673a\u4fe1\u53f7\u4e22\u5931\uff0c\u4f7f\u7528\u5931\u63a7\u4fdd\u62a4\u8bbe\u5b9a"
+        "message": "当接收机信号丢失启用失控保护"
     },
     "configurationFeatureEnabled": {
-        "message": "\u6253\u5f00"
+        "message": "已启用"
     },
     "configurationFeatureName": {
-        "message": "\u529f\u80fd"
+        "message": "功能"
     },
     "configurationFeatureDescription": {
-        "message": "\u8bf4\u660e"
+        "message": "说明"
     },
     "configurationMixer": {
-        "message": "\u6df7\u63a7"
+        "message": "混控类型"
     },
     "configurationFeatures": {
-        "message": "\u5176\u4ed6\u529f\u80fd"
+        "message": "其他功能"
     },
     "configurationReceiver": {
-        "message": "\u63a5\u6536\u673a"
+        "message": "接收机"
     },
     "configurationReceiverMode": {
-        "message": "\u63a5\u6536\u673a\u6a21\u5f0f"
+        "message": "接收机模式"
     },
     "configurationRSSI": {
-        "message": "RSSI\uff08\u63a5\u6536\u673a\u4fe1\u53f7\u5f3a\u5ea6\uff09"
+        "message": "RSSI（接收机信号强度）"
     },
     "configurationRSSIHelp": {
-        "message": "RSSI\u662f\u63a5\u6536\u673a\u8f93\u51fa\u7684\u63a5\u53d7\u4fe1\u53f7\u7684\u5f3a\u5ea6\u4fe1\u606f\u3002\u8be5\u4fe1\u53f7\u5c06\u4f1a\u975e\u5e38\u6709\u7528\u5f53\u4f60\u98de\u51fa\u9065\u63a7\u8303\u56f4\u6216\u8005\u53d7\u5230\u65e0\u7ebf\u5e72\u6270"
+        "message": "RSSI 是接受信号的强度，对判断飞机是否受到无线信号干扰或者即将超出范围很有用。"
     },
     "configurationEscFeatures": {
-        "message": "\u7535\u8c03\/\u7535\u673a\u529f\u80fd"
+        "message": "电调\/电机功能"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong> \u4e0d\u662f\u6240\u6709\u7684\u529f\u80fd\u90fd\u80fd\u540c\u65f6\u6253\u5f00\uff0c\u6709\u7684\u529f\u80fd\u65f6\u4e92\u76f8\u51b2\u7a81\u7684\uff0c \u5f53\u98de\u63a7\u68c0\u6d4b\u5230\u6709\u51b2\u7a81\u7684\u529f\u80fd\u3002\u98de\u63a7\u5c06\u4f1a\u5173\u95ed\u8be5\u529f\u80fd<br \/><strong>\u6ce8\u610f:<\/strong>  <span class=\"message-negative\">\u5148<\/span> \u8bbe\u7f6e\u4e32\u53e3\uff0c\u5728\u6253\u5f00\u9700\u8981\u7528\u5230\u4e32\u53e3\u7684\u529f\u80fd"
+        "message": "<strong>注意:<\/strong> 不是所有的功能都能同时被启用。当飞控检测到有冲突时会禁用相应的功能。<br \/><strong>注意:<\/strong>  <span class=\"message-negative\">先<\/span> 设置串口，再启用需要用到串口的功能。"
     },
     "configurationSerialRXHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong>\u5f00\u542fRX_SERIAL \u529f\u80fd\u65f6\uff0c\u8bf7\u5728\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u76f8\u5e94\u7684\u4e32\u53e3\uff0c\u548c\u9009\u62e9 Serial Receiver Provider."
+        "message": "<strong>注意:<\/strong>开启RX_SERIAL 功能时，请选择串口接收机类型，并在串口页面设置相应的串口。"
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong> SPI \u63a5\u6536\u673a\u9700\u8981\u677f\u8f7d\u786c\u4ef6\u8fde\u63a5\u5230SPI \u63a5\u53e3"
+        "message": "<strong>注意:<\/strong> SPI 接收机只有通过通过 SPI 总线连接到飞控或板载了相应硬件时才能工作。"
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong>\u4e0d\u662f\u6240\u6709\u98de\u63a7\u90fd\u80fd\u6253\u5f00\u6240\u6709\u7684\u529f\u80fd.\u5982\u679c\u4f60\u6253\u5f00\u4e86\u67d0\u4e2a\u529f\u80fd\uff0c\u5f53\u4f60\u4fdd\u5b58\u98de\u63a7\u91cd\u542f\u4ee5\u540e\uff0c\u529f\u80fd\u7f16\u7a0b\u5173\u95ed\u3002\u8bf4\u660e\u4f60\u7684\u98de\u63a7\u4e0d\u652f\u6301\u8be5\u529f\u80fd"
+        "message": "<strong>注意:<\/strong>不是所有飞控都能支持所有的功能。如果你启用了某个功能，但在“保存并控重启”以后，该功能被禁用，则说明你的飞控不支持该功能。"
     },
     "configurationBoardAlignment": {
-        "message": "\u98de\u63a7\u548c\u4f20\u611f\u5668\u65b9\u5411"
+        "message": "飞控和传感器方向"
     },
     "configurationBoardAlignmentRoll": {
-        "message": "\u6a2a\u6eda \u5ea6"
+        "message": "横滚 度"
     },
     "configurationBoardAlignmentPitch": {
-        "message": "\u4fef\u4ef0 \u5ea6"
+        "message": "俯仰 度"
     },
     "configurationBoardAlignmentYaw": {
-        "message": "\u65b9\u5411 \u5ea6"
+        "message": "方向 度"
     },
     "configurationSensorAlignmentGyro": {
-        "message": "\u9640\u87ba\u4eea\u65b9\u5411"
+        "message": "陀螺仪方向"
     },
     "configurationSensorAlignmentAcc": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1 \u65b9\u5411"
+        "message": "加速度计方向"
     },
     "configurationSensorAlignmentMag": {
-        "message": "\u78c1\u573a\u8ba1\u65b9\u5411"
+        "message": "磁场计方向"
     },
     "configurationSensorAlignmentDefaultOption": {
-        "message": "\u9ed8\u8ba4"
+        "message": "默认"
     },
     "configurationAccelTrims": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1\u5fae\u8c03"
+        "message": "加速度计微调"
     },
     "configurationAccelTrimRoll": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1\u6a2a\u6eda\u5fae\u8c03"
+        "message": "加速度计横滚微调"
     },
     "configurationAccelTrimPitch": {
-        "message": "\u52a0\u901f\u5ea6\u4fef\u4ef0\u5fae\u8c03"
+        "message": "加速度俯仰微调"
     },
     "configurationArming": {
-        "message": "\u6b63\u5728\u5f00\u9501"
+        "message": "正在解锁"
     },
     "configurationArmingHelp": {
-        "message": "\u67d0\u4e9b\u5f00\u9501\u9009\u9879\u53ef\u80fd\u9700\u8981\u5f00\u542f\u52a0\u901f\u5ea6\u8ba1"
+        "message": "某些解锁选项可能需要启用加速度计"
     },
     "configurationMagDeclination": {
-        "message": "\u78c1\u573a\u8ba1\u4fee\u6b63[\u5ea6]"
+        "message": "磁强计衰落 [deg]"
     },
     "configurationReverseMotorSwitch": {
-        "message": "\u53cd\u8f6c\u7535\u673a\u8f6c\u5411"
+        "message": "反转电机转向"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "\u6253\u5f00\u8fd9\u4e2a\u529f\u80fd\uff0c\u5c06\u4f1a"
+        "message": "启用这个选项以让 Betaflight 知道电机和螺旋桨已被设定为反向旋转。"
     },
     "configurationAutoDisarmDelay": {
-        "message": "[seconds]\u4ee5\u540e\u4e0a\u9501\u7535\u673a\uff08\u9700\u8981\u529f\u80fd\uff09"
+        "message": "[seconds] 秒后锁定电机（需要启用 MOTOR_STOP）"
     },
     "configurationDisarmKillSwitch": {
-        "message": "\u4e0a\u9501\u7535\u673a\uff0c\u4e0d\u7ba1\u6cb9\u95e8\u4f4d\u7f6e\uff08\u5982\u679c\u4f60\u6a21\u5f0f\u9875\u9762\u91cc\u8bbe\u7f6e\u4e86\u89e3\u9501\u5f00\u5173\uff09"
+        "message": "忽略油门位置直接锁定电机（当在模式页里设定为通过 Aux 开关解锁时）"
     },
     "configurationDisarmKillSwitchHelp": {
-        "message": "\u5f53\u68c0\u6d4b\u5230\u6cb9\u95e8\u4f4d\u7f6e\u4e0d\u662f\u6700\u4f4e\uff0c\u4e0a\u9501\u7535\u673a\u3002\u6ce8\u610f\uff1a\u5f53\u6fc0\u6d3b\u8fd9\u4e2a\u9009\u9879,\u6709\u53ef\u80fd\u4f1a\u5728\u98de\u884c\u4e2d\u610f\u5916\u7684\u901a\u8fc7\u5f00\u5173\u89e6\u53d1\u4e0a\u9501\u3002"
+        "message": "油门未在最低位时禁止解锁电机。注意该选项启动时有可能在飞行中通过开关意外触发上锁。"
     },
     "configurationDigitalIdlePercent": {
-        "message": "\u7535\u673a\u6020\u901f\u6570\u503c[%]"
+        "message": "电机怠速数值[%]"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "\u8fd9\u91cc\u7684\u201d\u6020\u901f\u201c\u503c\u6307\u7684\u6700\u5927\u6cb9\u95e8\u7684\u767e\u5206\u6bd4\u3002\u5f53\u98de\u63a7\u5f00\u9501\uff0c\u5e76\u4e14\u6cb9\u95e8\u5728\u6700\u5c0f\u4f4d\u7f6e\u65f6\u3002\u98de\u63a7\u53d1\u8fd9\u4e2a\u6570\u503c\u5230\u7535\u8c03\u3002\u589e\u52a0\u8fd9\u4e2a\u767e\u5206\u6bd4\uff0c\u4f1a\u589e\u52a0\u6020\u901f\u7535\u673a\u7684\u8f6c\u901f\u3002"
+        "message": "这里的”怠速“指按百分比算的油门值。当飞控解锁并且油门在最低位时，该数值会被发送到电调。增加这个百分比可增加怠速时电机的转速。"
     },
     "configurationThrottleMinimum": {
-        "message": "\u6700\u5c0f\u6cb9\u95e8\uff08\u4e0a\u9501\u65f6\u98de\u63a7\u8f93\u51fa\u7ed9\u7535\u8c03\u7684\u6700\u4f4e\u7684\u6cb9\u95e8\u6570\u503c\uff09"
+        "message": "最小油门（解锁时飞控输出给电调的最低油门数值）"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "\u8fd9\u91cc\u7684\u201d\u6020\u901f\u201c\u503c\u6307\u7684\u5f53\u98de\u63a7\u5f00\u9501\uff0c\u5e76\u4e14\u6cb9\u95e8\u5728\u6700\u5c0f\u4f4d\u7f6e\u65f6\u3002\u98de\u63a7\u53d1\u8fd9\u4e2a\u6570\u503c\u5230\u7535\u8c03\u3002\u589e\u52a0\u8fd9\u4e2a\u6570\u503c\uff0c\u4f1a\u589e\u52a0\u6020\u901f\u7535\u673a\u7684\u8f6c\u901f"
+        "message": "这里的”怠速“值指当飞控解锁并且油门在最低位时，会被发送到电调的数值。增加这个数值可增加怠速时电机的转速。"
     },
     "configurationThrottleMaximum": {
-        "message": "\u6700\u5927\u6cb9\u95e8\u503c\uff08\u98de\u63a7\u53d1\u7ed9\u7535\u8c03\u7684\u6700\u5927\u503c\uff09"
+        "message": "最大油门值（飞控发给电调的最大值）"
     },
     "configurationThrottleMinimumCommand": {
-        "message": "\u6700\u5c0f\u547d\u4ee4\u7535\u8c03\u6570\u503c(\u4e0a\u9501\u65f6\uff0c\u98de\u63a7\u53d1\u7ed9\u7535\u8c03\u7684\u6570\u503c)"
+        "message": "最小命令电调数值（锁定时飞控发给电调的数值）"
     },
     "configurationThrottleMinimumCommandHelp": {
-        "message": "\u8fd9\u4e2a\u6570\u503c\u662f\u98de\u63a7\u4e0a\u9501\u7535\u673a\u65f6\u5019\u53d1\u7ed9\u7535\u8c03\u6570\u503c\u3002\u5982\u679c\u9ed8\u8ba4\u6570\u503c\u4e0a\u9501\u65f6\u5019\u7535\u673a\u4e0d\u505c\u8f6c\uff0c\u964d\u4f4e\u4f4e\u8fd9\u4e2a\u6570\u503c\uff08\u5927\u591a\u6570\u7535\u8c03\u4f1a\u57281000\u505c\u6b62\u7535\u673a\u8f6c\u52a8\uff09"
+        "message": "这个数值是飞控锁定电机时发给电调的数值。将它设定为可以让电机停转的数值。（对大部分电调而言该值是1000）"
+    },
+    "configurationDshotBeeper": {
+        "message": "DSHOT 信标配置"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "使用 DSHOT 信标 （当锁定状态时使用电机来发出蜂鸣声）"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "信标音调"
     },
     "configurationBeeper": {
-        "message": "\u8702\u9e23\u5668\u8bbe\u7f6e"
+        "message": "蜂鸣器设置"
     },
     "beeperGYRO_CALIBRATED": {
-        "message": "beeps \u5f53\u9640\u87ba\u5df2\u7ecf\u6821\u51c6\uff0c\u6fc0\u6d3b\u8702\u9e23\u5668"
+        "message": "陀螺仪校准完成后鸣叫"
     },
     "beeperRX_LOST": {
-        "message": "beeps \u5f53\u68c0\u6d4b\u5230\u9065\u63a7\u673a\u5173\u95ed\u6216\u8005\u4e22\u5931\u63a5\u6536\u673a\u4fe1\u53f7\uff08\u91cd\u590d\u76f4\u5230\u63a5\u6536\u5230\u9065\u63a7\u5668\u4fe1\u53f7\uff09"
+        "message": "遥控器关闭或信号丢失时持续鸣叫直到信号恢复"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "beep sos \u58f0\u97f3\uff0c \u98de\u63a7\u89e3\u9501\uff0c\u5e76\u68c0\u6d4b\u5230\u9065\u63a7\u4fe1\u53f7\u4e22\u5931"
+        "message": "在解锁状态里遥控器关闭或信号丢失（自动降落\/自动锁定）时鸣叫 SOS 信号"
     },
     "beeperDISARMING": {
-        "message": "beep \u5f53\u4e0a\u9501\u98de\u63a7"
+        "message": "锁定飞控时鸣叫"
     },
     "beeperARMING": {
-        "message": "beep \u5f53\u98de\u63a7\u89e3\u9501\u65f6"
+        "message": "解锁飞控时鸣叫"
     },
     "beeperARMING_GPS_FIX": {
-        "message": "beep \u7279\u5b9a\u7684\u58f0\u97f3 \u5f53\u98de\u63a7\u89e3\u9501\u5e76\u4e14GPS \u9501\u5b9a\u536b\u661f"
+        "message": "GPS 锁定后解锁飞控时鸣叫特殊音调"
     },
     "beeperBAT_CRIT_LOW": {
-        "message": "\u6301\u7eed beeps \u957f\u8b66\u544a\u8702\u9e23\u58f0\u97f3\uff0c \u5f53\u68c0\u6d4b\u5230\u7535\u6c60\u7535\u538b\u592a\u4f4e"
+        "message": "当电池电压严重偏低时持续长鸣"
     },
     "beeperBAT_LOW": {
-        "message": "beeps\u8b66\u544a\u8702\u9e23\u97f3\uff0c\u5f53\u68c0\u6d4b\u5230\u7535\u6c60\u7535\u538b\u504f\u4f4e"
-    },
-    "beeperGPS_STATUS": {
-        "message": ""
+        "message": "当电池电压偏低时重复鸣叫"
     },
     "beeperRX_SET": {
-        "message": "beeps \u5f53\u4f7f\u7528\u5f00\u5173\u901a\u9053\u6fc0\u6d3b\u8702\u9e23\u5668\u3002 \u6216\u8005\u5f53GPS\u529f\u80fd\u6253\u5f00\uff0cbeeps \u987a\u5e8f\u7684\u58f0\u97f3\u63d0\u793a\u63a5\u6536\u5230\u7684\u536b\u661f\u6570"
+        "message": "当 Aux 开关设定为鸣叫时鸣叫，或在启用 GPS 时鸣叫接收到的卫星数"
     },
     "beeperDISARM_REPEAT": {
-        "message": "beeps \u5f53\u9065\u611f\u6253\u5230\u4e0a\u9501\u4f4d\u7f6e"
+        "message": "摇杆保持在锁定位置时鸣叫"
     },
     "beeperACC_CALIBRATION": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1\u98de\u884c\u4e2d\u6821\u51c6\u5b8c\u6210\u786e\u8ba4"
+        "message": "加速度计飞行中校准完成"
     },
     "beeperACC_CALIBRATION_FAIL": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1\u98de\u884c\u4e2d\u6821\u51c6\u5931\u8d25"
+        "message": "加速度计飞行中校准失败"
     },
     "beeperREADY_BEEP": {
-        "message": "\u53d1\u51fa\u94c3\u58f0\uff0c\u5f53GPS\u9501\u5b9a\uff0c\u51c6\u5907\u5bfc\u822a"
-    },
-    "beeperMULTI_BEEPS": {
-        "message": ""
+        "message": "当 GPS 锁定卫星且就绪时发出铃声"
     },
     "beeperARMED": {
-        "message": "\u6301\u7eed\u53d1\u51fa\u8b66\u544a\u97f3\uff0c\u5f53\u98de\u63a7\u5f00\u9501\uff08\u77e5\u9053\u4e0a\u9501\uff0c\u6216\u8005\u4e0a\u63a8\u6cb9\u95e8\uff09"
+        "message": "飞控解锁后持续发出警告鸣叫直到上推油门或重新锁定"
     },
     "beeperSYSTEM_INIT": {
-        "message": "\u5f53\u4e0a\u7535\u662f\uff0c\u53d1\u51fa\u521d\u59cb\u5316\u58f0\u97f3\u3002"
+        "message": "飞控上电时鸣叫初始化音"
     },
     "beeperUSB": {
-        "message": "\u5982\u679c\u4e0d\u60f3\u8702\u9e23\u5668\u5728\u4f7f\u7528USB\u65f6\u5019\u53d1\u51fa\u58f0\u97f3\uff0c\u5173\u6389\u8fd9\u4e2a\u9009\u9879"
+        "message": "通过 USB 连接飞控时启用蜂鸣器。不想在调试时听到鸣叫可禁用这个选项。"
     },
     "beeperBLACKBOX_ERASE": {
-        "message": "beep\uff0c\u5f53\u9ed1\u5323\u5b50\u64e6\u9664\u5b8c\u6210 "
+        "message": "黑匣子擦除完成时鸣叫"
     },
     "configuration3d": {
-        "message": "3D \u7535\u8c03\/\u7535\u673a\u529f\u80fd"
+        "message": "3D 电调\/电机功能"
     },
     "configuration3dDeadbandLow": {
-        "message": "3D \u901a\u9053\u6b7b\u533a\u4f4e"
+        "message": "3D 通道死区低值"
     },
     "configuration3dDeadbandHigh": {
-        "message": "3D \u901a\u9053\u6b7b\u533a\u9ad8"
+        "message": "3D 通道死区高值"
     },
     "configuration3dNeutral": {
-        "message": "3D \u4e2d\u4f4d"
+        "message": "3D 中位"
     },
     "configuration3dDeadbandThrottle": {
-        "message": "3D \u6b7b\u533a\u6cb9\u95e8"
+        "message": "3D 死区油门"
     },
     "configurationSystem": {
-        "message": "\u7cfb\u7edf\u8bbe\u7f6e"
+        "message": "系统设置"
     },
     "configurationLoopTime": {
-        "message": "\u98de\u63a7\u5faa\u73af\u65f6\u95f4"
+        "message": "飞控循环时间"
     },
     "configurationCalculatedCyclesSec": {
-        "message": "\u5faa\u73af\/\u79d2[Hz]"
+        "message": "循环\/秒[Hz]"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong>\u786e\u5b9a\u4f60\u7684\u98de\u63a7\u53ef\u4ee5\u8fd0\u884c\u8fd9\u901f\u5ea6\uff0c\u68c0\u67e5CPU\u7684\u5faa\u73af\u65f6\u95f4\u7a33\u5b9a\u6027\u3002\u6539\u53d8\u901f\u5ea6\u53ef\u80fd\u9700\u8981\u91cd\u65b0\u8c03\u6574PID. \u63d0\u793a:\u5173\u95ed\u52a0\u901f\u5ea6\u8ba1\u548c\u5176\u4ed6\u4f20\u611f\u5668\u53ef\u4ee5\u8ba9cpu\u8fd0\u884c\u66f4\u5feb"
+        "message": "<strong>注意：<\/strong>确定你的飞控有能力运行在这些速度上！检查CPU的循环时间稳定性。改变速度可能需要重新调校PID。提示：关闭加速度计和其他传感器可以节省运算资源以获得更高性能。"
     },
     "configurationGPS": {
         "message": "GPS"
     },
     "configurationGPSProtocol": {
-        "message": "\u534f\u8bae"
+        "message": "协议"
     },
     "configurationGPSBaudrate": {
-        "message": "\u6ce2\u7279\u7387"
+        "message": "波特率"
     },
     "configurationGPSubxSbas": {
-        "message": "\u5730\u9762\u8f85\u52a9\u7c7b\u578b"
+        "message": "地面辅助类型"
     },
     "configurationGPSAutoBaud": {
-        "message": "\u81ea\u52a8\u6ce2\u7279\u7387"
+        "message": "自动波特率"
     },
     "configurationGPSAutoConfig": {
-        "message": "\u81ea\u52a8\u8bbe\u7f6e"
+        "message": "自动设置"
     },
     "configurationGPSHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong>\u5982\u679c\u8981\u4f7f\u7528GPS\uff0c\u5148\u8bbe\u7f6e\u7528\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u4e32\u53e3"
+        "message": "<strong>注意:<\/strong>使用 GPS 之前需要先在串口页面设置一个串口。"
     },
     "configurationSerialRX": {
-        "message": "\u4e32\u884c\u6570\u5b57\u63a5\u6536\u673a\u54c1\u724c"
+        "message": "串行数字接收机协议"
     },
     "configurationSpiRX": {
-        "message": "SPI \u603b\u7ebf\u63a5\u53e3\u63a5\u6536\u673a\u63d0\u4f9b\u8005"
+        "message": "SPI 总线接口接收机提供者"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "configurationButtonSave": {
-        "message": "\u4fdd\u5b58\u548c\u91cd\u542f"
+        "message": "保存并重启"
     },
     "portsIdentifier": {
-        "message": "\u6807\u8bc6\u7b26"
+        "message": "标识符"
     },
     "portsConfiguration": {
-        "message": "\u8bbe\u7f6e\/MSP"
+        "message": "设置\/MSP"
     },
     "portsSerialRx": {
-        "message": "\u4e32\u884c\u6570\u5b57\u63a5\u6536\u673a"
+        "message": "串行数字接收机"
     },
     "portsSensorIn": {
-        "message": "\u4f20\u611f\u5668\u8f93\u5165"
+        "message": "传感器输入"
     },
     "portsTelemetryOut": {
-        "message": "\u9065\u63a7\u9065\u611f\u8f93\u51fa"
+        "message": "遥测输出"
     },
     "portsPeripherals": {
-        "message": "\u5916\u56f4\u8bbe\u5907"
+        "message": "外设"
     },
     "portsHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong> \u4e0d\u662f\u6240\u6709\u7684\u7ec4\u5408\u53ef\u4ee5\u540c\u65f6\u5de5\u4f5c\uff0c\u5982\u679c\u98de\u63a7\u68c0\u67e5\u5230\u67d0\u7ec4\u5408\u4e0d\u80fd\u540c\u65f6\u5de5\u4f5c\u3002\u98de\u63a7\u5c06\u4f1a\u91cd\u7f6e\u4e32\u53e3\u8bbe\u7f6e."
+        "message": "<strong>注意：<\/strong> 不是所有的组合都是有效的，如果飞控检查到某组合不能同时工作，对应串口的设置将会被重置。"
     },
     "portsMSPHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong> \u4e0d<span class=\"message-negative\">\u8981<\/span> \u5173\u95ed\u7b2c\u4e00\u4e2a\u4e32\u53e3\u7684MSP\u9009\u9879\uff0c\u5982\u679c\u4f60\u5173\u95ed\u4e86\u7b2c\u4e00\u4e2a\u4e32\u53e3\u7684MSP\uff0c \u4f60\u53ef\u80fd\u9700\u8981\u91cd\u65b0\u70e7\u5199\u56fa\u4ef6\u548c\u6e05\u7a7a\u6240\u6709\u4fdd\u5b58\u7684\u8bbe\u7f6e"
+        "message": "<strong>注意：<\/strong> <span class=\"message-negative\">不要<\/span> 关闭第一个串口的MSP选项。否则你可能要重新烧录固件并清空（丢失）所有设置。"
     },
     "portsFirmwareUpgradeRequired": {
-        "message": "\u56fa\u4ef6\u5347\u7ea7 <span class=\"message-negative\">\u9700\u8981<\/span>.\u4e32\u53e3\u8bbe\u7f6e&lt;1.8.0\u4e0d\u652f\u6301"
+        "message": "<span class=\"message-negative\">需要<\/span>升级固件。 固件版本 &lt;1.8.0 不支持串口设置。"
     },
     "portsButtonSave": {
-        "message": "\u4fdd\u5b58\u548c\u91cd\u542f"
+        "message": "保存并重启"
     },
     "portsTelemetryDisabled": {
-        "message": "\u5173\u95ed"
+        "message": "已禁用"
     },
     "portsFunction_MSP": {
         "message": "MSP"
@@ -1081,100 +1100,109 @@
         "message": "SRXL"
     },
     "portsFunction_ESC_SENSOR": {
-        "message": "\u7535\u8c03"
+        "message": "电调"
     },
     "portsFunction_RX_SERIAL": {
-        "message": "\u4e32\u884c\u63a5\u6536\u673a"
+        "message": "串行接收机"
     },
     "portsFunction_BLACKBOX": {
-        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55"
+        "message": "黑匣子记录"
     },
     "portsFunction_TBS_SMARTAUDIO": {
-        "message": "\u9ed1\u5c71\u7f8a \u56fe\u4f20"
+        "message": "TBS SmartAudio"
     },
     "portsFunction_IRC_TRAMP": {
         "message": "IRC Tramp"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "RunCam \u8bbe\u5907"
+        "message": "RunCam 设备"
+    },
+    "pidTuningProfileOption": {
+        "message": "设置 $1"
+    },
+    "pidTuningRateProfileOption": {
+        "message": "速度设置 $1"
+    },
+    "portsFunction_LIDAR_TF": {
+        "message": "Benewake LIDAR"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">\u8c03\u6574PID \u63a7\u5236\u5668\u4e0d\u53ef\u7528, \u4f60\u53ef\u4ee5\u901a\u8fc7CLI \u6765\u8c03\u6574.<\/span> \u56fa\u4ef6 API \u7248\u672c<span class=\"message-negative\">$1<\/span>,\u529f\u80fd\u9700\u8981 <span class=\"message-positive\">$2<\/span>."
+        "message": "<span class=\"message-negative\">禁止切换 PID 控制器 -  你可以通过CLI 来调整。<\/span> 当前固件 API 版本为 <span class=\"message-negative\">$1<\/span>，而此功能需要版本 <span class=\"message-positive\">$2<\/span>。"
     },
     "pidTuningSubTabPid": {
-        "message": "PID \u8bbe\u7f6e"
+        "message": "PID 设置"
     },
     "pidTuningSubTabFilter": {
-        "message": "\u6ee4\u6ce2\u5668\u8bbe\u7f6e"
+        "message": "滤波器设置"
     },
     "pidTuningShowAllPids": {
-        "message": "\u663e\u793a\u6240\u6709PID"
+        "message": "显示所有PID"
     },
     "pidTuningHideUnusedPids": {
-        "message": "\u9690\u85cf\u6ca1\u6709\u7528\u5230\u7684PID"
+        "message": "隐藏未使用的PID"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": "\u914d\u7f6e\u6587\u4ef6\u72ec\u7acb\u7684PID\u8bbe\u7f6e"
+        "message": "独立于配置文件的PID控制器设置"
     },
     "pidTuningAntiGravityGain": {
-        "message": "\u53cd\u91cd\u529b\u589e\u76ca"
+        "message": "反重力增益"
     },
     "pidTuningAntiGravityThres": {
-        "message": "\u53cd\u91cd\u529b\u6781\u9650\u503c"
+        "message": "反重力阈值"
     },
     "pidTuningPidSettings": {
-        "message": "PID \u63a7\u5236\u5668\u8bbe\u7f6e"
+        "message": "PID 控制器设置"
     },
     "receiverRcInterpolation": {
-        "message": "RC \u63d2\u503c"
+        "message": "RC 插值"
     },
     "receiverRcInterpolationHelp": {
-        "message": "\u7531\u4e8e\u9065\u63a7\u8bbe\u5907\u8fd0\u884c\u901f\u5ea6\u6ca1\u6709\u98de\u63a7PID\u8fd0\u884c\u901f\u5ea6\u5feb\uff0c\u5728PID \u66f4\u65b0\u7684\u65f6\u5019\u6709\u53ef\u80fd\u4ea7\u751f\u9065\u63a7\u4fe1\u53f7\u7a7a\u5f53\u3002 \u6253\u5f00\u9065\u63a7\u4fe1\u53f7\u63d2\u503c\u4fe1\u53f7\u4f1a\u5728\u65e0\u9065\u63a7\u4fe1\u53f7\u7684\u7a7a\u6863\u63d2\u5165\u9065\u63a7\u4fe1\u53f7\u8f93\u5165\uff0c\u4f1a\u5f97\u5230\u66f4\u52a0\u987a\u6ed1\u7684P\u548cD\u63a7\u5236\u3002"
+        "message": "由于遥控设备运行速度没有飞控PID运行速度快，在PID 更新的时候有可能产生遥控信号空当。 打开遥控信号插值信号会在无遥控信号的空档插入遥控信号输入，会得到更加顺滑的P和D控制。"
     },
     "receiverRcInterpolationIntervalHelp": {
-        "message": "\u624b\u52a8\u7684\u9065\u63a7\u4fe1\u53f7\u63d2\u503c\u65f6\u5dee\u6a21\u5f0f \u6beb\u79d2"
+        "message": "手工设置遥控信号插值间隔 [毫秒]"
     },
     "receiverRcInterpolationOff": {
-        "message": "\u5173\u95ed"
+        "message": "关闭"
     },
     "receiverRcInterpolationDefault": {
-        "message": "\u9884\u8c03\u53c2\u6570"
+        "message": "预设"
     },
     "receiverRcInterpolationAuto": {
-        "message": "\u81ea\u52a8"
+        "message": "自动"
     },
     "receiverRcInterpolationManual": {
-        "message": "\u624b\u52a8"
+        "message": "手动"
     },
     "receiverRcInterpolationInterval": {
-        "message": "\u9065\u63a7\u4fe1\u53f7\u63d2\u503c\u95f4\u9699[\u6beb\u79d2]"
+        "message": "遥控信号插值间隙[毫秒]"
     },
     "pidTuningDtermSetpointTransition": {
-        "message": "D \u5b9a\u4f4d\u70b9\u8f6c\u6362"
+        "message": "D 定位点转换"
     },
     "pidTuningDtermSetpoint": {
-        "message": "D \u5b9a\u4f4d\u70b9\u6bd4\u91cd"
+        "message": "D 定位点权重"
     },
     "pidTuningDtermSetpointTransitionHelp": {
-        "message": "With this parameter, D Setpoint Weight can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Setpoint Weight is kept constant at its configured value. When the stick is positioned below that point, Setpoint Weight is reduced proportionally, reaching 0 at the stick center position.<br> Value of 1 gives maximum smoothing effect, while value of 0 keeps the Setpoint Weight fixed at its configured value over the whole stick range."
+        "message": "通过这个参数， D 设定点权重可以被降低到接近摇杆中点，使翻滚动作的结束更平滑一些。<br> 该值表示摇杆偏移量：0代表摇杆居中，1代表摇杆打满。当摇杆实际位置大于该值时，设定点权重保持在用户设定的数字不变。当摇杆实际位置小于该值时，设定点权重会按比例下降，在摇杆居中时降低到0。<br> 设置为1可以获得最平滑的效果，而设置为0将保持设定点权重在全程都保持在用户设定的数字不变。"
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "This parameter determines the stick accelerating effect within derivative component.<br> Value of 0 equals to old Measuemenent method where D only tracks gyro, while value of 1 equals to old Error method with equal gyro and stick tracking ratio.<br> Lower value equals to slower\/smoother stick response, while higher value provides more stick acceleration response.<br> Note that RC interpolation is recommended to be enabled with higher values to prevent control kicks making noise."
+        "message": "该参数在 derivative 范围里影响摇杆的“加速”效果。<br> 0等同于老的D只追踪陀螺仪的“测量”方法，1等同于同等追踪陀螺仪和摇杆的”误差“方法。<br> 较低的值提供较为平滑缓和的摇杆相应，较高的值则使摇杆的反应（加速）更迅猛。<br> 注意使用较高值时，建议同时启用RC插值以避免信号噪声。"
     },
     "pidTuningProportional": {
-        "message": "\u6bd4\u4f8b\u5355\u5143"
+        "message": "Proportional"
     },
     "pidTuningIntegral": {
-        "message": "\u79ef\u5206\u5355\u5143"
+        "message": "Integral"
     },
     "pidTuningDerivative": {
-        "message": "\u5fae\u5206\u5355\u5143"
+        "message": "Derivative"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
     },
     "pidTuningMaxVel": {
-        "message": "\u6700\u5927\u89d2\u901f\u5ea6 [\u5ea6\/\u79d2]"
+        "message": "最大角速度 [度\/秒]"
     },
     "pidTuningRate": {
         "message": "Rate"
@@ -1183,7 +1211,7 @@
         "message": "Super Rate"
     },
     "pidTuningRatesPreview": {
-        "message": "Rates \u9884\u89c8"
+        "message": "Rates 预览"
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
@@ -1192,319 +1220,331 @@
         "message": "TPA"
     },
     "pidTuningTPABreakPoint": {
-        "message": "TPA \u65ad\u70b9"
+        "message": "TPA 起始点"
     },
     "pidTuningFilter": {
-        "message": "\u6ee4\u6ce2\u5668"
+        "message": "滤波器"
     },
     "pidTuningFilterFrequency": {
-        "message": "\u9891\u7387"
+        "message": "频率"
     },
     "pidTuningRatesCurve": {
         "message": "Rates"
     },
     "throttle": {
-        "message": "\u6cb9\u95e8"
+        "message": "油门曲线"
     },
     "pidTuningButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "pidTuningButtonRefresh": {
-        "message": "\u5237\u65b0"
+        "message": "刷新"
     },
     "pidTuningProfileHead": {
-        "message": "\u914d\u7f6e\u6587\u4ef6"
+        "message": "配置文件"
     },
     "pidTuningControllerHead": {
-        "message": "PID \u63a7\u5236\u5668"
+        "message": "PID 控制器"
     },
     "pidTuningCopyProfile": {
-        "message": "\u590d\u5236\u914d\u7f6e\u6587\u4ef6\u503c"
+        "message": "复制 PID 配置文件"
     },
     "pidTuningCopyRateProfile": {
-        "message": "\u590d\u5236rate\u914d\u7f6e\u6587\u4ef6\u503c"
+        "message": "复制 Rate 配置文件"
+    },
+    "dialogCopyProfileText": {
+        "message": "将当前设置值复制到"
+    },
+    "dialogCopyRateProfileText": {
+        "message": "将当前速率设定复制到"
     },
     "dialogCopyProfileTitle": {
-        "message": "\u590d\u5236\u914d\u7f6e\u6587\u4ef6\u503c"
+        "message": "复制配置文件值"
     },
     "dialogCopyProfileNote": {
-        "message": "\u6240\u6709\u76ee\u6807\u914d\u7f6e\u6587\u4ef6\u7684\u6570\u503c\u5c06\u4f1a\u64e6\u9664\u548c\u6539\u5199"
+        "message": "所有目标配置文件的数值将会被擦除和覆盖"
     },
     "dialogCopyProfileConfirm": {
-        "message": "\u590d\u5236"
+        "message": "复制"
     },
     "dialogCopyProfileClose": {
-        "message": "\u53d6\u6d88"
+        "message": "取消"
     },
     "pidTuningResetProfile": {
-        "message": "\u91cd\u7f6e\u6240\u6709\u914d\u7f6e\u6587\u4ef6"
+        "message": "重置所有配置文件"
     },
     "pidTuningProfileReset": {
-        "message": "\u52a0\u8f7d\u9ed8\u8ba4\u914d\u7f6e\u6587\u4ef6"
+        "message": "加载默认配置文件"
     },
     "pidTuningReceivedProfile": {
-        "message": "\u5f53\u524d\u98de\u63a7\u914d\u7f6e\u6587\u4ef6: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "当前飞控配置文件: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "\u5f53\u524d\u98de\u63a7rate\u914d\u7f6e\u6587\u4ef6\uff1a<strong class=\"message-positive\">$1<\/strong>"
+        "message": "当前飞控rate配置文件：<strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": "\u52a0\u8f7d\u914d\u7f6e: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "加载配置: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": "\u52a0\u8f7d rate\u914d\u7f6e\u6587\u4ef6: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "加载rate配置文件: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": "PID \u6570\u636e<strong>\u5237\u65b0<\/strong>"
+        "message": "PID 数据<strong>已刷新<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u4ee5\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "receiverHelp": {
-        "message": "\u8bf7\u9605\u8bfb\u6587\u6863\u501f\u624b\u673a\u90e8\u5206\uff0c\u914d\u7f6e\u4e32\u53e3\uff08\u5982\u679c\u9700\u8981\uff09\uff0c\u63a5\u6536\u673a\u6a21\u5f0f\uff08serial\/ppm\/pwm\uff09,\u4e32\u53e3\u63a5\u6536\u673a\u5382\u5bb6\uff0c\u7ed1\u5b9a\u63a5\u6536\u673a\uff0c\u8bbe\u7f6e\u901a\u9053\u6620\u5c04\uff0c\u914d\u7f6e\u6240\u6709\u901a\u9053\u6700\u5927\u548c\u6700\u5c0f\u503c\u4ece~1000 \u5230~2000.\u8bbe\u7f6e\u548c\u4fee\u6b63\u4e2d\u70b9\u5024\uff08\u4e00\u822c\u4e3a1500\uff09\uff0c\u914d\u7f6e\u6447\u6746\u6b7b\u533a\uff0c\u67e5\u770b\u548c\u9a8c\u8bc1\u54e5\u54e5\u901a\u5bfc\u81f4\u662f\u5426\u6709\u9650\u6216\u8005\u8d85\u51fa\u8303\u56f4\u3002.<br \/><span class=\"message-negative\">\u91cd\u8981:<\/span> \u5728\u98de\u884c\u4e4b\u524d\uff0c\u8bf7\u9605\u8bfb\u6587\u6863\u5931\u63a7\u4fdd\u62a4\u90e8\u5206\uff0c\u5e76\u4e14\u8bbe\u7f6e\u597d\u5931\u63a7\u4fdd\u62a4"
+        "message": "请阅读文档的接收机部分。 按需配置好串口、接收机模式（serial\/ppm\/pwm），接收机厂商，对频好接收机，设置好通道映射，配置通道的最小最大值范围让它们可以覆盖1000到2000。设置中位值（默认1500），微调通道到1500，配置摇杆死区，确认当遥控器关闭或超出范围时接收机的行为（失控保护）。<br \/><span class=\"message-negative\">重要：<\/span> 飞行前阅读文档的失控保护章解并且配置好失控保护。"
     },
     "tuningHelp": {
-        "message": "<b> \u8c03\u8bd5\u6280\u5de7<\/b><br \/><span class=\"message-negative\">\u91cd\u8981:<\/span>\u5728\u7b2c\u4e00\u6b21\u98de\u884c\u65f6\u6ce8\u610f\u7535\u673a\u6e29\u5ea6\u3002\u6ee4\u6ce2\u503c\u8d8a\u9ad8\uff0c\u98de\u884c\u6548\u679c\u53ef\u80fd\u8d8a\u597d\uff0c\u4f46\u662f\u4f1a\u4f7f\u7535\u673a\u4ea7\u751f\u66f4\u5bf9\u7684\u566a\u58f0\uff08\u9707\u52a8\uff09\uff0c<br>100\u8d6b\u5179\u9ed8\u8ba4\u503c\u662f\u6700\u4f73\u7684\u6570\u503c\uff0c\u4f46\u662f\u4f60\u53ef\u4ee5\u5c1d\u8bd5\u5427Dterm\u548cGyro\u6ee4\u6ce2\u5668\u964d\u4f4e\u523050\u8d6b\u5179\u3002"
+        "message": "<b> 调校技巧<\/b><br \/><span class=\"message-negative\">重要：<\/span>调校后的初次飞行需注意电机温度。滤波值越高，飞行效果可能越好，但也会导致更多的信号“噪音”进入电机。<br>100Hz 是默认较佳的数值，但对震动较严重的情况，你可以尝试把 Dterm 和 Gyro 滤波器降低到50Hz。"
     },
     "receiverThrottleMid": {
-        "message": "\u6cb9\u95e8\u91cd\u70b9"
+        "message": "油门中点"
     },
     "receiverThrottleExpo": {
-        "message": "\u6cb9\u95e8\u66f2\u7ebf"
+        "message": "油门 Expo"
     },
     "receiverStickMin": {
-        "message": "'\u9065\u611f\u6700\u4f4e' \u9650\u5236\u503c"
+        "message": "'摇杆低位' 阈值"
     },
     "receiverHelpStickMin": {
-        "message": "\u6447\u6746\u6700\u5c0f\u503c\uff08\u6447\u6746\u6700\u4f4e\u70b9\u548c\u6447\u6746\u6700\u5de6\uff09\u7684\u6570\u503c \uff08\u5fae\u79d2\uff09\uff08\u5927\u4e8e\u8fd9\u4e2a\u503c\u98de\u63a7\u8ba4\u4e3a\u9065\u63a7\u4fe1\u53f7\u6b63\u5e38\uff09"
+        "message": "摇杆最小值（摇杆最低点和摇杆最左）的数值 （微秒）（大于这个值飞控认为遥控信号正常）"
     },
     "receiverStickCenter": {
-        "message": "\u6447\u6746\u4e2d\u70b9"
+        "message": "摇杆中点"
     },
     "receiverHelpStickCenter": {
-        "message": "\u6447\u6746\u4e2d\u4f4d\u503c\uff08\u5fae\u79d2\uff09"
+        "message": "摇杆中位判定值（微秒）"
     },
     "receiverStickMax": {
-        "message": "\u6447\u6746\u6700\u5927\u503c"
+        "message": "'摇杆高位' 阈值"
     },
     "receiverHelpStickMax": {
-        "message": "\u6447\u6746\u6700\u5927\u503c\uff08\u6447\u6746\u6700\u9ad8\u548c\u6447\u6746\u6700\u53f3\uff09\u7684\u6570\u503c \uff08\u5fae\u79d2\uff09\uff08\u5c0f\u4e8e\u8fd9\u4e2a\u503c\u98de\u63a7\u8ba4\u4e3a\u9065\u63a7\u4fe1\u53f7\u6b63\u5e38\uff09"
+        "message": "摇杆最大值（摇杆最高和摇杆最右）的数值 （微秒）（小于这个值飞控认为遥控信号正常）"
     },
     "receiverDeadband": {
-        "message": "RC \u6b7b\u533a\u533a\u95f4"
+        "message": "RC 死区区间"
     },
     "receiverHelpDeadband": {
-        "message": "\u9065\u63a7\u8f93\u5165\u591a\u5c11\u98de\u63a7\u624d\u8ba4\u4e3a\u662f\u6709\u6548\u503c\u3002\u5bf9\u4e8e\u8f93\u5165\u6709\u6296\u52a8\u7684\u9065\u63a7\u5668\uff0c\u53ef\u4ee5\u589e\u52a0\u8fd9\u4e2a\u503c\u3002"
+        "message": "遥控输入变化大于多少us飞控才认为是有效输入。对于静止状态下有抖动的遥控器，可以适当增加这个值。"
     },
     "receiverYawDeadband": {
-        "message": "\u65b9\u5411\u901a\u9053 \u6b7b\u533a\u533a\u95f4"
+        "message": "Yaw 死区区间"
     },
     "receiverHelpYawDeadband": {
-        "message": "\u9065\u63a7\u65b9\u5411\u901a\u9053\u8f93\u5165\u591a\u5c11\u624d\u88ab\u98de\u63a7\u8ba4\u4e3a\u662f\u6709\u6548\u503c\uff0c\u5bf9\u4e8e\u8f93\u5165\u6709\u6296\u52a8\u7684\u9065\u63a7\u5668\uff0c\u53ef\u4ee5\u589e\u52a0\u8fd9\u4e2a\u503c\u3002<strong>\u8fd9\u4e2a\u6570\u503c\u53ea\u5bf9\u65b9\u5411\u6447\u6746\u6709\u6548<\/strong>"
+        "message": "遥控方向通道输入多少才被飞控认为是有效值，对于输入有抖动的遥控器，可以增加这个值。<strong>这个数值只对方向摇杆有效<\/strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": "3D \u6cb9\u95e8\u6b7b\u533a"
+        "message": "3D 油门死区"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": "\u589e\u52a0\u8fd9\u4e2a\u503c\uff08\u6beb\u79d2\uff09\u4f1a\u589e\u52a03D \u6cb9\u95e8\u4e2d\u4f4d\u5bbd\u5ea6\u3002<strong>\u53ea\u5bf93D \u8bbe\u7f6e\u6cb9\u95e8\u6709\u6548<\/strong>"
+        "message": "增加这个值（us）会增加3D 油门中位宽度。<strong>该设置只对 3D 油门有效<\/strong>"
     },
     "receiverChannelMap": {
-        "message": "\u901a\u9053\u6620\u5c04"
+        "message": "通道映射"
     },
     "receiverChannelDefaultOption": {
-        "message": "\u9ed8\u8ba4"
+        "message": "默认"
     },
     "receiverChannelMapTitle": {
-        "message": "\u4f60\u53ef\u4ee5\u901a\u8fc7\u9009\u62e9\u8fd9\u4e2a\u9009\u9879\u6765\u5b9a\u4e49\u4f60\u60f3\u8981\u7684\u6cb9\u95e8\u6620\u5c04"
+        "message": "你可以通过选择这个选项来自定义通道映射"
     },
     "receiverRssiChannel": {
-        "message": "RSSI \u901a\u9053"
+        "message": "RSSI 通道"
     },
     "receiverRssiChannelDisabledOption": {
-        "message": "\u5173\u95ed"
+        "message": "已禁用"
     },
     "receiverRefreshRateTitle": {
-        "message": "\u56fe\u5f62\u663e\u793a\u5237\u65b0\u7387"
+        "message": "图形显示刷新率"
     },
     "receiverButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "receiverButtonRefresh": {
-        "message": "\u5237\u65b0"
+        "message": "刷新"
     },
     "receiverButtonSticks": {
-        "message": "\u63a7\u5236\u6447\u6746"
+        "message": "控制摇杆"
     },
     "receiverDataRefreshed": {
-        "message": "\u9065\u63a7\u4fe1\u53f7 <strong>\u5df2\u5237\u65b0<\/strong>"
+        "message": "遥控信号 <strong>已刷新<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "receiverModelPreview": {
-        "message": "\u9884\u89c8"
+        "message": "预览"
+    },
+    "receiverMspWarningText": {
+        "message": "这些摇杆使 Betaflight 可以无需遥控器和接收机就可以解锁飞控进行测试。然而，<strong> 这项功能并非是为实际飞行而设，且螺旋桨必须被拆除。\n <\/strong><br><br>此功能并不保证可以可靠地控制你的飞机。 <strong>如果不拆除螺旋桨可能会造成严重的伤害。<\/strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "启用控制"
     },
     "auxiliaryHelp": {
-        "message": "\u4f7f\u7528\u9ec4\u8272\u533a\u57df\u6765\u5b9a\u4e49\u4f60\u60f3\u8981\u7684\u5f00\u5173\u901a\u9053\u548c\u60f3\u8bbe\u7f6e\u7684\u98de\u884c\u6a21\u5f0f\u3002\u6240\u9009\u7684\u901a\u9053\u9ec4\u8272\u5c0f\u5757\uff0c\u548c\u8bbe\u7f6e\u7684\u9ec4\u8272\u533a\u57df\u91cd\u5408\u65f6\uff0c\u6539\u6a21\u5f0f\u4f1a\u6fc0\u6d3b\uff0c\u540c\u65f6\u76f8\u5e94\u7684\u6a21\u5f0f\u4e5f\u4f1a\u53d8\u6210\u9ec4\u8272\uff0c\u4ee3\u8868\u8be5\u901a\u9053\u5f00\u5173\u5df2\u6fc0\u6d3b\u8be5\u6a21\u5f0f\u3002 \u8bbe\u7f6e\u5b8c\u6210\u8bf7\u901a\u8fc7\u53f3\u4e0b\u89d2\u4fdd\u5b58\u6309\u94ae\u6765\u4fdd\u5b58\u8bbe\u7f6e"
+        "message": "使用黄色区域来定义你想要的开关通道和对应的飞行模式。所选通道的游标落在黄色区域时该模式会激活变成黄色（亮起），代表该通道开关已激活该模式。 完成后点击保存按钮以保存设置。"
     },
     "auxiliaryMin": {
-        "message": "\u6700\u5c0f"
+        "message": "最小"
     },
     "auxiliaryMax": {
-        "message": "\u6700\u5927"
+        "message": "最大"
     },
     "auxiliaryAddRange": {
-        "message": "\u6dfb\u52a0\u8303\u56f4"
+        "message": "添加范围"
     },
     "auxiliaryButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "auxiliaryAutoChannelSelect": {
-        "message": "\u81ea\u52a8"
+        "message": "自动"
     },
     "adjustmentsHelp": {
-        "message": "Configure adjustment switches. See the 'in-flight adjustments' section of the manual for details. The changes that adjustment functions make are not saved automatically. There are 4 slots. Each switch used to concurrently make adjustments requires exclusive use of a slot."
+        "message": "配置调整开关。参阅手册的 'in-flight adjustments' 章解获取具体信息。通过该功能所做的调校修改不会被自动保存。总共有4个槽位。每一个开关需要独占一个槽位。"
     },
     "adjustmentsExamples": {
-        "message": "\u4e3e\u4f8b"
+        "message": "范例"
     },
     "adjustmentsExample1": {
-        "message": "\u4f7f\u7528\u63d2\u69fd1 \u548cAUX1\u901a\u9053\u4e0a\u7684\u4e09\u6bb5\u5f00\u5173\u5728Pitch\/Roll P I D \u4e4b\u95f4\u9009\u62e9\uff0c\u4f7f\u7528AUX2\u901a\u9053\u7684\u4e09\u6bb5\u5f00\u5173\u6765\u4e0a\u4e0b\u589e\u5927\u548c\u51cf\u5c0f\u6570\u503c\uff08\u4fdd\u6301\u9ad8\uff0c\u6216\u8005\u4fdd\u6301\u4f4e\uff09"
+        "message": "使用插槽1 和AUX1通道上的三段开关在Pitch\/Roll P， I 和 D 之间选择，使用AUX2通道的三段开关来上下增大和减小数值（保持高，或者保持低）。"
     },
     "adjustmentsExample2": {
-        "message": "\u4f7f\u7528\u63d2\u69fd2 \u548cAUX4\u901a\u9053\u4e0a\u7684\u4e09\u6bb5\u5f00\u5173\u6765\u9009\u62e9 Rate \u914d\u7f6e\u6587\u4ef6"
+        "message": "使用插槽2 和AUX4通道上的三段开关来选择 Rate 配置文件"
     },
     "adjustmentsColumnEnable": {
-        "message": "\u5982\u679c\u6fc0\u6d3b"
+        "message": "如果激活"
     },
     "adjustmentsColumnUsingSlot": {
-        "message": "\u4f7f\u7528\u63d2\u69fd"
+        "message": "使用插槽"
     },
     "adjustmentsColumnWhenChannel": {
-        "message": "\u5f53\u901a\u9053"
+        "message": "当通道"
     },
     "adjustmentsColumnIsInRange": {
-        "message": "\u5728\u6307\u5b9a\u8303\u56f4\u65f6"
+        "message": "在指定范围时"
     },
     "adjustmentsColumnThenApplyFunction": {
-        "message": "\u6267\u884c"
+        "message": "执行"
     },
     "adjustmentsColumnViaChannel": {
-        "message": "\u901a\u8fc7\u901a\u9053"
+        "message": "通过通道"
     },
     "adjustmentsSlot0": {
-        "message": "\u63d2\u69fd1"
+        "message": "插槽1"
     },
     "adjustmentsSlot1": {
-        "message": "\u63d2\u69fd2"
+        "message": "插槽2"
     },
     "adjustmentsSlot2": {
-        "message": "\u63d2\u69fd3"
+        "message": "插槽3"
     },
     "adjustmentsSlot3": {
-        "message": "\u63d2\u69fd4"
+        "message": "插槽4"
     },
     "adjustmentsMin": {
-        "message": "\u6700\u5c0f"
+        "message": "最小"
     },
     "adjustmentsMax": {
-        "message": "\u6700\u5927"
+        "message": "最大"
     },
     "adjustmentsFunction0": {
-        "message": "\u4e0d\u53d8"
+        "message": "不变"
     },
     "adjustmentsFunction1": {
-        "message": "\u9065\u63a7Rate \u8c03\u6574"
+        "message": "RC Rate 调整"
     },
     "adjustmentsFunction2": {
-        "message": "\u9065\u63a7 \u66f2\u7ebf\u8c03\u6574"
+        "message": "RC Expo 调整"
     },
     "adjustmentsFunction3": {
-        "message": "\u6cb9\u95e8\u66f2\u7ebf\u8c03\u6574"
+        "message": "油门曲线调整"
     },
     "adjustmentsFunction4": {
-        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda Rate \u8c03\u6574"
+        "message": "俯仰 和 横滚 Rate 调整"
     },
     "adjustmentsFunction5": {
-        "message": "\u65b9\u5411Rate\u8c03\u6574"
+        "message": "方向Rate调整"
     },
     "adjustmentsFunction6": {
-        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda P \u8c03\u6574"
+        "message": "俯仰 和 横滚 P 调整"
     },
     "adjustmentsFunction7": {
-        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda I \u8c03\u6574"
+        "message": "俯仰 和 横滚 I 调整"
     },
     "adjustmentsFunction8": {
-        "message": "\u4fef\u4ef0 \u548c \u6a2a\u6eda D \u8c03\u6574"
+        "message": "俯仰 和 横滚 D 调整"
     },
     "adjustmentsFunction9": {
-        "message": "\u65b9\u5411 P \u8c03\u6574"
+        "message": "方向 P 调整"
     },
     "adjustmentsFunction10": {
-        "message": "\u65b9\u5411I\u8c03\u6574"
+        "message": "方向 I 调整"
     },
     "adjustmentsFunction11": {
-        "message": "\u65b9\u5411D\u8c03\u6574"
+        "message": "方向 D 调整"
     },
     "adjustmentsFunction12": {
-        "message": "Rate\u914d\u7f6e\u6587\u4ef6\u9009\u62e9"
+        "message": "Rate配置文件选择"
     },
     "adjustmentsFunction13": {
-        "message": "\u4fef\u4ef0Rate"
+        "message": "俯仰Rate"
     },
     "adjustmentsFunction14": {
-        "message": "\u6a2a\u6edaRate"
+        "message": "横滚Rate"
     },
     "adjustmentsFunction15": {
-        "message": "\u4fef\u4ef0P\u8c03\u6574"
+        "message": "俯仰 P 调整"
     },
     "adjustmentsFunction16": {
-        "message": "\u4fef\u4ef0I\u8c03\u6574"
+        "message": "俯仰 I 调整"
     },
     "adjustmentsFunction17": {
-        "message": "\u4fef\u4ef0D\u8c03\u6574"
+        "message": "俯仰 D 调整"
     },
     "adjustmentsFunction18": {
-        "message": "\u6a2a\u6edaP\u8c03\u6574"
+        "message": "横滚 P 调整"
     },
     "adjustmentsFunction19": {
-        "message": "\u6a2a\u6edaI\u8c03\u6574"
+        "message": "横滚 I 调整"
     },
     "adjustmentsFunction20": {
-        "message": "\u6a2a\u6edaD\u8c03\u6574"
+        "message": "横滚 D 调整"
     },
     "adjustmentsFunction21": {
-        "message": "\u9065\u63a7\u65b9\u5411Rate"
+        "message": "遥控方向Rate"
     },
     "adjustmentsFunction22": {
-        "message": "D \u8bbe\u5b9a\u70b9"
+        "message": "D 设定点"
     },
     "adjustmentsFunction23": {
-        "message": "D \u8bbe\u5b9a\u70b9\u8f6c\u6362"
+        "message": "D 设定点转换"
     },
     "adjustmentsFunction24": {
-        "message": "\u6c34\u5e73\u6a21\u5f0f\u5f3a\u5ea6\u8c03\u6574"
+        "message": "水平模式强度调整"
     },
     "adjustmentsSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "transponderNotSupported": {
-        "message": "\u8be5\u98de\u63a7\u4e0d\u652f\u6301\u6bd4\u8d5b\u6536\u53d1\u5668"
+        "message": "该飞控不支持比赛收发器"
     },
     "transponderInformation": {
-        "message": "Transponders systems allow race organizers to time your laps. The transponder is fitted to your aircraft and when your aircraft passes the timing gate the track-side receiver registers your code and records your laptime. When fitting an IR based transponder your should ensure that it points outward from your aircraft towards the track-side receivers and that the light beam is not obstructed by your airframe, battery-straps, cables, propellers, etc."
+        "message": "比赛收发器供赛事组织者记录你的单圈时间。收发器安装在你的飞机上，当它通过计时门时赛道接收机会记录下你的编号和时间。安装基于红外线的收发器时请确保它指向机体外部的赛道接收机方向，并且光线中间不会被机架，电池扎带，螺旋桨等等遮挡。"
     },
     "transponderConfigurationType": {
-        "message": "\u6bd4\u8d5b\u6536\u53d1\u5668\u7c7b\u522b"
+        "message": "比赛收发器类别"
     },
     "transponderType0": {
-        "message": "\u6ca1\u6709"
+        "message": "无"
     },
     "transponderType1": {
         "message": "iLap"
@@ -1516,694 +1556,861 @@
         "message": "ERLT"
     },
     "transponderConfiguration1": {
-        "message": "Configuration iLap"
+        "message": "配置 iLap"
     },
     "transponderConfiguration2": {
-        "message": "Configuration aRCiTimer"
+        "message": "配置 aRCiTimer"
     },
     "transponderConfiguration3": {
-        "message": "Configuration ERLT"
+        "message": "配置 ERLT"
     },
     "transponderData1": {
-        "message": "\u6570\u636e"
+        "message": "数据"
     },
     "transponderData2": {
-        "message": "\u6bd4\u8d5b\u6536\u53d1\u5668 \u7f16\u53f7"
+        "message": "比赛收发器 编号"
     },
     "transponderData3": {
-        "message": "\u6bd4\u8d5b\u6536\u53d1\u5668 \u7f16\u53f7"
+        "message": "比赛收发器 编号"
     },
     "transponderDataHelp1": {
-        "message": "\u4ec5\u5341\u516d\u8fdb\u5236 \u6570\u5b57\uff0c0-9\uff0c A-F"
+        "message": "仅十六进制 数字，0-9， A-F"
     },
     "transponderHelp1": {
-        "message": "Configure your transponder code here. Note: Only valid codes will be recognised by race timing systems. Valid transponder codes can be obtained from <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\">Seriously Pro<\/a>."
+        "message": "在此配置你的比赛收发器编号。注意：只有有效的编号才会被系统接受。有效的编号可以在这里获得：<a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\">Seriously Pro<\/a>。"
     },
     "transponderHelp2": {
-        "message": "For more information please visit <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer site<\/a>"
+        "message": "更多信息请访问 <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer site<\/a>"
     },
     "transponderDataHelp3": {
-        "message": "Choose ERLT ID 0-63"
+        "message": "选择 ERLT ID 0-63"
     },
     "transponderHelp3": {
-        "message": "For more information please visit <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer site<\/a>"
+        "message": "更多信息请访问 <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer site<\/a>"
     },
     "transponderButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "transponderButtonSaveReboot": {
-        "message": "\u4fdd\u5b58\u5e76\u91cd\u542f"
+        "message": "保存并重启"
     },
     "transponderDataInvalid": {
-        "message": "Transponder data is <span class=\"message-negative\">invalid<\/span>"
+        "message": "收发器数据<span class=\"message-negative\">无效<\/span>"
     },
     "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
-        "message": "\u8235\u673a\u652f\u6301\u8981\u6c42\u56fa\u4ef6\u7248\u672c\u5927\u4e8e1.10.0. \u548c\u98de\u63a7\u652f\u6301"
+        "message": "舵机支持要求固件版本大于1.10.0. 和飞控支持"
     },
     "servosChangeDirection": {
-        "message": "\u8bbe\u7f6e\u9065\u63a7\u5668\u901a\u9053\u53cd\u5411\u6765\u5339\u914d"
+        "message": "设置遥控器通道反向来匹配"
     },
     "servosName": {
-        "message": "\u540d\u5b57"
+        "message": "名字"
     },
     "servosMid": {
-        "message": "\u4e2d"
+        "message": "中"
     },
     "servosMin": {
-        "message": "\u5c0f"
+        "message": "小"
     },
     "servosMax": {
-        "message": "\u5927"
+        "message": "大"
     },
     "servosAngleAtMin": {
-        "message": "\u6700\u5c0f\u89d2\u5ea6"
+        "message": "最小角度"
     },
     "servosAngleAtMax": {
-        "message": "\u6700\u5927\u89d2\u5ea6"
+        "message": "最大角度"
     },
     "servosDirectionAndRate": {
-        "message": "\u65b9\u5411\u548crate"
+        "message": "方向和rate"
     },
     "servosLiveMode": {
-        "message": "\u6fc0\u6d3b\u5b9e\u65f6\u6a21\u5f0f"
+        "message": "激活实时模式"
     },
     "servosButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "servosNormal": {
-        "message": "\u6b63\u5e38"
+        "message": "正常"
     },
     "servosReverse": {
-        "message": "\u53cd\u5411"
+        "message": "反向"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
     },
     "gpsMapHead": {
-        "message": "\u5f53\u524dGPS\u4f4d\u7f6e"
+        "message": "当前GPS位置"
     },
     "gpsMapMessage1": {
-        "message": "\u8bf7\u68c0\u67e5\u7f51\u7edc\u8fde\u63a5"
+        "message": "请检查网络连接"
     },
     "gpsMapMessage2": {
-        "message": "\u7b49\u5f85GPS\u9501\u5b9a\u536b\u661f"
+        "message": "等待GPS 3D锁定……"
     },
     "gps3dFix": {
-        "message": "GPS\u9501\u5b9a\u536b\u661f"
+        "message": "GPS 3D锁定："
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">\u51c6\u786e<\/span>"
+        "message": "<span class=\"fixtrue\">准确<\/span>"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">\u5931\u8d25<\/span>"
+        "message": "<span class=\"fixfalse\">失败<\/span>"
     },
     "gpsAltitude": {
-        "message": "\u9ad8\u5ea6\uff1a"
+        "message": "高度："
     },
     "gpsLat": {
-        "message": "\u7eac\u5ea6\uff1a"
+        "message": "纬度："
     },
     "gpsLon": {
-        "message": "\u7ecf\u5ea6\uff1a"
+        "message": "经度："
     },
     "gpsSpeed": {
-        "message": "\u901f\u5ea6\uff1a"
+        "message": "速度："
     },
     "gpsSats": {
-        "message": "\u536b\u661f\u6570\uff1a"
+        "message": "卫星数："
     },
     "gpsDistToHome": {
-        "message": "\u79bb\u8d77\u98de\u4f4d\u7f6e\u8ddd\u79bb"
+        "message": "离起飞位置距离"
     },
     "gpsSignalStrHead": {
-        "message": "GPS \u4fe1\u53f7\u5f3a\u5ea6"
+        "message": "GPS 信号强度"
     },
     "gpsSignalStr": {
-        "message": "\u578b\u53f7\u5f3a\u5ea6"
+        "message": "信号强度"
     },
     "gpsSignalSatId": {
-        "message": "\u536b\u661f\u7f16\u53f7"
+        "message": "卫星编号"
     },
     "gpsSignalQty": {
-        "message": "\u6570\u91cf"
+        "message": "数量"
     },
     "motorsText": {
-        "message": "\u7535\u673a"
+        "message": "电机"
     },
     "motorNumber1": {
-        "message": "\u7535\u673a-1"
+        "message": "电机-1"
     },
     "motorNumber2": {
-        "message": "\u7535\u673a-2"
+        "message": "电机-2"
     },
     "motorNumber3": {
-        "message": "\u7535\u673a-3"
+        "message": "电机-3"
     },
     "motorNumber4": {
-        "message": "\u7535\u673a-4"
+        "message": "电机-4"
     },
     "motorNumber5": {
-        "message": "\u7535\u673a-5"
+        "message": "电机-5"
     },
     "motorNumber6": {
-        "message": "\u7535\u673a-6"
+        "message": "电机-6"
     },
     "motorNumber7": {
-        "message": "\u7535\u673a-7"
+        "message": "电机-7"
     },
     "motorNumber8": {
-        "message": "\u7535\u673a-8"
+        "message": "电机-8"
     },
     "servosText": {
-        "message": "\u8235\u673a"
+        "message": "舵机"
     },
     "servoNumber1": {
-        "message": "\u8235\u673a -1"
+        "message": "舵机-1"
     },
     "servoNumber2": {
-        "message": "\u8235\u673a -2"
+        "message": "舵机-2"
     },
     "servoNumber3": {
-        "message": "\u8235\u673a -3"
+        "message": "舵机-3"
     },
     "servoNumber4": {
-        "message": "\u8235\u673a -4"
+        "message": "舵机-4"
     },
     "servoNumber5": {
-        "message": "\u8235\u673a -5"
+        "message": "舵机-5"
     },
     "servoNumber6": {
-        "message": "\u8235\u673a -6"
+        "message": "舵机-6"
     },
     "servoNumber7": {
-        "message": "\u8235\u673a -7"
+        "message": "舵机-7"
     },
     "servoNumber8": {
-        "message": "\u8235\u673a -8"
+        "message": "舵机-8"
     },
     "motorsResetMaximumButton": {
-        "message": "\u91cd\u7f6e"
+        "message": "重置"
     },
     "motorsResetMaximum": {
-        "message": "\u91cd\u7f6e\u6700\u5927\u65f6\u95f4"
+        "message": "重置最大时间"
     },
     "motorsSensorGyroSelect": {
-        "message": "\u9640\u87ba\u8ba1"
+        "message": "陀螺仪"
     },
     "motorsSensorAccelSelect": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1"
+        "message": "加速度计"
     },
     "motorsMaster": {
-        "message": "\u603b\u63a7\u5236"
+        "message": "主控制"
     },
     "motorsNotice": {
-        "message": "<strong>\u7535\u673a\u6d4b\u8bd5\u6a21\u5f0f\u6ce8\u610f:<\/strong><br \/>\u79fb\u52a8\u6ed1\u5757\u548c\u901a\u8fc7\u9065\u63a7\u89e3\u9501\u7535\u673a\u5c06\u4f1a<strong>\u8f6c\u52a8<\/strong>.<br \/>\u4e3a\u4e86\u9632\u6b62\u53d7\u4f24\u53d1\u751f\uff0c\u6d4b\u8bd5\u7535\u673a\u4e4b\u524d<strong class=\"message-negative\">\u8bf7\u62c6\u6389\u87ba\u65cb\u6868<\/strong> <br \/>"
+        "message": "<strong> 电机测试模式\/解除锁定提示：<\/strong> <br\/> 移动滑块或用遥控器解锁飞机会导致电机 <strong> 旋转 <\/strong>！ <br\/> 为了避免造成伤害，在使用此功能之前<strong class=\"message-negative\">卸下所有螺旋桨<\/strong>！ <br\/> 启用电机测试模式还将暂时禁用[预防起飞失控]，以避免在工作台上无螺旋桨测试时自动锁定电机。 <br\/>"
     },
     "motorsEnableControl": {
-        "message": "\u5df2\u660e\u767d\u6253\u5f00\u7535\u673a\u6d4b\u8bd5\u7684\u98ce\u9669\uff0c\u5e76\u5df2\u62c6\u6389\u87ba\u65cb\u6868-\u542f\u52a8\u7535\u673a\u6d4b\u8bd5"
+        "message": "<strong> 我已了解风险 <\/strong>， 螺旋桨已被拆除 - 启用电机控制和解锁，并禁用[预防起飞失控]。"
     },
     "sensorsInfo": {
-        "message": "\u8bf7\u6ce8\u610f\uff0c\u8bbe\u7f6e\u8fc7\u9ad8\u7684\u56fe\u5f62\u5237\u65b0\u7387\u4f1a\u66f4\u4f1a\u7f29\u77ed\u5c24\u5176\u662f\u7b14\u8bb0\u672c\u7535\u8111\u7684\u7535\u6c60\u4f7f\u7528\u65f6\u95f4<br \/>\u5efa\u8bae\u53ea\u6253\u5f00\u4f60\u611f\u5174\u8da3\u7684\u4f20\u611f\u5668\u7684\u56fe\u5f62\u663e\u793a\u548c\u5408\u7406\u7684\u5237\u65b0\u7387"
+        "message": "请注意，设置过高的图形刷新率会更会缩短尤其是笔记本电脑的电池使用时间<br \/>建议只打开你感兴趣的传感器的图形显示和合理的刷新率"
     },
     "sensorsRefresh": {
-        "message": "\u5237\u65b0\uff1a"
+        "message": "刷新："
     },
     "sensorsScale": {
-        "message": "\u6bd4\u4f8b\uff1a"
+        "message": "比例："
     },
     "sensorsGyroSelect": {
-        "message": "\u9640\u87ba\u4eea"
+        "message": "陀螺仪"
     },
     "sensorsAccelSelect": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1"
+        "message": "加速度计"
     },
     "sensorsMagSelect": {
-        "message": "\u78c1\u573a\u8ba1"
+        "message": "磁场计"
     },
     "sensorsBaroSelect": {
-        "message": "\u9ad8\u5ea6\u8ba1"
+        "message": "高度计"
     },
     "sensorsSonarSelect": {
-        "message": "\u58f0\u5450"
+        "message": "声呐"
     },
     "sensorsDebugSelect": {
-        "message": "\u8c03\u8bd5"
+        "message": "调试"
     },
     "sensorsGyroTitle": {
-        "message": "\u9640\u87ba\u4eea - \u5ea6\/\u79d2"
+        "message": "陀螺仪 - 度\/秒"
     },
     "sensorsAccelTitle": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1 - G"
+        "message": "加速度计 - G"
     },
     "sensorsMagTitle": {
-        "message": "\u78c1\u573a\u8ba1 - Ga"
+        "message": "磁场计 - Ga"
     },
     "sensorsBaroTitle": {
-        "message": "\u9ad8\u5ea6\u8ba1 - \u7c73"
+        "message": "高度计 - 米"
     },
     "sensorsSonarTitle": {
-        "message": "\u58f0\u5450 - \u5398\u7c73"
+        "message": "声呐 - 厘米"
     },
     "sensorsDebugTitle": {
-        "message": "\u8c03\u8bd5"
+        "message": "调试"
     },
     "cliInfo": {
-        "message": "<strong>\u6ce8\u610f<\/strong>:\u9000\u51fa\u547d\u4ee4\u884c\u9875\u9762\u4f1a <strong>\u81ea\u52a8<\/strong> \u53d1\u9001\"<strong>exit<\/strong>\" \u547d\u4ee4\u5230\u98de\u63a7\u3002\u6700\u65b0\u7684\u56fa\u4ef6\u5c06\u4f1a\u4f7f\u98de\u63a7 <span class=\"message-negative\">\u91cd\u542f<\/span>\u6240\u6709\u6ca1\u6709\u4fdd\u5b58\u7684\u8bbe\u7f6e\u5c06\u4f1a <span class=\"message-negative\">\u4e22\u5931<\/span>."
+        "message": "<strong>注意<\/strong>：退出CLI命令行页面会 <strong>自动<\/strong> 发送\"<strong>exit<\/strong>\" 命令到飞控。这将会使飞控 <span class=\"message-negative\">重启<\/span>，所有没有保存的设置都会 <span class=\"message-negative\">丢失<\/span>。"
     },
     "cliInputPlaceholder": {
-        "message": "\u5728\u8fd9\u91cc\u8f93\u5165\u547d\u4ee4"
+        "message": "在这里输入命令"
     },
     "cliEnter": {
-        "message": "\u68c0\u6d4b\u5230\u547d\u4ee4\u884c\u6a21\u5f0f"
+        "message": "检测到命令行模式"
     },
     "cliReboot": {
-        "message": "\u68c0\u6d4b\u5230\u547d\u4ee4\u884c\u91cd\u542f\u547d\u4ee4"
+        "message": "检测到命令行重启"
     },
     "cliSaveToFileBtn": {
-        "message": "\u4fdd\u5b58\u5230\u6587\u4ef6"
+        "message": "保存到文件"
     },
     "loggingNote": {
-        "message": "\u6570\u636e <span class=\"message-negative\">\u4ec5\u4ec5\u4f1a\u5728\u6b64\u9875\u9762\u8bb0\u5f55<\/span>,\u5173\u95ed\u6b64\u9875\u9762\u5c06\u4f1a <span class=\"message-negative\">\u53d6\u6d88<\/span>\u6570\u636e\u8bb0\u5f55\u3002\u5e76\u4e14\u5c06\u4f1a\u8fd4\u56de\u5e94\u7528<strong>\u201c\u666e\u901a\u914d\u7f6e\u201d<\/strong> \u72b6\u6001\u3002.<br \/> \u4f60\u53ef\u4ee5\u9009\u62e9\u5408\u9002\u7684\u5168\u5c40\u5237\u65b0\u7387\uff0c \u98de\u63a7\u51fa\u4e8e\u6027\u80fd\u8003\u8651\uff0c\u53ea\u4f1a\u6bcf <strong>1<\/strong> \u79d2\u5199\u5165\u65e5\u5fd7\u3002"
+        "message": "数据 <span class=\"message-negative\">仅会<\/span>在此页面记录，关闭此页面将会 <span class=\"message-negative\">取消<\/span>数据记录，并且应用将会返回<strong>“普通配置”<\/strong> 状态。<br \/> 你可以选择合适的全局刷新率，飞控出于性能考虑，只会每 <strong>1<\/strong> 秒写入一次日志。"
     },
     "loggingSamplesSaved": {
-        "message": "\u91c7\u6837\u5df2\u4fdd\u5b58"
+        "message": "采样已保存"
     },
     "loggingLogSize": {
-        "message": "\u8bb0\u5f55\u5927\u5c0f\uff1a"
+        "message": "记录大小："
     },
     "loggingButtonLogFile": {
-        "message": "\u9009\u62e9\u8bb0\u5f55\u6587\u4ef6"
+        "message": "选择记录文件"
     },
     "loggingStart": {
-        "message": "\u5f00\u59cb\u8bb0\u5f55"
+        "message": "开始记录"
     },
     "loggingStop": {
-        "message": "\u505c\u6b62\u8bb0\u5f55"
+        "message": "停止记录"
     },
     "loggingBack": {
-        "message": "\u9000\u51fa\u8bb0\u5f55\/\u65ad\u5f00\u8fde\u63a5"
+        "message": "退出记录\/断开连接"
     },
     "loggingErrorNotConnected": {
-        "message": "\u8bf7\u5148<strong>\u8fde\u63a5<\/strong>"
+        "message": "请先<strong>连接<\/strong>"
     },
     "loggingErrorLogFile": {
-        "message": "\u8bf7\u9009\u62e9\u8bb0\u5f55\u6587\u4ef6"
+        "message": "请选择记录文件"
     },
     "loggingErrorOneProperty": {
-        "message": "\u81f3\u5c11\u9700\u8981\u4e00\u4e2a\u6570\u636e\u96c6\u6765\u8bb0\u5f55"
+        "message": "至少需要一个数据集来记录"
     },
     "loggingAutomaticallyRetained": {
-        "message": "\u81ea\u52a8\u52a0\u8f7d\u4e0a\u4e00\u4e2a\u8bb0\u5f55\u6587\u4ef6: <strong>$1<\/strong>"
+        "message": "已自动加载上一个记录文件: <strong>$1<\/strong>"
     },
     "blackboxNotSupported": {
-        "message": "\u8be5\u98de\u63a7\u56fa\u4ef6\u4e0d\u652f\u6301\u9ed1\u5323\u5b50"
+        "message": "该飞控固件不支持黑匣子记录"
     },
     "blackboxMaybeSupported": {
-        "message": "\u98de\u63a7\u56fa\u4ef6\u7248\u672c\u592a\u4f4e\u6765\u6253\u5f00\u8be5\u9875\u9762\uff0c\u6216\u8005\u9ed1\u5323\u5b50\u529f\u80fd\u6ca1\u6709\u5728\u8bbe\u7f6e\u9875\u9762\u6253\u5f00"
+        "message": "飞控固件版本太低，无法打开该页面，或者黑匣子功能没有在设置页面打开。"
     },
     "blackboxConfiguration": {
-        "message": "\u9ed1\u5323\u5b50\u8bbe\u7f6e"
+        "message": "黑匣子设置"
     },
     "blackboxButtonSave": {
-        "message": "\u4fdd\u5b58\u5e76\u91cd\u542f"
+        "message": "保存并重启"
     },
     "blackboxLoggingNone": {
-        "message": "\u65e0\u8bb0\u5f55"
+        "message": "无"
     },
     "blackboxLoggingFlash": {
-        "message": "\u677f\u8f7d\u95ea\u5b58"
+        "message": "板载闪存"
     },
     "blackboxLoggingSdCard": {
-        "message": "SD \u5361"
+        "message": "SD 卡"
     },
     "blackboxLoggingSerial": {
-        "message": "\u4e32\u53e3"
+        "message": "串口"
     },
     "serialLoggingSupportedNote": {
-        "message": "\u4f60\u53ef\u4ee5\u7528\u8fc7\u4e32\u53e3\u5916\u63a5\u8bb0\u5f55\u4eea\u5668\u8bb0\u5f55\uff08\u4f8b\u5982Openlog\uff09\uff0c\u5148\u901a\u8fc7\u4e32\u53e3\u9875\u9762\u8bbe\u7f6e\u5728\u4f7f\u7528"
+        "message": "你可以用过串口外接记录设备来记录日志（例如Openlog）。需要在串口设置页设置相应的串口。"
     },
     "sdcardNote": {
-        "message": "\u98de\u884c\u6570\u636e\u53ef\u4ee5\u4fdd\u5b58\u5230\u677f\u8f7d\u7684SD \u5361"
+        "message": "飞行数据可以保存到板载的SD卡槽。"
     },
     "dataflashUsedSpace": {
-        "message": "\u5df2\u7528\u7a7a\u95f4"
+        "message": "已用空间"
     },
     "dataflashFreeSpace": {
-        "message": "\u53ef\u7528\u7a7a\u95f4"
+        "message": "可用空间"
     },
     "dataflashUnavSpace": {
-        "message": "\u4e0d\u53ef\u7528\u7a7a\u95f4"
+        "message": "不可用空间"
     },
     "dataflashLogsSpace": {
-        "message": "\u8bb0\u5f55\u53ef\u7528\u7a7a\u95f4"
+        "message": "记录可用空间"
     },
     "dataflashNote": {
-        "message": "\u98de\u884c\u6570\u636e\u53ef\u4ee5\u4fdd\u5b58\u5230\u677f\u8f7d\u7684\u95ea\u5b58\u5185"
+        "message": "飞行数据可以保存到板载的闪存内。"
     },
     "dataflashNotPresentNote": {
-        "message": "\u98de\u63a7\u4e0d\u77e5\u9053\u4efb\u4f55\u9ed1\u5323\u5b50\u8bbe\u5907"
+        "message": "你的飞控没有可用的闪存芯片。"
     },
     "dataflashFirmwareUpgradeRequired": {
-        "message": "\u677f\u8f7d\u95ea\u5b58\u9700\u8981\u56fa\u4ef6\u7248\u672c\u5927\u4e8e1.8.0."
+        "message": "板载闪存需要固件版本大于1.8.0."
     },
     "dataflashButtonSaveFile": {
-        "message": "\u4fdd\u5b58\u95ea\u5b58\u6570\u636e\u5230\u6587\u4ef6"
+        "message": "保存闪存数据到文件"
     },
     "dataflashButtonErase": {
-        "message": "\u64e6\u9664\u95ea\u5b58"
+        "message": "擦除闪存"
     },
     "dataflashConfirmEraseTitle": {
-        "message": "\u786e\u8ba4\u64e6\u9664\u95ea\u5b58"
+        "message": "确认擦除闪存"
     },
     "dataflashConfirmEraseNote": {
-        "message": "\u5c06\u4f1a\u64e6\u9664\u95ea\u5b58\u91cc\u9762\u4fdd\u5b58\u7684\u6240\u6709\u6570\u636e\uff0c\u53ef\u80fd\u4f1a\u9700\u898120\u79d2\u5de6\u53f3\u6765\u64e6\u9664\u3002 \u786e\u5b9a\u64e6\u9664\uff1f"
+        "message": "将会擦除闪存里面保存的所有数据，耗时20秒左右，确定继续？"
     },
     "dataflashSavingTitle": {
-        "message": "\u6b63\u5728\u4fdd\u5b58\u95ea\u5b58\u6570\u636e\u5230\u6587\u4ef6"
+        "message": "正在保存闪存数据到文件"
     },
     "dataflashSavingNote": {
-        "message": "\u4fdd\u5b58\u95ea\u5b58\u6570\u636e\u5230\u6587\u4ef6\u53ef\u80fd\u4f1a\u8d85\u8fc7\u51e0\u5206\u949f\uff0c\u8bf7\u7b49\u5f85\u3002"
+        "message": "保存闪存数据到文件可能会需要几分钟，请等待。"
     },
     "dataflashSavingNoteAfter": {
-        "message": "\u4fdd\u5b58\u6210\u529f\uff0c\u70b9\u51fb \u201c\u786e\u8ba4\u201d \u7ee7\u7eed"
+        "message": "保存成功，点击 “确认” 继续"
     },
     "dataflashButtonSaveCancel": {
-        "message": "\u53d6\u6d88"
+        "message": "取消"
     },
     "dataflashButtonSaveDismiss": {
-        "message": "\u786e\u8ba4"
+        "message": "确认"
     },
     "dataflashButtonEraseConfirm": {
-        "message": "\u64e6\u9664\u95ea\u5b58"
+        "message": "确认擦除"
     },
     "dataflashButtonEraseCancel": {
-        "message": "\u53d6\u6d88"
+        "message": "取消"
     },
     "dataflashFileWriteFailed": {
-        "message": "\u5199\u5165\u6587\u4ef6\u5931\u8d25\uff0c\u8bf7\u786e\u8ba4\u6587\u4ef6\u548c\u6587\u4ef6\u5939\u6743\u9650"
+        "message": "写入文件失败，请确认文件和文件夹权限。"
     },
     "sdcardStatusNoCard": {
-        "message": "\u65e0SD \u5361"
+        "message": "无SD卡"
     },
     "sdcardStatusReboot": {
-        "message": "\u9519\u8bef<br>\u91cd\u542f\u98de\u63a7\u518d\u8bd5"
+        "message": "致命错误<br>重启后再试"
     },
     "sdcardStatusReady": {
-        "message": "SD \u5361\u5c31\u7eea"
+        "message": "SD 卡就绪"
     },
     "sdcardStatusStarting": {
-        "message": "SD \u5361\u5c31\u7eea\u4e2d"
+        "message": "SD 卡正在就绪……"
     },
     "sdcardStatusFileSystem": {
-        "message": "\u6587\u4ef6\u7cfb\u7edf\u5c31\u7eea\u4e2d"
+        "message": "文件系统正在就绪……"
     },
     "sdcardStatusUnknown": {
-        "message": "\u672a\u77e5\u72b6\u6001 $1"
+        "message": "未知状态 $1"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "\u53d1\u5e03\u4fe1\u606f"
+        "message": "发布信息"
     },
     "firmwareFlasherReleaseName": {
-        "message": "\u540d\u5b57\/\u7248\u672c\uff1a"
+        "message": "名称\/版本："
     },
     "firmwareFlasherReleaseVersionUrl": {
-        "message": "\u8bbf\u95ee\u53d1\u5e03\u4fe1\u606f\u9875\u9762"
+        "message": "访问发布信息页面"
     },
     "firmwareFlasherReleaseNotes": {
-        "message": "\u53d1\u5e03\u8bf4\u660e\uff1a"
+        "message": "发布说明："
     },
     "firmwareFlasherReleaseDate": {
-        "message": "\u65e5\u671f\uff1a"
+        "message": "日期："
     },
     "firmwareFlasherReleaseStatus": {
-        "message": "\u72b6\u6001\uff1a"
+        "message": "状态："
     },
     "firmwareFlasherReleaseTarget": {
-        "message": "\u98de\u63a7\u76ee\u6807"
+        "message": "飞控目标"
     },
     "firmwareFlasherReleaseFile": {
-        "message": "\u4e8c\u8fdb\u5236"
+        "message": "二进制"
     },
     "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\">\u91cd\u8981: \u9009\u62e9\u7684\u56fa\u4ef6\u7248\u672c\u662f\u6d4b\u8bd5\u7248\u672c\uff0c\u5982\u679c\u53d1\u73b0\u4efb\u4f55\u95ee\u9898\uff0c\u8bf7\u7acb\u5373\u53cd\u9988\u7ed9\u5f00\u53d1\u8005<\/span>"
+        "message": "<span class=\"message-negative\">重要：选择的固件是候选的发布版本，如果发现任何问题，请立即反馈给开发者。<\/span>"
     },
     "firmwareFlasherReleaseFileUrl": {
-        "message": "\u624b\u52a8\u4e0b\u8f7d"
+        "message": "手动下载"
     },
     "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">\u91cd\u8981<\/span>: \u8bf7\u9009\u62e9\u98de\u63a7\u5bf9\u5e94\u7684\u7248\u672c\u56fa\u4ef6\uff0c\u5982\u679c\u70e7\u5199\u9519\u8bef\u7684\u56fa\u4ef6\u5c06\u4f1a\u5bfc\u81f4 <span class=\"message-negative\">\u5f02\u5e38<\/span>."
+        "message": "<span class=\"message-negative\">重要<\/span>：请选择飞控对应的版本固件，如果烧写错误的固件将会导致 <span class=\"message-negative\">糟糕<\/span> 的事发生。"
     },
     "firmwareFlasherPath": {
-        "message": "\u8def\u5f84\uff1a"
+        "message": "路径："
     },
     "firmwareFlasherSize": {
-        "message": "\u5927\u5c0f\uff1a"
+        "message": "大小："
     },
     "firmwareFlasherStatus": {
-        "message": "\u72b6\u6001\uff1a"
+        "message": "状态："
     },
     "firmwareFlasherProgress": {
-        "message": "\u8fdb\u5ea6\uff1a"
+        "message": "进度："
     },
     "firmwareFlasherLoadFirmwareFile": {
-        "message": "\u8bf7\u8f7d\u5165\u56fa\u4ef6\u6587\u4ef6"
+        "message": "请载入固件文件"
     },
     "firmwareFlasherNoReboot": {
-        "message": "\u65e0\u91cd\u542f\u987a\u5e8f"
+        "message": "无重启序列"
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "\u9009\u62e9\u6b63\u786e\u98de\u63a7\u540d\u5b57\u6765\u663e\u793a\u6700\u65b0\u53d1\u5e03\u7684\u56fa\u4ef6"
+        "message": "选择你的飞控型号"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": "\u9009\u62e9\u98de\u63a7\u56fa\u4ef6\u7248\u672c"
+        "message": "选择对应你飞控型号的固件版本"
     },
     "firmwareFlasherNoRebootDescription": {
-        "message": "\u5982\u679c\u98de\u63a7\u7684boot\u5f15\u811a\u6216\u8005boot\u6309\u952e\u6309\u4e0b\uff0c\u8bf7\u9009\u62e9\u6b64\u9879"
+        "message": "如果你的飞控已经处于boot模式下则启用这个选项。比如你在插电时已经短接了飞控的boot引脚或者按住了boot按钮。"
     },
     "firmwareFlasherFlashOnConnect": {
-        "message": "\u5f53\u98de\u63a7\u8fde\u63a5\u65f6\uff0c\u81ea\u52a8\u66f4\u65b0\u56fa\u4ef6"
+        "message": "当飞控连接时自动烧录固件"
     },
     "firmwareFlasherFlashOnConnectDescription": {
-        "message": "\u5c1d\u8bd5\u81ea\u52a8\u66f4\u65b0\u98de\u63a7\u56fa\u4ef6\uff08\u5f53\u53d1\u73b0\u65b0\u7684\u4e32\u53e3\u8fde\u63a5\u4e0a\uff09"
+        "message": "当发现新的串口设备时尝试自动烧录固件"
     },
     "firmwareFlasherFullChipErase": {
-        "message": "\u64e6\u9664\u6574\u4e2a\u82af\u7247\uff08\u4f1a\u4e22\u5931\u6240\u6709\u4ee5\u524d\u7684\u98de\u63a7\u8bbe\u7f6e\uff09"
+        "message": "全盘擦除（会丢失所有设置）"
     },
     "firmwareFlasherFullChipEraseDescription": {
-        "message": "\u64e6\u9664\u6240\u6709\u98de\u63a7\u4e0a\u4ee5\u4fdd\u5b58\u7684\u8bbe\u7f6e"
+        "message": "擦除保存在飞控上的所有设置"
     },
     "firmwareFlasherFlashDevelopmentFirmware": {
-        "message": "\u4f7f\u7528\u6d4b\u8bd5\u7248\u672c\u56fa\u4ef6"
+        "message": "使用测试版本固件"
     },
     "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": "\u70e7\u5199\u6700\u65b0\uff08\u6ca1\u6709\u7ecf\u8fc7\u6d4b\u8bd5\uff09\u56fa\u4ef6"
+        "message": "烧录最新（没有经过测试）的固件"
     },
     "firmwareFlasherManualPort": {
-        "message": "\u7aef\u53e3"
+        "message": "端口"
     },
     "firmwareFlasherManualBaud": {
-        "message": "\u624b\u52a8\u6ce2\u7279\u7387"
+        "message": "手动设置波特率"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "\u5982\u679c\u98de\u63a7\u4e0d\u652f\u6301\u9ed8\u8ba4\u70e7\u5199\u6570\u636e\uff0c\u6216\u8005\u901a\u8fc7\u84dd\u7259\u6a21\u5757\u6765\u70e7\u5199\uff0c\u53ef\u4ee5\u901a\u8fc7\u624b\u52a8\u8bbe\u7f6e\u6ce2\u7279\u7387\u3002<br \/><span class=\"message-negative\">\u6ce8\u610f:<\/span> \u540c\u65f6\u7528DFU \u6a21\u5f0f\u70e7\u5199\uff0c\u8be5\u9009\u9879\u65e0\u6548"
+        "message": "如果飞控不支持默认的波特率，或者要通过蓝牙模块来烧录，可以手动设置波特率。<br \/><span class=\"message-negative\">注意：<\/span> USB DFU 烧录时该选项无效。"
     },
     "firmwareFlasherBaudRate": {
-        "message": "\u6ce2\u7279\u7387"
+        "message": "波特率"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "\u663e\u793a\u4e0d\u7a33\u5b9a\u56fa\u4ef6"
+        "message": "显示测试固件"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "\u663e\u793a\u6d4b\u8bd5\u7248\u672c\u56fa\u4ef6"
+        "message": "显示测试版本固件"
     },
     "firmwareFlasherOptionLoading": {
-        "message": "\u52a0\u8f7d\u4e2d"
+        "message": "加载中……"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": "\u9009\u62e9\u56fa\u4ef6\/\u98de\u63a7"
+        "message": "选择固件\/飞控板"
     },
     "firmwareFlasherOptionLabelSelectBoard": {
-        "message": "\u9009\u62e9\u98de\u63a7\u677f"
+        "message": "选择飞控板"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersion": {
-        "message": "\u9009\u62e9\u56fa\u4ef6\u7248\u672c"
+        "message": "选择固件版本"
     },
     "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
-        "message": "\u9009\u62e9\u56fa\u4ef6\u7248\u672c"
+        "message": "选择固件版本"
     },
     "firmwareFlasherButtonLoadLocal": {
-        "message": "\u52a0\u8f7d\u672c\u5730\u56fa\u4ef6"
+        "message": "从本地电脑加载固件"
     },
     "firmwareFlasherButtonLoadOnline": {
-        "message": "\u4ece\u7f51\u7edc\u52a0\u8f7d\u56fa\u4ef6"
+        "message": "从网络加载固件"
     },
     "firmwareFlasherButtonDownloading": {
-        "message": "\u4e0b\u8f7d\u4e2d..."
+        "message": "下载中..."
     },
     "firmwareFlasherFlashFirmware": {
-        "message": "\u70e7\u5199\u56fa\u4ef6"
+        "message": "烧写固件"
     },
     "firmwareFlasherGithubInfoHead": {
-        "message": "GitHub \u56fa\u4ef6\u4fe1\u606f"
+        "message": "GitHub 固件信息"
     },
     "firmwareFlasherCommiter": {
-        "message": "\u63d0\u4ea4\u8005\uff1a"
+        "message": "提交者："
     },
     "firmwareFlasherDate": {
-        "message": "\u65e5\u671f\uff1a"
+        "message": "日期："
     },
     "firmwareFlasherHash": {
         "message": "Hash:"
     },
     "firmwareFlasherUrl": {
-        "message": "\u6253\u5f00Gihub\u67e5\u770b\u8be5\u56fa\u4ef6\u53d1\u5e03\u4fe1\u606f"
+        "message": "打开Gihub查看该提交……"
     },
     "firmwareFlasherMessage": {
-        "message": "\u4fe1\u606f\uff1a"
+        "message": "信息："
     },
     "firmwareFlasherWarningText": {
-        "message": "\u8bf7<span class=\"message-negative\">\u4e0d\u8981<\/span>\u5c1d\u8bd5\u70e7\u5199<strong>Betaflight\u4e0d\u652f\u6301\u7684\u98de\u63a7<\/strong>.\u70e7\u5199\u56fa\u4ef6\u8fc7\u7a0b\u4e2d\u5343\u4e07<br \/>\u4e0d<span class=\"message-negative\">\u8981<\/span> <strong>\u65ad\u5f00\u8fde\u63a5\u98de\u63a7\u8fde\u63a5<\/strong> <strong>\u548c\u5173\u95ed\u7535\u8111<\/strong><br \/><br \/><strong>\u6ce8\u610f: <\/strong>STM32 \u7684bootloader\u50a8\u5b58\u5728ROM\u4e2d\uff0c\u6240\u4ee5\u4e0d\u4f1a\u6709\u53d8\u7816\u53ef\u80fd\u3002<br \/><strong>\u6ce8\u610f: \u5728\u4f60\u6253\u5f00\u56fa\u4ef6\u70e7\u5199\u9875\u9762<\/strong><span class=\"message-negative\">\u81ea\u52a8\u8fde\u63a5<\/span>\u4e0d\u53ef\u7528.<br \/><strong>\u6ce8\u610f: <\/strong>\u70e7\u5199\u56fa\u4ef6\u4f1a\u5f15\u8d77\u98de\u63a7\u6e05\u7a7a\u4fdd\u5b58\u7684\u8bbe\u7f6e\uff0c\u8bf7\u52a1\u5fc5\u5317\u975e\u597d\u4f60\u7684\u6570\u636e<br \/><strong>\u6ce8\u610f:<\/strong>\u5982\u679c\u70e7\u5199\u9047\u5230\u95ee\u9898 <strong>\u5c1d\u8bd5\u62d4\u6389\u8fde\u63a5\u5230\u98de\u63a7\u7684\u6240\u6709\u8fde\u63a5\u7ebf<\/strong> \u7136\u540e\u5c1d\u8bd5\u91cd\u542f\uff0c\u66f4\u65b0chrome \uff0c\u5347\u7ea7\u9a71\u52a8\u3002.<br \/><strong>\u6ce8\u610f:<\/strong> \u5f53\u4f7f\u7528USB\u76f4\u8fde\uff08VCP\uff09\u7684\u98de\u63a7\uff0c\uff08\u5927\u591a\u6570\u65b0\u7684\u98de\u63a7\uff09\u8bf7\u4ed4\u7ec6\u9605\u8bfbBetaflight\u624b\u518cUSB flashing\u90e8\u5206\u7ae0\u8282\uff0c\u5e76\u786e\u4fdd\u9a71\u52a8\u548c\u8f6f\u4ef6\u5df2\u6b63\u786e\u5b89\u88c5"
+        "message": "请<span class=\"message-negative\">不要<\/span>尝试烧写<strong>Betaflight不支持的飞控板<\/strong>。烧写固件过程中千万<br \/><span class=\"message-negative\">不要<\/span> <strong>断开连接飞控连接<\/strong> <strong>或关闭电脑<\/strong><br \/><br \/><strong>注意：<\/strong>STM32 的bootloader储存在ROM中，所以不会有变砖可能。<br \/><strong>注意：在固件烧写页面<\/strong><span class=\"message-negative\">自动连接<\/span>会被自动禁用。<br \/><strong>注意：<\/strong>烧写固件可能会清空设置，请务必先备份好你的数据。<br \/><strong>注意：<\/strong>如果烧写遇到问题，<strong>尝试拔掉连接到飞控的所有连线<\/strong> 然后尝试重启，更新地面站，升级驱动。<br \/><strong>注意：<\/strong>当使用虚拟USB（VCP）的飞控（大多数新的飞控都是），请仔细阅读Betaflight手册USB flashing部分章节，并确保驱动和软件已正确安装。"
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>\u98de\u63a7\u70e7\u5199\u5931\u8d25\u6062\u590d\/\u4e22\u5931\u6570\u636e\u8fde\u63a5<strong>"
+        "message": "<strong> 恢复\/丢失通信 <\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "\u5982\u679c\u98de\u63a7\u677f\u5931\u53bb\u901a\u4fe1\uff0c\u4f60\u53ef\u4ee5\u6309\u7167\u4ee5\u4e0b\u7684\u51e0\u4e2a\u6b65\u9aa4\u6765\u6062\u590d\uff1a<ul><li>\u5173\u95ed\u7535\u6e90<\/li><li>\u6253\u5f00'\u65e0\u91cd\u542f\u987a\u5e8f'\uff0c\u6253\u5f00\u2018\u64e6\u9664\u6574\u4e2a\u82af\u7247\u2018\u9009\u9879.<\/li><li>\u77ed\u63a5BOOT\u5f15\u811a\uff0c\u6216\u8005\u6309\u4f4fBOOT \u6309\u952e.<\/li><li>\u4e0a\u7535(\u5982\u679c\u64cd\u4f5c\u6b63\u786e\uff0c\u98de\u63a7\u677f\u5c06\u4e0d\u4f1a\u6709LED\u95ea\u70c1).<\/li><li>\u5982\u679c\u9700\u8981\u8bf7\u5b89\u88c5STM32 \u9a71\u52a8\u548cZadig if(\u53c2\u9605Betaflight manual<a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> \u90e8\u5206 ).<\/li><li>\u5173\u95edBefaflight\u8f6f\u4ef6\uff0c\u5173\u95ed\u6240\u6709Chrome\u5e94\u7528\uff0c\u7136\u540e\u91cd\u65b0\u542f\u52a8Betaflight.<\/li><li>\u91ca\u653eBOOT\u6309\u952e\uff0c\u5982\u679c\u98de\u63a7\u6709\u8be5\u6309\u952e.<\/li><li>\u70e7\u5199\u6b63\u786e\u7684\u56fa\u4ef6(\u53c2\u7167\u98de\u63a7\u5382\u5546\u5236\u5b9a\u7684\u98de\u63a7\u56fa\u4ef6).<\/li><li>\u5173\u95ed\u7535\u6e90.<\/li><li>\u79fb\u9664BOOT\u5f15\u811a\u7684\u77ed\u63a5.<\/li><li>\u4e0a\u7535(\u98de\u63a7LED \u5e94\u8be5\u4f1a\u95ea\u70c1).<\/li><li>\u6b63\u5e38\u8fde\u63a5.<\/li><\/ul>"
+        "message": "如果飞控板失去通信，你可以按照以下的几个步骤来恢复：<ul><li>关闭电源<\/li><li>打开'无重启序列'，打开‘擦除整个芯片‘选项。<\/li><li>短接BOOT引脚，或者按住BOOT 按键。<\/li><li>上电(如果操作正确，飞控的“活动”灯不会闪烁)。<\/li><li>如果需要请安装STM32 驱动和Zadig if(参阅Betaflight手册<a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> 部分 ).<\/li><li>关闭Befaflight软件，关闭所有Chrome应用，然后重新启动Betaflight。<\/li><li>释放BOOT按键（如有）。<\/li><li>烧写正确的固件(参照飞控厂商制定的波特率)。<\/li><li>断电。<\/li><li>移除BOOT引脚的短接。<\/li><li>上电(飞控“活动”灯应该会闪烁).<\/li><li>正常连接。<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
-        "message": "\u5173\u95ed\u56fa\u4ef6\u70e7\u5199"
+        "message": "关闭固件烧写"
     },
     "firmwareFlasherFirmwareNotLoaded": {
-        "message": "\u6ca1\u6709\u52a0\u8f7d\u56fa\u4ef6"
+        "message": "没有加载固件"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "已加载本地固件: ($ 1 字节)"
     },
     "firmwareFlasherHexCorrupted": {
-        "message": "HEX\u6587\u4ef6\u635f\u574f"
+        "message": "HEX文件似乎已损坏"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": "<span class=\"message-positive\">\u56fa\u4ef6\u52a0\u8f7d\u6210\u529f, \u51c6\u5907\u70e7\u5f55<\/span>"
+        "message": "<span class=\"message-positive\">固件加载成功，可供烧录<\/span>"
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
-        "message": "\u52a0\u8f7d\u56fa\u4ef6\u5931\u8d25"
+        "message": "加载固件失败"
     },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": "<b>\u6ca1\u6709\u627e\u5230\u9009\u62e9\u7684\u56fa\u4ef6<\/b>"
+        "message": "<b>没有找到选择的固件<\/b>"
     },
     "firmwareFlasherNoValidPort": {
-        "message": "<span class=\"message-negative\">\u8bf7\u9009\u62e9\u6709\u6548\u7684\u4e32\u53e3<\/span>"
+        "message": "<span class=\"message-negative\">请选择有效的串口<\/span>"
     },
     "firmwareFlasherWritePermissions": {
-        "message": "\u6ca1\u6709\u8be5\u6587\u4ef6 <span class=\"message-negative\">\u5199\u7684\u6743\u9650<\/span>"
+        "message": "没有该文件的<span class=\"message-negative\">写入<\/span>权限"
     },
     "firmwareFlasherFlashTrigger": {
-        "message": "\u68c0\u6d4b\u5230\u98de\u63a7: <strong>$1<\/strong> - \u5f00\u59cb\u81ea\u52a8\u8fde\u63a5\u70e7\u5f55"
+        "message": "检测到飞控：<strong>$1<\/strong> - 正在触发自动烧录"
     },
     "firmwareFlasherPreviousDevice": {
-        "message": "\u68c0\u6d4b\u5230\u98de\u63a7\uff1a<strong>$1<\/strong> - \u56fa\u4ef6\u70e7\u5199\u6b63\u5728\u70e7\u5199\u98de\u63a7\uff0c\u8bf7\u91cd\u65b0\u63d2\u5165\u91cd\u8bd5"
+        "message": "检测到：<strong>$1<\/strong> - 仍在烧录前一个设备，请稍后重新插入再试一次。"
     },
     "ledStripHelp": {
-        "message": "\u98de\u63a7\u53ef\u4ee5\u63a7\u5236\u5355\u72ec\u6216\u8005\u591a\u4e2aLED \u706f\u5e26\u3002.<br \/>\u5148\u8bbe\u7f6e\u7f51\u683c\u8bbe\u7f6eLED\uff0c\u7136\u540e\u914d\u7f6eLED\u5e03\u7ebf\u987a\u5e8f\uff0c\u6700\u540e\u6309\u7167\u7f51\u683c\u4e0aLED\u4f4d\u7f6e\u548c\u5e03\u7ebf\u987a\u5e8f\u5b89\u88c5\u5230\u98de\u673a\u4e0a\u3002\u6ca1\u6709\u8bbe\u7f6e\u5e03\u7ebf\u987a\u5e8f\u7684LED\u5c06\u65e0\u6cd5\u4fdd\u5b58.<br \/>"
+        "message": "飞控可以控制LED灯带上的每一个灯珠的颜色和效果。<br \/>配置灯珠的位置，连线的顺序，然后按位置将灯带接入。没有设置过接线顺序的灯珠设置不会被保存。<br \/>在一个颜色上双击可编辑HSV值。"
     },
     "ledStripButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
+    },
+    "ledStripColorSetupTitle": {
+        "message": "颜色设置",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "剩余",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "清除已选定",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "全部清除",
+        "description": "In the LED STRIP, clear all leds"
     },
     "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">\u5df2\u4fdd\u5b58<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "ledStripVtxOverlay": {
-        "message": "\u56fe\u4f20(\u4f7f\u7528\u56fe\u4f20\u9891\u7387\u6765\u8bbe\u7f6eLED\u989c\u8272)"
+        "message": "图传(颜色根据图传频率而变化)"
     },
     "ledStripFunctionSection": {
-        "message": "LED \u529f\u80fd"
+        "message": "LED 功能"
     },
     "ledStripFunctionTitle": {
-        "message": "\u529f\u80fd"
+        "message": "功能"
+    },
+    "ledStripFunctionNoneOption": {
+        "message": "无",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "颜色",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "模式和方向",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "锁定状态",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "电池",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "环",
+        "description": "One of the modes of the Led Strip"
     },
     "ledStripColorModifierTitle": {
-        "message": "\u989c\u8272\u4fee\u6539\u5668"
+        "message": "颜色修改器"
     },
-    "ledStripThrottleFunction": {
-        "message": "\u6cb9\u95e8"
+    "ledStripModeColorsTitle": {
+        "message": "模式颜色"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "方向",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "无头模式",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizon",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Angle",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "磁力仪",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "气压计",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "北",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "南",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "西",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "东",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "上",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "下",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "LED 方向（“模式和方向”）和颜色",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "特殊颜色",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "已锁定",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "已解锁",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "动画",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "闪烁背景",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: 无卫星",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: 未锁定",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: 已锁定",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "LED 灯带布线",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "布线模式",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "清除已选定",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "清除所有布线",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "没有布线序号的 LED 不会被保存。",
+        "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
-        "message": "\u5de6\u53f3\u626b\u63cf"
+        "message": "左右扫描"
     },
     "ledStripBlinkTitle": {
-        "message": "\u95ea\u70c1"
+        "message": "闪烁"
     },
     "ledStripBlinkAlwaysOverlay": {
-        "message": "\u6301\u7eed\u95ea\u70c1"
+        "message": "持续闪烁"
     },
     "ledStripBlinkLandingOverlay": {
-        "message": "\u7740\u9646\u95ea\u70c1"
+        "message": "着陆时闪烁"
     },
     "ledStripOverlayTitle": {
-        "message": "\u53e0\u52a0"
+        "message": "叠加"
     },
     "ledStripWarningsOverlay": {
-        "message": "\u8b66\u544a"
+        "message": "警告"
     },
     "ledStripIndecatorOverlay": {
-        "message": "\u6307\u793a\u706f"
+        "message": "指示灯"
     },
     "colorBlack": {
-        "message": "\u9ed1\u8272"
+        "message": "黑色"
     },
     "colorWhite": {
-        "message": "\u767d\u8272"
+        "message": "白色"
     },
     "colorRed": {
-        "message": "\u7ea2\u8272"
+        "message": "红色"
     },
     "colorOrange": {
-        "message": "\u6a58\u8272"
+        "message": "橙色"
     },
     "colorYellow": {
-        "message": "\u9ec4\u8272"
+        "message": "黄色"
     },
     "colorLimeGreen": {
-        "message": "\u6a59\u7eff\u8272"
+        "message": "橙绿色"
     },
     "colorGreen": {
-        "message": "\u7eff\u8272"
+        "message": "绿色"
     },
     "colorMintGreen": {
-        "message": "\u8584\u8377\u7eff"
+        "message": "薄荷绿"
     },
     "colorCyan": {
-        "message": "\u9752\u8272"
+        "message": "青色"
     },
     "colorLightBlue": {
-        "message": "\u6d45\u84dd\u8272"
+        "message": "浅蓝色"
     },
     "colorBlue": {
-        "message": "\u84dd\u8272"
+        "message": "蓝色"
     },
     "colorDarkViolet": {
-        "message": "\u6697\u7d2b\u8272"
+        "message": "暗紫色"
     },
     "colorMagenta": {
-        "message": "\u54c1\u7ea2\u8272"
+        "message": "品红色"
     },
     "colorDeepPink": {
-        "message": "\u6df1\u7c89\u7ea2"
+        "message": "深粉红"
     },
     "controlAxisRoll": {
-        "message": "\u6a2a\u6edaA"
+        "message": "横滚 [A]"
     },
     "controlAxisPitch": {
-        "message": "\u4fef\u4ef0 E"
+        "message": "俯仰 [E]"
     },
     "controlAxisYaw": {
-        "message": "\u65b9\u5411 R"
+        "message": "方向 [R]"
     },
     "controlAxisThrottle": {
-        "message": "\u6cb9\u95e8 T"
+        "message": "油门 [T]"
     },
     "controlAxisAux1": {
         "message": "AUX 1"
@@ -2254,927 +2461,927 @@
         "message": "AUX 16"
     },
     "pidTuningBasic": {
-        "message": "\u57fa\u672c\/\u624b\u52a8\u6a21\u5f0f"
+        "message": "基本\/手动模式"
     },
     "pidTuningYawJumpPrevention": {
-        "message": "\u9632\u6b62\u65b9\u5411\u6447\u6746\u5f15\u8d77\u98de\u673a\u9ad8\u5ea6\u53d8\u5316"
+        "message": "抑制 Yaw Jump"
     },
     "pidTuningYawJumpPreventionHelp": {
-        "message": "\u5728\u5b8c\u6210\u65b9\u5411\u6447\u6746\u52a8\u4f5c\u65f6\u4fdd\u6301\u98de\u673a\u9ad8\u5ea6\u4e0d\u53d8\uff0c\u6570\u503c\u8d8a\u5927\uff0c\u529f\u80fd\u4f5c\u7528\u8d8a\u5927\u3002"
+        "message": "抑制飞机在转向结束时的高度跳动。数值越高，抑制效果越强。"
     },
     "pidTuningRcExpoPower": {
-        "message": "RC \u66f2\u7ebf\u6743\u91cd"
+        "message": "RC 曲线权重"
     },
     "pidTuningRcExpoPowerHelp": {
-        "message": "The exponent that is used when calculating RC Expo. In Betaflight versions prior to 3.0, value is fixed at 3."
+        "message": "该指数用以计算RC Expo。在 Betaflight 3.0版本之前，该值固定为3。"
     },
     "pidTuningLevel": {
-        "message": "\u89d2\u5ea6\/\u6c34\u5e73"
+        "message": "角度\/水平"
     },
     "pidTuningAltitude": {
-        "message": "\u9ad8\u5ea6\u8ba1\u548c\u58f0\u5450\/\u9ad8\u5ea6"
+        "message": "气压计和声呐\/高度"
     },
     "pidTuningMag": {
-        "message": "\u78c1\u573a\u8ba1\/\u671d\u5411"
+        "message": "磁场计\/朝向"
     },
     "pidTuningGps": {
-        "message": "GPS\u5bfc\u822a"
+        "message": "GPS 导航"
     },
     "pidTuningStrength": {
-        "message": "\u5f3a\u5ea6"
+        "message": "强度"
     },
     "pidTuningTransition": {
-        "message": "\u8fc7\u6e21"
+        "message": "过渡"
     },
     "pidTuningHorizon": {
-        "message": "\u6c34\u5e73\u6a21\u5f0f"
+        "message": "Horizon 模式"
     },
     "pidTuningAngle": {
-        "message": "\u89d2\u5ea6\u6a21\u5f0f"
+        "message": "Angle 模式"
     },
     "pidTuningLevelAngleLimit": {
-        "message": "\u89d2\u5ea6\u9650\u5236"
+        "message": "角度限制"
     },
     "pidTuningLevelSensitivity": {
-        "message": "\u654f\u611f\u5ea6"
+        "message": "敏感度"
     },
     "pidTuningLevelHelp": {
-        "message": "\u4ee5\u4e0b\u503c\u5e94\u7528\u4e8e\u6c34\u5e73\u6a21\u5f0f\u548c\u89d2\u5ea6\u6a21\u5f0f\u3002\u4e0d\u540c\u7684PID\u63a7\u5236\u5668\u5bf9\u8be5\u503c\u7684\u8981\u6c42\u6570\u503c\u4f1a\u4e0d\u4e00\u6837\u3002\u8bf7\u53c2\u9605\u5177\u4f53\u6587\u6863\u8bf4\u660e"
+        "message": "以下值会改变 ANGLE 模式和 HORIZON 模式下的行为表现。不同的PID控制器对该值的要求数值会不一样。具体请参阅文档。"
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "\u72ec\u7acb\u4e0e\u914d\u7f6e\u6587\u4ef6\u7684\u6ee4\u6ce2\u5668\u8bbe\u7f6e"
+        "message": "独立于配置文件的滤波器设置"
     },
     "pidTuningGyroLowpassFrequency": {
-        "message": "\u9640\u87ba\u4eea\u8f6f\u4ef6\u4f4e\u901a\u6ee4\u6ce2\u9891\u7387[Hz]"
+        "message": "陀螺仪软件低通滤波频率[Hz]"
     },
     "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "\u9640\u87ba\u4eea\u8f6f\u4ef6\u4f4e\u901a\u6ee4\u6ce2\u9891\u7387[Hz]"
+        "message": "陀螺仪软件低通滤波频率[Hz]"
     },
     "pidTuningGyroNotch1Enable": {
-        "message": "\u6253\u5f00\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668 1"
+        "message": "启用陀螺仪陷波滤波器 1"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387[Hz]"
+        "message": "陀螺仪陷波滤波器频率[Hz]"
     },
     "pidTuningGyroNotch2Enable": {
-        "message": "\u6253\u5f00\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668 2"
+        "message": "启用陀螺仪陷波滤波器 2"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u56682 \u9891\u7387[Hz]"
+        "message": "陀螺仪陷波滤波器2 频率[Hz]"
     },
     "pidTuningGyroNotchFrequencyHelp": {
-        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387 Hz"
+        "message": "陀螺仪陷波滤波器频率 Hz"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u73871 [Hz]"
+        "message": "陀螺仪陷波滤波器截止频率1 [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u73872 [Hz]"
+        "message": "陀螺仪陷波滤波器截止频率2 [Hz]"
     },
     "pidTuningGyroNotchCutoffHelp": {
-        "message": "\u9640\u87ba\u4eea\u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u7387 Hz (\u8fd9\u662f\u9677\u6ce2\u6ee4\u6ce2\u5668\u5f00\u59cb\u9891\u7387\uff0c\u4e3e\u4f8b\uff0c\u5047\u5982\u9677\u6ce2\u6ee4\u6ce2\u5668\u8bbe\u7f6e160 \u548c\u9677\u6ce2\u9891\u7387\u5728260Hz\uff0c\u5728\u8303\u56f4160-360Hz\uff0c\u4e2d\u95f4\u9891\u7387\u8870\u51cf\u6700\u4e25\u91cd )"
+        "message": "陀螺仪陷波滤波器截止频率 Hz (这是陷波滤波器开始频率，举例，假如陷波滤波器设置为160Hz，陷波频率为260Hz，那么滤波范围就是160Hz-360Hz，中间频率衰减最严重)"
     },
     "pidTuningFilterSettings": {
-        "message": "\u6ee4\u6ce2\u5668\u8bbe\u7f6e"
+        "message": "滤波器设置"
     },
     "pidTuningDTermLowpassType": {
-        "message": "D-term \u4f4e\u901a\u6ee4\u6ce2\u5668"
+        "message": "D-term 低通滤波器"
     },
     "pidTuningDTermLowpassTypeTip": {
-        "message": "\u9009\u62e9D-Term\u4f4e\u901a\u6ee4\u6ce2\u5668\u7c7b\u578b\uff0c\u9ed8\u8ba4BIQUAD"
+        "message": "选择 D-Term 低通滤波器类型，默认是BIQUAD。"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "D Term \u4f4e\u901a\u9891\u7387 [Hz]"
+        "message": "D Term 低通频率 [Hz]"
     },
     "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "D Term \u4f4e\u901a\u9891\u7387  [Hz] (0 \u8868\u793a\u5173\u95ed)"
+        "message": "D Term 低通频率 [Hz] (0 表示禁用)"
     },
     "pidTuningDTermNotchEnable": {
-        "message": "\u6253\u5f00 D Term \u9677\u6ce2\u6ee4\u6ce2\u5668"
+        "message": "启用 D Term 陷波滤波器"
     },
     "pidTuningDTermNotchFrequency": {
-        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387 [Hz]"
+        "message": "D Term 陷波滤波器频率 [Hz]"
     },
     "pidTuningDTermNotchFrequencyHelp": {
-        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u9891\u7387 [Hz] (0 \u8868\u793a\u5173\u95ed)"
+        "message": "D Term 陷波滤波器频率 [Hz] (0 表示禁用)"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u7387 [Hz]"
+        "message": "D Term 陷波滤波器截止频率 [Hz]"
     },
     "pidTuningDTermNotchCutoffHelp": {
-        "message": "D Term \u9677\u6ce2\u6ee4\u6ce2\u5668\u622a\u6b62\u9891\u7387 Hz (\u8fd9\u662f\u9677\u6ce2\u6ee4\u6ce2\u5668\u5f00\u59cb\u9891\u7387\uff0c\u4e3e\u4f8b\uff0c\u5047\u5982\u9677\u6ce2\u6ee4\u6ce2\u5668\u8bbe\u7f6e160 \u548c\u9677\u6ce2\u9891\u7387\u5728260Hz\uff0c\u5728\u8303\u56f4160-360Hz\uff0c\u4e2d\u95f4\u9891\u7387\u8870\u51cf\u6700\u4e25\u91cd )"
+        "message": "D Term 陷波滤波器截止频率 Hz (这是陷波滤波器开始频率，举例，假如陷波滤波器设置为160Hz，陷波频率为260Hz，那么滤波范围就是160Hz-360Hz，中间频率衰减最严重)"
     },
     "pidTuningYawLowpassFrequency": {
-        "message": "\u65b9\u5411\u4f4e\u901a\u9891\u7387[Hz]"
+        "message": "方向轴低通滤波频率 [Hz]"
     },
     "pidTuningYawLowpassFrequencyHelp": {
-        "message": "\u65b9\u5411\u4f4e\u901a\u9891\u7387[Hz](\u65b9\u5411\u8f74\u6709\u65f6\u5019\u4f1a\u6bd4\u5176\u4ed6\u8f74\u66f4\u5bb9\u6613\u53d7\u9707\u52a8\u566a\u97f3\u5e72\u6270\uff0c\u8fd9\u4e2a\u6ee4\u6ce2\u5668\u4ec5\u4ec5\u5f71\u54cd\u65b9\u5411\u7684P \u6570\u503c)"
+        "message": "方向低通频率 [Hz] （方向轴有时候会比其他轴更容易受震动噪音干扰，这个滤波器仅仅影响方向的 P 值）"
     },
     "pidTuningVbatPidCompensation": {
-        "message": "\u7535\u6c60\u7535\u538bPID \u8865\u507f"
+        "message": "电池电压PID 补偿"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "\u5f53\u7535\u6c60\u7535\u538b\u53d8\u4f4e\u65f6\uff0c \u98de\u63a7\u81ea\u52a8\u589e\u52a0PID\u6570\u503c\u6765\u8865\u507f\u52a8\u529b\u7684\u635f\u5931\u3002\u8fd9\u4e2a\u529f\u80fd\u65e8\u5728\u66f4\u597d\u7684\u4fdd\u6301\u98de\u884c\u7279\u6027\u4e00\u81f4\u4e0d\u7ba1\u7535\u6c60\u662f\u6ee1\u7535\u8fd8\u662f\u7535\u6c60\u7535\u538b\u4f4e\u3002\u8fd9\u4e2a\u8865\u507f\u6570\u503c\u662f\u901a\u8fc7\u5728\u8bbe\u7f6e\u9875\u9762\u201c\u6700\u5927\u6bcf\u5757\u7535\u6c60\u7535\u538b\u201d \u6765\u8ba1\u7b97\u3002\u6b63\u786e\u7684\u8bbe\u7f6e\u6bcf\u5757\u7535\u6c60\u6700\u5927\u7535\u538b\u624d\u4f1a\u4f7f\u8be5\u529f\u80fd\u53d1\u6325\u5728\u5927\u4f5c\u7528\u3002"
+        "message": "当电池电压变低时， 飞控自动增加PID数值来补偿动力的损失。这会在整个飞行过程中提供一个更一致的飞行特性。该补偿数值通过在设置页面“最高单芯电压” 计算而得，所以请确保正确设置了该数值。"
     },
     "configHelp2": {
-        "message": "\u4efb\u610f\u65cb\u8f6c\u677f\u5b50\u5b89\u88c5\u89d2\u5ea6\uff0c\u5141\u8bb8\u98de\u63a7\u4efb\u610f\u952e\u5b89\u88c5\uff0c(\u6b63\u9762\uff0c\u4fa7\u9762\uff0c\u53cd\u9762\uff0c\u65cb\u8f6c)\u7b49\u7b49\u3002\u5f53\u4f7f\u7528\u5916\u90e8\u4f20\u611f\u5668\u65f6\uff0c\u8bf7\u4f7f\u7528\u4f20\u611f\u5668\u6821\u6b63(\u9640\u87ba\uff0c\u52a0\u901f\u5ea6\u8ba1\uff0c\u78c1\u573a\u8ba1)\u6765\u51b3\u5b9a\u4f20\u611f\u5668\u7684\u4f4d\u7f6e"
+        "message": "任意角度（直立，反转，旋转等）安装飞控板。当使用外部传感器时，请使用传感器校正设置(陀螺，加速度计，磁场计)来决定独立于飞控板的传感器位置。"
     },
     "failsafeFeaturesHelpOld": {
-        "message": "\u5931\u63a7\u4fdd\u62a4\u529f\u80fd\u4e00\u5927\u90e8\u5206\u6539\u5199\u3002\u8bf7\u4f7f\u7528Betaflight <strong>v1.12.0+<\/strong> \u6765\u8bbe\u7f6e\u66f4\u591a\u5931\u63a7\u4fdd\u62a4\u529f\u80fd"
+        "message": "失控保护功能被大量重做。请使用Betaflight <strong>v1.12.0+<\/strong> 来启用增强的失控保护设置页。"
     },
     "failsafePaneTitleOld": {
-        "message": "\u63a5\u6536\u673a\u5931\u63a7\u4fdd\u62a4"
+        "message": "接收机失控保护"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "\u5931\u63a7\u4fdd\u62a4\u6709\u4e24\u9636\u6bb5\u3002\u98de\u63a7\u5c06\u8fdb\u5165<strong>\u4e00\u9636\u5931\u63a7\u4fdd\u62a4<\/strong>\u5f53\u63a5\u6536\u673a\u901a\u9053\u6536\u5230\u65e0\u6548\u7684\u8109\u51b2\u957f\u5ea6\uff0c\u63a5\u6536\u673a\u51fa\u73b0\u5931\u63a7\u72b6\u6001\uff0c\u6216\u8005\u98de\u63a7\u6536\u4e0d\u5230\u63a5\u6536\u673a\u901a\u9053\u4fe1\u53f7\uff0c\u901a\u9053\u5c06\u4f1a\u5728<span class=\"message-negative\">\u6240\u6709\u901a\u9053<\/span>\u4f7f\u7528\u9884\u7f6e\u901a\u9053\u8bbe\u7f6e\u3002\u63d0\u4f9b\u77ed\u65f6\u95f4\u4e4b\u5185\u7684\u4fe1\u53f7\u6062\u590d\u3002\u98de\u63a7\u5c06\u8fdb\u5165<strong>\u4e8c\u4ef7\u5931\u63a7\u4fdd\u62a4<\/strong> \u5f53\u98de\u63a7<span class=\"message-negative\"> \u5f00\u9501<\/span>\u540e\uff0c\u98de\u63a7\u68c0\u6d4b\u5230\u9519\u8bef\u53d1\u751f\u65f6\u95f4\u8d85\u8fc7\u4e86\u8bbe\u7f6e\u7684\u65f6\u95f4\uff0c\u6240\u6709\u901a\u9053\u5c06\u4f1a\u4fdd\u6301\u5f53\u524d\u6570\u636e\uff0c\u76f4\u5230\u98de\u63a7\u91cd\u65b0\u542f\u52a8\u3002<br \/><strong>\u6ce8\u610f:<\/strong> \u5728\u98de\u63a7\u8fdb\u5165\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u4e4b\u524d\uff0c\u5982\u679cAUX \u901a\u9053\u51fa\u73b0\u65e0\u6548\u7684\u8109\u51b2\uff0c\u8be5\u901a\u9053\u4e00\u6837\u4f1a\u4f7f\u7528\u9884\u7f6e\u901a\u9053\u8bbe\u7f6e\u3002"
+        "message": "失控保护有两个阶段。当飞控在任一接收通道收到无效的脉冲长度，或者接收机汇报已失控，或者彻底没有收到接收机信号，飞控将进入<strong>一阶失控保护<\/strong>状态。飞控将会在<span class=\"message-negative\">所有通道<\/span>使用预置通道设置，如果短时间内信号恢复将可退出失控保护状态。在飞机处于<span class=\"message-negative\">解锁<\/span>状态，并且一阶失控保护模式持续时间超过了预设的时间，飞控将进入<strong>二价失控保护<\/strong>状态，所有通道将会保持当前输出。<br \/><strong>注意：<\/strong> 在飞控进入一阶失控保护之前，如果AUX 通道出现无效的脉冲，该通道一样会使用预置通道设置。"
     },
     "failsafePulsrangeTitle": {
-        "message": "\u65e0\u6548\u8109\u51b2\u8303\u56f4\u8bbe\u7f6e"
+        "message": "有效脉冲范围设置"
     },
     "failsafePulsrangeHelp": {
-        "message": "\u8109\u51b2\u957f\u5ea6\u5c0f\u4e8e\u6700\u5c0f\uff0c\u6216\u8005\u8d85\u8fc7\u6700\u5927\uff0c\u90fd\u4f1a\u8ba4\u4e3a\u662f\u65e0\u6548\u8109\u51b2\u3002\u5c06\u4f1a\u5f15\u8d77\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u3002"
+        "message": "脉冲长度小于最小，或者超过最大，都会被认为是无效脉冲。将会触发单个通道的预置设置覆盖，或引起一阶失控保护。"
     },
     "failsafeRxMinUsecItem": {
-        "message": "\u6700\u5c0f\u957f\u5ea6"
+        "message": "最小长度"
     },
     "failsafeRxMaxUsecItem": {
-        "message": "\u6700\u5927\u957f\u5ea6"
+        "message": "最大长度"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "\u9884\u7f6e\u901a\u9053\u8bbe\u7f6e"
+        "message": "预置通道设置"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "\u5f53\u8fdb\u5165\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u65f6\uff0c\u8fd9\u4e9b\u8bbe\u7f6e\u5c06\u4f1a\u5e94\u7528\u4e8e\u5355\u72ec\u65e0\u6548\u7684AUX \u901a\u9053\uff0c\u6216\u8005\u662f\u6240\u6709\u901a\u9053\u3002 <strong>\u6ce8\u610f:<\/strong>\u6570\u503c\u5c06\u4f1a\u5df2\u6bcf25\u5fae\u79d2\u4fdd\u5b58\uff0c\u5c0f\u4e8e25\u5fae\u79d2\u7684\u8bbe\u7f6e\u5c06\u4e0d\u4f1a\u4fdd\u5b58\u3002"
+        "message": "当进入一阶失控保护时，这些设置将会应用于单独无效的AUX 通道，或者是所有通道。<strong>注意：<\/strong>数值应是25us的整数倍，小于25us的设置会被上下取整。"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>\u81ea\u52a8<\/strong> \u6307\u7684\u662f \u6a2a\u6eda\uff0c\u4fef\u4ef0\uff0c\u65b9\u5411\u56de\u4e2d\uff0c\u6cb9\u95e8\u6700\u4f4e\u3002 <strong>\u4fdd\u6301<\/strong> \u6307\u7684\u662f \u6240\u6709\u901a\u9053\u4fdd\u6301\u6700\u540e\u63a5\u6536\u5230\u7684\u63a5\u6536\u673a\u6709\u6548\u6570\u636e"
+        "message": "<strong>自动<\/strong> 指的是 横滚、俯仰、方向都回中，油门最低。 <strong>保持<\/strong> 指的是 所有通道保持最后从接收机接收到的有效的数值。"
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>\u4fdd\u6301<\/strong>\u6307\u7684\u662f\u6240\u6709\u901a\u9053\u4fdd\u6301\u6700\u540e\u63a5\u6536\u5230\u7684\u63a5\u6536\u673a\u6709\u6548\u6570\u636e<strong>Set<\/strong> means the value given here will be used"
+        "message": "<strong>保持<\/strong>指的是 所有通道保持最后接收到的有效的数值。<strong>设置<\/strong> 指的是 通道使用在这里设定的值。"
     },
     "failsafeStageTwoSettingsTitle": {
-        "message": "\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4-\u8bbe\u7f6e"
+        "message": "二阶失控保护 - 设置"
     },
     "failsafeDelayItem": {
-        "message": "\u4e8c\u9636\u5931\u63a7\u4fdd\u62a4\u4fe1\u53f7\u4e22\u5931\u68c0\u6d4b\u65f6\u95f4[1 = 0.1 \u79d2.]"
+        "message": "触发二阶失控保护的信号丢失保护时间[1 = 0.1 秒.]"
     },
     "failsafeDelayHelp": {
-        "message": "\u4e00\u9636\u5931\u63a7\u4fdd\u62a4\u7b49\u5f85\u4fe1\u53f7\u6062\u590d\u65f6\u95f4"
+        "message": "一阶失控保护等待信号恢复时间"
     },
     "failsafeThrottleLowItem": {
-        "message": "\u5931\u63a7\u4fdd\u62a4\u6700\u4f4e\u6cb9\u95e8\u5ef6\u65f6[1 = 0.1 \u79d2.]"
+        "message": "低油门失控保护延迟 [1 = 0.1 秒]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "\u4e0a\u9501\u7535\u673a\uff0c\u5f53\u6cb9\u95e8\u5728\u6700\u4f4e\u8d85\u8fc7\u6539\u65f6\u95f4"
+        "message": "在油门保持低位超过该时间，不再执行失控保护措施转而直接锁定电机。"
     },
     "failsafeThrottleItem": {
-        "message": "\u964d\u843d\u65f6\u6cb9\u95e8\u5927\u5c0f"
+        "message": "降落时油门大小"
     },
     "failsafeOffDelayItem": {
-        "message": "\u5931\u63a7\u4fdd\u62a4\u8fc7\u7a0b\u4e2d\u7535\u673a\u5173\u95ed\u5ef6\u65f6 [1 = 0.1 \u79d2.]"
+        "message": "失控保护过程中关闭电机延时 [1 = 0.1 秒]"
     },
     "failsafeOffDelayHelp": {
-        "message": "\u4fdd\u6301\u964d\u843d\u6a21\u5f0f\u65f6\u95f4\uff0c\u77e5\u9053\u7535\u673a\u5173\u95ed\u6216\u8005\u98de\u63a7\u4e0a\u9501"
+        "message": "暂时保持在降落模式而不锁定电机的时间"
     },
     "failsafeSubTitle1": {
-        "message": "\u4e8c\u7ea7\u5931\u63a7\u4fdd\u62a4-\u5931\u63a7\u6267\u884c"
+        "message": "二阶失控保护措施"
     },
     "failsafeProcedureItemSelect1": {
-        "message": "\u7740\u843d"
+        "message": "降落"
     },
     "failsafeProcedureItemSelect2": {
-        "message": "\u5760\u843d"
+        "message": "坠落"
     },
     "failsafeKillSwitchItem": {
-        "message": "\u5f00\u5173\u5931\u63a7\u4fdd\u62a4(\u901a\u8fc7\u6a21\u5f0f\u9875\u9762\u8bbe\u7f6e\u5931\u63a7\u4fdd\u62a4\u5f00\u5173)"
+        "message": "失控保护开关 （在模式页面设置失控保护模式）"
     },
     "failsafeKillSwitchHelp": {
-        "message": "\u8bbe\u7f6e\u8fd9\u4e2a\u9009\u9879\u4f1a\u4f7f\u5931\u63a7\u4fdd\u62a4\u5f00\u5173(\u6a21\u5f0f\u9875\u9762\u8bbe\u7f6e)\u4f5c\u4e3a\u76f4\u63a5\u5173\u95ed\u5f00\u5173\uff0c\u5c06\u4f1a\u7ed5\u5f00\u6240\u6709\u7684\u5931\u63a7\u4fdd\u62a4\u68c0\u6d4b\u7a0b\u5e8f\u3002<strong>\u6ce8\u610f:<\/strong> \u5f53\u6253\u5f00\u5931\u63a7\u4fdd\u62a4\u5f00\u5173\u65f6\uff0c\u89e3\u9501\u5f00\u5173\u65e0\u6548"
+        "message": "设置这个选项会使失控保护开关(模式页面设置)作为直接关闭开关，将会绕开所有的失控保护检测程序。<strong>注意:<\/strong> 当打开失控保护开关时，解锁开关无效"
     },
     "powerButtonSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": "\u56fa\u4ef6\u66f4\u65b0 <span class=\"message-negative\">\u8981\u6c42<\/span>. \u7535\u6c60\u7535\u538b\u3001\u7535\u6d41\u901a\u8fc7API &lt; 1.33.0\u8bbe\u7f6e\u3002 (Betaflight \u7248\u672c&lt;= 3.17) \u5c06\u4e0d\u652f\u6301\u3002"
+        "message": "固件更新 <span class=\"message-negative\">要求<\/span>。 电池\/电流\/电压通过API &lt; 1.33.0 设置。 (Betaflight 版本&lt;= 3.17) 不支持。"
     },
     "powerBatteryVoltageMeterSource": {
-        "message": "\u7535\u538b\u4f20\u611f\u5668\u6765\u6e90"
+        "message": "电压计选择"
     },
     "powerBatteryVoltageMeterTypeNone": {
-        "message": "\u6ca1\u6709"
+        "message": "无"
     },
     "powerBatteryVoltageMeterTypeAdc": {
-        "message": "\u677f\u8f7d\u7535\u538b\u4f20\u611f\u5668"
+        "message": "板载传感器"
     },
     "powerBatteryVoltageMeterTypeEsc": {
-        "message": "\u7535\u8c03\u7535\u538b\u4f20\u611f"
+        "message": "电调传感器"
     },
     "powerBatteryCurrentMeterSource": {
-        "message": "\u7535\u6d41\u8ba1\u6765\u6e90"
+        "message": "电流计选择"
     },
     "powerBatteryCurrentMeterTypeNone": {
-        "message": "\u6ca1\u6709"
+        "message": "无"
     },
     "powerBatteryCurrentMeterTypeAdc": {
-        "message": "\u677f\u8f7d\u7535\u6d41\u4f20\u611f\u5668"
+        "message": "板载传感器"
     },
     "powerBatteryCurrentMeterTypeVirtual": {
-        "message": "\u6a21\u62df\u7535\u6d41\u4f20\u611f\u5668"
+        "message": "虚拟传感器"
     },
     "powerBatteryCurrentMeterTypeEsc": {
-        "message": "\u7535\u8c03\u7535\u6d41\u4f20\u611f\u5668"
+        "message": "电调传感器"
     },
     "powerBatteryCurrentMeterTypeMsp": {
-        "message": "MSP \u4f20\u611f\u5668\/OSD \u4ece\u673a"
+        "message": "MSP 传感器\/OSD 从机"
     },
     "powerBatteryMinimum": {
-        "message": "\u6700\u5c0f\u6bcf\u5757\u7535\u6c60\u7535\u538b"
+        "message": "最低单芯电压"
     },
     "powerBatteryMaximum": {
-        "message": "\u6700\u5927\u6bcf\u5757\u7535\u6c60\u7535\u538b"
+        "message": "最高单芯电压"
     },
     "powerBatteryWarning": {
-        "message": "\u8b66\u544a\u5757\u7535\u6c60\u7535\u538b"
+        "message": "警告单芯电压"
     },
     "powerVoltageHead": {
-        "message": "\u7535\u538b\u8ba1"
+        "message": "电压计"
     },
     "powerVoltageValue": {
-        "message": "$1 \u4f0f"
+        "message": "$1 V"
     },
     "powerAmperageValue": {
-        "message": "$1 \u5b89"
+        "message": "$1 A"
     },
     "powerVoltageId10": {
-        "message": "\u7535\u6c60"
+        "message": "电池"
     },
     "powerVoltageId20": {
-        "message": "5\u4f0f"
+        "message": "5V"
     },
     "powerVoltageId30": {
-        "message": "9\u4f0f"
+        "message": "9V"
     },
     "powerVoltageId40": {
-        "message": "12\u4f0f"
+        "message": "12V"
     },
     "powerVoltageId50": {
-        "message": "\u7535\u8c03\u7ec4\u5408"
+        "message": "电调组合"
     },
     "powerVoltageId60": {
-        "message": "\u7535\u8c03 \u7535\u673a 1"
+        "message": "电调 电机 1"
     },
     "powerVoltageId61": {
-        "message": "\u7535\u8c03 \u7535\u673a 2"
+        "message": "电调 电机 2"
     },
     "powerVoltageId62": {
-        "message": "\u7535\u673a\u7535\u8c03 3"
+        "message": "电机电调 3"
     },
     "powerVoltageId63": {
-        "message": "\u7535\u8c03 \u7535\u673a4"
+        "message": "电调 电机4"
     },
     "powerVoltageId64": {
-        "message": "\u7535\u8c03 \u7535\u673a 5"
+        "message": "电调 电机 5"
     },
     "powerVoltageId65": {
-        "message": "\u7535\u8c03 \u7535\u673a 6"
+        "message": "电调 电机 6"
     },
     "powerVoltageId66": {
-        "message": "\u7535\u8c03 \u7535\u673a 7"
+        "message": "电调 电机 7"
     },
     "powerVoltageId67": {
-        "message": "\u7535\u8c03 \u7535\u673a 8"
+        "message": "电调 电机 8"
     },
     "powerVoltageId68": {
-        "message": "\u7535\u8c03 \u7535\u673a 9"
+        "message": "电调 电机 9"
     },
     "powerVoltageId69": {
-        "message": "\u7535\u8c03 \u7535\u673a 10"
+        "message": "电调 电机 10"
     },
     "powerVoltageId70": {
-        "message": "\u7535\u8c03 \u7535\u673a 11"
+        "message": "电调 电机 11"
     },
     "powerVoltageId71": {
-        "message": "\u7535\u8c03 \u7535\u673a 12"
+        "message": "电调 电机 12"
     },
     "powerVoltageId80": {
-        "message": "\u7b2c\u4e00\u5757"
+        "message": "第一块"
     },
     "powerVoltageId81": {
-        "message": "\u7b2c\u4e8c\u5757"
+        "message": "第二块"
     },
     "powerVoltageId82": {
-        "message": "\u7b2c\u4e09\u5757"
+        "message": "第三块"
     },
     "powerVoltageId83": {
-        "message": "\u7b2c\u56db\u5757"
+        "message": "第四块"
     },
     "powerVoltageId84": {
-        "message": "\u7b2c\u4e94\u5757"
+        "message": "第五块"
     },
     "powerVoltageId85": {
-        "message": "\u7b2c\u516d\u5757"
+        "message": "第六块"
     },
     "powerVoltageScale": {
-        "message": "\u6bd4\u4f8b"
+        "message": "比例"
     },
     "powerVoltageDivider": {
-        "message": "\u7535\u963b\u5206\u538b\u5668 \u6570\u503c"
+        "message": "电阻分压器数值"
     },
     "powerVoltageMultiplier": {
-        "message": "\u500d\u6570"
+        "message": "倍数"
     },
     "powerAmperageHead": {
-        "message": "\u7535\u6d41\u8ba1"
+        "message": "电流计"
     },
     "powerAmperageId10": {
-        "message": "\u7535\u6c60"
+        "message": "电池"
     },
     "powerAmperageId50": {
-        "message": "\u7535\u8c03\u56de\u4f20\u7535\u538b"
+        "message": "电调回传电压"
     },
     "powerAmperageId60": {
-        "message": "\u7535\u8c03 \u7535\u673a 1"
+        "message": "电调 电机 1"
     },
     "powerAmperageId61": {
-        "message": "\u7535\u8c03 \u7535\u673a 2"
+        "message": "电调 电机 2"
     },
     "powerAmperageId62": {
-        "message": "\u7535\u8c03 \u7535\u673a 3"
+        "message": "电调 电机 3"
     },
     "powerAmperageId63": {
-        "message": "\u7535\u8c03 \u7535\u673a 4"
+        "message": "电调 电机 4"
     },
     "powerAmperageId64": {
-        "message": "\u7535\u8c03 \u7535\u673a 5"
+        "message": "电调 电机 5"
     },
     "powerAmperageId65": {
-        "message": "\u7535\u8c03 \u7535\u673a 6"
+        "message": "电调 电机 6"
     },
     "powerAmperageId66": {
-        "message": "\u7535\u8c03 \u7535\u673a 7"
+        "message": "电调 电机 7"
     },
     "powerAmperageId67": {
-        "message": "\u7535\u8c03 \u7535\u673a 8"
+        "message": "电调 电机 8"
     },
     "powerAmperageId68": {
-        "message": "\u7535\u8c03 \u7535\u673a 9"
+        "message": "电调 电机 9"
     },
     "powerAmperageId69": {
-        "message": "\u7535\u8c03 \u7535\u673a 10"
+        "message": "电调 电机 10"
     },
     "powerAmperageId70": {
-        "message": "\u7535\u8c03 \u7535\u673a 11"
+        "message": "电调 电机 11"
     },
     "powerAmperageId71": {
-        "message": "\u7535\u8c03 \u7535\u673a 12"
+        "message": "电调 电机 12"
     },
     "powerAmperageId80": {
-        "message": "\u6a21\u62df"
+        "message": "虚拟"
     },
     "powerAmperageId90": {
         "message": "MSP"
     },
     "powerMahValue": {
-        "message": "$1 \u6beb\u5b89\u65f6"
+        "message": "$1 mAh"
     },
     "powerAmperageScale": {
-        "message": "\u6bd4\u4f8b[ \u6beb\u4f0f X 10 \/\u5b89]"
+        "message": "比例 [1\/10 mV\/A]"
     },
     "powerAmperageOffset": {
-        "message": "\u8865\u507f [\u6beb\u4f0f]"
+        "message": "补偿 [mV]"
     },
     "powerBatteryHead": {
-        "message": "\u7535\u6c60"
+        "message": "电池"
     },
     "powerStateHead": {
-        "message": "\u529f\u7387\u72b6\u6001"
+        "message": "电池状态"
     },
     "powerBatteryConnected": {
-        "message": "\u8fde\u63a5"
+        "message": "已连接"
     },
     "powerBatteryConnectedValueYes": {
-        "message": "\u786e\u5b9a(\u7535\u6c60\u5757\u6570: $1)"
+        "message": "是 (电池芯数: $1)"
     },
     "powerBatteryConnectedValueNo": {
-        "message": "\u5426\u5b9a"
+        "message": "否"
     },
     "powerBatteryVoltage": {
-        "message": "\u7535\u538b"
+        "message": "电压"
     },
     "powerBatteryCurrentDrawn": {
-        "message": "\u4f7f\u7528\u6beb\u5b89\u65f6"
+        "message": "已用 mAh"
     },
     "powerBatteryAmperage": {
-        "message": "\u7535\u6d41"
+        "message": "电流"
     },
     "powerBatteryCapacity": {
-        "message": "\u5bb9\u91cf (\u6beb\u5b89\u65f6)"
+        "message": "容量 (mAh)"
     },
     "osdSetupTitle": {
-        "message": "OSD\u5c4f\u5e55\u53e0\u52a0\u663e\u793a"
+        "message": "OSD 屏幕叠加显示"
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>\u6ce8\u610f:<\/strong> \u5c4f\u5e55\u663e\u793a\u9605\u89c8\u663e\u793a\u7684\u5b57\u4f53\uff0c\u6709\u53ef\u80fd\u548c\u5b9e\u9645OSD\u663e\u793a\u7684\u5b57\u4f53\u4e0d\u4e00\u6837."
+        "message": "<strong>注意：<\/strong> 预览界面的字体有可能和实际OSD显示的字体不一样。"
     },
     "osdSetupUnsupportedNote1": {
-        "message": "\u98de\u63a7\u5bf9\u5c4f\u5e55\u663e\u793a\u529f\u80fd\u7684\u547d\u4ee4\u65e0\u53cd\u5e94\uff0c\u6709\u53ef\u80fd\u80fd\u98de\u63a7\u4e0d\u5e26\u677f\u8f7d\u5c4f\u5e55\u663e\u793a\u529f\u80fd\u3002"
+        "message": "飞控对 OSD 命令无反应，有可能飞控不带 OSD 功能。"
     },
     "osdSetupUnsupportedNote2": {
-        "message": "\u6ce8\u610f\uff0c\u6709\u7684\u98de\u63a7\u5e26\u6709 <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a> \uff0c\u53ef\u4ee5\u901a\u8fc7<a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>\u6765\u70e7\u5f55\u548c\u8bbe\u7f6e,\u4f46\u662f\u8fd9\u6837\u7684\u98de\u63a7\u4e0d\u80fd\u901a\u8fc7\u8be5\u9875\u9762\u6765\u8bbe\u7f6e\u53c2\u6570"
+        "message": "注意，有的飞控带有 <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a> ，可以通过<a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>来烧录和设置，但是这样的飞控不能通过此页面来设置参数。"
     },
     "osdSetupElementsTitle": {
-        "message": "\u663e\u793a\u7684\u5355\u5143"
+        "message": "元素"
     },
     "osdSetupElementsSwitchAll": {
-        "message": "\u5173\u95ed\u6240\u6709"
+        "message": "开关全部"
     },
     "osdSetupPreviewTitle": {
-        "message": "\u9884\u89c8(\u53ef\u4ee5\u901a\u8fc7\u62d6\u62fd\u6765\u6539\u53d8\u5148\u8981\u7684\u4f4d\u7f6e)"
+        "message": "预览 (可以通过拖拽来改变位置)"
     },
     "osdSetupPreviewTitleTip": {
-        "message": "\u5728\u9884\u89c8\u7a97\u53e3\u663e\u793a \u6216\u8005 \u9690\u85cfBetalight logo\u3002\u8fd9\u9009\u9879\u4e0d\u4f1a\u6539\u53d8\u5c4f\u5e55\u663e\u793a\u7684\u4efb\u4f55\u8bbe\u7f6e"
+        "message": "在预览窗口显示或者隐藏Betalight logo。这选项不会影响飞控上的设置。"
     },
     "osdSetupVideoFormatTitle": {
-        "message": "\u89c6\u9891\u683c\u5f0f"
+        "message": "视频制式"
     },
     "osdSetupUnitsTitle": {
-        "message": "\u5355\u4f4d"
+        "message": "单位制式"
     },
     "osdSetupTimersTitle": {
-        "message": "\u8ba1\u65f6\u5668"
+        "message": "计时器"
     },
     "osdSetupAlarmsTitle": {
-        "message": "\u8b66\u62a5"
+        "message": "警报"
     },
     "osdSetupStatsTitle": {
-        "message": "\u98de\u884c\u7edf\u8ba1\u6570\u636e"
+        "message": "飞行统计数据"
     },
     "osdSetupVtxTitle": {
-        "message": "\u56fe\u4f20\u8bbe\u7f6e"
+        "message": "图传设置"
     },
     "osdSetupCraftNameTitle": {
-        "message": "\u98de\u884c\u5668\u540d\u5b57"
+        "message": "飞行器名字"
     },
     "osdSetupWarningsTitle": {
-        "message": "\u8b66\u544a"
+        "message": "警告"
     },
     "osdSetupFontPresets": {
-        "message": "\u9884\u7f6e\u5b57\u4f53"
+        "message": "预置字体"
     },
     "osdSetupOpenFont": {
-        "message": "\u6253\u5f00\u5b57\u4f53\u6587\u4ef6"
+        "message": "打开字体文件"
     },
     "osdSetupUploadFont": {
-        "message": "\u66f4\u65b0\u5b57\u4f53"
+        "message": "更新字体"
     },
     "osdSetupSave": {
-        "message": "\u4fdd\u5b58"
+        "message": "保存"
     },
     "osdSetupFontManager": {
-        "message": "\u5b57\u4f53\u7ba1\u7406\u5668"
+        "message": "字体管理器"
     },
     "osdSetupUncheckAll": {
-        "message": "\u5168\u4e0d\u9009"
+        "message": "全不选"
     },
     "osdSetupHead": {
-        "message": "\u4fe1\u606f"
+        "message": "信息"
     },
     "osdSetupVideoMode": {
-        "message": "\u89c6\u9891\u683c\u5f0f"
+        "message": "视频格式"
     },
     "osdSetupCameraConnected": {
-        "message": "\u6444\u50cf\u5934\u5df2\u8fde\u63a5"
+        "message": "摄像头已连接"
     },
     "osdSetupCameraConnectedValueYes": {
-        "message": "\u786e\u8ba4"
+        "message": "是"
     },
     "osdSetupCameraConnectedValueNo": {
-        "message": "\u5426\u8ba4"
+        "message": "否认"
     },
     "osdSetupResetText": {
-        "message": "\u91cd\u7f6eOSD\u5230\u9ed8\u8ba4\u8bbe\u7f6e"
+        "message": "恢复 OSD 默认设置"
     },
     "osdSetupButtonReset": {
-        "message": "\u91cd\u8bbe\u914d\u7f6e"
+        "message": "重设配置"
     },
     "osdDescElementMainBattVoltage": {
-        "message": "\u7535\u538b\u663e\u793a(\u7535\u538b\u4f4e\u4e8e\u8b66\u544a\u7535\u538b\uff0c\u5c06\u4f1a\u95ea\u70c1)"
+        "message": "实时电压 (低于警告电压时会闪烁)"
     },
     "osdDescElementRssiValue": {
-        "message": "\u663e\u793aRSSI(\u63a5\u6536\u673a\u4fe1\u53f7\u5f3a\u5ea6\uff0c\u5f53\u4f4e\u4e8e\u8b66\u544a\u6570\u503c\u5c06\u4f1a\u95ea\u901f)"
+        "message": "实时 RSSI 值 (信号强度低于设定值时会闪烁)"
     },
     "osdDescElementThrottlePosition": {
-        "message": "\u5f53\u524d\u6cb9\u95e8\u4f4d\u7f6e"
+        "message": "当前油门位置"
     },
     "osdDescElementArmed": {
-        "message": "\u663e\u793a\u89e3\u9501\u4fe1\u606f"
+        "message": "解锁文字提示"
     },
     "osdDescElementDisarmed": {
-        "message": "\u663e\u793a\u4e0a\u9501\u4fe1\u606f"
+        "message": "锁定文字提示"
     },
     "osdDescElementCrosshairs": {
-        "message": "\u5728\u4e2d\u95f4\u663e\u793a\u5341\u5b57\u5149\u6807"
+        "message": "屏幕中间的十字光标"
     },
     "osdDescElementArtificialHorizon": {
-        "message": "\u663e\u793a\u6a21\u62df\u5730\u5e73\u7ebf"
+        "message": "图形化模拟地平线"
     },
     "osdDescElementHorizonSidebars": {
-        "message": "\u5728\u6a21\u62df\u5730\u5e73\u7ebf\u65c1\u8fb9\u663e\u793a\u6a2a\u7ebf"
+        "message": "模拟地平线旁边显示的边栏"
     },
     "osdDescElementCurrentDraw": {
-        "message": "\u7535\u6d41\u663e\u793a"
+        "message": "实时电流"
     },
     "osdDescElementMahDrawn": {
-        "message": "\u663e\u793a\u4f7f\u7528\u7535\u6c60\u7528\u91cf"
+        "message": "累计已用电池容量"
     },
     "osdDescElementCraftName": {
-        "message": "\u663e\u793a\u98de\u884c\u5668\u540d\u79f0(\u901a\u8fc7\u8bbe\u7f6e\u9875\u9762\u8bbe\u7f6e)"
+        "message": "设置页面里设置的飞行器名称"
     },
     "osdDescElementAltitude": {
-        "message": "\u663e\u793a\u9ad8\u5ea6(\u5f53\u5927\u4e8e\u8bbe\u7f6e\u7684\u8b66\u544a\u9ad8\u5ea6\u65f6\uff0c\u95ea\u70c1)"
+        "message": "当前高度 (当超过设置的警告高度时会闪烁)"
     },
     "osdDescElementOnTime": {
-        "message": "\u663e\u793a\u603b\u4e0a\u7535\u65f6\u95f4"
+        "message": "累计上电时间"
     },
     "osdDescElementFlyTime": {
-        "message": "\u663e\u793a\u603b\u5f00\u9501\u65f6\u95f4"
+        "message": "已解锁时间 （超过设定值时会闪烁）"
     },
     "osdDescElementFlyMode": {
-        "message": "\u663e\u793a\u5f53\u524d\u98de\u884c\u6a21\u5f0f"
+        "message": "当前飞行模式"
     },
     "osdDescElementGPSSpeed": {
-        "message": "\u663e\u793aGPS \u901f\u5ea6"
+        "message": "GPS 速度"
     },
     "osdDescElementGPSSats": {
-        "message": "\u663e\u793a\u536b\u661f\u6570"
+        "message": "GPS 锁定卫星数"
     },
     "osdDescElementGPSLon": {
-        "message": "\u663e\u793aGPS \u7ecf\u5ea6"
+        "message": "GPS 经度"
     },
     "osdDescElementGPSLat": {
-        "message": "\u663e\u793aGPS \u7eac\u5ea6"
+        "message": "GPS 纬度"
     },
     "osdDescElementDebug": {
-        "message": "\u663e\u793a\u8c03\u8bd5\u53d8\u91cf"
+        "message": "调试用变量"
     },
     "osdDescElementPIDRoll": {
-        "message": "\u663e\u793a\u6a2a\u6eda PID \u6570\u503c"
+        "message": "横滚 PID 数值"
     },
     "osdDescElementPIDPitch": {
-        "message": "\u663e\u793a\u4fef\u4ef0 PID \u6570\u503c"
+        "message": "俯仰 PID 数值"
     },
     "osdDescElementPIDYaw": {
-        "message": "\u663e\u793a\u65b9\u5411 PID \u6570\u503c"
+        "message": "方向 PID 数值"
     },
     "osdDescElementPower": {
-        "message": "\u663e\u793a\u7535\u673a\u8f93\u51fa\u603b\u529f\u7387"
+        "message": "实时功率消耗"
     },
     "osdDescElementPIDRateProfile": {
-        "message": "\u663e\u793a\u5f53\u524d\u4f7f\u7528\u7684PID \u548crate\u914d\u7f6e\u6587\u4ef6"
+        "message": "当前 PID 和 rate 配置文件的数字编号"
     },
     "osdDescElementBatteryWarning": {
-        "message": "\u663e\u793a\u6587\u5b57\u8b66\u544a\u63d0\u793a\uff0c\u5f53\u68c0\u6d4b\u5230\u7535\u6c60\u7535\u538b\u5c0f\u4e8e\u8bbe\u7f6e\u7684\u62a5\u8b66\u7535\u538b"
+        "message": "当电池电压低于设定阈值时的警告文字提示"
     },
     "osdDescElementAvgCellVoltage": {
-        "message": "\u5e73\u5747\u6bcf\u5757\u7535\u6c60\u7535\u538b(\u603b\u7535\u6c60\u7535\u538b \/ \u4e32\u6570)"
+        "message": "平均单芯电压 （电池总电压 \/ 芯数）"
     },
     "osdDescElementPitchAngle": {
-        "message": "\u663e\u793a\u4fef\u4ef0\u89d2\u5ea6"
+        "message": "俯仰角度数字"
     },
     "osdDescElementRollAngle": {
-        "message": "\u663e\u793a\u6a2a\u6eda\u89d2\u5ea6"
+        "message": "横滚角度数字"
     },
     "osdDescElementMainBattUsage": {
-        "message": "\u56fe\u5f62\u663e\u793a\u7535\u6c60\u5bb9\u91cf"
+        "message": "图形化显示电池用量"
     },
     "osdDescElementArmedTime": {
-        "message": "\u663e\u793a\u4ece\u4e0a\u6b21\u89e3\u9501\u603b\u65f6\u95f4"
+        "message": "距离上次解锁时间"
     },
     "osdDescElementWarnings": {
-        "message": "\u663e\u793a\u8b66\u62a5(\u6bd4\u5982\u4f4e\u7535\u538b)\uff0c\u8b66\u544a(\u4e0d\u80fd\u5f00\u9501\u539f\u56e0\uff0c\u7535\u6c60\u7535\u538b\u592a\u4f4e)\u548c \u6a21\u62df\u8702\u9e23\u5668(4 \u4e2a\u95ea\u70c1 \u661f\u53f7)"
+        "message": "警报 (比如低电压)，警告 (不能开锁原因，电池电压极低) 和模拟蜂鸣器(4个闪烁星号)。"
     },
     "osdDescElementEscTemperature": {
-        "message": "\u663e\u793a\u7535\u8c03\u56de\u4f20\u6e29\u5ea6"
+        "message": "电调回传温度"
     },
     "osdDescElementEscRpm": {
-        "message": "\u663e\u793a\u7535\u8c03\u56de\u4f20\u7535\u673a\u8f6c\u901f"
+        "message": "电调回传电机转速"
     },
     "osdDescElementRtcDateTime": {
-        "message": "\u663e\u793a\u65e5\u671f\/\u65f6\u95f4"
+        "message": "日期\/时间"
     },
     "osdDescElementAdjustmentRange": {
-        "message": "\u5f53\u524d\u6fc0\u6d3b\u8303\u56f4\u8bbe\u7f6e\u548c\u6570\u503c"
+        "message": "当前激活的调整范围和数值"
     },
     "osdDescElementHomeDirection": {
-        "message": "\u663e\u793a\u98de\u673a\u8d77\u98de\u65b9\u5411\u7bad\u5934"
+        "message": "指向起飞点的箭头 （啊~那是家的方向~~）"
     },
     "osdDescElementHomeDistance": {
-        "message": "\u663e\u793a\u79bb\u98de\u673a\u8d77\u98de\u4f4d\u7f6e\u8ddd\u79bb"
+        "message": "距离起飞点的距离"
     },
     "osdDescElementNumericalHeading": {
-        "message": "\u663e\u793a\u98de\u884c\u671d\u5411\u89d2\u5ea6"
+        "message": "当前行进方向的角度数字"
     },
     "osdDescElementNumericalVario": {
-        "message": "\u663e\u793a\u4e0a\u5347\u901f\u5ea6"
+        "message": "爬升速度数字"
     },
     "osdDescElementCompassBar": {
-        "message": "\u56fe\u5f62\u663e\u793a\u98de\u884c\u65b9\u5411"
+        "message": "当前行进方向的图形箭头"
     },
     "osdDescElementTimer1": {
-        "message": "\u663e\u793a\u8ba1\u65f6\u56681"
+        "message": "显示计时器1"
     },
     "osdDescElementTimer2": {
-        "message": "\u663e\u793a\u8ba1\u65f6\u56682"
+        "message": "显示计时器2"
     },
     "osdDescElementRemaningTimeEstimate": {
-        "message": "\u9884\u8ba1\u5269\u4f59\u7535\u6c60\u98de\u884c\u65f6\u95f4"
+        "message": "预计剩余电池飞行时间"
     },
     "osdDescElementUnknown": {
-        "message": "\u672a\u77e5\u53c2\u6570"
+        "message": "未知参数"
     },
     "osdDescElementCoreTemperature": {
-        "message": "\u663e\u793a\u98de\u63a7\u4e3b\u82af\u7247\u6e29\u5ea6"
+        "message": "显示飞控主芯片温度"
     },
     "osdDescStatMaxSpeed": {
-        "message": "\u6700\u5927\u8bb0\u5f55\u901f\u5ea6"
+        "message": "记录到的最大速度"
     },
     "osdDescStatMinBattery": {
-        "message": "\u6700\u5c0f\u7535\u6c60\u7535\u538b"
+        "message": "记录到的最低主电池电压"
     },
     "osdDescStatMinRssi": {
-        "message": "\u6700\u5c0fRSSI\u503c"
+        "message": "记录到的最小RSSI值"
     },
     "osdDescStatMaxCurrent": {
-        "message": "\u6700\u5927\u7535\u6d41"
+        "message": "记录到的最大电流"
     },
     "osdDescStatUsedMah": {
-        "message": "\u4f7f\u7528\u7535\u6c60\u5bb9\u91cf"
+        "message": "已用电池容量"
     },
     "osdDescStatMaxAltitude": {
-        "message": "\u6700\u5927\u9ad8\u5ea6"
+        "message": "记录到的最大高度"
     },
     "osdDescStatBlackbox": {
-        "message": "\u9ed1\u5323\u5b50\u4f7f\u7528\u767e\u5206\u6bd4"
+        "message": "黑匣子空间使用百分比"
     },
     "osdDescStatEndBattery": {
-        "message": "\u89e3\u9501\u65f6\u7535\u6c60\u7535\u538b"
+        "message": "解锁时电池电压"
     },
     "osdDescStatFlyTime": {
-        "message": "\u89e3\u9501\u603b\u65f6\u95f4"
+        "message": "解锁总时间"
     },
     "osdDescStatArmedTime": {
-        "message": "\u79bb\u4e0a\u4e00\u6b21\u89e3\u9501\u65f6\u95f4"
+        "message": "距离上一次解锁时间"
     },
     "osdDescStatMaxDistance": {
-        "message": "\u79bb\u8d77\u98de\u4f4d\u7f6e\u6700\u5927\u8ddd\u79bb"
+        "message": "距离起飞位置最大距离"
     },
     "osdDescStatBlackboxLogNumber": {
-        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55\u6587\u4ef6\u7f16\u53f7"
+        "message": "黑匣子记录文件编号"
     },
     "osdDescStatTimer1": {
-        "message": "\u4e0a\u9501\u65f6\u8ba1\u65f6\u56681\u6570\u503c"
+        "message": "上锁时计时器1数值"
     },
     "osdDescStatTimer2": {
-        "message": "\u4e0a\u9501\u65f6\u8ba1\u65f6\u56682\u6570\u503c"
+        "message": "上锁时计时器2数值"
     },
     "osdDescStatRtcDateTime": {
-        "message": "\u5b9e\u65f6\u65f6\u949f\u65f6\u95f4\u65e5\u671f"
+        "message": "实时时钟时间日期"
     },
     "osdTimerSource": {
-        "message": "\u6765\u6e90"
+        "message": "来源："
     },
     "osdTimerSourceTooltip": {
-        "message": "\u9009\u62e9\u65f6\u949f\u6e90"
+        "message": "选择时钟源"
     },
     "osdTimerPrecision": {
-        "message": "\u7cbe\u5ea6"
+        "message": "精度："
     },
     "osdTimerPrecisionTooltip": {
-        "message": "\u9009\u62e9\u8ba1\u65f6\u5668\u7cbe\u5ea6\u3002\u63a7\u5236\u65f6\u95f4\u7cbe\u5ea6"
+        "message": "选择计时器精度"
     },
     "osdTimerAlarm": {
-        "message": "\u8b66\u544a"
+        "message": "警报："
     },
     "osdTimerAlarmTooltip": {
-        "message": "\u8bbe\u7f6e\u8ba1\u65f6\u5668\u8b66\u62a5\u65f6\u95f4(\u5206\u949f)\u3002\u5f53\u8ba1\u65f6\u5668\u65f6\u95f4\u5927\u4e8e\u8bbe\u7f6e\u65f6\u95f4\uff0c\u5c06\u4f1a\u5728OSD\u4e0a\u9762\u95ea\u70c1"
+        "message": "设置计时器警报时间（分钟）。当计时器时间大于设置时间，将会在OSD上面闪烁。设定为0可禁用报警。"
     },
     "osdWarningArmingDisabled": {
-        "message": "\u663e\u793a\u5f15\u8d77\u4e0d\u89e3\u9501\u6700\u4e25\u91cd\u7684\u539f\u56e0"
+        "message": "显示导致不能解锁最主要的原因"
     },
     "osdWarningBatteryNotFull": {
-        "message": "\u8b66\u62a5\u68c0\u6d4b\u5230\u7535\u6c60\u4e0d\u6ee1\u7535"
+        "message": "当上电时检测到电池电量不满发出警告"
     },
     "osdWarningBatteryWarning": {
-        "message": "\u8b66\u62a5\uff0c\u5f53\u7535\u6c60\u7535\u538b\u4f4e\u4e8e\u8bbe\u7f6e\u8b66\u62a5\u7535\u538b"
+        "message": "当电池电压低于设置警报电压时发出警告"
     },
     "osdWarningBatteryCritical": {
-        "message": "\u8b66\u62a5, \u5f53\u7535\u6c60\u5757\u7535\u538b\u4f4e\u4e8e\u6700\u5c0f\u5e73\u5747\u7535\u6c60\u5757\u7535\u538b"
+        "message": "当电池电压低于最小单芯电压时发出警告"
     },
     "osdWarningVisualBeeper": {
-        "message": "\u663e\u793a\u5c4f\u5e55\u6a21\u62df\u8702\u9e23\u5668\uff0c\u663e\u793a4\u4e2a\u661f\u53f7"
+        "message": "显示模拟蜂鸣器（表现为4个星号）"
     },
     "osdWarningCrashFlipMode": {
-        "message": "\u8b66\u544a\uff0c\u5f53\u5760\u673a\u6a21\u5f0f\u6fc0\u6d3b\u5e76\u98de\u673a\u6210\u529f\u53cd\u8f6c\u5230\u6b63\u9762\u3002"
+        "message": "当激活坠机模式又发生翻转时发出警告"
     },
     "osdSectionHelpElements": {
-        "message": "\u663e\u793a\u6216\u8005\u9690\u85cf OSD \u663e\u793a\u4fe1\u606f"
+        "message": "显示或者隐藏 OSD 显示信息"
     },
     "osdSectionHelpVideoMode": {
-        "message": "\u8bbe\u7f6e\u6b63\u786e\u7684\u6444\u50cf\u5934\u89c6\u9891\u683c\u5f0f\u3002(\u5982\u679c\u4e0d\u77e5\u9053\u6444\u50cf\u5934\u89c6\u9891\u683c\u5f0f\uff0c\u53ef\u4ee5\u9009\u81ea\u52a8\u6a21\u5f0f)"
+        "message": "设置期望的摄像头视频格式。（通常可以使用 AUTO 自动检测，如果遇到问题再手动指定）。"
     },
     "osdSectionHelpUnits": {
-        "message": "\u8bbe\u7f6e\u5355\u4f4d"
+        "message": "设置单位制"
     },
     "osdSectionHelpTimers": {
-        "message": "\u8bbe\u7f6e\u98de\u884c\u8ba1\u65f6\u5668"
+        "message": "设置飞行计时器"
     },
     "osdSectionHelpAlarms": {
-        "message": "\u8bbe\u7f6eOSD\u62a5\u8b66\u53c2\u6570"
+        "message": "设置OSD报警阈值"
     },
     "osdSectionHelpStats": {
-        "message": "\u8bbe\u7f6e\u98de\u884c\u4e0a\u9501\uff0c\u663e\u793a\u4fe1\u606f"
+        "message": "设置飞行结束上锁后屏幕上显示的统计信息"
     },
     "osdSectionHelpWarnings": {
-        "message": "\u6253\u5f00\u6216\u8005\u5173\u95ed\u5e26\u6709\u8b66\u62a5\u7684\u4fe1\u606f"
+        "message": "显示或隐藏显示在警告区域的警告信息"
     },
     "osdSettingsSaved": {
-        "message": "OSD \u8bbe\u7f6e\u5df2\u4fdd\u5b58"
+        "message": "OSD 设置已保存"
     },
     "osdWritePermissions": {
-        "message": "\u8be5\u6587\u4ef6\u6ca1\u6709 <span class=\"message-negative\">\u5199\u6743\u9650<\/span>"
+        "message": "该文件没有 <span class=\"message-negative\">写权限<\/span>"
     },
     "mainHelpArmed": {
-        "message": "\u7535\u673a\u89e3\u9501"
+        "message": "电机解锁"
     },
     "mainHelpFailsafe": {
-        "message": "\u5931\u63a7\u4fdd\u62a4\u6a21\u5f0f"
+        "message": "失控保护模式"
     },
     "mainHelpLink": {
-        "message": "\u4e32\u53e3\u8fde\u63a5\u72b6\u6001"
+        "message": "串口连接状态"
     },
     "configurationEscProtocol": {
-        "message": "\u7535\u8c03\/\u7535\u673a\u534f\u8bae"
+        "message": "电调\/电机协议"
     },
     "configurationEscProtocolHelp": {
-        "message": "\u9009\u62e9\u7535\u8c03\u534f\u8bae<br>\u8bf7\u786e\u5b9a\u4f7f\u7528\u7684\u7535\u8c03\u53ef\u4ee5\u4f7f\u7528\u9009\u62e9\u7684\u534f\u8bae\u3002\u5177\u4f53\u4fe1\u606f\u53ef\u4ee5\u53c2\u8003\u7535\u8c03\u751f\u4ea7\u5382\u5bb6\u4ea7\u54c1\u4fe1\u606f. <br> <b>\u9009\u62e9Dshot900 \u548c1200 \u65f6\u8bf7\u6ce8\u610f\uff0c\u76ee\u524d\u6ca1\u6709\u5f88\u591a\u7535\u8c03\u652f\u6301\u8fd9\u4e2a\u534f\u8bae!<\/b>"
+        "message": "选择电调协议。<br>请确认你的电调支持该协议，电调制造商应该有提供这些信息。<br> <b>选择 DSHOT900 或 DSHOT1200 时请注意，目前没有很多电调支持这个协议！<\/b>"
     },
     "configurationunsyndePwm": {
-        "message": "\u7535\u673aPWM\u901f\u5ea6\u548cPID\u901f\u5ea6\u5206\u5f00"
+        "message": "电机PWM速度独立于PID速度"
     },
     "configurationUnsyncedPWMFreq": {
-        "message": "\u7535\u673aPWM \u9891\u7387"
+        "message": "电机PWM 频率"
     },
     "configurationGyroSyncDenom": {
-        "message": "\u9640\u87ba\u66f4\u65b0\u901f\u5ea6"
+        "message": "陀螺仪更新频率"
     },
     "configurationPidProcessDenom": {
-        "message": "PID \u5faa\u73af\u66f4\u65b0\u9891\u7387"
+        "message": "PID 循环更新频率"
     },
     "configurationPidProcessDenomHelp": {
-        "message": "PID\u5faa\u73af\u7684\u66f4\u65b0\u7684\u6700\u5927\u9891\u7387\u53d6\u51b3\u4e8e\u6240\u9009\u7535\u673a\u3001\u7535\u8c03\u534f\u8bae\u51b3\u5b9a\u7684\u6700\u5927\u66f4\u65b0\u9891\u7387"
+        "message": "PID 循环的最大频率会受限于所选电机、电调协议所决定的最大更新频率。"
     },
     "configurationGyroUse32kHz": {
-        "message": "\u6253\u5f00\u9640\u87ba32k\u8d6b\u5179\u91c7\u6837"
+        "message": "启用陀螺仪 32kHz 采样模式"
     },
     "configurationGyroUse32kHzHelp": {
-        "message": "32k\u8d6b\u5179\u91c7\u6837\u53d6\u51b3\u4e8e\u6240\u4f7f\u7528\u9640\u87ba\u652f\u4e0d\u652f\u630132K\u91c7\u6837\u3002\u76ee\u524d\u652f\u6301\u9640\u87ba(\u901a\u8fc7SPI\u603b\u7ebf\u8fde\u63a5\u7684 MPU6500,MPU9250,\u548cICM20xxx )\u3002\u5982\u679c\u4e0d\u6e05\u695a\u4f60\u7684\u98de\u63a7\u652f\u4e0d\u652f\u6301\u3002\u53ef\u4ee5\u54a8\u8be2\u98de\u63a7\u751f\u5382\u5546"
+        "message": "仅当陀螺仪芯片支持时才能启用 32khz 采样频率。（目前有通过 SPI 总线连接的 MPU6500、MPU9250 和 ICM20xxx 系列）。如不能确定请查询你的飞控板资料。"
     },
     "configurationAccHardware": {
-        "message": "\u52a0\u901f\u5ea6\u8ba1"
+        "message": "加速度计"
     },
     "configurationBaroHardware": {
-        "message": "\u9ad8\u5ea6\u8ba1(\u5982\u679c\u677f\u5b50\u652f\u6301)"
+        "message": "气压计 （如有）"
     },
     "configurationMagHardware": {
-        "message": "\u78c1\u573a\u8ba1(\u5982\u679c\u677f\u5b50\u652f\u6301)"
+        "message": "磁场计 （如有）"
     },
     "configurationSmallAngle": {
-        "message": "\u6700\u5927\u5141\u8bb8\u89e3\u9501\u89d2\u5ea6[\u5ea6]"
+        "message": "最大允许解锁角度 [degrees]"
     },
     "configurationSmallAngleHelp": {
-        "message": "\u98de\u63a7\u5c06\u4f1a\u4e0d\u5141\u8bb8\u89e3\u9501\uff0c\u5982\u679c\u98de\u673a\u503e\u659c\u7684\u89d2\u5ea6\u5927\u4e8e\u6307\u5b9a\u7684\u5141\u8bb8\u89e3\u9501\u89d2\u5ea6\u3002(\u4ec5\u9650\u4e8e\u52a0\u901f\u5ea6\u8ba1\u6253\u5f00\u60c5\u51b5\u4e0b)\u3002\u8bbe\u7f6e180\u5c06\u4f1a\u5173\u95ed\u8be5\u529f\u80fd"
+        "message": "如果飞机倾斜的角度大于指定的允许解锁角度，飞控将会不允许解锁。只有启用了加速度计该功能才能工作。设置为180度相当于关闭了倾斜角度检测。"
     },
     "configurationBatteryVoltage": {
-        "message": "\u7535\u6c60\u7535\u538b"
+        "message": "电池电压"
     },
     "configurationBatteryCurrent": {
-        "message": "\u7535\u6c60\u7535\u6d41"
+        "message": "电池电流"
     },
     "configurationBatteryMeterType": {
-        "message": "\u7535\u6c60\u8ba1\u7c7b\u578b"
+        "message": "电池计类型"
     },
     "configurationBatteryMinimum": {
-        "message": "\u6700\u5c0f\u7535\u6c60\u5757\u7535\u538b"
+        "message": "最低单芯电压"
     },
     "configurationBatteryMaximum": {
-        "message": "\u6700\u5927\u7535\u6c60\u5757\u7535\u538b"
+        "message": "最高单芯电压"
     },
     "configurationBatteryWarning": {
-        "message": "\u7535\u6c60\u5757\u8b66\u544a\u7535\u538b"
+        "message": "单芯警告电压"
     },
     "configurationBatteryScale": {
-        "message": "\u7535\u538b\u8ba1\u6bd4\u4f8b"
+        "message": "电压计比例"
     },
     "configurationCurrentMeterType": {
-        "message": "\u7535\u6d41\u8ba1\u7c7b\u578b"
+        "message": "电流计类型"
     },
     "configurationCurrent": {
-        "message": "\u7535\u6d41\u4f20\u611f\u5668"
+        "message": "电流传感器"
     },
     "configurationCurrentScale": {
-        "message": "\u7535\u6d41\u4f20\u611f\u5668\u8f93\u5165\u7535\u538b\u548c\u7535\u6d41\u6bd4\u4f8b[\u6beb\u4f0f x 10  \u6beb\u4f0f\/\u5b89]"
+        "message": "按比例 [1\/10 mV\/A] 将电压缩放到毫安"
     },
     "configurationCurrentOffset": {
-        "message": "\u7535\u6d41\u8ba10\u8865\u507f (\u5355\u4f4d\u6beb\u4f0f)"
+        "message": "补偿（单位毫伏）"
     },
     "configurationBatteryMultiwiiCurrent": {
-        "message": "\u6253\u5f00\u4f20\u7edfMultiwii MSP\u7535\u6d41\u8ba1\u8f93\u51fa"
+        "message": "启用对传统 Multiwii MSP 电流计输出的支持"
     },
     "pidTuningProfile": {
-        "message": "\u914d\u7f6e\u6587\u4ef6"
+        "message": "配置文件"
     },
     "pidTuningProfileTip": {
-        "message": "\u98de\u63a7\u53ef\u4ee5\u4fdd\u5b583(\u6709\u7684\u53ea\u80fd2)\u4e2aPID\u914d\u7f6e\u6587\u4ef6\uff0cPID \u914d\u7f6e\u6587\u4ef6\u5305\u62ec\uff1apid\uff0c D \u8bbe\u7f6e\u70b9\uff0c\u89d2\u5ea6\u548c\u6c34\u54c1\u6a21\u5f0f\u9009\u62e9\u8bbe\u7f6e\u3002\u914d\u7f6e\u6587\u4ef6\u53ef\u4ee5\u901a\u8fc7\u9065\u63a7\u6447\u6746\u547d\u4ee4\u6765\u56de\u5207\u6362(\u5177\u4f53\u64cd\u4f5c\u53c2\u9605\u7f51\u4e0a\u6559\u7a0b)"
+        "message": "飞控可以保存最多3个（有的只能2个）PID配置文件。PID 配置文件包括：PID值， D 设置点，angle\/horizon 模式选择设置。配置文件可以通过遥控摇杆命令来回切换(具体操作参阅网上教程)。"
     },
     "pidTuningRateProfile": {
-        "message": "Rate\u914d\u7f6e\u6587\u4ef6"
+        "message": "Rate配置文件"
     },
     "pidTuningRateProfileTip": {
-        "message": "\u98de\u63a7\u53ef\u4ee5\u4fdd\u5b583\u4e2a\u4e0d\u540c\u7684Rate\u914d\u7f6e\u6587\u4ef6\u3002 Rate\u914d\u7f6e\u6587\u4ef6\u5305\u62ec\uff1aRC rate\uff0c Rate\uff0cRC expo\uff0c\u6cb9\u95e8\uff0c\u548cTPA\u3002 \u914d\u7f6e\u6587\u4ef6\u53ef\u4ee5\u901a\u8fc7\u9065\u63a7\u6447\u6746\u547d\u4ee4\u6765\u56de\u5207\u6362(\u5177\u4f53\u64cd\u4f5c\u53c2\u9605\u7f51\u4e0a\u6559\u7a0b)\u3002\u4e5f\u53ef\u4ee5\u901a\u8fc7\u4e00\u4e2a3\u6bb5\u7684\u5f00\u5173\u6765\u9009\u7740\u4e0d\u540c\u7684\u914d\u7f6e\u6587\u4ef6"
+        "message": "飞控可以保存3个不同的Rate配置文件。 Rate配置文件包括：RC rate， Rate，RC expo，油门和TPA。 配置文件可以通过遥控摇杆命令来回切换（具体操作参阅网上教程）。也可以通过一个3段的开关来选择不同的配置文件。"
     },
     "pidTuningDelta": {
-        "message": "\u5bfc\u6570"
+        "message": "导数"
     },
     "pidTuningDeltaError": {
-        "message": "\u9519\u8bef"
+        "message": "错误"
     },
     "pidTuningDeltaMeasurement": {
-        "message": "\u6d4b\u91cf\u6a21\u5f0f"
+        "message": "测量模式"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>\u8bef\u5dee\u5bfc\u6570\u6a21\u5f0f<\/b>\u63d0\u4f9b\u66f4\u52a0\u76f4\u63a5\u7684\u6447\u6746\u53cd\u5e94\uff0c\u9002\u5408\u98de\u6bd4\u8d5b<br><br><b>\u6d4b\u91cf\u5bfc\u6570\u6a21\u5f0f<\/b> \u63d0\u4f9b\u66f4\u5e73\u6ed1\u6447\u6746\u7684\u53cd\u5e94\uff0c\u9002\u5408\u98de\u82b1\u6837"
+        "message": "<b>误差导数模式<\/b>提供更加直接的摇杆反应，适合竞速比赛。<br><br><b>测量导数模式<\/b> 提供更平滑摇杆的反应，适合花式飞行。"
     },
     "pidTuningPidControllerTip": {
-        "message": "<b>\u4f20\u7edf vs Betaflight (\u6d6e\u70b9\u6570):<\/b> PID \u6bd4\u4f8b\u548cPID\u903b\u8f91\u5b8c\u5168\u4e00\u6837\u7684.\u4e24\u8005\u4e4b\u95f4\u66f4\u6362\u7406\u8bba\u4e0d\u9700\u8981\u91cd\u65b0\u8c03\u53c2. \u4f20\u7edf\u7684\u4e5f\u662fbetaflight\u5f00\u53d1\u8005\u53c2\u4e0e\u91cd\u65b0\u6539\u5199\uff0c\u4f46\u662f\u7528\u7684\u662f\u6574\u6570\u6765\u8ba1\u7b97. Betaflight PID \u7528\u7684\u662f\u6d6e\u70b9\u6570\u6765\u8ba1\u7b97\uff0c\u5e76\u4e14\u662f\u4e13\u95e8\u4e3a\u591a\u8f74\u98de\u884c\u5668\u8bbe\u7f6e<br> <b>\u6d6e\u70b9 vs \u6574\u6570:<\/b> PID \u6bd4\u4f8b\u548cPID\u903b\u8f91\u5b8c\u5168\u4e00\u6837\u7684. N\u4e24\u8005\u4e4b\u95f4\u66f4\u6362\u7406\u8bba\u4e0d\u9700\u8981\u91cd\u65b0\u8c03\u53c2. \u4f7f\u7528F1\u82af\u7247\u7684\u98de\u63a7\u7f3a\u4e4f\u677f\u8f7d\u7684FPU\uff0c\u6253\u5f00\u6d6e\u70b9\u8ba1\u7b97\u5c06\u4f1a\u589e\u52a0CPU\u8d1f\u8377\uff0c\u4f7f\u7528\u6574\u6570\u4f1a\u5f97\u5230\u66f4\u52a0\u597d\u7684\u8fd0\u884c\u6548\u679c\u3002\u4f46\u662f\u6d6e\u70b9\u8ba1\u7b97\u4f1a\u63d0\u4f9b\u7a0d\u5fae\u66f4\u52a0\u51c6\u786e\u7684\u8ba1\u7b97"
+        "message": "<b>传统 vs Betaflight (浮点数):<\/b> PID 比例和PID逻辑完全一样的.两者之间更换理论不需要重新调参. 传统的也是betaflight开发者参与重新改写，但是用的是整数来计算. Betaflight PID 用的是浮点数来计算，并且是专门为多轴飞行器设置<br> <b>浮点 vs 整数:<\/b> PID 比例和PID逻辑完全一样的. N两者之间更换理论不需要重新调参. 使用F1芯片的飞控缺乏板载的FPU，打开浮点计算将会增加CPU负荷，使用整数会得到更加好的运行效果。但是浮点计算会提供稍微更加准确的计算"
     },
     "pidTuningFilterTip": {
-        "message": "<b>\u9640\u87ba\u67d4\u5316\u6ee4\u6ce2\u5668:<\/b> \u9640\u87ba\u7684\u4f4e\u901a\u6ee4\u6ce2\u5668. \u6570\u503c\u8d8a\u5c0f\uff0c\u6ee4\u6ce2\u66f4\u4e25\u91cd.<br><b>D Term \u6ee4\u6ce2\u5668:<\/b>Dterm \u4f4e\u901a\u6ee4\u6ce2\u5668.\u4f1a\u5f71\u54cdD\u503c\u7684\u8c03\u53c2\uff0c\u6570\u503c\u8d8a\u5c0f\uff0c\u6ee4\u6ce2\u66f4\u4e25\u91cd. <br><b>\u65b9\u5411\u6ee4\u6ce2\u5668:<\/b> \u8fc7\u6ee4\u65b9\u5411\u8f93\u51fa.\u5bf9\u65b9\u5411\u8f74\u9707\u52a8\u6216\u8005\u566a\u58f0\u5f88\u4e25\u91cd\u4f1a\u6709\u5e2e\u52a9\u3002"
+        "message": "<b>陀螺仪软件滤波器：<\/b> 陀螺仪的低通滤波。更低的数字会提供更多的过滤效果。<br><b>D Term 滤波器：<\/b>Dterm 低通滤波器。会影响D值的调参，更低的数字会提供更多的过滤效果。 <br><b>方向滤波器：<\/b> 对方向输出进行滤波。对方向轴震动或者噪声很严重的情况会有帮助。"
     },
     "pidTuningPidTuningTip": {
-        "message": "<b>\u6bd4\u4f8b P :<\/b> \u6570\u503c\u8d8a\u5927\uff0c\u98de\u673a\u4f1a\u8f93\u51fa\u8d8a\u5927\u529b\u91cf\u6765\u62b5\u6d88\u5916\u529b\u5f15\u8d77\u7684\u79fb\u52a8\uff0c\u8fc7\u5927\u4f1a\u5f15\u8d77\u9707\u8361 <br><b>\u79ef\u5206 I :<\/b>\u6570\u503c\u8d8a\u5927\uff0c\u5bf9\u4fdd\u6301\u98de\u673a\u59ff\u6001\u66f4\u597d\u3002\u4f46\u662f\u4e5f\u4f1a\u589e\u52a0\u98de\u673a\u5230\u8fbe\u9884\u5b9a\u89d2\u5ea6\u65f6\u95f4.<br><b>\u5bfc\u6570 D :<\/b> \u589e\u52a0\u56de\u4e2d\u65f6\u95f4\uff0c\u4f46\u662f\u4e5f\u4f1a\u589e\u52a0\u566a\u58f0<br><b>Rates and Expo<\/b>: Rates \u548cexpo \u5f71\u54cd\u8f6c\u52a8\u901f\u5ea6\u3002\u5f53\u4f60\u6253\u6ee1\u6447\u6746\u3002\u98de\u673a\u6700\u5927\u7ffb\u8f6c\u901f\u5ea6\u3002"
+        "message": "<b>比例 P:<\/b> 数值越大，飞机会输出越大力量来抵消外力引起的移动，过大会引起震荡 <br><b>积分 I:<\/b>数值越大，对保持飞机姿态更好。但是也会增加飞机到达预定角度时间。<br><b>导数 D:<\/b> 增加回中时间，但是也会增加噪声<br><b>Rates and Expo<\/b>: Rates 和expo 影响摇杆手感。参考图表和实时3D模型预览来找到你喜欢的设定。"
     },
     "pidTuningRatesTip": {
-        "message": "\u901a\u8fc7\u8bbe\u7f6erates\uff0c\u6765\u89c2\u5bdfRate\u662f\u600e\u6837\u5f71\u54cd\u6447\u6746\u7684\u66f2\u7ebf"
+        "message": "尝试不同的rates并观察它如何影响摇杆曲线"
     },
     "configurationCamera": {
-        "message": "\u6444\u50cf\u5934"
+        "message": "摄像头"
     },
     "configurationPersonalization": {
-        "message": "\u4e2a\u6027\u5316"
+        "message": "个性化"
     },
     "craftName": {
-        "message": "\u98de\u884c\u5668\u540d\u5b57"
+        "message": "飞行器名字"
     },
     "configurationFpvCamAngleDegrees": {
-        "message": "FPV\u6444\u50cf\u5934\u89d2\u5ea6[\u5ea6]"
+        "message": "FPV摄像头角度 [degrees]"
     },
     "onboardLoggingBlackbox": {
-        "message": "\u9ed1\u5323\u5b50\u8bb0\u5f55\u88c5\u7f6e"
+        "message": "黑匣子记录设备"
     },
     "onboardLoggingRateOfLogging": {
-        "message": "\u9ed1\u5323\u5b50\u51e0\u7387\u9891\u7387"
+        "message": "黑匣子记录速率"
     },
     "onboardLoggingSerialLogger": {
-        "message": "\u5916\u63a5\u4e32\u53e3\u8bb0\u5f55\u4eea"
+        "message": "外接串口日志记录设备"
     },
     "onboardLoggingFlashLogger": {
-        "message": "\u677f\u8f7d\u95ea\u5b58"
+        "message": "板载闪存"
     },
     "onboardLoggingEraseInProgress": {
-        "message": "\u6b63\u5728\u64e6\u9664\uff0c\u8bf7\u7a0d\u7b49\u3002\u3002\u3002"
+        "message": "正在擦除，请稍等……"
     },
     "onboardLoggingOnboardSDCard": {
-        "message": "\u677f\u8f7dSD \u5361"
+        "message": "板载SD卡"
     },
     "dialogConfirmResetTitle": {
-        "message": "\u786e\u8ba4"
+        "message": "确认"
     },
     "dialogConfirmResetNote": {
-        "message": "\u8b66\u544a\uff1a\u786e\u5b9a\u8981\u91cd\u7f6e\u6240\u6709\u8bbe\u7f6e\u5230\u9ed8\u8ba4\u8bbe\u7f6e\uff1f"
+        "message": "警告：确定要重置所有设置到默认设置？"
     },
     "dialogConfirmResetConfirm": {
-        "message": "\u91cd\u7f6e"
+        "message": "重置"
     },
     "dialogConfirmResetClose": {
-        "message": "\u53d6\u6d88"
+        "message": "取消"
     },
     "modeCameraWifi": {
-        "message": "\u6444\u50cf\u5934WI-FI \u6309\u952e"
+        "message": "摄像头WI-FI按键"
     },
     "modeCameraPower": {
-        "message": "\u6444\u50cf\u5934\u7535\u6e90\u6309\u952e"
+        "message": "摄像头电源按键"
     },
     "modeCameraChangeMode": {
-        "message": "\u6444\u50cf\u5934\u6539\u53d8\u6a21\u5f0f"
+        "message": "摄像头改变模式"
     }
 }

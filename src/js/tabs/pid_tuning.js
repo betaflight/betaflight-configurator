@@ -236,8 +236,18 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter input[name="dTermNotchFrequency"]').val(FILTER_CONFIG.dterm_notch_hz);
             $('.pid_filter input[name="dTermNotchCutoff"]').val(FILTER_CONFIG.dterm_notch_cutoff);
 
-            $('input[name="dtermSetpointTransition-number"]').val(ADVANCED_TUNING.dtermSetpointTransition / 100);
-            $('input[name="dtermSetpointTransition-range"]').val(ADVANCED_TUNING.dtermSetpointTransition / 100);
+            var dtermSetpointTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
+            var dtermSetpointTransitionRangeElement = $('input[name="dtermSetpointTransition-range"]');
+            if (semver.gte(CONFIG.apiVersion, "1.38.0")) {
+                dtermSetpointTransitionNumberElement.attr('min', 0.00);
+                dtermSetpointTransitionRangeElement.attr('min', 0.00);
+            } else {
+                dtermSetpointTransitionNumberElement.attr('min', 0.01);
+                dtermSetpointTransitionRangeElement.attr('min', 0.01);
+            }
+
+            dtermSetpointTransitionNumberElement.val(ADVANCED_TUNING.dtermSetpointTransition / 100);
+            dtermSetpointTransitionRangeElement.val(ADVANCED_TUNING.dtermSetpointTransition / 100);
 
             $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
             $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);

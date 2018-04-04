@@ -1,0 +1,3384 @@
+{
+    "warningTitle": {
+        "message": "Brīdinājums"
+    },
+    "noticeTitle": {
+        "message": "Paziņojums"
+    },
+    "options_title": {
+        "message": "Programmas iespējas"
+    },
+    "connect": {
+        "message": "Savienot"
+    },
+    "connecting": {
+        "message": "Savienojas"
+    },
+    "disconnect": {
+        "message": "Atvienot"
+    },
+    "portsSelectManual": {
+        "message": "Manuāli izvēlēties"
+    },
+    "portOverrideText": {
+        "message": "Ports:"
+    },
+    "autoConnect": {
+        "message": "Automātiska savienošanās"
+    },
+    "close": {
+        "message": "Aizvērt"
+    },
+    "autoConnectEnabled": {
+        "message": "Automātiskā savienošanās: Ieslēgta - Konfigurators mēģinās automātiski savienoties, kad tiks detektēts jauns ports"
+    },
+    "autoConnectDisabled": {
+        "message": "Automātiskā savienošanās: Atslēgta - Lietotājam nepieciešams pašam izvēlēties pareizo seriālo portu un nospiest uz pogas \"Savienot\""
+    },
+    "expertMode": {
+        "message": "Ieslēgt eksperta režīmu"
+    },
+    "permanentExpertMode": {
+        "message": "Patstāvīgi ieslēgts eksperta režīms"
+    },
+    "userLanguageSelect": {
+        "message": "Valoda (nepieciešams pārstartēt programmu, lai izmaiņas stātos spēkā)"
+    },
+    "language_default": {
+        "message": "Noklusējuma"
+    },
+    "sensorDataFlashNotFound": {
+        "message": "Datu atmiņas <br>čips nav atrasts",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "Datu atmiņa: brīva vieta",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorStatusGyro": {
+        "message": "Žiroskops"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Žiro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusAccel": {
+        "message": "Akselerometrs"
+    },
+    "sensorStatusAccelShort": {
+        "message": "Aksel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusMag": {
+        "message": "Magnetometrs"
+    },
+    "sensorStatusMagShort": {
+        "message": "Mag",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusBaro": {
+        "message": "Barometrs"
+    },
+    "sensorStatusBaroShort": {
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusSonar": {
+        "message": "Sonārs \/ Attāluma noteicējs"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Rādīt atjauninājumu paziņojumus priekš konfiguratora nestabilajām versijām"
+    },
+    "configuratorUpdateNotice": {
+        "message": "Jūs lietojat novecojušu <b>Betaflight Konfiguratora<\/b> versiju.<br>Versija <b>$1<\/b> ir pieejama, lūdzu apmeklējiet <a href=\"$2\" target=\"_blank\">relīžu lapu<\/a>, lai lejupielādētu un uzstādītu jaunāko versiju ar labojumiem un uzlabojumiem.<br>Lūdzu aizveriet konfiguratora logu pirms atjaunināšanās."
+    },
+    "configuratorUpdateWebsite": {
+        "message": "Dodieties uz relīzes vietni"
+    },
+    "deviceRebooting": {
+        "message": "Ierīce - <span class=\"message-negative\">Pārstartējas<\/span>"
+    },
+    "deviceReady": {
+        "message": "Ierīce - <span class=\"message-positive\">Gatava<\/span>"
+    },
+    "backupFileIncompatible": {
+        "message": "Rezerves kopijas fails tika uzģenerēts iepriekšējajai konfiguratora versijai un nav saderīgs ar šo konfiguratora versiju. Piedodiet"
+    },
+    "backupFileUnmigratable": {
+        "message": "Rezerves kopijas failu uzģenerēja iepriekšējās versijas konfigurators un tas nav migrējams. Piedodiet."
+    },
+    "configMigrationFrom": {
+        "message": "Migrēšanas konfigurācijas failu uzģenerēja konfigurators: $1"
+    },
+    "configMigratedTo": {
+        "message": "Migrēja konfigurāciju uz konfiguratoru: $1"
+    },
+    "configMigrationSuccessful": {
+        "message": "Konfigurācijas migrācija pabeigta, migrācija piemērota: $1"
+    },
+    "tabFirmwareFlasher": {
+        "message": "Programmators"
+    },
+    "tabLanding": {
+        "message": "Laipni lūgti"
+    },
+    "tabHelp": {
+        "message": "Dokumentācija & Atbalsts"
+    },
+    "tabSetup": {
+        "message": "Iestatījumi"
+    },
+    "tabSetupOSD": {
+        "message": "OSD iestatījumi"
+    },
+    "tabConfiguration": {
+        "message": "Konfigurācija"
+    },
+    "tabPorts": {
+        "message": "Porti"
+    },
+    "tabPidTuning": {
+        "message": "PID ieregulēšana"
+    },
+    "tabReceiver": {
+        "message": "Uztvērējs"
+    },
+    "tabModeSelection": {
+        "message": "Režīma izvēle"
+    },
+    "tabServos": {
+        "message": "Servos"
+    },
+    "tabFailsafe": {
+        "message": "Failsafe"
+    },
+    "tabTransponder": {
+        "message": "Sacensību transponders"
+    },
+    "tabOsd": {
+        "message": "OSD"
+    },
+    "tabPower": {
+        "message": "Barošanas & Akumulators"
+    },
+    "tabGPS": {
+        "message": "GPS"
+    },
+    "tabMotorTesting": {
+        "message": "Motori"
+    },
+    "tabLedStrip": {
+        "message": "LED lenta"
+    },
+    "tabRawSensorData": {
+        "message": "Sensors"
+    },
+    "tabCLI": {
+        "message": "CLI"
+    },
+    "tabLogging": {
+        "message": "Piesaistītā žurnalēšana"
+    },
+    "tabOnboardLogging": {
+        "message": "Melnā kaste"
+    },
+    "tabAdjustments": {
+        "message": "Korekcijas"
+    },
+    "tabAuxiliary": {
+        "message": "Režīmi"
+    },
+    "logActionHide": {
+        "message": "Slēpt žurnālu"
+    },
+    "logActionShow": {
+        "message": "Rādīt žurnālu"
+    },
+    "serialPortOpened": {
+        "message": "Seriālais ports <span class=\"message-positive\">veiksmīgi<\/span> atvērts ar ID: $1"
+    },
+    "serialPortOpenFail": {
+        "message": "<span class=\"message-negative\">Neizdevās<\/span> atvērt seriālo portu"
+    },
+    "serialPortClosedOk": {
+        "message": "Seriālais ports <span class=\"message-positive\">veiksmīgi<\/span> aizvērts"
+    },
+    "serialPortClosedFail": {
+        "message": "<span class=\"message-negative\">Neizdevās<\/span> aizvērt seriālo portu"
+    },
+    "serialUnrecoverable": {
+        "message": "Neatgriezeniska <span class=\"message-negative\">kļūda<\/span> seriālajā savienojumā, atvienojās..."
+    },
+    "usbDeviceOpened": {
+        "message": "USB ierīce <span class=\"message-positive\">veiksmīgi<\/span> atvērta ar ID: $1"
+    },
+    "usbDeviceOpenFail": {
+        "message": "<span class=\"message-negative\">Neizdevās<\/span> atvērt USB ierīci!"
+    },
+    "usbDeviceClosed": {
+        "message": "USB ierīce <span class=\"message-positive\">veiksmīgi<\/span> aizvērta"
+    },
+    "usbDeviceCloseFail": {
+        "message": "<span class=\"message-negative\">Neizdevās<\/span> aizvērt USB ierīci"
+    },
+    "usbDeviceUdevNotice": {
+        "message": "Vai <strong>udev nosacījumi<\/strong> uzstādīti pareizi? Instrukcijas skatīt dokumentācijā"
+    },
+    "stm32UsbDfuNotFound": {
+        "message": "USB DFU nav atrasts"
+    },
+    "stm32TimedOut": {
+        "message": "STM32 - laiks beidzies, programmēšana: NEIZDEVĀS"
+    },
+    "stm32WrongResponse": {
+        "message": "STM32 Komunikācija neizdevās, nepareiza atbilde, sagaidāms: $1 (0x$2) saņemts: $3 (0x$4)"
+    },
+    "stm32ContactingBootloader": {
+        "message": "Pieslēdzas pie ielādētāja ..."
+    },
+    "stm32ContactingBootloaderFailed": {
+        "message": "Komunikācija ar ielādētāju neizdevās"
+    },
+    "stm32ResponseBootloaderFailed": {
+        "message": "Nav atbildes no ielādētāja, programmēšana: NEIZDEVĀS"
+    },
+    "stm32GlobalEraseExtended": {
+        "message": "Izpilda globālo čipa dzēšana (ar paplašināto dzēšanu)..."
+    },
+    "stm32LocalEraseExtended": {
+        "message": "Izpilda lokālo čipa dzēšana (ar paplašināto dzēšanu)..."
+    },
+    "stm32GlobalErase": {
+        "message": "Izpilda globālo čipa dzēšanu..."
+    },
+    "stm32LocalErase": {
+        "message": "Izpilda lokālo dzēšanu..."
+    },
+    "stm32Erase": {
+        "message": "Notiek dzēšana..."
+    },
+    "stm32Flashing": {
+        "message": "Programmē ..."
+    },
+    "stm32Verifying": {
+        "message": "Pārbauda ..."
+    },
+    "stm32ProgrammingSuccessful": {
+        "message": "Programmēšana: VEIKSMĪGA"
+    },
+    "stm32ProgrammingFailed": {
+        "message": "Programmēšana: NEIZDEVĀS"
+    },
+    "stm32AddressLoadFailed": {
+        "message": "Adrešu ielāde priekš opciju baita sektora neizdevās. Ļoti iespējams, ka sakarā ar lasīšanas aizsardzību."
+    },
+    "stm32AddressLoadSuccess": {
+        "message": "Adrešu ielāde priekš opciju baita sektora izdevās."
+    },
+    "stm32AddressLoadUnknown": {
+        "message": "Adrešu ielāde priekš opciju baita sektora neizdevās ar nezināmu kļūdu. Pārtrauc."
+    },
+    "stm32NotReadProtected": {
+        "message": "Nolasīšanas aizsardzība nav aktīva"
+    },
+    "stm32ReadProtected": {
+        "message": "Izskatās, ka platei ir nolasīšanas aizsardzība. Noņemu aizsardzību. Neatvienojiet\/neatslēdziet plati!"
+    },
+    "stm32UnprotectSuccessful": {
+        "message": "Aizsardzība noņemta veiksmīgi."
+    },
+    "stm32UnprotectUnplug": {
+        "message": "NEPIECIEŠAMA DARBĪBA: Atslēdziet un pieslēdziet atpakaļ lidojuma kontrolieri DFU režīmā, lai mēģinātu programmēt vēlreiz!"
+    },
+    "stm32UnprotectFailed": {
+        "message": "Neizdevās noņemt plates aizsardzību"
+    },
+    "stm32UnprotectInitFailed": {
+        "message": "Neizdevās izsaukt aizsardzības noņemšanas rutīnu"
+    },
+    "noConfigurationReceived": {
+        "message": "Konfigurācija nav saņemta <span class=\"message-negative\">10 sekunžu<\/span> laikā, komunikācija <span class=\"message-negative\">neizdevās<\/span>"
+    },
+    "firmwareVersionNotSupported": {
+        "message": "Šī programmatūras versija <span class=\"message-negative\">netiek atbalstīta<\/span>. Lūdzu atjaunināties uz programmatūru, kas atbalsta API versiju <strong>$1<\/strong> vai augstāk. Izmantojiet CLI lai veiktu dublēšanu pirms programmēšanas. CLI dublēšanass\/atjaunošanas procedūras aprakstītas dokumentācijā. <br \/> Alternatīvi jūs varat lejuplādēt un lietot veco konfiguratora versiju, ja jūs neesat gatavs atjaunināt."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Programmas, kas nav Cleanflight\/Betaflight <span class=\"message-negative\">netiek atbalstītas<\/span>, izņemot CLI režīmu."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "Šai programmatūrai uz šīs iekārtas nepieciešama atjaunināšana uz jaunāku versiju. Izmantojiet CLI, lai dublētu datus pirms programmēšanas. CLI dublēšanas\/atjaunošanas procedūras ir dokumentācijā. <br \/>Alternatīva ir lejupielādēt un lietot veco konfiguratora versiju, ja jūs neesat gatavs atjaunināt."
+    },
+    "infoVersions": {
+        "message": "Strādā - OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Konfigurātors: <strong>$3<\/strong>"
+    },
+    "releaseCheckLoaded": {
+        "message": "Ielādēta relīzes informācija priekš $1 no GitHub."
+    },
+    "releaseCheckFailed": {
+        "message": "<b>Neveiksmīgs $1 relīzes GitHub pieprasījums, lieto kešatmiņā saglabāto informāciju. Iemesls: <code>$2<\/code><\/b>"
+    },
+    "releaseCheckCached": {
+        "message": "Izmanto kešoto relīzes informāciju priekš $1 relīzes."
+    },
+    "releaseCheckNoInfo": {
+        "message": "Nav pieejama $1 izdošanas informācija."
+    },
+    "tabSwitchConnectionRequired": {
+        "message": "Jums vajag <strong>savienoties<\/strong> pirms varat aplūkot kādu no cilnēm."
+    },
+    "tabSwitchWaitForOperation": {
+        "message": "Jūs patreiz to <span class=\"message-negative\">nevarat<\/span> izdarīt, lūdzu, uzgaidiet kamēr esošā operācija beigsies ..."
+    },
+    "tabSwitchUpgradeRequired": {
+        "message": "Jums vajag <strong>atjaunot<\/strong> jūsu programmatūras versiju uz jaunāko Betaflight versiju pirms varat sākt izmantot $1 cilni."
+    },
+    "firmwareVersion": {
+        "message": "Programmaparatūras versija: <strong>$1<\/strong>"
+    },
+    "apiVersionReceived": {
+        "message": "MultiWii API versija: <strong>$1<\/strong>"
+    },
+    "uniqueDeviceIdReceived": {
+        "message": "Ierīce unikālā ID: <strong>0x$1<\/strong>"
+    },
+    "craftNameReceived": {
+        "message": "Gaisa kuģa vārds: <strong>$1<\/strong>"
+    },
+    "armingDisabled": {
+        "message": "<strong>Aktivizēšana atslēgta<\/strong>"
+    },
+    "armingEnabled": {
+        "message": "<strong>Aktivizēšana ieslēgta<\/strong>"
+    },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong>Neadekvātās pacelšanās novēršana daļēji atslēgta<\/strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong>Neadekvātās pacelšanās novēršana ieslēgta<\/strong>"
+    },
+    "boardInfoReceived": {
+        "message": "Plate: <strong>$1<\/strong>, versija: <strong>$2<\/strong>"
+    },
+    "buildInfoReceived": {
+        "message": "Izmantojamā programma relizēta: <strong>$1<\/strong>"
+    },
+    "fcInfoReceived": {
+        "message": "Lidojuma kontroliera info, identifikators: <strong>$1<\/strong>, versija: <strong>$2<\/strong>"
+    },
+    "versionLabelTarget": {
+        "message": "Mērķi"
+    },
+    "versionLabelFirmware": {
+        "message": "Programmatūra"
+    },
+    "versionLabelConfigurator": {
+        "message": "Konfigurātors"
+    },
+    "notifications_app_just_updated_to_version": {
+        "message": "Lietotne atjaunota līdz versijai: $1"
+    },
+    "notifications_click_here_to_start_app": {
+        "message": "Nospied šeit, lai palaistu lietotni"
+    },
+    "statusbar_port_utilization": {
+        "message": "Porta noslodze:"
+    },
+    "statusbar_usage_download": {
+        "message": "D: $1 %"
+    },
+    "statusbar_usage_upload": {
+        "message": "U: $1%"
+    },
+    "statusbar_packet_error": {
+        "message": "Pakešu kļūda:"
+    },
+    "statusbar_i2c_error": {
+        "message": "I2C kļūda:"
+    },
+    "statusbar_cycle_time": {
+        "message": "Cikla laiks:"
+    },
+    "statusbar_cpu_load": {
+        "message": "CPU noslodze: $1%"
+    },
+    "dfu_connect_message": {
+        "message": "Lūdzu, izmantojiet programmatoru. lai piekļūtu DFU ierīcei"
+    },
+    "dfu_erased_kilobytes": {
+        "message": "<span class=\"message-positive\">Veiksmīgi<\/span> izdzēsts $1 kB no atmiņas"
+    },
+    "dfu_device_flash_info": {
+        "message": "Detektēta ierīces ar kopējo atmiņas lielumu $1 KiB"
+    },
+    "dfu_error_image_size": {
+        "message": "<span class=\"message-negative\">Kļūda<\/span>: Attēls ir lielāks neka uz čipa pieejamā vieta! Attēls: $1 KiB, limits = $2 KiB"
+    },
+    "eeprom_saved_ok": {
+        "message": "EEPROM <span class=\"message-positive\"> saglabāts<\/span>"
+    },
+    "defaultWelcomeIntro": {
+        "message": "Laipni lūgti <strong>Betaflight - Configurator<\/strong>, utilītā, kas paredzēta, lai vienkāršotu lidojuma kontroliera atjaunināšanu, konfigurēšanu un noregulēšanu."
+    },
+    "defaultWelcomeHead": {
+        "message": "Aparatūra"
+    },
+    "defaultWelcomeText": {
+        "message": "Šī aplikācija atbalsta visus kontrolierus uz kuriem var darboties Betaflight. Programmatora cilnē var skatīt atbalstāmo kontrolieru sarakstu.<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Lejuplādēt Betaflight Blackbox<\/a><br \/><br \/>Programmatūras izejas kods var tikt lejupielādēts <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">šeit<\/a><br \/>Jaunākais programmatūras binārais attēls ir pieejams <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">šeit<\/a><br \/><br \/>Jaunākais <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x Drivers<\/a> var tikt lejuplādēts <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">šeit<\/a><br \/>Jaunākais <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> var tikt lejuplādēts <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">šeit<\/a><br \/>Jaunākais <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> priekš Windows USB draivera instalācijas var tikt lejuplādēts <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">šeit<\/a><br \/>"
+    },
+    "defaultContributingHead": {
+        "message": "Atbalstīt"
+    },
+    "defaultContributingText": {
+        "message": "Ja jūs vēlaties padarīt Betaflight vēl labāku jūs varat palīdzēt daudzos veidos, ieskaitot:<br \/><ul><li>Atbildot uz citu lietotāju jautājumiem forumos un IRC.<\/li><li>Atbalstot programmatūras un konfiguratora kodu - jaunas iespējas, labojumi, uzlabojumi<\/li><li>Testējot <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">jaunās iespējas\/labojumus<\/a> sniedzot atsauksmes.<\/li><li>Palīdzot ar <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">problēmām un komentējot iespēju pieprasījumus<\/a>.<\/li><li>Sadarbojoties <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">tulkojot konfiguratora aplikāciju<\/a>jūsu valodā.<\/li><li><\/li><\/ul>"
+    },
+    "defaultChangelogAction": {
+        "message": "Izmaiņas"
+    },
+    "defaultChangelogHead": {
+        "message": "Konfiguratora izmaiņu žurnāls"
+    },
+    "defaultButtonFirmwareFlasher": {
+        "message": "Programmators"
+    },
+    "defaultDonateHead": {
+        "message": "Atvērtā koda \/ ziedojuma paziņojums"
+    },
+    "defaultDonateText": {
+        "message": "Šī utilīta ir pilnībā <strong>atvērta koda tipa<\/strong> un ir pieejama bezmaksas visiem <strong>Betaflight<\/strong> lietotājiem.<br \/>Ja tev Betaflight vai Betaflight konfigurators ir noderīgi, lūdzu apsver iespēju <strong>atbalstīt<\/strong> to izstrādi ziedojot."
+    },
+    "defaultDonate": {
+        "message": "Ziedot"
+    },
+    "defaultSponsorsHead": {
+        "message": "Sponsori"
+    },
+    "defaultDocumentationHead": {
+        "message": "Dokumentācija \/ Manuāli"
+    },
+    "defaultDocumentation": {
+        "message": "Betaflight dokumentācija ir pieejama relīzes dokumentācijā un wiki.<br \/><br \/>"
+    },
+    "defaultDocumentation1": {
+        "message": "Betaflight wiki ir lielisks informācijas avots, to var atrast <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\" target=\"_blank\">šeit<\/a>."
+    },
+    "defaultDocumentation2": {
+        "message": "Programmatūras relīzes dokumentācija ir pieejama GitHub relīžu lapā <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\">šeit<\/a>."
+    },
+    "defaultSupportHead": {
+        "message": "Atbalsts"
+    },
+    "defaultSupportSubline1": {
+        "message": "Atbalsta avoti"
+    },
+    "defaultSupportSubline2": {
+        "message": "Izstrādātājs"
+    },
+    "defaultSupport": {
+        "message": "Palīdzībai, lūdzu, apmeklējiet forumus un wiki vai sazināties ar savu pārdevēju.<br \/><br \/>"
+    },
+    "defaultSupport1": {
+        "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Grupas diskusijas<\/a>"
+    },
+    "defaultSupport2": {
+        "message": "<a href=\"http:\/\/betaflight.info\" target=\"_blank\">Betaflight Wiki<\/a>"
+    },
+    "defaultSupport3": {
+        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight Video<\/a>"
+    },
+    "defaultSupport4": {
+        "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">Betaflight izstrādātāji iekš slack<\/a>"
+    },
+    "initialSetupBackupAndRestoreApiVersion": {
+        "message": "<span class=\"message-negative\">Dublēšanas un atjaunošanas funkcionalitāte ir atslēgta.<\/span>Jūsu programmatūras API versija <span class=\"message-negative\">$1<\/span>, dublēšanai un atjaunošanai nepieciešama <span class=\"message-positive\">$2<\/span>.  Lūdzu, dublējat savus iestatījumus ar CLI, procedūras aprakstu skatīt Betaflight dokumentācijā."
+    },
+    "initialSetupButtonCalibrateAccel": {
+        "message": "Kalibrēt akselerometru"
+    },
+    "initialSetupCalibrateAccelText": {
+        "message": "Nolieciet plati vai rāmi uz <strong>nolīmeņotas<\/strong> virsmas, veiciet kalibrēšanu, kalibrēšanas laikā nodrošiniet platformas nekustēšanos"
+    },
+    "initialSetupButtonCalibrateMag": {
+        "message": "Kalibrēt magnetometru"
+    },
+    "initialSetupCalibrateMagText": {
+        "message": "Apgrieziet multirotoru vismaz par <strong>360<\/strong> grādiem visās rotācijas asīs, jums ir 30 sekundes, lai veiktu šo uzdevumu"
+    },
+    "initialSetupButtonCalibratingText": {
+        "message": "Kalibrē..."
+    },
+    "initialSetupButtonReset": {
+        "message": "Atiestatīt iestatījumus"
+    },
+    "initialSetupResetText": {
+        "message": "Atjaunot <strong>noklusējuma<\/strong> iestatījumus"
+    },
+    "initialSetupButtonBackup": {
+        "message": "Dublēt"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Atjaunot"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "Veikt jūsu konfigurācijas <strong>dublēšanu<\/strong>, ja notiek kas negaidīts, <strong>CLI<\/strong> konfigurācija <span class=\"message-negative\">netiek<\/span> iekļauta - skatīt 'dump' cli komandu"
+    },
+    "initialSetupBackupSuccess": {
+        "message": "Rezerves kopija <span class=\"message-positive\">veiksmīgi saglabāta<\/span>"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "Konfigurācija atjaunota <span class=\"message-positive\">veiksmīgi<\/span>"
+    },
+    "initialSetupButtonResetZaxis": {
+        "message": "Atiestatīt Z asi, nobīde: 0 grādi"
+    },
+    "initialSetupButtonResetZaxisValue": {
+        "message": "Atiestatīt Z asi, nobīde: $1 grādi"
+    },
+    "initialSetupMixerHead": {
+        "message": "Miksera tips"
+    },
+    "initialSetupThrottleHead": {
+        "message": "Droseles Iestatījumi"
+    },
+    "initialSetupMinimum": {
+        "message": "Minimums:"
+    },
+    "initialSetupMaximum": {
+        "message": "Maksimums:"
+    },
+    "initialSetupFailsafe": {
+        "message": "Failsafe:"
+    },
+    "initialSetupMinCommand": {
+        "message": "Min. Komanda:"
+    },
+    "initialSetupBatteryHead": {
+        "message": "Akumulators"
+    },
+    "initialSetupMinCellV": {
+        "message": "Min šūnas spriegums:"
+    },
+    "initialSetupMaxCellV": {
+        "message": "Max šūnas spriegums:"
+    },
+    "initialSetupVoltageScale": {
+        "message": "Sprieguma skala:"
+    },
+    "initialSetupAccelTrimsHead": {
+        "message": "Akselerometra pieregulēšana"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
+    "initialSetupMagHead": {
+        "message": "Magnetometrs"
+    },
+    "initialSetupDeclination": {
+        "message": "Declination:"
+    },
+    "initialSetupInfoHead": {
+        "message": "Info"
+    },
+    "initialSetupBattery": {
+        "message": "Akumulatora spriegums:"
+    },
+    "initialSetupBatteryValue": {
+        "message": "$1 V"
+    },
+    "initialSetupDrawn": {
+        "message": "Izmantotā kapacitāte:"
+    },
+    "initialSetupDrawing": {
+        "message": "Strāvas patēriņš:"
+    },
+    "initialSetupBatteryMahValue": {
+        "message": "$1 mAh"
+    },
+    "initialSetupBatteryAValue": {
+        "message": "$1 A"
+    },
+    "initialSetupRSSI": {
+        "message": "RSSI:"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 %"
+    },
+    "initialSetupArmingDisableFlags": {
+        "message": "Aktivizēšanu bloķējošie karogi:"
+    },
+    "initialSetupArmingAllowed": {
+        "message": "Aktivizēšana atļauta"
+    },
+    "initialSetupArmingDisableFlagsTooltip": {
+        "message": "Saraksts ar karogiem, kas indicē kāpēc aktivizācija nav atļauta. Pirmā un viss svarīgākā vērtība atbilst brīdinājuma pīkstienu skaitam, kas skan, kad mēģina aktivizēt. Lūdzu vērsieties Wiki ('Arming Sequence & Safety' lapā) priekš apraksta ko katrs karogs nozīmē."
+    },
+    "initialSetupGPSHead": {
+        "message": "GPS"
+    },
+    "initialSetupInstrumentsHead": {
+        "message": "Instrumenti"
+    },
+    "initialSetupButtonSave": {
+        "message": "Saglabāt"
+    },
+    "initialSetupModel": {
+        "message": "Modelis: $1"
+    },
+    "initialSetupAttitude": {
+        "message": "$1 grādi"
+    },
+    "initialSetupAccelCalibStarted": {
+        "message": "Akselerometra kalibrēšana uzsākta"
+    },
+    "initialSetupAccelCalibEnded": {
+        "message": "Akselerometra kalibrēšana <span class=\"message-positive\">pabeigta<\/span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "Magnetometra kalibrēšana uzsākta"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Magnetometra kalibrēšana <span class=\"message-positive\">pabeigta<\/span>"
+    },
+    "initialSetupSettingsRestored": {
+        "message": "<strong>Noklusējuma<\/strong> iestatījumi atjaunoti"
+    },
+    "initialSetupEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "featureNone": {
+        "message": "&lt;Izvēlies vienu&gt;"
+    },
+    "featureRX_PPM": {
+        "message": "PPM RX ievade"
+    },
+    "featureVBAT": {
+        "message": "Akumulatora sprieguma monitorings"
+    },
+    "featureINFLIGHT_ACC_CAL": {
+        "message": "Līmeņojuma kalibrēšana lidojuma laikā"
+    },
+    "featureRX_SERIAL": {
+        "message": "Seriālā-principa uztvērējs (SPEKSAT, SBUS, SUMD)"
+    },
+    "featureMOTOR_STOP": {
+        "message": "Negriezt motorus, kad aktivizēts"
+    },
+    "featureSERVO_TILT": {
+        "message": "Servo gimbal"
+    },
+    "featureSOFTSERIAL": {
+        "message": "Ieslēgt seriālo portu uz CPU pamata"
+    },
+    "featureSOFTSERIALTip": {
+        "message": "Pēc porta ieslēgšanas nokonfigurējiet to cilnē Porti."
+    },
+    "featureGPS": {
+        "message": "GPS priekš navigācijas un telemetrijas"
+    },
+    "featureGPSTip": {
+        "message": "No sākuma nokonfigurējiet porta scenāriju"
+    },
+    "featureSONAR": {
+        "message": "Sonārs"
+    },
+    "featureTELEMETRY": {
+        "message": "Telemetrijas izvade"
+    },
+    "featureCURRENT_METER": {
+        "message": "Akumulatora strāvas monitorings"
+    },
+    "feature3D": {
+        "message": "3D režīms (Pielieto ar ESC, kas atbalsta maināmu griešanās virzienu)"
+    },
+    "featureRX_PARALLEL_PWM": {
+        "message": "PWM RX ievade (viens vads uz katru kanālu)"
+    },
+    "featureRX_MSP": {
+        "message": "MSP RX ievade (kontrole caur MSP portu)"
+    },
+    "featureRSSI_ADC": {
+        "message": "Analogā RSSI ievade"
+    },
+    "featureLED_STRIP": {
+        "message": "RGB LED lentes atbalsts"
+    },
+    "featureDISPLAY": {
+        "message": "OLED ekrāna displejs"
+    },
+    "featureDISPLAYTip": {
+        "message": "Ja šī iespēja ir ieslēgta, un neviens displejs nav pieslēgts (vai displeja ierīce nav pieslēgta barošanai), tad aizture būs apmēram 10 sekundes pie katra lidojuma kontroliera pārstartēšanas."
+    },
+    "featureONESHOT125": {
+        "message": "ONESHOT ESC atbalsts"
+    },
+    "featureONESHOT125Tip": {
+        "message": "Pirms ieslēgšanas atvienojiet akumulatoru un noņemiet propellerus."
+    },
+    "featureBLACKBOX": {
+        "message": "Melnās kastes lidojuma datu reģistrators"
+    },
+    "featureBLACKBOXTip": {
+        "message": "Pēc ieslēgšanas konfigurēt caur Melnās kastes cilni."
+    },
+    "featureRX_SPI": {
+        "message": "SPI RX atbalsts"
+    },
+    "featureESC_SENSOR": {
+        "message": "Pielietot KISS\/BLHeli_32 ESC telemetriju kā sensorus"
+    },
+    "featureCHANNEL_FORWARDING": {
+        "message": "Novirzīt aux kanālus uz servo izvadi"
+    },
+    "featureTRANSPONDER": {
+        "message": "Sacensību transponders"
+    },
+    "featureTRANSPONDERTip": {
+        "message": "Pēc ieslēgšanas konfigurēt caur Sacensību transpondera cilni."
+    },
+    "featureAIRMODE": {
+        "message": "Patstāvīgi ieslēgts Airmode režīms"
+    },
+    "featureSUPEREXPO_RATES": {
+        "message": "Super Ekspo ātrums"
+    },
+    "featureSDCARD": {
+        "message": "SD kartes atbalsts (žurnalēšanai)"
+    },
+    "featureOSD": {
+        "message": "Uz ekrāna displejs"
+    },
+    "featureVTX": {
+        "message": "Video raidītājs"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "Īslaicīgi palielināt I-Term pie lielām droseles vērtībām izmaiņām"
+    },
+    "featureDYNAMIC_FILTER": {
+        "message": "Žiroskopa dinamiskā joslu ierobežojošā filtrēšana"
+    },
+    "featureFAILSAFE": {
+        "message": "Ieslēgt Failsafe posmu 2"
+    },
+    "featureFAILSAFEOld": {
+        "message": "Ieslēgt Failsafe"
+    },
+    "featureFAILSAFETip": {
+        "message": "<strong>Piezīme:<\/strong> Kad posms 2 ir ATSLĒGTS, atkāpšanās iestatījumi <strong>Auto<\/strong> tiks pielietoti lietotāja iestatījumu vietā priekš visiem lidojuma kanāliem(Roll, Pitch, Yaw un drosele)."
+    },
+    "featureFAILSAFEOldTip": {
+        "message": "Pielietot Failsafe iestatījumus pie RX signāla zudumu"
+    },
+    "configurationFeatureEnabled": {
+        "message": "Aktivizēts"
+    },
+    "configurationFeatureName": {
+        "message": "Iespēja"
+    },
+    "configurationFeatureDescription": {
+        "message": "Apraksts"
+    },
+    "configurationMixer": {
+        "message": "Mikseris"
+    },
+    "configurationFeatures": {
+        "message": "Citas iespējas"
+    },
+    "configurationReceiver": {
+        "message": "Uztvērējs"
+    },
+    "configurationReceiverMode": {
+        "message": "Uztvērēja režīms"
+    },
+    "configurationRSSI": {
+        "message": "RSSI (saņemtā signāla stipruma indikators)"
+    },
+    "configurationRSSIHelp": {
+        "message": "RSSI ir signāla stipruma mērījums un ir ļoti parocīgs, lai jūs zinātu, kad jūsu gaisa kuģis iziet no uztveršanas zonas vai tas cieš no RF interferences."
+    },
+    "configurationEscFeatures": {
+        "message": "ESC\/Motora iespējas"
+    },
+    "configurationFeaturesHelp": {
+        "message": "<strong>Piezīme:<\/strong> Ne visas iespēju kombinācijas ir derīgas. Kad lidojuma kontroliera programmatūra noteiks neiespējamu kombināciju, konfliktējošas iespējas tiks atslēgtas.<br \/><strong>Piezīme:<\/strong> Nokonfigurējiet seriālo portu <span class=\"message-negative\">pirms<\/span> ieslēdzat iespējas, kas izmanto portus."
+    },
+    "configurationSerialRXHelp": {
+        "message": "<strong>Piezīme:<\/strong> Atcerieties nokonfigurēt seriālo portu (caur cilni Porti) un izvēlieties seriālā uztvērēja nodrošinātāju, kad izmantojat RX_SERIAL iespēju."
+    },
+    "configurationSpiRxHelp": {
+        "message": "<strong>Piezīme:<\/strong> SPI RX devējs darbojas tikai tad, ja nepieciešamā aparatūra ir uz plates vai pieslēgta pie SPI līnijas."
+    },
+    "configurationOtherFeaturesHelp": {
+        "message": "<strong>Piezīme:<\/strong> Ne visas iespējas ir atbalstītas ar visiem lidojuma kontrolieriem. Ja jūs ieslēdzat specifisku iespēju, un tā atslēdzas pēc nospiešanas 'Saglabāt un pārstartēt', tas nozīmē ka konkrētā iespēja netiek atbalstīta uz konkrētās plates."
+    },
+    "configurationBoardAlignment": {
+        "message": "Plates un sensoru centrēšana"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Roll grādi"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Pitch grādi"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Yaw grādi"
+    },
+    "configurationSensorAlignmentGyro": {
+        "message": "ŽIRO centrēšana"
+    },
+    "configurationSensorAlignmentAcc": {
+        "message": "AKSEL centrēšana"
+    },
+    "configurationSensorAlignmentMag": {
+        "message": "MAG centrēšana"
+    },
+    "configurationSensorAlignmentDefaultOption": {
+        "message": "Noklusējuma"
+    },
+    "configurationAccelTrims": {
+        "message": "Akselerometra pieregulēšana"
+    },
+    "configurationAccelTrimRoll": {
+        "message": "Akselerometra Roll pieregulēšana"
+    },
+    "configurationAccelTrimPitch": {
+        "message": "Akselerometra Pitch pieregulēšana"
+    },
+    "configurationArming": {
+        "message": "Aktivizēšana"
+    },
+    "configurationArmingHelp": {
+        "message": "Dažām aktivizācijas iespējām ir nepieciešams akselerometrs"
+    },
+    "configurationMagDeclination": {
+        "message": "Magnetometra deklinācija [deg]"
+    },
+    "configurationReverseMotorSwitch": {
+        "message": "Motoru griešanās virziens ir reversā"
+    },
+    "configurationReverseMotorSwitchHelp": {
+        "message": "Ieslēdzot šo iespēju Betaflight tiks pateikts, ka motori un propelleri ir uzlikti pretējā griešanas virzienā."
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "Deaktivēt motorus pēc uzstādītās laika aiztures[seconds] (Nepieciešama MOTOR_STOP funkcija)"
+    },
+    "configurationDisarmKillSwitch": {
+        "message": "Deaktivēt motorus neatkarīgi no droseles vērtības (Kad aktivizēšana ir nokonfigurēta Režīmu cilnē caur AUX kanālu)"
+    },
+    "configurationDisarmKillSwitchHelp": {
+        "message": "Aktivizēšana vienmēr ir atslēgta, kad droselē vērtība nav lejā. Esat uzmanīgi, jo varat nejauši deaktivēt ar slēdzi kamēr lidojat ar ieslēgtu šo iespēju."
+    },
+    "configurationDigitalIdlePercent": {
+        "message": "Motora tukšgaitas droseles vērtība [percent]"
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "Šī ir 'tukšgaitas' vērtība procentos no maksimālās droseles vērtības, kas tiek sūtīta uz ESC, kad gaisa kuģis ir aktivizēts un droseles svira ir minimālajā pozīcijā. Palieliniet procentu vērtību, lai palielinātu tukšgaitas ātrumu."
+    },
+    "configurationThrottleMinimum": {
+        "message": "Droseles minimums (Zemākā ESC vērtība, kad aktivizēts)"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Šī ir 'tukšgaitas' vērtība, kas tiek sūtīta uz ESC, kad gaisa kuģis ir aktivizēts un droseles svira ir minimālajā pozīcijā. Palieliniet procentu vērtību, lai palielinātu tukšgaitas ātrumu. Palieliniet vērtību arī motoru desinhronizācijas gadījumā!"
+    },
+    "configurationThrottleMaximum": {
+        "message": "Droseles maksimums (Augstākā ESC vērtība, kad aktivizēts)"
+    },
+    "configurationThrottleMinimumCommand": {
+        "message": "Minimālā komanda (ESC vērtība, kad deaktivēts)"
+    },
+    "configurationThrottleMinimumCommandHelp": {
+        "message": "Šī ir vērtība, kas tiek sūtīta uz ESC, kad gaisa kuģis ir deaktivēts. Uzstādi vērtību pie kura motori ir apstājušies (1000 priekš lielākās ESC daļas)."
+    },
+    "configurationDshotBeeper": {
+        "message": "DSHOT skaņas signālu konfigurācija"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Lieto DSHOT skaņas signālus (lietot motorus lai atskaņotu pīkstienus, kad deaktivē)"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "Skaņas signāla tonis"
+    },
+    "configurationBeeper": {
+        "message": "Pīkstuļa konfigurācija"
+    },
+    "beeperGYRO_CALIBRATED": {
+        "message": "Pīkstēt, kad žiroskops tika nokalibrēts"
+    },
+    "beeperRX_LOST": {
+        "message": "Pīkstēt, kad TX ir atslēgts vai tā signāls ir pazaudēts (atkārtot kamēr atgūst TX)"
+    },
+    "beeperRX_LOST_LANDING": {
+        "message": "Pīkstēt SOS, kad ir aktivizēts un TX ir izslēgts vai pazaudēts signāls (automātiskā nosēšanas\/deaktivēšanās)"
+    },
+    "beeperDISARMING": {
+        "message": "Pīkstēt, kad tiek deaktivēts lidojuma kontrolieris"
+    },
+    "beeperARMING": {
+        "message": "Pīkstēt, kad tiek aktivizēts lidojuma kontrolieris"
+    },
+    "beeperARMING_GPS_FIX": {
+        "message": "Pīkstēt īpašu toni, kad plate tiek aktivizēta un GPS fiksējies"
+    },
+    "beeperBAT_CRIT_LOW": {
+        "message": "Gari brīdinājuma pīkstieni, kad akumulatora līmenis ir kritiski zems (atkārtojas)"
+    },
+    "beeperBAT_LOW": {
+        "message": "Brīdinājuma pīkstieni, kad akumulatora līmenis ir zems (atkārtojas)"
+    },
+    "beeperRX_SET": {
+        "message": "Pīkstēt, kad aux kanāls ir uzstādīts uz pīkstēšanu vai pīkstienu rinda, cik daudz satelītu ir atrasts, ja GPS ir ieslēgts"
+    },
+    "beeperDISARM_REPEAT": {
+        "message": "Pīkstēt kamēr vadības svira tiek turēta dezaktivācijas režīmā"
+    },
+    "beeperACC_CALIBRATION": {
+        "message": "Lidojuma laikā akselerometra kalibrēšanas pabeigšanas apstiprinājums"
+    },
+    "beeperACC_CALIBRATION_FAIL": {
+        "message": "Akselerometra kalibrēšana lidojuma laikā neizdevās"
+    },
+    "beeperREADY_BEEP": {
+        "message": "Nospēlēt toni, kad GPS ir nofiksējies un gatavs"
+    },
+    "beeperARMED": {
+        "message": "Brīdinājuma pīkstieni, kad plate tiek aktivizēta (atkārtojas kamēr plate nav deaktivēta vai droseles vērtība netiek palielināta)"
+    },
+    "beeperSYSTEM_INIT": {
+        "message": "Inicializēšanas pīkstieni, kad plate tiek ieslēgta"
+    },
+    "beeperUSB": {
+        "message": "Pīkstēt, kad lidojuma kontrolieris ir ieslēgts caur USB. Atslēdziet šo, kad jūs negribat, lai tas pīkst uz darbagalda"
+    },
+    "beeperBLACKBOX_ERASE": {
+        "message": "Pīkstēt, kad melnās kastes dzēšana pabeigta"
+    },
+    "configuration3d": {
+        "message": "3D ESC\/Motora iespējas"
+    },
+    "configuration3dDeadbandLow": {
+        "message": "3D minimālā robeža"
+    },
+    "configuration3dDeadbandHigh": {
+        "message": "3D maksimāla robeža"
+    },
+    "configuration3dNeutral": {
+        "message": "3D neitrālais"
+    },
+    "configuration3dDeadbandThrottle": {
+        "message": "3D droseles neaktīvā josla"
+    },
+    "configurationSystem": {
+        "message": "Sistēmas konfigurācija"
+    },
+    "configurationLoopTime": {
+        "message": "Lidojuma kontroliera cilpas laiks"
+    },
+    "configurationCalculatedCyclesSec": {
+        "message": "Cikli\/Sek [Hz]"
+    },
+    "configurationLoopTimeHelp": {
+        "message": "<strong>Piezīme:<\/strong> Pārliecināties, ka jūsu kontrolieris ir spējīgs darboties šādos ātrumos! Pārbaudiet CPU un cikla laika stabilitāti. Mainot šo iespējams būs nepieciešams pārregulēt PID. IETEIKUMS: Atslēdziet Akselerometru un citus sensorus lai ietaupītu CPU resursus."
+    },
+    "configurationGPS": {
+        "message": "GPS"
+    },
+    "configurationGPSProtocol": {
+        "message": "Protokols"
+    },
+    "configurationGPSBaudrate": {
+        "message": "Datu ātrums"
+    },
+    "configurationGPSubxSbas": {
+        "message": "Asistēšanas tips no zemes"
+    },
+    "configurationGPSAutoBaud": {
+        "message": "Auto datu ātrums"
+    },
+    "configurationGPSAutoConfig": {
+        "message": "Auto konfigurācija"
+    },
+    "configurationGPSHelp": {
+        "message": "<strong>Piezīme:<\/strong> Atcerieties nokonfigurēt seriālo portu (caur cilni Porti), kad izmantojat GPS iespēju."
+    },
+    "configurationSerialRX": {
+        "message": "Seriālā uztvērēja devējs"
+    },
+    "configurationSpiRX": {
+        "message": "SPI Bus uztvērēja devējs"
+    },
+    "configurationEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "configurationButtonSave": {
+        "message": "Saglabāt un pārstartēt"
+    },
+    "portsIdentifier": {
+        "message": "Identifikators"
+    },
+    "portsConfiguration": {
+        "message": "Konfigurācija\/MSP"
+    },
+    "portsSerialRx": {
+        "message": "Seriālais Rx"
+    },
+    "portsSensorIn": {
+        "message": "Sensora ievade"
+    },
+    "portsTelemetryOut": {
+        "message": "Telemetrijas izvade"
+    },
+    "portsPeripherals": {
+        "message": "Perifērijas"
+    },
+    "portsHelp": {
+        "message": "<strong>Piezīme:<\/strong> ne visas kombinācijas ir derīgas. Kad lidojuma kontrolieris detektēs šādu gadījumu seriālo portu konfigurācija tiks atiestatīta."
+    },
+    "portsMSPHelp": {
+        "message": "<strong>Piezīme:<\/strong> <span class=\"message-negative\">NEATSLĒDZIET<\/span> MSP uz pirmā seriālā porta, ja vien jūs zināt ko darāt. Var gadīties ka nāksies pārprogrammēt un nodzēst visu kontroliera konfigurāciju, ja tā izdarīsiet."
+    },
+    "portsFirmwareUpgradeRequired": {
+        "message": "<span class=\"message-negative\">Nepieciešama<\/span> programmatūras atjaunošana.  Programmatūras seriālā porta konfigurācija &lt; 1.8.0 netiek atbalstīta."
+    },
+    "portsButtonSave": {
+        "message": "Saglabāt un pārstartēt"
+    },
+    "portsTelemetryDisabled": {
+        "message": "Atslēgts"
+    },
+    "portsFunction_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_GPS": {
+        "message": "GPS"
+    },
+    "portsFunction_TELEMETRY_FRSKY": {
+        "message": "FrSky"
+    },
+    "portsFunction_TELEMETRY_HOTT": {
+        "message": "HoTT"
+    },
+    "portsFunction_TELEMETRY_LTM": {
+        "message": "LTM"
+    },
+    "portsFunction_TELEMETRY_MAVLINK": {
+        "message": "MAVLink"
+    },
+    "portsFunction_TELEMETRY_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_TELEMETRY_SMARTPORT": {
+        "message": "SmartPort"
+    },
+    "portsFunction_TELEMETRY_IBUS": {
+        "message": "iBUS"
+    },
+    "portsFunction_TELEMETRY_JETIXBUS": {
+        "message": "JETIXBUS"
+    },
+    "portsFunction_TELEMETRY_CRSF": {
+        "message": "CRSF"
+    },
+    "portsFunction_TELEMETRY_SRXL": {
+        "message": "SRXL"
+    },
+    "portsFunction_ESC_SENSOR": {
+        "message": "ESC"
+    },
+    "portsFunction_RX_SERIAL": {
+        "message": "Seriālais Rx"
+    },
+    "portsFunction_BLACKBOX": {
+        "message": "Melnās kastes žurnalēšana"
+    },
+    "portsFunction_TBS_SMARTAUDIO": {
+        "message": "TBS SmartAudio"
+    },
+    "portsFunction_IRC_TRAMP": {
+        "message": "IRC Tramp"
+    },
+    "portsFunction_RUNCAM_DEVICE_CONTROL": {
+        "message": "RunCam ierīce"
+    },
+    "pidTuningProfileOption": {
+        "message": "Profils $1"
+    },
+    "pidTuningRateProfileOption": {
+        "message": "Ātrumprofils $1"
+    },
+    "portsFunction_LIDAR_TF": {
+        "message": "Benewake LIDAR"
+    },
+    "pidTuningUpgradeFirmwareToChangePidController": {
+        "message": "<span class=\"message-negative\">PID kontroliera maiņa ir atslēgta  - jūs to varat nomainīt iekš CLI.<\/span>  Jums ir programmatūra ar API versiju <span class=\"message-negative\">$1<\/span>, bet šai funkcionalitātei nepieciešama <span class=\"message-positive\">$2<\/span>."
+    },
+    "pidTuningSubTabPid": {
+        "message": "PID Iestatījumi"
+    },
+    "pidTuningSubTabFilter": {
+        "message": "Filtra Iestatījumi"
+    },
+    "pidTuningShowAllPids": {
+        "message": "Parādīt visus PIDus"
+    },
+    "pidTuningHideUnusedPids": {
+        "message": "Paslēpt neizmantotos PID"
+    },
+    "pidTuningNonProfilePidSettings": {
+        "message": "Profila neatkarīga PID kontroliera iestatījumi"
+    },
+    "pidTuningAntiGravityGain": {
+        "message": "Antigravitācijas pastiprinājums"
+    },
+    "pidTuningAntiGravityThres": {
+        "message": "Antigravitācijas slieksnis"
+    },
+    "pidTuningPidSettings": {
+        "message": "PID kontroliera iestatījumi"
+    },
+    "receiverRcInterpolation": {
+        "message": "RC interpolācija"
+    },
+    "receiverRcInterpolationHelp": {
+        "message": "RC TX\/RX nav tik ātras kā PID cilpas. Tas nozīmē ka PID cilpām ir iztrūkumi datu plūsmā no RC sistēmas. Šī iespēja ieslēdz RC ievades interpolāciju laikā, kad nav saņemtas RC pakas. Šī iespēja piedāvā arī tīrāku P un D uzvedību, tā kā tur nav pakāpienu kontroles ievadē."
+    },
+    "receiverRcInterpolationIntervalHelp": {
+        "message": "Interpolācijas intervāls priekš manuāla RC interpolācijas režīma milisekundēs"
+    },
+    "receiverRcInterpolationOff": {
+        "message": "Izslēgts"
+    },
+    "receiverRcInterpolationDefault": {
+        "message": "Iestatīt"
+    },
+    "receiverRcInterpolationAuto": {
+        "message": "Auto"
+    },
+    "receiverRcInterpolationManual": {
+        "message": "Manuāla"
+    },
+    "receiverRcInterpolationInterval": {
+        "message": "RC interpolācijas intervāls [ms]"
+    },
+    "pidTuningDtermSetpointTransition": {
+        "message": "D iestatījuma pāreja"
+    },
+    "pidTuningDtermSetpoint": {
+        "message": "D iestatījuma svars"
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Ar šo parametru, D iestatījuma svars var tikt samazināts tuvu sviras centram, kas rezultējas ar maigāku nobeigumu pie flipiem un rolliem.<br> Šī vērtība reprezentē sviras ielieces punktu: 0 - svira centā, 1 - pilnīga ieliece. Kad svira ir virs šī punkta, iestatījuma svars ir konstants tā konfigurētajā vērtībā. Kad svira ir zem šī punkta, iestatījuma svars ir samazināts proporcionāli, sasniedzot 0 sviras centra pozīcijā.<br> Vērtība 1 dod maksimālu izlīdzinājumu efektu, kamēr 0 vērtība uztur iestatījuma svaru fiksētu uz tā konfigurēto vērtību visā svirās gājiena diapazonā."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Šis parametrs nosaka sviras akselerācijas efektu atvasinājuma komponentē. <br> Vērtība 0 ir ekvivalenta vecajai mērījuma metodei, kur D seko tika žiroskopam, kamēr vērtība 1 ekvivalenta vecajai mērījuma metodei ar vienādu žiroskopa un sviru sekošanu attiecību.<br> Zemāka vērtība sniedz lēnāku\/vienmērīgāku sviras atsauci, kamēr augstāka vērtība sniedz lielāku sviras akselerācijas atsauci.<br> Atcerieties ka pie augstām vērtībām RC interpolāciju ieteicams ieslēgt, tas novērsīs vadības sviras trokšņu ģenerēšanu."
+    },
+    "pidTuningProportional": {
+        "message": "Proporcionāls"
+    },
+    "pidTuningIntegral": {
+        "message": "Integrāls"
+    },
+    "pidTuningDerivative": {
+        "message": "Atvasinājums"
+    },
+    "pidTuningRcRate": {
+        "message": "RC ātrums"
+    },
+    "pidTuningMaxVel": {
+        "message": "Max ātrums [grādi\/s]"
+    },
+    "pidTuningRate": {
+        "message": "Ātrums"
+    },
+    "pidTuningSuperRate": {
+        "message": "Super ātrums"
+    },
+    "pidTuningRatesPreview": {
+        "message": "Ātruma priekšskatījums"
+    },
+    "pidTuningRcExpo": {
+        "message": "RC ekspo"
+    },
+    "pidTuningTPA": {
+        "message": "TPA"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "TPA lūzumpunkts"
+    },
+    "pidTuningFilter": {
+        "message": "Filtrs"
+    },
+    "pidTuningFilterFrequency": {
+        "message": "Frekvence"
+    },
+    "pidTuningRatesCurve": {
+        "message": "Ātrums"
+    },
+    "throttle": {
+        "message": "Drosele"
+    },
+    "pidTuningButtonSave": {
+        "message": "Saglabāt"
+    },
+    "pidTuningButtonRefresh": {
+        "message": "Atjaunot"
+    },
+    "pidTuningProfileHead": {
+        "message": "Profils"
+    },
+    "pidTuningControllerHead": {
+        "message": "PID kontrolieris"
+    },
+    "pidTuningCopyProfile": {
+        "message": "Kopēt profila vērtības"
+    },
+    "pidTuningCopyRateProfile": {
+        "message": "Kopēt ātrumprofila vērtības"
+    },
+    "dialogCopyProfileText": {
+        "message": "Kopēt vērtības no patreizējā profila uz"
+    },
+    "dialogCopyRateProfileText": {
+        "message": "Kopēt vērtības no patreizējā ātrumprofila uz"
+    },
+    "dialogCopyProfileTitle": {
+        "message": "Kopēt profila vērtības"
+    },
+    "dialogCopyProfileNote": {
+        "message": "Visas vērtības gala profilā tiks dzēstas un pārrakstītas"
+    },
+    "dialogCopyProfileConfirm": {
+        "message": "Kopēt"
+    },
+    "dialogCopyProfileClose": {
+        "message": "Atcelt"
+    },
+    "pidTuningResetProfile": {
+        "message": "Atiestatīt profilu vērtības"
+    },
+    "pidTuningProfileReset": {
+        "message": "Ielādētas profila noklusējuma vērtības."
+    },
+    "pidTuningReceivedProfile": {
+        "message": "Lidojuma kontroliera iestatītais Profils: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningReceivedRateProfile": {
+        "message": "Lidojuma kontroliera iestatītais Ātrumprofils: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningLoadedProfile": {
+        "message": "Ielādētais Profils: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningLoadedRateProfile": {
+        "message": "Ielādētais Ātrumprofils: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningDataRefreshed": {
+        "message": "PID dati <strong>atjaunoti<\/strong>"
+    },
+    "pidTuningEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "receiverHelp": {
+        "message": "Lūdzu izlasiet uztvērēja sadaļu dokumentācijā.  Nokonfigurējiet seriālo portu (ja tas nepieciešams), uztvērēja režīmu (serial\/ppm\/pwm), devēju (priekš seriālā uztvērēja), sapārojiet uztvērēju, uzstādiet kanālu karti, nokonfigurējiet kanālu robežlīnija\/diapazonus tā lai visi kanāli būtu no  ~1000 līdz ~2000.  Uzstādiet viduspunktu (noklusētais 1500), pieregulējiet kanālus uz 1500, nokonfigurējiet sviras neaktīvo joslu, pārbaudiet uzvedību kad TX ir izslēgts vai ārpus uztveršanas zonas.<br \/><span class=\"message-negative\">SVARĪGI:<\/span> Pirms lidošanas izlasiet failsafe sadaļu dokumentācijā un  nokonfigurējiet to."
+    },
+    "tuningHelp": {
+        "message": "<b>Ieregulēšanas ieteikumi <\/b><br \/><span class=\"message-negative\">SVARĪGI:<\/span> Ir svarīgi pārbaudīt motoru temperatūras pirmā lidojuma laikā. Jo lielākas filtru vērtības, jo labāk iespējams tas lidos, bet jūs iegūsiet lielāku trokšņu līmeni motoros. <br>Noklusētā vērtība 100Hz ir optimāla, bet pie trokšņainākām konstrukcijām, jūs varat mēģināt samazināt Dterm filtru uz 50Hz un iespējams arī žiroskopa filtru."
+    },
+    "receiverThrottleMid": {
+        "message": "Droseles vidus"
+    },
+    "receiverThrottleExpo": {
+        "message": "Droseles EKSPO"
+    },
+    "receiverStickMin": {
+        "message": "'svira lejā' slieksnis"
+    },
+    "receiverHelpStickMin": {
+        "message": "Maksimālā vērtība (us) ko svira atpazīst kā lejā \/ pa kreisi, priekš komandas ievades (MIN_CHECK)."
+    },
+    "receiverStickCenter": {
+        "message": "Sviras centrs"
+    },
+    "receiverHelpStickCenter": {
+        "message": "Maksimālā vērtība (us) ko lieto, lai noteiktu vai svira ir nocentrēta (MID_RC)."
+    },
+    "receiverStickMax": {
+        "message": "'svira augšā' slieksnis"
+    },
+    "receiverHelpStickMax": {
+        "message": "Maksimālā vērtība (us) ko svira atpazīst kā augša \/ pa labi priekš komandas ievades (MAX_CHECK)."
+    },
+    "receiverDeadband": {
+        "message": "RC neaktīvā josla"
+    },
+    "receiverHelpDeadband": {
+        "message": "Šīs ir vērtības (us) cik ļoti RC ievade var atšķirties pirms tā var tikt uzskatīta par derīgu. Priekš raidītājiem ar raustītu izvadi, šī vērtība var tikt palielināta, ja rc izvade raustas miera stāvoklī."
+    },
+    "receiverYawDeadband": {
+        "message": "Yaw neaktīvā josla"
+    },
+    "receiverHelpYawDeadband": {
+        "message": "Šīs ir vērtības (us) cik ļoti RC ievade var atšķirties pirms tā var tikt uzskatīta par derīgu. Priekš raidītājiem ar raustītu izvadi, šī vērtība var tikt palielināta, ja rc izvade raustas miera stāvoklī.<strong>Šie iestatījumi ir tikai priekš Yaw.<\/strong>"
+    },
+    "recevier3dDeadbandThrottle": {
+        "message": "3D droseles neaktīvā josla"
+    },
+    "receiverHelp3dDeadbandThrottle": {
+        "message": "Šīs vērtības ir (us). Lai plašinātu neitrālo zonu palieliniet šo vērtību. <strong>Šis iestatījums ir tikai priekš 3D droseles.<\/strong>"
+    },
+    "receiverChannelMap": {
+        "message": "Kanālu karte"
+    },
+    "receiverChannelDefaultOption": {
+        "message": "Noklusējuma"
+    },
+    "receiverChannelMapTitle": {
+        "message": "Jūs varat nodefinēt personificētu kanālu karti ieklikšķinot kastē"
+    },
+    "receiverRssiChannel": {
+        "message": "RSSI kanāls"
+    },
+    "receiverRssiChannelDisabledOption": {
+        "message": "Atslēgts"
+    },
+    "receiverRefreshRateTitle": {
+        "message": "Grafika atjaunošanās ātrums"
+    },
+    "receiverButtonSave": {
+        "message": "Saglabāt"
+    },
+    "receiverButtonRefresh": {
+        "message": "Atjaunot"
+    },
+    "receiverButtonSticks": {
+        "message": "Kontroles sviras"
+    },
+    "receiverDataRefreshed": {
+        "message": "RC pieregulēšanas dati <strong>atjaunoti<\/strong>"
+    },
+    "receiverEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "receiverModelPreview": {
+        "message": "Priekšskatījums"
+    },
+    "receiverMspWarningText": {
+        "message": "Šīs sviras ļauj Betaflight būt atvizētam un notestētam bez raidītāja vai uztvērēja klātbūtnes. Tomēr, <strong>šī iespēja nav paredzēta lidošanai un propelleriem jābūt noņemtiem.<\/strong><br><br>Šī iespēja negarantē pilnvērtīgu gaisa kuģa vadību. <strong>Ir liela varbūtība, ka būs nopietnas traumas, ja propelleri paliks nenoņemti.<\/strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Ieslēgt vadību"
+    },
+    "auxiliaryHelp": {
+        "message": "Izmantojiet robežas, lai nodefinētu slēdžus uz jūsu uztvērēja ar atbilstošo režīmu piesaisti. Uztvērēja kanāls, kas dos nolasījumus starp robežām min\/max, aktivizēs režīmu. Atceries saglabāt izmaiņas lietojot pogu Saglabāt."
+    },
+    "auxiliaryMin": {
+        "message": "Min"
+    },
+    "auxiliaryMax": {
+        "message": "Max"
+    },
+    "auxiliaryAddRange": {
+        "message": "Pievienot"
+    },
+    "auxiliaryButtonSave": {
+        "message": "Saglabāt"
+    },
+    "auxiliaryEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "auxiliaryAutoChannelSelect": {
+        "message": "AUTO"
+    },
+    "adjustmentsHelp": {
+        "message": "Konfigurēt pieregulēšanas slēdžus. Detaļas ir atrodamas manuāla sadaļā 'in-flight adjustments'. Šīs izmaiņas ko pieregulēšanas funkcija izpilda netiek automātiski saglabātas. Tur ir 4 sloti. Katrs slēdzis tiek lietots, lai vienlaikus veiktu nepieciešamās izmaiņas atbilstošam slotam."
+    },
+    "adjustmentsExamples": {
+        "message": "Piemēri"
+    },
+    "adjustmentsExample1": {
+        "message": "Izmantojiet Slotu 1 un 3 pozīciju slēdzi uz AUX1, lai izvēlētos starp Pitch\/Roll P, I un D un citu 3 pozīciju slēdzi uz AUX2, lai palielinātu vai samazinātu vērtību turot to augšā vai lejā."
+    },
+    "adjustmentsExample2": {
+        "message": "Izmanto Slotu 2 un 3 pozīciju slēdzi uz AUX4 lai izvēlētos ieslēgt Ātrumprofilu izvēli ar to pašu 3 pozīciju slēdzi uz tā paša kanāla."
+    },
+    "adjustmentsColumnEnable": {
+        "message": "Ja ieslēgts"
+    },
+    "adjustmentsColumnUsingSlot": {
+        "message": "izmanto slotu"
+    },
+    "adjustmentsColumnWhenChannel": {
+        "message": "kad kanāls"
+    },
+    "adjustmentsColumnIsInRange": {
+        "message": "ir robežās"
+    },
+    "adjustmentsColumnThenApplyFunction": {
+        "message": "tad piemērot"
+    },
+    "adjustmentsColumnViaChannel": {
+        "message": "caur kanālu"
+    },
+    "adjustmentsSlot0": {
+        "message": "Slots 1"
+    },
+    "adjustmentsSlot1": {
+        "message": "Slots 2"
+    },
+    "adjustmentsSlot2": {
+        "message": "Slots 3"
+    },
+    "adjustmentsSlot3": {
+        "message": "Slots 4"
+    },
+    "adjustmentsMin": {
+        "message": "Min"
+    },
+    "adjustmentsMax": {
+        "message": "Max"
+    },
+    "adjustmentsFunction0": {
+        "message": "Bez izmaiņām"
+    },
+    "adjustmentsFunction1": {
+        "message": "RC ātruma korekcija"
+    },
+    "adjustmentsFunction2": {
+        "message": "RC ekspo korekcija"
+    },
+    "adjustmentsFunction3": {
+        "message": "Droseles ekspo korekcija"
+    },
+    "adjustmentsFunction4": {
+        "message": "Pitch & Roll ātruma korekcija"
+    },
+    "adjustmentsFunction5": {
+        "message": "Yaw ātruma korekcija"
+    },
+    "adjustmentsFunction6": {
+        "message": "Pitch & Roll P ātruma korekcija"
+    },
+    "adjustmentsFunction7": {
+        "message": "Pitch & Roll I ātruma korekcija"
+    },
+    "adjustmentsFunction8": {
+        "message": "Pitch & Roll D ātruma korekcija"
+    },
+    "adjustmentsFunction9": {
+        "message": "Yaw P korekcija"
+    },
+    "adjustmentsFunction10": {
+        "message": "Yaw I korekcija"
+    },
+    "adjustmentsFunction11": {
+        "message": "Yaw D korekcija"
+    },
+    "adjustmentsFunction12": {
+        "message": "Ātrumu profila izvēle"
+    },
+    "adjustmentsFunction13": {
+        "message": "Pitch ātrums"
+    },
+    "adjustmentsFunction14": {
+        "message": "Roll ātrums"
+    },
+    "adjustmentsFunction15": {
+        "message": "Pitch & Roll D korekcija"
+    },
+    "adjustmentsFunction16": {
+        "message": "Pitch I korekcija"
+    },
+    "adjustmentsFunction17": {
+        "message": "Pitch D korekcija"
+    },
+    "adjustmentsFunction18": {
+        "message": "Roll P korekcija"
+    },
+    "adjustmentsFunction19": {
+        "message": "Roll I korekcija"
+    },
+    "adjustmentsFunction20": {
+        "message": "Roll D korekcija"
+    },
+    "adjustmentsFunction21": {
+        "message": "RC ātrums Yaw"
+    },
+    "adjustmentsFunction22": {
+        "message": "D iestatījums"
+    },
+    "adjustmentsFunction23": {
+        "message": "D iestatījuma pāreja"
+    },
+    "adjustmentsFunction24": {
+        "message": "Horizonta stipruma korekcija"
+    },
+    "adjustmentsSave": {
+        "message": "Saglabāt"
+    },
+    "adjustmentsEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "transponderNotSupported": {
+        "message": "Jūsu lidojuma kontroliera programmatūra neatbalsta transpondera funkcionalitāti."
+    },
+    "transponderInformation": {
+        "message": "Tanspondera sistēma ļauj sacensību rīkotājiem noteikt tavu apļa laiku.  Transponders tiek uzstādīts uz tava gaisa kuģa un, kad  tavs gaisa kuģis izlido caur laika kontroles vārtiem, tad trases uztvērējs reģistrē tavu kodu un ieraksta apļa laiku.  Kad tiek lietots IR tipa transponderis, jums jāpārliecinās, ka tas ir vērsts pret trases uztvērēju un gaismas staru neietekmē gaisa kuģa rāmis, akumulatora savilcējsiksna, vadi, propelleri, utt."
+    },
+    "transponderConfigurationType": {
+        "message": "Transpondera veids"
+    },
+    "transponderType0": {
+        "message": "Neviens"
+    },
+    "transponderType1": {
+        "message": "iLap"
+    },
+    "transponderType2": {
+        "message": "aRCiTimer"
+    },
+    "transponderType3": {
+        "message": "ERLT"
+    },
+    "transponderConfiguration1": {
+        "message": "iLap konfigurācija"
+    },
+    "transponderConfiguration2": {
+        "message": "aRCiTimer konfigurācija"
+    },
+    "transponderConfiguration3": {
+        "message": "ERLT konfigurācija"
+    },
+    "transponderData1": {
+        "message": "Dati"
+    },
+    "transponderData2": {
+        "message": "Transpondera ID"
+    },
+    "transponderData3": {
+        "message": "Transpondera ID"
+    },
+    "transponderDataHelp1": {
+        "message": "Tikai heksadecimālie cipari, 0-9, A-F"
+    },
+    "transponderHelp1": {
+        "message": "Konfigurējiet jūsu transpondera kodu šeit. Piezīme: Tikai derīgs kods tiks atpazīts sacensību taimera sistēmā. Derīgi transpondera kodi var tikt aizgūti no šejienes <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\">Seriously Pro<\/a>."
+    },
+    "transponderHelp2": {
+        "message": "Vairāk informācijas <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer vietnē<\/a>"
+    },
+    "transponderDataHelp3": {
+        "message": "Izvēlēties ERLT ID 0-63"
+    },
+    "transponderHelp3": {
+        "message": "Vairāk informācijai apmeklējiet <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer vietni<\/a>"
+    },
+    "transponderButtonSave": {
+        "message": "Saglabāt"
+    },
+    "transponderButtonSaveReboot": {
+        "message": "Saglabāt un pārstartēt"
+    },
+    "transponderDataInvalid": {
+        "message": "Transpondera dati ir <span class=\"message-negative\">nepareizi<\/span>"
+    },
+    "transponderEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "servosFirmwareUpgradeRequired": {
+        "message": "Servos nepieciešama programmatūra &gt;= 1.10.0. un galamērķa atbalsts."
+    },
+    "servosChangeDirection": {
+        "message": "Lai sakristu nomainiet virzienu iekš TX"
+    },
+    "servosName": {
+        "message": "Vārds"
+    },
+    "servosMid": {
+        "message": "MID"
+    },
+    "servosMin": {
+        "message": "MIN"
+    },
+    "servosMax": {
+        "message": "MAX"
+    },
+    "servosAngleAtMin": {
+        "message": "Leņķis pie min"
+    },
+    "servosAngleAtMax": {
+        "message": "Leņķis pie max"
+    },
+    "servosDirectionAndRate": {
+        "message": "Virziens un ātrums"
+    },
+    "servosLiveMode": {
+        "message": "Ieslēgt dzīvo režīmu"
+    },
+    "servosButtonSave": {
+        "message": "Saglabāt"
+    },
+    "servosNormal": {
+        "message": "Normāls"
+    },
+    "servosReverse": {
+        "message": "Apgriezt"
+    },
+    "servosEepromSave": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "gpsHead": {
+        "message": "GPS"
+    },
+    "gpsMapHead": {
+        "message": "Patreizējais GPS novietojums"
+    },
+    "gpsMapMessage1": {
+        "message": "Lūdzu pārbaudiet savu interneta savienojumu"
+    },
+    "gpsMapMessage2": {
+        "message": "Gaida GPS 3D fiksāciju…"
+    },
+    "gps3dFix": {
+        "message": "3D fiksācija:"
+    },
+    "gpsFixTrue": {
+        "message": "<span class=\"fixtrue\">Pareizi<\/span>"
+    },
+    "gpsFixFalse": {
+        "message": "<span class=\"fixfalse\">Nepareizi<\/span>"
+    },
+    "gpsAltitude": {
+        "message": "Augstums:"
+    },
+    "gpsLat": {
+        "message": "Platums:"
+    },
+    "gpsLon": {
+        "message": "Garums:"
+    },
+    "gpsSpeed": {
+        "message": "Ātrums:"
+    },
+    "gpsSats": {
+        "message": "Satelīti:"
+    },
+    "gpsDistToHome": {
+        "message": "Distance līdz mājām:"
+    },
+    "gpsSignalStrHead": {
+        "message": "GPS signāla stiprums"
+    },
+    "gpsSignalStr": {
+        "message": "Signāla stiprums"
+    },
+    "gpsSignalSatId": {
+        "message": "Satelīta ID"
+    },
+    "gpsSignalQty": {
+        "message": "Daudz."
+    },
+    "motorsText": {
+        "message": "Motori"
+    },
+    "motorNumber1": {
+        "message": "Motors - 1"
+    },
+    "motorNumber2": {
+        "message": "Motors - 2"
+    },
+    "motorNumber3": {
+        "message": "Motors - 3"
+    },
+    "motorNumber4": {
+        "message": "Motors - 4"
+    },
+    "motorNumber5": {
+        "message": "Motors - 5"
+    },
+    "motorNumber6": {
+        "message": "Motors - 6"
+    },
+    "motorNumber7": {
+        "message": "Motors - 7"
+    },
+    "motorNumber8": {
+        "message": "Motors - 8"
+    },
+    "servosText": {
+        "message": "Servos"
+    },
+    "servoNumber1": {
+        "message": "Servo - 1"
+    },
+    "servoNumber2": {
+        "message": "Servo - 2"
+    },
+    "servoNumber3": {
+        "message": "Servo - 3"
+    },
+    "servoNumber4": {
+        "message": "Servo - 4"
+    },
+    "servoNumber5": {
+        "message": "Servo - 5"
+    },
+    "servoNumber6": {
+        "message": "Servo - 6"
+    },
+    "servoNumber7": {
+        "message": "Servo - 7"
+    },
+    "servoNumber8": {
+        "message": "Servo - 8"
+    },
+    "motorsResetMaximumButton": {
+        "message": "Resetot"
+    },
+    "motorsResetMaximum": {
+        "message": "Atiestatīt maksimālo laiku"
+    },
+    "motorsSensorGyroSelect": {
+        "message": "žiro"
+    },
+    "motorsSensorAccelSelect": {
+        "message": "aksel"
+    },
+    "motorsMaster": {
+        "message": "Galvenais"
+    },
+    "motorsNotice": {
+        "message": "<strong>Motoru testēšanas režīma \/ aktivizēšanas Piezīme:<\/strong><br \/>Pārvietojot ritjoslu vai aktivizējot ar raidītāju liks motoriem <strong>griezties<\/strong>.<br \/> Lai novērstu iespējamās traumas <strong class=\"message-negative\">noņemiet VISUS propellerus<\/strong> pirms lietojat šo iespēju.<br \/> Ieslēdzot motoru testu arī tiks daļēji atslēgta neadekvātās pacelšanās novēršana iespēja, lai apturētu gaisa kuģa dezaktivāciju, kad to testē uz darbagalda bez propelleriem.<br \/>"
+    },
+    "motorsEnableControl": {
+        "message": "<strong>Es saprotu riskus<\/strong>, propelleri ir noņemti - ieslēgt motoru kontroli un aktivizē, un izslēgt neadekvātās pacelšanās novēršanu."
+    },
+    "sensorsInfo": {
+        "message": "Paturiet prāta, ka izmantojot īsus atjaunošanas periodus un ģenerējot vairākus grafikus vienlaicīgi, ir resursietilpīgs process un var izlādēt akumulatoru ātrāk, ja lietojat portatīvo datoru.<br \/>Ieteicams renderēt grafikus tikai sensoram par kuru jums ir interese un lietot saprātīgus atjaunināšanas periodus."
+    },
+    "sensorsRefresh": {
+        "message": "Atjaun.:"
+    },
+    "sensorsScale": {
+        "message": "Mērogs:"
+    },
+    "sensorsGyroSelect": {
+        "message": "Žiroskops"
+    },
+    "sensorsAccelSelect": {
+        "message": "Akselerometrs"
+    },
+    "sensorsMagSelect": {
+        "message": "Magnetometrs"
+    },
+    "sensorsBaroSelect": {
+        "message": "Barometrs"
+    },
+    "sensorsSonarSelect": {
+        "message": "Sonārs"
+    },
+    "sensorsDebugSelect": {
+        "message": "Atkļūdot"
+    },
+    "sensorsGyroTitle": {
+        "message": "Žiroskops - grādi\/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Akselerometra - g"
+    },
+    "sensorsMagTitle": {
+        "message": "Magnetometrs - Ga"
+    },
+    "sensorsBaroTitle": {
+        "message": "Barometrs - metri"
+    },
+    "sensorsSonarTitle": {
+        "message": "Sonārs - cm"
+    },
+    "sensorsDebugTitle": {
+        "message": "Atkļūdot"
+    },
+    "cliInfo": {
+        "message": "<strong>Piezīme<\/strong>: Pametot CLI cilni vai nospiežot Atvienoties <strong>automātiski<\/strong> sūtīs \"<strong>iziet<\/strong>\" uz plati.  ar pēdējo programmatūru tas liks kontrolierim <span class=\"message-negative\">pārstartēt<\/span> un nesaglabātās izmaiņas tiks <span class=\"message-negative\">zaudētas<\/span>."
+    },
+    "cliInputPlaceholder": {
+        "message": "Rakstiet jūsu komandu šeit"
+    },
+    "cliEnter": {
+        "message": "Detektēts CLI režīms"
+    },
+    "cliReboot": {
+        "message": "Detektēta CLI pārstartēšana"
+    },
+    "cliSaveToFileBtn": {
+        "message": "Saglabāt failā"
+    },
+    "loggingNote": {
+        "message": "Dati tiks žurnalēti <span class=\"message-negative\">tikai<\/span> šajā cilnē, pametot cilni žurnalēšana <span class=\"message-negative\">atcelsies<\/span> un lietotne atgriezīsies normālajā <strong>\"konfiguratora\"<\/strong> stāvoklī. Jūs varat iestatīt globālo atjaunošanās laiku, dati tiks ierakstīti žurnālā katru <br \/> <strong>1<\/strong> sekundi resursu iemeslu dēļ."
+    },
+    "loggingSamplesSaved": {
+        "message": "Paraugi Saglabāti:"
+    },
+    "loggingLogSize": {
+        "message": "Žurnāla izmērs:"
+    },
+    "loggingButtonLogFile": {
+        "message": "Izvēlaties Žurnāla Failu"
+    },
+    "loggingStart": {
+        "message": "Sākt Žurnalēšanu"
+    },
+    "loggingStop": {
+        "message": "Beigt Žurnalēšanu"
+    },
+    "loggingBack": {
+        "message": "Pamest Žurnalēšanu \/ Atvienoties"
+    },
+    "loggingErrorNotConnected": {
+        "message": "Jums no sākuma <strong>jāsavienojas<\/strong>"
+    },
+    "loggingErrorLogFile": {
+        "message": "Lūdzu izvēlaties žurnāla failu"
+    },
+    "loggingErrorOneProperty": {
+        "message": "Izvēlaties vismaz vienu iespēju ko žurnalēt"
+    },
+    "loggingAutomaticallyRetained": {
+        "message": "Automātiski ielādētais iepriekšējais žurnāls: <strong>$1<\/strong>"
+    },
+    "blackboxNotSupported": {
+        "message": "Jūsu lidojuma kontroliera programmatūra neatbalsta melnās kastes žurnalēšanu."
+    },
+    "blackboxMaybeSupported": {
+        "message": "Jūsu lidojuma kontroliera programmatūra ir pārāk veca, lai to atbalstītu šī cilne, vai arī melnās kastes iespēja ir izslēgta Konfigurācijas cilnē."
+    },
+    "blackboxConfiguration": {
+        "message": "Melnās kaste konfigurācija"
+    },
+    "blackboxButtonSave": {
+        "message": "Saglabāt un pārstartēt"
+    },
+    "blackboxLoggingNone": {
+        "message": "Nav žurnalēšanas"
+    },
+    "blackboxLoggingFlash": {
+        "message": "Integrētā atmiņa"
+    },
+    "blackboxLoggingSdCard": {
+        "message": "SD karte"
+    },
+    "blackboxLoggingSerial": {
+        "message": "Seriālais ports"
+    },
+    "serialLoggingSupportedNote": {
+        "message": "Jūs varat žurnalēt uz ārējās žurnalēšanas ierīces (tādas kā OpenLog vai saderīga klona) lietojot seriālo portu. Konfigurējat portu Porti cilnē."
+    },
+    "sdcardNote": {
+        "message": "Lidojuma žurnāli var tikt saglabāti jūsu lidojuma kontroliela esošajā SD kartē."
+    },
+    "dataflashUsedSpace": {
+        "message": "Izmantotā vieta"
+    },
+    "dataflashFreeSpace": {
+        "message": "Brīvā vieta"
+    },
+    "dataflashUnavSpace": {
+        "message": "Nepieejamā vieta"
+    },
+    "dataflashLogsSpace": {
+        "message": "Brīvā vieta žurnāliem"
+    },
+    "dataflashNote": {
+        "message": "Lidojuma žurnāls var tikt saglabāts jūsu lidojuma kontroliera esošajā datu atmiņas čipā."
+    },
+    "dataflashNotPresentNote": {
+        "message": "Jūsu lidojuma kontroliera datu atmiņas čips nav saderīgs."
+    },
+    "dataflashFirmwareUpgradeRequired": {
+        "message": "Datu atmiņai nepieciešama programmatūra &gt;= 1.8.0."
+    },
+    "dataflashButtonSaveFile": {
+        "message": "Saglabāt atmiņu failā..."
+    },
+    "dataflashButtonErase": {
+        "message": "Dzēst atmiņu"
+    },
+    "dataflashConfirmEraseTitle": {
+        "message": "Apstiprināt datu atmiņas dzēšanu"
+    },
+    "dataflashConfirmEraseNote": {
+        "message": "Šis izdzēsīs visus melnās kastes žurnālus vai citus datus esošus datu atmiņā. Tas prasīs aptuveni 20 sekundes, vai esat pārliecināts?"
+    },
+    "dataflashSavingTitle": {
+        "message": "Saglabā datu atmiņu failā"
+    },
+    "dataflashSavingNote": {
+        "message": "Saglabāšana var aizņemt vairākas minūtes, lūdzu gaidiet."
+    },
+    "dataflashSavingNoteAfter": {
+        "message": "Saglabāšana pabeigta! Nospiediet \"Ok\" lai turpinātu."
+    },
+    "dataflashButtonSaveCancel": {
+        "message": "Atcelt"
+    },
+    "dataflashButtonSaveDismiss": {
+        "message": "Ok"
+    },
+    "dataflashButtonEraseConfirm": {
+        "message": "Jā, dzēst datu atmiņu"
+    },
+    "dataflashButtonEraseCancel": {
+        "message": "Atcelt"
+    },
+    "dataflashFileWriteFailed": {
+        "message": "Neizdevās rakstīt izvēlētajā failā, vai jums ir tiesības uz šo direktoriju?"
+    },
+    "sdcardStatusNoCard": {
+        "message": "Nav ievietota karte"
+    },
+    "sdcardStatusReboot": {
+        "message": "Fatāla kļūda<br>Restartēt lai mēģinātu vēlreiz"
+    },
+    "sdcardStatusReady": {
+        "message": "Karte gatava"
+    },
+    "sdcardStatusStarting": {
+        "message": "Karte startējas..."
+    },
+    "sdcardStatusFileSystem": {
+        "message": "Failu sistēma startējas..."
+    },
+    "sdcardStatusUnknown": {
+        "message": "Nezināms stāvoklis $1"
+    },
+    "firmwareFlasherReleaseSummaryHead": {
+        "message": "Relīzes informācija"
+    },
+    "firmwareFlasherReleaseName": {
+        "message": "Vārds\/Versija:"
+    },
+    "firmwareFlasherReleaseVersionUrl": {
+        "message": "Apmeklējiet relīzes lapu."
+    },
+    "firmwareFlasherReleaseNotes": {
+        "message": "Relīzes piezīmes:"
+    },
+    "firmwareFlasherReleaseDate": {
+        "message": "Datums:"
+    },
+    "firmwareFlasherReleaseStatus": {
+        "message": "Stāvoklis:"
+    },
+    "firmwareFlasherReleaseTarget": {
+        "message": "Mērķis:"
+    },
+    "firmwareFlasherReleaseFile": {
+        "message": "Binārais:"
+    },
+    "firmwareFlasherReleaseStatusReleaseCandidate": {
+        "message": "<span class=\"message-negative\">SVARĪGI: Šī programmatūra patreiz atzīmēta kā relīzes kandidāts. Lūgums nekavējoties ziņot par jebkādām kļūdām.<\/span>"
+    },
+    "firmwareFlasherReleaseFileUrl": {
+        "message": "Lejuplādēt manuāli."
+    },
+    "firmwareFlasherTargetWarning": {
+        "message": "<span class=\"message-negative\">SVARĪGI<\/span>: Pārliecinieties ka ielādējat failu kas atbilst jūsu dzelžiem.  Ielādējot nepareizo bināro failu  <span class=\"message-negative\">sliktas<\/span> lietas var notikt."
+    },
+    "firmwareFlasherPath": {
+        "message": "Ceļš:"
+    },
+    "firmwareFlasherSize": {
+        "message": "Izmērs:"
+    },
+    "firmwareFlasherStatus": {
+        "message": "Statuss:"
+    },
+    "firmwareFlasherProgress": {
+        "message": "Progress:"
+    },
+    "firmwareFlasherLoadFirmwareFile": {
+        "message": "Lūdzu ielādējiet programmatūras failu"
+    },
+    "firmwareFlasherNoReboot": {
+        "message": "Nepielietot restartu"
+    },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Izvēlieties jūsu kontrolieri, lai redzētu pieejamās programmaparatūras relīzes - izvēlieties pareizo programmatūru, kas piemērota jūsu kontrolierim."
+    },
+    "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
+        "message": "Izvēlieties programmaparatūras versiju jūsu kontrolierim."
+    },
+    "firmwareFlasherNoRebootDescription": {
+        "message": "Ieslēdziet, ja jūsu kontrolieris ir ielādes režīmā. Tas ir, ja jūsu kontrolieris ir ieslēgts ar savienotiem ielādes kontaktiem, vai kamēr turat ielādes pogu."
+    },
+    "firmwareFlasherFlashOnConnect": {
+        "message": "Programmēt pie savienošanās"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Mēģināt kontrolieri programmēt automātiski (palaižas tiklīdz tiek atrasts jauns seriālais ports)."
+    },
+    "firmwareFlasherFullChipErase": {
+        "message": "Pilnīga kontroliera dzēšana"
+    },
+    "firmwareFlasherFullChipEraseDescription": {
+        "message": "Nodzēš visus konfigurācijas datus, kas pašlaik glabājas uz kontroliera."
+    },
+    "firmwareFlasherFlashDevelopmentFirmware": {
+        "message": "Lietot izstrādes programmatūru"
+    },
+    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
+        "message": "Ieprogrammēt pēdējo (nenotestēto) izstrādēs programmatūru."
+    },
+    "firmwareFlasherManualPort": {
+        "message": "Ports"
+    },
+    "firmwareFlasherManualBaud": {
+        "message": "Manuāls datu ātrums"
+    },
+    "firmwareFlasherManualBaudDescription": {
+        "message": "Manuāli izvēlieties datu ātrumu, priekš kontrolieriem, kas neatbalsta noklusēto ātrumu vai programmēšanai caur bluetooth. <br \/> <span class=\"message-negative\">Piezīme:<\/span> netiek izmantots, ja programmē caur USB DFU"
+    },
+    "firmwareFlasherBaudRate": {
+        "message": "Pārraides ātrums"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Rādīt nestabilās relīzes"
+    },
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
+        "message": "Rādīt relīžu kandidātu vai izstrādes relīzes."
+    },
+    "firmwareFlasherOptionLoading": {
+        "message": "Ielādē ..."
+    },
+    "firmwareFlasherOptionLabelSelectFirmware": {
+        "message": "Izvēlēties Programmatūru \/ Plati"
+    },
+    "firmwareFlasherOptionLabelSelectBoard": {
+        "message": "Izvēlies kontrolieri"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersion": {
+        "message": "Izvēlēties programmatūras versiju"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
+        "message": "Izvēlieties versiju priekš"
+    },
+    "firmwareFlasherButtonLoadLocal": {
+        "message": "Ielādēt programmatūru [Local]"
+    },
+    "firmwareFlasherButtonLoadOnline": {
+        "message": "Ielādēt programmatūru [Online]"
+    },
+    "firmwareFlasherButtonDownloading": {
+        "message": "Lejupielādē..."
+    },
+    "firmwareFlasherFlashFirmware": {
+        "message": "Ieprogrammēt programmatūru"
+    },
+    "firmwareFlasherGithubInfoHead": {
+        "message": "GitHub programmatūras informācija"
+    },
+    "firmwareFlasherCommiter": {
+        "message": "Iesūtītājs:"
+    },
+    "firmwareFlasherDate": {
+        "message": "Datums:"
+    },
+    "firmwareFlasherHash": {
+        "message": "Hash:"
+    },
+    "firmwareFlasherUrl": {
+        "message": "Iet uz GitHUb, lai pārbaudītu šo iesūtījumu..."
+    },
+    "firmwareFlasherMessage": {
+        "message": "Ziņa:"
+    },
+    "firmwareFlasherWarningText": {
+        "message": "Lūdzu <span class=\"message-negative\">nemēģiniet<\/span> programmēt <strong>ne-Betaflight<\/strong> dzelžus ar šo programmatoru.<br \/> <span class=\"message-negative\">Nemēģiniet <\/span> <strong>atvienot<\/strong> plati vai <strong>slēgt ārā<\/strong> jūsu datoru kamēr programmējas.<br \/><br \/><strong>Piezīme: <\/strong>STM32 ielādētājs atrodas uz ROM atmiņas, to nav iespējams sabojāt.<br \/><strong>Piezīme: <\/strong><span class=\"message-negative\">Auto-savienojums<\/span> ir vienmēr izslēgts kamēr jūs esat programmatora cilnē.<br \/><strong>Piezīme: <\/strong>Pārliecinieties ka jums ir rezerves kopija; daži atjauninājumi var pilnībā notīrīt jūsu konfigurāciju.<br \/><strong>Piezīme:<\/strong> Ja jums ir sarežģījumi ar programmēšanu, no sākuma <strong>pamēģiniet atslēgt visu kabeļus no kontroliera<\/strong>, pamēģiniet pārstartēt, atjaunināt Chrome, atjaunināt draiverus.<br \/><strong>Piezīme:<\/strong> Kad programmējat plates kurām ir tiešs USB ligzdas savienojums (lielākoties jaunās plates), pārliecinieties, ka izlasījāt USB programmēšanas sadaļu no Betaflight manuāla, un esat pareizi instalējuši programmatūru un draiverus"
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "<strong>Atkopšanas \/ Zaudēja komunikāciju<\/strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Ja jums pazuda savienojums ar plati veiciet šos soļus, lai atjaunotu savienojumu: <ul><li>Atvienojiet no barošanas avota<\/li><li>Ieslēdziet 'Nepielietot restartu', Ieslēdziet 'Pilnīga kontroliera dzēšana'.<\/li><li>Savienojiet ielādes kontaktus vai turiet ielādes pogu.<\/li><li>Pieslēdziet barošanas avotam (LED aktīvi NEmirgos, ja viss ir izdarīts pareizi).<\/li><li>Ieinstalējiet visus STM32 draiverus un Zadig ja nepieciešams (skatīt <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Programmēšana<\/a> Betaflight manuāla sadaļā).<\/li><li>Aizveriet konfiguratoru, aizveriet visas Chrome ejošās instances, aizveriet visas Chrome aplikācijas, Pārstartējiet konfiguratoru.<\/li><li>Atlaidiet ielādes pogu ja tāda platei ir.<\/li><li> Saprogrammējiet ar pareizo programmatūru (pielietojiet specifisku datu ātrumu ja tāds ir norādīts plates manuāli).<\/li><li>Atvienojiet no barošanas avota.<\/li><li>Noņemiet ielādes savienotāju.<\/li><li>Pieslēdziet barošanas avotam (LED vajadzētu aktīvi mirgot).<\/li><li>Savienojieties kā parasti.<\/li><\/ul>"
+    },
+    "firmwareFlasherButtonLeave": {
+        "message": "Pamest programmatoru"
+    },
+    "firmwareFlasherFirmwareNotLoaded": {
+        "message": "Programmatūra nav ielādēta"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Ielādēta lokālā programmatūra: ($1 baiti)"
+    },
+    "firmwareFlasherHexCorrupted": {
+        "message": "Izskatās ka HEX fails ir bojāts"
+    },
+    "firmwareFlasherRemoteFirmwareLoaded": {
+        "message": "<span class=\"message-positive\">Attālinātā programmatūra ielādēta, gatavs programmēšanai<\/span>"
+    },
+    "firmwareFlasherFailedToLoadOnlineFirmware": {
+        "message": "Nesanāca ielādēt attālināto programmatūru"
+    },
+    "firmwareFlasherNoFirmwareSelected": {
+        "message": "<b>Nav izvēlēta ielādējamā programmatūra<\/b>"
+    },
+    "firmwareFlasherNoValidPort": {
+        "message": "<span class=\"message-negative\">Lūdzu izvēlieties derīgu seriālo portu<\/span>"
+    },
+    "firmwareFlasherWritePermissions": {
+        "message": "Jums nav <span class=\"message-negative\">rakstīšanas tiesību<\/span> šim failam"
+    },
+    "firmwareFlasherFlashTrigger": {
+        "message": "Detektēts: <strong>$1<\/strong> - palaižu programmēšanu pie savienojuma"
+    },
+    "firmwareFlasherPreviousDevice": {
+        "message": "Detektēts: <strong>$1<\/strong> - iepriekšējā ierīce joprojām programmējas, pieslēdzieties atkārtoti, lai mēģinātu vēlreiz"
+    },
+    "ledStripHelp": {
+        "message": "Lidojuma kontrolieris var kontrolēt krāsas un individuāli ietekmēt LEDus uz joslas.<br \/>Konfigurējiet LEDus režģī, konfigurējiet slēguma secību un tad pieslēdziet LEDus uz jūsu gaisa kuģa atbilstoši režģa pozīcijai. LEDi bez slēguma secības netiks saglabāti.<br \/>Dubult klikšķis uz krāsas ļaus mainīt HSV vērtības."
+    },
+    "ledStripButtonSave": {
+        "message": "Saglabāt"
+    },
+    "ledStripColorSetupTitle": {
+        "message": "Krāsas iestatījums",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "Palika",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "Notīrīt atlasīto",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "Notīrīt visu",
+        "description": "In the LED STRIP, clear all leds"
+    },
+    "ledStripEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">saglabāts<\/span>"
+    },
+    "ledStripVtxOverlay": {
+        "message": "VTX (izmanto vtx frekvenci, lai piešķirtu krāsu)"
+    },
+    "ledStripFunctionSection": {
+        "message": "LED funkcijas"
+    },
+    "ledStripFunctionTitle": {
+        "message": "Funkcijas"
+    },
+    "ledStripFunctionNoneOption": {
+        "message": "Neviens",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "Krāsa",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "Režīmi &amp; Orientācija",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Aktiviz. status",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "Akumulators",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "Aplis",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripColorModifierTitle": {
+        "message": "Krāsu mainītājs"
+    },
+    "ledStripModeColorsTitle": {
+        "message": "Režīma krāsa"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "Orientācija",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Bez galvas",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizonts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Leņķis",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Mag",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Baro",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "N",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "E",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "S",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "W",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "U",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "D",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "LED orientācija ('Režīms &amp; Orientācija') un krāsa",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "Īpašās krāsas",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Deaktivēts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Aktivizēts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "Animācija",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "Mirgot fonā",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: nav sat.",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: nav fiks.",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: fiksēts",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "LED lentas slēgums",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "Slēguma secības režīms",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "Notīrīt atlasīto",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "Notīriet VISU slēgumu",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "LED bez slēguma kārtas numura netiks saglabāts.",
+        "description": "Message in the wiring modes in Led Strip"
+    },
+    "ledStripVtxFunction": {
+        "message": "Larson skeneris"
+    },
+    "ledStripBlinkTitle": {
+        "message": "Mirgot"
+    },
+    "ledStripBlinkAlwaysOverlay": {
+        "message": "Vienmēr mirgot"
+    },
+    "ledStripBlinkLandingOverlay": {
+        "message": "Mirgot nolaižoties"
+    },
+    "ledStripOverlayTitle": {
+        "message": "Pārklājums"
+    },
+    "ledStripWarningsOverlay": {
+        "message": "Brīdinājumi"
+    },
+    "ledStripIndecatorOverlay": {
+        "message": "Indikators (lieto pozīciju uz matricas)"
+    },
+    "colorBlack": {
+        "message": "melns"
+    },
+    "colorWhite": {
+        "message": "balts"
+    },
+    "colorRed": {
+        "message": "sarkans"
+    },
+    "colorOrange": {
+        "message": "oranžs"
+    },
+    "colorYellow": {
+        "message": "dzeltens"
+    },
+    "colorLimeGreen": {
+        "message": "laima zaļš"
+    },
+    "colorGreen": {
+        "message": "zaļš"
+    },
+    "colorMintGreen": {
+        "message": "piparmētru zaļš"
+    },
+    "colorCyan": {
+        "message": "ciāna"
+    },
+    "colorLightBlue": {
+        "message": "gaiši zils"
+    },
+    "colorBlue": {
+        "message": "zils"
+    },
+    "colorDarkViolet": {
+        "message": "tumši violets"
+    },
+    "colorMagenta": {
+        "message": "fuksīna"
+    },
+    "colorDeepPink": {
+        "message": "tumši rozā"
+    },
+    "controlAxisRoll": {
+        "message": "Roll [A]"
+    },
+    "controlAxisPitch": {
+        "message": "Pitch [E]"
+    },
+    "controlAxisYaw": {
+        "message": "Yaw [R]"
+    },
+    "controlAxisThrottle": {
+        "message": "Drosele [T]"
+    },
+    "controlAxisAux1": {
+        "message": "AUX 1"
+    },
+    "controlAxisAux2": {
+        "message": "AUX 2"
+    },
+    "controlAxisAux3": {
+        "message": "AUX 3"
+    },
+    "controlAxisAux4": {
+        "message": "AUX 4"
+    },
+    "controlAxisAux5": {
+        "message": "AUX 5"
+    },
+    "controlAxisAux6": {
+        "message": "AUX 6"
+    },
+    "controlAxisAux7": {
+        "message": "AUX 7"
+    },
+    "controlAxisAux8": {
+        "message": "AUX 8"
+    },
+    "controlAxisAux9": {
+        "message": "AUX 9"
+    },
+    "controlAxisAux10": {
+        "message": "AUX 10"
+    },
+    "controlAxisAux11": {
+        "message": "AUX 11"
+    },
+    "controlAxisAux12": {
+        "message": "AUX 12"
+    },
+    "controlAxisAux13": {
+        "message": "AUX 13"
+    },
+    "controlAxisAux14": {
+        "message": "AUX 14"
+    },
+    "controlAxisAux15": {
+        "message": "AUX 15"
+    },
+    "controlAxisAux16": {
+        "message": "AUX 16"
+    },
+    "pidTuningBasic": {
+        "message": "Pamata\/Akro"
+    },
+    "pidTuningYawJumpPrevention": {
+        "message": "Yaw lēciena novēršana"
+    },
+    "pidTuningYawJumpPreventionHelp": {
+        "message": "Pasargā gaisa kuģi no lēcieniem pie yaw nobeigumiem. Augstāks cipars dot lielāku amortizāciju pie yaw kustību beigām (strādā kā vecais yaw D, kas nebija tāds D kā uz citām asīm)"
+    },
+    "pidTuningRcExpoPower": {
+        "message": "RC Ekspo jauda"
+    },
+    "pidTuningRcExpoPowerHelp": {
+        "message": "Eksponents tiek lietots RC Ekspo kalkulācijās. Iekš Betaflight versijās pirms 3.0, vērtība fiksēta uz 3."
+    },
+    "pidTuningLevel": {
+        "message": "Leņķa\/Horizonta"
+    },
+    "pidTuningAltitude": {
+        "message": "Barometrs & Sonārs\/Augstums"
+    },
+    "pidTuningMag": {
+        "message": "Magnetometrs\/Pozīcija"
+    },
+    "pidTuningGps": {
+        "message": "GPS navigācija"
+    },
+    "pidTuningStrength": {
+        "message": "Stiprums"
+    },
+    "pidTuningTransition": {
+        "message": "Pāreja"
+    },
+    "pidTuningHorizon": {
+        "message": "Horizonts"
+    },
+    "pidTuningAngle": {
+        "message": "Leņķis"
+    },
+    "pidTuningLevelAngleLimit": {
+        "message": "Leņķa limits"
+    },
+    "pidTuningLevelSensitivity": {
+        "message": "Jūtīgums"
+    },
+    "pidTuningLevelHelp": {
+        "message": "Tālākās vērtības mainot ietekmēs LEŅĶA un HORIZONTA lidojuma režīmus. Atšķirīgi PID kontrolieri apstrādā vērtības atšķirīgi. Lūdzu pārbaudiet dokumentāciju."
+    },
+    "pidTuningNonProfileFilterSettings": {
+        "message": "Profila neatkarīgo filtru iestatījumi"
+    },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "Žiroskopa Soft zemfrekvenču frekvence [Hz]"
+    },
+    "pidTuningGyroLowpassFrequencyHelp": {
+        "message": "Žiroskopa Soft zemfrekvenču frekvence [Hz]"
+    },
+    "pidTuningGyroNotch1Enable": {
+        "message": "Ieslēgt žiroskopa joslas filtru 1"
+    },
+    "pidTuningGyroNotch1Frequency": {
+        "message": "Žiroskopa joslas filtra 1 frekvence [Hz]"
+    },
+    "pidTuningGyroNotch2Enable": {
+        "message": "Ieslēgt žiroskopa joslas filtru 2"
+    },
+    "pidTuningGyroNotch2Frequency": {
+        "message": "Žiroskopa joslas filtra 2 frekvence [Hz]"
+    },
+    "pidTuningGyroNotchFrequencyHelp": {
+        "message": "Žiroskopa joslas filtra frekvence hercos"
+    },
+    "pidTuningGyroNotch1Cutoff": {
+        "message": "Žiroskopa joslas filtra nogriešanas 1 frekvence [Hz]"
+    },
+    "pidTuningGyroNotch2Cutoff": {
+        "message": "Žiroskopa joslas filtra nogriešanas 2 frekvence [Hz]"
+    },
+    "pidTuningGyroNotchCutoffHelp": {
+        "message": "Žiroskopa joslas filtra nogriešanas frekvence hercos (Tas kur sākas joslas filtrs. Piemēram ar joslas filtra nogriešanu pie 160 un joslas filtra frekvenci 260, tas nozīmēs ka filtra diapazons ir no 160-360Hz ar lielāko vājinājumu ap centru)"
+    },
+    "pidTuningFilterSettings": {
+        "message": "Filtra iestatījumi"
+    },
+    "pidTuningDTermLowpassType": {
+        "message": "D-Term zemfrekvenču filtrs"
+    },
+    "pidTuningDTermLowpassTypeTip": {
+        "message": "Izvēlieties kuru D-Term zemfrekvenču filtra tipu izmantot. Noklusējums ir BIQUAD"
+    },
+    "pidTuningDTermLowpassFrequency": {
+        "message": "D Term zemfrekvenču frekvence [Hz]"
+    },
+    "pidTuningDTermLowpassFrequencyHelp": {
+        "message": "D Term zemfrekvenču frekvence [Hz] (0 nozīmē izslēgts)"
+    },
+    "pidTuningDTermNotchEnable": {
+        "message": "Ieslēgt D Term joslas filtru"
+    },
+    "pidTuningDTermNotchFrequency": {
+        "message": "D Term joslas filtra frekvence [Hz]"
+    },
+    "pidTuningDTermNotchFrequencyHelp": {
+        "message": "D Term zemfrekvenču frekvence [Hz] (0 nozīmē izslēgts)"
+    },
+    "pidTuningDTermNotchCutoff": {
+        "message": "D Term joslas filtra nogriešanas [Hz]"
+    },
+    "pidTuningDTermNotchCutoffHelp": {
+        "message": "D term joslas filtra nogriešanas frekvence hercos (Tas ir kur sākas joslas filtrs. Piemēram ar joslas filtra nogriešanu pie 160 un joslas filtra frekvenci 260, tas nozīmēs ka filtra diapazons ir no 160-360Hz ar lielāko vājinājumu ap centru)"
+    },
+    "pidTuningYawLowpassFrequency": {
+        "message": "Yaw zemfrekvenču frekvence [Hz]"
+    },
+    "pidTuningYawLowpassFrequencyHelp": {
+        "message": "Yaw zemfrekvenču frekvence [Hz] (Yaw ass dažreiz var būt trokšņaināka nekā citas. Šis filtrs ietekmē tikai Yaw P)"
+    },
+    "pidTuningVbatPidCompensation": {
+        "message": "Vbat PID kompensācija"
+    },
+    "pidTuningVbatPidCompensationHelp": {
+        "message": "Palielina PID vērtības lai kompensētu akumulatorā sprieguma kritumu. Tas sniegs daudz konstantākus lidojumu parametrus visā lidojuma laikā. Pielietotās kompensēšanas lielums ir aprēķināts no šūnas maksimālā sprieguma, kas uzstādīts konfigurācijas cilnē, tāpēc pārliecinieties ka šī vērtība ir atbilstoša."
+    },
+    "configHelp2": {
+        "message": "Patvaļīga plates pagriešana grādos, lai atļautu uzstādīt to sāniski \/ augšpēdus \/ pagrieztu utt. Kad darbojas ar ārējo sensoru, izmantojiet sensora pielāgošanu (Žiro, Aksel, Mag), lai definētu sensora pozīciju neatkarīgi no plates orientācijas. "
+    },
+    "failsafeFeaturesHelpOld": {
+        "message": "Failsafe konfigurācija ir ievērojami mainījusies. Lietojiet Betaflight <strong>v1.12.0+<\/strong> lai piekļūtu uzlabotajam konfigurācijas panelim."
+    },
+    "failsafePaneTitleOld": {
+        "message": "Uztvērēja Failsafe"
+    },
+    "failsafeFeaturesHelpNew": {
+        "message": "Failsafe ir divi posmi. <strong>Posms 1<\/strong> aktivizējas tad, kad lidojuma kanālā ir nederīgs impulsa garums, uztvērējs ziņo par Failsafe režīmu vai no uztvērēja nav signāla vispār, kanāla atkāpšanas konfigurācija tiek pielietota <span class=\"message-negative\">visos kanālos<\/span> un nelielu laiku tiek gaidīts, lai būtu iespēja atgūties. <strong>Posms 2<\/strong> aktivizējas, kad kļūdas stāvoklis ir ilgāks par uzstādīto sarga laiku, kamēr ierīce ir <span class=\"message-negative\">aktivizēta<\/span>, uz visiem kanāliem paliek pielietotā kanāla atkāpšanas konfigurācija, ja vien netiks izvēlēta cita procedūra<br \/><strong>Piezīme:<\/strong> Pirms posma 1 aktivizēšanas, kanāla atkāpšanās konfigurācija tiks pielietota uz individuālajiem AUX kanāliem kuriem nav derīgi impulsi."
+    },
+    "failsafePulsrangeTitle": {
+        "message": "Derīgā impulsa diapazona iestatījumi"
+    },
+    "failsafePulsrangeHelp": {
+        "message": "Impuls īsāks par minimumu vai garāks par maksimumu ir nederīgs un tiks izsaukta individuāla kanāla atkāpšanās konfigurācija priekš AUX kanāla vai posma 1 aktivizēšanos lidojuma kanālam"
+    },
+    "failsafeRxMinUsecItem": {
+        "message": "Minimālais garums"
+    },
+    "failsafeRxMaxUsecItem": {
+        "message": "Maksimālais garums"
+    },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "Kanāla atkāpšanās iestatījumi"
+    },
+    "failsafeChannelFallbackSettingsHelp": {
+        "message": "Šie iestatījumi tiks pielietoti individuāli uz nederīgajiem AUX kanāliem vai uz visiem kanāliem, kad aktivizēsies posms 1. <strong>Piezīme:<\/strong> vērtības ir saglabātas ar soli 25usek, tāpēc mazas izmaiņas pazudīs"
+    },
+    "failsafeChannelFallbackSettingsAuto": {
+        "message": "<strong>Auto<\/strong> nozīmē Roll, Pitch un Yaw uz centru un drosele uz leju. <strong>Hold<\/strong> nozīmē, ka tiks uzturēta pēdējā saņemtā derīgā vērtība"
+    },
+    "failsafeChannelFallbackSettingsHold": {
+        "message": "<strong>Hold<\/strong> nozīmē, ka tiks uzturēta pēdējā saņemtā derīgā vērtība.\n <strong>Set<\/strong> nozīmē ka norādītā vērtība tiks uzturēta"
+    },
+    "failsafeStageTwoSettingsTitle": {
+        "message": "2. posms - Iestatījumi"
+    },
+    "failsafeDelayItem": {
+        "message": "Sarga laiks priekš posma 2 pēc signāla pazušanas [1 = 0.1 sec.]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Posms 1 gaidīšanas laiks priekš atjaunošanās"
+    },
+    "failsafeThrottleLowItem": {
+        "message": "Failsafe droseles Min vērtības aizture [1 = 0.1 sec.]"
+    },
+    "failsafeThrottleLowHelp": {
+        "message": "Vienkārši deaktivēt gaisa kuģi, tā vietā, lai aktivētu Failsafe procedūru, kad drosele ir uz minimālās vērtības pie šāda daudzuma laika"
+    },
+    "failsafeThrottleItem": {
+        "message": "Nolaižoties lietotā droseles vērtība"
+    },
+    "failsafeOffDelayItem": {
+        "message": "Aizture pirms motoru dezaktivācijas Failsafe gadījumā [1 = 0.1 sec.]"
+    },
+    "failsafeOffDelayHelp": {
+        "message": "Laiks kurā paliks nosēšanās režīmā līdz motori tiks atslēgti un gaisa kuģis deaktivēts"
+    },
+    "failsafeSubTitle1": {
+        "message": "Posms 2 - Failsafe procedūra"
+    },
+    "failsafeProcedureItemSelect1": {
+        "message": "Nolaisties"
+    },
+    "failsafeProcedureItemSelect2": {
+        "message": "Krist"
+    },
+    "failsafeKillSwitchItem": {
+        "message": "Failsafe izsaukšanas slēdzis (uzstādīt cilnē Režīmi)"
+    },
+    "failsafeKillSwitchHelp": {
+        "message": "Uzstādiet šo iespēju, lai uzliktu Failsafe slēdzi (Režīmu cilnē), lai tas darbotos kā dezaktivācijas slēdzis, izlaižot Failsafe procedūras. <strong>Piezīme:<\/strong>Aktivizēšana ir bloķēta ar dezaktivācijas slēdzi ieslēgtā pozīcijā"
+    },
+    "powerButtonSave": {
+        "message": "Saglabāt"
+    },
+    "powerFirmwareUpgradeRequired": {
+        "message": "Programmatūras atjaunināšana <span class=\"message-negative\">nepieciešama<\/span>. Akumulatora\/Strāvas stipruma\/Sprieguma konfigurācija lietojot API &lt; 1.33.0 (Betaflight relīzi &lt;= 3.17) nav pieejama."
+    },
+    "powerBatteryVoltageMeterSource": {
+        "message": "Voltmetra avots"
+    },
+    "powerBatteryVoltageMeterTypeNone": {
+        "message": "Neviens"
+    },
+    "powerBatteryVoltageMeterTypeAdc": {
+        "message": "Integrētais ADC"
+    },
+    "powerBatteryVoltageMeterTypeEsc": {
+        "message": "ESC sensors"
+    },
+    "powerBatteryCurrentMeterSource": {
+        "message": "Ampērmetra avots"
+    },
+    "powerBatteryCurrentMeterTypeNone": {
+        "message": "Neviens"
+    },
+    "powerBatteryCurrentMeterTypeAdc": {
+        "message": "Integrētais ADC"
+    },
+    "powerBatteryCurrentMeterTypeVirtual": {
+        "message": "Virtuālais"
+    },
+    "powerBatteryCurrentMeterTypeEsc": {
+        "message": "ESC sensors"
+    },
+    "powerBatteryCurrentMeterTypeMsp": {
+        "message": "MSP Sensors\/OSD padotais"
+    },
+    "powerBatteryMinimum": {
+        "message": "Šūnas minimālais spriegums"
+    },
+    "powerBatteryMaximum": {
+        "message": "Šūnas maksimālais spriegums"
+    },
+    "powerBatteryWarning": {
+        "message": "Šūnas brīdinājuma spriegums"
+    },
+    "powerVoltageHead": {
+        "message": "Voltmetrs"
+    },
+    "powerVoltageValue": {
+        "message": "$1 V"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
+    },
+    "powerVoltageId10": {
+        "message": "Akumulators"
+    },
+    "powerVoltageId20": {
+        "message": "5V"
+    },
+    "powerVoltageId30": {
+        "message": "9V"
+    },
+    "powerVoltageId40": {
+        "message": "12V"
+    },
+    "powerVoltageId50": {
+        "message": "ESC Kopā"
+    },
+    "powerVoltageId60": {
+        "message": "ESC Motors 1"
+    },
+    "powerVoltageId61": {
+        "message": "ESC Motors 2"
+    },
+    "powerVoltageId62": {
+        "message": "ESC Motors 3"
+    },
+    "powerVoltageId63": {
+        "message": "ESC Motors 4"
+    },
+    "powerVoltageId64": {
+        "message": "ESC Motors 5"
+    },
+    "powerVoltageId65": {
+        "message": "ESC Motors 6"
+    },
+    "powerVoltageId66": {
+        "message": "ESC Motors 7"
+    },
+    "powerVoltageId67": {
+        "message": "ESC Motors 8"
+    },
+    "powerVoltageId68": {
+        "message": "ESC Motors 9"
+    },
+    "powerVoltageId69": {
+        "message": "ESC Motors 10"
+    },
+    "powerVoltageId70": {
+        "message": "ESC Motors 11"
+    },
+    "powerVoltageId71": {
+        "message": "ESC Motors 12"
+    },
+    "powerVoltageId80": {
+        "message": "Šūna 1"
+    },
+    "powerVoltageId81": {
+        "message": "Šūna 2"
+    },
+    "powerVoltageId82": {
+        "message": "Šūna 3"
+    },
+    "powerVoltageId83": {
+        "message": "Šūna 4"
+    },
+    "powerVoltageId84": {
+        "message": "Šūna 5"
+    },
+    "powerVoltageId85": {
+        "message": "Šūna 6"
+    },
+    "powerVoltageScale": {
+        "message": "Mērogs"
+    },
+    "powerVoltageDivider": {
+        "message": "Dalītāja vērtība"
+    },
+    "powerVoltageMultiplier": {
+        "message": "Reizinātāja vērtība"
+    },
+    "powerAmperageHead": {
+        "message": "Ampērmetrs"
+    },
+    "powerAmperageId10": {
+        "message": "Akumulators"
+    },
+    "powerAmperageId50": {
+        "message": "ESC Kopā"
+    },
+    "powerAmperageId60": {
+        "message": "ESC Motors 1"
+    },
+    "powerAmperageId61": {
+        "message": "ESC Motors 2"
+    },
+    "powerAmperageId62": {
+        "message": "ESC Motors 3"
+    },
+    "powerAmperageId63": {
+        "message": "ESC Motors 4"
+    },
+    "powerAmperageId64": {
+        "message": "ESC Motors 5"
+    },
+    "powerAmperageId65": {
+        "message": "ESC Motors 6"
+    },
+    "powerAmperageId66": {
+        "message": "ESC Motors 7"
+    },
+    "powerAmperageId67": {
+        "message": "ESC Motors 8"
+    },
+    "powerAmperageId68": {
+        "message": "ESC Motors 9"
+    },
+    "powerAmperageId69": {
+        "message": "ESC Motors 10"
+    },
+    "powerAmperageId70": {
+        "message": "ESC Motors 11"
+    },
+    "powerAmperageId71": {
+        "message": "ESC Motors 12"
+    },
+    "powerAmperageId80": {
+        "message": "Virtuālais"
+    },
+    "powerAmperageId90": {
+        "message": "MSP"
+    },
+    "powerMahValue": {
+        "message": "$1 mAh"
+    },
+    "powerAmperageScale": {
+        "message": "Mērogs [1\/10th mV\/A]"
+    },
+    "powerAmperageOffset": {
+        "message": "Nobīde [mV]"
+    },
+    "powerBatteryHead": {
+        "message": "Akumulators"
+    },
+    "powerStateHead": {
+        "message": "Barošanas stāvoklis"
+    },
+    "powerBatteryConnected": {
+        "message": "Savienots"
+    },
+    "powerBatteryConnectedValueYes": {
+        "message": "Jā (Šūna: $1)"
+    },
+    "powerBatteryConnectedValueNo": {
+        "message": "Nē"
+    },
+    "powerBatteryVoltage": {
+        "message": "Spriegums"
+    },
+    "powerBatteryCurrentDrawn": {
+        "message": "mAh izmantoti"
+    },
+    "powerBatteryAmperage": {
+        "message": "Strāva"
+    },
+    "powerBatteryCapacity": {
+        "message": "Kapacitāte (mAh)"
+    },
+    "osdSetupTitle": {
+        "message": "OSD"
+    },
+    "osdSetupPreviewHelp": {
+        "message": "<strong>Piezīme:<\/strong> OSD priekšskatījums var nerādīt aktuālos fontus, kas ieinstalēti lidojuma kontrolierī."
+    },
+    "osdSetupUnsupportedNote1": {
+        "message": "Jūsu lidojuma kontrolieris neatbild uz OSD komandām. Visdrīzāk tas nozīmē to, ka tam nav integrēta BetaFlight OSD."
+    },
+    "osdSetupUnsupportedNote2": {
+        "message": "Ņemiet vēra to ka dažiem lidojuma kontrolieriem uz plates ir <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a>, kas var būt saprogrammēts un konfigurēts ar <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>, toties MinimOSD nevar nokonfigurēt caur šo interfeisu."
+    },
+    "osdSetupElementsTitle": {
+        "message": "Elementi"
+    },
+    "osdSetupElementsSwitchAll": {
+        "message": "Pārslēgt visu"
+    },
+    "osdSetupPreviewTitle": {
+        "message": "Priekšskatīt (velciet, lai mainītu pozīciju)"
+    },
+    "osdSetupPreviewTitleTip": {
+        "message": "Rādīt vai slēpt logotipu priekšskatījuma logā. Šis nemainīs nekādus iestatījumus lidojuma kontrolierī."
+    },
+    "osdSetupVideoFormatTitle": {
+        "message": "Video Formāts"
+    },
+    "osdSetupUnitsTitle": {
+        "message": "Vienības"
+    },
+    "osdSetupTimersTitle": {
+        "message": "Taimeri"
+    },
+    "osdSetupAlarmsTitle": {
+        "message": "Trauksmes"
+    },
+    "osdSetupStatsTitle": {
+        "message": "Statistika pēc lidojuma"
+    },
+    "osdSetupVtxTitle": {
+        "message": "VTX Iestatījumi"
+    },
+    "osdSetupCraftNameTitle": {
+        "message": "Gaisa kuģa vārds"
+    },
+    "osdSetupWarningsTitle": {
+        "message": "Brīdinājumi"
+    },
+    "osdSetupFontPresets": {
+        "message": "Fonta iestatījumi:"
+    },
+    "osdSetupOpenFont": {
+        "message": "Atvērt fonta failu"
+    },
+    "osdSetupUploadFont": {
+        "message": "Augšupielādēt fontu"
+    },
+    "osdSetupSave": {
+        "message": "Saglabāt"
+    },
+    "osdSetupFontManager": {
+        "message": "Fonta pārvaldnieks"
+    },
+    "osdSetupUncheckAll": {
+        "message": "Noņemt atzīmes"
+    },
+    "osdSetupHead": {
+        "message": "Informācija"
+    },
+    "osdSetupVideoMode": {
+        "message": "Video Režīms"
+    },
+    "osdSetupCameraConnected": {
+        "message": "Kamera pieslēgta"
+    },
+    "osdSetupCameraConnectedValueYes": {
+        "message": "Jā"
+    },
+    "osdSetupCameraConnectedValueNo": {
+        "message": "Nē"
+    },
+    "osdSetupResetText": {
+        "message": "Atiestatīt OSD uz noklusējuma"
+    },
+    "osdSetupButtonReset": {
+        "message": "Atjaunot Iestatījumus"
+    },
+    "osdDescElementMainBattVoltage": {
+        "message": "Momentānais galvenā akumulatora spriegums (mirgo, kad zem trauksmes sliekšņa)"
+    },
+    "osdDescElementRssiValue": {
+        "message": "Momentānā RSSI vērtība (mirgo, kad zem trauksmes sliekšņa)"
+    },
+    "osdDescElementThrottlePosition": {
+        "message": "Patreizējā droseles kanāla vērtība"
+    },
+    "osdDescElementArmed": {
+        "message": "Aktivizācijas teksta ziņa"
+    },
+    "osdDescElementDisarmed": {
+        "message": "Deaktivizācijas tekstuāla ziņa"
+    },
+    "osdDescElementCrosshairs": {
+        "message": "Ekrāna krusteņa centrs"
+    },
+    "osdDescElementArtificialHorizon": {
+        "message": "Mākslīgā horizonta grafiskais indikators"
+    },
+    "osdDescElementHorizonSidebars": {
+        "message": "Sānu joslas ap mākslīgā horizonta indikatoru"
+    },
+    "osdDescElementCurrentDraw": {
+        "message": "Momentānais akumulatorā strāvas patēriņš"
+    },
+    "osdDescElementMahDrawn": {
+        "message": "Absolūtais akumulatora kapacitātes izlietojums"
+    },
+    "osdDescElementCraftName": {
+        "message": "Konfigurācijas cilnē iestatītais gaisa kuģa vārds"
+    },
+    "osdDescElementAltitude": {
+        "message": "Patreizējais augstums (mirgo, ja ir virs trauksmes sliekšņa)"
+    },
+    "osdDescElementOnTime": {
+        "message": "Kopējais laiks, kopš gaisa kuģa ieslēgšanas"
+    },
+    "osdDescElementFlyTime": {
+        "message": "Kopējais laiks, kurā gaisa kuģis ir patreizējā elektriskajā ciklā (mirgo, ja ir virs trauksmes sliekšņa)"
+    },
+    "osdDescElementFlyMode": {
+        "message": "Esošais lidojuma režīms"
+    },
+    "osdDescElementGPSSpeed": {
+        "message": "GPS pieejamais ātrums"
+    },
+    "osdDescElementGPSSats": {
+        "message": "GPS pieejamo satelītu skaits"
+    },
+    "osdDescElementGPSLon": {
+        "message": "GPS garums"
+    },
+    "osdDescElementGPSLat": {
+        "message": "GPS platums"
+    },
+    "osdDescElementDebug": {
+        "message": "Atkļūdošanas mainīgie"
+    },
+    "osdDescElementPIDRoll": {
+        "message": "Roll ass PID pastiprinājums"
+    },
+    "osdDescElementPIDPitch": {
+        "message": "Pitch ass PID pastiprinājums"
+    },
+    "osdDescElementPIDYaw": {
+        "message": "Yaw ass PID pastiprinājums"
+    },
+    "osdDescElementPower": {
+        "message": "Momentānais elektriskās jauda patēriņš"
+    },
+    "osdDescElementPIDRateProfile": {
+        "message": "Aktīvā PID un ātrumu profila numerālais rādījums"
+    },
+    "osdDescElementBatteryWarning": {
+        "message": "Brīdinājuma teksts, kas parādīsies, kad akumulatora spriegums nokritīs zem brīdinājuma sliekšņa"
+    },
+    "osdDescElementAvgCellVoltage": {
+        "message": "Vidējais šūnas spriegums (galvenā akumulatorā spriegums \/ šūnu skaitu)"
+    },
+    "osdDescElementPitchAngle": {
+        "message": "Numerālais pitch leņķis grādos"
+    },
+    "osdDescElementRollAngle": {
+        "message": "Numerālais roll leņķis grādos"
+    },
+    "osdDescElementMainBattUsage": {
+        "message": "Akumulatorā izmantotās kapacitātes grafiskā reprezentācija"
+    },
+    "osdDescElementArmedTime": {
+        "message": "Laiks kopš gaisa kuģis pēdējo reizi tika aktivizēts"
+    },
+    "osdDescElementWarnings": {
+        "message": "Trauksmes (piem. zems akumulatora līmenis), brīdinājumi (piem. iemesls kāpēc neaktivējas, kritiski zems akumulatora līmenis) un vizuālais pīkstulis (4 mirgojoša zvaigznītes)."
+    },
+    "osdDescElementEscTemperature": {
+        "message": "ESC telemetrijas ziņotā temperatūra"
+    },
+    "osdDescElementEscRpm": {
+        "message": "ESC telemetrijas ziņotais RPM"
+    },
+    "osdDescElementRtcDateTime": {
+        "message": "Reālā laika pulksteņa datums \/ laiks"
+    },
+    "osdDescElementAdjustmentRange": {
+        "message": "Patreiz aktīvā pieregulējamā diapazona konfigurācija un vērtība"
+    },
+    "osdDescElementHomeDirection": {
+        "message": "Bulta, kas norāda virzienu uz mājām"
+    },
+    "osdDescElementHomeDistance": {
+        "message": "Distance līdz mājai (var būt pēdas vai metri atkarībā no iestatītās mērvienības sistēmas)"
+    },
+    "osdDescElementNumericalHeading": {
+        "message": "Patreizējās debespuses numerālais rādījums grādos"
+    },
+    "osdDescElementNumericalVario": {
+        "message": "Vertikāla ātruma numerālais rādījums (var būt pēdas vai metri atkarībā no iestatītās mērvienības sistēma)"
+    },
+    "osdDescElementCompassBar": {
+        "message": "Kompasa grafiskā josla, kas norāda patreizējo debespusi"
+    },
+    "osdDescElementTimer1": {
+        "message": "Rādīt taimera 1 vērtību"
+    },
+    "osdDescElementTimer2": {
+        "message": "Rādīt taimera 2 vērtību"
+    },
+    "osdDescElementRemaningTimeEstimate": {
+        "message": "Paredzamais atlikušais lidojuma laiks"
+    },
+    "osdDescElementUnknown": {
+        "message": "Nezināms elements (informācija tiks pievienota nākamajā relīzē)"
+    },
+    "osdDescElementCoreTemperature": {
+        "message": "STM32 MCU kodola temperatūra"
+    },
+    "osdDescStatMaxSpeed": {
+        "message": "Maksimālais piefiksētais ātrums"
+    },
+    "osdDescStatMinBattery": {
+        "message": "Minimālais piefiksētais galvenā akumulatora spriegums"
+    },
+    "osdDescStatMinRssi": {
+        "message": "Minimālais piefiksētais RSSI"
+    },
+    "osdDescStatMaxCurrent": {
+        "message": "Maksimālais piefiksētais strāvas patēriņš"
+    },
+    "osdDescStatUsedMah": {
+        "message": "Akumulatora izmantotā kapacitāte"
+    },
+    "osdDescStatMaxAltitude": {
+        "message": "Maksimālais piefiksētais augstums"
+    },
+    "osdDescStatBlackbox": {
+        "message": "Melnās kastes izlietojuma procents"
+    },
+    "osdDescStatEndBattery": {
+        "message": "Akumulatora spriegums dezaktivācijas laikā"
+    },
+    "osdDescStatFlyTime": {
+        "message": "Absolūtais laiks kurā gaisa kuģis ir aktivizēts patreizējā elektriskajā ciklā"
+    },
+    "osdDescStatArmedTime": {
+        "message": "Kopējais laiks, kopš gaisa kuģa pēdējās aktivizācijas"
+    },
+    "osdDescStatMaxDistance": {
+        "message": "Maksimālā distance no mājas"
+    },
+    "osdDescStatBlackboxLogNumber": {
+        "message": "Žurnālu nummurs šī lidojuma melnās kastes žurnālam"
+    },
+    "osdDescStatTimer1": {
+        "message": "Taimera 1 vērtība dezaktivācijas laikā"
+    },
+    "osdDescStatTimer2": {
+        "message": "Taimera 2 vērtība dezaktivācijas laikā"
+    },
+    "osdDescStatRtcDateTime": {
+        "message": "Datums un laiks no reālā laika pulksteņa"
+    },
+    "osdTimerSource": {
+        "message": "Avots:"
+    },
+    "osdTimerSourceTooltip": {
+        "message": "Izvēlēties taimera avotu, tas kontrolē ilgumu\/notikumu kuru taimeris mērīs"
+    },
+    "osdTimerPrecision": {
+        "message": "Precizitāte:"
+    },
+    "osdTimerPrecisionTooltip": {
+        "message": "Izvēlēties taimera precizitāti, tas kontrolē ar kādu precizitāti laiks tiks ziņots"
+    },
+    "osdTimerAlarm": {
+        "message": "Trauksme:"
+    },
+    "osdTimerAlarmTooltip": {
+        "message": "Izvēlēties taimera trauksmes slieksni minūtēs, kad tiks sasniegta šī vērtība, OSD elements sāks mirgot, uzstādiet 0, lai atslēgtu trauksmi"
+    },
+    "osdWarningArmingDisabled": {
+        "message": "Ziņo par visiespējamāko iemeslu kāpēc neaktivizējas"
+    },
+    "osdWarningBatteryNotFull": {
+        "message": "Brīdināt, kad pieslēgtais akumulators nav pilnībā uzlādēts"
+    },
+    "osdWarningBatteryWarning": {
+        "message": "Brīdināt, kad akumulatora spriegums nokrīt zem brīdinājuma sliekšņa"
+    },
+    "osdWarningBatteryCritical": {
+        "message": "Brīdināt, kad akumulatorā spriegums nokrīt zem minimālā vidējā šūnas sprieguma"
+    },
+    "osdWarningVisualBeeper": {
+        "message": "Rādīt pīkstuļa vizualizāciju (parādās kā 4 zvaigznītes)"
+    },
+    "osdWarningCrashFlipMode": {
+        "message": "Brīdināt, kad ir apgriezies kājām gaisā pēc negadījuma režīma aktivizācijas"
+    },
+    "osdSectionHelpElements": {
+        "message": "Ieslēgt vai izslēgt OSD elementus."
+    },
+    "osdSectionHelpVideoMode": {
+        "message": "Uzstādīt sagaidāmo kameras video režīmu (parasti var palikt AUTO, bet ja rodas sarežģījumi uzstādiet režīmu, kas atbilst kameras izvadei)."
+    },
+    "osdSectionHelpUnits": {
+        "message": "Uzstāda mērvienības sistēmu priekš skaitliskajiem rādījumiem."
+    },
+    "osdSectionHelpTimers": {
+        "message": "Konfigurēt lidojuma taimerus."
+    },
+    "osdSectionHelpAlarms": {
+        "message": "Uzstāda sliekšņus, kurus pielieto OSD elementos ar trauksmes iespējām."
+    },
+    "osdSectionHelpStats": {
+        "message": "Uzstāda vērtības, kuras parādīt, statistikas ekrānā pēc lidojuma."
+    },
+    "osdSectionHelpWarnings": {
+        "message": "Ieslēgt vai izslēgt brīdinājumus, kas parādās uz brīdinājumu elementa."
+    },
+    "osdSettingsSaved": {
+        "message": "OSD iestatījumi saglabāti"
+    },
+    "osdWritePermissions": {
+        "message": "Jums nav <span class=\"message-negative\">rakstīšanas atļauju<\/span> šim failam"
+    },
+    "mainHelpArmed": {
+        "message": "Motoru aktivizēšana"
+    },
+    "mainHelpFailsafe": {
+        "message": "Failsafe režīms"
+    },
+    "mainHelpLink": {
+        "message": "Seriālās līnijas status"
+    },
+    "configurationEscProtocol": {
+        "message": "ESC\/Motor protokols"
+    },
+    "configurationEscProtocolHelp": {
+        "message": "Izvēlies savu motoru protokolu. <br> Pārliecinies, ka šo protokolu atbalsta tavi ESCs, šādai informācijai jābūt pieejamai ražotāja vietnē. <br> <b>Uzmanies izmantot DSHOT900 un DSHOT1200, jo ļoti maz ESCs atbalsta tos!<\/b>"
+    },
+    "configurationunsyndePwm": {
+        "message": "Motora PWM ātrums atdalīts no PID ātruma"
+    },
+    "configurationUnsyncedPWMFreq": {
+        "message": "Motora PWM frekvence"
+    },
+    "configurationGyroSyncDenom": {
+        "message": "Žiroskopa atjaunināšanās frekvence"
+    },
+    "configurationPidProcessDenom": {
+        "message": "PID cilpas frekvence"
+    },
+    "configurationPidProcessDenomHelp": {
+        "message": "Maksimālo PID cilpu frekvenci ierobežo maksimāla frekvence ar kuru izvēlēto ESC\/motoru protokols sūta datus."
+    },
+    "configurationGyroUse32kHz": {
+        "message": "Ieslēgt žiroskopu 32kHz mērījuma ātruma režīmā"
+    },
+    "configurationGyroUse32kHzHelp": {
+        "message": "32 kHz žiroskopa atjaunošanās frekvenci ir iespējama tikai tad, ja pats žiroskops to atbalsta (patreiz MPU6500, MPU9250, un ICM20xxx, ja ir pieslēgti caur SPI). Ja rodas šaubas, meklējiet informāciju jūsu plates specifikācijā."
+    },
+    "configurationAccHardware": {
+        "message": "Akselerometrs"
+    },
+    "configurationBaroHardware": {
+        "message": "Barometrs (ja tiek nodrošināts)"
+    },
+    "configurationMagHardware": {
+        "message": "Magnetometrs (ja tiek nodrošināts)"
+    },
+    "configurationSmallAngle": {
+        "message": "Maksimālais aktivizēšanas leņķis [degrees]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "Gaisa kuģi netiks aktivizēts, ja norādītais leņķis tiks pārsniegts. Darbojas tikai tad, ja akselerometrs ir ieslēgts. Uzstādot 180 pārbaude tiks atslēgta"
+    },
+    "configurationBatteryVoltage": {
+        "message": "Akumulatora spriegums"
+    },
+    "configurationBatteryCurrent": {
+        "message": "Akumulatora strāva"
+    },
+    "configurationBatteryMeterType": {
+        "message": "Voltmetra tips"
+    },
+    "configurationBatteryMinimum": {
+        "message": "Šūnas minimālais spriegums"
+    },
+    "configurationBatteryMaximum": {
+        "message": "Šūnas maksimālais spriegums"
+    },
+    "configurationBatteryWarning": {
+        "message": "Šūnas brīdinājuma spriegums"
+    },
+    "configurationBatteryScale": {
+        "message": "Sprieguma skala"
+    },
+    "configurationCurrentMeterType": {
+        "message": "Ampērmetra tips"
+    },
+    "configurationCurrent": {
+        "message": "Strāvas sensors"
+    },
+    "configurationCurrentScale": {
+        "message": "Izejas sprieguma mērogs pret miliampēriem [1\/10th mV\/A]"
+    },
+    "configurationCurrentOffset": {
+        "message": "Nobīde ar milivolta soli"
+    },
+    "configurationBatteryMultiwiiCurrent": {
+        "message": "Ieslēgt mantoto Multiwii MSP atbalstu uz patreizējo izvadi"
+    },
+    "pidTuningProfile": {
+        "message": "Profils"
+    },
+    "pidTuningProfileTip": {
+        "message": "Līdz pat 3 (2 priekš dažiem kontrolieriem) atšķirīgi pid profili var tikt glabāti uz lidojuma kontroliera. Šajā cilnē pid profili satur pid, d iestatījumus un Leņķa\/Horizonta konfigurāciju. Kad esat laukā, ar vienkāršām slēdžu komandām (skatīt instrukcijās internetā) var tikt veikta pārslēgšanas starp profiliem."
+    },
+    "pidTuningRateProfile": {
+        "message": "Ātrumprofils"
+    },
+    "pidTuningRateProfileTip": {
+        "message": "Līdz pat 3 atšķirīgiem ātrumprofiliem uz katru profilu var tik glabāti uz lidojuma kontrolieriem. Ātrumprofili iekļauj sevī iestatījumus priekš 'RC ātrumi', 'Ātrumi', 'RC Ekspo', 'Drosele' un 'TPA'. Pārslēgšanas starp ātrumprofiliem ir iespējama lidojuma laikā, uzstādot 3 pozīciju slēdzi priekš 'Ātrumu profila izvēle' iekš 'Korekcijas' cilnes."
+    },
+    "pidTuningDelta": {
+        "message": "Atvasinājuma metode"
+    },
+    "pidTuningDeltaError": {
+        "message": "Kļūda"
+    },
+    "pidTuningDeltaMeasurement": {
+        "message": "Mērījums"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Atvasinājums no kļūdas<\/b> sniedz daudz tiešāku sviras atsauci un vairāk piemērots sacensībām.<br><br><b>Atvasinājums no mērījumiem<\/b> sniedz vienmērīgāku sviras atsauci, kas ir vairāk piemērots frīstailam"
+    },
+    "pidTuningPidControllerTip": {
+        "message": "<b>Mantojuma vs Betaflight (peldošais):<\/b> PID mērogošana un PID loģika ir tāda pati. Nav obligāti nepieciešama atkārtota pieregulēšana. Mantojums ir vecais betaflight, kura pamata PID kontrolieris balstīts uz veselo skaitļu matemātikas. Betaflight PID kontrolieris pielieto peldošā punkta matemātiku un tas dod daudz jaunu iespēju, īpaši izstrādātu priekš multirotoriem<br> <b>Peldošais vs veselais:<\/b> PID mērogošana un PID loģika ir tāda pati. Nav nepieciešama atkārtota pieregulēšana. F1 platēm nav integrēta FPU un peldoša punkta matemātika ievērojami palielina CPU noslodzi un veselo skaitļu matemātika uzlabo ātrdarbību, bet samazina precizitāti."
+    },
+    "pidTuningFilterTip": {
+        "message": "<b>Gyro Soft filtrs:<\/b>Žiroskopa zemfrekvenču filtrs. Izmantojiet zemākas vērtības, lai panāktu efektīvāku filtrēšanu.<br><b>D Term Filtrs:<\/b> Dterm zemfrekvenču filtrs. Var ietekmēt D regulējumu. Izmantojiet zemākas vērtības, lai panāktu efektīvāku filtrēšanu. <br><b>Yaw filtrs:<\/b> Filtrē Yaw izvadi. Tas var palīdzēt ar konstrukcijas trokšņiem uz Yaw ass."
+    },
+    "pidTuningPidTuningTip": {
+        "message": "<b>Proporcionāls:<\/b> Jūs jutīsiet ļoti spēcīgu pretestību pie visiem mēģinājumiem kustināt multirotoru<br><b>Integrāls:<\/b> Palielina spēju noturēt sākotnējo pozīciju un samazina dreifēšanu, bet arī palielina laiku, kas nepieciešams nonākšanai sākotnējā pozīcijā.<br><b>Atvasinājums:<\/b> Uzlabo laiku, kurā novirze tiek labota, bet palielina trokšņus<br><b>Ātrumi un Ekspo <\/b>: Šie parametri nosaka cik jūtīgas būs vadības sviras. Pielietojiet ātrumu līknes un 3D modeli, lai atrastu jums visatbilstošākos ātruma iestatījumus"
+    },
+    "pidTuningRatesTip": {
+        "message": "Paeksperimentējiet ar ātrumiem un novērojiet kā tas ietekmēs vadības sviras līkni"
+    },
+    "configurationCamera": {
+        "message": "Kamera"
+    },
+    "configurationPersonalization": {
+        "message": "Personalizācija"
+    },
+    "craftName": {
+        "message": "Gaisa kuģa vārds"
+    },
+    "configurationFpvCamAngleDegrees": {
+        "message": "FPV kameras leņķis [degrees]"
+    },
+    "onboardLoggingBlackbox": {
+        "message": "Melnās kastes žurnalēšanas iekārta"
+    },
+    "onboardLoggingRateOfLogging": {
+        "message": "Melnās kastes žurnalēšanas ātrums"
+    },
+    "onboardLoggingSerialLogger": {
+        "message": "Integrēta seriālā žurnalēšanas iekārta"
+    },
+    "onboardLoggingFlashLogger": {
+        "message": "Integrētais datu atmiņas čips"
+    },
+    "onboardLoggingEraseInProgress": {
+        "message": "Notiek dzēšana, lūdzu gaidiet..."
+    },
+    "onboardLoggingOnboardSDCard": {
+        "message": "Integrētā SD karte"
+    },
+    "dialogConfirmResetTitle": {
+        "message": "Apstiprināt"
+    },
+    "dialogConfirmResetNote": {
+        "message": "Brīdinājums: Vai tiešām vēlaties atiestatīt VISU uz noklusējuma iestatījumiem?"
+    },
+    "dialogConfirmResetConfirm": {
+        "message": "Atiestatīt"
+    },
+    "dialogConfirmResetClose": {
+        "message": "Atcelt"
+    },
+    "modeCameraWifi": {
+        "message": "KAMERAS WI-FI POGA"
+    },
+    "modeCameraPower": {
+        "message": "KAMERAS BAROŠANAS POGA"
+    },
+    "modeCameraChangeMode": {
+        "message": "KAMERAS REŽĪMA MAIŅA"
+    }
+}

@@ -206,7 +206,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     if (parsed_hex) {
                                         $('a.flash_firmware').removeClass('disabled');
 
-                                        $('span.progressLabel').text('Loaded Local Firmware: (' + parsed_hex.bytes_total + ' bytes)');
+                                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total));
                                     } else {
                                         $('span.progressLabel').text(i18n.getMessage('firmwareFlasherHexCorrupted'));
                                     }
@@ -260,8 +260,12 @@ TABS.firmware_flasher.initialize = function (callback) {
                         $('div.release_info .status').text(summary.status);
                         $('div.release_info .file').text(summary.file).prop('href', summary.url);
 
-                        var formattedNotes = summary.notes.trim('\r').replace(/\r/g, '<br />');
+                        var formattedNotes = summary.notes.replace(/#(\d+)/g, '[#$1](https://github.com/betaflight/betaflight/pull/$1)');
+                        formattedNotes = marked(formattedNotes);
                         $('div.release_info .notes').html(formattedNotes);
+                        $('div.release_info .notes').find('a').each(function() {
+                            $(this).attr('target', '_blank');
+                        });
 
                         $('div.release_info').slideDown();
 

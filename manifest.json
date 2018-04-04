@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "minimum_chrome_version": "38",
-    "version": "10.2.0",
+    "version": "10.3.0",
     "author": "Betaflight Squad",
     "name": "Betaflight - Configurator",
     "short_name": "Betaflight",
@@ -45,7 +45,7 @@
         "partitions": [
             {
                 "name": "map",
-                "accessible_resources" : ["tabs/map.html", "tabs/map.js", "/images/icons/cf_icon_position.png"]
+                "accessible_resources" : ["tabs/map.html", "js/tabs/map.js", "/images/icons/cf_icon_position.png"]
             }
         ]
     },

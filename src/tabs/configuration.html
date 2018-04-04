@@ -674,9 +674,56 @@
 
                 </td>
             </tr>
+
+            <tr class="dshotbeeper">
+                <td style="width:calc(50%)" colspan="2">
+                    <!-- ROW 5 - HALF WIDTH PANE -->
+            
+                    
+                    <!-- DSHOT BEEPER -->
+                    <div class="dshotBeeper" style="width: calc(50%);">
+                        <div class="gui_box grey" style="margin-top:10px;">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="configurationDshotBeeper"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <table cellpadding="0" cellspacing="0">
+                                    <tbody class="dshot-beeper-configuration" id="noline">
+                                        <tr>
+                                            <td>
+                                                <div class="number">
+                                                    <div style="float: left; height: 20px; margin-right: 34px;">
+                                                        <input class="dshot-beeper toggle" id="dshotBeeperSwitch" type="checkbox" />
+                                                    </div>
+                                                    <label for="dshotBeeperSwitch">    
+                                                        <span i18n="configurationUseDshotBeeper"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="dshotbeacon">
+                                            <td>
+                                                <div class="number">
+                                                    <div style="float: left; height: 20px; margin-right: 10px;">
+                                                        <input type="number" id="dshotBeeperBeaconTone" step="1" min="1" max="5" />
+                                                    </div>
+                                                    <label for="dshotBeeperBeaconTone">
+                                                        <span i18n="configurationDshotBeaconTone"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
             <tr class="beepers">
                 <td style="width:calc(100%)" colspan="2">
-                    <!-- ROW 4 - FULL WIDTH PANE -->
+                    <!-- ROW 6 - FULL WIDTH PANE -->
             
                     <!-- BEEPER -->
                     <div class="beepers" style="width: calc(100%);">
