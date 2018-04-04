@@ -39,9 +39,19 @@ i18n.init = function(cb) {
 }
 
 i18n.getMessage = function(messageID, parameters) {
-    var translatedString =  i18next.t(messageID + '.message');
 
-    if (parameters !== undefined) {
+    var translatedString;
+
+    // Option 1, no parameters or Object as parameters (i18Next type parameters)
+    if ((parameters === undefined) || ((parameters.constructor !== Array) && (parameters instanceof Object))) {
+        translatedString =  i18next.t(messageID + '.message', parameters);
+
+    // Option 2: parameters as $1, $2, etc.
+    // (deprecated, from the old Chrome i18n
+    } else {
+
+        translatedString =  i18next.t(messageID + '.message');
+
         if (parameters.constructor !== Array) {
             parameters = [parameters];
         }
