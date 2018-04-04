@@ -981,6 +981,10 @@ OSD.constants = {
     RTC_DATE_TIME: {
       name: 'RTC_DATE_TIME',
       desc: 'osdDescStatRtcDateTime'
+    },
+    STAT_BATTERY: {
+      name: 'STAT_BATTERY',
+      desc: 'osdDescStatBattery'
     }
   },
   ALL_WARNINGS: {
@@ -1162,6 +1166,11 @@ OSD.chooseFields = function () {
     OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
       F.RTC_DATE_TIME
     ]);
+    if (semver.gte(CONFIG.apiVersion, "1.38.0")) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+          F.STAT_BATTERY
+        ]);
+    }
   }
 
   // Choose warnings
