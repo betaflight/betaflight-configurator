@@ -2805,7 +2805,7 @@
         "message": "Click <b>$t(osdSetupUploadFont.message)</b> to persist custom logo"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Invalid image size: $1×$2 (expected $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Invalid image size: {{width}}×{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "The image contains an invalid color palette (only green, black and white are allowed)"

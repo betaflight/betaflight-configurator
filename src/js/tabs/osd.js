@@ -265,10 +265,10 @@ LogoManager.constraints = {
             var constraint = LogoManager.constraints.imageSize;
             if (img.width != constraint.expectedWidth 
                 || img.height != constraint.expectedHeight) {
-                GUI.log(i18n.getMessage("osdSetupCustomLogoImageSizeError", [
-                    img.width,
-                    img.height,
-                ]));
+                GUI.log(i18n.getMessage("osdSetupCustomLogoImageSizeError", {
+                    width: img.width,
+                    height: img.height,
+                }));
                 return false;
             }
             return true;
