@@ -1011,7 +1011,12 @@ OSD.constants = {
     CRASH_FLIP_MODE: {
       name: 'CRASH_FLIP_MODE',
       desc: 'osdWarningCrashFlipMode'
+    },
+    ESC_FAIL: {
+      name: 'OSD_WARNING_ESC_FAIL',
+      desc: 'osdWarningEscFail'
     }
+
   },
   FONT_TYPES: [
     { file: "default", name: "Default" },
@@ -1184,6 +1189,11 @@ OSD.chooseFields = function () {
     F.VISUAL_BEEPER,
     F.CRASH_FLIP_MODE
   ];
+  if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+      OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+          F.ESC_FAIL
+      ]);
+    }
 };
 
 OSD.updateDisplaySize = function() {

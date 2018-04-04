@@ -3317,6 +3317,9 @@
     "osdWarningCrashFlipMode": {
         "message": "Warns when flip over after crash mode is activated"
     },
+    "osdWarningEscFail": {
+        "message": "Enumerates a list with the ESCs/motors that are failing (RPM or temperature are out of the configured threshold)"
+    },
 
     "osdSectionHelpElements": {
         "message": "Enable or disable OSD elements."
