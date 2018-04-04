@@ -532,7 +532,7 @@ OSD.constants = {
       default_position: 193,
       draw_order: 40, 
       positionable: function() {
-        return semver.gte(CONFIG.apiVersion, "1.38.0") ? true : false;
+        return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
       },
       preview: FONT.symbol(SYM.AH_CENTER_LINE) + FONT.symbol(SYM.AH_CENTER) + FONT.symbol(SYM.AH_CENTER_LINE_RIGHT)
     },
@@ -542,7 +542,7 @@ OSD.constants = {
       default_position: 194,
       draw_order: 10,
       positionable: function() {
-        return semver.gte(CONFIG.apiVersion, "1.38.0") ? true : false;
+        return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
       },
       preview: function() {
 
@@ -573,7 +573,7 @@ OSD.constants = {
       default_position: 194,
       draw_order: 50,
       positionable: function() {
-        return semver.gte(CONFIG.apiVersion, "1.38.0") ? true : false;
+        return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
       },
       preview: function(fieldPosition) {
 
@@ -1166,7 +1166,7 @@ OSD.chooseFields = function () {
     OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
       F.RTC_DATE_TIME
     ]);
-    if (semver.gte(CONFIG.apiVersion, "1.38.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
           F.STAT_BATTERY
         ]);
