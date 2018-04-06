@@ -559,7 +559,7 @@
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"http://betaflight.tk/slack\" target=\"_blank\">Betaflight devs on slack</a>"
+        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\">Betaflight devs on slack</a>"
     },
 
     "initialSetupBackupAndRestoreApiVersion": {
