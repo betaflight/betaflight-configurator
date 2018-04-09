@@ -239,7 +239,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var dshotBeeper_e = $('.tab-configuration .dshotbeeper');
         var dshotBeacon_e = $('.tab-configuration .dshotbeacon');
         var dshotBeeperSwitch = $('#dshotBeeperSwitch');
-        var dshotBeeperBeaconTone = $('#dshotBeeperBeaconTone');
+        var dshotBeeperBeaconTone = $('select.dshotBeeperBeaconTone');
+
+        if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+            for (var i = 1; i <= 5; i++) {
+                dshotBeeperBeaconTone.append('<option value="' + (i) + '">'+ (i) + '</option>');
+            }
+            dshotBeeper_e.show();
+        } else {
+            dshotBeeper_e.hide();
+        }
 
         dshotBeeperSwitch.change(function() {
             if ($(this).is(':checked')) {
@@ -259,12 +268,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         dshotBeeperBeaconTone.val(BEEPER_CONFIG.dshotBeaconTone);
         dshotBeeperSwitch.prop('checked', BEEPER_CONFIG.dshotBeaconTone !== 0).change();
-
-        if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
-            dshotBeeper_e.show();
-        } else {
-            dshotBeeper_e.hide();
-        }
 
         // Analog Beeper
         var template = $('.beepers .beeper-template');
