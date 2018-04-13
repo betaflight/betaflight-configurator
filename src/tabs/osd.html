@@ -117,35 +117,48 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Font Manager dialog -->
                 <div id="fontmanagercontent" style="display:none; width:720px;">
                     <div class="font-picker" style="margin-bottom: 10px;">
                         <h1 class="tab_title" i18n="osdSetupFontPresets" />
+                        <!-- Font preview and list -->
                         <div class="content_wrapper font-preview"></div>
-                        <div class="fontbuttons">
-
-                        </div>
-                        <h1 class="tab_title" i18n="osdSetupLogo" />
-                        <div class="helpicon cf_tip" i18n_title="osdSetupReplaceLogoHelp"></div>                                                    
+                        <div class="fontbuttons"></div>
+                        <!-- Boot logo setup -->
+                        <h1 class="tab_title" i18n="osdSetupCustomLogoTitle" />
                         <div id="font-logo-preview-container" class="content_wrapper">
                             <div id="font-logo-preview">
                                 <!-- this will be resized at runtime -->
                             </div>
                         </div>
-                        <div class="default_btn" style="width:100%; float:left;
-                            ">
-                            <a class="replace_logo" i18n="osdSetupReplaceLogo" />
+                        <div id="font-logo-info">
+                            <h3 i18n="osdSetupCustomLogoInfoTitle"></h3>
+                            <ul>
+                                <li id="font-logo-info-size" i18n="osdSetupCustomLogoInfoImageSize"></li>
+                                <li id="font-logo-info-colors" i18n="osdSetupCustomLogoInfoColorMap"></li>
+                            </ul>
+                            <p id="font-logo-info-upload-hint" i18n="osdSetupCustomLogoInfoUploadHint"></p>
                         </div>
+                        <div class="clear-both"></div>
+                        <!-- Replace logo button -->
+                        <div class="default_btn" style="width:100%; float:left;">
+                            <a class="replace_logo" i18n="osdSetupCustomLogoOpenImageButton" />
+                        </div>
+                        <!-- Upload progress bar -->
                         <div class="info">
                             <a name="progressbar"></a>
                             <progress class="progress" value="0" min="0" max="100"></progress>
                             <div class="progressLabel" style="margin-top: -21px; width: 95%; text-align: center; color: white; position: absolute;"></div>
                         </div>
                     </div>
+                    <!-- Upload button -->
                     <div class="default_btn green" style="width:100%; float:left;
                         ">
                         <a class="flash_font active" i18n="osdSetupUploadFont" />
                     </div>
                 </div>
+
                 <div class="content_toolbar supported hide" style="left:0;">
                     <div class="btn save">
                         <a class="active save" href="#" i18n="osdSetupSave" />
