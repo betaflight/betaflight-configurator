@@ -153,276 +153,6 @@ FONT.openFontFile = function($preview) {
 };
 
 /**
- * Replaces the logo in the loaded font based on an image.
- * 
- * @param {HTMLImageElement} img
- */
-FONT.replaceLogoFromImage = function(img) {
-    /**
-     * Takes an ImageData object and returns an MCM symbol as an array of strings.
-     * 
-     * @param {ImageData} data
-     */
-    var imageToCharacter = function(data) {
-        var char = [],
-            line = "";
-        for (var i = 0, I = data.length; i < I; i += 4) {
-            var rgbPixel = data.slice(i, i + 3),
-                colorKey = rgbPixel.join("-");
-            line += LogoManager.constants.MCM_COLORMAP[colorKey]
-                || LogoManager.constants.MCM_COLORMAP['default'];
-            if (line.length == 8) {
-                char.push(line);
-                line = "";
-            }
-        }
-        var fieldSize = FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE;
-        if (char.length < fieldSize) {
-            var pad = LogoManager.constants.MCM_COLORMAP['default'].repeat(4);
-            for (var i = 0, I = fieldSize - char.length; i < I; i++)
-                char.push(pad);
-        }
-        return char;
-    };
-    // takes an OSD symbol as an array of strings and replaces the in-memory character at charAddress with it
-    var replaceChar = function(lines, charAddress) {
-        var characterBits = [];
-        var characterBytes = [];
-        for (var n = 0, N = lines.length; n < N; n++) {
-            var line = lines[n];
-            for (var y = 0; y < 8; y = y + 2) {
-                var v = parseInt(line.slice(y, y + 2), 2);
-                characterBits.push(v);
-            }
-            characterBytes.push(parseInt(line, 2));
-        }
-        FONT.data.characters[charAddress] = characterBits;
-        FONT.data.characters_bytes[charAddress] = characterBytes;
-        FONT.data.character_image_urls[charAddress] = null;
-        FONT.draw(charAddress);
-    };
-    // loop through an image and replace font symbols
-    var canvas = document.createElement('canvas'),
-        ctx = canvas.getContext('2d'),
-        charAddr = SYM.LOGO;
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    for (var y = 0; y < LogoManager.constants.TILES_NUM_VERT; y++) {
-        for (var x = 0; x < LogoManager.constants.TILES_NUM_HORIZ; x++) {
-            var imageData = ctx.getImageData(
-                x * FONT.constants.SIZES.CHAR_WIDTH,
-                y * FONT.constants.SIZES.CHAR_HEIGHT,
-                FONT.constants.SIZES.CHAR_WIDTH,
-                FONT.constants.SIZES.CHAR_HEIGHT
-            ),
-                newChar = imageToCharacter(imageData.data);
-            replaceChar(newChar, charAddr);
-            charAddr++;
-        }
-    }
-};
-
-var LogoManager = LogoManager || {
-    // DOM elements to cache
-    elements: {
-        preview: "#font-logo-preview",
-        uploadHint: "#font-logo-info-upload-hint",
-    },
-    constants: {
-        TILES_NUM_HORIZ: 24,
-        TILES_NUM_VERT: 4,
-        MCM_COLORMAP: {
-            // background
-            '0-255-0': '01',
-            // black
-            '0-0-0': '00',
-            // white
-            '255-255-255': '10',
-            // fallback
-            'default': '01',
-        },    
-    },
-    // config for logo image selection dialog
-    acceptFileTypes: [
-        { extensions: ['png', 'bmp'] }, 
-    ],
-};
-
-// custom logo image constraints
-LogoManager.constraints = {
-    // test for image size
-    imageSize: {
-        el: "#font-logo-info-size",
-        // calculate logo image size at runtime as it may change conditionally in the future
-        expectedWidth: FONT.constants.SIZES.CHAR_WIDTH
-            * LogoManager.constants.TILES_NUM_HORIZ,
-        expectedHeight: FONT.constants.SIZES.CHAR_HEIGHT
-            * LogoManager.constants.TILES_NUM_VERT,
-        /**
-         * @param {HTMLImageElement} img
-         */
-        test: function(img) {
-            var constraint = LogoManager.constraints.imageSize;
-            if (img.width != constraint.expectedWidth 
-                || img.height != constraint.expectedHeight) {
-                GUI.log(i18n.getMessage("osdSetupCustomLogoImageSizeError", {
-                    width: img.width,
-                    height: img.height,
-                }));
-                return false;
-            }
-            return true;
-        },
-    },
-    // test for pixel colors
-    colorMap: {
-        el: "#font-logo-info-colors",
-        /**
-         * @param {HTMLImageElement} img
-         */
-        test: function(img) {
-            var canvas = document.createElement('canvas'),
-                ctx = canvas.getContext('2d');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            for (var y = 0, Y = canvas.height; y < Y; y++) {
-                for (var x = 0, X = canvas.width; x < X; x++) {
-                    var rgbPixel = ctx.getImageData(x, y, 1, 1).data.slice(0, 3),
-                        colorKey = rgbPixel.join("-");
-                    if (!LogoManager.constants.MCM_COLORMAP[colorKey]) {
-                        GUI.log(i18n.getMessage("osdSetupCustomLogoColorMapError"));
-                        return false;
-                    }
-                }
-            }
-            return true;
-        },
-    },
-};
-
-/**
- * Initialize Logo Manager UI.
- */
-LogoManager.init = function() {
-  // inject logo size variables for dynamic translation strings
-  i18n.addResources({
-      logoWidthPx: "" + LogoManager.constraints.imageSize.expectedWidth,
-      logoHeightPx: "" + LogoManager.constraints.imageSize.expectedHeight,
-  });
-  // find/cache DOM elements
-  Object.keys(LogoManager.elements).forEach(function(key) {
-    LogoManager.elements["$" + key] = $(LogoManager.elements[key]);
-  });
-  Object.keys(LogoManager.constraints).forEach(function(key) {
-      LogoManager.constraints[key].$el = $(LogoManager.constraints[key].el);
-  });
-  // resize logo preview area to match tile size
-  LogoManager.elements.$preview
-      .width(LogoManager.constraints.imageSize.expectedWidth)
-      .height(LogoManager.constraints.imageSize.expectedHeight);
-  LogoManager.resetImageInfo();
-};
-
-LogoManager.resetImageInfo = function() {
-    LogoManager.hideUploadHint();
-    Object.values(LogoManager.constraints).forEach(function(constraint) {
-        var $el = constraint.$el;
-        $el.toggleClass("invalid", false);
-        $el.toggleClass("valid", false);
-    });
-};
-
-LogoManager.showConstraintNotSatisfied = function(constraint) {
-    constraint.$el.toggleClass("invalid", true);
-};
-
-LogoManager.showConstraintSatisfied = function(constraint) {
-    constraint.$el.toggleClass("valid", true);
-};
-
-LogoManager.showUploadHint = function() {
-    LogoManager.elements.$uploadHint.show();
-};
-
-LogoManager.hideUploadHint = function() {
-    LogoManager.elements.$uploadHint.hide();
-};
-
-/**
- * Show a file open dialog and resolve to an Image object.
- * 
- * @returns {Promise}
- */
-LogoManager.openImage = function() {
-    return new Promise(function(resolve, reject) {
-        /**
-         * Validate image using defined constraints and display results on the UI.
-         * 
-         * @param {HTMLImageElement} img
-         */
-        var validateImage = function(img) {
-                return new Promise(function(resolve, reject) {
-                    LogoManager.resetImageInfo();
-                    for (var key in LogoManager.constraints) {
-                        if (!LogoManager.constraints.hasOwnProperty(key)) {
-                            continue;
-                        }
-                        var constraint = LogoManager.constraints[key],
-                            satisfied = constraint.test(img);
-                        if (satisfied) {
-                            LogoManager.showConstraintSatisfied(constraint);
-                        } else {
-                            LogoManager.showConstraintNotSatisfied(constraint);                        
-                            reject();
-                            return;
-                        }
-                    }
-                    resolve();
-                });
-            },
-            dialogOptions = { 
-                type: 'openFile', 
-                accepts: LogoManager.acceptFileTypes 
-            };
-
-        chrome.fileSystem.chooseEntry(dialogOptions, function(fileEntry) {
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                return;
-            }
-            // load and validate selected image
-            var img = new Image();
-            img.onload = function() {
-                validateImage(img).then(function() {
-                    resolve(img);
-                }).catch(function(error) {
-                    reject(error);
-                });
-            };
-            img.onerror = function(error) {
-                reject(error);
-            };
-            fileEntry.file(function(file) {
-                img.src = "file://" + file.path;
-            });
-        });
-    });
-};
-
-/**
- * Draw the logo using the loaded font data.
- */
-LogoManager.drawPreview = function() {
-    var $el = LogoManager.elements.$preview.empty();
-    for (var i = SYM.LOGO, I = FONT.constants.MAX_CHAR_COUNT; i < I; i++) {
-        var url = FONT.data.character_image_urls[i];
-        $el.append('<img src="' + url + '" title="0x' + i.toString(16) + '"></img>');
-    }
-};
-
-/**
  * returns a canvas image with the character on it
  */
 var drawCanvas = function(charAddress) {
@@ -1682,8 +1412,8 @@ TABS.osd.initialize = function (callback) {
 
         fontbuttons.append($('<button>', { class: "load_font_file", i18n: "osdSetupOpenFont" }));
 
-        // must invoke before localizePage() since it adds translation keys for expected logo size
-        LogoManager.init();
+        // must invoke before i18n.localizePage() since it adds translation keys for expected logo size
+        LogoManager.init(FONT, SYM.LOGO);
 
         // translate to user-selected language
         i18n.localizePage();
@@ -2212,15 +1942,17 @@ TABS.osd.initialize = function (callback) {
         });
 
         // replace logo
-        $('a.replace_logo').click(function() {
+        $('a.replace_logo').click(() => {
             if (GUI.connect_lock) { // button disabled while flashing is in progress
                 return;
             }
-            LogoManager.openImage().then(function(ctx) {
-                FONT.replaceLogoFromImage(ctx);
-                LogoManager.drawPreview();
-                LogoManager.showUploadHint();
-            }).catch(error => console.error(error));
+            LogoManager.openImage()
+              .then(ctx => {
+                  LogoManager.replaceLogoInFont(ctx);
+                  LogoManager.drawPreview();
+                  LogoManager.showUploadHint();
+              })
+              .catch(error => console.error(error));
         });
 
         //Switch all elements
