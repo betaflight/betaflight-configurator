@@ -5,6 +5,7 @@ var
 
 TABS.onboard_logging = {
     blockSize: 128,
+    writeError: false,
 
     BLOCK_SIZE: 4096,
     VCP_BLOCK_SIZE_3_0: 512,
@@ -409,7 +410,11 @@ TABS.onboard_logging.initialize = function (callback) {
                                             mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                         }
                                     } else {
-                                        mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                                        if (!self.writeError) {
+                                            mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                                        } else {
+                                            dismiss_saving_dialog();
+                                        }
                                     }
                                 };
                                 
@@ -459,9 +464,12 @@ TABS.onboard_logging.initialize = function (callback) {
 
             fileEntry.createWriter(function (fileWriter) {
                 fileWriter.onerror = function (e) {
+                    GUI.log('<strong><span class="message-negative">' + i18n.getMessage('errorTitle') + ': ' + e.target.error.message + '</span class="message-negative></strong>'); 
+                        
                     console.error(e);
 
                     // stop logging if the procedure was/is still running
+                    self.writeError = true;
                 };
 
                 onComplete(fileWriter);
