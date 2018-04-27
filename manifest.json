@@ -34,7 +34,8 @@
         {"usbDevices": [
             {"vendorId": 1155, "productId": 57105}
         ]},
-        "webview"
+        "webview",
+        "unlimitedStorage"
     ],
     "sockets": {
         "tcp": {
