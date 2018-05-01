@@ -210,7 +210,12 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     descriptor.target,
                                     descriptor.date,
                                     descriptor.status
-                            )).data('summary', descriptor);
+                            ))
+                            .css("font-weight", FirmwareCache.has(descriptor)
+                                    ? "bold"
+                                    : null
+                            )
+                            .data('summary', descriptor);
 
                     versions_e.append(select_e);
                 });
