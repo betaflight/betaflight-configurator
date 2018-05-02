@@ -24,16 +24,19 @@
 /**
  * @typedef {object} CacheItem
  * @property {Descriptor} release
- * @property {string} [hexdata]
+ * @property {string} hexdata
  */
 
- /**
-  * Manages caching of downloaded firmware files
-  */
-let FirmwareCache = (function() {
+/**
+ * Manages caching of downloaded firmware files
+ */
+let FirmwareCache = (function () {
 
-    let MetadataStorage = (function() {
-        let CACHEKEY = "firmware-cache-metadata";
+    let onPutToCacheCallback,
+        onRemoveFromCacheCallback;
+
+    let JournalStorage = (function () {
+        let CACHEKEY = "firmware-cache-journal";
 
         /**
          * @param {Array} data LRU key-value pairs
@@ -49,7 +52,7 @@ let FirmwareCache = (function() {
          */
         function load(callback) {
             chrome.storage.local.get(CACHEKEY, obj => {
-                let entries = typeof obj === "object" && obj.hasOwnProperty(CACHEKEY) 
+                let entries = typeof obj === "object" && obj.hasOwnProperty(CACHEKEY)
                     ? obj[CACHEKEY]
                     : [];
                 callback(entries);
@@ -62,25 +65,33 @@ let FirmwareCache = (function() {
         };
     })();
 
-    let metadataCache = new LRUMap(100);
-    let metadataLoaded = false;
+    let journal = new LRUMap(100),
+        journalLoaded = false;
 
-    metadataCache.shift = function() {
-        // remove hexdata for oldest release
+    journal.shift = function () {
+        // remove cached data for oldest release
         let oldest = LRUMap.prototype.shift.call(this);
-        if (oldest !== undefined) {
-            /** @type {CacheItem} */
-            let cached = oldest[1];
-            let hexdataKey = withHexdataPrefix(keyOf(cached.release));
-            chrome.storage.local.remove(hexdataKey, 
-                () => console.debug("Hex data removed: " + hexdataKey));
+        if (oldest === undefined) {
+            return undefined;
         }
+        let key = oldest[0];
+        let cacheKey = withCachePrefix(key);
+        chrome.storage.local.get(cacheKey, obj => {
+            /** @type {CacheItem} */
+            let cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey)
+                ? obj[cacheKey]
+                : null;
+            chrome.storage.local.remove(cacheKey, () => {
+                onRemoveFromCache(cached.release);
+                console.debug("Cache data removed: " + cacheKey);
+            });
+        });
         return oldest;
     };
 
     /**
      * @param {Descriptor} release 
-     * @returns {string} A key used for caching the metadata for a release
+     * @returns {string} A key used to store a release in the journal
      */
     function keyOf(release) {
         return release.file;
@@ -88,10 +99,10 @@ let FirmwareCache = (function() {
 
     /**
      * @param {string} key 
-     * @returns {string} A key for storing the hex data for a release
+     * @returns {string} A key for storing cached data for a release
      */
-    function withHexdataPrefix(key) {
-        return "hex:" + key;
+    function withCachePrefix(key) {
+        return "cache:" + key;
     }
 
     /**
@@ -99,11 +110,11 @@ let FirmwareCache = (function() {
      * @returns {boolean}
      */
     function has(release) {
-        if (!metadataLoaded) {
+        if (!journalLoaded) {
             console.warn("Cache not yet loaded");
             return false;
         }
-        return metadataCache.has(keyOf(release));
+        return journal.has(keyOf(release));
     }
 
     /**
@@ -111,48 +122,68 @@ let FirmwareCache = (function() {
      * @param {string} hexdata
      */
     function put(release, hexdata) {
-        if (!metadataLoaded) {
-            console.warn("Cache not yet loaded");
-            return;
-        }
-        if (has(release)) {
-            console.debug("Firmware is already cached: " + keyOf(release));
+        if (!journalLoaded) {
+            console.warn("Cache journal not yet loaded");
             return;
         }
         let key = keyOf(release);
-        let hexdataKey = withHexdataPrefix(key);
-        metadataCache.set(key, {
-            release: release,
-        });
-        MetadataStorage.persist(metadataCache.toJSON());
+        if (has(release)) {
+            console.debug("Firmware is already cached: " + key);
+            return;
+        }
+        journal.set(key, true);
+        JournalStorage.persist(journal.toJSON());
         let obj = {};
-        obj[hexdataKey] = hexdata;
-        chrome.storage.local.set(obj);
+        obj[withCachePrefix(key)] = {
+            release: release,
+            hexdata: hexdata,
+        };
+        chrome.storage.local.set(obj, () => {
+            console.info("Release put to cache: " + key);
+            onPutToCache(release);
+        });
     }
 
     /**
      * @param {Descriptor} release
      * @param {Function} callback
-     * @returns {(CacheItem|undefined)}
      */
     function get(release, callback) {
-        if (!metadataLoaded) {
-            console.warn("Cache not yet loaded");
+        if (!journalLoaded) {
+            console.warn("Cache journal not yet loaded");
             return undefined;
         }
         let key = keyOf(release);
-        /** @type {CacheItem} */
-        let cached = metadataCache.get(key);
-        if (cached !== undefined) {
-            let hexdataKey = withHexdataPrefix(key);
-            chrome.storage.local.get(hexdataKey, function(obj) {
-                cached.hexdata = typeof obj === "object" && obj.hasOwnProperty(hexdataKey) 
-                    ? obj[hexdataKey]
-                    : null;
-                callback(cached);
-            });
+        if (!has(release)) {
+            console.debug("Firmware is not cached: " + key);
+            return;
         }
-        return cached;
+        let cacheKey = withCachePrefix(key);
+        chrome.storage.local.get(cacheKey, obj => {
+            /** @type {CacheItem} */
+            let cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey)
+                ? obj[cacheKey]
+                : null;
+            callback(cached);
+        });
+    }
+
+    /**
+     * @param {Descriptor} release 
+     */
+    function onPutToCache(release) {
+        if (typeof onPutToCacheCallback === "function") {
+            onPutToCacheCallback(release);
+        }
+    }
+
+    /**
+     * @param {Descriptor} release 
+     */
+    function onRemoveFromCache(release) {
+        if (typeof onRemoveFromCacheCallback === "function") {
+            onRemoveFromCacheCallback(release);
+        }
     }
 
     /**
@@ -163,21 +194,23 @@ let FirmwareCache = (function() {
         for (let entry of entries) {
             pairs.push([entry.key, entry.value]);
         }
-        metadataCache.assign(pairs);
-        metadataLoaded = true;
-        console.info("Firmware cache loaded; number of entries: " + entries.length);
+        journal.assign(pairs);
+        journalLoaded = true;
+        console.info("Firmware cache journal loaded; number of entries: " + entries.length);
     }
 
     return {
         has: has,
         put: put,
         get: get,
+        onPutToCache: callback => onPutToCacheCallback = callback,
+        onRemoveFromCache: callback => onRemoveFromCacheCallback = callback,
         load: () => {
-            MetadataStorage.load(onEntriesLoaded);
+            JournalStorage.load(onEntriesLoaded);
         },
         flush: () => {
-            MetadataStorage.persist(metadataCache.toJSON());
-            metadataCache.clear();
+            JournalStorage.persist(journal.toJSON());
+            journal.clear();
         },
     };
 })();

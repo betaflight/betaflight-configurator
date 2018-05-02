@@ -16,8 +16,22 @@ TABS.firmware_flasher.initialize = function (callback) {
     var intel_hex = false, // standard intel hex in string format
         parsed_hex = false; // parsed raw hex in array format
 
+        /**
+         * Change boldness of firmware option depending on cache status
+         * 
+         * @param {Descriptor} release 
+         */
+    function onFirmwareCacheUpdate(release) {
+        $("option[value='{0}']".format(release.version))
+            .css("font-weight", FirmwareCache.has(release)
+                ? "bold"
+                : "normal");
+    }
+
     $('#content').load("./tabs/firmware_flasher.html", function () {
         FirmwareCache.load();
+        FirmwareCache.onPutToCache(onFirmwareCacheUpdate);
+        FirmwareCache.onRemoveFromCache(onFirmwareCacheUpdate);
 
         function parse_hex(str, callback) {
             // parsing hex in different thread
@@ -41,7 +55,6 @@ TABS.firmware_flasher.initialize = function (callback) {
                 if (parsed_hex) {
                     if (!FirmwareCache.has(summary)) {
                         FirmwareCache.put(summary, intel_hex);
-                        console.info("Release put to cache: " + summary.file);
                     }
 
                     var url;
@@ -213,7 +226,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                             ))
                             .css("font-weight", FirmwareCache.has(descriptor)
                                     ? "bold"
-                                    : null
+                                    : "normal"
                             )
                             .data('summary', descriptor);
 
