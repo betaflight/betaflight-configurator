@@ -464,7 +464,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
             fileEntry.createWriter(function (fileWriter) {
                 fileWriter.onerror = function (e) {
-                    GUI.log('<strong><span class="message-negative">' + i18n.getMessage('error', { errorMessage: e.target.error.message }) + '</span class="message-negative></strong>'); 
+                    GUI.log('<strong><span class="message-negative">' + i18n.getMessage('error', { errorMessage: e.target.error.message }) + '</span class="message-negative></strong>');
                         
                     console.error(e);
 
