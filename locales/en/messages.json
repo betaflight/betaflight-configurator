@@ -6,6 +6,9 @@
         "message": "Betaflight Configurator",
         "description": "Title of the application window, usually not translated"
     },
+    "error": {
+        "message": "Error: {{errorMessage}}"
+    },
     "warningTitle": {
         "message": "Warning"
     },
