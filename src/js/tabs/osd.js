@@ -488,7 +488,7 @@ OSD.constants = {
       draw_order: 160,
       positionable: true,
       preview: function(osd_data) {
-        return '399.7' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE)
+        return ' 399.7' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
       }
     },
     ONTIME: {
@@ -535,7 +535,7 @@ OSD.constants = {
       default_position: -1,
       draw_order: 350,
       positionable: true,
-      preview: FONT.symbol(SYM.ARROW_SOUTH) + '00.00000000'
+      preview: FONT.symbol(SYM.ARROW_EAST) + '-000.0000000'
     },
     GPS_LAT: {
       name: 'GPS_LAT',
@@ -543,7 +543,7 @@ OSD.constants = {
       default_position: -1,
       draw_order: 340,
       positionable: true,
-      preview: FONT.symbol(SYM.ARROW_EAST) + '00.00000000'
+      preview: FONT.symbol(SYM.ARROW_NORTH) + '-00.0000000 '
     },
     DEBUG: {
       name: 'DEBUG',
@@ -656,7 +656,7 @@ OSD.constants = {
       draw_order: 360,
       positionable: true,
       preview:  function(osd_data) {
-        return '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE)
+        return '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE) + (semver.gte(CONFIG.apiVersion, "1.37.0")?'    ':'');
       }
     },
     NUMERICAL_HEADING: {
