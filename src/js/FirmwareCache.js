@@ -173,6 +173,10 @@ let FirmwareCache = (function () {
      * Remove all cached data
      */
     function destroy() {
+        if (!journalLoaded) {
+            console.warn("Cache journal not yet loaded");
+            return undefined;
+        }
         let cacheKeys = [];
         for (let key of journal.keys()) {
             cacheKeys.push(withCachePrefix(key));
