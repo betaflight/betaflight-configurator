@@ -172,7 +172,7 @@ let FirmwareCache = (function () {
     /**
      * Remove all cached data
      */
-    function destroy() {
+    function invalidate() {
         if (!journalLoaded) {
             console.warn("Cache journal not yet loaded");
             return undefined;
@@ -240,10 +240,10 @@ let FirmwareCache = (function () {
         load: () => {
             JournalStorage.load(onEntriesLoaded);
         },
-        flush: () => {
+        unload: () => {
             JournalStorage.persist(journal.toJSON());
             journal.clear();
         },
-        destroy: destroy,
+        invalidate: invalidate,
     };
 })();
