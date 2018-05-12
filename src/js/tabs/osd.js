@@ -835,7 +835,7 @@ OSD.constants = {
       desc: 'osdDescStatRtcDateTime'
     },
     STAT_BATTERY: {
-      name: 'STAT_BATTERY',
+      name: 'BATTERY_VOLTAGE',
       desc: 'osdDescStatBattery'
     }
   },
@@ -1002,32 +1002,55 @@ OSD.chooseFields = function () {
     ];
   }
 
-  // Choose ststistic fields
+  // Choose statistic fields
   // Nothing much to do here, I'm preempting there being new statistics
   F = OSD.constants.ALL_STATISTIC_FIELDS;
-  OSD.constants.STATISTIC_FIELDS = [
-    F.MAX_SPEED,
-    F.MIN_BATTERY,
-    F.MIN_RSSI,
-    F.MAX_CURRENT,
-    F.USED_MAH,
-    F.MAX_ALTITUDE,
-    F.BLACKBOX,
-    F.END_BATTERY,
-    F.TIMER_1,
-    F.TIMER_2,
-    F.MAX_DISTANCE,
-    F.BLACKBOX_LOG_NUMBER
-  ];
-  if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
-    OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-      F.RTC_DATE_TIME
-    ]);
-    if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
-        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-          F.STAT_BATTERY
-        ]);
+
+  // ** IMPORTANT **
+  //
+  // Starting with 1.39.0 (Betaflight 3.4) the OSD stats selection options
+  // are ordered in the same sequence as displayed on-screen in the OSD.
+  // If future versions of the firmware implement changes to the on-screen ordering,
+  // that needs to be implemented here as well. Simply appending new stats does not
+  // require a completely new section for the version - only reordering.
+
+  if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
+    OSD.constants.STATISTIC_FIELDS = [
+      F.MAX_SPEED,
+      F.MIN_BATTERY,
+      F.MIN_RSSI,
+      F.MAX_CURRENT,
+      F.USED_MAH,
+      F.MAX_ALTITUDE,
+      F.BLACKBOX,
+      F.END_BATTERY,
+      F.TIMER_1,
+      F.TIMER_2,
+      F.MAX_DISTANCE,
+      F.BLACKBOX_LOG_NUMBER
+    ];
+    if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+      OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+        F.RTC_DATE_TIME
+      ]);
     }
+  } else {  // Starting with 1.39.0 OSD stats are reordered to match how they're presented on screen
+    OSD.constants.STATISTIC_FIELDS = [
+      F.RTC_DATE_TIME,
+      F.TIMER_1,
+      F.TIMER_2,
+      F.MAX_SPEED,
+      F.MAX_DISTANCE,
+      F.MIN_BATTERY,
+      F.END_BATTERY,
+      F.STAT_BATTERY,
+      F.MIN_RSSI,
+      F.MAX_CURRENT,
+      F.USED_MAH,
+      F.MAX_ALTITUDE,
+      F.BLACKBOX,
+      F.BLACKBOX_LOG_NUMBER
+    ];
   }
 
   // Choose warnings
