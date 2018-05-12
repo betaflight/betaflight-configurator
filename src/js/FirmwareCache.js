@@ -81,9 +81,11 @@ let FirmwareCache = (function () {
             let cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey)
                 ? obj[cacheKey]
                 : null;
+            if (cached === null) {
+                return;
+            }
             chrome.storage.local.remove(cacheKey, () => {
                 onRemoveFromCache(cached.release);
-                console.debug("Cache data removed: " + cacheKey);
             });
         });
         return oldest;
@@ -139,7 +141,6 @@ let FirmwareCache = (function () {
             hexdata: hexdata,
         };
         chrome.storage.local.set(obj, () => {
-            console.info("Release put to cache: " + key);
             onPutToCache(release);
         });
     }
@@ -169,12 +170,42 @@ let FirmwareCache = (function () {
     }
 
     /**
+     * Remove all cached data
+     */
+    function invalidate() {
+        if (!journalLoaded) {
+            console.warn("Cache journal not yet loaded");
+            return undefined;
+        }
+        let cacheKeys = [];
+        for (let key of journal.keys()) {
+            cacheKeys.push(withCachePrefix(key));
+        }
+        chrome.storage.local.get(cacheKeys, obj => {
+            if (typeof obj !== "object") {
+                return;
+            }
+            for (let cacheKey of cacheKeys) {
+                if (obj.hasOwnProperty(cacheKey)) {
+                    /** @type {CacheItem} */
+                    let item = obj[cacheKey];
+                    onRemoveFromCache(item.release);
+                }
+            }
+            chrome.storage.local.remove(cacheKeys);
+        });
+        journal.clear();
+        JournalStorage.persist(journal.toJSON());    
+    }
+
+    /**
      * @param {Descriptor} release 
      */
     function onPutToCache(release) {
         if (typeof onPutToCacheCallback === "function") {
             onPutToCacheCallback(release);
         }
+        console.info("Release put to cache: " + keyOf(release));
     }
 
     /**
@@ -184,6 +215,7 @@ let FirmwareCache = (function () {
         if (typeof onRemoveFromCacheCallback === "function") {
             onRemoveFromCacheCallback(release);
         }
+        console.debug("Cache data removed: " + keyOf(release));
     }
 
     /**
@@ -208,9 +240,10 @@ let FirmwareCache = (function () {
         load: () => {
             JournalStorage.load(onEntriesLoaded);
         },
-        flush: () => {
+        unload: () => {
             JournalStorage.persist(journal.toJSON());
             journal.clear();
         },
+        invalidate: invalidate,
     };
 })();

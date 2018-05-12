@@ -545,7 +545,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
 TABS.firmware_flasher.cleanup = function (callback) {
     PortHandler.flush_callbacks();
-    FirmwareCache.flush();
+    FirmwareCache.unload();
 
     // unbind "global" events
     $(document).unbind('keypress');
