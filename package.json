@@ -54,7 +54,7 @@
     "nw-builder": "^3.4.1",
     "os": "^0.1.1",
     "platform-dependent-modules": "0.0.14",
-    "rpm-builder": "^0.6.1",
+    "rpm-builder": "^0.7.0",
     "temp": "^0.8.3"
   },
   "config": {
