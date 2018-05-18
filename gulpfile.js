@@ -19,6 +19,7 @@ const concat = require('gulp-concat');
 const install = require("gulp-install");
 const rename = require('gulp-rename');
 const os = require('os');
+const exit = require('gulp-exit');
 
 const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
@@ -404,7 +405,7 @@ function release_deb(arch, done) {
              _out: RELEASE_DIR,
              _copyright: 'assets/linux/copyright',
              _clean: true
-    }));
+        }));
 }
 
 function release_rpm(arch, done) {
@@ -496,8 +497,8 @@ function release_osx64() {
                     }
                 }
             },
-        })
-    );
+        }))
+        .pipe(exit());
 }
 
 // Create the dir directory, with write permissions
