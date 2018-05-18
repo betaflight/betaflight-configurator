@@ -4,6 +4,8 @@ node_js:
   - node
 
 before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y rpm
   - npm i -g npm@latest
   - npm install gulp -g
 
