@@ -377,7 +377,8 @@ function compressFiles(srcPath, basePath, outputFile, zipFolder) {
     return gulp.src(srcPath, { base: basePath })
                .pipe(rename(function(actualPath){ actualPath.dirname = path.join(zipFolder, actualPath.dirname) }))
                .pipe(zip(outputFile))
-               .pipe(gulp.dest(RELEASE_DIR));
+               .pipe(gulp.dest(RELEASE_DIR))
+               .pipe(exit());
 }
 
 function release_deb(arch, done) {
