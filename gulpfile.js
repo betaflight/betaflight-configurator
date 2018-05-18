@@ -19,7 +19,6 @@ const concat = require('gulp-concat');
 const install = require("gulp-install");
 const rename = require('gulp-rename');
 const os = require('os');
-const exit = require('gulp-exit');
 
 const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
@@ -377,8 +376,7 @@ function compressFiles(srcPath, basePath, outputFile, zipFolder) {
     return gulp.src(srcPath, { base: basePath })
                .pipe(rename(function(actualPath){ actualPath.dirname = path.join(zipFolder, actualPath.dirname) }))
                .pipe(zip(outputFile))
-               .pipe(gulp.dest(RELEASE_DIR))
-               .pipe(exit());
+               .pipe(gulp.dest(RELEASE_DIR));
 }
 
 function release_deb(arch, done) {
@@ -498,8 +496,7 @@ function release_osx64() {
                     }
                 }
             },
-        }))
-        .pipe(exit());
+        }));
 }
 
 // Create the dir directory, with write permissions
