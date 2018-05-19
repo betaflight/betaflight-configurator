@@ -8,7 +8,7 @@ node_js:
   - node
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linuxx" ]]; then sudo apt-get -qq update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm; fi
   - npm i -g npm@latest
   - npm install gulp -g
