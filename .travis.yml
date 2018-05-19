@@ -16,7 +16,6 @@ before_install:
 script:
   - npm install
   - gulp release
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gulp release --win32; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gulp release --chromeos; fi
 
 cache:
