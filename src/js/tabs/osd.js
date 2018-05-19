@@ -519,7 +519,9 @@ OSD.constants = {
       default_position: -1,
       draw_order: 330,
       positionable: true,
-      preview: ' 40K'
+      preview: function(osd_data) {
+        return ' 40' + (osd_data.unit_mode === 0 ? 'M' : 'K');
+      }
     },
     GPS_SATS: {
       name: 'GPS_SATS',
