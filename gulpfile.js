@@ -404,7 +404,7 @@ function release_deb(arch, done) {
              _out: RELEASE_DIR,
              _copyright: 'assets/linux/copyright',
              _clean: true
-        }));
+    }));
 }
 
 function release_rpm(arch, done) {
@@ -496,7 +496,8 @@ function release_osx64() {
                     }
                 }
             },
-        }));
+        })
+    );
 }
 
 // Create the dir directory, with write permissions
