@@ -1,17 +1,23 @@
 language: node_js
 
+os:
+  - linux
+  - osx
+
 node_js:
   - node
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y rpm
+  - if [[ "$TRAVIS_OS_NAME" == "linuxx" ]]; then sudo apt-get -qq update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm; fi
   - npm i -g npm@latest
   - npm install gulp -g
 
 script:
   - npm install
   - gulp release
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gulp release --win32; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gulp release --chromeos; fi
 
 cache:
   directories:
