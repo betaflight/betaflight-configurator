@@ -255,20 +255,28 @@ function listPostBuildTasks(folder, done) {
     var postBuildTasks = [];
 
     if (platforms.indexOf('linux32') != -1) {
-        postBuildTasks.push(function post_build_linux32(done){ return post_build('linux32', folder, done) });
+        postBuildTasks.push(function post_build_linux32(done) {
+            return post_build('linux32', folder, done);
+        });
     }
 
     if (platforms.indexOf('linux64') != -1) {
-        postBuildTasks.push(function post_build_linux64(done){ return post_build('linux64', folder, done) });
+        postBuildTasks.push(function post_build_linux64(done) {
+            return post_build('linux64', folder, done);
+        });
     }
 
     if (platforms.indexOf('armv7') != -1) {
-        postBuildTasks.push(function post_build_armv7(done){ return post_build('armv7', folder, done) });
+        postBuildTasks.push(function post_build_armv7(done) {
+            return post_build('armv7', folder, done);
+        });
     }
 
     // We need to return at least one task, if not gulp will throw an error
     if (postBuildTasks.length == 0) {
-        postBuildTasks.push(function post_build_none(done){ done() });
+        postBuildTasks.push(function post_build_none(done) {
+            done();
+        });
     }
     return postBuildTasks;
 }
@@ -491,7 +499,9 @@ function release_chromeos() {
 // Compress files from srcPath, using basePath, to outputFile in the RELEASE_DIR
 function compressFiles(srcPath, basePath, outputFile, zipFolder) {
     return gulp.src(srcPath, { base: basePath })
-               .pipe(rename(function(actualPath){ actualPath.dirname = path.join(zipFolder, actualPath.dirname) }))
+               .pipe(rename(function(actualPath) {
+                   actualPath.dirname = path.join(zipFolder, actualPath.dirname);
+               }))
                .pipe(zip(outputFile))
                .pipe(gulp.dest(RELEASE_DIR));
 }
@@ -640,19 +650,33 @@ function listReleaseTasks(done) {
     }
 
     if (platforms.indexOf('linux64') !== -1) {
-        releaseTasks.push(function release_linux64_zip(){ return release_zip('linux64') });
-        releaseTasks.push(function release_linux64_deb(done){ return release_deb('linux64', done) });
-        releaseTasks.push(function release_linux64_rpm(done){ return release_rpm('linux64', done) });
+        releaseTasks.push(function release_linux64_zip() {
+            return release_zip('linux64');
+        });
+        releaseTasks.push(function release_linux64_deb(done) {
+            return release_deb('linux64', done);
+        });
+        releaseTasks.push(function release_linux64_rpm(done) {
+            return release_rpm('linux64', done);
+        });
     }
 
     if (platforms.indexOf('linux32') !== -1) {
-        releaseTasks.push(function release_linux32_zip(){ return release_zip('linux32') });
-        releaseTasks.push(function release_linux32_deb(done){ return release_deb('linux32', done) });
-        releaseTasks.push(function release_linux32_rpm(done){ return release_rpm('linux32', done) });
+        releaseTasks.push(function release_linux32_zip() {
+            return release_zip('linux32');
+        });
+        releaseTasks.push(function release_linux32_deb(done) {
+            return release_deb('linux32', done);
+        });
+        releaseTasks.push(function release_linux32_rpm(done) {
+            return release_rpm('linux32', done);
+        });
     }
 
     if (platforms.indexOf('armv7') !== -1) {
-        releaseTasks.push(function release_armv7_zip(){ return release_zip('armv7') });
+        releaseTasks.push(function release_armv7_zip() {
+            return release_zip('armv7');
+        });
     }
 
     if (platforms.indexOf('osx64') !== -1) {
@@ -660,11 +684,15 @@ function listReleaseTasks(done) {
     }
 
     if (platforms.indexOf('win32') !== -1) {
-        releaseTasks.push(function release_win32(done){ return release_win('win32', done) });
+        releaseTasks.push(function release_win32(done) {
+            return release_win('win32', done);
+        });
     }
 
     if (platforms.indexOf('win64') !== -1) {
-        releaseTasks.push(function release_win64(done){ return release_win('win64', done) });
+        releaseTasks.push(function release_win64(done) {
+            return release_win('win64', done);
+        });
     }
 
     return releaseTasks;
