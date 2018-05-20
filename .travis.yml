@@ -7,9 +7,15 @@ os:
 node_js:
   - 8.11.2
 
+dist: trusty
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - rpm
+
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm; fi
   - npm i -g npm@6.0.1
   - npm install gulp -g
 
