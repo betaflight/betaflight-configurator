@@ -5,16 +5,15 @@ os:
   - osx
 
 node_js:
-  - node
+  - 8.11.2
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm; fi
-  - npm i -g npm@latest
+  - npm i -g npm@6.0.1
   - npm install gulp -g
 
 script:
-  - npm install
   - gulp release
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gulp release --chromeos; fi
 
