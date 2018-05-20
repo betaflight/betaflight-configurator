@@ -303,11 +303,17 @@ function injectARMCache(flavor, callback) {
     var flavorPostfix = `-${flavor}`;
     var flavorDownloadPostfix = flavor !== 'normal' ? `-${flavor}` : '';
     clean_cache().then(function() {
-        if (!fs.existsSync('./cache')) fs.mkdirSync('./cache');
+        if (!fs.existsSync('./cache')) {
+            fs.mkdirSync('./cache');
+        }
         fs.closeSync(fs.openSync('./cache/_ARMv7_IS_CACHED', 'w'));
         var versionFolder = `./cache/${nwBuilderOptions.version}${flavorPostfix}`;
-        if (!fs.existsSync(versionFolder)) fs.mkdirSync(versionFolder);
-        if (!fs.existsSync(versionFolder + '/linux32')) fs.mkdirSync(`${versionFolder}/linux32`);
+        if (!fs.existsSync(versionFolder)) {
+            fs.mkdirSync(versionFolder);
+        }
+        if (!fs.existsSync(versionFolder + '/linux32')) {
+            fs.mkdirSync(`${versionFolder}/linux32`);
+        }
         var downloadedArchivePath = `${versionFolder}/nwjs${flavorPostfix}-v${nwArmVersion}-linux-arm.tar.gz`;
         var downloadUrl = `https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/v${nwArmVersion}/nwjs${flavorDownloadPostfix}-v${nwArmVersion}-linux-arm.tar.gz`;
         if (fs.existsSync(downloadedArchivePath)) {
@@ -340,7 +346,7 @@ function injectARMCache(flavor, callback) {
         targz.decompress({
             src: downloadedArchivePath,
             dest: versionFolder,
-        }, function(err){
+        }, function(err) {
             if (err) {
                 console.log(err);
                 clean_debug();
