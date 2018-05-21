@@ -1,19 +1,23 @@
-language: node_js
-
 os:
   - linux
   - osx
 
-node_js:
-  - 8.11.2
+sudo: false
 
 dist: trusty
-sudo: false
 
 addons:
   apt:
     packages:
       - rpm
+
+git:
+  depth: 5
+
+language: node_js
+
+node_js:
+  - 8.11.2
 
 before_install:
   - npm i -g npm@6.0.1
@@ -35,4 +39,3 @@ notifications:
     on_success: always  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
     on_start: always     # options: [always|never|change] default: always
-
