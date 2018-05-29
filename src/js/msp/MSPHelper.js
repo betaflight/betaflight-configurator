@@ -788,7 +788,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FAILSAFE_CONFIG.failsafe_off_delay = data.readU8();
                 FAILSAFE_CONFIG.failsafe_throttle = data.readU16();
                 if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                    FAILSAFE_CONFIG.failsafe_kill_switch = data.readU8();
+                    FAILSAFE_CONFIG.failsafe_switch_mode = data.readU8();
                     FAILSAFE_CONFIG.failsafe_throttle_low_delay = data.readU16();
                     FAILSAFE_CONFIG.failsafe_procedure = data.readU8();
                 }
@@ -1366,7 +1366,7 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(FAILSAFE_CONFIG.failsafe_off_delay)
                 .push16(FAILSAFE_CONFIG.failsafe_throttle);
             if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                buffer.push8(FAILSAFE_CONFIG.failsafe_kill_switch)
+                buffer.push8(FAILSAFE_CONFIG.failsafe_switch_mode)
                     .push16(FAILSAFE_CONFIG.failsafe_throttle_low_delay)
                     .push8(FAILSAFE_CONFIG.failsafe_procedure);
             }

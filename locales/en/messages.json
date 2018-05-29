@@ -2765,6 +2765,15 @@
     "failsafeKillSwitchHelp": {
         "message": "Set this option to make the failsafe switch (Modes Tab) act as a direct kill switch, bypassing the selected failsafe procedure. <strong>Note:</strong> Arming is blocked with the failsafe kill switch in the ON position"
     },
+    "failsafeSwitchTitle": {
+        "message": "Failsafe Switch"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "Failsafe Switch Action"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "This option determines what happens when Failsafe is activated through AUX switch:<br/><strong>Stage 1</strong> activates Stage 1 failsafe. This is useful if you want to simulate the exact signal loss failsafe behavior.<br/><strong>Stage 2</strong> skips Stage 1 and activates the Stage 2 procedure immediately<br/><strong>Kill</strong> disarms instantly (your craft will crash)"
+    },
 
     "powerButtonSave": {
         "message": "Save"

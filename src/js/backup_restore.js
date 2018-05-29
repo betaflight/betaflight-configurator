@@ -605,7 +605,7 @@ function configuration_restore(callback) {
                     failsafe_delay:                 10,
                     failsafe_off_delay:             200,
                     failsafe_throttle:              1000,
-                    failsafe_kill_switch:           0,
+                    failsafe_switch_mode:           0,
                     failsafe_throttle_low_delay:    100,
                     failsafe_procedure:             0
                 };

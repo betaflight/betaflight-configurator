@@ -261,8 +261,17 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 break;
         }
 
-        // set stage 2 kill switch option
-        $('input[name="failsafe_kill_switch"]').prop('checked', FAILSAFE_CONFIG.failsafe_kill_switch);
+        if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+            // `failsafe_kill_switch` has been renamed to `failsafe_switch_mode`.
+            // It is backwards compatible with `failsafe_kill_switch`
+            $('select[name="failsafe_switch_mode"]').val(FAILSAFE_CONFIG.failsafe_switch_mode);
+            $('div.kill_switch').hide();
+        }
+        else {
+            $('input[name="failsafe_kill_switch"]').prop('checked', FAILSAFE_CONFIG.failsafe_switch_mode);
+            $('div.failsafe_switch').hide();
+        }
+
 
 
         $('a.save').click(function () {
@@ -284,7 +293,12 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 FAILSAFE_CONFIG.failsafe_procedure = 1;
             }
 
-            FAILSAFE_CONFIG.failsafe_kill_switch = $('input[name="failsafe_kill_switch"]').is(':checked') ? 1 : 0;
+            if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                FAILSAFE_CONFIG.failsafe_switch_mode = $('select[name="failsafe_switch_mode"]').val();
+            }
+            else {
+                FAILSAFE_CONFIG.failsafe_switch_mode = $('input[name="failsafe_kill_switch"]').is(':checked') ? 1 : 0;
+            }
 
             function save_failssafe_config() {
                 MSP.send_message(MSPCodes.MSP_SET_FAILSAFE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FAILSAFE_CONFIG), false, save_rxfail_config);

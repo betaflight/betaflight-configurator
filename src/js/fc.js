@@ -391,7 +391,7 @@ var FC = {
             failsafe_delay:                 0,
             failsafe_off_delay:             0,
             failsafe_throttle:              0,
-            failsafe_kill_switch:           0,
+            failsafe_switch_mode:           0,
             failsafe_throttle_low_delay:    0,
             failsafe_procedure:             0.
         };
