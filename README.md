@@ -58,6 +58,10 @@ Linux build is disabled currently because of unmet dependecies with some distros
 2. Change to project folder and run `npm install`.
 3. Run `npm start`.
 
+### Running tests
+
+`npm test`
+
 ### App build and release
 
 The tasks are defined in `gulpfile.js` and can be run either via `gulp <task-name>` (if the command is in PATH or via `../node_modules/gulp/bin/gulp.js <task-name>`:
