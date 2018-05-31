@@ -716,7 +716,7 @@
         "message": "OLED Bildschirmschirm Anzeige"
     },
     "featureDISPLAYTip": {
-        "message": "Wem die Funktion aktiviert ist, und kein Bildschirm Gerät angeschlossen ist (oder das Gerät keinen Strom hat) gibt es ca. 10 Sekunden Verzögerung bei jedem Reboot des Flugcontrollers"
+        "message": "Wenn die Funktion aktiviert ist, und kein Bildschirm Gerät angeschlossen ist (oder das Gerät keinen Strom hat) gibt es ca. 10 Sekunden Verzögerung bei jedem Reboot des Flugcontrollers"
     },
     "featureONESHOT125": {
         "message": "ONESHOT ESC Unterstützug"
@@ -1529,7 +1529,7 @@
         "message": "Dein Flugcontroller unterstützt das Transponder Feature nicht."
     },
     "transponderInformation": {
-        "message": "Transponder erlaufen die Zeitmessung bei Rennen, sie übermitteln einen Code an das Zeitmessungssystem beim Durchfliegen des Ziel Gates. Stelle sicher dass das Infrarotsignal nicht durch Kabel, Bauteile oder Propeller gestört wird."
+        "message": "Transponder erlauben die Zeitmessung bei Rennen, sie übermitteln einen Code an das Zeitmessungssystem beim Durchfliegen des Ziel Gates. Stelle sicher dass das Infrarotsignal nicht durch Kabel, Bauteile oder Propeller gestört wird."
     },
     "transponderConfigurationType": {
         "message": "Transponder Typ"
