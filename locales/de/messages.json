@@ -947,7 +947,7 @@
         "message": "Kalibrierung des Beschleunigungssensor im Flug fehlgeschlagen"
     },
     "beeperREADY_BEEP": {
-        "message": "Spiele einen Ton wenn dsa GPS eine Position hat und bereit ist"
+        "message": "Spiele einen Ton wenn das GPS eine Position hat und bereit ist"
     },
     "beeperARMED": {
         "message": "Warnpiepsen wenn das Board gearmt wurde (bis zum disarm oder Gas geben)"
