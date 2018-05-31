@@ -959,7 +959,7 @@
         "message": "Piepsen wenn Flugcontroller über USB angeschlossen ist. Abschalten um am Schreibtisch seine Ruhe zu haben :)"
     },
     "beeperBLACKBOX_ERASE": {
-        "message": "Piepsen wen Blackbox Log löschen erfolgreich"
+        "message": "Piepsen wenn Blackbox Log löschen erfolgreich"
     },
     "configuration3d": {
         "message": "3D Regler \/ Motor Funktionen"
@@ -1376,7 +1376,7 @@
         "message": "Kontrolle aktivieren"
     },
     "auxiliaryHelp": {
-        "message": "Hier können verschiedene Modi auf einen bestimmten Bereich eines oder mehrerer AUX Kanäle gelegt werden. Bitte beachte dass Änderungen gespeichert werden müssen bevor diese aktiv werden."
+        "message": "Hier können verschiedene Modi auf einen bestimmten Bereich eines oder mehrerer AUX Kanäle gelegt werden. Bitte beachte, dass Änderungen gespeichert werden müssen bevor diese aktiv werden."
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -2872,7 +2872,7 @@
         "message": "OSD"
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Hinweis:<\/strong> OSD-VOrschau eventuell nicht in der aktuell auf dem FC installierten Schriftart."
+        "message": "<strong>Hinweis:<\/strong> OSD-Vorschau eventuell nicht in der Schriftart, welche aktuell auf dem FC installierten ist."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Dein FC reagiert nicht auf OSD-Kommandos. Das bedeutet wahrscheinlich, daß er kein eingebautes Betaflight-OSD hat."
@@ -2998,7 +2998,7 @@
         "message": "Absolute Zeit mit dieser Batterie seit das Fluggerät gearmt ist (blinkt wenn unter dem Alarm Schwellwert)"
     },
     "osdDescElementFlyMode": {
-        "message": "Aktueller Flug Modus"
+        "message": "Aktueller Flugmodus"
     },
     "osdDescElementGPSSpeed": {
         "message": "Ermittelte GPS Geschwindigkeit"
