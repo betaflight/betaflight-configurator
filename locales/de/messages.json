@@ -926,7 +926,7 @@
         "message": "Piepse beim Armen"
     },
     "beeperARMING_GPS_FIX": {
-        "message": "Piepse einen besoderen Ton falls gearmt ist und eine GPS Verbindung besteht"
+        "message": "Piepse einen besonderen Ton falls gearmt ist und eine GPS Verbindung besteht"
     },
     "beeperBAT_CRIT_LOW": {
         "message": "Piepse länger falls die Batteriespannungen einen kritischen Wert erreicht"
