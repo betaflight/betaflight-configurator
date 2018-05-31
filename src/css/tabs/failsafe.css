@@ -287,6 +287,17 @@
     width: 100%;
 }
 
+.tab-failsafe .selectSwitchMode {
+    clear: left;
+    width: 100%;
+    float: left;
+}
+
+.tab-failsafe .switchMode {
+    border: 1px solid silver;
+    margin-right: 5px;
+    width: 80px;
+}
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
 

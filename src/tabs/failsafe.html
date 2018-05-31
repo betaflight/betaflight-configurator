@@ -42,6 +42,24 @@
             </div>
         </div>
         <div class="rightWrapper">
+            <div class="gui_box grey failsafe_switch">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" i18n="failsafeSwitchTitle"></div>
+                </div>
+                <div class="spacer_box">
+                    <div class="selectSwitchMode">
+                        <label>
+                            <select class="switchMode" name="failsafe_switch_mode">
+                                <option value="0">Stage 1</option>
+                                <option value="2">Stage 2</option>
+                                <option value="1">Kill</option>
+                            </select>
+                            <span i18n="failsafeSwitchModeItem"></span>
+                            <div class="helpicon cf_tip" i18n_title="failsafeSwitchModeHelp"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="gui_box grey">
                 <div class="gui_box_titlebar">
                     <div class="spacer_box_title" i18n="failsafeStageTwoSettingsTitle"></div>
@@ -52,7 +70,7 @@
                             <!-- table generated here -->
                         </tbody>
                     </table>
-                    <div class="checkbox stage2">
+                    <div class="checkbox stage2 kill_switch">
                         <div class="numberspacer" >
                             <input type="checkbox" name="failsafe_kill_switch" class="toggle" id="failsafe_kill_switch" />
                         </div>
