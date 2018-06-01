@@ -39,7 +39,11 @@ describe('TABS.cli', () => {
                 data: toArrayBuffer('\r\033[Kserialpassthrough\tservo\r\n# ser')
             });
 
-            expect(cliOutput.html()).to.equal('<br>serialpassthrough\tservo<br>');
+            // Ambigous auto-complete from firmware is preceded with an \r carriage return
+            const expectedValue = GUI.operating_system === "MacOS" ?
+                '<br>serialpassthrough\tservo<br>' :
+                'serialpassthrough\tservo<br>';
+            expect(cliOutput.html()).to.equal(expectedValue);
             expect(cliPrompt.val()).to.equal('ser');
         });
 

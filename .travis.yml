@@ -19,11 +19,15 @@ language: node_js
 node_js:
   - 8.11.2
 
+addons:
+  chrome: stable
+
 before_install:
   - npm i -g npm@6.0.1
   - npm install gulp -g
 
 script:
+  - npm test
   - gulp release
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gulp release --chromeos; fi
 

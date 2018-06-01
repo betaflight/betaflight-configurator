@@ -1,6 +1,6 @@
 module.exports = function(config) {
     config.set({
-        basePath: '../../',
+        basePath: '../',
         frameworks: ['mocha', 'chai', 'sinon-chai'],
         files: [
             './libraries/jquery-2.1.4.min.js',
@@ -10,9 +10,15 @@ module.exports = function(config) {
             './src/js/localization.js',
             './src/js/gui.js',
             './src/js/tabs/cli.js',
-            './src/test/**/*.js'
+            './test/**/*.js'
         ],
-        browsers: ['ChromeHeadless'],
+        browsers: ['ChromeHeadlessNoSandbox'],
+        customLaunchers: {
+            ChromeHeadlessNoSandbox: {
+                base: 'ChromeHeadless',
+                flags: ['--no-sandbox']
+            }
+        },
         singleRun: true
     });
 };

@@ -256,14 +256,14 @@ TABS.cli.read = function (readInfo) {
             case lineFeedCode:
                 if (GUI.operating_system != "MacOS") {
                     writeLineToOutput(this.cliBuffer);
+                    this.cliBuffer = "";
                 }
-                this.cliBuffer = "";
                 break;
             case carriageReturnCode:
                 if (GUI.operating_system == "MacOS") {
                     writeLineToOutput(this.cliBuffer);
+                    this.cliBuffer = "";
                 }
-                this.cliBuffer = "";
                 break;
             case 60:
                 this.cliBuffer += '&lt';

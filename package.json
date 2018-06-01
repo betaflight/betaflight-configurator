@@ -10,7 +10,7 @@
     "_postinstall": "node ./node_modules/platform-dependent-modules/cli.js",
     "postinstall": "npm run _postinstall",
     "gulp": "gulp",
-    "test": "karma start src/test/karma.conf.js"
+    "test": "karma start test/karma.conf.js"
   },
   "window": {
     "show": false,
