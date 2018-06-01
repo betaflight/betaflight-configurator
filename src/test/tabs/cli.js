@@ -39,16 +39,27 @@ describe('TABS.cli', () => {
                 data: toArrayBuffer('\r\033[Kserialpassthrough\tservo\r\n# ser')
             });
 
-            expect(cliOutput.html()).to.equal('<br>serialpassthrough\tservo<br># ser');
+            expect(cliOutput.html()).to.equal('<br>serialpassthrough\tservo<br>');
             expect(cliPrompt.val()).to.equal('ser');
         });
 
         it('unambiguous auto-complete result', () => {
             TABS.cli.read({
-                data: toArrayBuffer('serialpassthrough\r\n# serialpassthrough')
+                data: toArrayBuffer('serialpassthrough')
             });
 
-            expect(cliOutput.html()).to.equal('serialpassthrough<br># serialpassthrough');
+            expect(cliOutput.html()).to.equal('');
+            expect(cliPrompt.val()).to.equal('serialpassthrough');
+        });
+
+        it('unambiguous auto-complete result with partial buffer', () => {
+            TABS.cli.cliBuffer = 'serial';
+
+            TABS.cli.read({
+                data: toArrayBuffer('passthrough')
+            });
+
+            expect(cliOutput.html()).to.equal('');
             expect(cliPrompt.val()).to.equal('serialpassthrough');
         });
 
@@ -131,9 +142,9 @@ describe('TABS.cli', () => {
         });
 
         it('second auto complete in row', done => {
-            TABS.cli.cliBuffer = '# ser';
-
             TABS.cli.initialize(() => {
+                TABS.cli.cliBuffer = '# ser';
+
                 cliPrompt.val('seri');
 
                 triggerTabKey(cliPrompt);
@@ -145,9 +156,9 @@ describe('TABS.cli', () => {
         });
 
         it('auto-complete command with trailing space', done => {
-            TABS.cli.cliBuffer = '# get ';
-
             TABS.cli.initialize(() => {
+                TABS.cli.cliBuffer = '# get ';
+
                 cliPrompt.val('get r');
 
                 triggerTabKey(cliPrompt);
@@ -159,9 +170,9 @@ describe('TABS.cli', () => {
         });
 
         it('auto-complete after delete characters', done => {
-            TABS.cli.cliBuffer = '# serial';
-
             TABS.cli.initialize(() => {
+                TABS.cli.cliBuffer = '# serial';
+
                 cliPrompt.val('ser');
 
                 triggerTabKey(cliPrompt);
@@ -175,9 +186,9 @@ describe('TABS.cli', () => {
         });
 
         it('enter after autocomplete', done => {
-            TABS.cli.cliBuffer = '# servo';
-
             TABS.cli.initialize(() => {
+                TABS.cli.cliBuffer = '# servo';
+
                 cliPrompt.val('servo');
 
                 triggerEnterKey(cliPrompt);
@@ -189,9 +200,9 @@ describe('TABS.cli', () => {
         });
 
         it('enter after autocomplete', done => {
-            TABS.cli.cliBuffer = '# ser';
-
             TABS.cli.initialize(() => {
+                TABS.cli.cliBuffer = '# ser';
+
                 cliPrompt.val('servo');
 
                 triggerEnterKey(cliPrompt);
@@ -203,9 +214,9 @@ describe('TABS.cli', () => {
         });
 
         it('enter after deleting characters', done => {
-            TABS.cli.cliBuffer = '# serial';
-
             TABS.cli.initialize(() => {
+                TABS.cli.cliBuffer = '# serial';
+
                 cliPrompt.val('ser');
 
                 triggerEnterKey(cliPrompt);
@@ -214,6 +225,15 @@ describe('TABS.cli', () => {
 
                 expect(TABS.cli.send).to.have.been.calledOnce;
                 expect(TABS.cli.send).to.have.been.calledWith(backspace.repeat(3) + '\n');
+                done();
+            });
+        });
+
+        it('cliBufer is cleared on startup', done => {
+            TABS.cli.cliBuffer = '# serial';
+
+            TABS.cli.initialize(() => {
+                expect(TABS.cli.cliBuffer).to.equal('');
                 done();
             });
         });

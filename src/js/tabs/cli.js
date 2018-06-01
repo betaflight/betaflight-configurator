@@ -19,6 +19,7 @@ TABS.cli.initialize = function (callback) {
     }
     
     self.outputHistory = "";
+    self.cliBuffer = "";
 
     $('#content').load("./tabs/cli.html", function () {
         // translate to user-selected language
@@ -198,12 +199,20 @@ TABS.cli.history.next = function () {
     return this.history[this.index - 1];
 };
 
+const backspaceCode = 8;
+const lineFeedCode = 10;
+const carriageReturnCode = 13;
+
 function writeToOutput(text) {
     $('.tab-cli .window .wrapper').append(text);
     $('.tab-cli .window').scrollTop($('.tab-cli .window .wrapper').height());
 }
 
-function writeToPrompt(text) {
+function writeLineToOutput(text) {
+    writeToOutput(text + "<br>");
+}
+
+function setPrompt(text) {
     $('.tab-cli textarea').val(text);
 }
 
@@ -219,7 +228,6 @@ TABS.cli.read = function (readInfo) {
         Chrome OS currently unknown
     */
     var data = new Uint8Array(readInfo.data),
-        cliOutput = "",
         validateText = "",
         sequenceCharsToSkip = 0;
 
@@ -229,7 +237,7 @@ TABS.cli.read = function (readInfo) {
         if (!CONFIGURATOR.cliValid) {
             // try to catch part of valid CLI enter message
             validateText += currentChar;
-            cliOutput += currentChar;
+            writeToOutput(currentChar);
             continue;
         }
 
@@ -244,35 +252,30 @@ TABS.cli.read = function (readInfo) {
             continue;
         }
 
-        const lineFeedCode = 10;
-        const carriageReturnCode = 13;
-        const backspaceCode = 8;
         switch (data[i]) {
             case lineFeedCode:
                 if (GUI.operating_system != "MacOS") {
-                    cliOutput += "<br />";
+                    writeLineToOutput(this.cliBuffer);
                 }
                 this.cliBuffer = "";
                 break;
             case carriageReturnCode:
                 if (GUI.operating_system == "MacOS") {
-                    cliOutput += "<br />";
+                    writeLineToOutput(this.cliBuffer);
                 }
                 this.cliBuffer = "";
                 break;
             case 60:
-                cliOutput += '&lt';
+                this.cliBuffer += '&lt';
                 break;
             case 62:
-                cliOutput += '&gt';
+                this.cliBuffer += '&gt';
                 break;
             case backspaceCode:
-                cliOutput = cliOutput.slice(0, -1);
                 this.cliBuffer = this.cliBuffer.slice(0, -1);
                 break;
 
             default:
-                cliOutput += currentChar;
                 this.cliBuffer += currentChar;
         }
 
@@ -310,8 +313,7 @@ TABS.cli.read = function (readInfo) {
         validateText = "";
     }
 
-    writeToOutput(cliOutput);
-    writeToPrompt(removePromptHash(this.cliBuffer));
+    setPrompt(removePromptHash(this.cliBuffer));
 };
 
 TABS.cli.sendLine = function (line, callback) {
