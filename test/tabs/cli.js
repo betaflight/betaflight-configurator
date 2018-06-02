@@ -35,14 +35,17 @@ describe('TABS.cli', () => {
         });
 
         it('ambiguous auto-complete results', () => {
+            TABS.cli.cliBuffer = 'se';
+
             TABS.cli.read({
                 data: toArrayBuffer('\r\033[Kserialpassthrough\tservo\r\n# ser')
             });
 
             // Ambigous auto-complete from firmware is preceded with an \r carriage return
+            // which only renders a line break on Mac
             const expectedValue = GUI.operating_system === "MacOS" ?
-                '<br>serialpassthrough\tservo<br>' :
-                'serialpassthrough\tservo<br>';
+                'se<br>serialpassthrough\tservo<br>' :
+                'seserialpassthrough\tservo<br>';
             expect(cliOutput.html()).to.equal(expectedValue);
             expect(cliPrompt.val()).to.equal('ser');
         });
@@ -90,6 +93,8 @@ describe('TABS.cli', () => {
         event.which = tabKeycode;
         input.trigger(event);
     }
+
+    const backspaceCode = String.fromCharCode(127);
 
     describe('input', () => {
         const content = $('<div>').attr('id', 'content');
@@ -181,10 +186,8 @@ describe('TABS.cli', () => {
 
                 triggerTabKey(cliPrompt);
 
-                const backspace = String.fromCharCode(127);
-
                 expect(TABS.cli.send).to.have.been.calledOnce;
-                expect(TABS.cli.send).to.have.been.calledWith(backspace.repeat(3) + '\t');
+                expect(TABS.cli.send).to.have.been.calledWith(backspaceCode.repeat(3) + '\t');
                 done();
             });
         });
@@ -225,19 +228,35 @@ describe('TABS.cli', () => {
 
                 triggerEnterKey(cliPrompt);
 
-                const backspace = String.fromCharCode(127);
-
                 expect(TABS.cli.send).to.have.been.calledOnce;
-                expect(TABS.cli.send).to.have.been.calledWith(backspace.repeat(3) + '\n');
+                expect(TABS.cli.send).to.have.been.calledWith(backspaceCode.repeat(3) + '\n');
                 done();
             });
         });
 
-        it('cliBufer is cleared on startup', done => {
+        it('cliBuffer is cleared on startup', done => {
             TABS.cli.cliBuffer = '# serial';
 
             TABS.cli.initialize(() => {
                 expect(TABS.cli.cliBuffer).to.equal('');
+                done();
+            });
+        });
+
+        it('exit upon cleanup clears cliBuffer first', done => {
+            CONFIGURATOR.connectionValid = true;
+            TABS.cli.cliValid = true;
+
+
+            TABS.cli.initialize(() => {
+                const commandInBuffer = 'resource';
+
+                TABS.cli.cliBuffer = `# ${commandInBuffer}`;
+
+                TABS.cli.cleanup();
+
+                expect(TABS.cli.send).to.have.been.calledOnce;
+                expect(TABS.cli.send).to.have.been.calledWith(backspaceCode.repeat(commandInBuffer.length) + 'exit\r');
                 done();
             });
         });

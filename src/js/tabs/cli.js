@@ -11,6 +11,36 @@ function removePromptHash(promptText) {
     return promptText.replace(/^# /, '');
 }
 
+function cliBufferCharsToDelete(command, buffer) {
+    var commonChars = 0;
+    for (var i = 0;i < buffer.length;i++) {
+        if (command[i] === buffer[i]) {
+            commonChars++;
+        } else {
+            break;
+        }
+    }
+
+    return buffer.length - commonChars;
+}
+
+function commandWithBackSpaces(command, buffer, noOfCharsToDelete) {
+    const backspace = String.fromCharCode(127);
+    return backspace.repeat(noOfCharsToDelete) + command.substring(buffer.length - noOfCharsToDelete, command.length);
+}
+
+function getCliCommand(command, cliBuffer) {
+    const buffer = removePromptHash(cliBuffer);
+    const bufferRegex = new RegExp('^' + buffer, 'g');
+    if (command.match(bufferRegex)) {
+        return command.replace(bufferRegex, '');
+    }
+
+    const noOfCharsToDelete = cliBufferCharsToDelete(command, buffer);
+
+    return commandWithBackSpaces(command, buffer, noOfCharsToDelete);
+}
+
 TABS.cli.initialize = function (callback) {
     var self = this;
 
@@ -61,7 +91,7 @@ TABS.cli.initialize = function (callback) {
                             writer.write(new Blob([self.outputHistory], {type: 'text/plain'}));
                         } else {
                             console.log('write complete');
-                        };
+                        }
                     };
 
                     writer.truncate(0);
@@ -70,36 +100,6 @@ TABS.cli.initialize = function (callback) {
                 });
             });
         });
-
-        function cliBufferCharsToDelete(command, buffer) {
-            var commonChars = 0;
-            for (var i = 0;i < buffer.length;i++) {
-                if (command[i] === buffer[i]) {
-                    commonChars++;
-                } else {
-                    break;
-                }
-            }
-
-            return buffer.length - commonChars;
-        }
-
-        function commandWithBackSpaces(command, buffer, noOfCharsToDelete) {
-            const backspace = String.fromCharCode(127);
-            return backspace.repeat(noOfCharsToDelete) + command.substring(buffer.length - noOfCharsToDelete, command.length);
-        }
-
-        function getCliCommand(command, cliBuffer) {
-            const buffer = removePromptHash(cliBuffer);
-            const bufferRegex = new RegExp('^' + buffer, 'g');
-            if (command.match(bufferRegex)) {
-                return command.replace(bufferRegex, '');
-            }
-
-            const noOfCharsToDelete = cliBufferCharsToDelete(command, buffer);
-
-            return commandWithBackSpaces(command, buffer, noOfCharsToDelete);
-        }
 
         // Tab key detection must be on keydown,
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
@@ -134,7 +134,7 @@ TABS.cli.initialize = function (callback) {
                             if (line.toLowerCase().startsWith('profile')) {
                                 processingDelay = self.profileSwitchDelayMs;
                             }
-                            const isLastCommand = index + 1 === outputArray.length;
+                            const isLastCommand = outputArray.length === index + 1;
                             if (isLastCommand && self.cliBuffer) {
                                 line = getCliCommand(line, self.cliBuffer);
                             }
@@ -317,11 +317,11 @@ TABS.cli.read = function (readInfo) {
 };
 
 TABS.cli.sendLine = function (line, callback) {
-    TABS.cli.send(line + '\n', callback);
+    this.send(line + '\n', callback);
 };
 
 TABS.cli.sendAutoComplete = function (line, callback) {
-    TABS.cli.send(line + '\t', callback);
+    this.send(line + '\t', callback);
 };
 
 TABS.cli.send = function (line, callback) {
@@ -340,17 +340,7 @@ TABS.cli.cleanup = function (callback) {
         if (callback) callback();
         return;
     }
-
-    var bufferOut = new ArrayBuffer(5);
-    var bufView = new Uint8Array(bufferOut);
-
-    bufView[0] = 0x65; // e
-    bufView[1] = 0x78; // x
-    bufView[2] = 0x69; // i
-    bufView[3] = 0x74; // t
-    bufView[4] = 0x0D; // enter
-
-    serial.send(bufferOut, function (writeInfo) {
+    this.send(getCliCommand('exit\r', this.cliBuffer), function (writeInfo) {
         // we could handle this "nicely", but this will do for now
         // (another approach is however much more complicated):
         // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
