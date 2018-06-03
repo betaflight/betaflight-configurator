@@ -43,7 +43,7 @@ describe('TABS.cli', () => {
 
             // Ambigous auto-complete from firmware is preceded with an \r carriage return
             // which only renders a line break on Mac
-            const expectedValue = GUI.operating_system === "MacOS" ?
+            const expectedValue = GUI.operating_system !== "Windows" ?
                 'se<br>serialpassthrough\tservo<br>' :
                 'seserialpassthrough\tservo<br>';
             expect(cliOutput.html()).to.equal(expectedValue);

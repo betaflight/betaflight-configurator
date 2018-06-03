@@ -254,13 +254,13 @@ TABS.cli.read = function (readInfo) {
 
         switch (data[i]) {
             case lineFeedCode:
-                if (GUI.operating_system != "MacOS") {
+                if (GUI.operating_system === "Windows") {
                     writeLineToOutput(this.cliBuffer);
                     this.cliBuffer = "";
                 }
                 break;
             case carriageReturnCode:
-                if (GUI.operating_system == "MacOS") {
+                if (GUI.operating_system !== "Windows") {
                     writeLineToOutput(this.cliBuffer);
                     this.cliBuffer = "";
                 }
