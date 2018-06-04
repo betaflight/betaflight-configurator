@@ -2618,71 +2618,68 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile independent Filter Settings"
     },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Gyro Lowpass Filters"
+    },
     "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Soft Lowpass Frequency [Hz]"
+        "message": "Gyro Lowpass 1 Cutoff Frequency [Hz]"
     },
-    "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "Gyro Soft Lowpass Frequency [Hz]"
+    "pidTuningGyroLowpassType": {
+        "message": "Gyro Lowpass 1 Filter Type"
     },
-    "pidTuningGyroNotch1Enable": {
-        "message": "Enable Gyro Notch Filter 1"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Gyro Lowpass 2 Cutoff Frequency [Hz]"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "Gyro Lowpass 2 Filter Type"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Gyro Notch Filters"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro Notch Filter 1 Frequency [Hz]"
-    },
-    "pidTuningGyroNotch2Enable": {
-        "message": "Enable Gyro Notch Filter 2"
+        "message": "Gyro Notch Filter 1 Center Frequency [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro Notch Filter 2 Frequency [Hz]"
-    },
-    "pidTuningGyroNotchFrequencyHelp": {
-        "message": "Gyro Notch Filter Frequency in Hz"
+        "message": "Gyro Notch Filter 2 Center Frequency [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 1 Frequency [Hz]"
+        "message": "Gyro Notch Filter 1 Cutoff Frequency [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 2 Frequency [Hz]"
+        "message": "Gyro Notch Filter 2 Cutoff Frequency [Hz]"
     },
-    "pidTuningGyroNotchCutoffHelp": {
-        "message": "Gyro Notch Filter Cutoff Frequency in Hz (This is where notch filter starts. For example with notch filter 160 and notch Hz of 260 it means the range is 160-360Hz with most attenuation around center)"
+    "pidTuningNotchFilterHelp": {
+        "message": "The Notch Filter has a Center and a Cutoff. The filter is symmetrical. The Center Frequency is the center of the filter and the Cutoff Frequency is where Notch filter starts. For example with Notch Cutoff of 160 and Notch Center of 260 it means the range is 160-360Hz with most attenuation around center"
     },
     "pidTuningFilterSettings": {
-        "message": "Filter Settings"
+        "message": "Profile dependent Filter Settings"
     },
+    "pidTuningDTermLowpassFiltersGroup": {
+        "message": "D Term Lowpass Filters"
+    },    
     "pidTuningDTermLowpassType": {
-        "message": "D-Term Lowpass Filter"
-    },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "Select D-Term lowpass filter type to use. Default is BIQUAD"
+        "message": "D Term Lowpass 1 Filter Type"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass Frequency [Hz]"
+        "message": "D Term Lowpass 1 Cutoff Frequency [Hz]"
     },
-    "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "D Term Lowpass Frequency [Hz] (0 means disabled)"
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "D Term Lowpass 2 Cutoff Frequency [Hz]"
     },
-    "pidTuningDTermNotchEnable": {
-        "message": "Enable D Term Notch Filter"
-    },
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "D Term Notch Filters"
+    },    
     "pidTuningDTermNotchFrequency": {
-        "message": "D Term Notch Filter Frequency [Hz]"
-    },
-    "pidTuningDTermNotchFrequencyHelp": {
-        "message": "D Term Notch Filter Frequency [Hz] (0 means disabled)"
+        "message": "D Term Notch Filter Center Frequency [Hz]"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Filter Cutoff [Hz]"
+        "message": "D Term Notch Filter Cutoff Frequency [Hz]"
     },
-    "pidTuningDTermNotchCutoffHelp": {
-        "message": "D Term Notch Filter Cutoff in Hz (This is where notch filter starts. For example with notch filter 160 and notch Hz of 260 it means the range is 160-360Hz with most attenuation around center)"
-    },
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "Yaw Lowpass Filters"
+    },    
     "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpass Frequency [Hz]"
-    },
-    "pidTuningYawLowpassFrequencyHelp": {
-        "message": "Yaw Lowpass Frequency [Hz] (Yaw axis can sometimes be noiser than the rest. This filter only affects the P of yaw)"
+        "message": "Yaw Lowpass Cutoff Frequency [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensation"
