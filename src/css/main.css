@@ -111,11 +111,11 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .message-positive {
-    color: #ffbb00;
+    color: #ffbb00 !important;
 }
 
 .message-negative {
-    color: red;
+    color: red !important;
 }
 
 .headerbar {
