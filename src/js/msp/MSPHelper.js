@@ -864,6 +864,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         ADVANCED_TUNING.itermThrottleThreshold = data.readU16();
                         ADVANCED_TUNING.itermAcceleratorGain = data.readU16();
                     }
+                    if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                        ADVANCED_TUNING.dtermSetpointWeight = data.readU16();
+                    }
                 }
                 break;
             case MSPCodes.MSP_SENSOR_CONFIG:
@@ -1479,7 +1482,7 @@ MspHelper.prototype.crunch = function(code) {
                     .push8(ADVANCED_TUNING.deltaMethod)
                     .push8(ADVANCED_TUNING.vbatPidCompensation)
                     .push8(ADVANCED_TUNING.dtermSetpointTransition)
-                    .push8(ADVANCED_TUNING.dtermSetpointWeight)
+                    .push8(Math.min(ADVANCED_TUNING.dtermSetpointWeight, 254))
                     .push8(ADVANCED_TUNING.toleranceBand)
                     .push8(ADVANCED_TUNING.toleranceBandReduction)
                     .push8(ADVANCED_TUNING.itermThrottleGain)
@@ -1492,6 +1495,9 @@ MspHelper.prototype.crunch = function(code) {
                 if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     buffer.push16(ADVANCED_TUNING.itermThrottleThreshold)
                         .push16(ADVANCED_TUNING.itermAcceleratorGain);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                    buffer.push16(ADVANCED_TUNING.dtermSetpointWeight);
                 }
             }
             // only supports 1 version pre bf 3.0

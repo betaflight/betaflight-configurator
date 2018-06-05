@@ -516,6 +516,10 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.tab-pid_tuning .pidTuningFeatures').hide();
         }
 
+        if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
+            $('input[name="dtermSetpoint-number"]').attr('max', '2.54');
+        }
+
         // translate to user-selected language
         i18n.localizePage();
 
