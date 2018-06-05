@@ -685,10 +685,23 @@ TABS.pid_tuning.initialize = function (callback) {
 
             var dtermTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
             var dtermTransitionRangeElement = $('input[name="dtermSetpointTransition-range"]');
+            var dtermTransitionWarningElement = $('#pid-tuning .dtermSetpointTransitionWarning');
+
+            function checkUpdateDtermTransitionWarning(value) {
+                if (value > 0 && value < 0.1) {
+                    dtermTransitionWarningElement.show();
+                } else {
+                    dtermTransitionWarningElement.hide();
+                }
+            }
+            checkUpdateDtermTransitionWarning(dtermTransitionNumberElement.val());
+
             dtermTransitionNumberElement.change(function () {
+                checkUpdateDtermTransitionWarning($(this).val());
                 dtermTransitionRangeElement.val($(this).val());
             });
             dtermTransitionRangeElement.change(function () {
+                checkUpdateDtermTransitionWarning($(this).val());
                 dtermTransitionNumberElement.val($(this).val());
             });
 

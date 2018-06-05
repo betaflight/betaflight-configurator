@@ -1258,6 +1258,9 @@
     "pidTuningDtermSetpointHelp": {
         "message": "This parameter determines the stick accelerating effect within derivative component.<br> Value of 0 equals to old Measuemenent method where D only tracks gyro, while value of 1 equals to old Error method with equal gyro and stick tracking ratio.<br> Lower value equals to slower/smoother stick response, while higher value provides more stick acceleration response.<br> Note that RC interpolation is recommended to be enabled with higher values to prevent control kicks making noise."
     },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
+    },
     "pidTuningProportional": {
         "message": "Proportional"
     },
