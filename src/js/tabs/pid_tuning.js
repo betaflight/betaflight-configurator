@@ -253,7 +253,8 @@ TABS.pid_tuning.initialize = function (callback) {
             dtermSetpointTransitionRangeElement.val(ADVANCED_TUNING.dtermSetpointTransition / 100);
 
             $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
-            $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
+            $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100)
+                                                  .change(); // trigger adjustRangeElement()
         } else {
             $('.pid_filter .newFilter').hide();
         }
