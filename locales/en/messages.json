@@ -2777,6 +2777,15 @@
     "failsafeSwitchModeHelp": {
         "message": "This option determines what happens when Failsafe is activated through AUX switch:<br/><strong>Stage 1</strong> activates Stage 1 failsafe. This is useful if you want to simulate the exact signal loss failsafe behavior.<br/><strong>Stage 2</strong> skips Stage 1 and activates the Stage 2 procedure immediately<br/><strong>Kill</strong> disarms instantly (your craft will crash)"
     },
+    "failsafeSwitchOptionStage1": {
+        "message": "Stage 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "Stage 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Kill"
+    },
 
     "powerButtonSave": {
         "message": "Save"
