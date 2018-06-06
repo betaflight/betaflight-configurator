@@ -6,7 +6,10 @@ TABS.pid_tuning = {
     updating: true,
     dirty: false,
     currentProfile: null,
-    currentRateProfile: null
+    currentRateProfile: null,
+    SETPOINT_WEIGHT_RANGE_LOW: 2.55,
+    SETPOINT_WEIGHT_RANGE_HIGH: 20,
+    SETPOINT_WEIGHT_RANGE_LEGACY: 2.54
 };
 
 TABS.pid_tuning.initialize = function (callback) {
@@ -517,7 +520,8 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
-            $('input[name="dtermSetpoint-number"]').attr('max', '2.54');
+            $('input[name="dtermSetpoint-number"]').attr('max', self.SETPOINT_WEIGHT_RANGE_LEGACY);
+            $('input[name="dtermSetpoint-range"]').attr('max', self.SETPOINT_WEIGHT_RANGE_LEGACY);
         }
 
         // translate to user-selected language
@@ -711,11 +715,25 @@ TABS.pid_tuning.initialize = function (callback) {
 
             var dtermNumberElement = $('input[name="dtermSetpoint-number"]');
             var dtermRangeElement = $('input[name="dtermSetpoint-range"]');
+
+            function adjustRangeElement(value) {
+                var range = dtermRangeElement.attr('max');
+                if (value >= self.SETPOINT_WEIGHT_RANGE_LOW && range <= self.SETPOINT_WEIGHT_RANGE_LOW) {
+                    dtermRangeElement.attr('max', self.SETPOINT_WEIGHT_RANGE_HIGH);
+                } else if (value < self.SETPOINT_WEIGHT_RANGE_LOW && range > self.SETPOINT_WEIGHT_RANGE_LOW) {
+                    dtermRangeElement.attr('max', self.SETPOINT_WEIGHT_RANGE_LOW);
+                }
+            }
+
             dtermNumberElement.change(function () {
-                dtermRangeElement.val($(this).val());
+                var value = $(this).val();
+                adjustRangeElement(value);
+                dtermRangeElement.val(value);
             });
             dtermRangeElement.change(function () {
-                dtermNumberElement.val($(this).val());
+                var value = $(this).val();
+                adjustRangeElement(value);
+                dtermNumberElement.val(value);
             });
         } else {
             $('.tab-pid_tuning .rate_profile').hide();
