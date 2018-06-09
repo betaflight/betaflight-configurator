@@ -303,8 +303,9 @@ TABS.pid_tuning.initialize = function (callback) {
             var checked = $(this).is(':checked');
             var hz = FILTER_CONFIG.gyro_notch_hz > 0 ? FILTER_CONFIG.gyro_notch_hz : DEFAULT.gyro_notch_hz;
             var cutoff = FILTER_CONFIG.gyro_notch_cutoff > 0 ? FILTER_CONFIG.gyro_notch_cutoff : DEFAULT.gyro_notch_cutoff;
-            
-            $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? hz : 0).attr('disabled', !checked);
+
+            $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
+                    .attr("min", checked ? 1 : 0).change();
             $('.pid_filter input[name="gyroNotch1Cutoff"]').attr('disabled', !checked);
         });
 
@@ -313,7 +314,8 @@ TABS.pid_tuning.initialize = function (callback) {
             var hz = FILTER_CONFIG.gyro_notch2_hz > 0 ? FILTER_CONFIG.gyro_notch2_hz : DEFAULT.gyro_notch2_hz;
             var cutoff = FILTER_CONFIG.gyro_notch2_cutoff > 0 ? FILTER_CONFIG.gyro_notch2_cutoff : DEFAULT.gyro_notch2_cutoff;
 
-            $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? hz : 0).attr('disabled', !checked);
+            $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
+                    .attr("min", checked ? 1 : 0).change();
             $('.pid_filter input[name="gyroNotch2Cutoff"]').attr('disabled', !checked);
         });
 
@@ -322,7 +324,8 @@ TABS.pid_tuning.initialize = function (callback) {
             var hz = FILTER_CONFIG.dterm_notch_hz > 0 ? FILTER_CONFIG.dterm_notch_hz : DEFAULT.dterm_notch_hz;
             var cutoff = FILTER_CONFIG.dterm_notch_cutoff > 0 ? FILTER_CONFIG.dterm_notch_cutoff : DEFAULT.dterm_notch_cutoff;
 
-            $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? hz : 0).attr('disabled', !checked);
+            $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? hz : 0).attr('disabled', !checked)
+                    .attr("min", checked ? 1 : 0).change();
             $('.pid_filter input[name="dTermNotchCutoff"]').attr('disabled', !checked);
         });
 
@@ -373,9 +376,10 @@ TABS.pid_tuning.initialize = function (callback) {
             var cutoff = $(".pid_filter input[name='" + cutoffName + "']").val();
 
             // Change the max and refresh the value if needed
-            $(".pid_filter input[name='" + cutoffName + "']").attr("max",frecuency - 1);
+            var maxCutoff = frecuency == 0 ? 0 : frecuency - 1;
+            $(".pid_filter input[name='" + cutoffName + "']").attr("max", maxCutoff);
             if (cutoff >= frecuency) {
-                $(".pid_filter input[name='" + cutoffName + "']").val(frecuency - 1);
+                $(".pid_filter input[name='" + cutoffName + "']").val(maxCutoff);
             }
         }
 
