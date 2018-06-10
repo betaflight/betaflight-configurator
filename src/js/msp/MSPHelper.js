@@ -605,6 +605,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
                     BEEPER_CONFIG.dshotBeaconTone = data.readU8();
                 }
+                if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                    BEEPER_CONFIG.dshotBeaconConditions.setMask(data.readU32());
+                }
                 break;
 
             case MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG:
@@ -1217,7 +1220,10 @@ MspHelper.prototype.crunch = function(code) {
             var beeperMask = BEEPER_CONFIG.beepers.getMask();
             buffer.push32(beeperMask);
             if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
-                buffer.push8(BEEPER_CONFIG.dshotBeaconTone );
+                buffer.push8(BEEPER_CONFIG.dshotBeaconTone);
+            }
+            if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                buffer.push32(BEEPER_CONFIG.dshotBeaconConditions.getMask());
             }
             break;
         case MSPCodes.MSP_SET_MIXER_CONFIG:

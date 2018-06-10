@@ -1,6 +1,6 @@
 'use strict;'
 
-var Beepers = function (config) {
+var Beepers = function (config, supportedConditions) {
     var self = this;
 
     var beepers = [
@@ -12,7 +12,7 @@ var Beepers = function (config) {
         {bit: 5, name: 'ARMING_GPS_FIX', visible: true},
         {bit: 6, name: 'BAT_CRIT_LOW', visible: true},
         {bit: 7, name: 'BAT_LOW', visible: true},
-        {bit: 8, name: 'GPS_STATUS', visible: false}, // do not show
+        {bit: 8, name: 'GPS_STATUS', visible: true},
         {bit: 9, name: 'RX_SET', visible: true},
         {bit: 10, name: 'ACC_CALIBRATION', visible: true},
         {bit: 11, name: 'ACC_CALIBRATION_FAIL', visible: true},
@@ -25,7 +25,27 @@ var Beepers = function (config) {
         {bit: 18, name: 'BLACKBOX_ERASE', visible: true},
     ];
 
-    self._beepers = beepers;
+    if (semver.gte(config.apiVersion, "1.37.0")) {
+        beepers.push(
+            {bit: 19, name: 'CRASH_FLIP', visible: true},
+            {bit: 20, name: 'CAM_CONNECTION_OPEN', visible: true},
+            {bit: 21, name: 'CAM_CONNECTION_CLOSE', visible: true},
+        );
+    }
+
+    if (supportedConditions) {
+        self._beepers = [];
+        beepers.forEach(function (beeper) {
+            if (supportedConditions.some(function (supportedCondition) {
+                    return supportedCondition === beeper.name;
+                })) {
+                self._beepers.push(beeper);
+            }
+        });
+    } else {
+        self._beepers = beepers.slice();
+    }
+
     self._beeperMask = 0;
 };
 
