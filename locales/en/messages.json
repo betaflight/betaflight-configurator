@@ -968,10 +968,10 @@
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
     },
     "configurationDshotBeeper": {
-        "message": "DSHOT Beacon Configuration"
+        "message": "Dshot Beacon Configuration"
     },
     "configurationUseDshotBeeper": {
-        "message": "Use DSHOT beacon (use motors to sound beeps when disarmed)"
+        "message": "Use Dshot beacon (use motors to sound beeps when disarmed)"
     },
     "configurationDshotBeaconTone": {
         "message": "Beacon Tone"
@@ -1004,13 +1004,10 @@
         "message": "Warning beeps when battery is getting low (repeats)"
     },
     "beeperGPS_STATUS": {
-        "message": ""
+        "message": "Use the number of beeps to indicate how many GPS satellites were found"
     },
     "beeperRX_SET": {
-        "message": "Beeps when aux channel is set for beep or beep sequence how many satellites has found if GPS enabled"
-    },
-    "beeperDISARM_REPEAT": {
-        "message": "Beeps sounded while stick held in disarm position"
+        "message": "Beeps when aux channel is set for beep"
     },
     "beeperACC_CALIBRATION": {
         "message": "Accelerometer inflight calibration completed confirmation"
@@ -1024,17 +1021,29 @@
     "beeperMULTI_BEEPS": {
         "message": ""
     },
+    "beeperDISARM_REPEAT": {
+        "message": "Beeps sounded while stick held in disarm position"
+    },
     "beeperARMED": {
-        "message": "Warning beeps when board is armed (repeats until board is disarmed or throttle is increased)"
+        "message": "Warning beeps when board is armed with motors off when idle (repeats until board is disarmed or throttle is increased)"
     },
     "beeperSYSTEM_INIT": {
         "message": "Initialisation beeps when board is powered on"
     },
     "beeperUSB": {
-        "message": "Beep when flight controller is powered from USB. Turn this off when you don't want the beeper on the workbench"
+        "message": "Beep when flight controller is powered from USB. Turn this off if you don't want the beeper to be on when on the workbench"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Beep when blackbox erase completes"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Beep when crash flip mode is active"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Beep when the 5 key camera control is entered"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Beep when the 5 key camera control is exited"
     },
     "configuration3d": {
         "message": "3D ESC/Motor Features"

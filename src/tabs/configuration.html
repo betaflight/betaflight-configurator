@@ -676,12 +676,12 @@
             </tr>
 
             <tr class="dshotbeeper">
-                <td style="width:calc(50%)" colspan="2">
-                    <!-- ROW 5 - HALF WIDTH PANE -->
+                <td style="width:calc(100%)" colspan="2">
+                    <!-- ROW 5 - FULL WIDTH PANE -->
             
                     
                     <!-- DSHOT BEEPER -->
-                    <div class="dshotBeeper" style="width: calc(50%);">
+                    <div class="dshotBeeper" style="width: calc(100%);">
                         <div class="gui_box grey" style="margin-top:10px;">
                             <div class="gui_box_titlebar">
                                 <div class="spacer_box_title" i18n="configurationDshotBeeper"></div>
@@ -689,7 +689,7 @@
                             <div class="spacer_box">
                                 <table cellpadding="0" cellspacing="0">
                                     <tbody class="dshot-beeper-configuration" id="noline">
-                                        <tr>
+                                        <tr class="dshotBeaconSwitch">
                                             <td>
                                                 <div class="number">
                                                     <div style="float: left; height: 20px; margin-right: 34px;">
@@ -718,6 +718,11 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <table cellpadding="0" cellspacing="0">
+                                    <tbody class="dshotBeaconConditions" id="noline">
+                                        <!-- table generated here -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -739,13 +744,13 @@
                                     <tbody class="beeper-configuration" id="noline">
                                         <tr class="beeper-template" style="display:none">
                                             <td>
-                                                <input class="beeper toggle" id="" name="" title="" type="checkbox" />
+                                                <input class="condition toggle" id="" name="" title="" type="checkbox" />
                                             </td>
                                             <td>
                                                 <label for=""></label>
                                             </td>
                                             <td>
-                                                <span i18n=""></span>
+                                                <span></span>
                                             </td>
                                         </tr>
                                         <!-- table generated here -->

@@ -332,6 +332,7 @@ function onConnect() {
     if (CONFIG.flightControllerVersion !== '') {
         FEATURE_CONFIG.features = new Features(CONFIG);
         BEEPER_CONFIG.beepers = new Beepers(CONFIG);
+        BEEPER_CONFIG.dshotBeaconConditions = new Beepers(CONFIG, [ "RX_LOST", "RX_SET" ]);
 
         $('#tabs ul.mode-connected').show();
 
