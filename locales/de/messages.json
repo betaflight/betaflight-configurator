@@ -503,7 +503,7 @@
         "message": "Beschleunigungssensor kalibieren"
     },
     "initialSetupCalibrateAccelText": {
-        "message": "Bitte den Flightcontroller <strong>waagerecht<\/strong> ausrichten und sicherstellen, dass das Gerät während des Prozesses nicht bewegt wird."
+        "message": "Bitte den Flightcontroller <strong>waagerecht<\/strong> ausrichten und sicherstellen, daß das Gerät während des Prozesses nicht bewegt wird."
     },
     "initialSetupButtonCalibrateMag": {
         "message": "Magnetometer kalibrieren"
@@ -716,7 +716,7 @@
         "message": "OLED Bildschirmschirm Anzeige"
     },
     "featureDISPLAYTip": {
-        "message": "Wem die Funktion aktiviert ist, und kein Bildschirm Gerät angeschlossen ist (oder das Gerät keinen Strom hat) gibt es ca. 10 Sekunden Verzögerung bei jedem Reboot des Flugcontrollers"
+        "message": "Wenn die Funktion aktiviert ist, und kein Bildschirm Gerät angeschlossen ist (oder das Gerät keinen Strom hat) gibt es ca. 10 Sekunden Verzögerung bei jedem Reboot des Flugcontrollers"
     },
     "featureONESHOT125": {
         "message": "ONESHOT ESC Unterstützug"
@@ -866,7 +866,7 @@
         "message": "Motor Drehrichtung umkehren"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Falls diese Option aktiviert ist geht Betaflight davon aus, dass die Drehrichtung der Motoren umgekehrt wurde"
+        "message": "Falls diese Option aktiviert ist geht Betaflight davon aus, daß die Drehrichtung der Motoren umgekehrt wurde"
     },
     "configurationAutoDisarmDelay": {
         "message": "Motoren disarmen nach gesetzer Wartezeit [seconds] (Benötigt Motor Stop Funktion)"
@@ -926,7 +926,7 @@
         "message": "Piepse beim Armen"
     },
     "beeperARMING_GPS_FIX": {
-        "message": "Piepse einen besoderen Ton falls gearmt ist und eine GPS Verbindung besteht"
+        "message": "Piepse einen besonderen Ton falls gearmt ist und eine GPS Verbindung besteht"
     },
     "beeperBAT_CRIT_LOW": {
         "message": "Piepse länger falls die Batteriespannungen einen kritischen Wert erreicht"
@@ -947,7 +947,7 @@
         "message": "Kalibrierung des Beschleunigungssensor im Flug fehlgeschlagen"
     },
     "beeperREADY_BEEP": {
-        "message": "Spiele einen Ton wenn dsa GPS eine Position hat und bereit ist"
+        "message": "Spiele einen Ton wenn das GPS eine Position hat und bereit ist"
     },
     "beeperARMED": {
         "message": "Warnpiepsen wenn das Board gearmt wurde (bis zum disarm oder Gas geben)"
@@ -959,7 +959,7 @@
         "message": "Piepsen wenn Flugcontroller über USB angeschlossen ist. Abschalten um am Schreibtisch seine Ruhe zu haben :)"
     },
     "beeperBLACKBOX_ERASE": {
-        "message": "Piepsen wen Blackbox Log löschen erfolgreich"
+        "message": "Piepsen wenn Blackbox Log löschen erfolgreich"
     },
     "configuration3d": {
         "message": "3D Regler \/ Motor Funktionen"
@@ -986,7 +986,7 @@
         "message": "Zyklen\/Sec (Hz)"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Hinweis:<\/strong>  Stelle sicher das dein FC mit dieser Geschwindigkeit arbeiten kann. Prüfe die CPU Auslastung und die Cycletime  Stabilität. Änderungen führen möglicherweise dazu, dass die PIDS neu eingestellt werden müssen. TIP: Deaktiviere unbenutzte Sensoren um mehr Leistung zu haben"
+        "message": "<strong>Hinweis:<\/strong>  Stelle sicher das dein FC mit dieser Geschwindigkeit arbeiten kann. Prüfe die CPU Auslastung und die Cycletime  Stabilität. Änderungen führen möglicherweise dazu, daß die PIDS neu eingestellt werden müssen. TIP: Deaktiviere unbenutzte Sensoren um mehr Leistung zu haben"
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1286,7 +1286,7 @@
         "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
     },
     "receiverHelp": {
-        "message": "Bitte das Kapitel über Empfänger in der Dokumentation lesen. Seriellen Empfänger (falls nötig) konfigurieren, Protocol auswählen, Empfänger binden und Kanäle zuweisen. Endpunkte so wählen dass alle Kanäle von ~ 1000 - ~2000 gehen. Mittelwert auf 1500 festelgen. <span class=\"message-negative\">WICHTIG:<\/span>Ebenso bitte Failsafe konfigurieren, bzw. das Kapital darüber in der Dokumentation lesen."
+        "message": "Bitte das Kapitel über Empfänger in der Dokumentation lesen. Seriellen Empfänger (falls nötig) konfigurieren, Protocol auswählen, Empfänger binden und Kanäle zuweisen. Endpunkte so wählen, daß alle Kanäle von ~ 1000 - ~2000 gehen. Mittelwert auf 1500 festelgen. <span class=\"message-negative\">WICHTIG:<\/span>Ebenso bitte Failsafe konfigurieren, bzw. das Kapital darüber in der Dokumentation lesen."
     },
     "tuningHelp": {
         "message": "<b>Tuning tips<\/b><br \/><span class=\"message-negative\">Wichtig:<\/span>Es ist wichtig, bei den ersten Flügen die Motortemperatur im Auge zu behalten. Je höher die Filterwerte, desto besser könnte er fliegen, aber es wird auch mehr Rauschen in die Motoren gehen<br>Die Standarteinstellung 100Hz ist optimal, für problematische Setups könnte man jedoch richtung 50Hz Dterm Filter (und eventuell auch beim Gyro-Filter) gehen."
@@ -1313,13 +1313,13 @@
         "message": "\"Hoher Stickwert\" Schwellwert"
     },
     "receiverHelpStickMax": {
-        "message": "Der Minimal Wert (in us) der Sticks  der benutzt wird um zu erkennen dass ein Wert \"maximal\" ist (MAX_ChECK)"
+        "message": "Der Minimalwert (in us) der Sticks, der benutzt wird um zu erkennen, daß ein Wert \"maximal\" ist (MAX_ChECK)"
     },
     "receiverDeadband": {
         "message": "RC Totzone"
     },
     "receiverHelpDeadband": {
-        "message": "Das ist der Bereich in dem das Kommando der Funke streuen kann bevor als als \"echt\" erkannt wird. Der Wert kann vergrößert werden wenn die übertragenen Werte im Ruhezustand zu sehr zittern."
+        "message": "Das ist der Bereich, in dem das Kommando der Funke streuen kann bevor es als \"echt\" erkannt wird. Der Wert kann vergrößert werden, wenn die übertragenen Werte im Ruhezustand zu sehr zittern."
     },
     "receiverYawDeadband": {
         "message": "Yaw Totzone"
@@ -1376,7 +1376,7 @@
         "message": "Kontrolle aktivieren"
     },
     "auxiliaryHelp": {
-        "message": "Hier können verschiedene Modi auf einen bestimmten Bereich eines oder mehrerer AUX Kanäle gelegt werden. Bitte beachte dass Änderungen gespeichert werden müssen bevor diese aktiv werden."
+        "message": "Hier können verschiedene Modi auf einen bestimmten Bereich eines oder mehrerer AUX Kanäle gelegt werden. Bitte beachte, daß Änderungen gespeichert werden müssen bevor diese aktiv werden."
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -1529,7 +1529,7 @@
         "message": "Dein Flugcontroller unterstützt das Transponder Feature nicht."
     },
     "transponderInformation": {
-        "message": "Transponder erlaufen die Zeitmessung bei Rennen, sie übermitteln einen Code an das Zeitmessungssystem beim Durchfliegen des Ziel Gates. Stelle sicher dass das Infrarotsignal nicht durch Kabel, Bauteile oder Propeller gestört wird."
+        "message": "Transponder erlauben die Zeitmessung bei Rennen, sie übermitteln einen Code an das Zeitmessungssystem beim Durchfliegen des Ziel Gates. Stelle sicher dass das Infrarotsignal nicht durch Kabel, Bauteile oder Propeller gestört wird."
     },
     "transponderConfigurationType": {
         "message": "Transponder Typ"
@@ -1820,7 +1820,7 @@
         "message": "In Dateni speichern"
     },
     "loggingNote": {
-        "message": "Daten werden in <span class=\"message-negative\">nur <\/span>diesem Tab geloggt. Wenn der Tab geschlossen wird, wir das logging <span class=\"message-negative\">abgebraochen<\/span> und der Anwendung geht in den normalen Modus zurück."
+        "message": "Daten werden in <span class=\"message-negative\">nur <\/span>diesem Tab geloggt. Wenn der Tab geschlossen wird, wird das Logging <span class=\"message-negative\">abgebrochen<\/span> und die Anwendung geht in den normalen Modus zurück."
     },
     "loggingSamplesSaved": {
         "message": "Gespeicherte Beispiele:"
@@ -2099,7 +2099,7 @@
         "message": "Nachricht:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Bitte versuche <span class=\"message-negative\">nicht<\/span>, mit diesem Firmware-Flasher <strong>non-Betaflight<\/strong> hardware zu flashen.<br \/>Den FC <span class=\"message-negative\">nicht<\/span> <strong>ausstecken<\/strong> und den Computer während des flashens <span class=\"message-negative\">nicht<\/span> <strong>abschalten<\/strong>. <br \/><br \/><strong>Hinweis: <\/strong>Der STM32-Bootloader ist im ROM gespeichert und kann nicht zerstört werden.<br \/><strong>Hinweis: <\/strong><span class=\"message-negative\">Automatisch Verbinden<\/span> ist immer ausgeschaltet, während du den Firmware-Flasher verwendest.<br \/><strong>Hinweis: <\/strong>Stelle sicher, dass du ein Backup deiner Konfiguration hast; einige Upgrades\/Downgrades werden diese eventuell löschen.<br \/><strong>Hinweis:<\/strong> Falls es Probleme beim flashen gibt, stelle sicher, daß<strong>keine anderen Geräte an den seriellen Ports von deinem FC angeschlossen sind<\/strong>, reboote den Computer und aktualisiere deine Treiber.<br \/><strong>Hinweis:<\/strong> Wenn du einen FC mit direkt verbundenem USB-Port flashst (die meisten modernen FCs), stelle sicher, daß du den Abschnitt \"USB Flashing\" des Betaflight-Handbuches gelesen hast, und daß korrekte Treiber und Software installiert sind"
+        "message": "Bitte versuche <span class=\"message-negative\">nicht<\/span>, mit diesem Firmware-Flasher <strong>non-Betaflight<\/strong> hardware zu flashen.<br \/>Den FC <span class=\"message-negative\">nicht<\/span> <strong>ausstecken<\/strong> und den Computer während des flashens <span class=\"message-negative\">nicht<\/span> <strong>abschalten<\/strong>. <br \/><br \/><strong>Hinweis: <\/strong>Der STM32-Bootloader ist im ROM gespeichert und kann nicht zerstört werden.<br \/><strong>Hinweis: <\/strong><span class=\"message-negative\">Automatisch Verbinden<\/span> ist immer ausgeschaltet, während du den Firmware-Flasher verwendest.<br \/><strong>Hinweis: <\/strong>Stelle sicher, daß du ein Backup deiner Konfiguration hast; einige Upgrades\/Downgrades werden diese eventuell löschen.<br \/><strong>Hinweis:<\/strong> Falls es Probleme beim flashen gibt, stelle sicher, daß<strong>keine anderen Geräte an den seriellen Ports von deinem FC angeschlossen sind<\/strong>, reboote den Computer und aktualisiere deine Treiber.<br \/><strong>Hinweis:<\/strong> Wenn du einen FC mit direkt verbundenem USB-Port flashst (die meisten modernen FCs), stelle sicher, daß du den Abschnitt \"USB Flashing\" des Betaflight-Handbuches gelesen hast, und daß korrekte Treiber und Software installiert sind"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Wiederherstellung \/ abgebrochene Kommunikation<\/strong>"
@@ -2530,7 +2530,7 @@
         "message": "Gyro Notchfilter Cutoff 2 Frequenz [Hz]"
     },
     "pidTuningGyroNotchCutoffHelp": {
-        "message": "Gyro Notch Filter Untergrenze. (Wenn dieser Wert z.b. auf 160 steht und die Notch Frequenz auf 260Hz ist, bedeutet das, dass der Notch Filter von 160-360 läuft und in der Mitte am stärksten ist)"
+        "message": "Gyro Notch Filter Untergrenze. (Wenn dieser Wert z.b. auf 160 steht und die Notch Frequenz auf 260Hz ist, bedeutet das, daß der Notch Filter von 160-360 läuft und in der Mitte am stärksten ist)"
     },
     "pidTuningFilterSettings": {
         "message": "Filtereinstellungen"
@@ -2560,7 +2560,7 @@
         "message": "D-Term Notchfilter Cutoff [Hz]"
     },
     "pidTuningDTermNotchCutoffHelp": {
-        "message": "D-Term Notch Filter Untergrenze. (Wenn dieser Wert z.b. auf 160 steht und die Notch Frequenz auf 260Hz ist, bedeutet das, dass der Notch Filter von 160-360 läuft und in der Mitte am stärksten ist)"
+        "message": "D-Term Notch Filter Untergrenze. (Wenn dieser Wert z.b. auf 160 steht und die Notch Frequenz auf 260Hz ist, bedeutet das, daß der Notch Filter von 160-360 läuft und in der Mitte am stärksten ist)"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Tiefpassfilter Frequenz [Hz]"
@@ -2572,7 +2572,7 @@
         "message": "PID Anpassung aufgrund Akkusspannung"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "Erhört die PID Werte sobald die Batterie schwächer wird. Das sorgt dafür, dass das Fluggefühl gleich bleibt während der Akku leerer wird. Die Stärke der Kompensation wird durch die Einstellung der maximalen Zellen Spannung errechnet. Stelle sicher das in den Energie Einstellungen passende Werte sind."
+        "message": "Erhört die PID Werte sobald die Batterie schwächer wird. Das sorgt dafür, daß das Fluggefühl gleich bleibt während der Akku leerer wird. Die Stärke der Kompensation wird durch die Einstellung der maximalen Zellen Spannung errechnet. Stelle sicher das in den Energie Einstellungen passende Werte sind."
     },
     "configHelp2": {
         "message": "Abweichender Winkel (Grad) in dem das Board anders eingebaut wurde als vorgesehen (über Kopf, gedreht, usw.) Falls externe Sensoren (Gyro, Acc, Mag) verwendet werden, bitte diese ebenfalls neu anlernen."
@@ -2590,7 +2590,7 @@
         "message": "Einstellungen für gültige Pulslängen des Signals"
     },
     "failsafePulsrangeHelp": {
-        "message": "Pulse kürzer als das Minimum oder länger als das Maximum sorgen dafür, dass der Kanal ein einen Rückfallmodus geht und die Rückfalleinstellungen greifen."
+        "message": "Pulse kürzer als das Minimum oder länger als das Maximum sorgen dafür, daß der Kanal ein einen Rückfallmodus geht und die Rückfalleinstellungen greifen."
     },
     "failsafeRxMinUsecItem": {
         "message": "Minimale Länge"
@@ -2602,13 +2602,13 @@
         "message": "Kanal Rückfall Einstellungen"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "Im Fall eines Stage 1 Failsafe werden diese Einstellungen werden den den AUX Kanälen zugewiesen. <strong>Heiweis:<\/strong> Werte werden im Abstand von 25us gesetzt, kleinere Einstellungen werden vernachlässigt."
+        "message": "Im Fall eines Stage 1 Failsafe werden diese Einstellungen den AUX Kanälen zugewiesen. <strong>Hinweis:<\/strong> Werte werden im Abstand von 25us gesetzt, kleinere Einstellungen werden vernachlässigt."
     },
     "failsafeChannelFallbackSettingsAuto": {
         "message": "<strong>Auto<\/strong> heißt Roll, Pitch, Yaw zentrieren sich, Gas wird niedrig gehalten. <strong>Hold<\/strong> bedeutet das der letzte empfangene Wert beibehalten wird."
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>Hold<\/strong> heißt, dass der letzte gültige Wert gehalten wird.<strong>Set<\/strong> heißt, dass der der hier gesetzte Werk verwendet wird"
+        "message": "<strong>Hold<\/strong> heißt, daß der letzte gültige Wert gehalten wird.<strong>Set<\/strong> heißt, daß der der hier gesetzte Wert verwendet wird"
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Stufe 2 Einstellungen"
@@ -2872,7 +2872,7 @@
         "message": "OSD"
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Hinweis:<\/strong> OSD-VOrschau eventuell nicht in der aktuell auf dem FC installierten Schriftart."
+        "message": "<strong>Hinweis:<\/strong> OSD-Vorschau eventuell nicht in der Schriftart, welche aktuell auf dem FC installierten ist."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Dein FC reagiert nicht auf OSD-Kommandos. Das bedeutet wahrscheinlich, daß er kein eingebautes Betaflight-OSD hat."
@@ -2998,7 +2998,7 @@
         "message": "Absolute Zeit mit dieser Batterie seit das Fluggerät gearmt ist (blinkt wenn unter dem Alarm Schwellwert)"
     },
     "osdDescElementFlyMode": {
-        "message": "Aktueller Flug Modus"
+        "message": "Aktueller Flugmodus"
     },
     "osdDescElementGPSSpeed": {
         "message": "Ermittelte GPS Geschwindigkeit"
@@ -3214,7 +3214,7 @@
         "message": "ESC\/Motor Protokoll"
     },
     "configurationEscProtocolHelp": {
-        "message": "Auswahl des Motor-Protokolls.<br>Bitte sicherstellen dass die Regler dies auch unterstützen. Im Zweifelsfall Dokumentation der Regler heranziehen.<br><b>Achtung bei Dshot900 oder Dshot1200, noch nicht viele Regler unterstützen diese Protokolle.<\/b>"
+        "message": "Auswahl des Motor-Protokolls.<br>Bitte sicherstellen, daß die Regler dies auch unterstützen. Im Zweifelsfall Dokumentation der Regler heranziehen.<br><b>Achtung bei Dshot900 oder Dshot1200, noch nicht viele Regler unterstützen diese Protokolle.<\/b>"
     },
     "configurationunsyndePwm": {
         "message": "Motor PWM Geschwindigkeit unabhängig vom PID Controller"
