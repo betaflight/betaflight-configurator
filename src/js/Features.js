@@ -1,4 +1,4 @@
-'use strict;'
+'use strict';
 
 var Features = function (config) {
     var self = this;
