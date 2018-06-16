@@ -306,7 +306,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
-            $('.pid_filter input[name="gyroNotch1Cutoff"]').attr('disabled', !checked);
+            $('.pid_filter input[name="gyroNotch1Cutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked).change();
         });
 
         $('input[id="gyroNotch2Enabled"]').change(function() {
@@ -316,7 +316,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
-            $('.pid_filter input[name="gyroNotch2Cutoff"]').attr('disabled', !checked);
+            $('.pid_filter input[name="gyroNotch2Cutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked).change();
         });
 
         $('input[id="dtermNotchEnabled"]').change(function() {
@@ -326,7 +326,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
-            $('.pid_filter input[name="dTermNotchCutoff"]').attr('disabled', !checked);
+            $('.pid_filter input[name="dTermNotchCutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked).change();
         });
 
         $('input[id="gyroLowpassEnabled"]').change(function() {
