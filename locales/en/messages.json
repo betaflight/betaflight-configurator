@@ -935,7 +935,7 @@
         "message": "Motor direction is reversed"
     },
        "configurationReverseMotorSwitchHelp": {
-        "message": "Enabling this option will tell Betaflight that motors and props are set to run in the reverse direction."
+        "message": "This option configures the mixer to expect the motor direction to be reversed and the propellers to be on accordingly. <strong>Warning:</strong> This does not reverse the motor direction. Use the configuration tool for your ESCs or switch the ESC - motor wiring order to achieve this. Also, make sure to check with propellers off that your motors are rotating in the directions shown in the diagram above before attempting to arm."
     },
     "configurationAutoDisarmDelay": {
         "message": "Disarm motors after set delay [seconds] (Requires MOTOR_STOP feature)"
