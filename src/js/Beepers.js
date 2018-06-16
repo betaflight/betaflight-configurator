@@ -75,7 +75,7 @@ Beepers.prototype.isEnabled = function (beeperName) {
 Beepers.prototype.generateElements = function (template, destination) {
     var self = this;
 
-    for (i = 0; i < self._beepers.length; i++) {
+    for (var i = 0; i < self._beepers.length; i++) {
         if (self._beepers[i].visible) {
             var element = template.clone();
             destination.append(element);
