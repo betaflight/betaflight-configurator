@@ -2137,6 +2137,9 @@
     "firmwareFlasherNoReboot": {
         "message": "No reboot sequence"
     },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Select build type to see available boards."
+    },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Select your board to see available online firmware releases - Select the correct firmware appropriate for your board."
     },
@@ -2184,6 +2187,21 @@
     },
     "firmwareFlasherOptionLoading": {
         "message": "Loading ..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Release"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Release And Release Candidate"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Development"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "3.3 AKK & RDQ VTX Patch"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "3.4 AKK & RDQ VTX Patch"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Choose a Firmware / Board"
