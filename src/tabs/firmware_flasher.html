@@ -3,6 +3,20 @@
         <div class="options gui_box">
             <div class="spacer">
                 <table class="cf_table" style="margin-top: 10px;">
+                    <tr class="option">
+                        <td><label> <input class="show_development_releases toggle" type="checkbox" /> <span
+                                i18n="firmwareFlasherShowDevelopmentReleases"></span>
+                        </label></td>
+                        <td><span class="description" i18n="firmwareFlasherShowDevelopmentReleasesDescription"></span></td>
+                    </tr>
+                    <tr class="build_type">
+                        <td>
+                            <select name="build_type">
+                                <!-- options generated at runtime -->
+                            </select>
+                        </td>
+                        <td><span class="description" i18n="firmwareFlasherOnlineSelectBuildType"></span></td>
+                    </tr>
                     <tr>
                         <td><select name="board">
                                 <option value="0" i18n="firmwareFlasherOptionLoading">Loading ...</option>
@@ -33,7 +47,7 @@
                         </label></td>
                         <td><span class="description" i18n="firmwareFlasherFullChipEraseDescription"></span></td>
                     </tr>
-                    <tr class="option manual_baud_rate">
+                    <tr class="option manual_baud_rate noboarder">
                         <td><label> <input class="flash_manual_baud toggle" type="checkbox" /> <span
                                 i18n="firmwareFlasherManualBaud"></span> <select id="flash_manual_baud_rate"
                                 i18n_title="firmwareFlasherBaudRate">
@@ -49,12 +63,6 @@
                             </select>
                         </label></td>
                         <td><span class="description" i18n="firmwareFlasherManualBaudDescription"></span></td>
-                    </tr>
-                    <tr class="option noboarder">
-                        <td><label> <input class="show_development_releases toggle" type="checkbox" /> <span
-                                i18n="firmwareFlasherShowDevelopmentReleases"></span>
-                        </label></td>
-                        <td><span class="description" i18n="firmwareFlasherShowDevelopmentReleasesDescription"></span></td>
                     </tr>
                 </table>
             </div>

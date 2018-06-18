@@ -93,17 +93,51 @@ TABS.firmware_flasher.initialize = function (callback) {
             $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
         };
     
-        function buildBoardOptions(releaseData) {
+        function buildJenkinsBoardOptions(builds) {
+            if (!builds) {
+                $('select[name="board"]').empty().append('<option value="0">Offline</option>');
+                $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
+
+                return;
+            }
+
+            var boards_e = $('select[name="board"]');
+            var versions_e = $('select[name="firmware_version"]');
+
+            var selectTargets = [];
+            Object.keys(builds)
+                .sort()
+                .forEach(function(target, i) {
+                    var descriptors = builds[target];
+                    descriptors.forEach(function(descriptor){
+                        if($.inArray(target, selectTargets) == -1) {
+                            selectTargets.push(target);
+                            var select_e =
+                                    $("<option value='{0}'>{0}</option>".format(
+                                            descriptor.target
+                                    )).data('summary', descriptor);
+                            boards_e.append(select_e);
+                        }
+                    });
+                });
+
+            TABS.firmware_flasher.releases = builds;
+
+            chrome.storage.local.get('selected_board', function (result) {
+                if (result.selected_board) {
+                    var boardBuilds = builds[result.selected_board]
+                    $('select[name="board"]').val(boardBuilds ? result.selected_board : 0).trigger('change');
+                }
+            });
+        }
+
+        function buildBoardOptions(releaseData, showDevReleases) {
             if (!releaseData) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
                 $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
             } else {
-                var boards_e = $('select[name="board"]').empty();
-                var showDevReleases = ($('input.show_development_releases').is(':checked'));
-                boards_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectBoard'))));
-
-                var versions_e = $('select[name="firmware_version"]').empty();
-                versions_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
+                var boards_e = $('select[name="board"]');
+                var versions_e = $('select[name="firmware_version"]');
 
                 var releases = {};
                 var sortedTargets = [];
@@ -158,8 +192,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                             "file"      : asset.name,
                             "target"    : target,
                             "date"      : formattedDate,
-                            "notes"     : release.body,
-                            "status"    : release.prerelease ? "release-candidate" : "stable"
+                            "notes"     : release.body
                         };
                         releases[target].push(descriptor);
                     });
@@ -181,21 +214,81 @@ TABS.firmware_flasher.initialize = function (callback) {
                         });
                     });
                 TABS.firmware_flasher.releases = releases;
+
                 chrome.storage.local.get('selected_board', function (result) {
                     if (result.selected_board) {
-                        $('select[name="board"]').val(result.selected_board);
-                        $('select[name="board"]').trigger("change");
+                        var boardReleases = releases[result.selected_board]
+                        $('select[name="board"]').val(boardReleases ? result.selected_board : 0).trigger('change');
                     }
                 });
             }
         };
 
+        function showOrHideBuildTypeSelect() {
+            var showDevReleases = $(this).is(':checked');
+
+            if (showDevReleases) {
+                $('tr.build_type').show();
+            } else {
+                $('tr.build_type').hide();
+                buildType_e.val(0).trigger('change');
+            }
+        }
+
+        var buildTypes = [
+            {
+                tag: 'firmwareFlasherOptionLabelBuildTypeRelease',
+                loader: () => self.releaseChecker.loadReleaseData(releaseData => buildBoardOptions(releaseData, false))
+            },
+            {
+                tag: 'firmwareFlasherOptionLabelBuildTypeReleaseCandidate',
+                loader: () => self.releaseChecker.loadReleaseData(releaseData => buildBoardOptions(releaseData, true))
+            },
+            {
+                tag: 'firmwareFlasherOptionLabelBuildTypeDevelopment',
+                loader: () => new JenkinsLoader('https://ci.betaflight.tech', 'Betaflight').loadBuilds(buildJenkinsBoardOptions)
+            },
+            {
+                tag: 'firmwareFlasherOptionLabelBuildTypeAKK3_3',
+                loader: () => new JenkinsLoader('https://ci.betaflight.tech', 'Betaflight Maintenance 3.3 (AKK - RDQ VTX Patch)').loadBuilds(buildJenkinsBoardOptions)
+            },
+            {
+                tag: 'firmwareFlasherOptionLabelBuildTypeAKK3_4',
+                loader: () => new JenkinsLoader('https://ci.betaflight.tech', 'Betaflight Maintenance 3.4 (AKK - RDQ VTX Patch)').loadBuilds(buildJenkinsBoardOptions)
+            }
+        ];
+
+        var buildType_e = $('select[name="build_type"]');
+        buildTypes.forEach((build, index) => {
+            buildType_e.append($("<option value='{0}' selected>{1}</option>".format(index, i18n.getMessage(build.tag))))
+        });
+
+        showOrHideBuildTypeSelect();
+        $('input.show_development_releases').change(showOrHideBuildTypeSelect);
+
         // translate to user-selected language
         i18n.localizePage();
 
-        // bind events
-        $('input.show_development_releases').click(function () {
-            self.releaseChecker.loadReleaseData(buildBoardOptions);
+        chrome.storage.local.get('selected_build_type', function (result) {
+            // ensure default build type is selected
+            buildType_e.val(result.selected_build_type || 0).trigger('change');
+        });
+
+        buildType_e.change(function() {
+            $("a.load_remote_file").addClass('disabled');
+            var build_type = $(this).val();
+
+            $('select[name="board"]').empty()
+            .append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectBoard'))));
+
+            $('select[name="firmware_version"]').empty()
+            .append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
+
+            if (!GUI.connect_lock) {
+                buildTypes[build_type].loader();
+            }
+
+            chrome.storage.local.set({'selected_build_type': build_type});
         });
 
         $('select[name="board"]').change(function() {
@@ -214,24 +307,23 @@ TABS.firmware_flasher.initialize = function (callback) {
                     versions_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
                 } else {
                     versions_e.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
+
+                    TABS.firmware_flasher.releases[target].forEach(function(descriptor) {
+                        var select_e =
+                                $("<option value='{0}'>{0} - {1} - {2}</option>".format(
+                                        descriptor.version,
+                                        descriptor.target,
+                                        descriptor.date,
+                                ))
+                                .css("font-weight", FirmwareCache.has(descriptor)
+                                        ? "bold"
+                                        : "normal"
+                                )
+                                .data('summary', descriptor);
+
+                        versions_e.append(select_e);
+                    });
                 }
-
-                TABS.firmware_flasher.releases[target].forEach(function(descriptor) {
-                    var select_e =
-                            $("<option value='{0}'>{0} - {1} - {2} ({3})</option>".format(
-                                    descriptor.version,
-                                    descriptor.target,
-                                    descriptor.date,
-                                    descriptor.status
-                            ))
-                            .css("font-weight", FirmwareCache.has(descriptor)
-                                    ? "bold"
-                                    : "normal"
-                            )
-                            .data('summary', descriptor);
-
-                    versions_e.append(select_e);
-                });
             }
             chrome.storage.local.set({'selected_board': target});
         });

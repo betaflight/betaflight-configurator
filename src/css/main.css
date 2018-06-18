@@ -198,7 +198,7 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 136px;
 }
 
-#port-picker .auto_connect {
+#port-picker .auto_connect, .gray {
     color: #ddd;
 }
 
