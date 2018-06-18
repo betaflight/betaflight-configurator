@@ -33,7 +33,8 @@ var nwBuilderOptions = {
     files: './dist/**/*',
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
-    winIco: './src/images/bf_icon.ico'
+    winIco: './src/images/bf_icon.ico',
+    zip: false
 };
 
 var nwArmVersion = '0.27.6';
