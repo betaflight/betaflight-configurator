@@ -408,7 +408,7 @@ var FC = {
         DEFAULT = {
             gyro_lowpass_hz:                100,
             gyro_lowpass_type:                0,
-            gyro_lowpass2_hz:               500,
+            gyro_lowpass2_hz:               300,
             gyro_lowpass2_type:               0,
             gyro_notch_cutoff:              300,
             gyro_notch_hz:                  400,
@@ -416,7 +416,7 @@ var FC = {
             gyro_notch2_hz:                 200,
             dterm_lowpass_hz:               100,
             dterm_lowpass_type:               0,
-            dterm_lowpass2_hz:              300,
+            dterm_lowpass2_hz:              200,
             dterm_notch_cutoff:             160,
             dterm_notch_hz:                 260,
             yaw_lowpass_hz:                 100,
