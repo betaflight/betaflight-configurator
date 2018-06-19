@@ -800,7 +800,15 @@ OSD.constants = {
         draw_order: 15,
         positionable: true,
         preview: '1.0G'
-    }
+    },
+    LOG_STATUS: {
+        name: 'LOG_STATUS',
+        desc: 'osdDescElementLogStatus',
+        default_position: -1,
+        draw_order: 330,
+        positionable: true,
+        preview: 'L16'
+    },
   },
   UNKNOWN_DISPLAY_FIELD: {
       name: 'UNKNOWN_',
@@ -1014,14 +1022,20 @@ OSD.chooseFields = function () {
                   OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                     F.ANTI_GRAVITY
                   ]);
-                  if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
-                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                        F.G_FORCE
-                    ]);
+                  if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                      OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                        F.ANTI_GRAVITY
+                      ]);
+                      if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                          OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                              F.LOG_STATUS,
+                              F.G_FORCE,
+                            ]);
+                      }
                   }
                 }
               }
-            }
+          }
           }
         }
       }
