@@ -269,11 +269,6 @@ TABS.firmware_flasher.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        chrome.storage.local.get('selected_build_type', function (result) {
-            // ensure default build type is selected
-            buildType_e.val(result.selected_build_type || 0).trigger('change');
-        });
-
         buildType_e.change(function() {
             $("a.load_remote_file").addClass('disabled');
             var build_type = $(this).val();
@@ -514,6 +509,11 @@ TABS.firmware_flasher.initialize = function (callback) {
             });
         });
 
+        chrome.storage.local.get('selected_build_type', function (result) {
+            // ensure default build type is selected
+            buildType_e.val(result.selected_build_type || 0).trigger('change');
+        });
+
         chrome.storage.local.get('no_reboot_sequence', function (result) {
             if (result.no_reboot_sequence) {
                 $('input.updating').prop('checked', true);
@@ -611,15 +611,9 @@ TABS.firmware_flasher.initialize = function (callback) {
         });
 
         chrome.storage.local.get('show_development_releases', function (result) {
-            if (result.show_development_releases) {
-                $('input.show_development_releases').prop('checked', true);
-            } else {
-                $('input.show_development_releases').prop('checked', false);
-            }
-
-            self.releaseChecker.loadReleaseData(buildBoardOptions);
-
-            $('input.show_development_releases').change(function () {
+            $('input.show_development_releases')
+            .prop('checked', result.show_development_releases)
+            .change(function () {
                 chrome.storage.local.set({'show_development_releases': $(this).is(':checked')});
             }).change();
         });
