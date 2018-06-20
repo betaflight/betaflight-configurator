@@ -1615,6 +1615,9 @@
     "adjustmentsFunction24": {
         "message": "Horizon Strength Adjustment"
     },
+    "adjustmentsFunction25": {
+        "message": "PID-Audio Selection"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },
