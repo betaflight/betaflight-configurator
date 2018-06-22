@@ -1,4 +1,7 @@
 {
+    "error": {
+        "message": "Error: {{errorMessage}}"
+    },
     "warningTitle": {
         "message": "Advertencia"
     },
@@ -320,7 +323,8 @@
         "message": "El firmware de este dispositivo necesita actualizarse a una nueva versión. Use CLI para hacer una copia de seguridad antes de flashear. El proceso de copia\/restauración con CLI está en la documentación.<br \/>Alternativamente puede descargar y usar una versión anterior del configurador si no está preparado para actualizar."
     },
     "infoVersions": {
-        "message": "Ejecutando - SO: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurador: <strong>$3<\/strong>"
+        "message": "Ejecutando - SO: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, Configurador: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "releaseCheckLoaded": {
         "message": "Información de versiones para el $1 cargada desde GitHub."
@@ -500,7 +504,7 @@
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">Desarrolladores de Betaflight en slack<\/a>"
+        "message": "<a href=\"https:\/\/slack.betaflight.com\" target=\"_blank\">Desarrolladores de Betaflight en Slack<\/a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">Funcionalidad de copia de seguridad y restauración desactivada.<\/span>  Tu firmware tiene versión de API <span class=\"message-negative\">$1<\/span>, copia de seguridad y restauración requiere <span class=\"message-positive\">$2<\/span>.  Haz copia de tus ajustes vía CLI, mira la documentación para ver el procedimiento."
@@ -872,7 +876,7 @@
         "message": "Dirección de los motores invertida"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Activar esta opción indica a Betaflight que los motores y hélices están configurados para girar en dirección inversa."
+        "message": "Esta opción configura el mezclador para esperar que la dirección de los motores esté invertida y las hélices estén colocadas en consecuencia. <strong>AVISO:<\/strong> esto no invierte la dirección del motor. Usa la herramienta de configuración para tus ESCs o modifica el orden del cableado entre los ESC y los motores para lograrlo. Además, verifica sin las hélices que los motores giran en la dirección que se muestra en el diagrama de arriba antes de intentar armar."
     },
     "configurationAutoDisarmDelay": {
         "message": "Desarmar motores después del tiempo configurado [segundos] (Requiere funcionalidad MOTOR_STOP)"
@@ -905,13 +909,16 @@
         "message": "Este es el valor que se envía a los ESC cuando la aeronave está desarmada. Ajústalo a un valor que haga que los motores estén parados (1000 para la mayoría de ESCs)."
     },
     "configurationDshotBeeper": {
-        "message": "Configuración de Baliza DSHOT"
+        "message": "Configuración de Baliza Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Usar baliza DSHOT (usa los motores para emitir pitidos cuando está desarmado)"
+        "message": "Usar baliza Dshot (usa los motores para emitir avisos cuando está desarmado)"
     },
     "configurationDshotBeaconTone": {
         "message": "Tono de la Baliza"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "La baliza Dshot usa los ESCs y motores para producir sonido. Esto implica que la baliza Dshot no puede ser usada cuando los motores están girando. En Betaflight 3.4 y posterior, cuando se intenta armar mientras la baliza Dshot está activa, hay una pausa de 2 segundos después del último tono de la baliza Dshot antes de realizar el armado. Esto se hace así para evitar que la funcionalidad de baliza Dshot interfiera con los comandos Dshot que se envían al armar.<br\/><strong>Atención:<\/strong> Como la baliza Dshot envía corriente a los motores mientras está activa, puede producir un exceso de calor y dañar los motores y \/ o los ESCs si la fuerza de la baliza está configurada muy alta. Usa BLHeli Configurator o BLHeli Suite para ajustar y testear la fuerza de la baliza."
     },
     "configurationBeeper": {
         "message": "Configuración de Avisos Acústicos"
@@ -940,11 +947,11 @@
     "beeperBAT_LOW": {
         "message": "Pitidos de aviso cuando la batería está baja (repite)"
     },
-    "beeperRX_SET": {
-        "message": "Pita cuando el canal auxiliar está configurado para pitar o secuencia de pitidos de cuantos satélites ha encontrado si el GPS está activado"
+    "beeperGPS_STATUS": {
+        "message": "Usa el número de pitidos para indicar cuantos satélites se han encontrado"
     },
-    "beeperDISARM_REPEAT": {
-        "message": "Suenan pitidos mientras la palanca está en posición desarmado"
+    "beeperRX_SET": {
+        "message": "Pita cuando un canal aux se ha configurado para pitar"
     },
     "beeperACC_CALIBRATION": {
         "message": "Confirmación de calibración de acelerómetro en vuelo completada"
@@ -955,17 +962,29 @@
     "beeperREADY_BEEP": {
         "message": "Suena un tono cuando el GPS está fijado y disponible"
     },
+    "beeperDISARM_REPEAT": {
+        "message": "Suenan pitidos mientras la palanca está en posición desarmado"
+    },
     "beeperARMED": {
-        "message": "Pitidos de aviso cuando la placa está armada (repite hasta que la placa está desarmada o el acelerador se incrementa)"
+        "message": "Pitidos de aviso cuando la placa está armada y configurada para no girar motores al armar (se repite hasta que la placa se desarma o se incrementa el acelerador)"
     },
     "beeperSYSTEM_INIT": {
         "message": "Pitidos de inicialización cuando la placa se enciende"
     },
     "beeperUSB": {
-        "message": "Pita cuando el controlador de vuelo se enciende desde el USB. Desactiva esto si no quieres pitidos en tu banco de trabajo"
+        "message": "Pita cuando el controlador de vuelo se alimenta desde el USB. Desactiva esto si no quieres pitidos en tu banco de trabajo"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Pita cuando el borrado de la caja negra finaliza"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Pita cuando el modo boca abajo está activado"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Pita cuando se entra en el control de cámara de 5 teclas"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Pita cuando se sale del control de cámara de 5 teclas"
     },
     "configuration3d": {
         "message": "3D"
@@ -1186,6 +1205,9 @@
     "pidTuningDtermSetpointHelp": {
         "message": "Este parámetro determina el efecto de aceleración de la palanca dentro del componente derivativo.<br> Un valor de 0 es igual al antiguo método de Medición donde D sólo sigue al giro, mientras 1 es igual al antiguo método de Error con seguimiento igual a giro y a radio de la palanca.<br> Un valor más bajo es igual a una respuesta de palanca más lenta y suave, mientras que valores más altos proporcionan más aceleración en la respuesta a la palanca.<br> Ten en cuenta que se recomienda activar Interpolación de RC con valores altos para evitar el ruido por golpes en el control."
     },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> El uso de un Punto de Ajuste de Transición de D mayor que 0 y menor que 0.1 está altamente desaconsejado. Puede causar inestabilidad y reducir la respuesta de los controles al cruzar el punto central.<\/span>"
+    },
     "pidTuningProportional": {
         "message": "Proporcional"
     },
@@ -1217,7 +1239,7 @@
         "message": "TPA"
     },
     "pidTuningTPABreakPoint": {
-        "message": "Punto de rotura del TPA"
+        "message": "Punto de corte del TPA"
     },
     "pidTuningFilter": {
         "message": "Filtro"
@@ -1525,6 +1547,9 @@
     "adjustmentsFunction24": {
         "message": "Ajuste de Fuerza del Horizonte"
     },
+    "adjustmentsFunction25": {
+        "message": "Selección de PID-Audio"
+    },
     "adjustmentsSave": {
         "message": "Guardar"
     },
@@ -1690,6 +1715,24 @@
     "gpsSignalQty": {
         "message": "Cantidad"
     },
+    "motorsVoltage": {
+        "message": "Voltaje:"
+    },
+    "motorsADrawing": {
+        "message": "Amperaje:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Amp. consumidos:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
     "motorsText": {
         "message": "Motores"
     },
@@ -1760,7 +1803,7 @@
         "message": "Maestro"
     },
     "motorsNotice": {
-        "message": "<strong>Aviso Modo Test de Motor \/ Armado:<\/strong><br \/>Mover los controles deslizantes o armar la aeronave con el transmisor provocará que los motores <strong>giren<\/strong>.<br \/>Para evitar lesiones <strong class=\"message-negative\">quita TODAS las hélices<\/strong> antes de utilizar esta funcionalidad.<br \/>Activar el modo test de motor también desactivará temporalmente la Protección de Despegue Incontrolado, para evitar que desarme la aeronave mientras esta en el banco de pruebas sin hélices.<br \/>"
+        "message": "<strong>Aviso Modo Test de Motor \/ Armado:<\/strong><br \/>Mover los controles deslizantes o armar la aeronave con el transmisor provocará que los motores <strong>giren<\/strong>.<br \/>Para evitar lesiones <strong class=\"message-negative\">quita TODAS las hélices<\/strong> antes de utilizar esta funcionalidad.<br \/>Activar el modo test de motor también desactivará temporalmente la Protección de Despegue Incontrolado, para evitar que desarme la aeronave mientras está en el banco de pruebas sin hélices.<br \/>"
     },
     "motorsEnableControl": {
         "message": "<strong>Entiendo los riesgos<\/strong>, las hélices están quitadas - activar control de motor y armado y desactivar la Protección de Despegue Incontrolado."
@@ -2014,6 +2057,9 @@
     "firmwareFlasherNoReboot": {
         "message": "No reiniciar"
     },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Selecciona el tipo de versión para ver las placas disponibles."
+    },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecciona tu placa para ver las versiones de firmware disponibles online - Elige el firmware adecuado para tu placa."
     },
@@ -2061,6 +2107,21 @@
     },
     "firmwareFlasherOptionLoading": {
         "message": "Cargando ..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Versiones Finales"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Versiones Finales y Versiones Candidatas"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Desarrollo"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "3.3 Parche AKK y RDQ VTX"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "3.4 Parche AKK y RDQ VTX"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Elige un Firmware \/ Placa"
@@ -2508,77 +2569,74 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Ajustes de Filtros independientes del Perfil"
     },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Filtros Paso Bajo del Giro"
+    },
     "pidTuningGyroLowpassFrequency": {
-        "message": "Frecuencia Paso Bajo Soft Giro [Hz]"
+        "message": "Giro Paso Bajo 1 Frecuencia de Corte [Hz]"
     },
-    "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "Frecuencia Paso Bajo Soft Giro [Hz]"
+    "pidTuningGyroLowpassType": {
+        "message": "Giro Paso Bajo 1 Tipo de Filtro"
     },
-    "pidTuningGyroNotch1Enable": {
-        "message": "Activar Filtro Notch 1 Giro"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Giro Paso Bajo 2 Frecuencia de Corte [Hz]"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "Giro Paso Bajo 2 Tipo de Filtro"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Filtros Notch del Giro"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "Frecuencia Filtro Notch 1 Giro [Hz]"
-    },
-    "pidTuningGyroNotch2Enable": {
-        "message": "Activar Filtro Notch 2 Giro"
+        "message": "Giro Filtro Notch 1 Frecuencia Central [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "Frecuencia Filtro Notch 2 Giro [Hz]"
-    },
-    "pidTuningGyroNotchFrequencyHelp": {
-        "message": "Frecuencia del Filtro Notch en Hz"
+        "message": "Giro Filtro Notch 2 Frecuencia Central [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 1 frecuencia [Hz]"
+        "message": "Giro Filtro Notch 1 Frecuencia de Corte [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 2 frecuencia [Hz]"
+        "message": "Giro Filtro Notch 2 Frecuencia de Corte [Hz]"
     },
-    "pidTuningGyroNotchCutoffHelp": {
-        "message": "Corte de Frecuencia del Filtro Notch del Giro en Hz (Aquí es donde el filtro notch empieza. Por ejemplo con corte de filtro 160 y notch Hz de 260 el rango es 160-360Hz con más atenuación entorno al centro)"
+    "pidTuningNotchFilterHelp": {
+        "message": "El Filtro Notch tiene un Centro y un Corte. El filtro es simétrico. La Frecuencia Central es el centro del filtro y la Frecuencia de Corte es donde el filtro Notch empieza. Por ejemplo con una Frecuencia de Corte de 160 y una Frecuencia Central de 260 el rango es 160-360Hz con la mayor atenuación en torno al centro"
     },
     "pidTuningFilterSettings": {
-        "message": "Ajustes de Filtros"
+        "message": "Ajustes de Filtros dependientes del Perfil"
+    },
+    "pidTuningDTermLowpassFiltersGroup": {
+        "message": "Filtros Paso Bajo del D Term"
     },
     "pidTuningDTermLowpassType": {
-        "message": "Filtro Paso Bajo D Term"
-    },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "Selecciona el tipo de filtro de paso bajo del D-Term a usar. Por defecto BIQUAD"
+        "message": "D Term Paso Bajo 1 Tipo de Filtro"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "Frecuencia Paso Bajo D Term [Hz]"
+        "message": "D Term Paso Bajo 1 Frecuencia de Corte [Hz]"
     },
-    "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "Frecuencia Paso Bajo D Term en Hz (0 significa desactivado)"
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "D Term Paso Bajo 2 Frecuencia de Corte [Hz]"
     },
-    "pidTuningDTermNotchEnable": {
-        "message": "Activar Filtro Notch D Term"
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "Filtros Notch del D Term"
     },
     "pidTuningDTermNotchFrequency": {
-        "message": "Frecuencia Filtro Notch D Term [Hz]"
-    },
-    "pidTuningDTermNotchFrequencyHelp": {
-        "message": "Frecuencia del Filtro Notch del D Term [Hz] (0 significa desactivado)"
+        "message": "D Term Filtro Notch Frecuencia Central [Hz]"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "Corte del Filtro Notch D Term [Hz]"
+        "message": "D Term Filtro Notch Frecuencia de Corte [Hz]"
     },
-    "pidTuningDTermNotchCutoffHelp": {
-        "message": "El Corte del Filtro Notch del D Term en Hz (Aquí es donde el filtro notch empieza. Por ejemplo con corte de filtro 160 y notch Hz de 260 el rango es 160-360Hz con más atenuación entorno al centro)"
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "Filtros Paso Bajo del Yaw"
     },
     "pidTuningYawLowpassFrequency": {
-        "message": "Frecuencia Paso Bajo Yaw [Hz]"
-    },
-    "pidTuningYawLowpassFrequencyHelp": {
-        "message": "Frecuencia Paso Bajo Yaw [Hz] (Yaw puede a veces ser más ruidoso que el resto. Este filtro sólo afecta a la P del yaw)"
+        "message": "Yaw Paso Bajo Frecuencia de Corte [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Compensación PID Vbat"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "Incremente los valores del PID para compensar cuando la Vbat está baja. Esto proporciona características de vuelo más constantes durante el vuelo. La cantidad de compensación que se aplica se calcula a partir del Voltaje Máximo por Celda indicado en la página de Configuración, así que asegúrate de que tiene un valor apropiado."
+        "message": "Incrementa los valores del PID para compensar cuando la Vbat está baja. Esto proporciona características de vuelo más constantes durante el vuelo. La cantidad de compensación que se aplica se calcula a partir del $t(powerBatteryMaximum.message) indicado en la página de $t(tabPower.message), así que asegúrate de que tiene un valor apropiado."
     },
     "configHelp2": {
         "message": "Rotación arbitraria de la placa en grados, para permitir montaje de lado \/ boca abajo \/ rotada etc. Al ejecutar sensores externos, usa la alineación del sensor (Giro, Acc, Mag) para definir la posición del sensor independientemente de la orientación de la placa. "
@@ -2641,7 +2699,7 @@
         "message": "Tiempo para permanecer en modo aterrizaje, hasta que los motores se apaguen y se desarmen"
     },
     "failsafeSubTitle1": {
-        "message": "Fase 2 - Procedimiento de seguridad"
+        "message": "Etapa 2 - Procedimiento de seguridad"
     },
     "failsafeProcedureItemSelect1": {
         "message": "Aterrizar"
@@ -2654,6 +2712,24 @@
     },
     "failsafeKillSwitchHelp": {
         "message": "Ajustar esta opción para usar un interruptor de modo de seguridad o FAILSAFE (apartado Modos). Actúa como un conmutador directo, saltando el procedimiento del modo de seguridad seleccionado. <strong>Nota:<\/strong> El armado está bloqueado cuando el modo de seguridad está en la posición ENCENDIDO"
+    },
+    "failsafeSwitchTitle": {
+        "message": "Interruptor Modo de Seguridad"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "Acción Interruptor Modo de Seguridad"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "Esta opción determina qué pasa cuando el Modo de seguridad (FAILSAFE) se activa a través de un interruptor AUX:<br\/><strong>Etapa 1<\/strong> activa el modo de seguridad Etapa 1. Es útil si quieres simular el comportamiento exacto de una pérdida de señal.<br\/><strong>Etapa 2<\/strong> se salta la Etapa 1 y activa el procedimiento Etapa 2 inmediatamente<br\/><strong>Matar<\/strong> desarma instantáneamente (la aeronave se estrellará)"
+    },
+    "failsafeSwitchOptionStage1": {
+        "message": "Etapa 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "Etapa 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Matar"
     },
     "powerButtonSave": {
         "message": "Guardar"
@@ -2845,7 +2921,7 @@
         "message": "Escala [1\/10 mV\/A]"
     },
     "powerAmperageOffset": {
-        "message": "Desplazamiento [mV]"
+        "message": "Desplazamiento [mA]"
     },
     "powerBatteryHead": {
         "message": "Batería"
@@ -2927,6 +3003,36 @@
     },
     "osdSetupOpenFont": {
         "message": "Abrir Archivo de Fuente"
+    },
+    "osdSetupCustomLogoTitle": {
+        "message": "Logo inicial:"
+    },
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "Seleccionar imagen personalizada&hellip;"
+    },
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "Imagen personalizada:"
+    },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Tamaño debe ser de $t(logoWidthPx) ×$t(logoHeightPx) píxeles"
+    },
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "Debe contener píxeles verdes, blancos y negros"
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "Pulse <b>$t(osdSetupUploadFont.message)<\/b> para persistir logo personalizado"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Tamaño de imagen no válido: {{width}}×{{height}} (esperado $t(logoWidthPx) ×$t(logoHeightPx))"
+    },
+    "osdSetupCustomLogoColorMapError": {
+        "message": "La imagen contiene una paleta de colores no válida (sólo se permite verde, blanco y negro)"
+    },
+    "osdSetupReplaceLogoImageSizeError": {
+        "message": "Tamaño de imagen no válido; se esperaba $1×$2 en vez de $3×$4"
+    },
+    "osdSetupReplaceLogoImageColorsError": {
+        "message": "La imagen contiene una paleta de colores no válida (sólo se permite verde, blanco y negro)"
     },
     "osdSetupUploadFont": {
         "message": "Cargar Fuente"
@@ -3144,6 +3250,9 @@
     "osdDescStatRtcDateTime": {
         "message": "Fecha y hora desde el reloj de tiempo real"
     },
+    "osdDescStatBattery": {
+        "message": "Voltaje de la batería en tiempo real"
+    },
     "osdTimerSource": {
         "message": "Origen:"
     },
@@ -3178,7 +3287,10 @@
         "message": "Muestra una visualización de los avisos acústicos (se muestra como 4 asteriscos)"
     },
     "osdWarningCrashFlipMode": {
-        "message": "Avisa cuando está del revés después de que el modo de choque está activado"
+        "message": "Avisa cuando el modo boca abajo después de choque está activado"
+    },
+    "osdWarningEscFail": {
+        "message": "Enumera una lista con los ESCs\/motores que están fallando (RPM o temperatura está fuera del umbral configurado)"
     },
     "osdSectionHelpElements": {
         "message": "Activa o desactiva elementos del OSD"
@@ -3206,6 +3318,9 @@
     },
     "osdWritePermissions": {
         "message": "No tienes <span class=\"message-negative\">permisos de escritura<\/span> para este archivo"
+    },
+    "osdButtonSaved": {
+        "message": "Guardado"
     },
     "mainHelpArmed": {
         "message": "Motor Armado"
@@ -3250,7 +3365,7 @@
         "message": "Barómetro (si está soportado)"
     },
     "configurationMagHardware": {
-        "message": "Magenetómetro (si está soportado)"
+        "message": "Magnetómetro (si está soportado)"
     },
     "configurationSmallAngle": {
         "message": "Ángulo de armado máximo [grados]"
