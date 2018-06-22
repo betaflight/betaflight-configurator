@@ -1,4 +1,7 @@
 {
+    "error": {
+        "message": "Erreur : {{errorMessage}}"
+    },
     "warningTitle": {
         "message": "Danger"
     },
@@ -320,7 +323,8 @@
         "message": "Le microprogramme de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde\/restauration par le CLI sont décrites dans l'aide.<br \/> Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
     },
     "infoVersions": {
-        "message": "Version - OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurateur: <strong>$3<\/strong>"
+        "message": "Running - OS: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, Configurator: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "releaseCheckLoaded": {
         "message": "Information release GitHub chargée pour $1."
@@ -500,7 +504,7 @@
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">Développeurs de Betaflight sur Slack<\/a>"
+        "message": "<a href=\"https:\/\/slack.betaflight.com\" target=\"_blank\">Devs Betaflight sur Slack<\/a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">La sauvegarde et la restauration sont désactivés.<\/span> La version API de votre microprogramme est <span class=\"message-negative\">$1<\/span>, la version minimum requise est <span class=\"message-positive\">$2<\/span>.  Veuillez sauvegarder vos paramètres en CLI, voir la procédure dans l'aide Betaflight."
@@ -602,7 +606,7 @@
         "message": "$1 V"
     },
     "initialSetupDrawn": {
-        "message": "mah consommé:"
+        "message": "Mah consommés:"
     },
     "initialSetupDrawing": {
         "message": "Courant consommé:"
@@ -872,7 +876,7 @@
         "message": "Sens de rotation inversé"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Si actif, informe Betaflight que les hélices et moteurs sont installés de façon à travailler dans le sens opposé."
+        "message": "Cette option informe le contrôleur que le sens de rotation des moteurs et des hélices est inversé. <strong>Attention: <\/strong> l'option n'inverse pas le sens de rotation des moteurs. Pour cela il faut utiliser l'utilitaire de configuration des ESCs ou interchanger 2 des fils moteurs. Enfin, retirez les hélices et vérifiez que le sens de rotation des moteurs est conforme au schéma ci-dessus."
     },
     "configurationAutoDisarmDelay": {
         "message": "Désarme les moteurs après un délais de [seconds] (nécessite MOTOR_STOP)"
@@ -905,13 +909,16 @@
         "message": "Valeur envoyée aux ESC lorsque la machine est désarmée. Renseigner une valeur pour laquelle les moteurs ne tournent pas (1000 pour la plupart des ESC)."
     },
     "configurationDshotBeeper": {
-        "message": "Configuration de Beacon DSHOT"
+        "message": "Configuration des Beacon Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Utiliser les beacon DSHOT (les moteurs bipent lorsqu'ils sont désarmés)"
+        "message": "Utiliser les beacons Dshot (utilise les moteurs pour biper quand désarmé)"
     },
     "configurationDshotBeaconTone": {
         "message": "Beacon tonalité"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "Le beacon Dshot utilise les ESCs et les moteurs pour produire du son. Cela signifie que la balise Dshot ne peut pas être utilisée lorsque les moteurs tournent. Dans Betaflight 3.4 et plus récent, lors de l'armement alors que la balise Dshot est active, il y a un délai de 2 secondes après la dernière tonalité de la balise Dshot avant que le vaisseau ne soit armé. Ceci afin d'éviter que la fonctionnalité de la balise Dshot n'interfère avec les commandes Dshot envoyées lors de l'armement.<br\/><strong>Warning:<\/strong> Puisque la balise Dshot fait passer le courant dans vos moteurs quand elle est active, cela peut entraîner une production de chaleur excessive et endommager vos moteurs et\/ou ESCs si la puissance de la balise est trop élevée. Utilisez BLHeli Configurator ou BLHeli Suite pour ajuster et tester la tension de la balise."
     },
     "configurationBeeper": {
         "message": "Configuration du Beeper"
@@ -940,11 +947,11 @@
     "beeperBAT_LOW": {
         "message": "Bip avertisseur sur batterie faible (de façon répétée)"
     },
-    "beeperRX_SET": {
-        "message": "Bip quand  le canal auxiliaire est réglé pour biper ou fait une série de bips pour indiquer le nombre de satellites trouvés si le GPS est activé"
+    "beeperGPS_STATUS": {
+        "message": "Le nombre de bip indique combien de satellites GPS ont été trouvés"
     },
-    "beeperDISARM_REPEAT": {
-        "message": "Bip tant que le switch est en position désarmée"
+    "beeperRX_SET": {
+        "message": "Bip quand la voie aux est réglée pour biper"
     },
     "beeperACC_CALIBRATION": {
         "message": "Calibration en vol de l'accéléromètre confirmée"
@@ -955,17 +962,29 @@
     "beeperREADY_BEEP": {
         "message": "Émettre un son lorsque le GPS est verrouillé et prêt"
     },
+    "beeperDISARM_REPEAT": {
+        "message": "Bip tant que le switch est en position désarmée"
+    },
     "beeperARMED": {
-        "message": "Bips d'avertissement quand la carte est armée (actifs jusqu'à ce que la carte soit désarmée ou le throttle augmenté)"
+        "message": "Bip d'avertissement quand la carte est armée et que les moteurs ne tournent pas (actifs jusqu'à ce que la carte soit désarmée ou le niveau de gaz augmenté)"
     },
     "beeperSYSTEM_INIT": {
         "message": "Bips d'initialisation lorsque la carte est mise sous tension"
     },
     "beeperUSB": {
-        "message": "Bip lorsque le contrôleur de vol est alimenté par USB. Passez à zéro si vous voulez désactiver le bipeur sur le plan de travail"
+        "message": "Bip lorsque le contrôleur de vol est alimenté par USB. Désactiver si vous ne voulez pas de bip lorsque vous êtes sur le plan de travail"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Bip lorsque le formatage du log est terminé"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Bip lorsque le mode crash flip est actif"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Bip lors de l'entrée dans le mode émulation du pad 5 points caméra"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Bip lors de la sortie du mode émulation du pad 5 points caméra"
     },
     "configuration3d": {
         "message": "Fonctions ESC\/Moteurs 3D"
@@ -1185,6 +1204,9 @@
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Ce paramètre détermine l'effet accélérateur de stick de la dérivée.<br \/>0 revient à l'ancienne méthode où D suivait les infos du gyro, 1 évalue l'écart entre la valeur demandée par le stick et celle obtenue par le gyro.<br \/>Avec une valeur faible le stick est plus lent\/souple, avec une valeur élevée le stick est de plus en plus réactif.<br \/>Note: avec une valeur élevée, il est recommandé d'utilise l'interpolation RC afin de limiter les accoups et du bruit (dans le gyro)."
+    },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong>Régler le D Setpoint transition sur une valeur comprise entre 0 et 0.1 est vivement déconseillée. Risques d'instabilité et manque réactivité vers les centres des sticks.<\/span>"
     },
     "pidTuningProportional": {
         "message": "Proportionnelle"
@@ -1522,6 +1544,9 @@
     "adjustmentsFunction24": {
         "message": "Ajustement de la force du mode Horizon"
     },
+    "adjustmentsFunction25": {
+        "message": "Sélection de PID-Audio"
+    },
     "adjustmentsSave": {
         "message": "Enregistrer"
     },
@@ -1686,6 +1711,24 @@
     },
     "gpsSignalQty": {
         "message": "Qty"
+    },
+    "motorsVoltage": {
+        "message": "Tension:"
+    },
+    "motorsADrawing": {
+        "message": "Intensité:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Intensité consommée:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
     },
     "motorsText": {
         "message": "Moteurs"
@@ -2011,6 +2054,9 @@
     "firmwareFlasherNoReboot": {
         "message": "Pas de redémarrage"
     },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Choisir le type de build pour voir les cartes disponibles."
+    },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Sélectionnez votre carte pour voir les microprogrammes disponibles - Sélectionnez le microprogramme approprié à votre carte."
     },
@@ -2058,6 +2104,21 @@
     },
     "firmwareFlasherOptionLoading": {
         "message": "Chargement..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Release"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Release et Release Candidate"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Développement"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "Patch 3.3 AKK & RDQ VTX"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "Patch 3.4 AKK & RDQ VTX"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Choisir un microprogramme \/ une carte"
@@ -2505,77 +2566,74 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Paramètres de filtre indépendants du profil"
     },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Filtres gyro passe-bas"
+    },
     "pidTuningGyroLowpassFrequency": {
-        "message": "Fréquence [Hz] du filtre passe bas du Gyro"
+        "message": "Fréquence de Coupure du filtre passe-bas gyro 1 [Hz]"
     },
-    "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "Fréquence [Hz] du filtre passe bas du Gyro"
+    "pidTuningGyroLowpassType": {
+        "message": "Type de filtre gyro passe-bas 1"
     },
-    "pidTuningGyroNotch1Enable": {
-        "message": "Activer le filtre Gyro Notch 1"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Fréquence de Coupure du filtre passe-bas gyro 2 [Hz]"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "Type de filtre gyro passe-bas 2"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Filtres gyro Notch"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "Fréquence [Hz] du filtre notch 1 du gyro"
-    },
-    "pidTuningGyroNotch2Enable": {
-        "message": "Activer le filtre Gyro Notch 2"
+        "message": "Centre de fréquence du Filtre gyro Notch 1 [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "Fréquence [Hz] du filtre notch 2 du gyro"
-    },
-    "pidTuningGyroNotchFrequencyHelp": {
-        "message": "Fréquence du filtre Notch du gyro en Hz"
+        "message": "Centre de fréquence du Filtre gyro Notch 2 [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "Fréquence [Hz] de coupure du filtre gyro Notch 1"
+        "message": "Fréquence de Coupure du filtre Notch gyro 1 [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Fréquence [Hz] de coupure du filtre gyro Notch 2"
+        "message": "Fréquence de Coupure du filtre Notch gyro 2 [Hz]"
     },
-    "pidTuningGyroNotchCutoffHelp": {
-        "message": "Gyro Notch Filter Cutoff Frequency en Hz (C'est la valeur de départ du filtre NOTCH. Par exemple un NOTCH à 160 et un NOTCH Cutoff à 260 ca veut dire que le filtre fonctionnera de 160 à 260 Hz avec un maximum d’atténuation autour du centre (environ 210 Hz)"
+    "pidTuningNotchFilterHelp": {
+        "message": "Le filtre Notch est définit par son centre et la coupure. Le filtre est symétrique. La fréquence centre est le milieu du filtre et la coupure est la fréquence à laquelle le filtre démarre. Par exemple avec une coupure de 160 et un centre à 260, la zone 160-360Hz sera filtrée avec un maximum d'atténuation autour du centre"
     },
     "pidTuningFilterSettings": {
-        "message": "Réglages des Filtres"
+        "message": "Réglages filtres liés au profile"
+    },
+    "pidTuningDTermLowpassFiltersGroup": {
+        "message": "Filtre passe-bas D Term"
     },
     "pidTuningDTermLowpassType": {
-        "message": "Filtre D-Term Lowpass"
-    },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "Sélectionnez le type de filtre D-Term lowpass. La valeur par défaut est BIQUAD"
+        "message": "Type du filtre passe-bas D Term 1"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": " Fréquence D Term Lowpass [Hz]"
+        "message": "Fréquence de coupure du filtre passe-bas D Term 1 [Hz]"
     },
-    "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "Fréquence  D Term Lowpass [Hz] (0= désactivé)"
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "Fréquence de coupure du filtre passe-bas D Term 2 [Hz]"
     },
-    "pidTuningDTermNotchEnable": {
-        "message": "Activer le filtre D term Notch"
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "Filtres Notch D Term"
     },
     "pidTuningDTermNotchFrequency": {
-        "message": "Fréquence du filtre D Term Notch [Hz]"
-    },
-    "pidTuningDTermNotchFrequencyHelp": {
-        "message": "Fréquence du filtre D Term Notch [Hz] (0= désactivé)"
+        "message": "Fréquence centre du filtre Notch D Term [Hz]"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Cutoff [Hz]"
+        "message": "Fréquence de coupure du filtre Notch D Term [Hz]"
     },
-    "pidTuningDTermNotchCutoffHelp": {
-        "message": "D Term Notch Filter Cutoff en Hz (C'est la valeur de départ du filtre NOTCH. Par exemple un NOTCH à 160 et un NOTCH Cutoff à 260 veut dire que le filtre fonctionnera de 160 à 260 Hz avec un maximum d’atténuation autour du centre (environ 210 Hz)"
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "Filtres passe-bas Yaw"
     },
     "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpass Fréquence [Hz]"
-    },
-    "pidTuningYawLowpassFrequencyHelp": {
-        "message": "Yaw Lowpass Fréquence [Hz] (le Yaw est parfois plus \"noisy\" que les autres axes. Ce filtre n'affecte que le P du Yaw)"
+        "message": "Fréquence de coupure du filtre passe-bas Yaw [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensation"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "Augmente les PID quand la batterie se vide. Ca procure plus de linéarité dans le vol. La compensation est calculée à partir de la valeur 'Tension maximum des éléments Lipo' renseigné dans la page configuration."
+        "message": "Augmente les PID quand la batterie se vide. Cela procure plus de linéarité dans le vol. La compensation est calculée à partir de la valeur $t(powerBatteryMaximum.message) renseignée dans la page $t(tabPower.message). Il faut s'assurer qu'une valeur cohérente soit renseignée."
     },
     "configHelp2": {
         "message": "Rotation arbitraire de la carte en degrés permettant un montage latéral \/ à l'envers \/ de côté etc. Si des capteurs externes sont utilisés, servez vous du sensor alignments (Gyro, Acc, Mag) pour définir leur position indépendamment  de l'orientation de la carte. "
@@ -2651,6 +2709,24 @@
     },
     "failsafeKillSwitchHelp": {
         "message": "Renseigner cette option pour utiliser le switch Failsafe comme un coupe circuit direct sans passer par la procédure de Failsafe. <strong>Note: <\/strong> l'armement est bloqué avec ce switch sur ON"
+    },
+    "failsafeSwitchTitle": {
+        "message": "Switch Failsafe"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "Action du switch Failsafe"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "Cette option détermine ce qu'il se passe lorsque le Failsafe est activé par un switch AUX :<br\/><strong>Stage 1<\/strong> active le Failsafe Stage 1. Ceci est utile si vous souhaitez simuler le comportement exact du Failsafe lors de la perte de signal.<br\/><strong>Stage 2<\/strong> saute le Stage 1 et active la procédure de Stage 2 immédiatement<br\/><strong>Kill<\/strong> désarme les moteurs instantanément (votre machine va crasher)"
+    },
+    "failsafeSwitchOptionStage1": {
+        "message": "Stage 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "Stage 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Tue"
     },
     "powerButtonSave": {
         "message": "Sauvegarder"
@@ -2842,7 +2918,7 @@
         "message": "Echelle [1\/10th mV\/A]"
     },
     "powerAmperageOffset": {
-        "message": "Ecart [mV]"
+        "message": "Ecart [mA]"
     },
     "powerBatteryHead": {
         "message": "Batterie"
@@ -2924,6 +3000,36 @@
     },
     "osdSetupOpenFont": {
         "message": "Ouvrir le fichier de police"
+    },
+    "osdSetupCustomLogoTitle": {
+        "message": "Logo de démarrage:"
+    },
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "Choisir une image personnalisée &hellip;"
+    },
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "Image personnalisée:"
+    },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "La taille doit être de $t(logoWidthPx)×$t(logoHeightPx) pixels"
+    },
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "Doit contenir des pixels verts, noir et blancs"
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "Cliquer <b>$t(osdSetupUploadFont.message)<\/b> afin de conserver le logo personnalisé"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Taille de l'image non valide: {{width}}×{{height}} (attendue $t(logoWidthPx)×$t(logoHeightPx))"
+    },
+    "osdSetupCustomLogoColorMapError": {
+        "message": "La palette couleurs de l'image n'est pas valide (seuls le vert, le noir et le blanc sont autorisés)"
+    },
+    "osdSetupReplaceLogoImageSizeError": {
+        "message": "Taille de l'image invalide; requise $1×$2 au lieu de $3×$4"
+    },
+    "osdSetupReplaceLogoImageColorsError": {
+        "message": "La palette couleurs de l'image n'est pas valide (seuls le vert, le noir et le blanc sont autorisés)"
     },
     "osdSetupUploadFont": {
         "message": "Charger le fichier de police"
@@ -3141,6 +3247,9 @@
     "osdDescStatRtcDateTime": {
         "message": "Date et heure depuis l'horloge réél"
     },
+    "osdDescStatBattery": {
+        "message": "Tension de la batterie en temps réel"
+    },
     "osdTimerSource": {
         "message": "Source:"
     },
@@ -3177,6 +3286,9 @@
     "osdWarningCrashFlipMode": {
         "message": "Avertit lors d'un retournement après l'activation du mode crash"
     },
+    "osdWarningEscFail": {
+        "message": "Enumère une liste d'ESCs\/moteurs (RPM ou température en dehors des seuils configurés)"
+    },
     "osdSectionHelpElements": {
         "message": "Activer ou désactiver l'OSD"
     },
@@ -3203,6 +3315,9 @@
     },
     "osdWritePermissions": {
         "message": "Vous n'avez pas  <span class=\"message-negative\">les droits d'écriture<\/span> pour ce fichier"
+    },
+    "osdButtonSaved": {
+        "message": "Enregistré"
     },
     "mainHelpArmed": {
         "message": "Moteur armé"

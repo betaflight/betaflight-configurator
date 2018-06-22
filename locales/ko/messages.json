@@ -1,4 +1,7 @@
 {
+    "error": {
+        "message": "오류: {{errorMessage}}"
+    },
     "warningTitle": {
         "message": "경고"
     },
@@ -107,7 +110,7 @@
         "message": "릴리즈 웹사이트로 가기"
     },
     "deviceRebooting": {
-        "message": "기기 -  <span class=\"message-negative\">재부팅<\/span>"
+        "message": "기기 - <span class=\"message-negative\">재부팅<\/span>"
     },
     "deviceReady": {
         "message": "기기 - <span class=\"message-positive\">준비<\/span>"
@@ -221,16 +224,16 @@
         "message": "시리얼 연결의 복구할 수 없는 <span class=\"message-negative\">오류 발생<\/span>, 연결해제 중..."
     },
     "usbDeviceOpened": {
-        "message": "USB 기기가 ID: $1로 <span class=\"message-positive\">성공적으로<\/span> 열림"
+        "message": "USB 장치가 ID: $1로 <span class=\"message-positive\">성공적으로<\/span> 열림"
     },
     "usbDeviceOpenFail": {
-        "message": "USB 기기 열기 <span class=\"message-negative\">실패<\/span>!"
+        "message": "USB 장치 열기 <span class=\"message-negative\">실패<\/span>!"
     },
     "usbDeviceClosed": {
-        "message": "USB 기기가 <span class=\"message-positive\">성공적으로<\/span> 닫힘"
+        "message": "USB 장치가 <span class=\"message-positive\">성공적으로<\/span> 닫힘"
     },
     "usbDeviceCloseFail": {
-        "message": "USB 기기 닫기 <span class=\"message-negative\">실패<\/span>"
+        "message": "USB 장치 닫기 <span class=\"message-negative\">실패<\/span>"
     },
     "usbDeviceUdevNotice": {
         "message": "<strong>udev 규칙이<\/strong> 올바르게 설치되었습니까? 지시 문서를 보십시오."
@@ -320,7 +323,8 @@
         "message": "이 기기의 펌웨어는 최신 버전으로 업그레이드해야합니다. 플래시하기 전에 CLI를 사용하여 백업하십시오. CLI 백업\/복원 절차는 문서를 참고하십시오. <br \/>또는 업그레이드 준비가 되지 않은 경우 이전 버전의 컨피규레이터를 다운로드하여 사용하십시오."
     },
     "infoVersions": {
-        "message": "운영중인 - OS: <strong>$1<\/strong>, 크롬: <strong>$2<\/strong>, 컨피규레이터: <strong>$3<\/strong>"
+        "message": "운영-OS: <strong>{{operatingSystem}}<\/strong>, 크롬: <strong>{{chromeVersion}}<\/strong>, 컨피규레이터: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "releaseCheckLoaded": {
         "message": "GitHub로부터 $1에 대한 릴리즈 정보를 로드했습니다."
@@ -500,7 +504,7 @@
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">베타플라이트 개발 슬랙<\/a>"
+        "message": "<a href=\"https:\/\/slack.betaflight.com\" target=\"_blank\">베타플라이트 개발 슬랙<\/a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">백업과 복구 기능이 비활성화되었습니다.<\/span> API 버전  <span class=\"message-negative\">$1<\/span>에 맞는 펌웨어여야 합니다, 백업과 복구 절차는 <span class=\"message-positive\">$2<\/span>를 참고하십시오. 당신의 설정을 CLI를 통해 백업하세요, 필요한 경우 절차에 대한 베타플라이트 문서를 확인하세요."
@@ -872,7 +876,7 @@
         "message": "모터 방향이 반대로 됩니다."
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "이 옵션을 활성화하면 베타플라이트에 모터와 프롭이 역 방향으로 작동되도록 설정한다는 것을 말합니다."
+        "message": "이 옵션은 모터 방향을 반대로 되게 믹서를 구성하며, 그에 따라 프로펠러가 장착되어야 합니다. <strong>경고:<\/strong> 이것은 모터 방향을 반대로 바꾸지는 않습니다. 당신의 ESC를 위한 컨피규레이터를 사용하거나 ESC를 변경 - 모터 배선 순서를 전환하여 이를 적용할 수 있습니다. 또한, 아밍을 시도하기 전에 당신의 모터가 위의 다이어그램에서 보여지는 방향으로 회전하는지 프로펠러를 제거한 상태로 반드시 확인하세요."
     },
     "configurationAutoDisarmDelay": {
         "message": "설정 지연 후 모터 해제 [초] (모터_정지 기능 필요)"
@@ -905,34 +909,37 @@
         "message": "이것은 기체가 해제될 때 ESC로 보내지는 값입니다. 모터를 정지시킨 값으로 설정하십시오(대부분의 ESC의 경우 1000)."
     },
     "configurationDshotBeeper": {
-        "message": "DSHOT 비콘 구성"
+        "message": "Dshot 비콘 환경설정"
     },
     "configurationUseDshotBeeper": {
-        "message": "DSHOT 비콘 사용 (디스아밍시 모터 비프음 사용)"
+        "message": "Dshot 비콘 사용 (디스아밍되면 모터를 사용하여 신호음을 울림)"
     },
     "configurationDshotBeaconTone": {
         "message": "비콘 톤"
     },
+    "configurationDshotBeaconHelp": {
+        "message": "Dshot 비콘은 ESC와 모터를 사용하여 소리를 재생합니다. 이는 모터가 회전 중일때는 Dshot 비콘을 사용할 수 없다는 것을 의미합니다. BF 3.4와 최신에서는 Dshot 비콘이 활성화 중일때 아밍을 시도하는 경우, 기체가 아밍되기 전에 마지막 Dshot 비콘 톤 이후 2초의 딜레이가 생깁니다. 이는 Dshot 비콘 기능이 아밍시 Dshot 명령이 보내지는 것을 방해하는 것을 막기 위함입니다.<br\/><strong>경고:<\/strong>Dshot 비콘은 활성화할 경우 당신의 모터를 통해 작동되기 때문에 만약 비콘 강도가 매우 높게 설정되어 있다면, 당신의 모터나 ESC에 과열과 손상을 일으킬 수 있습니다. BLHeli 컨피규레이터나 BLheli Suite를 사용하여 비콘 강도를 조정하고 테스트하세요."
+    },
     "configurationBeeper": {
-        "message": "부져 설정"
+        "message": "비퍼 설정"
     },
     "beeperGYRO_CALIBRATED": {
-        "message": "자이로가 교정되면 부져를 울립니다."
+        "message": "자이로가 교정되면 신호음을 울립니다."
     },
     "beeperRX_LOST": {
-        "message": "TX가 꺼져있거나 신호를 상실한 경우 부져를 울립니다. (TX가 정상일 때까지 반복됩니다.)"
+        "message": "TX가 꺼져있거나 신호를 상실한 경우 신호음을 울립니다. (TX가 정상일 때까지 반복됩니다.)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "아밍된 상태에서 TX가 꺼져있거나 신호를 상실한 경우 SOS 부져를 울립니다. (자동착륙\/자동해제)"
+        "message": "아밍된 상태에서 TX가 꺼져있거나 신호를 상실한 경우 SOS 신호음을 울립니다. (자동착륙\/자동해제)"
     },
     "beeperDISARMING": {
-        "message": "비행컨트롤러가 해제 중일 때 부져를 울립니다."
+        "message": "비행컨트롤러가 해제 중일 때 신호음을 울립니다."
     },
     "beeperARMING": {
-        "message": "비행컨트롤러가 아밍 중일때 부져를 울립니다."
+        "message": "비행컨트롤러가 아밍 중일때 신호음을 울립니다."
     },
     "beeperARMING_GPS_FIX": {
-        "message": "보드가 아밍 중이고 GPS가 고정되면 특별한 톤으로 부져를 울립니다."
+        "message": "보드가 아밍 중이고 GPS가 고정되면 특별한 톤으로 신호음을 울립니다."
     },
     "beeperBAT_CRIT_LOW": {
         "message": "배터리가 매우 부족할 때 긴 경고음을 울립니다. (반복)"
@@ -940,11 +947,11 @@
     "beeperBAT_LOW": {
         "message": "배터리가 부족할 때 경고음을 울립니다. (반복)"
     },
-    "beeperRX_SET": {
-        "message": "AUX 채널이 부져를 울리도록 설정되었거나 GPS가 활성화된 경우 얼마나 많은 위성이 잡혔는지에 따라 부져를 울립니다."
+    "beeperGPS_STATUS": {
+        "message": "신호음의 수를 사용하여 GPS위성이 몇개나 발견되었는지 지시합니다."
     },
-    "beeperDISARM_REPEAT": {
-        "message": "스틱이 해제 위치에 있을 때 부져를 반복해서 울립니다."
+    "beeperRX_SET": {
+        "message": "Aux 채널이 비퍼로 설정되었을 때 신호음을 울립니다."
     },
     "beeperACC_CALIBRATION": {
         "message": "비행중 가속도계 교정이 완료되었습니다."
@@ -955,17 +962,29 @@
     "beeperREADY_BEEP": {
         "message": "GPS가 고정되고 준비되면 링톤을 울립니다."
     },
+    "beeperDISARM_REPEAT": {
+        "message": "디스아밍 위치에서 스틱이 고정되어 있는 동안 신호음을 울립니다."
+    },
     "beeperARMED": {
-        "message": "보드가 아밍되면 경고음을 울립니다. (보드가 해제될 때까지 또는 스로틀이 상승할 때까지 계속 반복됩니다.)"
+        "message": "보드가 아밍되고 아이들시 모터가 멈춰있을 때 경고음을 울립니다. (보드가 해제될 때까지 또는 스로틀이 상승할 때까지 계속 반복됩니다.)"
     },
     "beeperSYSTEM_INIT": {
-        "message": "보드에 전원이 인가되었을 때 초기화 부져를 울립니다."
+        "message": "보드 전원을 켜면 초기화 신호음을 울립니다."
     },
     "beeperUSB": {
-        "message": "비행컨트롤러가 USB로부터 전원이 인가된 경우 부져를 울립니다. 워크벤치에서 부져가 작동되는 것을 원하지 않으면 이것을 끄십시오."
+        "message": "USB를 통해 비행컨트롤러에 전원이 공급되면 신호음이 울립니다. 작업대 위에 있을 때 신호음이 켜지지 않도록 하려면 이 옵션을 해제하세요."
     },
     "beeperBLACKBOX_ERASE": {
-        "message": "블랙박스 삭제가 완료되면 부져를 울립니다."
+        "message": "블랙박스 삭제가 완료되면 신호음을 울립니다."
+    },
+    "beeperCRASH_FLIP": {
+        "message": "크래쉬 플립 모드 활성 때 신호음을 울립니다."
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "주요 카메라 제어가 입력되면 신호음을 울립니다."
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "주요 카메라 제어가 종료될 때 신호음을 울립니다."
     },
     "configuration3d": {
         "message": "3D ESC\/모터 기능"
@@ -1112,7 +1131,7 @@
         "message": "IRC 트램프"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "RunCam 기기"
+        "message": "RunCam 디바이스"
     },
     "pidTuningProfileOption": {
         "message": "프로파일 $1"
@@ -1186,6 +1205,9 @@
     "pidTuningDtermSetpointHelp": {
         "message": "이 파라미터는 파생된 요소 내 스틱 가속 효과를 결정합니다. <br> 0은 D가 오직 자이로만을 추적하는 이전 측정 방법과 동일합니다. 반면에 1은 동일한 자이로와 스틱 추적 레이트를 갖는 이전 오류 방법과 같습니다. <br> 값이 낮을 수록 스틱 반응이 더욱 느리고\/부드러워지며, 반면에 값이 높을 수록 스틱 가속 응답을 더 많이 제공합니다. <br> RC 신호보간은 컨트롤 킥이 노이즈를 발생시키지 않도록 더 높은 값으로 설정하는 것이 좋습니다."
     },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 0 보다 크고 0.1 보다 작은 D 설정값 전환의 사용은 불안정을 유발시킬 수 있으며, 중립포인트에서 만나는 스틱의 반응성이 감소될 수 있습니다.<\/span>"
+    },
     "pidTuningProportional": {
         "message": "P(비례)"
     },
@@ -1199,7 +1221,7 @@
         "message": "RC 레이트"
     },
     "pidTuningMaxVel": {
-        "message": "최대 Vel [deg\/s]"
+        "message": "최대 속도 [도\/초]"
     },
     "pidTuningRate": {
         "message": "레이트"
@@ -1283,7 +1305,7 @@
         "message": "로드 된 프로파일:  <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": "로드 된 속도 프로파일:  <strong class=\"message-positive\">$1<\/strong>"
+        "message": "로드 된 레이트 프로파일: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningDataRefreshed": {
         "message": "PID 데이터 <strong>새로 고쳐짐<\/strong>"
@@ -1301,7 +1323,7 @@
         "message": "스로틀 중간값"
     },
     "receiverThrottleExpo": {
-        "message": "스로틀 Expo"
+        "message": "스로틀 EXPO"
     },
     "receiverStickMin": {
         "message": "'스틱 낮음' 한계값"
@@ -1525,6 +1547,9 @@
     "adjustmentsFunction24": {
         "message": "호리즌 강도 조정"
     },
+    "adjustmentsFunction25": {
+        "message": "PID-오디오 선택"
+    },
     "adjustmentsSave": {
         "message": "저장"
     },
@@ -1689,6 +1714,24 @@
     },
     "gpsSignalQty": {
         "message": "품질"
+    },
+    "motorsVoltage": {
+        "message": "전압:"
+    },
+    "motorsADrawing": {
+        "message": "전류:"
+    },
+    "motorsmAhDrawn": {
+        "message": "전류 소비량:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
     },
     "motorsText": {
         "message": "모터"
@@ -2014,6 +2057,9 @@
     "firmwareFlasherNoReboot": {
         "message": "재부팅 절차 없음"
     },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "사용 가능한 보드를 보고 빌드 형식을 선택하세요."
+    },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "보드를 선택하여 사용 가능한 온라인 펌웨어 릴리즈를 확인하십시오 - 보드에 적합한 올바른 펌웨어를 선택하십시오."
     },
@@ -2061,6 +2107,21 @@
     },
     "firmwareFlasherOptionLoading": {
         "message": "로딩중 ..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "릴리즈"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "릴리즈와 릴리즈 후보"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "개발 버전"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "3.3 AKK & RDQ VTX 패치"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "3.4 AKK & RDQ VTX 패치"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "펌웨어 \/ 보드를 선택하십시오."
@@ -2141,7 +2202,7 @@
         "message": "이 파일에는 <span class=\"message-negative\">쓰기 권한<\/span>이 없습니다."
     },
     "firmwareFlasherFlashTrigger": {
-        "message": "검출됨: <strong>$1<\/strong> - 연결시 플래시를 시작합니다."
+        "message": "감지됨: <strong>$1<\/strong> - 연결시 플래시를 시작합니다."
     },
     "firmwareFlasherPreviousDevice": {
         "message": "감지됨: <strong>$1<\/strong> - 이전 기기가 여전히 플래시중입니다. 다시 연결하여 재시도하세요."
@@ -2508,77 +2569,74 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "프로파일 독립적 필터 설정"
     },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "자이로 저역통과 필터"
+    },
     "pidTuningGyroLowpassFrequency": {
-        "message": "자이로 소프트 저역통과 주파수 [Hz]"
+        "message": "자이로 저역통과 1 컷오프 주파수 [Hz]"
     },
-    "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "자이로 소프트 저역통과 주파수 [Hz]"
+    "pidTuningGyroLowpassType": {
+        "message": "자이로 저역통과 1 필터 형식"
     },
-    "pidTuningGyroNotch1Enable": {
-        "message": "자이로 노치필터 1 활성"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "자이로 저역통과 2 컷오프 주파수 [Hz]"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "자이로 저역통과 2 필터 형식"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "자이로 노치 필터"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "자이로 노치 필터 1 주파수 [Hz]"
-    },
-    "pidTuningGyroNotch2Enable": {
-        "message": "자이로 노치필터 2 활성"
+        "message": "자이로 노치 필터 1 센터 주파수 [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "자이로 노치 필터 2 주파수 [Hz]"
-    },
-    "pidTuningGyroNotchFrequencyHelp": {
-        "message": "자이로 노치 필터 주파수(Hz) (0은 비활성화를 의미)"
+        "message": "자이로 노치 필터 2 센터 주파수 [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "자이로 노치 필터 컷오프 1 주파수 [Hz]"
+        "message": "자이로 노치 필터 1 컷오프 주파수 [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "자이로 노치 필터 컷오프 2 주파수 [Hz]"
+        "message": "자이로 노치 필터 2 컷오프 주파수 [Hz]"
     },
-    "pidTuningGyroNotchCutoffHelp": {
-        "message": "자이로 노치 필터 컷오프 주파수(Hz) (노치 필터가 시작되는 곳입니다. 예를 들어 노치 필터 160과 노치 Hz가 260인 경우 범위는 160-360Hz이며 중심 주위에는 대부분 감쇠가 있음)"
+    "pidTuningNotchFilterHelp": {
+        "message": "노치 필터는 센터와 컷오프로 나누어집니다. 필터는 대칭을 이룹니다. 센터 주파수는 필터의 중심이며 컷오프 주파수 노치 필터가 시작되는 곳입니다. 예를 들어 컷오프 160, 노치 센터 260은 범위가 센터 주변으로 대부분 감쇄를 갖는 160-360Hz임을 의미합니다."
     },
     "pidTuningFilterSettings": {
-        "message": "필터 설정"
+        "message": "프로파일 종속 필터 설정"
+    },
+    "pidTuningDTermLowpassFiltersGroup": {
+        "message": "D 텀 저역통과 필터"
     },
     "pidTuningDTermLowpassType": {
-        "message": "D-텀 저역통과 필터"
-    },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "사용할 D-텀 저역통과 필터 형태를 선택하세요. 기본은 BIQUAD입니다."
+        "message": "D 텀 저역통과 1 필터 형식"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "D 항목 저역통과 주파수 [Hz]"
+        "message": "D 텀 저역통과 1 컷오프 주파수 [Hz]"
     },
-    "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "D 항목 저역통과 주파수 [Hz] (0은 비활성화를 의미)"
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "D 텀 저역통과 2 컷오프 주파수 [Hz]"
     },
-    "pidTuningDTermNotchEnable": {
-        "message": "D-텀 노치필터 활성"
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "D 텀 노치 필터"
     },
     "pidTuningDTermNotchFrequency": {
-        "message": "D 항목 노치 필터 주파수 [Hz]"
-    },
-    "pidTuningDTermNotchFrequencyHelp": {
-        "message": "D 항목 노치 필터 주파수 [Hz] (0은 비활성화를 의미)"
+        "message": "D 텀 노치 필터 센터 주파수 [Hz]"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "D 항목 노치 필터 주파수 컷오프 [Hz]"
+        "message": "D 텀 노치 필터 컷오프 주파수 [Hz]"
     },
-    "pidTuningDTermNotchCutoffHelp": {
-        "message": "D 항목 노치 필터 컷오프(Hz) (노치 필터가 시작되는 곳입니다. 예를 들어 노치 필터 160과 노치 Hz가 260인 경우 범위는 160-360Hz이며 중심 주위에는 대부분 감쇠가 있음)"
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "요 저역통과 필터"
     },
     "pidTuningYawLowpassFrequency": {
-        "message": "요 저역통과 주파수 [Hz]"
-    },
-    "pidTuningYawLowpassFrequencyHelp": {
-        "message": "요 저역통과 주파수 [Hz] (요 축은 때로는 나머지 부분보다 노이즈가 많을 수 있습니다. 이 필터는 요의 P에만 영향을 미칩니다.)"
+        "message": "요 저역통과 컷오프 주파수 [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID 보상"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "Vbat이 낮아질 때 이를 보충하기 위해 PID 값을 증가시킵니다. 이것은 비행 내내 보다 일정한 비행 특성을 줄 것입니다. 적용되는 보정량은 환경설정 페이지에서 설정된 최대 셀 전압에서 계산되므로 적절한 값으로 설정되어 있는지 확인하십시오."
+        "message": "Vbat이 낮아질 때 이를 보충하기 위해 PID 값을 증가시킵니다. 이것은 비행 내내 보다 일정한 비행 특성을 줄 것입니다. 적용되는 보정량은 $t(tabPower.message) 페이지에서 설정된 $t(powerBatteryMaximum.message)에서 계산되므로 적절한 값으로 설정되어 있는지 확인하십시오."
     },
     "configHelp2": {
         "message": "옆면 \/ 아래로 \/ 회전 등으로 장착 할 수 있는 임의의 보드 회전 각도(°). 외부 센서를 작동할 때 센서 정렬(자이로, 가속도계, 자력계)을 사용하여 보드 방향과 상관없이 센서 위치를 정의합니다."
@@ -2641,7 +2699,7 @@
         "message": "모터가 꺼지고 기체가 해제될 때까지 착륙 모드로 유지할 시간"
     },
     "failsafeSubTitle1": {
-        "message": "2 단계 - 페일세이프 절차"
+        "message": "단계 2 - 페일세이프 절차"
     },
     "failsafeProcedureItemSelect1": {
         "message": "착륙"
@@ -2654,6 +2712,24 @@
     },
     "failsafeKillSwitchHelp": {
         "message": "페일 세이프 스위치 (모드 탭)가 선택한 페일 세이프 절차를 우회하여 직접적인 강제 종료 스위치로 작동하게 하려면 이 옵션을 설정하십시오. <strong>노트:<\/strong> 페일세이프 킬 스위치가 ON 위치에 있을 때 아밍이 차단됩니다."
+    },
+    "failsafeSwitchTitle": {
+        "message": "페일세이프 스위치"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "페일세이프 스위치 동작"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "이 옵션은 페일세이프가 AUX 스위치를 통해 활성화되었을 때 무엇이 일어나는지 결정합니다:<br\/><strong>단계 1<\/strong>은 단계 1 페일세이프를 활성화합니다. 정확한 신호 손실 페일세이프 동작을 시뮬레이션 하려는 경우 유용 합니다.<br\/><strong>단계 2<\/strong>는 단계 1을 생략하고 즉시 단계 2 절차를 활성화합니다.<br\/><strong>Kill<\/strong>은 즉시 디스아밍합니다. (당신의 기체는 충돌할 것입니다.)"
+    },
+    "failsafeSwitchOptionStage1": {
+        "message": "단계 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "단계 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Kill"
     },
     "powerButtonSave": {
         "message": "저장"
@@ -2845,7 +2921,7 @@
         "message": "스케일 [1\/10th mV\/A]"
     },
     "powerAmperageOffset": {
-        "message": "오프셋 [mV]"
+        "message": "오프셋 [mA]"
     },
     "powerBatteryHead": {
         "message": "배터리"
@@ -2923,19 +2999,49 @@
         "message": "경고"
     },
     "osdSetupFontPresets": {
-        "message": "폰트 프리셋:"
+        "message": "글꼴 프리셋:"
     },
     "osdSetupOpenFont": {
-        "message": "폰트파일 열기"
+        "message": "글꼴 파일 열기"
+    },
+    "osdSetupCustomLogoTitle": {
+        "message": "부트 로고:"
+    },
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "사용자 이미지 선택&hellip;"
+    },
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "사용자 이미지:"
+    },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "크기는 $t(logoWidthPx) ×$t(logoHeightPx) 픽셀 이어야 합니다."
+    },
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "녹색, 검은색과 흰색 픽셀을 포함 해야 합니다."
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "서용자 로고를 지속하려면 <b>$t(osdSetupUploadFont.message)<\/b>를 클릭하세요."
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "잘못 된 이미지 크기: {{width}}×{{height}} (예상된 크기 $t(logoWidthPx) ×$t(logoHeightPx))"
+    },
+    "osdSetupCustomLogoColorMapError": {
+        "message": "이미지가 유효하지 않은 색상표를 포함하고 있습니다 (오직 녹색, 검정 및 흰색만 허용됨)"
+    },
+    "osdSetupReplaceLogoImageSizeError": {
+        "message": "유효하지 않은 이미지 크기; $3×$4 대신 $1×$2 예상"
+    },
+    "osdSetupReplaceLogoImageColorsError": {
+        "message": "이미지가 유효하지 않은 색상표를 포함하고 있습니다 (오직 녹색, 검정 및 흰색만 허용됨)"
     },
     "osdSetupUploadFont": {
-        "message": "폰트 업로드"
+        "message": "글꼴 업로드"
     },
     "osdSetupSave": {
         "message": "저장"
     },
     "osdSetupFontManager": {
-        "message": "폰트 매니저"
+        "message": "글꼴 매니저"
     },
     "osdSetupUncheckAll": {
         "message": "모두 선택해제"
@@ -3144,6 +3250,9 @@
     "osdDescStatRtcDateTime": {
         "message": "실시간 시계로부터 날짜 및 시간"
     },
+    "osdDescStatBattery": {
+        "message": "실시간 배터리 전압"
+    },
     "osdTimerSource": {
         "message": "소스:"
     },
@@ -3175,10 +3284,13 @@
         "message": "배터리 전압이 최소 평균 셀 전압 미만으로 떨어지면 경고"
     },
     "osdWarningVisualBeeper": {
-        "message": "신호음의 시각화를 보여주기 (별표 4 개로 표시)"
+        "message": "비퍼의 시각화를 보여주기 (별표 4개로 표시)"
     },
     "osdWarningCrashFlipMode": {
         "message": "충돌 모드가 활성화 된 후 뒤집힐 때 경고"
+    },
+    "osdWarningEscFail": {
+        "message": "실패한 ESC\/모터 목록을 열거합니다 (RPM 또는 온도가 구성된 임계값을 벗어남)"
     },
     "osdSectionHelpElements": {
         "message": "OSD 요소를 활성화 또는 비활성화합니다."
@@ -3206,6 +3318,9 @@
     },
     "osdWritePermissions": {
         "message": "이 파일에는 <span class=\"message-negative\">쓰기 권한<\/span>이 없습니다."
+    },
+    "osdButtonSaved": {
+        "message": "저장됨"
     },
     "mainHelpArmed": {
         "message": "모터 아밍"
@@ -3343,13 +3458,13 @@
         "message": "FPV 카메라 각도 [도]"
     },
     "onboardLoggingBlackbox": {
-        "message": "블랙박스 로그기록 기기"
+        "message": "블랙박스 로그기록 장치"
     },
     "onboardLoggingRateOfLogging": {
         "message": "블랙박스 로그기록 속도"
     },
     "onboardLoggingSerialLogger": {
-        "message": "외부 시리얼 로그기록 기기"
+        "message": "외부 시리얼 로그기록 장치"
     },
     "onboardLoggingFlashLogger": {
         "message": "온보드 데이터 플래시 칩"

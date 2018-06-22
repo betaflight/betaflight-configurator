@@ -1,4 +1,7 @@
 {
+    "error": {
+        "message": "Error: {{errorMessage}}"
+    },
     "warningTitle": {
         "message": "Advertència"
     },
@@ -104,7 +107,7 @@
         "message": "Estàs fent servir una versió desactualitzada del <b>Configurador Betaflight <\/b>.<br>La versió <b>$1<\/b> està disponible, siusplau visita la pàgina <a href=\"$2\" target=\"_blank\"><\/a> per a descarregar i instaŀlar la última versió amb correccions i millores.<br>Tanca la finestra del configurador abans d'actualitzar."
     },
     "configuratorUpdateWebsite": {
-        "message": "Ves a la pàgina de publicació"
+        "message": "Ves a la pàgina de llançament"
     },
     "deviceRebooting": {
         "message": "Dispositiu - <span class=\"message-negative\">Reiniciant<\/span>"
@@ -320,7 +323,8 @@
         "message": "El firmware d'aquest dispositiu necessita ser actualitzat a una versió superior. Utilitza el CLI per fer una còpia de seguretat abans de flashejar. El procediment està explicat a la documentació.<br \/>D'altra banda pots descarregar i fer servir una versió antiga del configurador si no estàs preparat per actualitzar."
     },
     "infoVersions": {
-        "message": "Corrent - OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurator: <strong>$3<\/strong>"
+        "message": "Corrent - OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurator: <strong>$3<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "releaseCheckLoaded": {
         "message": "Informació de release carregada de $1 carregada de GitHub."
@@ -467,7 +471,7 @@
         "message": "Documentació \/ Manual"
     },
     "defaultDocumentation": {
-        "message": "La documentació de Betaflight està disponible a les notes de la publicació i a la wiki.<br \/><br \/>"
+        "message": "La documentació de Betaflight està disponible a les notes de la llançament i a la wiki.<br \/><br \/>"
     },
     "defaultDocumentation1": {
         "message": "La wiki de Betaflight és una gran font d'informació. La pots trobar <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\" target=\"_blank\">aquí<\/a>."
@@ -871,9 +875,6 @@
     "configurationReverseMotorSwitch": {
         "message": "La direcció dels motors és inversa"
     },
-    "configurationReverseMotorSwitchHelp": {
-        "message": "Habilitar aquesta opció li dirà a Betaflight que els motors i pales estan configurats per a girar en sentit invers."
-    },
     "configurationAutoDisarmDelay": {
         "message": "Desarma els motors després de [segons] (Requereix de la característica de MOTOR_STOP)"
     },
@@ -905,10 +906,7 @@
         "message": "Aquest és el valor que s'envia als ESCs quan l'aeronau està desarmada. Posa-ho a un valor que mantingui els motors parats (1000 a la majoria d'ESCs)."
     },
     "configurationDshotBeeper": {
-        "message": "Configuració del Beacon DSHOT"
-    },
-    "configurationUseDshotBeeper": {
-        "message": "Fes servir el Beacon DSHOT (fes servir els motors per sonar quan està desarmat)"
+        "message": "Configuració de Beacon Dshot"
     },
     "configurationDshotBeaconTone": {
         "message": "To de Beacon"
@@ -940,12 +938,6 @@
     "beeperBAT_LOW": {
         "message": "Sona quan la bateria s'està exhaurint (es repeteix)"
     },
-    "beeperRX_SET": {
-        "message": "Sona quan un canal auxiliar està configurat per indicar quants satèŀlits ha trobat el GPS si està habilitat aquest"
-    },
-    "beeperDISARM_REPEAT": {
-        "message": "Sona quan mantens l'stick a la posició de desarmat"
-    },
     "beeperACC_CALIBRATION": {
         "message": "Confirmació de calibració de l'acceleròmetre completada"
     },
@@ -955,14 +947,11 @@
     "beeperREADY_BEEP": {
         "message": "Sona quan el GPS estigui llest"
     },
-    "beeperARMED": {
-        "message": "Sona quan la controladora està connectada (es repeteix fins que la controladora està desconnectada o s'incrementa l'accelerador)"
+    "beeperDISARM_REPEAT": {
+        "message": "Sona quan mantens l'stick a la posició de desarmat"
     },
     "beeperSYSTEM_INIT": {
         "message": "Sons d'inicialització quan arrenca la controladora"
-    },
-    "beeperUSB": {
-        "message": "Sona quan alimentes la controladora des d'USB. Desactiva-ho quan no vulguis escoltar-ho al taller"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Sona quan l'esborrat de blackbox s'hagi completat"
@@ -1687,6 +1676,24 @@
     "gpsSignalQty": {
         "message": "Qty"
     },
+    "motorsVoltage": {
+        "message": "Voltatge:"
+    },
+    "motorsADrawing": {
+        "message": "Amperatge:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Amp. consumits:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
     "motorsText": {
         "message": "Motors"
     },
@@ -1961,16 +1968,16 @@
         "message": "Estat desconegut $1"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Info de la publicació"
+        "message": "Info del llançament"
     },
     "firmwareFlasherReleaseName": {
         "message": "Nom\/Versió:"
     },
     "firmwareFlasherReleaseVersionUrl": {
-        "message": "Visita la pàgina de publicació."
+        "message": "Visita la pàgina de llançament."
     },
     "firmwareFlasherReleaseNotes": {
-        "message": "Notes de release:"
+        "message": "Notes de llançament:"
     },
     "firmwareFlasherReleaseDate": {
         "message": "Data:"
@@ -2059,6 +2066,21 @@
     "firmwareFlasherOptionLoading": {
         "message": "Carregant ..."
     },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Llançament"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Llançament i Candidat a Llançament (RC)"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Desenvolupament"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "Pedaç 3.3 AKK i RDQ VTX"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "Pedaç 3.4 AKK i RDQ VTX"
+    },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Escull un Firmware \/ Placa"
     },
@@ -2116,6 +2138,9 @@
     "firmwareFlasherFirmwareNotLoaded": {
         "message": "Firmware no carregat"
     },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Firmware Local Carregat ($1 bytes)"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "L'arxiu HEX sembla corrupte"
     },
@@ -2146,6 +2171,34 @@
     "ledStripButtonSave": {
         "message": "Desa"
     },
+    "ledStripColorSetupTitle": {
+        "message": "Configuració de color",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "Restant",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "Neteja la selecció",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "Neteja-ho tot",
+        "description": "In the LED STRIP, clear all leds"
+    },
     "ledStripEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
     },
@@ -2158,11 +2211,147 @@
     "ledStripFunctionTitle": {
         "message": "Funció"
     },
+    "ledStripFunctionNoneOption": {
+        "message": "Cap",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "Color",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "Modes &amp; Orientació",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Estat d'armat",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "Bateria",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "Anell",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripColorModifierTitle": {
         "message": "Modificador de color"
     },
-    "ledStripThrottleFunction": {
-        "message": "Throttle"
+    "ledStripModeColorsTitle": {
+        "message": "Colors del mode"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "Orientació",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Mode lliure",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizon",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Angle",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Mag",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Baro",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "N",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "E",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "S",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "O",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "U",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "D",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "Orientació del LED ('Modes &amp; Orientació') i Color",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "Colors especials",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Desarmat",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Armat",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "Animació",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "Parpellejar fons",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: cap SAT",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: no ubicat",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: ubicat",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "Cablejat de la Tira LED",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "Mode d'Ordenació de Cablejat",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "Esborrar selecció",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "Esborra TOT el cablejat",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "Els LEDs sense nombre d'ordenació no es desaran.",
+        "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
         "message": "Larson scanner"
@@ -2338,71 +2527,23 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Ajustament de Filtres independents del perfil"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Soft Lowpass Frequency [Hz]"
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Filtres Passabaixos del Giro"
     },
-    "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "Gyro Soft Lowpass Frequency [Hz]"
-    },
-    "pidTuningGyroNotch1Enable": {
-        "message": "Habilita Filtre Gyro Notch 1"
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Filtres Notch del Giro"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro Notch Filter 1 Frequency [Hz]"
-    },
-    "pidTuningGyroNotch2Enable": {
-        "message": "Habilita Filtre Gyro Notch 2"
+        "message": "Giro Filtre Notch 1 Freqüència Central [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro Notch Filter 2 Frequency [Hz]"
-    },
-    "pidTuningGyroNotchFrequencyHelp": {
-        "message": "Gyro Notch Filter Frequency in Hz"
+        "message": "Giro Filtre Notch 2 Freqüència Central [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 1 Frequency [Hz]"
+        "message": "Giro Filtre Notch 1 Freqüència de Tall [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter Cutoff 2 Frequency [Hz]"
-    },
-    "pidTuningGyroNotchCutoffHelp": {
-        "message": "Freqüència de tall del filtre Notch del giroscopi en Hz (Aquí és on comença el filtre. P. ex. un filtre notch 160 i un notch Hz de 260 significa que el rang és 160-360Hz amb major atenuació al centre)"
-    },
-    "pidTuningFilterSettings": {
-        "message": "Ajustaments de Filtre"
-    },
-    "pidTuningDTermLowpassType": {
-        "message": "D-Term Lowpass Filter"
-    },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "Selecciona el filtre D-Term lowpass a fer servir. Per defecte es BIQUAD"
-    },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass Frequency [Hz]"
-    },
-    "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "D Term Lowpass Frequency [Hz] (0 significa disabled)"
-    },
-    "pidTuningDTermNotchEnable": {
-        "message": "Habilita D Term Notch Filter"
-    },
-    "pidTuningDTermNotchFrequency": {
-        "message": "D Term Notch Filter Frequency [Hz]"
-    },
-    "pidTuningDTermNotchFrequencyHelp": {
-        "message": "D Term Notch Filter Frequency [Hz] (0 significa deshabilitat)"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Filter Cutoff [Hz]"
-    },
-    "pidTuningDTermNotchCutoffHelp": {
-        "message": "Freqüència de tall D del filtre Notch del giroscopi en Hz (Aquí és on el filtre comença. P. ex. amb un filtre 160 i uns Hz notch de 260 significa que el rang és 160-360Hz amb la major atenuació al centre)"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpass Frequency [Hz]"
-    },
-    "pidTuningYawLowpassFrequencyHelp": {
-        "message": "Yaw Lowpass Frequency [Hz] (L'eix de yaw pot ser, a vegades, méssorollós que la resta. Aquest filtre només afecta a la P del yaw)"
+        "message": "Giro Filtre Notch 2 Freqüència de Tall [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Compensació d'Vbat per als PIDs"
@@ -2484,6 +2625,21 @@
     },
     "failsafeKillSwitchHelp": {
         "message": "Configura aquesta opció per a fer el failsafe switch com a mesura de seguretat. <strong>Nota:<\/strong> L'armat està bloquejat si el switch està a la posició ON"
+    },
+    "failsafeSwitchTitle": {
+        "message": "Interruptor de Failsafe"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "Acció de l'interruptor de Failsafe"
+    },
+    "failsafeSwitchOptionStage1": {
+        "message": "Stage 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "Stage 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Matar"
     },
     "powerButtonSave": {
         "message": "Desa"
@@ -2758,6 +2914,30 @@
     "osdSetupOpenFont": {
         "message": "Obrir un arxiu de Font"
     },
+    "osdSetupCustomLogoTitle": {
+        "message": "Imatge d'arrencada:"
+    },
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "Selecciona una imatge personalitzada"
+    },
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "Imatge personalitzada:"
+    },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "La mida ha de ser de $t(logoWidthPx)×$t(logoHeightPx) pixels"
+    },
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "Ha de contenir píxels verds, blancs i negres"
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "Prem <b>$t(osdSetupUploadFont.message)<\/b> per a desar la imatge personalitzada"
+    },
+    "osdSetupReplaceLogoImageSizeError": {
+        "message": "Mida de la imatge invàlida; s'esperava $1×$2 en comptes de $3×$4"
+    },
+    "osdSetupReplaceLogoImageColorsError": {
+        "message": "La imatge conté una paleta de colors invàlida (només verd, negre i blanc són permesos)"
+    },
     "osdSetupUploadFont": {
         "message": "Pujar Font"
     },
@@ -2974,6 +3154,9 @@
     "osdDescStatRtcDateTime": {
         "message": "Data i hora real"
     },
+    "osdDescStatBattery": {
+        "message": "Voltatge de la bateria en temps real"
+    },
     "osdTimerSource": {
         "message": "Font:"
     },
@@ -3021,6 +3204,9 @@
     },
     "osdWritePermissions": {
         "message": "No tens <span class=\"message-negative\">permisos d'escriptura<\/span> per a l'arxiu"
+    },
+    "osdButtonSaved": {
+        "message": "Desat"
     },
     "mainHelpArmed": {
         "message": "Armat de motors"

@@ -1,4 +1,7 @@
 {
+    "error": {
+        "message": "Kļūda: {{errorMessage}}"
+    },
     "warningTitle": {
         "message": "Brīdinājums"
     },
@@ -320,7 +323,8 @@
         "message": "Šai programmatūrai uz šīs iekārtas nepieciešama atjaunināšana uz jaunāku versiju. Izmantojiet CLI, lai dublētu datus pirms programmēšanas. CLI dublēšanas\/atjaunošanas procedūras ir dokumentācijā. <br \/>Alternatīva ir lejupielādēt un lietot veco konfiguratora versiju, ja jūs neesat gatavs atjaunināt."
     },
     "infoVersions": {
-        "message": "Strādā - OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Konfigurātors: <strong>$3<\/strong>"
+        "message": "Strādā - OS: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Konfigurātors: <strong>$3<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "releaseCheckLoaded": {
         "message": "Ielādēta relīzes informācija priekš $1 no GitHub."
@@ -770,7 +774,7 @@
         "message": "Īslaicīgi palielināt I-Term pie lielām droseles vērtībām izmaiņām"
     },
     "featureDYNAMIC_FILTER": {
-        "message": "Žiroskopa dinamiskā joslu ierobežojošā filtrēšana"
+        "message": "Žiroskopa dinamiskā joslas filtrēšana"
     },
     "featureFAILSAFE": {
         "message": "Ieslēgt Failsafe posmu 2"
@@ -872,7 +876,7 @@
         "message": "Motoru griešanās virziens ir reversā"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Ieslēdzot šo iespēju Betaflight tiks pateikts, ka motori un propelleri ir uzlikti pretējā griešanas virzienā."
+        "message": "Šī iespēja konfigurē mikseri, lai sagaidāmais motora virziens būtu reversā un propelleri uzlikti atbilstoši. <strong>Brīdinājums:<\/strong> Tas nemaina motora griešanās virzienu. Priekš ESCs pielietojiet konfigurācijas rīku vai samainiet ESC - motoru vadu secību, lai iegūtu sagaidāmo rezultātu. Obligāti pārliecināties bez propelleri, vai motora griešanas virziens ir atbilstoši tam kas norādīts diagrammā augšpusē, pirms mēģināsiet lidot."
     },
     "configurationAutoDisarmDelay": {
         "message": "Deaktivēt motorus pēc uzstādītās laika aiztures[seconds] (Nepieciešama MOTOR_STOP funkcija)"
@@ -905,13 +909,16 @@
         "message": "Šī ir vērtība, kas tiek sūtīta uz ESC, kad gaisa kuģis ir deaktivēts. Uzstādi vērtību pie kura motori ir apstājušies (1000 priekš lielākās ESC daļas)."
     },
     "configurationDshotBeeper": {
-        "message": "DSHOT skaņas signālu konfigurācija"
+        "message": "Dshot Beacon konfigurācija"
     },
     "configurationUseDshotBeeper": {
-        "message": "Lieto DSHOT skaņas signālus (lietot motorus lai atskaņotu pīkstienus, kad deaktivē)"
+        "message": "Lieto Dshot beacon (lietot motorus, lai atskaņotu pīkstienus, kad deaktivē)"
     },
     "configurationDshotBeaconTone": {
         "message": "Skaņas signāla tonis"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "Dshot beacon izmanto ESC un motorus lai atskaņotu skaņas. Tas nozīmē, ka Dshot beacon nevar tikt izmantots kamēr motori griežas. Betaflight 3.4 un jaunākos, ja mēģina aktivizēt gaisa kuģi kamēr Dshot beacon ir aktīvs, būs 2 sekunžu aizture pēc pēdēja Dshot beacon skaņas signāla, pirms gaisa kuģa aktivizēšanās. Tas novērš Dshot beacon funkcionalitātes interferenci ar Dshot komandām kas tiek sūtītas kad notiek aktivizēšana. <br\/><strong>Brīdinājums:<\/strong> Tā kā Dshot beacon savas aktivitātes laikā caur motoru laiž ievērojamu strāvu, tas var novēst pie pārmērīgas siltumizdales un bojāt motorus un \/ vai ESC ja \"beacon strength\" ir uzstādīts pārāk augstu. Izmantojiet BLHeli Configurator vai BLHeli Suite lai pieregulētu \"beacon strength\"."
     },
     "configurationBeeper": {
         "message": "Pīkstuļa konfigurācija"
@@ -940,11 +947,11 @@
     "beeperBAT_LOW": {
         "message": "Brīdinājuma pīkstieni, kad akumulatora līmenis ir zems (atkārtojas)"
     },
-    "beeperRX_SET": {
-        "message": "Pīkstēt, kad aux kanāls ir uzstādīts uz pīkstēšanu vai pīkstienu rinda, cik daudz satelītu ir atrasts, ja GPS ir ieslēgts"
+    "beeperGPS_STATUS": {
+        "message": "Pielietot noteiktu pīkstienu skaitu, lai reprezentētu cik GPS satelīti ir atrasti"
     },
-    "beeperDISARM_REPEAT": {
-        "message": "Pīkstēt kamēr vadības svira tiek turēta dezaktivācijas režīmā"
+    "beeperRX_SET": {
+        "message": "Pīkstēt kad aux kanāls ir uzstādīts uz pīkstēšanu"
     },
     "beeperACC_CALIBRATION": {
         "message": "Lidojuma laikā akselerometra kalibrēšanas pabeigšanas apstiprinājums"
@@ -954,6 +961,9 @@
     },
     "beeperREADY_BEEP": {
         "message": "Nospēlēt toni, kad GPS ir nofiksējies un gatavs"
+    },
+    "beeperDISARM_REPEAT": {
+        "message": "Pīkstēt kamēr vadības svira tiek turēta dezaktivācijas režīmā"
     },
     "beeperARMED": {
         "message": "Brīdinājuma pīkstieni, kad plate tiek aktivizēta (atkārtojas kamēr plate nav deaktivēta vai droseles vērtība netiek palielināta)"
@@ -966,6 +976,15 @@
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Pīkstēt, kad melnās kastes dzēšana pabeigta"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Pīkstēt kad avārijas apvelšanās režīms ir aktīvs"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Pīkstēt, kad 5 pogu kameras kontrole ir uzsākta"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Pīkstēt, kad 5 pogu kameras kontrole ir pabeigta"
     },
     "configuration3d": {
         "message": "3D ESC\/Motora iespējas"
@@ -1186,14 +1205,17 @@
     "pidTuningDtermSetpointHelp": {
         "message": "Šis parametrs nosaka sviras akselerācijas efektu atvasinājuma komponentē. <br> Vērtība 0 ir ekvivalenta vecajai mērījuma metodei, kur D seko tika žiroskopam, kamēr vērtība 1 ekvivalenta vecajai mērījuma metodei ar vienādu žiroskopa un sviru sekošanu attiecību.<br> Zemāka vērtība sniedz lēnāku\/vienmērīgāku sviras atsauci, kamēr augstāka vērtība sniedz lielāku sviras akselerācijas atsauci.<br> Atcerieties ka pie augstām vērtībām RC interpolāciju ieteicams ieslēgt, tas novērsīs vadības sviras trokšņu ģenerēšanu."
     },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong>Izmantojot D iestatījuma pāreju lielāku par 0 un mazāku par 0.1 ir drosmīgs gājiens. Tā darot, tas var novest līdz nestabilitātei un samazināt vadības sviru atsaucību, kad tās šķērso centra punktu.<\/span>"
+    },
     "pidTuningProportional": {
-        "message": "Proporcionāls"
+        "message": "Proportional"
     },
     "pidTuningIntegral": {
-        "message": "Integrāls"
+        "message": "Integral"
     },
     "pidTuningDerivative": {
-        "message": "Atvasinājums"
+        "message": "Derivative"
     },
     "pidTuningRcRate": {
         "message": "RC ātrums"
@@ -1211,7 +1233,7 @@
         "message": "Ātruma priekšskatījums"
     },
     "pidTuningRcExpo": {
-        "message": "RC ekspo"
+        "message": "RC Ekspo"
     },
     "pidTuningTPA": {
         "message": "TPA"
@@ -1525,6 +1547,9 @@
     "adjustmentsFunction24": {
         "message": "Horizonta stipruma korekcija"
     },
+    "adjustmentsFunction25": {
+        "message": "PID-Audio izvēle"
+    },
     "adjustmentsSave": {
         "message": "Saglabāt"
     },
@@ -1689,6 +1714,24 @@
     },
     "gpsSignalQty": {
         "message": "Daudz."
+    },
+    "motorsVoltage": {
+        "message": "Spriegums:"
+    },
+    "motorsADrawing": {
+        "message": "Strāva:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Strāvas patēriņš:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
     },
     "motorsText": {
         "message": "Motori"
@@ -2014,6 +2057,9 @@
     "firmwareFlasherNoReboot": {
         "message": "Nepielietot restartu"
     },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Izvēlieties bilda tipu, lai redzētu pieejamās plates."
+    },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Izvēlieties jūsu kontrolieri, lai redzētu pieejamās programmaparatūras relīzes - izvēlieties pareizo programmatūru, kas piemērota jūsu kontrolierim."
     },
@@ -2061,6 +2107,21 @@
     },
     "firmwareFlasherOptionLoading": {
         "message": "Ielādē ..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Relīze"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Relīze un relīzes kandidāts"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Izstrādes"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "3.3 AKK & RDQ VTX Paka"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "3.4 AKK & RDQ VTX Paka"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Izvēlēties Programmatūru \/ Plati"
@@ -2508,77 +2569,74 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profila neatkarīgo filtru iestatījumi"
     },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Žiroskopa zemfrekvenču filtrs"
+    },
     "pidTuningGyroLowpassFrequency": {
-        "message": "Žiroskopa Soft zemfrekvenču frekvence [Hz]"
+        "message": "Žiroskopa zemfrekvenču 1 nogriešanas frekvence [Hz]"
     },
-    "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "Žiroskopa Soft zemfrekvenču frekvence [Hz]"
+    "pidTuningGyroLowpassType": {
+        "message": "Žiroskopa zemfrekvenču 1 filtra tips"
     },
-    "pidTuningGyroNotch1Enable": {
-        "message": "Ieslēgt žiroskopa joslas filtru 1"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Žiroskopa zemfrekvenču 2 nogriešanas frekvence [Hz]"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "Žiroskopa zemfrekvenču 2 filtra tips"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Gyro joslas filtrs"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "Žiroskopa joslas filtra 1 frekvence [Hz]"
-    },
-    "pidTuningGyroNotch2Enable": {
-        "message": "Ieslēgt žiroskopa joslas filtru 2"
+        "message": "Žiroskopa joslas filtra 1 centra frekvence [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "Žiroskopa joslas filtra 2 frekvence [Hz]"
-    },
-    "pidTuningGyroNotchFrequencyHelp": {
-        "message": "Žiroskopa joslas filtra frekvence hercos"
+        "message": "Žiroskopa joslas filtra 2 centra frekvence [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "Žiroskopa joslas filtra nogriešanas 1 frekvence [Hz]"
+        "message": "Žiroskopa joslas filtra 1 nogriešanas frekvence [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Žiroskopa joslas filtra nogriešanas 2 frekvence [Hz]"
+        "message": "Žiroskopa joslas filtra 2 nogriešanas frekvence [Hz]"
     },
-    "pidTuningGyroNotchCutoffHelp": {
-        "message": "Žiroskopa joslas filtra nogriešanas frekvence hercos (Tas kur sākas joslas filtrs. Piemēram ar joslas filtra nogriešanu pie 160 un joslas filtra frekvenci 260, tas nozīmēs ka filtra diapazons ir no 160-360Hz ar lielāko vājinājumu ap centru)"
+    "pidTuningNotchFilterHelp": {
+        "message": "Joslas filtram ir centrs un nogriešana. Filtrs ir simetrisks. Centra frekvence ir filtra centrs un nogriešanas frekvence ir vieta, kur sākas joslas filtrs, Piemēram ar joslas filtra nogriešanu 160 un centu 260, nozīmēs ka diapazons būs 160-360 ar lielāko vājinājumu ap centru"
     },
     "pidTuningFilterSettings": {
-        "message": "Filtra iestatījumi"
+        "message": "Profila atkarīgo filtru iestatījumi"
+    },
+    "pidTuningDTermLowpassFiltersGroup": {
+        "message": "D Term zemfrekvenču filtrs"
     },
     "pidTuningDTermLowpassType": {
-        "message": "D-Term zemfrekvenču filtrs"
-    },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "Izvēlieties kuru D-Term zemfrekvenču filtra tipu izmantot. Noklusējums ir BIQUAD"
+        "message": "D Term zemfrekvenču 1 filtra tips"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "D Term zemfrekvenču frekvence [Hz]"
+        "message": "D Term zemfrekvenču 1 nogriešanas frekvence [Hz]"
     },
-    "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "D Term zemfrekvenču frekvence [Hz] (0 nozīmē izslēgts)"
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "D Term zemfrekvenču 2 nogriešanas frekvence [Hz]"
     },
-    "pidTuningDTermNotchEnable": {
-        "message": "Ieslēgt D Term joslas filtru"
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "D Term joslas filtrs"
     },
     "pidTuningDTermNotchFrequency": {
-        "message": "D Term joslas filtra frekvence [Hz]"
-    },
-    "pidTuningDTermNotchFrequencyHelp": {
-        "message": "D Term zemfrekvenču frekvence [Hz] (0 nozīmē izslēgts)"
+        "message": "D Term joslas filtra centra frekvence [Hz]"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "D Term joslas filtra nogriešanas [Hz]"
+        "message": "D Term joslas filtra nogriešanas frekvence [Hz]"
     },
-    "pidTuningDTermNotchCutoffHelp": {
-        "message": "D term joslas filtra nogriešanas frekvence hercos (Tas ir kur sākas joslas filtrs. Piemēram ar joslas filtra nogriešanu pie 160 un joslas filtra frekvenci 260, tas nozīmēs ka filtra diapazons ir no 160-360Hz ar lielāko vājinājumu ap centru)"
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "Yaw zemfrekvenču filtrs"
     },
     "pidTuningYawLowpassFrequency": {
-        "message": "Yaw zemfrekvenču frekvence [Hz]"
-    },
-    "pidTuningYawLowpassFrequencyHelp": {
-        "message": "Yaw zemfrekvenču frekvence [Hz] (Yaw ass dažreiz var būt trokšņaināka nekā citas. Šis filtrs ietekmē tikai Yaw P)"
+        "message": "Yaw zemfrekvenču nogriešanas frekvence [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID kompensācija"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "Palielina PID vērtības lai kompensētu akumulatorā sprieguma kritumu. Tas sniegs daudz konstantākus lidojumu parametrus visā lidojuma laikā. Pielietotās kompensēšanas lielums ir aprēķināts no šūnas maksimālā sprieguma, kas uzstādīts konfigurācijas cilnē, tāpēc pārliecinieties ka šī vērtība ir atbilstoša."
+        "message": "Palielina PID vērtības lai kompensētu akumulatorā sprieguma kritumu. Tas sniegs daudz konstantākus lidojumu parametrus visā lidojuma laikā. Pielietotās kompensēšanas lielums ir aprēķināts no $t(powerBatteryMaximum.message), kas uzstādīts $t(tabPower.message) cilnē, tāpēc pārliecinieties ka šī vērtība ir atbilstoša."
     },
     "configHelp2": {
         "message": "Patvaļīga plates pagriešana grādos, lai atļautu uzstādīt to sāniski \/ augšpēdus \/ pagrieztu utt. Kad darbojas ar ārējo sensoru, izmantojiet sensora pielāgošanu (Žiro, Aksel, Mag), lai definētu sensora pozīciju neatkarīgi no plates orientācijas. "
@@ -2654,6 +2712,24 @@
     },
     "failsafeKillSwitchHelp": {
         "message": "Uzstādiet šo iespēju, lai uzliktu Failsafe slēdzi (Režīmu cilnē), lai tas darbotos kā dezaktivācijas slēdzis, izlaižot Failsafe procedūras. <strong>Piezīme:<\/strong>Aktivizēšana ir bloķēta ar dezaktivācijas slēdzi ieslēgtā pozīcijā"
+    },
+    "failsafeSwitchTitle": {
+        "message": "Failsafe slēdzis"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "Failsafe slēdža darbība"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "Šī opcija nosaka, kas notiek, kad Failsafe tiek aktivizēts caur AUX slēdzi:<br\/><strong>Posms 1<\/strong> aktivizē Posms 1 failsafe. Tas ir noderīgi ja vēlaties nosimulēt signāla zuduma failsafe darbību.<br\/><strong>Posms 2<\/strong> izlaiž Posms 1 un aktivizē Posms 2 nekavējoties<br\/><strong>Kill<\/strong> atslēdz nekavējoties (jūsu aparāts sasitīsies)"
+    },
+    "failsafeSwitchOptionStage1": {
+        "message": "Posms 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "Posms 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Kill"
     },
     "powerButtonSave": {
         "message": "Saglabāt"
@@ -2845,7 +2921,7 @@
         "message": "Mērogs [1\/10th mV\/A]"
     },
     "powerAmperageOffset": {
-        "message": "Nobīde [mV]"
+        "message": "Nobīde [mA]"
     },
     "powerBatteryHead": {
         "message": "Akumulators"
@@ -2927,6 +3003,36 @@
     },
     "osdSetupOpenFont": {
         "message": "Atvērt fonta failu"
+    },
+    "osdSetupCustomLogoTitle": {
+        "message": "Ielādes logo:"
+    },
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "Izvēlēties pielāgotu attēlu&hellip;"
+    },
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "Pielāgots attēls:"
+    },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "Izmēram ir jābūt $t(logoWidthPx)×$t(logoHeightPx) pikseļi"
+    },
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "Jāsatur zaļi, melni un balti pikseļi"
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "Nospiest <b>$t(osdSetupUploadFont.message)<\/b> lai izmantotu pielāgoto logo"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Nederīgs attēla izmērs: {{width}}×{{height}} (sagaidāms $t(logoWidthPx)×$t(logoHeightPx))"
+    },
+    "osdSetupCustomLogoColorMapError": {
+        "message": "Šis attēls satur nederīgu krāsu paleti (tikai zaļa, melna un balta krāsa atļauta)"
+    },
+    "osdSetupReplaceLogoImageSizeError": {
+        "message": "Nederīgs attēla izmērs; sagaidu $1×$2 šī vietā $3×$4"
+    },
+    "osdSetupReplaceLogoImageColorsError": {
+        "message": "Šis attēls satur nederīgu krāsu paleti (tikai zaļa, melna un balta krāsa atļauta)"
     },
     "osdSetupUploadFont": {
         "message": "Augšupielādēt fontu"
@@ -3144,6 +3250,9 @@
     "osdDescStatRtcDateTime": {
         "message": "Datums un laiks no reālā laika pulksteņa"
     },
+    "osdDescStatBattery": {
+        "message": "Akumulatora spriegums reālā laika"
+    },
     "osdTimerSource": {
         "message": "Avots:"
     },
@@ -3180,6 +3289,9 @@
     "osdWarningCrashFlipMode": {
         "message": "Brīdināt, kad ir apgriezies kājām gaisā pēc negadījuma režīma aktivizācijas"
     },
+    "osdWarningEscFail": {
+        "message": "Uzskaita sarakstu ar tiem ESC\/Motoriem, kas ir nederīgi (RPM vai temperatūra ir ārpus uzstādītajām robežlīnijām)"
+    },
     "osdSectionHelpElements": {
         "message": "Ieslēgt vai izslēgt OSD elementus."
     },
@@ -3206,6 +3318,9 @@
     },
     "osdWritePermissions": {
         "message": "Jums nav <span class=\"message-negative\">rakstīšanas atļauju<\/span> šim failam"
+    },
+    "osdButtonSaved": {
+        "message": "Saglabāts"
     },
     "mainHelpArmed": {
         "message": "Motoru aktivizēšana"
@@ -3325,7 +3440,7 @@
         "message": "<b>Gyro Soft filtrs:<\/b>Žiroskopa zemfrekvenču filtrs. Izmantojiet zemākas vērtības, lai panāktu efektīvāku filtrēšanu.<br><b>D Term Filtrs:<\/b> Dterm zemfrekvenču filtrs. Var ietekmēt D regulējumu. Izmantojiet zemākas vērtības, lai panāktu efektīvāku filtrēšanu. <br><b>Yaw filtrs:<\/b> Filtrē Yaw izvadi. Tas var palīdzēt ar konstrukcijas trokšņiem uz Yaw ass."
     },
     "pidTuningPidTuningTip": {
-        "message": "<b>Proporcionāls:<\/b> Jūs jutīsiet ļoti spēcīgu pretestību pie visiem mēģinājumiem kustināt multirotoru<br><b>Integrāls:<\/b> Palielina spēju noturēt sākotnējo pozīciju un samazina dreifēšanu, bet arī palielina laiku, kas nepieciešams nonākšanai sākotnējā pozīcijā.<br><b>Atvasinājums:<\/b> Uzlabo laiku, kurā novirze tiek labota, bet palielina trokšņus<br><b>Ātrumi un Ekspo <\/b>: Šie parametri nosaka cik jūtīgas būs vadības sviras. Pielietojiet ātrumu līknes un 3D modeli, lai atrastu jums visatbilstošākos ātruma iestatījumus"
+        "message": "<b>Proportional:<\/b> Jūs jutīsiet ļoti spēcīgu pretestību pie visiem mēģinājumiem kustināt multirotoru<br><b>Integral:<\/b> Palielina spēju noturēt sākotnējo pozīciju un samazina dreifēšanu, bet arī palielina laiku, kas nepieciešams nonākšanai sākotnējā pozīcijā.<br><b>Derivative:<\/b> Uzlabo laiku, kurā novirze tiek labota, bet palielina trokšņus<br><b>Ātrumi un Ekspo <\/b>: Šie parametri nosaka cik jūtīgas būs vadības sviras. Pielietojiet ātrumu līknes un 3D modeli, lai atrastu jums visatbilstošākos ātruma iestatījumus"
     },
     "pidTuningRatesTip": {
         "message": "Paeksperimentējiet ar ātrumiem un novērojiet kā tas ietekmēs vadības sviras līkni"
