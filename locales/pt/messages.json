@@ -1,6 +1,9 @@
 {
+    "error": {
+        "message": "Erro: {{errorMessage}}"
+    },
     "warningTitle": {
-        "message": "Alerta"
+        "message": "Atenção"
     },
     "noticeTitle": {
         "message": "Aviso"
@@ -42,7 +45,7 @@
         "message": "Sempre usar o modo avançado"
     },
     "userLanguageSelect": {
-        "message": "Idioma (necessário reiniciar a aplicação)"
+        "message": "Idioma (necessário reiniciar a aplicação para que as alterações surtam efeito)"
     },
     "language_default": {
         "message": "Padrão"
@@ -101,7 +104,7 @@
         "message": "Mostrar notificações de atualizações para versões instáveis do configurador"
     },
     "configuratorUpdateNotice": {
-        "message": "Você está usando uma versão antiga do <b>Betaflight Configurator<\/b>. <br>A versão <b>$1<\/b> está disponível online, por favor visite <a href=\"$2\" target=\"_blank\">a página da nova versão<\/a> para efetuar o download e instalar a ultima versão com correções e melhorias. <br>Por favor feche a janela do configurador antes de atualizar."
+        "message": "Você está usando uma versão antiga do <b>Betaflight Configurator<\/b>. <br>A versão <b>$1<\/b> está disponível online, por favor visite <a href=\"$2\" target=\"_blank\">a página da nova versão<\/a> para efetuar o download e instalar a última versão com correções e melhorias. <br>Por favor feche a janela do configurador antes de atualizar."
     },
     "configuratorUpdateWebsite": {
         "message": "Ir para a Página Web do lançamento"
@@ -122,7 +125,7 @@
         "message": "Migrando o arquivo de configuração gerado pelo configurador: $1"
     },
     "configMigratedTo": {
-        "message": "Configuração migrada para o configurador: $1"
+        "message": "Configuração enviada para o configurador: $1"
     },
     "configMigrationSuccessful": {
         "message": "Migração da configuração completa, migrações aplicadas: $1"
@@ -137,7 +140,7 @@
         "message": "Documentação & Suporte"
     },
     "tabSetup": {
-        "message": "Configurações"
+        "message": "Opções"
     },
     "tabSetupOSD": {
         "message": "Configuração do OSD"
@@ -161,7 +164,7 @@
         "message": "Servos"
     },
     "tabFailsafe": {
-        "message": "Falhas"
+        "message": "Failsafe"
     },
     "tabTransponder": {
         "message": "Transponder de corridas"
@@ -233,7 +236,7 @@
         "message": "<span class=\"message-negative\">Falha<\/span> ao desconectar dispositivo USB"
     },
     "usbDeviceUdevNotice": {
-        "message": "O <strong>udev rules<\/strong> foi instalado corretamente? Veja a documentação para instruções"
+        "message": "O <strong>udev rules<\/strong> está instalado corretamente? Veja a documentação para instruções"
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU não encontrado"
@@ -242,7 +245,7 @@
         "message": "STM32 - sem resposta, programação: FALHOU"
     },
     "stm32WrongResponse": {
-        "message": "Comunicação falhou com o STM32, resposta incorreta, experada: $1 (0x$2) recebida: $3 (0x$4)"
+        "message": "Falha na comunicação STM32, resposta incorreta, esperada: $1 (0x$2) recebida: $3 (0x$4)"
     },
     "stm32ContactingBootloader": {
         "message": "Contactando bootloader ..."
@@ -320,16 +323,17 @@
         "message": "O firmware deste dispositivo precisa ser atualizado para uma versão mais recente. Use a linha de comandos para realizar uma cópia de segurança antes da atualização. O procedimento para fazer uma cópia de segurança\/restaurar encontra-se na documentação.<br \/>Como alternativa faça o download e use uma versão antiga do configurador, caso não esteja preparado para efetuar a atualização."
     },
     "infoVersions": {
-        "message": "Em execução - SO: <strong>$1<\/strong>, Chrome: <strong>$2<\/strong>, Configurador: <strong>$3<\/strong>"
+        "message": "Executando - SO: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, Configurador: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "releaseCheckLoaded": {
-        "message": "Informações da versão $1 carregadas do GitHub."
+        "message": "Informações da versão do $1 carregadas do GitHub."
     },
     "releaseCheckFailed": {
         "message": "<b>Query ao GitHub para a versão $1 falhou, usando as informações em cache. Razão: <code>$2<\/code><\/b>"
     },
     "releaseCheckCached": {
-        "message": "Usando informações em cache para as versões $1."
+        "message": "Usando informações em cache para as informações de versão do $1."
     },
     "releaseCheckNoInfo": {
         "message": "Nenhuma informação disponível para a versão $1."
@@ -341,7 +345,7 @@
         "message": "Você <span class=\"message-negative\">não pode<\/span> realizar esta operação neste momento, por favor aguarde o fim da operação em execução..."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "Você precisa <strong>atualizar<\/strong> o firmware para a ultima versão do Betaflight antes de poder usar a aba $1."
+        "message": "Você precisa <strong>atualizar<\/strong> o firmware para a última versão do Betaflight antes de poder usar a aba $1."
     },
     "firmwareVersion": {
         "message": "Versão do firmware: <strong>$1<\/strong>"
@@ -440,7 +444,7 @@
         "message": "Contribuir"
     },
     "defaultContributingText": {
-        "message": "Se desejar ajudar o Betaflight a tornar-se ainda melhor, pode contribuir de várias formas, incluindo:<br \/><ul><li>Respondendo a questões de outros usuários nos forúms e IRC.<\/li><li>Contribuindo com código para o firmware e para o configurador: Novas funcionalidades, correções e melhorias<\/li><li>Testando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">novas funcionalidades\/correções<\/a> e fornecer feedback. <\/li><li>Ajudar com <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">correções e comentar em sugestões de novas funcionalidades<\/a>.<\/li><li>Colaborar <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">ajudando na tradução do configurador<\/a> para a seu idioma.<\/li><li><\/li><\/ul>"
+        "message": "Se desejar ajudar o Betaflight a tornar-se ainda melhor, pode contribuir de várias formas, incluindo:<br \/><ul><li>Respondendo a questões de outros usuários nos fóruns e IRC.<\/li><li>Contribuindo com código para o firmware e para o configurador: Novas funcionalidades, correções e melhorias<\/li><li>Testando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">novas funcionalidades\/correções<\/a> e fornecer feedback. <\/li><li>Ajudar com <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">correções e comentar em sugestões de novas funcionalidades<\/a>.<\/li><li>Colaborar <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">ajudando na tradução do configurador<\/a> para a seu idioma.<\/li><li><\/li><\/ul>"
     },
     "defaultChangelogAction": {
         "message": "Novidades"
@@ -524,7 +528,7 @@
         "message": "Redefinir configurações"
     },
     "initialSetupResetText": {
-        "message": "Restaurar configurações <strong>padrão<\/strong>"
+        "message": "Restaura as configurações para o <strong>padrão<\/strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup"
@@ -533,7 +537,7 @@
         "message": "Restaurar"
     },
     "initialSetupBackupRestoreText": {
-        "message": "Faça um <strong>Backup<\/strong> das configurações em caso de acidente, as configurações da <strong>CLI<\/strong><span class=\"message-negative\"> não<\/span> estão incluídas - Consulte o comando 'dump' da CLI"
+        "message": "Faça um <strong>Backup<\/strong> das configurações em caso de acidente, as configurações feitas pela <strong>CLI<\/strong><span class=\"message-negative\"> não<\/span> estão incluídas - Para isso consulte o comando 'dump' da CLI"
     },
     "initialSetupBackupSuccess": {
         "message": "Backup salvo com <span class=\"message-positive\">sucesso<\/span>"
@@ -560,7 +564,7 @@
         "message": "Máximo:"
     },
     "initialSetupFailsafe": {
-        "message": "Segurança contra falhas:"
+        "message": "Failsafe:"
     },
     "initialSetupMinCommand": {
         "message": "Comando mínimo:"
@@ -722,7 +726,7 @@
         "message": "Tela OLED"
     },
     "featureDISPLAYTip": {
-        "message": "Se esta funcionalidade é ativada, e nenhum dispositivo de imagem está conectado (ou o dispositivo de imagem não está ligado), haverá um atraso de cerca de 10 segundos em cada reinicio do controlador de voo."
+        "message": "Se esta funcionalidade é ativada, e nenhum dispositivo de imagem está conectado (ou o dispositivo de imagem não está ligado), haverá um atraso de cerca de 10 segundos toda vez que reiniciar o controlador de voo."
     },
     "featureONESHOT125": {
         "message": "Suporte a ESC com ONESHOT"
@@ -770,19 +774,19 @@
         "message": "Impulso provisório do I em alterações grandes do throttle"
     },
     "featureDYNAMIC_FILTER": {
-        "message": "Filtragem Notch dinâmica do giroscópio"
+        "message": "Filtro Notch dinâmico do giroscópio"
     },
     "featureFAILSAFE": {
-        "message": "Ativar estágio 2 da segurança contra falhas"
+        "message": "Ativar estágio 2 do Failsafe"
     },
     "featureFAILSAFEOld": {
-        "message": "Ativar segurança contra falhas"
+        "message": "Ativar Failsafe"
     },
     "featureFAILSAFETip": {
-        "message": "<strong>Nota:<\/strong> quando o estágio 2 estiver DESATIVADO, a opção <strong>Automática<\/strong> é usada em vez das configurações do usuário para todos os canais de voo (Roll, Pitch, Yaw e Throttle)."
+        "message": "<strong>Nota:<\/strong> quando o estágio 2 estiver DESATIVADO, a opção <strong>Automatico<\/strong> é usada em vez das configurações do usuário para todos os canais de voo (Roll, Pitch, Yaw e Throttle)."
     },
     "featureFAILSAFEOldTip": {
-        "message": "Aplicar configurações de segurança contra falhas na perda do sinal RX"
+        "message": "Aplicar configurações do Failsafe na perda do sinal RX"
     },
     "configurationFeatureEnabled": {
         "message": "Ativado"
@@ -806,7 +810,7 @@
         "message": "Modo do receptor"
     },
     "configurationRSSI": {
-        "message": "RSSI (força do sinal)"
+        "message": "RSSI (Potência do sinal)"
     },
     "configurationRSSIHelp": {
         "message": "RSSI é uma medida de intensidade do sinal e é muito útil para saber quando a aeronave está saindo de alcance ou se está sofrendo interferência."
@@ -872,7 +876,7 @@
         "message": "Direção do motor é invertida"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Ativar esta opção irá dizer ao Betaflight que os motores e hélices estão definidos para rodar na direção inversa."
+        "message": "Esta opção indica à controladora de voo que a rotação dos motores é invertida e que as hélices serão montadas de acordo com isso. <strong>Atenção:<\/strong> Esta opção não inverte o sentido do motor; Para isto, use a ferramenta de configuração de seu ESC ou altere a ordem dos cabos ESC-motor. Além disso, com as hélices removidas, certifique-se que os motores estão girando nas direções mostradas no diagrama acima antes de tentar armar."
     },
     "configurationAutoDisarmDelay": {
         "message": "Desarmar os motores após definir [seconds] de espera (Requer a funcionalidade MOTOR_STOP)"
@@ -905,16 +909,19 @@
         "message": "Este é o valor que é enviado para os ESCs quando a aeronave está desarmada. Defina um valor em que os motores fiquem parados (1000 para a maioria dos ESCs)."
     },
     "configurationDshotBeeper": {
-        "message": "Configuração do sinalizador para DSHOT"
+        "message": "Configuração do sinalizador do Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Usar o sinalizador do DSHOT (usar os motores para emitir tons quando desarmado)"
+        "message": "Usar o sinalizador do Dshot (usar os motores para emitir tons quando desarmado)"
     },
     "configurationDshotBeaconTone": {
         "message": "Tom do sinalizador"
     },
+    "configurationDshotBeaconHelp": {
+        "message": "O sinalizador do Dshot usa os ESCs e motores para emitir som. Isso significa que o sinalizador do Dshot não pode ser usado enquanto os motores estiverem rodando. A partir do Betaflight 3.4, quando tentar armar com o sinalizador do Dshot ativo, haverá um atraso de 2 segundos para que a aeronave seja armada após um tom do sinalizador do Dshot. Isto evita que o sinalizador interfira com os comando Dshot enviados durante o processo de armar.<br\/><strong>Atenção:<\/strong> O sinalizador do Dshot envia uma corrente elétrica para motores quando ativo, isso pode gerar calor excessivo e danificar seus motores e\/ou ESCs se a potência do sinalizador estiver muito alta. Use o configurador BLHeli ou o BLHeli Suite para ajustar e testar a potência do sinalizador."
+    },
     "configurationBeeper": {
-        "message": "Configuração do Beeper"
+        "message": "Configuração dos Sinais Sonoros"
     },
     "beeperGYRO_CALIBRATED": {
         "message": "Emite um sinal sonoro quando o giroscópio for calibrado"
@@ -940,11 +947,11 @@
     "beeperBAT_LOW": {
         "message": "Emite sinais sonoros quando a bateria estiver ficando fraca (repete)"
     },
-    "beeperRX_SET": {
-        "message": "Emite um sinal sonoro quando o canal auxiliar estiver definido para emitir sinais sonoros ou emite uma sequência de sinais sonoros conforme o número de satélites encontrados se o GPS estiver ativado"
+    "beeperGPS_STATUS": {
+        "message": "Use a quantidade de tons para indicar quantos satélites GPS foram encontrados"
     },
-    "beeperDISARM_REPEAT": {
-        "message": "Sinais sonoros emitidos quando segurar o stick na posição de desarmar"
+    "beeperRX_SET": {
+        "message": "Emite um sinal sonoro quando o canal aux estiver configurado para tons"
     },
     "beeperACC_CALIBRATION": {
         "message": "Confirmação de calibração do acelerômetro concluída durante o voo"
@@ -955,17 +962,29 @@
     "beeperREADY_BEEP": {
         "message": "Emitir um tom quando o GPS estiver localizado e pronto"
     },
+    "beeperDISARM_REPEAT": {
+        "message": "Sinais sonoros emitidos quando segurar o stick na posição de desarmar"
+    },
     "beeperARMED": {
-        "message": "Sinais sonoros de aviso quando a placa está armada (repete até que a placa seja desarmada ou o throttle é aumentado)"
+        "message": "Sinal sonoro de alerta quando a placa estiver armada com os motores desligados quando ocioso (repete até que a placa seja desarmada ou o throttle é aumentado)"
     },
     "beeperSYSTEM_INIT": {
         "message": "Sinais sonoros de inicialização quando a placa é ligada"
     },
     "beeperUSB": {
-        "message": "Emitir um sinal sonoro quando o controlador de voo recebe energia via USB. Desligue esta opção se não desejar sons na bancada"
+        "message": "Emitir um sinal sonoro quando o controlador de voo recebe energia via USB. Desligue esta opção se não desejar sons enquanto estiver na bancada"
     },
     "beeperBLACKBOX_ERASE": {
         "message": "Emitir um sinal sonoro quando a Caixa Preta é completamente apagada"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Sinal sonoro quando o modo batida de ponta cabeça estiver ativo"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Sinal sonoro quando ativar o controle de câmera de 5 teclas"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Sinal sonoro quando desativar o controle de câmera de 5 teclas"
     },
     "configuration3d": {
         "message": "Modo 3D dos Motores\/ESC"
@@ -1175,16 +1194,19 @@
         "message": "Intervalo de Interpolação RC [ms]"
     },
     "pidTuningDtermSetpointTransition": {
-        "message": "Ponto de transição D"
+        "message": "Transição do ponto D"
     },
     "pidTuningDtermSetpoint": {
         "message": "Peso do ponto D"
     },
     "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Com este parâmetro, o peso do ponto D pode ser reduzido próximo ao centro dos sticks, isso faz com que o fim dos flips e rolls seja mais suave.<br> O valor representa a posição do stick: 0 - stick centralizado, 1 - stick nas bordas. Quando o stick estiver acima do ponto transição, o peso do ponto será mantido constante no valor configurado. quando o stick estiver abaixo do ponto de transição, o peso é reduzido proporcionalmente, até atingir 0 com o stick centralizado.<br> Valor 1 gera o efeito mais suave possível, enquanto o valor 0 mantêm o peso fixo no valor configurado durante todo o movimento do stick."
+        "message": "Com este parâmetro, o peso do ponto D pode ser reduzido próximo ao centro dos sticks, isso faz com que o fim dos flips e rolls seja mais suave.<br> O valor representa a posição do stick: 0 - stick centralizado, 1 - stick nas bordas. Quando o stick estiver acima do ponto transição, o peso do ponto será mantido constante no valor configurado. quando o stick estiver abaixo do ponto de transição, o peso é reduzido proporcionalmente, até atingir 0 com o stick centralizado.<br> Valor 1 gera o efeito mais suave possível, enquanto o valor 0 mantém o peso fixo no valor configurado durante todo o movimento do stick."
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Este parâmetro determina o efeito de aceleração do stick em relação ao componente derivativo D.<br> Com o valor em 0, será usado o antigo método de medição onde D monitora somente o giroscópio, enquanto o valor em 1 usa o antigo método de correção de erro com monitoramento igual entre o giroscópio e o stick.<br> Valores mais baixos resultam em uma resposta mais lenta\/suave do stick, enquanto valores mais altos resultam em uma resposta mais acelerada.<br> É recomendado ativar a interpolação do RC para valores mais altos para evitar ruídos."
+    },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Usar a Transição do ponto D com um valor maior que 0 e menor do que 0.1 não é recomendado. Fazer isso pode causar instabilidade e resposta reduzida do stick conforme o stick atravessa a posição central.<\/span>"
     },
     "pidTuningProportional": {
         "message": "Proporcional"
@@ -1196,7 +1218,7 @@
         "message": "Derivativo"
     },
     "pidTuningRcRate": {
-        "message": "Taxa do RC"
+        "message": "Taxa RC"
     },
     "pidTuningMaxVel": {
         "message": "Velocidade Máxima [deg\/s]"
@@ -1292,7 +1314,7 @@
         "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
     },
     "receiverHelp": {
-        "message": "Por favor leia o capitulo da documentação sobre receptores. Configure a porta serial (se necessário), modo do receptor (serial\/ppm\/pwm), provedor (para receptores serial), vincule o receptor, especifique o mapa de canais, configure os limites\/faixas no TX de forma que todos os canais vão de ~1000 a ~2000. Defina o ponto médio (1500 por padrão), canais de ajuste (trim) em 1500, configure a zona morta do stick, verifique o comportamento quando o TX estiver desligado ou fora de alcance.<br \/><span class=\"message-negative\">IMPORTANTE:<\/span> Antes de voar, leia o capitulo da documentação sobre segurança contra falhas (failsafe) e configure-a."
+        "message": "Por favor leia o capítulo da documentação sobre receptores. Configure a porta serial (se necessário), modo do receptor (serial\/ppm\/pwm), provedor (para receptores serial), vincule o receptor, especifique o mapa de canais, configure os limites\/faixas no TX de forma que todos os canais vão de ~1000 a ~2000. Defina o ponto médio (1500 por padrão), canais de ajuste (trim) em 1500, configure a zona morta do stick, verifique o comportamento quando o TX estiver desligado ou fora de alcance.<br \/><span class=\"message-negative\">IMPORTANTE:<\/span> Antes de voar, leia a documentação e configure o Failsafe."
     },
     "tuningHelp": {
         "message": "<b>Dicas de otimização<\/b><br \/><span class=\"message-negative\">IMPORTANTE:<\/span> Sempre verifique a temperatura dos motores durante os primeiros voos. Quanto maior o valor do filtro, melhor pode ser o voo, porém, mais ruído chegará aos motores. <br>O Valor padrão de 100Hz é ótimo, mas para veículos com mais ruídos, você pode tentar diminuir o filtro do termo D para 50Hz e possivelmente também o filtro do giroscópio."
@@ -1310,7 +1332,7 @@
         "message": "O valor máximo (em us) para que o stick seja reconhecido como baixo \/ esquerda para entrada do comando (MIN_CHECK)."
     },
     "receiverStickCenter": {
-        "message": "Meio do Stick"
+        "message": "Centro do Stick"
     },
     "receiverHelpStickCenter": {
         "message": "O valor (em us) usado para determinar se o stick está centralizado (MID_RC)."
@@ -1355,7 +1377,7 @@
         "message": "Desativado"
     },
     "receiverRefreshRateTitle": {
-        "message": "Taxa de atualização do grafico"
+        "message": "Taxa de atualização do gráfico"
     },
     "receiverButtonSave": {
         "message": "Salvar"
@@ -1364,7 +1386,7 @@
         "message": "Atualizar"
     },
     "receiverButtonSticks": {
-        "message": "Sticks do controle"
+        "message": "Controle Virtual"
     },
     "receiverDataRefreshed": {
         "message": "Dados de afinação do RC <strong>atualizados<\/strong>"
@@ -1403,7 +1425,7 @@
         "message": "AUTO"
     },
     "adjustmentsHelp": {
-        "message": "Configure os switches de ajuste. Leia a seção do manual sobre 'in-flight adjustments' para detalhes. As mudanças que as funções de ajuste fazem não são salvas automaticamente. Existem 4 slots. Cada switch usado para ajuste exige o uso exclusivo de um slot."
+        "message": "Configure os switches de ajuste. Leia a seção do manual sobre 'in-flight adjustments' para detalhes. Os ajustes feitos por essas funções não serão salvos automaticamente. Existem 4 slots. Cada switch utilizado ao mesmo tempo para o ajuste exige o uso exclusivo de um slot."
     },
     "adjustmentsExamples": {
         "message": "Exemplos"
@@ -1421,13 +1443,13 @@
         "message": "usando slot"
     },
     "adjustmentsColumnWhenChannel": {
-        "message": "quando canal"
+        "message": "quando o canal"
     },
     "adjustmentsColumnIsInRange": {
         "message": "está na faixa"
     },
     "adjustmentsColumnThenApplyFunction": {
-        "message": "então aplicar"
+        "message": "então ajustar"
     },
     "adjustmentsColumnViaChannel": {
         "message": "via canal"
@@ -1454,40 +1476,40 @@
         "message": "Sem alterações"
     },
     "adjustmentsFunction1": {
-        "message": "Ajuste de Taxa do RC"
+        "message": "Taxa RC"
     },
     "adjustmentsFunction2": {
-        "message": "Ajuste de Expo do RC"
+        "message": "RC Expo"
     },
     "adjustmentsFunction3": {
-        "message": "Ajuste de Expo do Acelerador"
+        "message": "Throttle Expo"
     },
     "adjustmentsFunction4": {
-        "message": "Ajuste de taxa do Pitch & Roll"
+        "message": "Taxa do Pitch & Roll"
     },
     "adjustmentsFunction5": {
-        "message": "Ajuste da taxa de Yaw"
+        "message": "Taxa do Yaw"
     },
     "adjustmentsFunction6": {
-        "message": "Ajuste P do Pitch & Roll"
+        "message": "P do Pitch & Roll"
     },
     "adjustmentsFunction7": {
-        "message": "Ajuste I do Pitch & Roll"
+        "message": "I do Pitch & Roll"
     },
     "adjustmentsFunction8": {
-        "message": "Ajuste D do Pitch & Roll"
+        "message": "D do Pitch & Roll"
     },
     "adjustmentsFunction9": {
-        "message": "Ajuste P do Yaw"
+        "message": "P do Yaw"
     },
     "adjustmentsFunction10": {
-        "message": "Ajuste I do Yaw"
+        "message": "I do Yaw"
     },
     "adjustmentsFunction11": {
-        "message": "Ajuste D do Yaw"
+        "message": "D do Yaw"
     },
     "adjustmentsFunction12": {
-        "message": "Seleção de perfil de taxa"
+        "message": "Selecionar perfil de taxa"
     },
     "adjustmentsFunction13": {
         "message": "Taxa do Pitch"
@@ -1496,34 +1518,37 @@
         "message": "Taxa do Roll"
     },
     "adjustmentsFunction15": {
-        "message": "Ajuste P do Pitch"
+        "message": "P do Pitch"
     },
     "adjustmentsFunction16": {
-        "message": "Ajuste I do Pitch"
+        "message": "I do Pitch"
     },
     "adjustmentsFunction17": {
-        "message": "Ajuste D do Pitch"
+        "message": "D do Pitch"
     },
     "adjustmentsFunction18": {
-        "message": "Ajuste P do Roll"
+        "message": "P do Roll"
     },
     "adjustmentsFunction19": {
-        "message": "Ajuste I do Roll"
+        "message": "I do Roll"
     },
     "adjustmentsFunction20": {
-        "message": "Ajuste D do Roll"
+        "message": "D do Roll"
     },
     "adjustmentsFunction21": {
-        "message": "Taxa de Yaw do RC"
+        "message": "Taxa RC do Yaw"
     },
     "adjustmentsFunction22": {
-        "message": "Ponto de ajuste D"
+        "message": "Peso do ponto D"
     },
     "adjustmentsFunction23": {
         "message": "Transição do ponto D"
     },
     "adjustmentsFunction24": {
-        "message": "Força de ajuste de horizonte"
+        "message": "Potência do modo Horizonte"
+    },
+    "adjustmentsFunction25": {
+        "message": "Selecionar Áudio-PID"
     },
     "adjustmentsSave": {
         "message": "Salvar"
@@ -1535,7 +1560,7 @@
         "message": "O firmware do seu controlador de voo não suporta a função de transponder."
     },
     "transponderInformation": {
-        "message": "Sistemas de transponder permitem que os organizadores de corridas cronometrem suas voltas. O transponder é instalado na sua aeronave, e quando passar por um gate equipado com receptores, seu código é registrado junto com o tempo da sua volta. Quando equipar um transponder baseado em IR, você deve garantir que ele aponta para fora da sua aeronave, na direção dos receptores da pista, e que os feixes de luz não estão sendo obstruídos pela estrutura, straps para bateria, cabos, hélices, etc."
+        "message": "Sistemas de transponder permitem que os organizadores de corridas cronometrem suas voltas. O transponder é instalado na sua aeronave, e quando passar por um gate equipado com receptores, seu código é registrado junto com o tempo da sua volta. Quando equipar um transponder baseado em IR, você deve garantir que ele aponta para fora da sua aeronave, na direção dos receptores da pista, e que os feixes de luz não estão sendo obstruídos pela estrutura, cintos da bateria, cabos, hélices, etc."
     },
     "transponderConfigurationType": {
         "message": "Tipo de transponder"
@@ -1690,6 +1715,24 @@
     "gpsSignalQty": {
         "message": "Quantidade"
     },
+    "motorsVoltage": {
+        "message": "Voltagem:"
+    },
+    "motorsADrawing": {
+        "message": "Amperagem:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Amp. Usada:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
     "motorsText": {
         "message": "Motores"
     },
@@ -1745,10 +1788,10 @@
         "message": "Servo - 8"
     },
     "motorsResetMaximumButton": {
-        "message": "Resetar"
+        "message": "Reset"
     },
     "motorsResetMaximum": {
-        "message": "Resetar valor máximo no tempo"
+        "message": "Redefinir valores máximos do gráfico"
     },
     "motorsSensorGyroSelect": {
         "message": "giroscópio"
@@ -1760,7 +1803,7 @@
         "message": "Mestre"
     },
     "motorsNotice": {
-        "message": "<strong>Aviso sobre o modo de Teste de Motor \/ Armar:<\/strong><br \/>Mover os sliders ou armar a sua aeronave com o transmissor irá fazer com que os motores <strong>girem<\/strong>.<br \/>Para evitar ferimentos, <strong class=\"message-negative\">remova TODAS as hélices<\/strong> antes de usar esta função.<br \/>Habilitar o modo de Teste de Motor também irá temporariamente desabilitar a Prevenção contra decolagem acidental, afim de evitar o desarme da aeronave enquanto estiver testando em sua bancada sem as hélices.<br \/>"
+        "message": "<strong>Aviso sobre o modo de Teste de Motor \/ Armar:<\/strong><br \/>Mover os sliders ou armar a sua aeronave com o transmissor irá fazer com que os motores <strong>girem<\/strong>.<br \/>Para evitar ferimentos, <strong class=\"message-negative\">remova TODAS as hélices<\/strong> antes de usar esta função.<br \/>Habilitar o modo de Teste de Motor também irá temporariamente desabilitar a Prevenção contra decolagem acidental, afim de evitar o desarme da aeronave enquanto estiver testando em sua bancada, sem as hélices.<br \/>"
     },
     "motorsEnableControl": {
         "message": "<strong>Eu entendo os riscos<\/strong>, as hélices foram removidas - habilitar o controle do motor, armar e desativar a Prevenção contra decolagem acidental."
@@ -1826,7 +1869,7 @@
         "message": "Salvar para arquivo"
     },
     "loggingNote": {
-        "message": "Os dados serão logados <span class=\"message-negative\">somente<\/span> nesta aba, sair da aba irá <span class=\"message-negative\">cancelar<\/span> o log e a aplicação irá retornar para seu estado <strong>\"cofigurador\"<\/strong> normal.<br \/> Você pode selecionar o período de atualização global, dados serão escritos no arquivo de log a cada <strong>1<\/strong> segundo por motivos de performance."
+        "message": "Os dados serão logados <span class=\"message-negative\">somente<\/span> nesta aba, sair da aba irá <span class=\"message-negative\">cancelar<\/span> o log e a aplicação irá retornar para seu estado <strong>\"configurador\"<\/strong> normal.<br \/> Você pode selecionar o período de atualização global, dados serão escritos no arquivo de log a cada <strong>1<\/strong> segundo por motivos de performance."
     },
     "loggingSamplesSaved": {
         "message": "Amostras Salvas:"
@@ -1883,7 +1926,7 @@
         "message": "Porta Serial"
     },
     "serialLoggingSupportedNote": {
-        "message": "Você pode logar em um dispositivo externo (como o OpenLog ou clone compativel) utilizando a porta serial. Configure a porta na aba de Portas."
+        "message": "Você pode fazer o log em um dispositivo externo (como o OpenLog ou clone compatível) utilizando a porta serial. Configure a porta na aba de Portas."
     },
     "sdcardNote": {
         "message": "Logs de voo podem ser salvos no Cartão SD a bordo do seu controlador de voo."
@@ -2014,6 +2057,9 @@
     "firmwareFlasherNoReboot": {
         "message": "Sem sequencia de reinicialização"
     },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Selecione o tipo de compilação para ver as placas disponíveis."
+    },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecione a sua placa para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
     },
@@ -2061,6 +2107,21 @@
     },
     "firmwareFlasherOptionLoading": {
         "message": "Carregando..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Versões finais"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Versões finais e Release Candidate"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Desenvolvimento"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "3.3 AKK & RDQ VTX Patch"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "3.4 AKK & RDQ VTX Patch"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Escolha um Firmware \/ Placa"
@@ -2508,89 +2569,86 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Configurações de filtros independentes de perfil"
     },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Filtros Lowpass do giroscópio"
+    },
     "pidTuningGyroLowpassFrequency": {
-        "message": "Frequência do Soft Lowpass para o Giroscópio: [Hz]"
+        "message": "Frequência de corte do filtro Lowpass 1 do Giroscópio [Hz]"
     },
-    "pidTuningGyroLowpassFrequencyHelp": {
-        "message": "Frequência do Soft Lowpass para o Giroscópio: [Hz]"
+    "pidTuningGyroLowpassType": {
+        "message": "Tipo do filtro Lowpass 1 do giroscópio"
     },
-    "pidTuningGyroNotch1Enable": {
-        "message": "Ativar filtro Notch 1 do Giroscópio"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Frequência de corte do filtro Lowpass 2 do Giroscópio [Hz]"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "Tipo do filtro Lowpass 2 do giroscópio"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Filtros Notch do Giroscópio"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "Frequência do filtro Notch 1 [Hz]"
-    },
-    "pidTuningGyroNotch2Enable": {
-        "message": "Ativar filtro Notch 2 do Giroscópio"
+        "message": "Frequência central do filtro Notch 1 do giroscópio [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "Frequência do filtro Notch 2 [Hz]"
-    },
-    "pidTuningGyroNotchFrequencyHelp": {
-        "message": "Frequência do filtro Notch em Hz"
+        "message": "Frequência central do filtro Notch 2 do giroscópio [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "Frequência de Cutoff do filtro Notch 1 [Hz]"
+        "message": "Frequência de corte do filtro Notch 1 do Giroscópio [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Frequência de Cutoff do filtro Notch 2 [Hz]"
+        "message": "Frequência de corte do filtro Notch 2 do Giroscópio [Hz]"
     },
-    "pidTuningGyroNotchCutoffHelp": {
-        "message": "Frequência de Cutoff do filtro Notch em Hz (Aqui é onde o filtro Notch começa. Por exemplo, com o filtro notch em 160 e o Notch Hz em 360, ele terá uma faixa de 160-360Hz com a maior atenuação em torno do centro)"
+    "pidTuningNotchFilterHelp": {
+        "message": "O filtro Notch tem duas frequências, a de centro e a de corte. O filtro é simétrico. A frequência de centro é o centro do filtro e a frequência de corte é onde o filtro começa. Por exemplo, configurando o corte em 160Hz e o centro em 260Hz indica que o range será de 160Hz a 360Hz, com a maior atenuação no centro"
     },
     "pidTuningFilterSettings": {
-        "message": "Configurações do Filtro"
+        "message": "Configurações de filtros por perfil"
     },
-    "pidTuningDTermLowpassType": {
+    "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filtro Lowpass do termo D"
     },
-    "pidTuningDTermLowpassTypeTip": {
-        "message": "Selecione o tipo de filtro lowpass do termo D para usar. O padrão é BIQUAD"
+    "pidTuningDTermLowpassType": {
+        "message": "Tipo do filtro Lowpass 1 do termo D"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "Frequência do Lowpass do Termo D [Hz]"
+        "message": "Frequência de corte do filtro Lowpass 1 do termo D [Hz]"
     },
-    "pidTuningDTermLowpassFrequencyHelp": {
-        "message": "Frequência do Lowpass do Termo D [Hz] (0 significa desativado)"
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "Frequência de corte do filtro Lowpass 2 do termo D [Hz]"
     },
-    "pidTuningDTermNotchEnable": {
-        "message": "Ativar filtro Notch do termo D"
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "Filtros Notch do Termo D"
     },
     "pidTuningDTermNotchFrequency": {
-        "message": "Frequência do filtro Notch do Termo D [Hz]"
-    },
-    "pidTuningDTermNotchFrequencyHelp": {
-        "message": "Frequência do filtro Notch do Termo D [Hz] (0 significa desativado)"
+        "message": "Frequência central do filtro Notch do Termo D [Hz]"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "Cutoff do filtro Notch do termo D [Hz]"
+        "message": "Frequência de corte do filtro Notch do termo D [Hz]"
     },
-    "pidTuningDTermNotchCutoffHelp": {
-        "message": "Cutoff do filtro Notch do termo D em Hz (Aqui é onde o filtro Notch começa. Por exemplo, com o filtro notch em 160 e o Notch Hz em 360, ele terá uma faixa de 160-360Hz com a maior atenuação em torno do centro)"
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "Filtro Lowpass do Yaw"
     },
     "pidTuningYawLowpassFrequency": {
-        "message": "Frequência de Lowpass do Yaw [Hz]"
-    },
-    "pidTuningYawLowpassFrequencyHelp": {
-        "message": "Frequência do Lowpass do Yaw [Hz] (O eixo Yaw muitas vezes pode ter mais ruido que os demais. Este filtro afeta somente o P do yaw)"
+        "message": "Frequência de corte do filtro Lowpass do Yaw [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Compensação da Voltagem da bateria (Vbat) no PID"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "Aumenta os valores do PID para compensar quando a voltagem da bateria diminui. Isso resulta em características mais constantes durante o voo. A quantidade de compensação aplicada é calculada a partir da Voltagem Máxima da Célula indicada na aba Energia & Bateria, então tenha certeza de que foi configurado adequadamente."
+        "message": "Aumenta os valores do PID para compensar quando a voltagem da bateria (Vbat) diminui. Isso resulta em características mais constantes durante o voo. A quantidade de compensação aplicada é calculada a partir da $t(powerBatteryMaximum.message) indicada na aba $t(tabPower.message), então tenha certeza de que a configurou corretamente."
     },
     "configHelp2": {
         "message": "Rotação da placa em graus, permite que a placa seja montada de lado, de ponta-cabeça, rotacionada, etc. Quando estiver utilizando sensores externos, use o alinhamento dos sensores (Giro, Acc, Mag) para definir a posição do sensor independente da orientação da placa. "
     },
     "failsafeFeaturesHelpOld": {
-        "message": "As configurações de segurança contra falhas mudaram consideravelmente. Use o Betaflight <strong>v1.12.0+<\/strong> para ativar o painel de configuração aprimorado."
+        "message": "As configurações do Failsafe mudaram consideravelmente. Use o Betaflight <strong>v1.12.0+<\/strong> para ativar o painel de configuração aprimorado."
     },
     "failsafePaneTitleOld": {
-        "message": "Segurança contra falhas do receptor"
+        "message": "Failsafe do receptor"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "A segurança contra falhas tem dois estágios. O <strong>Estágio 1<\/strong> é iniciado quando o canal recebe um sinal inválido, quando o receptor solicita o modo ou quando não há nenhum sinal do receptor. As configurações de segurança do canal são aplicadas em <span class=\"message-negative\">todos canais<\/span> e um breve período de tempo é providenciado para que seja possível recuperar. O <strong>Estágio 2<\/strong> é iniciado quando a condição de falha acorre durante mais tempo do que o tempo de espera definido e enquanto a aeronave estiver <span class=\"message-negative\">armada<\/span>, todos os canais permanecerão nas configurações de segurança definidas a menos que sejam sobrepostos por algum procedimento. <br \/><strong>Nota:<\/strong> Antes de iniciar o estágio 1, as configurações de segurança também são aplicadas a todos canais AUX que também estão com sinais inválidos."
+        "message": "O Failsafe tem dois estágios. O <strong>Estágio 1<\/strong> é iniciado quando o canal recebe um sinal inválido, quando o receptor solicita o modo ou quando não há nenhum sinal do receptor. As configurações de segurança do canal são aplicadas em <span class=\"message-negative\">todos canais<\/span> e um breve período de tempo é providenciado para que seja possível se recuperar. O <strong>Estágio 2<\/strong> é iniciado quando a condição de falha ocorre durante mais tempo do que o tempo de espera definido e enquanto a aeronave estiver <span class=\"message-negative\">armada<\/span>: Todos os canais permanecerão nas configurações de segurança definidas a menos que sejam sobrepostos por algum procedimento. <br \/><strong>Nota:<\/strong> Antes de iniciar o estágio 1, as configurações de segurança também são aplicadas a todos canais AUX que também estão com sinais inválidos."
     },
     "failsafePulsrangeTitle": {
         "message": "Configuração de faixa de pulsos válidos"
@@ -2626,22 +2684,22 @@
         "message": "Tempo para recuperação no estágio 1"
     },
     "failsafeThrottleLowItem": {
-        "message": "Delay para o Throttle baixo [1 = 0.1 sec.]"
+        "message": "Delay do Failsafe para o Throttle baixo [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Apenas desarme a aeronave ao invés de executar o procedimento de segurança contra falhas se o throttle estava baixo por este determinado período de tempo"
+        "message": "Apenas desarme a aeronave ao invés de executar o Failsafe se o throttle estiver baixo por este determinado período de tempo"
     },
     "failsafeThrottleItem": {
         "message": "Valor do Throttle utilizado para aterrissar"
     },
     "failsafeOffDelayItem": {
-        "message": "Delay para desligar os motores em caso de falha [1 = 0.1 sec.]"
+        "message": "Delay para desligar os motores durante o Failsafe [1 = 0.1 sec.]"
     },
     "failsafeOffDelayHelp": {
         "message": "Tempo para ficar no modo de aterrissagem até que os motores sejam desligados e a aeronave desarmada"
     },
     "failsafeSubTitle1": {
-        "message": "Estágio 2 - Procedimentos"
+        "message": "Estágio 2 - Procedimento do Failsafe"
     },
     "failsafeProcedureItemSelect1": {
         "message": "Aterrissar"
@@ -2650,10 +2708,28 @@
         "message": "Cair"
     },
     "failsafeKillSwitchItem": {
-        "message": "\"Kill Switch\" da prevenção contra acidentes (configure na aba Modos)"
+        "message": "\"Kill Switch\" do Failsafe (configure o Failsafe na aba Modos)"
     },
     "failsafeKillSwitchHelp": {
-        "message": "Ative esta opção para alterar o modo da segurança contra falhas (aba Modos) isso funciona como um kill switch, parando o procedimento em execução. <strong>Nota:<\/strong> Não é possível Armar enquanto o kill switch estiver na posição LIGADO"
+        "message": "Ative esta opção para fazer com que o switch do Failsafe (aba Modos) desligue a aeronave, sobrepondo o procedimento do Failsafe. <strong>Nota:<\/strong> Não é possível Armar enquanto o switch estiver na posição LIGADO"
+    },
+    "failsafeSwitchTitle": {
+        "message": "Switch do Failsafe"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "Ação do switch do Failsafe"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "Esta opção determina o que acontece quando o Failsafe é ativado por um switch AUX:<br\/><strong>Estágio 1<\/strong> Ativa o estágio 1 do failsafe. Isto é útil se você deseja simular o comportamento exato da perda de sinal.<br\/><strong>Estágio 2<\/strong> pula o 1º estágio e ativa o 2º procedimento imediatamente.<br\/><strong>Kill<\/strong> desarma instantaneamente (sua aeronave irá cair)"
+    },
+    "failsafeSwitchOptionStage1": {
+        "message": "Estágio 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "Estágio 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Kill"
     },
     "powerButtonSave": {
         "message": "Salvar"
@@ -2845,7 +2921,7 @@
         "message": "Escala [1\/10th mV\/A]"
     },
     "powerAmperageOffset": {
-        "message": "Offset [mV]"
+        "message": "Offset [mA]"
     },
     "powerBatteryHead": {
         "message": "Bateria"
@@ -2905,7 +2981,7 @@
         "message": "Unidades"
     },
     "osdSetupTimersTitle": {
-        "message": "Timers"
+        "message": "Cronômetros"
     },
     "osdSetupAlarmsTitle": {
         "message": "Alarmes"
@@ -2928,14 +3004,29 @@
     "osdSetupOpenFont": {
         "message": "Abrir Arquivo de Fonte"
     },
-    "osdSetupLogo": {
-        "message": "Logo na fonte:"
+    "osdSetupCustomLogoTitle": {
+        "message": "Logo do boot:"
     },
-    "osdSetupReplaceLogo": {
-        "message": "Substituir Logo"
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "Selecionar imagem&hellip;"
     },
-    "osdSetupReplaceLogoHelp": {
-        "message": "A imagem customizada da logo deve ser 288x72 pixels em tamanho e conter somente pixels em preto e branco em um fundo completamente verde."
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "Imagem customizada:"
+    },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "O tamanho deve ser $t(logoWidthPx)×$t(logoHeightPx) pixels"
+    },
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "Deve conter pixels verdes, preto e branco"
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "Pressione <b>$t(osdSetupUploadFont.message)<\/b> para manter a logo customizada"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Tamanho da imagem inválido: {{width}}×{{height}} (deveria ser $t(logoWidthPx)×$t(logoHeightPx))"
+    },
+    "osdSetupCustomLogoColorMapError": {
+        "message": "A imagem contém uma paleta de cores inválida (somente verde, preto e branco são permitidos)"
     },
     "osdSetupReplaceLogoImageSizeError": {
         "message": "Tamanho da imagem inválida; era esperado $1x$2 ao invés de $3x$4"
@@ -2962,7 +3053,7 @@
         "message": "Modo do Vídeo"
     },
     "osdSetupCameraConnected": {
-        "message": "Camera Conectada"
+        "message": "Câmera Conectada"
     },
     "osdSetupCameraConnectedValueYes": {
         "message": "Sim"
@@ -3082,7 +3173,7 @@
         "message": "Relógio real (data \/ hora)"
     },
     "osdDescElementAdjustmentRange": {
-        "message": "Faixa de ajuste de configuração ativo e seu valor"
+        "message": "Faixa e valor do elemento de ajuste atualmente ativo"
     },
     "osdDescElementHomeDirection": {
         "message": "Seta mostrando a direção da base"
@@ -3100,10 +3191,10 @@
         "message": "Barra de bússola gráfica, mostrando a direção atual"
     },
     "osdDescElementTimer1": {
-        "message": "Mostra o valor do timer 1"
+        "message": "Mostra o valor do cronômetro 1"
     },
     "osdDescElementTimer2": {
-        "message": "Mostra o valor do timer 2"
+        "message": "Mostra o valor do cronômetro 2"
     },
     "osdDescElementRemaningTimeEstimate": {
         "message": "Tempo estimado de voo restante"
@@ -3151,31 +3242,34 @@
         "message": "Número do arquivo do registro da caixa preta"
     },
     "osdDescStatTimer1": {
-        "message": "Valor do timer 1 ao desarmar"
+        "message": "Valor do cronômetro 1 ao desarmar"
     },
     "osdDescStatTimer2": {
-        "message": "Valor do timer 2 ao desarmar"
+        "message": "Valor do cronômetro 2 ao desarmar"
     },
     "osdDescStatRtcDateTime": {
         "message": "Data e hora do relógio"
+    },
+    "osdDescStatBattery": {
+        "message": "Voltagem da bateria em tempo real"
     },
     "osdTimerSource": {
         "message": "Origem:"
     },
     "osdTimerSourceTooltip": {
-        "message": "Selecione a origem do timer, isto controla a duração\/evento que o timer mede"
+        "message": "Selecione a origem do cronômetro, isto controla a duração\/evento que o cronômetro mede"
     },
     "osdTimerPrecision": {
         "message": "Precisão:"
     },
     "osdTimerPrecisionTooltip": {
-        "message": "Selecione a precisão do timer, isto controla qual a precisão que o timer reporta"
+        "message": "Selecione a precisão do cronômetro, isto controla em qual precisão o cronômetro será exibido"
     },
     "osdTimerAlarm": {
         "message": "Alarme:"
     },
     "osdTimerAlarmTooltip": {
-        "message": "Selecione o limite do alarme do timer em minutos, quando o tempo excede este valor, o elemento no OSD irá piscar, um valor de 0 desabilita o alarme"
+        "message": "Selecione o limite do alarme do cronômetro em minutos, quando o tempo excede este valor, o elemento no OSD irá piscar, um valor de 0 desabilita o alarme"
     },
     "osdWarningArmingDisabled": {
         "message": "Mostra o principal motivo de não ter armado"
@@ -3193,19 +3287,22 @@
         "message": "Mostra uma visualização do beeper (mostra 4 asteriscos)"
     },
     "osdWarningCrashFlipMode": {
-        "message": "Alertas quando estiver de ponta cabeça depois que o modo de batida for ativado"
+        "message": "Alerta quando o modo de virar após cair (Turtle mode) estiver ativo"
+    },
+    "osdWarningEscFail": {
+        "message": "Mostra uma lista com os ESCs\/motores que estão falhando (A temperatura ou RPM estão fora dos limites configurados)"
     },
     "osdSectionHelpElements": {
         "message": "Ativar ou desativar elementos do OSD."
     },
     "osdSectionHelpVideoMode": {
-        "message": "Defina o modo de vídeo esperado da camera (normalmente isto pode ser deixado em AUTOMATICO, se estiver tendo problemas, então defina esta opção para o mesmo modo que a saída da camera)."
+        "message": "Defina o modo de vídeo esperado da camera (normalmente isto pode ser deixado em AUTOMÁTICO, se estiver tendo problemas, então defina esta opção para o mesmo modo que a saída da camera)."
     },
     "osdSectionHelpUnits": {
         "message": "Define o sistema de unidades para leituras numéricas."
     },
     "osdSectionHelpTimers": {
-        "message": "Configure os timers de voo."
+        "message": "Configure os cronômetros de voo."
     },
     "osdSectionHelpAlarms": {
         "message": "Defina os limites utilizados para elementos do OSD com alertas."
@@ -3222,11 +3319,14 @@
     "osdWritePermissions": {
         "message": "Você não tem <span class=\"message-negative\">permissões de escrita<\/span> para este arquivo"
     },
+    "osdButtonSaved": {
+        "message": "Salvo"
+    },
     "mainHelpArmed": {
-        "message": "Armar Motor"
+        "message": "Motor Armado"
     },
     "mainHelpFailsafe": {
-        "message": "Modo de segurança contra falhas"
+        "message": "Modo do Failsafe"
     },
     "mainHelpLink": {
         "message": "Status do Link Serial"
@@ -3268,7 +3368,7 @@
         "message": "Magnetômetro (se suportado)"
     },
     "configurationSmallAngle": {
-        "message": "Angulo máximo para ARMAR [degrees]"
+        "message": "Angulo máximo permitido para Armar [degrees]"
     },
     "configurationSmallAngleHelp": {
         "message": "A aeronave não irá ARMAR se estiver inclinada além do limite de graus especificado. Somente será utilizado se o acelerômetro estiver ativado. Definir um angulo de 180 irá efetivamente desativar esta verificação"
@@ -3313,13 +3413,13 @@
         "message": "Perfil"
     },
     "pidTuningProfileTip": {
-        "message": "Até 3 perfis PID (2 para alguns controladores) podem ser armazenados no controlador de voo. os perfis incluem o PID, Ponto de ajuste D, e configurações de angulo\/horizonte desta aba. Quando estiver em campo, simples comandos no transmissor (veja as instruções online) podem ser utilizados para alternar entre os perfis."
+        "message": "Até 3 perfis PID (2 para alguns controladores) podem ser armazenados no controlador de voo. os perfis incluem o PID, Ponto D, e configurações de angulo\/horizonte desta aba. Quando estiver em campo, simples comandos no transmissor (veja as instruções online) podem ser utilizados para alternar entre os perfis."
     },
     "pidTuningRateProfile": {
         "message": "Perfil de taxa"
     },
     "pidTuningRateProfileTip": {
-        "message": "Até 3 diferentes perfis de taxa podem ser armazenados no controlador de voo. O perfil de taxa inclui configurações da 'Taxa do RC', 'Taxa', 'Expo do RC', 'Throttle', e 'TPA'. Alternar entre os perfis de taxa é possível durante o voo, basta configurar um switch de 3 posições para 'Seleção do Perfil de Taxa' na aba de Configurações."
+        "message": "Até 3 diferentes perfis de taxa podem ser armazenados no controlador de voo. O perfil de taxa inclui configurações da 'Taxa do RC', 'Taxa', 'Expo do RC', 'Throttle', e 'TPA'. Alternar entre os perfis de taxa é possível durante o voo, basta configurar um switch de 3 posições para 'Seleção do Perfil de Taxa' na aba de Ajustes."
     },
     "pidTuningDelta": {
         "message": "Método Derivativo"
@@ -3334,19 +3434,19 @@
         "message": "<b>Derivativo a partir do Erro<\/b> gera uma reposta mais direta ao stick e é melhor para corridas.<br><br><b>Derivativo a partir da Medição<\/b> gera uma resposta mais suave ao stick e é melhor para freestyle"
     },
     "pidTuningPidControllerTip": {
-        "message": "<b>Legado vs Betaflight (flutuante):<\/b> A lógica e a escala do PID são exatamente os mesmo. Não é necessário reajustar. O Legado é o antigo Betaflight Evolved Rewrite, que é um controlador PID básico baseado em matemática de números inteiros. o controlador PID Betaflight usa matemática de números com ponto flutuante e tem várias novas funcionalidades especificamente desenhadas para multirotores<br><b>Inteiro vs Flutuante:<\/b> A lógica e a escala do PID é exatamente a mesma. Não é necessário reajustar. placas F1 não tem um FPU a bordo e a matemática com ponto flutuante aumentam a carga no CPU; Matemática com inteiros melhora a performance, mas a matemática com ponto flutuante é mais precisa."
+        "message": "<b>Legado vs Betaflight (flutuante):<\/b> A lógica e a escala do PID são exatamente os mesmo. Não é necessário reajustar. O Legado é o antigo Betaflight Evolved Rewrite, que é um controlador PID básico baseado em matemática de números inteiros. o controlador PID Betaflight usa matemática de números com ponto flutuante e tem várias novas funcionalidades especificamente desenhadas para multirotores<br><b>Inteiro vs Flutuante:<\/b> A lógica e a escala do PID é exatamente a mesma. Não é necessário reajustar. placas F1 não tem um FPU a bordo e a matemática com ponto flutuante aumenta a carga no CPU; Matemática com inteiros melhora a performance, mas a matemática com ponto flutuante é mais precisa."
     },
     "pidTuningFilterTip": {
         "message": "<b>Filtro Soft para o Giroscópio:<\/b> Um filtro Lowpass para o Giroscópio. Use valores mais baixos para filtrar mais.<br><b>Filtro do Termo D:<\/b> Filtro Lowpass para o termo D. Pode afetar a afinação do D. Use valores mais baixos para filtrar mais.<br><b>Filtro Yaw:<\/b> Filtra a saída do Yaw. Pode ajudar os veículos com ruídos no eixo Yaw."
     },
     "pidTuningPidTuningTip": {
-        "message": "<b>Proporcional:<\/b> Força da resistência ao tentar mover o multirotor em qualquer direção<br><b>Integral:<\/b> Aumenta a habilidade de manter a posição inicial e reduz o drift, mas também aumenta o delay para retornar à posição inicial.<br><b>Derivativo:<\/b> Melhora a velocidade de recuperação dos desvios, mas também aumento o ruído<br><b>Taxas e Expo:<\/b> Determine a sensação dos sticks baseado nestes parâmetros. Use o gráfico e modelo 3D para encontrar suas configurações preferidas"
+        "message": "<b>Proporcional:<\/b> Força da resistência ao tentar mover o multirotor em qualquer direção<br><b>Integral:<\/b> Aumenta a habilidade de manter a posição inicial e reduz o drift, mas também aumenta o atraso para retornar à posição inicial.<br><b>Derivativo:<\/b> Melhora a velocidade de recuperação dos desvios, mas também aumenta o ruído<br><b>Taxas e Expo:<\/b> Determine a sensação dos sticks baseado nestes parâmetros. Use o gráfico e modelo 3D para encontrar suas configurações preferidas"
     },
     "pidTuningRatesTip": {
         "message": "Modifique as taxas e veja como elas afetam a curva do stick"
     },
     "configurationCamera": {
-        "message": "Camera"
+        "message": "Câmera"
     },
     "configurationPersonalization": {
         "message": "Personalização"
@@ -3355,7 +3455,7 @@
         "message": "Nome da aeronave"
     },
     "configurationFpvCamAngleDegrees": {
-        "message": "Angulo da camera FPV [degrees]"
+        "message": "Angulo da câmera FPV [degrees]"
     },
     "onboardLoggingBlackbox": {
         "message": "Dispositivo de caixa preta"
@@ -3379,7 +3479,7 @@
         "message": "Confirmar"
     },
     "dialogConfirmResetNote": {
-        "message": "ALERTA: Tem certeza que deseja restaurar TODAS as configurações para os valores padrão?"
+        "message": "ATENÇÃO: Tem certeza que deseja restaurar TODAS as configurações para os valores padrão?"
     },
     "dialogConfirmResetConfirm": {
         "message": "Restaurar"
@@ -3388,12 +3488,12 @@
         "message": "Cancelar"
     },
     "modeCameraWifi": {
-        "message": "BOTÃO WI-FI DA CAMERA"
+        "message": "BOTÃO WI-FI DA CÂMERA"
     },
     "modeCameraPower": {
-        "message": "BOTÃO LIGAR DA CAMERA"
+        "message": "BOTÃO LIGAR DA CÂMERA"
     },
     "modeCameraChangeMode": {
-        "message": "ALTERAR MODO DA CAMERA"
+        "message": "ALTERAR MODO DA CÂMERA"
     }
 }
