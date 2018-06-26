@@ -3025,12 +3025,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "La palette couleurs de l'image n'est pas valide (seuls le vert, le noir et le blanc sont autorisés)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Taille de l'image invalide; requise $1×$2 au lieu de $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "La palette couleurs de l'image n'est pas valide (seuls le vert, le noir et le blanc sont autorisés)"
-    },
     "osdSetupUploadFont": {
         "message": "Charger le fichier de police"
     },

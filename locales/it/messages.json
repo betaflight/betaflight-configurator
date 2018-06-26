@@ -2908,12 +2908,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "L'immagine contiene una tavolozza colori non valida (sono ammessi solo verde, nero e bianco)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Dimensione immagine non valida; previsto $1×$2 invece di $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "L'immagine contiene una palette colori non valida (sono ammessi solo verde, nero e bianco)"
-    },
     "osdSetupUploadFont": {
         "message": "Carica carattere"
     },
