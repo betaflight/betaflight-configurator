@@ -3028,12 +3028,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "La imagen contiene una paleta de colores no válida (sólo se permite verde, blanco y negro)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Tamaño de imagen no válido; se esperaba $1×$2 en vez de $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "La imagen contiene una paleta de colores no válida (sólo se permite verde, blanco y negro)"
-    },
     "osdSetupUploadFont": {
         "message": "Cargar Fuente"
     },

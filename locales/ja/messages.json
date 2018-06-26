@@ -3028,12 +3028,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "画像に無効なカラーが含まれています\n (緑・黒・白のみ有効)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "画像サイズが無効; 既定サイズ $1×$2 無効サイズ $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "画像に無効なカラーパレットが含まれています \n(緑、黒、白のみが許可)"
-    },
     "osdSetupUploadFont": {
         "message": "フォントアップロード"
     },

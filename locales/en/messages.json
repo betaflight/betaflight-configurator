@@ -3119,12 +3119,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "The image contains an invalid color palette (only green, black and white are allowed)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Invalid image size; expected $1×$2 instead of $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "The image contains an invalid color palette (only green, black and white are allowed)"
-    },
     "osdSetupUploadFont": {
         "message": "Upload Font"
     },
