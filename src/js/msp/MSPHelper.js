@@ -1109,7 +1109,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_ADJUSTMENT_RANGE:
                 console.log('Adjustment range saved');
                 break;
-
+            case MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG:
+                console.log('Board alignment saved');
+                break;
             case MSPCodes.MSP_PID_CONTROLLER:
                 PID.controller = data.readU8();
                 break;
@@ -1874,7 +1876,6 @@ MspHelper.prototype.sendCurrentConfig = function(onCompleteCallback) {
     }
 
 }
-
 
 MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
 

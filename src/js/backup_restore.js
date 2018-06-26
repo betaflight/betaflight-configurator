@@ -141,6 +141,11 @@ function configuration_backup(callback) {
                 configuration.SERIAL_CONFIG = jQuery.extend(true, {}, SERIAL_CONFIG);
                 configuration.LED_STRIP = jQuery.extend(true, [], LED_STRIP);
                 configuration.LED_COLORS = jQuery.extend(true, [], LED_COLORS);
+                configuration.BOARD_ALIGNMENT_CONFIG = jQuery.extend(true, {}, BOARD_ALIGNMENT_CONFIG);
+                configuration.CRAFT_NAME = CONFIG.name;
+                configuration.MIXER_CONFIG = jQuery.extend(true, {}, MIXER_CONFIG);
+                configuration.SENSOR_CONFIG = jQuery.extend(true, {}, SENSOR_CONFIG);
+                configuration.PID_ADVANCED_CONFIG = jQuery.extend(true, {}, PID_ADVANCED_CONFIG);
 
                 if (semver.gte(CONFIG.apiVersion, "1.19.0")) {
                     configuration.LED_MODE_COLORS = jQuery.extend(true, [], LED_MODE_COLORS);
@@ -164,6 +169,9 @@ function configuration_backup(callback) {
                     configuration.MOTOR_CONFIG = jQuery.extend(true, {}, MOTOR_CONFIG);
                     configuration.GPS_CONFIG = jQuery.extend(true, {}, GPS_CONFIG);
                     configuration.COMPASS_CONFIG = jQuery.extend(true, {}, COMPASS_CONFIG);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    configuration.BEEPER_CONFIG = jQuery.extend(true, {}, BEEPER_CONFIG);
                 }
 
                 save();
@@ -303,26 +311,21 @@ function configuration_restore(callback) {
 
 
                     // validate
-                    if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.backupFileMinVersionAccepted)) {
-                                                
+                    if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.backupFileMinVersionAccepted)) {                    
                         if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
                             GUI.log(i18n.getMessage('backupFileUnmigratable'));
                             return;
                         }
-
-                        if (configuration.FEATURE_CONFIG.features._featureMask) {
+                        if (typeof configuration.FEATURE_CONFIG != 'undefined' && configuration.FEATURE_CONFIG.features._featureMask) {
                             var features = new Features(CONFIG);
                             features.setMask(configuration.FEATURE_CONFIG.features._featureMask);
                             configuration.FEATURE_CONFIG.features = features;
                         }
 
                         configuration_upload(configuration, callback);
-                        
                     } else {
                         GUI.log(i18n.getMessage('backupFileIncompatible'));
                     }
-
-                    
                 }
             };
 
@@ -763,6 +766,13 @@ function configuration_restore(callback) {
                 ];
                 
                 function update_unique_data_list() {
+                    uniqueData.push(MSPCodes.MSP_SET_NAME);
+                    uniqueData.push(MSPCodes.MSP_SET_SENSOR_CONFIG);
+                    uniqueData.push(MSPCodes.MSP_SET_MIXER_CONFIG);
+                    uniqueData.push(MSPCodes.MSP_SET_BEEPER_CONFIG);
+                    uniqueData.push(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG);
+                    uniqueData.push(MSPCodes.MSP_SET_ADVANCED_CONFIG);
+
                     if (semver.gte(CONFIG.apiVersion, "1.8.0")) {
                         uniqueData.push(MSPCodes.MSP_SET_LOOP_TIME);
                         uniqueData.push(MSPCodes.MSP_SET_ARMING_CONFIG);
@@ -803,6 +813,17 @@ function configuration_restore(callback) {
                     GPS_CONFIG = configuration.GPS_CONFIG;
                     COMPASS_CONFIG = configuration.COMPASS_CONFIG;
                     RSSI_CONFIG = configuration.RSSI_CONFIG;
+                    BOARD_ALIGNMENT_CONFIG = configuration.BOARD_ALIGNMENT_CONFIG;
+                    CONFIG.name = configuration.CRAFT_NAME;
+                    MIXER_CONFIG = configuration.MIXER_CONFIG;
+                    SENSOR_CONFIG = configuration.SENSOR_CONFIG;
+                    PID_ADVANCED_CONFIG = configuration.PID_ADVANCED_CONFIG;
+
+                    BEEPER_CONFIG.beepers = new Beepers(CONFIG);
+                    BEEPER_CONFIG.beepers.setMask(configuration.BEEPER_CONFIG.beepers._beeperMask);
+                    BEEPER_CONFIG.dshotBeaconTone = configuration.BEEPER_CONFIG.dshotBeaconTone;
+                    BEEPER_CONFIG.dshotBeaconConditions = new Beepers(CONFIG, [ "RX_LOST", "RX_SET" ]);
+                    BEEPER_CONFIG.dshotBeaconConditions.setMask(configuration.BEEPER_CONFIG.dshotBeaconConditions._beeperMask);
                 }
 
                 function send_unique_data_item() {
