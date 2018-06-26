@@ -3028,12 +3028,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "Šis attēls satur nederīgu krāsu paleti (tikai zaļa, melna un balta krāsa atļauta)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Nederīgs attēla izmērs; sagaidu $1×$2 šī vietā $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "Šis attēls satur nederīgu krāsu paleti (tikai zaļa, melna un balta krāsa atļauta)"
-    },
     "osdSetupUploadFont": {
         "message": "Augšupielādēt fontu"
     },

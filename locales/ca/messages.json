@@ -2932,12 +2932,6 @@
     "osdSetupCustomLogoInfoUploadHint": {
         "message": "Prem <b>$t(osdSetupUploadFont.message)<\/b> per a desar la imatge personalitzada"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Mida de la imatge invàlida; s'esperava $1×$2 en comptes de $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "La imatge conté una paleta de colors invàlida (només verd, negre i blanc són permesos)"
-    },
     "osdSetupUploadFont": {
         "message": "Pujar Font"
     },

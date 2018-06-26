@@ -3028,12 +3028,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "图像包含无效的颜色 (仅允许绿色、黑色和白色)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "图像大小无效：应该是 $1×$2 而不是 $3×$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "图像包含无效调色板 (仅允许绿色、黑色和白色)"
-    },
     "osdSetupUploadFont": {
         "message": "更新字体"
     },

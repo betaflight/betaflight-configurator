@@ -3028,12 +3028,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "A imagem contém uma paleta de cores inválida (somente verde, preto e branco são permitidos)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "Tamanho da imagem inválida; era esperado $1x$2 ao invés de $3x$4"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "A imagem contém uma palheta de cores inválida (somente é permitido verde, preto e branco)"
-    },
     "osdSetupUploadFont": {
         "message": "Carregar Fonte"
     },

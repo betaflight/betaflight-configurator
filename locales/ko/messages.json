@@ -3028,12 +3028,6 @@
     "osdSetupCustomLogoColorMapError": {
         "message": "이미지가 유효하지 않은 색상표를 포함하고 있습니다 (오직 녹색, 검정 및 흰색만 허용됨)"
     },
-    "osdSetupReplaceLogoImageSizeError": {
-        "message": "유효하지 않은 이미지 크기; $3×$4 대신 $1×$2 예상"
-    },
-    "osdSetupReplaceLogoImageColorsError": {
-        "message": "이미지가 유효하지 않은 색상표를 포함하고 있습니다 (오직 녹색, 검정 및 흰색만 허용됨)"
-    },
     "osdSetupUploadFont": {
         "message": "글꼴 업로드"
     },
