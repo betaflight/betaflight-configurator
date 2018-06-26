@@ -843,7 +843,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
                         FILTER_CONFIG.gyro_hardware_lpf = data.readU8();
                         FILTER_CONFIG.gyro_32khz_hardware_lpf = data.readU8();
-                        FILTER_CONFIG.gyro_soft_lpf_hz = data.readU16();
+                        FILTER_CONFIG.gyro_lowpass_hz = data.readU16();
                         FILTER_CONFIG.gyro_lowpass2_hz = data.readU16();
                         FILTER_CONFIG.gyro_lowpass_type = data.readU8();
                         FILTER_CONFIG.gyro_lowpass2_type = data.readU8();
@@ -1472,7 +1472,7 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
         case MSPCodes.MSP_SET_FILTER_CONFIG:
-            buffer.push8(FILTER_CONFIG.gyro_soft_lpf_hz)
+            buffer.push8(FILTER_CONFIG.gyro_lowpass_hz)
                 .push16(FILTER_CONFIG.dterm_lowpass_hz)
                 .push16(FILTER_CONFIG.yaw_lowpass_hz);
             if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
