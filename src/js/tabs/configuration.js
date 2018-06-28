@@ -10,6 +10,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     if (GUI.active_tab != 'configuration') {
         GUI.active_tab = 'configuration';
+        GUI.configuration_loaded = true;
     }
 
     if (semver.lt(CONFIG.apiVersion, "1.36.0")) {

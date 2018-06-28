@@ -177,9 +177,65 @@ function configuration_backup(callback) {
                 save();
             }
         }
+
+        if (GUI.configuration_loaded === true) {
+            return fetch_unique_data_item();
+        }
+        var promises = [ getAdvancedConfig(), getSensorConfig(), getCraftName(), getBoardAlignmentConfig(), getMixerConfig(), getBeeperConfig() ];
+        Promise.all(promises).
+        then(function () {
+            fetch_unique_data_item();
+        });
+
         
-        // start fetching
-        fetch_unique_data_item();
+    }
+
+    function getAdvancedConfig() {
+        return new Promise(function (resolve, reject) {
+            MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function() {
+                resolve();
+            });
+        });
+    }
+
+    function getSensorConfig() {
+        return new Promise(function (resolve, reject) {
+            MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
+                resolve();
+            });
+        });
+    }
+
+    function getCraftName() {
+        return new Promise(function (resolve, reject) {
+            MSP.send_message(MSPCodes.MSP_NAME, false, false, function() {
+                resolve();
+            });
+        });
+    }
+
+    function getBoardAlignmentConfig() {
+        return new Promise(function (resolve, reject) {
+            MSP.send_message(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG, false, false, function() {
+                resolve();
+            });
+        });
+    }
+
+    function getMixerConfig() {
+        return new Promise(function (resolve, reject) {
+            MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, function() {
+                resolve();
+            });
+        });
+    }
+
+    function getBeeperConfig() {
+        return new Promise(function (resolve, reject) {
+            MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, function() {
+                resolve();
+            });
+        });
     }
 
     function save() {
@@ -316,7 +372,7 @@ function configuration_restore(callback) {
                             GUI.log(i18n.getMessage('backupFileUnmigratable'));
                             return;
                         }
-                        if (typeof configuration.FEATURE_CONFIG != 'undefined' && configuration.FEATURE_CONFIG.features._featureMask) {
+                        if (configuration.FEATURE_CONFIG.features._featureMask) {
                             var features = new Features(CONFIG);
                             features.setMask(configuration.FEATURE_CONFIG.features._featureMask);
                             configuration.FEATURE_CONFIG.features = features;
