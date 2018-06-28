@@ -381,7 +381,13 @@ OSD.constants = {
     CROSSHAIRS: {
       name: 'CROSSHAIRS',
       desc: 'osdDescElementCrosshairs',
-      default_position: 193,
+      default_position: function() {
+          var position = 193;
+          if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] != 'NTSC') {
+              position += FONT.constants.SIZES.LINE;
+          }
+          return position;
+      },
       draw_order: 40, 
       positionable: function() {
         return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
@@ -391,7 +397,13 @@ OSD.constants = {
     ARTIFICIAL_HORIZON: {
       name: 'ARTIFICIAL_HORIZON',
       desc: 'osdDescElementArtificialHorizon',
-      default_position: 194,
+      default_position: function() {
+          var position = 74;
+          if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] != 'NTSC') {
+              position += FONT.constants.SIZES.LINE;
+          }
+          return position;
+      },
       draw_order: 10,
       positionable: function() {
         return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
@@ -422,7 +434,13 @@ OSD.constants = {
     HORIZON_SIDEBARS: {
       name: 'HORIZON_SIDEBARS',
       desc: 'osdDescElementHorizonSidebars',
-      default_position: 194,
+      default_position: function() {
+          var position = 194;
+          if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] != 'NTSC') {
+              position += FONT.constants.SIZES.LINE;
+          }
+          return position;
+      },
       draw_order: 50,
       positionable: function() {
         return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
@@ -1119,14 +1137,20 @@ OSD.msp = {
     unpack: {
       position: function(bits, c) {
         var display_item = {};
+
+        var positionable = typeof(c.positionable) === 'function'? c.positionable() : c.positionable;
+        var default_position = typeof(c.default_position) === 'function'? c.default_position() : c.default_position;
+
+        display_item.positionable = positionable;
         if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
           // size * y + x
-          display_item.position = FONT.constants.SIZES.LINE * ((bits >> 5) & 0x001F) + (bits & 0x001F);
+          display_item.position = positionable ? FONT.constants.SIZES.LINE * ((bits >> 5) & 0x001F) + (bits & 0x001F) : default_position;
           display_item.isVisible = (bits & OSD.constants.VISIBLE) != 0;
         } else {
-          display_item.position = (bits === -1) ? c.default_position : bits;
+          display_item.position = (bits === -1) ? default_position : bits;
           display_item.isVisible = bits !== -1;
         }
+
         return display_item;
       },
       timer: function(bits, c) {
@@ -1264,7 +1288,6 @@ OSD.msp = {
         desc: c.desc,
         index: j,
         draw_order: c.draw_order,
-        positionable: c.positionable,
         preview: suffix ? c.preview + suffix : c.preview
       }, this.helpers.unpack.position(v, c)));
     }
@@ -1322,9 +1345,6 @@ OSD.msp = {
     for (let item of d.display_items) {
       if (typeof(item.preview) === 'function') {
         item.preview = item.preview(d);
-      }
-      if (typeof(item.positionable) === 'function') {
-          item.positionable = item.positionable(d);
       }
     }
 
