@@ -517,7 +517,7 @@ OSD.constants = {
       name: 'GPS_SPEED',
       desc: 'osdDescElementGPSSpeed',
       default_position: -1,
-      draw_order: 330,
+      draw_order: 430,
       positionable: true,
       preview: function(osd_data) {
         return ' 40' + (osd_data.unit_mode === 0 ? 'M' : 'K');
@@ -527,7 +527,7 @@ OSD.constants = {
       name: 'GPS_SATS',
       desc: 'osdDescElementGPSSats',
       default_position: -1,
-      draw_order: 320,
+      draw_order: 420,
       positionable: true,
       preview: FONT.symbol(SYM.GPS_SAT_L) + FONT.symbol(SYM.GPS_SAT_R) + '14'
     },
@@ -535,7 +535,7 @@ OSD.constants = {
       name: 'GPS_LON',
       desc: 'osdDescElementGPSLon',
       default_position: -1,
-      draw_order: 350,
+      draw_order: 450,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_EAST) + '-000.0000000'
     },
@@ -543,7 +543,7 @@ OSD.constants = {
       name: 'GPS_LAT',
       desc: 'osdDescElementGPSLat',
       default_position: -1,
-      draw_order: 340,
+      draw_order: 440,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_NORTH) + '-00.0000000 '
     },
@@ -647,7 +647,7 @@ OSD.constants = {
       name: 'HOME_DIRECTION',
       desc: 'osdDescElementHomeDirection',
       default_position: -1,
-      draw_order: 370,
+      draw_order: 470,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_SOUTH + 2)
     },
@@ -655,7 +655,7 @@ OSD.constants = {
       name: 'HOME_DISTANCE',
       desc: 'osdDescElementHomeDistance',
       default_position: -1,
-      draw_order: 360,
+      draw_order: 460,
       positionable: true,
       preview:  function(osd_data) {
         return '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE) + (semver.gte(CONFIG.apiVersion, "1.37.0")?'    ':'');
@@ -701,7 +701,7 @@ OSD.constants = {
       name: 'ESC_TEMPERATURE',
       desc: 'osdDescElementEscTemperature',
       default_position: -1,
-      draw_order: 380,
+      draw_order: 480,
       positionable: true,
       preview: FONT.symbol(SYM.TEMP_C) + '45'
     },
@@ -709,7 +709,7 @@ OSD.constants = {
         name: 'ESC_RPM',
         desc: 'osdDescElementEscRpm',
         default_position: -1,
-        draw_order: 390,
+        draw_order: 490,
         positionable: true,
         preview: '226000'
       },
@@ -725,7 +725,7 @@ OSD.constants = {
         name: 'RTC_DATE_TIME',
         desc: 'osdDescElementRtcDateTime',
         default_position: -1,
-        draw_order: 400,
+        draw_order: 500,
         positionable: true,
         preview: '2017-11-11 16:20:00'
     },
@@ -733,7 +733,7 @@ OSD.constants = {
         name: 'ADJUSTMENT_RANGE',
         desc: 'osdDescElementAdjustmentRange',
         default_position: -1,
-        draw_order: 410,
+        draw_order: 510,
         positionable: true,
         preview: 'PITCH/ROLL P: 42'
     },
@@ -761,11 +761,19 @@ OSD.constants = {
       name: 'CORE_TEMPERATURE',
       desc: 'osdDescElementCoreTemperature',
       default_position: -1,
-      draw_order: 420,
+      draw_order: 520,
       positionable: true,
       preview: function(osd_data) {
         return OSD.generateTemperaturePreview(osd_data, 33);
       }
+    },
+    ANTI_GRAVITY: {
+        name: 'ANTI_GRAVITY',
+        desc: 'osdDescAntiGravity',
+        default_position: -1,
+        draw_order: 320,
+        positionable: true,
+        preview: 'AG'
     }
   },
   UNKNOWN_DISPLAY_FIELD: {
@@ -976,6 +984,11 @@ OSD.chooseFields = function () {
                     F.ADJUSTMENT_RANGE,
                     F.CORE_TEMPERATURE
                   ]);
+                  if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                      OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                        F.ANTI_GRAVITY
+                      ]);
+                  }
               }
             }
           }
