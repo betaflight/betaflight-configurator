@@ -779,7 +779,7 @@ OSD.constants = {
         name: 'G_FORCE',
         desc: 'osdDescGForce',
         default_position: -1,
-        draw_order: 11,
+        draw_order: 15,
         positionable: true,
         preview: '1.0G'
     }
