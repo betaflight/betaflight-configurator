@@ -336,7 +336,7 @@
 #font-logo-preview-container {
   background:rgba(0, 255, 0, 0.4);
   margin-bottom: 10px;
-  width: 50%;
+  width: 45%;
   float: left;
 }
 
@@ -347,6 +347,7 @@
 }
 
 #font-logo-info {
+  width: 45%;
   margin-left: 18px;
   font-size: 125%;
   line-height: 150%;

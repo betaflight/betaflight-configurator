@@ -80,7 +80,13 @@ LogoManager.init = function (font, logoStartIndex) {
                         var rgbPixel = ctx.getImageData(x, y, 1, 1).data.slice(0, 3),
                             colorKey = rgbPixel.join("-");
                         if (!this.constants.MCM_COLORMAP[colorKey]) {
-                            GUI.log(i18n.getMessage("osdSetupCustomLogoColorMapError"));
+                            GUI.log(i18n.getMessage("osdSetupCustomLogoColorMapError", {
+                                valueR: rgbPixel[0],
+                                valueG: rgbPixel[1],
+                                valueB: rgbPixel[2],
+                                posX: x,
+                                posY: y,
+                            }));
                             return false;
                         }
                     }
@@ -162,7 +168,7 @@ LogoManager.openImage = function () {
                         this.showConstraintSatisfied(constraint);
                     } else {
                         this.showConstraintNotSatisfied(constraint);
-                        reject();
+                        reject("Boot logo image constraint violation");
                         return;
                     }
                 }
