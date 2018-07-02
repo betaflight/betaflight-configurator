@@ -774,6 +774,14 @@ OSD.constants = {
         draw_order: 320,
         positionable: true,
         preview: 'AG'
+    },
+    G_FORCE: {
+        name: 'G_FORCE',
+        desc: 'osdDescGForce',
+        default_position: -1,
+        draw_order: 11,
+        positionable: true,
+        preview: '1.0G'
     }
   },
   UNKNOWN_DISPLAY_FIELD: {
@@ -978,17 +986,22 @@ OSD.chooseFields = function () {
                 F.ESC_RPM
               ]);
               if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                  F.REMAINING_TIME_ESTIMATE,
+                  F.RTC_DATE_TIME,
+                  F.ADJUSTMENT_RANGE,
+                  F.CORE_TEMPERATURE
+                ]);
+                if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
                   OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                    F.REMAINING_TIME_ESTIMATE,
-                    F.RTC_DATE_TIME,
-                    F.ADJUSTMENT_RANGE,
-                    F.CORE_TEMPERATURE
+                    F.ANTI_GRAVITY
                   ]);
-                  if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
-                      OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                        F.ANTI_GRAVITY
-                      ]);
+                  if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                        F.G_FORCE
+                    ]);
                   }
+                }
               }
             }
           }
