@@ -46,9 +46,13 @@ TABS.gps.initialize = function (callback) {
             var lat = GPS_DATA.lat / 10000000;
             var lon = GPS_DATA.lon / 10000000;
             var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
+            var alt = GPS_DATA.alt;
+            if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
+                alt = alt / 10;
+            }
 
             $('.GPS_info td.fix').html((GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
-            $('.GPS_info td.alt').text((GPS_DATA.alt / 10) + ' m');
+            $('.GPS_info td.alt').text(alt + ' m');
             $('.GPS_info td.lat a').prop('href', url).text(lat.toFixed(4) + ' deg');
             $('.GPS_info td.lon a').prop('href', url).text(lon.toFixed(4) + ' deg');
             $('.GPS_info td.speed').text(GPS_DATA.speed + ' cm/s');
