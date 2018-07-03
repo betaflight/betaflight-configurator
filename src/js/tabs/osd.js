@@ -1022,16 +1022,11 @@ OSD.chooseFields = function () {
                   OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                     F.ANTI_GRAVITY
                   ]);
-                  if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                  if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
                       OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                        F.ANTI_GRAVITY
-                      ]);
-                      if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
-                          OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                              F.LOG_STATUS,
-                              F.G_FORCE,
-                            ]);
-                      }
+                          F.G_FORCE,
+                          F.LOG_STATUS,
+                        ]);
                   }
                 }
               }
