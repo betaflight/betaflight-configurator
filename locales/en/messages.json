@@ -3295,7 +3295,9 @@
     "osdDescAntiGravity": {
         "message": "Enables an indicator when the anti gravity is active"
     },
-
+    "osdDescGForce": {
+        "message": "Shows how much G-Force the craft is experiencing"
+    },
     "osdDescStatMaxSpeed": {
         "message": "Maximum recorded speed"
     },
