@@ -228,10 +228,10 @@ function onOpen(openInfo) {
                                                 GUI.log(i18n.getMessage('craftNameReceived', [CONFIG.name]));
 
                                                 CONFIG.armingDisabled = false;
-                                                mspHelper.setArmingEnabled(false, false, finishOpen);
+                                                mspHelper.setArmingEnabled(false, false, setRtc);
                                             });
                                         } else {
-                                            finishOpen();
+                                            setRtc();
                                         }
                                     });
                                 });
@@ -277,6 +277,14 @@ function onOpen(openInfo) {
 
         // reset data
         $('div#connectbutton a.connect').data("clicks", false);
+    }
+}
+
+function setRtc() {
+    if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+        MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
+    } else {
+        finishOpen();
     }
 }
 

@@ -150,6 +150,11 @@ var MSPCodes = {
     MSP_ACC_TRIM:                   240,
     MSP_SERVO_MIX_RULES:            241,
     MSP_SET_SERVO_MIX_RULE:         242, // Not used
+    MSP_SET_4WAY_IF:                245, // Not used
+    MSP_SET_RTC:                    246,
+    MSP_RTC:                        247, // Not used
+    MSP_SET_BOARD_INFO:             248, // Not used
+    MSP_SET_SIGNATURE:              249, // Not used
 
     MSP_EEPROM_WRITE:               250,
     MSP_DEBUGMSG:                   253, // Not used

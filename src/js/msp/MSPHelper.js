@@ -1178,6 +1178,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_ARMING_DISABLE:
                 console.log('Arming disable');
                 break;
+            case MSPCodes.MSP_SET_RTC:
+                console.log('Real time clock set');
+                break;
             default:
                 console.log('Unknown code detected: ' + code);
         } else {
@@ -1576,6 +1579,16 @@ MspHelper.prototype.crunch = function(code) {
             }
             // This will be ignored if `armingDisabled` is true
             buffer.push8(value);
+
+            break;
+        case MSPCodes.MSP_SET_RTC:
+            var now = new Date();
+            buffer.push16(now.getUTCFullYear());
+            buffer.push8(now.getUTCMonth() + 1);
+            buffer.push8(now.getUTCDate());
+            buffer.push8(now.getUTCHours());
+            buffer.push8(now.getUTCMinutes());
+            buffer.push8(now.getUTCSeconds());
 
             break;
         default:
