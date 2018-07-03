@@ -91,7 +91,7 @@
     color: #fff;
 }
 
-.text1, .text2, .text3 {
+.text1, .text2, .text3, .text4 {
     margin-top: 15px;
     margin-bottom: 15px;
     font-weight: normal;
@@ -141,7 +141,6 @@
 
 .tab-landing .content_mid .text2 li {
     padding: 5px 0;
-    border-top: 1px dotted silver;
 }
 
 .tab-landing .content_mid .text3 {
@@ -162,6 +161,24 @@
 .tab-landing .content_mid .text3 .donate {
     margin-top: 10px;
     text-align: center;
+}
+
+.tab-landing .content_mid_bottom {
+    padding: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.tab-landing .content_mid_bottom .logo {
+    float: left;
+    width: 40px;
+}
+
+.tab-landing .content_mid_bottom .text4 {
+    margin-top: 0px;
+    margin-left: 5px;
+    display: block;
+    float: left;
 }
 
 /* changelog block */
