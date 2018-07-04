@@ -3120,7 +3120,7 @@
         "message": "Invalid image size: {{width}}×{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
-        "message": "The image contains an invalid color palette (only green, black and white are allowed)"
+        "message": "The image contains an invalid pixel: rgb({{valueR}}, {{valueG}}, {{valueB}}) at coordinates {{posX}}×{{posY}}"
     },
     "osdSetupUploadFont": {
         "message": "Upload Font"
