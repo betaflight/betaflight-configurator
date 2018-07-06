@@ -153,6 +153,10 @@ PortHandler.check_usb_devices = function (callback) {
                 $('div#port-picker #port').val('DFU');
             }
             self.dfu_available = true;
+
+            if (!GUI.connected_to) {
+                $('li.tab_firmware_flasher > a').trigger('click');
+            }
         } else {
             if ($("div#port-picker #port [value='DFU']").length) {
                $("div#port-picker #port [value='DFU']").remove();
