@@ -72,6 +72,7 @@
                                 <th class="proportional" i18n="pidTuningProportional"></th>
                                 <th class="integral" i18n="pidTuningIntegral"></th>
                                 <th class="derivative" i18n="pidTuningDerivative"></th>
+                                <th class="feedforward" i18n="pidTuningFeedforward"></th>
                                 <th class="rc_rate" i18n="pidTuningRcRate"></th>
                                 <th class="rate" i18n="pidTuningRate"></th>
                                 <th class="new_rates maxVel" i18n="pidTuningMaxVel"></th>
@@ -80,7 +81,7 @@
                         </table>
                         <table id="pid_main" class="pid_tuning">
                             <tr>
-                                <th colspan="8">
+                                <th colspan="9">
                                     <div class="pid_mode">
                                         <div i18n="pidTuningBasic" style="float:left;"></div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningPidTuningTip"></div>
@@ -93,6 +94,7 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="255" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="255" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="255" /></td>
+                                <td class="pid_data"><input type="number" name="f" step="1" min="0" max="255" /></td>
                                 <td rowspan="2" style="background-color:white;">
                                     <input type="number" name="rc_rate" step="0.01" min="0" max="2.55" />
                                     <div class="bracket"></div>
@@ -111,6 +113,7 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="255" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="255" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="255" /></td>
+                                <td class="pid_data"><input type="number" name="f" step="1" min="0" max="255" /></td>
                                 <td class="pitch_rate"><input type="number" name="pitch_rate" step="0.01" min="0" max="1.00" /></td>
                                 <td class="new_rates maxAngularVelPitch"></td>
                             </tr>
@@ -119,7 +122,8 @@
                                 <td bgcolor="#8080FF"></td>
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="255" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="255" /></td>
-                                <td></td>
+                                <td class="pid_data"><input type="number" name="d" step="1" min="0" max="255" /></td>
+                                <td class="pid_data"><input type="number" name="f" step="1" min="0" max="255" /></td>
                                 <td rowspan="1"><input type="number" name="rc_rate_yaw" step="0.01" min="0" max="2.55" /></td>
                                 <td><input type="number" name="yaw_rate" step="0.01" min="0" max="2.55" /></td>
                                 <td class="new_rates maxAngularVelYaw"></td>
@@ -293,7 +297,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="dtermSetpoint">
+                            <tr class="dtermSetpoint" style="height:30px;">
                                 <td><input type="number" name="dtermSetpoint-number" step="0.01" min="0.00" max="20"/></td>
                                 <td class="slider"><input type="range" name="dtermSetpoint-range" step="0.01" min="0.00" max="20"/></td>
                                 <td>
@@ -320,6 +324,19 @@
                             <tr class="dtermSetpointTransitionWarning">
                                 <td colspan="3">
                                     <span i18n="pidTuningDtermSetpointTransitionWarning"></span>
+                                </td>
+                            </tr>
+
+                            <tr class="feedforwardTransition" style="height:30px;">
+                                <td><input type="number" name="feedforwardTransition-number" step="0.01" min="0.00" max="1.00"/></td>
+                                <td class="slider"><input type="range" name="feedforwardTransition-range" step="0.01" min="0.00" max="1.00"/></td>
+                                <td>
+                                    <div>
+                                        <label>
+                                        <span i18n="pidTuningFeedforwardTransition"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardTransitionHelp"></div>
+                                    </div>
                                 </td>
                             </tr>
 
