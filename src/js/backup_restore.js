@@ -181,60 +181,19 @@ function configuration_backup(callback) {
         if (GUI.configuration_loaded === true) {
             return fetch_unique_data_item();
         }
-        var promises = [ getAdvancedConfig(), getSensorConfig(), getCraftName(), getBoardAlignmentConfig(), getMixerConfig(), getBeeperConfig() ];
-        Promise.all(promises).
-        then(function () {
-            fetch_unique_data_item();
-        });
 
-        
-    }
-
-    function getAdvancedConfig() {
-        return new Promise(function (resolve, reject) {
-            MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function() {
-                resolve();
-            });
-        });
-    }
-
-    function getSensorConfig() {
-        return new Promise(function (resolve, reject) {
-            MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, function() {
-                resolve();
-            });
-        });
-    }
-
-    function getCraftName() {
-        return new Promise(function (resolve, reject) {
-            MSP.send_message(MSPCodes.MSP_NAME, false, false, function() {
-                resolve();
-            });
-        });
-    }
-
-    function getBoardAlignmentConfig() {
-        return new Promise(function (resolve, reject) {
-            MSP.send_message(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG, false, false, function() {
-                resolve();
-            });
-        });
-    }
-
-    function getMixerConfig() {
-        return new Promise(function (resolve, reject) {
-            MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, function() {
-                resolve();
-            });
-        });
-    }
-
-    function getBeeperConfig() {
-        return new Promise(function (resolve, reject) {
-            MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, function() {
-                resolve();
-            });
+        MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG).then(function() {
+            return MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+        }).then(function() {
+            return MSP.promise(MSPCodes.MSP_NAME);
+        }).then(function() {
+            return MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
+        }).then(function() {
+            return MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+        }).then(function() {
+            return MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
+        }).then(function() {
+            return fetch_unique_data_item();
         });
     }
 
