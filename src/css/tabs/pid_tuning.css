@@ -222,6 +222,7 @@
     margin: 0px;
     border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
 }
 
 .tab-pid_tuning .gui_box {
@@ -244,12 +245,10 @@
     padding: 5px;
     text-align: left;
     border-right: 1px solid #ccc;
-    width: calc(100% / 9);
 }
 
 .tab-pid_tuning .pid_titlebar th:first-child {
     text-align: left;
-    width: calc(100% / 9);
 }
 
 .tab-pid_tuning .pid_titlebar th:last-child {
@@ -336,7 +335,6 @@
 .tab-pid_tuning table td {
     padding: 1px;
     padding-left: 5px;
-    width: calc(100% / 9);
     border-right: 1px solid #ccc;
 }
 

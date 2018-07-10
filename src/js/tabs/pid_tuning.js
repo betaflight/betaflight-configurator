@@ -399,11 +399,14 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.absoluteControlGain').hide();
             $('.throttleBoost').hide();
             $('.acroTrainerAngleLimit').hide();
+
             $('.pid_tuning .YAW input[name="d"]').hide();
-            $('.pid_tuning .ROLL input[name="f"]').hide();
-            $('.pid_tuning .PITCH input[name="f"]').hide();
-            $('.pid_tuning .YAW input[name="f"]').hide();
-            $('#pid-tuning .feedForwardTransition').hide();
+
+            // Feedforward column
+            $('#pid_main tr :nth-child(5)').hide();
+            $('#pid_main .pid_titlebar2 th').attr("colspan", 8);
+
+            $('#pid-tuning .feedforwardTransition').hide();
         }
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
