@@ -342,7 +342,7 @@ OSD.constants = {
       default_position: -9,
       draw_order: 110,
       positionable: true,
-      preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + '69'
+      preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + ' 69'
     },
     CPU_LOAD: {
       name: 'CPU_LOAD',
