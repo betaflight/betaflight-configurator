@@ -293,7 +293,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="dtermSetpoint" style="height:30px;">
+                            <tr class="dtermSetpoint">
                                 <td><input type="number" name="dtermSetpoint-number" step="0.01" min="0.00" max="20"/></td>
                                 <td class="slider"><input type="range" name="dtermSetpoint-range" step="0.01" min="0.00" max="20"/></td>
                                 <td>
@@ -322,8 +322,60 @@
                                     <span i18n="pidTuningDtermSetpointTransitionWarning"></span>
                                 </td>
                             </tr>
+
+                            <tr class="acroTrainerAngleLimit">
+                                <td><input type="number" name="acroTrainerAngleLimit-number" step="1" min="0" max="80"/></td>
+                                <td class="slider"><input type="range" name="acroTrainerAngleLimit-range" step="1" min="0" max="80"/></td>
+                                 <td colspan="2">
+                                    <div>
+                                        <label>
+                                        <span i18n="pidTuningAcroTrainerAngleLimit"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningAcroTrainerAngleLimitHelp"></div>
+                                    </div>
+                                 </td>
+                            </tr>
+
+                            <tr class="throttleBoost">
+                                <td><input type="number" name="throttleBoost-number" step="1" min="0" max="100"/></td>
+                                <td class="slider"><input type="range" name="throttleBoost-range" step="1" min="0" max="100"/></td>
+                                 <td colspan="2">
+                                    <div>
+                                        <label>
+                                        <span i18n="pidTuningThrottleBoost"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningThrottleBoostHelp"></div>
+                                    </div>
+                                 </td>
+                            </tr>
+
+                            <tr class="absoluteControlGain">
+                                <td><input type="number" name="absoluteControlGain-number" step="1" min="0" max="20"/></td>
+                                <td class="slider"><input type="range" name="absoluteControlGain-range" step="1" min="0" max="20"/></td>
+                                 <td colspan="2">
+                                    <div>
+                                        <label>
+                                        <span i18n="pidTuningAbsoluteControlGain"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningAbsoluteControlGainHelp"></div>
+                                    </div>
+                                 </td>
+                            </tr>
+
+                            <tr class="itermrotation">
+                                <td><input type="checkbox" id="itermrotation" class="toggle" /></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label for="itermrotation">
+                                        <span i18n="pidTuningItermRotation"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningItermRotationHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
                             <tr>
-                                <td style="height:30px;"><input type="checkbox" id="vbatpidcompensation" class="toggle" /></td>
+                                <td><input type="checkbox" id="vbatpidcompensation" class="toggle" /></td>
                                 <td colspan="2">
                                     <div>
                                         <label for="vbatpidcompensation">
@@ -333,6 +385,54 @@
                                     </div>
                                 </td>
                             </tr>
+
+                            <tr class="smartfeedforward">
+                                <td><input type="checkbox" id="smartfeedforward" class="toggle" /></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label for="smartfeedforward">
+                                        <span i18n="pidTuningSmartFeedforward"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningSmartFeedforwardHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="itermrelax">
+                                <td><input type="checkbox" id="itermrelax" class="toggle" /></td>
+                                <td colspan="2">
+                                    <span>
+                                        <label for="itermrelax">
+                                            <span i18n="pidTuningItermRelax" />
+                                        </label>
+                                    </span>
+
+                                    <span class="suboption">
+                                        <label for="itermrelaxAxes">
+                                            <span i18n="pidTuningItermRelaxAxes" />
+                                        </label>
+                                        <select id="itermrelaxAxes">
+                                            <option i18n="pidTuningItermRelaxAxesOptionRP"     value="1">
+                                            <option i18n="pidTuningItermRelaxAxesOptionRPY"    value="2"/>
+                                            <option i18n="pidTuningItermRelaxAxesOptionRPInc"  value="3"/>
+                                            <option i18n="pidTuningItermRelaxAxesOptionRPYInc" value="4"/>
+                                        </select>
+                                    </span>
+
+                                    <span class="suboption">
+                                        <label for="itermrelaxType">
+                                            <span i18n="pidTuningItermRelaxType" />
+                                        </label>
+                                        <select id="itermrelaxType">
+                                            <option i18n="pidTuningItermRelaxTypeOptionGyro"     value="0"/> 
+                                            <option i18n="pidTuningItermRelaxTypeOptionSetpoint" value="1"/>
+                                        </select>
+                                    </span>
+
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningItermRelaxHelp"></div>
+                                </td>
+                            </tr>
+
                         </table>
                     </div>
 
