@@ -73,15 +73,8 @@ TABS.setup.initialize = function (callback) {
                 buffer.push(1);
                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
             });
-
-            $('a.rebootMsc').click(function () {
-                var buffer = [];
-                buffer.push(2);
-                MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
-            });
         } else {
             $('.initialSetupRebootBootloader').hide();
-            $('.initialSetupRebootMsc').hide();
         }
 
         // UI Hooks
