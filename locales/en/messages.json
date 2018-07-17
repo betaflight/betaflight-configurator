@@ -3364,6 +3364,9 @@
     "osdDescStatBattery": {
         "message": "Voltage of the battery in real time"
     },
+    "osdDescStatGForce": {
+        "message": "Max G-Force experienced by the craft"
+    },
     
 
     "osdTimerSource": {
