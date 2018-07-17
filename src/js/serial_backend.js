@@ -43,6 +43,8 @@ function initializeSerialBackend() {
                 thisElement.data("clicks", !clicks);
             };
 
+            GUI.configuration_loaded = false;
+
             var selected_baud = parseInt($('div#port-picker #baud').val());
             var selected_port = $('div#port-picker #port option:selected').data().isManual ?
                     $('#port-override').val() :
