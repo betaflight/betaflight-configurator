@@ -9,11 +9,20 @@
     "error": {
         "message": "Error: {{errorMessage}}"
     },
+    "errorTitle": {
+        "message": "Error"
+    },
     "warningTitle": {
         "message": "Warning"
     },
     "noticeTitle": {
         "message": "Notice"
+    },
+    "operationNotSupported": {
+        "message": "This operation is not supported by your hardware."
+    },
+    "storageDeviceNotReady": {
+        "message": "The storage device is not ready. In the case of a microSD card, make sure it is properly recognised by your flight controller."
     },
     "options_title": {
         "message": "Application Options"
@@ -598,8 +607,14 @@
     "initialSetupButtonRestore": {
         "message": "Restore"
     },
+    "initialSetupButtonRebootBootloader": {
+        "message": "Activate Boot Loader / DFU"
+    },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span class=\"message-negative\">not</span> included - See 'dump' cli command"
+        "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span class=\"message-negative\">not</span> included - use the command 'diff all' in CLI for this."
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Reboot into <strong>boot loader / DFU</strong> mode."
     },
     "initialSetupBackupSuccess": {
         "message": "Backup saved <span class=\"message-positive\">successfully</span>"
@@ -3575,6 +3590,18 @@
     },
     "onboardLoggingOnboardSDCard": {
         "message": "Onboard SD card"
+    },
+    "onboardLoggingMsc": {
+        "message": "Mass Storage Mode"
+    },
+    "onboardLoggingMscNote": {
+        "message": "Reboot into <strong>mass storage device (MSC)</strong> mode. Once activated, the onboard flash or SD card on your flight controller will be recognised as a storage device by your computer, and allow you to download your log files. Eject and power cycel your flight controller to leave mass storage device mode."
+    },
+    "onboardLoggingRebootMscText": {
+        "message": "Activate Mass Storage Device Mode"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "Mass storage mode can not be activated because the storage device is not ready."
     },
     "dialogConfirmResetTitle": {
         "message": "Confirm"

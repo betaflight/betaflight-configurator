@@ -27,6 +27,12 @@ function MspHelper () {
     'RUNCAM_DEVICE_CONTROL': 14, // support communitate with RunCam Device
     'LIDAR_TF': 15
   };
+
+    self.REBOOT_TYPES = {
+        FIRMWARE: 0,
+        BOOTLOADER: 1,
+        MSC: 2
+    };
 }
 
 MspHelper.prototype.reorderPwmProtocols = function (protocol) {
@@ -617,6 +623,17 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_SET_REBOOT:
+                if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                    var rebootType = data.read8();
+                    if (rebootType === self.REBOOT_TYPES.MSC) {
+                        if (data.read8() === 0) {
+                            console.log('Storage device not ready.');
+
+                            showErrorDialog(i18n.getMessage('storageDeviceNotReady'));
+                            break;
+                        }
+                    }
+                }
                 console.log('Reboot request accepted');
                 break;
 
@@ -1187,6 +1204,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('Unknown code detected: ' + code);
         } else {
             console.log('FC reports unsupported message error: ' + code);
+
+            switch (code) {
+            case MSPCodes.MSP_SET_REBOOT:
+                showErrorDialog(i18n.getMessage('operationNotSupported'));
+            }
         }
     }
     // trigger callbacks, cleanup/remove callback after trigger
@@ -1208,7 +1230,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
         }
     }
 }
-
 
 /**
  * Encode the request body for the MSP request with the given code and return it as an array of bytes.

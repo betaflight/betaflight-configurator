@@ -145,6 +145,20 @@ TABS.onboard_logging.initialize = function (callback) {
                     $("div.blackboxRate").show();
                 }
             }).change();
+
+            if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                if (SDCARD.supported || DATAFLASH.supported) {
+
+                    $(".tab-onboard_logging")
+                        .toggleClass("msc-supported", true);
+
+                    $('a.onboardLoggingRebootMsc').click(function () {
+                        var buffer = [];
+                        buffer.push(2);
+                        MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+                    });
+                }
+            }
             
             update_html();
             
@@ -296,6 +310,18 @@ TABS.onboard_logging.initialize = function (callback) {
             .toggleClass("sdcard-error", SDCARD.state === MSP.SDCARD_STATE_FATAL)
             .toggleClass("sdcard-initializing", SDCARD.state === MSP.SDCARD_STATE_CARD_INIT || SDCARD.state === MSP.SDCARD_STATE_FS_INIT)
             .toggleClass("sdcard-ready", SDCARD.state === MSP.SDCARD_STATE_READY);
+
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+            var mscIsReady = (DATAFLASH.totalSize > 0) || (SDCARD.state === MSP.SDCARD_STATE_READY);
+            $(".tab-onboard_logging")
+                .toggleClass("msc-not-ready", !mscIsReady);
+
+            if (!mscIsReady) {
+                $('a.onboardLoggingRebootMsc').addClass('disabled');
+            } else {
+                $('a.onboardLoggingRebootMsc').removeClass('disabled');
+            }
+        }
         
         switch (SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
