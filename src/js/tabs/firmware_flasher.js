@@ -325,7 +325,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         // UI Hooks
         $('a.load_file').click(function () {
-            chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{extensions: ['hex']}]}, function (fileEntry) {
+            chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
                 if (chrome.runtime.lastError) {
                     console.error(chrome.runtime.lastError.message);
 
@@ -465,7 +465,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         $(document).on('click', 'span.progressLabel a.save_firmware', function () {
             var summary = $('select[name="firmware_version"] option:selected').data('summary');
-            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: summary.file, accepts: [{extensions: ['hex']}]}, function (fileEntry) {
+            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: summary.file, accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
                 if (chrome.runtime.lastError) {
                     console.error(chrome.runtime.lastError.message);
                     return;
