@@ -67,7 +67,7 @@ TABS.cli.initialize = function (callback) {
             var filename = generateFilename(prefix, suffix);
 
             var accepts = [{
-                extensions: [suffix],
+                description: suffix.toUpperCase() + ' files', extensions: [suffix],
             }];
 
             chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {

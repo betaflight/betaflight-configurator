@@ -129,7 +129,7 @@ FONT.parseMCMFontFile = function(data) {
 
 FONT.openFontFile = function($preview) {
   return new Promise(function(resolve) {
-    chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
+    chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{description: 'MCM files', extensions: ['mcm']}]}, function (fileEntry) {
       FONT.data.loaded_font_file = fileEntry.name;
       if (chrome.runtime.lastError) {
           console.error(chrome.runtime.lastError.message);
@@ -2047,7 +2047,7 @@ TABS.osd.initialize = function (callback) {
         })
 
         $(document).on('click', 'span.progressLabel a.save_font', function () {
-            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'baseflight', accepts: [{extensions: ['mcm']}]}, function (fileEntry) {
+            chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: 'baseflight', accepts: [{description: 'MCM files', extensions: ['mcm']}]}, function (fileEntry) {
                 if (chrome.runtime.lastError) {
                     console.error(chrome.runtime.lastError.message);
                     return;

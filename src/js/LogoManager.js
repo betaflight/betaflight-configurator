@@ -26,7 +26,7 @@ var LogoManager = LogoManager || {
     },
     // config for logo image selection dialog
     acceptFileTypes: [
-        { extensions: ['png', 'bmp'] },
+        { description: 'images', extensions: ['png', 'bmp'] },
     ],
 };
 

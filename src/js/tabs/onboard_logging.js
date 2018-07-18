@@ -471,7 +471,7 @@ TABS.onboard_logging.initialize = function (callback) {
         var filename = generateFilename(prefix, suffix);
 
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, 
-                accepts: [{extensions: [suffix]}]}, function(fileEntry) {
+                accepts: [{description: suffix.toUpperCase() + ' files', extensions: [suffix]}]}, function(fileEntry) {
             var error = chrome.runtime.lastError;
             
             if (error) {

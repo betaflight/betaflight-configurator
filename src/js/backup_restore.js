@@ -206,7 +206,7 @@ function configuration_backup(callback) {
         var filename = generateFilename(prefix, suffix);
 
         var accepts = [{
-            extensions: [suffix]
+            description: suffix.toUpperCase() + ' files', extensions: [suffix]
         }];
 
         // create or load the file
@@ -277,7 +277,7 @@ function configuration_restore(callback) {
     var chosenFileEntry = null;
 
     var accepts = [{
-        extensions: ['json']
+        description: 'JSON files', extensions: ['json']
     }];
 
     // load up the file
