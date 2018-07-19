@@ -60,6 +60,9 @@
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
     },
+    "rememberLastTab": {
+        "message": "Reopen last tab on connect"
+    },
     "userLanguageSelect": {
         "message": "Language (need to restart the application for the changes to take effect)"
     },

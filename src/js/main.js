@@ -91,7 +91,14 @@ function startProcess() {
             GUI.tab_switch_cleanup(function () {
                 // disable previously active tab highlight
                 $('li', ui_tabs).removeClass('active');
-
+                
+                // store last active tab only when connected
+                if (GUI.connected_to) {
+                    chrome.storage.local.set({
+                        lastTab: $(self).parent().attr("class")
+                    });
+                }
+        
                 // Highlight selected tab
                 $(self).parent().addClass('active');
 
@@ -215,6 +222,13 @@ function startProcess() {
                         }
 
                     }).change();
+                });
+
+                chrome.storage.local.get('rememberLastTab', function (result) {
+                    $('div.rememberLastTab input')
+                        .prop('checked', !!result.rememberLastTab)
+                        .change(function() { chrome.storage.local.set({rememberLastTab: $(this).is(':checked')}) })
+                        .change();
                 });
 
                 if (GUI.operating_system !== 'ChromeOS') {

@@ -321,5 +321,21 @@ GUI_control.prototype.content_ready = function (callback) {
     if (callback) callback();
 }
 
+GUI_control.prototype.selectDefaultTabWhenConnected = function() {
+    chrome.storage.local.get(['rememberLastTab', 'lastTab'], function (result) {
+        let fallbackTab = '#tabs ul.mode-connected .tab_setup a'; 
+        if (!(result.rememberLastTab && !!result.lastTab)) {
+            $(fallbackTab).click();
+            return;
+        }
+        let $savedTab = $("#tabs ul.mode-connected ." + result.lastTab + " a");
+        if (!!$savedTab.data("ignore-reopen")) {
+            $(fallbackTab).click();
+        } else {
+            $savedTab.click();
+        }
+    });    
+};
+
 // initialize object into GUI variable
 var GUI = new GUI_control();
