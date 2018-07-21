@@ -20,7 +20,6 @@ TABS.adjustments.initialize = function (callback) {
     }
 
     function load_html() {
-        self.adjust_template();
         $('#content').load("./tabs/adjustments.html", process_html);
     }
 
@@ -153,6 +152,8 @@ TABS.adjustments.initialize = function (callback) {
 
     function process_html() {
 
+        self.adjust_template();
+
         var auxChannelCount = RC.active_channels - 4;
 
         var modeTableBodyElement = $('.tab-adjustments .adjustments tbody');
@@ -272,14 +273,20 @@ TABS.adjustments.cleanup = function (callback) {
 };
 
 TABS.adjustments.adjust_template = function () {
-    var availableFunctionCount;
-    if (semver.lt(CONFIG.apiVersion, "1.31.0")) {
-        availableFunctionCount = 21; // Available in betaflight 2.9
+
+    var selectFunction = $('#functionSelectionSelect');
+    var elementsNumber;
+
+    if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+        elementsNumber = 26; // PID Audio
+    } else if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+        elementsNumber = 25; // Horizon Strength
     } else {
-        availableFunctionCount = 24; // RC rate Yaw / D setpoint / D setpoint transition added to 3.1.0
+        elementsNumber = 24; // Setpoint transition
     }
-    var template = $('#tab-adjustments-templates .adjustments .adjustment');
-    var functionList = $(template).find('.functionSelection .function');
-    var functionListOptions = $(functionList).find('option').slice(0,availableFunctionCount);
-    functionList.empty().append(functionListOptions);
+
+    for (let i = 0; i < elementsNumber; i++) {
+        selectFunction.append(new Option(i18n.getMessage('adjustmentsFunction' + i), i));
+    }
+
 };
