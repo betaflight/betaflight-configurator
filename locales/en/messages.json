@@ -1636,14 +1636,29 @@
     "adjustmentsFunction22": {
         "message": "D Setpoint"
     },
+    "adjustmentsFunction22_2": {
+        "message": "Pitch & Roll F Adjustment"
+    },
     "adjustmentsFunction23": {
         "message": "D Setpoint Transition"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Feedforward Transition"
     },
     "adjustmentsFunction24": {
         "message": "Horizon Strength Adjustment"
     },
     "adjustmentsFunction25": {
         "message": "PID-Audio Selection"
+    },
+    "adjustmentsFunction26": {
+        "message": "Pitch F Adjustment"
+    },
+    "adjustmentsFunction27": {
+        "message": "Roll F Adjustment"
+    },
+    "adjustmentsFunction28": {
+        "message": "Yaw F Adjustment"
     },
     "adjustmentsSave": {
         "message": "Save"
