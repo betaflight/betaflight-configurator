@@ -2741,6 +2741,67 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Increases the PID values to compensate when Vbat gets lower. This will give more constant flight characteristics throughout the flight. The amount of compensation that is applied is calculated from the $t(powerBatteryMaximum.message) set in the $t(tabPower.message) page, so make sure that is set to something appropriate."
     },
+    "pidTuningItermRotation": {
+        "message": "I Term Rotation"
+    },
+    "pidTuningItermRotationHelp": {
+        "message": "Rotates the current I Term vector properly to other axes as the quad rotates when yawing continuously during rolls and when performing funnels and other tricks. Very appreciated by LOS acro pilots."
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "Smart Feedforward"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "Reduces the effect of the F Term in the PIDF. When both the P Term and the F Term are active at the same moment, it only uses the larger of the two, avoiding overshoots without the needing to raise D, but also reduces the responsiveness effect produced by the F term when added to P."
+    },
+    "pidTuningItermRelax": {
+        "message": "I Term Relax"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Limits the accumulation of I Term when fast movements happen. This helps specially to reduce the bounceback at the end of rolls and other fast movements. You can choose the axes in which this is active, and if the fast movement is detectd using the Gyro or the Setpoint (stick)."
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "Axes:"
+    },
+    "pidTuningItermRelaxAxesOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningItermRelaxAxesOptionRPY": {
+        "message": "RPY"
+    },
+    "pidTuningItermRelaxAxesOptionRPInc": {
+        "message": "RP (increment only)"
+    },
+    "pidTuningItermRelaxAxesOptionRPYInc": {
+        "message": "RPY (increment only)"
+    },
+    "pidTuningItermRelaxType": {
+        "message": "Type:"
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "Gyro"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Setpoint"
+    },
+    "pidTuningAbsoluteControlGain": {
+        "message": "Absolute Control"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "This feature solves some underlying problems of I Term Rotation and should hopefully replace it at some point. The feature accumulates the absolute gyro error in quad coordinates and mixes a proportional correction into the setpoint. It needs to have the iterm_relax enable for RPY."
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Throttle Boost"
+    },
+    "pidTuningThrottleBoostHelp": {
+        "message": "This feature allows throttle to be temporarily boosted to the up to down-side to increase acceleration torque to the motors, providing a much faster throttle response."
+    },
+    "pidTuningAcroTrainerAngleLimit": {
+        "message": "Acro Trainer Angle Limit"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Adds a new angle limiting mode for pilots who are learning to fly in acro mode. The range valid is 10-80 (a value of 0 deactivates it)"
+    },
+
     "configHelp2": {
         "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },

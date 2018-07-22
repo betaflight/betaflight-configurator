@@ -299,6 +299,86 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.dtermLowpass2').hide();
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+
+            // I Term Rotation
+            $('input[id="itermrotation"]').prop('checked', ADVANCED_TUNING.itermRotation !== 0);
+
+             // Smart Feed Forward
+            $('input[id="smartfeedforward"]').prop('checked', ADVANCED_TUNING.smartFeedforward !== 0);
+
+            // I Term Relax
+            var itermRelaxCheck = $('input[id="itermrelax"]');
+
+            itermRelaxCheck.prop('checked', ADVANCED_TUNING.itermRelax !== 0);
+            $('select[id="itermrelaxAxes"]').val(ADVANCED_TUNING.itermRelax > 0 ? ADVANCED_TUNING.itermRelax : 1);
+            $('select[id="itermrelaxType"]').val(ADVANCED_TUNING.itermRelaxType);
+
+            itermRelaxCheck.change(function() {
+                var checked = $(this).is(':checked');
+
+                if (checked) {
+                    $('.itermrelax .suboption').show();
+                } else {
+                    $('.itermrelax .suboption').hide();
+                }
+            });
+            itermRelaxCheck.change();
+
+            // Absolute Control
+            var absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
+            var absoluteControlGainRangeElement = $('input[name="absoluteControlGain-range"]');
+
+            absoluteControlGainNumberElement.change(function () {
+                absoluteControlGainRangeElement.val($(this).val());
+            });
+            absoluteControlGainRangeElement.change(function () {
+                absoluteControlGainNumberElement.val($(this).val());
+            });
+            absoluteControlGainNumberElement.val(ADVANCED_TUNING.absoluteControlGain).change();
+
+            // Throttle Boost
+            var throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
+            var throttleBoostRangeElement = $('input[name="throttleBoost-range"]');
+
+            throttleBoostNumberElement.change(function () {
+                throttleBoostRangeElement.val($(this).val());
+            });
+            throttleBoostRangeElement.change(function () {
+                throttleBoostNumberElement.val($(this).val());
+            });
+            throttleBoostNumberElement.val(ADVANCED_TUNING.throttleBoost).change();
+
+            // Acro Trainer
+            var acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
+            var acroTrainerAngleLimitRangeElement = $('input[name="acroTrainerAngleLimit-range"]');
+
+            var validateAcroTrainerAngle = function(value) {
+                // The minimum acro trainer angle is 10, but we must let zero too to deactivate it
+                if (value > 0 && value < 10) {
+                    value = 10;
+                }
+                acroTrainerAngleLimitRangeElement.val(value);
+                acroTrainerAngleLimitNumberElement.val(value);
+            }
+
+            acroTrainerAngleLimitNumberElement.change(function () {
+                validateAcroTrainerAngle($(this).val());
+            });
+            acroTrainerAngleLimitRangeElement.change(function () {
+                validateAcroTrainerAngle($(this).val());
+            });
+            acroTrainerAngleLimitNumberElement.val(ADVANCED_TUNING.acroTrainerAngleLimit).change();
+
+        } else {
+            $('.itermrotation').hide();
+            $('.smartfeedforward').hide();
+            $('.itermrelax').hide();
+            $('.absoluteControlGain').hide();
+            $('.throttleBoost').hide();
+            $('.acroTrainerAngleLimit').hide();
+        }
+
         $('input[id="gyroNotch1Enabled"]').change(function() {
             var checked = $(this).is(':checked');
             var hz = FILTER_CONFIG.gyro_notch_hz > 0 ? FILTER_CONFIG.gyro_notch_hz : DEFAULT.gyro_notch_hz;
@@ -527,6 +607,21 @@ TABS.pid_tuning.initialize = function (callback) {
             FILTER_CONFIG.gyro_lowpass2_type = parseInt($('.pid_filter select[name="gyroLowpass2Type"]').val());
             FILTER_CONFIG.dterm_lowpass2_hz = parseInt($('.pid_filter input[name="dtermLowpass2Frequency"]').val());
         }
+
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+            ADVANCED_TUNING.itermRotation = $('input[id="itermrotation"]').is(':checked') ? 1 : 0;
+            ADVANCED_TUNING.smartFeedforward = $('input[id="smartfeedforward"]').is(':checked') ? 1 : 0;
+
+            ADVANCED_TUNING.itermRelax = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxAxes"]').val() : 0;
+            ADVANCED_TUNING.itermRelaxType = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxType"]').val() : 0;
+
+            ADVANCED_TUNING.absoluteControlGain = $('input[name="absoluteControlGain-number"]').val();
+
+            ADVANCED_TUNING.throttleBoost = $('input[name="throttleBoost-number"]').val();
+
+            ADVANCED_TUNING.acroTrainerAngleLimit = $('input[name="acroTrainerAngleLimit-number"]').val();
+        }
+
     }
 
     function showAllPids() {
