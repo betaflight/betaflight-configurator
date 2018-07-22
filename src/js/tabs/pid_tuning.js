@@ -370,6 +370,28 @@ TABS.pid_tuning.initialize = function (callback) {
             });
             acroTrainerAngleLimitNumberElement.val(ADVANCED_TUNING.acroTrainerAngleLimit).change();
 
+            // Yaw D
+            $('.pid_tuning .YAW input[name="d"]').val(PIDs[2][2]); // PID Yaw D
+
+            // Feedforward
+            $('.pid_tuning .ROLL input[name="f"]').val(ADVANCED_TUNING.feedforwardRoll);
+            $('.pid_tuning .PITCH input[name="f"]').val(ADVANCED_TUNING.feedforwardPitch);
+            $('.pid_tuning .YAW input[name="f"]').val(ADVANCED_TUNING.feedforwardYaw);
+
+            var feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
+            var feedforwardTransitionRangeElement = $('input[name="feedforwardTransition-range"]');
+
+            feedforwardTransitionNumberElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
+            feedforwardTransitionRangeElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
+
+            feedforwardTransitionNumberElement.change(function () {
+                feedforwardTransitionRangeElement.val($(this).val());
+            });
+            feedforwardTransitionRangeElement.change(function () {
+                feedforwardTransitionNumberElement.val($(this).val());
+            });
+
+
         } else {
             $('.itermrotation').hide();
             $('.smartfeedforward').hide();
@@ -377,6 +399,14 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.absoluteControlGain').hide();
             $('.throttleBoost').hide();
             $('.acroTrainerAngleLimit').hide();
+
+            $('.pid_tuning .YAW input[name="d"]').hide();
+
+            // Feedforward column
+            $('#pid_main tr :nth-child(5)').hide();
+            $('#pid_main .pid_titlebar2 th').attr("colspan", 8);
+
+            $('#pid-tuning .feedforwardTransition').hide();
         }
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
@@ -609,6 +639,7 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+
             ADVANCED_TUNING.itermRotation = $('input[id="itermrotation"]').is(':checked') ? 1 : 0;
             ADVANCED_TUNING.smartFeedforward = $('input[id="smartfeedforward"]').is(':checked') ? 1 : 0;
 
@@ -620,8 +651,13 @@ TABS.pid_tuning.initialize = function (callback) {
             ADVANCED_TUNING.throttleBoost = $('input[name="throttleBoost-number"]').val();
 
             ADVANCED_TUNING.acroTrainerAngleLimit = $('input[name="acroTrainerAngleLimit-number"]').val();
-        }
 
+            ADVANCED_TUNING.feedforwardRoll  = parseInt($('.pid_tuning .ROLL input[name="f"]').val());
+            ADVANCED_TUNING.feedforwardPitch = parseInt($('.pid_tuning .PITCH input[name="f"]').val());
+            ADVANCED_TUNING.feedforwardYaw   = parseInt($('.pid_tuning .YAW input[name="f"]').val());
+
+            ADVANCED_TUNING.feedforwardTransition = parseInt($('input[name="feedforwardTransition-number"]').val() * 100);
+        }
     }
 
     function showAllPids() {
@@ -1467,8 +1503,13 @@ TABS.pid_tuning.updatePidControllerParameters = function () {
     } else {
         $('.pid_tuning .YAW_JUMP_PREVENTION').hide();
 
-        $('#pid-tuning .dtermSetpointTransition').show();
-        $('#pid-tuning .dtermSetpoint').show();
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+            $('#pid-tuning .dtermSetpointTransition').hide();
+            $('#pid-tuning .dtermSetpoint').hide();
+        } else {
+            $('#pid-tuning .dtermSetpointTransition').show();
+            $('#pid-tuning .dtermSetpoint').show();
+        }
 
         $('#pid-tuning .delta').hide();
     }

@@ -277,7 +277,9 @@ TABS.adjustments.adjust_template = function () {
     var selectFunction = $('#functionSelectionSelect');
     var elementsNumber;
 
-    if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+        elementsNumber = 29; // PID Audio
+    } else if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
         elementsNumber = 26; // PID Audio
     } else if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
         elementsNumber = 25; // Horizon Strength
@@ -288,5 +290,19 @@ TABS.adjustments.adjust_template = function () {
     for (let i = 0; i < elementsNumber; i++) {
         selectFunction.append(new Option(i18n.getMessage('adjustmentsFunction' + i), i));
     }
+    
+    // For 1.40, the D Setpoint has been replaced, so we replace it with the correct values
+    if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
 
+        var element22 = selectFunction.find("option[value='22']");
+        var element23 = selectFunction.find("option[value='23']");
+
+        // Change the "text"
+        element22.text(i18n.getMessage('adjustmentsFunction22_2'));
+        element23.text(i18n.getMessage('adjustmentsFunction23_2'));
+
+        // Reorder, we insert it with the other FF elements to be coherent...
+        element22.insertAfter(selectFunction.find("option[value='25']"));
+        element23.insertAfter(selectFunction.find("option[value='28']"));
+    }
 };

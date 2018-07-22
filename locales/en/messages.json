@@ -1276,6 +1276,12 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolation Interval [ms]"
     },
+    "pidTuningFeedforwardTransition": {
+        "message": "Feedforward transition"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "With this parameter, the Feedforward term can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Feedforward is kept constant at its configured value. When the stick is positioned below that point, Feedforward is reduced proportionally, reaching 0 at the stick center position.<br> Value of 1 gives maximum smoothing effect, while value of 0 keeps the Feedforward fixed at its configured value over the whole stick range."
+    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
@@ -1299,6 +1305,9 @@
     },
     "pidTuningDerivative": {
         "message": "Derivative"
+    },
+    "pidTuningFeedforward": {
+        "message": "Feedforward"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
@@ -1627,14 +1636,29 @@
     "adjustmentsFunction22": {
         "message": "D Setpoint"
     },
+    "adjustmentsFunction22_2": {
+        "message": "Pitch & Roll F Adjustment"
+    },
     "adjustmentsFunction23": {
         "message": "D Setpoint Transition"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Feedforward Transition"
     },
     "adjustmentsFunction24": {
         "message": "Horizon Strength Adjustment"
     },
     "adjustmentsFunction25": {
         "message": "PID-Audio Selection"
+    },
+    "adjustmentsFunction26": {
+        "message": "Pitch F Adjustment"
+    },
+    "adjustmentsFunction27": {
+        "message": "Roll F Adjustment"
+    },
+    "adjustmentsFunction28": {
+        "message": "Yaw F Adjustment"
     },
     "adjustmentsSave": {
         "message": "Save"

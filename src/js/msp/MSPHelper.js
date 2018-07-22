@@ -878,7 +878,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 ADVANCED_TUNING.deltaMethod = data.readU8();
                 ADVANCED_TUNING.vbatPidCompensation = data.readU8();
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-                    ADVANCED_TUNING.dtermSetpointTransition = data.readU8();
+                    if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                        ADVANCED_TUNING.feedforwardTransition = data.readU8();
+                    } else {
+                        ADVANCED_TUNING.dtermSetpointTransition = data.readU8();
+                    }
                     ADVANCED_TUNING.dtermSetpointWeight = data.readU8();
                     ADVANCED_TUNING.toleranceBand = data.readU8();
                     ADVANCED_TUNING.toleranceBandReduction = data.readU8();
@@ -904,6 +908,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                     ADVANCED_TUNING.absoluteControlGain = data.readU8();
                                     ADVANCED_TUNING.throttleBoost = data.readU8();
                                     ADVANCED_TUNING.acroTrainerAngleLimit = data.readU8();
+                                    ADVANCED_TUNING.feedforwardRoll  = data.readU16();
+                                    ADVANCED_TUNING.feedforwardPitch = data.readU16();
+                                    ADVANCED_TUNING.feedforwardYaw   = data.readU16();
                                 }
                             }
                         }
@@ -1542,14 +1549,20 @@ MspHelper.prototype.crunch = function(code) {
                     .push16(ADVANCED_TUNING.yawItermIgnoreRate)
                     .push16(ADVANCED_TUNING.yaw_p_limit)
                     .push8(ADVANCED_TUNING.deltaMethod)
-                    .push8(ADVANCED_TUNING.vbatPidCompensation)
-                    .push8(ADVANCED_TUNING.dtermSetpointTransition)
-                    .push8(Math.min(ADVANCED_TUNING.dtermSetpointWeight, 254))
-                    .push8(ADVANCED_TUNING.toleranceBand)
-                    .push8(ADVANCED_TUNING.toleranceBandReduction)
-                    .push8(ADVANCED_TUNING.itermThrottleGain)
-                    .push16(ADVANCED_TUNING.pidMaxVelocity)
-                    .push16(ADVANCED_TUNING.pidMaxVelocityYaw);
+                    .push8(ADVANCED_TUNING.vbatPidCompensation);
+
+                if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                    buffer.push8(ADVANCED_TUNING.feedforwardTransition);
+                } else {
+                    buffer.push8(ADVANCED_TUNING.dtermSetpointTransition);
+                }
+
+                buffer.push8(Math.min(ADVANCED_TUNING.dtermSetpointWeight, 254))
+                      .push8(ADVANCED_TUNING.toleranceBand)
+                      .push8(ADVANCED_TUNING.toleranceBandReduction)
+                      .push8(ADVANCED_TUNING.itermThrottleGain)
+                      .push16(ADVANCED_TUNING.pidMaxVelocity)
+                      .push16(ADVANCED_TUNING.pidMaxVelocityYaw);
 
                 if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
                     buffer.push8(ADVANCED_TUNING.levelAngleLimit)
@@ -1569,9 +1582,11 @@ MspHelper.prototype.crunch = function(code) {
                                       .push8(ADVANCED_TUNING.itermRelaxType)
                                       .push8(ADVANCED_TUNING.absoluteControlGain)
                                       .push8(ADVANCED_TUNING.throttleBoost)
-                                      .push8(ADVANCED_TUNING.acroTrainerAngleLimit);
+                                      .push8(ADVANCED_TUNING.acroTrainerAngleLimit)
+                                      .push16(ADVANCED_TUNING.feedforwardRoll)
+                                      .push16(ADVANCED_TUNING.feedforwardPitch)
+                                      .push16(ADVANCED_TUNING.feedforwardYaw);
                             }
-
                         }
                     }
                 }
