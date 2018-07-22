@@ -323,17 +323,11 @@ GUI_control.prototype.content_ready = function (callback) {
 
 GUI_control.prototype.selectDefaultTabWhenConnected = function() {
     chrome.storage.local.get(['rememberLastTab', 'lastTab'], function (result) {
-        let fallbackTab = '#tabs ul.mode-connected .tab_setup a'; 
         if (!(result.rememberLastTab && !!result.lastTab)) {
-            $(fallbackTab).click();
+            $('#tabs ul.mode-connected .tab_setup a').click();
             return;
         }
-        let $savedTab = $("#tabs ul.mode-connected ." + result.lastTab + " a");
-        if (!!$savedTab.data("ignore-reopen")) {
-            $(fallbackTab).click();
-        } else {
-            $savedTab.click();
-        }
+        $("#tabs ul.mode-connected ." + result.lastTab + " a").click();
     });    
 };
 

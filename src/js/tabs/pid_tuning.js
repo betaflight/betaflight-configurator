@@ -39,8 +39,12 @@ TABS.pid_tuning.initialize = function (callback) {
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_RC_DEADBAND);
     }).then(function() {
-        $('#content').load("./tabs/pid_tuning.html", process_html);
+        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
     });
+
+    function load_html() {
+        $('#content').load("./tabs/pid_tuning.html", process_html);        
+    }
 
     function pid_and_rc_to_form() {
         self.setProfile();

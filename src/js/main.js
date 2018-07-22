@@ -98,7 +98,7 @@ function startProcess() {
             GUI.tab_switch_cleanup(function () {
                 // disable previously active tab highlight
                 $('li', ui_tabs).removeClass('active');
-                
+
                 // Highlight selected tab
                 $(self).parent().addClass('active');
 
