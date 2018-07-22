@@ -86,19 +86,19 @@ function startProcess() {
                 return;
             }
 
+            $("#tabs ul.mode-connected li").click(function() {
+                // store the first class of the current tab (omit things like ".active")
+                chrome.storage.local.set({
+                    lastTab: $(this).attr("class").split(' ')[0]
+                });
+            });
+        
             GUI.tab_switch_in_progress = true;
 
             GUI.tab_switch_cleanup(function () {
                 // disable previously active tab highlight
                 $('li', ui_tabs).removeClass('active');
                 
-                // store last active tab only when connected
-                if (GUI.connected_to) {
-                    chrome.storage.local.set({
-                        lastTab: $(self).parent().attr("class")
-                    });
-                }
-        
                 // Highlight selected tab
                 $(self).parent().addClass('active');
 
