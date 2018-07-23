@@ -391,6 +391,22 @@ TABS.pid_tuning.initialize = function (callback) {
                 feedforwardTransitionNumberElement.val($(this).val());
             });
 
+            // AntiGravity Mode
+            var antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
+            antiGravityModeSelect.change(function () {
+                var antiGravityModeValue = $('.antigravity select[id="antiGravityMode"]').val();
+
+                // Smooth
+                if (antiGravityModeValue == 0) {
+                    $('.antigravity  table th:nth-child(3)').hide();
+                    $('.antigravity  table td:nth-child(3)').hide();
+                } else {
+                    $('.antigravity  table th:nth-child(3)').show();
+                    $('.antigravity  table td:nth-child(3)').show();
+                }
+            });
+
+            antiGravityModeSelect.val(ADVANCED_TUNING.antiGravityMode).change();
 
         } else {
             $('.itermrotation').hide();
@@ -407,6 +423,9 @@ TABS.pid_tuning.initialize = function (callback) {
             $('#pid_main .pid_titlebar2 th').attr("colspan", 8);
 
             $('#pid-tuning .feedforwardTransition').hide();
+
+            $('.antigravity  table th:first-child').hide();
+            $('.antigravity  table td:first-child').hide();
         }
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
@@ -657,6 +676,8 @@ TABS.pid_tuning.initialize = function (callback) {
             ADVANCED_TUNING.feedforwardYaw   = parseInt($('.pid_tuning .YAW input[name="f"]').val());
 
             ADVANCED_TUNING.feedforwardTransition = parseInt($('input[name="feedforwardTransition-number"]').val() * 100);
+
+            ADVANCED_TUNING.antiGravityMode = $('select[id="antiGravityMode"]').val();
         }
     }
 

@@ -455,14 +455,25 @@
                         <table class="cf">
                             <thead>
                                 <tr>
+                                    <th i18n="pidTuningAntiGravityMode"></th>
                                     <th i18n="pidTuningAntiGravityGain"></th>
                                     <th i18n="pidTuningAntiGravityThres"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr style="height: 35px;">
-                                    <td><input type="number" name="itermAcceleratorGain" step="0.1" min="1" max="30" /></td>
-                                    <td><input type="number" name="itermThrottleThreshold" step="10" min="20" max="1000" /></td>
+                                    <td>
+                                        <select id="antiGravityMode">
+                                            <option i18n="pidTuningAntiGravityModeOptionSmooth" value="0">
+                                            <option i18n="pidTuningAntiGravityModeOptionStep"   value="1">
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="itermAcceleratorGain" step="0.1" min="1" max="30" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="itermThrottleThreshold" step="10" min="20" max="1000" />
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

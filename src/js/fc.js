@@ -380,6 +380,7 @@ var FC = {
             feedforwardPitch:           0,
             feedforwardYaw:             0,
             feedforwardTransition:      0,
+            antiGravityMode:            0,
         };
 
         SENSOR_CONFIG = {
