@@ -45,7 +45,11 @@ TABS.motors.initialize = function (callback) {
     }
 
     function load_motor_data() {
-        MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_html);
+        MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_mixer_config);
+    }
+
+    function load_mixer_config() {
+        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
     }
 
     function load_html() {

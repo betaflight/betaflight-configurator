@@ -299,7 +299,7 @@ function finishOpen() {
 
     onConnect();
 
-    $('#tabs ul.mode-connected .tab_setup a').click();
+    GUI.selectDefaultTabWhenConnected();
 }
 
 function connectCli() {

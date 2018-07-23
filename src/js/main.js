@@ -86,6 +86,13 @@ function startProcess() {
                 return;
             }
 
+            $("#tabs ul.mode-connected li").click(function() {
+                // store the first class of the current tab (omit things like ".active")
+                chrome.storage.local.set({
+                    lastTab: $(this).attr("class").split(' ')[0]
+                });
+            });
+        
             GUI.tab_switch_in_progress = true;
 
             GUI.tab_switch_cleanup(function () {
@@ -215,6 +222,13 @@ function startProcess() {
                         }
 
                     }).change();
+                });
+
+                chrome.storage.local.get('rememberLastTab', function (result) {
+                    $('div.rememberLastTab input')
+                        .prop('checked', !!result.rememberLastTab)
+                        .change(function() { chrome.storage.local.set({rememberLastTab: $(this).is(':checked')}) })
+                        .change();
                 });
 
                 if (GUI.operating_system !== 'ChromeOS') {

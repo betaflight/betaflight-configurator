@@ -40,12 +40,16 @@ TABS.receiver.initialize = function (callback) {
     }
 
     function load_rx_config() {
-        var next_callback = load_html;
+        var next_callback = load_mixer_config;
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
+    }
+
+    function load_mixer_config() {
+        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
     }
 
     function load_html() {
