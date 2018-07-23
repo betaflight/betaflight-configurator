@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="cf_column right">
-                <div class="default_btn show">
+                <div class="default_btn show showAllPids">
                     <a href="#" id="showAllPids" i18n="pidTuningShowAllPids"></a>
                 </div>
                 <div class="default_btn resetbt">
@@ -139,17 +139,17 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="pid_optional" class="gui_box grey topspacer pid_tuning">
-                        <table class="pid_titlebar">
-                            <tr>
+                    <div id="pid_baro_mag_gps" class="pid_optional needed_by_ALT needed_by_VEL needed_by_MAG needed_by_Pos needed_by_PosR needed_by_NavR gui_box grey topspacer pid_tuning">
+                        <table class="pid_titlebar needed_by_ALT needed_by_VEL needed_by_MAG">
+                            <tr class="needed_by_ALT needed_by_VEL needed_by_MAG">
                                 <th class="name"></th>
                                 <th class="proportional" i18n="pidTuningProportional"></th>
                                 <th class="integral" i18n="pidTuningIntegral"></th>
                                 <th class="derivative" i18n="pidTuningDerivative"></th>
                             </tr>
                         </table>
-                        <table id="pid_baro" class="pid_tuning">
-                            <tr>
+                        <table id="pid_baro" class="pid_tuning needed_by_ALT needed_by_VEL">
+                            <tr class="needed_by_ALT needed_by_VEL">
                                 <th colspan="4">
                                     <div class="pid_mode" i18n="pidTuningAltitude"></div>
                                 </th>
@@ -161,16 +161,16 @@
                                 <td><input type="number" name="i" step="1" min="0" max="255" /></td>
                                 <td><input type="number" name="d" step="1" min="0" max="255" /></td>
                             </tr>
-                            <tr class="Vario">
+                            <tr class="VEL">
                                 <!-- 9 -->
-                                <td>VEL</td>
+                                <td></td>
                                 <td><input type="number" name="p" step="1" min="0" max="255" /></td>
                                 <td><input type="number" name="i" step="1" min="0" max="255" /></td>
                                 <td><input type="number" name="d" step="1" min="0" max="255" /></td>
                             </tr>
                         </table>
-                        <table id="pid_mag" class="pid_tuning">
-                            <tr>
+                        <table id="pid_mag" class="pid_tuning needed_by_MAG">
+                            <tr class="needed_by_MAG">
                                 <th colspan="4">
                                     <div class="pid_mode" i18n="pidTuningMag"></div>
                                 </th>
@@ -183,8 +183,8 @@
                                 <td></td>
                             </tr>
                         </table>
-                        <table id="pid_gps" class="pid_tuning">
-                            <tr>
+                        <table id="pid_gps" class="pid_tuning needed_by_Pos needed_by_PosR needed_by_NavR">
+                            <tr class="needed_by_Pos needed_by_PosR needed_by_NavR">
                                 <th colspan="4">
                                     <div class="pid_mode" i18n="pidTuningGps"></div>
                                 </th>
@@ -213,9 +213,9 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="pid_accel" class="gui_box grey topspacer pid_tuning">
-                        <table id="pid_level" class="pid_tuning">
-                            <tr>
+                    <div id="pid_accel" class="pid_optional needed_by_LEVEL gui_box grey topspacer pid_tuning">
+                        <table id="pid_level" class="pid_tuning needed_by_LEVEL">
+                            <tr class="needed_by_LEVEL">
                                 <th colspan="3">
                                     <div class="pid_mode">
                                         <div i18n="pidTuningLevel" style="float:left;"></div>
@@ -224,42 +224,43 @@
                                 </th>
                             </tr>
                         </table>
-                        <table class="pid_titlebar">
-                            <tr>
+                        <table class="pid_titlebar needed_by_LEVEL">
+                            <tr class="needed_by_LEVEL">
                                 <th class="third"></th>
                                 <th class="third" i18n="pidTuningStrength" style="width: 33%;"></th>
                                 <th class="third" i18n="pidTuningTransition" style="width: 33%;"></th>
                             </tr>
                         </table>
-                        <table>
-                            <tr class="ANGLE">
+                        <table class="needed_by_LEVEL">
+                            <tr class="LEVEL">
                                 <!-- 7 -->
                                 <td class="third" i18n="pidTuningAngle"></td>
                                 <td class="third"><input type="number" name="p" step="1" min="0" max="255" /></td>
                                 <td class="third"></td>
                             </tr>
-                            <tr class="HORIZON">
+                            <tr class="LEVEL">
                                 <!-- 7 -->
                                 <td class="third" i18n="pidTuningHorizon"></td>
                                 <td class="third"><input type="number" name="i" step="1" min="0" max="255" /></td>
                                 <td class="third"><input type="number" name="d" step="1" min="0" max="255" /></td>
                             </tr>
                         </table>
-                        <table class="pid_titlebar pid_sensitivity">
-                            <tr>
+                        <table class="needed_by_LEVEL pid_titlebar pid_sensitivity">
+                            <tr class="needed_by_LEVEL">
                                 <th class="third"></th>
                                 <th class="third" i18n="pidTuningLevelAngleLimit" style="width: 33%;"></th>
                                 <th class="third levelSensitivityHeader" i18n="pidTuningLevelSensitivity" style="width: 33%;"></th>
                             </tr>
                         </table>
-                        <table id="pid_sensitivity" class="pid_tuning pid_sensitivity">
-                            <tr>
+                        <table id="pid_sensitivity" class="needed_by_LEVEL pid_tuning pid_sensitivity">
+                            <tr class="needed_by_LEVEL">
                                 <td class="third"></td>
                                 <td class="third"><input type="number" name="angleLimit" step="1" min="10" max="200" /></td>
                                 <td class="third"><input type="number" name="sensitivity" step="1" min="10" max="120" /></td>
                             </tr>
                         </table>
                     </div>
+
                     <div class="gui_box grey topspacer pidTuningFeatures">
                         <table class="pid_titlebar new_rates">
                             <tr>

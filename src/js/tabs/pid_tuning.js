@@ -49,142 +49,19 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         // Fill in the data from PIDs array
-        var i = 0;
-        $('.pid_tuning .ROLL input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[0][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[0][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[0][i++]);
-                    break;
-            }
-        });
 
-        i = 0;
-        $('.pid_tuning .PITCH input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[1][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[1][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[1][i++]);
-                    break;
-            }
-        });
+        // For each pid name
+        PID_names.forEach(function(elementPid, indexPid) {
 
-        i = 0;
-        $('.pid_tuning .YAW input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[2][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[2][i++]);
-                    break;
-            }
-        });
-        $('.pid_tuning .YAW_JUMP_PREVENTION input').each(function () {
-            switch (i) {
-                case 2:
-                    $(this).val(PIDs[2][i++]);
-                    break;
-            }
-        });
+            // Look into the PID table to a row with the name of the pid
+            var searchRow = $('.pid_tuning .' + elementPid + ' input');
 
-        i = 0;
-        $('.pid_tuning .ALT input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[3][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[3][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[3][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .Pos input').each(function () {
-            $(this).val(PIDs[4][i++]);
-        });
-
-        i = 0;
-        $('.pid_tuning .PosR input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[5][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[5][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[5][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .NavR input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[6][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[6][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[6][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .ANGLE input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[7][i++]);
-                    break;
-            }
-        });
-        $('.pid_tuning .HORIZON input').each(function () {
-            switch (i) {
-                case 1:
-                    $(this).val(PIDs[7][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[7][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .MAG input').each(function () {
-            $(this).val(PIDs[8][i++]);
-        });
-
-        i = 0;
-        $('.pid_tuning .Vario input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[9][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[9][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[9][i++]);
-                    break;
-            }
+            // Assign each value
+            searchRow.each(function (indexInput) {
+                if (PIDs[indexPid][indexInput] !== undefined) {
+                    $(this).val(PIDs[indexPid][indexInput]);
+                }
+            });
         });
 
         // Fill in data from RC_tuning object
@@ -519,60 +396,19 @@ TABS.pid_tuning.initialize = function (callback) {
     function form_to_pid_and_rc() {
         // Fill in the data from PIDs array
         // Catch all the changes and stuff the inside PIDs array
-        var i = 0;
-        $('table.pid_tuning tr.ROLL .pid_data input').each(function () {
-            PIDs[0][i++] = parseFloat($(this).val());
-        });
 
-        i = 0;
-        $('table.pid_tuning tr.PITCH .pid_data input').each(function () {
-            PIDs[1][i++] = parseFloat($(this).val());
-        });
+        // For each pid name
+        PID_names.forEach(function(elementPid, indexPid) {
 
-        i = 0;
-        $('table.pid_tuning tr.YAW .pid_data input').each(function () {
-            PIDs[2][i++] = parseFloat($(this).val());
-        });
-        $('table.pid_tuning tr.YAW_JUMP_PREVENTION .pid_data input').each(function () {
-            PIDs[2][i++] = parseFloat($(this).val());
-        });
+            // Look into the PID table to a row with the name of the pid
+            var searchRow = $('.pid_tuning .' + elementPid + ' input');
 
-        i = 0;
-        $('table.pid_tuning tr.ALT input').each(function () {
-            PIDs[3][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.Vario input').each(function () {
-            PIDs[9][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.Pos input').each(function () {
-            PIDs[4][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.PosR input').each(function () {
-            PIDs[5][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.NavR input').each(function () {
-            PIDs[6][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('div.pid_tuning tr.ANGLE input').each(function () {
-            PIDs[7][i++] = parseFloat($(this).val());
-        });
-        $('div.pid_tuning tr.HORIZON input').each(function () {
-            PIDs[7][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('div.pid_tuning tr.MAG input').each(function () {
-            PIDs[8][i++] = parseFloat($(this).val());
+            // Assign each value
+            searchRow.each(function (indexInput) {
+                if ($(this).val()) {
+                    PIDs[indexPid][indexInput] = parseFloat($(this).val());
+                }
+            });
         });
 
         // catch RC_tuning changes
@@ -661,37 +497,54 @@ TABS.pid_tuning.initialize = function (callback) {
     }
 
     function showAllPids() {
-        $('.tab-pid_tuning .pid_tuning').show();
+
+        // Hide all optional elements
+        $('.pid_optional tr').hide(); // Hide all rows
+        $('.pid_optional table').hide(); // Hide tables
+        $('.pid_optional').hide(); // Hide general div
+
+        // Only show rows supported by the firmware
+        PID_names.forEach(function(elementPid) {
+            // Show rows for the PID
+            $('.pid_tuning .' + elementPid).show();
+
+            // Show titles and other elements needed by the PID
+            $('.needed_by_' + elementPid).show();
+        });
+
+        // Special case
+        if (semver.lt(CONFIG.apiVersion, "1.24.0")) {
+            $('#pid_sensitivity').hide();
+        }
+
     }
 
     function hideUnusedPids() {
-        $('.tab-pid_tuning .pid_tuning').hide();
 
-        $('#pid_main').show();
-
-        if (have_sensor(CONFIG.activeSensors, 'acc')) {
-            $('#pid_accel').show();
-            $('#pid_level').show();
-            $('#pid_sensitivity').show();
+        if (!have_sensor(CONFIG.activeSensors, 'acc')) {
+            $('#pid_accel').hide();
         }
 
-        var showTitle = false;
-        if (have_sensor(CONFIG.activeSensors, 'baro') ||
-            have_sensor(CONFIG.activeSensors, 'sonar')) {
-            $('#pid_baro').show();
-            showTitle = true;
-        }
-        if (have_sensor(CONFIG.activeSensors, 'mag')) {
-            $('#pid_mag').show();
-            showTitle = true;
-        }
-        if (FEATURE_CONFIG.features.isEnabled('GPS')) {
-            $('#pid_gps').show();
-            showTitle = true;
+        var hideSensorPid = function(element, sensorReady) {
+            var isVisible = element.is(":visible");
+            if (!isVisible || !sensorReady) {
+                element.hide();
+                isVisible = false;
+            }
+
+            return isVisible;
         }
 
-        if (showTitle) {
-            $('#pid_optional').show();
+        var isVisibleBaroMagGps = false;
+
+        isVisibleBaroMagGps |= hideSensorPid($('#pid_baro'), have_sensor(CONFIG.activeSensors, 'baro') || have_sensor(CONFIG.activeSensors, 'sonar'));
+
+        isVisibleBaroMagGps |= hideSensorPid($('#pid_mag'), have_sensor(CONFIG.activeSensors, 'mag'));
+
+        isVisibleBaroMagGps |= hideSensorPid($('#pid_gps'), have_sensor(CONFIG.activeSensors, 'GPS'));
+
+        if (!isVisibleBaroMagGps) {
+            $('#pid_baro_mag_gps').hide();
         }
     }
 
@@ -873,6 +726,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }
         }
 
+        showAllPids();
         updatePidDisplay();
 
         showAllButton.on('click', function(){
@@ -981,12 +835,16 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.tab-pid_tuning .note').hide();
 		}
 
+        // Add a name to each row of PIDs if empty
         $('.pid_tuning tr').each(function(){
-          for(i = 0; i < PID_names.length; i++) {
-            if($(this).hasClass(PID_names[i])) {
-              $(this).find('td:first').text(PID_names[i]);
+            for(i = 0; i < PID_names.length; i++) {
+                if($(this).hasClass(PID_names[i])) {
+                    var firstColumn = $(this).find('td:first');
+                    if (!firstColumn.text()) {
+                        firstColumn.text(PID_names[i]);
+                    }
+                }
             }
-          }
         });
 
 
