@@ -492,6 +492,12 @@
         "message": "Welcome to <strong>Betaflight - Configurator</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
     },
 
+    "defaultOpenSourceHead": {
+        "message": "Betaflight"
+    },
+    "defaultOpenSourceText": {
+        "message": "Betaflight is a flight controller software that is open source and is available free of charge without warranty to all users."
+    },
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
