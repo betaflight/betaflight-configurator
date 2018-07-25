@@ -1245,6 +1245,17 @@
         "message": "Profile independent PID Controller Settings"
     },
 
+    "pidTuningAntiGravityMode": {
+        "message": "Anti Gravity Mode"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Smooth",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Step",
+        "description": "One of the modes of anti gravity"
+    },
     "pidTuningAntiGravityGain": {
         "message": "Anti Gravity Gain"
     },

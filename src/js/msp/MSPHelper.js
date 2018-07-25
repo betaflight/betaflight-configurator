@@ -911,6 +911,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                     ADVANCED_TUNING.feedforwardRoll  = data.readU16();
                                     ADVANCED_TUNING.feedforwardPitch = data.readU16();
                                     ADVANCED_TUNING.feedforwardYaw   = data.readU16();
+                                    ADVANCED_TUNING.antiGravityMode  = data.readU8();
                                 }
                             }
                         }
@@ -1585,7 +1586,8 @@ MspHelper.prototype.crunch = function(code) {
                                       .push8(ADVANCED_TUNING.acroTrainerAngleLimit)
                                       .push16(ADVANCED_TUNING.feedforwardRoll)
                                       .push16(ADVANCED_TUNING.feedforwardPitch)
-                                      .push16(ADVANCED_TUNING.feedforwardYaw);
+                                      .push16(ADVANCED_TUNING.feedforwardYaw)
+                                      .push8(ADVANCED_TUNING.antiGravityMode);
                             }
                         }
                     }
