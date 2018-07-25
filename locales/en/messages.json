@@ -3686,7 +3686,7 @@
         "message": "Mass Storage Mode"
     },
     "onboardLoggingMscNote": {
-        "message": "Reboot into <strong>mass storage device (MSC)</strong> mode. Once activated, the onboard flash or SD card on your flight controller will be recognised as a storage device by your computer, and allow you to download your log files. Eject and power cycel your flight controller to leave mass storage device mode."
+        "message": "Reboot into <strong>mass storage device (MSC)</strong> mode. Once activated, the onboard flash or SD card on your flight controller will be recognised as a storage device by your computer, and allow you to download your log files. Eject and power cycle your flight controller to leave mass storage device mode."
     },
     "onboardLoggingRebootMscText": {
         "message": "Activate Mass Storage Device Mode"
