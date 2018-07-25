@@ -2829,7 +2829,7 @@
         "message": "Acro Trainer Angle Limit"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Adds a new angle limiting mode for pilots who are learning to fly in acro mode. The range valid is 10-80 (a value of 0 deactivates it)"
+        "message": "Adds a new angle limiting mode for pilots who are learning to fly in acro mode. The range valid is 10-80 and must be activated with a switch in the $t(tabAuxiliary.message) tab."
     },
 
     "configHelp2": {
