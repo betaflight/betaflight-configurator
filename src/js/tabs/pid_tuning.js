@@ -234,20 +234,11 @@ TABS.pid_tuning.initialize = function (callback) {
             var acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
             var acroTrainerAngleLimitRangeElement = $('input[name="acroTrainerAngleLimit-range"]');
 
-            var validateAcroTrainerAngle = function(value) {
-                // The minimum acro trainer angle is 10, but we must let zero too to deactivate it
-                if (value > 0 && value < 10) {
-                    value = 10;
-                }
-                acroTrainerAngleLimitRangeElement.val(value);
-                acroTrainerAngleLimitNumberElement.val(value);
-            }
-
             acroTrainerAngleLimitNumberElement.change(function () {
-                validateAcroTrainerAngle($(this).val());
+                acroTrainerAngleLimitRangeElement.val($(this).val());
             });
             acroTrainerAngleLimitRangeElement.change(function () {
-                validateAcroTrainerAngle($(this).val());
+                acroTrainerAngleLimitNumberElement.val($(this).val());
             });
             acroTrainerAngleLimitNumberElement.val(ADVANCED_TUNING.acroTrainerAngleLimit).change();
 
