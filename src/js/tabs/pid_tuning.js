@@ -263,6 +263,8 @@ TABS.pid_tuning.initialize = function (callback) {
                 feedforwardTransitionNumberElement.val($(this).val());
             });
 
+            $('.helpicon[i18n_title="pidTuningPidTuningTip"]').hide();
+
             // AntiGravity Mode
             var antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
             antiGravityModeSelect.change(function () {
@@ -293,6 +295,7 @@ TABS.pid_tuning.initialize = function (callback) {
             // Feedforward column
             $('#pid_main tr :nth-child(5)').hide();
             $('#pid_main .pid_titlebar2 th').attr("colspan", 8);
+            $('.helpicon[i18n_title="pidTuningPidTuningTipFeedforward"]').hide();
 
             $('#pid-tuning .feedforwardTransition').hide();
 
