@@ -910,7 +910,7 @@ OSD.constants = {
     { file: "default", name: "Default" },
     { file: "bold", name: "Bold" },
     { file: "large", name: "Large" },
-    { file: "extra_large", name: "Extra Large" },
+    { file: "extra_large", name: "X-Large" },
     { file: "betaflight", name: "Betaflight" },
     { file: "digital", name: "Digital" },
     { file: "clarity", name: "Clarity" },
