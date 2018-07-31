@@ -1,19 +1,60 @@
 'use strict';
 
+var analytics;
+
 openNewWindowsInExternalBrowser();
 
 //Asynchronous configuration to be done.
 //When finish the startProcess() function must be called 
 $(document).ready(function () {
     i18n.init(function() {
-        startProcess();
+        setupAnalytics();
         initializeSerialBackend();
     });
 });
 
+function setupAnalytics() {
+    analytics = new Analytics('com.betaflight.configurator', 'UA-123002063-1', GUI.operating_system);
+    chrome.storage.local.get('userId', function (result) {
+        var userId;
+        if (result.userId) {
+            userId = result.userId;
+        } else {
+            var uid = new ShortUniqueId();
+            userId = uid.randomUUID(13);
+
+            chrome.storage.local.set({'userId': userId});
+        }
+
+        analytics.tracker.set('userId', userId);
+
+        analytics.tracker.set('sessionControl', 'start');
+        analytics.send(analytics.APPLICATION_EVENT.action('AppStart'))
+
+        function sendCloseEvent() {
+            analytics.send(analytics.APPLICATION_EVENT.action('AppClose'))
+            analytics.tracker.set('sessionControl', 'end');
+        }
+
+        try {
+            var gui = require('nw.gui');
+            var win = gui.Window.get();
+            win.on('close', function () {
+                sendCloseEvent();
+
+                this.close(true);
+            });
+        } catch (ex) {
+            // Looks like we're in Chrome - but the event does not actually get fired
+            chrome.runtime.onSuspend.addListener(sendCloseEvent);
+        }
+
+        startProcess();
+    });
+}
+
 //Process to execute to real start the app
 function startProcess() {
-
     // translate to user-selected language
     i18n.localizePage();
 
@@ -112,6 +153,8 @@ function startProcess() {
                 function content_ready() {
                     GUI.tab_switch_in_progress = false;
                 }
+
+                analytics.sendAppView(tab);
 
                 switch (tab) {
                     case 'landing':
@@ -248,6 +291,28 @@ function startProcess() {
                 } else {
                     $('div.checkForConfiguratorUnstableVersions').hide();
                 }
+
+                chrome.storage.local.get('analyticsOptOut', function (result) {
+                    if (result.analyticsOptOut) {
+                        $('div.analyticsOptOut input').prop('checked', true);
+                    }
+
+                    $('div.analyticsOptOut input').change(function () {
+                        var checked = $(this).is(':checked');
+
+                        chrome.storage.local.set({'analyticsOptOut': checked});
+
+                        if (checked) {
+                            analytics.send(analytics.APPLICATION_EVENT.action('OptOut'));
+                        }
+
+                        analytics.setTrackingPermitted(!checked);
+
+                        if (!checked) {
+                            analytics.send(analytics.APPLICATION_EVENT.action('OptIn'));
+                        }
+                    }).change();
+                });
 
                 chrome.storage.local.get('userLanguageSelect', function (result) {
 

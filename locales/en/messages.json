@@ -63,6 +63,9 @@
     "rememberLastTab": {
         "message": "Reopen last tab on connect"
     },
+    "analyticsOptOut": {
+        "message": "Opt out of the anonymised collection of statistics data"
+    },
     "userLanguageSelect": {
         "message": "Language (need to restart the application for the changes to take effect)"
     },

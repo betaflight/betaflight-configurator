@@ -24,6 +24,7 @@
         "http://*.baseflight.net/",
         "https://*.amazonaws.com/",
         "https://*.betaflight.tech/",
+        "https://www.google-analytics.com/",
         "serial",
         "usb",
         "storage",
