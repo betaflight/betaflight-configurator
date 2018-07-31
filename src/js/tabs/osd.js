@@ -913,7 +913,8 @@ OSD.constants = {
     { file: "extra_large", name: "Extra Large" },
     { file: "betaflight", name: "Betaflight" },
     { file: "digital", name: "Digital" },
-    { file: "clarity", name: "Clarity" }
+    { file: "clarity", name: "Clarity" },
+    { file: "vision", name: "Vision" }
   ]
 };
 
