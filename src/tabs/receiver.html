@@ -114,6 +114,147 @@
                     </tr>
                 </table>
             </div>
+            <div class="gui_box grey tunings topspacer rcSmoothing">
+                <table class="rcSmoothing-table">
+                    <tr>
+                        <th colspan="4" i18n="receiverRcSmoothing"></th>
+                    </tr>
+                        <tr class="rcSmoothing-type">
+                        <td style="width: 15%">
+                            <select name="rcSmoothing-select" style="width: 90%">
+                                <option value="0" i18n="receiverRcSmoothingInterpolation"/>
+                                <option value="1" i18n="receiverRcSmoothingFilter"/>
+                            </select>
+                        </td>
+                        <td style="border-right: none">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcInterpolation"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingTypeHelp" style="margin-top:0px;"></div>
+                        </td>
+                    </tr>
+                    <tr class="rcSmoothing-channels">
+                        <td style="width: 15%"> 
+                            <select name="rcSmoothingChannels-select" style="width: 90%">
+                                <option value="0" i18n="receiverRcSmoothingChannelsRP"/>
+                                <option value="1" i18n="receiverRcSmoothingChannelsRPY"/>
+                                <option value="2" i18n="receiverRcSmoothingChannelsRPYT"/>
+                                <option value="3" i18n="receiverRcSmoothingChannelsT"/>
+                                <option value="4" i18n="receiverRcSmoothingChannelsRPT"/>
+                            </select>
+                        </td>
+                        <td style="border-right: none">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcSmoothingChannel"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="helpicon cf_tip" i18n_title="rcSmoothingChannelsSmoothedHelp" style="margin-top:0px;"></div>
+                        </td>
+                    </tr>
+                    <tr class="rcSmoothing-input-manual">
+                        <td style="width: 15%">
+                            <select name="rcSmoothing-input-manual-select" style="width: 90%">
+                                <option value="0" i18n="receiverRcSmoothingAuto"/>
+                                <option value="1" i18n="receiverRcSmoothingManual"/>
+                            </select>
+                        </td>
+                        <td style="border-right: none">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcInputTypeSelect"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingInputManual" style="margin-top:0px;"></div>
+                        </td>
+                    </tr>
+                    <tr class="rcSmoothing-input-cutoff">
+                        <td><input type="number" name="rcSmoothingInputHz-number" step="1" min="1" max="255" style="width: 90%"/></td>
+                        <td colspan="2">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcSmoothingInputHz"></span>
+                                </label>
+                                <div class="helpicon cf_tip" i18n_title="rcSmoothingInputCutoffHelp" style="margin-top:0px;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="rcSmoothing-derivative-manual">
+                        <td style="width: 15%">
+                            <select name="rcSmoothing-input-derivative-select" style="width: 90%">
+                                <option value="0" i18n="receiverRcSmoothingAuto"/>
+                                <option value="1" i18n="receiverRcSmoothingManual"/>
+                            </select>
+                        </td>
+                        <td style="border-right: none">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcDerivativeTypeSelect"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingDerivativeManual" style="margin-top:0px;"></div>
+                        </td>
+                    </tr>
+                    <tr class="rcSmoothing-derivative-cutoff">
+                        <td><input type="number" name="rcSmoothingDerivativeCutoff-number" step="1" min="1" max="255" style="width: 90%"/></td>
+                        <td colspan="2">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcSmoothingDerivativeCutoff"></span>
+                                </label>
+                                <div class="helpicon cf_tip" i18n_title="rcSmoothingDerivativeCutoffHelp" style="margin-top:0px;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="rcSmoothing-input-type">
+                        <td style="width: 15%">
+                        <select name="rcSmoothingInputType-select" style="width: 90%">
+                                <option value="0" i18n="receiverRcSmoothingInputTypePt1"/>
+                                <option value="1" i18n="receiverRcSmoothingInputTypeBiquad"/>
+                            </select>
+                        </td>
+                        <td style="border-right: none">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcInputType"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="helpicon cf_tip" i18n_title="rcSmoothingInputTypeHelp" style="margin-top:0px;"></div>
+                        </td>
+                    </tr>
+                    <tr class="rcSmoothing-derivative-type">
+                        <td style="width: 15%">
+                            <select name="rcSmoothingDerivativeType-select" style="width: 90%">
+                                <option value="0" i18n="receiverRcSmoothingDerivativeTypeOff"/>
+                                <option value="1" i18n="receiverRcSmoothingInputTypePt1"/>
+                                <option value="2" i18n="receiverRcSmoothingInputTypeBiquad"/>
+                            </select>
+                        </td>
+                        <td style="border-right: none">
+                            <div>
+                                <label>
+                                    <span i18n="receiverRcDerivativeType"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="helpicon cf_tip" i18n_title="rcSmoothingDerivativeTypeHelp" style="margin-top:0px;"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <div class="gui_box grey tunings topspacer">
                 <table class="pid_titlebar" style="width: 100%;">
                     <thead>

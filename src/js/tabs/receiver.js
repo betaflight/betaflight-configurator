@@ -324,6 +324,83 @@ TABS.receiver.initialize = function (callback) {
             });
         });
 
+        // RC Smoothing
+        $('.tab-receiver .rcSmoothing').hide();
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+            $('.tab-receiver .rcSmoothing').show();
+
+            var rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
+            rc_smoothing_protocol_e.change(function () {
+                RX_CONFIG.rcSmoothingType = $(this).val();
+                updateInterpolationView();
+            });
+            rc_smoothing_protocol_e.val(RX_CONFIG.rcSmoothingType);
+
+            var rcSmoothingnNumberElement = $('input[name="rcSmoothingInputHz-number"]');
+            var rcSmoothingnDerivativeNumberElement = $('input[name="rcSmoothingDerivativeCutoff-number"]');
+            
+            $('.tab-receiver .rcSmoothing-input-cutoff').show();
+            $('select[name="rcSmoothing-input-manual-select"]').val("1");
+            if (RX_CONFIG.rcSmoothingInputCutoff == 0) {
+                $('.tab-receiver .rcSmoothing-input-cutoff').hide();
+                $('select[name="rcSmoothing-input-manual-select"]').val("0");
+            }
+            $('select[name="rcSmoothing-input-manual-select"]').change(function () {
+                if ($(this).val() == 0) {
+                    RX_CONFIG.rcSmoothingInputCutoff = 0;
+                    $('.tab-receiver .rcSmoothing-input-cutoff').hide();
+                }
+                if ($(this).val() == 1) {
+                    rcSmoothingnNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
+                    $('.tab-receiver .rcSmoothing-input-cutoff').show();
+                } 
+            });
+
+            $('.tab-receiver .rcSmoothing-derivative-cutoff').show();
+            $('select[name="rcSmoothing-input-derivative-select"]').val("1");
+            if (RX_CONFIG.rcSmoothingDerivativeCutoff == 0) {
+                $('select[name="rcSmoothing-input-derivative-select"]').val("0");
+                $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
+            }
+            $('select[name="rcSmoothing-input-derivative-select"]').change(function () {
+                if ($(this).val() == 0) {
+                    $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
+                    RX_CONFIG.rcSmoothingDerivativeCutoff = 0;
+                }
+                if ($(this).val() == 1) {
+                    $('.tab-receiver .rcSmoothing-derivative-cutoff').show();
+                    rcSmoothingnDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
+                }
+            });
+            
+            rcSmoothingnNumberElement.change(function () {
+                RX_CONFIG.rcSmoothingInputCutoff = $(this).val();
+            });
+            rcSmoothingnNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
+
+            rcSmoothingnDerivativeNumberElement.change(function () {
+                RX_CONFIG.rcSmoothingDerivativeCutoff = $(this).val();
+            });
+            rcSmoothingnDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
+            var rc_smoothing_derivative_type = $('select[name="rcSmoothingDerivativeType-select"]');
+            rc_smoothing_derivative_type.change(function () {
+                RX_CONFIG.rcSmoothingDerivativeType = $(this).val();
+            });
+            rc_smoothing_derivative_type.val(RX_CONFIG.rcSmoothingDerivativeType);
+            var rc_smoothing_channels = $('select[name="rcSmoothingChannels-select"]');
+            rc_smoothing_channels.change(function () {
+                RX_CONFIG.rcInterpolationChannels = $(this).val();
+            });
+            rc_smoothing_channels.val(RX_CONFIG.rcInterpolationChannels);
+            var rc_smoothing_input_type = $('select[name="rcSmoothingInputType-select"]');
+            rc_smoothing_input_type.change(function () {
+                RX_CONFIG.rcSmoothingInputType = $(this).val();
+            });
+            rc_smoothing_input_type.val(RX_CONFIG.rcSmoothingInputType);
+
+            updateInterpolationView();
+        }
+
         // Only show the MSP control sticks if the MSP Rx feature is enabled
         $(".sticks_btn").toggle(FEATURE_CONFIG.features.isEnabled('RX_MSP'));
 
@@ -510,3 +587,29 @@ TABS.receiver.updateRcInterpolationParameters = function () {
         }
     }
 };
+
+function updateInterpolationView() {
+    $('.tab-receiver .rcInterpolation').hide();
+    $('.tab-receiver .rcSmoothing-derivative-cutoff').show();
+    $('.tab-receiver .rcSmoothing-input-cutoff').show();
+    $('.tab-receiver .rcSmoothing-derivative-type').show();
+    $('.tab-receiver .rcSmoothing-input-type').show();
+    $('.tab-receiver .rcSmoothing-derivative-manual').show();
+    $('.tab-receiver .rcSmoothing-input-manual').show();
+
+    if (parseInt(RX_CONFIG.rcSmoothingType) === 0) {
+        $('.tab-receiver .rcInterpolation').show();
+        $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-input-cutoff').hide();
+        $('.tab-receiver .rcSmoothing-derivative-type').hide();
+        $('.tab-receiver .rcSmoothing-input-type').hide();
+        $('.tab-receiver .rcSmoothing-derivative-manual').hide();
+        $('.tab-receiver .rcSmoothing-input-manual').hide();
+    }
+    if (parseInt(RX_CONFIG.rcSmoothingDerivativeCutoff) === 0) {
+        $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
+    }
+    if (parseInt(RX_CONFIG.rcSmoothingInputCutoff) === 0) {
+        $('.tab-receiver .rcSmoothing-input-cutoff').hide();
+    }
+}
