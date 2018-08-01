@@ -3212,6 +3212,12 @@
     "osdSetupFontPresets": {
         "message": "Font presets:"
     },
+    "osdSetupFontPresetsSelector": {
+        "message": "Select Font Presets:"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "or"
+    },
     "osdSetupOpenFont": {
         "message": "Open Font File"
     },
