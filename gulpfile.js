@@ -60,13 +60,14 @@ gulp.task('clean-release', clean_release);
 
 gulp.task('clean-cache', clean_cache);
 
-var distBuild = gulp.series(clean_dist, dist_src, dist_locale, dist_libraries, dist_resources);
-gulp.task('dist', distBuild);
+var distBuild = gulp.series(dist_src, dist_locale, dist_libraries, dist_resources);
+var distRebuild = gulp.series(clean_dist, distBuild);
+gulp.task('dist', distRebuild);
 
-var appsBuild = gulp.series(gulp.parallel(clean_apps, distBuild), apps, gulp.parallel(listPostBuildTasks(APPS_DIR)));
+var appsBuild = gulp.series(gulp.parallel(clean_apps, distRebuild), apps, gulp.parallel(listPostBuildTasks(APPS_DIR)));
 gulp.task('apps', appsBuild);
 
-var debugBuild = gulp.series(gulp.parallel(clean_debug, distBuild), debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)), start_debug)
+var debugBuild = gulp.series(distBuild, debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)), start_debug)
 gulp.task('debug', debugBuild);
 
 var releaseBuild = gulp.series(gulp.parallel(clean_release, appsBuild), gulp.parallel(listReleaseTasks()));
