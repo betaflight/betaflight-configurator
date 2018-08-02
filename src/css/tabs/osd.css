@@ -402,11 +402,15 @@ button {
   cursor: pointer;
 }
 
-.fontbuttons {
+.fontpresets_wrapper {
   display: inline-block;
   position: absolute;
   right: 1.2em;
   top: .8em;
+}
+
+.fontpresets {
+  border: 1px solid #cccccc;
 }
 
 .tab-osd .switchable-field {

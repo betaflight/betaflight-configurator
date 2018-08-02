@@ -913,7 +913,8 @@ OSD.constants = {
     { file: "extra_large", name: "Extra Large" },
     { file: "betaflight", name: "Betaflight" },
     { file: "digital", name: "Digital" },
-    { file: "clarity", name: "Clarity" }
+    { file: "clarity", name: "Clarity" },
+    { file: "vision", name: "Vision" }
   ]
 };
 
@@ -1470,17 +1471,18 @@ TABS.osd.initialize = function (callback) {
     }
 
     $('#content').load("./tabs/osd.html", function () {
-
-        // Generate font type buttons
-        var fontbuttons = $('.fontbuttons');
+        // Generate font type select element
+        var fontselect = $('.fontpresets');
         OSD.constants.FONT_TYPES.forEach(function(e, i) {
-          var button = $('<button>', {
+          var option = $('<option>', {
             "data-font-file": e.file,
+            value: e.file,
             text: e.name
           });
-          fontbuttons.append($(button));
+          fontselect.append($(option));
         });
 
+        var fontbuttons = $('.fontpresets_wrapper');
         fontbuttons.append($('<button>', { class: "load_font_file", i18n: "osdSetupOpenFont" }));
 
         // must invoke before i18n.localizePage() since it adds translation keys for expected logo size
@@ -1974,24 +1976,27 @@ TABS.osd.initialize = function (callback) {
         // init structs once, also clears current font
         FONT.initData();
 
-        var $fontPicker = $('.fontbuttons button');
-        $fontPicker.click(function(e) {
-          if (!$(this).data('font-file')) { return; }
-          $fontPicker.removeClass('active');
-          $(this).addClass('active');
-          $.get('./resources/osd/' + $(this).data('font-file') + '.mcm', function(data) {
+        var $fontpresets = $('.fontpresets')
+        $fontpresets.change(function(e) {
+          var $font = $('.fontpresets option:selected');
+          $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function(data) {
             FONT.parseMCMFontFile(data);
             FONT.preview($preview);
             LogoManager.drawPreview();
             updateOsdView();
           });
         });
-
+        
         // load the first font when we change tabs
-        $fontPicker.first().click();
+        var $font = $('.fontpresets option:selected');
+        $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function(data) {
+          FONT.parseMCMFontFile(data);
+          FONT.preview($preview);
+          LogoManager.drawPreview();
+          updateOsdView();
+        });
 
         $('button.load_font_file').click(function() {
-          $fontPicker.removeClass('active');
           FONT.openFontFile().then(function() {
             FONT.preview($preview);
             LogoManager.drawPreview();
