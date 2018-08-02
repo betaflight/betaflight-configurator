@@ -1,7 +1,7 @@
 'use strict';
 var mspHelper;
 
-var analyticsTimer;
+var connectionTimestamp;
 
 function initializeSerialBackend() {
 
@@ -126,11 +126,12 @@ function initializeSerialBackend() {
 function finishClose(finishedCallback) {
     var wasConnected = CONFIGURATOR.connectionValid;
 
-    analytics.send(analytics.FLIGHT_CONTROLLER_EVENT.action('Disconnected'));
-    if (analyticsTimer) {
-        analyticsTimer.send();
-        
-        analyticsTimer = undefined;
+    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Disconnected');
+    if (connectionTimestamp) {
+        var connectedTime = Date.now() - connectionTimestamp;
+        analytics.sendTiming(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected', connectedTime);
+
+        connectedTime = undefined;
     }
     analytics.resetFlightControllerData();
 
@@ -241,8 +242,8 @@ function onOpen(openInfo) {
                                         var uniqueDeviceIdentifier = CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16);
 
                                         analytics.setFlightControllerData(analytics.DATA.MCU_ID, objectHash.sha1(uniqueDeviceIdentifier));
-                                        analytics.send(analytics.FLIGHT_CONTROLLER_EVENT.action('Connected'));
-                                        analyticsTimer = analytics.tracker.startTiming('FlightController', 'Connected');
+                                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
+                                        connectionTimestamp = Date.now();
                                         GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
 
                                         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
@@ -260,7 +261,7 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        analytics.send(analytics.FLIGHT_CONTROLLER_EVENT.action('ConnectionRefused'));
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefused');
 
                         var dialog = $('.dialogConnectWarning')[0];
 
@@ -276,7 +277,7 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
-                analytics.send(analytics.FLIGHT_CONTROLLER_EVENT.action('ConnectionRefused'));
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefused');
 
                 var dialog = $('.dialogConnectWarning')[0];
 
@@ -292,7 +293,7 @@ function onOpen(openInfo) {
             }
         });
     } else {
-        analytics.send(analytics.APPLICATION_EVENT.action('SerialPortFailed'));
+        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SerialPortFailed');
 
         console.log('Failed to open serial port');
         GUI.log(i18n.getMessage('serialPortOpenFail'));

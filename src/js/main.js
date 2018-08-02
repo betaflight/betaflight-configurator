@@ -4,8 +4,8 @@ var analytics;
 
 openNewWindowsInExternalBrowser();
 
-//Asynchronous configuration to be done.
-//When finish the startProcess() function must be called 
+// Asynchronous configuration to be done.
+// When finish the startProcess() function must be called
 $(document).ready(function () {
     i18n.init(function() {
         setupAnalytics();
@@ -14,8 +14,7 @@ $(document).ready(function () {
 });
 
 function setupAnalytics() {
-    analytics = new Analytics('com.betaflight.configurator', 'UA-123002063-1', GUI.operating_system);
-    chrome.storage.local.get('userId', function (result) {
+    chrome.storage.local.get(['userId', 'analyticsOptOut'], function (result) {
         var userId;
         if (result.userId) {
             userId = result.userId;
@@ -23,17 +22,25 @@ function setupAnalytics() {
             var uid = new ShortUniqueId();
             userId = uid.randomUUID(13);
 
-            chrome.storage.local.set({'userId': userId});
+            chrome.storage.local.set({ 'userId': userId });
         }
 
-        analytics.tracker.set('userId', userId);
+        var optOut = !!result.analyticsOptOut
 
-        analytics.tracker.set('sessionControl', 'start');
-        analytics.send(analytics.APPLICATION_EVENT.action('AppStart'))
+        var debugMode = process.versions['nw-flavor'] === 'sdk';
+
+        analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), GUI.operating_system, optOut, debugMode);
+
+        function logException(exception) {
+            analytics.sendException(exception.stack);
+        }
+
+        process.on('uncaughtException', logException);
+
+        analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
 
         function sendCloseEvent() {
-            analytics.send(analytics.APPLICATION_EVENT.action('AppClose'))
-            analytics.tracker.set('sessionControl', 'end');
+            analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' })
         }
 
         try {
@@ -303,13 +310,13 @@ function startProcess() {
                         chrome.storage.local.set({'analyticsOptOut': checked});
 
                         if (checked) {
-                            analytics.send(analytics.APPLICATION_EVENT.action('OptOut'));
+                            analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'OptOut');
                         }
 
-                        analytics.setTrackingPermitted(!checked);
+                        analytics.setOptOut(checked);
 
                         if (!checked) {
-                            analytics.send(analytics.APPLICATION_EVENT.action('OptIn'));
+                            analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'OptIn');
                         }
                     }).change();
                 });
