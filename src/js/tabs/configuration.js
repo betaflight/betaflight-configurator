@@ -356,8 +356,20 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             esc_protocol_e.append('<option value="' + (i + 1) + '">'+ escprotocols[i] + '</option>');
         }
 
-        esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
+        $("input[id='unsyncedPWMSwitch']").change(function() {
+            if ($(this).is(':checked')) {
+                $('div.unsyncedpwmfreq').show();
+            } else {
+                $('div.unsyncedpwmfreq').hide();
+            }
+        });
 
+        $('input[id="unsyncedPWMSwitch"]').prop('checked', PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0).change();
+        $('input[name="unsyncedpwmfreq"]').val(PID_ADVANCED_CONFIG.motor_pwm_rate);
+        $('input[name="digitalIdlePercent"]').val(PID_ADVANCED_CONFIG.digitalIdlePercent);
+
+
+        esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
         esc_protocol_e.change(function () {
             //hide not used setting for DSHOT protocol
             if ($(this).val() - 1 >= self.DSHOT_PROTOCOL_MIN_VALUE) {
@@ -380,9 +392,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }).change();
 
-        $('input[id="unsyncedPWMSwitch"]').prop('checked', PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0);
-        $('input[name="unsyncedpwmfreq"]').val(PID_ADVANCED_CONFIG.motor_pwm_rate);
-        $('input[name="digitalIdlePercent"]').val(PID_ADVANCED_CONFIG.digitalIdlePercent);
 
         // Gyro and PID update
         var gyroUse32kHz_e = $('input[id="gyroUse32kHz"]');
@@ -921,14 +930,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             checkUpdateVbatControls();
             checkUpdateCurrentControls();
         }
-
-        $("input[id='unsyncedPWMSwitch']").change(function() {
-            if ($(this).is(':checked')) {
-                $('div.unsyncedpwmfreq').show();
-            } else {
-                $('div.unsyncedpwmfreq').hide();
-            }
-        }).change();
 
         $('a.save').click(function () {
             // gather data that doesn't have automatic change event bound
