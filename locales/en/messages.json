@@ -537,6 +537,9 @@
     "defaultChangelogHead": {
         "message": "Configurator - Changelog"
     },
+    "defaultPrivacyPolicyAction": {
+        "message": "Privacy Policy"
+    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
