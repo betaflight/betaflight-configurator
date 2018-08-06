@@ -26,6 +26,7 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
     this.EVENT_CATEGORIES = {
         APPLICATION: 'Application',
         FLIGHT_CONTROLLER: 'FlightController',
+        FIRMWARE: 'Firmware',
     };
 
     this.DATA = {
@@ -34,6 +35,10 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
         FIRMWARE_VERSION: 'firmwareVersion',
         API_VERSION: 'apiVersion',
         MCU_ID: 'mcuId',
+        FIRMWARE_NAME: 'firmwareName',
+        FIRMWARE_CHECKSUM: 'firmwareChecksum',
+        FIRMWARE_CHANNEL: 'firmwareChannel',
+        FIRMWARE_ERASE_ALL: 'firmwareEraseAll',
     };
 
     this.DIMENSIONS = {
@@ -42,11 +47,15 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
         FIRMWARE_TYPE: 3,
         FIRMWARE_VERSION: 4,
         API_VERSION: 5,
+        FIRMWARE_NAME: 6,
+        FIRMWARE_CHANNEL: 7,
+        FIRMWARE_ERASE_ALL: 8,
     };
 
     this.setDimension(this.DIMENSIONS.BUILD_TYPE, buildType);
 
     this.resetFlightControllerData();
+    this.resetFirmwareData();
 };
 
 Analytics.prototype.setDimension = function (dimension, value) {
@@ -55,8 +64,7 @@ Analytics.prototype.setDimension = function (dimension, value) {
 }
 
 Analytics.prototype.sendEvent = function (category, action, options) {
-    options = options || {};
-    options.eventLabel = options.eventLabel || this.flightControllerData[this.DATA.MCU_ID];
+//    options.eventLabel = options.eventLabel || this._flightControllerData[this.DATA.MCU_ID];
     this._analytics.event(category, action, options);
 }
 
@@ -88,20 +96,40 @@ Analytics.prototype.setOptOut = function (optOut) {
 }
 
 Analytics.prototype._rebuildFlightControllerEvent = function () {
-    this.setDimension(this.DIMENSIONS.BOARD_TYPE, this.flightControllerData[this.DATA.BOARD_TYPE]);
-    this.setDimension(this.DIMENSIONS.FIRMWARE_TYPE, this.flightControllerData[this.DATA.FIRMWARE_TYPE]);
-    this.setDimension(this.DIMENSIONS.FIRMWARE_VERSION, this.flightControllerData[this.DATA.FIRMWARE_VERSION]);
-    this.setDimension(this.DIMENSIONS.API_VERSION, this.flightControllerData[this.DATA.API_VERSION]);
+    this.setDimension(this.DIMENSIONS.BOARD_TYPE, this._flightControllerData[this.DATA.BOARD_TYPE]);
+    this.setDimension(this.DIMENSIONS.FIRMWARE_TYPE, this._flightControllerData[this.DATA.FIRMWARE_TYPE]);
+    this.setDimension(this.DIMENSIONS.FIRMWARE_VERSION, this._flightControllerData[this.DATA.FIRMWARE_VERSION]);
+    this.setDimension(this.DIMENSIONS.API_VERSION, this._flightControllerData[this.DATA.API_VERSION]);
+    this._analytics.set('eventLabel', this._flightControllerData[this.DATA.MCU_ID]);
 }
 
 Analytics.prototype.setFlightControllerData = function (property, value) {
-    this.flightControllerData[property] = value;
+    this._flightControllerData[property] = value;
 
     this._rebuildFlightControllerEvent();
 }
 
 Analytics.prototype.resetFlightControllerData = function () {
-    this.flightControllerData = {};
+    this._flightControllerData = {};
 
     this._rebuildFlightControllerEvent();
+}
+
+Analytics.prototype._rebuildFirmwareEvent = function () {
+    this.setDimension(this.DIMENSIONS.FIRMWARE_NAME, this._firmwareData[this.DATA.FIRMWARE_NAME]);
+    this.setDimension(this.DIMENSIONS.FIRMWARE_CHANNEL, this._firmwareData[this.DATA.FIRMWARE_CHANNEL]);
+    this.setDimension(this.DIMENSIONS.FIRMWARE_ERASE_ALL, this._firmwareData[this.DATA.FIRMWARE_ERASE_ALL]);
+    this._analytics.set('eventLabel', this._firmwareData[this.DATA.FIRMWARE_CHECKSUM]);
+}
+
+Analytics.prototype.setFirmwareData = function (property, value) {
+    this._firmwareData[property] = value;
+
+    this._rebuildFirmwareEvent();
+}
+
+Analytics.prototype.resetFirmwareData = function () {
+    this._firmwareData = {};
+
+    this._rebuildFirmwareEvent();
 }
