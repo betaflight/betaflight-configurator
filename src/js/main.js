@@ -4,8 +4,6 @@ var analytics;
 
 openNewWindowsInExternalBrowser();
 
-// Asynchronous configuration to be done.
-// When finish the startProcess() function must be called
 $(document).ready(function () {
     i18n.init(function() {
         setupAnalytics();
@@ -25,7 +23,7 @@ function setupAnalytics() {
             chrome.storage.local.set({ 'userId': userId });
         }
 
-        var optOut = !!result.analyticsOptOut
+        var optOut = !!result.analyticsOptOut;
 
         var debugMode = process.versions['nw-flavor'] === 'sdk';
 

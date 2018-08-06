@@ -227,18 +227,18 @@ Features.prototype.updateData = function (featureElement) {
         var controlElements = featureElement.children();
         var selectedBit = featureElement.val();
         if (selectedBit !== -1) {
-            var featureName;
+            var selectedFeature;
             for (var i = 0; i < controlElements.length; i++) {
                 var bit = controlElements[i].value;
                 if (selectedBit === bit) {
                     self._featureMask = bit_set(self._featureMask, bit);
-                    featureName = self.findFeatureByBit(bit).name;
+                    selectedFeature = self.findFeatureByBit(bit);
                 } else {
                     self._featureMask = bit_clear(self._featureMask, bit);
                 }
             }
-            if (featureName) {
-                self._analyticsChanges['Feature' + featureName] = 'On';
+            if (selectedFeature) {
+                self._analyticsChanges['FeatureGroup-' + selectedFeature.group] = selectedFeature.name;
             }
         }
     }
