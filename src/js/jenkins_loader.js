@@ -1,66 +1,118 @@
  'use strict;'
 
-var JenkinsLoader = function (url, jobName) {
-    var self = this;
-    
-    self._url = url;
-    self._jobName = jobName;
-    self._jobUrl = self._url + '/job/' + self._jobName;
-    self._buildsRequest = '/api/json?tree=builds[number,result,timestamp,artifacts[relativePath],changeSet[items[commitId,msg]]]';
-    self._builds = {};
+var JenkinsLoader = function (url) {
+    this._url = url;
+    this._jobs = [];
+    this._cacheExpirationPeriod = 3600 * 1000;
 
-    self._buildsDataTag = `${self._jobUrl}BuildsData`;
-    self._cacheLastUpdateTag = `${self._jobUrl}BuildsLastUpdate`
+    this._jobsRequest = '/api/json?tree=jobs[name]';
+    this._buildsRequest = '/api/json?tree=builds[number,result,timestamp,artifacts[relativePath],changeSet[items[commitId,msg]]]';
 }
 
-JenkinsLoader.prototype.loadBuilds = function (callback) {
+JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
     var self = this;
 
-    chrome.storage.local.get([self._cacheLastUpdateTag, self._buildsDataTag], function (result) {
-        var buildsDataTimestamp = $.now();
-        var cachedBuildsData = result[self._buildsDataTag];
-        var cachedBuildsLastUpdate = result[self._cacheLastUpdateTag];
+    var viewUrl = `${self._url}/view/${viewName}`;
+    var jobsDataTag = '${viewUrl}JobsData';
+    var cacheLastUpdateTag = '${viewUrl}JobsLastUpdate';
 
-        if (!cachedBuildsData || !cachedBuildsLastUpdate || buildsDataTimestamp - cachedBuildsLastUpdate > 3600 * 1000) {
-            var request = self._jobUrl + self._buildsRequest;
+    var wrappedCallback = jobs => {
+        self._jobs = jobs;
+        callback(jobs);
+    };
 
-            $.get(request, function (buildsInfo) {
-                // filter successful builds
-                self._builds = buildsInfo.builds.filter(build => build.result == 'SUCCESS')
-                    .map(build => ({
-                        number: build.number,
-                        artifacts: build.artifacts.map(artifact => artifact.relativePath),
-                        changes: build.changeSet.items.map(item => '* ' + item.msg).join('<br>\n'),
-                        date: new Date(build.timestamp)
-                    }));
+    chrome.storage.local.get([cacheLastUpdateTag, jobsDataTag], function (result) {
+        var jobsDataTimestamp = $.now();
+        var cachedJobsData = result[jobsDataTag];
+        var cachedJobsLastUpdate = result[cacheLastUpdateTag];
 
-                self._parseBuilds(callback);
-            }).fail(function (data) {
-                GUI.log(i18n.getMessage('releaseCheckFailed', [self._jobName, 'failed to load builds']));
-            
-                self._builds = cachedBuildsData;
-                self._parseBuilds(callback);
-            });
+        if (!cachedJobsData || !cachedJobsLastUpdate || jobsDataTimestamp - cachedJobsLastUpdate > self._cacheExpirationPeriod) {
+            var url = `${viewUrl}${self._jobsRequest}`;
+
+            $.get(url, jobsInfo => {
+                GUI.log(i18n.getMessage('buildServerLoaded', ['jobs']));
+
+                // remove Betaflight prefix, rename Betaflight job to Development
+                var jobs = jobsInfo.jobs.map(job => {
+                    return { title: job.name.replace('Betaflight ', '').replace('Betaflight', 'Development'), name: job.name };
+                })
+
+                // cache loaded info
+                object = {}
+                object[jobsDataTag] = jobs;
+                object[cacheLastUpdateTag] = $.now();
+                chrome.storage.local.set(object);
+
+                wrappedCallback(jobs);
+            }).error(xhr => {
+                GUI.log(i18n.getMessage('buildServerLoadFailed', ['jobs', `HTTP ${xhr.status}`]));
+            }).fail(() => wrappedCallback([]));
         } else {
-            if (cachedBuildsData) {
-                GUI.log(i18n.getMessage('releaseCheckCached', [self._jobName]));
+            if (cachedJobsData) {
+                GUI.log(i18n.getMessage('buildServerUsingCached', ['jobs']));
             }
 
-            self._builds = cachedBuildsData;
-            self._parseBuilds(callback);
+            wrappedCallback(cachedJobsData);
         }
     });
 }
 
-JenkinsLoader.prototype._parseBuilds = function (callback) {
+JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
     var self = this;
 
+    var jobUrl = `${self._url}/job/${jobName}`;
+    var buildsDataTag = `${jobUrl}BuildsData`;
+    var cacheLastUpdateTag = `${jobUrl}BuildsLastUpdate`
+
+    chrome.storage.local.get([cacheLastUpdateTag, buildsDataTag], function (result) {
+        var buildsDataTimestamp = $.now();
+        var cachedBuildsData = result[buildsDataTag];
+        var cachedBuildsLastUpdate = result[cacheLastUpdateTag];
+
+        if (!cachedBuildsData || !cachedBuildsLastUpdate || buildsDataTimestamp - cachedBuildsLastUpdate > self._cacheExpirationPeriod) {
+            var url = `${jobUrl}${self._buildsRequest}`;
+
+            $.get(url, function (buildsInfo) {
+                GUI.log(i18n.getMessage('buildServerLoaded', [jobName]));
+
+                // filter successful builds
+                var builds = buildsInfo.builds.filter(build => build.result == 'SUCCESS')
+                    .map(build => ({
+                        number: build.number,
+                        artifacts: build.artifacts.map(artifact => artifact.relativePath),
+                        changes: build.changeSet.items.map(item => '* ' + item.msg).join('<br>\n'),
+                        timestamp: build.timestamp
+                    }));
+
+                // cache loaded info
+                object = {}
+                object[buildsDataTag] = builds;
+                object[cacheLastUpdateTag] = $.now();
+                chrome.storage.local.set(object);
+
+                self._parseBuilds(jobUrl, jobName, builds, callback);
+            }).error(xhr => {
+                GUI.log(i18n.getMessage('buildServerLoadFailed', [jobName, `HTTP ${xhr.status}`]));
+            }).fail(() => {
+                self._parseBuilds(jobUrl, jobName, [], callback);
+            });
+        } else {
+            if (cachedBuildsData) {
+                GUI.log(i18n.getMessage('buildServerUsingCached', [jobName]));
+            }
+
+            self._parseBuilds(jobUrl, jobName, cachedBuildsData, callback);
+        }
+    });
+}
+
+JenkinsLoader.prototype._parseBuilds = function (jobUrl, jobName, builds, callback) {
     // convert from `build -> targets` to `target -> builds` mapping
     var targetBuilds = {};
 
     var targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
 
-    self._builds.forEach(build => {
+    builds.forEach(build => {
         build.artifacts.forEach(relativePath => {
             var match = targetFromFilenameExpression.exec(relativePath);
 
@@ -70,15 +122,16 @@ JenkinsLoader.prototype._parseBuilds = function (callback) {
 
             var version = match[1];
             var target = match[2];
+            var date = new Date(build.timestamp);
 
-            var formattedDate = ("0" + build.date.getDate()).slice(-2) + "-" + ("0" + (build.date.getMonth()+1)).slice(-2) + "-" +
-                build.date.getFullYear() + " " + ("0" + build.date.getHours()).slice(-2) + ":" + ("0" + build.date.getMinutes()).slice(-2);
+            var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" +
+                date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
 
             var descriptor = {
-                'releaseUrl': self._jobUrl + '/' + build.number,
-                'name'      : self._jobName + ' #' + build.number,
+                'releaseUrl': jobUrl + '/' + build.number,
+                'name'      : jobName + ' #' + build.number,
                 'version'   : version + ' #' + build.number,
-                'url'       : self._jobUrl + '/' + build.number + '/artifact/' + relativePath,
+                'url'       : jobUrl + '/' + build.number + '/artifact/' + relativePath,
                 'file'      : relativePath.split('/').slice(-1)[0],
                 'target'    : target,
                 'date'      : formattedDate,

@@ -2,7 +2,8 @@
 
 TABS.firmware_flasher = {
     releases: null,
-    releaseChecker: new ReleaseChecker('firmware', 'https://api.github.com/repos/betaflight/betaflight/releases')
+    releaseChecker: new ReleaseChecker('firmware', 'https://api.github.com/repos/betaflight/betaflight/releases'),
+    jenkinsLoader: new JenkinsLoader('https://ci.betaflight.tech')
 };
 
 TABS.firmware_flasher.initialize = function (callback) {
@@ -28,7 +29,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                 : "normal");
     }
 
-    $('#content').load("./tabs/firmware_flasher.html", function () {
+    function onDocumentLoad() {
         FirmwareCache.load();
         FirmwareCache.onPutToCache(onFirmwareCacheUpdate);
         FirmwareCache.onRemoveFromCache(onFirmwareCacheUpdate);
@@ -243,24 +244,21 @@ TABS.firmware_flasher.initialize = function (callback) {
             {
                 tag: 'firmwareFlasherOptionLabelBuildTypeReleaseCandidate',
                 loader: () => self.releaseChecker.loadReleaseData(releaseData => buildBoardOptions(releaseData, true))
-            },
-            {
-                tag: 'firmwareFlasherOptionLabelBuildTypeDevelopment',
-                loader: () => new JenkinsLoader('https://ci.betaflight.tech', 'Betaflight').loadBuilds(buildJenkinsBoardOptions)
-            },
-            {
-                tag: 'firmwareFlasherOptionLabelBuildTypeAKK3_3',
-                loader: () => new JenkinsLoader('https://ci.betaflight.tech', 'Betaflight Maintenance 3.3 (AKK - RDQ VTX Patch)').loadBuilds(buildJenkinsBoardOptions)
-            },
-            {
-                tag: 'firmwareFlasherOptionLabelBuildTypeAKK3_4',
-                loader: () => new JenkinsLoader('https://ci.betaflight.tech', 'Betaflight Maintenance 3.4 (AKK - RDQ VTX Patch)').loadBuilds(buildJenkinsBoardOptions)
             }
         ];
 
+        var ciBuildsTypes = self.jenkinsLoader._jobs.map(job => {
+            return {
+                title: job.title,
+                loader: () => self.jenkinsLoader.loadBuilds(job.name, buildJenkinsBoardOptions)
+            };
+        })
+
+        buildTypes = buildTypes.concat(ciBuildsTypes);
+
         var buildType_e = $('select[name="build_type"]');
         buildTypes.forEach((build, index) => {
-            buildType_e.append($("<option value='{0}' selected>{1}</option>".format(index, i18n.getMessage(build.tag))))
+            buildType_e.append($("<option value='{0}' selected>{1}</option>".format(index, build.tag ? i18n.getMessage(build.tag) : build.title)))
         });
 
         showOrHideBuildTypeSelect();
@@ -626,6 +624,10 @@ TABS.firmware_flasher.initialize = function (callback) {
         });
 
         GUI.content_ready(callback);
+    }
+
+    self.jenkinsLoader.loadJobs('Firmware', () => {
+       $('#content').load("./tabs/firmware_flasher.html", onDocumentLoad);
     });
 };
 
