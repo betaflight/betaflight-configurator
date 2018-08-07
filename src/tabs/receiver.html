@@ -117,10 +117,10 @@
             <div class="gui_box grey tunings topspacer rcSmoothing">
                 <table class="rcSmoothing-table">
                     <tr>
-                        <th colspan="4" i18n="receiverRcSmoothing"></th>
+                        <th colspan="6" i18n="receiverRcSmoothing"></th>
                     </tr>
-                        <tr class="rcSmoothing-type">
-                        <td style="width: 15%">
+                    <tr class="rc-smoothing-type">
+                        <td style="width: 25%">
                             <select name="rcSmoothing-select" style="width: 90%">
                                 <option value="0" i18n="receiverRcSmoothingInterpolation"/>
                                 <option value="1" i18n="receiverRcSmoothingFilter"/>
@@ -136,9 +136,7 @@
                         <td>
                             <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingTypeHelp" style="margin-top:0px;"></div>
                         </td>
-                    </tr>
-                    <tr class="rcSmoothing-channels">
-                        <td style="width: 15%"> 
+                        <td style="width: 15%; border-right: none !important"> 
                             <select name="rcSmoothingChannels-select" style="width: 90%">
                                 <option value="0" i18n="receiverRcSmoothingChannelsRP"/>
                                 <option value="1" i18n="receiverRcSmoothingChannelsRPY"/>
@@ -172,13 +170,11 @@
                                 </label>
                             </div>
                         </td>
-                        <td>
+                        <td style="border-right: none">
                             <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingInputManual" style="margin-top:0px;"></div>
                         </td>
-                    </tr>
-                    <tr class="rcSmoothing-input-cutoff">
-                        <td><input type="number" name="rcSmoothingInputHz-number" step="1" min="1" max="255" style="width: 90%"/></td>
-                        <td colspan="2">
+                        <td class="rcSmoothing-input-cutoff" style="border-right: none"><input type="number" name="rcSmoothingInputHz-number" step="1" min="1" max="255" style="width: 90%"/></td>
+                        <td class="rcSmoothing-input-cutoff" colspan="2">
                             <div>
                                 <label>
                                     <span i18n="receiverRcSmoothingInputHz"></span>
@@ -186,6 +182,7 @@
                                 <div class="helpicon cf_tip" i18n_title="rcSmoothingInputCutoffHelp" style="margin-top:0px;"></div>
                             </div>
                         </td>
+                        <td class="rc-smoothing-input-blank" colspan="3"></td>
                     </tr>
                     <tr class="rcSmoothing-derivative-manual">
                         <td style="width: 15%">
@@ -201,13 +198,11 @@
                                 </label>
                             </div>
                         </td>
-                        <td>
+                        <td style="border-right: none">
                             <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingDerivativeManual" style="margin-top:0px;"></div>
                         </td>
-                    </tr>
-                    <tr class="rcSmoothing-derivative-cutoff">
-                        <td><input type="number" name="rcSmoothingDerivativeCutoff-number" step="1" min="1" max="255" style="width: 90%"/></td>
-                        <td colspan="2">
+                        <td class="rcSmoothing-derivative-cutoff" style="border-right: none"><input type="number" name="rcSmoothingDerivativeCutoff-number" step="1" min="1" max="255" style="width: 90%"/></td>
+                        <td colspan="2" class="rcSmoothing-derivative-cutoff">
                             <div>
                                 <label>
                                     <span i18n="receiverRcSmoothingDerivativeCutoff"></span>
@@ -215,6 +210,7 @@
                                 <div class="helpicon cf_tip" i18n_title="rcSmoothingDerivativeCutoffHelp" style="margin-top:0px;"></div>
                             </div>
                         </td>
+                        <td class="rc-smoothing-derivative-blank" colspan="3"></td>
                     </tr>
                     <tr class="rcSmoothing-input-type">
                         <td style="width: 15%">
@@ -230,12 +226,10 @@
                                 </label>
                             </div>
                         </td>
-                        <td>
+                        <td style="border-right: none">
                             <div class="helpicon cf_tip" i18n_title="rcSmoothingInputTypeHelp" style="margin-top:0px;"></div>
                         </td>
-                    </tr>
-                    <tr class="rcSmoothing-derivative-type">
-                        <td style="width: 15%">
+                        <td style="width: 15%; border-right: none">
                             <select name="rcSmoothingDerivativeType-select" style="width: 90%">
                                 <option value="0" i18n="receiverRcSmoothingDerivativeTypeOff"/>
                                 <option value="1" i18n="receiverRcSmoothingInputTypePt1"/>
