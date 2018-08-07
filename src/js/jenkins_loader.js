@@ -26,6 +26,14 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
         var cachedJobsData = result[jobsDataTag];
         var cachedJobsLastUpdate = result[cacheLastUpdateTag];
 
+        var cachedCallback = () => {
+            if (cachedJobsData) {
+                GUI.log(i18n.getMessage('buildServerUsingCached', ['jobs']));
+            }
+
+            wrappedCallback(cachedJobsData ? cachedJobsData : []);
+        };
+
         if (!cachedJobsData || !cachedJobsLastUpdate || jobsDataTimestamp - cachedJobsLastUpdate > self._cacheExpirationPeriod) {
             var url = `${viewUrl}${self._jobsRequest}`;
 
@@ -46,13 +54,9 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
                 wrappedCallback(jobs);
             }).error(xhr => {
                 GUI.log(i18n.getMessage('buildServerLoadFailed', ['jobs', `HTTP ${xhr.status}`]));
-            }).fail(() => wrappedCallback([]));
+            }).fail(cachedCallback);
         } else {
-            if (cachedJobsData) {
-                GUI.log(i18n.getMessage('buildServerUsingCached', ['jobs']));
-            }
-
-            wrappedCallback(cachedJobsData);
+            cachedCallback();
         }
     });
 }
@@ -68,6 +72,14 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
         var buildsDataTimestamp = $.now();
         var cachedBuildsData = result[buildsDataTag];
         var cachedBuildsLastUpdate = result[cacheLastUpdateTag];
+
+        var cachedCallback = () => {
+            if (cachedBuildsData) {
+                GUI.log(i18n.getMessage('buildServerUsingCached', [jobName]));
+            }
+
+            self._parseBuilds(jobUrl, jobName, cachedBuildsData ? cachedBuildsData : [], callback);
+        };
 
         if (!cachedBuildsData || !cachedBuildsLastUpdate || buildsDataTimestamp - cachedBuildsLastUpdate > self._cacheExpirationPeriod) {
             var url = `${jobUrl}${self._buildsRequest}`;
@@ -93,15 +105,9 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
                 self._parseBuilds(jobUrl, jobName, builds, callback);
             }).error(xhr => {
                 GUI.log(i18n.getMessage('buildServerLoadFailed', [jobName, `HTTP ${xhr.status}`]));
-            }).fail(() => {
-                self._parseBuilds(jobUrl, jobName, [], callback);
-            });
+            }).fail(cachedCallback);
         } else {
-            if (cachedBuildsData) {
-                GUI.log(i18n.getMessage('buildServerUsingCached', [jobName]));
-            }
-
-            self._parseBuilds(jobUrl, jobName, cachedBuildsData, callback);
+            cachedCallback();
         }
     });
 }
