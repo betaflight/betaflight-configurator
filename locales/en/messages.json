@@ -389,6 +389,15 @@
         "message" : "Running - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
+    "buildServerLoaded": {
+        "message" : "Loaded builds information for $1 from build server."
+    },
+    "buildServerLoadFailed": {
+        "message" : "<b>Build server query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
+    },
+    "buildServerUsingCached": {
+        "message" : "Using cached builds information for $1."
+    },
     "releaseCheckLoaded": {
         "message" : "Loaded release information for $1 from GitHub."
     },
@@ -2242,7 +2251,7 @@
         "message": "Baud Rate"
     },    
     "firmwareFlasherShowDevelopmentReleases":{
-        "message": "Show unstable releases"
+        "message": "Show unstable and additional releases"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription":{
         "message": "Show Release-Candidates and Development Releases."

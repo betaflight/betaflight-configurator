@@ -23,6 +23,7 @@
         "https://*.githubusercontent.com/",
         "http://*.baseflight.net/",
         "https://*.amazonaws.com/",
+        "https://*.betaflight.tech/",
         "serial",
         "usb",
         "storage",
