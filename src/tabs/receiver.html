@@ -78,7 +78,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="gui_box grey tunings topspacer rcInterpolation">
+            <!-- <div class="gui_box grey tunings topspacer rcInterpolation">
                 <table class="rcInterpolation">
                     <tr>
                         <th colspan="2" i18n="receiverRcInterpolation"></th>
@@ -113,7 +113,7 @@
                         </td>
                     </tr>
                 </table>
-            </div>
+            </div> -->
             <div class="gui_box grey tunings topspacer rcSmoothing">
                 <table class="rcSmoothing-table">
                     <tr>
@@ -214,7 +214,7 @@
                     </tr>
                     <tr class="rcSmoothing-input-type">
                         <td style="width: 15%">
-                        <select name="rcSmoothingInputType-select" style="width: 90%">
+                            <select name="rcSmoothingInputType-select" style="width: 90%">
                                 <option value="0" i18n="receiverRcSmoothingInputTypePt1"/>
                                 <option value="1" i18n="receiverRcSmoothingInputTypeBiquad"/>
                             </select>
@@ -245,6 +245,31 @@
                         </td>
                         <td>
                             <div class="helpicon cf_tip" i18n_title="rcSmoothingDerivativeTypeHelp" style="margin-top:0px;"></div>
+                        </td>
+                    </tr>
+                    <tr class="rcInterpolation">
+                        <td style="width: 50px !important" colspan="3">
+                            <select name="rcInterpolation-select">
+                                <option value="0" i18n="receiverRcInterpolationOff"/>
+                                <option value="1" i18n="receiverRcInterpolationDefault"/>
+                                <option value="2" i18n="receiverRcInterpolationAuto"/>
+                                <option value="3" i18n="receiverRcInterpolationManual"/>
+                            </select>
+                            <div class="rcInterpolation-label">
+                                <label style="margin-left: 5px">
+                                    <span i18n="receiverRcInterpolation"></span>
+                                </label>
+                                <div class="helpicon cf_tip" i18n_title="receiverRcInterpolationHelp" style="margin-top: 2px"></div>
+                            </div>
+                        </td>
+                        <td class="rc-interpolation-manual" colspan="1" style="border-right: none"><input type="number" name="rcInterpolationInterval-number" step="1" min="1" max="50" /></td>
+                        <td class="rc-interpolation-manual" colspan="2">
+                            <div>
+                                <label style="margin-left: 5px" >
+                                    <span i18n="receiverRcInterpolationInterval"></span>
+                                </label>
+                                <div class="helpicon cf_tip" i18n_title="receiverRcInterpolationIntervalHelp" style="margin-top: 2px"></div>
+                            </div>
                         </td>
                     </tr>
                 </table>

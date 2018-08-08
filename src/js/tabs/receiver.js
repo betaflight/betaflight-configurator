@@ -585,9 +585,9 @@ TABS.receiver.cleanup = function (callback) {
 TABS.receiver.updateRcInterpolationParameters = function () {
     if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
         if ($('select[name="rcInterpolation-select"]').val() === '3') {
-            $('.tab-receiver .rcInterpolationInterval').show();
+            $('.tab-receiver .rc-interpolation-manual').show();
         } else {
-            $('.tab-receiver .rcInterpolationInterval').hide();
+            $('.tab-receiver .rc-interpolation-manual').hide();
         }
     }
 };
