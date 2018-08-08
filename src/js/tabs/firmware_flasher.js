@@ -270,6 +270,8 @@ TABS.firmware_flasher.initialize = function (callback) {
         i18n.localizePage();
 
         buildType_e.change(function() {
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, $(this).find('option:selected').text());
+
             $("a.load_remote_file").addClass('disabled');
             var build_type = $(this).val();
 
@@ -325,7 +327,8 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         // UI Hooks
         $('a.load_file').click(function () {
-            analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, 'file');
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, undefined);
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'file');
 
             chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
                 if (chrome.runtime.lastError) {
@@ -390,7 +393,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             let isCached = FirmwareCache.has(release);
             if (evt.target.value=="0" || isCached) {
                 if (isCached) {
-                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, 'cache');
+                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'cache');
 
                     FirmwareCache.get(release, cached => {
                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, release.file);
@@ -406,7 +409,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         });
 
         $('a.load_remote_file').click(function (evt) {
-            analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, 'http');
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'http');
 
             if ($('select[name="firmware_version"]').val() == "0") {
                 GUI.log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));

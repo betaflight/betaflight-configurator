@@ -37,6 +37,7 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
         MCU_ID: 'mcuId',
         FIRMWARE_NAME: 'firmwareName',
         FIRMWARE_CHECKSUM: 'firmwareChecksum',
+        FIRMWARE_SOURCE: 'firmwareSource',
         FIRMWARE_CHANNEL: 'firmwareChannel',
         FIRMWARE_ERASE_ALL: 'firmwareEraseAll',
     };
@@ -48,9 +49,10 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
         FIRMWARE_VERSION: 4,
         API_VERSION: 5,
         FIRMWARE_NAME: 6,
-        FIRMWARE_CHANNEL: 7,
+        FIRMWARE_SOURCE: 7,
         FIRMWARE_ERASE_ALL: 8,
         CONFIGURATOR_EXPERT_MODE: 9,
+        FIRMWARE_CHANNEL: 10,
     };
 
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
@@ -118,8 +120,9 @@ Analytics.prototype.resetFlightControllerData = function () {
 
 Analytics.prototype._rebuildFirmwareEvent = function () {
     this.setDimension(this.DIMENSIONS.FIRMWARE_NAME, this._firmwareData[this.DATA.FIRMWARE_NAME]);
-    this.setDimension(this.DIMENSIONS.FIRMWARE_CHANNEL, this._firmwareData[this.DATA.FIRMWARE_CHANNEL]);
+    this.setDimension(this.DIMENSIONS.FIRMWARE_SOURCE, this._firmwareData[this.DATA.FIRMWARE_SOURCE]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_ERASE_ALL, this._firmwareData[this.DATA.FIRMWARE_ERASE_ALL]);
+    this.setDimension(this.DIMENSIONS.FIRMWARE_CHANNEL, this._firmwareData[this.DATA.FIRMWARE_CHANNEL]);
     this._analytics.set('eventLabel', this._firmwareData[this.DATA.FIRMWARE_CHECKSUM]);
 }
 
