@@ -5,7 +5,7 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
 
     this.setOptOut(optOut);
 
-    this._analytics = analytics;
+    this._analytics = googleAnalytics;
 
     this._analytics.initialize(this._trackingId, {
         storage: 'none',
@@ -42,7 +42,7 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
     };
 
     this.DIMENSIONS = {
-        BUILD_TYPE: 1,
+        CONFIGURATOR_BUILD_TYPE: 1,
         BOARD_TYPE: 2,
         FIRMWARE_TYPE: 3,
         FIRMWARE_VERSION: 4,
@@ -50,9 +50,10 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
         FIRMWARE_NAME: 6,
         FIRMWARE_CHANNEL: 7,
         FIRMWARE_ERASE_ALL: 8,
+        CONFIGURATOR_EXPERT_MODE: 9,
     };
 
-    this.setDimension(this.DIMENSIONS.BUILD_TYPE, buildType);
+    this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
 
     this.resetFlightControllerData();
     this.resetFirmwareData();

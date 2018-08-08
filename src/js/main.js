@@ -1,61 +1,74 @@
 'use strict';
 
-var analytics;
+var googleAnalytics = analytics;
+var analytics = undefined;
 
 openNewWindowsInExternalBrowser();
 
 $(document).ready(function () {
     i18n.init(function() {
-        setupAnalytics();
+        startProcess();
         initializeSerialBackend();
     });
 });
 
-function setupAnalytics() {
-    chrome.storage.local.get(['userId', 'analyticsOptOut'], function (result) {
-        var userId;
-        if (result.userId) {
-            userId = result.userId;
-        } else {
-            var uid = new ShortUniqueId();
-            userId = uid.randomUUID(13);
+function checkSetupAnalytics(callback) {
+    if (!analytics) {
+        setTimeout(function () {
+            chrome.storage.local.get(['userId', 'analyticsOptOut'], function (result) {
+                if (!analytics) {
+                    setupAnalytics(result);
+                }
 
-            chrome.storage.local.set({ 'userId': userId });
-        }
-
-        var optOut = !!result.analyticsOptOut;
-
-        var debugMode = process.versions['nw-flavor'] === 'sdk';
-
-        analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), GUI.operating_system, optOut, debugMode);
-
-        function logException(exception) {
-            analytics.sendException(exception.stack);
-        }
-
-        process.on('uncaughtException', logException);
-
-        analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
-
-        function sendCloseEvent() {
-            analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' })
-        }
-
-        try {
-            var gui = require('nw.gui');
-            var win = gui.Window.get();
-            win.on('close', function () {
-                sendCloseEvent();
-
-                this.close(true);
+                callback(analytics);
             });
-        } catch (ex) {
-            // Looks like we're in Chrome - but the event does not actually get fired
-            chrome.runtime.onSuspend.addListener(sendCloseEvent);
-        }
+        });
+    } else if (callback) {
+        callback(analytics);
+    }
+};
 
-        startProcess();
-    });
+function setupAnalytics(result) {
+    var userId;
+    if (result.userId) {
+        userId = result.userId;
+    } else {
+        var uid = new ShortUniqueId();
+        userId = uid.randomUUID(13);
+
+        chrome.storage.local.set({ 'userId': userId });
+    }
+
+    var optOut = !!result.analyticsOptOut;
+
+    var debugMode = process.versions['nw-flavor'] === 'sdk';
+
+    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), GUI.operating_system, optOut, debugMode);
+
+    function logException(exception) {
+        analytics.sendException(exception.stack);
+    }
+
+    process.on('uncaughtException', logException);
+
+    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
+
+    function sendCloseEvent() {
+        analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' })
+    }
+
+    try {
+        var gui = require('nw.gui');
+        var win = gui.Window.get();
+        win.on('close', function () {
+            sendCloseEvent();
+
+            this.close(true);
+        });
+    } catch (ex) {
+        // Looks like we're in Chrome - but the event does not actually get fired
+        chrome.runtime.onSuspend.addListener(sendCloseEvent);
+    }
 }
 
 //Process to execute to real start the app
@@ -159,7 +172,9 @@ function startProcess() {
                     GUI.tab_switch_in_progress = false;
                 }
 
-                analytics.sendAppView(tab);
+                checkSetupAnalytics(function (analytics) {
+                    analytics.sendAppView(tab);
+                });
 
                 switch (tab) {
                     case 'landing':
@@ -265,10 +280,6 @@ function startProcess() {
                         chrome.storage.local.set({'permanentExpertMode': checked});
 
                         $('input[name="expertModeCheckbox"]').prop('checked', checked).change();
-                        if (FEATURE_CONFIG) {
-                            updateTabList(FEATURE_CONFIG.features);
-                        }
-
                     }).change();
                 });
 
@@ -307,15 +318,17 @@ function startProcess() {
 
                         chrome.storage.local.set({'analyticsOptOut': checked});
 
-                        if (checked) {
-                            analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'OptOut');
-                        }
+                        checkSetupAnalytics(function (analytics) {
+                            if (checked) {
+                                analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'OptOut');
+                            }
 
-                        analytics.setOptOut(checked);
+                            analytics.setOptOut(checked);
 
-                        if (!checked) {
-                            analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'OptIn');
-                        }
+                            if (!checked) {
+                                analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'OptIn');
+                            }
+                        });
                     }).change();
                 });
 
@@ -469,6 +482,11 @@ function startProcess() {
         }
 
         $('input[name="expertModeCheckbox"]').change(function () {
+            var checked = $(this).is(':checked');
+            checkSetupAnalytics(function (analytics) {
+                analytics.setDimension(analytics.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
+            });
+
             if (FEATURE_CONFIG) {
                 updateTabList(FEATURE_CONFIG.features);
             }
