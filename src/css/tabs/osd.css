@@ -235,6 +235,15 @@
   background-color: #b8b8b8;
 }
 
+.tab-osd .buttons a.read_font.locked {
+  background-color: #b8b8b8;
+}
+
+.tab-osd .buttons a.read_font.locked:hover {
+  cursor: default;
+  background-color: #b8b8b8;
+}
+
 .tab-osd .buttons a.load_remote_file.locked {
   background-color: #b8b8b8;
 }

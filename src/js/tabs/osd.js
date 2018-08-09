@@ -92,7 +92,7 @@ FONT.parseMCMFontFile = function(data) {
   LogoManager.resetImageInfo();
   // make sure the font file is valid
   if (data.shift().trim() != 'MAX7456') {
-    var msg = 'that font file doesnt have the MAX7456 header, giving up';
+    var msg = 'that font file doesn\'t have the MAX7456 header, giving up';
     console.debug(msg);
     Promise.reject(msg);
   }
@@ -198,6 +198,19 @@ FONT.upload = function($progress) {
   return Promise.mapSeries(FONT.data.characters, function(data, i) {
     $progress.val((i / FONT.data.characters.length) * 100);
     return MSP.promise(MSPCodes.MSP_OSD_CHAR_WRITE, FONT.msp.encode(i));
+  })
+  .then(function() {
+    OSD.GUI.jbox.close();
+    return MSP.promise(MSPCodes.MSP_SET_REBOOT);
+  });
+};
+
+FONT.download = function($progress) {
+  return Promise.mapSeries(FONT.data.characters, function(data, i) {
+    $progress.val((i / FONT.data.characters.length) * 100);
+    console.log(i);
+    return MSP.promise(MSPCodes.MSP_OSD_CHAR_READ, FONT.msp.encode(i))
+    .then(function(info){console.log(info.data)});
   })
   .then(function() {
     OSD.GUI.jbox.close();
@@ -1516,7 +1529,7 @@ TABS.osd.initialize = function (callback) {
         // Open modal window
         OSD.GUI.jbox = new jBox('Modal', {
             width: 720,
-            height: 420,
+            height: 455,
             closeButton: 'title',
             animation: false,
             attach: $('#fontmanager'),
@@ -2041,6 +2054,18 @@ TABS.osd.initialize = function (callback) {
                 });
             }
         });
+
+        $('a.read_font').click(function () {
+          if (!GUI.connect_lock) { // button disabled while flashing is in progress
+              $('a.read_font').addClass('disabled');
+              $('.progressLabel').text('Downloading...');
+              FONT.download($('.progress').val(0)).then(function() {
+                  var msg = 'Fetched Info character';
+                  console.log(msg);
+                  $('.progressLabel').text(msg);
+              });
+          }
+      });
 
         // replace logo
         $('a.replace_logo').click(() => {
