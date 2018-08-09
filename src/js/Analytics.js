@@ -5,23 +5,23 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
 
     this.setOptOut(optOut);
 
-    this._analytics = googleAnalytics;
+    this._googleAnalytics = googleAnalytics;
 
-    this._analytics.initialize(this._trackingId, {
+    this._googleAnalytics.initialize(this._trackingId, {
         storage: 'none',
         clientId: userId,
         debug: !!debugMode
     });
 
     // Make it work for the Chrome App:
-    this._analytics.set('forceSSL', true);
-    this._analytics.set('transport', 'xhr');
+    this._googleAnalytics.set('forceSSL', true);
+    this._googleAnalytics.set('transport', 'xhr');
 
     // Make it work for NW.js:
-    this._analytics.set('checkProtocolTask', null);
+    this._googleAnalytics.set('checkProtocolTask', null);
 
-    this._analytics.set('appName', appName);
-    this._analytics.set('appVersion', debugMode ? appVersion + '-debug' : appVersion);
+    this._googleAnalytics.set('appName', appName);
+    this._googleAnalytics.set('appVersion', debugMode ? appVersion + '-debug' : appVersion);
 
     this.EVENT_CATEGORIES = {
         APPLICATION: 'Application',
@@ -63,12 +63,11 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
 
 Analytics.prototype.setDimension = function (dimension, value) {
     var dimensionName = 'dimension' + dimension;
-    this._analytics.custom(dimensionName, value);
+    this._googleAnalytics.custom(dimensionName, value);
 }
 
 Analytics.prototype.sendEvent = function (category, action, options) {
-//    options.eventLabel = options.eventLabel || this._flightControllerData[this.DATA.MCU_ID];
-    this._analytics.event(category, action, options);
+    this._googleAnalytics.event(category, action, options);
 }
 
 Analytics.prototype.sendChangeEvents = function (category, changeList) {
@@ -83,15 +82,15 @@ Analytics.prototype.sendChangeEvents = function (category, changeList) {
 }
 
 Analytics.prototype.sendAppView = function (viewName) {
-    this._analytics.screenview(viewName);
+    this._googleAnalytics.screenview(viewName);
 }
 
 Analytics.prototype.sendTiming = function (category, timing, value) {
-    this._analytics.timing(category, timing, value);
+    this._googleAnalytics.timing(category, timing, value);
 }
 
 Analytics.prototype.sendException = function (message) {
-    this._analytics.exception(message);
+    this._googleAnalytics.exception(message);
 }
 
 Analytics.prototype.setOptOut = function (optOut) {
@@ -103,7 +102,7 @@ Analytics.prototype._rebuildFlightControllerEvent = function () {
     this.setDimension(this.DIMENSIONS.FIRMWARE_TYPE, this._flightControllerData[this.DATA.FIRMWARE_TYPE]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_VERSION, this._flightControllerData[this.DATA.FIRMWARE_VERSION]);
     this.setDimension(this.DIMENSIONS.API_VERSION, this._flightControllerData[this.DATA.API_VERSION]);
-    this._analytics.set('eventLabel', this._flightControllerData[this.DATA.MCU_ID]);
+    this._googleAnalytics.set('eventLabel', this._flightControllerData[this.DATA.MCU_ID]);
 }
 
 Analytics.prototype.setFlightControllerData = function (property, value) {
@@ -123,7 +122,7 @@ Analytics.prototype._rebuildFirmwareEvent = function () {
     this.setDimension(this.DIMENSIONS.FIRMWARE_SOURCE, this._firmwareData[this.DATA.FIRMWARE_SOURCE]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_ERASE_ALL, this._firmwareData[this.DATA.FIRMWARE_ERASE_ALL]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_CHANNEL, this._firmwareData[this.DATA.FIRMWARE_CHANNEL]);
-    this._analytics.set('eventLabel', this._firmwareData[this.DATA.FIRMWARE_CHECKSUM]);
+    this._googleAnalytics.set('eventLabel', this._firmwareData[this.DATA.FIRMWARE_CHECKSUM]);
 }
 
 Analytics.prototype.setFirmwareData = function (property, value) {
