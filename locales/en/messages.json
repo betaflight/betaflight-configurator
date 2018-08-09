@@ -3333,7 +3333,7 @@
         "message": "Upload Font"
     },
     "osdSetupDownloadFont": {
-        "message": "Download Font"
+        "message": "Load Font from EEPROM"
     },
     "osdSetupSave": {
         "message": "Save"

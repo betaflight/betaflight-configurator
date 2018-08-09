@@ -48,7 +48,7 @@ FONT.initData = function() {
   FONT.data = {
     // default font file name
     loaded_font_file: 'default',
-    // array of arry of image bytes ready to upload to fc
+    // array of array of image bytes ready to upload to fc
     characters_bytes: [],
     // array of array of image bits by character
     characters: [],
@@ -84,15 +84,10 @@ FONT.constants = {
  */
 FONT.parseMCMFontFile = function(data) {
   var data = data.split("\n");
-  // clear local data
-  FONT.data.characters.length = 0;
-  FONT.data.characters_bytes.length = 0;
-  FONT.data.character_image_urls.length = 0;
-  // reset logo image info when font data is changed
-  LogoManager.resetImageInfo();
+  FONT.ClearData();
   // make sure the font file is valid
   if (data.shift().trim() != 'MAX7456') {
-    var msg = 'that font file doesn\'t have the MAX7456 header, giving up';
+    var msg = 'That font file doesn\'t have the MAX7456 header, giving up';
     console.debug(msg);
     Promise.reject(msg);
   }
@@ -125,6 +120,39 @@ FONT.parseMCMFontFile = function(data) {
   // push the last char
   pushChar();
   return FONT.data.characters;
+};
+
+FONT.ClearData = function() {
+    // clear local data
+    FONT.data.characters.length = 0;
+    FONT.data.characters_bytes.length = 0;
+    FONT.data.character_image_urls.length = 0;
+    // reset logo image info when font data is changed
+    LogoManager.resetImageInfo();
+}
+
+FONT.parseEEPROMCharData = function(data) {
+  var character_bits = [];
+  var character_bytes = [];
+  FONT.data.hexstring = [];
+  var pushChar = function() {
+    FONT.data.characters_bytes.push(character_bytes);
+    FONT.data.characters.push(character_bits);
+    FONT.draw(FONT.data.characters.length-1);
+    character_bits = [];
+    character_bytes = [];
+  };
+  for (var i = 0; i < FONT.constants.SIZES.MAX_NVM_FONT_CHAR_SIZE; i++) {
+    var line = data.getUint8(i);
+    var binLine = '00000000'.concat(line.toString(2)).slice(-8)
+    FONT.data.hexstring.push('0x' + line.toString(16));
+    for (var y = 0; y < 8; y = y + 2) {
+      var v = parseInt(binLine.slice(y, y+2), 2);
+      character_bits.push(v);
+    }
+    character_bytes.push(line);
+  }
+  pushChar();
 };
 
 FONT.openFontFile = function($preview) {
@@ -206,15 +234,16 @@ FONT.upload = function($progress) {
 };
 
 FONT.download = function($progress) {
-  return Promise.mapSeries(FONT.data.characters, function(data, i) {
-    $progress.val((i / FONT.data.characters.length) * 100);
-    console.log(i);
-    return MSP.promise(MSPCodes.MSP_OSD_CHAR_READ, FONT.msp.encode(i))
-    .then(function(info){console.log(info.data)});
+  FONT.ClearData();
+  return Promise.mapSeries(new Array(FONT.constants.MAX_CHAR_COUNT), function(data, i) {
+    $progress.val((i / FONT.constants.MAX_CHAR_COUNT) * 100);
+    return MSP.promise(MSPCodes.MSP_OSD_CHAR_READ, [i])
+    .then(function(info){
+      FONT.parseEEPROMCharData(info.data);
+    });
   })
   .then(function() {
     OSD.GUI.jbox.close();
-    return MSP.promise(MSPCodes.MSP_SET_REBOOT);
   });
 };
 
@@ -2060,9 +2089,12 @@ TABS.osd.initialize = function (callback) {
               $('a.read_font').addClass('disabled');
               $('.progressLabel').text('Downloading...');
               FONT.download($('.progress').val(0)).then(function() {
-                  var msg = 'Fetched Info character';
+                var msg = 'Downloaded all ' + FONT.data.characters.length + ' characters';
                   console.log(msg);
                   $('.progressLabel').text(msg);
+                  FONT.preview($preview);
+                  LogoManager.drawPreview();
+                  updateOsdView();
               });
           }
       });
