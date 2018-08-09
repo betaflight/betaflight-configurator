@@ -2,7 +2,8 @@
 
 TABS.configuration = {
     DSHOT_PROTOCOL_MIN_VALUE: 5,
-    SHOW_OLD_BATTERY_CONFIG: false
+    SHOW_OLD_BATTERY_CONFIG: false,
+    analyticsChanges: {},
 };
 
 TABS.configuration.initialize = function (callback, scrollPosition) {
@@ -195,6 +196,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     load_config();
 
     function process_html() {
+        var self = this;
+
+        self.analyticsChanges = {};
+
         var mixer_list_e = $('select.mixerList');
         for (var selectIndex = 0; selectIndex < mixerList.length; selectIndex++) {
             mixerList.forEach(function (mixerEntry, mixerIndex) {
@@ -225,7 +230,15 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         reverseMotorSwitch_e.prop('checked', MIXER_CONFIG.reverseMotorDir != 0).change();
 
         mixer_list_e.change(function () {
-            MIXER_CONFIG.mixer = parseInt($(this).val());
+            var mixerValue = parseInt($(this).val());
+
+            var newValue;
+            if (mixerValue !== MIXER_CONFIG.mixer) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['Mixer'] = newValue;
+
+            MIXER_CONFIG.mixer = mixerValue;
             refreshMixerPreview();
         });
 
@@ -371,8 +384,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
         esc_protocol_e.change(function () {
+            var escProtocolValue = parseInt($(this).val()) - 1;
+
+            var newValue;
+            if (escProtocolValue !== PID_ADVANCED_CONFIG.fast_pwm_protocol) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['EscProtocol'] = newValue;
+
             //hide not used setting for DSHOT protocol
-            if ($(this).val() - 1 >= self.DSHOT_PROTOCOL_MIN_VALUE) {
+            if (escProtocolValue >= self.DSHOT_PROTOCOL_MIN_VALUE) {
                 $('div.minthrottle').hide();
                 $('div.maxthrottle').hide();
                 $('div.mincommand').hide();
@@ -621,7 +642,15 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         serialRX_e.change(function () {
-            RX_CONFIG.serialrx_provider = parseInt($(this).val());
+            var serialRxValue = parseInt($(this).val());
+
+            var newValue;
+            if (serialRxValue !== RX_CONFIG.serialrx_provider) {
+                newValue = $(this).find('option:selected').text();
+            }
+            self.analyticsChanges['SerialRx'] = newValue;
+
+            RX_CONFIG.serialrx_provider = serialRxValue;
         });
 
         // select current serial RX type
@@ -988,6 +1017,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                 RX_CONFIG.fpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
             }
+
+            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            self.analyticsChanges = {};
 
             function save_serial_config() {
                 var next_callback = save_feature_config;

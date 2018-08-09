@@ -24,6 +24,7 @@
         "http://*.baseflight.net/",
         "https://*.amazonaws.com/",
         "https://*.betaflight.tech/",
+        "https://www.google-analytics.com/",
         "serial",
         "usb",
         "storage",
@@ -51,7 +52,6 @@
             }
         ]
     },
-
     "icons": {
         "128": "images/bf_icon_128.png"
     }

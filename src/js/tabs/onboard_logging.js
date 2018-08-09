@@ -153,6 +153,8 @@ TABS.onboard_logging.initialize = function (callback) {
                         .toggleClass("msc-supported", true);
 
                     $('a.onboardLoggingRebootMsc').click(function () {
+                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
+
                         var buffer = [];
                         buffer.push(2);
                         MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
@@ -298,6 +300,8 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function update_html() {
+        var dataflashPresent = DATAFLASH.totalSize > 0;
+
         update_bar_width($(".tab-onboard_logging .dataflash-used"), DATAFLASH.usedSize, DATAFLASH.totalSize, i18n.getMessage('dataflashUsedSpace'), false);
         update_bar_width($(".tab-onboard_logging .dataflash-free"), DATAFLASH.totalSize - DATAFLASH.usedSize, DATAFLASH.totalSize, i18n.getMessage('dataflashFreeSpace'), false);
 
@@ -312,7 +316,7 @@ TABS.onboard_logging.initialize = function (callback) {
             .toggleClass("sdcard-ready", SDCARD.state === MSP.SDCARD_STATE_READY);
 
         if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
-            var mscIsReady = (DATAFLASH.totalSize > 0) || (SDCARD.state === MSP.SDCARD_STATE_READY);
+            var mscIsReady = dataflashPresent || (SDCARD.state === MSP.SDCARD_STATE_READY);
             $(".tab-onboard_logging")
                 .toggleClass("msc-not-ready", !mscIsReady);
 
@@ -323,26 +327,38 @@ TABS.onboard_logging.initialize = function (callback) {
             }
         }
         
+        var loggingStatus
         switch (SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusNoCard'));
+                loggingStatus = 'SdCard: NotPresent';
             break;
             case MSP.SDCARD_STATE_FATAL:
                 $(".sdcard-status").html(i18n.getMessage('sdcardStatusReboot'));
+                loggingStatus = 'SdCard: Error';
             break;
             case MSP.SDCARD_STATE_READY:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusReady'));
+                loggingStatus = 'SdCard: Ready';
             break;
             case MSP.SDCARD_STATE_CARD_INIT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusStarting'));
+                loggingStatus = 'SdCard: Init';
             break;
             case MSP.SDCARD_STATE_FS_INIT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusFileSystem'));
+                loggingStatus = 'SdCard: FsInit';
             break;
             default:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusUnknown',[SDCARD.state]));
         }
         
+        if (dataflashPresent && SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
+            loggingStatus = 'Dataflash';
+            analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, DATAFLASH.usedSize);
+        }
+        analytics.setFlightControllerData(analytics.DATA.LOGGING_STATUS, loggingStatus);
+
         if (SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status
             sdcardTimer = setTimeout(function() {
@@ -374,6 +390,8 @@ TABS.onboard_logging.initialize = function (callback) {
     }
     
     function mark_saving_dialog_done(startTime, totalBytes, totalBytesCompressed) {
+        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SaveDataflash');
+
         var totalTime = (new Date().getTime() - startTime) / 1000;
         console.log('Received ' + totalBytes + ' bytes in ' + totalTime.toFixed(2) + 's ('
             + (totalBytes / totalTime / 1024).toFixed(2) + 'kB / s) with block size ' + self.blockSize + '.');
@@ -539,6 +557,9 @@ TABS.onboard_logging.initialize = function (callback) {
 };
 
 TABS.onboard_logging.cleanup = function (callback) {
+    analytics.setFlightControllerData(analytics.DATA.LOGGING_STATUS, undefined);
+    analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, undefined);
+
     if (sdcardTimer) {
         clearTimeout(sdcardTimer);
         sdcardTimer = false;

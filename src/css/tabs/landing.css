@@ -255,3 +255,62 @@
 #changelog .log p {
     margin-bottom: 20px;
 }
+
+/* privacy policy block */
+#privacy_policy {
+    width: 500px;
+    height: 100%;
+    position: fixed;
+    right: -495px;
+    top: 0px;
+}
+
+#privacy_policy .wrapper {
+    height: 100%;
+    padding: 0 20px;
+    border-left: 5px solid #ffbb00;
+    overflow-y: auto;
+    display: none;
+}
+
+#privacy_policy .button {
+    transform: rotate(270deg);
+    top: 170px;
+    right: 450px;
+    position: absolute;
+    background: #ffbb00;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+    height: 30px;
+}
+
+#privacy_policy .button a {
+    display: block;
+    padding: 5px 10px;
+    width: 100px;
+    text-align: center;
+    color: #000;
+}
+
+#content.policy_open #privacy_policy {
+    right: 0px;
+    background: white;
+}
+
+#content.policy_open #privacy_policy .wrapper {
+    display: block;
+}
+
+/* privacy policy content */
+#privacy_policy .policy ul {
+    margin: 5px 0 20px 10px;
+}
+
+#privacy_policy .policy li {
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+#privacy_policy .policy p {
+    margin-bottom: 20px;
+}

@@ -99,10 +99,15 @@ var Features = function (config) {
 
     self._features = features;
     self._featureMask = 0;
+
+    self._analyticsChanges = {};
 };
 
 Features.prototype.getMask = function () {
     var self = this;
+
+    analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self._analyticsChanges);
+    self._analyticsChanges = {};
 
     return self._featureMask;
 };
@@ -126,6 +131,8 @@ Features.prototype.isEnabled = function (featureName) {
 
 Features.prototype.generateElements = function (featuresElements) {
     var self = this;
+
+    self._featureChanges = {};
 
     var listElements = [];
 
@@ -191,28 +198,47 @@ Features.prototype.generateElements = function (featuresElements) {
     }
 };
 
+Features.prototype.findFeatureByBit = function (bit) {
+    var self = this;
+
+    for (var i = 0; i < self._features.length; i++) {
+        if (self._features[i].bit == bit) {
+            return self._features[i];
+        }
+    }
+}
+
 Features.prototype.updateData = function (featureElement) {
     var self = this;
 
     if (featureElement.attr('type') === 'checkbox') {
         var bit = featureElement.data('bit');
 
+        var featureValue;
         if (featureElement.is(':checked')) {
             self._featureMask = bit_set(self._featureMask, bit);
+            featureValue = 'On';
         } else {
             self._featureMask = bit_clear(self._featureMask, bit);
+            featureValue = 'Off';
         }
+        self._analyticsChanges['Feature' + self.findFeatureByBit(bit).name] = featureValue;
     } else if (featureElement.prop('localName') === 'select') {
         var controlElements = featureElement.children();
         var selectedBit = featureElement.val();
         if (selectedBit !== -1) {
+            var selectedFeature;
             for (var i = 0; i < controlElements.length; i++) {
                 var bit = controlElements[i].value;
                 if (selectedBit === bit) {
                     self._featureMask = bit_set(self._featureMask, bit);
+                    selectedFeature = self.findFeatureByBit(bit);
                 } else {
                     self._featureMask = bit_clear(self._featureMask, bit);
                 }
+            }
+            if (selectedFeature) {
+                self._analyticsChanges['FeatureGroup-' + selectedFeature.group] = selectedFeature.name;
             }
         }
     }

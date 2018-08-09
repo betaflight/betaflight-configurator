@@ -1,6 +1,8 @@
 'use strict';
 
-TABS.ports = {};
+TABS.ports = {
+    analyticsChanges: {},
+};
 
 TABS.ports.initialize = function (callback, scrollPosition) {
     var self = this;
@@ -117,6 +119,9 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
     function update_ui() {
+        self.analyticsChanges = {};
+
+        self.foo.bar = 1;
 
         if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
 
@@ -240,6 +245,19 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                         if (serialPort.functions.indexOf(functionName) >= 0) {
                             select_e.val(functionName);
                         }
+
+                        if (column === 'telemetry') {
+                            var initialValue = functionName;
+                            select_e.change(function () {
+                                var telemetryValue = $(this).val();
+
+                                var newValue;
+                                if (telemetryValue !== initialValue) {
+                                    newValue = $(this).find('option:selected').text();
+                                }
+                                self.analyticsChanges['Telemetry'] = newValue;
+                            });
+                        }
                     }
                 }
             }
@@ -249,6 +267,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
     function on_tab_loaded_handler() {
+        var self = this;
 
         i18n.localizePage();
 
@@ -265,6 +284,9 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
    function on_save_handler() {
+        analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+       self.analyticsChanges = {};
+
         // update configuration based on current ui state
         SERIAL_CONFIG.ports = [];
 
