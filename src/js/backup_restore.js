@@ -254,6 +254,7 @@ function configuration_backup(callback) {
                                     return;
                                 }
 
+                                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Backup');
                                 console.log('Write SUCCESSFUL');
                                 if (callback) callback();
                             };
@@ -336,6 +337,8 @@ function configuration_restore(callback) {
                             features.setMask(configuration.FEATURE_CONFIG.features._featureMask);
                             configuration.FEATURE_CONFIG.features = features;
                         }
+
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Restore');
 
                         configuration_upload(configuration, callback);
                     } else {

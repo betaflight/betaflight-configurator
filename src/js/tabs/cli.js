@@ -60,7 +60,6 @@ TABS.cli.initialize = function (callback) {
         var textarea = $('.tab-cli textarea');
 
         $('.tab-cli .save').click(function() {
-
             var prefix = 'cli';
             var suffix = 'txt';
 
@@ -87,9 +86,11 @@ TABS.cli.initialize = function (callback) {
                     };
 
                     writer.onwriteend = function () {
-                        if (writer.length === 0) {
+                        if (self.outputHistory.length > 0 && writer.length === 0) {
                             writer.write(new Blob([self.outputHistory], {type: 'text/plain'}));
                         } else {
+                            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliSave', self.outputHistory.length);
+
                             console.log('write complete');
                         }
                     };

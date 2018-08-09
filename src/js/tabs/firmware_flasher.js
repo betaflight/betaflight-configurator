@@ -56,11 +56,11 @@ TABS.firmware_flasher.initialize = function (callback) {
                 parsed_hex = data;
 
                 if (parsed_hex) {
+                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, parsed_hex.bytes_total);
+
                     if (!FirmwareCache.has(summary)) {
                         FirmwareCache.put(summary, intel_hex);
                     }
-
-                    var url;
 
                     $('span.progressLabel').html('<a class="save_firmware" href="#" title="Save Firmware">Loaded Online Firmware: (' + parsed_hex.bytes_total + ' bytes)</a>');
 
@@ -367,6 +367,8 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     parsed_hex = data;
 
                                     if (parsed_hex) {
+                                        analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, parsed_hex.bytes_total);
+
                                         $('a.flash_firmware').removeClass('disabled');
 
                                         $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total));

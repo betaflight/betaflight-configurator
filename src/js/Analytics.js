@@ -31,15 +31,18 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
 
     this.DATA = {
         BOARD_TYPE: 'boardType',
+        API_VERSION: 'apiVersion',
         FIRMWARE_TYPE: 'firmwareType',
         FIRMWARE_VERSION: 'firmwareVersion',
-        API_VERSION: 'apiVersion',
-        MCU_ID: 'mcuId',
         FIRMWARE_NAME: 'firmwareName',
         FIRMWARE_CHECKSUM: 'firmwareChecksum',
         FIRMWARE_SOURCE: 'firmwareSource',
         FIRMWARE_CHANNEL: 'firmwareChannel',
         FIRMWARE_ERASE_ALL: 'firmwareEraseAll',
+        FIRMWARE_SIZE: 'firmwareSize',
+        MCU_ID: 'mcuId',
+        LOGGING_STATUS: 'loggingStatus',
+        LOG_SIZE: 'logSize',
     };
 
     this.DIMENSIONS = {
@@ -53,6 +56,13 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
         FIRMWARE_ERASE_ALL: 8,
         CONFIGURATOR_EXPERT_MODE: 9,
         FIRMWARE_CHANNEL: 10,
+        LOGGING_STATUS: 11,
+        MCU_ID: 12,
+    };
+
+    this.METRICS = {
+        FIRMWARE_SIZE: 1,
+        LOG_SIZE: 2,
     };
 
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
@@ -64,6 +74,11 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
 Analytics.prototype.setDimension = function (dimension, value) {
     var dimensionName = 'dimension' + dimension;
     this._googleAnalytics.custom(dimensionName, value);
+}
+
+Analytics.prototype.setMetric = function (metric, value) {
+    var metricName = 'metric' + metric;
+    this._googleAnalytics.custom(metricName, value);
 }
 
 Analytics.prototype.sendEvent = function (category, action, options) {
@@ -102,7 +117,9 @@ Analytics.prototype._rebuildFlightControllerEvent = function () {
     this.setDimension(this.DIMENSIONS.FIRMWARE_TYPE, this._flightControllerData[this.DATA.FIRMWARE_TYPE]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_VERSION, this._flightControllerData[this.DATA.FIRMWARE_VERSION]);
     this.setDimension(this.DIMENSIONS.API_VERSION, this._flightControllerData[this.DATA.API_VERSION]);
-    this._googleAnalytics.set('eventLabel', this._flightControllerData[this.DATA.MCU_ID]);
+    this.setDimension(this.DIMENSIONS.LOGGING_STATUS, this._flightControllerData[this.DATA.LOGGING_STATUS]);
+    this.setDimension(this.DIMENSIONS.MCU_ID, this._flightControllerData[this.DATA.MCU_ID]);
+    this.setMetric(this.METRICS.LOG_SIZE, this._flightControllerData[this.DATA.LOG_SIZE]);
 }
 
 Analytics.prototype.setFlightControllerData = function (property, value) {
@@ -122,6 +139,7 @@ Analytics.prototype._rebuildFirmwareEvent = function () {
     this.setDimension(this.DIMENSIONS.FIRMWARE_SOURCE, this._firmwareData[this.DATA.FIRMWARE_SOURCE]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_ERASE_ALL, this._firmwareData[this.DATA.FIRMWARE_ERASE_ALL]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_CHANNEL, this._firmwareData[this.DATA.FIRMWARE_CHANNEL]);
+    this.setMetric(this.METRICS.FIRMWARE_SIZE, this._firmwareData[this.DATA.FIRMWARE_SIZE]);
     this._googleAnalytics.set('eventLabel', this._firmwareData[this.DATA.FIRMWARE_CHECKSUM]);
 }
 
