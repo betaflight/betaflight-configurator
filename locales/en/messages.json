@@ -1333,6 +1333,9 @@
     "receiverRcInterpolationOff": {
         "message": "Off"
     },
+    "receiverRcSmoothingType": {
+        "message": "Smoothing Type"
+    },
     "receiverRcInterpolationDefault": {
         "message": "Preset"
     },

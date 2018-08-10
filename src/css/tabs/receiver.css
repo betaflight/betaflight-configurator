@@ -410,6 +410,10 @@
     margin-right: 10px;
 }
 
+.tab-receiver .rcInterpolation-label {
+    border-right: none;
+}
+
 .tab-receiver .throttle_curve {
     margin: 0 0px 0px 0;
     width: 200px;

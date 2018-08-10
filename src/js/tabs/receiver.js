@@ -325,7 +325,6 @@ TABS.receiver.initialize = function (callback) {
         });
 
         // RC Smoothing
-        $('.tab-receiver .rcSmoothing').hide();
         if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
             $('.tab-receiver .rcSmoothing').show();
 
@@ -403,6 +402,15 @@ TABS.receiver.initialize = function (callback) {
             rc_smoothing_input_type.val(RX_CONFIG.rcSmoothingInputType);
 
             updateInterpolationView();
+        } else {
+            $('.tab-receiver .rcInterpolation').show();
+            $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
+            $('.tab-receiver .rcSmoothing-input-cutoff').hide();
+            $('.tab-receiver .rcSmoothing-derivative-type').hide();
+            $('.tab-receiver .rcSmoothing-input-type').hide();
+            $('.tab-receiver .rcSmoothing-derivative-manual').hide();
+            $('.tab-receiver .rcSmoothing-input-manual').hide();
+            $('.tab-receiver .rc-smoothing-type').hide();
         }
 
         // Only show the MSP control sticks if the MSP Rx feature is enabled

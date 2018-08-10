@@ -764,9 +764,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 RX_CONFIG.spektrum_sat_bind = data.readU8();
                 RX_CONFIG.rx_min_usec = data.readU16();
                 RX_CONFIG.rx_max_usec = data.readU16();
-                RX_CONFIG.rcInterpolation = 0;
-                RX_CONFIG.rcInterpolationInterval = 0;
-                RX_CONFIG.airModeActivateThreshold = 0;
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     RX_CONFIG.rcInterpolation = data.readU8();
                     RX_CONFIG.rcInterpolationInterval = data.readU8();
@@ -784,8 +781,19 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             RX_CONFIG.rcSmoothingInputType = data.readU8();
                             RX_CONFIG.rcSmoothingDerivativeType = data.readU8();
                         }
+                    } else {
+                        RX_CONFIG.rxSpiProtocol = 0;
+                        RX_CONFIG.rxSpiId = 0;
+                        RX_CONFIG.rxSpiRfChannelCount = 0;
+                        RX_CONFIG.fpvCamAngleDegrees = 0;
                     }
+                } else {
+                    RX_CONFIG.rcInterpolation = 0;
+                    RX_CONFIG.rcInterpolationInterval = 0;
+                    RX_CONFIG.airModeActivateThreshold = 0;
                 }
+
+                
                 break;
 
             case MSPCodes.MSP_FAILSAFE_CONFIG:
