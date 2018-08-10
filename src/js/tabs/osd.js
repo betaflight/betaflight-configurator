@@ -142,7 +142,7 @@ FONT.parseEEPROMCharData = function(data) {
     character_bits = [];
     character_bytes = [];
   };
-  for (var i = 0; i < FONT.constants.SIZES.MAX_NVM_FONT_CHAR_SIZE; i++) {
+  for (var i = 0; i < FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE; i++) {
     var line = data.getUint8(i);
     var binLine = '00000000'.concat(line.toString(2)).slice(-8)
     FONT.data.hexstring.push('0x' + line.toString(16));
