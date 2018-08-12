@@ -15,12 +15,16 @@ $(document).ready(function () {
 function checkSetupAnalytics(callback) {
     if (!analytics) {
         setTimeout(function () {
-            chrome.storage.local.get(['userId', 'analyticsOptOut'], function (result) {
-                if (!analytics) {
-                    setupAnalytics(result);
-                }
+            chrome.storage.local.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions', ], function (result) {
+                $.getJSON('version.json', function(data) {
+                    var gitChangesetId = data.gitChangesetId;
 
-                callback(analytics);
+                    if (!analytics) {
+                        setupAnalytics(result, gitChangesetId);
+                    }
+
+                    callback(analytics);
+                });
             });
         });
     } else if (callback) {
@@ -28,7 +32,7 @@ function checkSetupAnalytics(callback) {
     }
 };
 
-function setupAnalytics(result) {
+function setupAnalytics(result, gitChangesetId) {
     var userId;
     if (result.userId) {
         userId = result.userId;
@@ -40,10 +44,11 @@ function setupAnalytics(result) {
     }
 
     var optOut = !!result.analyticsOptOut;
+    var checkForDebugVersions = !!result.checkForConfiguratorUnstableVersions;
 
     var debugMode = process.versions['nw-flavor'] === 'sdk';
 
-    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), GUI.operating_system, optOut, debugMode);
+    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode);
 
     function logException(exception) {
         analytics.sendException(exception.stack);
@@ -69,6 +74,8 @@ function setupAnalytics(result) {
         // Looks like we're in Chrome - but the event does not actually get fired
         chrome.runtime.onSuspend.addListener(sendCloseEvent);
     }
+
+    $('.connect_b a.connect').removeClass('disabled');
 }
 
 //Process to execute to real start the app

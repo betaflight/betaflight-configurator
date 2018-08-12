@@ -1,6 +1,6 @@
 'use strict';
 
-var Analytics = function (trackingId, userId, appName, appVersion, buildType, optOut, debugMode) {
+var Analytics = function (trackingId, userId, appName, appVersion, changesetId, buildType, checkForDebugVersions, optOut, debugMode) {
     this._trackingId = trackingId;
 
     this.setOptOut(optOut);
@@ -58,6 +58,8 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
         FIRMWARE_CHANNEL: 10,
         LOGGING_STATUS: 11,
         MCU_ID: 12,
+        CONFIGURATOR_CHANGESET_ID: 13,
+        CONFIGURATOR_USE_DEBUG_VERSIONS: 14,
     };
 
     this.METRICS = {
@@ -66,6 +68,8 @@ var Analytics = function (trackingId, userId, appName, appVersion, buildType, op
     };
 
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
+    this.setDimension(this.DIMENSIONS.CONFIGURATOR_CHANGESET_ID, changesetId);
+    this.setDimension(this.DIMENSIONS.CONFIGURATOR_USE_DEBUG_VERSIONS, checkForDebugVersions);
 
     this.resetFlightControllerData();
     this.resetFirmwareData();
