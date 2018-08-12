@@ -22,6 +22,7 @@ const concat = require('gulp-concat');
 const install = require("gulp-install");
 const rename = require('gulp-rename');
 const os = require('os');
+const git = require('gulp-git');
 
 const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
@@ -60,7 +61,9 @@ gulp.task('clean-release', clean_release);
 
 gulp.task('clean-cache', clean_cache);
 
-var distBuild = gulp.series(dist_src, dist_locale, dist_libraries, dist_resources);
+gulp.task('get-changeset-id', getChangesetId);
+
+var distBuild = gulp.series(dist_src, dist_locale, dist_libraries, dist_resources, getChangesetId);
 var distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
 
@@ -433,6 +436,20 @@ function buildNWApps(platforms, flavor, dir, done) {
     }
 }
 
+function getChangesetId(done) {
+  git.exec({args : 'log -1 --format="%h"'}, function (err, stdout) {
+    if (err) {
+      throw err;
+    }
+
+    var versionData = { gitChangesetId: stdout.trim() }
+    var destFile = path.join(DIST_DIR, 'version.json');
+
+    fs.writeFile(destFile, JSON.stringify(versionData) , function () {
+      done();
+    });
+  });
+}
 
 function start_debug(done) {
 

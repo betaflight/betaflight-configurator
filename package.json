@@ -52,6 +52,7 @@
     "gulp": "~4.0.0",
     "gulp-concat": "~2.6.1",
     "gulp-debian": "~0.1.8",
+    "gulp-git": "^2.8.0",
     "gulp-install": "^1.1.0",
     "gulp-rename": "~1.2.2",
     "gulp-zip": "^4.1.0",
