@@ -790,6 +790,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         RX_CONFIG.rxSpiId = data.readU32();
                         RX_CONFIG.rxSpiRfChannelCount = data.readU8();
                         RX_CONFIG.fpvCamAngleDegrees = data.readU8();
+                        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                            RX_CONFIG.rcInterpolationChannels = data.readU8();
+                            RX_CONFIG.rcSmoothingType = data.readU8();
+                            RX_CONFIG.rcSmoothingInputCutoff = data.readU8();
+                            RX_CONFIG.rcSmoothingDerivativeCutoff = data.readU8();
+                            RX_CONFIG.rcSmoothingInputType = data.readU8();
+                            RX_CONFIG.rcSmoothingDerivativeType = data.readU8();
+                        }
                     } else {
                         RX_CONFIG.rxSpiProtocol = 0;
                         RX_CONFIG.rxSpiId = 0;
@@ -801,6 +809,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     RX_CONFIG.rcInterpolationInterval = 0;
                     RX_CONFIG.airModeActivateThreshold = 0;
                 }
+
+                
                 break;
 
             case MSPCodes.MSP_FAILSAFE_CONFIG:
@@ -1403,6 +1413,7 @@ MspHelper.prototype.crunch = function(code) {
                     .push16(BF_CONFIG.batterycapacity)
             }
             break;
+
         case MSPCodes.MSP_SET_RX_CONFIG:
             buffer.push8(RX_CONFIG.serialrx_provider)
                 .push16(RX_CONFIG.stick_max)
@@ -1420,6 +1431,14 @@ MspHelper.prototype.crunch = function(code) {
                         .push32(RX_CONFIG.rxSpiId)
                         .push8(RX_CONFIG.rxSpiRfChannelCount)
                         .push8(RX_CONFIG.fpvCamAngleDegrees);
+                    if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                        buffer.push8(RX_CONFIG.rcInterpolationChannels)
+                            .push8(RX_CONFIG.rcSmoothingType)
+                            .push8(RX_CONFIG.rcSmoothingInputCutoff)
+                            .push8(RX_CONFIG.rcSmoothingDerivativeCutoff)
+                            .push8(RX_CONFIG.rcSmoothingInputType)
+                            .push8(RX_CONFIG.rcSmoothingDerivativeType);
+                    }
                 }
             }
 

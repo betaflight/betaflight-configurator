@@ -195,6 +195,11 @@
     border-right: 1px solid silver;
 }
 
+.tab-receiver .smoothing table td {
+    background: #DEDEDE;
+    border-right: 0px;
+}
+
 .tab-receiver .tunings table td:first-child {
     border-bottom-left-radius: 3px;
 }
@@ -305,44 +310,119 @@
     width: calc(100% - 10px);
 }
 
-.tab-receiver .rcInterpolation td {
-    padding: 5px;
-    width: 100%;
-    background-color: #f9f9f9 !important;
+.tab-receiver .rcSmoothing-derivative-manual select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
 }
 
-.tab-receiver .rcInterpolationInterval td {
-    padding: 5px;
-    width: 100%;
-    background-color: #f9f9f9 !important;
-    border-top: 1px solid silver;
+.tab-receiver .rcSmoothing-input-manual select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
 }
 
-.tab-receiver .rcInterpolation td:first-child {
-    width: 70px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+.tab-receiver .rcSmoothing-input-manual select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
+}
+
+.tab-receiver .rc-smoothing-type {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+.tab-receiver .rc-smoothing-channels {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid silver;
+    width: 100%;
+}
+
+.tab-receiver .rc-smoothing-type select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
+}
+
+.tab-receiver .rc-smoothing-channels select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
+}
+
+.tab-receiver .rcSmoothing-input-type select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
+}
+
+.tab-receiver .rcSmoothing-input-type select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
+}
+
+.tab-receiver .rcInterpolation select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
+    float: left;
+}
+
+.tab-receiver .rcInterpolation-label {
+    margin-top: 6px;
+    border-right: 1px solid silver;
+}
+
+.tab-receiver .rcSmoothing-derivative-type select {
+    height: 22px;
+    padding-left: 5px;
+    border: 1px solid silver;
+    margin: 4px;
+    width: calc(100% - 8px);
+}
+
+.tab-receiver .rcSmoothing td:first-child {
+    width: 120px;
     padding-left:8px;
     border-right: none;
 }
 
-.tab-receiver .rcInterpolation td:last-child {
+.tab-receiver .rcSmoothing td:last-child {
     width: calc(100% - 78px);
 }
 
-
-.tab-receiver .rcInterpolation select {
-    border: 1px solid silver;
-    width: 66px;
-}
-
 .tab-receiver .rcInterpolation .slider input {
-    -webkit-appearance: slider-horizontal
+    -webkit-appearance: slider-horizontal;
 }
 
 .tab-receiver .curves {
     float: left;
     margin-right: 10px;
+}
+
+.tab-receiver .rcInterpolation-label {
+    border-right: none;
 }
 
 .tab-receiver .throttle_curve {

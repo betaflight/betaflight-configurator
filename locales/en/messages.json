@@ -1281,6 +1281,69 @@
     "pidTuningPidSettings": {
         "message": "PID Controller Settings"
     },
+    "receiverRcSmoothing": {
+        "message": "RC Smoothing"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "Auto"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "Manual"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "Derivative Cutoff Type"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "Input Cutoff Type"
+    },
+    "receiverRcSmoothingInterpolation": {
+        "message": "Interpolation"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "Filter"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "Type of RC smoothing used"
+    },
+    "rcSmoothingInputCutoffHelp": {
+        "message": "The cutoff frequency in Hz used by the input filter. Using lower values will result in smoother inputs and are more appropriate for slower receiver protocols. Most users should leave this at 0 corresponding to \"Auto\"."
+    },
+    "rcSmoothingDerivativeCutoffHelp": {
+        "message": "The cutoff frequency in Hz used by the setpoint derivative filter. Using lower values will result in smoother inputs and are more appropriate for slower receiver protocols. Most users should leave this at 0 corresponding to \"Auto\"."
+    },
+    "rcSmoothingChannelsSmoothedHelp": {
+        "message": "The channels smoothing applies to"
+    },
+    "rcSmoothingDerivativeTypeHelp": {
+        "message": "The type of filtering method used for the setpoint derivative. Most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
+    },
+    "rcSmoothingInputTypeHelp": {
+        "message": "The type of filtering method used for the input. Most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
+    },
+    "receiverRcSmoothingInputManual": {
+        "message": "Selects whether the input filter cutoff frequency is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
+    },
+    "receiverRcSmoothingDerivativeManual": {
+        "message": "Selects whether the setpoint derivative filter cutoff frequency is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
+    },
+    "receiverRcSmoothingInputHz": {
+        "message": "Input Cutoff Frequency"
+    },
+    "receiverRcSmoothingDerivativeCutoff": {
+        "message": "Derivative Cutoff Frequency"
+    },
+    "receiverRcInputType": {
+        "message": "Input Filter Type"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Derivative Filter Type"
+    },
+    "receiverRcSmoothingDerivativeTypeOff": {
+        "message": "Off"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "Channels Smoothed"
+    },
     "receiverRcInterpolation": {
         "message": "RC Interpolation"
     },
@@ -1292,6 +1355,9 @@
     },
     "receiverRcInterpolationOff": {
         "message": "Off"
+    },
+    "receiverRcSmoothingType": {
+        "message": "Smoothing Type"
     },
     "receiverRcInterpolationDefault": {
         "message": "Preset"
