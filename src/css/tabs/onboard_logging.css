@@ -206,6 +206,22 @@
     display: none;
 }
 
+.require-msc-supported {
+    display: none;
+}
+
+.tab-onboard_logging.msc-supported .require-msc-supported {
+    display: block;
+}
+
+.require-msc-not-ready {
+    display: none;
+}
+
+.tab-onboard_logging.msc-not-ready .require-msc-not-ready {
+    display: block;
+}
+
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
     .tab-onboard_logging table thead tr:first-child {
         font-size: 12px;

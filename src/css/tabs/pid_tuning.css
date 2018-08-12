@@ -222,6 +222,7 @@
     margin: 0px;
     border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
 }
 
 .tab-pid_tuning .gui_box {
@@ -244,12 +245,10 @@
     padding: 5px;
     text-align: left;
     border-right: 1px solid #ccc;
-    width: 12.5%;
 }
 
 .tab-pid_tuning .pid_titlebar th:first-child {
     text-align: left;
-    width: 12.5%;
 }
 
 .tab-pid_tuning .pid_titlebar th:last-child {
@@ -281,6 +280,10 @@
     width: 33%;
 }
 
+.tab-pid_tuning table.compensation tr {
+    height: 25px;
+}
+
 .tab-pid_tuning table.compensation td {
     width: 60%;
     padding-left: 5px;
@@ -289,10 +292,22 @@
 
 .tab-pid_tuning table.compensation td:first-child {
     width: 10%;
+    text-align: right;
 }
 
 .tab-pid_tuning table.compensation td:last-child {
     width: 30%;
+}
+
+.tab-pid_tuning table.compensation .suboption {
+    margin-left: 40px;
+}
+
+.tab-pid_tuning table.compensation .suboption select{
+    text-align-last: left;
+    font-size: 1.1em;
+    color: darkslategrey;
+    padding-left: 5px;
 }
 
 .tab-pid_tuning .pidTuningFeatures td {
@@ -320,7 +335,6 @@
 .tab-pid_tuning table td {
     padding: 1px;
     padding-left: 5px;
-    width: 12.5%;
     border-right: 1px solid #ccc;
 }
 

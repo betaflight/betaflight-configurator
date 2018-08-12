@@ -9,11 +9,20 @@
     "error": {
         "message": "Error: {{errorMessage}}"
     },
+    "errorTitle": {
+        "message": "Error"
+    },
     "warningTitle": {
         "message": "Warning"
     },
     "noticeTitle": {
         "message": "Notice"
+    },
+    "operationNotSupported": {
+        "message": "This operation is not supported by your hardware."
+    },
+    "storageDeviceNotReady": {
+        "message": "The storage device is not ready. In the case of a microSD card, make sure it is properly recognised by your flight controller."
     },
     "options_title": {
         "message": "Application Options"
@@ -50,6 +59,12 @@
     },
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
+    },
+    "rememberLastTab": {
+        "message": "Reopen last tab on connect"
+    },
+    "analyticsOptOut": {
+        "message": "Opt out of the anonymised collection of statistics data"
     },
     "userLanguageSelect": {
         "message": "Language (need to restart the application for the changes to take effect)"
@@ -377,6 +392,15 @@
         "message" : "Running - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
+    "buildServerLoaded": {
+        "message" : "Loaded builds information for $1 from build server."
+    },
+    "buildServerLoadFailed": {
+        "message" : "<b>Build server query for $1 releases failed, using cached information. Reason: <code>$2</code></b>"
+    },
+    "buildServerUsingCached": {
+        "message" : "Using cached builds information for $1."
+    },
     "releaseCheckLoaded": {
         "message" : "Loaded release information for $1 from GitHub."
     },
@@ -513,6 +537,9 @@
     "defaultChangelogHead": {
         "message": "Configurator - Changelog"
     },
+    "defaultPrivacyPolicyAction": {
+        "message": "Privacy Policy"
+    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
@@ -520,7 +547,7 @@
         "message": "Open Source / Donation Notice"
     },
     "defaultDonateText": {
-        "message": "This utility is fully <strong>open source</strong> and is available free of charge to all <strong>Betaflight</strong> users.<br />If you found the Betaflight or Betaflight configurator useful, please consider <strong>supporting</strong> its development by donating."
+        "message": "<strong>Betaflight</strong> is a flight controller software that is <strong>open source</strong> and is available free of charge <strong>without warranty</strong> to all users.<br />If you found the Betaflight or Betaflight configurator useful, please consider <strong>supporting</strong> its development by donating."
     },
     "defaultDonate": {
         "message": "Donate"
@@ -598,8 +625,14 @@
     "initialSetupButtonRestore": {
         "message": "Restore"
     },
+    "initialSetupButtonRebootBootloader": {
+        "message": "Activate Boot Loader / DFU"
+    },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span class=\"message-negative\">not</span> included - See 'dump' cli command"
+        "message": "<strong>Backup</strong> your configuration in case of an accident, <strong>CLI</strong> settings are <span class=\"message-negative\">not</span> included - use the command 'diff all' in CLI for this."
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Reboot into <strong>boot loader / DFU</strong> mode."
     },
     "initialSetupBackupSuccess": {
         "message": "Backup saved <span class=\"message-positive\">successfully</span>"
@@ -1227,6 +1260,17 @@
         "message": "Profile independent PID Controller Settings"
     },
 
+    "pidTuningAntiGravityMode": {
+        "message": "Anti Gravity Mode"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Smooth",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Step",
+        "description": "One of the modes of anti gravity"
+    },
     "pidTuningAntiGravityGain": {
         "message": "Anti Gravity Gain"
     },
@@ -1348,6 +1392,12 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolation Interval [ms]"
     },
+    "pidTuningFeedforwardTransition": {
+        "message": "Feedforward transition"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "With this parameter, the Feedforward term can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Feedforward is kept constant at its configured value. When the stick is positioned below that point, Feedforward is reduced proportionally, reaching 0 at the stick center position.<br> Value of 1 gives maximum smoothing effect, while value of 0 keeps the Feedforward fixed at its configured value over the whole stick range."
+    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
@@ -1371,6 +1421,9 @@
     },
     "pidTuningDerivative": {
         "message": "Derivative"
+    },
+    "pidTuningFeedforward": {
+        "message": "Feedforward"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
@@ -1564,6 +1617,9 @@
     "auxiliaryHelp": {
         "message": "Use ranges to define the switches on your transmitter and corresponding mode assignments.  A receiver channel that gives a reading between a range min/max will activate the mode.  Remember to save your settings using the Save button."
     },
+    "auxiliaryToggleUnused": {
+        "message": "Show/hide unused modes"
+    },
     "auxiliaryMin": {
         "message": "Min"
     },
@@ -1699,14 +1755,29 @@
     "adjustmentsFunction22": {
         "message": "D Setpoint"
     },
+    "adjustmentsFunction22_2": {
+        "message": "Pitch & Roll F Adjustment"
+    },
     "adjustmentsFunction23": {
         "message": "D Setpoint Transition"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Feedforward Transition"
     },
     "adjustmentsFunction24": {
         "message": "Horizon Strength Adjustment"
     },
     "adjustmentsFunction25": {
         "message": "PID-Audio Selection"
+    },
+    "adjustmentsFunction26": {
+        "message": "Pitch F Adjustment"
+    },
+    "adjustmentsFunction27": {
+        "message": "Roll F Adjustment"
+    },
+    "adjustmentsFunction28": {
+        "message": "Yaw F Adjustment"
     },
     "adjustmentsSave": {
         "message": "Save"
@@ -2273,7 +2344,7 @@
         "message": "Baud Rate"
     },    
     "firmwareFlasherShowDevelopmentReleases":{
-        "message": "Show unstable releases"
+        "message": "Show unstable and additional releases"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription":{
         "message": "Show Release-Candidates and Development Releases."
@@ -2813,6 +2884,67 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Increases the PID values to compensate when Vbat gets lower. This will give more constant flight characteristics throughout the flight. The amount of compensation that is applied is calculated from the $t(powerBatteryMaximum.message) set in the $t(tabPower.message) page, so make sure that is set to something appropriate."
     },
+    "pidTuningItermRotation": {
+        "message": "I Term Rotation"
+    },
+    "pidTuningItermRotationHelp": {
+        "message": "Rotates the current I Term vector properly to other axes as the quad rotates when yawing continuously during rolls and when performing funnels and other tricks. Very appreciated by LOS acro pilots."
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "Smart Feedforward"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "Reduces the effect of the F Term in the PID. When both the P Term and the F Term are active at the same moment, it only uses the larger of the two, avoiding overshoots without the needing to raise D, but also reduces the responsiveness effect produced by the F term when added to P."
+    },
+    "pidTuningItermRelax": {
+        "message": "I Term Relax"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Limits the accumulation of I Term when fast movements happen. This helps specially to reduce the bounceback at the end of rolls and other fast movements. You can choose the axes in which this is active, and if the fast movement is detectd using the Gyro or the Setpoint (stick)."
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "Axes:"
+    },
+    "pidTuningItermRelaxAxesOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningItermRelaxAxesOptionRPY": {
+        "message": "RPY"
+    },
+    "pidTuningItermRelaxAxesOptionRPInc": {
+        "message": "RP (increment only)"
+    },
+    "pidTuningItermRelaxAxesOptionRPYInc": {
+        "message": "RPY (increment only)"
+    },
+    "pidTuningItermRelaxType": {
+        "message": "Type:"
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "Gyro"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Setpoint"
+    },
+    "pidTuningAbsoluteControlGain": {
+        "message": "Absolute Control"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "This feature solves some underlying problems of I Term Rotation and should hopefully replace it at some point. The feature accumulates the absolute gyro error in quad coordinates and mixes a proportional correction into the setpoint. It needs to have the iterm_relax enable for RPY."
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Throttle Boost"
+    },
+    "pidTuningThrottleBoostHelp": {
+        "message": "This feature allows throttle to be temporarily boosted to the up to down-side to increase acceleration torque to the motors, providing a much faster throttle response."
+    },
+    "pidTuningAcroTrainerAngleLimit": {
+        "message": "Acro Trainer Angle Limit"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Adds a new angle limiting mode for pilots who are learning to fly in acro mode. The range valid is 10-80 and must be activated with a switch in the $t(tabAuxiliary.message) tab."
+    },
+
     "configHelp2": {
         "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },
@@ -3181,6 +3313,12 @@
     },
     "osdSetupFontPresets": {
         "message": "Font presets:"
+    },
+    "osdSetupFontPresetsSelector": {
+        "message": "Select Font Presets:"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "or"
     },
     "osdSetupOpenFont": {
         "message": "Open Font File"
@@ -3630,6 +3768,9 @@
     "pidTuningPidTuningTip": {
         "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise<br><b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting"
     },
+    "pidTuningPidTuningTipFeedforward": {
+        "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise<br><b>Feedforward:</b> Usually the PID controller reacts to the error. The Feedforward anticipates the error based on the stick input, giving responsiveness to the quad.<br><b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting"
+    },
     "pidTuningRatesTip": {
         "message": "Play with the rates and see how those affect the stick curve"
     },
@@ -3662,6 +3803,18 @@
     },
     "onboardLoggingOnboardSDCard": {
         "message": "Onboard SD card"
+    },
+    "onboardLoggingMsc": {
+        "message": "Mass Storage Mode"
+    },
+    "onboardLoggingMscNote": {
+        "message": "Reboot into <strong>mass storage device (MSC)</strong> mode. Once activated, the onboard flash or SD card on your flight controller will be recognised as a storage device by your computer, and allow you to download your log files. Eject and power cycle your flight controller to leave mass storage device mode."
+    },
+    "onboardLoggingRebootMscText": {
+        "message": "Activate Mass Storage Device Mode"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "Mass storage mode can not be activated because the storage device is not ready."
     },
     "dialogConfirmResetTitle": {
         "message": "Confirm"

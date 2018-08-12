@@ -236,7 +236,7 @@ TABS.logging.initialize = function (callback) {
         var filename = generateFilename(prefix, suffix);
 
         var accepts = [{
-            extensions: [suffix],
+            description: suffix.toUpperCase() + ' files', extensions: [suffix],
         }];
 
         // create or load the file

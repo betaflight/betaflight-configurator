@@ -39,8 +39,12 @@ TABS.pid_tuning.initialize = function (callback) {
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_RC_DEADBAND);
     }).then(function() {
-        $('#content').load("./tabs/pid_tuning.html", process_html);
+        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
     });
+
+    function load_html() {
+        $('#content').load("./tabs/pid_tuning.html", process_html);        
+    }
 
     function pid_and_rc_to_form() {
         self.setProfile();
@@ -49,142 +53,19 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         // Fill in the data from PIDs array
-        var i = 0;
-        $('.pid_tuning .ROLL input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[0][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[0][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[0][i++]);
-                    break;
-            }
-        });
 
-        i = 0;
-        $('.pid_tuning .PITCH input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[1][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[1][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[1][i++]);
-                    break;
-            }
-        });
+        // For each pid name
+        PID_names.forEach(function(elementPid, indexPid) {
 
-        i = 0;
-        $('.pid_tuning .YAW input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[2][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[2][i++]);
-                    break;
-            }
-        });
-        $('.pid_tuning .YAW_JUMP_PREVENTION input').each(function () {
-            switch (i) {
-                case 2:
-                    $(this).val(PIDs[2][i++]);
-                    break;
-            }
-        });
+            // Look into the PID table to a row with the name of the pid
+            var searchRow = $('.pid_tuning .' + elementPid + ' input');
 
-        i = 0;
-        $('.pid_tuning .ALT input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[3][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[3][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[3][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .Pos input').each(function () {
-            $(this).val(PIDs[4][i++]);
-        });
-
-        i = 0;
-        $('.pid_tuning .PosR input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[5][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[5][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[5][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .NavR input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[6][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[6][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[6][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .ANGLE input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[7][i++]);
-                    break;
-            }
-        });
-        $('.pid_tuning .HORIZON input').each(function () {
-            switch (i) {
-                case 1:
-                    $(this).val(PIDs[7][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[7][i++]);
-                    break;
-            }
-        });
-
-        i = 0;
-        $('.pid_tuning .MAG input').each(function () {
-            $(this).val(PIDs[8][i++]);
-        });
-
-        i = 0;
-        $('.pid_tuning .Vario input').each(function () {
-            switch (i) {
-                case 0:
-                    $(this).val(PIDs[9][i++]);
-                    break;
-                case 1:
-                    $(this).val(PIDs[9][i++]);
-                    break;
-                case 2:
-                    $(this).val(PIDs[9][i++]);
-                    break;
-            }
+            // Assign each value
+            searchRow.each(function (indexInput) {
+                if (PIDs[indexPid][indexInput] !== undefined) {
+                    $(this).val(PIDs[indexPid][indexInput]);
+                }
+            });
         });
 
         // Fill in data from RC_tuning object
@@ -299,6 +180,129 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.dtermLowpass2').hide();
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+
+            // I Term Rotation
+            $('input[id="itermrotation"]').prop('checked', ADVANCED_TUNING.itermRotation !== 0);
+
+             // Smart Feed Forward
+            $('input[id="smartfeedforward"]').prop('checked', ADVANCED_TUNING.smartFeedforward !== 0);
+
+            // I Term Relax
+            var itermRelaxCheck = $('input[id="itermrelax"]');
+
+            itermRelaxCheck.prop('checked', ADVANCED_TUNING.itermRelax !== 0);
+            $('select[id="itermrelaxAxes"]').val(ADVANCED_TUNING.itermRelax > 0 ? ADVANCED_TUNING.itermRelax : 1);
+            $('select[id="itermrelaxType"]').val(ADVANCED_TUNING.itermRelaxType);
+
+            itermRelaxCheck.change(function() {
+                var checked = $(this).is(':checked');
+
+                if (checked) {
+                    $('.itermrelax .suboption').show();
+                } else {
+                    $('.itermrelax .suboption').hide();
+                }
+            });
+            itermRelaxCheck.change();
+
+            // Absolute Control
+            var absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
+            var absoluteControlGainRangeElement = $('input[name="absoluteControlGain-range"]');
+
+            absoluteControlGainNumberElement.change(function () {
+                absoluteControlGainRangeElement.val($(this).val());
+            });
+            absoluteControlGainRangeElement.change(function () {
+                absoluteControlGainNumberElement.val($(this).val());
+            });
+            absoluteControlGainNumberElement.val(ADVANCED_TUNING.absoluteControlGain).change();
+
+            // Throttle Boost
+            var throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
+            var throttleBoostRangeElement = $('input[name="throttleBoost-range"]');
+
+            throttleBoostNumberElement.change(function () {
+                throttleBoostRangeElement.val($(this).val());
+            });
+            throttleBoostRangeElement.change(function () {
+                throttleBoostNumberElement.val($(this).val());
+            });
+            throttleBoostNumberElement.val(ADVANCED_TUNING.throttleBoost).change();
+
+            // Acro Trainer
+            var acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
+            var acroTrainerAngleLimitRangeElement = $('input[name="acroTrainerAngleLimit-range"]');
+
+            acroTrainerAngleLimitNumberElement.change(function () {
+                acroTrainerAngleLimitRangeElement.val($(this).val());
+            });
+            acroTrainerAngleLimitRangeElement.change(function () {
+                acroTrainerAngleLimitNumberElement.val($(this).val());
+            });
+            acroTrainerAngleLimitNumberElement.val(ADVANCED_TUNING.acroTrainerAngleLimit).change();
+
+            // Yaw D
+            $('.pid_tuning .YAW input[name="d"]').val(PIDs[2][2]); // PID Yaw D
+
+            // Feedforward
+            $('.pid_tuning .ROLL input[name="f"]').val(ADVANCED_TUNING.feedforwardRoll);
+            $('.pid_tuning .PITCH input[name="f"]').val(ADVANCED_TUNING.feedforwardPitch);
+            $('.pid_tuning .YAW input[name="f"]').val(ADVANCED_TUNING.feedforwardYaw);
+
+            var feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
+            var feedforwardTransitionRangeElement = $('input[name="feedforwardTransition-range"]');
+
+            feedforwardTransitionNumberElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
+            feedforwardTransitionRangeElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
+
+            feedforwardTransitionNumberElement.change(function () {
+                feedforwardTransitionRangeElement.val($(this).val());
+            });
+            feedforwardTransitionRangeElement.change(function () {
+                feedforwardTransitionNumberElement.val($(this).val());
+            });
+
+            $('.helpicon[i18n_title="pidTuningPidTuningTip"]').hide();
+
+            // AntiGravity Mode
+            var antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
+            antiGravityModeSelect.change(function () {
+                var antiGravityModeValue = $('.antigravity select[id="antiGravityMode"]').val();
+
+                // Smooth
+                if (antiGravityModeValue == 0) {
+                    $('.antigravity  table th:nth-child(3)').hide();
+                    $('.antigravity  table td:nth-child(3)').hide();
+                } else {
+                    $('.antigravity  table th:nth-child(3)').show();
+                    $('.antigravity  table td:nth-child(3)').show();
+                }
+            });
+
+            antiGravityModeSelect.val(ADVANCED_TUNING.antiGravityMode).change();
+
+        } else {
+            $('.itermrotation').hide();
+            $('.smartfeedforward').hide();
+            $('.itermrelax').hide();
+            $('.absoluteControlGain').hide();
+            $('.throttleBoost').hide();
+            $('.acroTrainerAngleLimit').hide();
+
+            $('.pid_tuning .YAW input[name="d"]').hide();
+
+            // Feedforward column
+            $('#pid_main tr :nth-child(5)').hide();
+            $('#pid_main .pid_titlebar2 th').attr("colspan", 8);
+            $('.helpicon[i18n_title="pidTuningPidTuningTipFeedforward"]').hide();
+
+            $('#pid-tuning .feedforwardTransition').hide();
+
+            $('.antigravity  table th:first-child').hide();
+            $('.antigravity  table td:first-child').hide();
+        }
+
         $('input[id="gyroNotch1Enabled"]').change(function() {
             var checked = $(this).is(':checked');
             var hz = FILTER_CONFIG.gyro_notch_hz > 0 ? FILTER_CONFIG.gyro_notch_hz : DEFAULT.gyro_notch_hz;
@@ -409,60 +413,19 @@ TABS.pid_tuning.initialize = function (callback) {
     function form_to_pid_and_rc() {
         // Fill in the data from PIDs array
         // Catch all the changes and stuff the inside PIDs array
-        var i = 0;
-        $('table.pid_tuning tr.ROLL .pid_data input').each(function () {
-            PIDs[0][i++] = parseFloat($(this).val());
-        });
 
-        i = 0;
-        $('table.pid_tuning tr.PITCH .pid_data input').each(function () {
-            PIDs[1][i++] = parseFloat($(this).val());
-        });
+        // For each pid name
+        PID_names.forEach(function(elementPid, indexPid) {
 
-        i = 0;
-        $('table.pid_tuning tr.YAW .pid_data input').each(function () {
-            PIDs[2][i++] = parseFloat($(this).val());
-        });
-        $('table.pid_tuning tr.YAW_JUMP_PREVENTION .pid_data input').each(function () {
-            PIDs[2][i++] = parseFloat($(this).val());
-        });
+            // Look into the PID table to a row with the name of the pid
+            var searchRow = $('.pid_tuning .' + elementPid + ' input');
 
-        i = 0;
-        $('table.pid_tuning tr.ALT input').each(function () {
-            PIDs[3][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.Vario input').each(function () {
-            PIDs[9][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.Pos input').each(function () {
-            PIDs[4][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.PosR input').each(function () {
-            PIDs[5][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('table.pid_tuning tr.NavR input').each(function () {
-            PIDs[6][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('div.pid_tuning tr.ANGLE input').each(function () {
-            PIDs[7][i++] = parseFloat($(this).val());
-        });
-        $('div.pid_tuning tr.HORIZON input').each(function () {
-            PIDs[7][i++] = parseFloat($(this).val());
-        });
-
-        i = 0;
-        $('div.pid_tuning tr.MAG input').each(function () {
-            PIDs[8][i++] = parseFloat($(this).val());
+            // Assign each value
+            searchRow.each(function (indexInput) {
+                if ($(this).val()) {
+                    PIDs[indexPid][indexInput] = parseFloat($(this).val());
+                }
+            });
         });
 
         // catch RC_tuning changes
@@ -527,40 +490,80 @@ TABS.pid_tuning.initialize = function (callback) {
             FILTER_CONFIG.gyro_lowpass2_type = parseInt($('.pid_filter select[name="gyroLowpass2Type"]').val());
             FILTER_CONFIG.dterm_lowpass2_hz = parseInt($('.pid_filter input[name="dtermLowpass2Frequency"]').val());
         }
+
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+
+            ADVANCED_TUNING.itermRotation = $('input[id="itermrotation"]').is(':checked') ? 1 : 0;
+            ADVANCED_TUNING.smartFeedforward = $('input[id="smartfeedforward"]').is(':checked') ? 1 : 0;
+
+            ADVANCED_TUNING.itermRelax = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxAxes"]').val() : 0;
+            ADVANCED_TUNING.itermRelaxType = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxType"]').val() : 0;
+
+            ADVANCED_TUNING.absoluteControlGain = $('input[name="absoluteControlGain-number"]').val();
+
+            ADVANCED_TUNING.throttleBoost = $('input[name="throttleBoost-number"]').val();
+
+            ADVANCED_TUNING.acroTrainerAngleLimit = $('input[name="acroTrainerAngleLimit-number"]').val();
+
+            ADVANCED_TUNING.feedforwardRoll  = parseInt($('.pid_tuning .ROLL input[name="f"]').val());
+            ADVANCED_TUNING.feedforwardPitch = parseInt($('.pid_tuning .PITCH input[name="f"]').val());
+            ADVANCED_TUNING.feedforwardYaw   = parseInt($('.pid_tuning .YAW input[name="f"]').val());
+
+            ADVANCED_TUNING.feedforwardTransition = parseInt($('input[name="feedforwardTransition-number"]').val() * 100);
+
+            ADVANCED_TUNING.antiGravityMode = $('select[id="antiGravityMode"]').val();
+        }
     }
 
     function showAllPids() {
-        $('.tab-pid_tuning .pid_tuning').show();
+
+        // Hide all optional elements
+        $('.pid_optional tr').hide(); // Hide all rows
+        $('.pid_optional table').hide(); // Hide tables
+        $('.pid_optional').hide(); // Hide general div
+
+        // Only show rows supported by the firmware
+        PID_names.forEach(function(elementPid) {
+            // Show rows for the PID
+            $('.pid_tuning .' + elementPid).show();
+
+            // Show titles and other elements needed by the PID
+            $('.needed_by_' + elementPid).show();
+        });
+
+        // Special case
+        if (semver.lt(CONFIG.apiVersion, "1.24.0")) {
+            $('#pid_sensitivity').hide();
+        }
+
     }
 
     function hideUnusedPids() {
-        $('.tab-pid_tuning .pid_tuning').hide();
 
-        $('#pid_main').show();
-
-        if (have_sensor(CONFIG.activeSensors, 'acc')) {
-            $('#pid_accel').show();
-            $('#pid_level').show();
-            $('#pid_sensitivity').show();
+        if (!have_sensor(CONFIG.activeSensors, 'acc')) {
+            $('#pid_accel').hide();
         }
 
-        var showTitle = false;
-        if (have_sensor(CONFIG.activeSensors, 'baro') ||
-            have_sensor(CONFIG.activeSensors, 'sonar')) {
-            $('#pid_baro').show();
-            showTitle = true;
-        }
-        if (have_sensor(CONFIG.activeSensors, 'mag')) {
-            $('#pid_mag').show();
-            showTitle = true;
-        }
-        if (FEATURE_CONFIG.features.isEnabled('GPS')) {
-            $('#pid_gps').show();
-            showTitle = true;
+        var hideSensorPid = function(element, sensorReady) {
+            var isVisible = element.is(":visible");
+            if (!isVisible || !sensorReady) {
+                element.hide();
+                isVisible = false;
+            }
+
+            return isVisible;
         }
 
-        if (showTitle) {
-            $('#pid_optional').show();
+        var isVisibleBaroMagGps = false;
+
+        isVisibleBaroMagGps |= hideSensorPid($('#pid_baro'), have_sensor(CONFIG.activeSensors, 'baro') || have_sensor(CONFIG.activeSensors, 'sonar'));
+
+        isVisibleBaroMagGps |= hideSensorPid($('#pid_mag'), have_sensor(CONFIG.activeSensors, 'mag'));
+
+        isVisibleBaroMagGps |= hideSensorPid($('#pid_gps'), have_sensor(CONFIG.activeSensors, 'GPS'));
+
+        if (!isVisibleBaroMagGps) {
+            $('#pid_baro_mag_gps').hide();
         }
     }
 
@@ -742,6 +745,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }
         }
 
+        showAllPids();
         updatePidDisplay();
 
         showAllButton.on('click', function(){
@@ -850,12 +854,16 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.tab-pid_tuning .note').hide();
 		}
 
+        // Add a name to each row of PIDs if empty
         $('.pid_tuning tr').each(function(){
-          for(i = 0; i < PID_names.length; i++) {
-            if($(this).hasClass(PID_names[i])) {
-              $(this).find('td:first').text(PID_names[i]);
+            for(i = 0; i < PID_names.length; i++) {
+                if($(this).hasClass(PID_names[i])) {
+                    var firstColumn = $(this).find('td:first');
+                    if (!firstColumn.text()) {
+                        firstColumn.text(PID_names[i]);
+                    }
+                }
             }
-          }
         });
 
 
@@ -1372,8 +1380,13 @@ TABS.pid_tuning.updatePidControllerParameters = function () {
     } else {
         $('.pid_tuning .YAW_JUMP_PREVENTION').hide();
 
-        $('#pid-tuning .dtermSetpointTransition').show();
-        $('#pid-tuning .dtermSetpoint').show();
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+            $('#pid-tuning .dtermSetpointTransition').hide();
+            $('#pid-tuning .dtermSetpoint').hide();
+        } else {
+            $('#pid-tuning .dtermSetpointTransition').show();
+            $('#pid-tuning .dtermSetpoint').show();
+        }
 
         $('#pid-tuning .delta').hide();
     }

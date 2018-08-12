@@ -369,6 +369,18 @@ var FC = {
             levelSensitivity:           0,
             itermThrottleThreshold:     0,
             itermAcceleratorGain:       0,
+            itermRotation:              0,
+            smartFeedforward:           0,
+            itermRelax:                 0,
+            itermRelaxType:             0,
+            absoluteControlGain:        0,
+            throttleBoost:              0,
+            acroTrainerAngleLimit:      0,
+            feedforwardRoll:            0,
+            feedforwardPitch:           0,
+            feedforwardYaw:             0,
+            feedforwardTransition:      0,
+            antiGravityMode:            0,
         };
 
         SENSOR_CONFIG = {
