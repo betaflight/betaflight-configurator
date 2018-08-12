@@ -196,8 +196,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     load_config();
 
     function process_html() {
-        var self = this;
-
         self.analyticsChanges = {};
 
         var mixer_list_e = $('select.mixerList');
