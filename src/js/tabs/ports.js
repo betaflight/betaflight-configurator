@@ -121,8 +121,6 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     function update_ui() {
         self.analyticsChanges = {};
 
-        self.foo.bar = 1;
-
         if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
 
             $(".tab-ports").removeClass("supported");
