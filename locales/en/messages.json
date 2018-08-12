@@ -1332,12 +1332,6 @@
     "receiverRcSmoothingDerivativeCutoff": {
         "message": "Derivative Cutoff Frequency"
     },
-    "receiverRcSmoothingInputTypeBiquad": {
-        "message": "BIQUAD"
-    },
-    "receiverRcSmoothingInputTypePt1": {
-        "message": "PT1"
-    },
     "receiverRcInputType": {
         "message": "Input Filter Type"
     },
@@ -1346,21 +1340,6 @@
     },
     "receiverRcSmoothingDerivativeTypeOff": {
         "message": "Off"
-    },
-    "receiverRcSmoothingChannelsRP": {
-        "message": "RP"
-    },
-    "receiverRcSmoothingChannelsRPY": {
-        "message": "Y"
-    },
-    "receiverRcSmoothingChannelsRPYT": {
-        "message": "RPYT"
-    },
-    "receiverRcSmoothingChannelsT": {
-        "message": "T"
-    },
-    "receiverRcSmoothingChannelsRPT": {
-        "message": "RPT"
     },
     "receiverRcSmoothingChannel": {
         "message": "Channels Smoothed"
