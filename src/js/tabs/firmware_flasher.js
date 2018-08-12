@@ -227,17 +227,6 @@ TABS.firmware_flasher.initialize = function (callback) {
             }
         };
 
-        function showOrHideBuildTypeSelect() {
-            var showDevReleases = $(this).is(':checked');
-
-            if (showDevReleases) {
-                $('tr.build_type').show();
-            } else {
-                $('tr.build_type').hide();
-                buildType_e.val(0).trigger('change');
-            }
-        }
-
         var buildTypes = [
             {
                 tag: 'firmwareFlasherOptionLabelBuildTypeRelease',
@@ -255,16 +244,48 @@ TABS.firmware_flasher.initialize = function (callback) {
                 loader: () => self.jenkinsLoader.loadBuilds(job.name, buildJenkinsBoardOptions)
             };
         })
-
-        buildTypes = buildTypes.concat(ciBuildsTypes);
+        var buildTypesToShow;
 
         var buildType_e = $('select[name="build_type"]');
-        buildTypes.forEach((build, index) => {
-            buildType_e.append($("<option value='{0}' selected>{1}</option>".format(index, build.tag ? i18n.getMessage(build.tag) : build.title)))
-        });
+        function buildBuildTypeOptionsList() {
+            buildType_e.empty();
+            buildTypesToShow.forEach((build, index) => {
+                buildType_e.append($("<option value='{0}' selected>{1}</option>".format(index, build.tag ? i18n.getMessage(build.tag) : build.title)))
+            });
+        }
 
-        showOrHideBuildTypeSelect();
-        $('input.show_development_releases').change(showOrHideBuildTypeSelect);
+        function showOrHideBuildTypes() {
+            var showExtraReleases = $(this).is(':checked');
+
+            if (showExtraReleases) {
+                $('tr.build_type').show();
+                $('tr.expert_mode').show();
+            } else {
+                $('tr.build_type').hide();
+                $('tr.expert_mode').hide();
+                buildType_e.val(0).trigger('change');
+            }
+        }
+
+        var globalExpertMode_e = $('input[name="expertModeCheckbox"]');
+        function showOrHideBuildTypeSelect() {
+            var expertModeChecked = $(this).is(':checked');
+
+            globalExpertMode_e.prop('checked', expertModeChecked);
+            if (expertModeChecked) {
+                buildTypesToShow = buildTypes.concat(ciBuildsTypes);
+                buildBuildTypeOptionsList();
+            } else {
+                buildTypesToShow = buildTypes;
+                buildBuildTypeOptionsList();
+                buildType_e.val(0).trigger('change');
+            }
+        }
+
+        var expertMode_e = $('.tab-firmware_flasher input.expert_mode');
+        expertMode_e.prop('checked', globalExpertMode_e.is(':checked'));
+        $('input.show_development_releases').change(showOrHideBuildTypes).change();
+        expertMode_e.change(showOrHideBuildTypeSelect).change();
 
         // translate to user-selected language
         i18n.localizePage();
@@ -282,7 +303,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             .append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
 
             if (!GUI.connect_lock) {
-                buildTypes[build_type].loader();
+                buildTypesToShow[build_type].loader();
             }
 
             chrome.storage.local.set({'selected_build_type': build_type});

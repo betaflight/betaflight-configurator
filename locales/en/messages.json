@@ -57,6 +57,9 @@
     "expertMode": {
         "message": "Enable Expert Mode"
     },
+    "expertModeDescription": {
+        "message": "Show unreleased and potentially unstable builds"
+    },
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
     },
@@ -2323,10 +2326,10 @@
         "message": "Baud Rate"
     },    
     "firmwareFlasherShowDevelopmentReleases":{
-        "message": "Show unstable and additional releases"
+        "message": "Show unstable releases"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription":{
-        "message": "Show Release-Candidates and Development Releases."
+        "message": "Show release candidates in addition to stable releases"
     },
     "firmwareFlasherOptionLoading": {
         "message": "Loading ..."
