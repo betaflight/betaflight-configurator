@@ -2,11 +2,20 @@
     "error": {
         "message": "Error: {{errorMessage}}"
     },
+    "errorTitle": {
+        "message": "Error"
+    },
     "warningTitle": {
         "message": "Advertencia"
     },
     "noticeTitle": {
         "message": "Aviso"
+    },
+    "operationNotSupported": {
+        "message": "Esta operación no es compatible con su hardware."
+    },
+    "storageDeviceNotReady": {
+        "message": "El dispositivo de almacenamiento no está listo. En el caso de una tarjeta MicroSD, asegúrate de que es reconocida correctamente por tu controlador de vuelo."
     },
     "options_title": {
         "message": "Opciones"
@@ -41,8 +50,17 @@
     "expertMode": {
         "message": "Modo Experto"
     },
+    "expertModeDescription": {
+        "message": "Mostrar versiones no publicadas y potencialmente inestables"
+    },
     "permanentExpertMode": {
         "message": "Activar permanentemente el Modo Experto"
+    },
+    "rememberLastTab": {
+        "message": "Recordar última pestaña al conectar"
+    },
+    "analyticsOptOut": {
+        "message": "Excluir de la recogida anónima de datos estadísticos"
     },
     "userLanguageSelect": {
         "message": "Idioma (hay que reiniciar la aplicación para que el cambio sea efectivo)"
@@ -326,6 +344,15 @@
         "message": "Ejecutando - SO: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, Configurador: <strong>{{configuratorVersion}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
+    "buildServerLoaded": {
+        "message": "Cargada información de compilaciones para $1 desde el servidor."
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>No se pudo hacer la petición al servidor de compilaciones para la versión $1, usando información en caché. Razón: <code>$2<\/code><\/b>"
+    },
+    "buildServerUsingCached": {
+        "message": "Usando información de compilaciones cacheada para $1."
+    },
     "releaseCheckLoaded": {
         "message": "Información de versiones para el $1 cargada desde GitHub."
     },
@@ -438,7 +465,7 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Mira el apartado Instalar Firmware para una lista completa del hardware.<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Descargar Betaflight Blackbox<\/a><br \/><br \/>El código fuente del firmware puede descargarse desde <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">aquí<\/a><br \/>La imagen binaria más reciente del firmware está disponible <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">aquí<\/a><br \/><br \/>Los últimos <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">Drivers CP210x<\/a> pueden descargarse desde <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">aquí<\/a><br \/>Los últimos <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">Drivers STM USB VCP<\/a> pueden descargarse desde <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">aquí<\/a><br \/>Ultimo driver <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> para instalación del driver USB de Windows puede descargarse desde <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">aquí<\/a><br \/>"
+        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Mira el apartado Instalar Firmware para una lista completa del hardware.<br><br> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\"> Descargar Betaflight Blackbox Log Viewer<\/a><br \/><br \/>El código fuente del firmware puede descargarse desde <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">aquí<\/a><br \/><br \/>Los últimos <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">Drivers CP210x<\/a> pueden descargarse desde <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">aquí<\/a><br \/>Los últimos <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">Drivers STM USB VCP<\/a> pueden descargarse desde <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">aquí<\/a><br \/>Ultimo driver <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> para instalación del driver USB de Windows puede descargarse desde <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">aquí<\/a><br \/>"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -446,11 +473,17 @@
     "defaultContributingText": {
         "message": "Si quieres ayudar a hacer Betaflight incluso mejor puedes hacerlo de diferentes maneras, incluyendo:<br \/><ul><li>Responder a preguntas de otros usuarios en foros e IRC.<\/li><li>Contribuyendo con código al firmware y al configurador- nuevas funcionalidades, correcciones, mejoras.<\/li><li>Testeando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">nuevas funcionalidades\/correcciones<\/a> y comentando resultados.<\/li><li>Ayudando con <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">problemas y opinando sobre las solicitudes de funcionalidades<\/a>.<\/li><li>Colaborando en <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">la traducción de la aplicación del configurador<\/a> a tu idioma.<\/li><li><\/li><\/ul>"
     },
+    "defaultFacebookText": {
+        "message": "También tenemos un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\">Grupo de Facebook<\/a>.<br \/>Únete a nosotros para tener un lugar donde hablar sobre Betaflight, preguntar sobre configuraciones, o simplemente charlar con otros pilotos."
+    },
     "defaultChangelogAction": {
         "message": "Novedades"
     },
     "defaultChangelogHead": {
         "message": "Configurator - Novedades"
+    },
+    "defaultPrivacyPolicyAction": {
+        "message": "Política de Privacidad"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Instalar Firmware"
@@ -459,7 +492,7 @@
         "message": "Código Abierto \/ Aviso de Donación"
     },
     "defaultDonateText": {
-        "message": "Esta utilidad es completamente de <strong>código abierto<\/strong> y está disponible gratuitamente para todos los usuarios de <strong>Betaflight<\/strong>.<br \/>Si encuentras Betaflight o Betaflight Configurator útil, por favor considera <strong>ayudar<\/strong> al desarrollo donando."
+        "message": "<strong>Betaflight<\/strong> es un software controlador de vuelo que es <strong>software libre<\/strong> y está disponible gratuitamente <strong>sin garantía<\/strong> para todos los usuarios.<br \/>Si encuentras Betaflight o Betaflight Configurator útil, por favor considera <strong>ayudar<\/strong> al desarrollo donando."
     },
     "defaultDonate": {
         "message": "Donar"
@@ -536,8 +569,14 @@
     "initialSetupButtonRestore": {
         "message": "Restaurar"
     },
+    "initialSetupButtonRebootBootloader": {
+        "message": "Activar Gestor de Arranque \/ DFU"
+    },
     "initialSetupBackupRestoreText": {
-        "message": "Realiza una <strong>copia de seguridad<\/strong> de tu configuración por si tienes problemas. La configuración del <strong>CLI<\/strong> <span class=\"message-negative\">no<\/span> está incluida en esta copia - Consulta el comando 'dump' del CLI"
+        "message": "Realiza una <strong>Copia de Seguridad<\/strong> de tu configuración por si tienes problemas. La configuración del <strong>CLI<\/strong> <span class=\"message-negative\">no<\/span> está incluida - usa el comando ' diff all' en CLI para esto."
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Reinicia en modo <strong>gestor de arranque \/ DFU<\/strong>."
     },
     "initialSetupBackupSuccess": {
         "message": "Copia de seguridad guardada <span class=\"message-positive\">correctamente<\/span>"
@@ -1160,6 +1199,17 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Ajustes de PID independientes del Perfil"
     },
+    "pidTuningAntiGravityMode": {
+        "message": "Modo Anti Gravedad"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Suavizado",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Intervalo",
+        "description": "One of the modes of anti gravity"
+    },
     "pidTuningAntiGravityGain": {
         "message": "Ganancia Anti Gravedad"
     },
@@ -1168,6 +1218,69 @@
     },
     "pidTuningPidSettings": {
         "message": "Ajustes del Controlador PID"
+    },
+    "receiverRcSmoothing": {
+        "message": "Suavizado RC"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "Auto"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "Manual"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "Tipo de Corte del Derivativo"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "Tipo de Corte de Entrada"
+    },
+    "receiverRcSmoothingInterpolation": {
+        "message": "Interpolación"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "Filtro"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "Tipo de suavizado RC usado"
+    },
+    "rcSmoothingInputCutoffHelp": {
+        "message": "La frecuencia de corte en Hz utilizada por el filtro de entrada. Utilizando valores más bajos se obtienen entradas más suavizadas y es más apropiado para receptores con protocolos más lentos. La mayoría de usuarios debería dejar esto en 0 que corresponde a \"Auto\"."
+    },
+    "rcSmoothingDerivativeCutoffHelp": {
+        "message": "La frecuencia de corte en Hz utilizada por el filtro derivativo del valor objetivo. Utilizando valores más bajos se obtienen entradas más suavizadas y es más apropiado para receptores con protocolos más lentos. La mayoría de usuarios debería dejar esto en 0 que corresponde a \"Auto\"."
+    },
+    "rcSmoothingChannelsSmoothedHelp": {
+        "message": "Los canales sobre los que se aplica el suavizado"
+    },
+    "rcSmoothingDerivativeTypeHelp": {
+        "message": "El tipo de filtro utilizado para el derivativo del valor objetivo. La mayoría de usuarios deberían dejar el valor por defecto \"BIQUAD\" ya que proporciona un buen balance entre suavidad y retardo. \"PT1\" reduce ligeramente el retraso pero proporciona menos suavizado."
+    },
+    "rcSmoothingInputTypeHelp": {
+        "message": "El tipo de filtro utilizado para el derivativo para la entrada. La mayoría de usuarios deberían dejar el valor por defecto \"BIQUAD\" ya que proporciona un buen balance entre suavidad y retardo. \"PT1\" reduce ligeramente el retraso pero proporciona menos suavizado."
+    },
+    "receiverRcSmoothingInputManual": {
+        "message": "Selecciona si la frecuencia de corte del filtro de entrada se calcula automáticamente (recomendado) o se selecciona manualmente por el usuario. El uso de \"manual\" no se recomienda para receptores con protocolos como Crossfire que pueden cambiar durante el vuelo."
+    },
+    "receiverRcSmoothingDerivativeManual": {
+        "message": "Selecciona si la frecuencia de corte del filtro derivativo del valor objetivo se calcula automáticamente (recomendado) o se selecciona manualmente por el usuario. El uso de \"manual\" no se recomienda para receptores con protocolos como Crossfire que pueden cambiar durante el vuelo."
+    },
+    "receiverRcSmoothingInputHz": {
+        "message": "Frecuencia de Corte de Entrada"
+    },
+    "receiverRcSmoothingDerivativeCutoff": {
+        "message": "Frecuencia de Corte del Derivativo"
+    },
+    "receiverRcInputType": {
+        "message": "Tipo de Filtro de Entrada"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Tipo de Filtro del Derivativo"
+    },
+    "receiverRcSmoothingDerivativeTypeOff": {
+        "message": "Apagado"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "Canales Suavizados"
     },
     "receiverRcInterpolation": {
         "message": "Interpolación de RC"
@@ -1181,6 +1294,9 @@
     "receiverRcInterpolationOff": {
         "message": "Apagada"
     },
+    "receiverRcSmoothingType": {
+        "message": "Tipo de Suavizado"
+    },
     "receiverRcInterpolationDefault": {
         "message": "Predefinida"
     },
@@ -1192,6 +1308,12 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "Intervalo de Interpolación RC [ms]"
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Transición de la prealimentación"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Con este parámetro, la Prealimentación (Feedforward) puede reducirse cuando las palancas están cerca del centro, lo cual provoca que el final de los flips y rolls sea más suave.<br>El valor representa un punto del movimiento de la palanca: 0 - palanca centrada, 1 - completamente desplazada. Cuando la palanca está por encima de ese punto, la Prealimentación se mantiene constante en el valor configurado. Cuando la palanca se sitúa por debajo de ese punto, la Prealimentación se reduce proporcionalmente, llegando a 0 en la posición central de la palanca. <br> El valor de 1 da el máximo efecto de suavizado, mientras que el valor de 0 mantiene la Prealimentación fija en su valor configurado sobre el rango completo de la palanca."
     },
     "pidTuningDtermSetpointTransition": {
         "message": "Punto de Ajuste de Transición de D"
@@ -1209,13 +1331,16 @@
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> El uso de un Punto de Ajuste de Transición de D mayor que 0 y menor que 0.1 está altamente desaconsejado. Puede causar inestabilidad y reducir la respuesta de los controles al cruzar el punto central.<\/span>"
     },
     "pidTuningProportional": {
-        "message": "Proporcional"
+        "message": "Proporcional (P)"
     },
     "pidTuningIntegral": {
-        "message": "Integral"
+        "message": "Integral (I)"
     },
     "pidTuningDerivative": {
-        "message": "Derivativo"
+        "message": "Derivativo (D)"
+    },
+    "pidTuningFeedforward": {
+        "message": "Prealimentación (F)"
     },
     "pidTuningRcRate": {
         "message": "Tasa RC"
@@ -1406,6 +1531,9 @@
     "auxiliaryHelp": {
         "message": "Usa rangos para definir los interruptores en tu transmisor y las asignaciones de modo correspondientes. Un canal receptor que de una lectura entre un rango mín\/máx activará el modo. Recuerda guardar tus cambios usando el botón Guardar."
     },
+    "auxiliaryToggleUnused": {
+        "message": "Mostrar\/ocultar modos no usados"
+    },
     "auxiliaryMin": {
         "message": "Mín"
     },
@@ -1541,14 +1669,29 @@
     "adjustmentsFunction22": {
         "message": "Punto de Ajuste de D"
     },
+    "adjustmentsFunction22_2": {
+        "message": "Corrección de F en Pitch y Roll"
+    },
     "adjustmentsFunction23": {
         "message": "Punto de Ajuste de Transición de D"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Transición de Prealimentación"
     },
     "adjustmentsFunction24": {
         "message": "Ajuste de Fuerza del Horizonte"
     },
     "adjustmentsFunction25": {
         "message": "Selección de PID-Audio"
+    },
+    "adjustmentsFunction26": {
+        "message": "Corrección de F en Pitch"
+    },
+    "adjustmentsFunction27": {
+        "message": "Corrección de F en Roll"
+    },
+    "adjustmentsFunction28": {
+        "message": "Corrección de F en Yaw"
     },
     "adjustmentsSave": {
         "message": "Guardar"
@@ -2103,7 +2246,7 @@
         "message": "Mostrar versiones inestables"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Muestra Versiones Candidatas y Versiones en Desarrollo."
+        "message": "Mostrar versiones candidatas además de versiones estables"
     },
     "firmwareFlasherOptionLoading": {
         "message": "Cargando ..."
@@ -2638,6 +2781,66 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Incrementa los valores del PID para compensar cuando la Vbat está baja. Esto proporciona características de vuelo más constantes durante el vuelo. La cantidad de compensación que se aplica se calcula a partir del $t(powerBatteryMaximum.message) indicado en la página de $t(tabPower.message), así que asegúrate de que tiene un valor apropiado."
     },
+    "pidTuningItermRotation": {
+        "message": "Rotación Término I"
+    },
+    "pidTuningItermRotationHelp": {
+        "message": "Rota adecuadamente el actual vector del término I a otros ejes cuando la aeronave gira por el uso del yaw continuamente y se realizan rolls, embudos y otros trucos. Muy útil para pilotos acro tipo LOS."
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "Prealimentación Inteligente"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "Reduce el efecto del término F (Prealimentación) en el PID. Cuando tanto el término P como el término F están activos en el mismo momento, sólo usa el más grande de los dos, evitando sobre rebasamientos sin la necesidad de aumentar D, pero también reduce el efecto de respuesta producido por el término F cuando se ha añade a P."
+    },
+    "pidTuningItermRelax": {
+        "message": "Relajar I Term"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Limita la acumulación del término I cuando hay movimientos rápidos. Esto ayuda especialmente a reducir el rebote al final the rolls y otros movimientos rápidos. Puedes elegir en que ejes está activo, y si la detección del movimiento rápido se hace usando el Giro o el Valor objetivo (mando)."
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "Ejes:"
+    },
+    "pidTuningItermRelaxAxesOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningItermRelaxAxesOptionRPY": {
+        "message": "RPY"
+    },
+    "pidTuningItermRelaxAxesOptionRPInc": {
+        "message": "RP (sólo incremento)"
+    },
+    "pidTuningItermRelaxAxesOptionRPYInc": {
+        "message": "RPY (sólo incremento)"
+    },
+    "pidTuningItermRelaxType": {
+        "message": "Tipo:"
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "Giro"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Valor objetivo"
+    },
+    "pidTuningAbsoluteControlGain": {
+        "message": "Control Absoluto"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Esta funcionalidad soluciona algunos problemas de la Rotación I Term y debería reemplazarla totalmente en algún momento. La funcionalidad acumula el error absoluto del giro en coordenadas de la aeronave y mezcla una corrección proporcional en el valor objetivo. Necesita que Relajar I Term esté activado para RPY."
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Potenciar Acelerador"
+    },
+    "pidTuningThrottleBoostHelp": {
+        "message": "Esta funcionalidad permite dar un impulso temporal al acelerador del tipo más-menos para incrementar el par de torsión en la aceleración de los motores, proporcionando una respuesta de aceleración mucho más rápida."
+    },
+    "pidTuningAcroTrainerAngleLimit": {
+        "message": "Ángulo Límite para Entrenador Acro"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Añade un nuevo modo que limita el ángulo para pilotos que están aprendiendo a volar en modo acro. El rango válido es 10-80 y debe activarse con un interruptor en la pestaña de $t(tabAuxiliary.message)."
+    },
     "configHelp2": {
         "message": "Rotación arbitraria de la placa en grados, para permitir montaje de lado \/ boca abajo \/ rotada etc. Al ejecutar sensores externos, usa la alineación del sensor (Giro, Acc, Mag) para definir la posición del sensor independientemente de la orientación de la placa. "
     },
@@ -3001,6 +3204,12 @@
     "osdSetupFontPresets": {
         "message": "Preajustes:"
     },
+    "osdSetupFontPresetsSelector": {
+        "message": "Elije una Fuente Predefinida:"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "o"
+    },
     "osdSetupOpenFont": {
         "message": "Abrir Archivo de Fuente"
     },
@@ -3026,7 +3235,7 @@
         "message": "Tamaño de imagen no válido: {{width}}×{{height}} (esperado $t(logoWidthPx) ×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
-        "message": "La imagen contiene una paleta de colores no válida (sólo se permite verde, blanco y negro)"
+        "message": "La imagen contiene un pixel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) en las coordenadas {{posX}}×{{posY}}"
     },
     "osdSetupUploadFont": {
         "message": "Cargar Fuente"
@@ -3198,6 +3407,12 @@
     },
     "osdDescElementCoreTemperature": {
         "message": "Temperatura del núcleo del MCU STM32"
+    },
+    "osdDescAntiGravity": {
+        "message": "Activa un indicador cuando la anti gravedad está activa"
+    },
+    "osdDescGForce": {
+        "message": "Muestra cuánta Fuerza G está experimentando la aeronave"
     },
     "osdDescStatMaxSpeed": {
         "message": "Máxima velocidad registrada"
@@ -3436,6 +3651,9 @@
     "pidTuningPidTuningTip": {
         "message": "<b>Proporcional:<\/b> Notarás una fuerte resistencia a cualquier intento de mover el MultiRotor<br><b>Integral:<\/b> Incrementa la habilidad de mantener la posición inicial general y reduce la deriva, pero también incrementa el retraso para volver a la posición inicial.<br><b>Derivativo:<\/b> Mejora la velocidad a la que se recuperan las desviaciones, pero incrementa el ruido<br><b>Tasas y Expo<\/b>: Determina las sensaciones con las palancas basadas en estos parámetros. Usa el gráfico y el modelo 3D en vivo para encontrar tus ajustes de tasas favorito"
     },
+    "pidTuningPidTuningTipFeedforward": {
+        "message": "<b>Proporcional:<\/b> Notarás una fuerte resistencia a cualquier intento de mover el MultiRotor<br><b>Integral:<\/b> Incrementa la habilidad de mantener la posición inicial general y reduce la deriva, pero también incrementa el retraso para volver a la posición inicial.<br><b>Derivativo:<\/b> Mejora la velocidad a la que se recuperan las desviaciones, pero incrementa el ruido<br><b>Prealimentación:<\/b> Normalmente el controlador PID reacciona al error. La Prealimentación anticipa el error basándose en la entrada de los mandos, mejorando el tiempo de respuesta del quad.<br><b>Tasas y Expo<\/b>: Determina las sensaciones con las palancas basadas en estos parámetros. Usa el gráfico y el modelo 3D en vivo para encontrar tus ajustes de tasas favorito"
+    },
     "pidTuningRatesTip": {
         "message": "Juega con las tasas y mira como afectan a la curva de las palancas"
     },
@@ -3468,6 +3686,18 @@
     },
     "onboardLoggingOnboardSDCard": {
         "message": "Tarjeta SD de la controladora"
+    },
+    "onboardLoggingMsc": {
+        "message": "Modo de Almacenamiento Masivo"
+    },
+    "onboardLoggingMscNote": {
+        "message": "Reinicia en modo de <strong>dispositivo de almacenamiento masivo (MSC)<\/strong>. Una vez activado, la memoria integrada o la tarjeta SD de tu controlador de vuelo será reconocida como dispositivo de almacenamiento por tu ordenador, y te permitirá descargar tus archivos de registro. Expulsa y apaga y enciende de nuevo tu controlador de vuelo para abandonar el modo de dispositivo de almacenamiento masivo."
+    },
+    "onboardLoggingRebootMscText": {
+        "message": "Activar Modo de Dispositivo de Almacenamiento Masivo"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "El modo de almacenamiento masivo no puede ser activado porque el dispositivo de almacenamiento no está disponible."
     },
     "dialogConfirmResetTitle": {
         "message": "Confirmar"
