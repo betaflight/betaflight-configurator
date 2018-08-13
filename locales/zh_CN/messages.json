@@ -2,11 +2,20 @@
     "error": {
         "message": "错误: {{errorMessage}}"
     },
+    "errorTitle": {
+        "message": "错误"
+    },
     "warningTitle": {
         "message": "警告"
     },
     "noticeTitle": {
         "message": "注意"
+    },
+    "operationNotSupported": {
+        "message": "您的硬件不支持此操作。"
+    },
+    "storageDeviceNotReady": {
+        "message": "存储设备尚未就绪。如果是 microSD 卡, 请确保它已被飞控正确识别。"
     },
     "options_title": {
         "message": "选项"
@@ -43,6 +52,12 @@
     },
     "permanentExpertMode": {
         "message": "默认启用专家模式"
+    },
+    "rememberLastTab": {
+        "message": "连接后重新打开最后使用的选项页"
+    },
+    "analyticsOptOut": {
+        "message": "退出匿名的统计数据收集"
     },
     "userLanguageSelect": {
         "message": "语言 （需要重启应用才能生效）"
@@ -326,6 +341,15 @@
         "message": "操作系统: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, 配置程序: <strong>{{configuratorVersion}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
+    "buildServerLoaded": {
+        "message": "已从生成服务器加载 $1 的生成信息。"
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>从生成服务器获取 $1 发布版本失败，使用已缓存的信息。 失败原因：<code>$2<\/code><\/b>"
+    },
+    "buildServerUsingCached": {
+        "message": "为 $1 使用已缓存的生成信息。"
+    },
     "releaseCheckLoaded": {
         "message": "从Github 载入 $1 发布信息"
     },
@@ -438,7 +462,7 @@
         "message": "硬件"
     },
     "defaultWelcomeText": {
-        "message": "本应用支持所有能运行betaflight的飞控。在”固件烧写“页面查看所有支持的飞控列表。<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> 下载 Betaflight Blackbox Explorer<\/a><br \/><br \/>固件源代码可以点击 <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">这里<\/a> 下载<br \/>最新发布已编译的固件可以点击 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">这里<\/a> 下载<br \/><br \/>最新的 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x 驱动<\/a> 可以点击 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">这里<\/a> 下载 <br \/>最新的 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> 可以点击 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">这里<\/a> 下载<br \/>最新的 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a>可以点击 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">这里<\/a> 下载<br \/>"
+        "message": "本应用支持所有能运行betaflight的飞控。在”固件烧写“页面查看所有支持的飞控列表。<br><br> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\">下载 Betaflight Blackbox 日志查看工具 <\/a><br \/><br \/>固件源代码可以点击 <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">这里<\/a> 下载<br \/>最新发布已编译的固件可以点击 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">这里<\/a> 下载<br \/><br \/>最新的 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x 驱动<\/a> 可以点击 <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">这里<\/a> 下载 <br \/>最新的 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> 可以点击 <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">这里<\/a> 下载<br \/>最新的 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a>可以点击 <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">这里<\/a> 下载<br \/>"
     },
     "defaultContributingHead": {
         "message": "参与开发"
@@ -446,11 +470,17 @@
     "defaultContributingText": {
         "message": "如果你想帮助betaflight变得更好，你可以：<br \/><ul><li>在论坛和IRC里帮助回答其他用户的问题<\/li><li> 参与固件和配置程序的开发，例如增加新功能，解决漏洞，改善代码<\/li><li>测试 <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">新功能和修改<\/a> 并提供测试反馈<\/li><li>帮助 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">寻找问题和提出建议<\/a> <\/li><li>在这里 <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">帮助翻译配置程序<\/a><\/li><li><\/li><\/ul>"
     },
+    "defaultFacebookText": {
+        "message": "我们还有一个 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\">Facebook 小组<\/a>。<br \/>加入我们来一起讨论 Betaflight, 询问配置问题, 或者只是和小伙伴们闲聊。"
+    },
     "defaultChangelogAction": {
         "message": "更新日志"
     },
     "defaultChangelogHead": {
         "message": "Configurator - 更新日志"
+    },
+    "defaultPrivacyPolicyAction": {
+        "message": "隐私政策"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "固件烧写器"
@@ -459,7 +489,7 @@
         "message": "开源\/捐赠说明"
     },
     "defaultDonateText": {
-        "message": "这是一个完全<strong>开源 <\/strong>的工具 ，所有<strong>betaflight<\/strong>的用户都可免费使用。<br \/>如果你觉得Betaflight和betaflight configurator对你有很大帮助，请考虑通过捐赠来<strong>支持<\/strong>它们的开发。"
+        "message": "<strong>Betaflight<\/strong> 是一个<strong>开放源码<\/strong>的飞行控制器软件，它可供所有人免费使用，但<strong>不提供任何担保<\/strong> 。<br \/>如果您发现 Betaflight 或 Betaflight 配置程序对你有帮助，请考虑通过捐赠来 <strong>支持<\/strong> 它的开发。"
     },
     "defaultDonate": {
         "message": "捐赠"
@@ -536,8 +566,14 @@
     "initialSetupButtonRestore": {
         "message": "恢复"
     },
+    "initialSetupButtonRebootBootloader": {
+        "message": "激活启动加载程序\/DFU"
+    },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>备份<\/strong>你的设置以防意外丢失，注意<strong>CLI命令行<\/strong>设置 <span class=\"message-negative\">没有<\/span> 包括在内 - 具体请查阅 CLI 命令 'dump'"
+        "message": "在 CLI 命令行中使用 'dump' 命令来<strong>备份<\/strong>你的设置以防意外丢失，注意<strong>CLI命令行<\/strong>设置 <span class=\"message-negative\">没有<\/span> 包括在内"
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "重新启动到 <strong>引导加载程序\/DFU<\/strong> 模式。"
     },
     "initialSetupBackupSuccess": {
         "message": "备份保存<span class=\"message-positive\">成功<\/span>"
@@ -1160,6 +1196,17 @@
     "pidTuningNonProfilePidSettings": {
         "message": "独立于配置文件的PID控制器设置"
     },
+    "pidTuningAntiGravityMode": {
+        "message": "反重力模式"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "平滑",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "阶跃",
+        "description": "One of the modes of anti gravity"
+    },
     "pidTuningAntiGravityGain": {
         "message": "反重力增益"
     },
@@ -1193,8 +1240,14 @@
     "receiverRcInterpolationInterval": {
         "message": "遥控信号插值间隙[毫秒]"
     },
+    "pidTuningFeedforwardTransition": {
+        "message": "前馈过渡阈值"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "通过这个参数， 前馈值可以被降低到接近摇杆中点，使翻滚动作的结束更平滑一些。<br> 该值表示摇杆偏移量：0代表摇杆居中，1代表摇杆打满。当摇杆实际位置大于该值时，前馈值保持在用户设定的数字不变。当摇杆实际位置小于该值时，前馈值会按比例下降，在摇杆居中时降低到0。<br> 设置为1可以获得最平滑的效果，而设置为0将保持前馈值在全程都保持在用户设定的数字不变。"
+    },
     "pidTuningDtermSetpointTransition": {
-        "message": "D 设定点转换"
+        "message": "D 设定点转换阈值"
     },
     "pidTuningDtermSetpoint": {
         "message": "D 设定点权重"
@@ -1216,6 +1269,9 @@
     },
     "pidTuningDerivative": {
         "message": "Derivative"
+    },
+    "pidTuningFeedforward": {
+        "message": "Feedforward"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
@@ -1406,6 +1462,9 @@
     "auxiliaryHelp": {
         "message": "使用黄色区域来定义你想要的开关通道和对应的飞行模式。所选通道的游标落在黄色区域时该模式会激活变成黄色（亮起），代表该通道开关已激活该模式。 完成后点击保存按钮以保存设置。"
     },
+    "auxiliaryToggleUnused": {
+        "message": "显示\/隐藏未使用的模式"
+    },
     "auxiliaryMin": {
         "message": "最小"
     },
@@ -1541,14 +1600,29 @@
     "adjustmentsFunction22": {
         "message": "D 设定点"
     },
+    "adjustmentsFunction22_2": {
+        "message": "俯仰 和 横滚 F 调整"
+    },
     "adjustmentsFunction23": {
-        "message": "D 设定点转换"
+        "message": "D 设定点转换阈值"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "前馈过渡"
     },
     "adjustmentsFunction24": {
         "message": "水平模式强度调整"
     },
     "adjustmentsFunction25": {
         "message": "PID-Audio 选择"
+    },
+    "adjustmentsFunction26": {
+        "message": "俯仰 F 调整"
+    },
+    "adjustmentsFunction27": {
+        "message": "横滚 F 调整"
+    },
+    "adjustmentsFunction28": {
+        "message": "方向 F 调整"
     },
     "adjustmentsSave": {
         "message": "保存"
@@ -2099,12 +2173,6 @@
     "firmwareFlasherBaudRate": {
         "message": "波特率"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "显示测试固件"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "显示测试版本固件"
-    },
     "firmwareFlasherOptionLoading": {
         "message": "加载中……"
     },
@@ -2172,7 +2240,7 @@
         "message": "<strong> 恢复\/丢失通信 <\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "如果飞控板失去通信，你可以按照以下的几个步骤来恢复：<ul><li>关闭电源<\/li><li>打开'无重启序列'，打开‘擦除整个芯片‘选项。<\/li><li>短接BOOT引脚，或者按住BOOT 按键。<\/li><li>上电(如果操作正确，飞控的“活动”灯不会闪烁)。<\/li><li>如果需要请安装STM32 驱动和Zadig if(参阅Betaflight手册<a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> 部分 ).<\/li><li>关闭Befaflight软件，关闭所有Chrome应用，然后重新启动Betaflight。<\/li><li>释放BOOT按键（如有）。<\/li><li>烧写正确的固件(参照飞控厂商制定的波特率)。<\/li><li>断电。<\/li><li>移除BOOT引脚的短接。<\/li><li>上电(飞控“活动”灯应该会闪烁).<\/li><li>正常连接。<\/li><\/ul>"
+        "message": "如果飞控板失去通信，你可以按照以下的几个步骤来恢复：<ul><li>关闭电源<\/li><li>打开'无重启序列'，打开‘擦除整个芯片‘选项。<\/li><li>短接BOOT引脚，或者按住BOOT 按键。<\/li><li>上电(如果操作正确，飞控的“活动”灯不会闪烁)。<\/li><li>如果需要请安装STM32 驱动和Zadig(参阅Betaflight手册<a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> 部分 ).<\/li><li>关闭Befaflight软件，关闭所有Chrome应用，然后重新启动Betaflight。<\/li><li>释放BOOT按键（如有）。<\/li><li>烧写正确的固件(参照飞控厂商制定的波特率)。<\/li><li>断电。<\/li><li>移除BOOT引脚的短接。<\/li><li>上电(飞控“活动”灯应该会闪烁).<\/li><li>正常连接。<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "关闭固件烧写"
@@ -2638,6 +2706,66 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "当电池电压变低时， 飞控自动增加PID数值来补偿动力的损失。这会在整个飞行过程中提供一个更一致的飞行特性。该补偿数值通过在 $t(tabPower.message) 的 $t(powerBatteryMaximum.message) 计算而得，所以请确保正确设置了该数值。"
     },
+    "pidTuningItermRotation": {
+        "message": "I 值旋转"
+    },
+    "pidTuningItermRotationHelp": {
+        "message": "在边转向边翻滚以及做漏斗等特技时，将 I 向量正确旋转到其他轴向上。比较受到目视飞行的飞手欢迎。"
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "智能前馈"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "减少 F 值在 PID 中的效果。当 P 和 F 同时激活时，只取两者中的较大值来避免过头而无需提高 D，但这也会降低 F 值提供的响应效果。"
+    },
+    "pidTuningItermRelax": {
+        "message": "I 值释放"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "在快速移动时限制 I 值的积累。这特别有助于降低翻滚等快速移动的末期的反弹。你可以选择该功能生效的轴向，以及快速移动的判断依据是陀螺仪还是设定点（摇杆）。"
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "轴："
+    },
+    "pidTuningItermRelaxAxesOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningItermRelaxAxesOptionRPY": {
+        "message": "RPY"
+    },
+    "pidTuningItermRelaxAxesOptionRPInc": {
+        "message": "RP (仅增量)"
+    },
+    "pidTuningItermRelaxAxesOptionRPYInc": {
+        "message": "RPY (仅增量)"
+    },
+    "pidTuningItermRelaxType": {
+        "message": "类型："
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "陀螺仪"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "设定点"
+    },
+    "pidTuningAbsoluteControlGain": {
+        "message": "绝对控制"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "此功能解决了 I 值旋转的一些底层问题，并希望最终可以替代它。该功能以四轴的坐标系统来累积陀螺仪的绝对误差，并按比例混合修正值到设定点中。它需要在RPY轴向上启用 I 值释放功能。"
+    },
+    "pidTuningThrottleBoost": {
+        "message": "油门增压"
+    },
+    "pidTuningThrottleBoostHelp": {
+        "message": "此功能通过短暂提高油门变化值来提高电机的加速度，使得油门响应更为迅速。"
+    },
+    "pidTuningAcroTrainerAngleLimit": {
+        "message": "萌新手动模式角度限制"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "为正在学习飞行的飞行员增加一个新的角度限制模式。有效范围为 10-80，需要使用 $t(tabAuxiliary.message) 选项卡中的一个开关激活。"
+    },
     "configHelp2": {
         "message": "任意角度（直立，反转，旋转等）安装飞控板。当使用外部传感器时，请使用传感器校正设置(陀螺，加速度计，磁场计)来决定独立于飞控板的传感器位置。"
     },
@@ -3001,6 +3129,12 @@
     "osdSetupFontPresets": {
         "message": "预置字体"
     },
+    "osdSetupFontPresetsSelector": {
+        "message": "选择预设字体："
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "或"
+    },
     "osdSetupOpenFont": {
         "message": "打开字体文件"
     },
@@ -3026,7 +3160,7 @@
         "message": "无效的图像大小: {{width}}x{{height}} (应是 $t(logoWidthPx) x$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
-        "message": "图像包含无效的颜色 (仅允许绿色、黑色和白色)"
+        "message": "图像包含无效的像素： rgb ({{valueR}}, {{valueG}}, {{valueB}}) ，坐标 {{posX}}x{{posY}}"
     },
     "osdSetupUploadFont": {
         "message": "更新字体"
@@ -3198,6 +3332,12 @@
     },
     "osdDescElementCoreTemperature": {
         "message": "显示飞控主芯片温度"
+    },
+    "osdDescAntiGravity": {
+        "message": "当反重力功能激活时显示指示器"
+    },
+    "osdDescGForce": {
+        "message": "显示当前飞机所受的地心引力"
     },
     "osdDescStatMaxSpeed": {
         "message": "记录到的最大速度"
@@ -3436,6 +3576,9 @@
     "pidTuningPidTuningTip": {
         "message": "<b>比例 P:<\/b> 数值越大，飞机会输出越大力量来抵消外力引起的移动，过大会引起震荡 <br><b>积分 I:<\/b>数值越大，对保持飞机姿态更好。但是也会增加飞机到达预定角度时间。<br><b>导数 D:<\/b> 增加回中时间，但是也会增加噪声<br><b>Rates and Expo<\/b>: Rates 和expo 影响摇杆手感。参考图表和实时3D模型预览来找到你喜欢的设定。"
     },
+    "pidTuningPidTuningTipFeedforward": {
+        "message": "<b>比例 P:<\/b> 数值越大，飞机会输出越大力量来抵消外力引起的移动，过大会引起震荡 <br><b>积分 I:<\/b>数值越大，对保持飞机姿态更好。但是也会增加飞机到达预定角度时间。<br><b>导数 D:<\/b> 增加回中时间，但是也会增加噪声<br><b>前馈:<\/b> 通常PID响应误差值。前馈则基于摇杆输入来预测误差，提高飞机的响应。<br><b>Rates and Expo<\/b>: Rates 和expo 影响摇杆手感。参考图表和实时3D模型预览来找到你喜欢的设定。"
+    },
     "pidTuningRatesTip": {
         "message": "尝试不同的rates并观察它如何影响摇杆曲线"
     },
@@ -3468,6 +3611,18 @@
     },
     "onboardLoggingOnboardSDCard": {
         "message": "板载SD卡"
+    },
+    "onboardLoggingMsc": {
+        "message": "大容量存储模式"
+    },
+    "onboardLoggingMscNote": {
+        "message": "重新启动到 <strong>大容量存储设备 (MSC)<\/strong> 模式。一旦激活, 您的飞行控制器上的板载闪存或 SD 卡将被计算机识别为存储设备, 并允许您下载日志文件。要退出此模式，请在电脑上执行弹出操作，并给飞控重新上电。"
+    },
+    "onboardLoggingRebootMscText": {
+        "message": "激活大容量存储设备模式"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "由于存储设备尚未就绪, 无法激活大容量存储模式。"
     },
     "dialogConfirmResetTitle": {
         "message": "确认"

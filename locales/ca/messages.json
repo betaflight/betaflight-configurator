@@ -437,9 +437,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "L'aplicació suporta tot el hardware que pugui fer funcionar Betaflight. Prova la pestanya flash per a la llista completa de hardware.<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Baixa Betaflight Blackbox<\/a><br \/><br \/>El codi font del firmware es pot descarregar d'<a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">aquí<\/a><br \/>La imatge del nou firmware binari és disponible <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">aquí<\/a><br \/><br \/>Últim <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x Drivers<\/a> es poden descarregar d'<a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">aquí<\/a><br \/>Últim <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> es poden descarregar d'<a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">aquí<\/a><br \/>Últim <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> per instalar Windows USB driver pots descarregar d'<a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">aquí<\/a><br \/>"
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -457,9 +454,6 @@
     },
     "defaultDonateHead": {
         "message": "Codi Lliure \/ Avís de Donació"
-    },
-    "defaultDonateText": {
-        "message": "Aquesta eina és <strong>codi lliure<\/strong> i és gratuïta per als usuaris de  <strong>Betaflight<\/strong>.<br \/>Si trobes Betaflight o el seu configurador útil, si us plau considera <strong>ajudar<\/strong> al seu desenvolupament fent una donació."
     },
     "defaultDonate": {
         "message": "Fes una donació"
@@ -535,9 +529,6 @@
     },
     "initialSetupButtonRestore": {
         "message": "Restaurar"
-    },
-    "initialSetupBackupRestoreText": {
-        "message": "Fes una <strong>Còpia de Seguretat<\/strong> de la teva configuració per si hi ha problemes, la configuració del <strong>CLI<\/strong>  <span class=\"message-negative\">no<\/span> estan incloses - Revisa la comanda 'dump' al CLI"
     },
     "initialSetupBackupSuccess": {
         "message": "Còpia de seguretat desada <span class=\"message-positive\">correctament<\/span>"
@@ -2056,12 +2047,6 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Velocitat de bauds"
-    },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostra releases inestables"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Mostra Release-Candidate o versions de desenvolupament."
     },
     "firmwareFlasherOptionLoading": {
         "message": "Carregant ..."
