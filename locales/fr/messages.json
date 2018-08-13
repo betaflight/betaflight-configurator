@@ -2,11 +2,20 @@
     "error": {
         "message": "Erreur : {{errorMessage}}"
     },
+    "errorTitle": {
+        "message": "Erreur"
+    },
     "warningTitle": {
         "message": "Danger"
     },
     "noticeTitle": {
         "message": "Remarques"
+    },
+    "operationNotSupported": {
+        "message": "Cette opération n’est pas pris en charge par votre matériel."
+    },
+    "storageDeviceNotReady": {
+        "message": "Le périphérique de stockage n'est pas prêt. S'il s'agit d'une microSD, vérifiez qu'elle soit correctement reconnue par votre contrôleur de vol."
     },
     "options_title": {
         "message": "Options de l'application"
@@ -15,7 +24,7 @@
         "message": "Connexion"
     },
     "connecting": {
-        "message": "Liaison"
+        "message": "Connexion encours"
     },
     "disconnect": {
         "message": "Déconnecter"
@@ -41,8 +50,17 @@
     "expertMode": {
         "message": "Mode Expert"
     },
+    "expertModeDescription": {
+        "message": "Montrer les version non finalisées et potentiellement instables"
+    },
     "permanentExpertMode": {
         "message": "Activer le mode expert de façon permanente"
+    },
+    "rememberLastTab": {
+        "message": "Rouvrir le dernier onglet à la connexion"
+    },
+    "analyticsOptOut": {
+        "message": "Ne pas participer à la collecte anonymes de données statistiques"
     },
     "userLanguageSelect": {
         "message": "Langue (nécessite un redémarrage pour appliquer les changements)"
@@ -326,6 +344,15 @@
         "message": "Running - OS: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, Configurator: <strong>{{configuratorVersion}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
+    "buildServerLoaded": {
+        "message": "Informations sur la version de $1 chargées depuis le serveur."
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>Requête auprès du serveur pour les releases $1 échouée, utilise les informations en cache. Raison: <code>$2<\/code><\/b>"
+    },
+    "buildServerUsingCached": {
+        "message": "Utilise les informations en cache pour $1."
+    },
     "releaseCheckLoaded": {
         "message": "Information release GitHub chargée pour $1."
     },
@@ -438,19 +465,25 @@
         "message": "Matériel"
     },
     "defaultWelcomeText": {
-        "message": "L'application fonctionne avec toutes les cartes sous Betaflight. Consulter la liste dans la rubrique flash.<br><br><a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Télécharger Betaflight Blackbox<\/a><br \/><br \/>Le code source du firmware est à télécharger <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">ici<\/a><br \/>L'image du firmware la plus récente est <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">ici<\/a><br \/><br \/>Le dernier <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">pilote CP210x<\/a> est à télécharger <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">ici<\/a><br \/>Le dernier <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">pilote STM USB VCP<\/a>est à télécharger <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">ici<\/a><br \/>La dernière version de <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> (utilitaire windows pour les pilotes USB) est à télécharger <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">ici<\/a><br \/>"
+        "message": "L'application est compatible avec toutes les cartes fonctionnant sous Betaflight. Consultez la liste dans l'onglet flash.<br>\n<br>\n<a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\"> Télécharger Betaflight Blackbox Log Viewer<\/a><br \/>\n<br \/>\nLe code source du firmware est à télécharger <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">ici<\/a><br \/>\n<br \/>\nLe dernier <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">pilote CP210x<\/a> se trouve <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">ici<\/a><br \/>\nLe dernier <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">pilote STM USB VCP <\/a> est disponible <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">ici<\/a><br \/>\nLa dernière version de <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> utilitaire pour les pilotes USB Windows est à télécharger <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">ici<\/a><br \/>"
     },
     "defaultContributingHead": {
         "message": "Participation"
     },
     "defaultContributingText": {
-        "message": "Vous souhaitez participer à l'amélioration de Betaflight, plusieurs possibilités:<br \/><ul><li>Répondre aux question des autres utilisateurs sur les forums, IRC et Slack.<\/li><li>Participer au développement du firmware et du configurateur - nouvelles fonctionnalités, améliorations et résolutions de bugs<\/li><li>Tester <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">les nouvelles fonctionnalités\/résolutions de bugs<\/a> et transmettre des retours.<\/li><li>Aider <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">avec des idées, commentaires et des demandes de fonctionnalités<\/a>.<\/li><li>Collaborer <a href=\"<a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">\" target=\"_blank\">à traduire le configurateur <\/a> dans votre langue.<\/li><li><\/li><\/ul>"
+        "message": "Vous souhaitez participer à l'amélioration de Betaflight, plusieurs possibilités:<br \/><ul><li>Répondre aux question des autres utilisateurs sur les forums, IRC et Slack.<\/li><li>Participer au développement du firmware et du configurateur - nouvelles fonctionnalités, améliorations et résolutions de bugs<\/li><li>Tester <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">les nouvelles fonctionnalités\/résolutions de bugs<\/a> et transmettre des retours.<\/li><li>Aider <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">avec des idées, commentaires et des demandes de fonctionnalités<\/a>.<\/li><li>Collaborer <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">à traduire le configurateur <\/a> dans votre langue.<\/li><li><\/li><\/ul>"
+    },
+    "defaultFacebookText": {
+        "message": "Nous avons également un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\">Groupe Facebook<\/a>.<br \/>\nVenez échanger à propos de Betaflight, posez des questions sur la configuration ou simplement passez du temps avec d'autres pilotes."
     },
     "defaultChangelogAction": {
         "message": "Notes de MAJ"
     },
     "defaultChangelogHead": {
         "message": "Configurateur - Changelog"
+    },
+    "defaultPrivacyPolicyAction": {
+        "message": "Politique de confidentialité"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Flasher le microprogramme"
@@ -459,7 +492,7 @@
         "message": "Open Source \/ Avis de dons"
     },
     "defaultDonateText": {
-        "message": "Cet utilitaire est entièrement <strong>open source<\/strong> et disponible gratuitement à tous les utilisateurs de <strong>Betaflight<\/strong>.<br \/>Si vous trouvez Betaflight ou son configurateur utiles, n'hésitez pas à soutenir son développement. <strong>Soutenez-nous <\/strong> en faisant un don."
+        "message": "<strong>Betaflight<\/strong>est un logiciel de contrôle de vol <strong>libre (open source)<\/strong> et gratuit <strong>sans aucune garantie<\/strong>, pour tous les utilisateurs.<br \/>Si vous trouvez Betaflight ou Betaflight Configurator utiles, veuillez envisager<strong>d'aider<\/strong> leur développement grâce à un don."
     },
     "defaultDonate": {
         "message": "Don"
@@ -504,7 +537,7 @@
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https:\/\/slack.betaflight.com\" target=\"_blank\">Devs Betaflight sur Slack<\/a>"
+        "message": "<a href=\"http:\/\/betaflight.tk\/slack\" target=\"_blank\">Développeurs de Betaflight sur Slack<\/a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">La sauvegarde et la restauration sont désactivés.<\/span> La version API de votre microprogramme est <span class=\"message-negative\">$1<\/span>, la version minimum requise est <span class=\"message-positive\">$2<\/span>.  Veuillez sauvegarder vos paramètres en CLI, voir la procédure dans l'aide Betaflight."
@@ -536,8 +569,14 @@
     "initialSetupButtonRestore": {
         "message": "Restaurer"
     },
+    "initialSetupButtonRebootBootloader": {
+        "message": "Activer le Boot Loader \/ DFU"
+    },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>Sauvegardez<\/strong> votre configuration, les paramètres <strong>CLI<\/strong> ne sont <span class=\"message-negative\">pas<\/span> inclus - Voir l'aide pour la commande cli 'dump'"
+        "message": "<strong>Sauvegardez<\/strong> votre configuration, les paramètres <strong>CLI<\/strong> ne seront <span class=\"message-negative\">pas<\/span> inclus - utilisez la commande CLI 'diff all' afin de les sauver."
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Redémarrer en mode <strong>boot loader \/ DFU<\/strong>."
     },
     "initialSetupBackupSuccess": {
         "message": "Sauvegarde <span class=\"message-positive\">réussie<\/span>"
@@ -1160,6 +1199,17 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Paramètres du contrôleur PID independants du profil"
     },
+    "pidTuningAntiGravityMode": {
+        "message": "Mode Anti Gravity"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Souple",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Seuil",
+        "description": "One of the modes of anti gravity"
+    },
     "pidTuningAntiGravityGain": {
         "message": "Gain Anti Gravity"
     },
@@ -1168,6 +1218,69 @@
     },
     "pidTuningPidSettings": {
         "message": "Réglages du Contrôleur PID"
+    },
+    "receiverRcSmoothing": {
+        "message": "RC Smoothing"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "Auto"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "Manuel"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "Type de Cutoff de dérivée"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "Type d’entrée de Cutoff"
+    },
+    "receiverRcSmoothingInterpolation": {
+        "message": "Interpolation"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "Filtre"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "Type de RC smoothing utilisé"
+    },
+    "rcSmoothingInputCutoffHelp": {
+        "message": "La fréquence de coupure en Hz utilisée par le filtre d’entrée. Des valeurs faibles rendent les entrées plus lisses et sont plus appropriée pour les protocoles de récepteur plus lents. La plupart des utilisateurs devraient laisser le paramètre à 0 correspondant à « Auto »."
+    },
+    "rcSmoothingDerivativeCutoffHelp": {
+        "message": "Fréquence de coupure en Hz utilisée par le filtre dérivée setpoint. Des valeurs faibles rendent les entrées plus lisses et sont plus appropriée pour les protocoles de récepteur plus lents. La plupart des utilisateurs devraient laisser le paramètre à 0 correspondant à « Auto »."
+    },
+    "rcSmoothingChannelsSmoothedHelp": {
+        "message": "Le lissage des canaux s'applique à"
+    },
+    "rcSmoothingDerivativeTypeHelp": {
+        "message": "Le type de méthode de filtrage utilisée pour la dérivée setpoint. La plupart des utilisateurs devraient utiliser le « BIQUAD » par défaut car il offre un bon équilibre entre souplesse et latence. « PT1 » réduit légèrement la latence mais offre moins de lissage."
+    },
+    "rcSmoothingInputTypeHelp": {
+        "message": "Le type de filtre utilisé pour l'entrée. La plupart des utilisateurs devraient utiliser le « BIQUAD » par défaut car il offre un bon équilibre entre souplesse et latence. « PT1 » réduit légèrement la latence mais offre moins de lissage."
+    },
+    "receiverRcSmoothingInputManual": {
+        "message": "Sélectionne si la fréquence de coupure du filtre d’entrée est calculée automatiquement (recommandé) ou fixée manuellement par l’utilisateur. « Manuel » n’est pas recommandé pour les protocoles de récepteur comme Crossfire qui peuvent changer en vol."
+    },
+    "receiverRcSmoothingDerivativeManual": {
+        "message": "Sélectionne si la fréquence de coupure du filtre dérivé setpoint est calculée automatiquement (recommandé) ou fixée manuellement par l’utilisateur. « Manuel » n’est pas recommandé pour les protocoles de récepteur comme Crossfire qui peuvent changer en vol."
+    },
+    "receiverRcSmoothingInputHz": {
+        "message": "Fréquence de coupure de l'entrée"
+    },
+    "receiverRcSmoothingDerivativeCutoff": {
+        "message": "Fréquence de coupure de dérivée"
+    },
+    "receiverRcInputType": {
+        "message": "Type de filtre d'entrée"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Type de filtre de dérivée"
+    },
+    "receiverRcSmoothingDerivativeTypeOff": {
+        "message": "Désactivé"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "Canaux lissés"
     },
     "receiverRcInterpolation": {
         "message": "Interpolation RC"
@@ -1181,6 +1294,9 @@
     "receiverRcInterpolationOff": {
         "message": "Désactivé"
     },
+    "receiverRcSmoothingType": {
+        "message": "Type de lissage"
+    },
     "receiverRcInterpolationDefault": {
         "message": "Preset"
     },
@@ -1192,6 +1308,12 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "Intervalle d'interpolation RC [ms]"
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Feedforward transition"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Avec ce paramètre, l'effet du Feedforward term peut être diminué prés du centre des sticks, donnant de la souplesse à la fin des flips et rolls.<br> La valeur représente un point de déflection des sticks: 0 - stick centré, 1 - déflection complète. Lorsque le stick dépasse ce point, le Feedforward est maintenu à la valeur configurée. Lorsque le stick passe sous ce point, le Feedforward est réduit proportionnellement, jusqu'à 0 lorsque le stick est au centre.<br> Une valeur de 1 donne un maximum de souplesse, 0 conserve sur toute la course de stick le FeeForward à sa valeur configurée."
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
@@ -1216,6 +1338,9 @@
     },
     "pidTuningDerivative": {
         "message": "Dérivée"
+    },
+    "pidTuningFeedforward": {
+        "message": "Feedforward"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
@@ -1403,6 +1528,9 @@
     "auxiliaryHelp": {
         "message": "Utilisez les plages pour définir les commutateurs de votre émetteur et les affectations de mode correspondantes. Un canal récepteur qui donne une lecture entre une plage min \/ max activera le mode. N'oubliez pas d'enregistrer vos paramètres à l'aide du bouton Enregistrer."
     },
+    "auxiliaryToggleUnused": {
+        "message": "Afficher\/masquer les modes non utilisés"
+    },
     "auxiliaryMin": {
         "message": "Minimum"
     },
@@ -1538,14 +1666,29 @@
     "adjustmentsFunction22": {
         "message": "Point de consigne du D"
     },
+    "adjustmentsFunction22_2": {
+        "message": "Ajustement du F Pitch & Roll"
+    },
     "adjustmentsFunction23": {
         "message": "Transition du point de consigne du D"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Feedforward Transition"
     },
     "adjustmentsFunction24": {
         "message": "Ajustement de la force du mode Horizon"
     },
     "adjustmentsFunction25": {
         "message": "Sélection de PID-Audio"
+    },
+    "adjustmentsFunction26": {
+        "message": "Ajustement du F pitch"
+    },
+    "adjustmentsFunction27": {
+        "message": "Ajustement du F Roll"
+    },
+    "adjustmentsFunction28": {
+        "message": "Ajustement du F Yaw"
     },
     "adjustmentsSave": {
         "message": "Enregistrer"
@@ -2097,10 +2240,10 @@
         "message": "Baud rate"
     },
     "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Montrer les versions instables"
+        "message": "Montrer les versions non finalisées"
     },
     "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Montrer les versions RC et en développement."
+        "message": "Montrer les releases candidates en plus des versions stables"
     },
     "firmwareFlasherOptionLoading": {
         "message": "Chargement..."
@@ -2635,6 +2778,66 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Augmente les PID quand la batterie se vide. Cela procure plus de linéarité dans le vol. La compensation est calculée à partir de la valeur $t(powerBatteryMaximum.message) renseignée dans la page $t(tabPower.message). Il faut s'assurer qu'une valeur cohérente soit renseignée."
     },
+    "pidTuningItermRotation": {
+        "message": "I Term Rotation"
+    },
+    "pidTuningItermRotationHelp": {
+        "message": "Transmet la valeur du vecteur I Term aux autres axes lorsque le quad tourne en yaw continuellement pendant des rolls et pendant des funnels ou autres figures. Très apprécié par les pilotes acro LOS."
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "Smart Feedforward"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "Réduits l'effet de F Term dans les PID. Lorsque P Term et F Term sont actifs en même temps, seule la plus grande valeur sera utilisée, limitant les excès de P et le besoin d'augmenter D, mais réduit la réactivité de F Term quand elle est ajoutée à P."
+    },
+    "pidTuningItermRelax": {
+        "message": "I Term Relax"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Limite l'accumulation de I Term sur des mouvements rapides. Ceci aide à réduire les rebonds en fin de rolls et autres manœuvres rapides. Vous pouvez choisir les axes pour lesquels l'option sera active et si les manœuvres rapides sont détectées par le Gyro ou les Setpoint (sticks)."
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "Axes:"
+    },
+    "pidTuningItermRelaxAxesOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningItermRelaxAxesOptionRPY": {
+        "message": "RPY"
+    },
+    "pidTuningItermRelaxAxesOptionRPInc": {
+        "message": "RP (incrémente uniquement)"
+    },
+    "pidTuningItermRelaxAxesOptionRPYInc": {
+        "message": "RPY (incrémente seulement)"
+    },
+    "pidTuningItermRelaxType": {
+        "message": "Type:"
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "Gyro"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Setpoint"
+    },
+    "pidTuningAbsoluteControlGain": {
+        "message": "Contrôle absolu"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Cette fonctionnalité résout certains problèmes sous-jacents à I Term Rotation et peut remplacer sa valeur à certains moments. Elle observe les erreurs Gyro sur les coordonnées et applique une correction proportionnelle de la valeur de la consigne. Nécessite iterm_relax sur RPY."
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Throttle Boost"
+    },
+    "pidTuningThrottleBoostHelp": {
+        "message": "Cette fonctionnalité booste temporairement les gaz et réduit le temps de réponse des moteurs dés le début des fortes accélérations."
+    },
+    "pidTuningAcroTrainerAngleLimit": {
+        "message": "Limite d'angle Acro Trainer"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Ajoute un nouvelle limite d'angle afin d'apprendre le pilotage en acro. La plage valide est 10-80 et doit être activé avec un switch dans l'onglet $t(tabAuxiliary.message) ."
+    },
     "configHelp2": {
         "message": "Rotation arbitraire de la carte en degrés permettant un montage latéral \/ à l'envers \/ de côté etc. Si des capteurs externes sont utilisés, servez vous du sensor alignments (Gyro, Acc, Mag) pour définir leur position indépendamment  de l'orientation de la carte. "
     },
@@ -2998,6 +3201,12 @@
     "osdSetupFontPresets": {
         "message": "Préréglages de police:"
     },
+    "osdSetupFontPresetsSelector": {
+        "message": "Choisir des réglages de Police:"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "ou"
+    },
     "osdSetupOpenFont": {
         "message": "Ouvrir le fichier de police"
     },
@@ -3023,7 +3232,7 @@
         "message": "Taille de l'image non valide: {{width}}×{{height}} (attendue $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
-        "message": "La palette couleurs de l'image n'est pas valide (seuls le vert, le noir et le blanc sont autorisés)"
+        "message": "L'image contient un pixel non valide : rgb({{valueR}}, {{valueG}}, {{valueB}}) aux coordonnées {{posX}}×{{posY}}"
     },
     "osdSetupUploadFont": {
         "message": "Charger le fichier de police"
@@ -3195,6 +3404,12 @@
     },
     "osdDescElementCoreTemperature": {
         "message": "Température du coeur du STM32 MCU"
+    },
+    "osdDescAntiGravity": {
+        "message": "Indique lorsque l'anti gravity est actif"
+    },
+    "osdDescGForce": {
+        "message": "Indique le nombre de G subit par l'appareil"
     },
     "osdDescStatMaxSpeed": {
         "message": "Vitesse maximale relevée"
@@ -3433,6 +3648,9 @@
     "pidTuningPidTuningTip": {
         "message": "<b>Proportionnelle:<\/b> Vous verrez une résistance forte lorsque vous essaierez de faire bouger le drone<br><b>Intégrale:<\/b> Augmente la capacité à tenir la position initiale et réduit le dérapage, mais augmente aussi le délai pour revenir à la position initiale.<br><b>Dérivée:<\/b> Améliore la vitesse à laquelle les écarts sont récupérés, mais augmente le bruit<br><b>Rates et Expo<\/b>: Détermine la réactivité des commandes en se basant sur ces paramètres. Utiliser le graphe et la vue du modèle en 3D pour trouver vos paramètres préférés."
     },
+    "pidTuningPidTuningTipFeedforward": {
+        "message": "<b>Proportionnelle:<\/b> Vous sentirez une résistance forte lorsque vous tenterez de faire bouger le MultiRotor<br>\n<b>Intégrale:<\/b> Augmente la capacité à tenir la position initiale et réduit le dérapage, mais augmente aussi le délai pour revenir à la position initiale.<br>\n<b>Dérivée:<\/b> Améliore la vitesse à laquelle les écarts sont récupérés, mais augmente le bruit<br>\n<b>Feedforward:<\/b> Traditionnellement le contrôleur PID se base sur les erreurs. Feedforward anticipe les erreurs en se basant sur les entrées sticks, et rend le quad plus réactif.<br>\n<b>Rates et Expo:<\/b> Agit sur le ressenti et la réactivité des commandes en se basant sur ces paramètres. Utiliser le graphe et la vue du modèle en 3D pour trouver vos paramètres préférés"
+    },
     "pidTuningRatesTip": {
         "message": "Jouer avec les rates et voir comment ça affecte la courbe des commandes"
     },
@@ -3465,6 +3683,18 @@
     },
     "onboardLoggingOnboardSDCard": {
         "message": "SD card Interne"
+    },
+    "onboardLoggingMsc": {
+        "message": "Mode de stockage de masse"
+    },
+    "onboardLoggingMscNote": {
+        "message": "Redémarrer en mode<strong>stockage de masse (MSC)<\/strong>. Une fois activé, la mémoire intégrée ou la carte SD de votre contrôleur de vol seront reconnues comme périphérique de stockage par votre ordinateur, afin de télécharger rapidement vos fichiers logs. Éjectez le périphérique de stockage et redémarrer votre contrôleur afin de quitter ce mode."
+    },
+    "onboardLoggingRebootMscText": {
+        "message": "Activer le Mode de périphérique de stockage de masse"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "Mode stockage de masse ne peut pas être activé car le périphérique de stockage n’est pas prêt."
     },
     "dialogConfirmResetTitle": {
         "message": "Confirmer"
