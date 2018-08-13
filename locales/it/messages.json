@@ -2,11 +2,20 @@
     "error": {
         "message": "Errore: {{errorMessage}}"
     },
+    "errorTitle": {
+        "message": "Errore"
+    },
     "warningTitle": {
         "message": "Attenzione"
     },
     "noticeTitle": {
         "message": "Avviso"
+    },
+    "operationNotSupported": {
+        "message": "Questa operazione non è supportata dal tuo hardware."
+    },
+    "storageDeviceNotReady": {
+        "message": "La memoria di archiviazione non è pronta. In caso di microSD card, assicurati che sia riconosciuta correttamente dal tuo flight controller."
     },
     "options_title": {
         "message": "Opzioni applicazione"
@@ -437,9 +446,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "L'applicazione supporta tutti i dispositivi su cui può girare Betaflight. Verifica la sezione delle flash per la lista completa dell'hardware.<br><br> <a href=\"https:\/\/chrome.google.com\/webstore\/detail\/betaflight-blackbox-explo\/canpiagfkeefejklcojkhojdijglnghc\" target=\"_blank\"> Scarica Betaflight Blackbox<\/a><br \/>Il codice sorgente del firmware può essere scaricato da <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">QUI<\/a><br \/>L'immagine più aggiornata del firmware è disponibile <a href=\"https:\/\/github.com\/betaflight\/betaflight\/releases\" title=\"www.github.com\" target=\"_blank\">QUI<\/a><br \/><br \/>L'ultima versione dei <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">Driver CP210x <\/a> da <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">QUI<\/a><br \/>L'ultima versione dei <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">Drivers STM USB VCP <\/a> da <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">QUI<\/a><br \/>L'ultima versione di<a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\"> Zadig <\/a>per l'installazione dei driver USB Windows può essere scaricata da <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">QUI<\/a><br \/>"
-    },
     "defaultContributingHead": {
         "message": "Contribuisci"
     },
@@ -457,9 +463,6 @@
     },
     "defaultDonateHead": {
         "message": "Open Source \/ donazione"
-    },
-    "defaultDonateText": {
-        "message": "Questa utility è completamente <strong>open source<\/strong> ed è disponibile gratuitamente per tutti gli utenti <strong>Betaflight<\/strong>.<br \/>Se ritieni Betaflight o il configuratore Betaflight utili, valuta di <strong> supportare<\/strong> il suo sviluppo con una donazione."
     },
     "defaultDonate": {
         "message": "Dona"
@@ -536,8 +539,8 @@
     "initialSetupButtonRestore": {
         "message": "Ripristina"
     },
-    "initialSetupBackupRestoreText": {
-        "message": "Esegui il <strong>Backup<\/strong> della tua configurazione in caso di incidente, i settaggi <strong>CLI<\/strong> <span class=\"message-negative\">non<\/span> sono inclusi - Vedi il comando 'dump'."
+    "initialSetupButtonRebootBootloader": {
+        "message": "Attiva Boot Loader \/ DFU"
     },
     "initialSetupBackupSuccess": {
         "message": "Backup salvato <span class=\"message-positive\">correttamente<\/span>"
@@ -875,6 +878,9 @@
     "configurationReverseMotorSwitch": {
         "message": "Il motore gira al contrario"
     },
+    "configurationReverseMotorSwitchHelp": {
+        "message": "Questa opzione configura il mixer per aspettarsi l'inversione di marcia del motore e le eliche per essere su di conseguenza. <strong>Attenzione:<\/strong> Ciò non inverte la direzione del motore. Utilizza lo strumento di configurazione dei tuoi ESCs o cambia l'ordine dei cavi fra motore e ESC per ottenere questo obiettivo. Inoltre, assicurati di controllare con le eliche smontate che i motori girino nelle direzioni indicate nel diagramma qui sopra prima di armare."
+    },
     "configurationAutoDisarmDelay": {
         "message": "Disarma i motori dopo un ritardo di [secondi] secondi (richiede MOTOR_STOP)"
     },
@@ -905,8 +911,17 @@
     "configurationThrottleMinimumCommandHelp": {
         "message": "Questo è il valore che viene inviato agli ESC quando il mezzo è disarmato. Impostalo su un valore che lasci i motori fermi (1000 per la maggior parte degli ESC)."
     },
+    "configurationDshotBeeper": {
+        "message": "Configurazione Dshot Beacon"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Usa beacon Dshot (usa i motori per riprodurre i beep quando disarmati)"
+    },
     "configurationDshotBeaconTone": {
         "message": "Tono Beacon"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "Il beacon Dshot utilizza i regolatori e i motori per produrre il suono. Ciò significa che il beacon Dshot non può essere utilizzato quando i motori girano. In Betaflight 3.4 e successivi, quando si prova ad armare mentre il BEACON Dshot è attivo, si ha un ritardo di 2 secondi dopo l'ultimo beacon prima che il modello sia armato. Questo per impedire che la funzionalità di beacon interferisca con i comandi Dshot inviati quando si arma.<br\/><strong>Attenzione:<\/strong> poiché il beacon Dshot porta corrente attraverso i motori quando è attivo, può provocare surriscaldamento e danni ai motori e \/ o ai regolatori se la forza del beacon è impostata troppo alta. Utilizzare BLHeli Configurator o la Suite BLHeli per regolare e testare la potenza del beacon."
     },
     "configurationBeeper": {
         "message": "Configurazione dei Beep"
@@ -935,6 +950,12 @@
     "beeperBAT_LOW": {
         "message": "Beep di avviso quando la batteria si sta scaricando (ripeti)"
     },
+    "beeperGPS_STATUS": {
+        "message": "Utilizzare il numero di bip per indicare quanti satelliti GPS sono stati trovati"
+    },
+    "beeperRX_SET": {
+        "message": "Emette un segnale acustico quando il canale aux è impostato per biipare"
+    },
     "beeperACC_CALIBRATION": {
         "message": "Conferma calibrazione involo degli Accelerometri eseguita"
     },
@@ -947,11 +968,26 @@
     "beeperDISARM_REPEAT": {
         "message": "Beep quando lo stick è mantenuto in posizione di disarmo"
     },
+    "beeperARMED": {
+        "message": "Beep di avvertimento quando la scheda è armata e motori fermi (si ripete fino a quando la scheda non viene disarmata o il gas non è aumentato)"
+    },
     "beeperSYSTEM_INIT": {
         "message": "Beep di inizializzazone quando la scheda viene accesa"
     },
+    "beeperUSB": {
+        "message": "Beep quando il controllore di volo è alimentato da USB. Disabilita questo se non desideri i beep durante le prove"
+    },
     "beeperBLACKBOX_ERASE": {
         "message": "Beep quando la cancellazione del blackbox è stata completata"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Biipa quando è attiva la modalità crash flip"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Biipa quando si entra nel controllo a 5 tasti della fotocamera"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Biipa quando si esce dal controllo a 5 tasti della fotocamera"
     },
     "configuration3d": {
         "message": "3D ESC\/Funzionalità motore"
@@ -1171,6 +1207,9 @@
     },
     "pidTuningDtermSetpointHelp": {
         "message": "Questo parametro determina l'effetto di accelerazione dello stick all'interno del componente derivato. <br> Il valore di 0 è uguale al vecchio metodo di misurazione dove D traccia solo il giroscopio, mentre il valore di 1 è uguale al vecchio metodo di errore con gyro e stick ratio uguali. <br>Un valore più basso equivale a una risposta dello stick più lenta \/ più morbida, mentre un valore più alto fornisce una maggiore risposta all'accelerazione dello stick. <br>Si noti che l'interpolazione RC è consigliata per essere abilitata con valori più alti per impedire che i calci di controllo producano rumore."
+    },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> L'utilizzo di un D Setpoint transition più grande di 0 e minore di 0.1 è fortemente sconsigliato. Se lo fai può portare instabilità e ridurre la risposta degli stick quando si trova in posizioni centrali.<\/span>"
     },
     "pidTuningProportional": {
         "message": "Proporzionale"
@@ -1510,6 +1549,9 @@
     },
     "adjustmentsFunction24": {
         "message": "Regolazione Modalità Horizon"
+    },
+    "adjustmentsFunction25": {
+        "message": "PID-Selezione Audio"
     },
     "adjustmentsSave": {
         "message": "salva"
@@ -2018,6 +2060,9 @@
     "firmwareFlasherNoReboot": {
         "message": "Nessuna sequenza di riavvio"
     },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Seleziona il tipo di build per vedere le schede disponibili."
+    },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Seleziona la tua scheda per vedere i relativi firmware disponibili online - Seleziona il firmware appropriato per la tua scheda."
     },
@@ -2057,14 +2102,23 @@
     "firmwareFlasherBaudRate": {
         "message": "velocità di trasmissione"
     },
-    "firmwareFlasherShowDevelopmentReleases": {
-        "message": "Mostra versioni non stabili"
-    },
-    "firmwareFlasherShowDevelopmentReleasesDescription": {
-        "message": "Mostra versioni candidate alla pubblicazione e versioni di sviluppo"
-    },
     "firmwareFlasherOptionLoading": {
         "message": "Caricamento in corso"
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Versione"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Versioni pubblicate e candidate alla pubblicazione"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Sviluppo"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "3.3 AKK & RDQ VTX Patch"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "3.4 AKK & RDQ VTX Patch"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
         "message": "Scegli un Firmware \/ Scheda"
@@ -2512,6 +2566,69 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Impostazioni filtro profilo indipendente"
     },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Filtri passo-basso del giroscopio"
+    },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "Frequenza [Hz] di taglio passo-basso 1 del giroscopio"
+    },
+    "pidTuningGyroLowpassType": {
+        "message": "Tipo 1 filtro passo-basso del giroscopio"
+    },
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Frequenza [Hz] di taglio passa-basso 2 del giroscopio"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "Tipo 2 filtro passa-basso del giroscopio"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Filtri Notch del giroscopio"
+    },
+    "pidTuningGyroNotch1Frequency": {
+        "message": "Filtro 1 Notch del giroscopio frequenza centrale[ Hz]"
+    },
+    "pidTuningGyroNotch2Frequency": {
+        "message": "Filtro 2 Notch del giroscopio frequenza centrale [Hz]"
+    },
+    "pidTuningGyroNotch1Cutoff": {
+        "message": "Frequenza [Hz] taglio filtro Notch 1 del giroscopio"
+    },
+    "pidTuningGyroNotch2Cutoff": {
+        "message": "Frequenza [Hz] taglio filtro Notch 2 del giroscopio"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "Il filtro Notch ha un centro e un cutoff. Il filtro è simmetrico. La frequenza centrale è il centro del filtro e la frequenza di taglio è dove inizia il filtro Notch. Ad esempio con Notch Cutoff di 160 e Notch Center di 260 significa che la gamma è 160-360Hz con maggior attenuazione intorno al centro"
+    },
+    "pidTuningFilterSettings": {
+        "message": "Impostazioni filtro profilo dipendente"
+    },
+    "pidTuningDTermLowpassFiltersGroup": {
+        "message": "Filtri passo-basso del D Term"
+    },
+    "pidTuningDTermLowpassType": {
+        "message": "Tipo 1 filtro passa-basso del D Term"
+    },
+    "pidTuningDTermLowpassFrequency": {
+        "message": "Frequenza [Hz] di taglio passo-basso 1 D Term"
+    },
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "Frequenza [Hz] di taglio passo-basso D Term 2"
+    },
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "Filtri Notch del D Term"
+    },
+    "pidTuningDTermNotchFrequency": {
+        "message": "Frequenza centrale [Hz] del Filtro Notch del D Term"
+    },
+    "pidTuningDTermNotchCutoff": {
+        "message": "Frequenza di taglio [Hz] del Filtro Notch del D Term"
+    },
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "Filtri passo-basso yaw"
+    },
+    "pidTuningYawLowpassFrequency": {
+        "message": "Frequenza [Hz] di taglio passa-basso Yaw"
+    },
     "pidTuningVbatPidCompensation": {
         "message": "Compensazione PID Vbat"
     },
@@ -2905,9 +3022,6 @@
     "osdSetupCustomLogoImageSizeError": {
         "message": "Dimensione dell'immagine non valida: {{width}}×{{height}} (expected $t(logoWidthPx)×$t(logoHeightPx))"
     },
-    "osdSetupCustomLogoColorMapError": {
-        "message": "L'immagine contiene una tavolozza colori non valida (sono ammessi solo verde, nero e bianco)"
-    },
     "osdSetupUploadFont": {
         "message": "Carica carattere"
     },
@@ -3078,6 +3192,12 @@
     },
     "osdDescElementCoreTemperature": {
         "message": "Temperatura del nucleo della MCU STM32"
+    },
+    "osdDescAntiGravity": {
+        "message": "Abilita un indicatore quando anti gravity è attivo"
+    },
+    "osdDescGForce": {
+        "message": "Mostra la quantità di forza G che sta agendo sul modello"
     },
     "osdDescStatMaxSpeed": {
         "message": "Massima velocità registrata"
@@ -3348,6 +3468,15 @@
     },
     "onboardLoggingOnboardSDCard": {
         "message": "Scheda SD Onboard"
+    },
+    "onboardLoggingMsc": {
+        "message": "Modalità archiviazione di massa"
+    },
+    "onboardLoggingRebootMscText": {
+        "message": "Attiva modalità periferica di archiviazione di massa"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "La modalità di archiviazione di massa non può essere attivata perché la periferica di archiviazione non è pronta."
     },
     "dialogConfirmResetTitle": {
         "message": "Conferma"
