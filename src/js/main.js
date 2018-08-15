@@ -46,7 +46,7 @@ function setupAnalytics(result, gitChangesetId) {
     var optOut = !!result.analyticsOptOut;
     var checkForDebugVersions = !!result.checkForConfiguratorUnstableVersions;
 
-    var debugMode = process.versions['nw-flavor'] === 'sdk';
+    var debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
     analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode);
 
@@ -54,7 +54,9 @@ function setupAnalytics(result, gitChangesetId) {
         analytics.sendException(exception.stack);
     }
 
-    process.on('uncaughtException', logException);
+    if (typeof process === "object") {
+        process.on('uncaughtException', logException);
+    }
 
     analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
 
