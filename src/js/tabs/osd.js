@@ -1391,7 +1391,6 @@ OSD.GUI.preview = {
   },
   onDragStart: function(e) {
     var ev = e.originalEvent;
-    
     var display_item = OSD.data.display_items[$(ev.target).data('field').index];
     var xPos = ev.currentTarget.dataset.x;
     var yPos = ev.currentTarget.dataset.y;
@@ -1441,8 +1440,7 @@ OSD.GUI.preview = {
         overflows_line = FONT.constants.SIZES.LINE - ((position % FONT.constants.SIZES.LINE) + display_item.preview.length);
         if (overflows_line < 0) {
             position += overflows_line;
-        }        
-
+        }
     // Advanced preview, array type
     } else {
         var arrayElements = display_item.preview;
