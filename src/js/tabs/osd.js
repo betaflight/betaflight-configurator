@@ -1131,7 +1131,7 @@ OSD.updateDisplaySize = function() {
   };
 };
 
-OSD.drawByOrder = function(selectedPosition, field, charCode) {
+OSD.drawByOrder = function(selectedPosition, field, charCode, x, y) {
 
     // Check if there is other field at the same position
     if (OSD.data.preview[selectedPosition] !== undefined) {
@@ -1146,7 +1146,7 @@ OSD.drawByOrder = function(selectedPosition, field, charCode) {
         }
     
         // Default action, overwrite old field
-        OSD.data.preview[selectedPosition++] = [field, charCode];
+        OSD.data.preview[selectedPosition++] = [field, charCode, x, y];
     }
 }
 
@@ -1391,17 +1391,24 @@ OSD.GUI.preview = {
   },
   onDragStart: function(e) {
     var ev = e.originalEvent;
-
     var display_item = OSD.data.display_items[$(ev.target).data('field').index];
+    var xPos = ev.currentTarget.dataset.x;
+    var yPos = ev.currentTarget.dataset.y;
     var offsetX = 6;
     var offsetY = 9;
+
     if (display_item.preview.constructor === Array) {
         var arrayElements = display_item.preview;
         var limits = OSD.searchLimitsElement(arrayElements);
-        offsetX -= limits.minX*12;
-        offsetY -= limits.minY*12;
+        xPos -= limits.minX;
+        yPos -= limits.minY;
+        offsetX += (xPos) * 12;
+        offsetY += (yPos) * 18;
     }
+
     ev.dataTransfer.setData("text/plain", $(ev.target).data('field').index);
+    ev.dataTransfer.setData("x", ev.currentTarget.dataset.x);
+    ev.dataTransfer.setData("y", ev.currentTarget.dataset.y);
     ev.dataTransfer.setDragImage($(this).data('field').preview_img, offsetX, offsetY);
   },
   onDragOver: function(e) {
@@ -1413,13 +1420,18 @@ OSD.GUI.preview = {
     });
   },
   onDragLeave: function(e) {
-    // brute force unstyling on drag leave
+    // brute force un-styling on drag leave
     $(this).removeAttr('style');
   },
   onDrop: function(e) {
     var ev = e.originalEvent;
+    
     var position = $(this).removeAttr('style').data('position');
     var field_id = parseInt(ev.dataTransfer.getData('text/plain'))
+    var x = parseInt(ev.dataTransfer.getData('x'))
+    var y = parseInt(ev.dataTransfer.getData('y'))
+    position -= x;
+    position -= (y  * FONT.constants.SIZES.LINE)
     var display_item = OSD.data.display_items[field_id];
     
     var overflows_line = 0;
@@ -1429,15 +1441,14 @@ OSD.GUI.preview = {
         if (overflows_line < 0) {
             position += overflows_line;
         }
-        
     // Advanced preview, array type
     } else {
         var arrayElements = display_item.preview;
         var limits = OSD.searchLimitsElement(arrayElements);
-        
+
         var selectedPositionX = position % FONT.constants.SIZES.LINE;
         var selectedPositionY = Math.trunc(position / FONT.constants.SIZES.LINE);
-        
+
         if ((limits.minX < 0) && ((selectedPositionX + limits.minX) < 0)) {
             position += Math.abs(selectedPositionX + limits.minX);
         } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= FONT.constants.SIZES.LINE)) {
@@ -1823,14 +1834,14 @@ TABS.osd.initialize = function (callback) {
             }
             // clear the buffer
             for(var i = 0; i < OSD.data.display_size.total; i++) {
-              OSD.data.preview.push([null, ' '.charCodeAt(0)]);
+              OSD.data.preview.push([null, ' '.charCodeAt(0), null, null]);
             }
             // logo first, so it gets overwritten by subsequent elements
             if (OSD.data.preview_logo) {
               var x = 160;
               for (var i = 1; i < 5; i++) {
                 for (var j = 3; j < 27; j++)
-                    OSD.data.preview[i * 30 + j] = [{name: 'LOGO', positionable: false}, x++];
+                    OSD.data.preview[i * 30 + j] = [{name: 'LOGO', positionable: false}, x++, i, j];
               }
             }
 
@@ -1857,13 +1868,13 @@ TABS.osd.initialize = function (callback) {
                     
                     // Add the character to the preview
                     var charCode = field.preview.charCodeAt(i);
-                    OSD.drawByOrder(selectedPosition++, field, charCode);
+                    OSD.drawByOrder(selectedPosition++, field, charCode, i, 1);
 
                     // Image used when "dragging" the element
                     if (field.positionable) {
                         var img = new Image();
                         img.src = FONT.draw(charCode);
-                        ctx.drawImage(img, i*12, 0);
+                        ctx.drawImage(img, i * 12, 0);
                     }
                   }
               } else {
@@ -1886,13 +1897,13 @@ TABS.osd.initialize = function (callback) {
                    // Add the character to the preview
                       var element = arrayElements[i];
                       var charCode = element.sym;
-                      OSD.drawByOrder(selectedPosition + element.x + element.y*FONT.constants.SIZES.LINE, field, charCode);
+                      OSD.drawByOrder(selectedPosition + element.x + element.y*FONT.constants.SIZES.LINE, field, charCode, element.x, element.y);
 
                       // Image used when "dragging" the element
                       if (field.positionable) {
                           var img = new Image();
                           img.src = FONT.draw(charCode);
-                          ctx.drawImage(img, (element.x + offsetX)*12, (element.y + offsetY)*12);
+                          ctx.drawImage(img, (element.x + offsetX) * 12, (element.y + offsetY) * 18);
                       }
                   }
               }
@@ -1910,6 +1921,8 @@ TABS.osd.initialize = function (callback) {
               if (typeof charCode === 'object') {
                 var field = OSD.data.preview[i][0];
                 var charCode = OSD.data.preview[i][1];
+                var x = OSD.data.preview[i][2];
+                var y = OSD.data.preview[i][3];
               }
               var $img = $('<div class="char" draggable><img src='+FONT.draw(charCode)+'></img></div>')
                 .on('mouseenter', OSD.GUI.preview.onMouseEnter)
@@ -1922,6 +1935,7 @@ TABS.osd.initialize = function (callback) {
               // Required for NW.js - Otherwise the <img /> will
               // consume drag/drop events.
               $img.find('img').css('pointer-events', 'none');
+              $img.attr('data-x', x).attr('data-y', y);
               if (field && field.positionable) {
                 $img
                   .addClass('field-'+field.index)
