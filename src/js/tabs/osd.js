@@ -1431,13 +1431,19 @@ OSD.GUI.preview = {
   onDrop: function(e) {
     var ev = e.originalEvent;
     
-    var position = $(this).removeAttr('style').data('position');
     var field_id = parseInt(ev.dataTransfer.getData('text/plain'))
-    var x = parseInt(ev.dataTransfer.getData('x'))
-    var y = parseInt(ev.dataTransfer.getData('y'))
-    position -= x;
-    position -= (y  * FONT.constants.SIZES.LINE)
     var display_item = OSD.data.display_items[field_id];
+    var position = $(this).removeAttr('style').data('position');
+
+    if (display_item.preview.constructor === Array) {
+      console.log('Initial Drop Position: ' + position);
+      var x = parseInt(ev.dataTransfer.getData('x'))
+      var y = parseInt(ev.dataTransfer.getData('y'))
+      console.log('XY Co-ords:' + x + '-' + y);
+      position -= x;
+      position -= (y  * FONT.constants.SIZES.LINE)
+      console.log('Calculated Position: ' + position);
+    } 
     
     var overflows_line = 0;
     // Standard preview, string type
