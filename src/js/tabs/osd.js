@@ -873,6 +873,10 @@ OSD.constants = {
     STAT_BATTERY: {
       name: 'BATTERY_VOLTAGE',
       desc: 'osdDescStatBattery'
+    },
+    MAX_G_FORCE: {
+      name: 'MAX_G_FORCE',
+      desc: 'osdDescStatGForce'
     }
   },
   ALL_WARNINGS: {
@@ -1096,7 +1100,8 @@ OSD.chooseFields = function () {
       F.USED_MAH,
       F.MAX_ALTITUDE,
       F.BLACKBOX,
-      F.BLACKBOX_LOG_NUMBER
+      F.BLACKBOX_LOG_NUMBER,
+      F.MAX_G_FORCE
     ];
   }
 
