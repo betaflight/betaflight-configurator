@@ -1201,6 +1201,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('OSD config set');
                 break;
             case MSPCodes.MSP_OSD_CHAR_READ:
+                console.log('OSD char downloaded');
                 break;
             case MSPCodes.MSP_OSD_CHAR_WRITE:
                 console.log('OSD char uploaded');

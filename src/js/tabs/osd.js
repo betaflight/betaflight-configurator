@@ -45,6 +45,7 @@ FONT.initData = function() {
   if (FONT.data) {
     return;
   }
+  FONT.EEPROMHash = "";
   FONT.data = {
     // default font file name
     loaded_font_file: 'default',
@@ -62,7 +63,7 @@ FONT.constants = {
   SIZES: {
     /** NVM ram size for one font char, actual character bytes **/
     MAX_NVM_FONT_CHAR_SIZE: 54,
-    /** NVM ram field size for one font char, last 10 bytes dont matter **/
+    /** NVM ram field size for one font char, last 10 bytes not used for character data **/
     MAX_NVM_FONT_CHAR_FIELD_SIZE: 64,
     CHAR_HEIGHT: 18,
     CHAR_WIDTH: 12,
@@ -83,6 +84,7 @@ FONT.constants = {
  * Each line is composed of 8 asci 1 or 0, representing 1 bit each for a total of 1 byte per line
  */
 FONT.parseMCMFontFile = function(data) {
+  FONT.hash = objectHash.sha1(data);
   var data = data.split("\n");
   FONT.ClearData();
   // make sure the font file is valid
@@ -107,7 +109,7 @@ FONT.parseMCMFontFile = function(data) {
     var line = data[i];
     // hexstring is for debugging
     FONT.data.hexstring.push('0x' + parseInt(line, 2).toString(16));
-    // every 64 bytes (line) is a char, we're counting chars though, which are 2 bits
+    // every 64 bytes (64 lines) is a char, we're counting pixels though, which are 2 bits
     if (character_bits.length == FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE * (8 / 2)) {
       pushChar()
     }
@@ -218,7 +220,16 @@ FONT.draw = function(charAddress) {
 
 FONT.msp = {
   encode: function(charAddress) {
-    return [charAddress].concat(FONT.data.characters_bytes[charAddress].slice(0,FONT.constants.SIZES.MAX_NVM_FONT_CHAR_SIZE));
+    var x  = [charAddress].concat(FONT.data.characters_bytes[charAddress].slice(0,FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE));
+    if (charAddress > 0 && charAddress < 5){
+      x = x.slice(0, 55)
+      var start = (charAddress * 10) - 10
+      for (var i = start; i < start + 10; ++i) {
+        var code = FONT.hash.charCodeAt(i);
+        x = x.concat(code);
+      }
+    }
+    return x
   }
 };
 
@@ -230,6 +241,18 @@ FONT.upload = function($progress) {
   .then(function() {
     OSD.GUI.jbox.close();
     return MSP.promise(MSPCodes.MSP_SET_REBOOT);
+  });
+};
+
+FONT.checkEEPROMHash = function() {
+  FONT.EEPROMHash = "";
+  return Promise.mapSeries([1,2,3,4], function(data, i){
+    return MSP.promise(MSPCodes.MSP_OSD_CHAR_READ, [data])
+    .then(function(info){
+      for(var i = 54; i < 64; ++i){
+        FONT.EEPROMHash += String.fromCharCode(info.data.getUint8(i));
+      }
+    });
   });
 };
 
@@ -953,14 +976,14 @@ OSD.constants = {
 
   },
   FONT_TYPES: [
-    { file: "default", name: "Default" },
-    { file: "bold", name: "Bold" },
-    { file: "large", name: "Large" },
-    { file: "extra_large", name: "Extra Large" },
-    { file: "betaflight", name: "Betaflight" },
-    { file: "digital", name: "Digital" },
-    { file: "clarity", name: "Clarity" },
-    { file: "vision", name: "Vision" }
+    { file: "default", name: "Default", hash: "2ad1c6488898ca85ce1611cd13d54502ce5b2ba3" },
+    { file: "bold", name: "Bold", hash: "0c494c1536edda39519800b722d78bc2c2947af1" },
+    { file: "large", name: "Large", hash: "a2fddee48a166481e28d57eaa330a40e434c7b73"},
+    { file: "extra_large", name: "Extra Large", hash: "c5c1edfc2f73599e60c401feae3e6b5fe54eae14" },
+    { file: "betaflight", name: "Betaflight", hash: "54f9b83674e29c968d8ef517281fdc223a9998ed" },
+    { file: "digital", name: "Digital", hash: "30b062fcdabcd2455a5d9dfa16cfbad50c666227" },
+    { file: "clarity", name: "Clarity", hash: "db7764279c22b8192ecf489d4a4f3156f9f2bbed"},
+    { file: "vision", name: "Vision", hash: "5fb84b0dabcd209e945a4a689b40c5ba8618d7f6" }
   ]
 };
 
@@ -1558,7 +1581,7 @@ TABS.osd.initialize = function (callback) {
         // Open modal window
         OSD.GUI.jbox = new jBox('Modal', {
             width: 720,
-            height: 455,
+            height: 470,
             closeButton: 'title',
             animation: false,
             attach: $('#fontmanager'),
@@ -2055,14 +2078,29 @@ TABS.osd.initialize = function (callback) {
         });
         
         // load the first font when we change tabs
-        var $font = $('.fontpresets option:selected');
-        $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function(data) {
-          FONT.parseMCMFontFile(data);
+        FONT.checkEEPROMHash().then(function(x){
+          var eeprom_font;
+          OSD.constants.FONT_TYPES.forEach(function(e, i) {
+            if(e.hash == FONT.EEPROMHash){
+              eeprom_font = e;
+            }
+          })
+          if(eeprom_font){
+            $.get('./resources/osd/' + eeprom_font.file + '.mcm', function(data) {
+              FONT.parseMCMFontFile(data);
+            });
+          } else {
+            var $font = $('.fontpresets option:selected');
+            $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function(data) {
+              FONT.parseMCMFontFile(data);
+            });
+          }
           FONT.preview($preview);
+          LogoManager.init(FONT);
           LogoManager.drawPreview();
           updateOsdView();
         });
-
+        
         $('button.load_font_file').click(function() {
           FONT.openFontFile().then(function() {
             FONT.preview($preview);
