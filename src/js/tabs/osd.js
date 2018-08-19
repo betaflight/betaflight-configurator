@@ -2077,7 +2077,9 @@ TABS.osd.initialize = function (callback) {
           });
         });
         
-        // load the first font when we change tabs
+        // load the font when we change tabs
+        // first check if we can detect the font in the EEPROM 
+        // and if not load the default
         FONT.checkEEPROMHash().then(function(x){
           var eeprom_font;
           OSD.constants.FONT_TYPES.forEach(function(e, i) {
@@ -2089,6 +2091,8 @@ TABS.osd.initialize = function (callback) {
             $.get('./resources/osd/' + eeprom_font.file + '.mcm', function(data) {
               FONT.parseMCMFontFile(data);
             });
+            // if we detected the font hide the warning
+            $('.note').fadeOut();
           } else {
             var $font = $('.fontpresets option:selected');
             $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function(data) {
