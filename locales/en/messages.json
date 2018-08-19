@@ -3508,6 +3508,10 @@
     "osdDescGForce": {
         "message": "Shows how much G-Force the craft is experiencing"
     },
+    "osdDescElementLogStatus": {
+        "message": "Blackbox number and warnings"
+    },
+
     "osdDescStatMaxSpeed": {
         "message": "Maximum recorded speed"
     },
