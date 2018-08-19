@@ -249,8 +249,10 @@ FONT.checkEEPROMHash = function() {
   return Promise.mapSeries([1,2,3,4], function(data, i){
     return MSP.promise(MSPCodes.MSP_OSD_CHAR_READ, [data])
     .then(function(info){
-      for(var i = 54; i < 64; ++i){
-        FONT.EEPROMHash += String.fromCharCode(info.data.getUint8(i));
+      if(info.length > 0){
+        for(var i = 54; i < 64; ++i){
+          FONT.EEPROMHash += String.fromCharCode(info.data.getUint8(i));
+        }
       }
     });
   });
