@@ -437,18 +437,21 @@ function buildNWApps(platforms, flavor, dir, done) {
 }
 
 function getChangesetId(done) {
-  git.exec({args : 'log -1 --format="%h"'}, function (err, stdout) {
-    if (err) {
-      throw err;
-    }
+    git.exec({args : 'log -1 --format="%h"'}, function (err, stdout) {
+        var version;
+        if (err) {
+            version = 'unsupported';
+        } else {
+            version = stdout.trim();
+        }
 
-    var versionData = { gitChangesetId: stdout.trim() }
-    var destFile = path.join(DIST_DIR, 'version.json');
+        var versionData = { gitChangesetId: version }
+        var destFile = path.join(DIST_DIR, 'version.json');
 
-    fs.writeFile(destFile, JSON.stringify(versionData) , function () {
-      done();
+        fs.writeFile(destFile, JSON.stringify(versionData) , function () {
+            done();
+        });
     });
-  });
 }
 
 function start_debug(done) {

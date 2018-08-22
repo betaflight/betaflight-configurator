@@ -6,9 +6,13 @@ var analytics = undefined;
 openNewWindowsInExternalBrowser();
 
 $(document).ready(function () {
-    i18n.init(function() {
-        startProcess();
-        initializeSerialBackend();
+    $.getJSON('version.json', function(data) {
+        CONFIGURATOR.gitChangesetId = data.gitChangesetId;
+
+        i18n.init(function() {
+            startProcess();
+            initializeSerialBackend();
+        });
     });
 });
 
@@ -16,15 +20,11 @@ function checkSetupAnalytics(callback) {
     if (!analytics) {
         setTimeout(function () {
             chrome.storage.local.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions', ], function (result) {
-                $.getJSON('version.json', function(data) {
-                    var gitChangesetId = data.gitChangesetId;
+                if (!analytics) {
+                    setupAnalytics(result);
+                }
 
-                    if (!analytics) {
-                        setupAnalytics(result, gitChangesetId);
-                    }
-
-                    callback(analytics);
-                });
+                callback(analytics);
             });
         });
     } else if (callback) {
@@ -32,7 +32,7 @@ function checkSetupAnalytics(callback) {
     }
 };
 
-function setupAnalytics(result, gitChangesetId) {
+function setupAnalytics(result) {
     var userId;
     if (result.userId) {
         userId = result.userId;
@@ -48,7 +48,7 @@ function setupAnalytics(result, gitChangesetId) {
 
     var debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode);
+    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), CONFIGURATOR.gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode);
 
     function logException(exception) {
         analytics.sendException(exception.stack);
@@ -720,7 +720,7 @@ function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {
         versionText = versionText + ', ';
     }
 
-    versionText = versionText + getConfiguratorVersion();
+    versionText = versionText + getConfiguratorVersion() + ' (' + CONFIGURATOR.gitChangesetId + ')';
 
     $('#status-bar .version').text(versionText);
 }
