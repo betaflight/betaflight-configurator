@@ -1147,7 +1147,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     case DIALOG_MODE_RATEPROFILE:
                         COPY_PROFILE.type = DIALOG_MODE_RATEPROFILE;    // 1 = rate profile
                         COPY_PROFILE.dstProfile = parseInt(selectRateProfile.val());
-                        COPY_PROFILE.srcProfile = CONFIG.profile;
+                        COPY_PROFILE.srcProfile = CONFIG.rateProfile;
 
                         MSP.send_message(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE), false, close_dialog);
 
