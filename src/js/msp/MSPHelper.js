@@ -1667,13 +1667,21 @@ MspHelper.prototype.crunch = function(code) {
 
             break;
         case MSPCodes.MSP_SET_RTC:
-            var now = new Date();
-            buffer.push16(now.getUTCFullYear());
-            buffer.push8(now.getUTCMonth() + 1);
-            buffer.push8(now.getUTCDate());
-            buffer.push8(now.getUTCHours());
-            buffer.push8(now.getUTCMinutes());
-            buffer.push8(now.getUTCSeconds());
+            var now = Date.now();
+
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                var secs = now / 1000;
+                var millis = now % 1000;
+                buffer.push32(secs);
+                buffer.push16(millis);
+            } else {
+                buffer.push16(now.getUTCFullYear());
+                buffer.push8(now.getUTCMonth() + 1);
+                buffer.push8(now.getUTCDate());
+                buffer.push8(now.getUTCHours());
+                buffer.push8(now.getUTCMinutes());
+                buffer.push8(now.getUTCSeconds());
+            }
 
             break;
         default:
