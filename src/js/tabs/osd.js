@@ -809,6 +809,14 @@ OSD.constants = {
         positionable: true,
         preview: 'L16'
     },
+    FLIP_ARROW: {
+      name: 'FLIP_ARROW',
+      desc: 'osdDescElementFlipArrow',
+      default_position: -1,
+      draw_order: 340,
+      positionable: true,
+      preview: FONT.symbol(SYM.ARROW_EAST)
+    },
   },
   UNKNOWN_DISPLAY_FIELD: {
       name: 'UNKNOWN_',
@@ -1032,6 +1040,11 @@ OSD.chooseFields = function () {
                           F.G_FORCE,
                           F.LOG_STATUS,
                         ]);
+                    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                            F.FLIP_ARROW,
+                          ]);
+                    }
                   }
                 }
               }
