@@ -3487,6 +3487,9 @@
     "osdDescElementCompassBar": {
         "message": "Graphical compass bar showing current heading"
     },
+    "osdDescElementFlipArrow": {
+        "message": "Arrow showing which side motors are up in turtle mode"
+    },
     "osdDescElementTimer1" : {
         "message": "Shows the value of timer 1"
     },
