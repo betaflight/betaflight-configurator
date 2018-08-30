@@ -10,5 +10,6 @@ var CONFIGURATOR = {
     'connectionValid': false,
     'connectionValidCliOnly': false,
     'cliActive': false,
-    'cliValid': false
+    'cliValid': false,
+    'gitChangesetId': 'unknown'
 };
