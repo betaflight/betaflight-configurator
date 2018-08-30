@@ -531,6 +531,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'NMEA',
             'UBLOX'
         ];
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            gpsProtocols.push('MSP');
+        }
 
         var gpsBaudRates = [
             '115200',
@@ -547,7 +550,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'Japanese MSAS',
             'Indian GAGAN'
         ];
-
 
         var gps_protocol_e = $('select.gps_protocol');
         for (var i = 0; i < gpsProtocols.length; i++) {
