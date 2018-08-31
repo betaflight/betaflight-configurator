@@ -2918,7 +2918,7 @@
         "message": "Throttle Boost"
     },
     "pidTuningThrottleBoostHelp": {
-        "message": "This feature allows throttle to be temporarily boosted on quick stick movements, winch increases acceleration torque to the motors, providing a much faster throttle response"
+        "message": "This feature allows throttle to be temporarily boosted on quick stick movements, which increases acceleration torque to the motors, providing a much faster throttle response."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"
