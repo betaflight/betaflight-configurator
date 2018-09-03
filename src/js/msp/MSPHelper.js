@@ -1667,11 +1667,12 @@ MspHelper.prototype.crunch = function(code) {
 
             break;
         case MSPCodes.MSP_SET_RTC:
-            var now = Date.now();
+            var now = new Date();
 
             if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-                var secs = now / 1000;
-                var millis = now % 1000;
+                var timestamp = now.getTime();
+                var secs = timestamp / 1000;
+                var millis = timestamp % 1000;
                 buffer.push32(secs);
                 buffer.push16(millis);
             } else {
