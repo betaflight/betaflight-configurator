@@ -127,6 +127,25 @@ TABS.cli.initialize = function (callback) {
                 var out_string = textarea.val();
                 self.history.add(out_string.trim());
 
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {  // Added in BF4.0
+                    // check and see if we have multiple commands to treat this as a batch
+                    // if so, prepend a "batch start". If the commands don't contain a "save"
+                    // then also append a "batch end".
+                    var checkArray = out_string.split("\n");
+                    if (checkArray.length > 1) {
+                        var hasSave = false;
+                        for (var i = 0; i < checkArray.length; i++) {
+                            if (checkArray[i].trim().toLowerCase() == "save") {
+                                hasSave = true;
+                            }
+                        }
+                        out_string = "batch start\n" + out_string;
+                        if (!hasSave) {
+                            out_string = out_string + "\nbatch end";
+                        }
+                    }
+                }
+                
                 var outputArray = out_string.split("\n");
                 Promise.reduce(outputArray, function(delay, line, index) {
                     return new Promise(function (resolve) {
