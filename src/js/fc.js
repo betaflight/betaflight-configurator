@@ -155,6 +155,8 @@ var FC = {
             dynamic_THR_breakpoint:     0,
             RC_YAW_EXPO:                0,
             rcYawRate:                  0,
+            rcPitchRate:                0,
+            RC_PITCH_EXPO:              0,
         };
 
         AUX_CONFIG =                    [];

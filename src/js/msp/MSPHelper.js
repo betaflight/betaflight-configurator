@@ -313,6 +313,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 } else {
                     RC_tuning.RC_YAW_EXPO = 0;
                 }
+                if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                    RC_tuning.rcPitchRate = parseFloat((data.readU8() / 100).toFixed(2));
+                    RC_tuning.RC_PITCH_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
+                } else {
+                    RC_tuning.rcPitchRate = 0;
+                    RC_tuning.RC_PITCH_EXPO = 0;
+                }
                 break;
             case MSPCodes.MSP_PID:
                 // PID data arrived, we need to scale it and save to appropriate bank / array
@@ -1324,6 +1331,10 @@ MspHelper.prototype.crunch = function(code) {
                 if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
                     buffer.push8(Math.round(RC_tuning.rcYawRate * 100));
                 }
+            }
+            if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                buffer.push8(Math.round(RC_tuning.rcPitchRate * 100));
+                buffer.push8(Math.round(RC_tuning.RC_PITCH_EXPO * 100));
             }
             break;
         case MSPCodes.MSP_SET_RX_MAP:
