@@ -128,21 +128,30 @@ TABS.cli.initialize = function (callback) {
                 self.history.add(out_string.trim());
 
                 if (semver.gte(CONFIG.apiVersion, "1.41.0")) {  // Added in BF4.0
-                    // check and see if we have multiple commands to treat this as a batch
-                    // if so, prepend a "batch start". If the commands don't contain a "save"
+                    // Check and see if we have multiple commands to treat this as a batch
+                    // If so, prepend a "batch start". If the commands don't contain a "save"
                     // then also append a "batch end".
+                    // Lastly, remove any commands after a "save" as they wouldn't be
+                    // executed anyway.
                     var checkArray = out_string.split("\n");
                     if (checkArray.length > 1) {
+                        var new_out_string = "batch start";
                         var hasSave = false;
-                        for (var i = 0; i < checkArray.length; i++) {
-                            if (checkArray[i].trim().toLowerCase() == "save") {
-                                hasSave = true;
+                        for (var i = 0; (i < checkArray.length) && !hasSave; i++) {
+                            var commandLine = checkArray[i]
+                            var firstWord = commandLine.split(" ")[0];
+                            firstWord = firstWord.trim().toLowerCase();
+                            if (firstWord != "batch") { // filter out batch commands
+                                if (firstWord == "save") {
+                                    hasSave = true;
+                                }
+                                new_out_string = new_out_string + "\n" + commandLine;
                             }
                         }
-                        out_string = "batch start\n" + out_string;
                         if (!hasSave) {
-                            out_string = out_string + "\nbatch end";
+                            new_out_string = new_out_string + "\nbatch end";
                         }
+                        out_string = new_out_string;
                     }
                 }
                 
