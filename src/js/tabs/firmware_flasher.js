@@ -252,6 +252,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             buildTypesToShow.forEach((build, index) => {
                 buildType_e.append($("<option value='{0}' selected>{1}</option>".format(index, build.tag ? i18n.getMessage(build.tag) : build.title)))
             });
+            $('select[name="build_type"]').val($('select[name="build_type"] option:first').val());
         }
 
         function showOrHideBuildTypes() {
