@@ -163,6 +163,11 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.antigravity').hide();
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+            $('.pid_tuning input[name="rc_rate_pitch"]').val(RC_tuning.rcPitchRate.toFixed(2));
+            $('.pid_tuning input[name="rc_pitch_expo"]').val(RC_tuning.RC_PITCH_EXPO.toFixed(2));
+        }
+
         if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
 
             $('.pid_filter input[name="gyroLowpass2Frequency"]').val(FILTER_CONFIG.gyro_lowpass2_hz);
@@ -437,6 +442,8 @@ TABS.pid_tuning.initialize = function (callback) {
         RC_tuning.RC_EXPO = parseFloat($('.pid_tuning input[name="rc_expo"]').val());
         RC_tuning.RC_YAW_EXPO = parseFloat($('.pid_tuning input[name="rc_yaw_expo"]').val());
         RC_tuning.rcYawRate = parseFloat($('.pid_tuning input[name="rc_rate_yaw"]').val());
+        RC_tuning.rcPitchRate = parseFloat($('.pid_tuning input[name="rc_rate_pitch"]').val());
+        RC_tuning.RC_PITCH_EXPO = parseFloat($('.pid_tuning input[name="rc_pitch_expo"]').val());
 
         RC_tuning.throttle_MID = parseFloat($('.throttle input[name="mid"]').val());
         RC_tuning.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val());
@@ -635,13 +642,15 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // Local cache of current rates
         self.currentRates = {
-            roll_rate:   RC_tuning.roll_rate,
-            pitch_rate:  RC_tuning.pitch_rate,
-            yaw_rate:    RC_tuning.yaw_rate,
-            rc_rate:     RC_tuning.RC_RATE,
-            rc_rate_yaw: RC_tuning.rcYawRate,
-            rc_expo:     RC_tuning.RC_EXPO,
-            rc_yaw_expo: RC_tuning.RC_YAW_EXPO,
+            roll_rate:     RC_tuning.roll_rate,
+            pitch_rate:    RC_tuning.pitch_rate,
+            yaw_rate:      RC_tuning.yaw_rate,
+            rc_rate:       RC_tuning.RC_RATE,
+            rc_rate_yaw:   RC_tuning.rcYawRate,
+            rc_expo:       RC_tuning.RC_EXPO,
+            rc_yaw_expo:   RC_tuning.RC_YAW_EXPO,
+            rc_rate_pitch: RC_tuning.rcPitchRate,
+            rc_pitch_expo: RC_tuning.RC_PITCH_EXPO,
             superexpo:   FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
             deadband: RC_DEADBAND_CONFIG.deadband,
             yawDeadband: RC_DEADBAND_CONFIG.yaw_deadband
@@ -663,6 +672,11 @@ TABS.pid_tuning.initialize = function (callback) {
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             $('.pid_tuning input[name="sensitivity"]').hide();
             $('.pid_tuning .levelSensitivityHeader').empty();
+        }
+
+        if (semver.lt(CONFIG.apiVersion, "1.37.0")) {
+            self.currentRates.rc_rate_pitch = self.currentRates.rc_rate;
+            self.currentRates.rc_expo_pitch = self.currentRates.rc_expo;
         }
 
         $('.tab-pid_tuning .tab_container .pid').on('click', function () {
@@ -950,6 +964,16 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning .roll_pitch_rate').hide();
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+            $('.pid_tuning .bracket').hide();
+            $('.pid_tuning input[name=rc_rate]').parent().css('background-color', '')
+            $('.pid_tuning input[name=rc_rate]').parent().attr('rowspan', 1)
+            $('.pid_tuning input[name=rc_expo]').parent().attr('rowspan', 1)
+        } else {
+            $('.pid_tuning input[name=rc_rate_pitch]').parent().hide()
+            $('.pid_tuning input[name=rc_pitch_expo]').parent().hide()
+        }
+
         if (useLegacyCurve) {
             $('.new_rates').hide();
         }
@@ -996,6 +1020,14 @@ TABS.pid_tuning.initialize = function (callback) {
 
                         updateNeeded = true;
                     }
+
+                    if (targetElement.attr('name') === 'rc_rate' && semver.lt(CONFIG.apiVersion, "1.37.0")) {
+                        self.currentRates.rc_rate_pitch = targetValue;
+                    }
+
+                    if (targetElement.attr('name') === 'rc_expo' && semver.lt(CONFIG.apiVersion, "1.37.0")) {
+                        self.currentRates.rc_pitch_expo = targetValue;
+                    }
                 } else { // no event was passed, just force a graph update
                     updateNeeded = true;
                 }
@@ -1009,7 +1041,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     if (!useLegacyCurve) {
                         maxAngularVel = Math.max(
                             printMaxAngularVel(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.maxAngularVelRollElement),
-                            printMaxAngularVel(self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.maxAngularVelPitchElement),
+                            printMaxAngularVel(self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, self.maxAngularVelPitchElement),
                             printMaxAngularVel(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, self.maxAngularVelYawElement));
 
                         // make maxAngularVel multiple of 200deg/s so that the auto-scale doesn't keep changing for small changes of the maximum curve
@@ -1023,7 +1055,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
                     curveContext.lineWidth = 2 * lineScale;
                     drawCurve(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, '#ff0000', 0, curveContext);
-                    drawCurve(self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, '#00ff00', -4, curveContext);
+                    drawCurve(self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, '#00ff00', -4, curveContext);
                     drawCurve(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, maxAngularVel, '#0000ff', 4, curveContext);
 
                     self.updateRatesLabels();
@@ -1532,7 +1564,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
 
             if(RC.channels[0] && RC.channels[1] && RC.channels[2]) {
                 currentValues.push(self.rateCurve.drawStickPosition(RC.channels[0], self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, stickContext, '#FF8080') + ' deg/s');
-                currentValues.push(self.rateCurve.drawStickPosition(RC.channels[1], self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, stickContext, '#80FF80') + ' deg/s');
+                currentValues.push(self.rateCurve.drawStickPosition(RC.channels[1], self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, stickContext, '#80FF80') + ' deg/s');
                 currentValues.push(self.rateCurve.drawStickPosition(RC.channels[2], self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, maxAngularVel, stickContext, '#8080FF') + ' deg/s');
             } else {
                 currentValues = [];
