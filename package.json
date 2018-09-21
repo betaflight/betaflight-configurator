@@ -58,7 +58,7 @@
     "gulp-zip": "^4.1.0",
     "inflection": "1.12.0",
     "jquery-ui-npm": "1.12.0",
-    "karma": "^2.0.0",
+    "karma": "^3.0.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
