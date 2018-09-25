@@ -2541,6 +2541,9 @@
     "ledStripVtxFunction": {
         "message": "Larson skeneris"
     },
+    "ledStripRainbowFunction": {
+        "message": "Rainbow"
+    },
     "ledStripBlinkTitle": {
         "message": "Mirgot"
     },

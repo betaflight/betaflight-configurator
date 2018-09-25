@@ -16,12 +16,12 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'b', 'g', 'r'];
         TABS.led_strip.overlays = ['t', 's', 'i', 'w'];
     } else {
-        TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'n'];
+        TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'p', 'n'];
         TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'l', 's', 'g', 'r'];
         if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
-            TABS.led_strip.overlays =  ['t', 'o', 'b', 'n', 'i', 'w'];
+            TABS.led_strip.overlays =  ['t', 'o', 'b', 'n', 'i', 'w', 'p'];
         } else {
-            TABS.led_strip.overlays =  ['t', 'o', 'b', 'v', 'i', 'w'];
+            TABS.led_strip.overlays =  ['t', 'o', 'b', 'v', 'i', 'w', 'p'];
         }
     }
 
@@ -76,9 +76,9 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             if (semver.lte(CONFIG.apiVersion, "1.19.0")) {
                 theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-s"> </span><span class="overlay-w"> </span><span class="overlay-i"> </span><span class="overlay-color"> </span></div>');
             } else if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
-                theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-b"> </span><span class="overlay-n"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
+                theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-p"> </span><span class="overlay-b"> </span><span class="overlay-n"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
             } else {
-                theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-b"> </span><span class="overlay-v"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
+                theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-p"> </span><span class="overlay-b"> </span><span class="overlay-v"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
             }
         }
         $('.mainGrid').html(theHTML.join(''));
@@ -465,6 +465,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                                 switch (letter) {
                                 case 't':
                                 case 'o':
+                                case 'p':
                                 case 's':
                                     if (areModifiersActive('function-' + f))
                                         p.addClass('function-' + letter);
@@ -760,6 +761,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 case "function-l":
                 case "function-r":
                 case "function-o":
+                case "function-p":
                 case "function-g":
                     return true;
                 break;
@@ -968,6 +970,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 unselectOverlay(letter, 'b');
                 unselectOverlay(letter, 'n');
                 unselectOverlay(letter, 't');
+                unselectOverlay(letter, 'p');
             }
             if (letter == 'l' || letter == 'g' || letter == 's') {
                 unselectOverlay(letter, 'w');
@@ -976,6 +979,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 unselectOverlay(letter, 'o');
                 unselectOverlay(letter, 'b');
                 unselectOverlay(letter, 'n');
+                unselectOverlay(letter, 'p');
             }
         }
     }

@@ -2395,6 +2395,9 @@
     "ledStripVtxFunction": {
         "message": "Scanner Larson"
     },
+    "ledStripRainbowFunction": {
+        "message": "Rainbow"
+    },
     "ledStripBlinkTitle": {
         "message": "Lampeggia"
     },

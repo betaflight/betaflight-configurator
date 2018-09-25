@@ -2466,6 +2466,9 @@
     "ledStripVtxFunction": {
         "message": "左右扫描"
     },
+    "ledStripRainbowFunction": {
+        "message": "Rainbow"
+    },
     "ledStripBlinkTitle": {
         "message": "闪烁"
     },

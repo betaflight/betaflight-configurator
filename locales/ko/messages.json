@@ -2541,6 +2541,9 @@
     "ledStripVtxFunction": {
         "message": "라슨 스캐너"
     },
+    "ledStripRainbowFunction": {
+        "message": "Rainbow"
+    },
     "ledStripBlinkTitle": {
         "message": "깜빡이기"
     },

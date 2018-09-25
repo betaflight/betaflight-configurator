@@ -94,6 +94,7 @@
 .tab-led-strip .gPoint.function-i .overlay-i,
 .tab-led-strip .gPoint.function-t .overlay-t,
 .tab-led-strip .gPoint.function-o .overlay-o,
+.tab-led-strip .gPoint.function-p .overlay-p,
 .tab-led-strip .gPoint.function-b .overlay-b,
 .tab-led-strip .gPoint.function-n .overlay-n {
     float: left;
@@ -134,6 +135,12 @@
 .tab-led-strip .gPoint.function-o .overlay-o {
     background-image: radial-gradient(1px at 8px 50% , brown 0%, brown 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
     margin-top: -6px;
+    margin-left: 16px;
+}
+
+.tab-led-strip .gPoint.function-p .overlay-p {
+    background-image: radial-gradient(1px at 8px 50% , pink 0%, pink 2px, rgba(0, 0, 0, 0.3) 3px, rgba(0, 0, 0, 0) 4px);
+    margin-top: -18px;
     margin-left: 16px;
 }
 

@@ -2541,6 +2541,9 @@
     "ledStripVtxFunction": {
         "message": "Ларсон сканер"
     },
+    "ledStripRainbowFunction": {
+        "message": "Rainbow"
+    },
     "ledStripBlinkTitle": {
         "message": "Мигать"
     },

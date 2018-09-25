@@ -41,7 +41,7 @@
     },
     "portOverrideText": {
         "message": "Port:"
-    },    
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },
@@ -2171,7 +2171,7 @@
     },
     "dataflashLogsSpace": {
         "message": "Free space for logs"
-    },    
+    },
     "dataflashNote": {
         "message": "Flight logs can be recorded to your flight controller's onboard dataflash chip."
     },
@@ -2217,25 +2217,25 @@
     "dataflashFileWriteFailed": {
         "message": "Failed to write to the file you selected, are the permissions on that folder okay?"
     },
-    
+
     "sdcardStatusNoCard": {
         "message": "No card inserted"
-    },    
+    },
     "sdcardStatusReboot": {
         "message": "Fatal error<br>Reboot to retry"
-    },    
+    },
     "sdcardStatusReady": {
         "message": "Card ready"
-    },    
+    },
     "sdcardStatusStarting": {
         "message": "Card starting..."
-    },    
+    },
     "sdcardStatusFileSystem": {
         "message": "Filesystem starting..."
-    },    
+    },
     "sdcardStatusUnknown": {
         "message": "Unknown state $1"
-    },    
+    },
 
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release info"
@@ -2330,7 +2330,7 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
-    },    
+    },
     "firmwareFlasherShowDevelopmentReleases":{
         "message": "Show unstable releases"
     },
@@ -2631,6 +2631,9 @@
     "ledStripVtxFunction": {
         "message": "Larson scanner"
     },
+    "ledStripRainbowFunction": {
+        "message": "Rainbow"
+    },
     "ledStripBlinkTitle": {
         "message": "Blink"
     },
@@ -2841,7 +2844,7 @@
     },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Lowpass Filters"
-    },    
+    },
     "pidTuningDTermLowpassType": {
         "message": "D Term Lowpass 1 Filter Type"
     },
@@ -2853,7 +2856,7 @@
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filters"
-    },    
+    },
     "pidTuningDTermNotchFrequency": {
         "message": "D Term Notch Filter Center Frequency [Hz]"
     },
@@ -2862,7 +2865,7 @@
     },
     "pidTuningYawLospassFiltersGroup": {
         "message": "Yaw Lowpass Filters"
-    },    
+    },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass Cutoff Frequency [Hz]"
     },
@@ -3572,7 +3575,7 @@
     "osdDescStatGForce": {
         "message": "Max G-Force experienced by the craft"
     },
-    
+
 
     "osdTimerSource": {
       "message": "Source:"

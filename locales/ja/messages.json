@@ -2541,6 +2541,9 @@
     "ledStripVtxFunction": {
         "message": "ラーソンスキャナー"
     },
+    "ledStripRainbowFunction": {
+        "message": "Rainbow"
+    },
     "ledStripBlinkTitle": {
         "message": "点滅"
     },
