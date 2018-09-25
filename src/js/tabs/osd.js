@@ -893,6 +893,14 @@ OSD.constants = {
     MAX_G_FORCE: {
       name: 'MAX_G_FORCE',
       desc: 'osdDescStatGForce'
+    },
+    MAX_ESC_TEMP: {
+      name: 'MAX_ESC_TEMP',
+      desc: 'osdDescStatEscTemperature'
+    },
+    MAX_ESC_RPM: {
+      name: 'MAX_ESC_RPM',
+      desc: 'osdDescStatEscRpm'
     }
   },
   ALL_WARNINGS: {
@@ -1107,6 +1115,12 @@ OSD.chooseFields = function () {
         F.RTC_DATE_TIME
       ]);
     }
+      if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+          F.MAX_ESC_TEMP,
+          F.MAX_ESC_RPM
+        ]);
+      }
   } else {  // Starting with 1.39.0 OSD stats are reordered to match how they're presented on screen
     OSD.constants.STATISTIC_FIELDS = [
       F.RTC_DATE_TIME,
@@ -1123,7 +1137,9 @@ OSD.chooseFields = function () {
       F.MAX_ALTITUDE,
       F.BLACKBOX,
       F.BLACKBOX_LOG_NUMBER,
-      F.MAX_G_FORCE
+      F.MAX_G_FORCE,
+      F.MAX_ESC_TEMP,
+      F.MAX_ESC_RPM
     ];
   }
 
