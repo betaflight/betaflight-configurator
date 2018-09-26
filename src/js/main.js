@@ -78,6 +78,7 @@ function setupAnalytics(result) {
     }
 
     $('.connect_b a.connect').removeClass('disabled');
+    $('.firmware_b a.connect').removeClass('disabled');
 }
 
 //Process to execute to real start the app
@@ -149,7 +150,13 @@ function startProcess() {
                 return;
             }
 
-            if (GUI.allowedTabs.indexOf(tab) < 0) {
+            if (GUI.allowedTabs.indexOf(tab) < 0 && tabName == "Firmware Flasher") {
+                if (GUI.connected_to || GUI.connecting_to) {
+                    $('a.connect').click();
+                } else {
+                    self.disconnect();
+                }
+            } else if (GUI.allowedTabs.indexOf(tab) < 0) {
                 GUI.log(i18n.getMessage('tabSwitchUpgradeRequired', [tabName]));
                 return;
             }

@@ -119,7 +119,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .headerbar {
-    height:110px;
+    height:115px;
     width:100%;
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
 }
@@ -1458,6 +1458,18 @@ dialog {
     margin-left: 20px;
 }
 
+/* firmware update button */
+.open_firmware_flasher {
+    position: relative;
+    float: right;
+    left: 0px;
+    top: 19px;
+    height: 70px;
+    width: 60px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
 .connect_b {
     float: left;
 }
@@ -1504,7 +1516,80 @@ dialog {
     background-color: #f21212;
 }
 
+.firmware_b {
+    float: left;
+}
+
+.firmware_b a {
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
+    float: left;
+    margin-left: 5px;
+    margin-bottom: 7px;
+    transition: none;
+}
+
+.firmware_b a.connect.disabled {
+    background-color: #808080;
+    pointer-events: none;
+    cursor: default;
+ }
+
+.firmware_b a.connect {
+    background-color: #ffbb00;
+    border: 1px solid #dba718;
+    background-image: url(../images/icons/cf_icon_flasher_white.svg);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    background-position: center 10px;
+    transition: none;
+}
+
+.firmware_b a.connect:hover {
+    background-color: #ffcc3f;
+}
+
+.firmware_b a.connect.active {
+    background-color: #e60000;
+    border: 1px solid #fe0000;
+    background-image: url(../images/icons/cf_icon_flasher_white.svg);
+    transition: none;
+}
+
+.firmware_b a.connect.active:hover {
+    background-color: #f21212;
+}
+
+.firmware_b a.connect.active {
+    background-color: #e60000;
+    border: 1px solid #fe0000;
+    background-image: url(../images/icons/cf_icon_flasher_white.svg);
+    transition: none;
+}
+
+.firmware_b a.connect.active:hover {
+    background-color: #f21212;
+}
+
+.tab_firmware_flasher {
+    display:none;
+}
+
 .connect_state {
+    float: left;
+    height: 20px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    font-family: 'open_sansregular', Arial;
+    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
+    margin-top: -1px;
+}
+
+.flash_state {
     float: left;
     height: 20px;
     width: 100%;

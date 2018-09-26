@@ -82,6 +82,11 @@ function initializeSerialBackend() {
        }
     });
 
+    $('div.open_firmware_flasher a.connect').click(function () {
+        $('#tabs ul.mode-disconnected .tab_firmware_flasher a').click();
+        $('div.open_firmware_flasher a.flash_state').text(i18n.getMessage('flashTab'));
+    });
+
     // auto-connect
     chrome.storage.local.get('auto_connect', function (result) {
         if (result.auto_connect === 'undefined' || result.auto_connect) {
