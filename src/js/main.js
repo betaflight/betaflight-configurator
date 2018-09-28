@@ -156,6 +156,7 @@ function startProcess() {
                 } else {
                     self.disconnect();
                 }
+                $('div.open_firmware_flasher a.flash').click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
                 GUI.log(i18n.getMessage('tabSwitchUpgradeRequired', [tabName]));
                 return;
