@@ -78,7 +78,7 @@ function setupAnalytics(result) {
     }
 
     $('.connect_b a.connect').removeClass('disabled');
-    $('.firmware_b a.connect').removeClass('disabled');
+    $('.firmware_b a.flash').removeClass('disabled');
 }
 
 //Process to execute to real start the app

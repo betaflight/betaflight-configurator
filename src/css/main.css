@@ -1531,13 +1531,13 @@ dialog {
     transition: none;
 }
 
-.firmware_b a.connect.disabled {
+.firmware_b a.flash.disabled {
     background-color: #808080;
     pointer-events: none;
     cursor: default;
  }
 
-.firmware_b a.connect {
+.firmware_b a.flash {
     background-color: #ffbb00;
     border: 1px solid #dba718;
     background-image: url(../images/icons/cf_icon_flasher_white.svg);
@@ -1547,29 +1547,29 @@ dialog {
     transition: none;
 }
 
-.firmware_b a.connect:hover {
+.firmware_b a.flash:hover {
     background-color: #ffcc3f;
 }
 
-.firmware_b a.connect.active {
+.firmware_b a.flash.active {
     background-color: #e60000;
     border: 1px solid #fe0000;
     background-image: url(../images/icons/cf_icon_flasher_white.svg);
     transition: none;
 }
 
-.firmware_b a.connect.active:hover {
+.firmware_b a.active.flash:hover {
     background-color: #f21212;
 }
 
-.firmware_b a.connect.active {
+.firmware_b a.flash.active {
     background-color: #e60000;
     border: 1px solid #fe0000;
     background-image: url(../images/icons/cf_icon_flasher_white.svg);
     transition: none;
 }
 
-.firmware_b a.connect.active:hover {
+.firmware_b a.flash.active:hover {
     background-color: #f21212;
 }
 
