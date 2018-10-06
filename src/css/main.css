@@ -1556,8 +1556,6 @@ dialog {
     border: 1px solid #fe0000;
     background-image: url(../images/icons/cf_icon_flasher_white.svg);
     transition: none;
-    pointer-events: none;
-    cursor: default;
 }
 
 .firmware_b a.flash.active:hover {
