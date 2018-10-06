@@ -1564,10 +1564,6 @@ dialog {
     background-color: #f21212;
 }
 
-.tab_firmware_flasher {
-    display:none;
-}
-
 .connect_state {
     float: left;
     height: 20px;
