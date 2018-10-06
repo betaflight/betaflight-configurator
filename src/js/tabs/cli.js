@@ -102,6 +102,11 @@ TABS.cli.initialize = function (callback) {
             });
         });
 
+        $('.tab-cli .clear').click(function() {
+            self.outputHistory = "";
+            $('.tab-cli .window .wrapper').empty();
+        });
+
         // Tab key detection must be on keydown,
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
         textarea.keydown(function (event) {
