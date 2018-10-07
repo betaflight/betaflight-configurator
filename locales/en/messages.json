@@ -3837,5 +3837,8 @@
     },
     "modeCameraChangeMode": {
         "message": "CAMERA CHANGE MODE"
+    },
+    "flashTab": {
+        "message": "Update Firmware"
     }
 }

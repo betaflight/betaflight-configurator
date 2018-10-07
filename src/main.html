@@ -129,6 +129,12 @@
                 </div>
                 <a class="connect_state" i18n="connect"></a>
             </div>
+            <div class="open_firmware_flasher" id="flashbutton">
+                <div class="firmware_b">
+                    <a class="flash disabled" href="#"></a>
+                </div>
+                <a class="flash_state" i18n="flashTab"></a>
+            </div>
             <div id="portsinput">
                 <div class="dropdown dropdown-dark">
                     <select class="dropdown-select" id="port" i18n_title="firmwareFlasherManualPort">
@@ -226,9 +232,9 @@
     <div class="tab_container">
         <div id="tabs">
             <ul class="mode-disconnected">
-                <li class="tab_landing"><a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a>
+                <li class="tab_landing" id="tab_landing"><a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a>
                 </li>
-                <li class="tab_help"><a href="#" i18n="tabHelp" class="tabicon ic_help"
+                <li class="tab_help" id="tab_help"><a href="#" i18n="tabHelp" class="tabicon ic_help"
                                         i18n_title="tabHelp"></a></li>
                 <li class="tab_firmware_flasher"><a href="#" i18n="tabFirmwareFlasher" class="tabicon ic_flasher"
                                                     i18n_title="tabFirmwareFlasher"></a></li>

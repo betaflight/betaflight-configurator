@@ -67,6 +67,10 @@ function initializeSerialBackend() {
 
                     toggleStatus();
                 } else {
+                    if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+                        $('div#flashbutton a.flash_state').removeClass('active');
+                        $('div#flashbutton a.flash').removeClass('active');
+                    }
                     GUI.timeout_kill_all();
                     GUI.interval_kill_all();
                     GUI.tab_switch_cleanup();
@@ -80,6 +84,23 @@ function initializeSerialBackend() {
                 }
             }
        }
+    });
+
+    $('div.open_firmware_flasher a.flash').click(function () {
+        if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+            $('div#flashbutton a.flash_state').removeClass('active');
+            $('div#flashbutton a.flash').removeClass('active');
+            document.getElementById("tab_landing").style.display = "block";
+            document.getElementById("tab_help").style.display = "block";
+            $('#tabs ul.mode-disconnected .tab_landing a').click();
+        } else {
+            $('#tabs ul.mode-disconnected .tab_firmware_flasher a').click();
+            $('div.open_firmware_flasher a.flash_state').text(i18n.getMessage('flashTab'));
+            $('div#flashbutton a.flash_state').addClass('active');
+            $('div#flashbutton a.flash').addClass('active');
+            document.getElementById("tab_landing").style.display = "none";
+            document.getElementById("tab_help").style.display = "none";
+        }
     });
 
     // auto-connect
@@ -337,6 +358,10 @@ function connectCli() {
 }
 
 function onConnect() {
+    if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
+        $('div#flashbutton a.flash_state').removeClass('active');
+        $('div#flashbutton a.flash').removeClass('active');
+    }
     GUI.timeout_remove('connecting'); // kill connecting timer
     $('div#connectbutton a.connect_state').text(i18n.getMessage('disconnect')).addClass('active');
     $('div#connectbutton a.connect').addClass('active');
