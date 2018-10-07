@@ -1115,12 +1115,6 @@ OSD.chooseFields = function () {
         F.RTC_DATE_TIME
       ]);
     }
-      if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-        OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-          F.MAX_ESC_TEMP,
-          F.MAX_ESC_RPM
-        ]);
-      }
   } else {  // Starting with 1.39.0 OSD stats are reordered to match how they're presented on screen
     OSD.constants.STATISTIC_FIELDS = [
       F.RTC_DATE_TIME,
@@ -1141,6 +1135,12 @@ OSD.chooseFields = function () {
       F.MAX_ESC_TEMP,
       F.MAX_ESC_RPM
     ];
+    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+      OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+        F.MAX_ESC_TEMP,
+        F.MAX_ESC_RPM
+      ]);
+    }
   }
 
   // Choose warnings
