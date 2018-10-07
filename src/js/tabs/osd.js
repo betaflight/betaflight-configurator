@@ -1131,9 +1131,7 @@ OSD.chooseFields = function () {
       F.MAX_ALTITUDE,
       F.BLACKBOX,
       F.BLACKBOX_LOG_NUMBER,
-      F.MAX_G_FORCE,
-      F.MAX_ESC_TEMP,
-      F.MAX_ESC_RPM
+      F.MAX_G_FORCE
     ];
     if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
       OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
