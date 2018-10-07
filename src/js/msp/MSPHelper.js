@@ -109,6 +109,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 $('span.i2c-error').text(CONFIG.i2cError);
                 $('span.cycle-time').text(CONFIG.cycleTime);
                 $('span.cpu-load').text(i18n.getMessage('statusbar_cpu_load', [CONFIG.cpuload]));
+                if (CONFIG.cpuload >= 30) {
+                    GUI.log(i18n.getMessage('cpuLoadTooHigh'));
+                }
                 break;
 
             case MSPCodes.MSP_RAW_IMU:

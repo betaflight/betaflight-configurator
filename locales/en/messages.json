@@ -474,6 +474,9 @@
     "versionLabelConfigurator": {
         "message": "Configurator"
     },
+    "cpuLoadTooHigh": {
+        "message": "Your CPU usage is too high. Make sure to lower loop times or disable certain features you don't want to use until the CPU load % is low enough."
+    },
 
     "notifications_app_just_updated_to_version": {
         "message": "Application just updated to version: $1"
