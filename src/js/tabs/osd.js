@@ -893,6 +893,14 @@ OSD.constants = {
     MAX_G_FORCE: {
       name: 'MAX_G_FORCE',
       desc: 'osdDescStatGForce'
+    },
+    MAX_ESC_TEMP: {
+      name: 'MAX_ESC_TEMP',
+      desc: 'osdDescStatEscTemperature'
+    },
+    MAX_ESC_RPM: {
+      name: 'MAX_ESC_RPM',
+      desc: 'osdDescStatEscRpm'
     }
   },
   ALL_WARNINGS: {
@@ -1125,6 +1133,12 @@ OSD.chooseFields = function () {
       F.BLACKBOX_LOG_NUMBER,
       F.MAX_G_FORCE
     ];
+    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+      OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+        F.MAX_ESC_TEMP,
+        F.MAX_ESC_RPM
+      ]);
+    }
   }
 
   // Choose warnings

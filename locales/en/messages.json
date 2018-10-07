@@ -3575,6 +3575,12 @@
     "osdDescStatGForce": {
         "message": "Max G-Force experienced by the craft"
     },
+    "osdDescStatEscTemperature": {
+        "message": "Max ESC temperature"
+    },
+    "osdDescStatEscRpm": {
+        "message": "Max ESC RPM"
+    },
     
 
     "osdTimerSource": {
