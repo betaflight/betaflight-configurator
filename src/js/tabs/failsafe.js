@@ -38,7 +38,11 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     }
 
     function get_rc_data() {
-        MSP.send_message(MSPCodes.MSP_RC, false, false, load_feature_config);
+        MSP.send_message(MSPCodes.MSP_RC, false, false, get_rssi_config);
+    }
+
+    function get_rssi_config() {
+        MSP.send_message(MSPCodes.MSP_RSSI_CONFIG, false, false, load_feature_config);
     }
 
     function load_feature_config() {
@@ -87,6 +91,10 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
         for (var channelIndex = 0; channelIndex < RC.active_channels - 4; channelIndex++) {
             auxAssignment.push("");
         }
+
+        if (typeof RSSI_CONFIG.channel !== 'undefined')  {
+            auxAssignment[RSSI_CONFIG.channel - 5] += "<span class=\"modename\">" + "RSSI" + "</span>";         // Aux channels start at 5 in backend so we have to substract 5
+        }  
 
         for (var modeIndex = 0; modeIndex < AUX_CONFIG.length; modeIndex++) {
 
