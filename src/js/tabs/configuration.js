@@ -196,6 +196,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     load_config();
 
     function process_html() {
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            $('input[name="fpvCamAngleDegrees"]').attr({
+                "max" : 90
+            });
+        }
+        
         self.analyticsChanges = {};
 
         var mixer_list_e = $('select.mixerList');
