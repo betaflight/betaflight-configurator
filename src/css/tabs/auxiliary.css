@@ -9,6 +9,12 @@
     margin-bottom: 10px;
 }
 
+.tab-auxiliary .toolbox {
+    font-weight: bold;
+    color: rgb(105, 99, 99);
+    padding: 10px 5px;
+}
+
 .tab-auxiliary .range .marker, .tab-auxiliary .channel-slider .noUi-connect {
     background: #ffbb00;
     border-radius: 3px;
