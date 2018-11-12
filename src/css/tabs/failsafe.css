@@ -63,7 +63,8 @@
     background-color: #ededed;
     margin-bottom: 0;
     margin-top: 5px;
-    height: 150px;
+    min-height: 90px;
+    padding-bottom: 10px;
 }
 
 .tab-failsafe .radiobuttons {
@@ -248,10 +249,6 @@
     padding-bottom: 7px;
 }
 
-.tab-failsafe .pro1 {
-    height: 90px;
-}
-
 .tab-failsafe .featuresNew {
     width: 100%;
 }
@@ -296,7 +293,7 @@
 .tab-failsafe .switchMode {
     border: 1px solid silver;
     margin-right: 5px;
-    width: 80px;
+    min-width: 80px;
 }
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {

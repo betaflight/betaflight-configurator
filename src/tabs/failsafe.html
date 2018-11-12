@@ -115,6 +115,63 @@
                             </div>
                         </div>
                     </div>
+                    <div class="radioarea pro4 stage2">
+                        <div class="radiobuttons"><input class="procedure" id="gps_rescue" name="group1" type="radio" checked/>
+                            <label for="gps_rescue" i18n="failsafeProcedureItemSelect4"></label>
+                        </div>
+                        <div class="proceduresettings">
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_angle" min="0" max="200" /> <span
+                                    i18n="failsafeGpsRescueItemAngle"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_initial_altitude" min="20" max="100" /> <span
+                                    i18n="failsafeGpsRescueItemInitialAltitude"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_descent_distance" min="30" max="500" /> <span
+                                    i18n="failsafeGpsRescueItemDescentDistance"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_ground_speed" min="0.30" max="30.00" step="0.01"/> <span
+                                    i18n="failsafeGpsRescueItemGroundSpeed"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_throttle_min" min="1000" max="2000" /> <span
+                                    i18n="failsafeGpsRescueItemThrottleMin"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_throttle_max" min="1000" max="2000" /> <span
+                                    i18n="failsafeGpsRescueItemThrottleMax"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_throttle_hover" min="1000" max="2000" /> <span
+                                    i18n="failsafeGpsRescueItemThrottleHover"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_min_sats" min="0" max="50" /> <span
+                                    i18n="failsafeGpsRescueItemMinSats"></span>
+                                </label>
+                            </div>
+                            <div class="selectSwitchMode">
+                                <label>
+                                    <select class="switchMode" name="gps_rescue_sanity_checks">
+                                        <option value="0" i18n="failsafeGpsRescueItemSanityChecksOff"></option>
+                                        <option value="1" i18n="failsafeGpsRescueItemSanityChecksOn"></option>
+                                        <option value="2" i18n="failsafeGpsRescueItemSanityChecksFSOnly"></option>
+                                    </select>
+                                <span i18n="failsafeGpsRescueItemSanityChecks"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -18,7 +18,12 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     }
     
     function load_rxfail_config() {
-        MSP.send_message(MSPCodes.MSP_RXFAIL_CONFIG, false, false, get_box_names);
+        MSP.send_message(MSPCodes.MSP_RXFAIL_CONFIG, false, false, 
+                semver.gte(CONFIG.apiVersion, "1.41.0") ? load_gps_rescue : get_box_names);
+    }
+
+    function load_gps_rescue() {
+        MSP.send_message(MSPCodes.MSP_GPS_RESCUE, false, false, get_box_names);
     }
 
     function get_box_names() {
@@ -238,21 +243,11 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             var element = $(this),
                 checked = element.is(':checked'),
                 id = element.attr('id');
-            switch(id) {
-                case 'drop':
-                    if (checked) {
-                        $('input[name="failsafe_throttle"]').prop("disabled", true);
-                        $('input[name="failsafe_off_delay"]').prop("disabled", true);
-                    }
-                    break;
 
-                case 'land':
-                    if (checked) {
-                        $('input[name="failsafe_throttle"]').prop("disabled", false);
-                        $('input[name="failsafe_off_delay"]').prop("disabled", false);
-                    }
-                    break;
-            }
+            // Disable all the settings
+            $('.proceduresettings :input').attr('disabled',true);
+            // Enable only selected
+            element.parent().parent().find(':input').attr('disabled',false);
         });
 
         switch(FAILSAFE_CONFIG.failsafe_procedure) {
@@ -264,6 +259,11 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 break;
             case 1:
                 element = $('input[id="drop"]');
+                element.prop('checked', true);
+                element.change();
+                break;
+            case 2:
+                element = $('input[id="gps_rescue"]');
                 element.prop('checked', true);
                 element.change();
                 break;
@@ -279,6 +279,31 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             $('input[name="failsafe_kill_switch"]').prop('checked', FAILSAFE_CONFIG.failsafe_switch_mode);
             $('div.failsafe_switch').hide();
         }
+
+        // The GPS Rescue tab is only available for 1.40 or later, and the parameters for 1.41
+        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                // Load GPS Rescue parameters
+                $('input[name="gps_rescue_angle"]').val(GPS_RESCUE.angle);
+                $('input[name="gps_rescue_initial_altitude"]').val(GPS_RESCUE.initialAltitudeM);
+                $('input[name="gps_rescue_descent_distance"]').val(GPS_RESCUE.descentDistanceM);
+                $('input[name="gps_rescue_ground_speed"]').val((GPS_RESCUE.rescueGroundspeed / 100).toFixed(2));
+                $('input[name="gps_rescue_throttle_min"]').val(GPS_RESCUE.throttleMin);
+                $('input[name="gps_rescue_throttle_max"]').val(GPS_RESCUE.throttleMax);
+                $('input[name="gps_rescue_throttle_hover"]').val(GPS_RESCUE.throttleHover);
+                $('input[name="gps_rescue_min_sats"]').val(GPS_RESCUE.minSats);
+                $('select[name="gps_rescue_sanity_checks"]').val(GPS_RESCUE.sanityChecks);
+            } else {
+                // GPS Rescue Parameters not available
+                $('.pro4 > .proceduresettings').hide();
+            }
+
+        } else {
+            // GPS Rescue option not available
+            $('.pro4').hide();
+        }
+
 
 
 
@@ -299,6 +324,8 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 FAILSAFE_CONFIG.failsafe_procedure = 0;
             } else if( $('input[id="drop"]').is(':checked')) {
                 FAILSAFE_CONFIG.failsafe_procedure = 1;
+            } else if( $('input[id="gps_rescue"]').is(':checked')) {
+                FAILSAFE_CONFIG.failsafe_procedure = 2;
             }
 
             if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
@@ -306,6 +333,19 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             }
             else {
                 FAILSAFE_CONFIG.failsafe_switch_mode = $('input[name="failsafe_kill_switch"]').is(':checked') ? 1 : 0;
+            }
+
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                // Load GPS Rescue parameters
+                GPS_RESCUE.angle             = $('input[name="gps_rescue_angle"]').val();
+                GPS_RESCUE.initialAltitudeM  = $('input[name="gps_rescue_initial_altitude"]').val();
+                GPS_RESCUE.descentDistanceM  = $('input[name="gps_rescue_descent_distance"]').val();
+                GPS_RESCUE.rescueGroundspeed = $('input[name="gps_rescue_ground_speed"]').val() * 100;
+                GPS_RESCUE.throttleMin       = $('input[name="gps_rescue_throttle_min"]').val();
+                GPS_RESCUE.throttleMax       = $('input[name="gps_rescue_throttle_max"]').val();
+                GPS_RESCUE.throttleHover     = $('input[name="gps_rescue_throttle_hover"]').val();
+                GPS_RESCUE.minSats           = $('input[name="gps_rescue_min_sats"]').val();
+                GPS_RESCUE.sanityChecks      = $('select[name="gps_rescue_sanity_checks"]').val();
             }
 
             function save_failssafe_config() {
@@ -317,9 +357,14 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             }
 
             function save_feature_config() {
-                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, save_to_eeprom);
+                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, 
+                        semver.gte(CONFIG.apiVersion, "1.41.0") ? save_gps_rescue : save_to_eeprom);
             }
 
+            function save_gps_rescue() {
+                MSP.send_message(MSPCodes.MSP_SET_GPS_RESCUE, mspHelper.crunch(MSPCodes.MSP_SET_GPS_RESCUE), false, save_to_eeprom);
+            }
+            
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
             }
