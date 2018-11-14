@@ -3008,6 +3008,47 @@
     "failsafeProcedureItemSelect2": {
         "message": "Drop"
     },
+    "failsafeProcedureItemSelect4": {
+        "message": "GPS Rescue"
+    },
+
+    "failsafeGpsRescueItemAngle": {
+        "message": "Angle"
+    },
+    "failsafeGpsRescueItemInitialAltitude": {
+        "message": "Initial altitude (meters)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Descent distance (meters)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Ground speed (meters/second)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Throttle minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Throttle maximum"
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Throttle hover"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Minimum satellites"
+    },
+    "failsafeGpsRescueItemSanityChecks": {
+        "message": "Sanity checks"
+    },
+    "failsafeGpsRescueItemSanityChecksOff": {
+        "message": "Off"
+    },
+    "failsafeGpsRescueItemSanityChecksOn": {
+        "message": "On"
+    },
+    "failsafeGpsRescueItemSanityChecksFSOnly": {
+        "message": "Failsafe only"
+    },
+
     "failsafeKillSwitchItem": {
         "message": "Failsafe Kill Switch (setup Failsafe in Modes Tab)"
     },

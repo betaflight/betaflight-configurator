@@ -50,6 +50,7 @@ var RC_DEADBAND_CONFIG;
 var SENSOR_ALIGNMENT;
 var RX_CONFIG;
 var FAILSAFE_CONFIG;
+var GPS_RESCUE;
 var RXFAIL_CONFIG;
 var PID_ADVANCED_CONFIG;
 var FILTER_CONFIG;
@@ -420,7 +421,19 @@ var FC = {
             failsafe_throttle:              0,
             failsafe_switch_mode:           0,
             failsafe_throttle_low_delay:    0,
-            failsafe_procedure:             0.
+            failsafe_procedure:             0,
+        };
+
+        GPS_RESCUE = {
+            angle:                          0,
+            initialAltitudeM:               0,
+            descentDistanceM:               0,
+            rescueGroundspeed:              0,
+            throttleMin:                    0,
+            throttleMax:                    0,
+            throttleHover:                  0,
+            sanityChecks:                   0,
+            minSats:                        0,
         };
 
         RXFAIL_CONFIG = [];

@@ -382,6 +382,17 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     GPS_CONFIG.auto_baud = data.readU8();
                 }
                 break;
+            case MSPCodes.MSP_GPS_RESCUE:
+                GPS_RESCUE.angle             = data.readU16();
+                GPS_RESCUE.initialAltitudeM  = data.readU16();
+                GPS_RESCUE.descentDistanceM  = data.readU16();
+                GPS_RESCUE.rescueGroundspeed = data.readU16();
+                GPS_RESCUE.throttleMin       = data.readU16();
+                GPS_RESCUE.throttleMax       = data.readU16();
+                GPS_RESCUE.throttleHover     = data.readU16();
+                GPS_RESCUE.sanityChecks      = data.readU8();
+                GPS_RESCUE.minSats           = data.readU8();
+                break;
             case MSPCodes.MSP_RSSI_CONFIG:
                 RSSI_CONFIG.channel = data.readU8();
                 break;
@@ -1390,6 +1401,17 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push8(GPS_CONFIG.auto_config)
                     .push8(GPS_CONFIG.auto_baud);
             }
+            break;
+        case MSPCodes.MSP_SET_GPS_RESCUE:
+            buffer.push16(GPS_RESCUE.angle)
+                  .push16(GPS_RESCUE.initialAltitudeM)
+                  .push16(GPS_RESCUE.descentDistanceM)
+                  .push16(GPS_RESCUE.rescueGroundspeed)
+                  .push16(GPS_RESCUE.throttleMin)
+                  .push16(GPS_RESCUE.throttleMax)
+                  .push16(GPS_RESCUE.throttleHover)
+                  .push8(GPS_RESCUE.sanityChecks)
+                  .push8(GPS_RESCUE.minSats);
             break;
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
             buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));
