@@ -107,6 +107,16 @@ TABS.cli.initialize = function (callback) {
             $('.tab-cli .window .wrapper').empty();
         });
 
+        $('.tab-cli .copy').click(function() {
+            try {
+                let gui = require('nw.gui'),
+                    clipboard = gui.Clipboard.get();
+                clipboard.set(self.outputHistory, "text");
+            } catch (ex) {
+                console.warn(ex);
+            }
+        });
+
         // Tab key detection must be on keydown,
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
         textarea.keydown(function (event) {
