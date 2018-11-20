@@ -89,7 +89,7 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 
         var inputValue = this.rcCommand(rcData, rcRate, deadband);
         var maxRc = 500 * rcRate;
-        
+        var absRc = Math.abs(inputValue) / maxRc;
         var expoPower;
         var rcRateConstant;
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
@@ -101,14 +101,13 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
         }
 
         if (rcExpo > 0) {
-            var absRc = Math.abs(inputValue) / maxRc;
             inputValue =  inputValue * Math.pow(absRc, expoPower) * rcExpo + inputValue * (1-rcExpo);
         }
 
         var rcInput = inputValue / maxRc;
 
         if (superExpoActive) {
-            var rcFactor = 1 / this.constrain(1 - Math.abs(rcInput) * rate, 0.01, 1);
+            var rcFactor = 1 / this.constrain(1 - absRc * rate, 0.01, 1);
             angleRate = rcRateConstant * rcRate * rcInput; // 200 should be variable checked on version (older versions it's 205,9)
             angleRate = angleRate * rcFactor;
         } else {
