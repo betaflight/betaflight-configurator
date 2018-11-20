@@ -173,6 +173,42 @@ TABS.cli.initialize = function (callback, nwGui) {
         } else {
             $('.tab-cli .copy').hide();
         }
+        
+        $('.tab-cli .load').click(function() {
+            var suffix = 'txt',
+                accepts = [{
+                    description: suffix.toUpperCase() + ' files', extensions: [suffix],
+                }];
+
+            chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(entry) {
+                if (chrome.runtime.lastError) {
+                    console.error(chrome.runtime.lastError.message);
+                    return;
+                }
+
+                if (!entry) {
+                    console.log('No file selected');
+                    return;
+                }
+
+                function setCommands(result) {
+                    let notice = i18n.getMessage("cliCommandsLoadedNotice", {
+                        filename: entry.name,
+                    });
+                    textarea.val(result + "\n" + "# " + notice);
+                    // scroll to the last line to show confirmation notice
+                    textarea.scrollTop(textarea[0].scrollHeight);
+                }
+
+                entry.file((file) => {
+                    let reader = new FileReader();
+                    reader.onload = 
+                        () => setCommands(reader.result);
+                    reader.onerror = () => console.error(reader.error);
+                    reader.readAsText(file);
+                });
+            });
+        });
 
         // Tab key detection must be on keydown,
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
