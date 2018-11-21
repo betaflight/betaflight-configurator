@@ -41,6 +41,35 @@ function getCliCommand(command, cliBuffer) {
     return commandWithBackSpaces(command, buffer, noOfCharsToDelete);
 }
 
+function copyToClipboard(text) {
+    function onCopySuccessful() {
+        writeLineToOutput("* " + i18n.getMessage("cliCopySuccessful"));
+    }
+
+    function onCopyFailed(ex) {
+        console.warn(ex);
+    }
+
+    function nwCopy(text) {
+        try {
+            let gui = require('nw.gui'),
+                clipboard = gui.Clipboard.get();
+            clipboard.set(text, "text");
+            onCopySuccessful();
+        } catch (ex) {
+            onCopyFailed(ex);
+        }
+    }
+
+    function webCopy(text) {
+        navigator.clipboard.writeText(text)
+            .then(onCopySuccessful, onCopyFailed);
+    }
+
+    let copyFunc = !navigator.clipboard ? nwCopy : webCopy;
+    copyFunc(text);
+}
+
 TABS.cli.initialize = function (callback) {
     var self = this;
 
@@ -108,13 +137,7 @@ TABS.cli.initialize = function (callback) {
         });
 
         $('.tab-cli .copy').click(function() {
-            try {
-                let gui = require('nw.gui'),
-                    clipboard = gui.Clipboard.get();
-                clipboard.set(self.outputHistory, "text");
-            } catch (ex) {
-                console.warn(ex);
-            }
+            copyToClipboard(self.outputHistory);
         });
 
         // Tab key detection must be on keydown,
