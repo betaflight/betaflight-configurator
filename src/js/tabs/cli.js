@@ -316,6 +316,10 @@ TABS.cli.read = function (readInfo) {
     if (!CONFIGURATOR.cliValid && validateText.indexOf('CLI') !== -1) {
         GUI.log(i18n.getMessage('cliEnter'));
         CONFIGURATOR.cliValid = true;
+        // begin output history with the prompt (last line of welcome message)
+        // this is to match the content of the history with what the user sees on this tab
+        const lastLine = validateText.split("\n").pop();
+        this.outputHistory = lastLine;
         validateText = "";
     }
 
