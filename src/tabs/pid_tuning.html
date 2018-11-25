@@ -582,6 +582,39 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="spacer_left topspacer throttle_limit">
+                        <table class="cf">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div>
+                                            <div i18n="pidTuningThrottleLimitType" style="float:left;"></div>
+                                            <div class="helpicon cf_tip" i18n_title="pidTuningThrottleLimitTypeTip"></div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div>
+                                            <div i18n="pidTuningThrottleLimitPercent" style="float:left;"></div>
+                                            <div class="helpicon cf_tip" i18n_title="pidTuningThrottleLimitPercentTip"></div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="height: 35px;">
+                                    <td>
+                                        <select id="throttleLimitType">
+                                            <option i18n="pidTuningThrottleLimitTypeOff" value="0">
+                                            <option i18n="pidTuningThrottleLimitTypeScale" value="1">
+                                            <option i18n="pidTuningThrottleLimitTypeClip" value="2">
+                                        </select>
+
+                                    </td>
+                                    <td><input type="number" name="throttleLimitPercent" step="1" min="25" max="100" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
