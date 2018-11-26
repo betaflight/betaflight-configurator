@@ -1440,6 +1440,27 @@
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
     },
+    "pidTuningThrottleLimitType": {
+        "message": "Throttle Limit"
+    },
+    "pidTuningThrottleLimitPercent": {
+        "message": "Throttle Limit %"
+    },
+    "pidTuningThrottleLimitTypeOff": {
+        "message": "OFF"
+    },
+    "pidTuningThrottleLimitTypeScale": {
+        "message": "SCALE"
+    },
+    "pidTuningThrottleLimitTypeClip": {
+        "message": "CLIP"
+    },
+    "pidTuningThrottleLimitTypeTip": {
+        "message": "Select the type of throttle limiting. <b>OFF</b> disables the feature, <b>SCALE</b> will transform the throttle range from 0 to the selected percentage using the full stick travel, <b>CLIP</b> will set a max throttle percentage and stick travel above that will have no additional effect"
+    },
+    "pidTuningThrottleLimitPercentTip": {
+        "message": "Set the desired throttle limit percentage. Setting to 100% disables the feature."
+    },
     "pidTuningFilter": {
         "message": "Filter"
     },

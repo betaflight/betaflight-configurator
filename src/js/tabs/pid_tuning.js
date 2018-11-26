@@ -308,6 +308,13 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.antigravity  table td:first-child').hide();
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            $('select[id="throttleLimitType"]').val(RC_tuning.throttleLimitType);
+            $('.throttle_limit input[name="throttleLimitPercent"]').val(RC_tuning.throttleLimitPercent);
+        } else {
+            $('.throttle_limit').hide();
+        }
+
         $('input[id="gyroNotch1Enabled"]').change(function() {
             var checked = $(this).is(':checked');
             var hz = FILTER_CONFIG.gyro_notch_hz > 0 ? FILTER_CONFIG.gyro_notch_hz : DEFAULT.gyro_notch_hz;
@@ -520,6 +527,12 @@ TABS.pid_tuning.initialize = function (callback) {
 
             ADVANCED_TUNING.antiGravityMode = $('select[id="antiGravityMode"]').val();
         }
+
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            RC_tuning.throttleLimitType = $('select[id="throttleLimitType"]').val();
+            RC_tuning.throttleLimitPercent = parseInt($('.throttle_limit input[name="throttleLimitPercent"]').val());
+        }
+
     }
 
     function showAllPids() {
