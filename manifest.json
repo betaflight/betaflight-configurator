@@ -34,7 +34,8 @@
         "notifications",
         "alwaysOnTopWindows",
         {"usbDevices": [
-            {"vendorId": 1155, "productId": 57105}
+            {"vendorId": 1155, "productId": 57105},
+            {"vendorId": 10473, "productId": 393}
         ]},
         "webview",
         "unlimitedStorage"
