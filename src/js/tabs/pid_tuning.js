@@ -215,7 +215,7 @@ TABS.pid_tuning.initialize = function (callback) {
             var absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
             var absoluteControlGainRangeElement = $('input[name="absoluteControlGain-range"]');
 			
-			//Use 'input' event for coupled controls to allow synchronized update
+            //Use 'input' event for coupled controls to allow synchronized update
             absoluteControlGainNumberElement.on('input', function () {
                 absoluteControlGainRangeElement.val($(this).val());
             });
@@ -228,7 +228,7 @@ TABS.pid_tuning.initialize = function (callback) {
             var throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
             var throttleBoostRangeElement = $('input[name="throttleBoost-range"]');
 			
-			//Use 'input' event for coupled controls to allow synchronized update
+            //Use 'input' event for coupled controls to allow synchronized update
             throttleBoostNumberElement.on('input', function () {
                 throttleBoostRangeElement.val($(this).val());
             });
@@ -241,7 +241,7 @@ TABS.pid_tuning.initialize = function (callback) {
             var acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
             var acroTrainerAngleLimitRangeElement = $('input[name="acroTrainerAngleLimit-range"]');
 			
-			//Use 'input' event for coupled controls to allow synchronized update
+            //Use 'input' event for coupled controls to allow synchronized update
             acroTrainerAngleLimitNumberElement.on('input', function () {
                 acroTrainerAngleLimitRangeElement.val($(this).val());
             });
@@ -264,7 +264,7 @@ TABS.pid_tuning.initialize = function (callback) {
             feedforwardTransitionNumberElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
             feedforwardTransitionRangeElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
 			
-			//Use 'input' event for coupled controls to allow synchronized update
+            //Use 'input' event for coupled controls to allow synchronized update
             feedforwardTransitionNumberElement.on('input', function () {
                 feedforwardTransitionRangeElement.val($(this).val());
             });
@@ -829,7 +829,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }
             checkUpdateDtermTransitionWarning(dtermTransitionNumberElement.val());
 			
-			//Use 'input' event for coupled controls to allow synchronized update
+            //Use 'input' event for coupled controls to allow synchronized update
             dtermTransitionNumberElement.on('input', function () {
                 checkUpdateDtermTransitionWarning($(this).val());
                 dtermTransitionRangeElement.val($(this).val());
@@ -851,7 +851,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 }
             }
 			
-			//Use 'input' event for coupled controls to allow synchronized update
+            //Use 'input' event for coupled controls to allow synchronized update
             dtermNumberElement.on('input', function () {
                 var value = $(this).val();
                 adjustRangeElement(value);
