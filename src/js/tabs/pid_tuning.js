@@ -135,7 +135,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('input[name="dtermSetpoint-number"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100);
             $('input[name="dtermSetpoint-range"]').val(ADVANCED_TUNING.dtermSetpointWeight / 100)
-                                                  .change(); // trigger adjustRangeElement()
+                                                  .trigger('input'); // trigger adjustRangeElement()
         } else {
             $('.pid_filter .newFilter').hide();
         }
@@ -214,38 +214,41 @@ TABS.pid_tuning.initialize = function (callback) {
             // Absolute Control
             var absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
             var absoluteControlGainRangeElement = $('input[name="absoluteControlGain-range"]');
-
-            absoluteControlGainNumberElement.change(function () {
+			
+            //Use 'input' event for coupled controls to allow synchronized update
+            absoluteControlGainNumberElement.on('input', function () {
                 absoluteControlGainRangeElement.val($(this).val());
             });
-            absoluteControlGainRangeElement.change(function () {
+            absoluteControlGainRangeElement.on('input', function () {
                 absoluteControlGainNumberElement.val($(this).val());
             });
-            absoluteControlGainNumberElement.val(ADVANCED_TUNING.absoluteControlGain).change();
+            absoluteControlGainNumberElement.val(ADVANCED_TUNING.absoluteControlGain).trigger('input');
 
             // Throttle Boost
             var throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
             var throttleBoostRangeElement = $('input[name="throttleBoost-range"]');
-
-            throttleBoostNumberElement.change(function () {
+			
+            //Use 'input' event for coupled controls to allow synchronized update
+            throttleBoostNumberElement.on('input', function () {
                 throttleBoostRangeElement.val($(this).val());
             });
-            throttleBoostRangeElement.change(function () {
+            throttleBoostRangeElement.on('input', function () {
                 throttleBoostNumberElement.val($(this).val());
             });
-            throttleBoostNumberElement.val(ADVANCED_TUNING.throttleBoost).change();
+            throttleBoostNumberElement.val(ADVANCED_TUNING.throttleBoost).trigger('input');
 
             // Acro Trainer
             var acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
             var acroTrainerAngleLimitRangeElement = $('input[name="acroTrainerAngleLimit-range"]');
-
-            acroTrainerAngleLimitNumberElement.change(function () {
+			
+            //Use 'input' event for coupled controls to allow synchronized update
+            acroTrainerAngleLimitNumberElement.on('input', function () {
                 acroTrainerAngleLimitRangeElement.val($(this).val());
             });
-            acroTrainerAngleLimitRangeElement.change(function () {
+            acroTrainerAngleLimitRangeElement.on('input', function () {
                 acroTrainerAngleLimitNumberElement.val($(this).val());
             });
-            acroTrainerAngleLimitNumberElement.val(ADVANCED_TUNING.acroTrainerAngleLimit).change();
+            acroTrainerAngleLimitNumberElement.val(ADVANCED_TUNING.acroTrainerAngleLimit).trigger('input');
 
             // Yaw D
             $('.pid_tuning .YAW input[name="d"]').val(PIDs[2][2]); // PID Yaw D
@@ -260,11 +263,12 @@ TABS.pid_tuning.initialize = function (callback) {
 
             feedforwardTransitionNumberElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
             feedforwardTransitionRangeElement.val(ADVANCED_TUNING.feedforwardTransition / 100);
-
-            feedforwardTransitionNumberElement.change(function () {
+			
+            //Use 'input' event for coupled controls to allow synchronized update
+            feedforwardTransitionNumberElement.on('input', function () {
                 feedforwardTransitionRangeElement.val($(this).val());
             });
-            feedforwardTransitionRangeElement.change(function () {
+            feedforwardTransitionRangeElement.on('input', function () {
                 feedforwardTransitionNumberElement.val($(this).val());
             });
 
@@ -837,12 +841,13 @@ TABS.pid_tuning.initialize = function (callback) {
                 }
             }
             checkUpdateDtermTransitionWarning(dtermTransitionNumberElement.val());
-
-            dtermTransitionNumberElement.change(function () {
+			
+            //Use 'input' event for coupled controls to allow synchronized update
+            dtermTransitionNumberElement.on('input', function () {
                 checkUpdateDtermTransitionWarning($(this).val());
                 dtermTransitionRangeElement.val($(this).val());
             });
-            dtermTransitionRangeElement.change(function () {
+            dtermTransitionRangeElement.on('input', function () {
                 checkUpdateDtermTransitionWarning($(this).val());
                 dtermTransitionNumberElement.val($(this).val());
             });
@@ -858,13 +863,14 @@ TABS.pid_tuning.initialize = function (callback) {
                     dtermRangeElement.attr('max', self.SETPOINT_WEIGHT_RANGE_LOW);
                 }
             }
-
-            dtermNumberElement.change(function () {
+			
+            //Use 'input' event for coupled controls to allow synchronized update
+            dtermNumberElement.on('input', function () {
                 var value = $(this).val();
                 adjustRangeElement(value);
                 dtermRangeElement.val(value);
             });
-            dtermRangeElement.change(function () {
+            dtermRangeElement.on('input', function () {
                 var value = $(this).val();
                 adjustRangeElement(value);
                 dtermNumberElement.val(value);
