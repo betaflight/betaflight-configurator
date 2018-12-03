@@ -1783,6 +1783,13 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
                  * figure out the reply format:
                  */
                 if (dataCompressionType == 0) {
+
+                    var offset = response.data.byteOffset + headerSize;
+                    var remainingDataSize = response.data.byteLength - offset;
+                    if (dataSize > remainingDataSize) {
+                        console.log('Data size mismatch, expected: ' + dataSize + ', remaining bytes: ' + remainingDataSize);
+                        dataSize = remainingDataSize;
+                    }
                     onDataCallback(address, new DataView(response.data.buffer, response.data.byteOffset + headerSize), dataSize);
                 } else if (dataCompressionType == 1) {
                     // Read compressed char count to avoid decoding stray bit sequences as bytes
