@@ -395,10 +395,9 @@ TABS.onboard_logging.initialize = function (callback) {
         var totalTime = (new Date().getTime() - startTime) / 1000;
         console.log('Received ' + totalBytes + ' bytes in ' + totalTime.toFixed(2) + 's ('
             + (totalBytes / totalTime / 1024).toFixed(2) + 'kB / s) with block size ' + self.blockSize + '.');
-        if (totalBytesCompressed) {
+        if (!isNaN(totalBytesCompressed)) {
             console.log('Compressed into', totalBytesCompressed, 'bytes with mean compression factor of', totalBytes / totalBytesCompressed);
         }
-
 
         $(".dataflash-saving").addClass("done");
     }
@@ -440,7 +439,11 @@ TABS.onboard_logging.initialize = function (callback) {
                             // Did we receive any data?
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
-                                totalBytesCompressed += bytesCompressed;
+                                if (isNaN(bytesCompressed) || isNaN(totalBytesCompressed)) {
+                                    totalBytesCompressed = null;
+                                } else {
+                                    totalBytesCompressed += bytesCompressed;
+                                }
                                 
                                 $(".dataflash-saving progress").attr("value", nextAddress / maxBytes * 100);
 
