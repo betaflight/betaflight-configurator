@@ -3564,6 +3564,12 @@
     "osdDescElementFlipArrow": {
         "message": "Arrow showing which side motors are up in turtle mode"
     },
+    "osdDescElementLinkQuality": {
+        "message": "Alternative indicator for 'link quality' based on frame loss - use with caution"
+    },
+    "osdDescElementTotalDist": {
+        "message": "Total distance flown during this flight."
+    },
     "osdDescElementTimer1" : {
         "message": "Shows the value of timer 1"
     },
@@ -3584,6 +3590,9 @@
     },
     "osdDescGForce": {
         "message": "Shows how much G-Force the craft is experiencing"
+    },
+    "osdDescElementMotorDiag": {
+        "message": "Shows a graph of the output of each motor"
     },
     "osdDescElementLogStatus": {
         "message": "Blackbox number and warnings"
