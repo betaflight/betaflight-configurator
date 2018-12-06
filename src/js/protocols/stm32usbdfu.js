@@ -64,6 +64,7 @@ var STM32DFU_protocol = function () {
 
     this.chipInfo = null; // information about chip's memory
     this.flash_layout = { 'start_address': 0, 'total_size': 0, 'sectors': []};
+    this.transferSize = 2048; // Default USB DFU transfer size for F3,F4 and F7
 };
 
 STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) {
@@ -558,18 +559,16 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                             (self.available_flash_size / 1024.0).toFixed(1)]));
                         self.upload_procedure(99);
                     } else {
-                        self.clearStatus(function () {
-                            self.upload_procedure(1);
+                        self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
+                            self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                            console.log('Using transfer size: ' + self.transferSize);
+                            self.clearStatus(function () {
+                                self.upload_procedure(1);
+                            });
                         });
                     }
                 }
             });
-
-            self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
-                self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
-                console.log('Using transfer size: ' + self.transferSize);
-            });
-
             break;
         case 1:
 		if (typeof self.chipInfo.option_bytes === "undefined") {
