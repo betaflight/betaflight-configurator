@@ -287,6 +287,38 @@ STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callb
     });
 }
 
+STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, callback) {
+    var self = this;
+    chrome.usb.controlTransfer(this.handle, {
+        'direction':    'in',
+        'recipient':    'interface',
+        'requestType':  'standard',
+        'request':      6,
+        'value':        0x2100,
+        'index':        0,
+        'length':       255
+    }, function (result) {
+        if(self.checkChromeError()) {
+            console.log('USB transfer failed! ' + result.resultCode);
+            callback({}, result.resultCode);
+            return;
+        }
+
+        var buf = new Uint8Array(result.data);
+
+        var descriptor = {
+            'bLength':            buf[0],
+            'bDescriptorType':    buf[1],
+            'bmAttributes':       buf[2],
+            'wDetachTimeOut':     (buf[4] << 8)|buf[3],
+            'wTransferSize':      (buf[6] << 8)|buf[5],
+            'bcdDFUVersion':      buf[7]
+        };
+
+        callback(descriptor, result.resultCode);
+    });
+}
+
 STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
     var self = this;
 
@@ -512,7 +544,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         console.log('Failed to detect internal flash');
                         self.upload_procedure(99);
 		    }
-		
+
 	            self.chipInfo = chipInfo;
 
                     self.flash_layout = chipInfo.internal_flash;
@@ -532,6 +564,12 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     }
                 }
             });
+
+            self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
+                self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                console.log('Using transfer size: ' + self.transferSize);
+            });
+
             break;
         case 1:
 		if (typeof self.chipInfo.option_bytes === "undefined") {
@@ -764,7 +802,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
             var write = function () {
                 if (bytes_flashed < self.hex.data[flashing_block].bytes) {
-                    var bytes_to_write = ((bytes_flashed + 2048) <= self.hex.data[flashing_block].bytes) ? 2048 : (self.hex.data[flashing_block].bytes - bytes_flashed);
+                    var bytes_to_write = ((bytes_flashed + self.transferSize) <= self.hex.data[flashing_block].bytes) ? self.transferSize : (self.hex.data[flashing_block].bytes - bytes_flashed);
 
                     var data_to_flash = self.hex.data[flashing_block].data.slice(bytes_flashed, bytes_flashed + bytes_to_write);
 
@@ -848,7 +886,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
             var read = function () {
                 if (bytes_verified < self.hex.data[reading_block].bytes) {
-                    var bytes_to_read = ((bytes_verified + 2048) <= self.hex.data[reading_block].bytes) ? 2048 : (self.hex.data[reading_block].bytes - bytes_verified);
+                    var bytes_to_read = ((bytes_verified + self.transferSize) <= self.hex.data[reading_block].bytes) ? self.transferSize : (self.hex.data[reading_block].bytes - bytes_verified);
 
                     self.controlTransfer('in', self.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, function (data, code) {
                         for (var i = 0; i < data.length; i++) {
