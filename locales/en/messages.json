@@ -3655,6 +3655,12 @@
     "osdDescStatEscRpm": {
         "message": "Max ESC RPM"
     },
+    "osdDescStatMinLinkQuality": {
+        "message": "Minimum of the alternative indicator for 'link quality' based on frame loss"
+    },
+    "osdDescStatTotalDistance": {
+        "message": "Total distance travelled during the flight"
+    },
     
 
     "osdTimerSource": {

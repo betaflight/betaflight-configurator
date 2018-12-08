@@ -802,7 +802,7 @@ OSD.constants = {
         preview: '1.0G'
     },
     MOTOR_DIAG: {
-        name: 'MOTOR_DIAG',
+        name: 'MOTOR_DIAGNOSTICS',
         desc: 'osdDescElementMotorDiag',
         default_position: -1,
         draw_order: 325,
@@ -837,7 +837,7 @@ OSD.constants = {
       preview: '8'
     },
     TOTAL_DIST: {
-      name: 'TOTAL_DIST',
+      name: 'TOTAL_DISTANCE',
       desc: 'osdDescElementTotalDist',
       default_position: -1,
       draw_order: 360,
@@ -930,6 +930,14 @@ OSD.constants = {
     MAX_ESC_RPM: {
       name: 'MAX_ESC_RPM',
       desc: 'osdDescStatEscRpm'
+    },
+    MIN_LINK_QUALITY: {
+      name: 'MIN_LINK_QUALITY',
+      desc: 'osdDescStatMinLinkQuality'
+    },
+    TOTAL_DISTANCE: {
+      name: 'TOTAL_DISTANCE',
+      desc: 'osdDescStatTotalDistance'
     }
   },
   ALL_WARNINGS: {
@@ -1167,8 +1175,10 @@ OSD.chooseFields = function () {
     ];
     if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
       OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-        F.MAX_ESC_TEMP,
-        F.MAX_ESC_RPM
+          F.MAX_ESC_TEMP,
+          F.MAX_ESC_RPM,
+          F.MIN_LINK_QUALITY,
+          F.TOTAL_DISTANCE
       ]);
     }
   }
