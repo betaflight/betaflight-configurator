@@ -3567,8 +3567,8 @@
     "osdDescElementLinkQuality": {
         "message": "Alternative indicator for 'link quality' based on frame loss - use with caution"
     },
-    "osdDescElementTotalDist": {
-        "message": "Total distance flown during this flight."
+    "osdDescElementFlightDist": {
+        "message": "Distance flown during this flight."
     },
     "osdDescElementTimer1" : {
         "message": "Shows the value of timer 1"
@@ -3658,7 +3658,7 @@
     "osdDescStatMinLinkQuality": {
         "message": "Minimum of the alternative indicator for 'link quality' based on frame loss"
     },
-    "osdDescStatTotalDistance": {
+    "osdDescStatFlightDistance": {
         "message": "Total distance travelled during the flight"
     },
     

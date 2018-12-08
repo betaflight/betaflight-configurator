@@ -836,9 +836,9 @@ OSD.constants = {
       positionable: true,
       preview: '8'
     },
-    TOTAL_DIST: {
-      name: 'TOTAL_DISTANCE',
-      desc: 'osdDescElementTotalDist',
+    FLIGHT_DIST: {
+      name: 'FLIGHT_DISTANCE',
+      desc: 'osdDescElementFlightDist',
       default_position: -1,
       draw_order: 360,
       positionable: true,
@@ -935,9 +935,9 @@ OSD.constants = {
       name: 'MIN_LINK_QUALITY',
       desc: 'osdDescStatMinLinkQuality'
     },
-    TOTAL_DISTANCE: {
-      name: 'TOTAL_DISTANCE',
-      desc: 'osdDescStatTotalDistance'
+    FLIGHT_DISTANCE: {
+      name: 'FLIGHT_DISTANCE',
+      desc: 'osdDescStatFlightDistance'
     }
   },
   ALL_WARNINGS: {
@@ -1090,7 +1090,7 @@ OSD.chooseFields = function () {
                               F.LOG_STATUS,
                               F.FLIP_ARROW,
                               F.LINK_QUALITY,
-                              F.TOTAL_DIST,
+                              F.FLIGHT_DIST,
                           ]);
                       }
                   }
@@ -1178,7 +1178,7 @@ OSD.chooseFields = function () {
           F.MAX_ESC_TEMP,
           F.MAX_ESC_RPM,
           F.MIN_LINK_QUALITY,
-          F.TOTAL_DISTANCE
+          F.FLIGHT_DISTANCE
       ]);
     }
   }
