@@ -801,6 +801,17 @@ OSD.constants = {
         positionable: true,
         preview: '1.0G'
     },
+    MOTOR_DIAG: {
+        name: 'MOTOR_DIAGNOSTICS',
+        desc: 'osdDescElementMotorDiag',
+        default_position: -1,
+        draw_order: 325,
+        positionable: true,
+        preview: FONT.symbol(0x84)
+            + FONT.symbol(0x85)
+            + FONT.symbol(0x84)
+            + FONT.symbol(0x83)
+    },
     LOG_STATUS: {
         name: 'LOG_STATUS',
         desc: 'osdDescElementLogStatus',
@@ -816,6 +827,24 @@ OSD.constants = {
       draw_order: 340,
       positionable: true,
       preview: FONT.symbol(SYM.ARROW_EAST)
+    },
+    LINK_QUALITY: {
+      name: 'LINK_QUALITY',
+      desc: 'osdDescElementLinkQuality',
+      default_position: -1,
+      draw_order: 350,
+      positionable: true,
+      preview: '8'
+    },
+    FLIGHT_DIST: {
+      name: 'FLIGHT_DISTANCE',
+      desc: 'osdDescElementFlightDist',
+      default_position: -1,
+      draw_order: 360,
+      positionable: true,
+      preview: function(osd_data) {
+          return '653' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+      }
     },
   },
   UNKNOWN_DISPLAY_FIELD: {
@@ -901,6 +930,14 @@ OSD.constants = {
     MAX_ESC_RPM: {
       name: 'MAX_ESC_RPM',
       desc: 'osdDescStatEscRpm'
+    },
+    MIN_LINK_QUALITY: {
+      name: 'MIN_LINK_QUALITY',
+      desc: 'osdDescStatMinLinkQuality'
+    },
+    FLIGHT_DISTANCE: {
+      name: 'FLIGHT_DISTANCE',
+      desc: 'osdDescStatFlightDistance'
     }
   },
   ALL_WARNINGS: {
@@ -1046,13 +1083,16 @@ OSD.chooseFields = function () {
                   if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
                       OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                           F.G_FORCE,
-                          F.LOG_STATUS,
-                        ]);
-                    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-                        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
-                            F.FLIP_ARROW,
+                      ]);
+                      if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                          OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                              F.MOTOR_DIAG,
+                              F.LOG_STATUS,
+                              F.FLIP_ARROW,
+                              F.LINK_QUALITY,
+                              F.FLIGHT_DIST,
                           ]);
-                    }
+                      }
                   }
                 }
               }
@@ -1135,8 +1175,10 @@ OSD.chooseFields = function () {
     ];
     if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
       OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-        F.MAX_ESC_TEMP,
-        F.MAX_ESC_RPM
+          F.MAX_ESC_TEMP,
+          F.MAX_ESC_RPM,
+          F.MIN_LINK_QUALITY,
+          F.FLIGHT_DISTANCE
       ]);
     }
   }
