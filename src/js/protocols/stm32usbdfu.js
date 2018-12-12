@@ -197,7 +197,7 @@ STM32DFU_protocol.prototype.getString = function (index, callback) {
         'length':       255 // max length to retreive
     }, function (result) {
         if(self.checkChromeError()) {
-            console.log('USB transfer failed! ' + result.resultCode);
+            console.log('USB getString failed! ' + result.resultCode);
             callback("", result.resultCode);
             return;
         }
@@ -266,7 +266,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callb
         'length':       18 + _interface * 9
     }, function (result) {
         if(self.checkChromeError()) {
-            console.log('USB transfer failed! ' + result.resultCode);
+            console.log('USB getInterfaceDescriptor failed! ' + result.resultCode);
             callback({}, result.resultCode);
             return;
         }
@@ -300,7 +300,7 @@ STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, call
         'length':       255
     }, function (result) {
         if(self.checkChromeError()) {
-            console.log('USB transfer failed! ' + result.resultCode);
+            console.log('USB getFunctionalDescriptor failed! ' + result.resultCode);
             callback({}, result.resultCode);
             return;
         }
@@ -425,7 +425,7 @@ STM32DFU_protocol.prototype.controlTransfer = function (direction, request, valu
             'timeout':      timeout
         }, function (result) {
             if(self.checkChromeError()) {
-                console.log('USB transfer failed!');
+                console.log('USB controlTransfer IN failed for request ' + request + '!');
             }
             if (result.resultCode) console.log('USB transfer result code: ' + result.resultCode);
 
@@ -453,7 +453,7 @@ STM32DFU_protocol.prototype.controlTransfer = function (direction, request, valu
             'timeout':      timeout
         }, function (result) {
             if(self.checkChromeError()) {
-                console.log('USB transfer failed!');
+                console.log('USB controlTransfer OUT failed for request ' + request + '!');
             }
             if (result.resultCode) console.log('USB transfer result code: ' + result.resultCode);
 
