@@ -70,7 +70,7 @@ TABS.setup.initialize = function (callback) {
 
             $('a.rebootBootloader').click(function () {
                 var buffer = [];
-                buffer.push(1);
+                buffer.push(mspHelper.REBOOT_TYPES.BOOTLOADER);
                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
             });
         } else {
