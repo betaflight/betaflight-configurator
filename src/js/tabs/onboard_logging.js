@@ -156,7 +156,17 @@ TABS.onboard_logging.initialize = function (callback) {
                          analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
 
                         var buffer = [];
-                        buffer.push(2);
+                        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                            if (GUI.operating_system === "Linux") {
+                                // Reboot into MSC using UTC time offset instead of user timezone
+                                // Linux seems to expect that the FAT file system timestamps are UTC based
+                                buffer.push(mspHelper.REBOOT_TYPES.MSC_UTC);
+                            } else {
+                                buffer.push(mspHelper.REBOOT_TYPES.MSC);
+                            }
+                        } else {
+                            buffer.push(mspHelper.REBOOT_TYPES.MSC);
+                        }
                         MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
                     });
                 }
