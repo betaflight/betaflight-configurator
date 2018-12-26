@@ -181,6 +181,12 @@ TABS.power.initialize = function (callback) {
         var element = template.clone();
         destination.append(element);
 
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            $('input[name="mincellvoltage"]').prop('step','0.01');
+            $('input[name="maxcellvoltage"]').prop('step','0.01');
+            $('input[name="warningcellvoltage"]').prop('step','0.01');
+        }
+
         $('input[name="mincellvoltage"]').val(BATTERY_CONFIG.vbatmincellvoltage);
         $('input[name="maxcellvoltage"]').val(BATTERY_CONFIG.vbatmaxcellvoltage);
         $('input[name="warningcellvoltage"]').val(BATTERY_CONFIG.vbatwarningcellvoltage);
@@ -247,7 +253,11 @@ TABS.power.initialize = function (callback) {
                 for (var i = 0; i < VOLTAGE_METERS.length; i++) {
                     var elementName = '#voltage-meter-' + i + ' .value';
                     var element = $(elementName);
-                    element.text(i18n.getMessage('powerVoltageValue', [VOLTAGE_METERS[i].voltage]));
+                    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                        element.text(i18n.getMessage('powerVoltageValue', [ANALOG.voltage]));
+				    } else {
+                        element.text(i18n.getMessage('powerVoltageValue', [VOLTAGE_METERS[i].voltage]));
+                    }
                 }
             });
 

@@ -757,6 +757,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.batterymetertype').hide();
             }
 
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                $('input[name="mincellvoltage"]').prop('step','0.01');
+                $('input[name="maxcellvoltage"]').prop('step','0.01');
+                $('input[name="warningcellvoltage"]').prop('step','0.01');
+            }
+
             $('input[name="mincellvoltage"]').val(MISC.vbatmincellvoltage);
             $('input[name="maxcellvoltage"]').val(MISC.vbatmaxcellvoltage);
             $('input[name="warningcellvoltage"]').val(MISC.vbatwarningcellvoltage);

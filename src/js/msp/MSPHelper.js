@@ -178,7 +178,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 ANALOG.rssi = data.readU16(); // 0-1023
                 ANALOG.amperage = data.read16() / 100; // A
                 ANALOG.last_received_timestamp = Date.now();
-                if (semver.gte(CONFIG.apiVersion, "1.??.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     ANALOG.voltage = data.readU16() / 100;
                 }
                 break;
@@ -213,8 +213,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 BATTERY_STATE.voltage = data.readU8() / 10.0; // V
                 BATTERY_STATE.mAhDrawn = data.readU16(); // mAh
                 BATTERY_STATE.amperage = data.readU16() / 100; // A
-                if (semver.gte(CONFIG.apiVersion, "1.??.0")) {
-                    data.readU8();
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    BATTERY_STATE.batteryState = data.readU8();
                     BATTERY_STATE.voltage = data.readU16() / 100;
                 }
                 break;
@@ -288,7 +288,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 BATTERY_CONFIG.capacity = data.readU16();
                 BATTERY_CONFIG.voltageMeterSource = data.readU8();
                 BATTERY_CONFIG.currentMeterSource = data.readU8();
-                if (semver.gte(CONFIG.apiVersion, "1.??.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     BATTERY_CONFIG.vbatmincellvoltage = data.readU16() / 100;
                     BATTERY_CONFIG.vbatmaxcellvoltage = data.readU16() / 100;
                     BATTERY_CONFIG.vbatwarningcellvoltage = data.readU16() / 100;
@@ -1446,7 +1446,7 @@ MspHelper.prototype.crunch = function(code) {
                 .push16(BATTERY_CONFIG.capacity)
                 .push8(BATTERY_CONFIG.voltageMeterSource)
                 .push8(BATTERY_CONFIG.currentMeterSource);
-                if (semver.gte(CONFIG.apiVersion, "1.??.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     buffer.push16(Math.round(BATTERY_CONFIG.vbatmincellvoltage * 100))
                         .push16(Math.round(BATTERY_CONFIG.vbatmaxcellvoltage * 100))
                         .push16(Math.round(BATTERY_CONFIG.vbatwarningcellvoltage * 100));
