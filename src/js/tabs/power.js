@@ -253,11 +253,7 @@ TABS.power.initialize = function (callback) {
                 for (var i = 0; i < VOLTAGE_METERS.length; i++) {
                     var elementName = '#voltage-meter-' + i + ' .value';
                     var element = $(elementName);
-                    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-                        element.text(i18n.getMessage('powerVoltageValue', [ANALOG.voltage]));
-				    } else {
-                        element.text(i18n.getMessage('powerVoltageValue', [VOLTAGE_METERS[i].voltage]));
-                    }
+                    element.text(i18n.getMessage('powerVoltageValue', [VOLTAGE_METERS[i].voltage]));
                 }
             });
 
