@@ -938,6 +938,10 @@ OSD.constants = {
         FLIGHT_DISTANCE: {
             name: 'FLIGHT_DISTANCE',
             desc: 'osdDescStatFlightDistance'
+        },
+        MAX_FFT: {
+            name: 'MAX_FFT',
+            desc: 'osdDescStatMaxFFT'
         }
     },
     ALL_WARNINGS: {
@@ -1178,7 +1182,8 @@ OSD.chooseFields = function () {
                 F.MAX_ESC_TEMP,
                 F.MAX_ESC_RPM,
                 F.MIN_LINK_QUALITY,
-                F.FLIGHT_DISTANCE
+                F.FLIGHT_DISTANCE,
+                F.MAX_FFT
             ]);
         }
     }
