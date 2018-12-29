@@ -181,6 +181,12 @@ TABS.power.initialize = function (callback) {
         var element = template.clone();
         destination.append(element);
 
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            $('input[name="mincellvoltage"]').prop('step','0.01');
+            $('input[name="maxcellvoltage"]').prop('step','0.01');
+            $('input[name="warningcellvoltage"]').prop('step','0.01');
+        }
+
         $('input[name="mincellvoltage"]').val(BATTERY_CONFIG.vbatmincellvoltage);
         $('input[name="maxcellvoltage"]').val(BATTERY_CONFIG.vbatmaxcellvoltage);
         $('input[name="warningcellvoltage"]').val(BATTERY_CONFIG.vbatwarningcellvoltage);

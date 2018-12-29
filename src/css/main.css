@@ -1838,6 +1838,7 @@ dialog {
     width: 60px;
     transition: none;
     margin-top: 4px;
+    margin-left: -4px;
     background-repeat: no-repeat;
 }
 
