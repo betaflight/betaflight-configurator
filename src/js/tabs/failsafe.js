@@ -139,19 +139,37 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
         for (i = 0; i < RXFAIL_CONFIG.length; i++) {
             if (i < channelNames.length) {
-                fullChannels_e.append('\
-                    <div class="number">\
-                        <div class="channelprimary">\
-                            <span>' + channelNames[i] + '</span>\
+                if (semver.lt(CONFIG.apiVersion, "1.41.0")) {
+                    fullChannels_e.append('\
+                        <div class="number">\
+                            <div class="channelprimary">\
+                                <span>' + channelNames[i] + '</span>\
+                            </div>\
+                            <div class="cf_tip channelsetting" title="' + i18n.getMessage("failsafeChannelFallbackSettingsAuto") + '">\
+                                <select class="aux_set" id="' + i + '">\
+                                    <option value="0">Auto</option>\
+                                    <option value="1">Hold</option>\
+                                </select>\
+                            </div>\
                         </div>\
-                        <div class="cf_tip channelsetting" title="' + i18n.getMessage("failsafeChannelFallbackSettingsAuto") + '">\
-                            <select class="aux_set" id="' + i + '">\
-                                <option value="0">Auto</option>\
-                                <option value="1">Hold</option>\
-                            </select>\
+                    ');
+                } else {
+                    fullChannels_e.append('\
+                        <div class="number">\
+                            <div class="channelprimary">\
+                                <span>' + channelNames[i] + '</span>\
+                            </div>\
+                            <div class="cf_tip channelsetting" title="' + i18n.getMessage("failsafeChannelFallbackSettingsAuto") + '">\
+                                <select class="aux_set" id="' + i + '">\
+                                    <option value="0">Auto</option>\
+                                    <option value="1">Hold</option>\
+                                    <option value="2">Set</option>\
+                                </select>\
+                            </div>\
+                            <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="' + i + '"/></div>\
                         </div>\
-                    </div>\
-                ');
+                    ');
+                }
             } else {
                 fullChannels_e.append('\
                     <div class="number">\
