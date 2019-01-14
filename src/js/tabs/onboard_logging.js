@@ -147,7 +147,7 @@ TABS.onboard_logging.initialize = function (callback) {
             }).change();
 
             if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
-                if (SDCARD.supported || DATAFLASH.supported) {
+                if ((SDCARD.supported && deviceSelect.val() == 2) || (DATAFLASH.supported && deviceSelect.val() == 1)) {
 
                     $(".tab-onboard_logging")
                         .toggleClass("msc-supported", true);
