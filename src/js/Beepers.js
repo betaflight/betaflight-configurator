@@ -33,6 +33,12 @@ var Beepers = function (config, supportedConditions) {
         );
     }
 
+    if (semver.gte(config.apiVersion, "1.39.0")) {
+        beepers.push(
+            {bit: 22, name: 'RC_SMOOTHING_INIT_FAIL', visible: true},
+        );
+    }
+
     if (supportedConditions) {
         self._beepers = [];
         beepers.forEach(function (beeper) {
