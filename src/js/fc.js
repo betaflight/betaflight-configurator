@@ -81,6 +81,7 @@ var FC = {
             numProfiles:                      3,
             rateProfile:                      0,
             boardType:                        0,
+            armingDisableCount:               0,
             armingDisableFlags:               0,
             armingDisabled:                   false,
             runawayTakeoffPreventionDisabled: false,
