@@ -334,6 +334,7 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
             // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
             // F72x: "@Internal Flash  /0x08000000/04*016Kg,01*64Kg,03*128Kg"
             // F74x: "@Internal Flash  /0x08000000/04*032Kg,01*128Kg,03*256Kg"
+            // H74x: "@Internal Flash  /0x08000000/16*128Kg"
             // split main into [location, start_addr, sectors]
             var tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
             var tmp1 = tmp0.split('/');
