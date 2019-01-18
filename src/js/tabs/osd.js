@@ -970,8 +970,32 @@ OSD.constants = {
             desc: 'osdWarningCrashFlipMode'
         },
         ESC_FAIL: {
-            name: 'OSD_WARNING_ESC_FAIL',
+            name: 'ESC_FAIL',
             desc: 'osdWarningEscFail'
+        },
+        CORE_TEMPERATURE: {
+            name: 'CORE_TEMPERATURE',
+            desc: 'osdWarningCoreTemperature'
+        },
+        RC_SMOOTHING_FAILURE: {
+            name: 'RC_SMOOTHING_FAILURE',
+            desc: 'osdWarningRcSmoothingFailure'
+        },
+        FAILSAFE: {
+            name: 'FAILSAFE',
+            desc: 'osdWarningFailsafe'
+        },
+        LAUNCH_CONTROL: {
+            name: 'LAUNCH_CONTROL',
+            desc: 'osdWarningLaunchControl'
+        },
+        GPS_RESCUE_UNAVAILABLE: {
+            name: 'GPS_RESCUE_UNAVAILABLE',
+            desc: 'osdWarningGpsRescueUnavailable'
+        },
+        GPS_RESCUE_DISABLED: {
+            name: 'GPS_RESCUE_DISABLED',
+            desc: 'osdWarningGpsRescueDisabled'
         }
 
     },
@@ -1201,7 +1225,17 @@ OSD.chooseFields = function () {
     ];
     if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
-            F.ESC_FAIL
+            F.ESC_FAIL,
+            F.CORE_TEMPERATURE,
+            F.RC_SMOOTHING_FAILURE
+        ]);
+    }
+    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+            F.FAILSAFE,
+            F.LAUNCH_CONTROL,
+            F.GPS_RESCUE_UNAVAILABLE,
+            F.GPS_RESCUE_DISABLED
         ]);
     }
 };
@@ -1315,6 +1349,9 @@ OSD.msp = {
                 }
                 console.log(warningFlags);
                 result.push16(warningFlags);
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    result.push32(warningFlags);
+                }
             }
         }
         return result;
@@ -1448,11 +1485,14 @@ OSD.msp = {
             }
 
             // Parse enabled warnings
-            if (view.offset + 2 <= view.byteLength) {
-                var warningFlags = view.readU16();
-                for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
-                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled: (warningFlags & (1 << i)) != 0 }));
-                }
+            var warningFlags = view.readU16();
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                var warningCount = view.readU8();
+                // the flags were replaced with a 32bit version
+                warningFlags = view.readU32();
+            }
+            for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
+                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled: (warningFlags & (1 << i)) != 0 }));
             }
         }
 

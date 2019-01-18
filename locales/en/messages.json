@@ -3705,6 +3705,24 @@
     "osdWarningEscFail": {
         "message": "Enumerates a list with the ESCs/motors that are failing (RPM or temperature are out of the configured threshold)"
     },
+    "osdWarningCoreTemperature": {
+        "message": "Warns when MCU core temperature exceeds a configured threshold"
+    },
+    "osdWarningRcSmoothingFailure": {
+        "message": "Warns when RC Smoothing initialization failed"
+    },
+    "osdWarningFailsafe": {
+        "message": "Warns when failsafe occurs"
+    },
+    "osdWarningLaunchControl": {
+        "message": "Warns when Launch Control mode is activated"
+    },
+    "osdWarningGpsRescueUnavailable": {
+        "message": "Warns when GPS Rescue is not available and cannot be activated"
+    },
+    "osdWarningGpsRescueDisabled": {
+        "message": "Warns when GPS Rescue is disabled"
+    },
 
     "osdSectionHelpElements": {
         "message": "Enable or disable OSD elements."
