@@ -3687,6 +3687,9 @@
         "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"
     },
 
+    "osdWarningUnknown": {
+        "message": "Unknown warning (details to be added in a future release)"
+    },
     "osdWarningArmingDisabled": {
         "message": "Reports the most severe reason for not arming"
     },
