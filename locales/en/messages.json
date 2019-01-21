@@ -1096,6 +1096,9 @@
     "beeperCAM_CONNECTION_CLOSE": {
         "message": "Beep when the 5 key camera control is exited"
     },
+    "beeperRC_SMOOTHING_INIT_FAIL": {
+        "message": "Beep when armed and rc smoothing has not initialized filters"
+    },
     "configuration3d": {
         "message": "3D ESC/Motor Features"
     },
