@@ -1429,18 +1429,21 @@ OSD.msp = {
             var j = d.display_items.length;
             var c;
             var suffix;
+            var ignoreSize = false;
             if (d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
                 c = OSD.constants.DISPLAY_FIELDS[j];
             } else {
                 c = OSD.constants.UNKNOWN_DISPLAY_FIELD;
                 suffix = "" + (1 + d.display_items.length - OSD.constants.DISPLAY_FIELDS.length);
+                ignoreSize = true;
             }
             d.display_items.push($.extend({
                 name: suffix ? c.name + suffix : c.name,
                 desc: c.desc,
                 index: j,
                 draw_order: c.draw_order,
-                preview: suffix ? c.preview + suffix : c.preview
+                preview: suffix ? c.preview + suffix : c.preview,
+                ignoreSize: ignoreSize
             }, this.helpers.unpack.position(v, c)));
         }
 
@@ -1568,30 +1571,31 @@ OSD.GUI.preview = {
             console.log('Calculated Position: ' + position);
         }
 
-        var overflows_line = 0;
-        // Standard preview, string type
-        if (display_item.preview.constructor !== Array) {
-            overflows_line = FONT.constants.SIZES.LINE - ((position % FONT.constants.SIZES.LINE) + display_item.preview.length);
-            if (overflows_line < 0) {
-                position += overflows_line;
-            }
-            // Advanced preview, array type
-        } else {
-            var arrayElements = display_item.preview;
-            var limits = OSD.searchLimitsElement(arrayElements);
+        if (!display_item.ignoreSize) {
+            if (display_item.preview.constructor !== Array) {
+                // Standard preview, string type
+                var overflows_line = FONT.constants.SIZES.LINE - ((position % FONT.constants.SIZES.LINE) + display_item.preview.length);
+                if (overflows_line < 0) {
+                    position += overflows_line;
+                }
+            } else {
+                // Advanced preview, array type
+                var arrayElements = display_item.preview;
+                var limits = OSD.searchLimitsElement(arrayElements);
 
-            var selectedPositionX = position % FONT.constants.SIZES.LINE;
-            var selectedPositionY = Math.trunc(position / FONT.constants.SIZES.LINE);
+                var selectedPositionX = position % FONT.constants.SIZES.LINE;
+                var selectedPositionY = Math.trunc(position / FONT.constants.SIZES.LINE);
 
-            if ((limits.minX < 0) && ((selectedPositionX + limits.minX) < 0)) {
-                position += Math.abs(selectedPositionX + limits.minX);
-            } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= FONT.constants.SIZES.LINE)) {
-                position -= (selectedPositionX + limits.maxX + 1) - FONT.constants.SIZES.LINE;
-            }
-            if ((limits.minY < 0) && ((selectedPositionY + limits.minY) < 0)) {
-                position += Math.abs(selectedPositionY + limits.minY) * FONT.constants.SIZES.LINE;
-            } else if ((limits.maxY > 0) && ((selectedPositionY + limits.maxY) >= OSD.data.display_size.y)) {
-                position -= (selectedPositionY + limits.maxY - OSD.data.display_size.y + 1) * FONT.constants.SIZES.LINE;
+                if ((limits.minX < 0) && ((selectedPositionX + limits.minX) < 0)) {
+                    position += Math.abs(selectedPositionX + limits.minX);
+                } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= FONT.constants.SIZES.LINE)) {
+                    position -= (selectedPositionX + limits.maxX + 1) - FONT.constants.SIZES.LINE;
+                }
+                if ((limits.minY < 0) && ((selectedPositionY + limits.minY) < 0)) {
+                    position += Math.abs(selectedPositionY + limits.minY) * FONT.constants.SIZES.LINE;
+                } else if ((limits.maxY > 0) && ((selectedPositionY + limits.maxY) >= OSD.data.display_size.y)) {
+                    position -= (selectedPositionY + limits.maxY - OSD.data.display_size.y + 1) * FONT.constants.SIZES.LINE;
+                }
             }
         }
 
