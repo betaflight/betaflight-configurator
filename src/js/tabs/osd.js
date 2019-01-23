@@ -1342,7 +1342,7 @@ OSD.msp = {
             result.push16(OSD.data.alarms.alt.value);
             if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
                 var warningFlags = 0;
-                for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
+                for (var i = 0; i < OSD.data.warnings.length; i++) {
                     if (OSD.data.warnings[i].enabled) {
                         warningFlags |= (1 << i);
                     }
@@ -1485,14 +1485,25 @@ OSD.msp = {
             }
 
             // Parse enabled warnings
+            var warningCount = OSD.constants.WARNINGS.length;
             var warningFlags = view.readU16();
             if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-                var warningCount = view.readU8();
+                warningCount = view.readU8();
                 // the flags were replaced with a 32bit version
                 warningFlags = view.readU32();
             }
-            for (var i = 0; i < OSD.constants.WARNINGS.length; i++) {
-                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled: (warningFlags & (1 << i)) != 0 }));
+            for (var i = 0; i < warningCount; i++) {
+
+                // Known warning field
+                if (i < OSD.constants.WARNINGS.length) {
+                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled: (warningFlags & (1 << i)) != 0 }));
+
+                // Push Unknown Warning field
+                } else {
+                    var warningNumber = i - OSD.constants.WARNINGS.length + 1;
+                    d.warnings.push({name: 'UNKNOWN_' + warningNumber, desc: 'osdWarningUnknown', enabled: (warningFlags & (1 << i)) != 0 });
+
+                }
             }
         }
 
