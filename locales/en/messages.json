@@ -1794,6 +1794,12 @@
     "adjustmentsFunction28": {
         "message": "Yaw F Adjustment"
     },
+    "adjustmentsFunction29": {
+        "message": "OSD Profile Selection"
+    },
+    "adjustmentsFunction30": {
+        "message": "LED Profile Selection"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },

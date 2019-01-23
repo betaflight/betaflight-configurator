@@ -277,7 +277,9 @@ TABS.adjustments.adjust_template = function () {
     var selectFunction = $('#functionSelectionSelect');
     var elementsNumber;
 
-    if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+        elementsNumber = 31; // OSD Profile Select & LED Profile Select
+    } else if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
         elementsNumber = 29; // PID Audio
     } else if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
         elementsNumber = 26; // PID Audio
