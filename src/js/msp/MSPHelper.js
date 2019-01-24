@@ -99,7 +99,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                       }
 
                       // Read arming disable flags
-                      data.readU8(); // Flag count
+                      CONFIG.armingDisableCount = data.readU8(); // Flag count
                       CONFIG.armingDisableFlags = data.readU32();
                     }
 

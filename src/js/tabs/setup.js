@@ -59,7 +59,7 @@ TABS.setup.initialize = function (callback) {
 
         self.initializeInstruments();
 
-        $('#arming-disable-flag-row').attr('title', i18n.getMessage('initialSetupArmingDisableFlagsTooltip'));
+        $('#arming-disable-flag').attr('title', i18n.getMessage('initialSetupArmingDisableFlagsTooltip'));
 
         if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
             if (isExpertModeEnabled()) {
@@ -198,21 +198,78 @@ TABS.setup.initialize = function (callback) {
             arming_disable_flags_e.hide();
         }
 
-        function get_slow_data() {
-            MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                var armingString = '';
-                if (CONFIG.armingDisableFlags == 0) {
-                  armingString = i18n.getMessage('initialSetupArmingAllowed');
+        // DISARM FLAGS
+        // We add all the arming/disarming flags available, and show/hide them if needed.
+        var prepareDisarmFlags = function() {
+
+            var disarmFlagElements = ['NO_GYRO', 
+                                      'FAILSAFE', 
+                                      'RX_FAILSAFE', 
+                                      'BAD_RX_RECOVERY', 
+                                      'BOXFAILSAFE',
+                                      'THROTTLE',
+                                      'ANGLE',
+                                      'BOOT_GRACE_TIME',
+                                      'NOPREARM',
+                                      'LOAD',
+                                      'CALIBRATING',
+                                      'CLI',
+                                      'CMS_MENU',
+                                      'OSD_MENU',
+                                      'BST',
+                                      'MSP',
+                                     ];
+
+            if (semver.gte(CONFIG.apiVersion, "1.38.0")) {
+                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF'); 
+            }
+
+            if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                disarmFlagElements = disarmFlagElements.concat(['PARALYZE',
+                                                                'GPS']);
+            }
+
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
+                disarmFlagElements = disarmFlagElements.concat(['RESC']);
+            }
+
+            // Always the latest element
+            disarmFlagElements = disarmFlagElements.concat(['ARM_SWITCH']);
+
+            // Arming allowed flag
+            arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"/>');
+
+            // Arming disabled flags
+            for (var i = 0; i < CONFIG.armingDisableCount; i++) {
+
+                // All the known elements but the ARM_SWITCH (it must be always the last element)
+                if (i < disarmFlagElements.length - 1) {
+                    arming_disable_flags_e.append('<span id="initialSetupArmingDisableFlags' + i + '" class="cf_tip disarm-flag" title="' + i18n.getMessage('initialSetupArmingDisableFlagsTooltip' + disarmFlagElements[i]) + '" style="display: none;">' + disarmFlagElements[i] + '</span>');
+
+                // The ARM_SWITCH, always the last element
+                } else if (i == CONFIG.armingDisableCount - 1) {
+                    arming_disable_flags_e.append('<span id="initialSetupArmingDisableFlags' + i + '" class="cf_tip disarm-flag" title="' + i18n.getMessage('initialSetupArmingDisableFlagsTooltipARM_SWITCH') + '" style="display: none;">ARM_SWITCH</span>');
+
+                // Unknown disarm flags
                 } else {
-                  var flagIndicies = [];
-                  for (var i = 0; i < 32; i++) {
-                    if (CONFIG.armingDisableFlags & (1 << i)) {
-                      flagIndicies.push(i + 1);
-                    }
-                  }
-                  armingString = flagIndicies;
+                    arming_disable_flags_e.append('<span id="initialSetupArmingDisableFlags' + i + '" class="disarm-flag" style="display: none;">' + (i + 1) + '</span>');
                 }
-                arming_disable_flags_e.text(armingString);
+            }
+        }
+
+        prepareDisarmFlags();
+
+        function get_slow_data() {
+
+            MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
+
+                $('#initialSetupArmingAllowed').toggle(CONFIG.armingDisableFlags == 0);
+
+                for (var i = 0; i < CONFIG.armingDisableCount; i++) {
+                    $('#initialSetupArmingDisableFlags'+i).css('display',(CONFIG.armingDisableFlags & (1 << i)) == 0 ? 'none':'inline-block');
+                }
+
             });
 
             MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
