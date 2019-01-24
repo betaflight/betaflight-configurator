@@ -11,5 +11,8 @@ dist/
 debug/
 release/
 
+# Font template bitmaps
+resources/osd/*.png
+
 # artefacts for Visual Studio Code
 /.vscode/
