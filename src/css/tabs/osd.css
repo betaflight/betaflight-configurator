@@ -26,6 +26,10 @@
   float: none;
 }
 
+.tab-osd .spacer_box_title .profileOsdHeader {
+    padding: 6px;
+}
+
 .tab-osd .info {
   float: left;
   width: 100%;
@@ -298,6 +302,10 @@
   position: relative;
 }
 
+.tab-osd .preview .gui_box_bottombar {
+  text-align: center;
+}
+
 .tab-osd .preview .char {
   display: inline-block;
   padding: 0;
@@ -426,12 +434,14 @@ button {
 }
 
 .tab-osd .switchable-field input {
-  float: right;
-  width: 50px;
   border-radius: 3px;
   border: 1px solid #ddd;
   padding:2px;
   margin-top: -2px;
+}
+
+.tab-osd .switchable-field input[type=number] {
+  float: right;
   display: none;
 }
 
