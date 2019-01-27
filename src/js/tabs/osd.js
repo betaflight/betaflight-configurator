@@ -127,7 +127,7 @@ FONT.parseMCMFontFile = function (data) {
     return FONT.data.characters;
 };
 
-FONT.openFontFile = function ($preview) {
+FONT.openFontFile = function (fontPreviewElement) {
     return new Promise(function (resolve) {
         chrome.fileSystem.chooseEntry({ type: 'openFile', accepts: [{ description: 'MCM files', extensions: ['mcm'] }] }, function (fileEntry) {
             FONT.data.loaded_font_file = fileEntry.name;
@@ -200,7 +200,8 @@ FONT.upload = function ($progress) {
         return MSP.promise(MSPCodes.MSP_OSD_CHAR_WRITE, FONT.msp.encode(i));
     })
         .then(function () {
-            OSD.GUI.jbox.close();
+            OSD.GUI.fontManager.close();
+
             return MSP.promise(MSPCodes.MSP_SET_REBOOT);
         });
 };
@@ -1632,14 +1633,14 @@ TABS.osd.initialize = function (callback) {
 
     $('#content').load("./tabs/osd.html", function () {
         // Generate font type select element
-        var fontselect = $('.fontpresets');
+        var fontPresetsElement = $('.fontpresets');
         OSD.constants.FONT_TYPES.forEach(function (e, i) {
             var option = $('<option>', {
                 "data-font-file": e.file,
                 value: e.file,
                 text: e.name
             });
-            fontselect.append($(option));
+            fontPresetsElement.append($(option));
         });
 
         var fontbuttons = $('.fontpresets_wrapper');
@@ -1652,7 +1653,7 @@ TABS.osd.initialize = function (callback) {
         i18n.localizePage();
 
         // Open modal window
-        OSD.GUI.jbox = new jBox('Modal', {
+        OSD.GUI.fontManager = new jBox('Modal', {
             width: 720,
             height: 420,
             closeButton: 'title',
@@ -2134,17 +2135,16 @@ TABS.osd.initialize = function (callback) {
         });
 
         // font preview window
-        var $preview = $('.font-preview');
+        var fontPreviewElement = $('.font-preview');
 
         // init structs once, also clears current font
         FONT.initData();
 
-        var $fontpresets = $('.fontpresets')
-        $fontpresets.change(function (e) {
+        fontPresetsElement.change(function (e) {
             var $font = $('.fontpresets option:selected');
             $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function (data) {
                 FONT.parseMCMFontFile(data);
-                FONT.preview($preview);
+                FONT.preview(fontPreviewElement);
                 LogoManager.drawPreview();
                 updateOsdView();
             });
@@ -2154,14 +2154,14 @@ TABS.osd.initialize = function (callback) {
         var $font = $('.fontpresets option:selected');
         $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function (data) {
             FONT.parseMCMFontFile(data);
-            FONT.preview($preview);
+            FONT.preview(fontPreviewElement);
             LogoManager.drawPreview();
             updateOsdView();
         });
 
         $('button.load_font_file').click(function () {
             FONT.openFontFile().then(function () {
-                FONT.preview($preview);
+                FONT.preview(fontPreviewElement);
                 LogoManager.drawPreview();
                 updateOsdView();
             }).catch(error => console.error(error));
@@ -2272,6 +2272,10 @@ TABS.osd.initialize = function (callback) {
 
 TABS.osd.cleanup = function (callback) {
     PortHandler.flush_callbacks();
+
+    if (OSD.GUI.fontManager) {
+        OSD.GUI.fontManager.destroy();
+    }
 
     // unbind "global" events
     $(document).unbind('keypress');
