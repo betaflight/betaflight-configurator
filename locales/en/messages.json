@@ -3663,6 +3663,12 @@
     "osdDescElementFlightDist": {
         "message": "Distance flown during this flight."
     },
+    "osdDescElementStickOverlayLeft": {
+        "message": "Overlay for the left transmitter stick position."
+    },
+    "osdDescElementStickOverlayRight": {
+        "message": "Overlay for the right transmitter stick position."
+    },
     "osdDescElementTimer1" : {
         "message": "Shows the value of timer 1"
     },
