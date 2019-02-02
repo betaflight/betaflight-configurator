@@ -515,7 +515,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         $('input[name="craftName"]').val(CONFIG.name);
 
-
         if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             $('input[name="fpvCamAngleDegrees"]').val(RX_CONFIG.fpvCamAngleDegrees);
         } else {
@@ -1117,7 +1116,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_sensor_alignment() {
                 var next_callback = save_esc_protocol;
-               MSP.send_message(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT), false, next_callback);
+                MSP.send_message(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT), false, next_callback);
             }
             function save_esc_protocol() {
                 var next_callback = save_acc_trim;

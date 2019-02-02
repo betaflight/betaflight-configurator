@@ -295,6 +295,13 @@ OSD.generateCraftName = function (osd_data) {
     return preview;
 }
 
+OSD.generateDisplayName = function(osd_data) {
+  var preview = 'DISPLAY_NAME';
+  if (CONFIG.displayName != '')
+      preview = CONFIG.displayName.toUpperCase();
+  return preview;
+}
+
 OSD.drawStickOverlayPreview = function () {
     function randomInt(count) {
         return Math.floor(Math.random() * Math.floor(count));
@@ -914,6 +921,16 @@ OSD.constants = {
             positionable: true,
             preview: OSD.drawStickOverlayPreview
         },
+        DISPLAY_NAME: {
+            name: 'DISPLAY_NAME',
+            desc: 'osdDescElementDisplayName',
+            default_position: -77,
+            draw_order: 380,
+            positionable: true,
+            preview: function(osd_data) {
+                return OSD.generateDisplayName(osd_data, 1);
+            }
+        },
     },
     UNKNOWN_DISPLAY_FIELD: {
         name: 'UNKNOWN_',
@@ -1189,6 +1206,7 @@ OSD.chooseFields = function () {
                                                 F.FLIGHT_DIST,
                                                 F.STICK_OVERLAY_LEFT,
                                                 F.STICK_OVERLAY_RIGHT,
+                                                F.DISPLAY_NAME,
                                             ]);
                                         }
                                     }

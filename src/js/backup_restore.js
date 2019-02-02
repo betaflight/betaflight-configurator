@@ -143,6 +143,7 @@ function configuration_backup(callback) {
                 configuration.LED_COLORS = jQuery.extend(true, [], LED_COLORS);
                 configuration.BOARD_ALIGNMENT_CONFIG = jQuery.extend(true, {}, BOARD_ALIGNMENT_CONFIG);
                 configuration.CRAFT_NAME = CONFIG.name;
+                configuration.DISPLAY_NAME = CONFIG.displayName;
                 configuration.MIXER_CONFIG = jQuery.extend(true, {}, MIXER_CONFIG);
                 configuration.SENSOR_CONFIG = jQuery.extend(true, {}, SENSOR_CONFIG);
                 configuration.PID_ADVANCED_CONFIG = jQuery.extend(true, {}, PID_ADVANCED_CONFIG);
@@ -833,6 +834,7 @@ function configuration_restore(callback) {
                     RSSI_CONFIG = configuration.RSSI_CONFIG;
                     BOARD_ALIGNMENT_CONFIG = configuration.BOARD_ALIGNMENT_CONFIG;
                     CONFIG.name = configuration.CRAFT_NAME;
+                    CONFIG.displayName = configuration.DISPLAY_NAME;
                     MIXER_CONFIG = configuration.MIXER_CONFIG;
                     SENSOR_CONFIG = configuration.SENSOR_CONFIG;
                     PID_ADVANCED_CONFIG = configuration.PID_ADVANCED_CONFIG;

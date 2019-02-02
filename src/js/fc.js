@@ -78,6 +78,7 @@ var FC = {
             uid:                              [0, 0, 0],
             accelerometerTrims:               [0, 0],
             name:                             '',
+            displayName:                      'JOE PILOT',
             numProfiles:                      3,
             rateProfile:                      0,
             boardType:                        0,
