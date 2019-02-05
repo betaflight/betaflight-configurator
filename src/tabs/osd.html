@@ -17,13 +17,12 @@
                 <div class="cf_column third_left elements requires-osd-feature">
                     <div class="spacer_right">
                         <div class="gui_box grey">
-                            <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px;">
+                            <div class="gui_box_titlebar" style="margin-bottom: 0px;">
                                 <div class="spacer_box_title">
-                                    <span i18n="osdSetupElementsTitle" />
-                                    <span class="switch-all-elements">
-                                        <label for="switch-all"><span i18n="osdSetupElementsSwitchAll" />: </label>
-                                        <input type="checkbox" id="switch-all" name="switch-all" class="togglesmall"></input>
+                                    <span class="osd-profiles-header cf_tip" i18n_title="osdSetupProfilesTitle" >
+                                        <!--  Generated profiles header here -->
                                     </span>
+                                    <span i18n="osdSetupElementsTitle" />
                                 </div>
                             </div>
                             <div class="spacer_box">
@@ -33,21 +32,47 @@
                     </div>
                 </div>
                 <div class="cf_column twothird">
+
                     <div class="gui_box grey preview requires-osd-feature" style="float: left; position: fixed;">
+
                         <div class="gui_box_titlebar image">
                             <div class="spacer_box_title">
-                                <span i18n="osdSetupPreviewTitle" />
+                               <span>
+                                   <label id="osdprofile-selector-label" i18n="osdSetupPreviewSelectProfileTitle"/>
+                                   <select class="osdprofile-selector">
+                                       <!--  Populated at runtime -->
+                                   </select>
+                               </span>
                                 <span class="preview-logo cf_tip" i18n_title="osdSetupPreviewTitleTip"></span>
                             </div>
                         </div>
+
                         <div class="display-layout">
                             <div class="col right">
                                 <div class="preview">
                                 </div>
                             </div>
                         </div>
+
+                        <div class="gui_box_bottombar">
+                            <div class="spacer_box_title">
+                                <span i18n="osdSetupPreviewTitle" />
+                            </div>
+                        </div>
+
                     </div>
                     <div class="cf_column third_right" style="width: calc(100% - 377px);">
+                        <div class="gui_box osdprofile-selected-container grey requires-max7456">
+                            <div class="gui_box_titlebar cf_tip">
+                                <div class="spacer_box_title" i18n="osdSetupSelectedProfileTitle" />
+                            </div>
+                            <div class="spacer_box">
+                                <label i18n="osdSetupSelectedProfileLabel"/>
+                                <select class="osdprofile-active">
+                                    <!--  Populated at runtime -->
+                                </select>
+                            </div>
+                        </div>
                         <div class="gui_box videomode-container grey requires-max7456">
                             <div class="gui_box_titlebar cf_tip">
                                 <div class="spacer_box_title" i18n="osdSetupVideoFormatTitle" />

@@ -232,6 +232,19 @@ FONT.symbol = function (hexVal) {
 
 var OSD = OSD || {};
 
+OSD.getNumberOfProfiles = function() {
+    return OSD.data.osd_profiles.number;
+}
+
+OSD.getCurrentPreviewProfile = function() {
+    let osdprofile_e = $('.osdprofile-selector');
+    if (osdprofile_e) {
+        return osdprofile_e.val();
+    } else {
+        return 0;
+    }
+}
+
 // parsed fc output and output to fc, used by to OSD.msp.encode
 OSD.initData = function () {
     OSD.data = {
@@ -245,7 +258,8 @@ OSD.initData = function () {
         last_positions: {},
         preview_logo: true,
         preview: [],
-        tooltips: []
+        tooltips: [],
+        osd_profiles: {}
     };
 };
 OSD.initData();
@@ -1382,10 +1396,14 @@ OSD.msp = {
                 if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
                     // size * y + x
                     display_item.position = positionable ? FONT.constants.SIZES.LINE * ((bits >> 5) & 0x001F) + (bits & 0x001F) : default_position;
-                    display_item.isVisible = (bits & OSD.constants.VISIBLE) != 0;
+                    
+                    display_item.isVisible = [];
+                    for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
+                        display_item.isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) != 0;
+                    }
                 } else {
                     display_item.position = (bits === -1) ? default_position : bits;
-                    display_item.isVisible = bits !== -1;
+                    display_item.isVisible = [bits !== -1];
                 }
 
                 return display_item;
@@ -1404,9 +1422,14 @@ OSD.msp = {
                 var isVisible = display_item.isVisible;
                 var position = display_item.position;
                 if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
-                    return (isVisible ? 0x0800 : 0) | (((position / FONT.constants.SIZES.LINE) & 0x001F) << 5) | (position % FONT.constants.SIZES.LINE);
+
+                    let packed_visible = 0;
+                    for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
+                        packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
+                    }
+                    return packed_visible | (((position / FONT.constants.SIZES.LINE) & 0x001F) << 5) | (position % FONT.constants.SIZES.LINE);
                 } else {
-                    return isVisible ? (position == -1 ? 0 : position) : -1;
+                    return isVisible[0] ? (position == -1 ? 0 : position) : -1;
                 }
             },
             timer: function (timer) {
@@ -1439,8 +1462,11 @@ OSD.msp = {
                 result.push16(warningFlags);
                 if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     result.push32(warningFlags);
+
+                    result.push8(OSD.data.osd_profiles.selected + 1);
                 }
             }
+            
         }
         return result;
     },
@@ -1506,33 +1532,16 @@ OSD.msp = {
         d.warnings = [];
         d.timers = [];
 
-        // Parse display element positions
-        while (view.offset < view.byteLength && d.display_items.length < displayItemsCountActual) {
+        // Read display element positions, the parsing is done later because we need the number of profiles
+        var items_positions_read = [];
+        while (view.offset < view.byteLength && items_positions_read.length < displayItemsCountActual) {
             var v = null;
             if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
                 v = view.readU16();
             } else {
                 v = view.read16();
             }
-            var j = d.display_items.length;
-            var c;
-            var suffix;
-            var ignoreSize = false;
-            if (d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
-                c = OSD.constants.DISPLAY_FIELDS[j];
-            } else {
-                c = OSD.constants.UNKNOWN_DISPLAY_FIELD;
-                suffix = "" + (1 + d.display_items.length - OSD.constants.DISPLAY_FIELDS.length);
-                ignoreSize = true;
-            }
-            d.display_items.push($.extend({
-                name: suffix ? c.name + suffix : c.name,
-                desc: c.desc,
-                index: j,
-                draw_order: c.draw_order,
-                preview: suffix ? c.preview + suffix : c.preview,
-                ignoreSize: ignoreSize
-            }, this.helpers.unpack.position(v, c)));
+            items_positions_read.push(v);
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
@@ -1596,6 +1605,38 @@ OSD.msp = {
 
                 }
             }
+        }
+
+        // OSD profiles
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            d.osd_profiles.number = view.readU8();
+            d.osd_profiles.selected = view.readU8() - 1;
+        } else {
+            d.osd_profiles.number = 1;
+            d.osd_profiles.selected = 0;
+        }
+
+        // Now we have the number of profiles, process the OSD elements
+        for (let item of items_positions_read) {
+            var j = d.display_items.length;
+            var c;
+            var suffix;
+            var ignoreSize = false;
+            if (d.display_items.length < OSD.constants.DISPLAY_FIELDS.length) {
+                c = OSD.constants.DISPLAY_FIELDS[j];
+            } else {
+                c = OSD.constants.UNKNOWN_DISPLAY_FIELD;
+                suffix = "" + (1 + d.display_items.length - OSD.constants.DISPLAY_FIELDS.length);
+                ignoreSize = true;
+            }
+            d.display_items.push($.extend({
+                name: suffix ? c.name + suffix : c.name,
+                desc: c.desc,
+                index: j,
+                draw_order: c.draw_order,
+                preview: suffix ? c.preview + suffix : c.preview,
+                ignoreSize: ignoreSize
+            }, this.helpers.unpack.position(item, c)));
         }
 
         // Generate OSD element previews and positionable that are defined by a function
@@ -2000,13 +2041,38 @@ TABS.osd.initialize = function (callback) {
                         $('.requires-osd-feature').hide();
                     }
 
+                    let numberOfProfiles = OSD.getNumberOfProfiles();
+
+                    // Header for the switches
+                    let headerSwitches_e = $('.elements').find('.osd-profiles-header');
+                    if (headerSwitches_e.children().length == 0) {
+                        for (let profileNumber = 0; profileNumber < numberOfProfiles; profileNumber++) {
+                            headerSwitches_e.append('<span class="profileOsdHeader">' + (profileNumber + 1) + '</span>');
+                        }
+                    }
+
+                    // Populate the profiles selector preview and current active
+                    let osdProfileSelector_e = $('.osdprofile-selector');
+                    let osdProfileActive_e = $('.osdprofile-active');
+                    if (osdProfileSelector_e.children().length == 0) {
+                        for (let profileNumber = 0; profileNumber < numberOfProfiles; profileNumber++) {
+                            let optionText = i18n.getMessage('osdSetupPreviewSelectProfileElement', {profileNumber : (profileNumber + 1)});
+                            osdProfileSelector_e.append(new Option(optionText, profileNumber));
+                            osdProfileActive_e.append(new Option(optionText, profileNumber));
+                        }
+                    }
+
+                    // Select the current OSD profile
+                    osdProfileActive_e.val(OSD.data.osd_profiles.selected);
+
                     // display fields on/off and position
                     var $displayFields = $('#element-fields').empty();
                     var enabledCount = 0;
                     for (let field of OSD.data.display_items) {
                         // versioning related, if the field doesn't exist at the current flight controller version, just skip it
                         if (!field.name) { continue; }
-                        if (field.isVisible) { enabledCount++; }
+
+                        if (field.isVisible[OSD.getCurrentPreviewProfile()]) { enabledCount++; }
 
                         var $field = $('<div class="switchable-field field-' + field.index + '"/>');
                         var desc = null;
@@ -2017,27 +2083,31 @@ TABS.osd.initialize = function (callback) {
                             $field[0].classList.add('osd_tip');
                             $field.attr('title', desc);
                         }
-                        $field.append(
-                            $('<input type="checkbox" name="' + field.name + '" class="togglesmall"></input>')
-                                .data('field', field)
-                                .attr('checked', field.isVisible)
-                                .change(function (e) {
-                                    var field = $(this).data('field');
-                                    var $position = $(this).parent().find('.position.' + field.name);
-                                    field.isVisible = !field.isVisible;
-                                    if (field.isVisible) {
-                                        $position.show();
-                                    } else {
-                                        $position.hide();
-                                    }
-                                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(field))
-                                        .then(function () {
-                                            updateOsdView();
-                                        });
-                                })
-                        );
+                        for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
+                            $field.append(
+                                    $('<input type="checkbox" name="' + field.name + '"></input>')
+                                        .data('field', field)
+                                        .data('osd_profile', osd_profile)
+                                        .attr('checked', field.isVisible[osd_profile])
+                                        .change(function (e) {
+                                            var field = $(this).data('field');
+                                            var profile = $(this).data('osd_profile');
+                                            var $position = $(this).parent().find('.position.' + field.name);
+                                            field.isVisible[profile] = !field.isVisible[profile];
+                                            if (field.isVisible[OSD.getCurrentPreviewProfile()]) {
+                                                $position.show();
+                                            } else {
+                                                $position.hide();
+                                            }
+                                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(field))
+                                                .then(function () {
+                                                    updateOsdView();
+                                                });
+                                        })
+                                );
+                        }
                         $field.append('<label for="' + field.name + '" class="char-label">' + inflection.titleize(field.name) + '</label>');
-                        if (field.positionable && field.isVisible) {
+                        if (field.positionable && field.isVisible[OSD.getCurrentPreviewProfile()]) {
                             $field.append(
                                 $('<input type="number" class="' + field.index + ' position"></input>')
                                     .data('field', field)
@@ -2055,9 +2125,6 @@ TABS.osd.initialize = function (callback) {
                         }
                         $displayFields.append($field);
                     }
-                    //Set Switch all checkbox defaults based on the majority of the switches
-                    var checked = enabledCount >= (OSD.data.display_items.length / 2);
-                    $('input#switch-all').prop('checked', checked).change();
 
                     GUI.switchery();
                     // buffer the preview
@@ -2085,7 +2152,7 @@ TABS.osd.initialize = function (callback) {
                     // draw all the displayed items and the drag and drop preview images
                     for (let field of OSD.data.display_items) {
 
-                        if (!field.preview || !field.isVisible) {
+                        if (!field.preview || !field.isVisible[OSD.getCurrentPreviewProfile()]) {
                             continue;
                         }
 
@@ -2210,6 +2277,15 @@ TABS.osd.initialize = function (callback) {
                 });
         };
 
+        $('.osdprofile-selector').change(updateOsdView);
+        $('.osdprofile-active').change(function() {
+            OSD.data.osd_profiles.selected = parseInt($(this).val());
+            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
+                .then(function () {
+                    updateOsdView();
+                });
+        });
+
         $('a.save').click(function () {
             var self = this;
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
@@ -2280,26 +2356,6 @@ TABS.osd.initialize = function (callback) {
                 })
                 .catch(error => console.error(error));
         });
-
-        //Switch all elements
-        $('input#switch-all').change(function (event) {
-            //if we just change value based on the majority of the switches
-            if (event.isTrigger) return;
-
-            var new_state = $(this).is(':checked');
-
-            var updateList = [];
-            $('#element-fields input[type=checkbox]').each(function () {
-                var field = $(this).data('field');
-                field.isVisible = new_state;
-
-                updateList.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(field)));
-            })
-
-            Promise.all(updateList).then(function () {
-                updateOsdView();
-            });
-        })
 
         $(document).on('click', 'span.progressLabel a.save_font', function () {
             chrome.fileSystem.chooseEntry({ type: 'saveFile', suggestedName: 'baseflight', accepts: [{ description: 'MCM files', extensions: ['mcm'] }] }, function (fileEntry) {
