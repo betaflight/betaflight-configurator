@@ -787,6 +787,21 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
 
+            case MSPCodes.MSP_MODE_RANGES_EXTRA:
+                MODE_RANGES_EXTRA = []; // empty the array as new data is coming in
+
+                var modeRangeExtraCount = data.readU8();
+
+                for (var i = 0; i < modeRangeExtraCount; i++) {
+                    var modeRangeExtra = {
+                        id: data.readU8(),
+                        modeLogic: data.readU8(),
+                        linkedTo: data.readU8()
+                    };
+                    MODE_RANGES_EXTRA.push(modeRangeExtra);
+                }
+                break;
+
             case MSPCodes.MSP_ADJUSTMENT_RANGES:
                 ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
 
@@ -1913,19 +1928,21 @@ MspHelper.prototype.sendModeRanges = function(onCompleteCallback) {
     function send_next_mode_range() {
 
         var modeRange = MODE_RANGES[modeRangeIndex];
+        var modeRangeExtra = MODE_RANGES_EXTRA[modeRangeIndex];
 
         var buffer = [];
         buffer.push8(modeRangeIndex)
             .push8(modeRange.id)
             .push8(modeRange.auxChannelIndex)
             .push8((modeRange.range.start - 900) / 25)
-            .push8((modeRange.range.end - 900) / 25);
+            .push8((modeRange.range.end - 900) / 25)
+            .push8(modeRangeExtra.modeLogic)
+            .push8(modeRangeExtra.linkedTo);
 
         // prepare for next iteration
         modeRangeIndex++;
         if (modeRangeIndex == MODE_RANGES.length) {
             nextFunction = onCompleteCallback;
-
         }
         MSP.send_message(MSPCodes.MSP_SET_MODE_RANGE, buffer, false, nextFunction);
     }

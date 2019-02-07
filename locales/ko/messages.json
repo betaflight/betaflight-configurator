@@ -1543,6 +1543,9 @@
     "auxiliaryAddRange": {
         "message": "범위 추가"
     },
+    "auxiliaryAddLink": {
+        "message": "연접하다"
+    },
     "auxiliaryButtonSave": {
         "message": "저장"
     },
@@ -1551,6 +1554,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "자동"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "조정 스위치를 설정하십시오. 자세한 내용은 매뉴얼의 '비행-중 조정' 섹션을 참조하십시오. 조정 기능의 변경사항은 자동으로 저장되지 않습니다. 4개의 슬롯이 있습니다. 조정을 동시에 수행하는 데 사용되는 각 스위치는 슬롯을 독점적으로 사용해야합니다."

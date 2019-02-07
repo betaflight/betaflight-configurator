@@ -1418,6 +1418,9 @@
     "auxiliaryAddRange": {
         "message": "Attiva"
     },
+    "auxiliaryAddLink": {
+        "message": "Link"
+    },
     "auxiliaryButtonSave": {
         "message": "Salva"
     },
@@ -1426,6 +1429,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Configurare gli interruttori di regolazione. Vedi la sezione 'aggiustamenti in volo' del manuale per i dettagli. Le modifiche apportate dalle funzioni di regolazione non vengono salvate automaticamente. Ci sono 4 slot. Ogni interruttore utilizzato per apportare modifiche simultanee richiede l'uso esclusivo di uno slot."

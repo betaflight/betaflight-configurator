@@ -1543,6 +1543,9 @@
     "auxiliaryAddRange": {
         "message": "Añadir Rango"
     },
+    "auxiliaryAddLink": {
+        "message": "Enlace"
+    },
     "auxiliaryButtonSave": {
         "message": "Guardar"
     },
@@ -1551,6 +1554,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Configura interruptores para correcciones. Mira el apartado 'in-flight adjustments' del manual para detalles. Las correcciones realizadas no se guardan automáticamente. Hay 4 ranuras. Cada interruptor usado para hacer correcciones concurrentemente requiere el uso exclusivo de una ranura."

@@ -8,7 +8,12 @@ TABS.auxiliary.initialize = function (callback) {
     var prevChannelsValues = null;
 
     function get_mode_ranges() {
-        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, get_box_ids);
+        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, 
+            semver.gte(CONFIG.apiVersion, "1.41.0") ? get_mode_ranges_extra : get_box_ids);
+    }
+
+    function get_mode_ranges_extra() {
+        MSP.send_message(MSPCodes.MSP_MODE_RANGES_EXTRA, false, false, get_box_ids);
     }
 
     function get_box_ids() {
@@ -45,6 +50,12 @@ TABS.auxiliary.initialize = function (callback) {
         
         $(newMode).find('.name').data('modeElement', newMode);
         $(newMode).find('a.addRange').data('modeElement', newMode);
+        $(newMode).find('a.addLink').data('modeElement', newMode);
+
+        // hide link button for ARM
+        if (modeId == 0) {
+            $(newMode).find('.addLink').hide();
+        }
 
         return newMode; 
     }
@@ -70,9 +81,50 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         channelOptionTemplate.val(-1);
+
+        var logicList = $(rangeTemplate).find('.logic');
+        var logicOptionTemplate = $(logicList).find('option');
+        logicOptionTemplate.remove();
+
+        //add logic option(s)
+        var logicOption = logicOptionTemplate.clone();
+        logicOption.text(i18n.getMessage('auxiliaryModeLogicOR'));
+        logicOption.val(0);
+        logicList.append(logicOption);
+        
+        if(semver.gte(CONFIG.apiVersion, "1.41.0")){
+            var logicOption = logicOptionTemplate.clone();
+            logicOption.text(i18n.getMessage('auxiliaryModeLogicAND'));
+            logicOption.val(1);
+            logicList.append(logicOption);
+        }
+        logicOptionTemplate.val(0);
     }
     
-    function addRangeToMode(modeElement, auxChannelIndex, range) {
+    function configureLinkTemplate() {
+        var linkTemplate = $('#tab-auxiliary-templates .link');
+        
+        var linkList = $(linkTemplate).find('.linkedTo');
+        var linkOptionTemplate = $(linkList).find('option');
+        linkOptionTemplate.remove();
+        
+        // set up a blank option in place of ARM
+        var linkOption = linkOptionTemplate.clone();
+        linkOption.text("");
+        linkOption.val(0);
+        linkList.append(linkOption);
+
+        for (var index = 1; index < AUX_CONFIG.length; index++) {
+            var linkOption = linkOptionTemplate.clone();
+            linkOption.text(AUX_CONFIG[index]);
+            linkOption.val(AUX_CONFIG_IDS[index]);  // set value to mode id
+            linkList.append(linkOption);
+        }
+
+        linkOptionTemplate.val(0);
+    }
+    
+    function addRangeToMode(modeElement, auxChannelIndex, modeLogic, range) {
         var modeIndex = $(modeElement).data('index');
 
         var channel_range = {
@@ -86,6 +138,10 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         var rangeIndex = $(modeElement).find('.range').length;
+
+        if (rangeIndex == 0) {
+            $(modeElement).find('.addLink').hide();
+        }
         
         var rangeElement = $('#tab-auxiliary-templates .range').clone();
         rangeElement.attr('id', 'mode-' + modeIndex + '-range-' + rangeIndex);
@@ -115,19 +171,67 @@ TABS.auxiliary.initialize = function (callback) {
         });
         
         $(rangeElement).find('.deleteRange').data('rangeElement', rangeElement);
+        $(rangeElement).find('.deleteRange').data('modeElement', modeElement);
 
         $(rangeElement).find('a.deleteRange').click(function () {
             var rangeElement = $(this).data('rangeElement');
+            var numSiblings = $(rangeElement).parent().children().length - 1;
+
+            if (numSiblings == 0) {
+                var modeElement = $(this).data('modeElement');
+                var modeId = $(modeElement).data('id');
+                if (modeId != 0){                           // don't show Link for ARM
+                    $(modeElement).find('.addLink').show();
+                }
+            }
+
             rangeElement.remove();
         });
 
         $(rangeElement).find('.channel').val(auxChannelIndex);
+        $(rangeElement).find('.logic').val(modeLogic);
+    }
+
+    function addLinkedToMode(modeElement, linkedTo) {
+        var modeId = $(modeElement).data('id');
+        var modeIndex = $(modeElement).data('index');
+
+        $(modeElement).find('.addRange').hide();
+        $(modeElement).find('.addLink').hide();
+
+        var linkElement = $('#tab-auxiliary-templates .link').clone();
+        linkElement.attr('id', 'mode-' + modeIndex + '-link');
+        modeElement.find('.ranges').append(linkElement);
+
+        // disable the option associated with this mode
+        var linkSelect = $(linkElement).find('.linkedTo');
+        $(linkSelect).find('option[value="' + modeId + '"]').prop('disabled',true);
+
+        $(linkElement).find('.deleteLink').data('linkElement', linkElement);
+        $(linkElement).find('.deleteLink').data('modeElement', modeElement);
+
+        $(linkElement).find('a.deleteLink').click(function () {
+            var linkElement = $(this).data('linkElement');
+            var modeElement = $(this).data('modeElement');
+
+            $(modeElement).find('.addRange').show();
+
+            var modeId = $(modeElement).data('id');
+            if (modeId != 0){                           // don't show Link for ARM
+                $(modeElement).find('.addLink').show();
+            }
+
+            linkElement.remove();
+        });
+
+        $(linkElement).find('.linkedTo').val(linkedTo);
     }
 
     function process_html() {
         var auxChannelCount = RC.active_channels - 4;
 
         configureRangeTemplate(auxChannelCount);
+        configureLinkTemplate();
 
         var modeTableBodyElement = $('.tab-auxiliary .modes tbody') 
         for (var modeIndex = 0; modeIndex < AUX_CONFIG.length; modeIndex++) {
@@ -136,28 +240,47 @@ TABS.auxiliary.initialize = function (callback) {
             var newMode = createMode(modeIndex, modeId);
             modeTableBodyElement.append(newMode);
             
-            // generate ranges from the supplied AUX names and MODE_RANGE data
+            // generate ranges from the supplied AUX names and MODE_RANGES[_EXTRA] data
+            // skip linked modes for now
             for (var modeRangeIndex = 0; modeRangeIndex < MODE_RANGES.length; modeRangeIndex++) {
                 var modeRange = MODE_RANGES[modeRangeIndex];
+
+                var modeRangeExtra = {
+                    id: modeRange.id,
+                    modeLogic: 0,
+                    linkedTo: 0
+                };
+                if (semver.gte(apiVersion, "1.41.0")) {
+                    modeRangeExtra = MODE_RANGES_EXTRA[modeRangeIndex];
+                }
                 
-                if (modeRange.id != modeId) {
+                if (modeRange.id != modeId || modeRangeExtra.id != modeId) {
                     continue;
                 }
-                
-                var range = modeRange.range;
-                if (!(range.start < range.end)) {
-                    continue; // invalid!
-                }
-                
-                addRangeToMode(newMode, modeRange.auxChannelIndex, range)
-            }
 
+                if (modeId == 0 || modeRangeExtra.linkedTo == 0) {
+                    var range = modeRange.range;
+                    if (!(range.start < range.end)) {
+                        continue; // invalid!
+                    }
+
+                    addRangeToMode(newMode, modeRange.auxChannelIndex, modeRangeExtra.modeLogic, range)
+
+                } else {
+                    addLinkedToMode(newMode, modeRangeExtra.linkedTo);
+                }
+            }
         }
         
         $('a.addRange').click(function () {
             var modeElement = $(this).data('modeElement');
-            //auto select AUTO option
-            addRangeToMode(modeElement, -1);
+            //auto select AUTO option; default to 'OR' logic
+            addRangeToMode(modeElement, -1, 0);
+        });
+        
+        $('a.addLink').click(function () {
+            var modeElement = $(this).data('modeElement');
+            addLinkedToMode(modeElement, 0);
         });
                 
         // translate to user-selected language
@@ -172,13 +295,13 @@ TABS.auxiliary.initialize = function (callback) {
             var requiredModesRangeCount = MODE_RANGES.length;
             
             MODE_RANGES = [];
+            MODE_RANGES_EXTRA = [];
             
             $('.tab-auxiliary .modes .mode').each(function () {
                 var modeElement = $(this);
                 var modeId = modeElement.data('id');
                 
                 $(modeElement).find('.range').each(function() {
-                    
                     var rangeValues = $(this).find('.channel-slider').val();
                     var modeRange = {
                         id: modeId,
@@ -189,6 +312,32 @@ TABS.auxiliary.initialize = function (callback) {
                         }
                     };
                     MODE_RANGES.push(modeRange);
+
+                    var modeRangeExtra = {
+                        id: modeId,
+                        modeLogic: parseInt($(this).find('.logic').val()),
+                        linkedTo: 0
+                    };
+                    MODE_RANGES_EXTRA.push(modeRangeExtra);
+                });
+
+                $(modeElement).find('.link').each(function() {
+                    var modeRange = {
+                        id: modeId,
+                        auxChannelIndex: 0,
+                        range: {
+                            start: 900,
+                            end: 900
+                        }
+                    };
+                    MODE_RANGES.push(modeRange);
+
+                    var modeRangeExtra = {
+                        id: modeId,
+                        modeLogic: 0,
+                        linkedTo: parseInt($(this).find('.linkedTo').val())
+                    };
+                    MODE_RANGES_EXTRA.push(modeRangeExtra);
                 });
             });
             
@@ -202,6 +351,13 @@ TABS.auxiliary.initialize = function (callback) {
                     }
                 };
                 MODE_RANGES.push(defaultModeRange);
+
+                var defaultModeRangeExtra = {
+                    id: 0,
+                    modeLogic: 0,
+                    linkedTo: 0
+                };
+                MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
             }
 
             //
@@ -247,7 +403,7 @@ TABS.auxiliary.initialize = function (callback) {
             let hasUsedMode = false;
             for (let i = 0; i < AUX_CONFIG.length; i++) {
                 let modeElement = $('#mode-' + i);
-                if (modeElement.find(' .range').length == 0) {
+                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     // if the mode is unused, skip it
                     modeElement.removeClass('off').removeClass('on');
                     continue;
@@ -264,7 +420,7 @@ TABS.auxiliary.initialize = function (callback) {
             let hideUnused = hideUnusedModes && hasUsedMode;
             for (let i = 0; i < AUX_CONFIG.length; i++) {
                 let modeElement = $('#mode-' + i);
-                if (modeElement.find(' .range').length == 0) {
+                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     modeElement.toggle(!hideUnused);
                 }
             }    

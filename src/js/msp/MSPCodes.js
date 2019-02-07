@@ -148,6 +148,7 @@ var MSPCodes = {
     MSP_SET_COMPASS_CONFIG:         224,
     MSP_SET_GPS_RESCUE:             225,
 
+    MSP_MODE_RANGES_EXTRA:          238,
     MSP_SET_ACC_TRIM:               239,
     MSP_ACC_TRIM:                   240,
     MSP_SERVO_MIX_RULES:            241,

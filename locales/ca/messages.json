@@ -1370,6 +1370,9 @@
     "auxiliaryAddRange": {
         "message": "Afegeix Rang"
     },
+    "auxiliaryAddLink": {
+        "message": "Enllaç"
+    },
     "auxiliaryButtonSave": {
         "message": "Desa"
     },
@@ -1378,6 +1381,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Configureu els interruptors d'ajust. Consulteu la secció \"Ajustaments de vol\" del manual per obtenir-ne més detalls. Els canvis que realitzen les funcions d'ajust no es guarden automàticament. Hi ha 4 ranures (slots). Cada interruptor utilitzat per fer ajustaments simultanis requereix l'ús exclusiu d'una ranura."

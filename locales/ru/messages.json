@@ -1543,6 +1543,9 @@
     "auxiliaryAddRange": {
         "message": "Доб. диапазон"
     },
+    "auxiliaryAddLink": {
+        "message": "Cвязывай"
+    },
     "auxiliaryButtonSave": {
         "message": "Сохранить"
     },
@@ -1551,6 +1554,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "АВТО"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Установка нас троечных переключателей. Смотри 'in-flight adjustments' секцию руководства. Изменение этих настроек автоматически не сохраняется. Там 4 слота. Каждый переключатель используемый одновременно требует исключительного использования слота."
