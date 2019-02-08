@@ -99,6 +99,8 @@ TABS.auxiliary.initialize = function (callback) {
             logicList.append(logicOption);
         }
         logicOptionTemplate.val(0);
+
+        logicList.hide();
     }
     
     function configureLinkTemplate() {
@@ -138,14 +140,17 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         var rangeIndex = $(modeElement).find('.range').length;
-
-        if (rangeIndex == 0) {
-            $(modeElement).find('.addLink').hide();
-        }
         
         var rangeElement = $('#tab-auxiliary-templates .range').clone();
         rangeElement.attr('id', 'mode-' + modeIndex + '-range-' + rangeIndex);
         modeElement.find('.ranges').append(rangeElement);
+
+        if (rangeIndex == 0) {
+            $(modeElement).find('.addLink').hide();
+        } else {
+            var prevRangeElement = $(modeElement).find('.ranges').children().eq(rangeIndex - 1);
+            $(prevRangeElement).find('.logic').show();
+        }
         
         $(rangeElement).find('.channel-slider').noUiSlider({
             start: rangeValues,
@@ -183,6 +188,9 @@ TABS.auxiliary.initialize = function (callback) {
                 if (modeId != 0){                           // don't show Link for ARM
                     $(modeElement).find('.addLink').show();
                 }
+            } else {
+                var lastRangeElement = $(modeElement).find('.ranges').children().eq(numSiblings - 1);
+                $(lastRangeElement).find('.logic').hide();
             }
 
             rangeElement.remove();
@@ -250,7 +258,7 @@ TABS.auxiliary.initialize = function (callback) {
                     modeLogic: 0,
                     linkedTo: 0
                 };
-                if (semver.gte(apiVersion, "1.41.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     modeRangeExtra = MODE_RANGES_EXTRA[modeRangeIndex];
                 }
                 
@@ -322,22 +330,34 @@ TABS.auxiliary.initialize = function (callback) {
                 });
 
                 $(modeElement).find('.link').each(function() {
-                    var modeRange = {
-                        id: modeId,
-                        auxChannelIndex: 0,
-                        range: {
-                            start: 900,
-                            end: 900
-                        }
-                    };
-                    MODE_RANGES.push(modeRange);
+                    var linkedToSelection = parseInt($(this).find('.linkedTo').val());
 
-                    var modeRangeExtra = {
-                        id: modeId,
-                        modeLogic: 0,
-                        linkedTo: parseInt($(this).find('.linkedTo').val())
-                    };
-                    MODE_RANGES_EXTRA.push(modeRangeExtra);
+                    if (linkedToSelection == 0) {
+                        $(modeElement).find('.addRange').show();
+
+                        if (modeId != 0){                           // don't show Link for ARM
+                            $(modeElement).find('.addLink').show();
+                        }
+                        
+                        $(this).remove();
+                    } else {
+                        var modeRange = {
+                            id: modeId,
+                            auxChannelIndex: 0,
+                            range: {
+                                start: 900,
+                                end: 900
+                            }
+                        };
+                        MODE_RANGES.push(modeRange);
+
+                        var modeRangeExtra = {
+                            id: modeId,
+                            modeLogic: 0,
+                            linkedTo: linkedToSelection
+                        };
+                        MODE_RANGES_EXTRA.push(modeRangeExtra);
+                    }
                 });
             });
             

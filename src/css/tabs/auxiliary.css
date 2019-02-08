@@ -143,11 +143,13 @@
     float: left;
     min-width: 90px;
     text-align: center;
+    margin-top: -4px;
 }
 
 .tab-auxiliary .range .channel {
     border: 1px solid silver;
     border-radius: 3px;
+    margin-bottom: 3px;
 }
 
 .tab-auxiliary .range .logic {
