@@ -34,6 +34,9 @@ function configuration_backup(callback) {
         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
             profileSpecificData.push(MSPCodes.MSP_RC_DEADBAND);
         }
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            profileSpecificData.push(MSPCodes.MSP_MODE_RANGES_EXTRA);
+        }
     }
     
     update_profile_specific_data_list();
@@ -76,6 +79,9 @@ function configuration_backup(callback) {
 
                         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
                             configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, RC_DEADBAND_CONFIG);
+                        }
+                        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                            configuration.profiles[fetchingProfile].ModeRangesExtra = jQuery.extend(true, [], MODE_RANGES_EXTRA);
                         }
                         codeKey = 0;
                         fetchingProfile++;
@@ -680,7 +686,7 @@ function configuration_restore(callback) {
             GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
-        
+
         if (appliedMigrationsCount > 0) {
             GUI.log(i18n.getMessage('configMigrationSuccessful', [appliedMigrationsCount]));
         }        
@@ -733,6 +739,21 @@ function configuration_restore(callback) {
                     MODE_RANGES = configuration.profiles[profile].ModeRanges;
                     ADJUSTMENT_RANGES = configuration.profiles[profile].AdjustmentRanges;
                     RC_DEADBAND_CONFIG = configuration.profiles[profile].RCdeadband;
+
+                    if (configuration.profiles[profile].ModeRangesExtra == undefined) {
+                        MODE_RANGES_EXTRA = [];
+
+                        for (var modeIndex = 0; modeIndex < MODE_RANGES.length; modeIndex++) {
+                            var defaultModeRangeExtra = {
+                                modeId:     MODE_RANGES[modeIndex].modeId,
+                                modeLogic:  0,
+                                linkedTo:   0
+                            };
+                            MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
+                        }
+                    } else {
+                        MODE_RANGES_EXTRA = configuration.profiles[profile].ModeRangesExtra;
+                    }
                 }
 
                 function upload_using_specific_commands() {
