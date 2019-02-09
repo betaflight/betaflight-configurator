@@ -2301,6 +2301,10 @@
     "dataflashFirmwareUpgradeRequired": {
         "message": "Dataflash requires firmware &gt;= 1.8.0."
     },
+    "dataflashSavingDeprecationNote": {
+        "message": "(Deprecated, use '<b>$t(onboardLoggingRebootMscText.message)</b>' below:",
+        "description": "Used to indicate that saving log files through configurator is deprecated if MSC is available. Note: The seemingly unbalanced opening brace is intentional, there is a closing brace in a separate DOM element after the button."
+    },
     "dataflashButtonSaveFile": {
         "message": "Save flash to file..."
     },

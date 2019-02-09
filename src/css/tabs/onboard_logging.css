@@ -211,7 +211,7 @@
 }
 
 .tab-onboard_logging.msc-supported .require-msc-supported {
-    display: block;
+    display: unset;
 }
 
 .require-msc-not-ready {
