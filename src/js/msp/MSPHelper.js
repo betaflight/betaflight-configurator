@@ -1928,7 +1928,6 @@ MspHelper.prototype.sendModeRanges = function(onCompleteCallback) {
     function send_next_mode_range() {
 
         var modeRange = MODE_RANGES[modeRangeIndex];
-        var modeRangeExtra = MODE_RANGES_EXTRA[modeRangeIndex];
 
         var buffer = [];
         buffer.push8(modeRangeIndex)
@@ -1938,6 +1937,8 @@ MspHelper.prototype.sendModeRanges = function(onCompleteCallback) {
             .push8((modeRange.range.end - 900) / 25);
 
         if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            var modeRangeExtra = MODE_RANGES_EXTRA[modeRangeIndex];
+            
             buffer.push8(modeRangeExtra.modeLogic)
                 .push8(modeRangeExtra.linkedTo);
         }
