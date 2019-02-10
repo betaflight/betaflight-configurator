@@ -1,5 +1,7 @@
 'use strict';
 
+var nwGui = getNwGui();
+
 var googleAnalytics = analytics;
 var analytics = undefined;
 
@@ -15,6 +17,17 @@ $(document).ready(function () {
         });
     });
 });
+
+function getNwGui() {
+    var gui = null;
+    try {
+        gui = require('nw.gui');
+    } catch (ex) {
+        console.log("Could not require 'nw.gui', maybe inside chrome");
+    }
+
+    return gui;
+}
 
 function checkSetupAnalytics(callback) {
     if (!analytics) {
@@ -32,6 +45,10 @@ function checkSetupAnalytics(callback) {
     }
 };
 
+function getBuildType() {
+    return nwGui ? 'NW.js' : 'Chrome';
+}
+
 function setupAnalytics(result) {
     var userId;
     if (result.userId) {
@@ -48,7 +65,7 @@ function setupAnalytics(result) {
 
     var debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), CONFIGURATOR.gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode);
+    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), CONFIGURATOR.gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode, getBuildType());
 
     function logException(exception) {
         analytics.sendException(exception.stack);
@@ -64,15 +81,14 @@ function setupAnalytics(result) {
         analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' })
     }
 
-    try {
-        var gui = require('nw.gui');
-        var win = gui.Window.get();
+    if (nwGui) {
+        var win = nwGui.Window.get();
         win.on('close', function () {
             sendCloseEvent();
 
             this.close(true);
         });
-    } catch (ex) {
+    } else {
         // Looks like we're in Chrome - but the event does not actually get fired
         chrome.runtime.onSuspend.addListener(sendCloseEvent);
     }
@@ -698,15 +714,21 @@ function generateFilename(prefix, suffix) {
     return filename + '.' + suffix;
 }
 
-function getFirmwareVersion(firmwareVersion, firmwareId, hardwareId) {
+function getTargetVersion(hardwareId) {
+    var versionText = '';
+
+    if (hardwareId) {
+       versionText += i18n.getMessage('versionLabelTarget') + ': ' + hardwareId;
+    }
+
+    return versionText;
+}
+
+function getFirmwareVersion(firmwareVersion, firmwareId) {
     var versionText = '';
 
     if (firmwareVersion) {
         versionText += i18n.getMessage('versionLabelFirmware') + ': ' + firmwareId + ' ' + firmwareVersion;
-
-        if (hardwareId) {
-           versionText += ' (' + i18n.getMessage('versionLabelTarget') + ': ' + hardwareId + ')';
-        }
     }
 
     return versionText;
@@ -719,7 +741,9 @@ function getConfiguratorVersion() {
 function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
     var versionText = getConfiguratorVersion() + '<br />';
 
-    versionText = versionText + getFirmwareVersion(firmwareVersion, firmwareId, hardwareId);
+    versionText = versionText + getFirmwareVersion(firmwareVersion, firmwareId) + '<br />';
+
+    versionText = versionText + getTargetVersion(hardwareId);
 
     $('#logo .logo_text').html(versionText);
 }
@@ -727,9 +751,16 @@ function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
 function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {
     var versionText = '';
 
-    versionText = versionText + getFirmwareVersion(firmwareVersion, firmwareId, hardwareId);
+    versionText = versionText + getFirmwareVersion(firmwareVersion, firmwareId);
 
     if (versionText !== '') {
+        versionText = versionText + ', ';
+    }
+
+    let targetVersion = getTargetVersion(hardwareId);
+    versionText = versionText + targetVersion;
+
+    if (targetVersion !== '') {
         versionText = versionText + ', ';
     }
 
@@ -752,19 +783,15 @@ function getManifestVersion(manifest) {
 }
 
 function openNewWindowsInExternalBrowser() {
-    try {
-        var gui = require('nw.gui');
-
+    if (nwGui) {
         //Get the current window
-        var win = gui.Window.get();
+        var win = nwGui.Window.get();
 
         //Listen to the new window event
         win.on('new-win-policy', function (frame, url, policy) {
           gui.Shell.openExternal(url);
           policy.ignore();
         });
-    } catch (ex) {
-        console.log("require does not exist, maybe inside chrome");
     }
 }
 

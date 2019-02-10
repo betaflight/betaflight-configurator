@@ -60,7 +60,7 @@ var COPY_PROFILE;
 var DEFAULT;
 
 var FC = {
-    resetState: function() {
+    resetState: function () {
         CONFIG = {
             apiVersion:                       "0.0.0",
             flightControllerIdentifier:       '',
@@ -86,6 +86,14 @@ var FC = {
             armingDisableFlags:               0,
             armingDisabled:                   false,
             runawayTakeoffPreventionDisabled: false,
+            boardIdentifier:                  "",
+            boardVersion:                     0,
+            commCapabilities:                 0,
+            targetName:                       "",
+            boardName:                        "",
+            manufacturerId:                   "",
+            signature:                        [],
+            mcuTypeId:                        255,
         };
 
         BF_CONFIG = {
@@ -456,5 +464,42 @@ var FC = {
             dterm_notch_hz:                 260,
             yaw_lowpass_hz:                 100,
         };
+    },
+
+    MCU_TYPES: {
+        0: "SIMULATOR",
+        1: "F103",
+        2: "F303",
+        3: "F40X",
+        4: "F411",
+        5: "F446",
+        6: "F722",
+        7: "F745",
+        8: "F746",
+        9: "F765",
+        255: "Unknown MCU",
+    },
+
+    getHardwareName: function () {
+        let name;
+        if (CONFIG.targetName) {
+            name = CONFIG.targetName;
+        } else {
+            name = CONFIG.boardIdentifier;
+        }
+
+        if (CONFIG.boardName && CONFIG.boardName !== name) {
+            name = CONFIG.boardName + "(" + name + ")";
+        }
+
+        if (CONFIG.manufacturerId) {
+            name = CONFIG.manufacturerId + "/" + name;
+        }
+
+        return name;
+    },
+
+    getMcuType: function () {
+        return FC.MCU_TYPES[CONFIG.mcuTypeId];
     }
 };

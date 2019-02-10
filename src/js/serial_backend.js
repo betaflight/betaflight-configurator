@@ -254,10 +254,14 @@ function onOpen(openInfo) {
 
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
                                     analytics.setFlightControllerData(analytics.DATA.BOARD_TYPE, CONFIG.boardIdentifier);
+                                    analytics.setFlightControllerData(analytics.DATA.TARGET_NAME, CONFIG.targetName);
+                                    analytics.setFlightControllerData(analytics.DATA.BOARD_NAME, CONFIG.boardName);
+                                    analytics.setFlightControllerData(analytics.DATA.MANUFACTURER_ID, CONFIG.manufacturerId);
+                                    analytics.setFlightControllerData(analytics.DATA.MCU_TYPE, FC.getMcuType());
 
-                                    GUI.log(i18n.getMessage('boardInfoReceived', [CONFIG.boardIdentifier, CONFIG.boardVersion]));
-                                    updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, CONFIG.boardIdentifier);
-                                    updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, CONFIG.boardIdentifier);
+                                    GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), CONFIG.boardVersion]));
+                                    updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
+                                    updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
 
                                     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
                                         var uniqueDeviceIdentifier = CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16);

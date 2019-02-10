@@ -1,6 +1,5 @@
 'use strict';
 
-
 function MspHelper () {
   var self = this;
 
@@ -34,6 +33,8 @@ function MspHelper () {
         MSC: 2,
         MSC_UTC: 3
     };
+
+    self.SIGNATURE_LENGTH = 32;
 }
 
 MspHelper.prototype.reorderPwmProtocols = function (protocol) {
@@ -710,12 +711,49 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 CONFIG.boardIdentifier = identifier;
                 CONFIG.boardVersion = data.readU16();
+
                 if (semver.gte(CONFIG.apiVersion, "1.35.0")) {
                     CONFIG.boardType = data.readU8();
                 } else {
                     CONFIG.boardType = 0;
                 }
 
+                CONFIG.targetName = "";
+                if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                    CONFIG.commCapabilities = data.readU8();
+
+                    let length = data.readU8();
+                    for (let i = 0; i < length; i++) {
+                        CONFIG.targetName += String.fromCharCode(data.readU8());
+                    }
+                } else {
+                    CONFIG.commCapabilities = 0;
+                }
+
+                CONFIG.boardName = "";
+                CONFIG.manufacturerId = "";
+                CONFIG.signature = [];
+                if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                    let length = data.readU8();
+                    for (let i = 0; i < length; i++) {
+                        CONFIG.boardName += String.fromCharCode(data.readU8());
+                    }
+
+                    length = data.readU8();
+                    for (let i = 0; i < length; i++) {
+                        CONFIG.manufacturerId += String.fromCharCode(data.readU8());
+                    }
+
+                    for (let i = 0; i < self.SIGNATURE_LENGTH; i++) {
+                        CONFIG.signature.push(data.readU8());
+                    }
+                }
+
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    CONFIG.mcuTypeId = data.readU8();
+                } else {
+                    CONFIG.mcuTypeId = 255;
+                }
                 break;
 
             case MSPCodes.MSP_NAME:
