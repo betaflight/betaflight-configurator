@@ -34,9 +34,6 @@ function configuration_backup(callback) {
         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
             profileSpecificData.push(MSPCodes.MSP_RC_DEADBAND);
         }
-        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-            profileSpecificData.push(MSPCodes.MSP_MODE_RANGES_EXTRA);
-        }
     }
     
     update_profile_specific_data_list();
@@ -79,9 +76,6 @@ function configuration_backup(callback) {
 
                         if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
                             configuration.profiles[fetchingProfile].RCdeadband = jQuery.extend(true, {}, RC_DEADBAND_CONFIG);
-                        }
-                        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-                            configuration.profiles[fetchingProfile].ModeRangesExtra = jQuery.extend(true, [], MODE_RANGES_EXTRA);
                         }
                         codeKey = 0;
                         fetchingProfile++;
@@ -128,6 +122,9 @@ function configuration_backup(callback) {
             uniqueData.push(MSPCodes.MSP_GPS_CONFIG);
             uniqueData.push(MSPCodes.MSP_COMPASS_CONFIG);
             uniqueData.push(MSPCodes.MSP_FEATURE_CONFIG);
+        }
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            uniqueData.push(MSPCodes.MSP_MODE_RANGES_EXTRA);
         }
     }
     
@@ -179,6 +176,9 @@ function configuration_backup(callback) {
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     configuration.BEEPER_CONFIG = jQuery.extend(true, {}, BEEPER_CONFIG);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    configuration.MODE_RANGES_EXTRA = jQuery.extend(true, [], MODE_RANGES_EXTRA);
                 }
 
                 save();
@@ -739,21 +739,6 @@ function configuration_restore(callback) {
                     MODE_RANGES = configuration.profiles[profile].ModeRanges;
                     ADJUSTMENT_RANGES = configuration.profiles[profile].AdjustmentRanges;
                     RC_DEADBAND_CONFIG = configuration.profiles[profile].RCdeadband;
-
-                    if (configuration.profiles[profile].ModeRangesExtra == undefined) {
-                        MODE_RANGES_EXTRA = [];
-
-                        for (var modeIndex = 0; modeIndex < MODE_RANGES.length; modeIndex++) {
-                            var defaultModeRangeExtra = {
-                                modeId:     MODE_RANGES[modeIndex].modeId,
-                                modeLogic:  0,
-                                linkedTo:   0
-                            };
-                            MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
-                        }
-                    } else {
-                        MODE_RANGES_EXTRA = configuration.profiles[profile].ModeRangesExtra;
-                    }
                 }
 
                 function upload_using_specific_commands() {
@@ -786,6 +771,23 @@ function configuration_restore(callback) {
                 }
 
                 function upload_mode_ranges() {
+                    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                        if (configuration.MODE_RANGES_EXTRA == undefined) {
+                            MODE_RANGES_EXTRA = [];
+
+                            for (var modeIndex = 0; modeIndex < MODE_RANGES.length; modeIndex++) {
+                                var defaultModeRangeExtra = {
+                                    modeId:     MODE_RANGES[modeIndex].modeId,
+                                    modeLogic:  0,
+                                    linkedTo:   0
+                                };
+                                MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
+                            }
+                        } else {
+                            MODE_RANGES_EXTRA = configuration.MODE_RANGES_EXTRA;
+                        }
+                    }
+                    
                     mspHelper.sendModeRanges(upload_adjustment_ranges);
                 }
                 
