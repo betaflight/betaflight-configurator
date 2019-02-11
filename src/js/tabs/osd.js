@@ -37,6 +37,7 @@ SYM.HEADING_N = 0x18;
 SYM.HEADING_S = 0x19;
 SYM.HEADING_E = 0x1A;
 SYM.HEADING_W = 0x1B;
+SYM.TEMP_F = 0x0D;
 SYM.TEMP_C = 0x0E;
 SYM.STICK_OVERLAY_SPRITE_HIGH = 0x08;
 SYM.STICK_OVERLAY_SPRITE_MID = 0x09;
@@ -292,10 +293,10 @@ OSD.generateTemperaturePreview = function (osd_data, temperature) {
         case 0:
             temperature *= (9.0 / 5.0);
             temperature += 32.0;
-            preview += Math.floor(temperature) + 'F'
+            preview += Math.floor(temperature) + FONT.symbol(SYM.TEMP_F);
             break;
         case 1:
-            preview += temperature + 'C'
+            preview += temperature + FONT.symbol(SYM.TEMP_C);
             break;
     }
     return preview;
