@@ -1,6 +1,6 @@
 'use strict';
 
-var Analytics = function (trackingId, userId, appName, appVersion, changesetId, buildType, checkForDebugVersions, optOut, debugMode) {
+var Analytics = function (trackingId, userId, appName, appVersion, changesetId, os, checkForDebugVersions, optOut, debugMode, buildType) {
     this._trackingId = trackingId;
 
     this.setOptOut(optOut);
@@ -43,10 +43,14 @@ var Analytics = function (trackingId, userId, appName, appVersion, changesetId, 
         MCU_ID: 'mcuId',
         LOGGING_STATUS: 'loggingStatus',
         LOG_SIZE: 'logSize',
+        TARGET_NAME: 'targetName',
+        BOARD_NAME: 'boardName',
+        MANUFACTURER_ID: 'manufacturerId',
+        MCU_TYPE: 'mcuType',
     };
 
     this.DIMENSIONS = {
-        CONFIGURATOR_BUILD_TYPE: 1,
+        CONFIGURATOR_OS: 1,
         BOARD_TYPE: 2,
         FIRMWARE_TYPE: 3,
         FIRMWARE_VERSION: 4,
@@ -60,6 +64,11 @@ var Analytics = function (trackingId, userId, appName, appVersion, changesetId, 
         MCU_ID: 12,
         CONFIGURATOR_CHANGESET_ID: 13,
         CONFIGURATOR_USE_DEBUG_VERSIONS: 14,
+        TARGET_NAME: 15,
+        BOARD_NAME: 16,
+        MANUFACTURER_ID: 17,
+        MCU_TYPE: 18,
+        CONFIGURATOR_BUILD_TYPE: 19,
     };
 
     this.METRICS = {
@@ -67,9 +76,10 @@ var Analytics = function (trackingId, userId, appName, appVersion, changesetId, 
         LOG_SIZE: 2,
     };
 
-    this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
+    this.setDimension(this.DIMENSIONS.CONFIGURATOR_OS, os);
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_CHANGESET_ID, changesetId);
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_USE_DEBUG_VERSIONS, checkForDebugVersions);
+    this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
 
     this.resetFlightControllerData();
     this.resetFirmwareData();
@@ -124,6 +134,10 @@ Analytics.prototype._rebuildFlightControllerEvent = function () {
     this.setDimension(this.DIMENSIONS.LOGGING_STATUS, this._flightControllerData[this.DATA.LOGGING_STATUS]);
     this.setDimension(this.DIMENSIONS.MCU_ID, this._flightControllerData[this.DATA.MCU_ID]);
     this.setMetric(this.METRICS.LOG_SIZE, this._flightControllerData[this.DATA.LOG_SIZE]);
+    this.setMetric(this.DIMENSIONS.TARGET_NAME, this._flightControllerData[this.DATA.TARGET_NAME]);
+    this.setMetric(this.DIMENSIONS.BOARD_NAME, this._flightControllerData[this.DATA.BOARD_NAME]);
+    this.setMetric(this.DIMENSIONS.MANUFACTURER_ID, this._flightControllerData[this.DATA.MANUFACTURER_ID]);
+    this.setMetric(this.DIMENSIONS.MCU_TYPE, this._flightControllerData[this.DATA.MCU_TYPE]);
 }
 
 Analytics.prototype.setFlightControllerData = function (property, value) {
