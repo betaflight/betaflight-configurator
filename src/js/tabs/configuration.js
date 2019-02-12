@@ -464,6 +464,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             updateGyroDenom(8);
         }
 
+
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeNo32KhzHelp'));
+        } else {
+            $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeHelp'));
+        }
+
         gyro_select_e.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
 
         gyro_select_e.change(function () {
