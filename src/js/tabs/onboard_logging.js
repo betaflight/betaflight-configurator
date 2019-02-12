@@ -50,27 +50,9 @@ TABS.onboard_logging.initialize = function (callback) {
         GUI.log(i18n.getMessage('configurationEepromSaved'));
 
         GUI.tab_switch_cleanup(function() {
-            MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialize);
+            MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+            reinitialiseConnection(self);
         });
-    }
-
-    function reinitialize() {
-        GUI.log(i18n.getMessage('deviceRebooting'));
-
-        if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) { // VCP-based flight controls may crash old drivers, we catch and reconnect
-            $('a.connect').click();
-            GUI.timeout_add('start_connection',function start_connection() {
-                $('a.connect').click();
-            },2000);
-        } else {
-
-            GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                    GUI.log(i18n.getMessage('deviceReady'));
-                    TABS.onboard_logging.initialize(false, $('#content').scrollTop());
-                });
-            },1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
-        }
     }
     
     function load_html() {
@@ -424,7 +406,7 @@ TABS.onboard_logging.initialize = function (callback) {
     
     function flash_save_begin() {
         if (GUI.connected_to) {
-            if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) {
+            if (FC.boardHasVcp()) {
                 if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {

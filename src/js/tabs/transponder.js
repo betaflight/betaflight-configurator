@@ -304,7 +304,8 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                         GUI.log(i18n.getMessage('transponderEepromSaved'));
                         if ( $(_this).hasClass('reboot') ) {
                             GUI.tab_switch_cleanup(function() {
-                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialize);
+                                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+                                reinitialiseConnection(self);
                             });
                         }
                     });
@@ -318,23 +319,6 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                     save_transponder_data();
                 }
             });
-        }
-
-        function reinitialize() {
-            GUI.log(i18n.getMessage('deviceRebooting'));
-            if ( BOARD.find_board_definition(CONFIG.boardIdentifier).vcp ) {
-                $('a.connect').click();
-                GUI.timeout_add('start_connection', function start_connection() {
-                    $('a.connect').click();
-                }, 2500);
-            } else {
-                GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                    MSP.send_message(MSPCodes.MSP_IDENT, false, false, function() {
-                        GUI.log(i18n.getMessage('deviceReady'));
-                        TABS.configuration.initialize(false, $('#content').scrollTop());
-                    });
-                }, 1500);
-            }
         }
 
         GUI.content_ready(callback);

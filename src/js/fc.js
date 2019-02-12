@@ -466,20 +466,6 @@ var FC = {
         };
     },
 
-    MCU_TYPES: {
-        0: "SIMULATOR",
-        1: "F103",
-        2: "F303",
-        3: "F40X",
-        4: "F411",
-        5: "F446",
-        6: "F722",
-        7: "F745",
-        8: "F746",
-        9: "F765",
-        255: "Unknown MCU",
-    },
-
     getHardwareName: function () {
         let name;
         if (CONFIG.targetName) {
@@ -499,7 +485,37 @@ var FC = {
         return name;
     },
 
+    MCU_TYPES: {
+        0: "SIMULATOR",
+        1: "F103",
+        2: "F303",
+        3: "F40X",
+        4: "F411",
+        5: "F446",
+        6: "F722",
+        7: "F745",
+        8: "F746",
+        9: "F765",
+        255: "Unknown MCU",
+    },
+
     getMcuType: function () {
         return FC.MCU_TYPES[CONFIG.mcuTypeId];
-    }
+    },
+
+    COMM_CAPABILITIES_FLAGS: {
+        HAS_VCP: 0x01,
+        HAS_SOFTSERIAL: 0x02,
+    },
+
+    boardHasVcp: function () {
+        var hasVcp = false;
+        if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+            hasVcp = (CONFIG.commCapabilities & FC.COMM_CAPABILITIES_FLAGS.HAS_VCP) !== 0;
+        } else {
+            hasVcp = BOARD.find_board_definition(CONFIG.boardIdentifier).vcp;
+        }
+
+        return hasVcp;
+    },
 };

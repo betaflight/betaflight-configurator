@@ -291,24 +291,7 @@ TABS.cli.read = function (readInfo) {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
             GUI.log(i18n.getMessage('cliReboot'));
-            GUI.log(i18n.getMessage('deviceRebooting'));
-
-            if (BOARD.find_board_definition(CONFIG.boardIdentifier).vcp) { // VCP-based flight controls may crash old drivers, we catch and reconnect
-                $('a.connect').click();
-                GUI.timeout_add('start_connection', function start_connection() {
-                    $('a.connect').click();
-                }, 2500);
-            } else {
-
-                GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                    MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
-                        GUI.log(i18n.getMessage('deviceReady'));
-                        if (!GUI.tab_switch_in_progress) {
-                            $('#tabs ul.mode-connected .tab_setup a').click();
-                        }
-                    });
-                }, 1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
-            }
+            reinitialiseConnection(self);
         }
 
     }
@@ -347,7 +330,10 @@ TABS.cli.send = function (line, callback) {
 
 TABS.cli.cleanup = function (callback) {
     if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive)) {
-        if (callback) callback();
+        if (callback) {
+            callback();
+        }
+
         return;
     }
     this.send(getCliCommand('exit\r', this.cliBuffer), function (writeInfo) {
@@ -355,9 +341,10 @@ TABS.cli.cleanup = function (callback) {
         // (another approach is however much more complicated):
         // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
         // we could probably implement this someday
-        GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-            if (callback) callback();
-        }, 1000); // if we dont allow enough time to reboot, CRC of "first" command sent will fail, keep an eye for this one
+        reinitialiseConnection(self, function () {
+            GUI.timeout_add('tab_change_callback', callback, 500);
+        });
         CONFIGURATOR.cliActive = false;
+        CONFIGURATOR.cliValid = false;
     });
 };

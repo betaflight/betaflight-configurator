@@ -724,3 +724,23 @@ function update_dataflash_global() {
         });
      }
 }
+
+function reinitialiseConnection(originatorTab, callback) {
+    GUI.log(i18n.getMessage('deviceRebooting'));
+
+    if (FC.boardHasVcp()) { // VCP-based flight controls may crash old drivers, we catch and reconnect
+        setTimeout(function start_connection() {
+            $('a.connect').click();
+            if (callback) {
+                callback();
+            }
+        }, 2500);
+    } else {
+        GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
+            MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
+                GUI.log(i18n.getMessage('deviceReady'));
+                originatorTab.initialize(false, $('#content').scrollTop());
+            });
+        }, 1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
+    }
+}
