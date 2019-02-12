@@ -919,7 +919,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     PID_ADVANCED_CONFIG.digitalIdlePercent = data.readU16() / 100;
 
                     if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
-                        PID_ADVANCED_CONFIG.gyroUse32kHz = data.readU8();
+                        let gyroUse32kHz = data.readU8();
+                        if (semver.lt(CONFIG.apiVersion, "1.41.0")) {
+                            PID_ADVANCED_CONFIG.gyroUse32kHz = gyroUse32kHz;
+                        }
                     }
                 }
                 break;
@@ -941,12 +944,15 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                     if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
                         FILTER_CONFIG.gyro_hardware_lpf = data.readU8();
-                        FILTER_CONFIG.gyro_32khz_hardware_lpf = data.readU8();
+                        let gyro_32khz_hardware_lpf = data.readU8();
                         FILTER_CONFIG.gyro_lowpass_hz = data.readU16();
                         FILTER_CONFIG.gyro_lowpass2_hz = data.readU16();
                         FILTER_CONFIG.gyro_lowpass_type = data.readU8();
                         FILTER_CONFIG.gyro_lowpass2_type = data.readU8();
                         FILTER_CONFIG.dterm_lowpass2_hz = data.readU16();
+                        if (semver.lt(CONFIG.apiVersion, "1.41.0")) {
+                            FILTER_CONFIG.gyro_32khz_hardware_lpf = data.readU8();
+                        }
                     }
                 }
                 break;
@@ -1630,7 +1636,11 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push16(PID_ADVANCED_CONFIG.digitalIdlePercent * 100);
 
                 if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
-                    buffer.push8(PID_ADVANCED_CONFIG.gyroUse32kHz);
+                    let gyroUse32kHz = 0;
+                    if (semver.lt(CONFIG.apiVersion, "1.41.0")) {
+                        gyroUse32kHz = PID_ADVANCED_CONFIG.gyroUse32kHz;
+                    }
+                    buffer.push8(gyroUse32kHz);
                 }
             }
             break;
@@ -1651,8 +1661,12 @@ MspHelper.prototype.crunch = function(code) {
                     buffer.push8(FILTER_CONFIG.dterm_lowpass_type);
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                    let gyro_32khz_hardware_lpf = 0;
+                    if (semver.lt(CONFIG.apiVersion, "1.41.0")) {
+                        gyro_32khz_hardware_lpf = FILTER_CONFIG.gyro_32khz_hardware_lpf;
+                    }
                     buffer.push8(FILTER_CONFIG.gyro_hardware_lpf)
-                          .push8(FILTER_CONFIG.gyro_32khz_hardware_lpf)
+                          .push8(gyro_32khz_hardware_lpf)
                           .push16(FILTER_CONFIG.gyro_lowpass_hz)
                           .push16(FILTER_CONFIG.gyro_lowpass2_hz)
                           .push8(FILTER_CONFIG.gyro_lowpass_type)

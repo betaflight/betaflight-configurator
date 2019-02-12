@@ -209,7 +209,7 @@ TABS.onboard_logging.initialize = function (callback) {
         var loggingRates = [];
         var pidRateBase = 8000;
 
-        if (PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
+        if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0") && PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
             pidRateBase = 32000;
         }
 
