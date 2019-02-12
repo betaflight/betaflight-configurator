@@ -582,3 +582,10 @@ TABS.onboard_logging.cleanup = function (callback) {
         callback();
     }
 };
+
+TABS.onboard_logging.mscRebootFailedCallback = function () {
+    $(".tab-onboard_logging")
+        .toggleClass("msc-supported", false);
+
+    showErrorDialog(i18n.getMessage('operationNotSupported'));
+}

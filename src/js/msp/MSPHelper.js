@@ -1309,7 +1309,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             switch (code) {
             case MSPCodes.MSP_SET_REBOOT:
-                showErrorDialog(i18n.getMessage('operationNotSupported'));
+                TABS.onboard_logging.mscRebootFailedCallback();
+
+                break;
             }
         }
     }
