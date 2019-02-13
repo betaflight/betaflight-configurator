@@ -134,10 +134,10 @@ Analytics.prototype._rebuildFlightControllerEvent = function () {
     this.setDimension(this.DIMENSIONS.LOGGING_STATUS, this._flightControllerData[this.DATA.LOGGING_STATUS]);
     this.setDimension(this.DIMENSIONS.MCU_ID, this._flightControllerData[this.DATA.MCU_ID]);
     this.setMetric(this.METRICS.LOG_SIZE, this._flightControllerData[this.DATA.LOG_SIZE]);
-    this.setMetric(this.DIMENSIONS.TARGET_NAME, this._flightControllerData[this.DATA.TARGET_NAME]);
-    this.setMetric(this.DIMENSIONS.BOARD_NAME, this._flightControllerData[this.DATA.BOARD_NAME]);
-    this.setMetric(this.DIMENSIONS.MANUFACTURER_ID, this._flightControllerData[this.DATA.MANUFACTURER_ID]);
-    this.setMetric(this.DIMENSIONS.MCU_TYPE, this._flightControllerData[this.DATA.MCU_TYPE]);
+    this.setDimension(this.DIMENSIONS.TARGET_NAME, this._flightControllerData[this.DATA.TARGET_NAME]);
+    this.setDimension(this.DIMENSIONS.BOARD_NAME, this._flightControllerData[this.DATA.BOARD_NAME]);
+    this.setDimension(this.DIMENSIONS.MANUFACTURER_ID, this._flightControllerData[this.DATA.MANUFACTURER_ID]);
+    this.setDimension(this.DIMENSIONS.MCU_TYPE, this._flightControllerData[this.DATA.MCU_TYPE]);
 }
 
 Analytics.prototype.setFlightControllerData = function (property, value) {
