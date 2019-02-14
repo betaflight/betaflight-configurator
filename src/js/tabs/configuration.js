@@ -445,7 +445,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gyro_select_e.change();
         };
 
-        if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
+        if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0")) {
             gyroUse32kHz_e.prop('checked', PID_ADVANCED_CONFIG.gyroUse32kHz !== 0);
 
             gyroUse32kHz_e.change(function () {
@@ -464,13 +464,20 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             updateGyroDenom(8);
         }
 
+
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeNo32KhzHelp'));
+        } else {
+            $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeHelp'));
+        }
+
         gyro_select_e.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
 
         gyro_select_e.change(function () {
             var originalPidDenom = pid_select_e.val();
 
             var pidBaseFreq = 8;
-            if (semver.gte(CONFIG.apiVersion, "1.25.0") && gyroUse32kHz_e.is(':checked')) {
+            if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0") && gyroUse32kHz_e.is(':checked')) {
                 pidBaseFreq = 32;
             }
 
@@ -1023,7 +1030,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyro_select_e.val());
             PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pid_select_e.val());
             PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
-            if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
+            if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0")) {
                 PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
             }
 
