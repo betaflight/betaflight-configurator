@@ -115,8 +115,8 @@
     height: 70px;
     padding-top: 15px;
     padding-left: 15px;
-    border-top: 0px;
-    border-bottom: 0px;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #cccccc;
     background-color: #ececec;
     padding-bottom: 5px;
 }
@@ -126,6 +126,14 @@
 }
 
 .tab-auxiliary .range:last-child {
+    border-bottom: 0px;
+}
+
+.tab-auxiliary .link:first-child {
+    border-top: 0px;
+}
+
+.tab-auxiliary .link:last-child {
     border-bottom: 0px;
 }
 
@@ -152,7 +160,7 @@
     margin-bottom: 3px;
 }
 
-.tab-auxiliary .range .logic {
+.tab-auxiliary .logic {
     border: 1px solid silver;
     border-radius: 3px;
 }
@@ -173,13 +181,14 @@
     margin-top: 1px;
 }
 
-.tab-auxiliary .mode .link .channelLink {
+.tab-auxiliary .mode .link .modeInfo {
     float: left;
 }
 
 .tab-auxiliary .link .linkedTo {
     border: 1px solid silver;
     border-radius: 3px;
+    margin-bottom: 3px;
 }
 
 .tab-auxiliary>.buttons {
