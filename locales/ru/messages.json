@@ -1170,7 +1170,7 @@
         "message": "IRC Tramp"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "RunCam устройство"
+        "message": "RunCam/Caddx устройство"
     },
     "pidTuningProfileOption": {
         "message": "Профиль $1"
