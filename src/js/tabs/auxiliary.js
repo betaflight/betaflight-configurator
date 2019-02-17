@@ -78,8 +78,6 @@ TABS.auxiliary.initialize = function (callback) {
             logicList.append(logicOption);
         }
         logicOptionTemplate.val(0);
-
-        logicList.hide();
     }
     
     function configureRangeTemplate(auxChannelCount) {
@@ -131,20 +129,6 @@ TABS.auxiliary.initialize = function (callback) {
         
         configureLogicList(linkTemplate);
     }
-
-    function hideSiblingLogic(modeElement, element) {
-        var numSiblings = $(element).parent().children().length - 1;
-
-        if (numSiblings != 0 && $(element).find('.logic').is(':hidden')) {
-            $(modeElement).find('.ranges').children().eq(numSiblings - 1).find('.logic').hide();
-        }
-    }
-
-    function showSiblingLogic(modeElement, index) {
-        if (index != 0) {
-            $(modeElement).find('.ranges').children().eq(index - 1).find('.logic').show();
-        }
-    }
     
     function addRangeToMode(modeElement, auxChannelIndex, modeLogic, range) {
         var modeIndex = $(modeElement).data('index');
@@ -166,7 +150,11 @@ TABS.auxiliary.initialize = function (callback) {
         rangeElement.attr('id', 'mode-' + modeIndex + '-range-' + rangeIndex);
         modeRanges.append(rangeElement);
 
-        showSiblingLogic(modeElement, rangeIndex);
+        if (rangeIndex == 0) {
+            $(rangeElement).find('.logic').hide();
+        } else if (rangeIndex == 1) {
+            modeRanges.children().eq(0).find('.logic').show();
+        }
         
         $(rangeElement).find('.channel-slider').noUiSlider({
             start: rangeValues,
@@ -197,10 +185,14 @@ TABS.auxiliary.initialize = function (callback) {
         $(rangeElement).find('a.deleteRange').click(function () {
             var modeElement = $(this).data('modeElement');
             var rangeElement = $(this).data('rangeElement');
-            
-            hideSiblingLogic(modeElement, rangeElement);
 
             rangeElement.remove();
+    
+            var siblings = $(modeElement).find('.ranges').children();
+    
+            if (siblings.length == 1) {
+                siblings.eq(0).find('.logic').hide();
+            }
         });
 
         $(rangeElement).find('.channel').val(auxChannelIndex);
@@ -218,7 +210,11 @@ TABS.auxiliary.initialize = function (callback) {
         linkElement.attr('id', 'mode-' + modeIndex + '-link-' + linkIndex);
         modeRanges.append(linkElement);
 
-        showSiblingLogic(modeElement, linkIndex);
+        if (linkIndex == 0) {
+            $(linkElement).find('.logic').hide();
+        } else if (linkIndex == 1) {
+            modeRanges.children().eq(0).find('.logic').show();
+        }
 
         // disable the option associated with this mode
         var linkSelect = $(linkElement).find('.linkedTo');
@@ -230,10 +226,14 @@ TABS.auxiliary.initialize = function (callback) {
         $(linkElement).find('a.deleteLink').click(function () {
             var modeElement = $(this).data('modeElement');
             var linkElement = $(this).data('linkElement');
-            
-            hideSiblingLogic(modeElement, linkElement);
 
             linkElement.remove();
+    
+            var siblings = $(modeElement).find('.ranges').children();
+    
+            if (siblings.length == 1) {
+                siblings.eq(0).find('.logic').hide();
+            }
         });
 
         $(linkElement).find('.linkedTo').val(linkedTo);
