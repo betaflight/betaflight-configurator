@@ -21,9 +21,13 @@ If you are experiencing any problems please make sure you are running the [lates
 
 ### Standalone
 
+**This is the default installation method, and at some point in the future this will become the only way available for most platforms. Please use this method whenever possible.**
+
 Download the installer from [Releases.](https://github.com/betaflight/betaflight-configurator/releases)
 
 ### Via Chrome Web Store
+
+**Deprecated, discouraged if a standalone version is available for your operating system.**
 
 [![available in the Chrome web store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/betaflight-configurator/kdaghagfopacdngbohiknlhcocjccjao)
 
@@ -32,17 +36,11 @@ Download the installer from [Releases.](https://github.com/betaflight/betaflight
 
 Please note - the application will automatically update itself when new versions are released.  Please ensure you maintain configuration backups as described in the Betaflight documentation.
 
-### Alternative way, Chrome app:
+### Unstable Testing Versions
 
-1. Clone the repo to any local directory or download it as zip.
-2. If downloaded as a zip, extract it into a new directory.
-3. Start Google Chrome.
-4. Click the 3-dots on the far right of the URL bar.
-5. Select "More Tools"
-6. Select "Extensions"
-7. Check the Developer Mode checkbox.
-8. Click on load unpacked extension.
-9. Point it to the folder you extracted the zip to.
+Unstable testing versions of the lates builds of the configurator for most platforms can be downloaded from [here](https://ci.betaflight.tech/job/BetaFlight_Configurator/).
+
+**Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
 
 ## Native app build via NW.js
 
