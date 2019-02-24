@@ -53,7 +53,7 @@ TABS.auxiliary.initialize = function (callback) {
         $(newMode).find('a.addLink').data('modeElement', newMode);
 
         // hide link button for ARM
-        if (modeId == 0) {
+        if (modeId == 0 || semver.lt(CONFIG.apiVersion, "1.41.0")) {
             $(newMode).find('.addLink').hide();
         }
 
