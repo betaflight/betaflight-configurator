@@ -18,7 +18,7 @@
         }
     },
     "permissions": [
-        "https://maps.googleapis.com/*",    
+        "https://api.openstreetmap.org/",
         "https://*.github.com/",
         "https://*.githubusercontent.com/",
         "http://*.baseflight.net/",
@@ -49,7 +49,11 @@
         "partitions": [
             {
                 "name": "map",
-                "accessible_resources" : ["tabs/map.html", "js/tabs/map.js", "/images/icons/cf_icon_position.png"]
+                "accessible_resources" : ["tabs/map.html", 
+                                          "js/tabs/map.js", 
+                                          "/js/libraries/openlayers/ol.css", 
+                                          "/js/libraries/openlayers/ol.js",
+                                          "/images/icons/cf_icon_position.png"]
             }
         ]
     },
