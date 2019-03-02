@@ -8,7 +8,12 @@ TABS.auxiliary.initialize = function (callback) {
     var prevChannelsValues = null;
 
     function get_mode_ranges() {
-        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, get_box_ids);
+        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, 
+            semver.gte(CONFIG.apiVersion, "1.41.0") ? get_mode_ranges_extra : get_box_ids);
+    }
+
+    function get_mode_ranges_extra() {
+        MSP.send_message(MSPCodes.MSP_MODE_RANGES_EXTRA, false, false, get_box_ids);
     }
 
     function get_box_ids() {
@@ -45,8 +50,34 @@ TABS.auxiliary.initialize = function (callback) {
         
         $(newMode).find('.name').data('modeElement', newMode);
         $(newMode).find('a.addRange').data('modeElement', newMode);
+        $(newMode).find('a.addLink').data('modeElement', newMode);
+
+        // hide link button for ARM
+        if (modeId == 0 || semver.lt(CONFIG.apiVersion, "1.41.0")) {
+            $(newMode).find('.addLink').hide();
+        }
 
         return newMode; 
+    }
+
+    function configureLogicList(template) {
+        var logicList = $(template).find('.logic');
+        var logicOptionTemplate = $(logicList).find('option');
+        logicOptionTemplate.remove();
+
+        //add logic option(s)
+        var logicOption = logicOptionTemplate.clone();
+        logicOption.text(i18n.getMessage('auxiliaryModeLogicOR'));
+        logicOption.val(0);
+        logicList.append(logicOption);
+        
+        if(semver.gte(CONFIG.apiVersion, "1.41.0")){
+            var logicOption = logicOptionTemplate.clone();
+            logicOption.text(i18n.getMessage('auxiliaryModeLogicAND'));
+            logicOption.val(1);
+            logicList.append(logicOption);
+        }
+        logicOptionTemplate.val(0);
     }
     
     function configureRangeTemplate(auxChannelCount) {
@@ -70,10 +101,38 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         channelOptionTemplate.val(-1);
+        
+        configureLogicList(rangeTemplate);
     }
     
-    function addRangeToMode(modeElement, auxChannelIndex, range) {
+    function configureLinkTemplate() {
+        var linkTemplate = $('#tab-auxiliary-templates .link');
+        
+        var linkList = $(linkTemplate).find('.linkedTo');
+        var linkOptionTemplate = $(linkList).find('option');
+        linkOptionTemplate.remove();
+        
+        // set up a blank option in place of ARM
+        var linkOption = linkOptionTemplate.clone();
+        linkOption.text("");
+        linkOption.val(0);
+        linkList.append(linkOption);
+
+        for (var index = 1; index < AUX_CONFIG.length; index++) {
+            var linkOption = linkOptionTemplate.clone();
+            linkOption.text(AUX_CONFIG[index]);
+            linkOption.val(AUX_CONFIG_IDS[index]);  // set value to mode id
+            linkList.append(linkOption);
+        }
+
+        linkOptionTemplate.val(0);
+        
+        configureLogicList(linkTemplate);
+    }
+    
+    function addRangeToMode(modeElement, auxChannelIndex, modeLogic, range) {
         var modeIndex = $(modeElement).data('index');
+        var modeRanges = $(modeElement).find('.ranges');
 
         var channel_range = {
                 'min': [  900 ],
@@ -85,11 +144,17 @@ TABS.auxiliary.initialize = function (callback) {
             rangeValues = [range.start, range.end];
         }
 
-        var rangeIndex = $(modeElement).find('.range').length;
+        var rangeIndex = modeRanges.children().length;
         
         var rangeElement = $('#tab-auxiliary-templates .range').clone();
         rangeElement.attr('id', 'mode-' + modeIndex + '-range-' + rangeIndex);
-        modeElement.find('.ranges').append(rangeElement);
+        modeRanges.append(rangeElement);
+
+        if (rangeIndex == 0) {
+            $(rangeElement).find('.logic').hide();
+        } else if (rangeIndex == 1) {
+            modeRanges.children().eq(0).find('.logic').show();
+        }
         
         $(rangeElement).find('.channel-slider').noUiSlider({
             start: rangeValues,
@@ -115,19 +180,71 @@ TABS.auxiliary.initialize = function (callback) {
         });
         
         $(rangeElement).find('.deleteRange').data('rangeElement', rangeElement);
+        $(rangeElement).find('.deleteRange').data('modeElement', modeElement);
 
         $(rangeElement).find('a.deleteRange').click(function () {
+            var modeElement = $(this).data('modeElement');
             var rangeElement = $(this).data('rangeElement');
+
             rangeElement.remove();
+    
+            var siblings = $(modeElement).find('.ranges').children();
+    
+            if (siblings.length == 1) {
+                siblings.eq(0).find('.logic').hide();
+            }
         });
 
         $(rangeElement).find('.channel').val(auxChannelIndex);
+        $(rangeElement).find('.logic').val(modeLogic);
+    }
+
+    function addLinkedToMode(modeElement, modeLogic, linkedTo) {
+        var modeId = $(modeElement).data('id');
+        var modeIndex = $(modeElement).data('index');
+        var modeRanges = $(modeElement).find('.ranges');
+
+        var linkIndex = modeRanges.children().length;
+
+        var linkElement = $('#tab-auxiliary-templates .link').clone();
+        linkElement.attr('id', 'mode-' + modeIndex + '-link-' + linkIndex);
+        modeRanges.append(linkElement);
+
+        if (linkIndex == 0) {
+            $(linkElement).find('.logic').hide();
+        } else if (linkIndex == 1) {
+            modeRanges.children().eq(0).find('.logic').show();
+        }
+
+        // disable the option associated with this mode
+        var linkSelect = $(linkElement).find('.linkedTo');
+        $(linkSelect).find('option[value="' + modeId + '"]').prop('disabled',true);
+
+        $(linkElement).find('.deleteLink').data('linkElement', linkElement);
+        $(linkElement).find('.deleteLink').data('modeElement', modeElement);
+
+        $(linkElement).find('a.deleteLink').click(function () {
+            var modeElement = $(this).data('modeElement');
+            var linkElement = $(this).data('linkElement');
+
+            linkElement.remove();
+    
+            var siblings = $(modeElement).find('.ranges').children();
+    
+            if (siblings.length == 1) {
+                siblings.eq(0).find('.logic').hide();
+            }
+        });
+
+        $(linkElement).find('.linkedTo').val(linkedTo);
+        $(linkElement).find('.logic').val(modeLogic);
     }
 
     function process_html() {
         var auxChannelCount = RC.active_channels - 4;
 
         configureRangeTemplate(auxChannelCount);
+        configureLinkTemplate();
 
         var modeTableBodyElement = $('.tab-auxiliary .modes tbody') 
         for (var modeIndex = 0; modeIndex < AUX_CONFIG.length; modeIndex++) {
@@ -136,28 +253,48 @@ TABS.auxiliary.initialize = function (callback) {
             var newMode = createMode(modeIndex, modeId);
             modeTableBodyElement.append(newMode);
             
-            // generate ranges from the supplied AUX names and MODE_RANGE data
+            // generate ranges from the supplied AUX names and MODE_RANGES[_EXTRA] data
+            // skip linked modes for now
             for (var modeRangeIndex = 0; modeRangeIndex < MODE_RANGES.length; modeRangeIndex++) {
                 var modeRange = MODE_RANGES[modeRangeIndex];
+
+                var modeRangeExtra = {
+                    id: modeRange.id,
+                    modeLogic: 0,
+                    linkedTo: 0
+                };
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    modeRangeExtra = MODE_RANGES_EXTRA[modeRangeIndex];
+                }
                 
-                if (modeRange.id != modeId) {
+                if (modeRange.id != modeId || modeRangeExtra.id != modeId) {
                     continue;
                 }
-                
-                var range = modeRange.range;
-                if (!(range.start < range.end)) {
-                    continue; // invalid!
-                }
-                
-                addRangeToMode(newMode, modeRange.auxChannelIndex, range)
-            }
 
+                if (modeId == 0 || modeRangeExtra.linkedTo == 0) {
+                    var range = modeRange.range;
+                    if (!(range.start < range.end)) {
+                        continue; // invalid!
+                    }
+
+                    addRangeToMode(newMode, modeRange.auxChannelIndex, modeRangeExtra.modeLogic, range)
+
+                } else {
+                    addLinkedToMode(newMode, modeRangeExtra.modeLogic, modeRangeExtra.linkedTo);
+                }
+            }
         }
         
         $('a.addRange').click(function () {
             var modeElement = $(this).data('modeElement');
-            //auto select AUTO option
-            addRangeToMode(modeElement, -1);
+            // auto select AUTO option; default to 'OR' logic
+            addRangeToMode(modeElement, -1, 0);
+        });
+        
+        $('a.addLink').click(function () {
+            var modeElement = $(this).data('modeElement');
+            // default to 'OR' logic and no link selected
+            addLinkedToMode(modeElement, 0, 0);
         });
                 
         // translate to user-selected language
@@ -172,13 +309,13 @@ TABS.auxiliary.initialize = function (callback) {
             var requiredModesRangeCount = MODE_RANGES.length;
             
             MODE_RANGES = [];
+            MODE_RANGES_EXTRA = [];
             
             $('.tab-auxiliary .modes .mode').each(function () {
                 var modeElement = $(this);
                 var modeId = modeElement.data('id');
                 
                 $(modeElement).find('.range').each(function() {
-                    
                     var rangeValues = $(this).find('.channel-slider').val();
                     var modeRange = {
                         id: modeId,
@@ -189,6 +326,38 @@ TABS.auxiliary.initialize = function (callback) {
                         }
                     };
                     MODE_RANGES.push(modeRange);
+
+                    var modeRangeExtra = {
+                        id: modeId,
+                        modeLogic: parseInt($(this).find('.logic').val()),
+                        linkedTo: 0
+                    };
+                    MODE_RANGES_EXTRA.push(modeRangeExtra);
+                });
+
+                $(modeElement).find('.link').each(function() {
+                    var linkedToSelection = parseInt($(this).find('.linkedTo').val());
+
+                    if (linkedToSelection == 0) {
+                        $(this).remove();
+                    } else {
+                        var modeRange = {
+                            id: modeId,
+                            auxChannelIndex: 0,
+                            range: {
+                                start: 900,
+                                end: 900
+                            }
+                        };
+                        MODE_RANGES.push(modeRange);
+
+                        var modeRangeExtra = {
+                            id: modeId,
+                            modeLogic: parseInt($(this).find('.logic').val()),
+                            linkedTo: linkedToSelection
+                        };
+                        MODE_RANGES_EXTRA.push(modeRangeExtra);
+                    }
                 });
             });
             
@@ -202,6 +371,13 @@ TABS.auxiliary.initialize = function (callback) {
                     }
                 };
                 MODE_RANGES.push(defaultModeRange);
+
+                var defaultModeRangeExtra = {
+                    id: 0,
+                    modeLogic: 0,
+                    linkedTo: 0
+                };
+                MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
             }
 
             //
@@ -247,7 +423,7 @@ TABS.auxiliary.initialize = function (callback) {
             let hasUsedMode = false;
             for (let i = 0; i < AUX_CONFIG.length; i++) {
                 let modeElement = $('#mode-' + i);
-                if (modeElement.find(' .range').length == 0) {
+                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     // if the mode is unused, skip it
                     modeElement.removeClass('off').removeClass('on');
                     continue;
@@ -264,7 +440,7 @@ TABS.auxiliary.initialize = function (callback) {
             let hideUnused = hideUnusedModes && hasUsedMode;
             for (let i = 0; i < AUX_CONFIG.length; i++) {
                 let modeElement = $('#mode-' + i);
-                if (modeElement.find(' .range').length == 0) {
+                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     modeElement.toggle(!hideUnused);
                 }
             }    

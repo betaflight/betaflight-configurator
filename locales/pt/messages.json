@@ -1468,6 +1468,9 @@
     "auxiliaryAddRange": {
         "message": "Adicionar Faixa"
     },
+    "auxiliaryAddLink": {
+        "message": "Vincule"
+    },
     "auxiliaryButtonSave": {
         "message": "Salvar"
     },
@@ -1476,6 +1479,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Configure os 'switches' de ajuste. Leia a seção do manual sobre 'in-flight adjustments' para detalhes. Os ajustes feitos por essas funções não serão salvos automaticamente. Existem 4 slots. Cada switch utilizado ao mesmo tempo para o ajuste exige o uso exclusivo de um slot."

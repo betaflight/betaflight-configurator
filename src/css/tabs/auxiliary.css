@@ -56,8 +56,8 @@
 }
 
 .tab-auxiliary .mode .name {
-    min-height: 50px;
-    padding: 13px 0px;
+    min-height: 80px;
+    padding: 5px 0px;
 }
 
 .tab-auxiliary .mode .info {
@@ -77,13 +77,20 @@
 
 .tab-auxiliary .mode .info .buttons {
     position: absolute;
-    bottom: 14px;
+    bottom: 0px;
     width: 100%;
 }
 
 .tab-auxiliary .mode .info .buttons a {
     padding: 2px 5px;
     border-radius: 4px;
+    cursor: pointer;
+    margin: 3px;
+    display: block;
+}
+
+.tab-auxiliary .mode .info .buttons a:hover {
+    background-color: darkgrey;
 }
 
 .tab-auxiliary .ranges {
@@ -103,11 +110,30 @@
     padding-bottom: 5px;
 }
 
+.tab-auxiliary .link {
+    position: relative;
+    height: 70px;
+    padding-top: 15px;
+    padding-left: 15px;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #cccccc;
+    background-color: #ececec;
+    padding-bottom: 5px;
+}
+
 .tab-auxiliary .range:first-child {
     border-top: 0px;
 }
 
 .tab-auxiliary .range:last-child {
+    border-bottom: 0px;
+}
+
+.tab-auxiliary .link:first-child {
+    border-top: 0px;
+}
+
+.tab-auxiliary .link:last-child {
     border-bottom: 0px;
 }
 
@@ -125,13 +151,16 @@
     float: left;
     min-width: 90px;
     text-align: center;
-}
-
-.tab-auxiliary .mode .range .channelInfo .limits {
-    padding: 10px 0px;
+    margin-top: -4px;
 }
 
 .tab-auxiliary .range .channel {
+    border: 1px solid silver;
+    border-radius: 3px;
+    margin-bottom: 3px;
+}
+
+.tab-auxiliary .logic {
     border: 1px solid silver;
     border-radius: 3px;
 }
@@ -150,6 +179,16 @@
     width: 80%;
     margin-left: 20px;
     margin-top: 1px;
+}
+
+.tab-auxiliary .mode .link .modeInfo {
+    float: left;
+}
+
+.tab-auxiliary .link .linkedTo {
+    border: 1px solid silver;
+    border-radius: 3px;
+    margin-bottom: 3px;
 }
 
 .tab-auxiliary>.buttons {

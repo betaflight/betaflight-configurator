@@ -1540,6 +1540,9 @@
     "auxiliaryAddRange": {
         "message": "Ajouter une plage"
     },
+    "auxiliaryAddLink": {
+        "message": "Lier"
+    },
     "auxiliaryButtonSave": {
         "message": "Enregistrer"
     },
@@ -1548,6 +1551,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTOMATIQUE"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Configurez les commutateurs d'ajustement. Voir la section «Ajustements en vol» du manuel pour plus de détails. Les modifications apportées par les fonctions de réglage ne sont pas enregistrées automatiquement. Il y a 4 emplacements. Chaque commutateur utilisé pour effectuer simultanément des ajustements nécessite l'utilisation exclusive d'un emplacement."

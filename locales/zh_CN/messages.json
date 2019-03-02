@@ -1474,6 +1474,9 @@
     "auxiliaryAddRange": {
         "message": "添加范围"
     },
+    "auxiliaryAddLink": {
+        "message": "鏈接"
+    },
     "auxiliaryButtonSave": {
         "message": "保存"
     },
@@ -1482,6 +1485,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "自动"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "配置调整开关。参阅手册的 'in-flight adjustments' 章解获取具体信息。通过该功能所做的调校修改不会被自动保存。总共有4个槽位。每一个开关需要独占一个槽位。"

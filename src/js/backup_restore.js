@@ -123,6 +123,9 @@ function configuration_backup(callback) {
             uniqueData.push(MSPCodes.MSP_COMPASS_CONFIG);
             uniqueData.push(MSPCodes.MSP_FEATURE_CONFIG);
         }
+        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            uniqueData.push(MSPCodes.MSP_MODE_RANGES_EXTRA);
+        }
     }
     
     update_unique_data_list();
@@ -173,6 +176,9 @@ function configuration_backup(callback) {
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     configuration.BEEPER_CONFIG = jQuery.extend(true, {}, BEEPER_CONFIG);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    configuration.MODE_RANGES_EXTRA = jQuery.extend(true, [], MODE_RANGES_EXTRA);
                 }
 
                 save();
@@ -680,7 +686,7 @@ function configuration_restore(callback) {
             GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
             appliedMigrationsCount++;
         }
-        
+
         if (appliedMigrationsCount > 0) {
             GUI.log(i18n.getMessage('configMigrationSuccessful', [appliedMigrationsCount]));
         }        
@@ -765,6 +771,23 @@ function configuration_restore(callback) {
                 }
 
                 function upload_mode_ranges() {
+                    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                        if (configuration.MODE_RANGES_EXTRA == undefined) {
+                            MODE_RANGES_EXTRA = [];
+
+                            for (var modeIndex = 0; modeIndex < MODE_RANGES.length; modeIndex++) {
+                                var defaultModeRangeExtra = {
+                                    modeId:     MODE_RANGES[modeIndex].modeId,
+                                    modeLogic:  0,
+                                    linkedTo:   0
+                                };
+                                MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
+                            }
+                        } else {
+                            MODE_RANGES_EXTRA = configuration.MODE_RANGES_EXTRA;
+                        }
+                    }
+                    
                     mspHelper.sendModeRanges(upload_adjustment_ranges);
                 }
                 

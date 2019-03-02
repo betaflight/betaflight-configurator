@@ -1547,6 +1547,9 @@
     "auxiliaryAddRange": {
         "message": "Lägg till intervall"
     },
+    "auxiliaryAddLink": {
+        "message": "Länka"
+    },
     "auxiliaryButtonSave": {
         "message": "Spara"
     },
@@ -1555,6 +1558,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Konfigurera justerings-switchar. Se avsnittet 'In-flight adjustments' i manualen för detaljer. Ändringarna som justeringsfunktionerna utför sparas inte automatiskt. Det finns 4 platser. Varje switch som används för att göra samtidiga justeringar kräver exklusiv användning av en plats."

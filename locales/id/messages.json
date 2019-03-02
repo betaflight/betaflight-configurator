@@ -1546,6 +1546,9 @@
     "auxiliaryAddRange": {
         "message": "Tambahkan Rentang"
     },
+    "auxiliaryAddLink": {
+        "message": "Tautkan"
+    },
     "auxiliaryButtonSave": {
         "message": "Simpan"
     },
@@ -1554,6 +1557,12 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
+    },
+    "auxiliaryModeLogicOR": {
+      "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Mengkonfigurasi switch penyesuaian. Lihat manual bagian 'in-flight adjustments' untuk detilnya. Perubahan yang dilakukan fungsi penyesuaian tidak disimpan secara otomatis. Ada 4 slot. Setiap switch yang digunakan untuk secara bersamaan melakukan penyesuaian menggunakan sebuah slot."

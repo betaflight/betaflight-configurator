@@ -19,6 +19,7 @@ var RC_tuning;
 var AUX_CONFIG;
 var AUX_CONFIG_IDS;
 var MODE_RANGES;
+var MODE_RANGES_EXTRA;
 var ADJUSTMENT_RANGES;
 var SERVO_CONFIG;
 var SERVO_RULES;
@@ -174,6 +175,7 @@ var FC = {
         AUX_CONFIG_IDS =                [];
 
         MODE_RANGES =                   [];
+        MODE_RANGES_EXTRA =             [];
         ADJUSTMENT_RANGES =             [];
 
         SERVO_CONFIG =                  [];

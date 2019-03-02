@@ -35,6 +35,7 @@
                 <td class="info">
                     <p class="name"></p>
                     <div class="buttons">
+                        <a class="addLink" href="#" i18n="auxiliaryAddLink"></a>
                         <a class="addRange" href="#" i18n="auxiliaryAddRange"></a>
                     </div>
                 </td>
@@ -44,9 +45,16 @@
     </table>
     <div class="range">
         <div class="channelInfo">
-            <select class="channel">
-                <option value=""></option>
-            </select>
+            <div class="channelName">
+                <select class="channel">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="rangeLogic">
+                <select class="logic">
+                    <option value=""></option>
+                </select>
+            </div>
             <div class="limits">
                 <p class="lowerLimit">
                     <span i18n="auxiliaryMin"></span>: <span class="lowerLimitValue"></span>
@@ -61,6 +69,23 @@
         </div>
         <div class="delete">
             <a class="deleteRange" href="#">&nbsp;</a>
+        </div>
+    </div>
+    <div class="link">
+        <div class=modeInfo>
+            <div class="modeLink">
+                <select class="linkedTo">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="linkLogic">
+                <select class="logic">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="delete">
+            <a class="deleteLink" href="#">&nbsp;</a>
         </div>
     </div>
 </div>
