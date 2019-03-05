@@ -966,7 +966,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         FILTER_CONFIG.gyro_lowpass2_type = data.readU8();
                         FILTER_CONFIG.dterm_lowpass2_hz = data.readU16();
                         if (semver.lt(CONFIG.apiVersion, "1.41.0")) {
-                            FILTER_CONFIG.gyro_32khz_hardware_lpf = data.readU8();
+                            FILTER_CONFIG.gyro_32khz_hardware_lpf = gyro_32khz_hardware_lpf;
+                        } else {
+                            FILTER_CONFIG.gyro_32khz_hardware_lpf = 0;
                         }
                     }
                 }
