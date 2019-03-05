@@ -639,8 +639,55 @@
                         <table>
                             <tr>
                                 <th colspan="2">
-                                    <div class="pid_mode" i18n="pidTuningGyroLowpassFiltersGroup"/>
+                                    <div class="pid_mode">
+                                        <div i18n="pidTuningGyroLowpassFiltersGroup" />
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningLowpassFilterHelp" />
+                                    </div>
                                 </th>
+                            </tr>
+
+                            <tr class="gyroLowpassDyn">
+                                <td>
+                                    <span class="groupSwitchValue">
+                                        <span class="inputSwitch"><input type="checkbox" id="gyroLowpassDynEnabled" class="toggle" /></span>
+                                        <span class="inputValue"><input type="number" name="gyroLowpassDynMinFrequency" step="1" min="1" max="16000"/></span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningGyroLowpassDynMinFrequency"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="gyroLowpassDyn">
+                                <td>
+                                    <span class="inputValue"><input type="number" name="gyroLowpassDynMaxFrequency" step="1" min="1" max="16000"/></span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningGyroLowpassDynMaxFrequency"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="gyroLowpassDyn">
+                                <td>
+                                    <select name="gyroLowpassDynType">
+                                        <!--  Populated on execution -->
+                                    </select>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningGyroLowpassDynType"></span>
+                                        </label>
+                                    </div>
+                                </td>
                             </tr>
 
                             <tr>
@@ -673,6 +720,7 @@
                                     </div>
                                 </td>
                             </tr>
+
 
                             <tr class="gyroLowpass2">
                                 <td>
@@ -786,8 +834,55 @@
                                 <th colspan="2">
                                     <div class="pid_mode">
                                         <div i18n="pidTuningDTermLowpassFiltersGroup" />
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningLowpassFilterHelp" />
+                                    </div>
+                                        
                                     </div>
                                 </th>
+                            </tr>
+
+                            <tr class="dtermLowpassDyn">
+                                <td>
+                                    <span class="groupSwitchValue">
+                                        <span class="inputSwitch"><input type="checkbox" id="dtermLowpassDynEnabled" class="toggle" /></span>
+                                        <span class="inputValue"><input type="number" name="dtermLowpassDynMinFrequency" step="1" min="1" max="16000"/></span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDTermLowpassDynMinFrequency"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="dtermLowpassDyn">
+                                <td>
+                                    <span class="inputValue"><input type="number" name="dtermLowpassDynMaxFrequency" step="1" min="1" max="16000"/></span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDTermLowpassDynMaxFrequency"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="dtermLowpassDyn">
+                                <td>
+                                    <select name="dtermLowpassDynType">
+                                        <!--  Populated on execution -->
+                                    </select>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDTermLowpassDynType"></span>
+                                        </label>
+                                    </div>
+                                </td>
                             </tr>
 
                             <tr>
@@ -832,6 +927,21 @@
                                     <div>
                                         <label>
                                             <span i18n="pidTuningDTermLowpass2Frequency"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="dtermLowpass2 dtermLowpass2TypeGroup">
+                                <td>
+                                    <select name="dtermLowpass2Type">
+                                        <!--  Populated on execution -->
+                                    </select>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDTermLowpass2Type"></span>
                                         </label>
                                     </div>
                                 </td>

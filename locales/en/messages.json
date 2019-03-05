@@ -2950,6 +2950,15 @@
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 Filter Type"
     },
+    "pidTuningGyroLowpassDynMinFrequency": {
+        "message": "Gyro Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
+    },
+    "pidTuningGyroLowpassDynMaxFrequency": {
+        "message": "Gyro Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
+    },
+    "pidTuningGyroLowpassDynType": {
+        "message": "Gyro Lowpass 1 Dynamic Filter Type"
+    },
     "pidTuningGyroLowpass2Frequency": {
         "message": "Gyro Lowpass 2 Cutoff Frequency [Hz]"
     },
@@ -2974,6 +2983,9 @@
     "pidTuningNotchFilterHelp": {
         "message": "The Notch Filter has a Center and a Cutoff. The filter is symmetrical. The Center Frequency is the center of the filter and the Cutoff Frequency is where Notch filter starts. For example with Notch Cutoff of 160 and Notch Center of 260 it means the range is 160-360Hz with most attenuation around center"
     },
+    "pidTuningLowpassFilterHelp": {
+        "message": "The Lowpass Filters can have two variants: static and dynamic. For a determined lowpass filter number only one (static or dynamic) can be enabled at the same time. The static only has a Cutoff that is a value that defines in some way where the filter starts. The dynamic defines a min and max values, that is the range where the Cutoff is placed. This Cutoff moves from min to max at the same time than you move the throttle stick."
+    },
     "pidTuningFilterSettings": {
         "message": "Profile dependent Filter Settings"
     },
@@ -2988,6 +3000,18 @@
     },
     "pidTuningDTermLowpass2Frequency": {
         "message": "D Term Lowpass 2 Cutoff Frequency [Hz]"
+    },
+    "pidTuningDTermLowpass2Type": {
+        "message": "D Term Lowpass 2 Filter Type"
+    },
+    "pidTuningDTermLowpassDynMinFrequency": {
+        "message": "D Term Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
+    },
+    "pidTuningDTermLowpassDynMaxFrequency": {
+        "message": "D Term Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term Lowpass 1 Dynamic Filter Type"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filters"
