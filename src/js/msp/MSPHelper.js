@@ -969,6 +969,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             FILTER_CONFIG.gyro_32khz_hardware_lpf = gyro_32khz_hardware_lpf;
                         } else {
                             FILTER_CONFIG.gyro_32khz_hardware_lpf = 0;
+
+                            FILTER_CONFIG.dterm_lowpass2_type = data.readU8();
+                            FILTER_CONFIG.gyro_lowpass_dyn_min_hz = data.readU16();
+                            FILTER_CONFIG.gyro_lowpass_dyn_max_hz = data.readU16();
+                            FILTER_CONFIG.dterm_lowpass_dyn_min_hz = data.readU16();
+                            FILTER_CONFIG.dterm_lowpass_dyn_max_hz = data.readU16();
                         }
                     }
                 }
@@ -1689,6 +1695,13 @@ MspHelper.prototype.crunch = function(code) {
                           .push8(FILTER_CONFIG.gyro_lowpass_type)
                           .push8(FILTER_CONFIG.gyro_lowpass2_type)
                           .push16(FILTER_CONFIG.dterm_lowpass2_hz);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    buffer.push8(FILTER_CONFIG.dterm_lowpass2_type)
+                          .push16(FILTER_CONFIG.gyro_lowpass_dyn_min_hz)
+                          .push16(FILTER_CONFIG.gyro_lowpass_dyn_max_hz)
+                          .push16(FILTER_CONFIG.dterm_lowpass_dyn_min_hz)
+                          .push16(FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
                 }
             }
             break;
