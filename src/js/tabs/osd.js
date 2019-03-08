@@ -803,7 +803,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 490,
             positionable: true,
-            preview: '226000'
+            preview: [ "22600", "22600", "22600", "22600"]
         },
         REMAINING_TIME_ESTIMATE: {
             name: 'REMAINING_TIME_ESTIMATE',
@@ -945,6 +945,14 @@ OSD.constants = {
             preview: function(osd_data) {
                 return OSD.generateDisplayName(osd_data, 1);
             }
+        },
+        ESC_RPM_FREQ: {
+            name: 'ESC_RPM_FREQ',
+            desc: 'osdDescElementEscRpmFreq',
+            default_position: -1,
+            draw_order: 390,
+            positionable: true,
+            preview: [ "22600", "22600", "22600", "22600"]
         },
     },
     UNKNOWN_DISPLAY_FIELD: {
@@ -1114,13 +1122,25 @@ OSD.constants = {
 OSD.searchLimitsElement = function (arrayElements) {
     // Search minimum and maximum
     var limits = { minX: 0, maxX: 0, minY: 0, maxY: 0 };
+    if (arrayElements.length == 0) {
+        return limits;
+    }
 
-    arrayElements.forEach(function (valor, indice, array) {
-        limits.minX = Math.min(valor.x, limits.minX);
-        limits.maxX = Math.max(valor.x, limits.maxX);
-        limits.minY = Math.min(valor.y, limits.minY);
-        limits.maxY = Math.max(valor.y, limits.maxY);
-    });
+    if (arrayElements[0].constructor === String) {
+        limits.maxY = arrayElements.length;
+        limits.minY = 0;
+        limits.minX = 0;
+        arrayElements.forEach(function(valor, indice, array) {
+            limits.maxX = Math.max(valor.length, limits.maxX);
+        });
+    } else {
+        arrayElements.forEach(function (valor, indice, array) {
+            limits.minX = Math.min(valor.x, limits.minX);
+            limits.maxX = Math.max(valor.x, limits.maxX);
+            limits.minY = Math.min(valor.y, limits.minY);
+            limits.maxY = Math.max(valor.y, limits.maxY);
+        });
+    }
 
     return limits;
 }
@@ -1222,6 +1242,7 @@ OSD.chooseFields = function () {
                                                 F.STICK_OVERLAY_LEFT,
                                                 F.STICK_OVERLAY_RIGHT,
                                                 F.DISPLAY_NAME,
+                                                F.ESC_RPM_FREQ
                                             ]);
                                         }
                                     }
@@ -1701,6 +1722,8 @@ OSD.GUI.preview = {
         var field_id = parseInt(ev.dataTransfer.getData('text/plain'))
         var display_item = OSD.data.display_items[field_id];
         var position = $(this).removeAttr('style').data('position');
+        var cursor = position;
+        var cursorX = cursor % FONT.constants.SIZES.LINE;
 
         if (display_item.preview.constructor === Array) {
             console.log('Initial Drop Position: ' + position);
@@ -1723,19 +1746,35 @@ OSD.GUI.preview = {
                 // Advanced preview, array type
                 var arrayElements = display_item.preview;
                 var limits = OSD.searchLimitsElement(arrayElements);
-
                 var selectedPositionX = position % FONT.constants.SIZES.LINE;
                 var selectedPositionY = Math.trunc(position / FONT.constants.SIZES.LINE);
+                if (arrayElements[0].constructor === String) {
+                    if (position < 0 ) {
+                        return;
+                    }
+                    if (selectedPositionX > cursorX) { // TRUE -> Detected wrap around
+                        position += FONT.constants.SIZES.LINE - selectedPositionX;
+                        selectedPositionY++;
+                    } else if (selectedPositionX + limits.maxX > FONT.constants.SIZES.LINE) { // TRUE -> right border of the element went beyond left edge of screen.
+                        position -= selectedPositionX + limits.maxX - FONT.constants.SIZES.LINE;
+                    }
+                    if (selectedPositionY < 0 ) {
+                        position += Math.abs(selectedPositionY) * FONT.constants.SIZES.LINE;
+                    } else if ((selectedPositionY + limits.maxY ) > OSD.data.display_size.y) {
+                        position -= (selectedPositionY + limits.maxY  - OSD.data.display_size.y) * FONT.constants.SIZES.LINE;
+                    }
 
-                if ((limits.minX < 0) && ((selectedPositionX + limits.minX) < 0)) {
-                    position += Math.abs(selectedPositionX + limits.minX);
-                } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= FONT.constants.SIZES.LINE)) {
-                    position -= (selectedPositionX + limits.maxX + 1) - FONT.constants.SIZES.LINE;
-                }
-                if ((limits.minY < 0) && ((selectedPositionY + limits.minY) < 0)) {
-                    position += Math.abs(selectedPositionY + limits.minY) * FONT.constants.SIZES.LINE;
-                } else if ((limits.maxY > 0) && ((selectedPositionY + limits.maxY) >= OSD.data.display_size.y)) {
-                    position -= (selectedPositionY + limits.maxY - OSD.data.display_size.y + 1) * FONT.constants.SIZES.LINE;
+                } else {
+                    if ((limits.minX < 0) && ((selectedPositionX + limits.minX) < 0)) {
+                        position += Math.abs(selectedPositionX + limits.minX);
+                    } else if ((limits.maxX > 0) && ((selectedPositionX + limits.maxX) >= FONT.constants.SIZES.LINE)) {
+                        position -= (selectedPositionX + limits.maxX + 1) - FONT.constants.SIZES.LINE;
+                    }
+                    if ((limits.minY < 0) && ((selectedPositionY + limits.minY) < 0)) {
+                        position += Math.abs(selectedPositionY + limits.minY) * FONT.constants.SIZES.LINE;
+                    } else if ((limits.maxY > 0) && ((selectedPositionY + limits.maxY) >= OSD.data.display_size.y)) {
+                        position -= (selectedPositionY + limits.maxY - OSD.data.display_size.y + 1) * FONT.constants.SIZES.LINE;
+                    }
                 }
             }
         }
@@ -2167,7 +2206,6 @@ TABS.osd.initialize = function (callback) {
                         // Standard preview, type String
                         if (field.preview.constructor !== Array) {
 
-
                             // fill the screen buffer
                             for (var i = 0; i < field.preview.length; i++) {
 
@@ -2184,33 +2222,43 @@ TABS.osd.initialize = function (callback) {
                             }
                         } else {
                             var arrayElements = field.preview;
-
-                            // The array can have negative and positive positions, search limits...
-                            var limits = OSD.searchLimitsElement(arrayElements);
-
-                            var offsetX = 0;
-                            var offsetY = 0;
-                            if (limits.minX < 0) {
-                                offsetX = -limits.minX;
-                            }
-                            if (limits.minY < 0) {
-                                offsetY = -limits.minY;
-                            }
-
                             for (var i = 0; i < arrayElements.length; i++) {
-
-                                // Add the character to the preview
                                 var element = arrayElements[i];
-                                var charCode = element.sym;
-                                OSD.drawByOrder(selectedPosition + element.x + element.y * FONT.constants.SIZES.LINE, field, charCode, element.x, element.y);
-
-                                // Image used when "dragging" the element
-                                if (field.positionable) {
-                                    var img = new Image();
-                                    img.src = FONT.draw(charCode);
-                                    ctx.drawImage(img, (element.x + offsetX) * 12, (element.y + offsetY) * 18);
+                                //Add string to the preview.
+                                if (element.constructor === String) { 
+                                    for(var j = 0; j < element.length; j++) {
+                                        var charCode = element.charCodeAt(j);
+                                        OSD.drawByOrder(selectedPosition++, field, charCode, j, i);
+                                        // Image used when "dragging" the element
+                                        if (field.positionable) {
+                                            var img = new Image();
+                                            img.src = FONT.draw(charCode);
+                                            ctx.drawImage(img, j * 12, i * 18);
+                                        }
+                                    }
+                                    selectedPosition = selectedPosition - element.length + FONT.constants.SIZES.LINE;
+                                } else {
+                                    var limits = OSD.searchLimitsElement(arrayElements);
+                                    var offsetX = 0;
+                                    var offsetY = 0;
+                                        if (limits.minX < 0) {
+                                            offsetX = -limits.minX;
+                                        }
+                                        if (limits.minY < 0) {
+                                            offsetY = -limits.minY;
+                                        }
+                                        // Add the character to the preview
+                                        var charCode = element.sym;
+                                        OSD.drawByOrder(selectedPosition + element.x + element.y * FONT.constants.SIZES.LINE, field, charCode, element.x, element.y);
+                                        // Image used when "dragging" the element
+                                        if (field.positionable) {
+                                            var img = new Image();
+                                            img.src = FONT.draw(charCode);
+                                            ctx.drawImage(img, (element.x + offsetX) * 12, (element.y + offsetY) * 18);
+                                        }
                                 }
                             }
+
                         }
                         field.preview_img.src = canvas.toDataURL('image/png');
                         // Required for NW.js - Otherwise the <img /> will
