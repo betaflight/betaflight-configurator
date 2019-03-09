@@ -215,7 +215,11 @@ function writeToOutput(text) {
 }
 
 function writeLineToOutput(text) {
-    writeToOutput(text + "<br>");
+    if (text.startsWith("###ERROR: ")) {
+        writeToOutput('<span class="error_message">' + text + '</span><br>');
+    } else {
+        writeToOutput(text + "<br>");
+    }
 }
 
 function setPrompt(text) {

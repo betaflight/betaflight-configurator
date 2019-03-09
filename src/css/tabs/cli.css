@@ -61,6 +61,11 @@
     white-space: pre-wrap;
 }
 
+.tab-cli .window .error_message {
+    color: red;
+    font-weight: bold;
+}
+
 .tab-cli .save {
     color: white;
 }
