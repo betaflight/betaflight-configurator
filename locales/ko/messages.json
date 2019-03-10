@@ -1170,7 +1170,7 @@
         "message": "IRC 트램프"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "RunCam/Caddx 디바이스"
+        "message": "RunCam 디바이스"
     },
     "pidTuningProfileOption": {
         "message": "프로파일 $1"

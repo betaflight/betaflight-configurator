@@ -1174,7 +1174,7 @@
         "message": "IRC Tramp"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "RunCam/Caddx-enhet"
+        "message": "RunCam-enhet"
     },
     "pidTuningProfileOption": {
         "message": "Profil $1"
