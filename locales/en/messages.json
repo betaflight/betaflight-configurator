@@ -3625,7 +3625,7 @@
         "message": "Craft name as set in Configuration tab"
     },
     "osdDescElementDisplayName": {
-        "message": "Display name as set in Configuration tab"
+        "message": "Display name as set by the \"display_name\" cli command"
     },
     "osdDescElementAltitude": {
         "message": "Current altitude (flashes when above alarm threshold)"
