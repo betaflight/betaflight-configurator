@@ -1023,6 +1023,16 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                     ADVANCED_TUNING.feedforwardPitch = data.readU16();
                                     ADVANCED_TUNING.feedforwardYaw   = data.readU16();
                                     ADVANCED_TUNING.antiGravityMode  = data.readU8();
+                                    
+                                    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                                        ADVANCED_TUNING.dMinRoll = data.readU8();
+                                        ADVANCED_TUNING.dMinPitch = data.readU8();
+                                        ADVANCED_TUNING.dMinYaw = data.readU8();
+                                        ADVANCED_TUNING.dMinGain = data.readU8();
+                                        ADVANCED_TUNING.dMinAdvance = data.readU8();
+                                        ADVANCED_TUNING.useIntegratedYaw = data.readU8();
+                                        ADVANCED_TUNING.integratedYawRelax = data.readU8();
+                                    }
                                 }
                             }
                         }
@@ -1749,6 +1759,16 @@ MspHelper.prototype.crunch = function(code) {
                                       .push16(ADVANCED_TUNING.feedforwardPitch)
                                       .push16(ADVANCED_TUNING.feedforwardYaw)
                                       .push8(ADVANCED_TUNING.antiGravityMode);
+
+                                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                                    buffer.push8(ADVANCED_TUNING.dMinRoll)
+                                          .push8(ADVANCED_TUNING.dMinPitch)
+                                          .push8(ADVANCED_TUNING.dMinYaw)
+                                          .push8(ADVANCED_TUNING.dMinGain)
+                                          .push8(ADVANCED_TUNING.dMinAdvance)
+                                          .push8(ADVANCED_TUNING.useIntegratedYaw)
+                                          .push8(ADVANCED_TUNING.integratedYawRelax);
+                                }
                             }
                         }
                     }
