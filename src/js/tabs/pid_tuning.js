@@ -330,6 +330,8 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.dminGroup input[name="dMinGain"]').val(ADVANCED_TUNING.dMinGain);
             $('.dminGroup input[name="dMinAdvance"]').val(ADVANCED_TUNING.dMinAdvance);
 
+            $('input[id="useIntegratedYaw"]').prop('checked', ADVANCED_TUNING.useIntegratedYaw !== 0);
+
         } else {
             $('.throttle_limit').hide();
 
@@ -338,7 +340,14 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.dtermLowpass2TypeGroup').hide();
 
             $('.dminGroup').hide();
+
+            $('.integratedYaw').hide();
         }
+
+        $('input[id="useIntegratedYaw"]').change(function() {
+            var checked = $(this).is(':checked');
+            $('#pidTuningIntegratedYawCaution').toggle(checked);
+        }).change();
 
         function adjustDMin(dElement, dMinElement) {
             var dValue = parseInt(dElement.val());
@@ -653,6 +662,7 @@ TABS.pid_tuning.initialize = function (callback) {
             ADVANCED_TUNING.dMinGain = parseInt($('.dminGroup input[name="dMinGain"]').val());
             ADVANCED_TUNING.dMinAdvance = parseInt($('.dminGroup input[name="dMinAdvance"]').val());
 
+            ADVANCED_TUNING.useIntegratedYaw = $('input[id="useIntegratedYaw"]').is(':checked') ? 1 : 0;
         }
 
     }
