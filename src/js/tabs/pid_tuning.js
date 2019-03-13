@@ -324,13 +324,47 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val(FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
             $('.pid_filter select[name="dtermLowpassDynType"]').val(FILTER_CONFIG.dterm_lowpass_type);
 
+            $('.dminGroup input[name="dMinRoll"]').val(ADVANCED_TUNING.dMinRoll);
+            $('.dminGroup input[name="dMinPitch"]').val(ADVANCED_TUNING.dMinPitch);
+            $('.dminGroup input[name="dMinYaw"]').val(ADVANCED_TUNING.dMinYaw);
+            $('.dminGroup input[name="dMinGain"]').val(ADVANCED_TUNING.dMinGain);
+            $('.dminGroup input[name="dMinAdvance"]').val(ADVANCED_TUNING.dMinAdvance);
+
         } else {
             $('.throttle_limit').hide();
 
             $('.gyroLowpassDyn').hide();
             $('.dtermLowpassDyn').hide();
             $('.dtermLowpass2TypeGroup').hide();
+
+            $('.dminGroup').hide();
         }
+
+        function adjustDMin(dElement, dMinElement) {
+            var dValue = parseInt(dElement.val());
+            var dMinValue = parseInt(dMinElement.val());
+
+            if (dMinValue >= dValue) {
+                dMinElement.val(0);
+            }
+
+            dMinElement.attr("max", dValue > 0? dValue - 1 : 0);
+        }
+
+        $('.pid_tuning .ROLL input[name="d"]').change(function() {
+            var dMinElement= $('.dminGroup input[name="dMinRoll"]');
+            adjustDMin($(this), dMinElement);
+        }).change();
+
+        $('.pid_tuning .PITCH input[name="d"]').change(function() {
+            var dMinElement= $('.dminGroup input[name="dMinPitch"]');
+            adjustDMin($(this), dMinElement);
+        }).change();
+
+        $('.pid_tuning .YAW input[name="d"]').change(function() {
+            var dMinElement= $('.dminGroup input[name="dMinYaw"]');
+            adjustDMin($(this), dMinElement);
+        }).change();
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
             var checked = $(this).is(':checked');
@@ -612,6 +646,13 @@ TABS.pid_tuning.initialize = function (callback) {
             if (FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 && FILTER_CONFIG.dterm_lowpass_dyn_min_hz < FILTER_CONFIG.dterm_lowpass_dyn_max_hz ) {
                 FILTER_CONFIG.dterm_lowpass_type = $('.pid_filter select[name="dtermLowpassDynType"]').val();
             }
+
+            ADVANCED_TUNING.dMinRoll = parseInt($('.dminGroup input[name="dMinRoll"]').val());
+            ADVANCED_TUNING.dMinPitch = parseInt($('.dminGroup input[name="dMinPitch"]').val());
+            ADVANCED_TUNING.dMinYaw = parseInt($('.dminGroup input[name="dMinYaw"]').val());
+            ADVANCED_TUNING.dMinGain = parseInt($('.dminGroup input[name="dMinGain"]').val());
+            ADVANCED_TUNING.dMinAdvance = parseInt($('.dminGroup input[name="dMinAdvance"]').val());
+
         }
 
     }

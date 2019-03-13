@@ -1379,6 +1379,34 @@
     "pidTuningAntiGravityThres": {
         "message": "Anti Gravity Threshold"
     },
+    "pidTuningDMinHelp": {
+        "message": "D Min provides a way to have a lower level of D in normal flight and a higher level for quick manoeuvres that might cause overshoot, like flips and rolls. It also brings D up during prop wash. The craft will have a dynamic D Term varying from D Min (under normal flight) to the standard D (under fast roll and flips). A value of zero will disable the feature. The Gain determines how strongly D is boosted during quick stick inputs. The Advance speeds up of onset of the boost effect. This can be helpful if you have overshoot with very high rate flips on very responsive quads.",
+        "description": "Help message for D Min feature"
+    },
+    "pidTuningDMin": {
+        "message": "D Min",
+       "description": "Table header of the D Min feature in the PIDs tab" 
+    },
+    "pidTuningDMinRoll": {
+       "message": "Roll",
+       "description": "Axis to apply D Min feature" 
+    },
+    "pidTuningDMinPitch": {
+       "message": "Pitch",
+       "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinYaw": {
+       "message": "Yaw",
+       "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinGain": {
+       "message": "Gain",
+       "description": "Gain of the D Min feature"
+    },
+    "pidTuningDMinAdvance": {
+       "message": "Advance",
+       "description": "Advane of the D Min feature"
+    },
 
     "pidTuningPidSettings": {
         "message": "PID Controller Settings"
