@@ -3736,6 +3736,9 @@
     "osdDescElementEscRpm": {
         "message": "RPM reported by ESC telemetry"
     },
+    "osdDescElementEscRpmFreq": {
+        "message": "RPM frequency reported by ESC telemetry"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Real time clock date / time"
     },
