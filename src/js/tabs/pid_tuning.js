@@ -430,7 +430,7 @@ TABS.pid_tuning.initialize = function (callback) {
             var type = FILTER_CONFIG.gyro_lowpass_type > 0 ? FILTER_CONFIG.gyro_lowpass_type : DEFAULT.gyro_lowpass_type;
 
             $('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val(checked ? cutoff_min : 0).attr('disabled', !checked);
-            $('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').val(checked ? cutoff_max : 0).attr('disabled', !checked);
+            $('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').attr('disabled', !checked);
             $('.pid_filter select[name="gyroLowpassDynType"]').val(checked ? type : 0).attr('disabled', !checked);
 
             if (checked) {
