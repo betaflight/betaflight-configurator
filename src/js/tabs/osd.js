@@ -488,13 +488,13 @@ OSD.constants = {
             preview: function () {
                 var artificialHorizon = new Array();
 
-                for (var j = 1; j < 8; j++) {
+                for (var j = 0; j < 7; j++) {
                     for (var i = -4; i <= 4; i++) {
 
                         var element;
 
                         // Blank char to mark the size of the element
-                        if (j != 4) {
+                        if (j != 3) {
                             element = { x: i, y: j, sym: SYM.BLANK };
 
                             // Sample of horizon
@@ -1774,6 +1774,9 @@ OSD.GUI.preview = {
                         position += Math.abs(selectedPositionY + limits.minY) * FONT.constants.SIZES.LINE;
                     } else if ((limits.maxY > 0) && ((selectedPositionY + limits.maxY) >= OSD.data.display_size.y)) {
                         position -= (selectedPositionY + limits.maxY - OSD.data.display_size.y + 1) * FONT.constants.SIZES.LINE;
+                    }
+                    if (position < 0) {
+                        return;
                     }
                 }
             }
