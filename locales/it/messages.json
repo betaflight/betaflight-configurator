@@ -260,10 +260,10 @@
         "message": "Contattando il bootloader ..."
     },
     "stm32ContactingBootloaderFailed": {
-        "message": "comunicazione col bootloader fallita"
+        "message": "Comunicazione col bootloader fallita"
     },
     "stm32ResponseBootloaderFailed": {
-        "message": "nessuna risposta dal  bootloader, programmazione FALLITA"
+        "message": "Nessuna risposta dal bootloader, programmazione FALLITA"
     },
     "stm32GlobalEraseExtended": {
         "message": "Esecuzione della cancellazione gli del chip (tramite cancellazione estesa) ..."
@@ -281,7 +281,7 @@
         "message": "cancellazione in corso..."
     },
     "stm32Flashing": {
-        "message": "Lampeggiante ..."
+        "message": "Scrittura in corso..."
     },
     "stm32Verifying": {
         "message": "Verifica in corso..."
@@ -372,7 +372,7 @@
         "message": "<strong>Armamento motori Disabilitato<\/strong>"
     },
     "armingEnabled": {
-        "message": "<strong>Armamento motori abilitato<\/strong>"
+        "message": "<strong>Armamento motori Abilitato<\/strong>"
     },
     "runawayTakeoffPreventionDisabled": {
         "message": "<strong>Prevenzione di decollo fuori controllo temporaneamente disabilitato<\/strong>"
@@ -1431,10 +1431,10 @@
         "message": "AUTO"
     },
     "auxiliaryModeLogicOR": {
-      "message": "OR"
+        "message": "OR"
     },
     "auxiliaryModeLogicAND": {
-      "message": "AND"
+        "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Configurare gli interruttori di regolazione. Vedi la sezione 'aggiustamenti in volo' del manuale per i dettagli. Le modifiche apportate dalle funzioni di regolazione non vengono salvate automaticamente. Ci sono 4 slot. Ogni interruttore utilizzato per apportare modifiche simultanee richiede l'uso esclusivo di uno slot."
@@ -2261,35 +2261,35 @@
     },
     "ledStripFunctionNoneOption": {
         "message": "Nessuno",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripFunctionColorOption": {
         "message": "Colore",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripFunctionModesOption": {
         "message": "Modalità &amp; Orientamento",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripFunctionArmOption": {
         "message": "Stato Armato",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripFunctionBatteryOption": {
         "message": "Batteria",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripFunctionRSSIOption": {
         "message": "RSSI",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripFunctionGPSOption": {
         "message": "GPS",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripFunctionRingOption": {
         "message": "Anello",
-        "description": "One of the modes of the Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripColorModifierTitle": {
         "message": "Modificatore Colore"
@@ -2299,107 +2299,107 @@
     },
     "ledStripModeColorsModeOrientation": {
         "message": "Orientamento",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeHeadfree": {
         "message": "Senza testa",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeHorizon": {
         "message": "Horizon",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeAngle": {
         "message": "Angle",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeMag": {
         "message": "Mag",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeBaro": {
         "message": "Baro",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripDirN": {
         "message": "N",
-        "description": "North direction in Color Mode in Led Strip"
+        "description": "Direzione Nord in modalità Colore striscia led"
     },
     "ledStripDirE": {
         "message": "E",
-        "description": "East direction in Color Mode in Led Strip"
+        "description": "Direzione Est in modalità Colore striscia led"
     },
     "ledStripDirS": {
         "message": "S",
-        "description": "South direction in Color Mode in Led Strip"
+        "description": "Direzione Sud in modalità Colore striscia led"
     },
     "ledStripDirW": {
         "message": "O",
-        "description": "West direction in Color Mode in Led Strip"
+        "description": "Direzione Ovest in modalità Colore striscia led"
     },
     "ledStripDirU": {
         "message": "Su",
-        "description": "Up direction in Color Mode in Led Strip"
+        "description": "Direzione Su in modalità Colore striscia led"
     },
     "ledStripDirD": {
         "message": "Giù",
-        "description": "Down direction in Color Mode in Led Strip"
+        "description": "Direzione Giù in modalità Colore striscia led"
     },
     "ledStripModesOrientationTitle": {
         "message": "Orientamento LED ('modalità &amp; orientamento') e colore",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModesSpecialColorsTitle": {
         "message": "Colori speciali",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeDisarmed": {
         "message": "Disarmato",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeArmed": {
         "message": "Armato",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeAnimation": {
         "message": "Animazione",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeBlinkBg": {
         "message": "Sfondo lampeggia",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeGPSNoSats": {
         "message": "GPS: nessun satellite",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeGPSNoLock": {
         "message": "GPS: nessun blocco",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: bloccato",
-        "description": "One of the modes in Color Mode in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripWiring": {
         "message": "Cablaggio Striscia LED",
-        "description": "One of the modes in Led Strip"
+        "description": "Una modalità per striscia Led"
     },
     "ledStripWiringMode": {
         "message": "Modalità ordinamento cavi",
-        "description": "One of the wiring modes in Led Strip"
+        "description": "Una modalità di cablaggio striscia Led"
     },
     "ledStripWiringClearControl": {
         "message": "Cancella selezionati",
-        "description": "Control button in the wiring modes in Led Strip"
+        "description": "Tasto controllo cablaggio striscia Led"
     },
     "ledStripWiringClearAllControl": {
         "message": "Cancella tutti i cablaggi",
-        "description": "Control button in the wiring modes in Led Strip"
+        "description": "Tasto controllo cablaggio striscia Led"
     },
     "ledStripWiringMessage": {
         "message": "LED senza numero ordinamento non verranno salvati.",
-        "description": "Message in the wiring modes in Led Strip"
+        "description": "Messaggio per cablaggio striscia Led"
     },
     "ledStripVtxFunction": {
         "message": "Scanner Larson"
@@ -2474,7 +2474,7 @@
         "message": "Yaw [R]"
     },
     "controlAxisThrottle": {
-        "message": "Gas"
+        "message": "Gas [T]"
     },
     "controlAxisAux1": {
         "message": "AUX 1"
