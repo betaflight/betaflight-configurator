@@ -19,6 +19,8 @@ describe('TABS.cli', () => {
         cliTab.append($('<div>').addClass('window').append(cliOutput));
         cliTab.append(cliPrompt);
 
+        CliAutoComplete.setEnabled(false); // not testing the client-side autocomplete
+
         before(() => {
             $('body')
                 .append(cliTab);

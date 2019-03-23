@@ -9,6 +9,8 @@ module.exports = function(config) {
             './src/js/data_storage.js',
             './src/js/localization.js',
             './src/js/gui.js',
+            './node_modules/jquery-textcomplete/dist/jquery.textcomplete.min.js',
+            './src/js/CliAutoComplete.js',
             './src/js/tabs/cli.js',
             './test/**/*.js'
         ],
