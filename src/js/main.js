@@ -283,7 +283,7 @@ function startProcess() {
                         TABS.onboard_logging.initialize(content_ready);
                         break;
                     case 'cli':
-                        TABS.cli.initialize(content_ready);
+                        TABS.cli.initialize(content_ready, nwGui);
                         break;
 
                     default:
