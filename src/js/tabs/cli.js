@@ -43,7 +43,21 @@ function getCliCommand(command, cliBuffer) {
 
 function copyToClipboard(text, nwGui) {
     function onCopySuccessful() {
-        writeLineToOutput("* " + i18n.getMessage("cliCopySuccessful"));
+        const button = $('.tab-cli .copy');
+        const origText = button.text();
+        const origWidth = button.css("width");
+        button.text(i18n.getMessage("cliCopySuccessful"));
+        button.css({
+            width: origWidth,
+            textAlign: "center",
+        });
+        setTimeout(() => {
+            button.text(origText);
+            button.css({
+                width: "",
+                textAlign: "",
+            });
+        }, 1500);
     }
 
     function onCopyFailed(ex) {

@@ -2260,7 +2260,7 @@
         "message": "Copy to clipboard"
     },
     "cliCopySuccessful": {
-        "message": "Content has been copied to clipboard!"
+        "message": "Copied!"
     },
 
     "loggingNote": {
