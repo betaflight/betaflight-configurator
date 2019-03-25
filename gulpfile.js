@@ -29,6 +29,8 @@ const APPS_DIR = './apps/';
 const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
 
+const LINUX_INSTALL_DIR = '/opt/betaflight';
+
 var nwBuilderOptions = {
     version: '0.35.3',
     files: './dist/**/*',
@@ -186,7 +188,7 @@ function getRunDebugAppCommand(arch) {
 }
 
 function getReleaseFilename(platform, ext) {
-    return 'betaflight-configurator_' + pkg.version + '_' + platform + '.' + ext;
+    return `${pkg.name}_${pkg.version}_${platform}.${ext}`;
 }
 
 function clean_dist() {
@@ -545,11 +547,12 @@ function release_deb(arch, done) {
              architecture: getLinuxPackageArch('deb', arch),
              maintainer: pkg.author,
              description: pkg.description,
-             postinst: ['xdg-desktop-menu install /opt/betaflight/betaflight-configurator/betaflight-configurator.desktop'],
-             prerm: ['xdg-desktop-menu uninstall betaflight-configurator.desktop'],
+             preinst: [`rm -rf ${LINUX_INSTALL_DIR}/${pkg.name}`],
+             postinst: [`chown root:root ${LINUX_INSTALL_DIR}`, `chown -R root:root ${LINUX_INSTALL_DIR}/${pkg.name}`, `xdg-desktop-menu install ${LINUX_INSTALL_DIR}/${pkg.name}/${pkg.name}.desktop`],
+             prerm: [`xdg-desktop-menu uninstall ${pkg.name}.desktop`],
              depends: 'libgconf-2-4',
              changelog: [],
-             _target: 'opt/betaflight/betaflight-configurator',
+             _target: `${LINUX_INSTALL_DIR}/${pkg.name}`,
              _out: RELEASE_DIR,
              _copyright: 'assets/linux/copyright',
              _clean: true
@@ -579,9 +582,9 @@ function release_rpm(arch, done) {
              files:
                  [ { cwd: path.join(APPS_DIR, pkg.name, arch),
                      src: '*',
-                     dest: '/opt/betaflight/betaflight-configurator' } ],
-             postInstallScript: ['xdg-desktop-menu install /opt/betaflight/betaflight-configurator/betaflight-configurator.desktop'],
-             preUninstallScript: ['xdg-desktop-menu uninstall betaflight-configurator.desktop'],
+                     dest: `${LINUX_INSTALL_DIR}/${pkg.name}` } ],
+             postInstallScript: [`xdg-desktop-menu install ${LINUX_INSTALL_DIR}/${pkg.name}/${pkg.name}.desktop`],
+             preUninstallScript: [`xdg-desktop-menu uninstall ${pkg.name}.desktop`],
              tempDir: path.join(RELEASE_DIR,'tmp-rpm-build-' + arch),
              keepTemp: false,
              verbose: false,
