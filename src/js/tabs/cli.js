@@ -41,7 +41,49 @@ function getCliCommand(command, cliBuffer) {
     return commandWithBackSpaces(command, buffer, noOfCharsToDelete);
 }
 
-TABS.cli.initialize = function (callback) {
+function copyToClipboard(text, nwGui) {
+    function onCopySuccessful() {
+        const button = $('.tab-cli .copy');
+        const origText = button.text();
+        const origWidth = button.css("width");
+        button.text(i18n.getMessage("cliCopySuccessful"));
+        button.css({
+            width: origWidth,
+            textAlign: "center",
+        });
+        setTimeout(() => {
+            button.text(origText);
+            button.css({
+                width: "",
+                textAlign: "",
+            });
+        }, 1500);
+    }
+
+    function onCopyFailed(ex) {
+        console.warn(ex);
+    }
+
+    function nwCopy(text) {
+        try {
+            let clipboard = nwGui.Clipboard.get();
+            clipboard.set(text, "text");
+            onCopySuccessful();
+        } catch (ex) {
+            onCopyFailed(ex);
+        }
+    }
+
+    function webCopy(text) {
+        navigator.clipboard.writeText(text)
+            .then(onCopySuccessful, onCopyFailed);
+    }
+
+    let copyFunc = nwGui ? nwCopy : webCopy;
+    copyFunc(text);
+}
+
+TABS.cli.initialize = function (callback, nwGui) {
     var self = this;
 
     if (GUI.active_tab != 'cli') {
@@ -50,6 +92,9 @@ TABS.cli.initialize = function (callback) {
     
     self.outputHistory = "";
     self.cliBuffer = "";
+
+    // nwGui variable is set in main.js
+    const clipboardCopySupport = !(nwGui == null && !navigator.clipboard);
 
     $('#content').load("./tabs/cli.html", function () {
         // translate to user-selected language
@@ -106,6 +151,14 @@ TABS.cli.initialize = function (callback) {
             self.outputHistory = "";
             $('.tab-cli .window .wrapper').empty();
         });
+
+        if (clipboardCopySupport) {
+            $('.tab-cli .copy').click(function() {
+                copyToClipboard(self.outputHistory, nwGui);
+            });
+        } else {
+            $('.tab-cli .copy').hide();
+        }
 
         // Tab key detection must be on keydown,
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
