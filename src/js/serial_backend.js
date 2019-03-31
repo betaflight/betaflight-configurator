@@ -729,14 +729,19 @@ function reinitialiseConnection(originatorTab, callback) {
     GUI.log(i18n.getMessage('deviceRebooting'));
 
     if (FC.boardHasVcp()) { // VCP-based flight controls may crash old drivers, we catch and reconnect
-        setTimeout(function start_connection() {
-            $('a.connect').click();
+        GUI.timeout_add('waiting_for_disconnect', function waiting_for_bootup() {
             if (callback) {
                 callback();
             }
-        }, 2500);
+        }, 100);
+        //TODO: Need to work out how to do a proper reconnect here.
+        // caveat: Timeouts set with `GUI.timeout_add()` are removed on disconnect.
     } else {
         GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
+            if (callback) {
+                callback();
+            }
+
             MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
                 GUI.log(i18n.getMessage('deviceReady'));
                 originatorTab.initialize(false, $('#content').scrollTop());
