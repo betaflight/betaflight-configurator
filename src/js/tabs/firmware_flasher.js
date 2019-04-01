@@ -3,7 +3,8 @@
 TABS.firmware_flasher = {
     releases: null,
     releaseChecker: new ReleaseChecker('firmware', 'https://api.github.com/repos/betaflight/betaflight/releases'),
-    jenkinsLoader: new JenkinsLoader('https://ci.betaflight.tech')
+    jenkinsLoader: new JenkinsLoader('https://ci.betaflight.tech'),
+    localFileLoaded: false,
 };
 
 TABS.firmware_flasher.initialize = function (callback) {
@@ -64,7 +65,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
                     $('span.progressLabel').html('<a class="save_firmware" href="#" title="Save Firmware">Loaded Online Firmware: (' + parsed_hex.bytes_total + ' bytes)</a>');
 
-                    $('a.flash_firmware').removeClass('disabled');
+                    self.enableFlashing(true);
 
                     $('div.release_info .target').text(summary.target);
                     $('div.release_info .name').text(summary.version).prop('href', summary.releaseUrl);
@@ -319,7 +320,10 @@ TABS.firmware_flasher.initialize = function (callback) {
                 $('span.progressLabel').text(i18n.getMessage('firmwareFlasherLoadFirmwareFile'));
                 $('div.git_info').slideUp();
                 $('div.release_info').slideUp();
-                $('a.flash_firmware').addClass('disabled');
+
+                if (!self.localFileLoaded) {
+                    self.enableFlashing(false);
+                }
 
                 var versions_e = $('select[name="firmware_version"]').empty();
                 if(target == 0) {
@@ -352,6 +356,9 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         // UI Hooks
         $('a.load_file').click(function () {
+            self.enableFlashing(false);
+            self.localFileLoaded = true;
+
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, undefined);
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'file');
 
@@ -394,7 +401,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     if (parsed_hex) {
                                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, parsed_hex.bytes_total);
 
-                                        $('a.flash_firmware').removeClass('disabled');
+                                        self.enableFlashing(true);
 
                                         $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total));
                                     } else {
@@ -415,7 +422,11 @@ TABS.firmware_flasher.initialize = function (callback) {
          */
         $('select[name="firmware_version"]').change(function(evt){
             $('div.release_info').slideUp();
-            $('a.flash_firmware').addClass('disabled');
+
+            if (!self.localFileLoaded) {
+                self.enableFlashing(false);
+            }
+
             let release = $("option:selected", evt.target).data("summary");
             let isCached = FirmwareCache.has(release);
             if (evt.target.value=="0" || isCached) {
@@ -436,6 +447,9 @@ TABS.firmware_flasher.initialize = function (callback) {
         });
 
         $('a.load_remote_file').click(function (evt) {
+            self.enableFlashing(false);
+            self.localFileLoaded = false;
+
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'http');
 
             if ($('select[name="firmware_version"]').val() == "0") {
@@ -445,7 +459,6 @@ TABS.firmware_flasher.initialize = function (callback) {
 
             function failed_to_load() {
                 $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFailedToLoadOnlineFirmware'));
-                $('a.flash_firmware').addClass('disabled');
                 $("a.load_remote_file").removeClass('disabled');
                 $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
             }
@@ -691,3 +704,13 @@ TABS.firmware_flasher.cleanup = function (callback) {
 
     if (callback) callback();
 };
+
+TABS.firmware_flasher.enableFlashing = function (enabled) {
+    var self = this;
+
+    if (enabled) {
+        $('a.flash_firmware').removeClass('disabled');
+    } else {
+        $('a.flash_firmware').addClass('disabled');
+    }
+}
