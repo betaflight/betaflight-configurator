@@ -398,9 +398,10 @@ TABS.cli.cleanup = function (callback) {
         // (another approach is however much more complicated):
         // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
         // we could probably implement this someday
-        reinitialiseConnection(self, function () {
-            GUI.timeout_add('tab_change_callback', callback, 500);
-        });
+        if (callback) {
+            callback();
+        }
+
         CONFIGURATOR.cliActive = false;
         CONFIGURATOR.cliValid = false;
     });
