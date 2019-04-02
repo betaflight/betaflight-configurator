@@ -311,6 +311,26 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // translate to user-selected language
         i18n.localizePage();
 
+        var gyro_align_content_e = $('.tab-configuration .gyro_align_content');
+        var legacy_gyro_alignment_e = $('.tab-configuration .legacy_gyro_alignment');
+        var legacy_accel_alignment_e = $('.tab-configuration .legacy_accel_alignment');
+
+        // Hide the new multi gyro element by default
+        gyro_align_content_e.hide();
+
+        // If we are sent USE_MULTI_GYRO flag from the target, show the new element, while hiding the old ones.
+        if (SENSOR_ALIGNMENT.use_multi_gyro == 1) {
+            gyro_align_content_e.show();
+            legacy_gyro_alignment_e.hide();
+            legacy_accel_alignment_e.hide();
+        }
+
+        // As the gyro_to_use does not have a 'DEFAULT' 0th element enum like alingments, the 0th element 'First' is excluded from here.
+        var gyros = [
+            i18n.getMessage('configurationSensorGyroToUseSecond'),
+            i18n.getMessage('configurationSensorGyroToUseBoth')
+        ];
+
         var alignments = [
             'CW 0°',
             'CW 90°',
@@ -326,17 +346,32 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var orientation_acc_e = $('select.accalign');
         var orientation_mag_e = $('select.magalign');
 
+        var orientation_gyro_to_use_e = $('select.gyro_to_use');
+        var orientation_gyro_1_align_e = $('select.gyro_1_align');
+        var orientation_gyro_2_align_e = $('select.gyro_2_align');
+
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.tab-configuration .sensoralignment').hide();
         } else {
+            for (var i = 0; i< gyros.length; i++) {
+                orientation_gyro_to_use_e.append('<option value="' + (i+1) + '">'+ gyros[i] + '</option>');
+            }
             for (var i = 0; i < alignments.length; i++) {
                 orientation_gyro_e.append('<option value="' + (i+1) + '">'+ alignments[i] + '</option>');
                 orientation_acc_e.append('<option value="' + (i+1) + '">'+ alignments[i] + '</option>');
                 orientation_mag_e.append('<option value="' + (i+1) + '">'+ alignments[i] + '</option>');
+
+                orientation_gyro_1_align_e.append('<option value="' + (i+1) + '">'+ alignments[i] + '</option>');
+                orientation_gyro_2_align_e.append('<option value="' + (i+1) + '">'+ alignments[i] + '</option>');
             }
             orientation_gyro_e.val(SENSOR_ALIGNMENT.align_gyro);
             orientation_acc_e.val(SENSOR_ALIGNMENT.align_acc);
             orientation_mag_e.val(SENSOR_ALIGNMENT.align_mag);
+
+            orientation_gyro_to_use_e.val(SENSOR_ALIGNMENT.gyro_to_use);
+
+            orientation_gyro_1_align_e.val(SENSOR_ALIGNMENT.gyro_1_align);
+            orientation_gyro_2_align_e.val(SENSOR_ALIGNMENT.gyro_2_align);
         }
 
         // ESC protocols
@@ -1023,6 +1058,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             SENSOR_ALIGNMENT.align_gyro = parseInt(orientation_gyro_e.val());
             SENSOR_ALIGNMENT.align_acc = parseInt(orientation_acc_e.val());
             SENSOR_ALIGNMENT.align_mag = parseInt(orientation_mag_e.val());
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());
+                SENSOR_ALIGNMENT.gyro_1_align = parseInt(orientation_gyro_1_align_e.val());
+                SENSOR_ALIGNMENT.gyro_2_align = parseInt(orientation_gyro_2_align_e.val());
+            }
 
             PID_ADVANCED_CONFIG.fast_pwm_protocol = parseInt(esc_protocol_e.val()-1);
             PID_ADVANCED_CONFIG.use_unsyncedPwm = $('input[id="unsyncedPWMSwitch"]').is(':checked') ? 1 : 0;

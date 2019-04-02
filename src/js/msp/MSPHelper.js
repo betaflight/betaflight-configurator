@@ -536,6 +536,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 SENSOR_ALIGNMENT.align_gyro = data.readU8();
                 SENSOR_ALIGNMENT.align_acc = data.readU8();
                 SENSOR_ALIGNMENT.align_mag = data.readU8();
+
+                if (semver.gte(CONFIG.apiVersion, '1.41.0')) {
+                    SENSOR_ALIGNMENT.use_multi_gyro = data.readU8();
+                    SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
+                    SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
+                    SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_DISPLAYPORT:
                 break;
@@ -1658,6 +1665,11 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(SENSOR_ALIGNMENT.align_gyro)
                 .push8(SENSOR_ALIGNMENT.align_acc)
                 .push8(SENSOR_ALIGNMENT.align_mag);
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                buffer.push8(SENSOR_ALIGNMENT.gyro_to_use)
+                .push8(SENSOR_ALIGNMENT.gyro_1_align)
+                .push8(SENSOR_ALIGNMENT.gyro_2_align);
+            }
             break;
         case MSPCodes.MSP_SET_ADVANCED_CONFIG:
             buffer.push8(PID_ADVANCED_CONFIG.gyro_sync_denom)
