@@ -53,7 +53,8 @@
                                           "js/tabs/map.js", 
                                           "/js/libraries/openlayers/ol.css", 
                                           "/js/libraries/openlayers/ol.js",
-                                          "/images/icons/cf_icon_position.png"]
+                                          "/images/icons/cf_icon_position.png",
+                                          "/images/icons/cf_icon_position_nofix.png"]
             }
         ]
     },
