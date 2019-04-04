@@ -466,9 +466,9 @@ var FC = {
             gyro_lowpass_hz:                100,
             gyro_lowpass_dyn_min_hz:        150,
             gyro_lowpass_dyn_max_hz:        450,
-            gyro_lowpass_type:                0,
+            gyro_lowpass_type:              FC.FILTER_TYPE_FLAGS.PT1,
             gyro_lowpass2_hz:               300,
-            gyro_lowpass2_type:               0,
+            gyro_lowpass2_type:             FC.FILTER_TYPE_FLAGS.PT1,
             gyro_notch_cutoff:              300,
             gyro_notch_hz:                  400,
             gyro_notch2_cutoff:             100,
@@ -476,9 +476,9 @@ var FC = {
             dterm_lowpass_hz:               100,
             dterm_lowpass_dyn_min_hz:       150,
             dterm_lowpass_dyn_max_hz:       250,
-            dterm_lowpass_type:               0,
+            dterm_lowpass_type:             FC.FILTER_TYPE_FLAGS.PT1,
             dterm_lowpass2_hz:              150,
-            dterm_lowpass2_type:              1,
+            dterm_lowpass2_type:            FC.FILTER_TYPE_FLAGS.BIQUAD,
             dterm_notch_cutoff:             160,
             dterm_notch_hz:                 260,
             yaw_lowpass_hz:                 100,
@@ -536,5 +536,28 @@ var FC = {
         }
 
         return hasVcp;
+    },
+
+    FILTER_TYPE_FLAGS: {
+        PT1: 0,
+        BIQUAD: 1,
+    },
+
+    getFilterDefaults: function() {
+        var versionFilterDefaults = DEFAULT;
+
+        if (semver.eq(CONFIG.apiVersion, "1.40.0")) {
+            versionFilterDefaults.dterm_lowpass2_hz = 200;
+        } else if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            versionFilterDefaults.gyro_lowpass_hz = 150;
+            versionFilterDefaults.gyro_lowpass_type = FC.FILTER_TYPE_FLAGS.BIQUAD;
+            versionFilterDefaults.gyro_lowpass2_hz = 0;
+            versionFilterDefaults.gyro_lowpass2_type = FC.FILTER_TYPE_FLAGS.BIQUAD;
+            versionFilterDefaults.dterm_lowpass_hz = 150;
+            versionFilterDefaults.dterm_lowpass_type = FC.FILTER_TYPE_FLAGS.BIQUAD;
+            versionFilterDefaults.dterm_lowpass2_hz = 150;
+            versionFilterDefaults.dterm_lowpass2_type = FC.FILTER_TYPE_FLAGS.BIQUAD;
+        }
+        return versionFilterDefaults;
     },
 };

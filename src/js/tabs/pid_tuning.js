@@ -13,11 +13,15 @@ TABS.pid_tuning = {
 };
 
 TABS.pid_tuning.initialize = function (callback) {
+
     var self = this;
 
     if (GUI.active_tab !== 'pid_tuning') {
         GUI.active_tab = 'pid_tuning';
     }
+
+    // Update filtering defaults based on API version
+    var FILTER_DEFAULT = FC.getFilterDefaults();
 
     // requesting MSP_STATUS manually because it contains CONFIG.profile
     MSP.promise(MSPCodes.MSP_STATUS).then(function() {
@@ -377,8 +381,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var hz = FILTER_CONFIG.gyro_notch_hz > 0 ? FILTER_CONFIG.gyro_notch_hz : DEFAULT.gyro_notch_hz;
-            var cutoff = FILTER_CONFIG.gyro_notch_cutoff > 0 ? FILTER_CONFIG.gyro_notch_cutoff : DEFAULT.gyro_notch_cutoff;
+            var hz = FILTER_CONFIG.gyro_notch_hz > 0 ? FILTER_CONFIG.gyro_notch_hz : FILTER_DEFAULT.gyro_notch_hz;
+            var cutoff = FILTER_CONFIG.gyro_notch_cutoff > 0 ? FILTER_CONFIG.gyro_notch_cutoff : FILTER_DEFAULT.gyro_notch_cutoff;
 
             $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
@@ -387,8 +391,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="gyroNotch2Enabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var hz = FILTER_CONFIG.gyro_notch2_hz > 0 ? FILTER_CONFIG.gyro_notch2_hz : DEFAULT.gyro_notch2_hz;
-            var cutoff = FILTER_CONFIG.gyro_notch2_cutoff > 0 ? FILTER_CONFIG.gyro_notch2_cutoff : DEFAULT.gyro_notch2_cutoff;
+            var hz = FILTER_CONFIG.gyro_notch2_hz > 0 ? FILTER_CONFIG.gyro_notch2_hz : FILTER_DEFAULT.gyro_notch2_hz;
+            var cutoff = FILTER_CONFIG.gyro_notch2_cutoff > 0 ? FILTER_CONFIG.gyro_notch2_cutoff : FILTER_DEFAULT.gyro_notch2_cutoff;
 
             $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
@@ -397,8 +401,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="dtermNotchEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var hz = FILTER_CONFIG.dterm_notch_hz > 0 ? FILTER_CONFIG.dterm_notch_hz : DEFAULT.dterm_notch_hz;
-            var cutoff = FILTER_CONFIG.dterm_notch_cutoff > 0 ? FILTER_CONFIG.dterm_notch_cutoff : DEFAULT.dterm_notch_cutoff;
+            var hz = FILTER_CONFIG.dterm_notch_hz > 0 ? FILTER_CONFIG.dterm_notch_hz : FILTER_DEFAULT.dterm_notch_hz;
+            var cutoff = FILTER_CONFIG.dterm_notch_cutoff > 0 ? FILTER_CONFIG.dterm_notch_cutoff : FILTER_DEFAULT.dterm_notch_cutoff;
 
             $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
@@ -407,8 +411,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="gyroLowpassEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff = FILTER_CONFIG.gyro_lowpass_hz > 0 ? FILTER_CONFIG.gyro_lowpass_hz : DEFAULT.gyro_lowpass_hz;
-            var type = FILTER_CONFIG.gyro_lowpass_type > 0 ? FILTER_CONFIG.gyro_lowpass_type : DEFAULT.gyro_lowpass_type;
+            var cutoff = FILTER_CONFIG.gyro_lowpass_hz > 0 ? FILTER_CONFIG.gyro_lowpass_hz : FILTER_DEFAULT.gyro_lowpass_hz;
+            var type = FILTER_CONFIG.gyro_lowpass_type > 0 ? FILTER_CONFIG.gyro_lowpass_type : FILTER_DEFAULT.gyro_lowpass_type;
 
             $('.pid_filter input[name="gyroLowpassFrequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="gyroLowpassType"]').val(checked ? type : 0).attr('disabled', !checked);
@@ -421,13 +425,13 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="gyroLowpassDynEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff_min = DEFAULT.gyro_lowpass_dyn_min_hz;
-            var cutoff_max = DEFAULT.gyro_lowpass_dyn_max_hz;
+            var cutoff_min = FILTER_DEFAULT.gyro_lowpass_dyn_min_hz;
+            var cutoff_max = FILTER_DEFAULT.gyro_lowpass_dyn_max_hz;
             if (FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 && FILTER_CONFIG.gyro_lowpass_dyn_min_hz < FILTER_CONFIG.gyro_lowpass_dyn_max_hz) {
                 cutoff_min = FILTER_CONFIG.gyro_lowpass_dyn_min_hz;  
                 cutoff_max = FILTER_CONFIG.gyro_lowpass_dyn_max_hz;
             } 
-            var type = FILTER_CONFIG.gyro_lowpass_type > 0 ? FILTER_CONFIG.gyro_lowpass_type : DEFAULT.gyro_lowpass_type;
+            var type = FILTER_CONFIG.gyro_lowpass_type > 0 ? FILTER_CONFIG.gyro_lowpass_type : FILTER_DEFAULT.gyro_lowpass_type;
 
             $('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val(checked ? cutoff_min : 0).attr('disabled', !checked);
             $('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').attr('disabled', !checked);
@@ -440,8 +444,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="gyroLowpass2Enabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff = FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FILTER_CONFIG.gyro_lowpass2_hz : DEFAULT.gyro_lowpass2_hz;
-            var type = FILTER_CONFIG.gyro_lowpass2_type > 0 ? FILTER_CONFIG.gyro_lowpass2_type : DEFAULT.gyro_lowpass2_type;
+            var cutoff = FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FILTER_CONFIG.gyro_lowpass2_hz : FILTER_DEFAULT.gyro_lowpass2_hz;
+            var type = FILTER_CONFIG.gyro_lowpass2_type > 0 ? FILTER_CONFIG.gyro_lowpass2_type : FILTER_DEFAULT.gyro_lowpass2_type;
 
             $('.pid_filter input[name="gyroLowpass2Frequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="gyroLowpass2Type"]').val(checked ? type : 0).attr('disabled', !checked);
@@ -449,8 +453,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="dtermLowpassEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff = FILTER_CONFIG.dterm_lowpass_hz > 0 ? FILTER_CONFIG.dterm_lowpass_hz : DEFAULT.dterm_lowpass_hz;
-            var type = FILTER_CONFIG.dterm_lowpass_type > 0 ? FILTER_CONFIG.dterm_lowpass_type : DEFAULT.dterm_lowpass_type;
+            var cutoff = FILTER_CONFIG.dterm_lowpass_hz > 0 ? FILTER_CONFIG.dterm_lowpass_hz : FILTER_DEFAULT.dterm_lowpass_hz;
+            var type = FILTER_CONFIG.dterm_lowpass_type > 0 ? FILTER_CONFIG.dterm_lowpass_type : FILTER_DEFAULT.dterm_lowpass_type;
 
             $('.pid_filter input[name="dtermLowpassFrequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="dtermLowpassType"]').val(checked ? type : 0).attr('disabled', !checked);
@@ -462,13 +466,13 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="dtermLowpassDynEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff_min = DEFAULT.dterm_lowpass_dyn_min_hz;
-            var cutoff_max = DEFAULT.dterm_lowpass_dyn_max_hz;
+            var cutoff_min = FILTER_DEFAULT.dterm_lowpass_dyn_min_hz;
+            var cutoff_max = FILTER_DEFAULT.dterm_lowpass_dyn_max_hz;
             if (FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 && FILTER_CONFIG.dterm_lowpass_dyn_min_hz < FILTER_CONFIG.dterm_lowpass_dyn_max_hz) {
                 cutoff_min = FILTER_CONFIG.dterm_lowpass_dyn_min_hz;  
                 cutoff_max = FILTER_CONFIG.dterm_lowpass_dyn_max_hz;
             } 
-            var type = FILTER_CONFIG.dterm_lowpass_type > 0 ? FILTER_CONFIG.dterm_lowpass_type : DEFAULT.dterm_lowpass_type;
+            var type = FILTER_CONFIG.dterm_lowpass_type > 0 ? FILTER_CONFIG.dterm_lowpass_type : FILTER_DEFAULT.dterm_lowpass_type;
 
             $('.pid_filter input[name="dtermLowpassDynMinFrequency"]').val(checked ? cutoff_min : 0).attr('disabled', !checked);
             $('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val(checked ? cutoff_max : 0).attr('disabled', !checked);
@@ -481,8 +485,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="dtermLowpass2Enabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff = FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FILTER_CONFIG.dterm_lowpass2_hz : DEFAULT.dterm_lowpass2_hz;
-            var type = FILTER_CONFIG.dterm_lowpass2_type > 0 ? FILTER_CONFIG.dterm_lowpass2_type : DEFAULT.dterm_lowpass2_type;
+            var cutoff = FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FILTER_CONFIG.dterm_lowpass2_hz : FILTER_DEFAULT.dterm_lowpass2_hz;
+            var type = FILTER_CONFIG.dterm_lowpass2_type > 0 ? FILTER_CONFIG.dterm_lowpass2_type : FILTER_DEFAULT.dterm_lowpass2_type;
 
             $('.pid_filter input[name="dtermLowpass2Frequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="dtermLowpass2Type"]').val(checked ? type : 0).attr('disabled', !checked);
@@ -490,7 +494,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="yawLowpassEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff = FILTER_CONFIG.yaw_lowpass_hz > 0 ? FILTER_CONFIG.yaw_lowpass_hz : DEFAULT.yaw_lowpass_hz;
+            var cutoff = FILTER_CONFIG.yaw_lowpass_hz > 0 ? FILTER_CONFIG.yaw_lowpass_hz : FILTER_DEFAULT.yaw_lowpass_hz;
 
             $('.pid_filter input[name="yawLowpassFrequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
         });
