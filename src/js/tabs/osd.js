@@ -114,10 +114,11 @@ FONT.parseMCMFontFile = function (data) {
     // hexstring is for debugging
     FONT.data.hexstring = [];
     var pushChar = function () {
+        // Only push full characters onto the stack.
+        if (character_bytes.length != 64) { return; }
         FONT.data.characters_bytes.push(character_bytes);
         FONT.data.characters.push(character_bits);
         FONT.draw(FONT.data.characters.length - 1);
-        //$log.debug('parsed char ', i, ' as ', character);
         character_bits = [];
         character_bytes = [];
     };
