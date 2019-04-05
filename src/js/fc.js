@@ -336,7 +336,7 @@ var FC = {
             align_gyro:                 0,
             align_acc:                  0,
             align_mag:                  0,
-            use_multi_gyro:             0,
+            gyro_detection_flags:       0,
             gyro_to_use:                0,
             gyro_1_align:               0,
             gyro_2_align:               0,
