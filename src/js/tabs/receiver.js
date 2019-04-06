@@ -549,8 +549,8 @@ TABS.receiver.initModelPreview = function () {
     this.model = new Model($('.model_preview'), $('.model_preview canvas'));
 
     this.useSuperExpo = false;
-    if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
-        this.useSuperExpo = FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES');
+    if (semver.gte(CONFIG.apiVersion, "1.20.0") || (semver.gte(CONFIG.apiVersion, "1.16.0") && FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'))) {
+        this.useSuperExpo = true;
     }
 
     var useOldRateCurve = false;
