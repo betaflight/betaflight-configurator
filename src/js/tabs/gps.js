@@ -42,6 +42,9 @@ TABS.gps.initialize = function (callback) {
             MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, update_ui);
         }
 
+        // To not flicker the divs while the fix is unstable
+        var gpsWasFixed = false;
+
         function update_ui() {
             var lat = GPS_DATA.lat / 10000000;
             var lon = GPS_DATA.lon / 10000000;
@@ -81,16 +84,20 @@ TABS.gps.initialize = function (callback) {
             if (navigator.onLine) {
                 $('#connect').hide();
 
-                //if(lat != 0 && lon != 0){
-                if(GPS_DATA.fix){
+                if (GPS_DATA.fix) {
+                   gpsWasFixed = true;
                    frame.contentWindow.postMessage(message, '*');
                    $('#loadmap').show();
                    $('#waiting').hide();
-                }else{
+                } else if (!gpsWasFixed) {
                    $('#loadmap').hide();
                    $('#waiting').show();
+                } else {
+                    message.action = 'nofix';
+                    frame.contentWindow.postMessage(message, '*');
                 }
             }else{
+                gpsWasFixed = false;
                 $('#connect').show();
                 $('#waiting').hide(); 
                 $('#loadmap').hide();
