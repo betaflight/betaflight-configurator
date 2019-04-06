@@ -96,7 +96,7 @@ FONT.constants = {
 * Each line is composed of 8 asci 1 or 0, representing 1 bit each for a total of 1 byte per line
 */
 FONT.parseMCMFontFile = function (data) {
-    var data = data.split("\n");
+    var data = data.trim().split("\n");
     // clear local data
     FONT.data.characters.length = 0;
     FONT.data.characters_bytes.length = 0;
@@ -114,10 +114,13 @@ FONT.parseMCMFontFile = function (data) {
     // hexstring is for debugging
     FONT.data.hexstring = [];
     var pushChar = function () {
+        // Only push full characters onto the stack.
+        if (character_bytes.length != FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE) {
+            return;
+        }
         FONT.data.characters_bytes.push(character_bytes);
         FONT.data.characters.push(character_bits);
         FONT.draw(FONT.data.characters.length - 1);
-        //$log.debug('parsed char ', i, ' as ', character);
         character_bits = [];
         character_bytes = [];
     };
