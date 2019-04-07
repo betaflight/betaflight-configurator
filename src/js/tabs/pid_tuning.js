@@ -382,114 +382,120 @@ TABS.pid_tuning.initialize = function (callback) {
         $('input[id="gyroNotch1Enabled"]').change(function() {
             var checked = $(this).is(':checked');
             var hz = FILTER_CONFIG.gyro_notch_hz > 0 ? FILTER_CONFIG.gyro_notch_hz : FILTER_DEFAULT.gyro_notch_hz;
-            var cutoff = FILTER_CONFIG.gyro_notch_cutoff > 0 ? FILTER_CONFIG.gyro_notch_cutoff : FILTER_DEFAULT.gyro_notch_cutoff;
 
             $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
-            $('.pid_filter input[name="gyroNotch1Cutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked).change();
+            $('.pid_filter input[name="gyroNotch1Cutoff"]').attr('disabled', !checked).change();
         });
 
         $('input[id="gyroNotch2Enabled"]').change(function() {
             var checked = $(this).is(':checked');
             var hz = FILTER_CONFIG.gyro_notch2_hz > 0 ? FILTER_CONFIG.gyro_notch2_hz : FILTER_DEFAULT.gyro_notch2_hz;
-            var cutoff = FILTER_CONFIG.gyro_notch2_cutoff > 0 ? FILTER_CONFIG.gyro_notch2_cutoff : FILTER_DEFAULT.gyro_notch2_cutoff;
 
             $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
-            $('.pid_filter input[name="gyroNotch2Cutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked).change();
+            $('.pid_filter input[name="gyroNotch2Cutoff"]').attr('disabled', !checked).change();
         });
 
         $('input[id="dtermNotchEnabled"]').change(function() {
             var checked = $(this).is(':checked');
             var hz = FILTER_CONFIG.dterm_notch_hz > 0 ? FILTER_CONFIG.dterm_notch_hz : FILTER_DEFAULT.dterm_notch_hz;
-            var cutoff = FILTER_CONFIG.dterm_notch_cutoff > 0 ? FILTER_CONFIG.dterm_notch_cutoff : FILTER_DEFAULT.dterm_notch_cutoff;
 
             $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
-            $('.pid_filter input[name="dTermNotchCutoff"]').val(checked ? cutoff : 0).attr('disabled', !checked).change();
+            $('.pid_filter input[name="dTermNotchCutoff"]').attr('disabled', !checked).change();
         });
 
         $('input[id="gyroLowpassEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff = FILTER_CONFIG.gyro_lowpass_hz > 0 ? FILTER_CONFIG.gyro_lowpass_hz : FILTER_DEFAULT.gyro_lowpass_hz;
-            var type = FILTER_CONFIG.gyro_lowpass_type > 0 ? FILTER_CONFIG.gyro_lowpass_type : FILTER_DEFAULT.gyro_lowpass_type;
+            var disabledByDynamicLowpass = $('input[id="gyroLowpassDynEnabled"]').is(':checked');
 
-            $('.pid_filter input[name="gyroLowpassFrequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
-            $('.pid_filter select[name="gyroLowpassType"]').val(checked ? type : 0).attr('disabled', !checked);
+            var cutoff = FILTER_CONFIG.gyro_lowpass_hz > 0 ? FILTER_CONFIG.gyro_lowpass_hz : FILTER_DEFAULT.gyro_lowpass_hz;
+            var type = FILTER_CONFIG.gyro_lowpass_hz > 0 ? FILTER_CONFIG.gyro_lowpass_type : FILTER_DEFAULT.gyro_lowpass_type;
+
+            $('.pid_filter input[name="gyroLowpassFrequency"]').val((checked || disabledByDynamicLowpass) ? cutoff : 0).attr('disabled', !checked);
+            $('.pid_filter select[name="gyroLowpassType"]').val(type).attr('disabled', !checked);
 
             if (checked) {
                 $('input[id="gyroLowpassDynEnabled"]').prop('checked', false).change();
             }
-
+            self.updateFilterWarning();
         });
 
         $('input[id="gyroLowpassDynEnabled"]').change(function() {
             var checked = $(this).is(':checked');
             var cutoff_min = FILTER_DEFAULT.gyro_lowpass_dyn_min_hz;
-            var cutoff_max = FILTER_DEFAULT.gyro_lowpass_dyn_max_hz;
+            var type = FILTER_DEFAULT.gyro_lowpass_type;
             if (FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 && FILTER_CONFIG.gyro_lowpass_dyn_min_hz < FILTER_CONFIG.gyro_lowpass_dyn_max_hz) {
                 cutoff_min = FILTER_CONFIG.gyro_lowpass_dyn_min_hz;  
-                cutoff_max = FILTER_CONFIG.gyro_lowpass_dyn_max_hz;
+                type = FILTER_CONFIG.gyro_lowpass_type;
             } 
-            var type = FILTER_CONFIG.gyro_lowpass_type > 0 ? FILTER_CONFIG.gyro_lowpass_type : FILTER_DEFAULT.gyro_lowpass_type;
 
             $('.pid_filter input[name="gyroLowpassDynMinFrequency"]').val(checked ? cutoff_min : 0).attr('disabled', !checked);
             $('.pid_filter input[name="gyroLowpassDynMaxFrequency"]').attr('disabled', !checked);
-            $('.pid_filter select[name="gyroLowpassDynType"]').val(checked ? type : 0).attr('disabled', !checked);
+            $('.pid_filter select[name="gyroLowpassDynType"]').val(type).attr('disabled', !checked);
 
             if (checked) {
                 $('input[id="gyroLowpassEnabled"]').prop('checked', false).change();
+            } else if (FILTER_CONFIG.gyro_lowpass_hz > 0 && !$('input[id="gyroLowpassEnabled"]').is(':checked')) {
+                $('input[id="gyroLowpassEnabled"]').prop('checked', true).change();
             }
+            self.updateFilterWarning();
         });
 
         $('input[id="gyroLowpass2Enabled"]').change(function() {
             var checked = $(this).is(':checked');
             var cutoff = FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FILTER_CONFIG.gyro_lowpass2_hz : FILTER_DEFAULT.gyro_lowpass2_hz;
-            var type = FILTER_CONFIG.gyro_lowpass2_type > 0 ? FILTER_CONFIG.gyro_lowpass2_type : FILTER_DEFAULT.gyro_lowpass2_type;
+            var type = FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FILTER_CONFIG.gyro_lowpass2_type : FILTER_DEFAULT.gyro_lowpass2_type;
 
             $('.pid_filter input[name="gyroLowpass2Frequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
-            $('.pid_filter select[name="gyroLowpass2Type"]').val(checked ? type : 0).attr('disabled', !checked);
+            $('.pid_filter select[name="gyroLowpass2Type"]').val(type).attr('disabled', !checked);
         });
 
         $('input[id="dtermLowpassEnabled"]').change(function() {
             var checked = $(this).is(':checked');
-            var cutoff = FILTER_CONFIG.dterm_lowpass_hz > 0 ? FILTER_CONFIG.dterm_lowpass_hz : FILTER_DEFAULT.dterm_lowpass_hz;
-            var type = FILTER_CONFIG.dterm_lowpass_type > 0 ? FILTER_CONFIG.dterm_lowpass_type : FILTER_DEFAULT.dterm_lowpass_type;
+            var disabledByDynamicLowpass = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
 
-            $('.pid_filter input[name="dtermLowpassFrequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
-            $('.pid_filter select[name="dtermLowpassType"]').val(checked ? type : 0).attr('disabled', !checked);
+            var cutoff = FILTER_CONFIG.dterm_lowpass_hz > 0 ? FILTER_CONFIG.dterm_lowpass_hz : FILTER_DEFAULT.dterm_lowpass_hz;
+            var type = FILTER_CONFIG.dterm_lowpass_hz > 0 ? FILTER_CONFIG.dterm_lowpass_type : FILTER_DEFAULT.dterm_lowpass_type;
+
+            $('.pid_filter input[name="dtermLowpassFrequency"]').val((checked || disabledByDynamicLowpass) ? cutoff : 0).attr('disabled', !checked);
+            $('.pid_filter select[name="dtermLowpassType"]').val(type).attr('disabled', !checked);
 
             if (checked) {
                 $('input[id="dtermLowpassDynEnabled"]').prop('checked', false).change();
             }
+            self.updateFilterWarning();
         });
 
         $('input[id="dtermLowpassDynEnabled"]').change(function() {
             var checked = $(this).is(':checked');
             var cutoff_min = FILTER_DEFAULT.dterm_lowpass_dyn_min_hz;
-            var cutoff_max = FILTER_DEFAULT.dterm_lowpass_dyn_max_hz;
+            var type = FILTER_DEFAULT.dterm_lowpass_type;
             if (FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 && FILTER_CONFIG.dterm_lowpass_dyn_min_hz < FILTER_CONFIG.dterm_lowpass_dyn_max_hz) {
                 cutoff_min = FILTER_CONFIG.dterm_lowpass_dyn_min_hz;  
-                cutoff_max = FILTER_CONFIG.dterm_lowpass_dyn_max_hz;
+                type = FILTER_CONFIG.dterm_lowpass_type;
             } 
-            var type = FILTER_CONFIG.dterm_lowpass_type > 0 ? FILTER_CONFIG.dterm_lowpass_type : FILTER_DEFAULT.dterm_lowpass_type;
 
             $('.pid_filter input[name="dtermLowpassDynMinFrequency"]').val(checked ? cutoff_min : 0).attr('disabled', !checked);
-            $('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').val(checked ? cutoff_max : 0).attr('disabled', !checked);
-            $('.pid_filter select[name="dtermLowpassDynType"]').val(checked ? type : 0).attr('disabled', !checked);
+            $('.pid_filter input[name="dtermLowpassDynMaxFrequency"]').attr('disabled', !checked);
+            $('.pid_filter select[name="dtermLowpassDynType"]').val(type).attr('disabled', !checked);
 
             if (checked) {
                 $('input[id="dtermLowpassEnabled"]').prop('checked', false).change();
+            } else if (FILTER_CONFIG.dterm_lowpass_hz > 0 && !$('input[id="dtermLowpassEnabled"]').is(':checked')) {
+                $('input[id="dtermLowpassEnabled"]').prop('checked', true).change();
             }
+            self.updateFilterWarning();
         });
 
         $('input[id="dtermLowpass2Enabled"]').change(function() {
             var checked = $(this).is(':checked');
             var cutoff = FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FILTER_CONFIG.dterm_lowpass2_hz : FILTER_DEFAULT.dterm_lowpass2_hz;
-            var type = FILTER_CONFIG.dterm_lowpass2_type > 0 ? FILTER_CONFIG.dterm_lowpass2_type : FILTER_DEFAULT.dterm_lowpass2_type;
+            var type = FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FILTER_CONFIG.dterm_lowpass2_type : FILTER_DEFAULT.dterm_lowpass2_type;
 
             $('.pid_filter input[name="dtermLowpass2Frequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
-            $('.pid_filter select[name="dtermLowpass2Type"]').val(checked ? type : 0).attr('disabled', !checked);
+            $('.pid_filter select[name="dtermLowpass2Type"]').val(type).attr('disabled', !checked);
         });
 
         $('input[id="yawLowpassEnabled"]').change(function() {
@@ -1759,3 +1765,16 @@ TABS.pid_tuning.updateRatesLabels = function() {
         }
     }
 };
+
+TABS.pid_tuning.updateFilterWarning = function() {
+    var gyroDynamicLowpassEnabled = $('input[id="gyroLowpassDynEnabled"]').is(':checked');
+    var gyroLowpass1Enabled = $('input[id="gyroLowpassEnabled"]').is(':checked');
+    var dtermDynamicLowpassEnabled = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
+    var dtermLowpass1Enabled = $('input[id="dtermLowpassEnabled"]').is(':checked');
+    var warning_e = $('#pid-tuning .filterWarning');
+    if (!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled)) {
+        warning_e.show();
+    } else {
+        warning_e.hide();
+    }
+}
