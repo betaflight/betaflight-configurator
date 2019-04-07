@@ -247,27 +247,61 @@
                             </div>
                             <div class="spacer_box">
                                 <div class="board_align_content">
-                                    <div class="number">
-                                        <label> <input type="number" name="board_align_roll" step="1" min="-180" max="360" /> <span
-                                            i18n="configurationBoardAlignmentRoll"></span>
-                                        </label>
+                                    <div class="board_align_inputs">
                                         <div class="alignicon roll"></div>
-                                    </div>
-                                    <div class="number">
-                                        <label> <input type="number" name="board_align_pitch" step="1" min="-180" max="360" />
-                                        <span i18n="configurationBoardAlignmentPitch"></span>
+                                        <label>
+                                            <input type="number" name="board_align_roll" step="1" min="-180" max="360" />
+                                            <span i18n="configurationBoardAlignmentRoll"></span>
                                         </label>
-                                        <div class="alignicon pitch"></div>
-                                    </div>
-                                    <div class="number">
-                                        <label> <input type="number" name="board_align_yaw" step="1" min="-180" max="360" /> <span
-                                            i18n="configurationBoardAlignmentYaw"></span>
+                                     </div>
+
+                                     <div class="board_align_inputs">
+                                         <div class="alignicon pitch"></div>
+                                         <label>
+                                            <input type="number" name="board_align_pitch" step="1" min="-180" max="360" />
+                                            <span i18n="configurationBoardAlignmentPitch"></span>
                                         </label>
-                                        <div class="alignicon yaw"></div>
+                                     </div>
+
+                                     <div class="board_align_inputs">
+                                         <div class="alignicon yaw"></div>
+                                         <label>
+                                            <input type="number" name="board_align_yaw" step="1" min="-180" max="360" />
+                                            <span i18n="configurationBoardAlignmentYaw"></span>
+                                        </label>
+                                     </div>
+                                </div>
+                                <div class="gyro_align_content">
+                                    <div class="gyro_alignment_inputs">
+                                        <label>
+                                            <select class="gyro_to_use">
+                                                <option i18n="configurationSensorGyroToUseDefaultOption" value="0"></option>
+                                                <!-- list generated here -->
+                                            </select>
+                                            <span i18n="configurationSensorGyroToUse"></span>
+                                        </label>
+                                    </div>
+                                    <div class="gyro_alignment_inputs">
+                                        <label>
+                                            <select class="gyro_1_align">
+                                                <option i18n="configurationSensorAlignmentDefaultOption" value="0"></option>
+                                                <!-- list generated here -->
+                                            </select>
+                                            <span i18n="configurationSensorAlignmentGyro1"></span>
+                                        </label>
+                                    </div>
+                                    <div class="gyro_alignment_inputs">
+                                        <label>                                            
+                                            <select class="gyro_2_align">
+                                                <option i18n="configurationSensorAlignmentDefaultOption" value="0"></option>
+                                                <!-- list generated here -->
+                                            </select>
+                                            <span i18n="configurationSensorAlignmentGyro2"></span>
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="sensoralignment">
-                                    <div class="select">
+                                <div class="sensor_align_content">
+                                    <div class="legacy_gyro_alignment select">
                                         <label>
                                             <span i18n="configurationSensorAlignmentGyro"></span>
                                             <select class="gyroalign">
@@ -276,7 +310,7 @@
                                             </select>
                                         </label>
                                     </div>
-                                    <div class="select">
+                                    <div class="legacy_accel_alignment select">
                                         <label>
                                             <span i18n="configurationSensorAlignmentAcc"></span>
                                             <select class="accalign">

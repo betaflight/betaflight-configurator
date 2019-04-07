@@ -210,6 +210,27 @@
     border-bottom: 1px solid #ddd;
     width: 100%;
     float: left;
+ }
+
+.tab-configuration .board_align_inputs,
+.tab-configuration .gyro_alignment_inputs {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    width: 33.3%;
+    float: left;
+    white-space: nowrap;
+}
+
+.tab-configuration .board_align_inputs input {
+    width: 3.5em;
+}
+
+.tab-configuration .board_align_inputs label,
+.tab-configuration .gyro_alignment_inputs label {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tab-configuration .selectProtocol
@@ -365,39 +386,37 @@
 }
 
 .tab-configuration .alignicon {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     float: left;
-    margin-left: -5px;
+    margin-left: -1px;
     margin-right: 3px;
 }
 
 .tab-configuration .pitch {
     background-image: url(../../images/icons/cf_icon_pitch.svg);
     background-repeat: no-repeat;
-    background-size: 20px;
     background-position: center;
 }
 
 .tab-configuration .yaw {
     background-image: url(../../images/icons/cf_icon_yaw.svg);
     background-repeat: no-repeat;
-    background-size: 20px;
     background-position: center;
 }
 
 .tab-configuration .roll {
     background-image: url(../../images/icons/cf_icon_roll.svg);
     background-repeat: no-repeat;
-    background-size: 20px;
     background-position: center;
 }
 
 .tab-configuration .board select {
-    /*float: left;*/
-    width: 45%;
+    float: left;
+    width: fit-content;
+    max-width: 50%;
     height: 20px;
-    margin: 0 0px 2px 0;
+    margin-right: 5px;
     border: 1px solid silver;
     border-radius:3px;
 }
@@ -473,19 +492,16 @@
     margin-top: 3px;
 }
 
-.tab-configuration .sensoralignment {
-    width: 50%;
-    float: left;
+.tab-configuration .gyro_align_content {
+    width: 100%;
 }
 
 .tab-configuration .board_align_content {
-    width: 50%;
-    float: left;
+    width: 100%;
 }
 
 .tab-configuration .sensoralignment span {
-    width: 55%;
-    float: left;
+    width: 100%;
 }
 
 .tab-configuration .escprotocol {
