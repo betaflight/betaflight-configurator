@@ -216,7 +216,6 @@
 .tab-configuration .gyro_alignment_inputs {
     margin-bottom: 5px;
     padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
     width: 33.3%;
     float: left;
     white-space: nowrap;
@@ -492,12 +491,11 @@
     margin-top: 3px;
 }
 
+.tab-configuration .board_align_content,
 .tab-configuration .gyro_align_content {
     width: 100%;
-}
-
-.tab-configuration .board_align_content {
-    width: 100%;
+    border-bottom: 1px solid #ddd;
+    display: inline-block;
 }
 
 .tab-configuration .sensoralignment span {
