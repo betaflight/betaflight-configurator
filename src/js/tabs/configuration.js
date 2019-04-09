@@ -577,6 +577,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             $('input[name="fpvCamAngleDegrees"]').val(RX_CONFIG.fpvCamAngleDegrees);
+            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                $('input[name="fpvCamAngleDegrees"]').attr("max", 90);
+            }
         } else {
             $('div.fpvCamAngleDegrees').hide();
         }
