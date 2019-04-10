@@ -471,7 +471,7 @@
         "message": "기여하기"
     },
     "defaultContributingText": {
-        "message": "베타플라이트를 더욱 효과적으로 만드는 데 도움이 되고 싶다면, 다음와 같은 다양한 방법으로 도움을 줄 수 있습니다:<br \/><ul><li>포럼과 IRC의 다른 사용자의 질문에 답변할 수 있습니다.<\/li><li>펌웨어와 컨피규레이터에 코드를 제공할 수 있습니다 - 새로운 기능, 오류 고침, 개선 등<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">새로운 기능\/오류 고침<\/a>을 테스트하고 피드백을 제공할 수 있습니다.<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">이슈와 기능 요청에 대한 제안<\/a>으로 도움을 줄 수 있습니다.<\/li><li>당신의 언어로 <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">컨피규레이터 어플리케이션을 번역<\/a>하여 공동작업을 할 수 있습니다. <br \/>한글번역(교정) 문의: 류장협(oto4futur@gmail.com)<\/li><li><\/li><li><a href=\"https:\/\/www.youtube.com\/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\">JJang FPV 베타플라이트 동영상(한글판) 바로가기(클릭)<\/a><\/li><\/ul>"
+        "message": "베타플라이트를 더욱 효과적으로 만드는 데 도움이 되고 싶다면, 다음와 같은 다양한 방법으로 도움을 줄 수 있습니다:<br \/><ul><li>포럼과 IRC의 다른 사용자의 질문에 답변할 수 있습니다.<\/li><li>펌웨어와 컨피규레이터에 코드를 제공할 수 있습니다 - 새로운 기능, 오류 고침, 개선 등<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">새로운 기능\/오류 고침<\/a>을 테스트하고 피드백을 제공할 수 있습니다.<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">이슈와 기능 요청에 대한 제안<\/a>으로 도움을 줄 수 있습니다.<\/li><li>당신의 언어로 <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">컨피규레이터 어플리케이션을 번역<\/a>하여 공동작업을 할 수 있습니다. <br \/>한글번역(교정) 문의: 류장협(oto4futur@gmail.com)<\/li><li><\/li><li><a href=\"https:\/\/www.youtube.com\/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\">JJang FPV's 베타플라이트 설정 강의(동영상) 바로가기(클릭)<\/a><\/li><\/ul><br \/>"
     },
     "defaultFacebookText": {
         "message": "우리는 또한 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\">페이스북 그룹<\/a>이 있습니다.<br \/>우리와 함께 베타플라이트에 대해 이야기하고, 환경설정 질문을 하거나, 동료 파일럿과 어울릴 수 있습니다."
@@ -492,7 +492,10 @@
         "message": "오픈 소스 \/ 기부 알림"
     },
     "defaultDonateText": {
-        "message": "<strong>베타플라이트<\/strong>는 비행 컨트롤러 소프트웨어로 <strong>오픈 소스<\/strong>이며 모든 사용자들이 <strong>보증없이<\/strong> 무료로 사용할 수 있습니다.<br \/>베타플라이트 또는 베타플라이트 컨피규레이터가 유용하다고 판단되면, 기부하는 방법으로 개발을 <strong>지원하는<\/strong> 것을 고려하시기 바랍니다."
+        "message": "<p><strong>베타플라이트<\/strong>는 비행 컨트롤러 소프트웨어로 <strong>오픈 소스<\/strong>이며 모든 사용자들이 <strong>보증없이<\/strong> 무료로 사용할 수 있습니다.<\/p><p>베타플라이트 또는 베타플라이트 컨피규레이터가 유용하다고 판단되면, 기부하는 방법으로 개발을 <strong>지원하는<\/strong> 것을 고려하시기 바랍니다.<\/p>"
+    },
+    "defaultDonateBottom": {
+        "message": "<p>지속적으로 재정적으로 기여 하려는 경우 <a href='https:\/\/www.patreon.com\/betaflight'>Patron<\/a>에서 우리의 수호자가 되는 것을 고려하세요.<\/p>"
     },
     "defaultDonate": {
         "message": "기부"
@@ -531,7 +534,7 @@
         "message": "<a href=\"http:\/\/betaflight.info\" target=\"_blank\">베타플라이트 위키<\/a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell 베타플라이트 동영상<\/a><br \/><a href=\"https:\/\/www.youtube.com\/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\">JJang FPV 베타플라이트 동영상(한글판)<\/a>"
+        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell 베타플라이트 동영상<\/a><br \/><a href=\"https:\/\/www.youtube.com\/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\">JJang FPV's 베타플라이트 설정 강의(동영상)<\/a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
@@ -669,7 +672,91 @@
         "message": "아밍이 허용됨"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "플래그 목록은 아밍이 현재 허용되지 않는 이유를 나타냅니다. 가장 첫 번째로 중요한 값은 아밍을 시도할 때 울리는 경고음의 수와 관련있습니다. 이 플래그가 무엇을 의미하는지에 대한 설명은 Wiki ('Arming Sequence & Safety' 페이지)를 참조하십시오."
+        "message": "플래그 목록은 왜 아밍이 현재 허용되지 않는지를 나타냅니다. 플래그 위에 마우스를 대거나, 더 많은 정보에 대해 위키('Arming Sequence & Safety' 페이지) 를 참조하세요."
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
+        "message": "자이로가 감지되지 않았습니다",
+        "description": "Description of the NO GYRO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
+        "message": "페일세이프가 활성화 중입니다",
+        "description": "Description of the FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
+        "message": "유효한 수신기 신호가 감지되지 않습니다",
+        "description": "Description of the RX_FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+        "message": "수신기가 페일세이프로부터 복구되었지만 아밍 스위치가 켜져있습니다",
+        "description": "Description of the BAD_RX_RECOVERY arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
+        "message": "'페일세이프' 스위치가 작동중입니다",
+        "description": "Description of the BOXFAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
+        "message": "폭주이륙방지가 실행되고 있습니다",
+        "description": "Description of the RUNAWAY_TAKEOFF arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
+        "message": "스로틀이 너무 높습니다",
+        "description": "Description of the THROTTLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "기체가 수평이 (충분하지) 아닙니다",
+        "description": "Description of the ANGLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
+        "message": "전원이 켜진 후 아밍이 너무 빠릅니다",
+        "description": "Description of the BOOT_GRACE_TIME arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
+        "message": "프리암 스위치가 작동되지 않거나 디스아밍 후 실행되지 않고 있습니다",
+        "description": "Description of the NOPREARM arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOAD": {
+        "message": "시스템 부하가 안전한 비행을 하기에 너무 높습니다",
+        "description": "Description of the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "센서 교정이 여전히 진행 중입니다",
+        "description": "Description of the CALIBRATING arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCLI": {
+        "message": "CLI가 사용 중입니다",
+        "description": "Description of the CLI arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
+        "message": "CMS (설정 메뉴) 가 사용 중입니다 - OSD 또는 다른 디스플레이를 통해 -",
+        "description": "Description of the CMS_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
+        "message": "OSD 메뉴가 사용 중입니다",
+        "description": "Description of the OSD_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBST": {
+        "message": "TBS 텔레메트리 장치 (예 TBS 코어 프로) 가 해제되었으며 아밍하는 것을 방해하고 있습니다",
+        "description": "Description of the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "MSP 연결이 활성화 중입니다, 아마도 이 베타플라이트 컨피규레이터와 연결되어 있는 거 같습니다",
+        "description": "Description of the MSP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
+        "message": "마비 모드가 활성화 되어있습니다",
+        "description": "Description of the PARALYZE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipGPS": {
+        "message": "GPS 구조 모드가 구성 되어 있지만 위성의 필요한 수가 고정되지 않았습니다",
+        "description": "Description of the GPS arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRESC": {
+        "message": "'GPS 구조' 스위치가 작동중입니다",
+        "description": "Description of the RESC arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
+        "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
+        "description": "Description of the ARM_SWITCH arming disable flag"
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -884,6 +971,27 @@
     "configurationSensorAlignmentGyro": {
         "message": "자이로 정렬"
     },
+    "configurationSensorGyroToUse": {
+        "message": "자이로\/가속도계"
+    },
+    "configurationSensorGyroToUseNotFound": {
+        "message": "경고: 자이로\/가속도계 발견 안됨"
+    },
+    "configurationSensorGyroToUseFirst": {
+        "message": "첫번째"
+    },
+    "configurationSensorGyroToUseSecond": {
+        "message": "두번째"
+    },
+    "configurationSensorGyroToUseBoth": {
+        "message": "모두"
+    },
+    "configurationSensorAlignmentGyro1": {
+        "message": "첫번째 자이로"
+    },
+    "configurationSensorAlignmentGyro2": {
+        "message": "두번째 자이로"
+    },
     "configurationSensorAlignmentAcc": {
         "message": "가속도계 정렬"
     },
@@ -1025,6 +1133,9 @@
     "beeperCAM_CONNECTION_CLOSE": {
         "message": "주요 카메라 제어가 종료될 때 신호음을 울립니다."
     },
+    "beeperRC_SMOOTHING_INIT_FAIL": {
+        "message": "아밍시 rc 스무딩이 필터를 초기화하지 않은 때 비프음"
+    },
     "configuration3d": {
         "message": "3D ESC\/모터 기능"
     },
@@ -1051,6 +1162,9 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>도움말:<\/strong> FC가 이러한 속도로 동작할 수 있는지 확인하십시오! CPU 및 사이클 시간의 안정성을 점검하십시오. 이를 변경하면 PID 재조정이 필요할 수 있습니다. 팁: 가속도계 및 기타 센서를 비활성화하여 더 많은 성능을 얻으십시오."
+    },
+    "configurationLoopTimeNo32KhzHelp": {
+        "message": "$t(configurationLoopTimeHelp.message)<br><strong>32 kHz 자이로 샘플링 모드에 대한 공지:<\/strong> 32 kHz 자이로 샘플링 모드에 대한 지원은 베타플라이트에 추가 된 실험적인 기능입니다. 수 년 동안 그것을 사용할 수 있었으나, 그것은 진동에 대한 민감성 및 제어 루프의 지연을 야기하는 공격적인 필터링을 필요로 하는 높은 노이즈 수준 때문에, 결코 그것이 8 kHz 자이로 샘플링 모드 이상의 이점을 가진다고 보여지지 않았습니다. 이러한 이유로, 베타플라이트 4.0에는 <strong>32 kHz 자이로 샘플링 모드에 대한 지원이 중단되었습니다.<\/strong>"
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1164,13 +1278,13 @@
         "message": "블랙박스 로그기록"
     },
     "portsFunction_TBS_SMARTAUDIO": {
-        "message": "TBS 스마트오디오"
+        "message": "VTX (TBS 스마트오디오)"
     },
     "portsFunction_IRC_TRAMP": {
-        "message": "IRC 트램프"
+        "message": "VTX (IRC 트램프)"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "RunCam 디바이스"
+        "message": "카메라 (런캠 프로토콜)"
     },
     "pidTuningProfileOption": {
         "message": "프로파일 $1"
@@ -1215,6 +1329,34 @@
     },
     "pidTuningAntiGravityThres": {
         "message": "안티 그래비티 임계값"
+    },
+    "pidTuningDMinHelp": {
+        "message": "D 최소는 일반 비행에서 D보다 낮은 수준을 가질 수 있는 방법과 플립이나 롤링과 같이 오버슈트를 일으킬 수 있는 빠른 기동을 위한 높은 수준을 제공합니다. 그것은 또한 프롭워시 동안 D를 끌어올립니다. 기체는 D 최소(정상 비행 중) 에서 표준 D(고속 롤링 및 플립 사용) 까지 다양한 동적 D텀을 가질 것입니다. 값이 0이면 기능이 비활성화됩니다. 게인은 퀵 스틱 입력 시 D가 얼마나 강하게 상승되는지를 결정합니다. 가속은 부스트 효과의 시작 속도를 높입니다. 이것은 매우 반응에 민감한 쿼드에서 매우 높은 비율의 플립으로 오버슈트를 했을 때 도움이 될 수 있습니다.",
+        "description": "Help message for D Min feature"
+    },
+    "pidTuningDMin": {
+        "message": "D 최소",
+        "description": "Table header of the D Min feature in the PIDs tab"
+    },
+    "pidTuningDMinRoll": {
+        "message": "롤",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinPitch": {
+        "message": "피치",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinYaw": {
+        "message": "요",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinGain": {
+        "message": "게인",
+        "description": "Gain of the D Min feature"
+    },
+    "pidTuningDMinAdvance": {
+        "message": "가속",
+        "description": "Advane of the D Min feature"
     },
     "pidTuningPidSettings": {
         "message": "PID 컨트롤러 설정"
@@ -1366,6 +1508,27 @@
     "pidTuningTPABreakPoint": {
         "message": "TPA 브레이크포인트"
     },
+    "pidTuningThrottleLimitType": {
+        "message": "스로틀 제한"
+    },
+    "pidTuningThrottleLimitPercent": {
+        "message": "스로틀 제한 %"
+    },
+    "pidTuningThrottleLimitTypeOff": {
+        "message": "끄기"
+    },
+    "pidTuningThrottleLimitTypeScale": {
+        "message": "스케일"
+    },
+    "pidTuningThrottleLimitTypeClip": {
+        "message": "클립"
+    },
+    "pidTuningThrottleLimitTypeTip": {
+        "message": "스로틀 제한의 유형을 선택합니다. <b>끄기<\/b>는 기능을 비활성, <b>스케일<\/b>은 스로틀 범위를 0에서 선택한 퍼센트까지를 전체 스틱범위로 사용하게끔 전환, <b>클립<\/b>은 최대 스로틀 백분율을 설정하고, 그 이상의 스틱범위는 아무런 추가 효과가 없게 합니다."
+    },
+    "pidTuningThrottleLimitPercentTip": {
+        "message": "원하는 스로틀 제한 백분율을 설정합니다. 100%로 설정하면 기능을 사용할 수 없습니다."
+    },
     "pidTuningFilter": {
         "message": "필터"
     },
@@ -1443,6 +1606,9 @@
     },
     "tuningHelp": {
         "message": "<b>튜닝 팁<\/b><br \/><span class=\"message-negative\">중요:<\/span> 첫 비행 중 모터 온도를 확인하는 것이 중요합니다. 필터 값이 높을수록 더 잘 날 수 있지만 모터에 더 많은 노이즈가 들리게 됩니다. <br> 기본값 100Hz가 최적이지만, 노이즈 설정을 위하여 D텀 필터를 50Hz로 낮출 수 있으며, 자이로 필터를 낮추는 것 또한 가능합니다."
+    },
+    "filterWarning": {
+        "message": "<span class=\"message-negative\"><b>경고:<\/b><\/span> 당신이 사용하는 필터링 양은 위험할 정도로 낮습니다. 이는 기체를 제어하기 힘들게 하고, 분실을 초래할 수 있습니다. <b>최소한 하나의 자이로 다이나믹 저역통과 또는 자이로 저역통과 1과 최소한 하나의 D 텀 다이나믹 저역통과 또는 D 텀 저역통과 1을 활성화<\/b>할 것을 강력히 권장합니다."
     },
     "receiverThrottleMid": {
         "message": "스로틀 중간값"
@@ -1529,10 +1695,10 @@
         "message": "제어 활성화"
     },
     "auxiliaryHelp": {
-        "message": "범위를 사용하여 송신기의 스위치를 정의하고, 해당 모드를 지정하십시오. 수신기 채널이 범위의 최소\/최대 사이에서 판독이 되면, 그 모드가 활성화됩니다. 반드시 저장 버튼을 사용하여 설정을 저장하십시오."
+        "message": "여기서 범위 그리고\/또는 다른 모드의 조합을 사용하여 모드를 구성합니다(링크는 BF 4.0 이후부터 지원됩니다). <strong>범위<\/strong>를 사용하여 조종기에 스위치를 정의하고 해당 모드를 할당합니다. 수신기 채널이 범위의 최소\/최대값 사이에 읽혀지면 모드가 활성화됩니다. <strong>링크<\/strong>를 사용하여 다른 모드가 활성화될 때 모드를 활성화합니다. <strong>예외:<\/strong>아밍은 다른 모드에 또는 부터 링크될 수 없습니다. 모드는 링크(연결된 링크) 로 구성된 다른 모드에 링크될 수 없습니다. 여러 범위\/링크가 어느 모드를 활성하기 위해 사용될 수 있습니다. 하나의 모드에 대해 정의된 범위\/링크가 하나 이상일 경우, 각각은 <strong>AND<\/strong> 또는 <strong>OR<\/strong>로 설정할 수 있습니다. 모드는 다음의 경우에 활성화됩니다:<br \/>- 모든 <strong>AND<\/strong> 범위\/링크가 활성화일 때; 또는<br \/>- 최소 하나의 <strong>OR<\/strong> 범위\/링크가 활성화일 때.<br \/><br \/>저장 버튼을 이용해서 당신의 설정을 저장하는 것을 명심하세요."
     },
     "auxiliaryToggleUnused": {
-        "message": "사용하지 않는 모드 표시\/숨기기"
+        "message": "사용하지 않는 모드 숨기기"
     },
     "auxiliaryMin": {
         "message": "최소값"
@@ -1544,7 +1710,7 @@
         "message": "범위 추가"
     },
     "auxiliaryAddLink": {
-        "message": "연접하다"
+        "message": "링크 추가"
     },
     "auxiliaryButtonSave": {
         "message": "저장"
@@ -1556,10 +1722,10 @@
         "message": "자동"
     },
     "auxiliaryModeLogicOR": {
-      "message": "OR"
+        "message": "OR"
     },
     "auxiliaryModeLogicAND": {
-      "message": "AND"
+        "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "조정 스위치를 설정하십시오. 자세한 내용은 매뉴얼의 '비행-중 조정' 섹션을 참조하십시오. 조정 기능의 변경사항은 자동으로 저장되지 않습니다. 4개의 슬롯이 있습니다. 조정을 동시에 수행하는 데 사용되는 각 스위치는 슬롯을 독점적으로 사용해야합니다."
@@ -1701,6 +1867,12 @@
     },
     "adjustmentsFunction28": {
         "message": "요 F 조정"
+    },
+    "adjustmentsFunction29": {
+        "message": "OSD 프로필 선택"
+    },
+    "adjustmentsFunction30": {
+        "message": "LED 프로필 선택"
     },
     "adjustmentsSave": {
         "message": "저장"
@@ -2006,7 +2178,7 @@
         "message": "디버그 0"
     },
     "cliInfo": {
-        "message": "<strong>노트<\/strong>: CLI 탭을 나가거나 \"연결 끊기\"를 누르면 보드에 \"<strong>exit<\/strong>\"를 <strong>자동으로<\/strong> 보냅니다. 최신 펌웨어를 사용하면 컨트롤러가 <span class=\"message-negative\">다시 시작<\/span>되며, 저장되지 않은 변경사항은 <span class=\"message-negative\">손실<\/span>됩니다."
+        "message": "<strong>노트:<\/strong> CLI 탭을 빠져 나가거나 연결끊기를 누르면 <strong>자동으로<\/strong>보드에 \"<strong>exit<\/strong>\"를 보냅니다. 최신 펌웨어를 사용하면 컨트롤러를 <strong>재시작<\/strong>하고, 저장되지 않은 변경은 <strong>상실<\/strong>합니다. <p><strong><span class=\"message-negative\">경고:<\/span><\/strong> CLI에서 일부 명령은 임의로 신호를 모터 출력 핀으로 보내는 결과를 초래할 수 있습니다. 이것은 만약 배터리가 연결된 상태에서 모터의 회전을 유발할 수 있습니다. 그러므로 <strong>CLI에서 명령을 입력하기 전에 배터리를 연결하지 말 것을<\/strong> 강력히 권장합니다."
     },
     "cliInputPlaceholder": {
         "message": "여기에 명령을 입력하세요."
@@ -2019,6 +2191,15 @@
     },
     "cliSaveToFileBtn": {
         "message": "파일로 저장"
+    },
+    "cliClearOutputHistoryBtn": {
+        "message": "출력 이력 삭제"
+    },
+    "cliCopyToClipboardBtn": {
+        "message": "클립보드로 복사"
+    },
+    "cliCopySuccessful": {
+        "message": "복사됨!"
     },
     "loggingNote": {
         "message": "데이터가 이 탭에 로그되어 집니다. 데이터는 <span class=\"message-negative\">오직<\/span> 이 탭에서만 기록되며, 탭을 나가면 기록을 <span class=\"message-negative\">취소<\/span>하고 어플리케이션이 일반적인 <strong>\"컨피규레이터\"<\/strong> 상태로 돌아갑니다.<br \/> 사용자는 전체 업데이트 주기를 자유롭게 선택할 수 있으며, 데이터는 성능상의 이유로 매 <strong>1<\/strong>초마다 로그 파일에 기록됩니다."
@@ -2106,6 +2287,12 @@
     },
     "dataflashButtonSaveFile": {
         "message": "플래시를 파일로 저장..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "플래시를 파일로 저장... (권장하지 않음)"
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "블랙박스 로그를 컨피규레이터를 통해 저장하면 속도가 느리고 오류가 발생하기 비교적 쉽습니다. 대신 '<b>$t(onboardLoggingRebootMscText.message)<\/b>'(아래)를 사용하여 대용량 저장 모드를 활성화하고 로그 파일을 다운로드하는 저장 장치로 비행 컨트롤러에 접근하는 것을 권장합니다."
     },
     "dataflashButtonErase": {
         "message": "플래시 삭제"
@@ -2730,6 +2917,15 @@
     "pidTuningGyroLowpassType": {
         "message": "자이로 저역통과 1 필터 형식"
     },
+    "pidTuningGyroLowpassDynMinFrequency": {
+        "message": "자이로 저역통과 1 다이나믹 최소 컷오프 주파수 [Hz]"
+    },
+    "pidTuningGyroLowpassDynMaxFrequency": {
+        "message": "자이로 저역통과 1 다이나믹 최대 컷오프 주파수 [Hz]"
+    },
+    "pidTuningGyroLowpassDynType": {
+        "message": "자이로 저역통과 1 다이나믹 필터 형식"
+    },
     "pidTuningGyroLowpass2Frequency": {
         "message": "자이로 저역통과 2 컷오프 주파수 [Hz]"
     },
@@ -2754,6 +2950,9 @@
     "pidTuningNotchFilterHelp": {
         "message": "노치 필터는 센터와 컷오프로 나누어집니다. 필터는 대칭을 이룹니다. 센터 주파수는 필터의 중심이며 컷오프 주파수 노치 필터가 시작되는 곳입니다. 예를 들어 컷오프 160, 노치 센터 260은 범위가 센터 주변으로 대부분 감쇄를 갖는 160-360Hz임을 의미합니다."
     },
+    "pidTuningLowpassFilterHelp": {
+        "message": "저역통과 필터는 두 가지 변형을 가질 수 있습니다: 정적 필터와 동적 필터. 결정된 저역통과 필터의 경우 한 개 (정적 또는 동적) 만 동시에 활성화할 수 있습니다. 정적에는 필터가 시작되는 어떤 방식으로 정의되는 값인 컷오프만 있습니다. 동적에서는 최소값과 최대값, 즉 컷오프가 위치한 범위를 정의합니다. 이 컷오프는 스로틀 스틱을 이동하는 것보다 최소에서 최대로 동시에 이동합니다."
+    },
     "pidTuningFilterSettings": {
         "message": "프로파일 종속 필터 설정"
     },
@@ -2768,6 +2967,18 @@
     },
     "pidTuningDTermLowpass2Frequency": {
         "message": "D 텀 저역통과 2 컷오프 주파수 [Hz]"
+    },
+    "pidTuningDTermLowpass2Type": {
+        "message": "D 텀 저역통과 2 필터 형식"
+    },
+    "pidTuningDTermLowpassDynMinFrequency": {
+        "message": "D 텀 저역통과 1 다이나믹 최소 컷오프 주파수 [Hz]"
+    },
+    "pidTuningDTermLowpassDynMaxFrequency": {
+        "message": "D 텀 저역통과 1 다이나믹 최대 컷오프 주파수 [Hz]"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D 텀 저역통과 1 다이나믹 필터 형식"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D 텀 노치 필터"
@@ -2836,19 +3047,28 @@
         "message": "절대 제어"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "이 기능은 I 텀 회전의 몇가지 근본적인 문제를 해결하고 어느 시점에 이를 대체할 수 있을 것입니다. 이 기능은 쿼드 좌표에 절대 자이로 오류를 누적시키고 설정점에 비례 보정을 혼합합니다. RPY에 Item_relax를 활성화해야 합니다."
+        "message": "이 기능은 $t(pidTuningItermRotation.message)의 기본 문제를 해결하고, 희망적으로 어느 시점에서 그것을 대체합니다. 이 기능은 쿼드 좌표에 절대 자이로 오류를 축적하고 설정점에 비례 교정을 혼합합니다. 당신이 그것을 작동하려면 에어모드와 $t(pidTuningItermRelax.message) ($t(pidTuningItermRelaxAxesOptionRP.message)로)을 활셩화해야 합니다. 만약 이 기능을 $t(pidTuningIntegratedYaw.message)와 결합하려면, $t(pidTuningItermRelax.message)을 $t(pidTuningItermRelaxAxesOptionRPY.message)로 설정할 수 있습니다."
     },
     "pidTuningThrottleBoost": {
         "message": "스로틀 부스트"
     },
     "pidTuningThrottleBoostHelp": {
-        "message": "이 기능을 사용하면 스로틀을 일시적으로 거꾸로 상승시켜 모터에 대한 가속 토크를 높일 수 있으므로 훨씬 더 빠른 스로틀 반응을 제공합니다."
+        "message": "이 기능을 사용하면 빠른 스틱 움직임에 스로틀을 일시적으로 상승시켜 모터에 대한 가속 토크를 증가시킴으로써 훨씬 더 빠른 스로틀 반응을 제공합니다."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "아크로 트레이너 앵글 제한"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
         "message": "아크로 모드에서 비행을 배우는 파일럿을 위한 새로운 앵글 제한 모드를 추가 합니다. 유효한 범위 10-80 이며 $t(tabAuxiliary.message) 탭에서 스위치를 활성화 해야 합니다."
+    },
+    "pidTuningIntegratedYaw": {
+        "message": "통합 요(Yaw)"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">주의<\/span>:이 기능을 사용하는 경우 그에 따라 요 PID를 조정해야 합니다. 더 자세한 정보는 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Integrated-Yaw\" target=\"_blank\">여기<\/a>에서 확인하세요."
+    },
+    "pidTuningIntegratedYawHelp": {
+        "message": "통합 요는 쿼드 제어의 근본적인 문제를 해결하기 위한 기능입니다: 피치와 롤 축이 프롭이 만들어내는 추력 차이로 제어가 되는 반면에 요는 다릅니다. 통합 요는 요 pid의 출력값을 믹서에 적용하기 전에 통합함으로써 이를 해결합니다. 이것은 pid가 일하는 방식을 정상화합니다. 이제 다른 축과 같이 설정할 수 있습니다. 통합 요와 함께 I가 필요하지 않기 때문에 절대 제어의 사용을 필요로 합니다."
     },
     "configHelp2": {
         "message": "옆면 \/ 아래로 \/ 회전 등으로 장착 할 수 있는 임의의 보드 회전 각도(°). 외부 센서를 작동할 때 센서 정렬(자이로, 가속도계, 자력계)을 사용하여 보드 방향과 상관없이 센서 위치를 정의합니다."
@@ -2918,6 +3138,45 @@
     },
     "failsafeProcedureItemSelect2": {
         "message": "추락"
+    },
+    "failsafeProcedureItemSelect4": {
+        "message": "GPS 구조"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "각도"
+    },
+    "failsafeGpsRescueItemInitialAltitude": {
+        "message": "초기 고도 (미터)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "하강 거리 (미터)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "지면 속도 (미터\/초)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "스로틀 최소값"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "스로틀 최대값"
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "스로틀 호버"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "최소위성수"
+    },
+    "failsafeGpsRescueItemSanityChecks": {
+        "message": "온전성 검사"
+    },
+    "failsafeGpsRescueItemSanityChecksOff": {
+        "message": "끄기"
+    },
+    "failsafeGpsRescueItemSanityChecksOn": {
+        "message": "켜기"
+    },
+    "failsafeGpsRescueItemSanityChecksFSOnly": {
+        "message": "페일세이프만"
     },
     "failsafeKillSwitchItem": {
         "message": "페일세이프 킬 스위치 (모드 탭에서 페일세이프 설정)"
@@ -3174,14 +3433,32 @@
     "osdSetupUnsupportedNote2": {
         "message": "일부 비행 컨트롤러는 온보드 <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a>를 가지고 있습니다. 이는 <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>를 통해 플래시하고 설정할 수 있습니다. 그러나 MinimOSD는 이 인터페이스를 통해서 설정할수 없습니다."
     },
+    "osdSetupProfilesTitle": {
+        "message": "OSD 프로파일 번호",
+        "description": "Description of the header of the OSD elements column associated to each profile"
+    },
     "osdSetupElementsTitle": {
         "message": "요소"
     },
-    "osdSetupElementsSwitchAll": {
-        "message": "모두 켜기"
-    },
     "osdSetupPreviewTitle": {
-        "message": "미리보기 (위치를 변경하려면 드래그 하세요.)"
+        "message": "위치를 변경하려면 항목을 드래그하세요.",
+        "description": "Indicates in the preview window of the OSD that the user can drag the elements to reorder them"
+    },
+    "osdSetupPreviewSelectProfileTitle": {
+        "message": "미리보기",
+        "description": "Label of the selector for the OSD Profile in the preview"
+    },
+    "osdSetupSelectedProfileTitle": {
+        "message": "사용중인 OSD 프로파일",
+        "description": "Title of the box to select the current active OSD profile"
+    },
+    "osdSetupSelectedProfileLabel": {
+        "message": "현재:",
+        "description": "Label for the selection of the curren active OSD profile"
+    },
+    "osdSetupPreviewSelectProfileElement": {
+        "message": "OSD 프로파일 {{profileNumber}}",
+        "description": "Content of the selector for the OSD Profile in the preview"
     },
     "osdSetupPreviewTitleTip": {
         "message": "미리보기 화면에서 로고를 보기 또는 숨기기 하세요. 이는 비행 컨트롤러의 어떠한 설정도 변경하지 않습니다."
@@ -3312,6 +3589,9 @@
     "osdDescElementCraftName": {
         "message": "환경설정 탭에서 설정된 기체 이름"
     },
+    "osdDescElementDisplayName": {
+        "message": "\"display_name\" cli 명령에 의해 설정된 이름을 표시합니다."
+    },
     "osdDescElementAltitude": {
         "message": "현재 고도 (임계값 이상일 때 깜빡임)"
     },
@@ -3381,6 +3661,9 @@
     "osdDescElementEscRpm": {
         "message": "ESC 텔레메트리에 의해 보고된 RPM"
     },
+    "osdDescElementEscRpmFreq": {
+        "message": "ESC 텔레메트리에 의해 보고된 RPM 주파수"
+    },
     "osdDescElementRtcDateTime": {
         "message": "실시간 날짜 \/ 시간"
     },
@@ -3402,6 +3685,21 @@
     "osdDescElementCompassBar": {
         "message": "현재 기체방향을 보여주는 나침반 그래픽 막대"
     },
+    "osdDescElementFlipArrow": {
+        "message": "터틀 모드에서 어떤 모터가 올라가는지를 보여주는 화살표"
+    },
+    "osdDescElementLinkQuality": {
+        "message": "프레임 손실에 따른 링크 품질에 대한 대체 표시 - 주의해서 사용"
+    },
+    "osdDescElementFlightDist": {
+        "message": "이번 비행 중 비행한 거리"
+    },
+    "osdDescElementStickOverlayLeft": {
+        "message": "좌측 조종기 스틱 위치에 대한 오버레이"
+    },
+    "osdDescElementStickOverlayRight": {
+        "message": "우측 조종기 스틱 위치에 대한 오버레이"
+    },
     "osdDescElementTimer1": {
         "message": "타이머 1의 값 표시"
     },
@@ -3422,6 +3720,12 @@
     },
     "osdDescGForce": {
         "message": "기체가 얼마나 많은 G-포스를 경험하고 있는지를 보여줍니다."
+    },
+    "osdDescElementMotorDiag": {
+        "message": "각 모터의 출력 그래프 표시"
+    },
+    "osdDescElementLogStatus": {
+        "message": "블랙박스 번호 및 경고"
     },
     "osdDescStatMaxSpeed": {
         "message": "최대 기록 속도"
@@ -3471,6 +3775,24 @@
     "osdDescStatBattery": {
         "message": "실시간 배터리 전압"
     },
+    "osdDescStatGForce": {
+        "message": "기체에 의해 경험된 최대 G-포스"
+    },
+    "osdDescStatEscTemperature": {
+        "message": "최대 ESC 온도"
+    },
+    "osdDescStatEscRpm": {
+        "message": "최대 ESC RPM"
+    },
+    "osdDescStatMinLinkQuality": {
+        "message": "프레임 손실에 따른 링크 품질에 대한 대체 표시의 최소값"
+    },
+    "osdDescStatFlightDistance": {
+        "message": "비행 중 여행한 총 거리"
+    },
+    "osdDescStatMaxFFT": {
+        "message": "피크 FFT 주파수"
+    },
     "osdTimerSource": {
         "message": "소스:"
     },
@@ -3488,6 +3810,9 @@
     },
     "osdTimerAlarmTooltip": {
         "message": "타이머 알람 임계값을 분 단위로 선택하십시오. 시간이 이 값을 초과하면 OSD 항목이 깜박이고, 0으로 설정하면 알람이 비활성화됩니다."
+    },
+    "osdWarningUnknown": {
+        "message": "알 수 없는 경고 (다음 릴리스에 추가 될 세부 정보)"
     },
     "osdWarningArmingDisabled": {
         "message": "아밍이 되지 않는 가장 심각한 이유 보고"
@@ -3509,6 +3834,24 @@
     },
     "osdWarningEscFail": {
         "message": "실패한 ESC\/모터 목록을 열거합니다 (RPM 또는 온도가 구성된 임계값을 벗어남)"
+    },
+    "osdWarningCoreTemperature": {
+        "message": "MCU 코어 온도가 설정된 임계값을 초과할 때 경고합니다"
+    },
+    "osdWarningRcSmoothingFailure": {
+        "message": "RC 스무딩 초기화 실패시 경고합니다"
+    },
+    "osdWarningFailsafe": {
+        "message": "페일세이프 발생시 경고합니다"
+    },
+    "osdWarningLaunchControl": {
+        "message": "론치 제어 모드가 활성화되면 경고합니다"
+    },
+    "osdWarningGpsRescueUnavailable": {
+        "message": "GPS 구조가 사용할 수 없을 때 및 활성화할 수 없을 때 경고합니다"
+    },
+    "osdWarningGpsRescueDisabled": {
+        "message": "GPS 구조를 사용하지 않도록 설정하는 경우 경고합니다"
     },
     "osdSectionHelpElements": {
         "message": "OSD 요소를 활성화 또는 비활성화합니다."
@@ -3640,7 +3983,7 @@
         "message": "프로파일 당 최대 3개의 다른 레이트 프로파일을 비행 컨트롤러에 저장할 수 있습니다. 레이트 프로프일에는 'RC 레이트', '레이트', 'RC Expo', '스로틀'및 'TPA'에 대한 설정이 포함됩니다. '조정' 탭에서 '레이트 프로파일 선택'을 위한 3가지 위치 스위치를 설정하여 비행 중 레이트 프로파일 간을 전환 할 수 있습니다."
     },
     "pidTuningDelta": {
-        "message": "함수 방법"
+        "message": "미분 방법"
     },
     "pidTuningDeltaError": {
         "message": "오류"
@@ -3649,7 +3992,7 @@
         "message": "측정"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>오류로 부터 구하는 함수<\/b>는 더 직접적인 스틱 응답을 제공하며, 보통 레이싱에 적합합니다.<br><br><b>측정으로 부터 구하는 함수<\/b>는 더 부드러운 스틱 응답을 제공하기 때문에 프리스타일에 더욱 적합합니다."
+        "message": "<b>오류로 부터 구하는 미분<\/b>은 더 직접적인 스틱 응답을 제공하며, 보통 레이싱에 적합합니다.<br><br><b>측정으로 부터 구하는 미분<\/b>은 더 부드러운 스틱 응답을 제공하기 때문에 프리스타일에 더욱 적합합니다."
     },
     "pidTuningPidControllerTip": {
         "message": "<b>레거시 vs 베타플라이트 (부동 소수점):<\/b> PID 스케일링과 PID 로직은 정확히 동일합니다. 반드시 다시 조정할 필요는 없습니다. 레거시(legacy)는 정수 수학에 기초를 한 기본 PID 컨트롤러로써 오래된 베타플라이트의 진화 된 리라이트 버전입니다. 베타플라이트 PID 컨트롤러는 부동 소수점 연산을 사용하며, 멀티로터 어플리케이션을 위해 특별히 설계된 많은 새로운 기능을 제공합니다. <br> <b>부동 소수점 vs 정수:<\/b> PID 스케일링 및 PID 로직은 동일합니다. 리튠이 필요 없습니다. F1 보드에는 온보드 FPU가 없고 부동 소수점 연산으로 인해 CPU 부하가 증가하고 정수 연산으로 성능이 향상되지만, 부동 소수점 연산은 약간 더 정밀해질 수 있습니다."
@@ -3728,5 +4071,8 @@
     },
     "modeCameraChangeMode": {
         "message": "카메라 변경 모드"
+    },
+    "flashTab": {
+        "message": "펌웨어<\/br>업데이트"
     }
 }
