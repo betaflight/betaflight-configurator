@@ -50,6 +50,9 @@
     "expertMode": {
         "message": "启用专家模式"
     },
+    "expertModeDescription": {
+        "message": "显示未发布和潜在不稳定的生成"
+    },
     "permanentExpertMode": {
         "message": "默认启用专家模式"
     },
@@ -489,7 +492,10 @@
         "message": "开源\/捐赠说明"
     },
     "defaultDonateText": {
-        "message": "<strong>Betaflight<\/strong> 是一个<strong>开放源码<\/strong>的飞行控制器软件，它可供所有人免费使用，但<strong>不提供任何担保<\/strong> 。<br \/>如果您发现 Betaflight 或 Betaflight 配置程序对你有帮助，请考虑通过捐赠来 <strong>支持<\/strong> 它的开发。"
+        "message": "<p><strong>Betaflight<\/strong>是一个<strong>开放源码<\/strong>的飞行控制软件，所有用户都可以在<strong>没有保修<\/strong>的前提下免费使用。<\/p><p>如果你觉得Betaflight或Betaflight配置程序对你有用，请考虑捐赠以<strong>支持<\/strong>它的开发工作<\/p>"
+    },
+    "defaultDonateBottom": {
+        "message": "<p>如果你想持续捐助资金，请考虑在<a href='https:\/\/www.patreon.com\/betaflight'>Patreon<\/a>上赞助我们。<\/p>"
     },
     "defaultDonate": {
         "message": "捐赠"
@@ -666,7 +672,91 @@
         "message": "允许解锁"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "禁止解锁标志列表。第一个也是最主要的值对应于当尝试解锁时蜂鸣器提示音的次数。具体每个标志所代表的含义请参阅 wiki ('Arming Sequence & Safety' 页) 。"
+        "message": "阻止解锁的原因列表。将鼠标停留在标志上以获得信息，或参考Wiki中的(解锁顺序与安全) 章节。"
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
+        "message": "未检测到陀螺仪",
+        "description": "Description of the NO GYRO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
+        "message": "失控保护已激活",
+        "description": "Description of the FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
+        "message": "未检测到有效的接收机信号",
+        "description": "Description of the RX_FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+        "message": "你的接收机刚刚从接收机失控保护中恢复，但解锁开关处于已解锁状态。",
+        "description": "Description of the BAD_RX_RECOVERY arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
+        "message": "失控保护模式开关已激活",
+        "description": "Description of the BOXFAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
+        "message": "已触发起飞防暴走模式",
+        "description": "Description of the RUNAWAY_TAKEOFF arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
+        "message": "油门通道值过高",
+        "description": "Description of the THROTTLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "飞行器未（充分）放平",
+        "description": "Description of the ANGLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
+        "message": "上电后解锁太早",
+        "description": "Description of the BOOT_GRACE_TIME arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
+        "message": "预解锁开关没有激活或者预解锁开关没有在锁定后复位",
+        "description": "Description of the NOPREARM arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOAD": {
+        "message": "系统负载过高, 无法安全飞行",
+        "description": "Description of the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "传感器校准仍在进行中",
+        "description": "Description of the CALIBRATING arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCLI": {
+        "message": "CLI (命令行) 已激活",
+        "description": "Description of the CLI arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
+        "message": "CMS（配置菜单）在OSD或者其他显示设备中处于激活状态",
+        "description": "Description of the CMS_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
+        "message": "OSD菜单处于激活状态",
+        "description": "Description of the OSD_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBST": {
+        "message": "一个黑羊遥测设备(例如TBS Core Pro) 已上锁并阻止解锁",
+        "description": "Description of the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "MSP 连接已激活，可能正与当前的配置程序通信中。",
+        "description": "Description of the MSP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
+        "message": "瘫痪模式已被激活（已扑街）",
+        "description": "Description of the PARALYZE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipGPS": {
+        "message": "已配置GPS救援模式，但尚未锁定所需数量的卫星。",
+        "description": "Description of the GPS arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRESC": {
+        "message": "“GPS救援”开关已激活",
+        "description": "Description of the RESC arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
+        "message": "解锁时有一个阻止解锁的标志处于活跃状态",
+        "description": "Description of the ARM_SWITCH arming disable flag"
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -881,6 +971,27 @@
     "configurationSensorAlignmentGyro": {
         "message": "陀螺仪方向"
     },
+    "configurationSensorGyroToUse": {
+        "message": "陀螺仪\/加速度计"
+    },
+    "configurationSensorGyroToUseNotFound": {
+        "message": "警告：未检测到陀螺仪\/加速度计"
+    },
+    "configurationSensorGyroToUseFirst": {
+        "message": "第一个"
+    },
+    "configurationSensorGyroToUseSecond": {
+        "message": "第二个"
+    },
+    "configurationSensorGyroToUseBoth": {
+        "message": "同时启用"
+    },
+    "configurationSensorAlignmentGyro1": {
+        "message": "第一个陀螺仪"
+    },
+    "configurationSensorAlignmentGyro2": {
+        "message": "第二个陀螺仪"
+    },
     "configurationSensorAlignmentAcc": {
         "message": "加速度计方向"
     },
@@ -1022,6 +1133,9 @@
     "beeperCAM_CONNECTION_CLOSE": {
         "message": "当退出5键相机控制模式时发出蜂鸣音"
     },
+    "beeperRC_SMOOTHING_INIT_FAIL": {
+        "message": "当已解锁且 RC 平滑尚未完成滤波器初始化时发出警告"
+    },
     "configuration3d": {
         "message": "3D 电调\/电机功能"
     },
@@ -1048,6 +1162,9 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>注意：<\/strong>确保你的飞控有能力运行在这些频率上！检查CPU循环时间是否稳定。改变频率可能需要重新调校PID。提示：关闭加速度计和其他传感器可以节省运算资源以获得更高性能。"
+    },
+    "configurationLoopTimeNo32KhzHelp": {
+        "message": "$t(configurationLoopTimeHelp.message)<br><strong>关于32k陀螺仪采样模式的说明：<\/strong> Betaflight 曾以实验特性的形式提供了对 32kHz 陀螺仪采样模式的支持。在它可用的时间里，因其对震动的敏感性，且其较高的噪声水平所需要的更激进的滤波对控制环路造成的延迟，相较于 8kHz 陀螺仪采样模式它并未体现出任何优势。基于以上原因，在 Betaflight 4.0 中<strong>对 32kHz 陀螺仪采样模式的支持已被废弃<\/strong> 。"
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1161,13 +1278,13 @@
         "message": "黑匣子记录"
     },
     "portsFunction_TBS_SMARTAUDIO": {
-        "message": "TBS SmartAudio"
+        "message": "图传(TBS SmartAudio)"
     },
     "portsFunction_IRC_TRAMP": {
-        "message": "IRC Tramp"
+        "message": "图传(IRC Tramp)"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "RunCam 设备"
+        "message": "摄像头(RunCam协议)"
     },
     "pidTuningProfileOption": {
         "message": "设置 $1"
@@ -1213,8 +1330,99 @@
     "pidTuningAntiGravityThres": {
         "message": "反重力阈值"
     },
+    "pidTuningDMinHelp": {
+        "message": "D Min使得飞机可以在正常飞行过程中保持较低水平的D；而在可能导致过冲的高速特技动作，比如翻滚和滚转时提高D。它也会在发生洗桨时提高D。飞机的D项会在D Min(正常飞行时) 到标准D(快速翻滚和滚转时) 内动态变化。将增益设置为0将禁用该功能。增益决定了快速打杆时的D的增强强度。高级设置则加速了D的增强效果。这可以帮你解决在高Rate和响应迅速的飞机上的一些过冲现象。",
+        "description": "Help message for D Min feature"
+    },
+    "pidTuningDMin": {
+        "message": "D Min",
+        "description": "Table header of the D Min feature in the PIDs tab"
+    },
+    "pidTuningDMinRoll": {
+        "message": "Roll",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinPitch": {
+        "message": "Pitch",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinYaw": {
+        "message": "Yaw",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinGain": {
+        "message": "增益（Gain）",
+        "description": "Gain of the D Min feature"
+    },
+    "pidTuningDMinAdvance": {
+        "message": "高级",
+        "description": "Advane of the D Min feature"
+    },
     "pidTuningPidSettings": {
         "message": "PID 控制器设置"
+    },
+    "receiverRcSmoothing": {
+        "message": "RC 平滑"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "自动"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "手动"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "导数截止类型"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "输入截止类型"
+    },
+    "receiverRcSmoothingInterpolation": {
+        "message": "插值"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "滤波器"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "使用 RC 平滑的类型"
+    },
+    "rcSmoothingInputCutoffHelp": {
+        "message": "输入滤波器使用的以 Hz 为单位的截止频率。使用较低的值将得到更平滑的输入，更适合于较慢的接收器协议。大多数用户应该把它留在0，对应“自动”。"
+    },
+    "rcSmoothingDerivativeCutoffHelp": {
+        "message": "定点导数滤波器使用的以 Hz 为单位的截止频率。使用较低的值将得到更平滑的输入，更适合于较慢的接收器协议。大多数用户应该把它留在0，对应“自动”。"
+    },
+    "rcSmoothingChannelsSmoothedHelp": {
+        "message": "适用平滑的通道"
+    },
+    "rcSmoothingDerivativeTypeHelp": {
+        "message": "用于定点导数的滤波方法的类型。大多数用户应该使用默认的 \"BIQUAD\" 值，因为它在平滑和延迟之间提供了良好的平衡。\"PT1\" 稍微减少了延迟，但提供的平滑程度也较低。"
+    },
+    "rcSmoothingInputTypeHelp": {
+        "message": "用于输入的滤波方法的类型。大多数用户应该使用默认的 \"BIQUAD\" 值，因为它在平滑和延迟之间提供了良好的平衡。\"PT1\" 稍微减少了延迟，但提供的平滑程度也较低。"
+    },
+    "receiverRcSmoothingInputManual": {
+        "message": "选择输入滤波器截止频率是自动计算的（推荐）还是由用户手动选择。对于可能在飞行中发生变化的接收机协议，比如Crossfire，不建议使用 \"手动\"。"
+    },
+    "receiverRcSmoothingDerivativeManual": {
+        "message": "选择定点导数滤波器截止频率是自动计算的（推荐）还是由用户手动选择。对于可能在飞行中发生变化的接收机协议，比如Crossfire，不建议使用 \"手动\"。"
+    },
+    "receiverRcSmoothingInputHz": {
+        "message": "输入截止频率"
+    },
+    "receiverRcSmoothingDerivativeCutoff": {
+        "message": "Derivative 截止频率"
+    },
+    "receiverRcInputType": {
+        "message": "输入滤波器类型"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Derivative 滤波器类型"
+    },
+    "receiverRcSmoothingDerivativeTypeOff": {
+        "message": "关闭"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "平滑通道"
     },
     "receiverRcInterpolation": {
         "message": "RC 插值"
@@ -1227,6 +1435,9 @@
     },
     "receiverRcInterpolationOff": {
         "message": "关闭"
+    },
+    "receiverRcSmoothingType": {
+        "message": "平滑类型"
     },
     "receiverRcInterpolationDefault": {
         "message": "预设"
@@ -1296,6 +1507,27 @@
     },
     "pidTuningTPABreakPoint": {
         "message": "TPA 起始点"
+    },
+    "pidTuningThrottleLimitType": {
+        "message": "油门限制"
+    },
+    "pidTuningThrottleLimitPercent": {
+        "message": "油门限制百分比"
+    },
+    "pidTuningThrottleLimitTypeOff": {
+        "message": "关闭"
+    },
+    "pidTuningThrottleLimitTypeScale": {
+        "message": "比例"
+    },
+    "pidTuningThrottleLimitTypeClip": {
+        "message": "截断"
+    },
+    "pidTuningThrottleLimitTypeTip": {
+        "message": "选择油门限制的类型。 <b>关闭<\/b> 将禁用此功能； <b>比例<\/b>将使用全杆行程来映射从0到指定百分比的油门； <b>截断<\/b> 将设置一个最大油门百分比，该百分比以上的杆位行程将不再起作用。"
+    },
+    "pidTuningThrottleLimitPercentTip": {
+        "message": "设置所需的限制百分比。设置为100% 将禁用该功能。"
     },
     "pidTuningFilter": {
         "message": "滤波器"
@@ -1374,6 +1606,9 @@
     },
     "tuningHelp": {
         "message": "<b> 调校技巧<\/b><br \/><span class=\"message-negative\">重要：<\/span>调校后的初次飞行需注意电机温度。滤波值越高，飞行效果可能越好，但也会导致更多的信号“噪音”进入电机。<br>100Hz 是默认较佳的数值，但对震动较严重的情况，你可以尝试把 Dterm 和 Gyro 滤波器降低到50Hz。"
+    },
+    "filterWarning": {
+        "message": "<span class=\"message-negative\"><b>警告：<\/b><\/span>你使用的滤波器数量非常少。这可能会导致飞机难以控制，并可能导致起飞暴走。强烈建议您<b>至少启用一个陀螺仪动态低通滤波器或者陀螺仪低通滤波器1和一个Dterm动态低通滤波器或Dterm低通滤波器1<\/b>"
     },
     "receiverThrottleMid": {
         "message": "油门中点"
@@ -1460,10 +1695,10 @@
         "message": "启用控制"
     },
     "auxiliaryHelp": {
-        "message": "使用黄色区域来定义你想要的开关通道和对应的飞行模式。所选通道的游标落在黄色区域时该模式会激活变成黄色（亮起），代表该通道开关已激活该模式。 完成后点击保存按钮以保存设置。"
+        "message": "在此处通过使用范围和\/或链接到其他模式的组合配置飞行模式(BF4.0及更高版本支持链接) 。使用 <strong>范围<\/strong> 来定义遥控器上的开关和分配相应的模式。当接收机给出的通道值在最小\/最大范围内将激活该模式。当一个模式被激活时，使用<strong>链接<\/strong>来激活另一个模式。<strong>例外:<\/strong> 解锁不能链接或者被链接到其他的模式，当一个模式已被链接则无法被再次链接(多重链接) 。多个范围\/链接可以用于激活任何模式。如果为一个模式定义了多个范围\/链接，则可以将每个范围\/连接设置为<strong>和<\/strong> 或是 <strong>或<\/strong>。模式将在以下情况下被激活：<br \/>- 全部的<strong>和<\/strong> 范围\/链接都激活; 或者是<br \/>-至少有一个 <strong>或<\/strong> 范围\/链接激活.<br \/><br \/>记得使用保存按钮来保存你的设置。"
     },
     "auxiliaryToggleUnused": {
-        "message": "显示\/隐藏未使用的模式"
+        "message": "隐藏未使用的模式"
     },
     "auxiliaryMin": {
         "message": "最小"
@@ -1475,7 +1710,7 @@
         "message": "添加范围"
     },
     "auxiliaryAddLink": {
-        "message": "鏈接"
+        "message": "添加链接"
     },
     "auxiliaryButtonSave": {
         "message": "保存"
@@ -1487,10 +1722,10 @@
         "message": "自动"
     },
     "auxiliaryModeLogicOR": {
-      "message": "OR"
+        "message": "或"
     },
     "auxiliaryModeLogicAND": {
-      "message": "AND"
+        "message": "和"
     },
     "adjustmentsHelp": {
         "message": "配置调整开关。参阅手册的 'in-flight adjustments' 章解获取具体信息。通过该功能所做的调校修改不会被自动保存。总共有4个槽位。每一个开关需要独占一个槽位。"
@@ -1632,6 +1867,12 @@
     },
     "adjustmentsFunction28": {
         "message": "方向 F 调整"
+    },
+    "adjustmentsFunction29": {
+        "message": "选择OSD配置文件"
+    },
+    "adjustmentsFunction30": {
+        "message": "选择LED配置文件"
     },
     "adjustmentsSave": {
         "message": "保存"
@@ -1937,7 +2178,7 @@
         "message": "调试"
     },
     "cliInfo": {
-        "message": "<strong>注意<\/strong>：退出CLI命令行页面会 <strong>自动<\/strong> 发送\"<strong>exit<\/strong>\" 命令到飞控。这将会使飞控 <span class=\"message-negative\">重启<\/span>，所有没有保存的设置都会 <span class=\"message-negative\">丢失<\/span>。"
+        "message": "<strong>注意：<\/strong>退出CLI菜单或者点击断开连接将自动向飞控<strong><\/strong>发送“<strong>退出<\/strong>”指令。在最新的固件中这将使飞控<strong>重启<\/strong>并且未保存的设置将会<strong>丢失<\/strong>。<p><strong><span class=\"message-negative\">警告：<\/span><\/strong>CLI中的某些命令可能导致电机输出引脚发出随机指令。如果连接电池，这有可能导致电机旋转。因此，强烈建议<strong>在CLI中输入命令之前确保未连接电池<\/strong>。"
     },
     "cliInputPlaceholder": {
         "message": "在这里输入命令"
@@ -1950,6 +2191,15 @@
     },
     "cliSaveToFileBtn": {
         "message": "保存到文件"
+    },
+    "cliClearOutputHistoryBtn": {
+        "message": "清除输出历史记录"
+    },
+    "cliCopyToClipboardBtn": {
+        "message": "复制到剪贴板"
+    },
+    "cliCopySuccessful": {
+        "message": "复制成功！"
     },
     "loggingNote": {
         "message": "数据 <span class=\"message-negative\">仅会<\/span>在此页面记录，关闭此页面将会 <span class=\"message-negative\">取消<\/span>数据记录，并且应用将会返回<strong>“普通配置”<\/strong> 状态。<br \/> 你可以选择合适的全局刷新率，飞控出于性能考虑，只会每 <strong>1<\/strong> 秒写入一次日志。"
@@ -2037,6 +2287,12 @@
     },
     "dataflashButtonSaveFile": {
         "message": "保存闪存数据到文件"
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "将闪存保存到文件...(已弃用)"
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "通过配置程序保存黑盒日志的速度很慢且相对容易出错。建议您改用 '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (下图) 来激活大容量存储模式, 并将您的飞控作为存储设备访问以下载日志文件。"
     },
     "dataflashButtonErase": {
         "message": "擦除闪存"
@@ -2181,6 +2437,12 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "波特率"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "显示非稳定版本"
+    },
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
+        "message": "除了稳定的版本外, 还显示候选版本"
     },
     "firmwareFlasherOptionLoading": {
         "message": "加载中……"
@@ -2397,15 +2659,15 @@
         "description": "North direction in Color Mode in Led Strip"
     },
     "ledStripDirE": {
-        "message": "南",
+        "message": "东",
         "description": "East direction in Color Mode in Led Strip"
     },
     "ledStripDirS": {
-        "message": "西",
+        "message": "南",
         "description": "South direction in Color Mode in Led Strip"
     },
     "ledStripDirW": {
-        "message": "东",
+        "message": "西",
         "description": "West direction in Color Mode in Led Strip"
     },
     "ledStripDirU": {
@@ -2655,6 +2917,15 @@
     "pidTuningGyroLowpassType": {
         "message": "陀螺仪低通滤波器1类型"
     },
+    "pidTuningGyroLowpassDynMinFrequency": {
+        "message": "陀螺仪低通滤波器1动态最低截止频率[Hz]"
+    },
+    "pidTuningGyroLowpassDynMaxFrequency": {
+        "message": "陀螺仪低通滤波器1动态最高截止频率[Hz]"
+    },
+    "pidTuningGyroLowpassDynType": {
+        "message": "陀螺仪低通滤波器1动态滤波器类型"
+    },
     "pidTuningGyroLowpass2Frequency": {
         "message": "陀螺仪低通滤波器2截止频率 [Hz]"
     },
@@ -2679,6 +2950,9 @@
     "pidTuningNotchFilterHelp": {
         "message": "陷波滤波器有一个中心频率和一个截止频率。过滤器频率设置是中心对称的。中心频率是过滤器的中心，截止频率是陷波滤波器开始的位置。例如：当设置截止频率为160和中心频率为260时，它意味着滤波范围是160-360Hz，并且中心频率附近获得最多的抑制。"
     },
+    "pidTuningLowpassFilterHelp": {
+        "message": "低通滤波器有两个类型：静态和动态。设定低通滤波器时同一时刻只能启用一个类型（静态或动态）。静态滤波器需要预先定义一个滤波器开始工作的截止频率。动态滤波器则通过设置最低和最高值来定义一个截止范围。截止频率跟随油门摇杆在最低和最高范围内移动。"
+    },
     "pidTuningFilterSettings": {
         "message": "配置文件关联的滤波器设置"
     },
@@ -2694,8 +2968,20 @@
     "pidTuningDTermLowpass2Frequency": {
         "message": "D Term 低通2截止频率 [Hz]"
     },
+    "pidTuningDTermLowpass2Type": {
+        "message": "D Term 低通滤波器2类型"
+    },
+    "pidTuningDTermLowpassDynMinFrequency": {
+        "message": "D Term 低通滤波器1动态最低截止频率[Hz]"
+    },
+    "pidTuningDTermLowpassDynMaxFrequency": {
+        "message": "D Term 低通滤波器1动态最高截止频率[Hz]"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term 低通滤波器1动态滤波器类型"
+    },
     "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term 低通滤波器"
+        "message": "D Term 陷波滤波器"
     },
     "pidTuningDTermNotchFrequency": {
         "message": "D Term 陷波滤波器中心频率 [Hz]"
@@ -2761,19 +3047,28 @@
         "message": "绝对控制"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "此功能解决了 I 值旋转的一些底层问题，并希望最终可以替代它。该功能以四轴的坐标系统来累积陀螺仪的绝对误差，并按比例混合修正值到设定点中。它需要在RPY轴向上启用 I 值释放功能。"
+        "message": "此功能解决了$t(pidTuningItermRotation.message)存在的一些潜在问题，并从某种角度上来说取代了它。此功能累积陀螺仪在四轴飞行器坐标系每个轴上的绝对误差，并按比例将其校正值混合到设定值中。要使它工作，您需要启用$t(pidTuningItermRelax.message)(轴设置为$t(pidTuningItermRelaxAxesOptionRP.message))。如果此功能与$t(pidTuningIntegratedYaw.message)一起使用，则可以将$t(pidTuningItermRelax.message)的轴设置为$t(pidTuningItermRelaxAxesOptionRPY.message)。"
     },
     "pidTuningThrottleBoost": {
         "message": "油门增压"
     },
     "pidTuningThrottleBoostHelp": {
-        "message": "此功能通过短暂提高油门变化值来提高电机的加速度，使得油门响应更为迅速。"
+        "message": "此功能通过根据摇杆快速移动量来短暂提高油门变化值以增加电机的加速扭矩，使得油门响应更为迅速。"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "萌新手动模式角度限制"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
         "message": "为正在学习飞行的飞行员增加一个新的角度限制模式。有效范围为 10-80，需要使用 $t(tabAuxiliary.message) 选项卡中的一个开关激活。"
+    },
+    "pidTuningIntegratedYaw": {
+        "message": "整合式偏航"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\">注意<\/span>:如果你启用此功能，则必须相应地调整偏航PID。更多信息在<a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Integrated-Yaw\" target=\"_blank\">此处<\/a>"
+    },
+    "pidTuningIntegratedYawHelp": {
+        "message": "整合式偏航是一个用来解决四轴飞行器控制的基本问题的功能: 尽管俯仰和横滚轴是由推力差来控制的，但偏航不同，它是由螺旋桨直接控制的。整合式偏航通过在输出的偏航PID输入到混控器之前对其进行积分来解决这个问题。这将使PID的工作方式正常化。你现在可以像调整其他轴一样调整偏航。因为整合式偏航不需要用到I，所以需要启用绝对控制。"
     },
     "configHelp2": {
         "message": "任意角度（直立，反转，旋转等）安装飞控板。当使用外部传感器时，请使用传感器校正设置(陀螺，加速度计，磁场计)来决定独立于飞控板的传感器位置。"
@@ -2843,6 +3138,45 @@
     },
     "failsafeProcedureItemSelect2": {
         "message": "坠落"
+    },
+    "failsafeProcedureItemSelect4": {
+        "message": "GPS 救援"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "角度"
+    },
+    "failsafeGpsRescueItemInitialAltitude": {
+        "message": "初始高度 (米)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "下降距离 (米)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "地面速度 (米\/秒)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "最低油门"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "最高油门"
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "悬停油门"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "最小卫星数"
+    },
+    "failsafeGpsRescueItemSanityChecks": {
+        "message": "理智检查"
+    },
+    "failsafeGpsRescueItemSanityChecksOff": {
+        "message": "关闭"
+    },
+    "failsafeGpsRescueItemSanityChecksOn": {
+        "message": "开启"
+    },
+    "failsafeGpsRescueItemSanityChecksFSOnly": {
+        "message": "仅限失控保护"
     },
     "failsafeKillSwitchItem": {
         "message": "失控保护开关 （在模式页面设置失控保护模式）"
@@ -3099,14 +3433,32 @@
     "osdSetupUnsupportedNote2": {
         "message": "注意，有的飞控带有 <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a> ，可以通过<a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>来烧录和设置，但是这样的飞控不能通过此页面来设置参数。"
     },
+    "osdSetupProfilesTitle": {
+        "message": "OSD 配置文件编号",
+        "description": "Description of the header of the OSD elements column associated to each profile"
+    },
     "osdSetupElementsTitle": {
         "message": "元素"
     },
-    "osdSetupElementsSwitchAll": {
-        "message": "开关全部"
-    },
     "osdSetupPreviewTitle": {
-        "message": "预览 (可以通过拖拽来改变位置)"
+        "message": "拖动元素以更改位置",
+        "description": "Indicates in the preview window of the OSD that the user can drag the elements to reorder them"
+    },
+    "osdSetupPreviewSelectProfileTitle": {
+        "message": "预览",
+        "description": "Label of the selector for the OSD Profile in the preview"
+    },
+    "osdSetupSelectedProfileTitle": {
+        "message": "激活OSD配置文件",
+        "description": "Title of the box to select the current active OSD profile"
+    },
+    "osdSetupSelectedProfileLabel": {
+        "message": "当前：",
+        "description": "Label for the selection of the curren active OSD profile"
+    },
+    "osdSetupPreviewSelectProfileElement": {
+        "message": "OSD配置文件 {{profileNumber}}",
+        "description": "Content of the selector for the OSD Profile in the preview"
     },
     "osdSetupPreviewTitleTip": {
         "message": "在预览窗口显示或者隐藏Betalight logo。这选项不会影响飞控上的设置。"
@@ -3237,6 +3589,9 @@
     "osdDescElementCraftName": {
         "message": "设置页面里设置的飞行器名称"
     },
+    "osdDescElementDisplayName": {
+        "message": "由CLI命令\"display_name\"设置的显示名称"
+    },
     "osdDescElementAltitude": {
         "message": "当前高度 (当超过设置的警告高度时会闪烁)"
     },
@@ -3306,6 +3661,9 @@
     "osdDescElementEscRpm": {
         "message": "电调回传电机转速"
     },
+    "osdDescElementEscRpmFreq": {
+        "message": "电调回传电机转速频率"
+    },
     "osdDescElementRtcDateTime": {
         "message": "日期\/时间"
     },
@@ -3327,6 +3685,21 @@
     "osdDescElementCompassBar": {
         "message": "当前行进方向的图形箭头"
     },
+    "osdDescElementFlipArrow": {
+        "message": "在乌龟模式中，箭头指示哪边的电机朝上"
+    },
+    "osdDescElementLinkQuality": {
+        "message": "基于帧丢失情况的“连接质量”的替代图标-请谨慎使用"
+    },
+    "osdDescElementFlightDist": {
+        "message": "此次飞行中的飞行距离"
+    },
+    "osdDescElementStickOverlayLeft": {
+        "message": "遥控器左摇杆的叠层位置"
+    },
+    "osdDescElementStickOverlayRight": {
+        "message": "遥控器右摇杆的叠层位置"
+    },
     "osdDescElementTimer1": {
         "message": "显示计时器1"
     },
@@ -3347,6 +3720,12 @@
     },
     "osdDescGForce": {
         "message": "显示当前飞机所受的地心引力"
+    },
+    "osdDescElementMotorDiag": {
+        "message": "显示每个电机输出的图表"
+    },
+    "osdDescElementLogStatus": {
+        "message": "黑匣子编号和警告"
     },
     "osdDescStatMaxSpeed": {
         "message": "记录到的最大速度"
@@ -3396,6 +3775,24 @@
     "osdDescStatBattery": {
         "message": "电池实时电压"
     },
+    "osdDescStatGForce": {
+        "message": "飞行器经历的最大 G 力"
+    },
+    "osdDescStatEscTemperature": {
+        "message": "电调最高温度"
+    },
+    "osdDescStatEscRpm": {
+        "message": "电调最高转速"
+    },
+    "osdDescStatMinLinkQuality": {
+        "message": "基于帧丢失情况的“连接质量”的替代图标的最小值"
+    },
+    "osdDescStatFlightDistance": {
+        "message": "此次飞行中的总行程"
+    },
+    "osdDescStatMaxFFT": {
+        "message": "FFT峰值频率"
+    },
     "osdTimerSource": {
         "message": "来源："
     },
@@ -3413,6 +3810,9 @@
     },
     "osdTimerAlarmTooltip": {
         "message": "设置计时器警报时间（分钟）。当计时器时间大于设置时间，将会在OSD上面闪烁。设定为0可禁用报警。"
+    },
+    "osdWarningUnknown": {
+        "message": "未知警告 (会在将来的版本中添加详细信息)"
     },
     "osdWarningArmingDisabled": {
         "message": "显示导致不能解锁最主要的原因"
@@ -3434,6 +3834,24 @@
     },
     "osdWarningEscFail": {
         "message": "列举一个出现故障的ESCs\/电机的列表 (RPM 或温度超出配置的阈值)"
+    },
+    "osdWarningCoreTemperature": {
+        "message": "当 MCU 核心温度超过配置的阈值时发出警告"
+    },
+    "osdWarningRcSmoothingFailure": {
+        "message": "当 RC 平滑初始化失败时发出警告"
+    },
+    "osdWarningFailsafe": {
+        "message": "发生失控保护时发出警告"
+    },
+    "osdWarningLaunchControl": {
+        "message": "起飞控制（Launch Control）模式被激活时发出警告"
+    },
+    "osdWarningGpsRescueUnavailable": {
+        "message": "当 GPS 救援不可用且无法激活时发出警告"
+    },
+    "osdWarningGpsRescueDisabled": {
+        "message": "GPS 救援被禁用时发出警告"
     },
     "osdSectionHelpElements": {
         "message": "显示或者隐藏 OSD 显示信息"
@@ -3653,5 +4071,8 @@
     },
     "modeCameraChangeMode": {
         "message": "摄像头改变模式"
+    },
+    "flashTab": {
+        "message": "更新固件"
     }
 }
