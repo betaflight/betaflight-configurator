@@ -620,9 +620,6 @@
     "initialSetupArmingAllowed": {
         "message": "Armat permès"
     },
-    "initialSetupArmingDisableFlagsTooltip": {
-        "message": "Llista de flags indicant perquè l'armat no està permès actualment. El primer valor i el més important correspon al número de sons d'avís quan s'intenta armar. Mira la Wiki (pàgina 'Arming Sequence & Safety') per veure la descripció d'aquests flags."
-    },
     "initialSetupGPSHead": {
         "message": "GPS"
     },
@@ -1082,15 +1079,6 @@
     "portsFunction_BLACKBOX": {
         "message": "Enregistrament Blackbox"
     },
-    "portsFunction_TBS_SMARTAUDIO": {
-        "message": "TBS SmartAudio"
-    },
-    "portsFunction_IRC_TRAMP": {
-        "message": "IRC Tramp"
-    },
-    "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "Dispositiu RunCam"
-    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1358,9 +1346,6 @@
     "receiverMspEnableButton": {
         "message": "Habilita els controls"
     },
-    "auxiliaryHelp": {
-        "message": "Fes servir els rangs per definir els interruptors al teu transmissor i els modes corresponents. Un canal del receptor que doni mesures entre un rang activarà el mode. Recorda desar la configuració amb el botó Desar."
-    },
     "auxiliaryMin": {
         "message": "Min"
     },
@@ -1370,9 +1355,6 @@
     "auxiliaryAddRange": {
         "message": "Afegeix Rang"
     },
-    "auxiliaryAddLink": {
-        "message": "Enllaç"
-    },
     "auxiliaryButtonSave": {
         "message": "Desa"
     },
@@ -1381,12 +1363,6 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
-    },
-    "auxiliaryModeLogicOR": {
-      "message": "OR"
-    },
-    "auxiliaryModeLogicAND": {
-      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Configureu els interruptors d'ajust. Consulteu la secció \"Ajustaments de vol\" del manual per obtenir-ne més detalls. Els canvis que realitzen les funcions d'ajust no es guarden automàticament. Hi ha 4 ranures (slots). Cada interruptor utilitzat per fer ajustaments simultanis requereix l'ús exclusiu d'una ranura."
@@ -1813,9 +1789,6 @@
     },
     "sensorsDebugTitle": {
         "message": "Debug"
-    },
-    "cliInfo": {
-        "message": "<strong>Nota<\/strong>: deixeu la pestanya CLI o premeu Desconnectar <strong>automàticament<\/strong> enviar \"<strong>sortir<\/strong>\" al tauler. Amb l'últim firmware això farà que el controlador <span class=\"message-negative\">es reinicii<\/span> i els canvis no desats es <span class=\"message-negative\">perdran<\/span>."
     },
     "cliInputPlaceholder": {
         "message": "Escriu la teva comanda aquí"
@@ -2868,12 +2841,6 @@
     },
     "osdSetupElementsTitle": {
         "message": "Elements"
-    },
-    "osdSetupElementsSwitchAll": {
-        "message": "Activa tot"
-    },
-    "osdSetupPreviewTitle": {
-        "message": "Previsualització (arrossega per a canviar la posició)"
     },
     "osdSetupPreviewTitleTip": {
         "message": "Mostra o amaga el logo a la finestra de previsualització. Això no canviarà cap configuració a la controladora de vol."

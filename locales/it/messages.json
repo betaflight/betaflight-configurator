@@ -50,8 +50,17 @@
     "expertMode": {
         "message": "Abilita modalità esperto"
     },
+    "expertModeDescription": {
+        "message": "Mostra build non rilasciate e potenzialmente instabili"
+    },
     "permanentExpertMode": {
         "message": "Modalità esperto sempre abilitata"
+    },
+    "rememberLastTab": {
+        "message": "Riapri l'ultima pagina alla connessione"
+    },
+    "analyticsOptOut": {
+        "message": "Disattiva la raccolta anonima di dati statistici"
     },
     "userLanguageSelect": {
         "message": "Lingua (è necessario riavviare l'applicazione affinché le modifiche abbiano effetto)"
@@ -335,6 +344,15 @@
         "message": "Sistema operativo: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, Configurator: <strong>{{configuratorVersion}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
+    "buildServerLoaded": {
+        "message": "Caricate informazioni delle build per $1 dal server."
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>La richiesta delle versioni per $1 non è riuscita, stai utilizzando informazioni memorizzate nella cache. Motivo: <code>$2<\/code><\/b>"
+    },
+    "buildServerUsingCached": {
+        "message": "Si stanno usando informazioni memorizzate nella cache per $1."
+    },
     "releaseCheckLoaded": {
         "message": "Informazioni della release $1 scaricate da GitHub."
     },
@@ -450,7 +468,10 @@
         "message": "Contribuisci"
     },
     "defaultContributingText": {
-        "message": "Se vuoi contribuire a rendere Betaflight ancora migliore puoi aiutare in molti modi, quali:<ul><li>Rispondere alle domande degli altri utenti sui forum e IRC.<\/li><li>Contribuire a scrivere codice per il firmware ed il configuratore - nuove funzioni, correzioni, miglioramenti<\/li><li>Testare le <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">nuove funzioni\/correzzioni<\/a> e fornendo feedback.<\/li><li>Aiutare a risolvere<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\"> problemi e commentare le funzioni richieste<\/a><\/li><li>Collaborare alla <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">traduzione deldel configuratore<\/a> nella tua lingua<\/li><\/ul>"
+        "message": "Se vuoi contribuire a rendere Betaflight ancora migliore puoi aiutare in molti modi, quali:<br \/><ul><li>Rispondere alle domande degli altri utenti sui forum e IRC.<\/li><li>Contribuire a scrivere codice per il firmware ed il configuratore - nuove funzioni, correzioni, miglioramenti<\/li><li>Testare le <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">nuove funzioni\/correzzioni<\/a> e fornendo feedback.<\/li><li>Aiutare a risolvere<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\"> problemi e commentare le funzioni richieste<\/a><\/li><li>Collaborare alla <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">traduzione del configuratore<\/a> nella tua lingua<\/li><\/ul>"
+    },
+    "defaultFacebookText": {
+        "message": "Abbiamo anche un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\">gruppo Facebook<\/a>.<br \/>. Unisciti a noi per discutere di Betaflight, fare domande riguardo la configurazione, o semplicemente ritrovarti con altri piloti."
     },
     "defaultChangelogAction": {
         "message": "Modifiche"
@@ -458,11 +479,17 @@
     "defaultChangelogHead": {
         "message": "Configurator - Registro Modifiche"
     },
+    "defaultPrivacyPolicyAction": {
+        "message": "Informativa sulla privacy"
+    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
     "defaultDonateHead": {
         "message": "Open Source \/ donazione"
+    },
+    "defaultDonateBottom": {
+        "message": "<p>Se vuoi contribuire economicamente in modo continuativo, puoi diventare un nostro patron su <a href='https:\/\/www.patreon.com\/betaflight'>Patreon<\/a>.<\/p>"
     },
     "defaultDonate": {
         "message": "Dona"
@@ -541,6 +568,9 @@
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Attiva Boot Loader \/ DFU"
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Riavvia in modalità <strong>boot loader \/ DFU<\/strong>."
     },
     "initialSetupBackupSuccess": {
         "message": "Backup salvato <span class=\"message-positive\">correttamente<\/span>"
@@ -632,8 +662,53 @@
     "initialSetupArmingAllowed": {
         "message": "Armamento motori consentito"
     },
-    "initialSetupArmingDisableFlagsTooltip": {
-        "message": "Elenco di flag che indicano perché non è attualmente consentito armare i motori. Il primo e più importante valore corrisponde al numero di bip di avvertimento che suonano quando si tenta di armare. Si prega di fare riferimento alla pagina Wiki ('Arming Sequence & Safety') per una descrizione di cosa significano questi flag."
+    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
+        "message": "Non è stato rilevato un giroscopio",
+        "description": "Description of the NO GYRO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
+        "message": "Failsafe è attivo",
+        "description": "Description of the FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
+        "message": "Nessun segnale valido ricevuto dalla ricevente",
+        "description": "Description of the RX_FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
+        "message": "È stato attivato l'interruttore 'FAIL-SAFE'",
+        "description": "Description of the BOXFAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
+        "message": "Canale gas troppo alto",
+        "description": "Description of the THROTTLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "Il modello non è livellato",
+        "description": "Description of the ANGLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
+        "message": "Stai armando troppo presto dopo l'accensione",
+        "description": "Description of the BOOT_GRACE_TIME arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOAD": {
+        "message": "Il carico del processore è troppo elevato per poter volare in sicurezza",
+        "description": "Description of the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Calibrazione sensori in esecuzione",
+        "description": "Description of the CALIBRATING arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCLI": {
+        "message": "CLI è attivo",
+        "description": "Description of the CLI arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
+        "message": "Il menù OSD è attivo",
+        "description": "Description of the OSD_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRESC": {
+        "message": "E' stato attivato lo switch \"GPS Rescue\"",
+        "description": "Description of the RESC arming disable flag"
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -1127,14 +1202,11 @@
     "portsFunction_BLACKBOX": {
         "message": "registrazione su scatola nera"
     },
-    "portsFunction_TBS_SMARTAUDIO": {
-        "message": "TBS SmartAudio"
-    },
     "portsFunction_IRC_TRAMP": {
-        "message": "IRC Tramp"
+        "message": "VTX (IRC Tramp)"
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "dispositivo RunCam"
+        "message": "Camera (Protocollo RunCam)"
     },
     "pidTuningProfileOption": {
         "message": "Profilo $1"
@@ -1163,14 +1235,77 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Impostazioni controller PID indipendenti dal profilo"
     },
+    "pidTuningAntiGravityMode": {
+        "message": "Modo Anti Gravity"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Liscio",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Passo",
+        "description": "One of the modes of anti gravity"
+    },
     "pidTuningAntiGravityGain": {
         "message": "Guadagno Anti Gravità"
     },
     "pidTuningAntiGravityThres": {
         "message": "Soglia Anti Gravità"
     },
+    "pidTuningDMinRoll": {
+        "message": "Roll",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinPitch": {
+        "message": "Pitch",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinYaw": {
+        "message": "Yaw",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinGain": {
+        "message": "Guadagno",
+        "description": "Gain of the D Min feature"
+    },
     "pidTuningPidSettings": {
         "message": "Impostazioni del controller PID"
+    },
+    "receiverRcSmoothing": {
+        "message": "RC Smoothing"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "Auto"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "Manuale"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "Tipo di taglio derivativo"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "Tipo di taglio di Input"
+    },
+    "receiverRcSmoothingInterpolation": {
+        "message": "Interpolazione"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "Filtro"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "Tipo di RC Smoothing usato"
+    },
+    "receiverRcInputType": {
+        "message": "Tipo filtro di input"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Tipo di filtro derivativo"
+    },
+    "receiverRcSmoothingDerivativeTypeOff": {
+        "message": "Spento"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "Canali smoothed"
     },
     "receiverRcInterpolation": {
         "message": "Interpolazione RC"
@@ -1184,6 +1319,9 @@
     "receiverRcInterpolationOff": {
         "message": "Spento"
     },
+    "receiverRcSmoothingType": {
+        "message": "Tipo smoothing"
+    },
     "receiverRcInterpolationDefault": {
         "message": "Preimpostato"
     },
@@ -1195,6 +1333,9 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "Intervallo di interpolazione RC [ms]"
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Transizione Feedforward"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Transizione setpoint"
@@ -1220,6 +1361,9 @@
     "pidTuningDerivative": {
         "message": "Derivato"
     },
+    "pidTuningFeedforward": {
+        "message": "Feedforward"
+    },
     "pidTuningRcRate": {
         "message": "Rate RC"
     },
@@ -1243,6 +1387,21 @@
     },
     "pidTuningTPABreakPoint": {
         "message": "Punto di interruzione TPA"
+    },
+    "pidTuningThrottleLimitType": {
+        "message": "Limite acceleratore"
+    },
+    "pidTuningThrottleLimitPercent": {
+        "message": "Limite acceleratore %"
+    },
+    "pidTuningThrottleLimitTypeOff": {
+        "message": "SPENTO"
+    },
+    "pidTuningThrottleLimitTypeScale": {
+        "message": "SCALA"
+    },
+    "pidTuningThrottleLimitTypeClip": {
+        "message": "CLIP"
     },
     "pidTuningFilter": {
         "message": "Filtro"
@@ -1406,8 +1565,8 @@
     "receiverMspEnableButton": {
         "message": "Abilita i controlli"
     },
-    "auxiliaryHelp": {
-        "message": "Attiva gli intervalli per definire gli switch sul tuo radiocomando ed i relativi modi di volo. Il canale della ricevente che dà una lettura compresa tra un intervallo min\/max attiverà il modo di volo. Ricordati di salvare le impostazioni premendo il pulsante Salva."
+    "auxiliaryToggleUnused": {
+        "message": "Nascondi le modalità inutilizzate"
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -1417,9 +1576,6 @@
     },
     "auxiliaryAddRange": {
         "message": "Attiva"
-    },
-    "auxiliaryAddLink": {
-        "message": "Link"
     },
     "auxiliaryButtonSave": {
         "message": "Salva"
@@ -1431,10 +1587,10 @@
         "message": "AUTO"
     },
     "auxiliaryModeLogicOR": {
-      "message": "OR"
+        "message": "OPPURE"
     },
     "auxiliaryModeLogicAND": {
-      "message": "AND"
+        "message": "E"
     },
     "adjustmentsHelp": {
         "message": "Configurare gli interruttori di regolazione. Vedi la sezione 'aggiustamenti in volo' del manuale per i dettagli. Le modifiche apportate dalle funzioni di regolazione non vengono salvate automaticamente. Ci sono 4 slot. Ogni interruttore utilizzato per apportare modifiche simultanee richiede l'uso esclusivo di uno slot."
@@ -1556,11 +1712,29 @@
     "adjustmentsFunction23": {
         "message": "Transizione D Setpoint"
     },
+    "adjustmentsFunction23_2": {
+        "message": "Transizione Feedforward"
+    },
     "adjustmentsFunction24": {
         "message": "Regolazione Modalità Horizon"
     },
     "adjustmentsFunction25": {
         "message": "PID-Selezione Audio"
+    },
+    "adjustmentsFunction26": {
+        "message": "Regolazione Pitch F"
+    },
+    "adjustmentsFunction27": {
+        "message": "Regolazione Roll F"
+    },
+    "adjustmentsFunction28": {
+        "message": "Regolazione Yaw F"
+    },
+    "adjustmentsFunction29": {
+        "message": "Selezione profilo OSD"
+    },
+    "adjustmentsFunction30": {
+        "message": "Selezione profilo LED"
     },
     "adjustmentsSave": {
         "message": "salva"
@@ -1865,9 +2039,6 @@
     "sensorsDebugTitle": {
         "message": "Debug"
     },
-    "cliInfo": {
-        "message": "<strong>Nota<\/strong>: uscendo dalla scheda CLI o premendo Disconnetti verrà <strong>automaticamente<\/strong> inviato \"<strong>exit<\/strong>\" alla scheda di controllo. Con gli ultimi firmware questo farà sì che la scheda venga  <span class=\"message-negative\">riavviata<\/span> e tutti i cambiamenti non salvati saranno <span class=\"message-negative\">persi<\/span>."
-    },
     "cliInputPlaceholder": {
         "message": "Scrivi qui il comando"
     },
@@ -1879,6 +2050,9 @@
     },
     "cliSaveToFileBtn": {
         "message": "Salva su file"
+    },
+    "cliClearOutputHistoryBtn": {
+        "message": "Cancella la cronologia della CLI"
     },
     "loggingNote": {
         "message": "I dati saranno registrati <span class=\"message-negative\">soltanto<\/span> in questa schermata, spostandoti da questa la registrazione sarà <span class=\"message-negative\">cancellata<\/span> ed il programma tornerà nel suo stato normale di <strong>\"configuratore\"<\/strong><br \/>. Sei libero di selezionare la frequenza di aggiornamento globale, i dati saranno scritti nel file di registro ogni <strong>1<\/strong> secondi per questioni di prestazioni."
@@ -1966,6 +2140,9 @@
     },
     "dataflashButtonSaveFile": {
         "message": "Salva flash su file ..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Salva flash su file... (deprecato)"
     },
     "dataflashButtonErase": {
         "message": "Cancella flash"
@@ -2110,6 +2287,12 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "velocità di trasmissione"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Mostra versioni non stabili"
+    },
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
+        "message": "Mostra i candidati al rilascio oltre alle versioni stabili"
     },
     "firmwareFlasherOptionLoading": {
         "message": "Caricamento in corso"
@@ -2644,6 +2827,39 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Aumenta i valori dei PID per compensare la diminuzione del voltaggio della batteria. Darà caratteristiche di volo più costanti per la durata di tutto il volo. La quantità di compensazione applicata è calcolata in base al $t(powerBatteryMaximum.message) impostato nella pagina $t(tabPower.message), quindi assicurati che sia impostato su in valore appropriato."
     },
+    "pidTuningSmartFeedforward": {
+        "message": "Feedforward Intelligente"
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "Assi:"
+    },
+    "pidTuningItermRelaxAxesOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningItermRelaxAxesOptionRPY": {
+        "message": "RPY"
+    },
+    "pidTuningItermRelaxAxesOptionRPInc": {
+        "message": "RP (solo incremento)"
+    },
+    "pidTuningItermRelaxAxesOptionRPYInc": {
+        "message": "RPY (solo incremento)"
+    },
+    "pidTuningItermRelaxType": {
+        "message": "Tipo:"
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "Gyro"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Setpoint"
+    },
+    "pidTuningAbsoluteControlGain": {
+        "message": "Controllo assoluto"
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Boost Gas"
+    },
     "configHelp2": {
         "message": "Rotazione arbitraria del controllore di volo, per permettere di montarlo di lato, sottosopra, ruotato ecc.. Quando si utilizzano sensori esterni, usa l'allineamento del sensore (Gyro, Acc, Mag) per definire la posizione del sensore indipendente dall'orientamento del controllore di volo."
     },
@@ -2712,6 +2928,42 @@
     },
     "failsafeProcedureItemSelect2": {
         "message": "Lascia cadere"
+    },
+    "failsafeProcedureItemSelect4": {
+        "message": "GPS Rescue"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Angle"
+    },
+    "failsafeGpsRescueItemInitialAltitude": {
+        "message": "Altitudine iniziale (metri)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Distanza di discesa (metri)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Velocità al suolo (metri\/secondo)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Gas minimo"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Gas massimo"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Satelliti minimi"
+    },
+    "failsafeGpsRescueItemSanityChecks": {
+        "message": "Controlli di salute"
+    },
+    "failsafeGpsRescueItemSanityChecksOff": {
+        "message": "Spento"
+    },
+    "failsafeGpsRescueItemSanityChecksOn": {
+        "message": "Acceso"
+    },
+    "failsafeGpsRescueItemSanityChecksFSOnly": {
+        "message": "Solo failsafe"
     },
     "failsafeKillSwitchItem": {
         "message": "Interruttore di interruzione sicura (imposta Failsafe nella scheda modi di volo)"
@@ -2971,12 +3223,6 @@
     "osdSetupElementsTitle": {
         "message": "Elementi"
     },
-    "osdSetupElementsSwitchAll": {
-        "message": "Scambia tutti"
-    },
-    "osdSetupPreviewTitle": {
-        "message": "Anteprima (trascina per cambiare posizione)"
-    },
     "osdSetupPreviewTitleTip": {
         "message": "Mostra o nascondi il logo nella finestra di anteprima. Questo non cambierà alcuna impostazione sul controller di volo."
     },
@@ -3006,6 +3252,12 @@
     },
     "osdSetupFontPresets": {
         "message": "Font predefiniti:"
+    },
+    "osdSetupFontPresetsSelector": {
+        "message": "Seleziona i preset del Font:"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "o"
     },
     "osdSetupOpenFont": {
         "message": "Apri il file dei caratteri"
@@ -3255,6 +3507,15 @@
     },
     "osdDescStatBattery": {
         "message": "Voltaggio batteria in tempo reale"
+    },
+    "osdDescStatGForce": {
+        "message": "Massima Forza-G subita dal modello"
+    },
+    "osdDescStatEscTemperature": {
+        "message": "Massima temperatura ESC"
+    },
+    "osdDescStatEscRpm": {
+        "message": "Massimo ESC RPM"
     },
     "osdTimerSource": {
         "message": "Sorgente:"
@@ -3507,5 +3768,8 @@
     },
     "modeCameraChangeMode": {
         "message": "MODALITA' CAMBIO CAMERA"
+    },
+    "flashTab": {
+        "message": "Aggiornamento Firmware"
     }
 }
