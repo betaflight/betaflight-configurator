@@ -494,9 +494,6 @@
     "defaultDonateHead": {
         "message": "Open Source \/ Himbauan Donasi"
     },
-    "defaultDonateText": {
-        "message": "<strong>Betaflight<\/strong> adalah perangkat lunak flight controller <strong>open source<\/strong>, gratis, <strong>tanpa garansi<\/strong> untuk seluruh pengguna.<br \/>Jika Anda merasakan Betaflight atau Betaflight Configurator ini berguna, harap pertimbangkan untuk <strong>mendukung<\/strong> pengembangannya dengan memberikan donasi."
-    },
     "defaultDonate": {
         "message": "Donasi"
     },
@@ -670,9 +667,6 @@
     },
     "initialSetupArmingAllowed": {
         "message": "Arming Diizinkan"
-    },
-    "initialSetupArmingDisableFlagsTooltip": {
-        "message": "Daftar rambu yang menunjukkan mengapa arming saat ini tidak di perbolehkan. Nilai pertama dan terpenting sesuai dengan jumlah peringatan beep yang terdengar ketika percobaan arming. Silakan lihat halaman Wiki ('Arming Sequence & Safety') untuk deskripsi tentang arti dari rambu-rambu ini."
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -1166,15 +1160,6 @@
     "portsFunction_BLACKBOX": {
         "message": "Logging blackbox"
     },
-    "portsFunction_TBS_SMARTAUDIO": {
-        "message": "TBS SmartAudio"
-    },
-    "portsFunction_IRC_TRAMP": {
-        "message": "IRC Tramp"
-    },
-    "portsFunction_RUNCAM_DEVICE_CONTROL": {
-        "message": "Perangkat RunCam"
-    },
     "pidTuningProfileOption": {
         "message": "Profil $1"
     },
@@ -1369,6 +1354,27 @@
     "pidTuningTPABreakPoint": {
         "message": "Breakpoint TPA"
     },
+    "pidTuningThrottleLimitType": {
+        "message": "Batas Throttle"
+    },
+    "pidTuningThrottleLimitPercent": {
+        "message": "Batas Throttle %"
+    },
+    "pidTuningThrottleLimitTypeOff": {
+        "message": "MATI"
+    },
+    "pidTuningThrottleLimitTypeScale": {
+        "message": "SCALE"
+    },
+    "pidTuningThrottleLimitTypeClip": {
+        "message": "CLIP"
+    },
+    "pidTuningThrottleLimitTypeTip": {
+        "message": "Pilih jenis pembatasan throttle. <b>MATI<\/b> fitur non-aktif, <b>SCALE<\/b> akan menyesuaikan throttle dari 0 hingga persentase terpilih dari pergerakan penuh stik, <b>CLIP<\/b> akan membatasi persentase throttle max dan input diatas persentase tersebut tidal akan memberikan efek tambahan"
+    },
+    "pidTuningThrottleLimitPercentTip": {
+        "message": "Menentukan persentase batas throttle. Nilai 100% akan berakibat fitur non-aktif."
+    },
     "pidTuningFilter": {
         "message": "Filter"
     },
@@ -1531,11 +1537,8 @@
     "receiverMspEnableButton": {
         "message": "Aktifkan kontrol"
     },
-    "auxiliaryHelp": {
-        "message": "Gunakan rentang untuk menentukan fungsi switch pada transmitter anda dan peruntukan mode yg sesuai. Channel receiver yg memberikan nilai antara min\/max akan mengaktifkan mode terbang. Simpan pengaturan anda menggunakan tombol Simpan."
-    },
     "auxiliaryToggleUnused": {
-        "message": "Tampilkan\/sembunyikan mode tidak terpakai"
+        "message": "Sembunyikan mode yg tidak terpakai"
     },
     "auxiliaryMin": {
         "message": "Min"
@@ -1546,9 +1549,6 @@
     "auxiliaryAddRange": {
         "message": "Tambahkan Rentang"
     },
-    "auxiliaryAddLink": {
-        "message": "Tautkan"
-    },
     "auxiliaryButtonSave": {
         "message": "Simpan"
     },
@@ -1557,12 +1557,6 @@
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
-    },
-    "auxiliaryModeLogicOR": {
-      "message": "OR"
-    },
-    "auxiliaryModeLogicAND": {
-      "message": "AND"
     },
     "adjustmentsHelp": {
         "message": "Mengkonfigurasi switch penyesuaian. Lihat manual bagian 'in-flight adjustments' untuk detilnya. Perubahan yang dilakukan fungsi penyesuaian tidak disimpan secara otomatis. Ada 4 slot. Setiap switch yang digunakan untuk secara bersamaan melakukan penyesuaian menggunakan sebuah slot."
@@ -2007,9 +2001,6 @@
     },
     "sensorsDebugTitle": {
         "message": "Debug"
-    },
-    "cliInfo": {
-        "message": "<strong>Catatan<\/strong>: Meninggalkan tab CLI atau menekan Putus akan <strong> secara otomatis<\/strong> mengirimkan perintah \"<strong>keluar<\/strong>\" ke FC. Dengan firmware terbaru ini akan membuat FC di <span class =\"message-negative\"> restart<\/span> dan perubahan yang belum disimpan akan <span class =\"message-negative\">hilang<\/span>."
     },
     "cliInputPlaceholder": {
         "message": "Tulis perintah anda di sini"
@@ -2841,9 +2832,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Control"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Fitur ini mengatasi beberapa masalah Rotasi I Term dan suatu saat akan menggantikannya. Fitur ini menjumlahkan galat absolut sensor gyro pada sumbu orientasi unit dan menerapkan koreksi proporsional terhadap setpoint. Variabel iterm_relax perlu diset enable untuk RPY."
-    },
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
     },
@@ -2924,6 +2912,45 @@
     },
     "failsafeProcedureItemSelect2": {
         "message": "Jatuhkan"
+    },
+    "failsafeProcedureItemSelect4": {
+        "message": "Rescue GPS"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Angle"
+    },
+    "failsafeGpsRescueItemInitialAltitude": {
+        "message": "Ketinggian awal (meter)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Jarak turun (meter)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Kecepatan darat (meter\/detik)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Throttle minimum"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Throttle maksimum"
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Throttle hover"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Satelit minimum"
+    },
+    "failsafeGpsRescueItemSanityChecks": {
+        "message": "Cek kewajaran"
+    },
+    "failsafeGpsRescueItemSanityChecksOff": {
+        "message": "Mati"
+    },
+    "failsafeGpsRescueItemSanityChecksOn": {
+        "message": "Aktif"
+    },
+    "failsafeGpsRescueItemSanityChecksFSOnly": {
+        "message": "Hanya Failsafe"
     },
     "failsafeKillSwitchItem": {
         "message": "Failsafe Kill Switch (setup Failsafe di Tab Modes)"
@@ -3183,12 +3210,6 @@
     "osdSetupElementsTitle": {
         "message": "Elemen"
     },
-    "osdSetupElementsSwitchAll": {
-        "message": "Alihkan semua"
-    },
-    "osdSetupPreviewTitle": {
-        "message": "Tinjauan (tarik untuk mengubah posisi)"
-    },
     "osdSetupPreviewTitleTip": {
         "message": "Tampilkan atau sembunyikan logo di jendela peninjauan. Ini tidak akan mengubah pengaturan apapun pada pengontrol penerbangan."
     },
@@ -3411,6 +3432,12 @@
     "osdDescElementFlipArrow": {
         "message": "Panah yang menandakan posisi motor yang berada di atas pada mode turtle"
     },
+    "osdDescElementLinkQuality": {
+        "message": "Indikator alternatif untuk 'kualitas link' berdasarkan frame loss - gunakan dengan hati-hati"
+    },
+    "osdDescElementFlightDist": {
+        "message": "Jarak tempuh pada penerbangan ini."
+    },
     "osdDescElementTimer1": {
         "message": "Menunjukkan nilai timer 1"
     },
@@ -3431,6 +3458,9 @@
     },
     "osdDescGForce": {
         "message": "Menampilkan nilai G-Force yang dialami unit"
+    },
+    "osdDescElementMotorDiag": {
+        "message": "Tampilkan grafik output dari tiap motor"
     },
     "osdDescElementLogStatus": {
         "message": "Nomor blackbox dan peringatan"
@@ -3491,6 +3521,12 @@
     },
     "osdDescStatEscRpm": {
         "message": "RPM Max ESC"
+    },
+    "osdDescStatMinLinkQuality": {
+        "message": "Nilai minimal indikator alternatif untuk 'kualitas link' berdasarkan frame loss"
+    },
+    "osdDescStatFlightDistance": {
+        "message": "Jarak tempuh total selama penerbangan"
     },
     "osdTimerSource": {
         "message": "Sumber:"
