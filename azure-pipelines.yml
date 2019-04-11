@@ -23,13 +23,7 @@ steps:
 - script: gulp debug-no-start --win32
   displayName: 'Gulp debug-no-start'
 
-# Testing publishing using different task
-#- task: ArchiveFiles@2
-#  inputs:
-#    archiveFile: '$(Build.ArtifactStagingDirectory)/betaflight-configurator.zip'
-#    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/debug'
-#    includeRootFolder: false
-
 - task: PublishPipelineArtifact@0
   inputs: 
-    targetPath: '$(System.DefaultWorkingDirectory)/debug'
+    artifactName: betaflight-configurator
+    targetPath: '$(System.DefaultWorkingDirectory)/debug/betaflight-configurator'
