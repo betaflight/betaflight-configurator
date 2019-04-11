@@ -2292,8 +2292,14 @@
     "cliLoadFromFileBtn": {
         "message": "Load from file"
     },
-    "cliCommandsLoadedNotice": {
-        "message": "Commands loaded from `{{filename}}`. Press ENTER to confirm execution!"
+    "cliConfirmSnippetDialogTitle": {
+        "message": "Review loaded commands"
+    },
+    "cliConfirmSnippetNote": {
+        "message": "<strong>Note</strong>: You can review and edit commands before execution."
+    },
+    "cliConfirmSnippetBtn": {
+        "message": "Execute"
     },
 
     "loggingNote": {

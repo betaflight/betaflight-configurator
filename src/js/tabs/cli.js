@@ -4,7 +4,10 @@ TABS.cli = {
     lineDelayMs: 15,
     profileSwitchDelayMs: 100,
     outputHistory: "",
-    cliBuffer: ""
+    cliBuffer: "",
+    GUI: {
+        snippetPreviewWindow: null,
+    },
 };
 
 function removePromptHash(promptText) {
@@ -95,6 +98,31 @@ TABS.cli.initialize = function (callback, nwGui) {
 
     // nwGui variable is set in main.js
     const clipboardCopySupport = !(nwGui == null && !navigator.clipboard);
+    const enterKeyCode = 13;
+
+    function executeCommands(out_string) {
+        self.history.add(out_string.trim());
+
+        var outputArray = out_string.split("\n");
+        Promise.reduce(outputArray, function(delay, line, index) {
+            return new Promise(function (resolve) {
+                GUI.timeout_add('CLI_send_slowly', function () {
+                    var processingDelay = self.lineDelayMs;
+                    line = line.trim();
+                    if (line.toLowerCase().startsWith('profile')) {
+                        processingDelay = self.profileSwitchDelayMs;
+                    }
+                    const isLastCommand = outputArray.length === index + 1;
+                    if (isLastCommand && self.cliBuffer) {
+                        line = getCliCommand(line, self.cliBuffer);
+                    }
+                    self.sendLine(line, function () {
+                        resolve(processingDelay);
+                    });
+                }, delay)
+            })
+        }, 0);
+}
 
     $('#content').load("./tabs/cli.html", function () {
         // translate to user-selected language
@@ -102,7 +130,7 @@ TABS.cli.initialize = function (callback, nwGui) {
 
         CONFIGURATOR.cliActive = true;
 
-        var textarea = $('.tab-cli textarea');
+        var textarea = $('.tab-cli textarea[name="commands"]');
 
         CliAutoComplete.initialize(textarea, self.sendLine.bind(self), writeToOutput);
         $(CliAutoComplete).on('build:start', function() {
@@ -190,20 +218,37 @@ TABS.cli.initialize = function (callback, nwGui) {
                     console.log('No file selected');
                     return;
                 }
+                
+                let previewArea = $("#snippetpreviewcontent textarea#preview");
 
-                function setCommands(result) {
-                    let notice = i18n.getMessage("cliCommandsLoadedNotice", {
-                        filename: entry.name,
+                function executeSnippet() {
+                    const commands = previewArea.val();
+                    executeCommands(commands);
+                    self.GUI.snippetPreviewWindow.destroy();
+                    self.GUI.snippetPreviewWindow = null;
+                }
+
+                function previewCommands(result) {
+                    self.GUI.snippetPreviewWindow = new jBox("Modal", {
+                        width: 'auto',
+                        height: 'auto',
+                        closeButton: 'title',
+                        animation: false,
+                        attach: $('.tab-cli'),
+                        title: i18n.getMessage("cliConfirmSnippetDialogTitle"),
+                        content: $('#snippetpreviewcontent'),
+                        onCreated: () =>  
+                            $("#snippetpreviewcontent a.confirm").click(() => executeSnippet())
+                        ,
                     });
-                    textarea.val(result + "\n" + "# " + notice);
-                    // scroll to the last line to show confirmation notice
-                    textarea.scrollTop(textarea[0].scrollHeight);
+                    previewArea.val(result);
+                    self.GUI.snippetPreviewWindow.open();
                 }
 
                 entry.file((file) => {
                     let reader = new FileReader();
                     reader.onload = 
-                        () => setCommands(reader.result);
+                        () => previewCommands(reader.result);
                     reader.onerror = () => console.error(reader.error);
                     reader.readAsText(file);
                 });
@@ -236,7 +281,6 @@ TABS.cli.initialize = function (callback, nwGui) {
         });
 
         textarea.keypress(function (event) {
-            const enterKeyCode = 13;
             if (event.which == enterKeyCode) {
                 event.preventDefault(); // prevent the adding of new line
 
@@ -245,28 +289,7 @@ TABS.cli.initialize = function (callback, nwGui) {
                 }
 
                 var out_string = textarea.val();
-                self.history.add(out_string.trim());
-
-                var outputArray = out_string.split("\n");
-                Promise.reduce(outputArray, function(delay, line, index) {
-                    return new Promise(function (resolve) {
-                        GUI.timeout_add('CLI_send_slowly', function () {
-                            var processingDelay = self.lineDelayMs;
-                            line = line.trim();
-                            if (line.toLowerCase().startsWith('profile')) {
-                                processingDelay = self.profileSwitchDelayMs;
-                            }
-                            const isLastCommand = outputArray.length === index + 1;
-                            if (isLastCommand && self.cliBuffer) {
-                                line = getCliCommand(line, self.cliBuffer);
-                            }
-                            self.sendLine(line, function () {
-                                resolve(processingDelay);
-                            });
-                        }, delay)
-                    })
-                }, 0);
-
+                executeCommands(out_string);
                 textarea.val('');
             }
         });
@@ -469,6 +492,10 @@ TABS.cli.send = function (line, callback) {
 };
 
 TABS.cli.cleanup = function (callback) {
+    if (TABS.cli.GUI.snippetPreviewWindow) {
+        TABS.cli.GUI.snippetPreviewWindow.destroy();
+        TABS.cli.GUI.snippetPreviewWindow = null;
+    }
     if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive)) {
         if (callback) {
             callback();
