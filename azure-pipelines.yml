@@ -20,13 +20,20 @@ steps:
 - script: npm install
   displayName: 'NPM install'
 
-- script: gulp release --win32
-  displayName: 'Gulp release'
+# Whilst no-exec isn't a valid platform, is avoids executing configurator
+# as more than one platform is passed. Gulp will stay happy as long as one
+# valid platform is passed along.
+- script: gulp debug --win32 --no-exec
+  displayName: 'Gulp debug'
 
-- task: ArchiveFiles@2
-  inputs:
-    archiveFile: '$(Build.ArtifactStagingDirectory)/betaflight-configurator-$(Build.BuildId).zip'
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/release'
-    includeRootFolder: false
+# Testing direct download using different task
+#- task: ArchiveFiles@2
+#  inputs:
+#    archiveFile: '$(Build.ArtifactStagingDirectory)/betaflight-configurator.zip'
+#    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/debug'
+#    includeRootFolder: false
 
-- task: PublishBuildArtifacts@1
+- task: DownloadPipelineArtifact@0
+  inputs: 
+    artifactName: 'betaflight-configurator'
+    targetPath: '$(System.DefaultWorkingDirectory)/debug'
