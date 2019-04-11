@@ -75,6 +75,9 @@ gulp.task('apps', appsBuild);
 var debugBuild = gulp.series(distBuild, debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)), start_debug)
 gulp.task('debug', debugBuild);
 
+var debugBuild = gulp.series(distBuild, debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)))
+gulp.task('debug-no-start', debugBuild);
+
 var releaseBuild = gulp.series(gulp.parallel(clean_release, appsBuild), gulp.parallel(listReleaseTasks()));
 gulp.task('release', releaseBuild);
 
