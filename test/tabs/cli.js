@@ -14,7 +14,7 @@ describe('TABS.cli', () => {
     describe('output', () => {
         const cliTab = $('<div>').addClass('tab-cli');
         const cliOutput = $('<div>').addClass('wrapper')
-        const cliPrompt = $('<textarea>');
+        const cliPrompt = $('<textarea name="commands">');
 
         cliTab.append($('<div>').addClass('window').append(cliOutput));
         cliTab.append(cliPrompt);
@@ -101,7 +101,7 @@ describe('TABS.cli', () => {
     describe('input', () => {
         const content = $('<div>').attr('id', 'content');
         const cliTab = $('<div>').addClass('tab-cli');
-        const cliPrompt = $('<textarea>');
+        const cliPrompt = $('<textarea name="commands">');
         cliTab.append(cliPrompt);
 
         beforeEach(() => {
