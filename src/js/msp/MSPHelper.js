@@ -1458,6 +1458,11 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push8(RC_tuning.throttleLimitType);
                 buffer.push8(RC_tuning.throttleLimitPercent);
             }
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                buffer.push16(RC_tuning.roll_rate_limit);
+                buffer.push16(RC_tuning.pitch_rate_limit);
+                buffer.push16(RC_tuning.yaw_rate_limit);
+            }
             break;
         case MSPCodes.MSP_SET_RX_MAP:
             for (var i = 0; i < RC_MAP.length; i++) {
