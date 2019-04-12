@@ -574,9 +574,9 @@ TABS.receiver.renderModel = function () {
     if (RC.channels[0] && RC.channels[1] && RC.channels[2]) {
         var delta = this.clock.getDelta();
 
-        var roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[0], RC_tuning.roll_rate, RC_tuning.RC_RATE, RC_tuning.RC_EXPO, this.useSuperExpo, this.deadband),
-            pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[1], RC_tuning.pitch_rate, RC_tuning.rcPitchRate, RC_tuning.RC_PITCH_EXPO, this.useSuperExpo, this.deadband),
-            yaw   = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[2], RC_tuning.yaw_rate, RC_tuning.rcYawRate, RC_tuning.RC_YAW_EXPO, this.useSuperExpo, this.yawDeadband);
+        var roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[0], RC_tuning.roll_rate, RC_tuning.RC_RATE, RC_tuning.RC_EXPO, this.useSuperExpo, this.deadband, RC_tuning.roll_rate_limit),
+            pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[1], RC_tuning.pitch_rate, RC_tuning.rcPitchRate, RC_tuning.RC_PITCH_EXPO, this.useSuperExpo, this.deadband, RC_tuning.pitch_rate_limit),
+            yaw   = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(RC.channels[2], RC_tuning.yaw_rate, RC_tuning.rcYawRate, RC_tuning.RC_YAW_EXPO, this.useSuperExpo, this.yawDeadband, RC_tuning.yaw_rate_limit);
 
         this.model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }

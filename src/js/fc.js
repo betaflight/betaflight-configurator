@@ -169,6 +169,9 @@ var FC = {
             rcYawRate:                  0,
             rcPitchRate:                0,
             RC_PITCH_EXPO:              0,
+            roll_rate_limit:            1998,
+            pitch_rate_limit:           1998,
+            yaw_rate_limit:             1998,
         };
 
         AUX_CONFIG =                    [];
