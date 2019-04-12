@@ -765,18 +765,18 @@ TABS.pid_tuning.initialize = function (callback) {
 
     self.rateCurve = new RateCurve(useLegacyCurve);
 
-    function printMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, maxAngularVelElement) {
-        var maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband).toFixed(0);
+    function printMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit, maxAngularVelElement) {
+        var maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit).toFixed(0);
         maxAngularVelElement.text(maxAngularVel);
 
         return maxAngularVel;
     }
 
-    function drawCurve(rate, rcRate, rcExpo, useSuperExpo, deadband, maxAngularVel, colour, yOffset, context) {
+    function drawCurve(rate, rcRate, rcExpo, useSuperExpo, deadband, limit, maxAngularVel, colour, yOffset, context) {
         context.save();
         context.strokeStyle = colour;
         context.translate(0, yOffset);
-        self.rateCurve.draw(rate, rcRate, rcExpo, useSuperExpo, deadband, maxAngularVel, context);
+        self.rateCurve.draw(rate, rcRate, rcExpo, useSuperExpo, deadband, limit, maxAngularVel, context);
         context.restore();
     }
 
@@ -808,7 +808,10 @@ TABS.pid_tuning.initialize = function (callback) {
             rc_pitch_expo: RC_tuning.RC_PITCH_EXPO,
             superexpo:   FEATURE_CONFIG.features.isEnabled('SUPEREXPO_RATES'),
             deadband: RC_DEADBAND_CONFIG.deadband,
-            yawDeadband: RC_DEADBAND_CONFIG.yaw_deadband
+            yawDeadband: RC_DEADBAND_CONFIG.yaw_deadband,
+            roll_rate_limit:   RC_tuning.roll_rate_limit,
+            pitch_rate_limit:  RC_tuning.pitch_rate_limit,
+            yaw_rate_limit:    RC_tuning.yaw_rate_limit
         };
 
         if (semver.lt(CONFIG.apiVersion, "1.7.0")) {
@@ -1201,9 +1204,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
                     if (!useLegacyCurve) {
                         maxAngularVel = Math.max(
-                            printMaxAngularVel(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.maxAngularVelRollElement),
-                            printMaxAngularVel(self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, self.maxAngularVelPitchElement),
-                            printMaxAngularVel(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, self.maxAngularVelYawElement));
+                            printMaxAngularVel(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.roll_rate_limit, self.maxAngularVelRollElement),
+                            printMaxAngularVel(self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.pitch_rate_limit, self.maxAngularVelPitchElement),
+                            printMaxAngularVel(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, self.currentRates.yaw_rate_limit, self.maxAngularVelYawElement));
 
                         // make maxAngularVel multiple of 200deg/s so that the auto-scale doesn't keep changing for small changes of the maximum curve
                         maxAngularVel = self.rateCurve.setMaxAngularVel(maxAngularVel);
@@ -1215,9 +1218,9 @@ TABS.pid_tuning.initialize = function (callback) {
                     }
 
                     curveContext.lineWidth = 2 * lineScale;
-                    drawCurve(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, '#ff0000', 0, curveContext);
-                    drawCurve(self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, maxAngularVel, '#00ff00', -4, curveContext);
-                    drawCurve(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, maxAngularVel, '#0000ff', 4, curveContext);
+                    drawCurve(self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.roll_rate_limit, maxAngularVel, '#ff0000', 0, curveContext);
+                    drawCurve(self.currentRates.pitch_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.pitch_rate_limit, maxAngularVel, '#00ff00', -4, curveContext);
+                    drawCurve(self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, self.currentRates.yaw_rate_limit, maxAngularVel, '#0000ff', 4, curveContext);
 
                     self.updateRatesLabels();
 
