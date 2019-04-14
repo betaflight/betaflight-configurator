@@ -272,6 +272,7 @@ OSD.generateTimerPreview = function (osd_data, timer_index) {
     var preview = '';
     switch (osd_data.timers[timer_index].src) {
         case 0:
+        case 3:
             preview += FONT.symbol(SYM.ON_M);
             break;
         case 1:
@@ -379,11 +380,6 @@ OSD.constants = {
     UNIT_TYPES: [
         'IMPERIAL',
         'METRIC'
-    ],
-    TIMER_TYPES: [
-        'ON TIME',
-        'TOTAL ARMED TIME',
-        'LAST ARMED TIME'
     ],
     TIMER_PRECISION: [
         'SECOND',
@@ -1363,6 +1359,17 @@ OSD.chooseFields = function () {
             F.LAUNCH_CONTROL,
             F.GPS_RESCUE_UNAVAILABLE,
             F.GPS_RESCUE_DISABLED
+        ]);
+    }
+    
+    OSD.constants.TIMER_TYPES = [
+        'ON TIME',
+        'TOTAL ARMED TIME',
+        'LAST ARMED TIME'
+    ];
+    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        OSD.constants.TIMER_TYPES = OSD.constants.TIMER_TYPES.concat([
+            'ON/ARM TIME'
         ]);
     }
 };
