@@ -357,11 +357,12 @@ TABS.pid_tuning.initialize = function (callback) {
             var dValue = parseInt(dElement.val());
             var dMinValue = parseInt(dMinElement.val());
 
-            if (dMinValue >= dValue) {
-                dMinElement.val(0);
+            var dMinLimit = dValue > 0 ? dValue - 1 : 0;
+            if (dMinValue > dMinLimit) {
+                dMinElement.val(dMinLimit);
             }
 
-            dMinElement.attr("max", dValue > 0? dValue - 1 : 0);
+            dMinElement.attr("max", dMinLimit);
         }
 
         $('.pid_tuning .ROLL input[name="d"]').change(function() {
