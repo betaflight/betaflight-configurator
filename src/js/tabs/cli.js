@@ -104,6 +104,20 @@ TABS.cli.initialize = function (callback, nwGui) {
 
         var textarea = $('.tab-cli textarea');
 
+        CliAutoComplete.initialize(textarea, self.sendLine.bind(self), writeToOutput);
+        $(CliAutoComplete).on('build:start', function() {
+            textarea
+                .val('')
+                .attr('placeholder', i18n.getMessage('cliInputPlaceholderBuilding'))
+                .prop('disabled', true);
+        });
+        $(CliAutoComplete).on('build:stop', function() {
+            textarea
+                .attr('placeholder', i18n.getMessage('cliInputPlaceholder'))
+                .prop('disabled', false)
+                .focus();
+        });
+
         $('.tab-cli .save').click(function() {
             var prefix = 'cli';
             var suffix = 'txt';
@@ -167,12 +181,20 @@ TABS.cli.initialize = function (callback, nwGui) {
             if (event.which == tabKeyCode) {
                 // prevent default tabbing behaviour
                 event.preventDefault();
-                const outString = textarea.val();
-                const lastCommand = outString.split("\n").pop();
-                const command = getCliCommand(lastCommand, self.cliBuffer);
-                if (command) {
-                    self.sendAutoComplete(command);
-                    textarea.val('');
+
+                if (!CliAutoComplete.isEnabled()) {
+                    // Native FC autoComplete
+                    const outString = textarea.val();
+                    const lastCommand = outString.split("\n").pop();
+                    const command = getCliCommand(lastCommand, self.cliBuffer);
+                    if (command) {
+                        self.sendNativeAutoComplete(command);
+                        textarea.val('');
+                    }
+                }
+                else if (!CliAutoComplete.isOpen() && !CliAutoComplete.isBuilding()) {
+                    // force show autocomplete on Tab
+                    CliAutoComplete.openLater(true);
                 }
             }
         });
@@ -181,6 +203,10 @@ TABS.cli.initialize = function (callback, nwGui) {
             const enterKeyCode = 13;
             if (event.which == enterKeyCode) {
                 event.preventDefault(); // prevent the adding of new line
+
+                if (CliAutoComplete.isBuilding()) {
+                    return; // silently ignore commands if autocomplete is still building
+                }
 
                 var out_string = textarea.val();
                 self.history.add(out_string.trim());
@@ -211,6 +237,10 @@ TABS.cli.initialize = function (callback, nwGui) {
         textarea.keyup(function (event) {
             var keyUp = {38: true},
                 keyDown = {40: true};
+
+            if (CliAutoComplete.isOpen()) {
+                return; // disable history keys if autocomplete is open
+            }
 
             if (event.keyCode in keyUp) {
                 textarea.val(self.history.prev());
@@ -268,6 +298,11 @@ function writeToOutput(text) {
 }
 
 function writeLineToOutput(text) {
+    if (CliAutoComplete.isBuilding()) {
+        CliAutoComplete.builderParseLine(text);
+        return; // suppress output if in building state
+    }
+
     if (text.startsWith("###ERROR: ")) {
         writeToOutput('<span class="error_message">' + text + '</span><br>');
     } else {
@@ -336,13 +371,17 @@ TABS.cli.read = function (readInfo) {
                 break;
             case backspaceCode:
                 this.cliBuffer = this.cliBuffer.slice(0, -1);
-                break;
+                this.outputHistory = this.outputHistory.slice(0, -1);
+                continue;
 
             default:
                 this.cliBuffer += currentChar;
         }
 
-        this.outputHistory += currentChar;
+        if (!CliAutoComplete.isBuilding()) {
+            // do not include the building dialog into the history
+            this.outputHistory += currentChar;
+        }
 
         if (this.cliBuffer == 'Rebooting') {
             CONFIGURATOR.cliActive = false;
@@ -361,16 +400,23 @@ TABS.cli.read = function (readInfo) {
         const lastLine = validateText.split("\n").pop();
         this.outputHistory = lastLine;
         validateText = "";
+
+        if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
+            // start building autoComplete
+            CliAutoComplete.builderStart();
+        }
     }
 
-    setPrompt(removePromptHash(this.cliBuffer));
+    if (!CliAutoComplete.isEnabled())
+        // fallback to native autocomplete
+        setPrompt(removePromptHash(this.cliBuffer));
 };
 
 TABS.cli.sendLine = function (line, callback) {
     this.send(line + '\n', callback);
 };
 
-TABS.cli.sendAutoComplete = function (line, callback) {
+TABS.cli.sendNativeAutoComplete = function (line, callback) {
     this.send(line + '\t', callback);
 };
 
@@ -405,4 +451,7 @@ TABS.cli.cleanup = function (callback) {
         CONFIGURATOR.cliActive = false;
         CONFIGURATOR.cliValid = false;
     });
+
+    CliAutoComplete.cleanup();
+    $(CliAutoComplete).off();
 };

@@ -370,6 +370,15 @@ function startProcess() {
                     }).change();
                 });
 
+                $('div.cliAutoComplete input')
+                    .prop('checked', CliAutoComplete.configEnabled)
+                    .change(function () {
+                        var checked = $(this).is(':checked');
+
+                        chrome.storage.local.set({'cliAutoComplete': checked});
+                        CliAutoComplete.setEnabled(checked);
+                    }).change();
+
                 chrome.storage.local.get('userLanguageSelect', function (result) {
 
                     var userLanguage_e = $('div.userLanguage select');
@@ -529,6 +538,10 @@ function startProcess() {
                 updateTabList(FEATURE_CONFIG.features);
             }
         }).change();
+    });
+
+    chrome.storage.local.get('cliAutoComplete', function (result) {
+        CliAutoComplete.setEnabled(typeof result.cliAutoComplete == 'undefined' || result.cliAutoComplete); // On by default
     });
 };
 
