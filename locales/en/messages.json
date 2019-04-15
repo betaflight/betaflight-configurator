@@ -3961,6 +3961,12 @@
     "osdWarningGpsRescueDisabled": {
         "message": "Warns when GPS Rescue is disabled"
     },
+    "osdWarningRSSI": {
+        "message": "Warns when RSSI is below alarm setting"
+    },
+    "osdWarningLinkQuality": {
+        "message": "Warns when Link Quality is below alarm setting"
+    },
 
     "osdSectionHelpElements": {
         "message": "Enable or disable OSD elements."

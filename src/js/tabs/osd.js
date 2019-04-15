@@ -1372,6 +1372,12 @@ OSD.chooseFields = function () {
             F.GPS_RESCUE_DISABLED
         ]);
     }
+    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+            F.RSSI,
+            F.LINK_QUALITY
+        ]);
+    }
 };
 
 OSD.updateDisplaySize = function () {
