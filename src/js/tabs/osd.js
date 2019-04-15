@@ -263,8 +263,7 @@ OSD.initData = function () {
         preview_logo: true,
         preview: [],
         tooltips: [],
-        osd_profiles: {},
-        overlay_mode: null,
+        osd_profiles: {}
     };
 };
 OSD.initData();
@@ -1373,12 +1372,6 @@ OSD.chooseFields = function () {
             F.GPS_RESCUE_DISABLED
         ]);
     }
-    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
-        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
-            F.RSSI,
-            F.LINK_QUALITY
-        ]);
-    }
 };
 
 OSD.updateDisplaySize = function () {
@@ -1501,12 +1494,8 @@ OSD.msp = {
                 result.push16(warningFlags);
                 if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     result.push32(warningFlags);
-                    // NOTE: betaflight MSP does not expect result.push8(OSD.data.osd_profiles.number);
+
                     result.push8(OSD.data.osd_profiles.selected + 1);
-                    result.push8(OSD.data.overlay_mode);
-                }
-                if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
-                    result.push8(OSD.data.alarms.link_quality.value);
                 }
             }
             
@@ -1654,15 +1643,9 @@ OSD.msp = {
         if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
             d.osd_profiles.number = view.readU8();
             d.osd_profiles.selected = view.readU8() - 1;
-            d.overlay_mode = view.readU8();
         } else {
             d.osd_profiles.number = 1;
             d.osd_profiles.selected = 0;
-        }
-
-        // Link Quality Alarm
-        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
-            d.alarms['link_quality'] = { display_name: 'Link Quality', value: view.readU8() };
         }
 
         // Now we have the number of profiles, process the OSD elements
