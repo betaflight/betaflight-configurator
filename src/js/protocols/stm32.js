@@ -145,7 +145,8 @@ STM32_protocol.prototype.initialize = function () {
     // reset progress bar to initial state
     self.progress_bar_e = $('.progress');
     self.progress_bar_e.val(0);
-    self.progress_bar_e.removeClass('valid invalid');
+    self.progress_label_e = $('span.progressLabel');
+    self.progress_label_e.removeClass('valid invalid actionRequired');
 
     // lock some UI elements TODO needs rework
     $('select[name="release"]').prop('disabled', true);
@@ -161,7 +162,7 @@ STM32_protocol.prototype.initialize = function () {
             console.log('STM32 - timed out, programming failed ...');
 
             $('span.progressLabel').text(i18n.getMessage('stm32TimedOut'));
-            self.progress_bar_e.addClass('invalid');
+            self.progress_label_e.addClass('invalid');
 
             // protocol got stuck, clear timer and disconnect
             GUI.interval_remove('STM32_timeout');
@@ -244,7 +245,7 @@ STM32_protocol.prototype.verify_response = function (val, data) {
         var message = 'STM32 Communication failed, wrong response, expected: ' + val + ' (0x' + val.toString(16) + ') received: ' + data[0] + ' (0x' + data[0].toString(16) + ')';
         console.error(message);
         $('span.progressLabel').text(i18n.getMessage('stm32WrongResponse',[val, val.toString(16), data[0], data[0].toString(16)]));
-        self.progress_bar_e.addClass('invalid');
+        self.progress_label_e.addClass('invalid');
 
         // disconnect
         this.upload_procedure(99);
@@ -369,7 +370,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                         self.upload_procedure(2);
                     } else {
                         $('span.progressLabel').text(i18n.getMessage('stm32ContactingBootloaderFailed'));
-                        self.progress_bar_e.addClass('invalid');
+                        self.progress_label_e.addClass('invalid');
 
                         GUI.interval_remove('stm32_initialize_mcu');
 
@@ -383,7 +384,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                     console.log('STM32 - no response from bootloader, disconnecting');
 
                     $('span.progressLabel').text(i18n.getMessage('stm32ResponseBootloaderFailed'));
-                    self.progress_bar_e.addClass('invalid');
+                    self.progress_label_e.addClass('invalid');
 
                     GUI.interval_remove('stm32_initialize_mcu');
                     GUI.interval_remove('STM32_timeout');
@@ -699,19 +700,17 @@ STM32_protocol.prototype.upload_procedure = function (step) {
 
                         if (verify) {
                             console.log('Programming: SUCCESSFUL');
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
-
                             // update progress bar
-                            self.progress_bar_e.addClass('valid');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
+                            self.progress_label_e.addClass('valid');
 
                             // proceed to next step
                             self.upload_procedure(7);
                         } else {
                             console.log('Programming: FAILED');
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
-
                             // update progress bar
-                            self.progress_bar_e.addClass('invalid');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
+                            self.progress_label_e.addClass('invalid');
 
                             // disconnect
                             self.upload_procedure(99);

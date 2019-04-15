@@ -87,7 +87,8 @@ STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) 
     // reset progress bar to initial state
     self.progress_bar_e = $('.progress');
     self.progress_bar_e.val(0);
-    self.progress_bar_e.removeClass('valid invalid');
+    self.progress_label_e = $('span.progressLabel');
+    self.progress_label_e.removeClass('valid invalid actionRequired');
 
     chrome.usb.getDevices(device, function (result) {
         if (result.length) {
@@ -580,7 +581,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 			console.log('Initiate read unprotect');
 			GUI.log(i18n.getMessage('stm32ReadProtected'));
 			$('span.progressLabel').text(i18n.getMessage('stm32ReadProtected'));
-			self.progress_bar_e.addClass('actionRequired');
+			self.progress_label_e.addClass('actionRequired');
 
 			self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x92], function () { // 0x92 initiates read unprotect
 		            self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
@@ -604,12 +605,12 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 							GUI.log(i18n.getMessage('stm32UnprotectUnplug'));
 							$('span.progressLabel').text(i18n.getMessage('stm32UnprotectUnplug'));
 							self.progress_bar_e.val(0);
-							self.progress_bar_e.addClass('actionRequired');
+							self.progress_label_e.addClass('actionRequired');
 						} else { // unprotecting the flight controller did not work. It did not reboot.
 		                                	console.log('Failed to execute unprotect memory command');
 							GUI.log(i18n.getMessage('stm32UnprotectFailed'));
 							$('span.progressLabel').text(i18n.getMessage('stm32UnprotectFailed'));
-							self.progress_bar_e.addClass('invalid');
+							self.progress_label_e.addClass('invalid');
 							console.log(data);
 		                                	self.upload_procedure(99);
 						}
@@ -619,7 +620,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 		                    console.log('Failed to initiate unprotect memory command');
 				    GUI.log(i18n.getMessage('stm32UnprotectInitFailed'));
 				    $('span.progressLabel').text(i18n.getMessage('stm32UnprotectInitFailed'));
-				    self.progress_bar_e.addClass('invalid');
+				    self.progress_label_e.addClass('invalid');
 		                    self.upload_procedure(99);
 		                }
 		            });
@@ -928,19 +929,17 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
                         if (verify) {
                             console.log('Programming: SUCCESSFUL');
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
-
                             // update progress bar
-                            self.progress_bar_e.addClass('valid');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
+                            self.progress_label_e.addClass('valid');
 
                             // proceed to next step
                             self.upload_procedure(6);
                         } else {
                             console.log('Programming: FAILED');
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
-
                             // update progress bar
-                            self.progress_bar_e.addClass('invalid');
+                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
+                            self.progress_label_e.addClass('invalid');
 
                             // disconnect
                             self.upload_procedure(99);
