@@ -507,8 +507,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // The notch cutoff must be smaller than the notch frecuency
         function adjustNotchCutoff(frequencyName, cutoffName) {
-            var frecuency = $(".pid_filter input[name='" + frequencyName + "']").val();
-            var cutoff = $(".pid_filter input[name='" + cutoffName + "']").val();
+            var frecuency = parseInt($(".pid_filter input[name='" + frequencyName + "']").val());
+            var cutoff = parseInt($(".pid_filter input[name='" + cutoffName + "']").val());
 
             // Change the max and refresh the value if needed
             var maxCutoff = frecuency == 0 ? 0 : frecuency - 1;
