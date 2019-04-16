@@ -348,6 +348,10 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.integratedYaw').hide();
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            $('.smartfeedforward').hide();
+        }
+
         $('input[id="useIntegratedYaw"]').change(function() {
             var checked = $(this).is(':checked');
             $('#pidTuningIntegratedYawCaution').toggle(checked);
