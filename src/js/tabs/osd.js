@@ -1107,8 +1107,15 @@ OSD.constants = {
         GPS_RESCUE_DISABLED: {
             name: 'GPS_RESCUE_DISABLED',
             desc: 'osdWarningGpsRescueDisabled'
-        }
-
+        },
+        RSSI: {
+            name: 'RSSI',
+            desc: 'osdWarningRSSI'
+        },
+        LINK_QUALITY: {
+            name: 'LINK_QUALITY',
+            desc: 'osdWarningLinkQuality'
+        },
     },
     FONT_TYPES: [
         { file: "default", name: "Default" },
@@ -1363,6 +1370,12 @@ OSD.chooseFields = function () {
             F.LAUNCH_CONTROL,
             F.GPS_RESCUE_UNAVAILABLE,
             F.GPS_RESCUE_DISABLED
+        ]);
+    }
+    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+            F.RSSI,
+            F.LINK_QUALITY
         ]);
     }
 };
