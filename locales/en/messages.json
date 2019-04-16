@@ -3902,6 +3902,15 @@
     "osdDescStatMaxFFT": {
         "message": "Peak FFT frequency"
     },
+    "osdDescStatTotalFlights": {
+        "message": "Total number of flights"
+    },
+    "osdDescStatTotalFlightTime": {
+        "message": "Total time spent flying"
+    },
+    "osdDescStatTotalFlightDistance": {
+        "message": "Total distance traveled"
+    },
     
     "osdTimerSource": {
       "message": "Source:"

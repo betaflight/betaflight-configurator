@@ -1053,6 +1053,18 @@ OSD.constants = {
         MAX_FFT: {
             name: 'MAX_FFT',
             desc: 'osdDescStatMaxFFT'
+        },
+        TOTAL_FLIGHTS: {
+            name: 'TOTAL_FLIGHTS',
+            desc: 'osdDescStatTotalFlights'
+        },
+        TOTAL_FLIGHT_TIME: {
+            name: 'TOTAL_FLIGHT_TIME',
+            desc: 'osdDescStatTotalFlightTime'
+        },
+        TOTAL_FLIGHT_DIST: {
+            name: 'TOTAL_FLIGHT_DIST',
+            desc: 'osdDescStatTotalFlightDistance'
         }
     },
     ALL_WARNINGS: {
@@ -1342,6 +1354,13 @@ OSD.chooseFields = function () {
                 F.MIN_LINK_QUALITY,
                 F.FLIGHT_DISTANCE,
                 F.MAX_FFT
+            ]);
+        }
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+                F.TOTAL_FLIGHTS,
+                F.TOTAL_FLIGHT_TIME,
+                F.TOTAL_FLIGHT_DIST
             ]);
         }
     }
