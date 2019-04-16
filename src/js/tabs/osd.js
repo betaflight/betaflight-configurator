@@ -1049,6 +1049,18 @@ OSD.constants = {
         MAX_FFT: {
             name: 'MAX_FFT',
             desc: 'osdDescStatMaxFFT'
+        },
+        TOTAL_FLIGHTS: {
+            name: 'TOTAL_FLIGHTS',
+            desc: 'osdDescStatTotalFlights'
+        },
+        TOTAL_FLIGHT_TIME: {
+            name: 'TOTAL_FLIGHT_TIME',
+            desc: 'osdDescStatTotalFlightTime'
+        },
+        TOTAL_FLIGHT_DIST: {
+            name: 'TOTAL_FLIGHT_DIST',
+            desc: 'osdDescStatTotalFlightDistance'
         }
     },
     ALL_WARNINGS: {
@@ -1103,8 +1115,15 @@ OSD.constants = {
         GPS_RESCUE_DISABLED: {
             name: 'GPS_RESCUE_DISABLED',
             desc: 'osdWarningGpsRescueDisabled'
-        }
-
+        },
+        RSSI: {
+            name: 'RSSI',
+            desc: 'osdWarningRSSI'
+        },
+        LINK_QUALITY: {
+            name: 'LINK_QUALITY',
+            desc: 'osdWarningLinkQuality'
+        },
     },
     FONT_TYPES: [
         { file: "default", name: "Default" },
@@ -1333,6 +1352,13 @@ OSD.chooseFields = function () {
                 F.MAX_FFT
             ]);
         }
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
+                F.TOTAL_FLIGHTS,
+                F.TOTAL_FLIGHT_TIME,
+                F.TOTAL_FLIGHT_DIST
+            ]);
+        }
     }
 
     // Choose warnings
@@ -1370,6 +1396,10 @@ OSD.chooseFields = function () {
     if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
         OSD.constants.TIMER_TYPES = OSD.constants.TIMER_TYPES.concat([
             'ON/ARM TIME'
+        ]);
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+            F.RSSI,
+            F.LINK_QUALITY
         ]);
     }
 };

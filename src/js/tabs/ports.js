@@ -132,6 +132,8 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
         $(".tab-ports").addClass("supported");
 
+        const VCP_PORT_IDENTIFIER = 20;
+
         var portIdentifierToNameMapping = {
            0: 'UART1',
            1: 'UART2',
@@ -228,6 +230,12 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                         if (serialPort.functions.indexOf(functionName) >= 0) {
                             var checkbox_e = functions_e.find('#' + checkboxId);
                             checkbox_e.prop("checked", true);
+                        }
+
+                        if (serialPort.identifier == VCP_PORT_IDENTIFIER && functionName == "MSP") {
+                            var checkbox_e = functions_e.find('#' + checkboxId);
+                            checkbox_e.prop("checked", true);
+                            checkbox_e.prop("disabled", true);
                         }
 
                     } else {

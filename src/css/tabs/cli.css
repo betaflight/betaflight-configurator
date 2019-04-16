@@ -81,3 +81,55 @@
 
 }
 
+
+/* AutoComplete */
+.cli-textcomplete-dropdown {
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 5px;
+    max-height: 50%;
+    overflow: auto;
+}
+
+.cli-textcomplete-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cli-textcomplete-dropdown::-webkit-scrollbar-track {
+    background: lightgrey;
+    border-radius: 3px;
+}
+
+.cli-textcomplete-dropdown::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 3px;
+}
+
+.cli-textcomplete-dropdown li {
+    padding: 2px 5px;
+}
+
+.cli-textcomplete-dropdown li:hover,
+.cli-textcomplete-dropdown .active {
+    background-color: rgb(255, 187, 0);
+}
+
+.cli-textcomplete-dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cli-textcomplete-dropdown a:hover {
+    cursor: pointer;
+}
+
+.cli-textcomplete-dropdown a {
+    font-family: monospace;
+}
+
+.cli-textcomplete-dropdown a b {
+    font-family: monospace;
+    font-weight: bold;
+}
+/* End AutoComplete */
