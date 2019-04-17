@@ -95,7 +95,6 @@ function initializeSerialBackend() {
             $('#tabs ul.mode-disconnected .tab_landing a').click();
         } else {
             $('#tabs ul.mode-disconnected .tab_firmware_flasher a').click();
-            $('div.open_firmware_flasher a.flash_state').text(i18n.getMessage('flashTab'));
             $('div#flashbutton a.flash_state').addClass('active');
             $('div#flashbutton a.flash').addClass('active');
             document.getElementById("tab_landing").style.display = "none";
