@@ -216,6 +216,7 @@ TABS.cli.initialize = function (callback, nwGui) {
                     return new Promise(function (resolve) {
                         GUI.timeout_add('CLI_send_slowly', function () {
                             var processingDelay = self.lineDelayMs;
+                            line = line.trim();
                             if (line.toLowerCase().startsWith('profile')) {
                                 processingDelay = self.profileSwitchDelayMs;
                             }
