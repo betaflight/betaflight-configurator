@@ -2179,7 +2179,7 @@
         "message": "Debug"
     },
     "cliInfo": {
-        "message": "<strong>Hinweis:<\/strong> Beim Verlassen des CLI Tab oder beim Drücken der Taste \"trennen\" wird <strong>automatisch<\/strong>  <strong>beenden<\/strong> and die Flugsteuerung gesendet.  Mit der neuesten Firmware wird sie dadurch<strong>neu gestartet<\/strong> und nicht gespeicherte Änderungen gehen <strong>verloren<\/strong>. <p><strong><span class=\"message-negative\">Warnung:<\/span><\/strong> Einige CLI Befehle können dazu führen, dass willkürliche Signale an die Motoren geschickt werden. Dadurch können Motoren hochdrehen, wenn ein Batterie angeschlossen ist. Daher wird dringend empfohlen sicherzustellen, dass <strong> keine Batterie angeschlossen ist, bevor Sie Befehle in die CLI eingeben<\/strong>."
+        "message": "<strong>Hinweis:<\/strong> Beim Verlassen des CLI Tab oder beim Drücken der Taste \"trennen\" wird <strong>automatisch<\/strong>  <strong>beenden<\/strong> an die Flugsteuerung gesendet.  Mit der neuesten Firmware wird sie dadurch <strong>neu gestartet<\/strong> und nicht gespeicherte Änderungen gehen <strong>verloren<\/strong>. <p><strong><span class=\"message-negative\">Warnung:<\/span><\/strong> Einige CLI Befehle können dazu führen, dass willkürliche Signale an die Motoren geschickt werden. Dadurch können Motoren hochdrehen, wenn ein Batterie angeschlossen ist. Daher wird dringend empfohlen sicherzustellen, dass <strong> keine Batterie angeschlossen ist, bevor Sie Befehle in die CLI eingeben<\/strong>."
     },
     "cliInputPlaceholder": {
         "message": "Kommandos hier eingeben"
