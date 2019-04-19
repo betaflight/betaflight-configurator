@@ -642,7 +642,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             serialRXtypes.push('FrSky FPort');
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.41.0"))  {
+        if (semver.gte(CONFIG.apiVersion, "1.42.0"))  {
             serialRXtypes.push('DJI_HDL_7MS');
         }
 
