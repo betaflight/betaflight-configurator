@@ -241,6 +241,7 @@ function dist_src() {
     return packageJson
         .pipe(source('package.json'))
         .pipe(gulp.src(distSources, { base: 'src' }))
+        .pipe(gulp.src('./react/**/*', { passthrougth: true }))
         .pipe(gulp.src('manifest.json', { passthrougth: true }))
         .pipe(gulp.src('yarn.lock', { passthrougth: true }))
         .pipe(gulp.dest(DIST_DIR));
