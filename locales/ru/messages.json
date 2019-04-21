@@ -21,7 +21,7 @@
         "message": "Настройка приложения"
     },
     "connect": {
-        "message": "Подключится"
+        "message": "Подключиться"
     },
     "connecting": {
         "message": "Подключение"
@@ -2455,7 +2455,7 @@
         "message": "Загрузить прошивку [Online]"
     },
     "firmwareFlasherButtonDownloading": {
-        "message": "Загружаеться..."
+        "message": "Загружается..."
     },
     "firmwareFlasherFlashFirmware": {
         "message": "Загрузить прошивку"
