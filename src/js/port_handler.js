@@ -142,7 +142,7 @@ PortHandler.check = function () {
         GUI.updateManualPortVisibility();
         setTimeout(function () {
             self.check();
-        }, 250);
+        }, 500);
     });
 };
 
