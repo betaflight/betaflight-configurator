@@ -1,0 +1,4148 @@
+{
+    "translation_version": {
+        "message": "0"
+    },
+    "windowTitle": {
+        "message": "Betaflight Configurator",
+        "description": "Title of the application window, usually not translated"
+    },
+    "error": {
+        "message": "Erro: {{errorMessage}} "
+    },
+    "errorTitle": {
+        "message": "Erro"
+    },
+    "warningTitle": {
+        "message": "Advertencia "
+    },
+    "noticeTitle": {
+        "message": "Aviso"
+    },
+    "operationNotSupported": {
+        "message": "Esta operación non está soportada polo seu hardware."
+    },
+    "storageDeviceNotReady": {
+        "message": "O dispositivo de almacenamento non está preparado. No caso dunha tarxeta microSD, asegúrese de que o controlador de voo a recoñeza correctamente."
+    },
+    "options_title": {
+        "message": "Axustes da aplicación"
+    },
+    "connect": {
+        "message": "Conectar"
+    },
+    "connecting": {
+        "message": "Conectando"
+    },
+    "disconnect": {
+        "message": "Desconectar"
+    },
+    "portsSelectManual": {
+        "message": "Selección Manual"
+    },
+    "portOverrideText": {
+        "message": "Porto:"
+    },
+    "autoConnect": {
+        "message": "Conectar automáticamente"
+    },
+    "close": {
+        "message": "Pechar"
+    },
+    "autoConnectEnabled": {
+        "message": "Conexión automática: Activada - O configurador intentase conectarse automaticamente cando un porto novo é detectado"
+    },
+    "autoConnectDisabled": {
+        "message": "Auto conectar: Desactivado - Necesita seleccionar o porto serie correcto e premer o botón \"conectar\""
+    },
+    "expertMode": {
+        "message": "Activar Modo Experto"
+    },
+    "expertModeDescription": {
+        "message": "Mostrar versións inéditas e potencialmente inestables"
+    },
+    "permanentExpertMode": {
+        "message": "Activar permanentemente o Modo Experto"
+    },
+    "rememberLastTab": {
+        "message": "Abrir a última pestana ao conectar"
+    },
+    "analyticsOptOut": {
+        "message": "Elimina os datos anónimos das estatísticas"
+    },
+    "userLanguageSelect": {
+        "message": "Lingua (É necesario reiniciar a aplicación para que os cambios teñan efecto)"
+    },
+    "language_default": {
+        "message": "Por defecto"
+    },
+    "language_ca": {
+        "message": "Català (ca)"
+    },
+    "language_de": {
+        "message": "Deutsch (de)"
+    },
+    "language_en": {
+        "message": "English (en)"
+    },
+    "language_es": {
+        "message": "Español (es)"
+    },
+    "language_fr": {
+        "message": "Français (fr)"
+    },
+    "language_id": {
+        "message": "Bahasa Indonesia (id)"
+    },
+    "language_it": {
+        "message": "Italiano (it)"
+    },
+    "language_ja": {
+        "message": "日本語 (ja)"
+    },
+    "language_ko": {
+        "message": "한국어 (ko)"
+    },
+    "language_lv": {
+        "message": "Latviešu (lv)"
+    },
+    "language_pt": {
+        "message": "Português (pt)"
+    },
+    "language_ru": {
+        "message": "Русский язык (ru)"
+    },
+    "language_sv": {
+        "message": "Svenska (sv)"
+    },
+    "language_zh_CN": {
+        "message": "简体中文 (zh_CN)"
+    },
+    "sensorDataFlashNotFound": {
+        "message": "Memoria flash <br> non dispoñible",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "Memoria flash: libre",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorStatusGyro": {
+        "message": "Xiroscopio"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Xiro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusAccel": {
+        "message": "Acelerómetro"
+    },
+    "sensorStatusAccelShort": {
+        "message": "Accel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusMag": {
+        "message": "Magnetómetro"
+    },
+    "sensorStatusMagShort": {
+        "message": "Mag",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusBaro": {
+        "message": "Barómetro"
+    },
+    "sensorStatusBaroShort": {
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusSonar": {
+        "message": "Sonar\/ Buscador de Rango"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Mostrar notificacións de actualizacións para versións inestables do configurador"
+    },
+    "configuratorUpdateNotice": {
+        "message": "Está a usar unha versión desactualizada do <b> Configurador Betaflight<\/ b>.<br> A versión <b>$1<\/ b> está dispoñible en liña, visite <a href=\"$2\" target=\"_blank\"> a páxina de lanzamento <\/a> para descargar e instalar a última versión con correccións e melloras. Por favor pecha a xanela do configurador antes de actualizar."
+    },
+    "configuratorUpdateWebsite": {
+        "message": "Ir a web de descargas"
+    },
+    "deviceRebooting": {
+        "message": "Dispositivo  - <span class=\"message-negative\">Reiniciando<\/span>"
+    },
+    "deviceReady": {
+        "message": "Dispositivo -  <span class=\"message-positive\">Preparado<\/span>"
+    },
+    "backupFileIncompatible": {
+        "message": "O arquivo de resgardo facilitado foi creado para unha versión anterior do configurador polo que e incompatible coa versión. Sentímolo"
+    },
+    "backupFileUnmigratable": {
+        "message": "Este arquivo de copia de seguridad foi xerado cunha versión anterior do configurador e non se pode migrar. Sentímolo."
+    },
+    "configMigrationFrom": {
+        "message": "Migrando arquivo de configuración xerado por: $1"
+    },
+    "configMigratedTo": {
+        "message": "Configuracións migradas ó configurador: $1"
+    },
+    "configMigrationSuccessful": {
+        "message": "Migración da configuración completada, migracións aplicadas: $1"
+    },
+    "tabFirmwareFlasher": {
+        "message": "Flasheador de Firmware"
+    },
+    "tabLanding": {
+        "message": "Benvido\/a"
+    },
+    "tabHelp": {
+        "message": "Documentación e Soporte"
+    },
+    "tabSetup": {
+        "message": "Axuste"
+    },
+    "tabSetupOSD": {
+        "message": "Configurar OSD"
+    },
+    "tabConfiguration": {
+        "message": "Configuración"
+    },
+    "tabPorts": {
+        "message": "Portos"
+    },
+    "tabPidTuning": {
+        "message": "Axuste de PID"
+    },
+    "tabReceiver": {
+        "message": "Receptor"
+    },
+    "tabModeSelection": {
+        "message": "Selección de modo"
+    },
+    "tabServos": {
+        "message": "Servos"
+    },
+    "tabFailsafe": {
+        "message": "Failsafe"
+    },
+    "tabTransponder": {
+        "message": "Transpondedor de carreira"
+    },
+    "tabOsd": {
+        "message": "OSD"
+    },
+    "tabPower": {
+        "message": "Alimentación e batería"
+    },
+    "tabGPS": {
+        "message": "GPS"
+    },
+    "tabMotorTesting": {
+        "message": "Motores"
+    },
+    "tabLedStrip": {
+        "message": "Tira de LEDS"
+    },
+    "tabRawSensorData": {
+        "message": "Sensores"
+    },
+    "tabCLI": {
+        "message": "CLI"
+    },
+    "tabLogging": {
+        "message": "Rexistro Conectado"
+    },
+    "tabOnboardLogging": {
+        "message": "Blackbox"
+    },
+    "tabAdjustments": {
+        "message": "Axustes"
+    },
+    "tabAuxiliary": {
+        "message": "Modos"
+    },
+    "logActionHide": {
+        "message": "Agochar rexistro de conexións"
+    },
+    "logActionShow": {
+        "message": "Amosar rexistro de conexións"
+    },
+    "serialPortOpened": {
+        "message": "Porto serie <span class=\"message-positive\">satisfactoriamente<\/span> aberto coa ID: $1"
+    },
+    "serialPortOpenFail": {
+        "message": "<span class=\"message-negative\">Erro<\/span> abrindo porto serie"
+    },
+    "serialPortClosedOk": {
+        "message": "Porto serie pechado <span class=\"message-positive\">satisfactoriamente<\/span>"
+    },
+    "serialPortClosedFail": {
+        "message": "<span class=\"message-negative\">Erro<\/span> ó pechar porto serie"
+    },
+    "serialUnrecoverable": {
+        "message": "<span class=\"message-negative\">Erro<\/span> irrecuperable da conexión serie, desconectando..."
+    },
+    "usbDeviceOpened": {
+        "message": "Dispositivo USB aberto <span class=\"message-positive\">satisfactoriamente<\/span> coa ID: $1"
+    },
+    "usbDeviceOpenFail": {
+        "message": "!<span class=\"message-negative\">Erro<\/span> abrindo dispositivo USB!"
+    },
+    "usbDeviceClosed": {
+        "message": "Dispositivo USB pechado <span class=\"message-positive\">satisfactoriamente<\/span>"
+    },
+    "usbDeviceCloseFail": {
+        "message": "<span class=\"message-negative\">Erro<\/span> pechando dispositivo USB"
+    },
+    "usbDeviceUdevNotice": {
+        "message": "¿Están as <strong>regras udev<\/strong> instaladas correctamente? Consulte a documentación para instruccións"
+    },
+    "stm32UsbDfuNotFound": {
+        "message": "USB DFU non encontrado"
+    },
+    "stm32TimedOut": {
+        "message": "STM32 - Tempo de espera superado, programación: ERRADA"
+    },
+    "stm32WrongResponse": {
+        "message": "A comunicación STM32 errou, resposta incorrecta, esperábase: $1 (0x$2) recivido: $3 (0x$4)"
+    },
+    "stm32ContactingBootloader": {
+        "message": "Conectando bootloader ..."
+    },
+    "stm32ContactingBootloaderFailed": {
+        "message": "Erro ó comunicar có bootloader "
+    },
+    "stm32ResponseBootloaderFailed": {
+        "message": "Non hai resposta do bootloader, programación: ERRADA"
+    },
+    "stm32GlobalEraseExtended": {
+        "message": "Executando o borrado global do chip (a través do borrado estendido) ..."
+    },
+    "stm32LocalEraseExtended": {
+        "message": "Executando o borrado local (a través de borrado estendido) ..."
+    },
+    "stm32GlobalErase": {
+        "message": "Executando o borrado global do chip ..."
+    },
+    "stm32LocalErase": {
+        "message": "Executando o borrado local ..."
+    },
+    "stm32Erase": {
+        "message": "Borrando ..."
+    },
+    "stm32Flashing": {
+        "message": "Flasheando ..."
+    },
+    "stm32Verifying": {
+        "message": "Verificando ..."
+    },
+    "stm32ProgrammingSuccessful": {
+        "message": "Programación: SATISFACTORIA"
+    },
+    "stm32ProgrammingFailed": {
+        "message": "Programación: ERRADA"
+    },
+    "stm32AddressLoadFailed": {
+        "message": "Fallou a carga de enderezos para a opción de bytes do sector. Moi probablemente, debido á protección de lectura."
+    },
+    "stm32AddressLoadSuccess": {
+        "message": "A carga de enderezo para a opción de bytes do sector tivo éxito."
+    },
+    "stm32AddressLoadUnknown": {
+        "message": "A carga de enderezos para a opción de bytes do sector fallou cun erro descoñecido. Abortando."
+    },
+    "stm32NotReadProtected": {
+        "message": "Ler a protección non activo"
+    },
+    "stm32ReadProtected": {
+        "message": "A tarxeta parece estar protexida. Desprotexendo. Non desconecte!!"
+    },
+    "stm32UnprotectSuccessful": {
+        "message": "Desprotección satisfactoria."
+    },
+    "stm32UnprotectUnplug": {
+        "message": "ACCIÓN REQUERIDA: Desconecte e volva a conectar a controladora de voo en modo DFU para intentar cargar de novo!"
+    },
+    "stm32UnprotectFailed": {
+        "message": "Erro ó desprotexer a placa"
+    },
+    "stm32UnprotectInitFailed": {
+        "message": "Erro ó iniciar rutina de desprotexer"
+    },
+    "noConfigurationReceived": {
+        "message": "Non se recibiu configuración algunha en <span class=\"message-negative\">10 segundos<\/span>, comunicación<span class=\"message-negative\">errada<\/span>"
+    },
+    "firmwareVersionNotSupported": {
+        "message": "Esta versión de firmware <span class=\"message-negative\">non está soportada<\/span>. Por favor actualice a un firmware que soporte a versión de api <strong>$1<\/strong> ou superior. Empregue o CLI para facer un backup antes de flashear. O procedemento CLI de backup\/recuperación atópase na documentación.<br \/>Se o prefire tamén pode descargar e usar unha versión antigua do configurador se non desexa actualizar."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Un firmware que non sexa Cleanflight\/Betaflight <span class=\"message-negative\">non está soportado<\/span>, agás para o modo CLI."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "O firmware neste dispositivo necesita actualización a unha nova versión. Empregue o CLI para backup antes de flashear. O procedemento CLI de backup\/recuperación atópase na documentación.<br \/>Se o prefire tamén pode descargar e usar unha versión antigua do configurador se non desexa actualizar."
+    },
+    "infoVersions": {
+        "message": "Executando - OS: <strong> {{operatingSystem}} <\/strong>, Chrome: <strong>{{chromeVersion}} <\/strong>, Configurador: <strong> {{configuratorVersion}} <\/strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
+    },
+    "buildServerLoaded": {
+        "message": "Lendo construcción informativa para $1 dende o servidor de compilación."
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>Erro editando a consulta do servidor para $1, empregando a información da caché. Motivo: <code>$2<\/code><\/b>"
+    },
+    "buildServerUsingCached": {
+        "message": "Usando información construida na caché para $1."
+    },
+    "releaseCheckLoaded": {
+        "message": "Cargada información de versión para $1 dende GitHub."
+    },
+    "releaseCheckFailed": {
+        "message": "<b>Fallou a consulta GitHub para a versión $1, empregarase a información gardada na caché. Motivo: <code>$2<\/code><\/b>"
+    },
+    "releaseCheckCached": {
+        "message": "Empregando información gardada na caché para a versión $1."
+    },
+    "releaseCheckNoInfo": {
+        "message": "Non se atopa información válida para a versión $1."
+    },
+    "tabSwitchConnectionRequired": {
+        "message": "É necesario <strong>conectar<\/strong> para poder ver as pestanas."
+    },
+    "tabSwitchWaitForOperation": {
+        "message": "<span class=\"message-negative\">Non pode<\/span> facer isto agora, por favor espere a que remate a operación actual ..."
+    },
+    "tabSwitchUpgradeRequired": {
+        "message": "É necesario <strong>actualizar<\/strong> o firmware á última versión de Betaflight antes de poder empregar a pestana $1."
+    },
+    "firmwareVersion": {
+        "message": "Versión do Firmware: <strong>$1<\/strong>"
+    },
+    "apiVersionReceived": {
+        "message": "Versión de API MultiWii: : <strong>$1<\/strong>"
+    },
+    "uniqueDeviceIdReceived": {
+        "message": "ID único do dispositivo: <strong>0x$1<\/strong>"
+    },
+    "craftNameReceived": {
+        "message": "Nome aeronave: <strong>$1<\/strong>"
+    },
+    "armingDisabled": {
+        "message": "<strong>Armado Desactivado<\/strong>"
+    },
+    "armingEnabled": {
+        "message": "<strong>Armado Activado<\/strong>"
+    },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong>Desabilitado temporalmente prevención de despegue<\/strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong>Prevención de despegue habilitada<\/strong>"
+    },
+    "boardInfoReceived": {
+        "message": "Placa: <strong>$1<\/strong>, versión: <strong>$2<\/strong>"
+    },
+    "buildInfoReceived": {
+        "message": "Executando firmware publicado en: <strong>$1<\/strong>"
+    },
+    "fcInfoReceived": {
+        "message": "Información de controladora de voo, identificador: <strong>$1<\/strong>, versión: <strong>$2<\/strong>"
+    },
+    "versionLabelTarget": {
+        "message": "Placa"
+    },
+    "versionLabelFirmware": {
+        "message": "Firmware"
+    },
+    "versionLabelConfigurator": {
+        "message": "Configurador"
+    },
+    "notifications_app_just_updated_to_version": {
+        "message": "Aplicación actualizada á versión: $1"
+    },
+    "notifications_click_here_to_start_app": {
+        "message": "Pulsa aquí para abrila aplicación"
+    },
+    "statusbar_port_utilization": {
+        "message": "Utilización do porto:"
+    },
+    "statusbar_usage_download": {
+        "message": "D: $1%"
+    },
+    "statusbar_usage_upload": {
+        "message": "C: $1%"
+    },
+    "statusbar_packet_error": {
+        "message": "Paquetes con error:"
+    },
+    "statusbar_i2c_error": {
+        "message": "error I2C:"
+    },
+    "statusbar_cycle_time": {
+        "message": "Tempo de Ciclo:"
+    },
+    "statusbar_cpu_load": {
+        "message": "Carga de CPU: $1%"
+    },
+    "dfu_connect_message": {
+        "message": "Por favor emprega o Flasheador de Firmware para acceder os dispositivos DFU"
+    },
+    "dfu_erased_kilobytes": {
+        "message": "Borrados $1 kB da flash <span class=\"message-positive\">correctamente<\/span>"
+    },
+    "dfu_device_flash_info": {
+        "message": "Dispositivo detectado cun tamaño de flash total $1 KiB"
+    },
+    "dfu_error_image_size": {
+        "message": "<span class=\"message-negative\">Erro<\/span>: A imaxe estregada é maior que o tamaño do chip! Imaxe: $1 KiB, límite= $2 KiB"
+    },
+    "eeprom_saved_ok": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "defaultWelcomeIntro": {
+        "message": "Benvido ó <strong>Betaflight - Configurator<\/strong>, unha utilidade deseñada para simplificar a actualización, configuración e axuste da súa controladora de voo."
+    },
+    "defaultWelcomeHead": {
+        "message": "Hardware"
+    },
+    "defaultWelcomeText": {
+        "message": "A aplicación admite todo o hardware que pode executar Betaflight. Comprobe a pestana de flash para ver a lista completa de hardware.<br><br> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\"> Descargue Betaflight Blackbox Log Viewer<\/a><br \/><br \/>O código fonte do firmware pode ser descagado dende <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">here<\/a><br \/><br \/>Último <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x Drivers<\/a> poden ser descargados dende <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">here<\/a><br \/>Último <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP Drivers<\/a> poden ser descargados dende <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">here<\/a><br \/>Último <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> a instalación de drivers USB para Windows pode ser descargada dende <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">here<\/a><br \/>"
+    },
+    "defaultContributingHead": {
+        "message": "Contribuir"
+    },
+    "defaultContributingText": {
+        "message": "Se quere axudar a facer mellor Betaflight, pode axudar de moitas maneiras, incluíndo:<br \/><ul><li>Contestando preguntas de outros usuarios en forums e IRC.<\/li><li>Contribuindo código ó firmware e ó configurador: novas funcións, correccións, melloras<\/li><li>Testeando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">novas características \/ correccións<\/a> e proporcionar feedback.<\/li><li>Axudar con <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">cuestións e comentarios sobre solicitudes de funcións<\/a>.<\/li><li>Colaborado <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">traducindo a aplicación do configurador<\/a> na súa lingua.<\/li><li><\/li><\/ul>"
+    },
+    "defaultFacebookText": {
+        "message": "Nós tamén temos <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\">Grupo de Facebook<\/a>.<br \/>Únase a nós para conseguir un lugar para falar sobre Betaflight, facer preguntas de configuración ou simplemente saír cos compañeiros pilotos."
+    },
+    "defaultChangelogAction": {
+        "message": "Rexistro de actualización"
+    },
+    "defaultChangelogHead": {
+        "message": "Configurator - Novidades"
+    },
+    "defaultPrivacyPolicyAction": {
+        "message": "Política de privacidade"
+    },
+    "defaultButtonFirmwareFlasher": {
+        "message": "Flasheador de Firmware"
+    },
+    "defaultDonateHead": {
+        "message": "Código aberto \/ Aviso de doazón"
+    },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight<\/strong> é un software de controlador de voo que é <strong>open source<\/strong> e está dispoñible gratuitamente <strong>sin garantía<\/strong> para tódolos usuarios.<\/p><p>Se atopou o Betaflight ou o configurador Betaflight, porfavor considere<strong>apoiar<\/strong> o seu desenvolvemento cunha donación.<\/p>"
+    },
+    "defaultDonateBottom": {
+        "message": "<p>Se quere contribuír continuamente de forma financeira, debe considerar converterse nun patrocinador en <a href='https:\/\/www.patreon.com\/betaflight'> Patreon <\/a>.<\/p >"
+    },
+    "defaultDonate": {
+        "message": "Doar"
+    },
+    "defaultSponsorsHead": {
+        "message": "Patrocinadores"
+    },
+    "defaultDocumentationHead": {
+        "message": "Documentación \/ Manual"
+    },
+    "defaultDocumentation": {
+        "message": "A documentación de Betaflight está dispoñible nas notas da versión e na wiki.<br \/><br \/>"
+    },
+    "defaultDocumentation1": {
+        "message": "O Wiki de Betaflight ten unha gran cantidade de información e pode atoparse <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\" target=\"_blank\">aquí<\/a>."
+    },
+    "defaultDocumentation2": {
+        "message": "As notas da versión do firmware poden ser lidas na páxina de GitHub, <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\">aquí<\/a>."
+    },
+    "defaultSupportHead": {
+        "message": "Soporte"
+    },
+    "defaultSupportSubline1": {
+        "message": "Fontes de soporte"
+    },
+    "defaultSupportSubline2": {
+        "message": "Desenvolvedor"
+    },
+    "defaultSupport": {
+        "message": "Para soporte por favor busque nos foros e na wiki ou contacte co vendedor. <br \/><br \/>"
+    },
+    "defaultSupport1": {
+        "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\">Fio de RC Groups<\/a>"
+    },
+    "defaultSupport2": {
+        "message": "<a href=\"http:\/\/betaflight.info\" target=\"_blank\">Wiki de Betaflight<\/a>"
+    },
+    "defaultSupport3": {
+        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Videos Betaflight de Joshua Bardwell<\/a>"
+    },
+    "defaultSupport4": {
+        "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https:\/\/slack.betaflight.com\" target=\"_blank\"> Desenvolvedores de Betaflight no slack<\/a>"
+    },
+    "initialSetupBackupAndRestoreApiVersion": {
+        "message": "<span class=\"message-negative\"> Desactivada función de copia de seguridade e restauración. <\/span> Ten firmware con versión API <span class=\"message-negative\">$1<\/span>, requere copia de seguridade e restauración <span class=\"mensaxe positiva\">$2<\/span>. Por favor, faga unha copia de seguridade dos axustes mediante a CLI, consulte a documentación de Betaflight para o procedemento."
+    },
+    "initialSetupButtonCalibrateAccel": {
+        "message": "Calibrar Acelerómetro"
+    },
+    "initialSetupCalibrateAccelText": {
+        "message": "Coloque a placa ou o chasis nunha superficie <strong> nivelada<\/strong> , proceda coa calibración e asegúrese que a plataforma non se move durante este período"
+    },
+    "initialSetupButtonCalibrateMag": {
+        "message": "Calibrar Magnetómetro"
+    },
+    "initialSetupCalibrateMagText": {
+        "message": "Mova o multirotor <strong>360<\/strong> graos no eixo de rotacion, dispón de 30 segundos para esta tarefa"
+    },
+    "initialSetupButtonCalibratingText": {
+        "message": "Calibrando..."
+    },
+    "initialSetupButtonReset": {
+        "message": "Reiniciar Axustes"
+    },
+    "initialSetupResetText": {
+        "message": "Reiniciar axustes a valores por <strong>defecto<\/strong>"
+    },
+    "initialSetupButtonBackup": {
+        "message": "Backup"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Restaurar"
+    },
+    "initialSetupButtonRebootBootloader": {
+        "message": "Activar o cargador de arranque \/ DFU"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "<strong>Copia seguridade<\/strong> da súa configuración en caso de accidente,<strong>CLI<\/strong>ten opcións<span class=\"message-negative\">non<\/span>incluídas - usa o comando 'diff all' en CLI para isto."
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Reinicia en modo<strong>cargador de arranque \/ DFU <\/strong>."
+    },
+    "initialSetupBackupSuccess": {
+        "message": "Backup gardado <span class=\"message-positive\">exitosamente<\/span>"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "Configuración restaurada <span class=\"message-positive\">correctamente<\/span>"
+    },
+    "initialSetupButtonResetZaxis": {
+        "message": "Reiniciar eixo Z, offset: 0 º"
+    },
+    "initialSetupButtonResetZaxisValue": {
+        "message": "Reiniciar eixo Z, offset: $1 º"
+    },
+    "initialSetupMixerHead": {
+        "message": "Tipo Mezclador"
+    },
+    "initialSetupThrottleHead": {
+        "message": "Axustes do Acelerador"
+    },
+    "initialSetupMinimum": {
+        "message": "Mínimo:"
+    },
+    "initialSetupMaximum": {
+        "message": "Máximo:"
+    },
+    "initialSetupFailsafe": {
+        "message": "Failsafe:"
+    },
+    "initialSetupMinCommand": {
+        "message": "MinCommand:"
+    },
+    "initialSetupBatteryHead": {
+        "message": "Batería"
+    },
+    "initialSetupMinCellV": {
+        "message": "Min Celda Voltaxe:"
+    },
+    "initialSetupMaxCellV": {
+        "message": "Max Celda Voltaxe:"
+    },
+    "initialSetupVoltageScale": {
+        "message": "Escala de voltaxe:"
+    },
+    "initialSetupAccelTrimsHead": {
+        "message": "Acelerómetro trims"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
+    "initialSetupMagHead": {
+        "message": "Magnetómetro"
+    },
+    "initialSetupDeclination": {
+        "message": "Declinación:"
+    },
+    "initialSetupInfoHead": {
+        "message": "Info"
+    },
+    "initialSetupBattery": {
+        "message": "Voltaxe da batería:"
+    },
+    "initialSetupBatteryValue": {
+        "message": "$1 V"
+    },
+    "initialSetupDrawn": {
+        "message": "Capacidade consumida:"
+    },
+    "initialSetupDrawing": {
+        "message": "Corrente consumida:"
+    },
+    "initialSetupBatteryMahValue": {
+        "message": "$1 mAh"
+    },
+    "initialSetupBatteryAValue": {
+        "message": "$1 A"
+    },
+    "initialSetupRSSI": {
+        "message": "RSSI:"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 %"
+    },
+    "initialSetupArmingDisableFlags": {
+        "message": "Flags Armado Desactivado:"
+    },
+    "initialSetupArmingAllowed": {
+        "message": "Armado Permitido"
+    },
+    "initialSetupArmingDisableFlagsTooltip": {
+        "message": "Lista de bandeiras que indican por que non se permite armar actualmente. Pase o rato sobre a bandeira ou consulte a Wiki (páxina 'Arming Sequence & Safety') para máis información."
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
+        "message": "O xiro non foi detectado",
+        "description": "Description of the NO GYRO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
+        "message": "Failsafe está activado",
+        "description": "Description of the FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
+        "message": "Non se detecta ningún sinal de receptor válido",
+        "description": "Description of the RX_FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+        "message": "O seu receptor acaba de recuperarse do dispositivo a proba de fallos, pero o interruptor de armar está activo",
+        "description": "Description of the BAD_RX_RECOVERY arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
+        "message": "O switch 'FAILSAFE' foi activado",
+        "description": "Description of the BOXFAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
+        "message": "Activouse a protección de despegue incontrolado",
+        "description": "Description of the RUNAWAY_TAKEOFF arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
+        "message": "A canle do acelerador é demasiado alto",
+        "description": "Description of the THROTTLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "A aeronave non está nivelada (suficientemente)",
+        "description": "Description of the ANGLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
+        "message": "Armado demasiado pronto despois de acenderse",
+        "description": "Description of the BOOT_GRACE_TIME arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
+        "message": "O interruptor prearmar non está activado ou non se desactivou despois de desarmalo",
+        "description": "Description of the NOPREARM arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOAD": {
+        "message": "A carga do sistema é demasiado alta para un voo seguro",
+        "description": "Description of the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "A calibración do sensor aínda está en curso",
+        "description": "Description of the CALIBRATING arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCLI": {
+        "message": "CLI está activo",
+        "description": "Description of the CLI arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
+        "message": "O CMS (menú de configuración) está activo - a través de OSD ou outra pantalla -",
+        "description": "Description of the CMS_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
+        "message": "Menú OSD está activo",
+        "description": "Description of the OSD_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBST": {
+        "message": "Un dispositivo Black Sheep Telemetry (por exemplo, TBS Core Pro) desarmouse e está impedindo que se arme",
+        "description": "Description of the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "A conexión MSP está activa, probablemente con este Betaflight Configurator",
+        "description": "Description of the MSP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
+        "message": "Activouse o modo de paralización",
+        "description": "Description of the PARALYZE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipGPS": {
+        "message": "O modo de rescate GPS está configurado pero o número de satélites requirido non foi fixado",
+        "description": "Description of the GPS arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRESC": {
+        "message": "O switch 'GPS Rescue' foi activado",
+        "description": "Description of the RESC arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
+        "message": "Unha das outras sinais de desarmado está activa ao armar",
+        "description": "Description of the ARM_SWITCH arming disable flag"
+    },
+    "initialSetupGPSHead": {
+        "message": "GPS"
+    },
+    "initialSetupInstrumentsHead": {
+        "message": "Instrumentos"
+    },
+    "initialSetupButtonSave": {
+        "message": "Gardar"
+    },
+    "initialSetupModel": {
+        "message": "Modelo: $1"
+    },
+    "initialSetupAttitude": {
+        "message": "$1 grao"
+    },
+    "initialSetupAccelCalibStarted": {
+        "message": "Calibración de acelerómetro comezada"
+    },
+    "initialSetupAccelCalibEnded": {
+        "message": "Calibración de acelerómetro<span class=\"message-positive\">finalizada<\/span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "Calibración de magnetómetro comezada"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Calibración de magnetómetro <span class=\"message-positive\">finalizada<\/span>"
+    },
+    "initialSetupSettingsRestored": {
+        "message": "Axustes restaurados a <strong>valores por defecto<\/strong>"
+    },
+    "initialSetupEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "featureNone": {
+        "message": "&lt;Elixir un&gt;"
+    },
+    "featureRX_PPM": {
+        "message": "Entrada PPM RX"
+    },
+    "featureVBAT": {
+        "message": "Monitorización do voltaxe da batería"
+    },
+    "featureINFLIGHT_ACC_CAL": {
+        "message": "Calibración do nivel en voo"
+    },
+    "featureRX_SERIAL": {
+        "message": "Receptor tipo serie (SPEKSAT, SBUS, SUMD)"
+    },
+    "featureMOTOR_STOP": {
+        "message": "Non xiran os motores cando se arme"
+    },
+    "featureSERVO_TILT": {
+        "message": "Servo gimbal"
+    },
+    "featureSOFTSERIAL": {
+        "message": "Activar portos serie basados en CPU"
+    },
+    "featureSOFTSERIALTip": {
+        "message": "Configurar portos no menú Portos despois da activación."
+    },
+    "featureGPS": {
+        "message": "GPS para navegación e telemetría"
+    },
+    "featureGPSTip": {
+        "message": "Configura os portos primeiro"
+    },
+    "featureSONAR": {
+        "message": "Sonar"
+    },
+    "featureTELEMETRY": {
+        "message": "Saída de telemetría"
+    },
+    "featureCURRENT_METER": {
+        "message": "Monitorización do sensor de corrente"
+    },
+    "feature3D": {
+        "message": "Modo 3D (para utilizar con ESCs reversibles)"
+    },
+    "featureRX_PARALLEL_PWM": {
+        "message": "Entrada PWM RX (un cable por canle)"
+    },
+    "featureRX_MSP": {
+        "message": "Entrada MSP RX (control polo porto MSP)"
+    },
+    "featureRSSI_ADC": {
+        "message": "Entrada RSSI analóxica"
+    },
+    "featureLED_STRIP": {
+        "message": "Soporte para LED RGB multicolor"
+    },
+    "featureDISPLAY": {
+        "message": "Pantalla OLED"
+    },
+    "featureDISPLAYTip": {
+        "message": "Se esta característica está activada, e non hai un monitor conectado (ou o monitor non está acendido), haberá un tempo de espera de 10 segundos aprox. cada vez que se reinicie a controladora."
+    },
+    "featureONESHOT125": {
+        "message": "Soporte para ESCs ONESHOT"
+    },
+    "featureONESHOT125Tip": {
+        "message": "Desconecte a batería e quite as hélices antes de activalo."
+    },
+    "featureBLACKBOX": {
+        "message": "Gravador de datos de voo blackbox"
+    },
+    "featureBLACKBOXTip": {
+        "message": "Configurar a través do menú BlackBox despois de activar."
+    },
+    "featureRX_SPI": {
+        "message": "Soporte de receptores SPI"
+    },
+    "featureESC_SENSOR": {
+        "message": "Usar telemetría KISS\/BLHeli_32 ESC como sensor"
+    },
+    "featureCHANNEL_FORWARDING": {
+        "message": "Enviar os canles aux ás saídas de servos."
+    },
+    "featureTRANSPONDER": {
+        "message": "Transpondedor de carreira"
+    },
+    "featureTRANSPONDERTip": {
+        "message": "Configurar no menú de Race Transponder despois de activar."
+    },
+    "featureAIRMODE": {
+        "message": "Activar permanentemente Airmode"
+    },
+    "featureSUPEREXPO_RATES": {
+        "message": "Super Expo Rates"
+    },
+    "featureSDCARD": {
+        "message": "Soporte SDCard (para a Caixa Negra)"
+    },
+    "featureOSD": {
+        "message": "On Screen Display"
+    },
+    "featureVTX": {
+        "message": "Transmisor de video"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "Incrementar temporalmente o termo I en grandes cambios de acelerador."
+    },
+    "featureDYNAMIC_FILTER": {
+        "message": "Filtrado notch dinámico do xiro"
+    },
+    "featureFAILSAFE": {
+        "message": "Activar Failsafe Etapa 2"
+    },
+    "featureFAILSAFEOld": {
+        "message": "Activar Failsafe"
+    },
+    "featureFAILSAFETip": {
+        "message": "<strong>Nota:<\/strong> Cando a etapa 2 está DESACTIVADA, a configuración de rerpaldo<strong>Automática<\/strong> será empregada en lugar da configuración do usuario para todos os canles (Roll, Pitch, Yaw and Throttle)."
+    },
+    "featureFAILSAFEOldTip": {
+        "message": "Utilizar configuracións de Failsafe en caso de pérdida de sinal no receptor"
+    },
+    "configurationFeatureEnabled": {
+        "message": "Activado"
+    },
+    "configurationFeatureName": {
+        "message": "Característica"
+    },
+    "configurationFeatureDescription": {
+        "message": "Descripción"
+    },
+    "configurationMixer": {
+        "message": "Mixer"
+    },
+    "configurationFeatures": {
+        "message": "Outras características"
+    },
+    "configurationReceiver": {
+        "message": "Receptor"
+    },
+    "configurationReceiverMode": {
+        "message": "Modo do receptor"
+    },
+    "configurationRSSI": {
+        "message": "RSSI (Calidade da sinal)"
+    },
+    "configurationRSSIHelp": {
+        "message": "RSSI e a medida da forza da sinal e é moy útil porque permite saber cando a aeronave está a sairse do alcance ou si está a sufrir interferencias de radiofrecuencia."
+    },
+    "configurationEscFeatures": {
+        "message": "Características de ESC\/Motores"
+    },
+    "configurationFeaturesHelp": {
+        "message": "<strong>Nota:<\/strong>Non tódalas combinacións de opcións son válidas. Cando o firmware da controladora detecta unha configuración inválida as opcións con conflicto serán desactivadas. <br \/><strong>Nota:<\/strong> Configurar portos serie <span class=\"message-negative\">antes<\/span> activando as características que usan esos portos."
+    },
+    "configurationSerialRXHelp": {
+        "message": "<strong>Nota:<\/strong> Recorde configurar o Porto Serie (menú Portos) e elixir Receptor Serie cando se use a opción RX_SERIAL."
+    },
+    "configurationSpiRxHelp": {
+        "message": "<strong>Nota:<\/strong> O provedor SPI RX só funcionará se o hardware necesario está na placa ou se conecta a un bus SPI."
+    },
+    "configurationOtherFeaturesHelp": {
+        "message": "<strong>Nota:<\/strong> Non tódalas opcións son soportadas por tódalas controladoras. Se activa una opción específica, e se desactiva despois de pulsar 'Gardar e Reiniciar', significa que esta opción non está soportada na súa controladora."
+    },
+    "configurationBoardAlignment": {
+        "message": "Aliñamento de Placa e Sensor"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Graos de Roll"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Graos de Pitch"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Graos de Yaw"
+    },
+    "configurationSensorAlignmentGyro": {
+        "message": "Aliñado do XIRO"
+    },
+    "configurationSensorGyroToUse": {
+        "message": "XIRO\/ACCEL"
+    },
+    "configurationSensorGyroToUseNotFound": {
+        "message": "Peligro: Non funciona Xiro\/Acc"
+    },
+    "configurationSensorGyroToUseFirst": {
+        "message": "Primeiro"
+    },
+    "configurationSensorGyroToUseSecond": {
+        "message": "Segundo"
+    },
+    "configurationSensorGyroToUseBoth": {
+        "message": "Ámbalas dúas"
+    },
+    "configurationSensorAlignmentGyro1": {
+        "message": "Primer XIRO"
+    },
+    "configurationSensorAlignmentGyro2": {
+        "message": "Segundo XIRO"
+    },
+    "configurationSensorAlignmentAcc": {
+        "message": "Aliñado do ACELERADOR"
+    },
+    "configurationSensorAlignmentMag": {
+        "message": "Aliñado da brúxula"
+    },
+    "configurationSensorAlignmentDefaultOption": {
+        "message": "Por defecto"
+    },
+    "configurationAccelTrims": {
+        "message": "Trim do acelerómetro"
+    },
+    "configurationAccelTrimRoll": {
+        "message": "Trim do acelerómetro de Roll"
+    },
+    "configurationAccelTrimPitch": {
+        "message": "Trim do acelerómetro de Pitch"
+    },
+    "configurationArming": {
+        "message": "Armado"
+    },
+    "configurationArmingHelp": {
+        "message": "Algunhas opcións de armado poderían necesitar que actives o acelerómetro"
+    },
+    "configurationMagDeclination": {
+        "message": "Declinación Magnética [graos]"
+    },
+    "configurationReverseMotorSwitch": {
+        "message": "Dirección de motor invertida"
+    },
+    "configurationReverseMotorSwitchHelp": {
+        "message": "Esta opción configura o mesturador para esperar que a dirección do motor se invirta e que as hélices estean en consecuencia.<strong>Aviso:<\/strong> isto non inverte a dirección do motor. Use a ferramenta de configuración para os seus ESCs ou cambie a orde do cableado do motor para lograr isto. Ademais, asegúrese de verificar con hélices que os seus motores están rotando nas direccións que se mostran no diagrama anterior antes de intentar armalo."
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "Desarmar motores despóis de [segundos] (Require a característica de MOTOR_STOP)"
+    },
+    "configurationDisarmKillSwitch": {
+        "message": "Desarmar motores sin ter en conta o valor do acelerador (Cando ARM é configurado no menú Modos cun canale AUX)"
+    },
+    "configurationDisarmKillSwitchHelp": {
+        "message": "O armado está sempre desactivado cando o acelerador está baixo. Teña coidado xa que pode desarmar accidentalmente co conmutador cando este voando con esta opción activada."
+    },
+    "configurationDigitalIdlePercent": {
+        "message": "Valor Aceledaror Motor Inactivo [porcentaxe]"
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "Este é o valor 'a ralentí' en porcentaxe do acelerador máximo que se envía aos ESCs cando a aeronave está armada e o stick está en posición mínima. Aumente o porcentaxe de valor para gañar máis velocidade do ralentí."
+    },
+    "configurationThrottleMinimum": {
+        "message": "Minimun Throttle (Valor minimo do ESC ó armar)"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Este é o valor 'ralentí' que se envía aos ESCs cando a aeronave está armada e o acelerador está en posición mínima. Aumente o valor para gañar máis velocidade do ralentí. Tamén aumente o valor en caso de desincronización!"
+    },
+    "configurationThrottleMaximum": {
+        "message": "Maximum Throttle ( Valor maximo do ESC ó armar)"
+    },
+    "configurationThrottleMinimumCommand": {
+        "message": "Comando mínimo ( Valor do ESC ó desarmar)"
+    },
+    "configurationThrottleMinimumCommandHelp": {
+        "message": "Este é o valor que se envía aos ESCs cando a aeronave está desarmada. Selecciona un valor onde os motores estean parados (1000 para a maioria dos ESCs)."
+    },
+    "configurationDshotBeeper": {
+        "message": "Configuración baliza Dshot"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Usar a baliza Dshot (usa os motores para emitir pitidos cando está desarmado)"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "Ton da baliza"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "A baliza Dshot utiliza os ESCs e os motores para producir son. Isto significa que a baliza Dshot non se pode empregar cando os motores están xirando. En Betaflight 3.4 e máis recentes, cando se intenta armar mentres a baliza Dshot está activa, hai un atraso de 2 segundos despois do último ton da baliza Dshot antes de que a aeronave estea armada. Trátase de evitar que a funcionalidade de baliza Dshot interfira cós comandos Dshot enviados ao armar. <br\/><strong>Aviso:<\/strong> Xa que a baliza Dshot está funcionando a través dos seus motores cando está activo, isto pode provocar un exceso de calor producindo danos nos seus motores e \/ ou ESCs se a intensidade da baliza é demasiado alta. Use BLHeli Configurator ou BLHeli Suite para axustar e probar a intensidade da baliza."
+    },
+    "configurationBeeper": {
+        "message": "Configuración do Beeper"
+    },
+    "beeperGYRO_CALIBRATED": {
+        "message": "Soa cando o Xiro foi calibrado"
+    },
+    "beeperRX_LOST": {
+        "message": "Soa cando se apague o TX ou se perda a sinal (repetirase ata co TX estea ben)"
+    },
+    "beeperRX_LOST_LANDING": {
+        "message": "Soa SOS cando estando armado o Tx apagase ou perde sinal (autoaterrizaxe\/autodesarme)"
+    },
+    "beeperDISARMING": {
+        "message": "Soa cando desarmas a controladora de voo"
+    },
+    "beeperARMING": {
+        "message": "Soa cando se arma a controladora de voo"
+    },
+    "beeperARMING_GPS_FIX": {
+        "message": "Soa un ton especial cando se arma a controladora e o GPS está fixado"
+    },
+    "beeperBAT_CRIT_LOW": {
+        "message": "Pitidos longos de peligro cando a batería é moi baixa (repítese)"
+    },
+    "beeperBAT_LOW": {
+        "message": "Pitidos de peligro cando a batería é baixar (repítese)"
+    },
+    "beeperGPS_STATUS": {
+        "message": "Usa un número de pitidos para indicar cantos satélites GPS se atoparon"
+    },
+    "beeperRX_SET": {
+        "message": "Pitidos cando o canle auxiliar está configurado para pitido"
+    },
+    "beeperACC_CALIBRATION": {
+        "message": "Confirmación completa da calibración do acelerómetro de voo"
+    },
+    "beeperACC_CALIBRATION_FAIL": {
+        "message": "Erro da calibración do acelerómetro de voo"
+    },
+    "beeperREADY_BEEP": {
+        "message": "Soa un ton cando o GPS estea bloqueado e listo"
+    },
+    "beeperDISARM_REPEAT": {
+        "message": "Soan beeps mentres o stick quede en posición de desarmado"
+    },
+    "beeperARMED": {
+        "message": "Pitido de advertencia cando a placa está armada cós motores apagados inactivos (repítese ata que a placa está desarmada ou o acelerador aumenta)"
+    },
+    "beeperSYSTEM_INIT": {
+        "message": "Pitido de iniciación cando se encende a placa"
+    },
+    "beeperUSB": {
+        "message": "Emitir un pitido cando o controlador de voo estea alimentado por USB. Desactive isto se non quere que o pitido soe no banco de traballo"
+    },
+    "beeperBLACKBOX_ERASE": {
+        "message": "Bip cando se complete o borrado da caixa negra"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Pitido cando o modo de xiro estea activo"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Pitido cando se introduce o control da cámara de 5 teclas"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Bip cando se retira o control da cámara de 5 teclas"
+    },
+    "beeperRC_SMOOTHING_INIT_FAIL": {
+        "message": "Bip cando se arme e non teña os filtros de suavizado inicializados"
+    },
+    "configuration3d": {
+        "message": "Características do 3D ESC\/Motor"
+    },
+    "configuration3dDeadbandLow": {
+        "message": "Baixa Bandamorta 3D"
+    },
+    "configuration3dDeadbandHigh": {
+        "message": "Alta Bandamorta 3D"
+    },
+    "configuration3dNeutral": {
+        "message": "3D Neutro"
+    },
+    "configuration3dDeadbandThrottle": {
+        "message": "Acelerador 3D Bandamorta"
+    },
+    "configurationSystem": {
+        "message": "Configuración de sistema"
+    },
+    "configurationLoopTime": {
+        "message": "Tempo de ciclo do controlador de voo"
+    },
+    "configurationCalculatedCyclesSec": {
+        "message": "Ciclo\/Sec [Hz]"
+    },
+    "configurationLoopTimeHelp": {
+        "message": "<strong>Nota:<\/strong> Asegúrese de que a súa FC poida funcionar a estas velocidades. Comprobe a estabilidade da CPU e do ciclo. Cambiar isto pode requirir a reordenación de PID. SUXERENCIA: desactivar o acelerómetro e outros sensores para obter máis rendemento."
+    },
+    "configurationLoopTimeNo32KhzHelp": {
+        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Nota sobre o modo de mostraxe do xiro de 32 kHz: <\/strong> engadiuse soporte para o modo de mostraxe de xiro de 32 kHz a Betaflight como unha característica experimental. Nos anos nos que estivo dispoñible, nunca mostrou que ten ningunha vantaxe sobre o modo de mostraxe xiratorio de 8 kHz, debido á súa susceptibilidade ás vibracións e ao seu alto nivel de ruído que require un filtrado agresivo, provocando atrasos no circuíto de control. Por esta razón, o <strong> soporte para o modo de mostraxe xiratorio de 32 kHz foi descartado <\/strong> en Betaflight 4.0."
+    },
+    "configurationGPS": {
+        "message": "GPS"
+    },
+    "configurationGPSProtocol": {
+        "message": "Protocolo"
+    },
+    "configurationGPSBaudrate": {
+        "message": "Tasa de baudios"
+    },
+    "configurationGPSubxSbas": {
+        "message": "Tipo de asistencia en terra"
+    },
+    "configurationGPSAutoBaud": {
+        "message": "Baudios automáticos"
+    },
+    "configurationGPSAutoConfig": {
+        "message": "Configuración automática"
+    },
+    "configurationGPSHelp": {
+        "message": "<strong> Nota: <\/strong> non esqueza configurar un porto serie (a través da pestana Ports) cando use a función GPS."
+    },
+    "configurationSerialRX": {
+        "message": "Proveedor do Receptor Serie"
+    },
+    "configurationSpiRX": {
+        "message": "Provedor de receptores de bus SPI"
+    },
+    "configurationEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
+    },
+    "configurationButtonSave": {
+        "message": "Gardar e Reiniciar"
+    },
+    "portsIdentifier": {
+        "message": "Identificador"
+    },
+    "portsConfiguration": {
+        "message": "Configuración\/MSP"
+    },
+    "portsSerialRx": {
+        "message": "Rx Serie"
+    },
+    "portsSensorIn": {
+        "message": "Entrada Sensor"
+    },
+    "portsTelemetryOut": {
+        "message": "Saída Telemetría"
+    },
+    "portsPeripherals": {
+        "message": "Periféricos"
+    },
+    "portsHelp": {
+        "message": "<strong> Nota: <\/strong> non todas as combinacións son válidas. Cando o firmware do controlador de voo detecte isto, restablecerase a configuración do porto serie."
+    },
+    "portsMSPHelp": {
+        "message": "<strong>Nota:<\/strong><span class=\"message-negative\">NON<\/span> desactive o MSP do primeiro porto serie a non ser que saiva o que está a facer. E posible que teña que reflashear e borrar a súa configuración si o fai."
+    },
+    "portsFirmwareUpgradeRequired": {
+        "message": "Actualización do firmware <span class=\"message-negative\"> requerida <\/span>. Configuracións do porto serie do firmware &lt; 1.8.0 non está soportado."
+    },
+    "portsButtonSave": {
+        "message": "Gardar e Reiniciar"
+    },
+    "portsTelemetryDisabled": {
+        "message": "Desactivado"
+    },
+    "portsFunction_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_GPS": {
+        "message": "GPS"
+    },
+    "portsFunction_TELEMETRY_FRSKY": {
+        "message": "FrSky"
+    },
+    "portsFunction_TELEMETRY_HOTT": {
+        "message": "HoTT"
+    },
+    "portsFunction_TELEMETRY_LTM": {
+        "message": "LTM"
+    },
+    "portsFunction_TELEMETRY_MAVLINK": {
+        "message": "MAVLink"
+    },
+    "portsFunction_TELEMETRY_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_TELEMETRY_SMARTPORT": {
+        "message": "SmartPort"
+    },
+    "portsFunction_TELEMETRY_IBUS": {
+        "message": "iBUS"
+    },
+    "portsFunction_TELEMETRY_JETIXBUS": {
+        "message": "JETIXBUS"
+    },
+    "portsFunction_TELEMETRY_CRSF": {
+        "message": "CRSF"
+    },
+    "portsFunction_TELEMETRY_SRXL": {
+        "message": "SRXL"
+    },
+    "portsFunction_ESC_SENSOR": {
+        "message": "ESC"
+    },
+    "portsFunction_RX_SERIAL": {
+        "message": "Serial RX"
+    },
+    "portsFunction_BLACKBOX": {
+        "message": "Rexistro de caixa negra"
+    },
+    "portsFunction_TBS_SMARTAUDIO": {
+        "message": "VTX (TBS SmartAudio)"
+    },
+    "portsFunction_IRC_TRAMP": {
+        "message": "VTX (IRC Tramp)"
+    },
+    "portsFunction_RUNCAM_DEVICE_CONTROL": {
+        "message": "Cámara (Protocolo RunCam)"
+    },
+    "pidTuningProfileOption": {
+        "message": "Perfil $1"
+    },
+    "pidTuningRateProfileOption": {
+        "message": "Perfil tasa $1"
+    },
+    "portsFunction_LIDAR_TF": {
+        "message": "Benewake LIDAR"
+    },
+    "pidTuningUpgradeFirmwareToChangePidController": {
+        "message": "<span class=\"message-negative\"> Cambio do controlador PID desactivado - pode cambialo a través da CLI. <\/span> Ten firmware coa versión API <span class=\"message-negative\">$1<\/span>, pero esta funcionalidade require <span class=\"message-positive\">$2<\/span>."
+    },
+    "pidTuningSubTabPid": {
+        "message": "Opcións de PID"
+    },
+    "pidTuningSubTabFilter": {
+        "message": "Opcións de filtros"
+    },
+    "pidTuningShowAllPids": {
+        "message": "Mostrar tódolos PID's"
+    },
+    "pidTuningHideUnusedPids": {
+        "message": "Oculta PID's no usados"
+    },
+    "pidTuningNonProfilePidSettings": {
+        "message": "Configuración do controlador PID independente do perfil"
+    },
+    "pidTuningAntiGravityMode": {
+        "message": "Modo anti Gravidade"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Suave",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Paso",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityGain": {
+        "message": "Ganancia Anti gravidade"
+    },
+    "pidTuningAntiGravityThres": {
+        "message": "Limiar Anti gravidade"
+    },
+    "pidTuningDMinHelp": {
+        "message": "D Min proporciona un xeito de ter un nivel máis baixo de D no voo normal e un nivel máis elevado para manobras rápidas que poidan provocar un exceso, como flips e rolls. Tamén podrá subir D durante prop wash. A aeronave terá un termo D dinámico que varía de D Min (en voo normal) ao D estándar (baixo rolls e flips rápidos). Un valor cero desactivará a función. A ganancia determina o fortalecemento de D durante as entradas de adherencia rápida. O ascenso acelérase ao comezo do efecto de aumento. Isto pode ser útil se ten un exceso de velocidade con taxas moi altas en quads moi sensibles.",
+        "description": "Help message for D Min feature"
+    },
+    "pidTuningDMin": {
+        "message": "D Min",
+        "description": "Table header of the D Min feature in the PIDs tab"
+    },
+    "pidTuningDMinRoll": {
+        "message": "Roll",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinPitch": {
+        "message": "Pitch",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinYaw": {
+        "message": "Yaw",
+        "description": "Axis to apply D Min feature"
+    },
+    "pidTuningDMinGain": {
+        "message": "Ganancia",
+        "description": "Gain of the D Min feature"
+    },
+    "pidTuningDMinAdvance": {
+        "message": "Ascenso",
+        "description": "Advane of the D Min feature"
+    },
+    "pidTuningPidSettings": {
+        "message": "Configuración do controlador PID"
+    },
+    "receiverRcSmoothing": {
+        "message": "Alisado RC"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "Auto"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "Manual"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "Tipo de corte derivado"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "Tipo de corte de entrada"
+    },
+    "receiverRcSmoothingInterpolation": {
+        "message": "Interpolación"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "Filtro"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "Tipo de suavizado RC usado"
+    },
+    "rcSmoothingInputCutoffHelp": {
+        "message": "A frecuencia de corte en Hz usada polo filtro de entrada. Usar valores máis baixos dará como resultado entradas máis suaves e máis apropiadas para protocolos de recepción máis lentos. A maioría dos usuarios deberían deixar isto en 0 correspondente a \"Auto\"."
+    },
+    "rcSmoothingDerivativeCutoffHelp": {
+        "message": "A frecuencia de corte en Hz usada polo filtro derivado da entrada. Usar valores máis baixos dará como resultado entradas máis suaves e máis apropiadas para protocolos de recepción máis lentos. A maioría dos usuarios deberían deixar isto en 0 correspondente a \"Auto\"."
+    },
+    "rcSmoothingChannelsSmoothedHelp": {
+        "message": "A suavización de canles aplícase a"
+    },
+    "rcSmoothingDerivativeTypeHelp": {
+        "message": "O tipo de método de filtrado empregado para a derivada de consigna. A maioría dos usuarios deben usar o valor \"BIQUAD\" predeterminado xa que proporciona un bo equilibrio entre a suavidade e o atraso. \"PT1\" reduce o atraso lixeiramente pero proporciona menos suavización."
+    },
+    "rcSmoothingInputTypeHelp": {
+        "message": "O tipo de método de filtrado empregado para a entrada. A maioría dos usuarios deben usar o valor \"BIQUAD\" predeterminado xa que proporciona un bo equilibrio entre a suavidade e o atraso. \"PT1\" reduce o atraso lixeiramente pero proporciona menos suavización."
+    },
+    "receiverRcSmoothingInputManual": {
+        "message": "Seleccionar se a frecuencia de corte do filtro de entrada é calculada automaticamente (recomendada) ou seleccionada manualmente polo usuario. Non se recomenda usar \"Manual\" para protocolos de recepción como Crossfire que poden cambiar en voo."
+    },
+    "receiverRcSmoothingDerivativeManual": {
+        "message": "Seleccionar se a frecuencia de corte do filtro derivado da consola é calculada automaticamente (recomendada) ou seleccionada manualmente polo usuario. Non se recomenda usar \"Manual\" para protocolos de recepción como Crossfire que poden cambiar en voo."
+    },
+    "receiverRcSmoothingInputHz": {
+        "message": "Frecuencia de corte de entrada"
+    },
+    "receiverRcSmoothingDerivativeCutoff": {
+        "message": "Frecuencia de corte derivada"
+    },
+    "receiverRcInputType": {
+        "message": "Tipo de filtro de entrada"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Tipo de filtro derivado"
+    },
+    "receiverRcSmoothingDerivativeTypeOff": {
+        "message": "Apagado"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "Canles suavizados"
+    },
+    "receiverRcInterpolation": {
+        "message": "Interpolación RC"
+    },
+    "receiverRcInterpolationHelp": {
+        "message": "Os sistemas RC TX \/ RX non son tan rápidos como os bucles PID. Isto significa que o bucle PID ten lagoas na corrente de información dos sistemas RC. Esta opción permite a interpolación da entrada RC durante os tempos en que non se reciben marcos RC. A opción tamén ofrece un comportamento P e D máis limpo xa que non hai rampas na entrada de control."
+    },
+    "receiverRcInterpolationIntervalHelp": {
+        "message": "Intervalo de interpolación para o modo de interpolación RC manual en milisegundos"
+    },
+    "receiverRcInterpolationOff": {
+        "message": "Apagado"
+    },
+    "receiverRcSmoothingType": {
+        "message": "Tipo suavizado"
+    },
+    "receiverRcInterpolationDefault": {
+        "message": "Predefinido"
+    },
+    "receiverRcInterpolationAuto": {
+        "message": "Auto"
+    },
+    "receiverRcInterpolationManual": {
+        "message": "Manual"
+    },
+    "receiverRcInterpolationInterval": {
+        "message": "Intervalo de interpolación RC [ms]"
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Transición de Feedforward"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Con este parámetro, o termo Feedforward pode reducirse preto do centro dos sticks, o que resulta nun final máis suave dos flips e rolls.<br> O valor representa un punto de desvío do stick: 0 - stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, Feedforward mantense constante no seu valor configurado. Cando o stick colócase por debaixo dese punto, Feedforward redúcese proporcionalmente, alcanzando 0 na posición central do stick.<br> O valor de 1 dá o efecto de alisado máximo, mentres que o valor de 0 mantén o Feedforward fixado no seu valor configurado en todo o intervalo de stick."
+    },
+    "pidTuningDtermSetpointTransition": {
+        "message": "Transición de punto D"
+    },
+    "pidTuningDtermSetpoint": {
+        "message": "Peso do punto D"
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Con este parámetro, o termo Feedforward pode reducirse preto do centro dos sticks, o que resulta nun final máis suave dos flips e rolls.<br> O valor representa un punto de desvío do stick: 0 - stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, Feedforward mantense constante no seu valor configurado. Cando o stick colócase por debaixo dese punto, Feedforward redúcese proporcionalmente, alcanzando 0 na posición central do stick.<br> O valor de 1 dá o efecto de alisado máximo, mentres que o valor de 0 mantén o Feedforward fixado no seu valor configurado en todo o intervalo de stick."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Este parámetro determina o efecto de aceleración de stick dentro do compoñente derivado.<br> Valor de 0 é igual ao antigo método de medición onde D só rastrexa o xiro, mentres que o valor de 1 é igual ao antigo método de rotación con igual xiro e relación de seguimento do stick.<br> Un valor baixo equivale a unha resposta de pau máis lenta \/ suave, mentres que un valor máis elevado proporciona máis resposta de aceleración de stick.<br> Recoméndase que a interpolación de RC estea habilitada con valores máis altos para evitar que os golpes de control fagan ruído."
+    },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong> $t(warningTitle.message):<\/strong> Desaconséllase moito o uso dunha transición de punto de consecuencia maior que 0 e inferior a 0,1. Se o fai, pode levar a inestabilidade e reducir a capacidade de resposta dos stick mentres atravesan o punto central.<\/span>"
+    },
+    "pidTuningProportional": {
+        "message": "Proporcional"
+    },
+    "pidTuningIntegral": {
+        "message": "Integral"
+    },
+    "pidTuningDerivative": {
+        "message": "Derivada"
+    },
+    "pidTuningFeedforward": {
+        "message": "Anticipativo"
+    },
+    "pidTuningRcRate": {
+        "message": "RC Rate"
+    },
+    "pidTuningMaxVel": {
+        "message": "Velocidade máxima [deg\/s]"
+    },
+    "pidTuningRate": {
+        "message": "Rate"
+    },
+    "pidTuningSuperRate": {
+        "message": "Super Rate"
+    },
+    "pidTuningRatesPreview": {
+        "message": "Previsualizar tasas"
+    },
+    "pidTuningRcExpo": {
+        "message": "RC Expo"
+    },
+    "pidTuningTPA": {
+        "message": "TPA"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "TPA Breakpoint"
+    },
+    "pidTuningThrottleLimitType": {
+        "message": "Límite Throttle"
+    },
+    "pidTuningThrottleLimitPercent": {
+        "message": "Límite Throttle %"
+    },
+    "pidTuningThrottleLimitTypeOff": {
+        "message": "OFF"
+    },
+    "pidTuningThrottleLimitTypeScale": {
+        "message": "Escala"
+    },
+    "pidTuningThrottleLimitTypeClip": {
+        "message": "CLIP"
+    },
+    "pidTuningThrottleLimitTypeTip": {
+        "message": "Seleccione o tipo de limitación do acelerador. <b> Desactivar <\/b> Desactivar a función, <b> ESCALA <\/b> transformará o rango do acelerador de 0 á porcentaxe seleccionada usando o recorrido completo, <b> CLIP <\/b> establecerá un porcentaxe de acelerador máximo e un recorrido por riba que non teña ningún efecto adicional"
+    },
+    "pidTuningThrottleLimitPercentTip": {
+        "message": "Estableza a porcentaxe de límite do acelerador desexado. O axuste ao 100% desactiva a función."
+    },
+    "pidTuningFilter": {
+        "message": "Filtro"
+    },
+    "pidTuningFilterFrequency": {
+        "message": "Frecuencia"
+    },
+    "pidTuningRatesCurve": {
+        "message": "Valores"
+    },
+    "throttle": {
+        "message": "Throttle"
+    },
+    "pidTuningButtonSave": {
+        "message": "Gardar"
+    },
+    "pidTuningButtonRefresh": {
+        "message": "Refrescar"
+    },
+    "pidTuningProfileHead": {
+        "message": "Perfil"
+    },
+    "pidTuningControllerHead": {
+        "message": "Controlador PID"
+    },
+    "pidTuningCopyProfile": {
+        "message": "Copiar valores do perfil"
+    },
+    "pidTuningCopyRateProfile": {
+        "message": "Copiar valores do perfil de rate"
+    },
+    "dialogCopyProfileText": {
+        "message": "Copiar valores dende o perfil actual a"
+    },
+    "dialogCopyRateProfileText": {
+        "message": "Copiar valores dende o perfil de rates actual a"
+    },
+    "dialogCopyProfileTitle": {
+        "message": "Copiar valores do perfil"
+    },
+    "dialogCopyProfileNote": {
+        "message": "Tódolos valores do perfil de destino serán borrados e sobrescritos"
+    },
+    "dialogCopyProfileConfirm": {
+        "message": "Copiar"
+    },
+    "dialogCopyProfileClose": {
+        "message": "Cancelar"
+    },
+    "pidTuningResetProfile": {
+        "message": "Resetear tódolos valores do perfil"
+    },
+    "pidTuningProfileReset": {
+        "message": "Cargados os valeres por defecto do perfil."
+    },
+    "pidTuningReceivedProfile": {
+        "message": "Perfil do controlador de voo seleccionado: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningReceivedRateProfile": {
+        "message": "Perfil de tasas do controlador de voo seleccionado: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningLoadedProfile": {
+        "message": "Perfil cargado: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningLoadedRateProfile": {
+        "message": "Perfil de tasas cargado: <strong class=\"message-positive\">$1<\/strong>"
+    },
+    "pidTuningDataRefreshed": {
+        "message": "Datos PID <strong>actualizados<\/strong>"
+    },
+    "pidTuningEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "receiverHelp": {
+        "message": "Por favor, lea o capítulo sobre a documentación do receptor. Configurar o porto serie (se é necesario), o modo do receptor (serial \/ ppm \/ pwm), o provedor (para os receptores serie), enlazar co receptor, seleccionar o canal do mapa, configurar os puntos finais do canle \/ intervalo na TX para que tódolos canles pasen de ~ 1000 a ~ 2000. Estableza o punto medio (predeterminado 1500), reduza as canles a 1500, configure a banda morta dos stick, comprobe o comportamento cando a TX está desactivada ou fóra do rango. <br \/> <span class = \"message-negative\"> IMPORTANTE: <\/span> Antes de voar lea a documentación sobre a proba de fallos (Failsafe) e configureo."
+    },
+    "tuningHelp": {
+        "message": "<b>Consellos de axuste<\/b><br\/><span class=\"message-negative\"> IMPORTANTE: <\/span> É importante verificar as temperaturas do motor durante os primeiros voos. Canto maior sexa o valor do filtro, mellor pode voar, pero tamén conseguirá máis ruído nos motores. <br> O valor predeterminado de 100Hz é óptimo, pero para configuracións de ruído pode intentar baixar o filtro Dterm a 50Hz e posiblemente tamén o filtro xiratorio."
+    },
+    "filterWarning": {
+        "message": "<span class=\"message-negative\"><b>Aviso: <\/b><\/span> A cantidade de filtrado que está a usar é perigosamente baixa. É probable que sexa difícil de controlar. É altamente recomendable que <b> habilite polo menos un dos Gyro Dynamic Lowpass ou Gyro Lowpass 1 e polo menos un dos D Term Dynamic Lowpass ou D Term Lowpass 1<\/b>."
+    },
+    "receiverThrottleMid": {
+        "message": "Throttle MID"
+    },
+    "receiverThrottleExpo": {
+        "message": "Throttle EXPO"
+    },
+    "receiverStickMin": {
+        "message": "'Stick Low' Threshold"
+    },
+    "receiverHelpStickMin": {
+        "message": "O valor máximo (en us) para que un stick sexa recoñecido como baixo para a entrada de comando (MIN_CHECK)."
+    },
+    "receiverStickCenter": {
+        "message": "Stick centrado"
+    },
+    "receiverHelpStickCenter": {
+        "message": "O valor (en us) é usado para determinar se un stick está centrado (MID_RC)."
+    },
+    "receiverStickMax": {
+        "message": "Límite \"Stick Alto\""
+    },
+    "receiverHelpStickMax": {
+        "message": "O valor mínimo (en us) para que un stick sexa recoñecido como alto \/ dereito para a entrada de comando (MAX_CHECK)."
+    },
+    "receiverDeadband": {
+        "message": "Progreso RC"
+    },
+    "receiverHelpDeadband": {
+        "message": "Estes son valores (en us) por canta entrada de RC pode ser diferente antes de que se considere válido. Para os transmisores con jitter nas saídas, este valor pódese aumentar cando as entradas rc se contraen mentres está inactivo."
+    },
+    "receiverYawDeadband": {
+        "message": "Progreso Yaw"
+    },
+    "receiverHelpYawDeadband": {
+        "message": "Estes son valores (en us) por canta entrada de RC pode ser diferente antes de que se considere válido. Para os transmisores con jitter nas saídas, este valor pódese aumentar cando as entradas rc se contraen mentres está inactivo. <strong> Esta configuración só é para Yaw. <\/strong>"
+    },
+    "recevier3dDeadbandThrottle": {
+        "message": "Progreso 3D Throttle"
+    },
+    "receiverHelp3dDeadbandThrottle": {
+        "message": "Estes son valores (en us). Para ensanchar a zona neutral aumente o valor. <strong> Esta configuración é só para o acelerador 3D. <\/strong>"
+    },
+    "receiverChannelMap": {
+        "message": "Mapa de canles"
+    },
+    "receiverChannelDefaultOption": {
+        "message": "Por defecto"
+    },
+    "receiverChannelMapTitle": {
+        "message": "Pode definir o seu propio mapa de canles pulsando dentro do cadro"
+    },
+    "receiverRssiChannel": {
+        "message": "Canle RSSI"
+    },
+    "receiverRssiChannelDisabledOption": {
+        "message": "Desactivado"
+    },
+    "receiverRefreshRateTitle": {
+        "message": "Tasa de refresco do gráfico"
+    },
+    "receiverButtonSave": {
+        "message": "Gardar"
+    },
+    "receiverButtonRefresh": {
+        "message": "Refrescar"
+    },
+    "receiverButtonSticks": {
+        "message": "Sticks de control"
+    },
+    "receiverDataRefreshed": {
+        "message": "Datos de Axustes de RC <strong>actualizados<\/strong>"
+    },
+    "receiverEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "receiverModelPreview": {
+        "message": "Vista Previa"
+    },
+    "receiverMspWarningText": {
+        "message": "Estos controles permiten armar e probar Betaflight sin que haxa un transmisor ou receptor presente. Sin embargo, <strong>esta característica non está diseñada para o voo e as hélices non deben estar postas.<\/strong><br><br>Esta funcionalidade non garantiza un control fiable da aeronave. <strong>Poden producirse lesións graves si se deixan as hélices postas.<\/strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Activar controis"
+    },
+    "auxiliaryHelp": {
+        "message": "Configure os modos aquí usando unha combinación de canles e \/ ou enlaces a outros modos (enlaces soportados en BF 4.0 e posteriores). Use <strong>intervalos<\/strong> para definir os interruptores do seu transmisor e as asignacións de modo correspondentes. Un canle de receptor que dá unha lectura entre un intervalo mínimo \/ máximo activará o modo. Usa a<strong>ligazón <\/strong> para activar un modo cando se activa outro modo. <strong> Excepcións: <\/strong> ARM non se pode ligar a ou desde outro modo, non se pode ligar a outros modos configurados cunha ligazón (ligazóns encadeadas). Pódense usar varios intervalos \/ ligazóns para activar calquera modo. Se hai máis dun intervalo \/ ligazón definido para un modo, cada un deles pode configurarse como <strong>e<\/strong>ou<strong>OR<\/strong>. Activarase un modo cando:<br\/> - Todas as ligazóns <strong>e<\/strong> rangos\/links estean activas; OR <br\/> - polo menos un <strong> OR <\/strong> intervalo \/ ligazón está activo. <br\/> <br\/> Non esqueza gardar a configuración mediante o botón Gardar."
+    },
+    "auxiliaryToggleUnused": {
+        "message": "Ocultar modos non empregados"
+    },
+    "auxiliaryMin": {
+        "message": "Mín"
+    },
+    "auxiliaryMax": {
+        "message": "Máx"
+    },
+    "auxiliaryAddRange": {
+        "message": "Engadir Rango"
+    },
+    "auxiliaryAddLink": {
+        "message": "Engadir Enlace"
+    },
+    "auxiliaryButtonSave": {
+        "message": "Gardar"
+    },
+    "auxiliaryEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "auxiliaryAutoChannelSelect": {
+        "message": "AUTO"
+    },
+    "auxiliaryModeLogicOR": {
+        "message": "OR"
+    },
+    "auxiliaryModeLogicAND": {
+        "message": "E"
+    },
+    "adjustmentsHelp": {
+        "message": "Configura interruptores para correccións. Mire o apartado 'in-flight adjustments' do manual para detalles. As correccións realizadas non se gardan automáticamente. Hai 4 slots. Cada interruptor usado para facer correccións concurrentemente requiere o uso exclusivo dun slot."
+    },
+    "adjustmentsExamples": {
+        "message": "Exemplos"
+    },
+    "adjustmentsExample1": {
+        "message": "Use Slot 1 e un interruptor de 3POS en AUX1 para elexir entre Pitch\/Roll de P, I e D e outro interruptor de 3POS en AUX2 para incrementar ou decrementar o valor ó mover arriba ou abaixo."
+    },
+    "adjustmentsExample2": {
+        "message": "Use Slot 2 e un interruptor de 3POS en AUX4 para activar a Selección de Perfil de Tasas a través do mesmo interruptor de 3POS no mesmo canle."
+    },
+    "adjustmentsColumnEnable": {
+        "message": "Si activo"
+    },
+    "adjustmentsColumnUsingSlot": {
+        "message": "usando slot"
+    },
+    "adjustmentsColumnWhenChannel": {
+        "message": "cando canle"
+    },
+    "adjustmentsColumnIsInRange": {
+        "message": "está en rango"
+    },
+    "adjustmentsColumnThenApplyFunction": {
+        "message": "entón aplicar"
+    },
+    "adjustmentsColumnViaChannel": {
+        "message": "vía canle"
+    },
+    "adjustmentsSlot0": {
+        "message": "Slot 1"
+    },
+    "adjustmentsSlot1": {
+        "message": "Slot 2"
+    },
+    "adjustmentsSlot2": {
+        "message": "Slot 3"
+    },
+    "adjustmentsSlot3": {
+        "message": "Slot 4"
+    },
+    "adjustmentsMin": {
+        "message": "Mín"
+    },
+    "adjustmentsMax": {
+        "message": "Máximo"
+    },
+    "adjustmentsFunction0": {
+        "message": "Sin cambios"
+    },
+    "adjustmentsFunction1": {
+        "message": "Axuste valor RC"
+    },
+    "adjustmentsFunction2": {
+        "message": "Axuste RC Expo"
+    },
+    "adjustmentsFunction3": {
+        "message": "Axuste Throttle Expo"
+    },
+    "adjustmentsFunction4": {
+        "message": "Axuste valor Pitch & Roll"
+    },
+    "adjustmentsFunction5": {
+        "message": "Axuste valor Yaw"
+    },
+    "adjustmentsFunction6": {
+        "message": "Axuste Pitch & Roll P"
+    },
+    "adjustmentsFunction7": {
+        "message": "Axuste Pitch & Roll I"
+    },
+    "adjustmentsFunction8": {
+        "message": "Axuste Pitch & Roll D "
+    },
+    "adjustmentsFunction9": {
+        "message": "Axuste Yaw P"
+    },
+    "adjustmentsFunction10": {
+        "message": "Axuste Yaw I"
+    },
+    "adjustmentsFunction11": {
+        "message": "Axuste Yaw D"
+    },
+    "adjustmentsFunction12": {
+        "message": "Seleccionar valor de perfil"
+    },
+    "adjustmentsFunction13": {
+        "message": "Valor de Pitch"
+    },
+    "adjustmentsFunction14": {
+        "message": "Valor de Rate"
+    },
+    "adjustmentsFunction15": {
+        "message": "Axuste Pitch P"
+    },
+    "adjustmentsFunction16": {
+        "message": "Axuste Pitch I"
+    },
+    "adjustmentsFunction17": {
+        "message": "Axuste Pitch D"
+    },
+    "adjustmentsFunction18": {
+        "message": "Axuste Roll P"
+    },
+    "adjustmentsFunction19": {
+        "message": "Axuste Roll I"
+    },
+    "adjustmentsFunction20": {
+        "message": "Axuste Roll D"
+    },
+    "adjustmentsFunction21": {
+        "message": "Valor Yaw RC"
+    },
+    "adjustmentsFunction22": {
+        "message": "Punto D"
+    },
+    "adjustmentsFunction22_2": {
+        "message": "Axuste Pitch & Roll F"
+    },
+    "adjustmentsFunction23": {
+        "message": "Transición do punto D"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Transición anticipativo"
+    },
+    "adjustmentsFunction24": {
+        "message": "Axuste da forza do horizonte"
+    },
+    "adjustmentsFunction25": {
+        "message": "Selección PID-Audio"
+    },
+    "adjustmentsFunction26": {
+        "message": "Axuste Pitch F"
+    },
+    "adjustmentsFunction27": {
+        "message": "Axuste Roll F"
+    },
+    "adjustmentsFunction28": {
+        "message": "Axuste Yaw F"
+    },
+    "adjustmentsFunction29": {
+        "message": "Selección de perfil OSD"
+    },
+    "adjustmentsFunction30": {
+        "message": "Selección perfil LED"
+    },
+    "adjustmentsSave": {
+        "message": "Gardar"
+    },
+    "adjustmentsEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
+    },
+    "transponderNotSupported": {
+        "message": "O firmware do controlador de voo non admite a funcionalidade do transpondedor."
+    },
+    "transponderInformation": {
+        "message": "Os sistemas de transponders permiten aos organizadores de carreiras darlle o tempo das voltas. O transpondedor está instalado na súa aeronave e cando pasa a porta de sincronización, o receptor da pista rexistra o seu código e o seu tempo da volta. Ao colocar un transpondedor baseado en IR, debe asegurarse de que apunte cara a fóra desde a súa aeronave cara aos receptores do camiño e que o raio de luz non estea bloqueado polo seu fuselaxe, as súas correas de batería, os seus cables, hélices, etc."
+    },
+    "transponderConfigurationType": {
+        "message": "Tipo transponder"
+    },
+    "transponderType0": {
+        "message": "Ningún"
+    },
+    "transponderType1": {
+        "message": "iLap"
+    },
+    "transponderType2": {
+        "message": "aRCitimer"
+    },
+    "transponderType3": {
+        "message": "ERLT"
+    },
+    "transponderConfiguration1": {
+        "message": "Ilap configuración"
+    },
+    "transponderConfiguration2": {
+        "message": "aRCitimer configuración"
+    },
+    "transponderConfiguration3": {
+        "message": "ERLT configuración"
+    },
+    "transponderData1": {
+        "message": "Data"
+    },
+    "transponderData2": {
+        "message": "Transponder ID"
+    },
+    "transponderData3": {
+        "message": "Transponder ID"
+    },
+    "transponderDataHelp1": {
+        "message": "Só díxitos hexadecimais, 0-9, A-F"
+    },
+    "transponderHelp1": {
+        "message": "Configure o seu código de transpondedor aquí. Nota: Os sistemas de medición de tempos en carreira so recoñecerán códigos válidos. Pode obter códigos válidos de transpondedor en <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\">Seriously Pro<\/a>."
+    },
+    "transponderHelp2": {
+        "message": "Para obter máis información, por favor, visite <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer<\/a>"
+    },
+    "transponderDataHelp3": {
+        "message": "Elexir ERLT ID 0-63"
+    },
+    "transponderHelp3": {
+        "message": "Para obter mais información, por favor, visita <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer<\/a>"
+    },
+    "transponderButtonSave": {
+        "message": "Gardar"
+    },
+    "transponderButtonSaveReboot": {
+        "message": "Gardar e Reiniciar"
+    },
+    "transponderDataInvalid": {
+        "message": "Os datos do transpondedor <span class=\"message-negative\">non son válidos<\/span>"
+    },
+    "transponderEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "servosFirmwareUpgradeRequired": {
+        "message": "O servos necesitan como mínimo o firmware &gt;= 1.10.0. e soporte para esa placa."
+    },
+    "servosChangeDirection": {
+        "message": "Cambiar dirección no TX para Igualar"
+    },
+    "servosName": {
+        "message": "Nome"
+    },
+    "servosMid": {
+        "message": "MID"
+    },
+    "servosMin": {
+        "message": "MIN"
+    },
+    "servosMax": {
+        "message": "MAX"
+    },
+    "servosAngleAtMin": {
+        "message": "Ángulo ó mín"
+    },
+    "servosAngleAtMax": {
+        "message": "Ángulo máximo"
+    },
+    "servosDirectionAndRate": {
+        "message": "Dirección e valor"
+    },
+    "servosLiveMode": {
+        "message": "Activar o modo en directo"
+    },
+    "servosButtonSave": {
+        "message": "Gardar"
+    },
+    "servosNormal": {
+        "message": "Normal"
+    },
+    "servosReverse": {
+        "message": "Reverso"
+    },
+    "servosEepromSave": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "gpsHead": {
+        "message": "GPS"
+    },
+    "gpsMapHead": {
+        "message": "Localización GPS actual"
+    },
+    "gpsMapMessage1": {
+        "message": "Por favor comprove a súa conexión a internet"
+    },
+    "gpsMapMessage2": {
+        "message": "Agardando a corrección 3D de GPS…"
+    },
+    "gps3dFix": {
+        "message": "Corrección 3D:"
+    },
+    "gpsFixTrue": {
+        "message": "<span class=\"fixtrue\">Aplicada<\/span>"
+    },
+    "gpsFixFalse": {
+        "message": "<\/span><span class=\"fixfalse\">Falso<\/span>"
+    },
+    "gpsAltitude": {
+        "message": "Altura:"
+    },
+    "gpsLat": {
+        "message": "Latitude:"
+    },
+    "gpsLon": {
+        "message": "Lonxitude:"
+    },
+    "gpsSpeed": {
+        "message": "Velocidade:"
+    },
+    "gpsSats": {
+        "message": "Satélites:"
+    },
+    "gpsDistToHome": {
+        "message": "Distancia a casa:"
+    },
+    "gpsSignalStrHead": {
+        "message": "Forza de sinal GPS"
+    },
+    "gpsSignalStr": {
+        "message": "Forza de sinal"
+    },
+    "gpsSignalSatId": {
+        "message": "Identificación satélite"
+    },
+    "gpsSignalQty": {
+        "message": "Cantidade"
+    },
+    "motorsVoltage": {
+        "message": "Voltaxe:"
+    },
+    "motorsADrawing": {
+        "message": "Amperaxe:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Amp. debuxado:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
+    "motorsText": {
+        "message": "Motores"
+    },
+    "motorNumber1": {
+        "message": "Motor - 1"
+    },
+    "motorNumber2": {
+        "message": "Motor - 2"
+    },
+    "motorNumber3": {
+        "message": "Motor - 3"
+    },
+    "motorNumber4": {
+        "message": "Motor - 4"
+    },
+    "motorNumber5": {
+        "message": "Motor - 5"
+    },
+    "motorNumber6": {
+        "message": "Motor - 6"
+    },
+    "motorNumber7": {
+        "message": "Motor - 7"
+    },
+    "motorNumber8": {
+        "message": "Motor - 8"
+    },
+    "servosText": {
+        "message": "Servos"
+    },
+    "servoNumber1": {
+        "message": "Servo - 1"
+    },
+    "servoNumber2": {
+        "message": "Servo - 2"
+    },
+    "servoNumber3": {
+        "message": "Servo - 3"
+    },
+    "servoNumber4": {
+        "message": "Servo - 4"
+    },
+    "servoNumber5": {
+        "message": "Servo - 5"
+    },
+    "servoNumber6": {
+        "message": "Servo - 6"
+    },
+    "servoNumber7": {
+        "message": "Servo - 7"
+    },
+    "servoNumber8": {
+        "message": "Servo - 8"
+    },
+    "motorsResetMaximumButton": {
+        "message": "Reset"
+    },
+    "motorsResetMaximum": {
+        "message": "Restablecer o tempo máximo"
+    },
+    "motorsSensorGyroSelect": {
+        "message": "xiro"
+    },
+    "motorsSensorAccelSelect": {
+        "message": "accel"
+    },
+    "motorsMaster": {
+        "message": "Master"
+    },
+    "motorsNotice": {
+        "message": "<strong>Modo proba de motor \/ Aviso de armado: <\/strong><br\/> Mover os controis ou armar a aeronave coa emisora ​​fará que os motores <strong> xiren <\/strong>.<br\/> Para previr lesións <strong class=\"message-negative\">retirar Tódalas hélices <\/strong> antes de empregar esta función. <br\/> A habilitación do modo de proba do motor tamén desactivará temporalmente a prevención de despegue para evitar que desarme a nave cando o banco fai a proba sen hélices.<br\/>"
+    },
+    "motorsEnableControl": {
+        "message": "<strong> Comprendo os riscos <\/strong>, as hélices están retiradas: permítese o control e armado do motor, e desactívase a prevención do despegue de Runaway."
+    },
+    "sensorsInfo": {
+        "message": "Teña presente que usar períodos de actualización rápida e renderizar varios gráficos ao mesmo tempo é un recurso pesado e agotará a batería máis rápido se usa un portátil. <br \/> Recomendamos facer representacións gráficas só para sensores que estean interesados ​​mentres usa períodos razonables de actualización."
+    },
+    "sensorsRefresh": {
+        "message": "Refrescar:"
+    },
+    "sensorsScale": {
+        "message": "Escala:"
+    },
+    "sensorsGyroSelect": {
+        "message": "Xiroscopio"
+    },
+    "sensorsAccelSelect": {
+        "message": "Acelerómetro"
+    },
+    "sensorsMagSelect": {
+        "message": "Magnetómetro"
+    },
+    "sensorsBaroSelect": {
+        "message": "Barómetro"
+    },
+    "sensorsSonarSelect": {
+        "message": "Sonar"
+    },
+    "sensorsDebugSelect": {
+        "message": "Depuración"
+    },
+    "sensorsGyroTitle": {
+        "message": "Xiroscopio - deg\/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Acelerómetro - g"
+    },
+    "sensorsMagTitle": {
+        "message": "Magnetómetro - Ga"
+    },
+    "sensorsBaroTitle": {
+        "message": "Barómetro - metros"
+    },
+    "sensorsSonarTitle": {
+        "message": "Sonar - cm"
+    },
+    "sensorsDebugTitle": {
+        "message": "Depuración"
+    },
+    "cliInfo": {
+        "message": "<strong> Nota: <\/strong> Deixar a pestana CLI ou premer Desconectar <strong> automaticamente <\/strong> enviará \"<strong> saír <\/strong>\" á placa. Co último firmware, fará que o controlador se <strong>reinicie<\/strong> e os cambios sen gardar sexan <strong>perdidos<\/strong> <p><strong> <span class=\"message-negative\">Aviso<\/span> <\/strong> Algúns comandos na CLI poden producir sinais arbitrarios nos pins de saída do motor. Isto pode facer que os motores xiren si a batería está conectada. Por iso, recoméndase asegurarse de que <strong> non hai batería conectada antes de introducir comandos en CLI <\/strong>."
+    },
+    "cliInputPlaceholder": {
+        "message": "Escriba o seu comando aquí. Prema Tab para Autocompletar."
+    },
+    "cliInputPlaceholderBuilding": {
+        "message": "Agarda mentres se crea a caché de autocompletar ..."
+    },
+    "cliEnter": {
+        "message": "Modo CLI detectado"
+    },
+    "cliReboot": {
+        "message": "Detectouse o reinicio de CLI"
+    },
+    "cliSaveToFileBtn": {
+        "message": "Guardar en archivo"
+    },
+    "cliClearOutputHistoryBtn": {
+        "message": "Borrar o historial de saídas"
+    },
+    "cliCopyToClipboardBtn": {
+        "message": "Copiar ao portapapeis"
+    },
+    "cliCopySuccessful": {
+        "message": "Copiado!"
+    },
+    "loggingNote": {
+        "message": "Os datos rexistraranse nesta pestana <span class=\"message-negative\">solo<\/span>, deixando a pestana <span class=\"message-negative\">cancela<\/span> o rexistro e a aplicación volverá ao seu estado normal <strong>\"configurador\" <\/strong>.<br\/> É libre para seleccionar o período de actualización global, os datos serán escritos no ficheiro de rexistro cada <strong>1<\/strong> segundo por razóns de rendemento."
+    },
+    "loggingSamplesSaved": {
+        "message": "Exemplos gardados:"
+    },
+    "loggingLogSize": {
+        "message": "Tamaño Log:"
+    },
+    "loggingButtonLogFile": {
+        "message": "Arquivo de Log seleccionado"
+    },
+    "loggingStart": {
+        "message": "Empezar rexistro"
+    },
+    "loggingStop": {
+        "message": "Parar rexistro"
+    },
+    "loggingBack": {
+        "message": "Deixar rexistro \/ desconectar"
+    },
+    "loggingErrorNotConnected": {
+        "message": "Necesita <strong>conectar<\/strong>primeiro"
+    },
+    "loggingErrorLogFile": {
+        "message": "Por favor seleccionar arquivo de log"
+    },
+    "loggingErrorOneProperty": {
+        "message": "Seleccione polo menos unha propiedade para rexistrar"
+    },
+    "loggingAutomaticallyRetained": {
+        "message": "Cargouse automaticamente o ficheiro de rexistro anterior: <strong>$1<\/strong>"
+    },
+    "blackboxNotSupported": {
+        "message": "O firmware do controlador de voo non admite rexistro na Blackbox."
+    },
+    "blackboxMaybeSupported": {
+        "message": "O firmware do controlador de voo é demasiado antigo para soportar esta pestana ou a función Blackbox está desactivada na pestana Configuration."
+    },
+    "blackboxConfiguration": {
+        "message": "Configuración Blackbox"
+    },
+    "blackboxButtonSave": {
+        "message": "Gardar e reiniciar"
+    },
+    "blackboxLoggingNone": {
+        "message": "Sen rexistro"
+    },
+    "blackboxLoggingFlash": {
+        "message": "Memoria Flash integrada"
+    },
+    "blackboxLoggingSdCard": {
+        "message": "Tarxeta SD"
+    },
+    "blackboxLoggingSerial": {
+        "message": "Porto Serie"
+    },
+    "serialLoggingSupportedNote": {
+        "message": "Pode conectarse a un dispositivo de rexistro externo (como un clon OpenLog ou compatible) usando un porto serie. Configure o porto na pestana Ports."
+    },
+    "sdcardNote": {
+        "message": "Os rexistros de voos pódense gravar no slot para tarxetas SD do controlador de voo."
+    },
+    "dataflashUsedSpace": {
+        "message": "Espazo en uso"
+    },
+    "dataflashFreeSpace": {
+        "message": "Espazo libre"
+    },
+    "dataflashUnavSpace": {
+        "message": "Espazo non dispiñible"
+    },
+    "dataflashLogsSpace": {
+        "message": "Espazo libre para logs"
+    },
+    "dataflashNote": {
+        "message": "Os históricos de voo poden gravarse na memoria dataflash da controladora."
+    },
+    "dataflashNotPresentNote": {
+        "message": "A súa controladora non dispon duna memoria dataflash compatible."
+    },
+    "dataflashFirmwareUpgradeRequired": {
+        "message": "Dataflash require un firmware &gt;= 1.8.0."
+    },
+    "dataflashButtonSaveFile": {
+        "message": "Gardar flash a arquivo..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Guardar flash a arquivo... (obsoleto)"
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Gardar os rexistros da caixa negra a través do configurador é lento e propenso a erros. Recoméndase que en cambio use<b>$t(onboardLoggingRebootMscText.message)<\/b> '(abaixo) para activar o modo de almacenamento masivo, e acceda ao controlador de voo como dispositivo de almacenamento para descargar os ficheiros de rexistro."
+    },
+    "dataflashButtonErase": {
+        "message": "Borrar flash"
+    },
+    "dataflashConfirmEraseTitle": {
+        "message": "Confirma o borrado da dataflash"
+    },
+    "dataflashConfirmEraseNote": {
+        "message": "Esto eliminará calquer rexistro da Caixa Negra ou outros datos contidos na flash. Debería tardar uns 20 segundos ¿Está seguro?"
+    },
+    "dataflashSavingTitle": {
+        "message": "Gardando dataflash a un arquivo"
+    },
+    "dataflashSavingNote": {
+        "message": "Gardar pode levar uns cantos minutos, por favor espere."
+    },
+    "dataflashSavingNoteAfter": {
+        "message": "¡Completouse o gardado! Prema \"Ok\" para continuar."
+    },
+    "dataflashButtonSaveCancel": {
+        "message": "Cancelar"
+    },
+    "dataflashButtonSaveDismiss": {
+        "message": "Aceptar"
+    },
+    "dataflashButtonEraseConfirm": {
+        "message": "Si, borrar dataflash"
+    },
+    "dataflashButtonEraseCancel": {
+        "message": "Cancelar"
+    },
+    "dataflashFileWriteFailed": {
+        "message": "Non se puido escribir no ficheiro que seleccionou, ¿están correctos os permisos nese cartafol?"
+    },
+    "sdcardStatusNoCard": {
+        "message": "Tarxeta non insertada"
+    },
+    "sdcardStatusReboot": {
+        "message": "Erro fatal<br>Reinicie para reintentar"
+    },
+    "sdcardStatusReady": {
+        "message": "Tarxeta dispoñible"
+    },
+    "sdcardStatusStarting": {
+        "message": "Iniciando tarxeta..."
+    },
+    "sdcardStatusFileSystem": {
+        "message": "Iniciando sistema de arquivos..."
+    },
+    "sdcardStatusUnknown": {
+        "message": "Estado descoñecido $1"
+    },
+    "firmwareFlasherReleaseSummaryHead": {
+        "message": "Información de versión"
+    },
+    "firmwareFlasherReleaseName": {
+        "message": "Nome\/Versión:"
+    },
+    "firmwareFlasherReleaseVersionUrl": {
+        "message": "Visitar páxina desta versión."
+    },
+    "firmwareFlasherReleaseNotes": {
+        "message": "Notas da versión:"
+    },
+    "firmwareFlasherReleaseDate": {
+        "message": "Data:"
+    },
+    "firmwareFlasherReleaseStatus": {
+        "message": "Estado:"
+    },
+    "firmwareFlasherReleaseTarget": {
+        "message": "Placa:"
+    },
+    "firmwareFlasherReleaseFile": {
+        "message": "Binario:"
+    },
+    "firmwareFlasherReleaseStatusReleaseCandidate": {
+        "message": "<span class=\"message-negative\">IMPORTANTE: Esta versión de firmware está marcada como versión candidata a convertirse en estable. Por favor, informe de calquera problema inmediatamente.<\/span>"
+    },
+    "firmwareFlasherReleaseFileUrl": {
+        "message": "Descargar manualmente."
+    },
+    "firmwareFlasherTargetWarning": {
+        "message": "<span class=\"message-negative\">IMPORTANTE<\/span>: Asegurese de que carga un arquivo apropiado para a súa placa. Flashear un binario para unha placa erronea pode facer que <span class=\"message-negative\">acontezan<\/span> cousas malas."
+    },
+    "firmwareFlasherPath": {
+        "message": "Ruta:"
+    },
+    "firmwareFlasherSize": {
+        "message": "Tamaño:"
+    },
+    "firmwareFlasherStatus": {
+        "message": "Estado:"
+    },
+    "firmwareFlasherProgress": {
+        "message": "Progreso:"
+    },
+    "firmwareFlasherLoadFirmwareFile": {
+        "message": "Por favor, cargue o arquivo do firmware"
+    },
+    "firmwareFlasherNoReboot": {
+        "message": "Sen secuencia de reinicio"
+    },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Seleccione o tipo de compilación para ver as dispoñibles."
+    },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Elixa a súa placa para poder ver as versións de firmware dispoñibles en linea - Seleccione a versión correcta de firmware apropiada para a súa controladora."
+    },
+    "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
+        "message": "Elixa a versión de firmware para a súa controladora."
+    },
+    "firmwareFlasherNoRebootDescription": {
+        "message": "Actívo si a súa FC está en modo boot. por exemplo se encende a súa FC cos pins de bootloader conectados ou suxeitando o botón de BOOT desta."
+    },
+    "firmwareFlasherFlashOnConnect": {
+        "message": "Flashear ó conectar"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Intentar flashear a controladora automáticamente (tan pronto como se detecte un novo porto serie)."
+    },
+    "firmwareFlasherFullChipErase": {
+        "message": "Borrado completo do chip"
+    },
+    "firmwareFlasherFullChipEraseDescription": {
+        "message": "Borrar toda a configuración almacenada na controladora."
+    },
+    "firmwareFlasherFlashDevelopmentFirmware": {
+        "message": "Utilizar Firmware en desenvolvemento"
+    },
+    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
+        "message": "Flashear o firmware de desenvolvemento (sen probar) máis recente."
+    },
+    "firmwareFlasherManualPort": {
+        "message": "Porto"
+    },
+    "firmwareFlasherManualBaud": {
+        "message": "Velocidade manual"
+    },
+    "firmwareFlasherManualBaudDescription": {
+        "message": "Selección manual da velocidade de transmisión en baudios para controladoras que non soportan a velocidade por defecto ou que se están a actualizar a través de bluetooth.<br \/><span class=\"message-negative\">Nota:<\/span> Non empregado cando se está a utilizar USB DFU"
+    },
+    "firmwareFlasherBaudRate": {
+        "message": "Velocidade de Transmisión"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Mostra versións inestables"
+    },
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
+        "message": "Mostrar versións candidatas ademais de versións estables"
+    },
+    "firmwareFlasherOptionLoading": {
+        "message": "Cargando ..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Versións"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Versións e versións candidatas"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Desenvolvemento"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "Parche 3.3 AKK e RDQ VTX"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "Parche 3.4 AKK e RDQ VTX"
+    },
+    "firmwareFlasherOptionLabelSelectFirmware": {
+        "message": "Elixe un Firmware \/ Controladora"
+    },
+    "firmwareFlasherOptionLabelSelectBoard": {
+        "message": "Elixe una Controladora"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersion": {
+        "message": "Elixe unha versión de Firmware"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
+        "message": "Elixe unha versión de Firmware para"
+    },
+    "firmwareFlasherButtonLoadLocal": {
+        "message": "Cargar Firmware [Local]"
+    },
+    "firmwareFlasherButtonLoadOnline": {
+        "message": "Cargar Firmware [En linea]"
+    },
+    "firmwareFlasherButtonDownloading": {
+        "message": "Descargando..."
+    },
+    "firmwareFlasherFlashFirmware": {
+        "message": "Grabar Firmware"
+    },
+    "firmwareFlasherGithubInfoHead": {
+        "message": "Información de Firmware en GitHub"
+    },
+    "firmwareFlasherCommiter": {
+        "message": "Contribuidor:"
+    },
+    "firmwareFlasherDate": {
+        "message": "Data:"
+    },
+    "firmwareFlasherHash": {
+        "message": "Hash:"
+    },
+    "firmwareFlasherUrl": {
+        "message": "Ir a GitHub para revisar este cambio..."
+    },
+    "firmwareFlasherMessage": {
+        "message": "Mensaxe:"
+    },
+    "firmwareFlasherWarningText": {
+        "message": "Por favor <span class=\"message-negative\">non<\/span> intente flashear <strong>hardware non compatible con Betaflight<\/strong> con este flasheador de firmwares.<br \/><span class=\"message-negative\">Non<\/span> <strong>desconecte<\/strong> a controladora nin<strong>apague<\/strong> o ordeador mentres se escribe o firmware.<br \/><br \/><strong>Nota:<\/strong>o bootloader STM32 está almacenado na ROM, polo que non se pode estragar.<br \/><strong>Nota: <\/strong><span class=\"message-negative\">Auto-Conectar<\/span>está sempre deshabilitado mentres está no Flasheador de Firmware.<br \/><strong>Nota: <\/strong>Asegúrese de que ten unha backup; algunhas actualizacións\/downgrades borrarán a súa configuración.<br \/><strong>Nota:<\/strong> Se ten problemas flasheando <strong>probe a desconectar tódolos cables da súa controladora<\/strong> primeiro, probe a reiniciar, actualiza chrome, actualiza drivers.<br \/><strong>Nota:<\/strong> Cando acualice placas que se conecten directamente a través de conectores USB (as controladoras máis novas) asegúrese de que ten lido a sección de Flasheo do manual de Betaflight e de que ten o software e drivers correctos instalados"
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "<strong> Recuperación \/ comunicación perdida <\/strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Se perde a conexión coa súa controladora siga estes pasos para reestabrecer a comunicación: <ul><li>Apagar<\/li><li>Activar 'non reiniciar', Activar 'Borrado completo do chip'.<\/li><li>Puenté os pins de BOOT ou manteña pulsado o botón BOOT.<\/li><li>Encenda(o LED de actividade NON parpadeará se se fai correctamente).<\/li><li>Instale tódolos drivers para STM32 e Zadig en caso de ser necesario (consulte a sección <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">Flasheo USB<\/a> do manual de Betaflight).<\/li><li>Peche o configurador, peche tódalas instancias de chrome, peche tódalas aplicacións de Chrome, Reinicie o Configurador.<\/li><li>Solte o botón se a súa controladora ten un.<\/li><li>Cargue o firmware correcto empregando unha velocidade de transmisión manual (se está especificada no manual da controladora)<\/li><li>Apagar.<\/li><li>Elimine o puenteo dos pins de BOOT<\/li><li>Encenda (o LED de actividad debería de parpadear).<\/li><li>Conecte con normalidade.<\/li><\/ul>"
+    },
+    "firmwareFlasherButtonLeave": {
+        "message": "Abandoando o Instalador o Firmware"
+    },
+    "firmwareFlasherFirmwareNotLoaded": {
+        "message": "Firmware non cargado"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Firmware Local Cargado: ($1 bytes)"
+    },
+    "firmwareFlasherHexCorrupted": {
+        "message": "O arquivo HEX parece estar corrupto"
+    },
+    "firmwareFlasherRemoteFirmwareLoaded": {
+        "message": "<span class=\"message-positive\">Firmware remoto cargado, listo para instalar<\/span>"
+    },
+    "firmwareFlasherFailedToLoadOnlineFirmware": {
+        "message": "Erro ó cargar o firmware remoto"
+    },
+    "firmwareFlasherNoFirmwareSelected": {
+        "message": "<b>Non se seleccionou ningún firmware para cargar<\/b>"
+    },
+    "firmwareFlasherNoValidPort": {
+        "message": "<span class=\"message-negative\">Por favor selecciona un porto serie válido<\/span>"
+    },
+    "firmwareFlasherWritePermissions": {
+        "message": "Non ten <span class=\"message-negative\">permisos de escritura<\/span> para este arquivo"
+    },
+    "firmwareFlasherFlashTrigger": {
+        "message": "Detectado: <strong>$1<\/strong> - executando instalar ó conectar"
+    },
+    "firmwareFlasherPreviousDevice": {
+        "message": "Detectado: <strong>$1<\/strong> - dispositivo anterior todavía en instalación, por favor volva conectalo para volver intentalo"
+    },
+    "ledStripHelp": {
+        "message": "O controlador de voo pode controlar cores e efectos dos LEDs individuais duna tira.<br\/>Configure LEDs, configure a orde do cableado e engada LEDs a súa aeronave acordo coas posiciones da reixa. LEDs sen número de orden do cableado non se gardarán.<br \/>Doble-pulsación nun cor para editar os valores HSV."
+    },
+    "ledStripButtonSave": {
+        "message": "Gardar"
+    },
+    "ledStripColorSetupTitle": {
+        "message": "Axuste da cor",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "Restantes",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "Borrar seleccionado",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "Borrar todo",
+        "description": "In the LED STRIP, clear all leds"
+    },
+    "ledStripEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
+    },
+    "ledStripVtxOverlay": {
+        "message": "VTX (usa a frecuencia VTX para asinar a cor)"
+    },
+    "ledStripFunctionSection": {
+        "message": "Funcións LED"
+    },
+    "ledStripFunctionTitle": {
+        "message": "Función"
+    },
+    "ledStripFunctionNoneOption": {
+        "message": "Ningunha",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "Cor",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "Modos &amp; Orientación",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Estado do Armado",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "Batería",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "RSSI",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "GPS",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRingOption": {
+        "message": "Sonido",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripColorModifierTitle": {
+        "message": "Modificador de cor"
+    },
+    "ledStripModeColorsTitle": {
+        "message": "Cores do modo"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "Orientación",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Headfree",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Horizon",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Angle",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Mag",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Baro",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "N",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "E",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "S",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "O",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "Alto",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "Baixo",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModesOrientationTitle": {
+        "message": "Orientación LED ('Modos &amp; Orientación ') e cor",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModesSpecialColorsTitle": {
+        "message": "Cores especiais",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Desarmado",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Armado",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "Animación",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBlinkBg": {
+        "message": "Parpadeo de fondo",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "GPS: Non hai satélites",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoLock": {
+        "message": "GPS: Sen rexistrar",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "GPS: Rexistrado",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "Tira LED",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringMode": {
+        "message": "Modo orde cableado",
+        "description": "One of the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "Borrar seleccionado",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringClearAllControl": {
+        "message": "Borrar tódala instalación eléctrica",
+        "description": "Control button in the wiring modes in Led Strip"
+    },
+    "ledStripWiringMessage": {
+        "message": "Os LED sen número de orde de arame non se gardarán.",
+        "description": "Message in the wiring modes in Led Strip"
+    },
+    "ledStripVtxFunction": {
+        "message": "Escáner de Larson"
+    },
+    "ledStripBlinkTitle": {
+        "message": "Parpadeo"
+    },
+    "ledStripBlinkAlwaysOverlay": {
+        "message": "Parpadeo continuo"
+    },
+    "ledStripBlinkLandingOverlay": {
+        "message": "Parpadeo ao aterrar"
+    },
+    "ledStripOverlayTitle": {
+        "message": "Superposición"
+    },
+    "ledStripWarningsOverlay": {
+        "message": "Avisos"
+    },
+    "ledStripIndecatorOverlay": {
+        "message": "Indicador (usa a posición na matriz)"
+    },
+    "colorBlack": {
+        "message": "negro"
+    },
+    "colorWhite": {
+        "message": "branco"
+    },
+    "colorRed": {
+        "message": "vermello"
+    },
+    "colorOrange": {
+        "message": "laranxa"
+    },
+    "colorYellow": {
+        "message": "amarelo"
+    },
+    "colorLimeGreen": {
+        "message": "verde lima"
+    },
+    "colorGreen": {
+        "message": "verde"
+    },
+    "colorMintGreen": {
+        "message": "verde menta"
+    },
+    "colorCyan": {
+        "message": "cian"
+    },
+    "colorLightBlue": {
+        "message": "azul claro"
+    },
+    "colorBlue": {
+        "message": "azul"
+    },
+    "colorDarkViolet": {
+        "message": "violeta oscuro"
+    },
+    "colorMagenta": {
+        "message": "magenta"
+    },
+    "colorDeepPink": {
+        "message": "rosa intenso"
+    },
+    "controlAxisRoll": {
+        "message": "Roll [A]"
+    },
+    "controlAxisPitch": {
+        "message": "Pitch [E]"
+    },
+    "controlAxisYaw": {
+        "message": "Yaw [R]"
+    },
+    "controlAxisThrottle": {
+        "message": "Throttle [T]"
+    },
+    "controlAxisAux1": {
+        "message": "AUX 1"
+    },
+    "controlAxisAux2": {
+        "message": "AUX 2"
+    },
+    "controlAxisAux3": {
+        "message": "AUX 3"
+    },
+    "controlAxisAux4": {
+        "message": "AUX 4"
+    },
+    "controlAxisAux5": {
+        "message": "AUX 5"
+    },
+    "controlAxisAux6": {
+        "message": "AUX 6"
+    },
+    "controlAxisAux7": {
+        "message": "AUX 7"
+    },
+    "controlAxisAux8": {
+        "message": "AUX 8"
+    },
+    "controlAxisAux9": {
+        "message": "AUX 9"
+    },
+    "controlAxisAux10": {
+        "message": "AUX 10"
+    },
+    "controlAxisAux11": {
+        "message": "AUX 11"
+    },
+    "controlAxisAux12": {
+        "message": "AUX 12"
+    },
+    "controlAxisAux13": {
+        "message": "AUX 13"
+    },
+    "controlAxisAux14": {
+        "message": "AUX 14"
+    },
+    "controlAxisAux15": {
+        "message": "AUX 15"
+    },
+    "controlAxisAux16": {
+        "message": "AUX 16"
+    },
+    "pidTuningBasic": {
+        "message": "Básico\/Acro"
+    },
+    "pidTuningYawJumpPrevention": {
+        "message": "Previr Salto de Yaw"
+    },
+    "pidTuningYawJumpPreventionHelp": {
+        "message": "Evita que a aeronave salte ó final dos yaws. Un número máis alto da máis amortiguación ó final dos movementos de yaw (funciona como a anterior D de yaw, que no era realmente unha D real como noutros eixos)"
+    },
+    "pidTuningRcExpoPower": {
+        "message": "Potencia Expo RC"
+    },
+    "pidTuningRcExpoPowerHelp": {
+        "message": "O expoñente que se usa ó calcular o RC Expo. En versións de Betaflight anteriores a 3.0, este valor está fixado en 3."
+    },
+    "pidTuningLevel": {
+        "message": "Angle\/Horizon"
+    },
+    "pidTuningAltitude": {
+        "message": "Barómetro e Sonar\/Altitude"
+    },
+    "pidTuningMag": {
+        "message": "Magnetómetro\/Dirección"
+    },
+    "pidTuningGps": {
+        "message": "Navegación GPS"
+    },
+    "pidTuningStrength": {
+        "message": "Forza"
+    },
+    "pidTuningTransition": {
+        "message": "Transición"
+    },
+    "pidTuningHorizon": {
+        "message": "Horizon"
+    },
+    "pidTuningAngle": {
+        "message": "Angle"
+    },
+    "pidTuningLevelAngleLimit": {
+        "message": "Ángulo Límite"
+    },
+    "pidTuningLevelSensitivity": {
+        "message": "Sensibilidade"
+    },
+    "pidTuningLevelHelp": {
+        "message": "Os seguintes valores cambian o comportamento dos modos de voo ANGLE e HORIZON. Diferentes controladores PID manexan os diferentes valores. Consulte a documentación."
+    },
+    "pidTuningNonProfileFilterSettings": {
+        "message": "Axustes do perfil de Filtros independentes"
+    },
+    "pidTuningGyroLowpassFiltersGroup": {
+        "message": "Filtros Paso Baixo do Xiro"
+    },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "Frecuencia de Corte Xiro Paso Baixo 1 [Hz]"
+    },
+    "pidTuningGyroLowpassType": {
+        "message": "Tipo de Filtro Xiro Paso Baixo 1"
+    },
+    "pidTuningGyroLowpassDynMinFrequency": {
+        "message": "Frecuencia de Corte Min do Xiro Paso Baixo 1 Dinámico [Hz]"
+    },
+    "pidTuningGyroLowpassDynMaxFrequency": {
+        "message": "Frecuencia de Corte Max Xiro Paso Baixo 1 Dinámico [Hz]"
+    },
+    "pidTuningGyroLowpassDynType": {
+        "message": "Tipo de Filtro Xiro Paso Baixo 1 Dinámico"
+    },
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Frecuencia de Corte Xiro Paso Baixo 2 [Hz]"
+    },
+    "pidTuningGyroLowpass2Type": {
+        "message": "Tipo de Filtro Xiro Paso Baixo 2"
+    },
+    "pidTuningGyroNotchFiltersGroup": {
+        "message": "Filtros Notch do Xiro"
+    },
+    "pidTuningGyroNotch1Frequency": {
+        "message": "Xiro Filtro Notch 1 Frecuencia Central [Hz]"
+    },
+    "pidTuningGyroNotch2Frequency": {
+        "message": "Xiro Filtro Notch 2 Frecuencia Central [Hz]"
+    },
+    "pidTuningGyroNotch1Cutoff": {
+        "message": "Xiro Filtro Notch 1 Frecuencia de Corte [Hz]"
+    },
+    "pidTuningGyroNotch2Cutoff": {
+        "message": "Xiro Filtro Notch 2 Frecuencia de Corte [Hz]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "O Filtro Notch ten un Centro e un Corte. O filtro é simétrico. A Frecuencia Central é o centro do filtro e a Frecuencia de Corte é donde o filtro Notch empeza. Por exemplo cunha Frecuencia de Corte de 160 e unha Frecuencia Central de 260 o rango é 160-360Hz cunha maior atenuación en torno ó centro"
+    },
+    "pidTuningLowpassFilterHelp": {
+        "message": "Os Filtros Paso Baixo poden ter duas variantes: estático e dinámico. Para un determinado número de filtro paso baixo só uno pode estar activado á vez (estático ou dinámico). O estático só ten un Corte que define de algunha maneira dónde empeza o filtro. O dinámico define valores mínimos e máximos, que é o rango dónde se sitúa o Corte. Este Corte móvese entre o mínimo e o máximo á vez que se move o stick do acelerador."
+    },
+    "pidTuningFilterSettings": {
+        "message": "Axustes de Filtros dependentes do Perfil"
+    },
+    "pidTuningDTermLowpassFiltersGroup": {
+        "message": "Filtros Paso Baixo do Termo D"
+    },
+    "pidTuningDTermLowpassType": {
+        "message": "Tipo de Filtro D Term Paso Baixo 1"
+    },
+    "pidTuningDTermLowpassFrequency": {
+        "message": "Frecuencia de Corte D Term Paso Baixo 1 [Hz]"
+    },
+    "pidTuningDTermLowpass2Frequency": {
+        "message": "Frecuencia de Corte D Term Paso Baixo 2 [Hz]"
+    },
+    "pidTuningDTermLowpass2Type": {
+        "message": "Tipo de filtro D Termo Lowpass 2"
+    },
+    "pidTuningDTermLowpassDynMinFrequency": {
+        "message": "D termo Lowpass 1 Frecuencia mínima de corte dinámica [Hz]"
+    },
+    "pidTuningDTermLowpassDynMaxFrequency": {
+        "message": "D Termo Lowpass 1 Frecuencia máxima de corte dinámica [Hz]"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term Lowpass 1 Tipo de filtro dinámico"
+    },
+    "pidTuningDTermNotchFiltersGroup": {
+        "message": "Filtros Notch de termo D"
+    },
+    "pidTuningDTermNotchFrequency": {
+        "message": "Filtro D de terminais Notch Frecuencia do centro [Hz]"
+    },
+    "pidTuningDTermNotchCutoff": {
+        "message": "Frecuencia de corte do filtro D de termo Notch [Hz]"
+    },
+    "pidTuningYawLospassFiltersGroup": {
+        "message": "Filtros Paso Baixo do Yaw"
+    },
+    "pidTuningYawLowpassFrequency": {
+        "message": "Frecuencia de corte de paso baixo de Yaw [Hz]"
+    },
+    "pidTuningVbatPidCompensation": {
+        "message": "Compensación PID Vbat"
+    },
+    "pidTuningVbatPidCompensationHelp": {
+        "message": "Aumente os valores PID para compensar cando Vbat diminúe. Isto dará características de voo máis constantes durante todo o voo. A cantidade de compensación que se aplica calcúlase a partir do $t(powerBatteryMaximum.message) definido na páxina $t(tabPower.message), así que asegúrese de que está axustado a algo apropiado."
+    },
+    "pidTuningItermRotation": {
+        "message": "Rotación Término I"
+    },
+    "pidTuningItermRotationHelp": {
+        "message": "Xira correctamente o vector Termo I actual a outros eixes mentres o quad xira ao xirarse continuamente durante os rolls e ao realizar embudos e outros trucos. Moi apreciado polos pilotos LOS acro."
+    },
+    "pidTuningSmartFeedforward": {
+        "message": "Smart Feedforward"
+    },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "Reduce o efecto do termo F no PID. Cando tanto o termo P como o termo F están activos no mesmo momento, só usa o maior dos dous, evitando pasarse sen necesidade de levantar D, pero tamén reduce o efecto de reacción producido polo termo F cando se engade a P."
+    },
+    "pidTuningItermRelax": {
+        "message": "Afloxar Termo I"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Limita a acumulación de Termo I cando se producen movementos rápidos. Isto axuda especialmente a reducir o retroceso ao final dos rolls e outros movementos rápidos. Pode escoller os eixes nos que está activo e se o movemento rápido está detectado usando o Xiro ou o Setpoint (stick)."
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "Eixos:"
+    },
+    "pidTuningItermRelaxAxesOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningItermRelaxAxesOptionRPY": {
+        "message": "RPY"
+    },
+    "pidTuningItermRelaxAxesOptionRPInc": {
+        "message": "RP (solo incremento)"
+    },
+    "pidTuningItermRelaxAxesOptionRPYInc": {
+        "message": "RPY (solo incremento)"
+    },
+    "pidTuningItermRelaxType": {
+        "message": "Tipo:"
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "Xiro"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Valor obxetivo"
+    },
+    "pidTuningAbsoluteControlGain": {
+        "message": "Control Absoluto"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Esta característica resolve algúns problemas subxacentes de $t(pidTuningItermRotation.message) e debería substituílo por algún outro punto. Este recurso acumula o erro xiratorio absoluto nas coordenadas quad e mestura unha corrección proporcional no punto de consigna. Para que funcione, ten que activar AirMode e $t(pidTuningItermRelax.message) (for $t(pidTuningItermRelaxAxesOptionRP.message)). Se combina esta función con $t(pidTuningIntegratedYaw.message), pode configurar $t(pidTuningItermRelax.message) activado para $t(pidTuningItermRelaxAxesOptionRPY.message)."
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Potenciar do Acelerador"
+    },
+    "pidTuningThrottleBoostHelp": {
+        "message": "Esta característica permite que o acelerador sexa impulsado temporalmente nos movementos de adherencia rápida, o que aumenta o par de aceleración dos motores, proporcionando unha resposta moito máis rápida."
+    },
+    "pidTuningAcroTrainerAngleLimit": {
+        "message": "Ángulo límite para Entrenador Acro"
+    },
+    "pidTuningAcroTrainerAngleLimitHelp": {
+        "message": "Engade un novo modo de limitación de ángulo para os pilotos que aprenden a voar en modo acro. O intervalo válido é de 10 a 80 e debe activarse cun cambio no separador $t(tabAuxiliary.message)."
+    },
+    "pidTuningIntegratedYaw": {
+        "message": "Yaw Integrado"
+    },
+    "pidTuningIntegratedYawCaution": {
+        "message": "<span class=\"message-negative\"> ATENCIÓN <\/span>: se habilita esta función, ten que axustar o PID YAW de acordo. Máis información <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Integrated-Yaw\" target=\"_blank\"> aquí <\/a>"
+    },
+    "pidTuningIntegratedYawHelp": {
+        "message": "Yaw integrado é unha característica que corrixe un problema fundamental co control do quad: mentres que o eixe do pich e roll son controlados polos diferenciais de empuxe, as hélices xeran diferente Yaw. Yaw integrado resolve isto integrando a saída do yaw pid antes de aplicalos ao mixer. Isto normaliza o xeito no que funcionan os pids. Agora podes sintonizar con calquera outro eixe. Require o uso do control absoluto xa que non se necesitan con Yaw integrado."
+    },
+    "configHelp2": {
+        "message": "Rotación arbitraria de taboleiro en graos, para permitir a súa montaxe lateral \/ boca abaixo \/ rotada etc. Ao executar sensores externos, use os aliñamentos do sensor (Xiro, Acc, Mag) para definir a posición do sensor independente da orientación da placa. "
+    },
+    "failsafeFeaturesHelpOld": {
+        "message": "A configuración de Failsafe cambiou considerablemente. Utiliza Betaflight <strong>v1.12.0+<\/strong> para habilitar o panel de configuración mellorado."
+    },
+    "failsafePaneTitleOld": {
+        "message": "Failsafe do receptor"
+    },
+    "failsafeFeaturesHelpNew": {
+        "message": "Failsafe ten dúas etapas. <strong>Etapa 1<\/strong> introdúcese cando un canle de voo ten unha lonxitude de pulso inválida, o receptor informa do modo a proba de fallos ou non hai ningún sinal do receptor, os axustes de caída do canal aplícanse a <span class=\"message-negative\"> todos os canais <\/span> e fornécese un curto período de tempo para permitir a recuperación. <strong> Etapa 2 <\/strong> introdúcese cando a condición de erro leva máis tempo que a garda configurada mentres que a nave é <span class=\"message-negative\"> armada <\/span>, tódolos canles permanecerán na canle aplicada opción de reposición a menos que se exceda o procedemento escollido. <br \/> <strong> Nota: <\/strong> Antes de entrar na fase 1, as opcións de caída do canal tamén se aplican a canles AUX individuais que teñen pulsos non válidos."
+    },
+    "failsafePulsrangeTitle": {
+        "message": "Configuración de intervalo de pulsos válidos"
+    },
+    "failsafePulsrangeHelp": {
+        "message": "Os pulsos máis curtos que o mínimo ou máis que o máximo non son válidos e desencadearán a aplicación das opcións de devolución de canles individuais para as canles AUX ou entrar na fase 1 para os canles de voo"
+    },
+    "failsafeRxMinUsecItem": {
+        "message": "Lonxitud mínima"
+    },
+    "failsafeRxMaxUsecItem": {
+        "message": "Lonxitud máxima"
+    },
+    "failsafeChannelFallbackSettingsTitle": {
+        "message": "Configuracións de respaldo dos canáis"
+    },
+    "failsafeChannelFallbackSettingsHelp": {
+        "message": "Estes axustes aplicaranse a cada canal auxiliar non válido ou a tódolos canáis cando se entra na Etapa 1.<strong>Nota:<\/strong> os valores gárdanse en pasos de 25usec, polo que os cambios pequenos desaparecen"
+    },
+    "failsafeChannelFallbackSettingsAuto": {
+        "message": "<strong> Auto <\/strong> significa Roll, Pitch and Yaw ao centro e baixo Throttle. <strong>Manter<\/strong> significa manter o último valor bo recibido"
+    },
+    "failsafeChannelFallbackSettingsHold": {
+        "message": "<strong>Hold<\/strong> significa manter o último valor correcto recibido. <strong>Set<\/strong> significa que se utilizará o valor especificado aquí"
+    },
+    "failsafeStageTwoSettingsTitle": {
+        "message": "Etapa 2 - Axustes"
+    },
+    "failsafeDelayItem": {
+        "message": "Tempo de espera antes de activar a etapa 2 tras perder o sinal [1 = 0.1 sec.]"
+    },
+    "failsafeDelayHelp": {
+        "message": "Tempo para recuperación na Etapa 1"
+    },
+    "failsafeThrottleLowItem": {
+        "message": "Demora para baixar o acelerador en Failsafe [1 = 0.1 sec.]"
+    },
+    "failsafeThrottleLowHelp": {
+        "message": "Simplemente desarmar a aeronave en lugar de executar o procedimiento de Failsafe seleccionado cando non se acelera durante este período de tempo"
+    },
+    "failsafeThrottleItem": {
+        "message": "Valor do acelerador utilizado durante o aterrizaxe"
+    },
+    "failsafeOffDelayItem": {
+        "message": "Espera para apagar os motores no caso de Failsafe [1 = 0.1 sec.]"
+    },
+    "failsafeOffDelayHelp": {
+        "message": "Tempo para permanecer no modo de aterrizaxe ata que os motores se apagan e a aeronave se desarma."
+    },
+    "failsafeSubTitle1": {
+        "message": "Etapa 2 - Procedimiento de Failsafe"
+    },
+    "failsafeProcedureItemSelect1": {
+        "message": "Aterrizar"
+    },
+    "failsafeProcedureItemSelect2": {
+        "message": "Caer"
+    },
+    "failsafeProcedureItemSelect4": {
+        "message": "GPS Rescue"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Ángulo"
+    },
+    "failsafeGpsRescueItemInitialAltitude": {
+        "message": "Altura inicial (metros)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Distancia de descenso (metros)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Velocidade de aterraxe (metros\/segundo)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Aceleredor mínimo"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Acelerador máximo"
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Acelerador planear"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Satélites mínimos"
+    },
+    "failsafeGpsRescueItemSanityChecks": {
+        "message": "Controis de corrección"
+    },
+    "failsafeGpsRescueItemSanityChecksOff": {
+        "message": "Apagado"
+    },
+    "failsafeGpsRescueItemSanityChecksOn": {
+        "message": "Activo"
+    },
+    "failsafeGpsRescueItemSanityChecksFSOnly": {
+        "message": "Só Failsafe"
+    },
+    "failsafeKillSwitchItem": {
+        "message": "Failsafe Kill Switch (configura o Failsafe na Pestana de Modos)"
+    },
+    "failsafeKillSwitchHelp": {
+        "message": "Activa esta opción para facer que o interruptor de failsafe (na Pestana de Modos) actue como un interruptor de apagado, ignorando o procedemento de Failsafe seleccionado. <strong>Nota:<\/strong> O armado está bloqueado mentres o interruptor de failsafe esté en posición de ACTIVADO."
+    },
+    "failsafeSwitchTitle": {
+        "message": "Interruptor Failsafe"
+    },
+    "failsafeSwitchModeItem": {
+        "message": "Acción Interruptor Failsafe"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "Esta opción determina qué pasa cando o Failsafe se activa a través dun interruptor AUX:<br\/><strong>Etapa 1<\/strong> activa o modo de seguridade Etapa 1. É útil si queres simular o comportamiento exacto duna pérdida de sinal.<br\/><strong>Etapa 2<\/strong>salta a Etapa 1 e activa o procedemiento Etapa 2 inmediatamente<br\/><strong>Matar<\/strong> desarma instantáneamente (a aeronave estrellarase)"
+    },
+    "failsafeSwitchOptionStage1": {
+        "message": "Etapa 1"
+    },
+    "failsafeSwitchOptionStage2": {
+        "message": "Etapa 2"
+    },
+    "failsafeSwitchOptionKill": {
+        "message": "Matar"
+    },
+    "powerButtonSave": {
+        "message": "Gardar"
+    },
+    "powerFirmwareUpgradeRequired": {
+        "message": "Actualitzación de firmware <span class=\"message-negative\">requerida<\/span>. A configuración de Batería\/Amperatge\/Voltatge empregando l'API &lt; 1.33.0 (Versió de Betaflight &lt;= 3.17) no està suportada."
+    },
+    "powerBatteryVoltageMeterSource": {
+        "message": "Orixe do Sensor de Voltaxe"
+    },
+    "powerBatteryVoltageMeterTypeNone": {
+        "message": "Ningún"
+    },
+    "powerBatteryVoltageMeterTypeAdc": {
+        "message": "ADC Integrado"
+    },
+    "powerBatteryVoltageMeterTypeEsc": {
+        "message": "Sensor ESC"
+    },
+    "powerBatteryCurrentMeterSource": {
+        "message": "Orixen do Sensor de Corriente"
+    },
+    "powerBatteryCurrentMeterTypeNone": {
+        "message": "Ningún"
+    },
+    "powerBatteryCurrentMeterTypeAdc": {
+        "message": "ADC Integrado"
+    },
+    "powerBatteryCurrentMeterTypeVirtual": {
+        "message": "Virtual"
+    },
+    "powerBatteryCurrentMeterTypeEsc": {
+        "message": "Sensor ESC"
+    },
+    "powerBatteryCurrentMeterTypeMsp": {
+        "message": "Sensor MSP\/OSD Esclavo"
+    },
+    "powerBatteryMinimum": {
+        "message": "Voltaxe Mínimo da celda"
+    },
+    "powerBatteryMaximum": {
+        "message": "Voltaxe Màximo da celda"
+    },
+    "powerBatteryWarning": {
+        "message": "Aviso Voltaxe por Celda"
+    },
+    "powerVoltageHead": {
+        "message": "Medidor de Voltaxe"
+    },
+    "powerVoltageValue": {
+        "message": "$1 V"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
+    },
+    "powerVoltageId10": {
+        "message": "Batería"
+    },
+    "powerVoltageId20": {
+        "message": "5V"
+    },
+    "powerVoltageId30": {
+        "message": "9V"
+    },
+    "powerVoltageId40": {
+        "message": "12V"
+    },
+    "powerVoltageId50": {
+        "message": "ESC Combinado"
+    },
+    "powerVoltageId60": {
+        "message": "ESC Motor 1"
+    },
+    "powerVoltageId61": {
+        "message": "ESC Motor 2"
+    },
+    "powerVoltageId62": {
+        "message": "ESC Motor 3"
+    },
+    "powerVoltageId63": {
+        "message": "ESC Motor 4"
+    },
+    "powerVoltageId64": {
+        "message": "ESC Motor 5"
+    },
+    "powerVoltageId65": {
+        "message": "ESC Motor 6"
+    },
+    "powerVoltageId66": {
+        "message": "ESC Motor 7"
+    },
+    "powerVoltageId67": {
+        "message": "ESC Motor 8"
+    },
+    "powerVoltageId68": {
+        "message": "ESC Motor 9"
+    },
+    "powerVoltageId69": {
+        "message": "ESC Motor 10"
+    },
+    "powerVoltageId70": {
+        "message": "ESC Motor 11"
+    },
+    "powerVoltageId71": {
+        "message": "ESC Motor 12"
+    },
+    "powerVoltageId80": {
+        "message": "Celda 1"
+    },
+    "powerVoltageId81": {
+        "message": "Celda 2"
+    },
+    "powerVoltageId82": {
+        "message": "Celda 3"
+    },
+    "powerVoltageId83": {
+        "message": "Celda 4"
+    },
+    "powerVoltageId84": {
+        "message": "Celda 5"
+    },
+    "powerVoltageId85": {
+        "message": "Celda 6"
+    },
+    "powerVoltageScale": {
+        "message": "Escala"
+    },
+    "powerVoltageDivider": {
+        "message": "Valor Divisor"
+    },
+    "powerVoltageMultiplier": {
+        "message": "Valor Multiplicador"
+    },
+    "powerAmperageHead": {
+        "message": "Medidor de Amperaxe"
+    },
+    "powerAmperageId10": {
+        "message": "Batería"
+    },
+    "powerAmperageId50": {
+        "message": "ESC Combinado"
+    },
+    "powerAmperageId60": {
+        "message": "ESC Motor 1"
+    },
+    "powerAmperageId61": {
+        "message": "ESC Motor 2"
+    },
+    "powerAmperageId62": {
+        "message": "ESC Motor 3"
+    },
+    "powerAmperageId63": {
+        "message": "ESC Motor 4"
+    },
+    "powerAmperageId64": {
+        "message": "ESC Motor 5"
+    },
+    "powerAmperageId65": {
+        "message": "ESC Motor 6"
+    },
+    "powerAmperageId66": {
+        "message": "ESC Motor 7"
+    },
+    "powerAmperageId67": {
+        "message": "ESC Motor 8"
+    },
+    "powerAmperageId68": {
+        "message": "ESC Motor 9"
+    },
+    "powerAmperageId69": {
+        "message": "ESC Motor 10"
+    },
+    "powerAmperageId70": {
+        "message": "ESC Motor 11"
+    },
+    "powerAmperageId71": {
+        "message": "ESC Motor 12"
+    },
+    "powerAmperageId80": {
+        "message": "Virtual"
+    },
+    "powerAmperageId90": {
+        "message": "MSP"
+    },
+    "powerMahValue": {
+        "message": "$1 mAh"
+    },
+    "powerAmperageScale": {
+        "message": "Escala [1\/10mV\/A]"
+    },
+    "powerAmperageOffset": {
+        "message": "Desprazamento [mA]"
+    },
+    "powerBatteryHead": {
+        "message": "Batería"
+    },
+    "powerStateHead": {
+        "message": "Estado da Energía"
+    },
+    "powerBatteryConnected": {
+        "message": "Conectada"
+    },
+    "powerBatteryConnectedValueYes": {
+        "message": "Si (Cells: $1)"
+    },
+    "powerBatteryConnectedValueNo": {
+        "message": "Non"
+    },
+    "powerBatteryVoltage": {
+        "message": "Voltaxe"
+    },
+    "powerBatteryCurrentDrawn": {
+        "message": "mAh empregados"
+    },
+    "powerBatteryAmperage": {
+        "message": "Amperaxe"
+    },
+    "powerBatteryCapacity": {
+        "message": "Capacidade (mAh)"
+    },
+    "osdSetupTitle": {
+        "message": "OSD"
+    },
+    "osdSetupPreviewHelp": {
+        "message": "<strong> Nota: <\/strong> a vista previa da OSD pode non mostrar a fonte real que está instalada no controlador de voo."
+    },
+    "osdSetupUnsupportedNote1": {
+        "message": "O controlador de voo non responde aos comandos OSD. Isto probablemente significa que non ten un OSD integrado de BetaFlight."
+    },
+    "osdSetupUnsupportedNote2": {
+        "message": "Observe que algunhas placas controladoras teñen integrado un <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a> que pode ser flasheado e configurado con <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>, de calquera maneira o MinimOSD non pode ser configurado a través deste interfaz."
+    },
+    "osdSetupProfilesTitle": {
+        "message": "Número Perfil OSD",
+        "description": "Description of the header of the OSD elements column associated to each profile"
+    },
+    "osdSetupElementsTitle": {
+        "message": "Elementos"
+    },
+    "osdSetupPreviewTitle": {
+        "message": "Arrastre elementos para cambiar de posición",
+        "description": "Indicates in the preview window of the OSD that the user can drag the elements to reorder them"
+    },
+    "osdSetupPreviewSelectProfileTitle": {
+        "message": "Previsualizar para",
+        "description": "Label of the selector for the OSD Profile in the preview"
+    },
+    "osdSetupSelectedProfileTitle": {
+        "message": "Perfil OSD activo",
+        "description": "Title of the box to select the current active OSD profile"
+    },
+    "osdSetupSelectedProfileLabel": {
+        "message": "Actual:",
+        "description": "Label for the selection of the curren active OSD profile"
+    },
+    "osdSetupPreviewSelectProfileElement": {
+        "message": "Perfil OSD {{profileNumber}}",
+        "description": "Content of the selector for the OSD Profile in the preview"
+    },
+    "osdSetupPreviewTitleTip": {
+        "message": "Mostrar ou ocultar o logotipo na xanela de previsualización. Isto non cambiará ningunha configuración do controlador de voo."
+    },
+    "osdSetupVideoFormatTitle": {
+        "message": "Formato de vídeo"
+    },
+    "osdSetupUnitsTitle": {
+        "message": "Unidades"
+    },
+    "osdSetupTimersTitle": {
+        "message": "Temporizadores"
+    },
+    "osdSetupAlarmsTitle": {
+        "message": "Alarmas"
+    },
+    "osdSetupStatsTitle": {
+        "message": "Estadísticas Post Voo"
+    },
+    "osdSetupVtxTitle": {
+        "message": "Axustes VTX"
+    },
+    "osdSetupCraftNameTitle": {
+        "message": "Nome aeronave"
+    },
+    "osdSetupWarningsTitle": {
+        "message": "Avisos"
+    },
+    "osdSetupFontPresets": {
+        "message": "Preaxustes:"
+    },
+    "osdSetupFontPresetsSelector": {
+        "message": "Elixe unha Fonte Predefinida:"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "or"
+    },
+    "osdSetupOpenFont": {
+        "message": "Abrir Arquivo Fonte"
+    },
+    "osdSetupCustomLogoTitle": {
+        "message": "Logo do arranque:"
+    },
+    "osdSetupCustomLogoOpenImageButton": {
+        "message": "Seleccionar imaxen personalizada&hellip;"
+    },
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "Imaxen personalizada:"
+    },
+    "osdSetupCustomLogoInfoImageSize": {
+        "message": "O tamaño debe ser $t(logoWidthPx)×$t(logoHeightPx) píxeles"
+    },
+    "osdSetupCustomLogoInfoColorMap": {
+        "message": "Debe conter píxeles verdes, brancos e negros"
+    },
+    "osdSetupCustomLogoInfoUploadHint": {
+        "message": "Pulse <b>$t(osdSetupUploadFont.message)<\/b> para conservar logo personalizado"
+    },
+    "osdSetupCustomLogoImageSizeError": {
+        "message": "Tamaño da imaxen inválido: {{width}}×{{height}} (esperado $t(logoWidthPx)×$t(logoHeightPx))"
+    },
+    "osdSetupCustomLogoColorMapError": {
+        "message": "A imaxen conten un píxel inválido: rgb({{valueR}}, {{valueG}}, {{valueB}}) nas coordenadas {{posX}}×{{posY}}"
+    },
+    "osdSetupUploadFont": {
+        "message": "Cargar Fonte"
+    },
+    "osdSetupSave": {
+        "message": "Gardar"
+    },
+    "osdSetupFontManager": {
+        "message": "Xestor de Fontes"
+    },
+    "osdSetupUncheckAll": {
+        "message": "Desmarcar todo"
+    },
+    "osdSetupHead": {
+        "message": "Info"
+    },
+    "osdSetupVideoMode": {
+        "message": "Modo Vídeo"
+    },
+    "osdSetupCameraConnected": {
+        "message": "Cámara Conectada"
+    },
+    "osdSetupCameraConnectedValueYes": {
+        "message": "Si"
+    },
+    "osdSetupCameraConnectedValueNo": {
+        "message": "Non"
+    },
+    "osdSetupResetText": {
+        "message": "Reiniciar OSD a valores por defecto"
+    },
+    "osdSetupButtonReset": {
+        "message": "Reiniciar Axustes"
+    },
+    "osdDescElementMainBattVoltage": {
+        "message": "Voltaxe instantáneo da batería principal (parpadea por debaixo do limiar de alarma)"
+    },
+    "osdDescElementRssiValue": {
+        "message": "Valor instantáneo RSSI (parpadea por debaixo do limiar de alarma)"
+    },
+    "osdDescElementThrottlePosition": {
+        "message": "Valor actual do canle do acelerador"
+    },
+    "osdDescElementArmed": {
+        "message": "Mensaxe de texto armado"
+    },
+    "osdDescElementDisarmed": {
+        "message": "Mensaxe de texto desarmado"
+    },
+    "osdDescElementCrosshairs": {
+        "message": "Punto de mira no centro da pantalla"
+    },
+    "osdDescElementArtificialHorizon": {
+        "message": "Indicador gráfico do horizonte artificial"
+    },
+    "osdDescElementHorizonSidebars": {
+        "message": "Barras laterais do indicador do horizonte artificial"
+    },
+    "osdDescElementCurrentDraw": {
+        "message": "Consumo instantáneo de corriente da batería"
+    },
+    "osdDescElementMahDrawn": {
+        "message": "Capacidad total usada da batería"
+    },
+    "osdDescElementCraftName": {
+        "message": "Nome da aeronave tal como está no apartado Configuración"
+    },
+    "osdDescElementDisplayName": {
+        "message": "Mostrar nome configurado có comando cli \"display_name\""
+    },
+    "osdDescElementAltitude": {
+        "message": "Altitude actual (parpadea por riba do limiar de alarma)"
+    },
+    "osdDescElementOnTime": {
+        "message": "Tempo total que a aeronave estivo encendida"
+    },
+    "osdDescElementFlyTime": {
+        "message": "Tempo total que a aeronave estivo armada no ciclo actual de enerxía (parpadea por riba do limiar de alarma)"
+    },
+    "osdDescElementFlyMode": {
+        "message": "Modo de voo actual"
+    },
+    "osdDescElementGPSSpeed": {
+        "message": "Velocidade proporcionada polo GPS"
+    },
+    "osdDescElementGPSSats": {
+        "message": "Número de satélites GPS fixados"
+    },
+    "osdDescElementGPSLon": {
+        "message": "Lonxitude GPS"
+    },
+    "osdDescElementGPSLat": {
+        "message": "Latitude GPS"
+    },
+    "osdDescElementDebug": {
+        "message": "Variables de Debug"
+    },
+    "osdDescElementPIDRoll": {
+        "message": "Valores PID do eixo roll"
+    },
+    "osdDescElementPIDPitch": {
+        "message": "Valores PID do eixo pitch"
+    },
+    "osdDescElementPIDYaw": {
+        "message": "Valores PID do eixo yaw"
+    },
+    "osdDescElementPower": {
+        "message": "Potencia eléctrica instantánea consumida"
+    },
+    "osdDescElementPIDRateProfile": {
+        "message": "Visualización numérica do perfil activo de PID e rates"
+    },
+    "osdDescElementBatteryWarning": {
+        "message": "Texto de aviso que aparece cando o voltaxe da batería cae por debaixo do limiar de alarma"
+    },
+    "osdDescElementAvgCellVoltage": {
+        "message": "Voltaxe medio das baterías (voltaxe principal da batería \/ número de celdas)"
+    },
+    "osdDescElementPitchAngle": {
+        "message": "Ángulo numérico do pitch en grados"
+    },
+    "osdDescElementRollAngle": {
+        "message": "Ángulo numérico do roll en grados"
+    },
+    "osdDescElementMainBattUsage": {
+        "message": "Representación gráfica da capacidad da batería usada"
+    },
+    "osdDescElementArmedTime": {
+        "message": "Tempo dende que a aeronave foi armada por última vez"
+    },
+    "osdDescElementWarnings": {
+        "message": "Alertas (p.ej. batería baixa), avisos (p.ej. razons para non armar, batería baixa crítica) e pitido visual (4 asteriscos parpadeando)."
+    },
+    "osdDescElementEscTemperature": {
+        "message": "Temperatura reportada pola telemetría dos ESC"
+    },
+    "osdDescElementEscRpm": {
+        "message": "RPM reportadas por la telemetría dos ESC"
+    },
+    "osdDescElementEscRpmFreq": {
+        "message": "Frecuencia RPM reportada pola telemetría dos ESC"
+    },
+    "osdDescElementRtcDateTime": {
+        "message": "Data \/ Hora en tempo real"
+    },
+    "osdDescElementAdjustmentRange": {
+        "message": "Axuste de rango e valor do elemento activo actualmente"
+    },
+    "osdDescElementHomeDirection": {
+        "message": "Flecha mostrando a dirección da posición da casa"
+    },
+    "osdDescElementHomeDistance": {
+        "message": "Distancia cara a posición casa (en pes ou en metros basada no axuste de unidades do sistema)"
+    },
+    "osdDescElementNumericalHeading": {
+        "message": "Lectura numérica da dirección actual en grados"
+    },
+    "osdDescElementNumericalVario": {
+        "message": "Lectura numérica da velocidade vertical (en pes ou metros basada no axuste de unidades do sistema)"
+    },
+    "osdDescElementCompassBar": {
+        "message": "Barra gráfica cuna brúxula mostrando a dirección actual"
+    },
+    "osdDescElementFlipArrow": {
+        "message": "Flecha que indica que lado ten os motores arriba en modo tartaruga"
+    },
+    "osdDescElementLinkQuality": {
+        "message": "Indicador alternativo para 'calidade do enlace' basado na pérdida de paquetes - empregar con precaución"
+    },
+    "osdDescElementFlightDist": {
+        "message": "Distancia recorrida durante este voo."
+    },
+    "osdDescElementStickOverlayLeft": {
+        "message": "Superposición da posición do mando esquerdo do transmisor."
+    },
+    "osdDescElementStickOverlayRight": {
+        "message": "Superposición da posición do mando dereito do transmisor."
+    },
+    "osdDescElementTimer1": {
+        "message": "Mostra o valor do temporizador 1"
+    },
+    "osdDescElementTimer2": {
+        "message": "Mostra o valor do temporizador 2"
+    },
+    "osdDescElementRemaningTimeEstimate": {
+        "message": "Tempo estimado restante de voo"
+    },
+    "osdDescElementUnknown": {
+        "message": "Elemento descoñecido (os detalles añadiranse nunha futura versión)"
+    },
+    "osdDescElementCoreTemperature": {
+        "message": "Temperatura do núcleo do STM32 MCU"
+    },
+    "osdDescAntiGravity": {
+        "message": "Activa un indicador cando a anti gravidade está activa"
+    },
+    "osdDescGForce": {
+        "message": "Mostra canta Forza G está experimentando a aeronave"
+    },
+    "osdDescElementMotorDiag": {
+        "message": "Mostra un gráfico coa saída de cada motor"
+    },
+    "osdDescElementLogStatus": {
+        "message": "Número de caixa negra e avisos"
+    },
+    "osdDescStatMaxSpeed": {
+        "message": "Máxima velocidade rexistrada"
+    },
+    "osdDescStatMinBattery": {
+        "message": "Mínimo voltaxe da batería principal rexistrado"
+    },
+    "osdDescStatMinRssi": {
+        "message": "Mínimo RSSI rexistrado"
+    },
+    "osdDescStatMaxCurrent": {
+        "message": "Consumo máximo de corrente rexistrado"
+    },
+    "osdDescStatUsedMah": {
+        "message": "Capacidade usada da batería"
+    },
+    "osdDescStatMaxAltitude": {
+        "message": "Máxima altitude rexistrada"
+    },
+    "osdDescStatBlackbox": {
+        "message": "Porcentaxe total do uso da caixa negra"
+    },
+    "osdDescStatEndBattery": {
+        "message": "Voltaxe da batería no momento do desarme"
+    },
+    "osdDescStatFlyTime": {
+        "message": "Tempo total que a aeronave estivo armada no actual ciclo de enerxía"
+    },
+    "osdDescStatArmedTime": {
+        "message": "Tempo dende que a aeronave foi armada por última vez"
+    },
+    "osdDescStatMaxDistance": {
+        "message": "Distancia máxima a posición de casa"
+    },
+    "osdDescStatBlackboxLogNumber": {
+        "message": "Número de rexistro para este voo na caixa negra"
+    },
+    "osdDescStatTimer1": {
+        "message": "Valor do temporizador 1 no momento do desarme"
+    },
+    "osdDescStatTimer2": {
+        "message": "Valor do temporizador 2 no momento do desarme"
+    },
+    "osdDescStatRtcDateTime": {
+        "message": "Data e hora real"
+    },
+    "osdDescStatBattery": {
+        "message": "Voltaxe da batería en tempo real"
+    },
+    "osdDescStatGForce": {
+        "message": "Máxima forza G experimentada pola aeronave"
+    },
+    "osdDescStatEscTemperature": {
+        "message": "Temperatura máxima ESC"
+    },
+    "osdDescStatEscRpm": {
+        "message": "RPM máximos ESC"
+    },
+    "osdDescStatMinLinkQuality": {
+        "message": "Mínimo do indicador alternativo para 'calidade do enlace' basado na pérdida de paquetes"
+    },
+    "osdDescStatFlightDistance": {
+        "message": "Distancia total percorrida durante o voo"
+    },
+    "osdDescStatMaxFFT": {
+        "message": "Pico de frecuencia FFT"
+    },
+    "osdDescStatTotalFlights": {
+        "message": "Número total de voos"
+    },
+    "osdDescStatTotalFlightTime": {
+        "message": "Tempo total invertido voando"
+    },
+    "osdDescStatTotalFlightDistance": {
+        "message": "Distancia total percorrida"
+    },
+    "osdTimerSource": {
+        "message": "Orixen:"
+    },
+    "osdTimerSourceTooltip": {
+        "message": "Elixe o orixen do temporizador, isto controla a duración\/evento que este temporizador mide"
+    },
+    "osdTimerPrecision": {
+        "message": "Precisión:"
+    },
+    "osdTimerPrecisionTooltip": {
+        "message": "Elixe a precisión do temporizador, isto controla a precisión coa que o tiempo é reportado"
+    },
+    "osdTimerAlarm": {
+        "message": "Alarma:"
+    },
+    "osdTimerAlarmTooltip": {
+        "message": "Elixe o limiar de alarma do temporizador en minutos, cando o tempo excede este valor o elemento do OSD parpadeará, indicando 0 se desactiva a alarma"
+    },
+    "osdWarningUnknown": {
+        "message": "Aviso descoñecido (os detalles añadiranse nunha futura versión)"
+    },
+    "osdWarningArmingDisabled": {
+        "message": "Avisa da razón máis importante para non armar"
+    },
+    "osdWarningBatteryNotFull": {
+        "message": "Alerta cando a batería está conectada pero non cargada totalmente"
+    },
+    "osdWarningBatteryWarning": {
+        "message": "Alerta cando o voltaxe da LIPO baixe do límite establecido"
+    },
+    "osdWarningBatteryCritical": {
+        "message": "Alerta cando a voltaxe da batería baixe da media mínima por celda"
+    },
+    "osdWarningVisualBeeper": {
+        "message": "Mostra unha visualización dos avisos acústicos (muestrase como 4 asteriscos)"
+    },
+    "osdWarningCrashFlipMode": {
+        "message": "Advertir ao voltearse despois de activar o modo de choque"
+    },
+    "osdWarningEscFail": {
+        "message": "Enumera unha lista cos ESCs\/motores que están fallando (RPM ou temperatura están fora do limiar configurado)"
+    },
+    "osdWarningCoreTemperature": {
+        "message": "Avisa cando a temperatura do núcleo MCU excede un rango configurado"
+    },
+    "osdWarningRcSmoothingFailure": {
+        "message": "Avisa cuando a inicialización do Suavizado RC fallou"
+    },
+    "osdWarningFailsafe": {
+        "message": "Avisa cuando se executa o Modo de Seguridade"
+    },
+    "osdWarningLaunchControl": {
+        "message": "Avisa cuando o Control de Lanzamento está activado"
+    },
+    "osdWarningGpsRescueUnavailable": {
+        "message": "Avisa cando o GPS Rescue non está dispoñible e non pode ser activado"
+    },
+    "osdWarningGpsRescueDisabled": {
+        "message": "Avisa cando o GPS Rescue está desactivado"
+    },
+    "osdWarningRSSI": {
+        "message": "Avisa cando o RSSI está por debaixo da alarma configurada"
+    },
+    "osdWarningLinkQuality": {
+        "message": "Avisa cando a Calidad do Enlace está por debaixo da alarma configurada"
+    },
+    "osdSectionHelpElements": {
+        "message": "Activar ou desactivar os elementos do OSD"
+    },
+    "osdSectionHelpVideoMode": {
+        "message": "Axusta o modo de vídeo esperado da cámara (habitualmente pode deixarse como AUTO, si ten problemas entonces axusta o valor a la salida da tua cámara)."
+    },
+    "osdSectionHelpUnits": {
+        "message": "Axusta o sistema de unidades usado para as lecturas numéricas."
+    },
+    "osdSectionHelpTimers": {
+        "message": "Configurar os temporizadores de voo."
+    },
+    "osdSectionHelpAlarms": {
+        "message": "Axusta os limiares empregados para os elementos do OSD con estado de alarma."
+    },
+    "osdSectionHelpStats": {
+        "message": "Axusta os valores mostrados na pantalla de estadísticas post voo."
+    },
+    "osdSectionHelpWarnings": {
+        "message": "Activa ou desactiva avisos mostrados no elemento AVISOS."
+    },
+    "osdSettingsSaved": {
+        "message": "Axustes do OSD gardados"
+    },
+    "osdWritePermissions": {
+        "message": "Non ten <span class=\"message-negative\">permisos de escritura<\/span> para este arquivo"
+    },
+    "osdButtonSaved": {
+        "message": "Gardado"
+    },
+    "mainHelpArmed": {
+        "message": "Armado de Motores"
+    },
+    "mainHelpFailsafe": {
+        "message": "Modo Failsafe"
+    },
+    "mainHelpLink": {
+        "message": "Estado da ligazón serie"
+    },
+    "configurationEscProtocol": {
+        "message": "Protocolo dos ESC\/Motores"
+    },
+    "configurationEscProtocolHelp": {
+        "message": "Elixa o seu protocolo para o motor.<br>Asegúrese de verificar nas características do seu ESC que protocolos soporta. <br><b>¡Coidado si selecciona DSHOT900 ou DSHOT1200 xa que a maioría de ESCs non o soportan!<\/b>"
+    },
+    "configurationunsyndePwm": {
+        "message": "Velocidade PWM do motor separada da velocidade PID"
+    },
+    "configurationUnsyncedPWMFreq": {
+        "message": "Frecuencia Motor PWM"
+    },
+    "configurationGyroSyncDenom": {
+        "message": "Frecuencia do xiroscopo actualizada"
+    },
+    "configurationPidProcessDenom": {
+        "message": "Frecuencia do ciclo PID"
+    },
+    "configurationPidProcessDenomHelp": {
+        "message": "A máxima frecuencia do ciclo PID está limitada pola máxima frecuencia na que as actualizacións pueden ser enviadas según o ESC \/ protocolo do motor elexidos."
+    },
+    "configurationGyroUse32kHz": {
+        "message": "Activar o modo de mostreo do xiro de 32kHz"
+    },
+    "configurationGyroUse32kHzHelp": {
+        "message": "A frecuencia de actualización do xiro de 32kHz só é posible si o chip da placa a soporta (actualmente MPU6500, MPU9259 e ICM20xxx si están conectados sobre SPI). Ante a duda, consulte a especificación da placa."
+    },
+    "configurationAccHardware": {
+        "message": "Acelerómetro"
+    },
+    "configurationBaroHardware": {
+        "message": "Barómetro (si está soportado)"
+    },
+    "configurationMagHardware": {
+        "message": "Magnetómetro (si está soportado)"
+    },
+    "configurationSmallAngle": {
+        "message": "Ángulo máximo de Armado [degrees]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "A aeronave non se armará si está ladeada máis que o número de graos especificados. Só aplica si o acelerómetro está activado. Axustalo a 180 desactiva esta comprobación"
+    },
+    "configurationBatteryVoltage": {
+        "message": "Voltaxe da LIPO"
+    },
+    "configurationBatteryCurrent": {
+        "message": "Corrente da LIPO"
+    },
+    "configurationBatteryMeterType": {
+        "message": "Tipo de medidor de batería"
+    },
+    "configurationBatteryMinimum": {
+        "message": "Voltaxe Mínimo por Celda"
+    },
+    "configurationBatteryMaximum": {
+        "message": "Voltaxe Máximo por Celda"
+    },
+    "configurationBatteryWarning": {
+        "message": "Aviso de Voltaxe por Celda"
+    },
+    "configurationBatteryScale": {
+        "message": "Escala do Voltaxe"
+    },
+    "configurationCurrentMeterType": {
+        "message": "Tipo de Medidor de Corrente"
+    },
+    "configurationCurrent": {
+        "message": "Sensor de Corrente"
+    },
+    "configurationCurrentScale": {
+        "message": "Escala o voltaxe da saída a miliamperios [1\/10 mV\/A]"
+    },
+    "configurationCurrentOffset": {
+        "message": "Desplazamento en pasos de milivoltio"
+    },
+    "configurationBatteryMultiwiiCurrent": {
+        "message": "Activa soporte para la salida de corriente heredada MSP Multiwii"
+    },
+    "pidTuningProfile": {
+        "message": "Perfil"
+    },
+    "pidTuningProfileTip": {
+        "message": "Ata 3 (2 para algúns controladores) perfís diferentes poden ser almacenados no controlador de voo. O perfil de pid inclue pid, punto de axuste de d e os axustes de ángulo\/horizonte deste apartado. Unha vez no campo, pódense empregar simples comandos de palanca (mirar instruccións online) para cambiar entre perfis."
+    },
+    "pidTuningRateProfile": {
+        "message": "Perfil de Tasas"
+    },
+    "pidTuningRateProfileTip": {
+        "message": "Asta 3 Perfís de Tasas diferentes por perfil poden ser almacenados no controlador de voo. Os perfís de tasas incluen axustes para 'Tasa RC', 'Tasa', 'Expo RC', 'Acelerador' e 'TPA'. Cambiar entre perfís de tasas é posible en voo, configurando un interruptor de 3 posicións como 'Selección de Perfil de Tasas' no apartado de ' Axustes'."
+    },
+    "pidTuningDelta": {
+        "message": "Método Derivativo"
+    },
+    "pidTuningDeltaError": {
+        "message": "Erro"
+    },
+    "pidTuningDeltaMeasurement": {
+        "message": "Medida"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivativo dende Erro<\/b> proporciona una respuesta más directa do stick e prefírese para Carreiras.<br><br><b>Derivativo dende Medida<\/b> proporciona unha resposta do stick máis suave o cal é máis útil para freestyle"
+    },
+    "pidTuningPidControllerTip": {
+        "message": "<b>Tradicional vs Betaflight (planear):<\/b> A escala e a lóxica do PID son exactamente as mesmas. Non se necesita reaxustar. Tradicional é o antiguo betaflight evolucionado e reescrito, que é o controlador PID básico basado en matemáticas integradas. O controlador PID de Betaflight usa matemáticas en punto flotante e ten moitas novas funcionalidades especialmente diseñadas para aplicacións multirotor<br><b>Flotante vs Enteiro:<\/b> A escala e a lóxica do PID son exactamente as mesmas. No se necesita reaxustar. As placas F1 non teñen FPU integrada e o cálculo en punto flotante incrementa a carga de CPU e a matemática integral melloraría o rendimento, pero a matemática en punto flotante pode dar algo máis de precisión."
+    },
+    "pidTuningFilterTip": {
+        "message": "<b>Filtro Soft do Xiro:<\/b> Filtro paso baixo para o xiro. Usa un valor máis baixo para maior filtrado.<br><b>Filtro Termo D:<\/b> Filtro paso baixo para D termo. Pode afectar ó axuste de D. Usa un valor máis baixo para maior filtrado. <br><b>Filtro Yaw:<\/b> Filtra a saída de yaw. Pode axudar en configuracións con eixo yaw ruidoso."
+    },
+    "pidTuningPidTuningTip": {
+        "message": "<b>Proporcional:<\/b> Notará unha forte resistencia a calquer intento de mover o MultiRotor<br><b>Integral:<\/b> Incrementa a habilidade de manter a posición inicial xeral e reduce a derivada, pero tamén incrementa o retraso para volver a posición inicial.<br><b>Derivativo:<\/b> Mellora a velocidade a que se recuperan as desviacións, pero incrementa o ruido<br><b>Tasas e Expo<\/b>: Determina as sensacións cos sticks basadas nestos parámetros. Use o gráfico e o modelo 3D en vivo para encontrar os seus axustes de tasas favoritos"
+    },
+    "pidTuningPidTuningTipFeedforward": {
+        "message": "<b>Proporcional:<\/b> Notará unha forte resistencia a calquer intento de mover o MultiRotor<br><b>Integral:<\/b> Incrementa a habilidade de manter a posición inicial xeral e reduce a derivada, pero tamén incrementa o retraso para volver a posición inicial.<br><b>Derivativo:<\/b> Mellora a velocidade a que se recuperan as desviacións, pero incrementa o ruido<br><b>Prealimentación:<\/b> Normalmente o controlador PID reacciona ó erro. A Prealimentación anticipa o error basándose na entrada dos mandos, mellorando o tempo de resposta do quad.<br><b>Tasas e Expo<\/b>: Determina as sensacións cós sticks basadas nestos parámetros. Use o gráfico e o modelo 3D en vivo para encontrar os seus axustes de tasas favoritos"
+    },
+    "pidTuningRatesTip": {
+        "message": "Xogue cos rates e vexa como afectan á curva do stick"
+    },
+    "configurationCamera": {
+        "message": "Cámara"
+    },
+    "configurationPersonalization": {
+        "message": "Persoalización"
+    },
+    "craftName": {
+        "message": "Nome da aeronave"
+    },
+    "configurationFpvCamAngleDegrees": {
+        "message": "Ángulo da cámara (graos)"
+    },
+    "onboardLoggingBlackbox": {
+        "message": "Dispositivo de rexistro da caixa negra"
+    },
+    "onboardLoggingRateOfLogging": {
+        "message": "Tasa de rexistro da caixa negra"
+    },
+    "onboardLoggingSerialLogger": {
+        "message": "Dispositivo externo de rexistro"
+    },
+    "onboardLoggingFlashLogger": {
+        "message": "Dataflash integrada á controladora"
+    },
+    "onboardLoggingEraseInProgress": {
+        "message": "Borrado en progreso, agarde..."
+    },
+    "onboardLoggingOnboardSDCard": {
+        "message": "Tarxeta SD integrada"
+    },
+    "onboardLoggingMsc": {
+        "message": "Modo de Almacenamento Masivo"
+    },
+    "onboardLoggingMscNote": {
+        "message": "Reinicia en modo<strong>dispositivo de almacenamiento masivo (MSC)<\/strong>. Unha vez activado, a memoria integrada ou a tarjeta SD do seu controlador de voo será recoñecida como dispositivo de almacenamiento polo seu ordenador, e permitiralle descargar os seus arquivos de rexistro. Expulse e reinicie de novo o seu controlador de voo para abandoar o modo de dispositivo de almacenamento masivo."
+    },
+    "onboardLoggingRebootMscText": {
+        "message": "Activar Modo de Dispositivo de Almacenamento Masivo"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "O modo de almacenamento masivo non pode ser activado porque o dispositivo de almacenamento non está dispoñible."
+    },
+    "dialogConfirmResetTitle": {
+        "message": "Confirmar"
+    },
+    "dialogConfirmResetNote": {
+        "message": "ATENCIÓN: ¿Estás seguro de restaurar tódolos axustes a os valores por defecto?"
+    },
+    "dialogConfirmResetConfirm": {
+        "message": "Resetear"
+    },
+    "dialogConfirmResetClose": {
+        "message": "Cancelar"
+    },
+    "modeCameraWifi": {
+        "message": "Botón da cámara Wi-fi"
+    },
+    "modeCameraPower": {
+        "message": "Botón encendido da cámara"
+    },
+    "modeCameraChangeMode": {
+        "message": "Cambiar o modo da cámara"
+    },
+    "flashTab": {
+        "message": "Actualizar Firmware"
+    },
+    "cliAutoComplete": {
+        "message": "AutoCompletar CLI Avanzado"
+    }
+}
