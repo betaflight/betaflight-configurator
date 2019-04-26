@@ -224,23 +224,24 @@ TABS.cli.initialize = function (callback, nwGui) {
                 function executeSnippet() {
                     const commands = previewArea.val();
                     executeCommands(commands);
-                    self.GUI.snippetPreviewWindow.destroy();
-                    self.GUI.snippetPreviewWindow = null;
+                    self.GUI.snippetPreviewWindow.close();
                 }
 
                 function previewCommands(result) {
-                    self.GUI.snippetPreviewWindow = new jBox("Modal", {
-                        width: 'auto',
-                        height: 'auto',
-                        closeButton: 'title',
-                        animation: false,
-                        attach: $('.tab-cli'),
-                        title: i18n.getMessage("cliConfirmSnippetDialogTitle"),
-                        content: $('#snippetpreviewcontent'),
-                        onCreated: () =>  
-                            $("#snippetpreviewcontent a.confirm").click(() => executeSnippet())
-                        ,
-                    });
+                    if (!self.GUI.snippetPreviewWindow) {
+                        self.GUI.snippetPreviewWindow = new jBox("Modal", {
+                            id: "snippetPreviewWindow",
+                            width: 'auto',
+                            height: 'auto',
+                            closeButton: 'title',
+                            animation: false,
+                            title: i18n.getMessage("cliConfirmSnippetDialogTitle"),
+                            content: $('#snippetpreviewcontent'),
+                            onCreated: () =>  
+                                $("#snippetpreviewcontent a.confirm").click(() => executeSnippet())
+                            ,
+                        });
+                    }
                     previewArea.val(result);
                     self.GUI.snippetPreviewWindow.open();
                 }
