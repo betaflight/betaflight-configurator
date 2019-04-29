@@ -203,10 +203,14 @@ TABS.cli.initialize = function (callback, nwGui) {
         }
         
         $('.tab-cli .load').click(function() {
-            var suffix = 'txt',
-                accepts = [{
-                    description: suffix.toUpperCase() + ' files', extensions: [suffix],
-                }];
+            var accepts = [
+                {
+                    description: 'Config files', extensions: ["txt", "config"],
+                },
+                {
+                    description: 'All files',
+                },
+            ];
 
             chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(entry) {
                 if (chrome.runtime.lastError) {
