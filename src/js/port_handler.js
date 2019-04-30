@@ -1,5 +1,7 @@
 'use strict';
 
+const TIMEOUT_CHECK = 500; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
+
 var usbDevices = { filters: [
     {'vendorId': 1155, 'productId': 57105},
     {'vendorId': 10473, 'productId': 393}
@@ -13,7 +15,7 @@ var PortHandler = new function () {
 };
 
 PortHandler.initialize = function () {
-    // start listening, check after 250ms
+    // start listening, check after TIMEOUT_CHECK ms
     this.check();
 };
 
@@ -142,7 +144,7 @@ PortHandler.check = function () {
         GUI.updateManualPortVisibility();
         setTimeout(function () {
             self.check();
-        }, 250);
+        }, TIMEOUT_CHECK);
     });
 };
 
