@@ -6,9 +6,8 @@
   "bg-script": "js/eventPage.js",
   "default_locale": "en",
   "scripts": {
-    "start": "node node_modules/gulp/bin/gulp.js debug",
-    "_postinstall": "node ./node_modules/platform-dependent-modules/cli.js",
-    "postinstall": "npm run _postinstall",
+    "start": "gulp debug",
+    "postinstall": "platform-dependent-modules",
     "gulp": "gulp",
     "test": "karma start test/karma.conf.js"
   },
@@ -38,6 +37,7 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "dependencies": {
+    "gulp": "^4.0.1",
     "i18next": "^14.1.1",
     "i18next-xhr-backend": "^2.0.0",
     "jquery-textcomplete": "^1.8.5",
@@ -53,7 +53,6 @@
     "del": "^3.0.0",
     "follow-redirects": "^1.6.1",
     "fs-extra": "^7.0.1",
-    "gulp": "~4.0.0",
     "gulp-concat": "~2.6.1",
     "gulp-debian": "~0.1.8",
     "gulp-git": "^2.9.0",

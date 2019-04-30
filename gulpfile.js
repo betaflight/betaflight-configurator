@@ -228,7 +228,7 @@ function dist_src() {
         .pipe(gulp.src('changelog.html', { passthrougth: true }))
         .pipe(gulp.dest(DIST_DIR))
         .pipe(install({
-            npm: '--production --ignore-scripts'
+            yarn: '--production --ignore-scripts'
         }));
 };
 
@@ -588,7 +588,8 @@ function release_rpm(arch, done) {
              tempDir: path.join(RELEASE_DIR,'tmp-rpm-build-' + arch),
              keepTemp: false,
              verbose: false,
-             rpmDest: RELEASE_DIR
+             rpmDest: RELEASE_DIR,
+             execOpts: { maxBuffer: 1024 * 1024 * 16 },
     };
 
     buildRpm(options, function(err, rpm) {
