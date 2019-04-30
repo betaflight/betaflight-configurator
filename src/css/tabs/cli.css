@@ -42,7 +42,7 @@
     float: left;
 }
 
-.tab-cli textarea {
+.tab-cli textarea[name='commands'] {
     -webkit-box-sizing: border-box;
     width: 100%;
     margin-top: 8px;
@@ -51,6 +51,18 @@
     padding-left: 5px;
     border: 1px solid silver;
     resize: none;
+}
+
+.jBox-container textarea#preview {
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100%;
+    resize: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-family: monospace;
+    color: white;
+    padding: 5px;
+    margin-bottom: 5px;
 }
 
 .tab-cli #content-watermark {
