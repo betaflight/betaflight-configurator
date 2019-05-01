@@ -47,19 +47,18 @@ Unstable testing versions of the lates builds of the configurator for most platf
 ### Development
 
 1. Install node.js
-2. Change to project folder and run `npm install`.
-3. Run `npm start`.
+2. Change to project folder and run `yarn install`.
+3. Run `yarn start`.
 
 ### Running tests
 
-`npm test`
+`yarn test`
 
 ### App build and release
 
-The tasks are defined in `gulpfile.js` and can be run either via `gulp <task-name>` (if the command is in PATH or via `../node_modules/gulp/bin/gulp.js <task-name>`:
+The tasks are defined in `gulpfile.js` and can be run either `yarn gulp <task-name>`:
 
-1. Optional, install gulp `npm install --global gulp-cli`.
-2. Run `gulp <taskname> [[platform] [platform] ...]`.
+2. Run `yarn gulp <taskname> [[platform] [platform] ...]`.
 
 List of possible values of `<task-name>`:
 * **dist** copies all the JS and CSS files in the `./dist` folder.
@@ -73,11 +72,11 @@ List of possible values of `<task-name>`:
 To build or release only for one specific platform you can append the plaform after the `task-name`.
 If no platform is provided, all the platforms will be done in sequence.
 
-* **MacOS** use `gulp <task-name> --osx64`
-* **Linux** use `gulp <task-name> --linux64`
-* **Windows** use `gulp <task-name> --win32`
+* **MacOS** use `yarn gulp <task-name> --osx64`
+* **Linux** use `yarn gulp <task-name> --linux64`
+* **Windows** use `yarn gulp <task-name> --win32`
 
-You can also use multiple platforms e.g. `gulp <taskname> --osx64 --linux64`.
+You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`.
 
 ## Languages
 

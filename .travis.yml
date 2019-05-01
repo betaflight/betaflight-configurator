@@ -24,12 +24,11 @@ addons:
 
 before_install:
   - npm i -g npm@6.0.1
-  - npm install gulp -g
 
 script:
-  - npm test
-  - gulp release
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gulp release --chromeos; fi
+  - yarn test
+  - yarn gulp release
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then yarn gulp release --chromeos; fi
 
 cache:
   directories:
