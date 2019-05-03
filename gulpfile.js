@@ -228,7 +228,11 @@ function dist_src() {
         .pipe(gulp.src('changelog.html', { passthrougth: true }))
         .pipe(gulp.dest(DIST_DIR))
         .pipe(install({
-            yarn: '--production --ignore-scripts'
+            commands: {
+                'package.json': 'yarn'
+            },
+            production: true,
+            ignoreScripts: true
         }));
 };
 
