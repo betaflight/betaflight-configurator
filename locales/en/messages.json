@@ -76,49 +76,69 @@
         "message": "Default"
     },
     "language_ca": {
-        "message": "Catal\u00e0 (ca)"
+        "message": "Catal\u00e0 (ca)",
+        "description": "Don't translate!!!"
     },
     "language_de": {
-        "message": "Deutsch (de)"
+        "message": "Deutsch (de)",
+        "description": "Don't translate!!!"
     },
     "language_en": {
-        "message": "English (en)"
+        "message": "English (en)",
+        "description": "Don't translate!!!"
     },
     "language_es": {
-        "message": "Espa\u00f1ol (es)"
+        "message": "Espa\u00f1ol (es)",
+        "description": "Don't translate!!!"
     },
     "language_fr": {
-        "message": "Fran\u00e7ais (fr)"
+        "message": "Fran\u00e7ais (fr)",
+        "description": "Don't translate!!!"
     },
     "language_gl": {
-        "message": "Galego (gl)"
+        "message": "Galego (gl)",
+        "description": "Don't translate!!!"
     },
+    "language_hr": {
+        "message": "Hrvatski (hr)",
+        "description": "Don't translate!!!"
+    },
+    
     "language_id": {
-        "message": "Bahasa Indonesia (id)"
+        "message": "Bahasa Indonesia (id)",
+        "description": "Don't translate!!!"
     },
     "language_it": {
-        "message": "Italiano (it)"
+        "message": "Italiano (it)",
+        "description": "Don't translate!!!"
     },
     "language_ja": {
-        "message": "\u65E5\u672C\u8A9E (ja)"
+        "message": "\u65E5\u672C\u8A9E (ja)",
+        "description": "Don't translate!!!"
     },
     "language_ko": {
-        "message": "\ud55c\uad6d\uc5b4 (ko)"
+        "message": "\ud55c\uad6d\uc5b4 (ko)",
+        "description": "Don't translate!!!"
     },
     "language_lv": {
-        "message": "Latvie\u0161u (lv)"
+        "message": "Latvie\u0161u (lv)",
+        "description": "Don't translate!!!"
     },
     "language_pt": {
-        "message": "Portugu\u00EAs (pt)"
+        "message": "Portugu\u00EAs (pt)",
+        "description": "Don't translate!!!"
     },
     "language_ru": {
-        "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A (ru)"
+        "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A (ru)",
+        "description": "Don't translate!!!"
     },
     "language_sv": {
-        "message": "Svenska (sv)"
+        "message": "Svenska (sv)",
+        "description": "Don't translate!!!"
     },
     "language_zh_CN": {
-        "message": "\u7b80\u4f53\u4e2d\u6587 (zh_CN)"
+        "message": "\u7b80\u4f53\u4e2d\u6587 (zh_CN)",
+        "description": "Don't translate!!!"
     },
 
     "sensorDataFlashNotFound": {
