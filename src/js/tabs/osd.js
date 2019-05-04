@@ -10,8 +10,8 @@ SYM.THR = 0x04;
 SYM.THR1 = 0x05;
 SYM.FLY_M = 0x9C;
 SYM.ON_M = 0x9B;
-SYM.AH_CENTER_LINE = 0x26;
-SYM.AH_CENTER_LINE_RIGHT = 0x27;
+SYM.AH_CENTER_LINE = 0x7B;
+SYM.AH_CENTER_LINE_RIGHT = 0x7D;
 SYM.AH_CENTER = 0x7E;
 SYM.AH_BAR9_0 = 0x80;
 SYM.AH_DECORATION = 0x13;
@@ -20,6 +20,8 @@ SYM.AMP = 0x9A;
 SYM.MAH = 0x07;
 SYM.METRE = 0xC;
 SYM.FEET = 0xF;
+SYM.KPH = 0x9E;
+SYM.MPH = 0x9D;
 SYM.GPS_SAT_L = 0x1E;
 SYM.GPS_SAT_R = 0x1F;
 SYM.PB_START = 0x8A;
@@ -611,7 +613,7 @@ OSD.constants = {
             draw_order: 430,
             positionable: true,
             preview: function (osd_data) {
-                return ' 40' + (osd_data.unit_mode === 0 ? 'M' : 'K');
+                return ' 40' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.MPH) : FONT.symbol(SYM.KPH));
             }
         },
         GPS_SATS: {
