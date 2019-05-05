@@ -39,6 +39,7 @@ SYM.HEADING_N = 0x18;
 SYM.HEADING_S = 0x19;
 SYM.HEADING_E = 0x1A;
 SYM.HEADING_W = 0x1B;
+SYM.TEMPERATURE = 0x7A;
 SYM.TEMP_F = 0x0D;
 SYM.TEMP_C = 0x0E;
 SYM.STICK_OVERLAY_SPRITE_HIGH = 0x08;
@@ -47,6 +48,7 @@ SYM.STICK_OVERLAY_SPRITE_LOW = 0x0A;
 SYM.STICK_OVERLAY_CENTER = 0x0B;
 SYM.STICK_OVERLAY_VERTICAL = 0x16;
 SYM.STICK_OVERLAY_HORIZONTAL = 0x17;
+SYM.BBLOG = 0x10;
 
 var STICK_OVERLAY_SPRITE = [
     SYM.STICK_OVERLAY_SPRITE_HIGH,
@@ -294,7 +296,7 @@ OSD.generateTimerPreview = function (osd_data, timer_index) {
 };
 
 OSD.generateTemperaturePreview = function (osd_data, temperature) {
-    var preview = '';
+    var preview = FONT.symbol(SYM.TEMPERATURE);
     switch (osd_data.unit_mode) {
         case 0:
             temperature *= (9.0 / 5.0);
@@ -796,7 +798,9 @@ OSD.constants = {
             default_position: -1,
             draw_order: 480,
             positionable: true,
-            preview: FONT.symbol(SYM.TEMP_C) + '45'
+            preview: function (osd_data) {
+                return "E" + OSD.generateTemperaturePreview(osd_data, 45);
+            }
         },
         ESC_RPM: {
             name: 'ESC_RPM',
@@ -857,7 +861,7 @@ OSD.constants = {
             draw_order: 520,
             positionable: true,
             preview: function (osd_data) {
-                return OSD.generateTemperaturePreview(osd_data, 33);
+                return "C" + OSD.generateTemperaturePreview(osd_data, 33);
             }
         },
         ANTI_GRAVITY: {
@@ -893,7 +897,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 330,
             positionable: true,
-            preview: 'L16'
+            preview: FONT.symbol(SYM.BBLOG) + '16'
         },
         FLIP_ARROW: {
             name: 'FLIP_ARROW',
@@ -1135,7 +1139,9 @@ OSD.constants = {
         { file: "betaflight", name: "Betaflight" },
         { file: "digital", name: "Digital" },
         { file: "clarity", name: "Clarity" },
-        { file: "vision", name: "Vision" }
+        { file: "vision", name: "Vision" },
+        { file: "impact", name: "Impact" },
+        { file: "impact_mini", name: "Impact Mini" },
     ]
 };
 
