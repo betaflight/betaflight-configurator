@@ -47,8 +47,9 @@ Unstable testing versions of the lates builds of the configurator for most platf
 ### Development
 
 1. Install node.js
-2. Change to project folder and run `yarn install`.
-3. Run `yarn start`.
+2. Install yarn: `npm install yarn -g`
+3. Change to project folder and run `yarn install`.
+4. Run `yarn start`.
 
 ### Running tests
 
@@ -56,9 +57,10 @@ Unstable testing versions of the lates builds of the configurator for most platf
 
 ### App build and release
 
-The tasks are defined in `gulpfile.js` and can be run either `yarn gulp <task-name>`:
-
-2. Run `yarn gulp <taskname> [[platform] [platform] ...]`.
+The tasks are defined in `gulpfile.js` and can be run with through yarn:
+```
+yarn gulp <taskname> [[platform] [platform] ...]
+```
 
 List of possible values of `<task-name>`:
 * **dist** copies all the JS and CSS files in the `./dist` folder.
@@ -75,6 +77,7 @@ If no platform is provided, all the platforms will be done in sequence.
 * **MacOS** use `yarn gulp <task-name> --osx64`
 * **Linux** use `yarn gulp <task-name> --linux64`
 * **Windows** use `yarn gulp <task-name> --win32`
+* **ChromeOS** use `yarn gulp <task-name> --chromeos`
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`.
 
