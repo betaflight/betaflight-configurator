@@ -19,7 +19,7 @@ const targz = require('targz');
 
 const gulp = require('gulp');
 const concat = require('gulp-concat');
-const install = require("gulp-install");
+const yarn = require("gulp-yarn");
 const rename = require('gulp-rename');
 const os = require('os');
 const git = require('gulp-git');
@@ -227,10 +227,7 @@ function dist_src() {
         .pipe(gulp.src('package.json', { passthrougth: true }))
         .pipe(gulp.src('changelog.html', { passthrougth: true }))
         .pipe(gulp.dest(DIST_DIR))
-        .pipe(install({
-            commands: {
-                'package.json': 'yarn'
-            },
+        .pipe(yarn({
             production: true,
             ignoreScripts: true
         }));
