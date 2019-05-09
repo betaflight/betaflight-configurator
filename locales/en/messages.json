@@ -789,6 +789,10 @@
         "message": "Runway Takeoff Prevention has been triggered",
         "description": "Description of the RUNAWAY_TAKEOFF arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASH": {
+        "message": "Disarmed via crash detection",
+        "description": "Description of the CRASH arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Throttle channel is too high",
         "description": "Description of the THROTTLE arming disable flag"
