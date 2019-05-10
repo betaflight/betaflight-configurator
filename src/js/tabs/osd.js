@@ -1,6 +1,7 @@
 'use strict';
 
 var SYM = SYM || {};
+// some of these are changed in the initialization function below
 SYM.BLANK = 0x20;
 SYM.VOLT = 0x06;
 SYM.RSSI = 0x01;
@@ -473,7 +474,9 @@ OSD.constants = {
             positionable: function () {
                 return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
             },
-            preview: FONT.symbol(SYM.AH_CENTER_LINE) + FONT.symbol(SYM.AH_CENTER) + FONT.symbol(SYM.AH_CENTER_LINE_RIGHT)
+            preview: function () {
+                return FONT.symbol(SYM.AH_CENTER_LINE) + FONT.symbol(SYM.AH_CENTER) + FONT.symbol(SYM.AH_CENTER_LINE_RIGHT);
+            }
         },
         ARTIFICIAL_HORIZON: {
             name: 'ARTIFICIAL_HORIZON',
@@ -1872,7 +1875,7 @@ TABS.osd.initialize = function (callback) {
         // Open modal window
         OSD.GUI.fontManager = new jBox('Modal', {
             width: 720,
-            height: 420,
+            height: 440,
             closeButton: 'title',
             animation: false,
             attach: $('#fontmanager'),
@@ -2401,30 +2404,38 @@ TABS.osd.initialize = function (callback) {
         // init structs once, also clears current font
         FONT.initData();
 
+        // Some of these definitions are determined by version.
+        SYM.AH_CENTER_LINE = 0x26;
+        SYM.AH_CENTER_LINE_RIGHT = 0x27;
+        if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            SYM.AH_CENTER_LINE = 0x7B;
+            SYM.AH_CENTER_LINE_RIGHT = 0x7D;
+        }
+
         fontPresetsElement.change(function (e) {
             var $font = $('.fontpresets option:selected');
-            $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function (data) {
+            var fontver = 1;
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                fontver = 2;
+            }
+            $('.font-manager-version-info').text(i18n.getMessage('osdDescribeFontVersion' + fontver));
+            $.get('./resources/osd/' + fontver + '/' + $font.data('font-file') + '.mcm', function (data) {
                 FONT.parseMCMFontFile(data);
                 FONT.preview(fontPreviewElement);
                 LogoManager.drawPreview();
                 updateOsdView();
             });
         });
-
         // load the first font when we change tabs
-        var $font = $('.fontpresets option:selected');
-        $.get('./resources/osd/' + $font.data('font-file') + '.mcm', function (data) {
-            FONT.parseMCMFontFile(data);
-            FONT.preview(fontPreviewElement);
-            LogoManager.drawPreview();
-            updateOsdView();
-        });
+        fontPresetsElement.change();
+
 
         $('button.load_font_file').click(function () {
             FONT.openFontFile().then(function () {
                 FONT.preview(fontPreviewElement);
                 LogoManager.drawPreview();
                 updateOsdView();
+                $('.font-manager-version-info').text(i18n.getMessage('osdDescribeFontVersionCUSTOM'));
             }).catch(error => console.error(error));
         });
 

@@ -3946,7 +3946,17 @@
     "osdDescStatTotalFlightDistance": {
         "message": "Total distance traveled"
     },
-    
+
+    "osdDescribeFontVersion1": {
+        "message": "Font version: 1 (firmware version <= 4.0)"
+    },
+    "osdDescribeFontVersion2": {
+        "message": "Font version: 2 (firmware version >= 4.1)"
+    },
+    "osdDescribeFontVersionCUSTOM": {
+        "message": "Font version: user provided"
+    },
+
     "osdTimerSource": {
       "message": "Source:"
     },
