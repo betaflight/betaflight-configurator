@@ -26,6 +26,7 @@ SYM.GPS_SAT_L = 0x1E;
 SYM.GPS_SAT_R = 0x1F;
 SYM.GPS_LAT = 0x89;
 SYM.GPS_LON = 0x98;
+SYM.HOMEFLAG = 0x11;
 SYM.PB_START = 0x8A;
 SYM.PB_FULL = 0x8B;
 SYM.PB_EMPTY = 0x8D;
@@ -758,7 +759,7 @@ OSD.constants = {
             draw_order: 460,
             positionable: true,
             preview: function (osd_data) {
-                return '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE) + (semver.gte(CONFIG.apiVersion, "1.37.0") ? '    ' : '');
+                return FONT.symbol(SYM.HOMEFLAG) + '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE) + (semver.gte(CONFIG.apiVersion, "1.37.0") ? '    ' : '');
             }
         },
         NUMERICAL_HEADING: {
