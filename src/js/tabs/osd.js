@@ -52,6 +52,8 @@ SYM.STICK_OVERLAY_VERTICAL = 0x16;
 SYM.STICK_OVERLAY_HORIZONTAL = 0x17;
 SYM.BBLOG = 0x10;
 SYM.ALTITUDE = 0x7F;
+SYM.PITCH = 0x15;
+SYM.ROLL = 0x14;
 
 var STICK_OVERLAY_SPRITE = [
     SYM.STICK_OVERLAY_SPRITE_HIGH,
@@ -716,7 +718,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 250,
             positionable: true,
-            preview: '-00.0'
+            preview: FONT.symbol(SYM.PITCH) + '-00.0'
         },
         ROLL_ANGLE: {
             name: 'ROLL_ANGLE',
@@ -724,7 +726,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 260,
             positionable: true,
-            preview: '-00.0'
+            preview: FONT.symbol(SYM.ROLL) + '-00.0'
         },
         MAIN_BATT_USAGE: {
             name: 'MAIN_BATT_USAGE',
