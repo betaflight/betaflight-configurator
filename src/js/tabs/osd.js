@@ -24,6 +24,8 @@ SYM.KPH = 0x9E;
 SYM.MPH = 0x9D;
 SYM.GPS_SAT_L = 0x1E;
 SYM.GPS_SAT_R = 0x1F;
+SYM.GPS_LAT = 0x89;
+SYM.GPS_LON = 0x98;
 SYM.PB_START = 0x8A;
 SYM.PB_FULL = 0x8B;
 SYM.PB_EMPTY = 0x8D;
@@ -633,7 +635,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 450,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_EAST) + '-000.0000000'
+            preview: FONT.symbol(SYM.GPS_LON) + '-000.0000000'
         },
         GPS_LAT: {
             name: 'GPS_LAT',
@@ -641,7 +643,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 440,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_NORTH) + '-00.0000000 '
+            preview: FONT.symbol(SYM.GPS_LAT) + '-00.0000000 '
         },
         DEBUG: {
             name: 'DEBUG',
