@@ -713,7 +713,7 @@ function generateFilename(prefix, suffix) {
             filename = CONFIG.flightControllerIdentifier + '_' + filename;
         }
         if(CONFIG.name && CONFIG.name.trim() !== '') {
-            filename = filename + '_' + CONFIG.name.trim().replace(' ', '_');
+            filename = filename + '_' + CONFIG.name.trim().replace(/[<>:"/\\|?* ]/g, '_');
         }
     }
 
