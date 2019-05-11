@@ -233,6 +233,9 @@ TABS.setup.initialize = function (callback) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
                 disarmFlagElements = disarmFlagElements.concat(['RESC']);
             }
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
+            }
 
             // Always the latest element
             disarmFlagElements = disarmFlagElements.concat(['ARM_SWITCH']);
