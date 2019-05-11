@@ -304,16 +304,12 @@ CliAutoComplete._initTextcomplete = function() {
             search:  function(term, callback) {
                 sendOnEnter = false;
                 searcher(term, callback, cache.settings, 3);
-            },
-            replace: function (value) {
-                self.openLater();
-                return '$1' + value + ' = ';
             }
         }),
 
         strategy({ // "set with value"
             match: /^(\s*set\s+(\w+)\s*=\s*)(\w*)$/i,
-            search:  function(term, callback, match) {
+            search: function(term, callback, match) {
                 var arr = [];
                 var settingName = match[2].toLowerCase();
                 this.isSettingValueArray = false;
@@ -338,7 +334,6 @@ CliAutoComplete._initTextcomplete = function() {
 
                 callback(arr);
             },
-            template: highlighterAnywhere,
             replace: function (value) {
                 if (this.isSettingValueArray) {
                     return basicReplacer(value);
@@ -360,7 +355,6 @@ CliAutoComplete._initTextcomplete = function() {
                 }
                 searcher(term, callback, arr, 1);
             },
-            template: highlighterAnywhere,
             replace: function(value) {
                 if (value in cache.resourcesCount) {
                     self.openLater();
