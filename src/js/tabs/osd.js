@@ -24,6 +24,8 @@ SYM.KPH = 0x9E;
 SYM.MPH = 0x9D;
 SYM.GPS_SAT_L = 0x1E;
 SYM.GPS_SAT_R = 0x1F;
+SYM.GPS_LAT = 0x89;
+SYM.GPS_LON = 0x98;
 SYM.PB_START = 0x8A;
 SYM.PB_FULL = 0x8B;
 SYM.PB_EMPTY = 0x8D;
@@ -50,6 +52,8 @@ SYM.STICK_OVERLAY_VERTICAL = 0x16;
 SYM.STICK_OVERLAY_HORIZONTAL = 0x17;
 SYM.BBLOG = 0x10;
 SYM.ALTITUDE = 0x7F;
+SYM.PITCH = 0x15;
+SYM.ROLL = 0x14;
 
 var STICK_OVERLAY_SPRITE = [
     SYM.STICK_OVERLAY_SPRITE_HIGH,
@@ -633,7 +637,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 450,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_EAST) + '-000.0000000'
+            preview: FONT.symbol(SYM.GPS_LON) + '-000.0000000'
         },
         GPS_LAT: {
             name: 'GPS_LAT',
@@ -641,7 +645,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 440,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_NORTH) + '-00.0000000 '
+            preview: FONT.symbol(SYM.GPS_LAT) + '-00.0000000 '
         },
         DEBUG: {
             name: 'DEBUG',
@@ -714,7 +718,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 250,
             positionable: true,
-            preview: '-00.0'
+            preview: FONT.symbol(SYM.PITCH) + '-00.0'
         },
         ROLL_ANGLE: {
             name: 'ROLL_ANGLE',
@@ -722,7 +726,7 @@ OSD.constants = {
             default_position: -1,
             draw_order: 260,
             positionable: true,
-            preview: '-00.0'
+            preview: FONT.symbol(SYM.ROLL) + '-00.0'
         },
         MAIN_BATT_USAGE: {
             name: 'MAIN_BATT_USAGE',
