@@ -1767,7 +1767,7 @@
         "message": "RSSI Channel"
     },
 	"receiverHelpRssiChannel": {
-	        "message": "AUX channel on which you have configured RSSI forwarding.  <p><strong>If AUX channel gets disabled after saving, check if ADC_RSSI is enabled in the Configuration tab.</strong></p>  ADC_RSSI has priority, and is enabled by default on boards that support it."
+	        "message": "Channel on which you have configured RSSI forwarding.  <p><strong>If AUX channel gets disabled after saving, check if ADC_RSSI is enabled in the Configuration tab.</strong></p>  ADC_RSSI has priority, and is enabled by default on boards that support it."
 	    },
     "receiverRssiChannelDisabledOption": {
         "message": "Disabled"
