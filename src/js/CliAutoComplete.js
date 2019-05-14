@@ -307,12 +307,25 @@ CliAutoComplete._initTextcomplete = function() {
             }
         }),
 
+        strategy({ // "set ="
+            match: /^(\s*set\s+\w*\s*)$/i,
+            search:  function(term, callback) {
+                sendOnEnter = false;
+                searcher('', callback, ['='], false);
+            },
+            replace: function(value) {
+                self.openLater();
+                return basicReplacer(value);
+            }
+        }),
+
         strategy({ // "set with value"
-            match: /^(\s*set\s+(\w+)\s*=\s*)(\w*)$/i,
+            match: /^(\s*set\s+(\w+))\s*=\s*(.*)$/i,
             search: function(term, callback, match) {
                 var arr = [];
                 var settingName = match[2].toLowerCase();
                 this.isSettingValueArray = false;
+                this.value = match[3];
                 sendOnEnter = !!term;
 
                 if (settingName in cache.settingsAcceptedValues) {
@@ -335,9 +348,12 @@ CliAutoComplete._initTextcomplete = function() {
                 callback(arr);
             },
             replace: function (value) {
-                if (this.isSettingValueArray) {
-                    return basicReplacer(value);
+                if (!this.isSettingValueArray) {
+                    // `value` is the tooltip text, so use the saved match
+                    value = this.value;
                 }
+
+                return '$1 = ' + value; // cosmetic - make sure we have spaces around the `=`
             },
             index: 3,
             isSettingValueArray: false
