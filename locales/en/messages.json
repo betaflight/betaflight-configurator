@@ -3570,7 +3570,7 @@
         "message": "OSD"
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Note:</strong> OSD preview may not show the actual font that is installed on the flight controller."
+        "message": "<strong>Note:</strong> OSD preview may not show the actual font that is installed on the flight controller. The layout of individual elements may look different when older versions of the firmware are used - please check the look through your goggles before flying."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Your flight controller isn't responding to OSD commands. This probably means that it does not have an integrated BetaFlight OSD."
