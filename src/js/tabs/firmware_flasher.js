@@ -63,7 +63,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         FirmwareCache.put(summary, intel_hex);
                     }
 
-                    $('span.progressLabel').html('<a class="save_firmware" href="#" title="Save Firmware">Loaded Online Firmware: (' + parsed_hex.bytes_total + ' bytes)</a>');
+                    $('span.progressLabel').html('<a class="save_firmware" href="#" title="Save Firmware">' + i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', parsed_hex.bytes_total) + '</a>');
 
                     self.enableFlashing(true);
 
