@@ -3,6 +3,7 @@ body {
     font-size: 12px;
     color: #303030;
     margin: 10px;
+    overflow: hidden;
 }
 
 .control-gimbals {
