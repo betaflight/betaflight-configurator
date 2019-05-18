@@ -3959,10 +3959,10 @@
     },
 
     "osdDescribeFontVersion1": {
-        "message": "Font version: 1 (firmware version <= 4.0)"
+        "message": "Font version: 1 (Betaflight 4.0 or older)"
     },
     "osdDescribeFontVersion2": {
-        "message": "Font version: 2 (firmware version >= 4.1)"
+        "message": "Font version: 2 (Betaflight 4.1 or newer)"
     },
     "osdDescribeFontVersionCUSTOM": {
         "message": "Font version: user provided"
