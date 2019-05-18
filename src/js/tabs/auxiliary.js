@@ -17,7 +17,11 @@ TABS.auxiliary.initialize = function (callback) {
     }
 
     function get_box_ids() {
-        MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, get_rc_data);
+        MSP.send_message(MSPCodes.MSP_BOXIDS, false, false, get_rssi_config);
+    }
+
+    function get_rssi_config() {
+        MSP.send_message(MSPCodes.MSP_RSSI_CONFIG, false, false, get_rc_data);
     }
 
     function get_rc_data() {
@@ -445,7 +449,7 @@ TABS.auxiliary.initialize = function (callback) {
                 }
             }    
 
-            auto_select_channel(RC.channels);
+            auto_select_channel(RC.channels, RSSI_CONFIG.channel);
 
             var auxChannelCount = RC.active_channels - 4;
 
@@ -457,10 +461,11 @@ TABS.auxiliary.initialize = function (callback) {
 
         /**
          * Autodetect channel based on maximum deference with previous value
-         * minimum value to autodetect is 100 - to prevent auto select RSSI channel
+         * minimum value to autodetect is 100
+         * @param RC_channels
          * @param RC_channels
          */
-        function auto_select_channel(RC_channels) {
+        function auto_select_channel(RC_channels, RSSI_channel) {
             var auto_option = $('.tab-auxiliary select.channel option[value="-1"]:selected');
             if (auto_option.length === 0) {
                 prevChannelsValues = null;
@@ -485,7 +490,7 @@ TABS.auxiliary.initialize = function (callback) {
             if (largest < 100) return fillPrevChannelsValues();
 
             var indexOfMaxValue = diff_array.indexOf(largest);
-            if (indexOfMaxValue >= 4){ //set channel
+            if (indexOfMaxValue >= 4 && indexOfMaxValue != RSSI_channel - 1){ //set channel
                 auto_option.parent().val(indexOfMaxValue - 4);
             }
 
