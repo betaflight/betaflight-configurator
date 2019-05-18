@@ -2656,6 +2656,9 @@
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Loaded Local Firmware: ($1 bytes)"
     },
+    "firmwareFlasherFirmwareOnlineLoaded": {
+        "message": "Loaded Online Firmware: ($1 bytes)"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
     },
@@ -3671,6 +3674,10 @@
     "osdSetupUploadFont": {
         "message": "Upload Font"
     },
+    "osdSetupUploadingFont": {
+        "message": "Uploading..."
+    },
+    
     "osdSetupSave": {
         "message": "Save"
     },

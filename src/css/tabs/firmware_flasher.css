@@ -1,18 +1,19 @@
 .tab-firmware_flasher .info {
-    margin: 10px 0 0 0;
+    padding: 2px 18px;
     position: relative;
 }
 
 .tab-firmware_flasher .info .progressLabel {
     position: absolute;
-    width: 100%;
+    width: calc(100% - 36px);
     height: 26px;
-    top: 0px;
+    top: 2px;
     left: 0;
     text-align: center;
     line-height: 24px;
     color: white;
     font-weight: bold;
+    margin-left: 18px;
 
     /* text-shadow: 1px 0px 2px rgba(0, 0, 0, 0.9);*/
 }
@@ -26,8 +27,7 @@
 }
 
 .tab-firmware_flasher .info {
-    float: left;
-    width: 100%;
+    flex-grow: 100;
 }
 
 .tab-firmware_flasher .info .progressLabel a {
