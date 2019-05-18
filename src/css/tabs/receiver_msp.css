@@ -3,6 +3,7 @@ body {
     font-size: 12px;
     color: #303030;
     margin: 10px;
+    overflow: hidden;
 }
 
 .control-gimbals {
@@ -12,6 +13,7 @@ body {
     padding: 25px;
     padding-bottom: 0;
     text-align: center;
+    display: inline-flex;
 }
 
 .control-gimbal {
@@ -109,6 +111,11 @@ a:hover {
 }
 
 .button-enable a {
+    /* Center the button */
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+
     /*  common styles for content toolbar buttons */
     margin-top: 0px;
     margin-bottom: 0px;
