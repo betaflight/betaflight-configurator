@@ -298,6 +298,9 @@ OSD.generateTimerPreview = function (osd_data, timer_index) {
         case 1:
             preview += '00:00.00';
             break;
+        case 2:
+            preview += '00:00.0';
+            break;
     }
     return preview;
 };
@@ -394,7 +397,8 @@ OSD.constants = {
     ],
     TIMER_PRECISION: [
         'SECOND',
-        'HUNDREDTH'
+        'HUNDREDTH',
+        'TENTH'
     ],
     AHISIDEBARWIDTHPOSITION: 7,
     AHISIDEBARHEIGHTPOSITION: 3,
