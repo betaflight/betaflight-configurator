@@ -232,9 +232,11 @@ TABS.setup.initialize = function (callback) {
             if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
                 disarmFlagElements = disarmFlagElements.concat(['RESC']);
+                disarmFlagElements = disarmFlagElements.concat(['RPMFILTER']);
             }
             if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
+                disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD']);
             }
 
             // Always the latest element
