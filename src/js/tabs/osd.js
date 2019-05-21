@@ -972,6 +972,22 @@ OSD.constants = {
             positionable: true,
             preview: [ "22600", "22600", "22600", "22600"]
         },
+        RATE_PROFILE_NAME: {
+            name: 'RATE_PROFILE_NAME',
+            desc: 'osdDescElementRateProfileName',
+            default_position: -1,
+            draw_order: 420,
+            positionable: true,
+            preview: 'RATE_1'
+        },
+        PID_PROFILE_NAME: {
+            name: 'PID_PROFILE_NAME',
+            desc: 'osdDescElementPidProfileName',
+            default_position: -1,
+            draw_order: 430,
+            positionable: true,
+            preview: 'PID_1'
+        },
     },
     UNKNOWN_DISPLAY_FIELD: {
         name: 'UNKNOWN_',
@@ -1283,6 +1299,12 @@ OSD.chooseFields = function () {
                                                 F.DISPLAY_NAME,
                                                 F.ESC_RPM_FREQ
                                             ]);
+                                            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                                                OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                                                    F.RATE_PROFILE_NAME,
+                                                    F.PID_PROFILE_NAME,
+                                                ]);
+                                            }
                                         }
                                     }
                                 }
