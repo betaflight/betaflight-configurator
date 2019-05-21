@@ -2188,6 +2188,37 @@ TABS.osd.initialize = function (callback) {
                     // Select the current OSD profile
                     osdProfileActive_e.val(OSD.data.osd_profiles.selected);
 
+                    // Populate the fonts selector preview
+                    let osdFontSelector_e = $('.osdfont-selector');
+                    let osdFontPresetsSelector_e = $('.fontpresets');
+                    if (osdFontSelector_e.children().length == 0) {
+
+                        // Custom font selected by the user
+                        var option = $('<option>', {
+                            text: i18n.getMessage("osdSetupFontPresetsSelectorCustomOption"),
+                            value: -1,
+                            "disabled": "disabled",
+                            "style":"display: none;",
+                        });
+                        osdFontSelector_e.append($(option));
+
+                        // Standard fonts
+                        OSD.constants.FONT_TYPES.forEach(function (e, i) {
+                            let optionText = i18n.getMessage('osdSetupPreviewSelectFontElement', {fontName : e.name});
+                            osdFontSelector_e.append(new Option(optionText, e.file));
+                        });
+
+                        osdFontSelector_e.change(function() {
+                            // Change the font selected in the Font Manager, in this way it is easier to flash if the user likes it
+                            osdFontPresetsSelector_e.val(this.value).change();
+                        });
+                    }
+
+                    // Select the same element than the Font Manager window
+                    osdFontSelector_e.val(osdFontPresetsSelector_e.val() != null ? osdFontPresetsSelector_e.val() : -1);
+                    // Hide custom if not used
+                    $('.osdfont-selector option[value=-1]').toggle(osdFontSelector_e.val() == -1);
+
                     // display fields on/off and position
                     var $displayFields = $('#element-fields').empty();
                     var enabledCount = 0;
@@ -2455,6 +2486,7 @@ TABS.osd.initialize = function (callback) {
                 FONT.preview(fontPreviewElement);
                 LogoManager.drawPreview();
                 updateOsdView();
+                $('.fontpresets option[value=-1]').hide();
             });
         });
         // load the first font when we change tabs
@@ -2467,6 +2499,8 @@ TABS.osd.initialize = function (callback) {
                 LogoManager.drawPreview();
                 updateOsdView();
                 $('.font-manager-version-info').text(i18n.getMessage('osdDescribeFontVersionCUSTOM'));
+                $('.fontpresets option[value=-1]').show();
+                $('.fontpresets').val(-1);
             }).catch(error => console.error(error));
         });
 

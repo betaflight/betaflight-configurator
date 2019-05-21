@@ -3594,7 +3594,11 @@
     },
     "osdSetupPreviewSelectProfileTitle": {
         "message": "Preview for",
-        "description": "Label of the selector for the OSD Profile in the preview"
+        "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
+    },
+    "osdSetupPreviewForTitle": {
+        "message": "Changing here the profile or the font will NOT change the profile or the font in the flight controller, only affects the preview window. If you want to change it, you must use the '$t(osdSetupSelectedProfileTitle.message)' option or the '$t(osdSetupFontManager.message)' button respectively.",
+        "description": "Help content for the OSD profile and font PREVIEW"
     },
     "osdSetupSelectedProfileTitle": {
         "message": "Active OSD Profile",
@@ -3607,6 +3611,10 @@
     "osdSetupPreviewSelectProfileElement": {
         "message": "OSD Profile {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
+    },
+    "osdSetupPreviewSelectFontElement": {
+        "message": "Font {{fontName}}",
+        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupPreviewTitleTip": {
         "message": "Show or hide the logo in the preview window. This will not change any settings on the flight controller."
@@ -3640,6 +3648,10 @@
     },
     "osdSetupFontPresetsSelector": {
         "message": "Select Font Presets:"
+    },
+    "osdSetupFontPresetsSelectorCustomOption": {
+        "message": "User supplied font",
+        "description": "Option to show as selected when the user selects a custom local font"
     },
     "osdSetupFontPresetsSelectorOr": {
         "message": "or"

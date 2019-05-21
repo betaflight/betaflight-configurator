@@ -302,6 +302,23 @@
   position: relative;
 }
 
+.tab-osd .preview .gui_box_titlebar label {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+.tab-osd .preview .gui_box_titlebar select {
+    max-width: 100px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: normal;
+    font-family: 'open_sansregular', 'Segoe UI', Tahoma, sans-serif;
+}
+
 .tab-osd .preview .gui_box_bottombar {
   text-align: center;
 }
