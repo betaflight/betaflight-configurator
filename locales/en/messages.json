@@ -3818,6 +3818,12 @@
     "osdDescElementEscRpmFreq": {
         "message": "RPM frequency reported by ESC telemetry"
     },
+    "osdDescElementRateProfileName": {
+        "message": "Shows the current rate profile name"
+    },
+    "osdDescElementPidProfileName": {
+        "message": "Shows the current PID profile name"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Real time clock date / time"
     },
