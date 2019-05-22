@@ -3893,6 +3893,9 @@
     "osdDescElementLogStatus": {
         "message": "Blackbox number and warnings"
     },
+    "osdDescElementOsdProfileName": {
+        "message": "OSD profile name as set in the \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\" CLI variables"
+    },
 
     "osdDescStatMaxSpeed": {
         "message": "Maximum recorded speed"
