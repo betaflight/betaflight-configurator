@@ -145,6 +145,13 @@ function startProcess() {
     console.log('Libraries: jQuery - ' + $.fn.jquery + ', d3 - ' + d3.version + ', three.js - ' + THREE.REVISION);
 
     // Tabs
+    $("#tabs ul.mode-connected li").click(function() {
+        // store the first class of the current tab (omit things like ".active")
+        chrome.storage.local.set({
+            lastTab: $(this).attr("class").split(' ')[0]
+        });
+    });
+
     var ui_tabs = $('#tabs > ul');
     $('a', ui_tabs).click(function () {
         if ($(this).parent().hasClass('active') == false && !GUI.tab_switch_in_progress) { // only initialize when the tab isn't already active
@@ -178,13 +185,6 @@ function startProcess() {
                 return;
             }
 
-            $("#tabs ul.mode-connected li").click(function() {
-                // store the first class of the current tab (omit things like ".active")
-                chrome.storage.local.set({
-                    lastTab: $(this).attr("class").split(' ')[0]
-                });
-            });
-        
             GUI.tab_switch_in_progress = true;
 
             GUI.tab_switch_cleanup(function () {
