@@ -596,7 +596,7 @@ OSD.constants = {
             draw_order: 160,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.ALTITUDE) + ' 399.7' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return FONT.symbol(SYM.ALTITUDE) + '399.7' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
             }
         },
         ONTIME: {
