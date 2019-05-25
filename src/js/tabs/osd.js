@@ -988,6 +988,14 @@ OSD.constants = {
             positionable: true,
             preview: 'PID_1'
         },
+        OSD_PROFILE_NAME: {
+            name: 'OSD_PROFILE_NAME',
+            desc: 'osdDescElementOsdProfileName',
+            default_position: -1,
+            draw_order: 440,
+            positionable: true,
+            preview: 'OSD_1'
+        },
     },
     UNKNOWN_DISPLAY_FIELD: {
         name: 'UNKNOWN_',
@@ -1303,6 +1311,7 @@ OSD.chooseFields = function () {
                                                 OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                     F.RATE_PROFILE_NAME,
                                                     F.PID_PROFILE_NAME,
+                                                    F.OSD_PROFILE_NAME
                                                 ]);
                                             }
                                         }
