@@ -3619,6 +3619,10 @@
     "osdSetupPreviewTitleTip": {
         "message": "Show or hide the logo in the preview window. This will not change any settings on the flight controller."
     },
+    "osdSetupPreviewLogo": {
+        "message": "Logo:",
+        "description": "KEEP IT SHORT!!!! Option to select or hide the Betaflight logo in the OSD preview."
+    },
     "osdSetupVideoFormatTitle": {
         "message": "Video Format"
     },

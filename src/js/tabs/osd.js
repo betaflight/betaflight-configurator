@@ -1931,6 +1931,14 @@ TABS.osd.initialize = function (callback) {
         $('.stats-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpStats'));
         $('.warnings-container div.cf_tip').attr('title', i18n.getMessage('osdSectionHelpWarnings'));
 
+        // show Betaflight logo in preview
+        var previewLogoCheck = $('.preview-logo :input');
+        previewLogoCheck.attr('checked', OSD.data.preview_logo)
+                .change(function (e) {
+                    OSD.data.preview_logo = $(this).prop('checked');
+                    updateOsdView();
+                });
+
         // 2 way binding... sorta
         function updateOsdView() {
             // ask for the OSD config data
@@ -1946,17 +1954,6 @@ TABS.osd.initialize = function (callback) {
                         return;
                     }
                     $('.supported').fadeIn();
-
-                    // show Betaflight logo in preview
-                    var $previewLogo = $('.preview-logo').empty();
-                    $previewLogo.append(
-                        $('<label for="preview-logo">Logo: </label><input type="checkbox" name="preview-logo" class="togglesmall"></input>')
-                            .attr('checked', OSD.data.preview_logo)
-                            .change(function (e) {
-                                OSD.data.preview_logo = $(this).attr('checked') == undefined;
-                                updateOsdView();
-                            })
-                    );
 
                     // video mode
                     var $videoTypes = $('.video-types').empty();
