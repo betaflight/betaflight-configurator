@@ -271,7 +271,6 @@ OSD.initData = function () {
         display_items: [],
         timers: [],
         last_positions: {},
-        preview_logo: true,
         preview: [],
         tooltips: [],
         osd_profiles: {}
@@ -1947,17 +1946,6 @@ TABS.osd.initialize = function (callback) {
                     }
                     $('.supported').fadeIn();
 
-                    // show Betaflight logo in preview
-                    var $previewLogo = $('.preview-logo').empty();
-                    $previewLogo.append(
-                        $('<label for="preview-logo">Logo: </label><input type="checkbox" name="preview-logo" class="togglesmall"></input>')
-                            .attr('checked', OSD.data.preview_logo)
-                            .change(function (e) {
-                                OSD.data.preview_logo = $(this).attr('checked') == undefined;
-                                updateOsdView();
-                            })
-                    );
-
                     // video mode
                     var $videoTypes = $('.video-types').empty();
                     for (var i = 0; i < OSD.constants.VIDEO_TYPES.length; i++) {
@@ -2302,14 +2290,6 @@ TABS.osd.initialize = function (callback) {
                     // clear the buffer
                     for (var i = 0; i < OSD.data.display_size.total; i++) {
                         OSD.data.preview.push([null, ' '.charCodeAt(0), null, null]);
-                    }
-                    // logo first, so it gets overwritten by subsequent elements
-                    if (OSD.data.preview_logo) {
-                        var x = 160;
-                        for (var i = 1; i < 5; i++) {
-                            for (var j = 3; j < 27; j++)
-                                OSD.data.preview[i * 30 + j] = [{ name: 'LOGO', positionable: false }, x++, i, j];
-                        }
                     }
 
                     // draw all the displayed items and the drag and drop preview images
