@@ -1019,7 +1019,7 @@ dialog {
     background-color: #fff7cd;
     border: 1px solid #ffe55f;
     margin-bottom: 7px;
-    margin-top: 3px;
+    margin-top: 0px;
     border-radius: 3px;
     font-size: 11px;
     font-family: 'open_sansregular', Arial;
@@ -1357,6 +1357,10 @@ dialog {
     background-color: #ffcc3f;
     transition: all ease 0.0s;
     box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+}
+
+.margin-top5 {
+    margin-top: 5px;
 }
 
 .regular-button {

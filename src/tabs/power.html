@@ -95,6 +95,9 @@
         <div class="btn save_btn">
             <a class="save" href="#" i18n="powerButtonSave"></a>
         </div>
+        <div class="btn calibration">
+            <a class="calibrationmanager" id="calibrationmanager" href="#" i18n="powerCalibrationManagerButton" />
+        </div>
     </div>
 </div>
 
@@ -207,3 +210,74 @@
         </div>
     </div>
 </div>
+
+<div class="tab-power" id="calibrationmanagercontent">
+    <div class = "note">
+        <div class="note_spacer">
+            <p i18n="powerCalibrationManagerHelp"></p>
+        </div>
+    </div>
+    <div class = "note">
+        <div class="note_spacer">
+            <p i18n="powerCalibrationManagerNote"></p>
+        </div>
+    </div>
+    <div class = "note nocalib">
+        <div class="note_spacer">
+            <p i18n="powerCalibrationManagerWarning"></p>
+        </div>
+    </div>
+    <div class = "note srcchange">
+        <div class="note_spacer">
+            <p i18n="powerCalibrationManagerSourceNote"></p>
+        </div>
+    </div>
+    <div class="vbatcalibration">
+        <div class="number">
+            <label> <input type="number" name="vbatcalibration" step="0.01" min="0" max="255" /> <span
+                i18n="powerVoltageCalibration"></span>
+            </label>
+        </div>
+    </div>
+    <div class="amperagecalibration">
+        <div class="number">
+            <label> <input type="number" name="amperagecalibration" step="0.01" min="0" max="255" /> <span
+                i18n="powerAmperageCalibration"></span>
+            </label>
+        </div>
+    </div>
+    <div class="default_btn margin-top5">
+        <a class="calibrate" id="calibrate" href="#" i18n="powerCalibrationSave" />
+    </div>
+</div>
+
+<div class="tab-power" id="calibrationmanagerconfirmcontent">
+    <div class = "note">
+        <div class="note_spacer">
+            <p i18n="powerCalibrationConfirmHelp"></p>
+        </div>
+    </div>
+    <div class="vbatcalibration">
+        <div class="number tab_title">
+            <label> 
+                <span i18n="powerVoltageCalibratedScale"></span>
+                <output type="number" name="vbatnewscale"></output> 
+            </label>
+        </div>
+    </div>
+    <div class="amperagecalibration">
+        <div class="number tab_title">
+            <label> 
+                <span i18n="powerAmperageCalibratedScale"></span>
+                <output type="number" name="amperagenewscale"></output> 
+            </label>
+        </div>
+    </div>
+    
+    <div class="default_btn margin-top5">
+        <a class="applycalibration" id="applycalibration" href="#" i18n="powerCalibrationApply" />
+    </div>
+    <div class="default_btn">
+        <a class="discardcalibration" id="discardcalibration" href="#" i18n="powerCalibrationDiscard" />
+    </div>
+</div> 

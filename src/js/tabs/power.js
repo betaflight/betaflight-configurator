@@ -13,6 +13,13 @@ TABS.power.initialize = function (callback) {
         //googleAnalytics.sendAppView('Power');
     }
 
+    if (GUI.calibrationManager) {
+        GUI.calibrationManager.destroy();
+    }
+    if (GUI.calibrationManagerConfirmation) {
+        GUI.calibrationManagerConfirmation.destroy();
+    }
+
     function load_status() {
         MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_voltage_meters);
     }
@@ -156,6 +163,12 @@ TABS.power.initialize = function (callback) {
             $('input[name="amperagescale-' + index + '"]').val(currentDataSource[index].scale);
             $('input[name="amperageoffset-' + index + '"]').val(currentDataSource[index].offset);
         }
+
+        if(BATTERY_CONFIG.voltageMeterSource == 1 || BATTERY_CONFIG.currentMeterSource == 1 || BATTERY_CONFIG.currentMeterSource == 2) {
+            $('.calibration').show();
+        } else {
+            $('.calibration').hide();
+        }
     }
 
     function initDisplay() {
@@ -233,11 +246,14 @@ TABS.power.initialize = function (callback) {
         updateDisplay(VOLTAGE_METER_CONFIGS, CURRENT_METER_CONFIGS);
 
         var batteryMeterType_e = $('select.batterymetersource');
+
+        var sourceschanged = false;
         batteryMeterType_e.val(BATTERY_CONFIG.voltageMeterSource);
         batteryMeterType_e.change(function () {
             BATTERY_CONFIG.voltageMeterSource = parseInt($(this).val());
 
             updateDisplay();
+            sourceschanged = true;
         });
 
         var currentMeterType_e = $('select.currentmetersource');
@@ -246,6 +262,7 @@ TABS.power.initialize = function (callback) {
             BATTERY_CONFIG.currentMeterSource = parseInt($(this).val());
 
             updateDisplay();
+            sourceschanged = true;
         });
 
         function get_slow_data() {
@@ -281,6 +298,128 @@ TABS.power.initialize = function (callback) {
 
         }
 
+        //calibration manager
+        var calibrationconfirmed = false;
+        GUI.calibrationManager = new jBox('Modal', {
+            width: 400,
+            height: 230,
+            closeButton: 'title',
+            animation: false,
+            attach: $('#calibrationmanager'),
+            title: 'Calibration Manager',
+            content: $('#calibrationmanagercontent'),
+            onCloseComplete: function() {
+                if (!calibrationconfirmed) {
+                    TABS.power.initialize();
+                }
+            },
+        });
+
+        GUI.calibrationManagerConfirmation = new jBox('Modal', {
+            width: 400,
+            height: 230,
+            closeButton: 'title',
+            animation: false,
+            attach: $('#calibrate'),
+            title: 'Calibration Manager Confirmation',
+            content: $('#calibrationmanagerconfirmcontent'),
+            onCloseComplete: function() {
+                GUI.calibrationManager.close();
+            },
+        });
+
+        $('a.calibrationmanager').click(function() {
+            if (BATTERY_CONFIG.voltageMeterSource == 1 && BATTERY_STATE.voltage > 0.1){
+                $('.vbatcalibration').show();
+            } else {
+                $('.vbatcalibration').hide();
+            }
+            if ((BATTERY_CONFIG.currentMeterSource == 1 || BATTERY_CONFIG.currentMeterSource == 2) && BATTERY_STATE.amperage > 0.1) {
+                $('.amperagecalibration').show();
+            } else {
+                $('.amperagecalibration').hide();
+            }
+            if (BATTERY_STATE.cellCount == 0) {
+                $('.vbatcalibration').hide();
+                $('.amperagecalibration').hide();
+                $('.calibrate').hide();
+                $('.nocalib').show();
+            } else {
+                $('.calibrate').show();
+                $('.nocalib').hide();
+            }
+            if (sourceschanged) {
+                $('.srcchange').show();
+                $('.vbatcalibration').hide();
+                $('.amperagecalibration').hide();
+                $('.calibrate').hide();
+                $('.nocalib').hide();
+            } else {
+                $('.srcchange').hide();
+            }
+        });
+        
+        $('input[name="vbatcalibration"]').val(0);
+        $('input[name="amperagecalibration"]').val(0);
+
+        var vbatscalechanged = false;
+        var amperagescalechanged = false;
+        $('a.calibrate').click(function() {
+            if (BATTERY_CONFIG.voltageMeterSource == 1) {
+                var vbatcalibration = parseFloat($('input[name="vbatcalibration"]').val());
+                if (vbatcalibration != 0) {
+                    var vbatnewscale = Math.round(VOLTAGE_METER_CONFIGS[0].vbatscale * (vbatcalibration / VOLTAGE_METERS[0].voltage));
+                    if (vbatnewscale >= 10 && vbatnewscale <= 255) {
+                        VOLTAGE_METER_CONFIGS[0].vbatscale = vbatnewscale;
+                        vbatscalechanged = true;
+                    }
+                }
+            }
+            var ampsource = BATTERY_CONFIG.currentMeterSource;
+            if (ampsource == 1 || ampsource == 2) {
+                var amperagecalibration = parseFloat($('input[name="amperagecalibration"]').val());
+                var amperageoffset = CURRENT_METER_CONFIGS[ampsource - 1].offset / 1000;
+                if (amperagecalibration != 0) {
+                    if (CURRENT_METERS[ampsource - 1].amperage != amperageoffset && amperagecalibration != amperageoffset) {
+                        var amperagenewscale = Math.round(CURRENT_METER_CONFIGS[ampsource - 1].scale * 
+                            ((CURRENT_METERS[ampsource - 1].amperage -  amperageoffset) / (amperagecalibration - amperageoffset)));
+                        if (amperagenewscale > -16000 && amperagenewscale < 16000 && amperagenewscale != 0) {
+                            CURRENT_METER_CONFIGS[ampsource - 1].scale = amperagenewscale;
+                            amperagescalechanged = true;
+                        }
+                    }
+                }
+            }
+            if (vbatscalechanged || amperagescalechanged) {
+                if (vbatscalechanged) {
+                    $('.vbatcalibration').show();
+                } else {
+                    $('.vbatcalibration').hide();
+                }
+                if (amperagescalechanged) {
+                    $('.amperagecalibration').show();
+                } else {
+                    $('.amperagecalibration').hide();
+                }
+
+                $('output[name="vbatnewscale"').val(vbatnewscale);
+                $('output[name="amperagenewscale"').val(amperagenewscale);
+
+                $('a.applycalibration').click(function() {
+                    calibrationconfirmed = true;
+                    GUI.calibrationManagerConfirmation.close();
+                    updateDisplay(VOLTAGE_METER_CONFIGS, CURRENT_METER_CONFIGS);
+                    $('.calibration').hide();
+                });
+
+                $('a.discardcalibration').click(function() {
+                    GUI.calibrationManagerConfirmation.close();
+                }); 
+            } else {
+                GUI.calibrationManagerConfirmation.close();
+            }
+        });
+
         $('a.save').click(function () {
             for (var index = 0; index < VOLTAGE_METER_CONFIGS.length; index++) {
                 VOLTAGE_METER_CONFIGS[index].vbatscale = parseInt($('input[name="vbatscale-' + index + '"]').val());
@@ -298,40 +437,44 @@ TABS.power.initialize = function (callback) {
             BATTERY_CONFIG.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
             BATTERY_CONFIG.capacity = parseInt($('input[name="capacity"]').val());
 
-            function save_battery_config() {
-                MSP.send_message(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG), false, save_voltage_config);
-            }
-
-            function save_voltage_config() {
-                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                    mspHelper.sendVoltageConfig(save_amperage_config);
-                } else {
-                    MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, save_amperage_config);
-                }
-            }
-
-            function save_amperage_config() {
-                if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                    mspHelper.sendCurrentConfig(save_to_eeprom);
-                } else {
-                    MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, save_to_eeprom);
-                }
-            }
-
-            function save_to_eeprom() {
-                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, save_completed);
-            }
-
-            function save_completed() {
-                GUI.log(i18n.getMessage('configurationEepromSaved'));
-
-                TABS.power.initialize();
-            }
-
-            save_battery_config();
+            save_power_config();
         });
 
         GUI.interval_add('setup_data_pull_slow', get_slow_data, 200, true); // 5hz
+    }
+
+    function save_power_config() {
+        function save_battery_config() {
+            MSP.send_message(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG), false, save_voltage_config);
+        }
+
+        function save_voltage_config() {
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                mspHelper.sendVoltageConfig(save_amperage_config);
+            } else {
+                MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, save_amperage_config);
+            }
+        }
+
+        function save_amperage_config() {
+            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                mspHelper.sendCurrentConfig(save_to_eeprom);
+            } else {
+                MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, save_to_eeprom);
+            }
+        }
+
+        function save_to_eeprom() {
+            MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, save_completed);
+        }
+
+        function save_completed() {
+            GUI.log(i18n.getMessage('configurationEepromSaved'));
+
+            TABS.power.initialize();
+        }
+
+        save_battery_config();
     }
 
     function process_html() {
@@ -346,4 +489,11 @@ TABS.power.initialize = function (callback) {
 
 TABS.power.cleanup = function (callback) {
     if (callback) callback();
+
+    if (GUI.calibrationManager) {
+        GUI.calibrationManager.destroy();
+    }
+    if (GUI.calibrationManagerConfirmation) {
+        GUI.calibrationManagerConfirmation.destroy();
+    }
 };

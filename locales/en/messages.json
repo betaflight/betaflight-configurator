@@ -3390,11 +3390,44 @@
     "powerBatteryWarning": {
         "message": "Warning Cell Voltage"
     },
+    "powerCalibrationManagerButton": {
+        "message": "Calibration"
+    },
+    "powerCalibrationManagerHelp": {
+        "message": "To calibrate, use a multimeter to measure the actual voltage / current draw on your craft (with a battery plugged in), and enter the values below. Then, with the same battery still plugged in, click [Calibrate]."
+    },
+    "powerCalibrationManagerNote": {
+        "message": "<strong>Note:</strong> Before calibrating the scale make sure that divider and multiplier for voltage and offset for amperage is set properly.<br>Leaving the values at 0 will not apply calibration.</br><strong>Remember to remove propellers before plugging in a battery!</strong>"
+    },
+    "powerCalibrationManagerWarning": {
+        "message": "<span class=\"message-negative\">Warning:</span> The battery <span class=\"message-negative\">is not plugged in</span> or voltage and amperage meter sources are <span class=\"message-negative\">not set properly.</span> Make sure that the voltage and/or amperage are reading a value above 0. Otherwise you will not be able to calibrate using this tool."
+    },
+    "powerCalibrationManagerSourceNote": {
+        "message": "<span class=\"message-negative\">Warning:</span> Voltage and/or amperage meter sources <strong>have been changed but not saved.</strong> Please set the correct meter sources and save them before trying to calibrate."
+    },
+    "powerCalibrationSave": {
+        "message": "Calibrate"
+    },
+    "powerCalibrationApply": {
+        "message": "Apply Calibration"
+    },
+    "powerCalibrationDiscard": {
+        "message": "Discard Calibration"
+    },
+    "powerCalibrationConfirmHelp": {
+        "message": "New calibrated scales are shown here. <br>Applying them will set the scales but <strong>will not save them.</strong></br> <br>After saving make sure that the new voltage and current are correct.</br>"
+    },
     "powerVoltageHead": {
         "message": "Voltage Meter"
     },
     "powerVoltageValue": {
         "message": "$1 V"
+    },
+    "powerVoltageCalibration": {
+        "message": "Measured Voltage"
+    },
+    "powerVoltageCalibratedScale": {
+        "message": "Calibrated Voltage Scale:"
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -3540,6 +3573,12 @@
     },
     "powerAmperageOffset": {
         "message": "Offset [mA]"
+    },
+    "powerAmperageCalibration": {
+        "message": "Measured Amperage"
+    },
+    "powerAmperageCalibratedScale": {
+        "message": "Calibrated Amperage Scale:"
     },
 
     "powerBatteryHead": {
