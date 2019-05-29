@@ -349,11 +349,6 @@
   cursor: move;
 }
 
-.tab-osd .preview-logo {
-  position: absolute;
-  right: 0;
-}
-
 .tab-osd .preview .row {
   height: 18px;
 }

@@ -3655,9 +3655,6 @@
         "message": "Font {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
     },
-    "osdSetupPreviewTitleTip": {
-        "message": "Show or hide the logo in the preview window. This will not change any settings on the flight controller."
-    },
     "osdSetupVideoFormatTitle": {
         "message": "Video Format"
     },
