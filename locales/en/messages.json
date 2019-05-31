@@ -4318,5 +4318,8 @@
     },
     "cliAutoComplete": {
         "message": "Advanced CLI AutoComplete"
+    },
+    "darkTheme": {
+        "message": "Enable dark theme"
     }
 }

@@ -1,0 +1,37 @@
+.tab-landing .content_top {
+    height: 140px;
+    padding: 20px;
+    background-color: #0000;
+    background-image: url(../../images/pattern.png);
+    background-size: 300px;
+}
+
+.tab-landing .content_mid {
+    background-color: #3e3e3e;
+}
+
+/* hero block */
+.tab-landing .logowrapper {
+    color: white;
+}
+
+.tab-landing .logowrapper img {
+    background: #f3f3f357;
+}
+
+.sponsors li a:hover {
+    color: #393b3a;
+}
+
+.tab-landing .content_mid .text3 .wrap2 {
+    border: 1px solid #9c9c9c;
+    background: #5f5f5f;
+}
+
+#content.log_open #changelog {
+    background: #404040;
+}
+
+#content.policy_open #privacy_policy {
+    background: #404040;
+}

@@ -1,0 +1,39 @@
+.tab-onboard_logging .regular-button {
+    border: 1px solid #9c9c9c;
+}
+
+.tab-onboard_logging .regular-button.disabled {
+    background-color: #393b3a;
+    border: 1px solid #9c9c9c;
+}
+
+.tab-onboard_logging .speed {
+    border: 1px solid #9c9c9c;
+}
+
+.tab-onboard_logging .dataflash-contents,
+.tab-onboard_logging .sdcard-contents {
+    border: 1px solid #9c9c9c;
+    background-color: #393b3a;
+}
+
+.tab-onboard_logging .dataflash-used,
+.tab-onboard_logging .sdcard-other {
+    background-color: #3a3a3a;
+}
+
+.tab-onboard_logging progress::-webkit-progress-bar {
+    background-color: #393b3a;
+}
+
+.tab-onboard_logging .blackboxRate select,
+.tab-onboard_logging .blackboxDevice select {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-onboard_logging .sdcard-icon {
+    background-color: #393b3a;
+    border: 1px solid #9c9c9c;
+}

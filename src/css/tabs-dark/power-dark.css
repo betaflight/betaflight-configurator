@@ -1,0 +1,17 @@
+.tab-power .number input {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-power .number,
+.tab-power .select
+ {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-power .battery-configuration select {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}

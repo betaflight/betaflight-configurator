@@ -1,0 +1,123 @@
+.tab-configuration table th {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-configuration table td {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-configuration .groupTitle {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-configuration .mixerList {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-configuration .number input {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-configuration .gps select {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-configuration .disarm .checkbox {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-configuration .disarm {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.disarmdelay {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-configuration .number,
+.tab-configuration .select
+ {
+    border-bottom: 1px solid #9c9c9c;
+ }
+
+.tab-configuration .board_align_inputs input {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-configuration .selectProtocol
+{
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-configuration select.batterymetertype {
+    border: 1px solid #9c9c9c;
+}
+
+.tab-configuration .currentmetertype {
+    border: 1px solid #9c9c9c;
+}
+
+.tab-configuration .serialRX, .spiRx, .rxMode {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-configuration .mixerPreview {
+    background-color: #393b3a;
+}
+
+.tab-configuration .gui_box span {
+    color: white;
+}
+
+.tab-configuration .board select {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+#mixercontent select {
+    border: 1px solid #9c9c9c;
+}
+
+#mixercontent input {
+    border: 1px solid #9c9c9c;
+}
+
+#mixercontent .mixerletter {
+    background-color: #393b3a;
+}
+
+#mixercontent .number {
+    border-top: 1px solid #9c9c9c;
+}
+
+#mixercontent .mixercanvas {
+    background-color: #393b3a;
+    border: 1px solid #9c9c9c;
+}
+
+.tab-configuration .board_align_content,
+.tab-configuration .gyro_align_content {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-configuration .escprotocol {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-configuration .gyroSyncDenom, .tab-configuration .pidProcessDenom {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}

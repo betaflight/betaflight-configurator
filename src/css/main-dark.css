@@ -1,0 +1,108 @@
+body {
+    color: white;
+}
+
+a {
+    color: #ffc549;
+}
+
+#options-window {
+    background-color: #393b3a;
+}
+
+#content {
+    background-color:#393b3a;
+}
+
+#content.logopen {
+    background-color: #393b3a;
+}
+
+#status-bar {
+    background-color: #414443;
+}
+
+#status-bar div {
+    border-right: 1px solid #9c9c9c;
+}
+
+dialog {
+    background-color: #3a3d3c;
+    color:white;
+    border: 1px solid #ffbb2a;
+}
+
+/* Note */
+.note {
+    background-color: #656565;
+    color: white;
+}
+
+.content_toolbar {
+    background-color: #555857;
+    border-top: 1px solid #9c9c9c;
+}
+
+.content_toolbar .btn a {
+    border: 1px solid #ffbb2a;
+}
+
+.content_toolbar .btn a.disabled {
+    border: 1px solid #ffbb2a;
+}
+
+.gui_box {
+    border: 1px solid #9c9c9c;
+    background-color: #393b3a;
+}
+
+.gui_warning {
+    background: #393b3a;
+}
+
+.gui_note {
+    background: #393b3a;
+}
+
+.grey {
+    background-color: #414443
+}
+
+.gui_box_titlebar {
+    background-color: #ffbb2a;
+    color: black;
+}
+
+.gui_box_bottombar {
+    background-color: #393b3a;
+}
+
+.fixed_band {
+    background-color: #393b3a;
+}
+
+.default_btn a.disabled {
+    background-color: #393b3a;
+    border: 1px solid #ffbb2a;
+}
+
+.small a {
+    border: 1px solid #ffbb2a;
+}
+
+.cf_table td {
+    border-bottom: solid 1px #9c9c9c;
+}
+
+
+.dataflash-contents_global {
+    border: 1px solid #ffbb2a;
+}
+
+#quad-status_wrapper {
+    color: #393b3a;
+}
+
+button {
+    border: 1px solid #ffbb2a;
+}

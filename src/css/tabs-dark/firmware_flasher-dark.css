@@ -1,0 +1,30 @@
+.tab-firmware_flasher .info .progress {
+    border: 1px solid #9c9c9c;
+}
+
+.tab-firmware_flasher .options select {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-firmware_flasher .options .description {
+    color: #b9b9b9;
+}
+
+.tab-firmware_flasher .options .manual_baud_rate select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-firmware_flasher .release_info .title {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-firmware_flasher .buttons a {
+    border: 1px solid #9c9c9c;
+}
+
+.btn .disabled {
+    background-color: #393b3a;
+}

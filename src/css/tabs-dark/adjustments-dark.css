@@ -1,0 +1,18 @@
+.tab-adjustments .adjustments thead td {
+    background-color: #ffbb2a;
+    color: black;
+}
+
+.tab-adjustments .adjustment:nth-child(odd) {
+    background-color: #393b3a;
+}
+
+.tab-adjustments .adjustments {
+    background-color: #393b3a;
+}
+
+.tab-adjustments .adjustment select {
+    border: 1px solid silver; 
+    background-color: #3a3a3a;
+    color: white;
+}
