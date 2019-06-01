@@ -23,6 +23,8 @@ SYM.METRE = 0xC;
 SYM.FEET = 0xF;
 SYM.KPH = 0x9E;
 SYM.MPH = 0x9D;
+SYM.SPEED = 0x70;
+SYM.TOTAL_DIST = 0x71;
 SYM.GPS_SAT_L = 0x1E;
 SYM.GPS_SAT_R = 0x1F;
 SYM.GPS_LAT = 0x89;
@@ -627,7 +629,7 @@ OSD.constants = {
             draw_order: 810,
             positionable: true,
             preview: function (osd_data) {
-                return ' 40' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.MPH) : FONT.symbol(SYM.KPH));
+                return FONT.symbol(SYM.SPEED) + ' 40' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.MPH) : FONT.symbol(SYM.KPH));
             }
         },
         GPS_SATS: {
@@ -934,7 +936,7 @@ OSD.constants = {
             draw_order: 860,
             positionable: true,
             preview: function (osd_data) {
-                return '653' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return FONT.symbol(SYM.TOTAL_DIST) + '653' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
             }
         },
         STICK_OVERLAY_LEFT: {
