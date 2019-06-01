@@ -227,16 +227,16 @@
         "message": "Показать недавние действия"
     },
     "serialPortOpened": {
-        "message": "Сериний порт <span class=\"message-positive\">успешно<\/span> открыт. ID порта: $1"
+        "message": "Последовательный порт <span class=\"message-positive\">успешно<\/span> открыт. ID порта: $1"
     },
     "serialPortOpenFail": {
-        "message": "<span class=\"message-negative\">Не удалось<\/span> открыть сериний порт"
+        "message": "<span class=\"message-negative\">Не удалось<\/span> открыть последовательный порт"
     },
     "serialPortClosedOk": {
-        "message": "Сериний порт <span class=\"message-positive\">успешно<\/span> закрыт"
+        "message": "Последовательный порт <span class=\"message-positive\">успешно<\/span> закрыт"
     },
     "serialPortClosedFail": {
-        "message": "<span class=\"message-negative\">Не удалось<\/span> закрыть сериний порт"
+        "message": "<span class=\"message-negative\">Не удалось<\/span> закрыть последовательный порт"
     },
     "serialUnrecoverable": {
         "message": "Невосстановимый <span class=\"message-negative\">сбой<\/span> последовательного подключения, разъединяюсь..."
