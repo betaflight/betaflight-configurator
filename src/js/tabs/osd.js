@@ -8,7 +8,6 @@ SYM.RSSI = 0x01;
 SYM.AH_RIGHT = 0x02;
 SYM.AH_LEFT = 0x03;
 SYM.THR = 0x04;
-SYM.THR1 = 0x05;
 SYM.FLY_M = 0x9C;
 SYM.ON_M = 0x9B;
 SYM.AH_CENTER_LINE = 0x7B;
@@ -434,7 +433,7 @@ OSD.constants = {
             default_position: -9,
             draw_order: 110,
             positionable: true,
-            preview: FONT.symbol(SYM.THR) + FONT.symbol(SYM.THR1) + ' 69'
+            preview: FONT.symbol(SYM.THR) + ' 69'
         },
         CPU_LOAD: {
             name: 'CPU_LOAD',
