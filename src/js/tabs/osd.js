@@ -19,9 +19,9 @@ SYM.AMP = 0x9A;
 SYM.MAH = 0x07;
 SYM.METRE = 0xC;
 SYM.FEET = 0xF;
-SYM.KPH = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x9E : 0x4B };
-SYM.MPH = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x9D : 0x4D };
-SYM.SPEED = 0x70;
+SYM.KPH = 0x9E;
+SYM.MPH = 0x9D;
+SYM.SPEED = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x70 : '' };
 SYM.TOTAL_DIST = 0x71;
 SYM.GPS_SAT_L = 0x1E;
 SYM.GPS_SAT_R = 0x1F;
@@ -242,11 +242,13 @@ FONT.preview = function ($el) {
 };
 
 FONT.symbol = function (hexVal) {
+    let charCode;
     if (typeof(hexVal) === 'function') {
-        return String.fromCharCode(hexVal());
+        charCode = hexVal();
     } else {
-        return String.fromCharCode(hexVal);
+        charCode = hexVal;
     }
+    return (charCode == '' || charCode == null)? '' : String.fromCharCode(charCode);
 };
 
 var OSD = OSD || {};
