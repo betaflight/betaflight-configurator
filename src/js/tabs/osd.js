@@ -1,7 +1,6 @@
 'use strict';
 
 var SYM = SYM || {};
-// some of these are changed in the initialization function below
 SYM.BLANK = 0x20;
 SYM.VOLT = 0x06;
 SYM.RSSI = 0x01;
@@ -10,9 +9,9 @@ SYM.AH_LEFT = 0x03;
 SYM.THR = 0x04;
 SYM.FLY_M = 0x9C;
 SYM.ON_M = 0x9B;
-SYM.AH_CENTER_LINE = 0x7B;
-SYM.AH_CENTER_LINE_RIGHT = 0x7D;
-SYM.AH_CENTER = 0x7E;
+SYM.AH_CENTER_LINE = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x72 : 0x26 };
+SYM.AH_CENTER = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x73 : 0x7E };
+SYM.AH_CENTER_LINE_RIGHT = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x74 : 0x27 };
 SYM.AH_BAR9_0 = 0x80;
 SYM.AH_DECORATION = 0x13;
 SYM.LOGO = 0xA0;
@@ -20,8 +19,8 @@ SYM.AMP = 0x9A;
 SYM.MAH = 0x07;
 SYM.METRE = 0xC;
 SYM.FEET = 0xF;
-SYM.KPH = 0x9E;
-SYM.MPH = 0x9D;
+SYM.KPH = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x9E : 0x4B };
+SYM.MPH = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x9D : 0x4D };
 SYM.SPEED = 0x70;
 SYM.TOTAL_DIST = 0x71;
 SYM.GPS_SAT_L = 0x1E;
@@ -243,7 +242,11 @@ FONT.preview = function ($el) {
 };
 
 FONT.symbol = function (hexVal) {
-    return String.fromCharCode(hexVal);
+    if (typeof(hexVal) === 'function') {
+        return String.fromCharCode(hexVal());
+    } else {
+        return String.fromCharCode(hexVal);
+    }
 };
 
 var OSD = OSD || {};
@@ -2455,14 +2458,6 @@ TABS.osd.initialize = function (callback) {
 
         // init structs once, also clears current font
         FONT.initData();
-
-        // Some of these definitions are determined by version.
-        SYM.AH_CENTER_LINE = 0x26;
-        SYM.AH_CENTER_LINE_RIGHT = 0x27;
-        if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
-            SYM.AH_CENTER_LINE = 0x7B;
-            SYM.AH_CENTER_LINE_RIGHT = 0x7D;
-        }
 
         fontPresetsElement.change(function (e) {
             var $font = $('.fontpresets option:selected');
