@@ -849,6 +849,14 @@
         "message": "The 'GPS Rescue' switch was activated",
         "description": "Description of the RESC arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
+        "message": "RPM-based filtering is enabled but one or more ESC's are not supplying valid DSHOT telemetry. Check that the ESC's are capable of and have the required firmware installed to support bidirectional DSHOT telemetry.",
+        "description": "Description of the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+        "message": "A configuration change requires a reboot",
+        "description": "Description of the REBOOT_REQD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
         "description": "Description of the ARM_SWITCH arming disable flag"
