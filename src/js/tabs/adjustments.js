@@ -166,6 +166,7 @@ TABS.adjustments.initialize = function (callback) {
         
 
         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            $('.tab-adjustments .adjustmentSlotsHelp').hide();
             $('.tab-adjustments .adjustmentSlotHeader').hide();
             $('.tab-adjustments .adjustmentSlot').hide();
         }
