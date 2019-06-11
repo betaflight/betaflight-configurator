@@ -1,61 +1,76 @@
 'use strict';
 
 var SYM = SYM || {};
-SYM.BLANK = 0x20;
-SYM.VOLT = 0x06;
-SYM.RSSI = 0x01;
-SYM.AH_RIGHT = 0x02;
-SYM.AH_LEFT = 0x03;
-SYM.THR = 0x04;
-SYM.FLY_M = 0x9C;
-SYM.ON_M = 0x9B;
-SYM.AH_CENTER_LINE = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x72 : 0x26 };
-SYM.AH_CENTER = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x73 : 0x7E };
-SYM.AH_CENTER_LINE_RIGHT = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x74 : 0x27 };
-SYM.AH_BAR9_0 = 0x80;
-SYM.AH_DECORATION = 0x13;
-SYM.LOGO = 0xA0;
-SYM.AMP = 0x9A;
-SYM.MAH = 0x07;
-SYM.METRE = 0xC;
-SYM.FEET = 0xF;
-SYM.KPH = 0x9E;
-SYM.MPH = 0x9D;
-SYM.SPEED = function() { return semver.gte(CONFIG.apiVersion, "1.42.0") ? 0x70 : '' };
-SYM.TOTAL_DIST = 0x71;
-SYM.GPS_SAT_L = 0x1E;
-SYM.GPS_SAT_R = 0x1F;
-SYM.GPS_LAT = 0x89;
-SYM.GPS_LON = 0x98;
-SYM.HOMEFLAG = 0x11;
-SYM.PB_START = 0x8A;
-SYM.PB_FULL = 0x8B;
-SYM.PB_EMPTY = 0x8D;
-SYM.PB_END = 0x8E;
-SYM.PB_CLOSE = 0x8F;
-SYM.BATTERY = 0x96;
-SYM.ARROW_NORTH = 0x68;
-SYM.ARROW_SOUTH = 0x60;
-SYM.ARROW_EAST = 0x64;
-SYM.HEADING_LINE = 0x1D;
-SYM.HEADING_DIVIDED_LINE = 0x1C;
-SYM.HEADING_N = 0x18;
-SYM.HEADING_S = 0x19;
-SYM.HEADING_E = 0x1A;
-SYM.HEADING_W = 0x1B;
-SYM.TEMPERATURE = 0x7A;
-SYM.TEMP_F = 0x0D;
-SYM.TEMP_C = 0x0E;
-SYM.STICK_OVERLAY_SPRITE_HIGH = 0x08;
-SYM.STICK_OVERLAY_SPRITE_MID = 0x09;
-SYM.STICK_OVERLAY_SPRITE_LOW = 0x0A;
-SYM.STICK_OVERLAY_CENTER = 0x0B;
-SYM.STICK_OVERLAY_VERTICAL = 0x16;
-SYM.STICK_OVERLAY_HORIZONTAL = 0x17;
-SYM.BBLOG = 0x10;
-SYM.ALTITUDE = 0x7F;
-SYM.PITCH = 0x15;
-SYM.ROLL = 0x14;
+
+SYM.loadSymbols = function() {
+    SYM.BLANK = 0x20;
+    SYM.VOLT = 0x06;
+    SYM.RSSI = 0x01;
+    SYM.AH_RIGHT = 0x02;
+    SYM.AH_LEFT = 0x03;
+    SYM.THR = 0x04;
+    SYM.FLY_M = 0x9C;
+    SYM.ON_M = 0x9B;
+    SYM.AH_CENTER_LINE = 0x72;
+    SYM.AH_CENTER = 0x73;
+    SYM.AH_CENTER_LINE_RIGHT = 0x74;
+    SYM.AH_BAR9_0 = 0x80;
+    SYM.AH_DECORATION = 0x13;
+    SYM.LOGO = 0xA0;
+    SYM.AMP = 0x9A;
+    SYM.MAH = 0x07;
+    SYM.METRE = 0xC;
+    SYM.FEET = 0xF;
+    SYM.KPH = 0x9E;
+    SYM.MPH = 0x9D;
+    SYM.SPEED = 0x70;
+    SYM.TOTAL_DIST = 0x71;
+    SYM.GPS_SAT_L = 0x1E;
+    SYM.GPS_SAT_R = 0x1F;
+    SYM.GPS_LAT = 0x89;
+    SYM.GPS_LON = 0x98;
+    SYM.HOMEFLAG = 0x11;
+    SYM.PB_START = 0x8A;
+    SYM.PB_FULL = 0x8B;
+    SYM.PB_EMPTY = 0x8D;
+    SYM.PB_END = 0x8E;
+    SYM.PB_CLOSE = 0x8F;
+    SYM.BATTERY = 0x96;
+    SYM.ARROW_NORTH = 0x68;
+    SYM.ARROW_SOUTH = 0x60;
+    SYM.ARROW_EAST = 0x64;
+    SYM.HEADING_LINE = 0x1D;
+    SYM.HEADING_DIVIDED_LINE = 0x1C;
+    SYM.HEADING_N = 0x18;
+    SYM.HEADING_S = 0x19;
+    SYM.HEADING_E = 0x1A;
+    SYM.HEADING_W = 0x1B;
+    SYM.TEMPERATURE = 0x7A;
+    SYM.TEMP_F = 0x0D;
+    SYM.TEMP_C = 0x0E;
+    SYM.STICK_OVERLAY_SPRITE_HIGH = 0x08;
+    SYM.STICK_OVERLAY_SPRITE_MID = 0x09;
+    SYM.STICK_OVERLAY_SPRITE_LOW = 0x0A;
+    SYM.STICK_OVERLAY_CENTER = 0x0B;
+    SYM.STICK_OVERLAY_VERTICAL = 0x16;
+    SYM.STICK_OVERLAY_HORIZONTAL = 0x17;
+    SYM.BBLOG = 0x10;
+    SYM.ALTITUDE = 0x7F;
+    SYM.PITCH = 0x15;
+    SYM.ROLL = 0x14;
+
+    /* Versions before Betaflight 4.1 use font V1
+     * To maintain this list at minimum, we only add here: 
+     * - Symbols used in this versions
+     * - That were moved or didn't exist in the font file
+     */
+    if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
+        SYM.AH_CENTER_LINE = 0x26;
+        SYM.AH_CENTER = 0x7E;
+        SYM.AH_CENTER_LINE_RIGHT = 0x27;
+        SYM.SPEED = null;
+    }
+}
 
 var STICK_OVERLAY_SPRITE = [
     SYM.STICK_OVERLAY_SPRITE_HIGH,
@@ -242,13 +257,7 @@ FONT.preview = function ($el) {
 };
 
 FONT.symbol = function (hexVal) {
-    let charCode;
-    if (typeof(hexVal) === 'function') {
-        charCode = hexVal();
-    } else {
-        charCode = hexVal;
-    }
-    return (charCode == '' || charCode == null)? '' : String.fromCharCode(charCode);
+    return (hexVal == '' || hexVal == null)? '' : String.fromCharCode(hexVal);
 };
 
 var OSD = OSD || {};
@@ -1897,6 +1906,10 @@ TABS.osd.initialize = function (callback) {
     }
 
     $('#content').load("./tabs/osd.html", function () {
+
+        // Prepare symbols depending on the version
+        SYM.loadSymbols();
+
         // Generate font type select element
         var fontPresetsElement = $('.fontpresets');
         OSD.constants.FONT_TYPES.forEach(function (e, i) {
