@@ -23,6 +23,8 @@ SYM.loadSymbols = function() {
     SYM.FEET = 0xF;
     SYM.KPH = 0x9E;
     SYM.MPH = 0x9D;
+    SYM.MPS = 0x9F;
+    SYM.FTPS = 0x99;
     SYM.SPEED = 0x70;
     SYM.TOTAL_DIST = 0x71;
     SYM.GPS_SAT_L = 0x1E;
@@ -840,7 +842,9 @@ OSD.constants = {
             default_position: -1,
             draw_order: 300,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_NORTH) + '8.7'
+            preview: function (osd_data) {
+                return FONT.symbol(SYM.ARROW_NORTH) + '8.7' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.FTPS) : FONT.symbol(SYM.MPS));
+            }
         },
         COMPASS_BAR: {
             name: 'COMPASS_BAR',
