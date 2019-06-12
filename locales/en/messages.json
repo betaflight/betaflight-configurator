@@ -1840,16 +1840,19 @@
       "message": "AND"
     },
     "adjustmentsHelp": {
-        "message": "Configure adjustment switches.  See the 'in-flight adjustments' section of the manual for details.  The changes that adjustment functions make are not saved automatically.  There are 4 slots.  Each switch used to concurrently make adjustments requires exclusive use of a slot."
+        "message": "Configure adjustment switches. See the 'in-flight adjustments' section of the manual for details. The changes that adjustment functions make are not saved automatically."
+    },
+    "adjustmentSlotsHelp": {
+        "message": "There are 4 slots. Each switch used to concurrently make adjustments requires exclusive use of a slot."
     },
     "adjustmentsExamples": {
-        "message": "Examples"
+        "message": "Examples:"
     },
     "adjustmentsExample1": {
-        "message": "Use Slot 1 and a 3POS switch on AUX1 to select between Pitch/Roll P, I and D and another 3POS switch on AUX2 to increase or decrease the value when held up or down."
+        "message": "Use a three position switch on AUX1 to select between Pitch/Roll P, I and D and another three position switch on AUX2 to increase or decrease the value when held up or down."
     },
     "adjustmentsExample2": {
-        "message": "Use Slot 2 and a 3POS switch on AUX4 to select enable Rate Profile Selection via the same 3POS switch on the same channel."
+        "message": "Use a three position switch on AUX4 to select enable Rate Profile Selection via the same three position switch on the same channel."
     },
     "adjustmentsColumnEnable": {
         "message": "If enabled"

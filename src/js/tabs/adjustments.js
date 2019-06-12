@@ -37,8 +37,10 @@ TABS.adjustments.initialize = function (callback) {
         // update selected slot
         //
         
-        var adjustmentList = $(newAdjustment).find('.adjustmentSlot .slot');
-        adjustmentList.val(adjustmentRange.slotIndex);
+        if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
+            var adjustmentList = $(newAdjustment).find('.adjustmentSlot .slot');
+            adjustmentList.val(adjustmentRange.slotIndex);
+        }
 
         //
         // populate source channel select box
@@ -162,6 +164,13 @@ TABS.adjustments.initialize = function (callback) {
             modeTableBodyElement.append(newAdjustment);
         }
         
+
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            $('.tab-adjustments .adjustmentSlotsHelp').hide();
+            $('.tab-adjustments .adjustmentSlotHeader').hide();
+            $('.tab-adjustments .adjustmentSlot').hide();
+        }
+
         // translate to user-selected language
         i18n.localizePage();
 
@@ -189,8 +198,13 @@ TABS.adjustments.initialize = function (callback) {
                 
                 if ($(adjustmentElement).find('.enable').prop("checked")) {
                     var rangeValues = $(this).find('.range .channel-slider').val();
+                    var slotIndex = 0;
+                    if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
+                        slotIndex = parseInt($(this).find('.adjustmentSlot .slot').val());
+                    }
+
                     var adjustmentRange = {
-                        slotIndex: parseInt($(this).find('.adjustmentSlot .slot').val()),
+                        slotIndex: slotIndex,
                         auxChannelIndex: parseInt($(this).find('.channelInfo .channel').val()),
                         range: {
                             start: rangeValues[0],
