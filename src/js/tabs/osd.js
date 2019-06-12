@@ -2275,7 +2275,19 @@ TABS.osd.initialize = function (callback) {
                                     }))
                             );
                         }
-                        $displayFields.append($field);
+
+                        // Insert in alphabetical order
+                        let added = false;
+                        $displayFields.children().each(function() {
+                            if ($(this).text() > $field.text()) {
+                                $(this).before($field);
+                                added = true;
+                                return false;
+                            }
+                        });
+                        if(!added) {
+                            $displayFields.append($field);
+                        }
                     }
 
                     GUI.switchery();
