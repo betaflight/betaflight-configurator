@@ -1065,7 +1065,7 @@ OSD.constants = {
         },
     },
     UNKNOWN_DISPLAY_FIELD: {
-        name: 'UNKNOWN_',
+        name: 'UNKNOWN',
         text: 'osdTextElementUnknown',
         desc: 'osdDescElementUnknown',
         default_position: -1,
@@ -1813,7 +1813,7 @@ OSD.msp = {
                 ignoreSize = true;
             }
             d.display_items.push($.extend({
-                name: suffix ? c.name + suffix : c.name,
+                name: c.name,
                 text: suffix ? [c.text, suffix] : c.text,
                 desc: c.desc,
                 index: j,
@@ -2354,17 +2354,21 @@ TABS.osd.initialize = function (callback) {
                             );
                         }
 
-                        // Insert in alphabetical order
-                        let added = false;
-                        $displayFields.children().each(function() {
-                            if ($(this).text().localeCompare($field.text(), i18n.getCurrentLocale(), { sensitivity: 'base' }) > 0) {
-                                $(this).before($field);
-                                added = true;
-                                return false;
-                            }
-                        });
-                        if(!added) {
+                        // Insert in alphabetical order, with unknown fields at the end
+                        if (field.name == OSD.constants.UNKNOWN_DISPLAY_FIELD.name) {
                             $displayFields.append($field);
+                        } else {
+                            let added = false;
+                            $displayFields.children().each(function() {
+                                if ($(this).text().localeCompare($field.text(), i18n.getCurrentLocale(), { sensitivity: 'base' }) > 0) {
+                                    $(this).before($field);
+                                    added = true;
+                                    return false;
+                                }
+                            });
+                            if(!added) {
+                                $displayFields.append($field);
+                            }
                         }
                     }
 
