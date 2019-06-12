@@ -3767,7 +3767,7 @@
     },
 
     "osdTextElementMainBattVoltage": {
-        "message": "Main battery voltage",
+        "message": "Battery voltage",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattVoltage": {
@@ -3809,7 +3809,7 @@
         "message": "Current VTX channel and power"
     },
     "osdTextElementVoltageWarning": {
-        "message": "Voltage warning",
+        "message": "Battery voltage warning",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementVoltageWarning": {
@@ -3844,21 +3844,21 @@
         "message": "Graphical artificial horizon indicator"
     },
     "osdTextElementHorizonSidebars": {
-        "message": "Horizon sidebars",
+        "message": "Artificial horizon sidebars",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementHorizonSidebars": {
         "message": "Sidebars around artificial horizon indicator"
     },
     "osdTextElementCurrentDraw": {
-        "message": "Current draw",
+        "message": "Battery current draw",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCurrentDraw": {
         "message": "Instantaneous battery current draw"
     },
     "osdTextElementMahDrawn": {
-        "message": "MAh drawn",
+        "message": "Battery current mAh drawn",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMahDrawn": {
@@ -3963,7 +3963,7 @@
         "message": "Instantaneous electrical power consumption"
     },
     "osdTextElementPIDRateProfile": {
-        "message": "PID and rate profile",
+        "message": "Profile: PID and rate",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRateProfile": {
@@ -3977,35 +3977,35 @@
         "message": "Warning text that appears when the battery voltage falls below warning threshold"
     },
     "osdTextElementAvgCellVoltage": {
-        "message": "Average cell voltage",
+        "message": "Battery average cell voltage",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementAvgCellVoltage": {
         "message": "Average cell voltage (main battery voltage / cell count)"
     },
     "osdTextElementPitchAngle": {
-        "message": "Pitch angle",
+        "message": "Angle: pitch",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPitchAngle": {
         "message": "Numerical pitch angle in degrees"
     },
     "osdTextElementRollAngle": {
-        "message": "Roll angle",
+        "message": "Angle: roll",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRollAngle": {
         "message": "Numerical roll angle in degrees"
     },
     "osdTextElementMainBattUsage": {
-        "message": "Main battery usage",
+        "message": "Battery usage",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattUsage": {
         "message": "Graphical representation of battery capacity usage"
     },
     "osdTextElementArmedTime": {
-        "message": "Armed time",
+        "message": "Timer: armed time",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementArmedTime": {
@@ -4068,7 +4068,7 @@
         "message": "RPM reported by ESC telemetry"
     },
     "osdTextElementRemaningTimeEstimate": {
-        "message": "Remaining time estimate",
+        "message": "Timer: remaining time estimate",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRemaningTimeEstimate" : {
@@ -4187,21 +4187,21 @@
         "message": "RPM frequency reported by ESC telemetry"
     },
     "osdTextElementRateProfileName": {
-        "message": "Rate profile name",
+        "message": "Profile: rate profile name",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRateProfileName": {
         "message": "Shows the current rate profile name"
     },
     "osdTextElementPidProfileName": {
-        "message": "PID profile name",
+        "message": "Profile: PID profile name",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPidProfileName": {
         "message": "Shows the current PID profile name"
     },
     "osdTextElementOsdProfileName": {
-        "message": "OSD profile name",
+        "message": "Profile: OSD profile name",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOsdProfileName": {
