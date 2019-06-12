@@ -407,6 +407,7 @@ OSD.constants = {
     ALL_DISPLAY_FIELDS: {
         MAIN_BATT_VOLTAGE: {
             name: 'MAIN_BATT_VOLTAGE',
+            text: 'osdTextElementMainBattVoltage',
             desc: 'osdDescElementMainBattVoltage',
             default_position: -29,
             draw_order: 20,
@@ -415,6 +416,7 @@ OSD.constants = {
         },
         RSSI_VALUE: {
             name: 'RSSI_VALUE',
+            text: 'osdTextElementRssiValue',
             desc: 'osdDescElementRssiValue',
             default_position: -59,
             draw_order: 30,
@@ -423,12 +425,15 @@ OSD.constants = {
         },
         TIMER: {
             name: 'TIMER',
+            text: 'osdTextElementTimer',
+            desc: 'osdDescElementTimer',
             default_position: -39,
             positionable: true,
             preview: FONT.symbol(SYM.ON_M) + ' 11:11'
         },
         THROTTLE_POSITION: {
             name: 'THROTTLE_POSITION',
+            text: 'osdTextElementThrottlePosition',
             desc: 'osdDescElementThrottlePosition',
             default_position: -9,
             draw_order: 110,
@@ -437,12 +442,16 @@ OSD.constants = {
         },
         CPU_LOAD: {
             name: 'CPU_LOAD',
+            text: 'osdTextElementCpuLoad',
+            desc: 'osdDescElementCpuLoad',
             default_position: 26,
             positionable: true,
             preview: '15'
         },
         VTX_CHANNEL: {
             name: 'VTX_CHANNEL',
+            text: 'osdTextElementVtxChannel',
+            desc: 'osdDescElementVtxChannel',
             default_position: 1,
             draw_order: 120,
             positionable: true,
@@ -450,12 +459,15 @@ OSD.constants = {
         },
         VOLTAGE_WARNING: {
             name: 'VOLTAGE_WARNING',
+            text: 'osdTextElementVoltageWarning',
+            desc: 'osdDescElementVoltageWarning',
             default_position: -80,
             positionable: true,
             preview: 'LOW VOLTAGE'
         },
         ARMED: {
             name: 'ARMED',
+            text: 'osdTextElementArmed',
             desc: 'osdDescElementArmed',
             default_position: -107,
             positionable: true,
@@ -463,6 +475,7 @@ OSD.constants = {
         },
         DISARMED: {
             name: 'DISARMED',
+            text: 'osdTextElementDisarmed',
             desc: 'osdDescElementDisarmed',
             default_position: -109,
             draw_order: 280,
@@ -471,6 +484,7 @@ OSD.constants = {
         },
         CROSSHAIRS: {
             name: 'CROSSHAIRS',
+            text: 'osdTextElementCrosshairs',
             desc: 'osdDescElementCrosshairs',
             default_position: function () {
                 var position = 193;
@@ -489,6 +503,7 @@ OSD.constants = {
         },
         ARTIFICIAL_HORIZON: {
             name: 'ARTIFICIAL_HORIZON',
+            text: 'osdTextElementArtificialHorizon',
             desc: 'osdDescElementArtificialHorizon',
             default_position: function () {
                 var position = 74;
@@ -525,6 +540,7 @@ OSD.constants = {
         },
         HORIZON_SIDEBARS: {
             name: 'HORIZON_SIDEBARS',
+            text: 'osdTextElementHorizonSidebars',
             desc: 'osdDescElementHorizonSidebars',
             default_position: function () {
                 var position = 194;
@@ -563,6 +579,7 @@ OSD.constants = {
         },
         CURRENT_DRAW: {
             name: 'CURRENT_DRAW',
+            text: 'osdTextElementCurrentDraw',
             desc: 'osdDescElementCurrentDraw',
             default_position: -23,
             draw_order: 130,
@@ -573,6 +590,7 @@ OSD.constants = {
         },
         MAH_DRAWN: {
             name: 'MAH_DRAWN',
+            text: 'osdTextElementMahDrawn',
             desc: 'osdDescElementMahDrawn',
             default_position: -18,
             draw_order: 140,
@@ -583,6 +601,7 @@ OSD.constants = {
         },
         CRAFT_NAME: {
             name: 'CRAFT_NAME',
+            text: 'osdTextElementCraftName',
             desc: 'osdDescElementCraftName',
             default_position: -77,
             draw_order: 150,
@@ -591,6 +610,7 @@ OSD.constants = {
         },
         ALTITUDE: {
             name: 'ALTITUDE',
+            text: 'osdTextElementAltitude',
             desc: 'osdDescElementAltitude',
             default_position: 62,
             draw_order: 160,
@@ -601,6 +621,7 @@ OSD.constants = {
         },
         ONTIME: {
             name: 'ONTIME',
+            text: 'osdTextElementOnTime',
             desc: 'osdDescElementOnTime',
             default_position: -1,
             positionable: true,
@@ -608,6 +629,7 @@ OSD.constants = {
         },
         FLYTIME: {
             name: 'FLYTIME',
+            text: 'osdTextElementFlyTime',
             desc: 'osdDescElementFlyTime',
             default_position: -1,
             positionable: true,
@@ -615,6 +637,7 @@ OSD.constants = {
         },
         FLYMODE: {
             name: 'FLYMODE',
+            text: 'osdTextElementFlyMode',
             desc: 'osdDescElementFlyMode',
             default_position: -1,
             draw_order: 90,
@@ -623,6 +646,7 @@ OSD.constants = {
         },
         GPS_SPEED: {
             name: 'GPS_SPEED',
+            text: 'osdTextElementGPSSpeed',
             desc: 'osdDescElementGPSSpeed',
             default_position: -1,
             draw_order: 810,
@@ -633,6 +657,7 @@ OSD.constants = {
         },
         GPS_SATS: {
             name: 'GPS_SATS',
+            text: 'osdTextElementGPSSats',
             desc: 'osdDescElementGPSSats',
             default_position: -1,
             draw_order: 800,
@@ -641,6 +666,7 @@ OSD.constants = {
         },
         GPS_LON: {
             name: 'GPS_LON',
+            text: 'osdTextElementGPSLon',
             desc: 'osdDescElementGPSLon',
             default_position: -1,
             draw_order: 830,
@@ -649,6 +675,7 @@ OSD.constants = {
         },
         GPS_LAT: {
             name: 'GPS_LAT',
+            text: 'osdTextElementGPSLat',
             desc: 'osdDescElementGPSLat',
             default_position: -1,
             draw_order: 820,
@@ -657,6 +684,7 @@ OSD.constants = {
         },
         DEBUG: {
             name: 'DEBUG',
+            text: 'osdTextElementDebug',
             desc: 'osdDescElementDebug',
             default_position: -1,
             draw_order: 240,
@@ -665,6 +693,7 @@ OSD.constants = {
         },
         PID_ROLL: {
             name: 'PID_ROLL',
+            text: 'osdTextElementPIDRoll',
             desc: 'osdDescElementPIDRoll',
             default_position: 0x800 | (10 << 5) | 2, // 0x0800 | (y << 5) | x
             draw_order: 170,
@@ -673,6 +702,7 @@ OSD.constants = {
         },
         PID_PITCH: {
             name: 'PID_PITCH',
+            text: 'osdTextElementPIDPitch',
             desc: 'osdDescElementPIDPitch',
             default_position: 0x800 | (11 << 5) | 2, // 0x0800 | (y << 5) | x
             draw_order: 180,
@@ -681,6 +711,7 @@ OSD.constants = {
         },
         PID_YAW: {
             name: 'PID_YAW',
+            text: 'osdTextElementPIDYaw',
             desc: 'osdDescElementPIDYaw',
             default_position: 0x800 | (12 << 5) | 2, // 0x0800 | (y << 5) | x
             draw_order: 190,
@@ -689,6 +720,7 @@ OSD.constants = {
         },
         POWER: {
             name: 'POWER',
+            text: 'osdTextElementPower',
             desc: 'osdDescElementPower',
             default_position: (15 << 5) | 2,
             draw_order: 200,
@@ -699,6 +731,7 @@ OSD.constants = {
         },
         PID_RATE_PROFILE: {
             name: 'PID_RATE_PROFILE',
+            text: 'osdTextElementPIDRateProfile',
             desc: 'osdDescElementPIDRateProfile',
             default_position: 0x800 | (13 << 5) | 2, // 0x0800 | (y << 5) | x
             draw_order: 210,
@@ -707,6 +740,7 @@ OSD.constants = {
         },
         BATTERY_WARNING: {
             name: 'BATTERY_WARNING',
+            text: 'osdTextElementBatteryWarning',
             desc: 'osdDescElementBatteryWarning',
             default_position: -1,
             positionable: true,
@@ -714,6 +748,7 @@ OSD.constants = {
         },
         AVG_CELL_VOLTAGE: {
             name: 'AVG_CELL_VOLTAGE',
+            text: 'osdTextElementAvgCellVoltage',
             desc: 'osdDescElementAvgCellVoltage',
             default_position: 12 << 5,
             draw_order: 230,
@@ -722,6 +757,7 @@ OSD.constants = {
         },
         PITCH_ANGLE: {
             name: 'PITCH_ANGLE',
+            text: 'osdTextElementPitchAngle',
             desc: 'osdDescElementPitchAngle',
             default_position: -1,
             draw_order: 250,
@@ -730,6 +766,7 @@ OSD.constants = {
         },
         ROLL_ANGLE: {
             name: 'ROLL_ANGLE',
+            text: 'osdTextElementRollAngle',
             desc: 'osdDescElementRollAngle',
             default_position: -1,
             draw_order: 260,
@@ -738,6 +775,7 @@ OSD.constants = {
         },
         MAIN_BATT_USAGE: {
             name: 'MAIN_BATT_USAGE',
+            text: 'osdTextElementMainBattUsage',
             desc: 'osdDescElementMainBattUsage',
             default_position: -17,
             draw_order: 270,
@@ -746,6 +784,7 @@ OSD.constants = {
         },
         ARMED_TIME: {
             name: 'ARMED_TIME',
+            text: 'osdTextElementArmedTime',
             desc: 'osdDescElementArmedTime',
             default_position: -1,
             positionable: true,
@@ -753,6 +792,7 @@ OSD.constants = {
         },
         HOME_DIR: {
             name: 'HOME_DIRECTION',
+            text: 'osdTextElementHomeDirection',
             desc: 'osdDescElementHomeDirection',
             default_position: -1,
             draw_order: 850,
@@ -761,6 +801,7 @@ OSD.constants = {
         },
         HOME_DIST: {
             name: 'HOME_DISTANCE',
+            text: 'osdTextElementHomeDistance',
             desc: 'osdDescElementHomeDistance',
             default_position: -1,
             draw_order: 840,
@@ -771,6 +812,7 @@ OSD.constants = {
         },
         NUMERICAL_HEADING: {
             name: 'NUMERICAL_HEADING',
+            text: 'osdTextElementNumericalHeading',
             desc: 'osdDescElementNumericalHeading',
             default_position: -1,
             draw_order: 290,
@@ -779,6 +821,7 @@ OSD.constants = {
         },
         NUMERICAL_VARIO: {
             name: 'NUMERICAL_VARIO',
+            text: 'osdTextElementNumericalVario',
             desc: 'osdDescElementNumericalVario',
             default_position: -1,
             draw_order: 300,
@@ -787,6 +830,7 @@ OSD.constants = {
         },
         COMPASS_BAR: {
             name: 'COMPASS_BAR',
+            text: 'osdTextElementCompassBar',
             desc: 'osdDescElementCompassBar',
             default_position: -1,
             draw_order: 310,
@@ -799,6 +843,7 @@ OSD.constants = {
         },
         WARNINGS: {
             name: 'WARNINGS',
+            text: 'osdTextElementWarnings',
             desc: 'osdDescElementWarnings',
             default_position: -1,
             draw_order: 220,
@@ -807,6 +852,7 @@ OSD.constants = {
         },
         ESC_TEMPERATURE: {
             name: 'ESC_TEMPERATURE',
+            text: 'osdTextElementEscTemperature',
             desc: 'osdDescElementEscTemperature',
             default_position: -1,
             draw_order: 900,
@@ -817,6 +863,7 @@ OSD.constants = {
         },
         ESC_RPM: {
             name: 'ESC_RPM',
+            text: 'osdTextElementEscRpm',
             desc: 'osdDescElementEscRpm',
             default_position: -1,
             draw_order: 1000,
@@ -825,6 +872,7 @@ OSD.constants = {
         },
         REMAINING_TIME_ESTIMATE: {
             name: 'REMAINING_TIME_ESTIMATE',
+            text: 'osdTextElementRemaningTimeEstimate',
             desc: 'osdDescElementRemaningTimeEstimate',
             default_position: -1,
             draw_order: 80,
@@ -833,6 +881,7 @@ OSD.constants = {
         },
         RTC_DATE_TIME: {
             name: 'RTC_DATE_TIME',
+            text: 'osdTextElementRtcDateTime',
             desc: 'osdDescElementRtcDateTime',
             default_position: -1,
             draw_order: 360,
@@ -841,6 +890,7 @@ OSD.constants = {
         },
         ADJUSTMENT_RANGE: {
             name: 'ADJUSTMENT_RANGE',
+            text: 'osdTextElementAdjustmentRange',
             desc: 'osdDescElementAdjustmentRange',
             default_position: -1,
             draw_order: 370,
@@ -849,6 +899,7 @@ OSD.constants = {
         },
         TIMER_1: {
             name: 'TIMER_1',
+            text: 'osdTextElementTimer1',
             desc: 'osdDescElementTimer1',
             default_position: -1,
             draw_order: 60,
@@ -859,6 +910,7 @@ OSD.constants = {
         },
         TIMER_2: {
             name: 'TIMER_2',
+            text: 'osdTextElementTimer2',
             desc: 'osdDescElementTimer2',
             default_position: -1,
             draw_order: 70,
@@ -869,6 +921,7 @@ OSD.constants = {
         },
         CORE_TEMPERATURE: {
             name: 'CORE_TEMPERATURE',
+            text: 'osdTextElementCoreTemperature',
             desc: 'osdDescElementCoreTemperature',
             default_position: -1,
             draw_order: 380,
@@ -879,6 +932,7 @@ OSD.constants = {
         },
         ANTI_GRAVITY: {
             name: 'ANTI_GRAVITY',
+            text: 'osdTextAntiGravity',
             desc: 'osdDescAntiGravity',
             default_position: -1,
             draw_order: 320,
@@ -887,6 +941,7 @@ OSD.constants = {
         },
         G_FORCE: {
             name: 'G_FORCE',
+            text: 'osdTextGForce',
             desc: 'osdDescGForce',
             default_position: -1,
             draw_order: 15,
@@ -895,6 +950,7 @@ OSD.constants = {
         },
         MOTOR_DIAG: {
             name: 'MOTOR_DIAGNOSTICS',
+            text: 'osdTextElementMotorDiag',
             desc: 'osdDescElementMotorDiag',
             default_position: -1,
             draw_order: 335,
@@ -906,6 +962,7 @@ OSD.constants = {
         },
         LOG_STATUS: {
             name: 'LOG_STATUS',
+            text: 'osdTextElementLogStatus',
             desc: 'osdDescElementLogStatus',
             default_position: -1,
             draw_order: 330,
@@ -914,6 +971,7 @@ OSD.constants = {
         },
         FLIP_ARROW: {
             name: 'FLIP_ARROW',
+            text: 'osdTextElementFlipArrow',
             desc: 'osdDescElementFlipArrow',
             default_position: -1,
             draw_order: 340,
@@ -922,6 +980,7 @@ OSD.constants = {
         },
         LINK_QUALITY: {
             name: 'LINK_QUALITY',
+            text: 'osdTextElementLinkQuality',
             desc: 'osdDescElementLinkQuality',
             default_position: -1,
             draw_order: 390,
@@ -930,6 +989,7 @@ OSD.constants = {
         },
         FLIGHT_DIST: {
             name: 'FLIGHT_DISTANCE',
+            text: 'osdTextElementFlightDist',
             desc: 'osdDescElementFlightDist',
             default_position: -1,
             draw_order: 860,
@@ -940,6 +1000,7 @@ OSD.constants = {
         },
         STICK_OVERLAY_LEFT: {
             name: 'STICK_OVERLAY_LEFT',
+            text: 'osdTextElementStickOverlayLeft',
             desc: 'osdDescElementStickOverlayLeft',
             default_position: -1,
             draw_order: 400,
@@ -948,6 +1009,7 @@ OSD.constants = {
         },
         STICK_OVERLAY_RIGHT: {
             name: 'STICK_OVERLAY_RIGHT',
+            text: 'osdTextElementStickOverlayRight',
             desc: 'osdDescElementStickOverlayRight',
             default_position: -1,
             draw_order: 410,
@@ -956,6 +1018,7 @@ OSD.constants = {
         },
         DISPLAY_NAME: {
             name: 'DISPLAY_NAME',
+            text: 'osdTextElementDisplayName',
             desc: 'osdDescElementDisplayName',
             default_position: -77,
             draw_order: 350,
@@ -966,6 +1029,7 @@ OSD.constants = {
         },
         ESC_RPM_FREQ: {
             name: 'ESC_RPM_FREQ',
+            text: 'osdTextElementEscRpmFreq',
             desc: 'osdDescElementEscRpmFreq',
             default_position: -1,
             draw_order: 1010,
@@ -974,6 +1038,7 @@ OSD.constants = {
         },
         RATE_PROFILE_NAME: {
             name: 'RATE_PROFILE_NAME',
+            text: 'osdTextElementRateProfileName',
             desc: 'osdDescElementRateProfileName',
             default_position: -1,
             draw_order: 420,
@@ -982,6 +1047,7 @@ OSD.constants = {
         },
         PID_PROFILE_NAME: {
             name: 'PID_PROFILE_NAME',
+            text: 'osdTextElementPidProfileName',
             desc: 'osdDescElementPidProfileName',
             default_position: -1,
             draw_order: 430,
@@ -990,6 +1056,7 @@ OSD.constants = {
         },
         OSD_PROFILE_NAME: {
             name: 'OSD_PROFILE_NAME',
+            text: 'osdTextElementOsdProfileName',
             desc: 'osdDescElementOsdProfileName',
             default_position: -1,
             draw_order: 440,
@@ -999,6 +1066,7 @@ OSD.constants = {
     },
     UNKNOWN_DISPLAY_FIELD: {
         name: 'UNKNOWN_',
+        text: 'osdTextElementUnknown',
         desc: 'osdDescElementUnknown',
         default_position: -1,
         positionable: true,
@@ -1670,6 +1738,7 @@ OSD.msp = {
                 var c = OSD.constants.STATISTIC_FIELDS[j];
                 d.stat_items.push({
                     name: c.name,
+                    text: c.text,
                     desc: c.desc,
                     index: j,
                     enabled: v === 1
@@ -1745,6 +1814,7 @@ OSD.msp = {
             }
             d.display_items.push($.extend({
                 name: suffix ? c.name + suffix : c.name,
+                text: suffix ? [c.text, suffix] : c.text,
                 desc: c.desc,
                 index: j,
                 draw_order: c.draw_order,
@@ -2258,7 +2328,15 @@ TABS.osd.initialize = function (callback) {
                                         })
                                 );
                         }
-                        $field.append('<label for="' + field.name + '" class="char-label">' + inflection.titleize(field.name) + '</label>');
+                        let finalFieldName = inflection.titleize(field.name); 
+                        if (field.text) {
+                            if (Array.isArray(field.text) && i18n.existsMessage(field.text[0])) {
+                                finalFieldName = i18n.getMessage(field.text[0], field.text.slice(1));
+                            } else if (i18n.existsMessage(field.text)) {
+                                finalFieldName = i18n.getMessage(field.text);
+                            }
+                        }
+                        $field.append('<label for="' + field.name + '" class="char-label">' + finalFieldName + '</label>');
                         if (field.positionable && field.isVisible[OSD.getCurrentPreviewProfile()]) {
                             $field.append(
                                 $('<input type="number" class="' + field.index + ' position"></input>')
@@ -2279,7 +2357,7 @@ TABS.osd.initialize = function (callback) {
                         // Insert in alphabetical order
                         let added = false;
                         $displayFields.children().each(function() {
-                            if ($(this).text() > $field.text()) {
+                            if ($(this).text().localeCompare($field.text(), i18n.getCurrentLocale(), { sensitivity: 'base' }) > 0) {
                                 $(this).before($field);
                                 added = true;
                                 return false;

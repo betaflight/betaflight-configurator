@@ -67,6 +67,14 @@ i18n.getLanguagesAvailables = function() {
     return languagesAvailables;
 }
 
+i18n.getCurrentLocale = function() {
+    return i18next.language;
+}
+
+i18n.existsMessage = function(key) {
+    return i18next.exists(key);
+}
+
 /**
  * Helper functions, don't depend of the i18n framework
  */
