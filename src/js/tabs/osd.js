@@ -1258,6 +1258,11 @@ OSD.constants = {
             name: 'LINK_QUALITY',
             desc: 'osdWarningLinkQuality'
         },
+        RSSI_DBM: {
+            name: 'RSSI_DBM',
+            desc: 'osdWarningRssiDbm'
+        },
+
     },
     FONT_TYPES: [
         { file: "default", name: "Default" },
@@ -1543,7 +1548,8 @@ OSD.chooseFields = function () {
         ]);
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.RSSI,
-            F.LINK_QUALITY
+            F.LINK_QUALITY,
+            F.RSSI_DBM,
         ]);
     }
 };
