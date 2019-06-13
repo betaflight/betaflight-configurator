@@ -41,6 +41,7 @@ SYM.loadSymbols = function() {
     SYM.ARROW_NORTH = 0x68;
     SYM.ARROW_SOUTH = 0x60;
     SYM.ARROW_EAST = 0x64;
+    SYM.ARROW_SMALL_UP = 0x75;
     SYM.HEADING_LINE = 0x1D;
     SYM.HEADING_DIVIDED_LINE = 0x1C;
     SYM.HEADING_N = 0x18;
@@ -843,7 +844,7 @@ OSD.constants = {
             draw_order: 300,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.ARROW_NORTH) + '8.7' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.FTPS) : FONT.symbol(SYM.MPS));
+                return FONT.symbol(SYM.ARROW_SMALL_UP) + '8.7' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.FTPS) : FONT.symbol(SYM.MPS));
             }
         },
         COMPASS_BAR: {
