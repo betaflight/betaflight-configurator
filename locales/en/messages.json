@@ -3669,8 +3669,28 @@
     "osdSetupVideoFormatTitle": {
         "message": "Video Format"
     },
+    "osdSetupVideoFormatOptionAuto": {
+        "message": "Auto",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionPal": {
+        "message": "PAL",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionNtsc": {
+        "message": "NTSC",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Units"
+    },
+    "osdSetupUnitsOptionImperial": {
+        "message": "Imperial",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionMetric": {
+        "message": "Metric",
+        "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
         "message": "Timers"
@@ -3735,6 +3755,9 @@
     },
     "osdSetupUploadingFont": {
         "message": "Uploading..."
+    },
+    "osdSetupUploadingFontEnd": {
+        "message": "Uploaded all {{length}} characters to the OSD"
     },
     
     "osdSetupSave": {
@@ -4310,17 +4333,57 @@
     "osdTimerSourceTooltip": {
         "message": "Select the timer source, this controls the duration/event that the timer measures"
     },
+    "osdTimerSourceOptionOnTime": {
+      "message": "On time",
+      "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
+    },
+    "osdTimerSourceOptionTotalArmedTime": {
+      "message": "Total armed time",
+      "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+    },
+    "osdTimerSourceOptionLastArmedTime": {
+      "message": "Last armed time",
+      "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+    },
+    "osdTimerSourceOptionOnArmTime": {
+      "message": "On/Armed time",
+      "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+    },
     "osdTimerPrecision": {
       "message": "Precision:"
     },
     "osdTimerPrecisionTooltip": {
         "message": "Select the timer precision, this controls to what precision the time is reported in"
     },
+    "osdTimerPrecisionOptionSecond": {
+      "message": "Second",
+      "description": "Selectable option for the precision of the timer in the OSD"
+    },
+    "osdTimerPrecisionOptionHundredth": {
+      "message": "Hundredth",
+      "description": "Selectable option for the precision of the timer in the OSD"
+    },
+    "osdTimerPrecisionOptionTenth": {
+      "message": "Tenth",
+      "description": "Selectable option for the precision of the timer in the OSD"
+    },
     "osdTimerAlarm": {
       "message": "Alarm:"
     },
     "osdTimerAlarmTooltip": {
         "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"
+    },
+    "osdTimerAlarmOptionRssi": {
+      "message": "RSSI",
+      "description": "Text of the RSSI alarm"
+    },
+    "osdTimerAlarmOptionCapacity": {
+      "message": "Capacity",
+      "description": "Text of the capacity alarm"
+    },
+    "osdTimerAlarmOptionAltitude": {
+      "message": "Altitude",
+      "description": "Text of the altitude alarm"
     },
 
     "osdWarningUnknown": {
