@@ -1077,6 +1077,15 @@ OSD.constants = {
             positionable: true,
             preview: 'OSD_1'
         },
+        RSSI_DBM_VALUE: {
+            name: 'OSD_PROFILE_NAME',
+            text: 'osdTextElementRssiDbmValue',
+            desc: 'osdDescElementRssiDbmValue',
+            default_position: -1,
+            draw_order: 395,
+            positionable: true,
+            preview: FONT.symbol(SYM.RSSI) + '-130'
+        },
     },
     UNKNOWN_DISPLAY_FIELD: {
         name: 'UNKNOWN',
@@ -1393,7 +1402,8 @@ OSD.chooseFields = function () {
                                                 OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                     F.RATE_PROFILE_NAME,
                                                     F.PID_PROFILE_NAME,
-                                                    F.OSD_PROFILE_NAME
+                                                    F.OSD_PROFILE_NAME,
+                                                    F.RSSI_DBM_VALUE
                                                 ]);
                                             }
                                         }
