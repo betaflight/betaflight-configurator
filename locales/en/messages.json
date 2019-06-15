@@ -4331,56 +4331,123 @@
         "message": "Select the timer alarm threshold in minutes, when the time exceeds this value the OSD element will blink, setting this to 0 disables the alarm"
     },
 
-    "osdWarningUnknown": {
-        "message": "Unknown warning (details to be added in a future release)"
+    "osdWarningTextArmingDisabled": {
+        "message": "Arming disabled",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningArmingDisabled": {
         "message": "Reports the most severe reason for not arming"
     },
+    "osdWarningTextBatteryNotFull": {
+        "message": "Battery not full",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningBatteryNotFull": {
         "message": "Alerts when a battery is connected that is not fully charged"
+    },
+    "osdWarningTextBatteryWarning": {
+        "message": "Battery warning",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningBatteryWarning": {
         "message": "Alerts when the battery voltage falls below warning threshold"
     },
+    "osdWarningTextBatteryCritical": {
+        "message": "Battery critical",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningBatteryCritical": {
         "message": "Alerts when the battery voltage falls below the minimum average cell voltage"
+    },
+    "osdWarningTextVisualBeeper": {
+        "message": "Visual beeper",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningVisualBeeper": {
         "message": "Shows a visualisation of the beeper (shows as 4 asterisks)"
     },
+    "osdWarningTextCrashFlipMode": {
+        "message": "Crash flip mode",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningCrashFlipMode": {
         "message": "Warns when flip over after crash mode is activated"
+    },
+    "osdWarningTextEscFail": {
+        "message": "ESC fail",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningEscFail": {
         "message": "Enumerates a list with the ESCs/motors that are failing (RPM or temperature are out of the configured threshold)"
     },
+    "osdWarningTextCoreTemperature": {
+        "message": "Core temperature",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningCoreTemperature": {
         "message": "Warns when MCU core temperature exceeds a configured threshold"
+    },
+    "osdWarningTextRcSmoothingFailure": {
+        "message": "RC Smoothing failure",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningRcSmoothingFailure": {
         "message": "Warns when RC Smoothing initialization failed"
     },
+    "osdWarningTextFailsafe": {
+        "message": "Failsafe",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningFailsafe": {
         "message": "Warns when failsafe occurs"
+    },
+    "osdWarningTextLaunchControl": {
+        "message": "Launch control",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningLaunchControl": {
         "message": "Warns when Launch Control mode is activated"
     },
+    "osdWarningTextGpsRescueUnavailable": {
+        "message": "GPS Rescue unavailable",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningGpsRescueUnavailable": {
         "message": "Warns when GPS Rescue is not available and cannot be activated"
+    },
+    "osdWarningTextGpsRescueDisabled": {
+        "message": "GPS Rescue disabled",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueDisabled": {
         "message": "Warns when GPS Rescue is disabled"
     },
+    "osdWarningTextRSSI": {
+        "message": "RSSI",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningRSSI": {
         "message": "Warns when RSSI is below alarm setting"
+    },
+    "osdWarningTextLinkQuality": {
+        "message": "Link quality",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningLinkQuality": {
         "message": "Warns when Link Quality is below alarm setting"
     },
+    "osdWarningTextRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningRssiDbm": {
         "message": "Warns when RSSI dBm value is below alarm setting"
+    },
+    "osdWarningTextUnknown": {
+        "message": "Unknown $1"
+    },
+    "osdWarningUnknown": {
+        "message": "Unknown warning (details to be added in a future release)"
     },
 
     "osdSectionHelpElements": {
