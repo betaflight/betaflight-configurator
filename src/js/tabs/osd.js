@@ -1077,6 +1077,15 @@ OSD.constants = {
             positionable: true,
             preview: 'OSD_1'
         },
+        RSSI_DBM_VALUE: {
+            name: 'OSD_PROFILE_NAME',
+            text: 'osdTextElementRssiDbmValue',
+            desc: 'osdDescElementRssiDbmValue',
+            default_position: -1,
+            draw_order: 395,
+            positionable: true,
+            preview: FONT.symbol(SYM.RSSI) + '-130'
+        },
     },
     UNKNOWN_DISPLAY_FIELD: {
         name: 'UNKNOWN',
@@ -1249,6 +1258,11 @@ OSD.constants = {
             name: 'LINK_QUALITY',
             desc: 'osdWarningLinkQuality'
         },
+        RSSI_DBM: {
+            name: 'RSSI_DBM',
+            desc: 'osdWarningRssiDbm'
+        },
+
     },
     FONT_TYPES: [
         { file: "default", name: "Default" },
@@ -1393,7 +1407,8 @@ OSD.chooseFields = function () {
                                                 OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                     F.RATE_PROFILE_NAME,
                                                     F.PID_PROFILE_NAME,
-                                                    F.OSD_PROFILE_NAME
+                                                    F.OSD_PROFILE_NAME,
+                                                    F.RSSI_DBM_VALUE
                                                 ]);
                                             }
                                         }
@@ -1533,7 +1548,8 @@ OSD.chooseFields = function () {
         ]);
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.RSSI,
-            F.LINK_QUALITY
+            F.LINK_QUALITY,
+            F.RSSI_DBM,
         ]);
     }
 };

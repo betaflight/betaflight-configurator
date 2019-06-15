@@ -4210,6 +4210,14 @@
     "osdDescElementOsdProfileName": {
         "message": "OSD profile name as set in the \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\" CLI variables"
     },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm value",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Value in dBm of the RSSI signal if available"
+    },
+    
     "osdTextElementUnknown": {
         "message": "Unknown $1",
         "description": "One of the elements of the OSD"
@@ -4370,6 +4378,9 @@
     },
     "osdWarningLinkQuality": {
         "message": "Warns when Link Quality is below alarm setting"
+    },
+    "osdWarningRssiDbm": {
+        "message": "Warns when RSSI dBm value is below alarm setting"
     },
 
     "osdSectionHelpElements": {
