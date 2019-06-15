@@ -23,6 +23,8 @@ SYM.loadSymbols = function() {
     SYM.FEET = 0xF;
     SYM.KPH = 0x9E;
     SYM.MPH = 0x9D;
+    SYM.MPS = 0x9F;
+    SYM.FTPS = 0x99;
     SYM.SPEED = 0x70;
     SYM.TOTAL_DIST = 0x71;
     SYM.GPS_SAT_L = 0x1E;
@@ -39,6 +41,7 @@ SYM.loadSymbols = function() {
     SYM.ARROW_NORTH = 0x68;
     SYM.ARROW_SOUTH = 0x60;
     SYM.ARROW_EAST = 0x64;
+    SYM.ARROW_SMALL_UP = 0x75;
     SYM.HEADING_LINE = 0x1D;
     SYM.HEADING_DIVIDED_LINE = 0x1C;
     SYM.HEADING_N = 0x18;
@@ -840,7 +843,9 @@ OSD.constants = {
             default_position: -1,
             draw_order: 300,
             positionable: true,
-            preview: FONT.symbol(SYM.ARROW_NORTH) + '8.7'
+            preview: function (osd_data) {
+                return FONT.symbol(SYM.ARROW_SMALL_UP) + '8.7' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.FTPS) : FONT.symbol(SYM.MPS));
+            }
         },
         COMPASS_BAR: {
             name: 'COMPASS_BAR',
