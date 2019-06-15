@@ -393,35 +393,10 @@ OSD.drawStickOverlayPreview = function () {
     return stickOverlay;
 }
 
-OSD.constants = {
-    VISIBLE: 0x0800,
-    VIDEO_TYPES: [
-        'AUTO',
-        'PAL',
-        'NTSC'
-    ],
-    VIDEO_LINES: {
-        PAL: 16,
-        NTSC: 13
-    },
-    VIDEO_BUFFER_CHARS: {
-        PAL: 480,
-        NTSC: 390
-    },
-    UNIT_TYPES: [
-        'IMPERIAL',
-        'METRIC'
-    ],
-    TIMER_PRECISION: [
-        'SECOND',
-        'HUNDREDTH',
-        'TENTH'
-    ],
-    AHISIDEBARWIDTHPOSITION: 7,
-    AHISIDEBARHEIGHTPOSITION: 3,
+OSD.loadDisplayFields = function() {
 
-    // All display fields, from every version, do not remove elements, only add!
-    ALL_DISPLAY_FIELDS: {
+ // All display fields, from every version, do not remove elements, only add!
+    OSD.ALL_DISPLAY_FIELDS = {
         MAIN_BATT_VOLTAGE: {
             name: 'MAIN_BATT_VOLTAGE',
             text: 'osdTextElementMainBattVoltage',
@@ -1091,7 +1066,36 @@ OSD.constants = {
             positionable: true,
             preview: FONT.symbol(SYM.RSSI) + '-130'
         },
+    };
+};
+
+OSD.constants = {
+    VISIBLE: 0x0800,
+    VIDEO_TYPES: [
+        'AUTO',
+        'PAL',
+        'NTSC'
+    ],
+    VIDEO_LINES: {
+        PAL: 16,
+        NTSC: 13
     },
+    VIDEO_BUFFER_CHARS: {
+        PAL: 480,
+        NTSC: 390
+    },
+    UNIT_TYPES: [
+        'IMPERIAL',
+        'METRIC'
+    ],
+    TIMER_PRECISION: [
+        'SECOND',
+        'HUNDREDTH',
+        'TENTH'
+    ],
+    AHISIDEBARWIDTHPOSITION: 7,
+    AHISIDEBARHEIGHTPOSITION: 3,
+
     UNKNOWN_DISPLAY_FIELD: {
         name: 'UNKNOWN',
         text: 'osdTextElementUnknown',
@@ -1311,7 +1315,7 @@ OSD.searchLimitsElement = function (arrayElements) {
 
 // Pick display fields by version, order matters, so these are going in an array... pry could iterate the example map instead
 OSD.chooseFields = function () {
-    var F = OSD.constants.ALL_DISPLAY_FIELDS;
+    var F = OSD.ALL_DISPLAY_FIELDS;
     // version 3.0.1
     if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
         OSD.constants.DISPLAY_FIELDS = [
@@ -2000,6 +2004,7 @@ TABS.osd.initialize = function (callback) {
 
         // Prepare symbols depending on the version
         SYM.loadSymbols();
+        OSD.loadDisplayFields();
 
         // Generate font type select element
         var fontPresetsElement = $('.fontpresets');
