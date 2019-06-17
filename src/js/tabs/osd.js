@@ -245,6 +245,10 @@ FONT.upload = function ($progress) {
         return MSP.promise(MSPCodes.MSP_OSD_CHAR_WRITE, FONT.msp.encode(i));
     })
         .then(function () {
+
+            console.log('Uploaded all ' + FONT.data.characters.length + ' characters');
+            GUI.log(i18n.getMessage('osdSetupUploadingFontEnd', {length: FONT.data.characters.length}));
+
             OSD.GUI.fontManager.close();
 
             return MSP.promise(MSPCodes.MSP_SET_REBOOT);
@@ -1547,13 +1551,13 @@ OSD.chooseFields = function () {
     }
     
     OSD.constants.TIMER_TYPES = [
-        'ON TIME',
-        'TOTAL ARMED TIME',
-        'LAST ARMED TIME'
+        'ON_TIME',
+        'TOTAL_ARMED_TIME',
+        'LAST_ARMED_TIME'
     ];
     if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
         OSD.constants.TIMER_TYPES = OSD.constants.TIMER_TYPES.concat([
-            'ON/ARM TIME'
+            'ON_ARM_TIME'
         ]);
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.RSSI,
@@ -1724,8 +1728,8 @@ OSD.msp = {
                 if (semver.gte(CONFIG.apiVersion, "1.21.0") && bit_check(d.flags, 0)) {
                     d.unit_mode = view.readU8();
                     d.alarms = {};
-                    d.alarms['rssi'] = { display_name: 'Rssi', value: view.readU8() };
-                    d.alarms['cap'] = { display_name: 'Capacity', value: view.readU16() };
+                    d.alarms['rssi'] = { display_name: i18n.getMessage('osdTimerAlarmOptionRssi'), value: view.readU8() };
+                    d.alarms['cap'] = { display_name: i18n.getMessage('osdTimerAlarmOptionCapacity'), value: view.readU16() };
                     if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
                         d.alarms['time'] = { display_name: 'Minutes', value: view.readU16() };
                     } else {
@@ -1737,7 +1741,7 @@ OSD.msp = {
                         }
                     }
 
-                    d.alarms['alt'] = { display_name: 'Altitude', value: view.readU16() };
+                    d.alarms['alt'] = { display_name: i18n.getMessage('osdTimerAlarmOptionAltitude'), value: view.readU16() };
                 }
             }
         }
@@ -2065,7 +2069,7 @@ TABS.osd.initialize = function (callback) {
                     var $videoTypes = $('.video-types').empty();
                     for (var i = 0; i < OSD.constants.VIDEO_TYPES.length; i++) {
                         var type = OSD.constants.VIDEO_TYPES[i];
-                        var $checkbox = $('<label/>').append($('<input name="video_system" type="radio"/>' + type + '</label>')
+                        var $checkbox = $('<label/>').append($('<input name="video_system" type="radio"/>' + i18n.getMessage('osdSetupVideoFormatOption' + inflection.camelize(type.toLowerCase())) + '</label>')
                             .prop('checked', i === OSD.data.video_system)
                             .data('type', type)
                             .data('type', i)
@@ -2086,7 +2090,7 @@ TABS.osd.initialize = function (callback) {
                         var $unitMode = $('.units').empty();
                         for (var i = 0; i < OSD.constants.UNIT_TYPES.length; i++) {
                             var type = OSD.constants.UNIT_TYPES[i];
-                            var $checkbox = $('<label/>').append($('<input name="unit_mode" type="radio"/>' + type + '</label>')
+                            var $checkbox = $('<label/>').append($('<input name="unit_mode" type="radio"/>' + i18n.getMessage('osdSetupUnitsOption' + inflection.camelize(type.toLowerCase())) + '</label>')
                                 .prop('checked', i === OSD.data.unit_mode)
                                 .data('type', type)
                                 .data('type', i)
@@ -2138,7 +2142,7 @@ TABS.osd.initialize = function (callback) {
                                 sourceTimerTableData.append('<label for="timerSource_' + tim.index + '" class="char-label">' + i18n.getMessage('osdTimerSource') + '</label>');
                                 var src = $('<select class="timer-option" id="timerSource_' + tim.index + '"></select>');
                                 OSD.constants.TIMER_TYPES.forEach(function (e, i) {
-                                    src.append('<option value="' + i + '">' + e + '</option>');
+                                    src.append('<option value="' + i + '">' + i18n.getMessage('osdTimerSourceOption' + inflection.camelize(e.toLowerCase())) + '</option>');
                                 });
                                 src[0].selectedIndex = tim.src;
                                 src.blur(function (e) {
@@ -2160,7 +2164,7 @@ TABS.osd.initialize = function (callback) {
                                 precisionTimerTableData.append('<label for="timerPrec_' + tim.index + '" class="char-label">' + i18n.getMessage('osdTimerPrecision') + '</label>');
                                 var precision = $('<select class="timer-option osd_tip" id="timerPrec_' + tim.index + '"></select>');
                                 OSD.constants.TIMER_PRECISION.forEach(function (e, i) {
-                                    precision.append('<option value="' + i + '">' + e + '</option>');
+                                    precision.append('<option value="' + i + '">' + i18n.getMessage('osdTimerPrecisionOption' + inflection.camelize(e.toLowerCase())) + '</option>');
                                 });
                                 precision[0].selectedIndex = tim.precision;
                                 precision.blur(function (e) {
@@ -2630,9 +2634,7 @@ TABS.osd.initialize = function (callback) {
                 $('a.flash_font').addClass('disabled');
                 $('.progressLabel').text(i18n.getMessage('osdSetupUploadingFont'));
                 FONT.upload($('.progress').val(0)).then(function () {
-                    var msg = 'Uploaded all ' + FONT.data.characters.length + ' characters';
-                    console.log(msg);
-                    $('.progressLabel').text(msg);
+                    $('.progressLabel').text(i18n.getMessage('osdSetupUploadingFontEnd', {length: FONT.data.characters.length}));
                 });
             }
         });
