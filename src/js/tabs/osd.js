@@ -1238,6 +1238,7 @@ OSD.constants = {
         },
         MIN_RSSI_DBM: {
             name: 'MIN_RSSI_DBM',
+            text: 'osdTextStatMinRssiDbm',
             desc: 'osdDescStatMinRssiDbm'
         },
     },
@@ -1842,7 +1843,8 @@ OSD.msp = {
 
                 // Read all the data for any statistics we don't know about
                 } else {
-                    d.stat_items.push({name: 'UNKNOWN', desc: 'osdDescStatUnknown', index: i, enabled: v === 1 });
+                    let statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
+                    d.stat_items.push({name: 'UNKNOWN', text: ['osdTextStatUnknown', statisticNumber], desc: 'osdDescStatUnknown', index: i, enabled: v === 1 });
                 }
             }
 
@@ -2114,16 +2116,20 @@ TABS.osd.initialize = function (callback) {
         }
 
         function insertOrdered(fieldList, field) {
-            let added = false;
-            fieldList.children().each(function() {
-                if ($(this).text().localeCompare(field.text(), i18n.getCurrentLocale(), { sensitivity: 'base' }) > 0) {
-                    $(this).before(field);
-                    added = true;
-                    return false;
-                }
-            });
-            if(!added) {
+            if (field.name == 'UNKNOWN') {
                 fieldList.append(field);
+            } else {
+                let added = false;
+                fieldList.children().each(function() {
+                    if ($(this).text().localeCompare(field.text(), i18n.getCurrentLocale(), { sensitivity: 'base' }) > 0) {
+                        $(this).before(field);
+                        added = true;
+                        return false;
+                    }
+                });
+                if(!added) {
+                    fieldList.append(field);
+                }
             }
         }
 
@@ -2311,6 +2317,7 @@ TABS.osd.initialize = function (callback) {
                                 );
                                 $field.append('<label for="' + field.name + '" class="char-label">' + titleizeField(field) + '</label>');
 
+                                // Insert in alphabetical order, with unknown fields at the end
                                 insertOrdered($statsFields, $field);
                             }
 
@@ -2348,11 +2355,8 @@ TABS.osd.initialize = function (callback) {
                                 $field.append('<label for="' + field.name + '" class="char-label">' + finalFieldName + '</label>');
 
                                 // Insert in alphabetical order, with unknown fields at the end
-                                if (field.name == 'UNKNOWN') {
-                                    $warningFields.append($field);
-                                } else {
-                                    insertOrdered($warningFields, $field);
-                                }
+                                insertOrdered($warningFields, $field);
+
                             }
                         }
                     }
@@ -2482,11 +2486,8 @@ TABS.osd.initialize = function (callback) {
                         }
 
                         // Insert in alphabetical order, with unknown fields at the end
-                        if (field.name == OSD.constants.UNKNOWN_DISPLAY_FIELD.name) {
-                            $displayFields.append($field);
-                        } else {
-                            insertOrdered($displayFields, $field);
-                        }
+                        insertOrdered($displayFields, $field);
+
                     }
 
                     GUI.switchery();
