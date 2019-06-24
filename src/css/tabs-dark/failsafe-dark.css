@@ -1,0 +1,47 @@
+.tab-failsafe .number input {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-failsafe .number input:disabled {
+    background-color: #393b3a;
+    color: grey;
+}
+
+.tab-failsafe .checkbox {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-failsafe .radioarea {
+    background-color: #393b3a;
+}
+
+.tab-failsafe .number {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-failsafe .gui_box span {
+    color: white;
+}
+
+.tab-failsafe .stage1 select {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-failsafe .modename {
+    background-color: #393b3a;
+    border: 1px solid #9c9c9c;
+}
+
+.tab-failsafe .featuresNew tr {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-failsafe .switchMode {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}

@@ -1,0 +1,19 @@
+.tab-transponder .text input {
+    border: 1px solid #9c9c9c;
+}
+
+.tab-transponder .text .disabled {
+    background-color: #393b3a;
+}
+
+.tab-transponder .text {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-transponder .gui_box span {
+    color: white;
+}
+
+.tab-transponder select {
+    border: 1px solid #9c9c9c;
+}

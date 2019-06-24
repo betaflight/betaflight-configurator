@@ -1,0 +1,40 @@
+.tab-auxiliary .toolbox {
+    color: white;
+}
+
+.tab-auxiliary .mode {
+    background-color: #393b3a;
+}
+
+.tab-auxiliary .mode .info {
+    background-color: #9e9e9e;
+    color: white;
+}
+
+.tab-auxiliary .ranges {
+    border-bottom: 5px solid #8a8a8a;
+    background-color: #676767;
+}
+
+.tab-auxiliary .range {
+    background-color: #484848;
+}
+
+.tab-auxiliary .link {
+    background-color: #484848;
+}
+
+.tab-auxiliary .range .channel {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-auxiliary .buttons a {
+    background-color: #333333;
+    color: white;
+}
+
+.tab-auxiliary .buttons a:hover {
+    background-color: #393b3a;
+}

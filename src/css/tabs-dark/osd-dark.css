@@ -1,0 +1,98 @@
+.info .progress {
+  border: 1px solid #9c9c9c;
+}
+
+.tab-osd .options select {
+  border: 1px solid #9c9c9c;
+}
+
+.tab-osd .release_info .title {
+  border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-osd .git_info {
+  border: 1px solid #9c9c9c;
+}
+
+.tab-osd .git_info .title {
+  border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-osd .buttons a {
+  border: 1px solid #9c9c9c;
+  background-color: #393b3a;
+}
+
+.tab-osd .buttons a:hover {
+  background-color: #393b3a;
+}
+
+.tab-osd .buttons a.flash_font.locked {
+  background-color: #393b3a;
+}
+
+.tab-osd .buttons a.flash_font.locked:hover {
+  cursor: default;
+  background-color: #393b3a;
+}
+
+.tab-osd .buttons a.load_remote_file.locked {
+  background-color: #393b3a;
+}
+
+.tab-osd .buttons a.load_remote_file.locked:hover {
+  cursor: default;
+  background-color: #393b3a;
+}
+
+.tab-osd .display-layout input.position{
+  border-bottom: 1px solid #9c9c9c
+}
+
+.tab-osd .preview .gui_box_titlebar select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.fontpresets {
+  border: 1px solid #9c9c9c;
+  background-color: #3c3c3c;
+  color: white;
+}
+
+.tab-osd .switchable-field {
+  border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-osd .switchable-field.mouseover {
+  background: #3a3a3a;
+  border: 1px solid #9c9c9c;
+}
+
+.tab-osd .switchable-field input {
+  border: 1px solid #9c9c9c;
+  background-color: #3a3a3a;
+  color: white;
+}
+
+.tab-osd .alarms label {
+  border-bottom: 1px solid #9c9c9c;
+  padding-bottom: 5px;
+}
+
+.tab-osd .alarms input {
+  border: 1px solid #9c9c9c;
+  background-color: #3a3a3a;
+  color: white;
+}
+
+.timer-option {
+  margin-bottom: 2px;
+  background-color: #3a3a3a;
+  color: white;
+}
+
+.osdprofile-active {
+  background-color: #3a3a3a;
+  color: white;
+}

@@ -1,0 +1,26 @@
+.tab-led-strip .section {
+    border-bottom: 1px solid #9c9c9c;
+}
+
+.tab-led-strip .mainGrid {
+    background-color: #393b3a;
+    border: #9c9c9c;
+}
+
+.tab-led-strip .mainGrid .gPoint {
+    border: solid 1px #9c9c9c;
+}
+
+.tab-led-strip button {
+    border: 1px solid #9c9c9c;
+    background-color: #393b3a;
+}
+
+.tab-led-strip button:hover {
+    background-color: #393b3a;
+}
+
+.tab-led-strip .colorDefineSliders {
+    border-color: #9c9c9c;
+}
+

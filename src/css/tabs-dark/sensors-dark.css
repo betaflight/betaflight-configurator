@@ -1,0 +1,13 @@
+.tab-sensors .plot_control {
+    background-color: #393b3a;
+}
+
+.tab-sensors .plot_control select {
+    border: 1px solid #9c9c9c;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-sensors text {
+    fill: white;
+}
