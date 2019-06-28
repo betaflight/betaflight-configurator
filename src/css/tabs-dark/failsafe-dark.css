@@ -45,3 +45,16 @@
     background-color: #3a3a3a;
     color: white;
 }
+
+.tab-failsafe .pro1 {
+    background-image: url(../../images/icons/cf_failsafe_procedure1-dark.svg);
+}
+
+.tab-failsafe .pro2 {
+    background-image: url(../../images/icons/cf_failsafe_procedure2-dark.svg);
+}
+
+.tab-failsafe .pro4 {
+    background-image: url(../../images/icons/cf_failsafe_procedure4-dark.svg);
+}
+
