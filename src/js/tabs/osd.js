@@ -1208,7 +1208,11 @@ OSD.constants = {
         TOTAL_FLIGHT_DIST: {
             name: 'TOTAL_FLIGHT_DIST',
             desc: 'osdDescStatTotalFlightDistance'
-        }
+        },
+        MIN_RSSI_DBM: {
+            name: 'MIN_RSSI_DBM',
+            desc: 'osdDescStatMinRssiDbm'
+        },
     },
     ALL_WARNINGS: {
         ARMING_DISABLED: {
@@ -1534,7 +1538,8 @@ OSD.chooseFields = function () {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
                 F.TOTAL_FLIGHTS,
                 F.TOTAL_FLIGHT_TIME,
-                F.TOTAL_FLIGHT_DIST
+                F.TOTAL_FLIGHT_DIST,
+                F.MIN_RSSI_DBM
             ]);
         }
     }
