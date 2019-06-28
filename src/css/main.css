@@ -2046,7 +2046,11 @@ input {
 }
 
 .darkgrey_box {
-  background-color: #575757;
-  color: white;
+    background-color: #575757;
+    color: white;
 }
 
+.topBorderLine {
+    border-top: 1px solid #ddd;
+    padding-top: 5px;
+}

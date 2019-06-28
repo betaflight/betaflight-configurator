@@ -118,3 +118,7 @@ button {
 .noUi-pips {
     color: #dbdbdb;
 }
+
+.topBorderLine {
+    border-top: 1px solid #9c9c9c;
+}

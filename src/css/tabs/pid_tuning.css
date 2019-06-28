@@ -251,6 +251,10 @@
     margin-bottom: 0px;
 }
 
+.tab-pid_tuning table .inputBackground {
+    background: white;
+}
+
 .tab-pid_tuning table, .tab-pid_tuning table td {
     padding: 1px;
     border-bottom: 0px solid #ccc;

@@ -30,6 +30,10 @@
   width: 100%;
 }
 
+.info .progressLabel {
+    color: white;
+}
+
 .info .progressLabel a {
   color: white;
 }

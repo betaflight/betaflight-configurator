@@ -1134,9 +1134,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
             $('.pid_tuning .bracket').hide();
-            $('.pid_tuning input[name=rc_rate]').parent().css('background-color', '');
+            $('.pid_tuning input[name=rc_rate]').parent().attr('class', 'pid_data');
             $('.pid_tuning input[name=rc_rate]').parent().attr('rowspan', 1);
-            $('.pid_tuning input[name=rc_expo]').parent().css('background-color', '');
+            $('.pid_tuning input[name=rc_expo]').parent().attr('class', 'pid_data');
             $('.pid_tuning input[name=rc_expo]').parent().attr('rowspan', 1);
         } else {
             $('.pid_tuning input[name=rc_rate_pitch]').parent().hide();
