@@ -528,6 +528,19 @@
     height: 20px;
 }
 
+.pid_roll {
+    background-color: #FF8080;
+}
+
+.pid_pitch {
+    background-color: #80FF80;
+}
+
+.pid_yaw {
+    background-color: #8080FF;
+}
+
+
 .pid_titlebar td:first-child {
     text-align: left;
 }

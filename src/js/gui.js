@@ -252,11 +252,19 @@ GUI_control.prototype.tab_switch_cleanup = function (callback) {
 
 GUI_control.prototype.switchery = function() {
     $('.togglesmall').each(function(index, elem) {
-        var switchery = new Switchery(elem, {
-          size: 'small',
-          color: '#ffbb00',
-          secondaryColor: '#c4c4c4'
-        });
+        if(DarkTheme.configEnabled) {
+            var switchery = new Switchery(elem, {
+              size: 'small',
+              color: '#ffbb00',
+              secondaryColor: '#858585'
+            });
+        } else {
+            var switchery = new Switchery(elem, {
+              size: 'small',
+              color: '#ffbb00',
+              secondaryColor: '#c4c4c4'
+            });
+        }
         $(elem).on("change", function (evt) {
             switchery.setPosition();
         });
@@ -264,10 +272,17 @@ GUI_control.prototype.switchery = function() {
     });
 
     $('.toggle').each(function(index, elem) {
-        var switchery = new Switchery(elem, {
-            color: '#ffbb00',
-            secondaryColor: '#c4c4c4'
-        });
+        if(DarkTheme.configEnabled) {
+            var switchery = new Switchery(elem, {
+              color: '#ffbb00',
+              secondaryColor: '#858585'
+            });
+        } else {
+            var switchery = new Switchery(elem, {
+                color: '#ffbb00',
+                secondaryColor: '#c4c4c4'
+            });
+        }
         $(elem).on("change", function (evt) {
             switchery.setPosition();
         });
@@ -275,11 +290,19 @@ GUI_control.prototype.switchery = function() {
     });
 
     $('.togglemedium').each(function(index, elem) {
-        var switchery = new Switchery(elem, {
-            className: 'switcherymid',
-            color: '#ffbb00',
-            secondaryColor: '#c4c4c4'
-         });
+        if(DarkTheme.configEnabled) {
+            var switchery = new Switchery(elem, {
+                className: 'switcherymid',
+                color: '#ffbb00',
+                secondaryColor: '#858585'
+             });
+        } else {
+            var switchery = new Switchery(elem, {
+                className: 'switcherymid',
+                color: '#ffbb00',
+                secondaryColor: '#c4c4c4'
+             });
+        }
          $(elem).on("change", function (evt) {
              switchery.setPosition();
          });

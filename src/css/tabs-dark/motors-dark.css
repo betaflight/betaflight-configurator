@@ -16,6 +16,10 @@
     background-color: #393b3a;
 }
 
+.tab-motors .m-block .label {
+    color: white;
+}
+
 .tab-motors .m-block .meter-bar {
     background-color: #393b3a;
     border: 1px solid #9c9c9c;

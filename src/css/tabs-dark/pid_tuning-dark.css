@@ -155,6 +155,19 @@
   border-bottom: 1px solid #9c9c9c;
 }
 
+.pid_roll {
+    background-color: #A00000;
+}
+
+.pid_pitch {
+    background-color: #00A000;
+}
+
+.pid_yaw {
+    background-color: #0000A0;
+}
+
+
 .pid_mode {
     background-color: #393b3a;
     border-bottom: 1px solid #9c9c9c;

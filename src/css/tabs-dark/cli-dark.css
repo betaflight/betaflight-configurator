@@ -6,8 +6,14 @@
     border: 1px solid #9c9c9c;
 }
 
+.tab-cli textarea[name='commands']::placeholder {
+    color: silver;
+}
+
 .tab-cli textarea[name='commands'] {
     border: 1px solid #9c9c9c;
+    background: black;
+    color: white;
 }
 
 /* AutoComplete */
