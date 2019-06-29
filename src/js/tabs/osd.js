@@ -6,6 +6,7 @@ SYM.loadSymbols = function() {
     SYM.BLANK = 0x20;
     SYM.VOLT = 0x06;
     SYM.RSSI = 0x01;
+    SYM.LINK_QUALITY = 0x7B;
     SYM.AH_RIGHT = 0x02;
     SYM.AH_LEFT = 0x03;
     SYM.THR = 0x04;
@@ -72,6 +73,7 @@ SYM.loadSymbols = function() {
         SYM.AH_CENTER = 0x7E;
         SYM.AH_CENTER_LINE_RIGHT = 0x27;
         SYM.SPEED = null;
+        SYM.LINK_QUALITY = null;
     }
 }
 
@@ -983,7 +985,7 @@ OSD.loadDisplayFields = function() {
             default_position: -1,
             draw_order: 390,
             positionable: true,
-            preview: '8'
+            preview: FONT.symbol(SYM.LINK_QUALITY) + '8'
         },
         FLIGHT_DIST: {
             name: 'FLIGHT_DISTANCE',
