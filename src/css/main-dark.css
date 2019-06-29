@@ -106,3 +106,19 @@ dialog {
 button {
     border: 1px solid #ffbb2a;
 }
+
+.helpicon {
+    background-image: url(../images/icons/cf_icon_info_white.svg);
+    opacity: 0.3;
+}
+.gui_box_titlebar .helpicon {
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
+}
+
+.noUi-pips {
+    color: #dbdbdb;
+}
+
+.topBorderLine {
+    border-top: 1px solid #9c9c9c;
+}

@@ -251,6 +251,10 @@
     margin-bottom: 0px;
 }
 
+.tab-pid_tuning table .inputBackground {
+    background: white;
+}
+
 .tab-pid_tuning table, .tab-pid_tuning table td {
     padding: 1px;
     border-bottom: 0px solid #ccc;
@@ -527,6 +531,19 @@
     border-top-right-radius: 3px;
     height: 20px;
 }
+
+.pid_roll {
+    background-color: #FF8080;
+}
+
+.pid_pitch {
+    background-color: #80FF80;
+}
+
+.pid_yaw {
+    background-color: #8080FF;
+}
+
 
 .pid_titlebar td:first-child {
     text-align: left;

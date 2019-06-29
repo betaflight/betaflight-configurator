@@ -17,11 +17,6 @@
   /* text-shadow: 1px 0px 2px rgba(0, 0, 0, 0.9);*/
 }
 
-
-.darkgrey {
-  background-color: #575757;
-}
-
 .tab-osd .spacer_box_title {
   float: none;
 }
@@ -33,6 +28,10 @@
 .tab-osd .info {
   float: left;
   width: 100%;
+}
+
+.info .progressLabel {
+    color: white;
 }
 
 .info .progressLabel a {
