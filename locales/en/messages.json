@@ -4324,6 +4324,9 @@
     "osdDescStatTotalFlightDistance": {
         "message": "Total distance traveled"
     },
+    "osdDescStatMinRssiDbm": {
+        "message": "Minimum RSSI dBm value"
+    },
 
     "osdDescribeFontVersion1": {
         "message": "Font version: 1 (Betaflight 4.0 or older)"
