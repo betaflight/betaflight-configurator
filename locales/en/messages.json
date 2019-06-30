@@ -4249,77 +4249,177 @@
         "message": "Unknown element (details to be added in a future release)"
     },
 
+    "osdTextStatMaxSpeed": {
+        "message": "Speed maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMaxSpeed": {
         "message": "Maximum recorded speed"
+    },
+    "osdTextStatMinBattery": {
+        "message": "Battery voltage minimum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinBattery": {
         "message": "Minimum recorded main battery voltage"
     },
+    "osdTextStatMinRssi": {
+        "message": "RSSI minimum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMinRssi": {
         "message": "Minimum recorded RSSI"
+    },
+    "osdTextStatMaxCurrent": {
+        "message": "Battery current draw maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxCurrent": {
         "message": "Maximum recorded current draw"
     },
+    "osdTextStatUsedMah": {
+        "message": "Battery mAh used",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatUsedMah": {
         "message": "Battery capacity used"
+    },
+    "osdTextStatMaxAltitude": {
+        "message": "Altitude maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxAltitude": {
         "message": "Maximum recorded altitude"
     },
+    "osdTextStatBlackbox": {
+        "message": "Blackbox usage",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatBlackbox": {
         "message": "Percentage of total blackbox use"
+    },
+    "osdTextStatEndBattery": {
+        "message": "Battery voltage end",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEndBattery": {
         "message": "Battery voltage at time of disarm"
     },
+    "osdTextStatFlyTime": {
+        "message": "Fly time total",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatFlyTime": {
         "message": "Total time craft has been armed on current power cycle"
+    },
+    "osdTextStatArmedTime": {
+        "message": "Fly time last armed",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatArmedTime": {
         "message": "Time since craft was last armed"
     },
+    "osdTextStatMaxDistance": {
+        "message": "Home distance maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMaxDistance": {
         "message": "Maximum distance from home location"
+    },
+    "osdTextStatBlackboxLogNumber": {
+        "message": "Blackbox number",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackboxLogNumber": {
         "message": "Log number for this flights Blackbox log"
     },
+    "osdTextStatTimer1": {
+        "message": "Timer 1",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatTimer1": {
         "message": "Value of timer 1 at time of disarming"
+    },
+    "osdTextStatTimer2": {
+        "message": "Timer 2",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer2": {
         "message": "Value of timer 2 at time of disarming"
     },
+    "osdTextStatRtcDateTime": {
+        "message": "RTC date and time",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatRtcDateTime": {
         "message": "Date and time from real time clock"
+    },
+    "osdTextStatBattery": {
+        "message": "Battery voltage",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBattery": {
         "message": "Voltage of the battery in real time"
     },
+    "osdTextStatGForce": {
+        "message": "G force maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatGForce": {
         "message": "Max G-Force experienced by the craft"
+    },
+    "osdTextStatEscTemperature": {
+        "message": "ESC temperature maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEscTemperature": {
         "message": "Max ESC temperature"
     },
+    "osdTextStatEscRpm": {
+        "message": "ESC RPM maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatEscRpm": {
         "message": "Max ESC RPM"
+    },
+    "osdTextStatMinLinkQuality": {
+        "message": "Link quality minimum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinLinkQuality": {
         "message": "Minimum of the alternative indicator for 'link quality' based on frame loss"
     },
+    "osdTextStatFlightDistance": {
+        "message": "Flight distance",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatFlightDistance": {
         "message": "Total distance travelled during the flight"
+    },
+    "osdTextStatMaxFFT": {
+        "message": "FFT maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxFFT": {
         "message": "Peak FFT frequency"
     },
+    "osdTextStatTotalFlights": {
+        "message": "Flights count total",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatTotalFlights": {
         "message": "Total number of flights"
     },
+    "osdTextStatTotalFlightTime": {
+        "message": "Fly time total",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatTotalFlightTime": {
         "message": "Total time spent flying"
+    },
+    "osdTextStatTotalFlightDistance": {
+        "message": "Flight distance total",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTotalFlightDistance": {
         "message": "Total distance traveled"
