@@ -1823,23 +1823,27 @@ OSD.msp = {
             if (expectedStatsCount != OSD.constants.STATISTIC_FIELDS.length) {
                 console.error("Firmware is transmitting a different number of statistics (" + expectedStatsCount + ") to what the configurator is expecting (" + OSD.constants.STATISTIC_FIELDS.length + ")");
             }
-            while (view.offset < view.byteLength && d.stat_items.length < OSD.constants.STATISTIC_FIELDS.length) {
-                var v = view.readU8();
-                var j = d.stat_items.length;
-                var c = OSD.constants.STATISTIC_FIELDS[j];
-                d.stat_items.push({
-                    name: c.name,
-                    text: c.text,
-                    desc: c.desc,
-                    index: j,
-                    enabled: v === 1
-                });
-                expectedStatsCount--;
-            }
-            // Read all the data for any statistics we don't know about
-            while (expectedStatsCount > 0) {
-                view.readU8();
-                expectedStatsCount--;
+            
+            for (var i = 0; i < expectedStatsCount; i++) {
+
+                let v = view.readU8();
+
+                // Known statistics field
+                if (i < OSD.constants.STATISTIC_FIELDS.length) {
+
+                    let c = OSD.constants.STATISTIC_FIELDS[i];
+                    d.stat_items.push({
+                        name: c.name,
+                        text: c.text,
+                        desc: c.desc,
+                        index: i,
+                        enabled: v === 1
+                    });
+
+                // Read all the data for any statistics we don't know about
+                } else {
+                    d.stat_items.push({name: 'UNKNOWN', desc: 'osdDescStatUnknown', index: i, enabled: v === 1 });
+                }
             }
 
             // Parse configurable timers

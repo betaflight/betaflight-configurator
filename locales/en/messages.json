@@ -4427,7 +4427,9 @@
     "osdDescStatMinRssiDbm": {
         "message": "Minimum RSSI dBm value"
     },
-
+    "osdDescStatUnknown": {
+        "message": "Unknown statistic (details to be added in a future release)"
+    },
     "osdDescribeFontVersion1": {
         "message": "Font version: 1 (Betaflight 4.0 or older)"
     },
