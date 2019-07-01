@@ -237,6 +237,7 @@ TABS.setup.initialize = function (callback) {
             if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
                 disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD']);
+                disarmFlagElements = disarmFlagElements.concat(['FILTERING']);
             }
 
             // Always the latest element
