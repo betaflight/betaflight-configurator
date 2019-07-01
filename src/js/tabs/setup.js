@@ -231,13 +231,13 @@ TABS.setup.initialize = function (callback) {
 
             if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
-                disarmFlagElements = disarmFlagElements.concat(['RESC']);
-                disarmFlagElements = disarmFlagElements.concat(['RPMFILTER']);
+                disarmFlagElements = disarmFlagElements.concat(['RESC',
+                                                                'RPMFILTER']);
             }
             if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
-                disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD']);
-                disarmFlagElements = disarmFlagElements.concat(['FILTERING']);
+                disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD',
+                                                                'FILTERING']);
             }
 
             // Always the latest element

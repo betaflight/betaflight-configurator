@@ -857,6 +857,10 @@
         "message": "A configuration change requires a reboot",
         "description": "Description of the REBOOT_REQD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipFILTERING": {
+        "message": "A filtering setup error or unsafe configuration detected",
+        "description": "Description of the FILTERING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
         "description": "Description of the ARM_SWITCH arming disable flag"
