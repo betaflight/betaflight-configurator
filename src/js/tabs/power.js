@@ -306,7 +306,7 @@ TABS.power.initialize = function (callback) {
             closeButton: 'title',
             animation: false,
             attach: $('#calibrationmanager'),
-            title: 'Calibration Manager',
+            title: i18n.getMessage('powerCalibrationManagerTitle'),
             content: $('#calibrationmanagercontent'),
             onCloseComplete: function() {
                 if (!calibrationconfirmed) {
