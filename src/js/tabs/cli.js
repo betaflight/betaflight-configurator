@@ -239,6 +239,7 @@ TABS.cli.initialize = function (callback, nwGui) {
                             height: 'auto',
                             closeButton: 'title',
                             animation: false,
+                            isolateScroll: false,
                             title: i18n.getMessage("cliConfirmSnippetDialogTitle"),
                             content: $('#snippetpreviewcontent'),
                             onCreated: () =>  
