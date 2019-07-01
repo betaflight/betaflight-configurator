@@ -178,6 +178,9 @@ TABS.power.initialize = function (callback) {
         }
         $(".tab-power").addClass("supported");
 
+        $("#calibrationmanagercontent").hide();
+        $("#calibrationmanagerconfirmcontent").hide();
+
        // battery
         var template = $('#tab-power-templates .battery-state .battery-state');
         var destination = $('.tab-power .battery-state');
