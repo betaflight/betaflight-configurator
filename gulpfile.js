@@ -244,7 +244,7 @@ function dist_libraries() {
 }
 
 function dist_resources() {
-    return gulp.src('./resources/**/*', { base: '.'})
+    return gulp.src(['./resources/**/*', '!./resources/osd/**/*.png'], { base: '.'})
         .pipe(gulp.dest(DIST_DIR));
 }
 
