@@ -805,7 +805,7 @@ OSD.loadDisplayFields = function() {
             draw_order: 840,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.HOMEFLAG) + '43' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE) + (semver.gte(CONFIG.apiVersion, "1.37.0") ? '    ' : '');
+                return FONT.symbol(SYM.HOMEFLAG) + '432' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
             }
         },
         NUMERICAL_HEADING: {
