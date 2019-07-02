@@ -3404,6 +3404,9 @@
     "powerCalibrationManagerButton": {
         "message": "Calibration"
     },
+    "powerCalibrationManagerTitle": {
+        "message": "Calibration Manager"
+    },
     "powerCalibrationManagerHelp": {
         "message": "To calibrate, use a multimeter to measure the actual voltage / current draw on your craft (with a battery plugged in), and enter the values below. Then, with the same battery still plugged in, click [Calibrate]."
     },
