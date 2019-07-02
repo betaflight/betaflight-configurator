@@ -2673,6 +2673,9 @@
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
     },
+    "firmwareFlasherTooBig": {
+        "message": "Firmware file is too big ($1 bytes)"
+    },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">Remote Firmware loaded, ready for flashing</span>"
     },
