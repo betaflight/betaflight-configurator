@@ -8,7 +8,7 @@ var Features = function (config) {
         {bit: 2, group: 'other', name: 'INFLIGHT_ACC_CAL'},
         {bit: 3, group: 'rxMode', mode: 'select', name: 'RX_SERIAL'},
         {bit: 4, group: 'esc', name: 'MOTOR_STOP'},
-        {bit: 5, group: 'other', name: 'SERVO_TILT'},
+        {bit: 5, group: 'other', name: 'SERVO_TILT', haveTip: true},
         {bit: 6, group: 'other', name: 'SOFTSERIAL', haveTip: true},
         {bit: 7, group: 'gps', name: 'GPS', haveTip: true},
         {bit: 9, group: 'other', name: 'SONAR'},

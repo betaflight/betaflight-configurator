@@ -915,6 +915,9 @@
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
     },
+    "featureSERVO_TILTTip": {
+        "message": "This feature enables CAMSTAB mode, which can be used to hold up to two axis steady using the accelerometer"
+    },
     "featureSOFTSERIAL": {
         "message": "Enable CPU based serial ports"
     },
