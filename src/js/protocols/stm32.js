@@ -143,10 +143,8 @@ STM32_protocol.prototype.initialize = function () {
     self.upload_process_alive = false;
 
     // reset progress bar to initial state
-    self.progress_bar_e = $('.progress');
-    self.progress_bar_e.val(0);
-    self.progress_label_e = $('span.progressLabel');
-    self.progress_label_e.removeClass('valid invalid actionRequired');
+    TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL)
+                         .flashProgress(0);
 
     // lock some UI elements TODO needs rework
     $('select[name="release"]').prop('disabled', true);
@@ -161,8 +159,7 @@ STM32_protocol.prototype.initialize = function () {
         } else {
             console.log('STM32 - timed out, programming failed ...');
 
-            $('span.progressLabel').text(i18n.getMessage('stm32TimedOut'));
-            self.progress_label_e.addClass('invalid');
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32TimedOut'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
             // protocol got stuck, clear timer and disconnect
             GUI.interval_remove('STM32_timeout');
@@ -244,8 +241,7 @@ STM32_protocol.prototype.verify_response = function (val, data) {
     if (val != data[0]) {
         var message = 'STM32 Communication failed, wrong response, expected: ' + val + ' (0x' + val.toString(16) + ') received: ' + data[0] + ' (0x' + data[0].toString(16) + ')';
         console.error(message);
-        $('span.progressLabel').text(i18n.getMessage('stm32WrongResponse',[val, val.toString(16), data[0], data[0].toString(16)]));
-        self.progress_label_e.addClass('invalid');
+        TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32WrongResponse',[val, val.toString(16), data[0], data[0].toString(16)]), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
         // disconnect
         this.upload_procedure(99);
@@ -357,7 +353,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
     switch (step) {
         case 1:
             // initialize serial interface on the MCU side, auto baud rate settings
-            $('span.progressLabel').text(i18n.getMessage('stm32ContactingBootloader'));
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ContactingBootloader'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             var send_counter = 0;
             GUI.interval_add('stm32_initialize_mcu', function () { // 200 ms interval (just in case mcu was already initialized), we need to break the 2 bytes command requirement
@@ -369,8 +365,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                         // proceed to next step
                         self.upload_procedure(2);
                     } else {
-                        $('span.progressLabel').text(i18n.getMessage('stm32ContactingBootloaderFailed'));
-                        self.progress_label_e.addClass('invalid');
+                        TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ContactingBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
                         GUI.interval_remove('stm32_initialize_mcu');
 
@@ -383,8 +378,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                     // stop retrying, its too late to get any response from MCU
                     console.log('STM32 - no response from bootloader, disconnecting');
 
-                    $('span.progressLabel').text(i18n.getMessage('stm32ResponseBootloaderFailed'));
-                    self.progress_label_e.addClass('invalid');
+                    TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ResponseBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
                     GUI.interval_remove('stm32_initialize_mcu');
                     GUI.interval_remove('STM32_timeout');
@@ -436,7 +430,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
             
                     var message = 'Executing global chip erase (via extended erase)';
                     console.log(message);
-                    $('span.progressLabel').text(i18n.getMessage('stm32GlobalEraseExtended'));
+                    TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32GlobalEraseExtended'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
     
                     self.send([self.command.extended_erase, 0xBB], 1, function (reply) {
                         if (self.verify_response(self.status.ACK, reply)) {
@@ -452,7 +446,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                 } else {
                     var message = 'Executing local erase (via extended erase)'; 
                     console.log(message);
-                    $('span.progressLabel').text(i18n.getMessage('stm32LocalEraseExtended'));
+                    TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32LocalEraseExtended'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
                     self.send([self.command.extended_erase, 0xBB], 1, function (reply) {
                         if (self.verify_response(self.status.ACK, reply)) {
@@ -504,7 +498,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
             if (self.options.erase_chip) {
                 var message = 'Executing global chip erase' ;
                 console.log(message);
-                $('span.progressLabel').text(i18n.getMessage('stm32GlobalErase'));
+                TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32GlobalErase'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
                 self.send([self.command.erase, 0xBC], 1, function (reply) { // 0x43 ^ 0xFF
                     if (self.verify_response(self.status.ACK, reply)) {
@@ -520,7 +514,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
             } else {
                 var message = 'Executing local erase'; 
                 console.log(message);
-                $('span.progressLabel').text(i18n.getMessage('stm32LocalErase'));
+                TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32LocalErase'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
                 self.send([self.command.erase, 0xBC], 1, function (reply) { // 0x43 ^ 0xFF
                     if (self.verify_response(self.status.ACK, reply)) {
@@ -553,7 +547,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
         case 5:
             // upload
             console.log('Writing data ...');
-            $('span.progressLabel').text(i18n.getMessage('stm32Flashing'));
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Flashing'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             var blocks = self.hex.data.length - 1,
                 flashing_block = 0,
@@ -598,7 +592,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                                     });
 
                                     // update progress bar
-                                    self.progress_bar_e.val(Math.round(bytes_flashed_total / (self.hex.bytes_total * 2) * 100));
+                                    TABS.firmware_flasher.flashProgress(Math.round(bytes_flashed_total / (self.hex.bytes_total * 2) * 100));
                                 }
                             });
                         }
@@ -628,7 +622,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
         case 6:
             // verify
             console.log('Verifying data ...');
-            $('span.progressLabel').text(i18n.getMessage('stm32Verifying'));
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Verifying'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             var blocks = self.hex.data.length - 1,
                 reading_block = 0,
@@ -674,7 +668,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                                     });
 
                                     // update progress bar
-                                    self.progress_bar_e.val(Math.round((self.hex.bytes_total + bytes_verified_total) / (self.hex.bytes_total * 2) * 100));
+                                    TABS.firmware_flasher.flashProgress(Math.round((self.hex.bytes_total + bytes_verified_total) / (self.hex.bytes_total * 2) * 100));
                                 }
                             });
                         }
@@ -701,16 +695,14 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                         if (verify) {
                             console.log('Programming: SUCCESSFUL');
                             // update progress bar
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
-                            self.progress_label_e.addClass('valid');
+                            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingSuccessful'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID);
 
                             // proceed to next step
                             self.upload_procedure(7);
                         } else {
                             console.log('Programming: FAILED');
                             // update progress bar
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
-                            self.progress_label_e.addClass('invalid');
+                            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
                             // disconnect
                             self.upload_procedure(99);
