@@ -3,8 +3,8 @@ module.exports = function(config) {
         basePath: '../',
         frameworks: ['mocha', 'chai', 'sinon-chai'],
         files: [
-            './libraries/jquery-2.1.4.min.js',
-            './libraries/bluebird.min.js',
+            './node_modules/jquery/dist/jquery.min.js',
+            './node_modules/bluebird/js/browser/bluebird.min.js',
             './src/js/serial.js',
             './src/js/data_storage.js',
             './src/js/localization.js',

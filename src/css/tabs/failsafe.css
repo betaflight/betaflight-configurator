@@ -44,7 +44,7 @@
     width: 100%;
     margin-bottom: 6px;
     padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--subtleAccent);
     margin-top: 0;
 }
 
@@ -151,7 +151,7 @@
 
 .tab-failsafe .number {
     padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--subtleAccent);
     width: 100%;
     float: left;
 }
@@ -183,7 +183,7 @@
     font-style: normal;
     font-family: 'open_sansregular', sans-serif;
     line-height: 19px;
-    color: #4F4F4F;
+    color: #4f4f4f;
     font-size: 11px;
 }
 
@@ -255,7 +255,7 @@
 
 .tab-failsafe .featuresNew tr {
     width: 100%;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--subtleAccent);
     float: left;
     padding: 0px;
     padding-bottom: 6px;

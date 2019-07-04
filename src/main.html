@@ -3,13 +3,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="author" content="cTn"/>
-    <link type="text/css" rel="stylesheet" href="./css/main.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./node_modules/jbox/dist/jBox.min.css"/>
     <link type="text/css" rel="stylesheet" href="./js/libraries/jquery.nouislider.min.css"/>
     <link type="text/css" rel="stylesheet" href="./js/libraries/jquery.nouislider.pips.min.css"/>
     <link type="text/css" rel="stylesheet" href="./js/libraries/flightindicators.css"/>
+    <link type="text/css" rel="stylesheet" href="./css/main.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/landing.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/setup.css" media="all"/>
-    <link type="text/css" rel="stylesheet" href="./css/tabs/setup_osd.css" media="all" />
     <link type="text/css" rel="stylesheet" href="./css/tabs/help.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/ports.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/configuration.css" media="all"/>
@@ -34,12 +34,10 @@
     <link type="text/css" rel="stylesheet" href="./css/opensans_webfontkit/fonts.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/dropdown-lists/css/style_lists.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./js/libraries/switchery/switchery.css" media="all"/>
-    <link rel="stylesheet" type="text/css" href="./js/libraries/jbox/jBox.css"/>
 
     <link type="text/css" rel="stylesheet" href="./css/main-dark.css" media="all" disabled/>
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/landing-dark.css" media="all" disabled/>
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/setup-dark.css" media="all" disabled/>
-    <link type="text/css" rel="stylesheet" href="./css/tabs-dark/setup_osd-dark.css" media="all" disabled/>
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/help-dark.css" media="all" disabled/>
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/ports-dark.css" media="all" disabled/>
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/configuration-dark.css" media="all" disabled/>
@@ -60,8 +58,33 @@
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/osd-dark.css" media="all" disabled/>
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/power-dark.css" media="all" disabled/>
     <link type="text/css" rel="stylesheet" href="./css/tabs-dark/transponder-dark.css" media="all" disabled/>
-    <link rel="stylesheet" type="text/css" href="./js/libraries/jbox/jBox-dark.css" disabled/>
 
+    <!-- Chrome 76 supports dark mode at the OS level -->
+    <style type="text/css">
+        @import url(./css/main-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/landing-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/setup-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/help-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/ports-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/configuration-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/pid_tuning-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/receiver-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/servos-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/gps-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/motors-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/led_strip-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/sensors-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/cli-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/logging-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/onboard_logging-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/firmware_flasher-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/adjustments-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/auxiliary-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/failsafe-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/osd-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/power-dark.css) (prefers-color-scheme: dark);
+        @import url(./css/tabs-dark/transponder-dark.css) (prefers-color-scheme: dark);
+    </style>
 
     <script type="text/javascript" src="./node_modules/lru_map/lru.js"></script>
     <script type="text/javascript" src="./node_modules/i18next/i18next.min.js"></script>
@@ -71,8 +94,9 @@
     <script type="text/javascript" src="./node_modules/short-unique-id/dist/short-unique-id.min.js"></script>
     <script type="text/javascript" src="./node_modules/object-hash/dist/object_hash.js"></script>
     <script type="text/javascript" src="./js/libraries/q.js"></script>
-    <script type="text/javascript" src="./js/libraries/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="./js/libraries/jquery-ui-1.11.4.min.js"></script>
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./node_modules/jbox/dist/jBox.min.js"></script>
+    <script type="text/javascript" src="./node_modules/jquery-ui-npm/jquery-ui.min.js"></script>
     <script type="text/javascript" src="./js/libraries/d3.min.js"></script>
     <script type="text/javascript" src="./js/libraries/jquery.nouislider.all.min.js"></script>
     <script type="text/javascript" src="./js/libraries/three/three.min.js"></script>
@@ -80,11 +104,10 @@
     <script type="text/javascript" src="./js/libraries/three/CanvasRenderer.js"></script>
     <script type="text/javascript" src="./js/libraries/jquery.flightindicators.js"></script>
     <script type="text/javascript" src="./js/libraries/semver.js"></script>
-    <script type="text/javascript" src="./js/libraries/jbox/jBox.min.js"></script>
     <script type="text/javascript" src="./js/libraries/switchery/switchery.js"></script>
-    <script type="text/javascript" src="./js/libraries/bluebird.min.js"></script>
+    <script type="text/javascript" src="./node_modules/bluebird/js/browser/bluebird.min.js"></script>
     <script type="text/javascript" src="./js/libraries/jquery.ba-throttle-debounce.min.js"></script>
-    <script type="text/javascript" src="./js/libraries/inflection.min.js"></script>
+    <script type="text/javascript" src="./node_modules/inflection/inflection.min.js"></script>
     <script type="text/javascript" src="./js/libraries/analytics.js"></script>
     <script type="text/javascript" src="./js/injected_methods.js"></script>
     <script type="text/javascript" src="./js/data_storage.js"></script>

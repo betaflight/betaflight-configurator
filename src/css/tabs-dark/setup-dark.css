@@ -1,41 +1,20 @@
-#interactive_block {
+.tab-setup #interactive_block {
     background-color: #393b3a;
     border: 1px solid #9c9c9c;
 }
 
-.attitude_info {
+.tab-setup .attitude_info {
     color: white;
 }
 
-#interactive_block a.reset {
-    color: black;
+.tab-setup #interactive_block a.reset {
+    color: white;
     border: 1px solid #9c9c9c;
-    background-color: #ffbb2a;
+    background-color: #575757;
 }
 
-#interactive_block a.reset:hover {
+.tab-setup #interactive_block a.reset:hover {
     background-color: #393b3a;
-}
-
-#canvas_wrapper {
-    background-image: url(../../images/paper-dark.jpg);
-}
-
-.gui_box grey .block {
-    border: 1px solid #9c9c9c;
-}
-
-.gui_box grey .block .head {
-    border-bottom: 1px solid #9c9c9c;
-    background-color: #393b3a;
-}
-
-.gui_box grey .block.info {
-    border: 1px solid #9c9c9c;
-}
-
-.cell_setup {
-    border-bottom: solid 1px #9c9c9c;
 }
 
 .tab-setup .regular-button.disabled {

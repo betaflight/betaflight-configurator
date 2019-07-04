@@ -1,6 +1,8 @@
 'use strict';
 
-const pkg = require('./package.json');
+var pkg = require('./package.json');
+// remove gulp-appdmg from the package.json we're going to write
+delete pkg.optionalDependencies['gulp-appdmg'];
 
 const child_process = require('child_process');
 const fs = require('fs');
@@ -23,6 +25,8 @@ const yarn = require("gulp-yarn");
 const rename = require('gulp-rename');
 const os = require('os');
 const git = require('gulp-git');
+const source = require('vinyl-source-stream');
+const stream = require('stream');
 
 const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
@@ -30,6 +34,9 @@ const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
 
 const LINUX_INSTALL_DIR = '/opt/betaflight';
+
+// Global variable to hold the change hash from when we get it, to when we use it.
+var gitChangeSetId;
 
 var nwBuilderOptions = {
     version: '0.36.4',
@@ -63,6 +70,8 @@ gulp.task('clean-release', clean_release);
 
 gulp.task('clean-cache', clean_cache);
 
+// Function definitions are processed before function calls.
+const getChangesetId = gulp.series(getHash, writeChangesetId);
 gulp.task('get-changeset-id', getChangesetId);
 
 var distBuild = gulp.series(dist_src, dist_locale, dist_libraries, dist_resources, getChangesetId);
@@ -221,10 +230,15 @@ function dist_src() {
         '!./src/css/opensans_webfontkit/*.{txt,html}',
         '!./src/support/**'
     ];
+    var packageJson = new stream.Readable;
+    packageJson.push(JSON.stringify(pkg,undefined,2));
+    packageJson.push(null);
 
-    return gulp.src(distSources, { base: 'src' })
+    return packageJson
+        .pipe(source('package.json'))
+        .pipe(gulp.src(distSources, { base: 'src' }))
         .pipe(gulp.src('manifest.json', { passthrougth: true }))
-        .pipe(gulp.src('package.json', { passthrougth: true }))
+        .pipe(gulp.src('yarn.lock', { passthrougth: true }))
         .pipe(gulp.src('changelog.html', { passthrougth: true }))
         .pipe(gulp.dest(DIST_DIR))
         .pipe(yarn({
@@ -439,22 +453,24 @@ function buildNWApps(platforms, flavor, dir, done) {
     }
 }
 
-function getChangesetId(done) {
-    git.exec({args : 'log -1 --format="%h"'}, function (err, stdout) {
-        var version;
+function getHash(cb) {
+    git.revParse({args: '--short HEAD'}, function (err, hash) {
         if (err) {
-            version = 'unsupported';
+            gitChangeSetId = 'unsupported';
         } else {
-            version = stdout.trim();
+            gitChangeSetId = hash;
         }
-
-        var versionData = { gitChangesetId: version }
-        var destFile = path.join(DIST_DIR, 'version.json');
-
-        fs.writeFile(destFile, JSON.stringify(versionData) , function () {
-            done();
-        });
+        cb();
     });
+}
+
+function writeChangesetId() {
+    var versionJson = new stream.Readable;
+    versionJson.push(JSON.stringify({ gitChangesetId: gitChangeSetId }, undefined, 2));
+    versionJson.push(null);
+    return versionJson
+        .pipe(source('version.json'))
+        .pipe(gulp.dest(DIST_DIR))
 }
 
 function start_debug(done) {

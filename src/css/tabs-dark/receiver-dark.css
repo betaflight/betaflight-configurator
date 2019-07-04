@@ -1,9 +1,9 @@
-.tab-receiver .help {
-    background-color: #3a3a3a;
+.tab-receiver select {
+    background-color: #414443;
+    color: white;
 }
 
 .tab-receiver .bars .meter-bar {
-    border: 1px solid #9c9c9c;
     background-color: #393b3a;
 }
 
@@ -15,19 +15,8 @@
     background-color: #393b3a;
 }
 
-.tab-receiver .tunings .head {
-    border-right: 1px solid #9c9c9c;
-}
-
-.tab-receiver .tunings table th {
-    background-color: #ffbb2a;
-    border-right: 1px solid #9c9c9c;
-    color: black;
-}
-
 .tab-receiver .tunings table td {
     background: #414443;
-    border-right: 1px solid #9c9c9c;
 }
 
 .tab-receiver .tunings table tr:nth-child(odd) {
@@ -35,134 +24,27 @@
 }
 
 .tab-receiver .tunings table input {
-    border: 1px solid #9c9c9c;
     background-color: #3a3a3a;
     color: white;
 }
 
 .tab-receiver .rssi_channel_wrapper {
-    background-color: #393b3a;
-    border-bottom: 1px solid #9c9c9c;
-}
-
-.tab-receiver .rssi_channel_wrapper select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rssi_channel_wrapper .head {
-    background-color: #ffbb2a;
-    color: black;
-}
-
-.tab-receiver .rssi_channel_wrapper select {
-    border: 1px solid #9c9c9c;
+    background-color: #414443;
+    border-bottom: 1px solid #4d4d4d;
 }
 
 .tab-receiver .rcmap_wrapper {
-    background-color: #393b3a;
-}
-
-.tab-receiver .rcmap_wrapper .head {
-    background-color: #ffbb2a;
-    border-right: 1px solid #9c9c9c;
-    color: black;
+    background-color: #414443;
 }
 
 .tab-receiver .hybrid_element {
-    border-right: 1px solid #9c9c9c;
-    border-bottom: 1px solid #9c9c9c;
-    border-left: 1px solid #9c9c9c;
+    border-bottom: 1px solid #4d4d4d;
+    border-left: 1px solid #4d4d4d;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
 
 .tab-receiver .hybrid_element input {
-    border: 1px solid #9c9c9c;
     background-color: #3a3a3a;
     color: white;
-}
-
-.tab-receiver .hybrid_element select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rcSmoothing-derivative-manual select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rcSmoothing-input-manual select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rcSmoothing-input-manual select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rc-smoothing-channels {
-    border-bottom: 1px solid #9c9c9c;
-}
-
-.tab-receiver .rc-smoothing-type select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rc-smoothing-channels select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rcSmoothing-input-type select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rcSmoothing-input-type select {
-    border: 1px solid #9c9c9c;
-    width: calc(100% - 8px);
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rcInterpolation select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .rcInterpolation-label {
-    border-right: 1px solid #9c9c9c;
-}
-
-.tab-receiver .rcSmoothing-derivative-type select {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .throttle_curve {
-    background-image: url(../../images/paper-dark.jpg);
-}
-
-.tab-receiver select[name="rx_refresh_rate"] {
-    border: 1px solid #9c9c9c;
-    background-color: #3a3a3a;
-    color: white;
-}
-
-.tab-receiver .model_preview {
-    background-image: url(../../images/paper-dark.jpg);
 }

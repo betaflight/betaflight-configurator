@@ -1,3 +1,19 @@
+:root {
+    --accent: #ffbb00;
+    --subtleAccent: #ddd;
+    --quietText: #ffffff;
+    --quietHeader: #828885;
+    --defaultText: #000000;
+    --subtleText: #c0c0c0;
+    --mutedText: #616161;
+    --boxBackground: #eeeeee;
+    --alternativeBackground: #f9f9f9;
+    --sideBackground: #ffffff;
+    --paper: url(../../images/paper.jpg);
+    --ledAccent: #adadad;
+    --ledBackground: #e9e9e9;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -22,7 +38,7 @@ body {
 
 a {
     text-decoration: none;
-    color: #000;
+    color: var(--defaultText);
     font-family: 'open_sanssemibold', Arial;
 }
 
@@ -116,6 +132,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .message-negative {
     color: red !important;
+    font-weight: bold;
 }
 
 .headerbar {
@@ -412,7 +429,7 @@ input[type="number"]::-webkit-inner-spin-button {
     top: 25px;
     padding: 5px;
     line-height: 20px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     background-color: white;
     border-radius: 5px;
     z-index: 10000;
@@ -420,15 +437,16 @@ input[type="number"]::-webkit-inner-spin-button {
 
 #options-window input {
     float: left;
-    margin-top: 3px;
+    margin-top: 4px;
     margin-right: 5px;
 }
 
 #options-window .separator {
     padding-bottom: 10px;
     margin-bottom: 10px;
-    border-bottom: 2px solid silver;
+    border-bottom: 2px solid var(--subtleAccent);
 }
+
 #options-window .dropdown {
     float: left;
     width: auto;
@@ -437,6 +455,10 @@ input[type="number"]::-webkit-inner-spin-button {
 
 #options-window select {
     margin-right: 3em;
+}
+
+#options-window span {
+    vertical-align: text-bottom;
 }
 
 /* Log setup*/
@@ -1047,7 +1069,7 @@ dialog {
     box-shadow: rgba(0, 0, 0, 0.10) 0 -3px 8px;
     padding: 10px 0;
     overflow: hidden;
-    border-top: 1px solid #F9F9F9;
+    border-top: 1px solid var(--subtleAccent);
 }
 
 .content_toolbar .btn a {
@@ -1245,12 +1267,12 @@ dialog {
 
 
 .grey {
-    /* background-color:#f5f5f5; */
     background-color: #f9f9f9
 }
 
 .gui_box_titlebar {
-    background-color: #e4e4e4;
+    background-color: var(--quietHeader);
+    color: var(--quietText);
     border-radius: 3px 3px 0px 0px;
     font-size: 13px;
     width: 100%;
@@ -1349,7 +1371,7 @@ dialog {
 
 .default_btn a.disabled {
     background-color: #f1f1f1;
-    border: 1px solid #ddd;
+    border: 1px solid var(--subtleAccent);
     color: #ccc;
 }
 
@@ -1457,7 +1479,7 @@ dialog {
 
 .cf_table td {
     border: 0px;
-    border-bottom: solid 1px #ccc;
+    border-bottom: solid 1px var(--subtleAccent);
     padding-top: 2px;
     padding-bottom: 5px;
     border-style: dotted;
@@ -1911,7 +1933,7 @@ button {
     border-radius: 4px;
     background-color: #ccc;
     color: #666;
-    border: 1px solid #ddd;
+    border: 1px solid var(--subtleAccent);
     font-family: 'open_sanssemibold', Arial;
     font-size: 10pt;
     cursor: pointer;
@@ -2051,6 +2073,35 @@ input {
 }
 
 .topBorderLine {
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--subtleAccent);
     padding-top: 5px;
+}
+
+.jBox-container {
+    background: #fff;
+    border:1px solid #ffbb00;
+    font-size: 11px;
+    line-height: 13px;
+    color: #525352;
+}
+.jBox-content {
+    padding: 4px 5px;
+}
+.jBox-Modal .jBox-content {
+    padding: 10px 15px;
+}
+.jBox-pointer-top,
+.jBox-pointer-bottom {
+    width: 22px;
+    height: 10px;
+ }
+.jBox-pointer-left,
+.jBox-pointer-right {
+    width: 10px;
+    height: 20px;
+}
+.jBox-pointer:after {
+    width: 10px;
+    height: 9px;
+    border:1px solid #ffbb00;
 }

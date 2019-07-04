@@ -32,7 +32,7 @@ body {
 .crosshair {
     display: block;
     position: absolute;
-    background-color: #ddd;
+    background-color: var(--subtleAccent);
 }
 
 .crosshair-vert {
@@ -67,7 +67,7 @@ body {
 }
 
 .control-stick {
-    background-color: rgba(255, 50, 50, 1.0);
+    background-color: #ff3232;
     width: 20px;
     height: 20px;
     margin-left: -10px;
@@ -127,7 +127,7 @@ a:hover {
     float: left;
     font-family: 'open_sansbold', Arial;
     font-size: 12px;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
+    text-shadow: 0px 1px #00000040;
     display: block;
     cursor: pointer;
     transition: all ease 0.2s;

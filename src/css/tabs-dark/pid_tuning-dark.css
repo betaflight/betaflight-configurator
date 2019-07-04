@@ -1,13 +1,21 @@
+.tab-pid_tuning .profile .helpicon,
+.tab-pid_tuning .rate_profile .helpicon {
+    background-image: url(../../images/icons/cf_icon_info_grey.svg);
+    opacity: 0.4;
+}
+.tab-pid_tuning .profile .helpicon:hover,
+.tab-pid_tuning .rate_profile .helpicon:hover {
+    opacity: 1;
+}
+
 .tab-pid_tuning .tpa th {
     background-color: #393b3a;
-    border-left: 0px solid #9c9c9c;
-    border-bottom: 1px solid #9c9c9c;
+    border-bottom: 1px solid #5e5e5e;
 }
 
 .tab-pid_tuning .throttle_limit th {
     background-color: #393b3a;
-    border-left: 0px solid #9c9c9c;
-    border-bottom: 1px solid #9c9c9c;
+    border-bottom: 1px solid #5e5e5e;
 }
 
 .tab-pid_tuning .cf tr {
@@ -16,8 +24,8 @@
 
 .tab-pid_tuning .cf th {
     border-right: solid 1px #9c9c9c;
-    background-color: #ffbb2a;
-    color: black;
+    background-color: var(--quietHeader);
+    color: white;
 }
 
 .tab-pid_tuning .cf input {
@@ -34,29 +42,15 @@
 
 .tab-pid_tuning .throttle_curve {
     border: 1px solid #9c9c9c;
-    background-image: url(../../images/paper-dark.jpg);
 }
 
 .tab-pid_tuning .throttle table th {
-    background: #ffbb2a;
     border-right: 1px solid #9c9c9c;
-    color: black;
-}
-
-.tab-pid_tuning .throttle table th:first-child {
-    background-color: #ffbb2a;
-    color: black;
 }
 
 .tab-pid_tuning .throttle table td {
     background: #414443;
     border-right: 1px solid #9c9c9c;
-}
-
-.tab-pid_tuning .throttle table th {
-    background: #ffbb2a;
-    border-right: 1px solid #9c9c9c;
-    color: black;
 }
 
 .tab-pid_tuning .throttle table td {
@@ -75,15 +69,11 @@
 }
 
 .tab-pid_tuning .rc_curve th {
-    background-color: #ffbb2a;
-    border-left: 0px solid #9c9c9c;
-    border-bottom: 1px solid #9c9c9c;
-    color: black;
+    border-bottom: 1px solid #00000000;
 }
 
 .tab-pid_tuning .rate_curve {
     border: 1px solid #9c9c9c;
-    background-image: url(../../images/paper-dark.jpg);
 }
 
 .tab-pid_tuning table, .tab-pid_tuning table td {
@@ -92,8 +82,12 @@
 
 .tab-pid_tuning .pid_titlebar th {
     border-right: 1px solid #9c9c9c;
-    background: #ffbb2a;
-    color: black;
+}
+
+/* These values should have been inherited from the regular style, but are not */
+.tab-pid_tuning .pid_titlebar .wide_header {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 .tab-pid_tuning table tr td:last-child {
@@ -146,8 +140,6 @@
 
 .tab-pid_tuning .single-field .head {
     border-bottom: 1px solid #9c9c9c;
-    background-color: #ffbb2a;
-    color: black;
 }
 
 .fancy.header {
@@ -169,8 +161,8 @@
 
 
 .pid_mode {
-    background-color: #393b3a;
-    border-bottom: 1px solid #9c9c9c;
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #1f1f1f;
     color: white;
 }
 
@@ -220,7 +212,6 @@
 }
 
 .tab-pid_tuning .rates_preview {
-    background-image: url(../../images/paper-dark.jpg);
     border: 1px solid #9c9c9c;
 }
 

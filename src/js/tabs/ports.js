@@ -243,7 +243,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                         var selectElementSelector = 'select[name=' + selectElementName + ']';
                         select_e = functions_e.find(selectElementSelector);
 
-                        if (select_e.size() == 0) {
+                        if (select_e.length == 0) {
                             functions_e.prepend('<span class="function"><select name="' + selectElementName + '" /></span>');
                             select_e = functions_e.find(selectElementSelector);
                             var disabledText = i18n.getMessage('portsTelemetryDisabled');

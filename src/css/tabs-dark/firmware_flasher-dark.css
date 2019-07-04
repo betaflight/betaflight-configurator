@@ -1,3 +1,11 @@
+.btn .disabled {
+    background-color: #393b3a;
+}
+
+.gui_note .gui_box_titlebar {
+    color: black;
+}
+
 .tab-firmware_flasher .info .progress {
     border: 1px solid #9c9c9c;
 }
@@ -29,10 +37,6 @@
     border: 1px solid #9c9c9c;
 }
 
-.btn .disabled {
-    background-color: #393b3a;
-}
-
-.gui_note .gui_box_titlebar {
-    color: black;
+.tab-firmware_flasher .cf_table td {
+    border-bottom: solid 1px #4f4f4f;
 }

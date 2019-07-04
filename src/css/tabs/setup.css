@@ -6,7 +6,7 @@
     margin-bottom: 10px;
 }
 
-#interactive_block {
+.tab-setup #interactive_block {
     position: absolute;
     width: calc(75% - 30px);
     height: calc(100% - 245px);
@@ -23,7 +23,7 @@
     width: 120px;
     margin: 0px 0px 0px 0px;
     font-weight: normal;
-    color: #616161;
+    color: var(--mutedText);
 }
 
 .attitude_info dl {
@@ -40,7 +40,7 @@
     float: left;
 }
 
-#interactive_block a.reset {
+.tab-setup #interactive_block a.reset {
     position: absolute;
     display: block;
     top: 10px;
@@ -52,12 +52,12 @@
     padding: 0 15px 0 15px;
     text-align: center;
     font-weight: bold;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     background-color: #ececec;
     z-index: 100;
 }
 
-#interactive_block a.reset:hover {
+.tab-setup #interactive_block a.reset:hover {
     background-color: #dedcdc;
 }
 
@@ -67,7 +67,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background-image: url(../../images/paper.jpg);
+    background-image: var(--paper);
     background-size: 100%;
     background-position: center;
     border-radius: 5px;
@@ -152,7 +152,7 @@
 }
 
 .cell_setup {
-    border-bottom: solid 1px #ddd;
+    border-bottom: solid 1px var(--subtleAccent);
     padding-bottom: 8px;
     padding-top: 7px;
 }
@@ -200,7 +200,7 @@
         width: 50px;
         height: 50px;
     }
-    #interactive_block {
+    .tab-setup #interactive_block {
         position: absolute;
         width: calc(75% - 20px);
         height: calc(100% - 218px);

@@ -9,16 +9,8 @@
     color: grey;
 }
 
-.tab-failsafe .checkbox {
-    border-bottom: 1px solid #9c9c9c;
-}
-
 .tab-failsafe .radioarea {
     background-color: #393b3a;
-}
-
-.tab-failsafe .number {
-    border-bottom: 1px solid #9c9c9c;
 }
 
 .tab-failsafe .gui_box span {
@@ -34,10 +26,6 @@
 .tab-failsafe .modename {
     background-color: #393b3a;
     border: 1px solid #9c9c9c;
-}
-
-.tab-failsafe .featuresNew tr {
-    border-bottom: 1px solid #9c9c9c;
 }
 
 .tab-failsafe .switchMode {

@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "minimum_chrome_version": "38",
+    "minimum_chrome_version": "49",
     "version": "10.6.0",
     "author": "Betaflight Squad",
     "name": "Betaflight - Configurator",

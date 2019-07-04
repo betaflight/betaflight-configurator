@@ -44,7 +44,7 @@
     margin-bottom: 5px;
     clear: left;
     padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--subtleAccent);
     width: 100%;
     float: left;
 }
@@ -65,7 +65,7 @@
     font-style: normal;
     font-family: 'open_sansregular', Arial;
     line-height: 19px;
-    color: #4F4F4F;
+    color: #4f4f4f;
     font-size: 11px;
 }
 
