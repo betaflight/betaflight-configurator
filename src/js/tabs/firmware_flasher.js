@@ -379,22 +379,9 @@ TABS.firmware_flasher.initialize = function (callback) {
                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, file.name);
                         var reader = new FileReader();
 
-                        // Max size in bytes of the local file to load and flash
-                        const MAX_FLASH_LOCAL_FILE_SIZE = 2*1024*1024;
-
-                        reader.onprogress = function (e) {
-                            if (e.total > MAX_FLASH_LOCAL_FILE_SIZE) { 
-                                reader.abort();
-                            }
-                        };
-
                         reader.onloadend = function(e) {
-                            if (e.total > MAX_FLASH_LOCAL_FILE_SIZE) {
 
-                                console.log('File limit (' + MAX_FLASH_LOCAL_FILE_SIZE + ') exceeded, aborting');
-                                $('span.progressLabel').text(i18n.getMessage('firmwareFlasherTooBig', e.total));
-
-                            } else if (e.total != 0 && e.total == e.loaded) {
+                            if (e.total != 0 && e.total == e.loaded) {
 
                                 console.log('File loaded (' + e.loaded + ')');
 
