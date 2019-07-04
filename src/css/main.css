@@ -2054,3 +2054,29 @@ input {
     border-top: 1px solid #ddd;
     padding-top: 5px;
 }
+
+.jBox-container {
+    background: #fff;
+    border:1px solid #ffbb00;
+    font-size: 11px;
+    line-height: 13px;
+    color: #525352;
+}
+.jBox-content {
+    padding: 4px 5px;
+}
+.jBox-pointer-top,
+.jBox-pointer-bottom {
+    width: 22px;
+    height: 10px;
+ }
+.jBox-pointer-left,
+.jBox-pointer-right {
+    width: 10px;
+    height: 20px;
+}
+.jBox-pointer:after {
+    width: 10px;
+    height: 9px;
+    border:1px solid #ffbb00;
+}

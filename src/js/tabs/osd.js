@@ -2086,8 +2086,8 @@ TABS.osd.initialize = function (callback) {
 
         // Open modal window
         OSD.GUI.fontManager = new jBox('Modal', {
-            width: 720,
-            height: 440,
+            width: 750,
+            height: 455,
             closeButton: 'title',
             animation: false,
             attach: $('#fontmanager'),

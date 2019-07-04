@@ -3,6 +3,10 @@
 
 .jBox-wrapper {
 	text-align: left;
+}
+
+.jBox-wrapper,
+.jBox-wrapper * {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	-webkit-font-smoothing: antialiased;
@@ -18,14 +22,10 @@
 
 .jBox-container {
 	background: #fff;
-	border:1px solid #ffbb00;
-	font-size:11px;
-	line-height:13px;
-	color:#525352;
 }
 
 .jBox-content {
-	padding: 4px 5px;
+	padding: 8px 10px;
 	overflow: auto;
 	-webkit-transition: opacity .15s;
 	transition: opacity .15s;
@@ -64,26 +64,24 @@
 
 .jBox-pointer-top,
 .jBox-pointer-bottom {
-	width: 22px;
-	height: 10px;
+	width: 30px;
+	height: 12px;
 }
 
 .jBox-pointer-left,
 .jBox-pointer-right {
-	width: 10px;
-	height: 20px;
+	width: 12px;
+	height: 30px;
 }
 
 .jBox-pointer:after {
 	content: '';
-	width: 10px;
-	height: 9px;
+	width: 20px;
+	height: 20px;
 	position: absolute;
 	background: #fff;
 	-webkit-transform: rotate(45deg);
 	transform: rotate(45deg);
-	border:1px solid #ffbb00;
-
 }
 
 .jBox-pointer-top:after {
