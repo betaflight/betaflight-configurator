@@ -379,17 +379,11 @@ TABS.firmware_flasher.initialize = function (callback) {
                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, file.name);
                         var reader = new FileReader();
 
-                        reader.onprogress = function (e) {
-                            if (e.total > 1048576) { // 1 MB
-                                // dont allow reading files bigger then 1 MB
-                                console.log('File limit (1 MB) exceeded, aborting');
-                                reader.abort();
-                            }
-                        };
-
                         reader.onloadend = function(e) {
+
                             if (e.total != 0 && e.total == e.loaded) {
-                                console.log('File loaded');
+
+                                console.log('File loaded (' + e.loaded + ')');
 
                                 intel_hex = e.target.result;
 
