@@ -85,10 +85,9 @@ STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) 
     self.verify_hex = [];
 
     // reset progress bar to initial state
-    self.progress_bar_e = $('.progress');
-    self.progress_bar_e.val(0);
-    self.progress_label_e = $('span.progressLabel');
-    self.progress_label_e.removeClass('valid invalid actionRequired');
+    TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL)
+                         .flashProgress(0);
+
 
     chrome.usb.getDevices(device, function (result) {
         if (result.length) {
@@ -579,9 +578,9 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
 		var unprotect = function() {
 			console.log('Initiate read unprotect');
-			GUI.log(i18n.getMessage('stm32ReadProtected'));
-			$('span.progressLabel').text(i18n.getMessage('stm32ReadProtected'));
-			self.progress_label_e.addClass('actionRequired');
+			let messageReadProtected = i18n.getMessage('stm32ReadProtected'); 
+			GUI.log(messageReadProtected);
+			TABS.firmware_flasher.flashingMessage(messageReadProtected, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION)
 
 			self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x92], function () { // 0x92 initiates read unprotect
 		            self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
@@ -591,7 +590,9 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 				    var timeSpentWaiting = 0;
 				    var incr = 1000; // one sec incements
 		                    var waitForErase = setInterval(function () {
-					self.progress_bar_e.val( Math.min(timeSpentWaiting/total_delay,1) * 100);
+
+                    TABS.firmware_flasher.flashProgress(Math.min(timeSpentWaiting / total_delay, 1) * 100);
+
 					if(timeSpentWaiting < total_delay)
 					{
 						timeSpentWaiting += incr; 
@@ -602,15 +603,18 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 						if(error) { // we encounter an error, but this is expected. should be a stall.
 							console.log('Unprotect memory command ran successfully. Unplug flight controller. Connect again in DFU mode and try flashing again.');
 							GUI.log(i18n.getMessage('stm32UnprotectSuccessful'));
-							GUI.log(i18n.getMessage('stm32UnprotectUnplug'));
-							$('span.progressLabel').text(i18n.getMessage('stm32UnprotectUnplug'));
-							self.progress_bar_e.val(0);
-							self.progress_label_e.addClass('actionRequired');
+							
+                            let messageUnprotectUnplug = i18n.getMessage('stm32UnprotectUnplug'); 
+                            GUI.log(messageUnprotectUnplug);
+
+		                    TABS.firmware_flasher.flashingMessage(messageUnprotectUnplug, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION)
+		                                         .flashProgress(0);
+
 						} else { // unprotecting the flight controller did not work. It did not reboot.
 		                                	console.log('Failed to execute unprotect memory command');
+		                                	
 							GUI.log(i18n.getMessage('stm32UnprotectFailed'));
-							$('span.progressLabel').text(i18n.getMessage('stm32UnprotectFailed'));
-							self.progress_label_e.addClass('invalid');
+							TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32UnprotectFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 							console.log(data);
 		                                	self.upload_procedure(99);
 						}
@@ -618,9 +622,9 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 		                    }, incr); 
 		                } else {
 		                    console.log('Failed to initiate unprotect memory command');
-				    GUI.log(i18n.getMessage('stm32UnprotectInitFailed'));
-				    $('span.progressLabel').text(i18n.getMessage('stm32UnprotectInitFailed'));
-				    self.progress_label_e.addClass('invalid');
+                            let messageUnprotectInitFailed = i18n.getMessage('stm32UnprotectInitFailed')
+                            GUI.log(messageUnprotectInitFailed);
+                            TABS.firmware_flasher.flashingMessage(messageUnprotectInitFailed, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID)
 		                    self.upload_procedure(99);
 		                }
 		            });
@@ -735,7 +739,8 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     }
                   }
                 }
-                $('span.progressLabel').text(i18n.getMessage('stm32Erase'));
+
+                TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Erase'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
                 console.log('Executing local chip erase'); 
 
                 var page = 0;
@@ -758,7 +763,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                                     self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
                                         if (data[4] == self.state.dfuDNLOAD_IDLE) {
                                             // update progress bar
-                                            self.progress_bar_e.val((page + 1) / erase_pages.length * 100);
+                                            TABS.firmware_flasher.flashProgress((page + 1) / erase_pages.length * 100);
                                             page++;
 
                                             if(page == erase_pages.length) {
@@ -790,7 +795,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
             // upload
             // we dont need to clear the state as we are already using DFU_DNLOAD
             console.log('Writing data ...');
-            $('span.progressLabel').text(i18n.getMessage('stm32Flashing'));
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Flashing'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             var blocks = self.hex.data.length - 1;
             var flashing_block = 0;
@@ -819,7 +824,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                                     self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
                                         if (data[4] == self.state.dfuDNLOAD_IDLE) {
                                             // update progress bar
-                                            self.progress_bar_e.val(bytes_flashed_total / (self.hex.bytes_total * 2) * 100);
+                                            TABS.firmware_flasher.flashProgress(bytes_flashed_total / (self.hex.bytes_total * 2) * 100);
 
                                             // flash another page
                                             write();
@@ -862,7 +867,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
         case 5:
             // verify
             console.log('Verifying data ...');
-            $('span.progressLabel').text(i18n.getMessage('stm32Verifying'));
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Verifying'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             var blocks = self.hex.data.length - 1;
             var reading_block = 0;
@@ -898,7 +903,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         bytes_verified_total += bytes_to_read;
 
                         // update progress bar
-                        self.progress_bar_e.val((self.hex.bytes_total + bytes_verified_total) / (self.hex.bytes_total * 2) * 100);
+                        TABS.firmware_flasher.flashProgress((self.hex.bytes_total + bytes_verified_total) / (self.hex.bytes_total * 2) * 100);
 
                         // verify another page
                         read();
@@ -930,16 +935,14 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         if (verify) {
                             console.log('Programming: SUCCESSFUL');
                             // update progress bar
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingSuccessful'));
-                            self.progress_label_e.addClass('valid');
+                            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingSuccessful'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID);
 
                             // proceed to next step
                             self.upload_procedure(6);
                         } else {
                             console.log('Programming: FAILED');
                             // update progress bar
-                            $('span.progressLabel').text(i18n.getMessage('stm32ProgrammingFailed'));
-                            self.progress_label_e.addClass('invalid');
+                            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32ProgrammingFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
 
                             // disconnect
                             self.upload_procedure(99);

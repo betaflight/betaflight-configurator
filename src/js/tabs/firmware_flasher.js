@@ -63,7 +63,8 @@ TABS.firmware_flasher.initialize = function (callback) {
                         FirmwareCache.put(summary, intel_hex);
                     }
 
-                    $('span.progressLabel').html('<a class="save_firmware" href="#" title="Save Firmware">' + i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', parsed_hex.bytes_total) + '</a>');
+                    self.flashingMessage('<a class="save_firmware" href="#" title="Save Firmware">' + i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', parsed_hex.bytes_total) + '</a>', 
+                                         self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
                     self.enableFlashing(true);
 
@@ -83,7 +84,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     $('div.release_info').slideDown();
 
                 } else {
-                    $('span.progressLabel').text(i18n.getMessage('firmwareFlasherHexCorrupted'));
+                    self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
                 }
             });
         }
@@ -316,8 +317,9 @@ TABS.firmware_flasher.initialize = function (callback) {
             var target = $(this).val();
 
             if (!GUI.connect_lock) {
-                $('.progress').val(0).removeClass('valid invalid');
-                $('span.progressLabel').text(i18n.getMessage('firmwareFlasherLoadFirmwareFile'));
+                self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL)
+                    .flashProgress(0);
+
                 $('div.git_info').slideUp();
                 $('div.release_info').slideUp();
 
@@ -336,7 +338,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 $("<option value='{0}'>{0} - {1} - {2}</option>".format(
                                         descriptor.version,
                                         descriptor.target,
-                                        descriptor.date,
+                                        descriptor.date
                                 ))
                                 .css("font-weight", FirmwareCache.has(descriptor)
                                         ? "bold"
@@ -397,9 +399,9 @@ TABS.firmware_flasher.initialize = function (callback) {
 
                                         self.enableFlashing(true);
 
-                                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total));
+                                        self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
                                     } else {
-                                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherHexCorrupted'));
+                                        self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
                                     }
                                 });
                             }
@@ -708,3 +710,44 @@ TABS.firmware_flasher.enableFlashing = function (enabled) {
         $('a.flash_firmware').addClass('disabled');
     }
 }
+
+TABS.firmware_flasher.FLASH_MESSAGE_TYPES = {NEUTRAL : 'NEUTRAL', 
+                                             VALID   : 'VALID', 
+                                             INVALID : 'INVALID',
+                                             ACTION  : 'ACTION'};
+
+TABS.firmware_flasher.flashingMessage = function(message, type) {
+
+    let self = this;
+    
+    let progressLabel_e = $('span.progressLabel');
+    switch (type) {
+        case self.FLASH_MESSAGE_TYPES.VALID:
+            progressLabel_e.removeClass('invalid actionRequired')
+                           .addClass('valid');
+            break;
+        case self.FLASH_MESSAGE_TYPES.INVALID:
+            progressLabel_e.removeClass('valid actionRequired')
+                           .addClass('invalid');
+            break;
+        case self.FLASH_MESSAGE_TYPES.ACTION:
+            progressLabel_e.removeClass('valid invalid')
+                           .addClass('actionRequired');
+            break;
+        case self.FLASH_MESSAGE_TYPES.NEUTRAL:
+        default:
+            progressLabel_e.removeClass('valid invalid actionRequired');
+            break;
+    }
+    if (message != null) {
+        progressLabel_e.html(message);
+    }
+
+    return self;
+};
+
+TABS.firmware_flasher.flashProgress = function(value) {
+    $('.progress').val(value);
+
+    return this;
+};
