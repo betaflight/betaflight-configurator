@@ -114,11 +114,12 @@ var serial = {
                             // We will do nothing.
                             break;
 
+                        case 'frame_error':
+                        case 'parity_error':
+                            GUI.log(i18n.getMessage('serialError' + inflection.camelize(info.error)));
                         case 'break': // This seems to be the error that is thrown under NW.js in Windows when the device reboots after typing 'exit' in CLI
                         case 'disconnected':
                         case 'device_lost':
-                        case 'frame_error':
-                        case 'parity_error':
                         default:
                             console.log("serial disconnecting: " + info.error);
                             CONFIG.armingDisabled = false;

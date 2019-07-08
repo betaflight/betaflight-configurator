@@ -306,6 +306,13 @@
         "message": "Show Log"
     },
 
+    "serialErrorFrameError": {
+        "message": "Serial connection error: bad framing"
+    },
+    "serialErrorParityError": {
+        "message": "Serial connection error: bad parity"
+    },
+
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> opened with ID: $1"
     },
