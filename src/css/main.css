@@ -2065,6 +2065,9 @@ input {
 .jBox-content {
     padding: 4px 5px;
 }
+.jBox-Modal .jBox-content {
+    padding: 10px 15px;
+}
 .jBox-pointer-top,
 .jBox-pointer-bottom {
     width: 22px;

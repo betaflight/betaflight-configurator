@@ -2195,7 +2195,7 @@ TABS.osd.initialize = function (callback) {
                             var alarm = OSD.data.alarms[k];
                             var alarmInput = $('<input name="alarm" type="number" id="' + k + '"/>' + alarm.display_name + '</label>');
                             alarmInput.val(alarm.value);
-                            alarmInput.blur(function (e) {
+                            alarmInput.focusout(function (e) {
                                 OSD.data.alarms[$(this)[0].id].value = $(this)[0].value;
                                 MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
                                     .then(function () {

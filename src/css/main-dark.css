@@ -105,6 +105,8 @@ dialog {
 
 button {
     border: 1px solid #ffbb2a;
+    background-color: #ffbb2a;
+    color: black;
 }
 
 .helpicon {
