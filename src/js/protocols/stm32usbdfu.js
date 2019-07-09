@@ -329,15 +329,34 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
             return;
         }
 
-	var parseDescriptor = function(str) {
+        // Keep this for new MCU debugging
+        // console.log('Descriptors: ' + descriptors);
+
+        var parseDescriptor = function(str) {
             // F303: "@Internal Flash  /0x08000000/128*0002Kg"
             // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
             // F72x: "@Internal Flash  /0x08000000/04*016Kg,01*64Kg,03*128Kg"
             // F74x: "@Internal Flash  /0x08000000/04*032Kg,01*128Kg,03*256Kg"
             // split main into [location, start_addr, sectors]
+
             var tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
             var tmp1 = tmp0.split('/');
-            if (tmp1.length != 3 || !tmp1[0].startsWith("@")) {
+
+            // G474 (and may be other G4 variants) returns
+            // "@Option Bytes   /0x1FFF7800/01*048 e/0x1FFFF800/01*048 e"
+            // for two banks of options bytes which may be fine in terms of descriptor syntax,
+            // but as this splits into an array of size 5 instead of 3, it induces an length error.
+            // Here, we blindly trim the array length to 3. While doing so may fail to
+            // capture errornous patterns, but it is good to avoid this known and immediate
+            // error.
+            // May need to preserve the second bank if the configurator starts to really
+            // support option bytes.
+
+            if (tmp1.length > 3) {
+                console.log('parseDescriptor: shrinking long descriptor "' + str + '"');
+                tmp1.length = 3;
+            }
+            if (!tmp1[0].startsWith("@")) {
                 return null;
             }
             var type = tmp1[0].trim().replace('@', '');
