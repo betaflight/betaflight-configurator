@@ -1,18 +1,29 @@
-.DS_store
-nbproject/
-.idea
-.project
-.settings/
+# node.js npm related
+
 node_modules/
-npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Configurator Build process
 cache/
 apps/
 dist/
 debug/
 release/
 
-# Font template bitmaps
-resources/osd/*.png
+# OSX
+.DS_store
 
 # artefacts for Visual Studio Code
 /.vscode/
+
+# NetBeans
+nbproject/
+
+# IntelliJ
+.idea
+
+# Eclipse
+.project
+.settings/
