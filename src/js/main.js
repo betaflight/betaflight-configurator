@@ -5,8 +5,6 @@ var nwGui = getNwGui();
 var googleAnalytics = analytics;
 var analytics = undefined;
 
-openNewWindowsInExternalBrowser();
-
 $(document).ready(function () {
     $.getJSON('version.json', function(data) {
         CONFIGURATOR.gitChangesetId = data.gitChangesetId;
@@ -87,6 +85,12 @@ function setupAnalytics(result) {
             sendCloseEvent();
 
             this.close(true);
+        });
+        win.on('new-win-policy', function(frame, url, policy) {
+            // do not open the window
+            policy.ignore();
+            // and open it in external browser
+            nwGui.Shell.openExternal(url);
         });
     } else {
         // Looks like we're in Chrome - but the event does not actually get fired
@@ -806,19 +810,6 @@ function getManifestVersion(manifest) {
     }
 
     return version;
-}
-
-function openNewWindowsInExternalBrowser() {
-    if (nwGui) {
-        //Get the current window
-        var win = nwGui.Window.get();
-
-        //Listen to the new window event
-        win.on('new-win-policy', function (frame, url, policy) {
-          gui.Shell.openExternal(url);
-          policy.ignore();
-        });
-    }
 }
 
 function showErrorDialog(message) {
