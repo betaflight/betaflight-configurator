@@ -1935,11 +1935,11 @@ OSD.GUI = {};
 OSD.GUI.preview = {
     onMouseEnter: function () {
         if (!$(this).data('field')) { return; }
-        $('.field-' + $(this).data('field').index).addClass('mouseover')
+        $('#element-fields .field-' + $(this).data('field').index).addClass('mouseover')
     },
     onMouseLeave: function () {
         if (!$(this).data('field')) { return; }
-        $('.field-' + $(this).data('field').index).removeClass('mouseover')
+        $('#element-fields .field-' + $(this).data('field').index).removeClass('mouseover')
     },
     onDragStart: function (e) {
         var ev = e.originalEvent;
