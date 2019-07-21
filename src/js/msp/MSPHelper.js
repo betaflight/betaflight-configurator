@@ -1071,9 +1071,17 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
 
                 var ledCount = data.byteLength / 7; // v1.4.0 and below incorrectly reported 4 bytes per led.
-                if (semver.gte(CONFIG.apiVersion, "1.20.0"))
+                if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     ledCount = data.byteLength / 4;
-
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                    // According to betaflight/src/main/msp/msp.c
+                    // API 1.41 - add indicator for advanced profile support and the current profile selection
+                    // 0 = basic ledstrip available
+                    // 1 = advanced ledstrip available
+                    // Following byte is the current LED profile
+                    ledCount = (data.byteLength - 2) / 4;
+                }
                 for (var i = 0; i < ledCount; i++) {
 
                     if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
