@@ -13,8 +13,8 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
     var self = this;
 
     var viewUrl = `${self._url}/view/${viewName}`;
-    var jobsDataTag = '${viewUrl}JobsData';
-    var cacheLastUpdateTag = '${viewUrl}JobsLastUpdate';
+    var jobsDataTag = `${viewUrl}_JobsData`;
+    var cacheLastUpdateTag = `${viewUrl}_JobsLastUpdate`;
 
     var wrappedCallback = jobs => {
         self._jobs = jobs;
