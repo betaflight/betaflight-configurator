@@ -4,7 +4,6 @@ var css_dark = [
     './css/main-dark.css',
     './css/tabs-dark/landing-dark.css',
     './css/tabs-dark/setup-dark.css',
-    './css/tabs-dark/setup_osd-dark.css',
     './css/tabs-dark/help-dark.css',
     './css/tabs-dark/ports-dark.css',
     './css/tabs-dark/configuration-dark.css',
@@ -25,7 +24,6 @@ var css_dark = [
     './css/tabs-dark/osd-dark.css',
     './css/tabs-dark/power-dark.css',
     './css/tabs-dark/transponder-dark.css',
-    './js/libraries/jbox/jBox-dark.css',
 ]
 
 var DarkTheme = {

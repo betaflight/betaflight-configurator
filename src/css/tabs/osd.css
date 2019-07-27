@@ -206,52 +206,6 @@
   text-decoration: underline;
 }
 
-.tab-osd .buttons {
-  width: calc(100% - 20px);
-  margin-top: 10px;
-  bottom: 10px;
-}
-
-.tab-osd .buttons a {
-  display: block;
-  float: left;
-  margin: 0 10px 0 0;
-  padding: 0 15px 0 15px;
-  height: 28px;
-  line-height: 28px;
-  text-align: center;
-  font-weight: bold;
-  border: 1px solid silver;
-  background-color: #ececec;
-}
-
-.tab-osd .buttons a:hover {
-  background-color: #dedcdc;
-}
-
-.tab-osd .buttons a.flash_font.locked {
-  background-color: #b8b8b8;
-}
-
-.tab-osd .buttons a.flash_font.locked:hover {
-  cursor: default;
-  background-color: #b8b8b8;
-}
-
-.tab-osd .buttons a.load_remote_file.locked {
-  background-color: #b8b8b8;
-}
-
-.tab-osd .buttons a.load_remote_file.locked:hover {
-  cursor: default;
-  background-color: #b8b8b8;
-}
-
-.tab-osd .buttons .back {
-  float: right;
-  margin: 0;
-}
-
 .tab-osd .btn .disabled {
   cursor: default;
   color: #fff;
@@ -273,7 +227,7 @@
 
 .tab-osd .display-layout input.position{
   width: 5em;
-  border-bottom: 1px solid #ccc
+  border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-osd .hide {
@@ -307,7 +261,7 @@
     text-overflow: ellipsis;
     display: inline-block;
     white-space: nowrap;
-    vertical-align: bottom;
+    vertical-align: text-bottom;
 }
 
 .tab-osd .preview .gui_box_titlebar select {
@@ -435,7 +389,7 @@ button {
 .tab-osd .switchable-field {
   padding: 3px;
   border: 1px solid transparent;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-osd .switchable-field.mouseover {
@@ -446,7 +400,7 @@ button {
 
 .tab-osd .switchable-field input {
   border-radius: 3px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--subtleAccent);
   padding:2px;
   margin-top: -2px;
 }
@@ -486,6 +440,11 @@ button {
   border-bottom: 0px;
 }
 
+.tab-osd input,
+.tab-osd select {
+  border: 1px solid var(--subtleAccent);
+}
+
 .tab-osd .preview {
   width: 360px;
   float: left; 
@@ -504,7 +463,7 @@ button {
 .tab-osd .alarms label {
   display: block;
   width:100%;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--subtleAccent);
   margin-top:5px;
   padding-bottom: 5px
 }
@@ -520,7 +479,6 @@ button {
   height: 18px;
   line-height: 20px;
   text-align: left;
-  border: 1px solid silver;
   border-radius: 3px;
   margin-right: 11px;
   font-size: 11px;

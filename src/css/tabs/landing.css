@@ -37,7 +37,7 @@
     margin-right: auto;
     margin-top: 5px;
     width: 800px;
-    color: black;
+    color: var(--defaultText);
     font-size: 14px;
     font-family: 'open_sanslight', Arial;
 }
@@ -148,7 +148,7 @@
 }
 
 .tab-landing .content_mid .text3 .wrap2 {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 5px;
     background: white;
     margin-right: 25px;
@@ -224,7 +224,8 @@
 
 #content.log_open #changelog {
     right: 0px;
-    background: white;
+    color: var(--defaultText);
+    background: var(--sideBackground);
 }
 
 #content.log_open #changelog .wrapper {
@@ -240,7 +241,7 @@
     display: block;
     font-weight: bold;
     padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--subtleAccent);
 }
 
 #changelog .log ul {
@@ -294,7 +295,8 @@
 
 #content.policy_open #privacy_policy {
     right: 0px;
-    background: white;
+    color: var(--defaultText);
+    background: var(--sideBackground);
 }
 
 #content.policy_open #privacy_policy .wrapper {

@@ -1,3 +1,18 @@
+:root {
+    --accent: #ffbb00;
+    --subtleAccent: #9c9c9c;
+    --quietHeader: #bf8606;
+    --defaultText: #ffffff;
+    --subtleText: #c0c0c0;
+    --mutedText: #d6d6d6;
+    --boxBackground: #393b3a;
+    --alternativeBackground: #4e4e4e;
+    --sideBackground: #404040;
+    --paper: url(../../images/paper-dark.jpg);
+    --ledAccent: #6e6e6e;
+    --ledBackground: #424242;
+}
+
 body {
     color: white;
 }
@@ -11,7 +26,7 @@ a {
 }
 
 #content {
-    background-color:#393b3a;
+    background-color: #393b3a;
 }
 
 #content.logopen {
@@ -34,13 +49,12 @@ dialog {
 
 /* Note */
 .note {
-    background-color: #656565;
+    background-color: #4e4e4e;
     color: white;
 }
 
 .content_toolbar {
     background-color: #555857;
-    border-top: 1px solid #9c9c9c;
 }
 
 .content_toolbar .btn a {
@@ -52,8 +66,21 @@ dialog {
 }
 
 .gui_box {
-    border: 1px solid #9c9c9c;
+    border: 1px solid #4d4d4d;
     background-color: #393b3a;
+}
+
+.gui_box grey .block {
+    border: 1px solid #9c9c9c;
+}
+
+.gui_box grey .block .head {
+    border-bottom: 1px solid #9c9c9c;
+    background-color: #393b3a;
+}
+
+.gui_box grey .block.info {
+    border: 1px solid #9c9c9c;
 }
 
 .gui_warning {
@@ -66,11 +93,6 @@ dialog {
 
 .grey {
     background-color: #414443
-}
-
-.gui_box_titlebar {
-    background-color: #ffbb2a;
-    color: black;
 }
 
 .gui_box_bottombar {
@@ -90,35 +112,54 @@ dialog {
     border: 1px solid #ffbb2a;
 }
 
-.cf_table td {
-    border-bottom: solid 1px #9c9c9c;
-}
-
-
-.dataflash-contents_global {
-    border: 1px solid #ffbb2a;
-}
-
 #quad-status_wrapper {
     color: #393b3a;
 }
 
 button {
     border: 1px solid #ffbb2a;
+    background-color: #ffbb2a;
+    color: black;
 }
 
 .helpicon {
     background-image: url(../images/icons/cf_icon_info_white.svg);
     opacity: 0.3;
 }
+.cf .helpicon {
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
+    opacity: 0.4;
+}
+.cf .helpicon:hover {
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
+    opacity: 1;
+}
+
 .gui_box_titlebar .helpicon {
     background-image: url(../images/icons/cf_icon_info_grey.svg);
+}
+
+.cf_table td {
+    border-style: solid;
+}
+
+.noboarder td {
+    border-style: unset;
 }
 
 .noUi-pips {
     color: #dbdbdb;
 }
 
-.topBorderLine {
-    border-top: 1px solid #9c9c9c;
+.jBox-container {
+    background: #393b3a;
+    color:white;
+}
+
+.jBox-Modal .jBox-title,
+.jBox-Confirm .jBox-title {
+    background: #393b3a;
+    border-bottom: 1px solid #9c9c9c;
+    text-shadow: 0 1px 1px #ffffff;
+    color: white;
 }

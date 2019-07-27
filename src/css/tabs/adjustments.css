@@ -40,8 +40,8 @@
     text-align: center;
     white-space: nowrap;
     padding: 10px 10px;
-    background-color: #828885;
-    color: white;
+    background-color: var(--quietHeader);
+    color:  var(--quietText);
 }
 
 .tab-adjustments .adjustments thead td:first-child {

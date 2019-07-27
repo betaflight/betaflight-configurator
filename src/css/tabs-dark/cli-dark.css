@@ -21,3 +21,10 @@
     border: 1px solid #9c9c9c;
     background-color: #393b3a;
 }
+.cli-textcomplete-dropdown a {
+    color: white;
+}
+.cli-textcomplete-dropdown li:hover,
+.cli-textcomplete-dropdown .active {
+    background-color: var(--quietHeader);
+}

@@ -1,7 +1,6 @@
 .tab-pid_tuning .tpa th {
     background-color: #828885;
     padding: 4px;
-    border-left: 0px solid #ccc;
     border-bottom: 1px solid #ccc;
     font-weight: bold;
     color: white;
@@ -11,7 +10,6 @@
 .tab-pid_tuning .throttle_limit th {
     background-color: #828885;
     padding: 4px;
-    border-left: 0px solid #ccc;
     border-bottom: 1px solid #ccc;
     font-weight: bold;
     color: white;
@@ -66,7 +64,7 @@
     margin: 0 2px 0px 0;
     border: 1px solid silver;
     border-radius: 3px;
-    background-image: url(../../images/paper.jpg);
+    background-image: var(--paper);
     background-size: 200%;
     background-position: center;
 }
@@ -88,8 +86,8 @@
 }
 
 .tab-pid_tuning .throttle table th {
-    background: #828885;
-    color: white;
+    background: var(--quietHeader);
+    color: var(--quietText);
     border-right: 1px solid silver;
     font-weight: normal;
 }
@@ -106,10 +104,16 @@
 .tab-pid_tuning .throttle table td {
     background: #DEDEDE;
     border-right: 1px solid silver;
+    padding: 1px;
 }
 
 .tab-pid_tuning .throttle table td:first-child {
     border-bottom-left-radius: 3px;
+}
+
+.tab-pid_tuning .throttle table td:last-child {
+    border-bottom-right-radius: 3px;
+    border-right: 0px;
 }
 
 .tab-pid_tuning .throttle {
@@ -126,40 +130,6 @@
     padding: 4px;
     text-align: left;
     padding-left: 6px;
-}
-
-.tab-pid_tuning .throttle table th {
-    background: #828885;
-    color: white;
-    border-right: 1px solid silver;
-    font-weight: normal;
-}
-
-.tab-pid_tuning .throttle table th:first-child {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .throttle table th:last-child {
-    border-top-right-radius: 3px;
-    border-right: 0px;
-}
-
-.tab-pid_tuning .throttle table td {
-    background: #DEDEDE;
-    border-right: 1px solid silver;
-}
-
-.tab-pid_tuning .throttle table td:first-child {
-    border-bottom-left-radius: 3px;
-}
-
-.tab-pid_tuning .throttle table td:last-child {
-    border-bottom-right-radius: 3px;
-    border-right: 0px;
-}
-
-.tab-pid_tuning .throttle table td {
-    padding: 1px;
 }
 
 .tab-pid_tuning .throttle table tr:nth-child(odd) {
@@ -206,12 +176,12 @@
 }
 
 .tab-pid_tuning .rc_curve th {
-    background-color: #828885;
+    background-color: var(--quietHeader);
     padding: 4px;
     border-left: 0px solid #ccc;
     border-bottom: 1px solid #ccc;
     font-weight: bold;
-    color: white;
+    color: var(--quietText);
     text-align: left;
 }
 
@@ -230,7 +200,7 @@
     min-width: 200px;
     border: 1px solid silver;
     border-radius: 3px;
-    background-image: url(../../images/paper.jpg);
+    background-image: var(--paper);
     background-size: 200%;
     background-position: center;
 }
@@ -447,8 +417,8 @@
 .tab-pid_tuning .single-field .head {
     text-align: left;
     border-bottom: 1px solid #ccc;
-    background-color: #828885;
-    color: white;
+    background-color: var(--quietHeader);
+    color: var(--quietText);
     height: 19px;
     font-weight: normal;
     padding: 2px;
@@ -524,9 +494,9 @@
     float: left;
 }
 
-.pid_titlebar {
+.tab-pid_tuning .pid_titlebar {
     color: #fff;
-    background-color: #828885;
+    background-color: var(--quietHeader);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     height: 20px;
@@ -545,7 +515,7 @@
 }
 
 
-.pid_titlebar td:first-child {
+.tab-pid_tuing .pid_titlebar td:first-child {
     text-align: left;
 }
 
@@ -590,7 +560,7 @@
     margin-bottom: 5px;
     clear: left;
     padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--subtleAccent);
     width: 100%;
     float: left;
 }
@@ -753,7 +723,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url(../../images/paper.jpg);
+    background-image: var(--paper);
     background-size: 100%;
     background-position: center;
     border: 1px solid silver;
@@ -768,7 +738,7 @@
 
 .tab-pid_tuning .pidTuning tr {
     width: 100%;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--subtleAccent);
     padding: 0px;
 }
 

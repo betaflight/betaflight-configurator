@@ -19,7 +19,7 @@
     margin-left: 130px;
     height: 20px;
     line-height: 20px;
-    color: silver;
+    color: var(--subtleText);
 }
 
 .tab-logging .speed {

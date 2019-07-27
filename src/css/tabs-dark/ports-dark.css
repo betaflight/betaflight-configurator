@@ -1,19 +1,5 @@
-.tab-ports table td {
-    border-bottom: 1px solid #9c9c9c;
-    border-left: 1px solid #9c9c9c;
-    border-right: 1px solid #9c9c9c;
-}
-
-.tab-ports table thead tr:first-child, .tab-ports table tr:nth-child(even) {
-    background-color: #4e4e4e;
-}
-
-.tab-ports table thead tr:first-child {
-    background-color: #393b3a;
-}
-
 .tab-ports select {
-    border: 1px solid #9c9c9c;
+    border: 1px solid #00000000;
 }
 
 .tab-ports .ports select {
@@ -21,7 +7,20 @@
     color: white;
 }
 
-.tab-ports .ports thead td {
-    background-color: #ffbb2a;
-    color: black;
+.tab-ports table td:first-child {
+    border-left: none;
+}
+.tab-ports table td:last-child {
+    border-right: none;
+}
+
+.tab-ports .ports tr:last-child,
+.tab-ports .ports tr:last-child td {
+    border-bottom: none;
+}
+
+.tab-ports table td {
+    border-bottom: 1px solid #575757;
+    border-left: 1px solid #575757;
+    border-right: 1px solid #575757;
 }

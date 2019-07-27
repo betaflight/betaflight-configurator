@@ -1,27 +1,9 @@
-.tab-servos .title {
-    border: 1px solid #9c9c9c;
-    background-color: #ffbb2a;
-    color: black;
-}
-
 .tab-servos table th {
-    border: 1px solid #9c9c9c;
-}
-
-.tab-servos table td {
-    border-bottom: 1px solid #9c9c9c;
-    border-left: 1px solid #9c9c9c;
-    border-right: 1px solid #9c9c9c;
+    background: #828885;
 }
 
 .tab-servos table tr:nth-child(even) {
-    background-color: #393b3a;
-}
-
-.tab-servos table tr:first-child {
-    border-left: 1px solid #9c9c9c;
-    border-right: 1px solid #9c9c9c;
-    background-color: #393b3a;
+    background-color: #2f2f2f;
 }
 
 .tab-servos table .main {

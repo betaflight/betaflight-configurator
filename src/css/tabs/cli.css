@@ -96,7 +96,7 @@
 
 /* AutoComplete */
 .cli-textcomplete-dropdown {
-    border: 1px solid #ddd;
+    border: 1px solid var(--subtleAccent);
     background-color: white;
     border-radius: 5px;
     max-height: 50%;
