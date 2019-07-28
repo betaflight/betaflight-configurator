@@ -453,7 +453,7 @@ OSD.loadDisplayFields = function() {
             default_position: 1,
             draw_order: 120,
             positionable: true,
-            preview: 'R:2:1'
+            preview: 'R:2:1:P'
         },
         VOLTAGE_WARNING: {
             name: 'VOLTAGE_WARNING',
