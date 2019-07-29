@@ -4,7 +4,7 @@ os:
 
 sudo: false
 
-dist: trusty
+dist: bionic
 
 addons:
   apt:
@@ -17,13 +17,10 @@ git:
 language: node_js
 
 node_js:
-  - 8.11.2
+  - 10
 
 addons:
   chrome: stable
-
-before_install:
-  - npm i -g npm@6.0.1
 
 script:
   - yarn test

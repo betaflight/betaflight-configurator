@@ -74,7 +74,8 @@ gulp.task('clean-cache', clean_cache);
 const getChangesetId = gulp.series(getHash, writeChangesetId);
 gulp.task('get-changeset-id', getChangesetId);
 
-var distBuild = gulp.series(dist_src, dist_locale, dist_libraries, dist_resources, getChangesetId);
+// dist_yarn MUST be done after dist_src
+var distBuild = gulp.series(dist_src, dist_yarn, dist_locale, dist_libraries, dist_resources, getChangesetId);
 var distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
 
@@ -202,23 +203,23 @@ function getReleaseFilename(platform, ext) {
 
 function clean_dist() {
     return del([DIST_DIR + '**'], { force: true });
-};
+}
 
 function clean_apps() {
     return del([APPS_DIR + '**'], { force: true });
-};
+}
 
 function clean_debug() {
     return del([DEBUG_DIR + '**'], { force: true });
-};
+}
 
 function clean_release() {
     return del([RELEASE_DIR + '**'], { force: true });
-};
+}
 
 function clean_cache() {
     return del(['./cache/**'], { force: true });
-};
+}
 
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
@@ -240,12 +241,17 @@ function dist_src() {
         .pipe(gulp.src('manifest.json', { passthrougth: true }))
         .pipe(gulp.src('yarn.lock', { passthrougth: true }))
         .pipe(gulp.src('changelog.html', { passthrougth: true }))
-        .pipe(gulp.dest(DIST_DIR))
+        .pipe(gulp.dest(DIST_DIR));
+}
+
+// This function relies on files from the dist_src function
+function dist_yarn() {
+    return gulp.src(['./dist/package.json', './dist/yarn.lock'])
+        .pipe(gulp.dest('./dist'))
         .pipe(yarn({
-            production: true,
-            ignoreScripts: true
+            production: true
         }));
-};
+}
 
 function dist_locale() {
     return gulp.src('./locales/**/*', { base: 'locales'})
