@@ -21,7 +21,7 @@
 }
 
 .tab-landing .content_mid {
-    background-color: #ffbb00;
+    background-color: var(--accent);
     overflow: hidden;
 }
 
@@ -193,7 +193,7 @@
 #changelog .wrapper {
     height: 100%;
     padding: 0 20px;
-    border-left: 5px solid #ffbb00;
+    border-left: 5px solid var(--accent);
     overflow-y: auto;
     display: none;
 }
@@ -203,7 +203,7 @@
     top: 50px;
     right: 215px;
     position: absolute;
-    background: #ffbb00;
+    background: var(--accent);
     border-radius: 5px 5px 0 0;
     border-bottom: none;
     height: 30px;
@@ -269,7 +269,7 @@
 #privacy_policy .wrapper {
     height: 100%;
     padding: 0 20px;
-    border-left: 5px solid #ffbb00;
+    border-left: 5px solid var(--accent);
     overflow-y: auto;
     display: none;
 }
@@ -279,7 +279,7 @@
     top: 170px;
     right: 450px;
     position: absolute;
-    background: #ffbb00;
+    background: var(--accent);
     border-radius: 5px 5px 0 0;
     border-bottom: none;
     height: 30px;

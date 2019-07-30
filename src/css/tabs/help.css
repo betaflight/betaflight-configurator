@@ -28,7 +28,7 @@
 }
 
 .tab-help li span a {
-    color: #ffbb00;
+    color: var(--accent);
 }
 
 .tab-help .subline {

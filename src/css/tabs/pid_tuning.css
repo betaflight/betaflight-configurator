@@ -394,7 +394,7 @@
 }
 
 .tab-pid_tuning .tab_container td.active {
-    background-color: #ffbb00;
+    background-color: var(--accent);
     color: #000;
     transition: none;
     height: 27px;
@@ -403,7 +403,7 @@
 }
 
 .tab-pid_tuning .tab_container td.active a {
-    background-color: #ffbb00;
+    background-color: var(--accent);
     color: #000;
     text-shadow: 0px 1px rgba(255, 255, 255, 0.45);
 }
@@ -811,7 +811,7 @@ width: 40%;
 }
 
 .tab-pid_tuning .tabboarder {
-    background-color: #ffbb00;
+    background-color: var(--accent);
     float: left;
     width: 100%;
     height: 3px;
@@ -850,7 +850,7 @@ width: 40%;
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 10px;
-    background-color: #ffbb00;
+    background-color: var(--accent);
     border-radius: 3px;
     border: 1px solid #dba718;
     color: #000;

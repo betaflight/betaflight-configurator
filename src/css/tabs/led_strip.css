@@ -392,7 +392,7 @@
 
 .tab-led-strip .wires-remaining div {
     font-size: 40px;
-    color: #ffbb00;
+    color: var(--accent);
     margin-bottom: -5px;
     margin-top: -10px;
 }
