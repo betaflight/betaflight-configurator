@@ -53,7 +53,7 @@
 }
 
 .tab-motors .plot_control .motor-button a {
-  background-color: #ffbb00;
+  background-color: var(--accent);
   border-radius: 3px;
   border: 1px solid #e8b423;
   color: #000;

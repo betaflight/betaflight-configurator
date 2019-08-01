@@ -2,7 +2,7 @@
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 10px;
-    background-color: #ffbb00;
+    background-color: var(--accent);
     border-radius: 3px;
     border: 1px solid #dba718;
     color: #000;
@@ -145,7 +145,7 @@
 
 .tab-onboard_logging .dataflash-used,
 .tab-onboard_logging .sdcard-other {
-    background-color: #ffbb00;
+    background-color: var(--accent);
     border-radius: 4px;
 }
 
