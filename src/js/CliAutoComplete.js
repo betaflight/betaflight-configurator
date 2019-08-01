@@ -196,6 +196,8 @@ CliAutoComplete._initTextcomplete = function() {
     var $textarea = this.$textarea;
     var cache = self.cache;
 
+    var savedMouseoverItemHandler = null;
+
     // helper functions
     var highlighter = function(anywhere) {
         return function(value, term) {
@@ -261,7 +263,36 @@ CliAutoComplete._initTextcomplete = function() {
                 }
             }
         }
-    );
+    )
+    .on('textComplete:show', function(e) {
+        /**
+         * The purpose of this code is to disable initially the `mouseover` menu item handler.
+         * Normally, when the menu pops up, if the mouse cursor is in the same area,
+         * the `mouseover` event triggers immediately and activates the item under
+         * the cursor. This might be undesirable when using the keyboard.
+         *
+         * Here we save the original `mouseover` handler and remove it on popup show.
+         * Then add `mousemove` handler. If the mouse moves we consider that mouse interaction
+         * is desired so we reenable the `mouseover` handler
+         */
+        if (!savedMouseoverItemHandler) {
+            // save the original 'mouseover' handeler
+            savedMouseoverItemHandler = $._data($('.textcomplete-dropdown')[0], 'events').mouseover[0].handler;
+        }
+
+        $('.textcomplete-dropdown')
+            .off('mouseover') // initially disable it
+            .off('mousemove') // avoid `mousemove` accumulation if previous show did not trigger `mousemove`
+            .on('mousemove', '.textcomplete-item', function(e) {
+                // the mouse has moved so reenable `mouseover`
+                $(this).parent()
+                    .off('mousemove')
+                    .on('mouseover', '.textcomplete-item', savedMouseoverItemHandler);
+
+                // trigger the mouseover handler to select the item under the cursor
+                savedMouseoverItemHandler(e);
+            });
+    });
 
     // textcomplete autocomplete strategies
 
@@ -290,7 +321,7 @@ CliAutoComplete._initTextcomplete = function() {
             search:  function(term, callback) {
                 sendOnEnter = true;
                 searcher(term, function(arr) {
-                    if (arr.length > 1) {
+                    if (term.length > 0 && arr.length > 1) {
                         // prepend the uncompleted term in the popup
                         arr = [term].concat(arr);
                     }

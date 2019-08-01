@@ -24,7 +24,6 @@
 .cli-textcomplete-dropdown a {
     color: white;
 }
-.cli-textcomplete-dropdown li:hover,
 .cli-textcomplete-dropdown .active {
     background-color: var(--quietHeader);
 }

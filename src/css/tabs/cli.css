@@ -121,7 +121,6 @@
     padding: 2px 5px;
 }
 
-.cli-textcomplete-dropdown li:hover,
 .cli-textcomplete-dropdown .active {
     background-color: rgb(255, 187, 0);
 }
