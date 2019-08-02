@@ -24,10 +24,10 @@ function initializeSerialBackend() {
     GUI.updateManualPortVisibility();
 
     $('#port-override').change(function () {
-        chrome.storage.local.set({'portOverride': $('#port-override').val()});
+        ConfigStorage.set({'portOverride': $('#port-override').val()});
     });
 
-    chrome.storage.local.get('portOverride', function (data) {
+    ConfigStorage.get('portOverride', function (data) {
         $('#port-override').val(data.portOverride);
     });
 
@@ -103,7 +103,7 @@ function initializeSerialBackend() {
     });
 
     // auto-connect
-    chrome.storage.local.get('auto_connect', function (result) {
+    ConfigStorage.get('auto_connect', function (result) {
         if (result.auto_connect === 'undefined' || result.auto_connect) {
             // default or enabled by user
             GUI.auto_connect = true;
@@ -135,7 +135,7 @@ function initializeSerialBackend() {
                 if (!GUI.connected_to && !GUI.connecting_to) $('select#baud').prop('disabled', false);
             }
 
-            chrome.storage.local.set({'auto_connect': GUI.auto_connect});
+            ConfigStorage.set({'auto_connect': GUI.auto_connect});
         });
     });
 
@@ -201,15 +201,15 @@ function onOpen(openInfo) {
         GUI.log(i18n.getMessage('serialPortOpened', [openInfo.connectionId]));
 
         // save selected port with chrome.storage if the port differs
-        chrome.storage.local.get('last_used_port', function (result) {
+        ConfigStorage.get('last_used_port', function (result) {
             if (result.last_used_port) {
                 if (result.last_used_port != GUI.connected_to) {
                     // last used port doesn't match the one found in local db, we will store the new one
-                    chrome.storage.local.set({'last_used_port': GUI.connected_to});
+                    ConfigStorage.set({'last_used_port': GUI.connected_to});
                 }
             } else {
                 // variable isn't stored yet, saving
-                chrome.storage.local.set({'last_used_port': GUI.connected_to});
+                ConfigStorage.set({'last_used_port': GUI.connected_to});
             }
         });
 

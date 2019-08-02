@@ -498,11 +498,11 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         let hideUnusedModes = false;
-        chrome.storage.local.get('hideUnusedModes', function (result) {
+        ConfigStorage.get('hideUnusedModes', function (result) {
             $("input#switch-toggle-unused")
                 .change(function() {
                     hideUnusedModes = $(this).prop("checked");
-                    chrome.storage.local.set({ hideUnusedModes: hideUnusedModes });
+                    ConfigStorage.set({ hideUnusedModes: hideUnusedModes });
                     update_ui();
                 })
                 .prop("checked", !!result.hideUnusedModes)

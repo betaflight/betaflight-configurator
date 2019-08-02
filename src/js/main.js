@@ -30,7 +30,7 @@ function getNwGui() {
 function checkSetupAnalytics(callback) {
     if (!analytics) {
         setTimeout(function () {
-            chrome.storage.local.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions', ], function (result) {
+            ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions', ], function (result) {
                 if (!analytics) {
                     setupAnalytics(result);
                 }
@@ -55,7 +55,7 @@ function setupAnalytics(result) {
         var uid = new ShortUniqueId();
         userId = uid.randomUUID(13);
 
-        chrome.storage.local.set({ 'userId': userId });
+        ConfigStorage.set({ 'userId': userId });
     }
 
     var optOut = !!result.analyticsOptOut;
@@ -134,7 +134,7 @@ function startProcess() {
         checkForConfiguratorUpdates();
     }
 
-    chrome.storage.local.get('logopen', function (result) {
+    ConfigStorage.get('logopen', function (result) {
         if (result.logopen) {
             $("#showlog").trigger('click');
         }
@@ -151,7 +151,7 @@ function startProcess() {
     // Tabs
     $("#tabs ul.mode-connected li").click(function() {
         // store the first class of the current tab (omit things like ".active")
-        chrome.storage.local.set({
+        ConfigStorage.set({
             lastTab: $(this).attr("class").split(' ')[0]
         });
     });
@@ -311,7 +311,7 @@ function startProcess() {
                 // translate to user-selected language
                 i18n.localizePage();
 
-                chrome.storage.local.get('permanentExpertMode', function (result) {
+                ConfigStorage.get('permanentExpertMode', function (result) {
                     if (result.permanentExpertMode) {
                         $('div.permanentExpertMode input').prop('checked', true);
                     }
@@ -319,21 +319,21 @@ function startProcess() {
                     $('div.permanentExpertMode input').change(function () {
                         var checked = $(this).is(':checked');
 
-                        chrome.storage.local.set({'permanentExpertMode': checked});
+                        ConfigStorage.set({'permanentExpertMode': checked});
 
                         $('input[name="expertModeCheckbox"]').prop('checked', checked).change();
                     }).change();
                 });
 
-                chrome.storage.local.get('rememberLastTab', function (result) {
+                ConfigStorage.get('rememberLastTab', function (result) {
                     $('div.rememberLastTab input')
                         .prop('checked', !!result.rememberLastTab)
-                        .change(function() { chrome.storage.local.set({rememberLastTab: $(this).is(':checked')}) })
+                        .change(function() { ConfigStorage.set({rememberLastTab: $(this).is(':checked')}) })
                         .change();
                 });
 
                 if (GUI.operating_system !== 'ChromeOS') {
-                    chrome.storage.local.get('checkForConfiguratorUnstableVersions', function (result) {
+                    ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
                         if (result.checkForConfiguratorUnstableVersions) {
                             $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
                         }
@@ -341,7 +341,7 @@ function startProcess() {
                         $('div.checkForConfiguratorUnstableVersions input').change(function () {
                             var checked = $(this).is(':checked');
 
-                            chrome.storage.local.set({'checkForConfiguratorUnstableVersions': checked});
+                            ConfigStorage.set({'checkForConfiguratorUnstableVersions': checked});
 
                             checkForConfiguratorUpdates();
                         });
@@ -350,7 +350,7 @@ function startProcess() {
                     $('div.checkForConfiguratorUnstableVersions').hide();
                 }
 
-                chrome.storage.local.get('analyticsOptOut', function (result) {
+                ConfigStorage.get('analyticsOptOut', function (result) {
                     if (result.analyticsOptOut) {
                         $('div.analyticsOptOut input').prop('checked', true);
                     }
@@ -358,7 +358,7 @@ function startProcess() {
                     $('div.analyticsOptOut input').change(function () {
                         var checked = $(this).is(':checked');
 
-                        chrome.storage.local.set({'analyticsOptOut': checked});
+                        ConfigStorage.set({'analyticsOptOut': checked});
 
                         checkSetupAnalytics(function (analytics) {
                             if (checked) {
@@ -379,7 +379,7 @@ function startProcess() {
                     .change(function () {
                         var checked = $(this).is(':checked');
 
-                        chrome.storage.local.set({'cliAutoComplete': checked});
+                        ConfigStorage.set({'cliAutoComplete': checked});
                         CliAutoComplete.setEnabled(checked);
                     }).change();
 
@@ -388,11 +388,11 @@ function startProcess() {
                     .change(function () {
                         var checked = $(this).is(':checked');
 
-                        chrome.storage.local.set({'darkTheme': checked});
+                        ConfigStorage.set({'darkTheme': checked});
                         DarkTheme.setConfig(checked);
                     }).change();
 
-                chrome.storage.local.get('userLanguageSelect', function (result) {
+                ConfigStorage.get('userLanguageSelect', function (result) {
 
                     var userLanguage_e = $('div.userLanguage select');
                     var languagesAvailables = i18n.getLanguagesAvailables();
@@ -411,7 +411,7 @@ function startProcess() {
                         var languageSelected = $(this).val();
 
                         // Select the new language, a restart is required
-                        chrome.storage.local.set({'userLanguageSelect': languageSelected});
+                        ConfigStorage.set({'userLanguageSelect': languageSelected});
                     });
                 });
 
@@ -519,7 +519,7 @@ function startProcess() {
             $("#content").removeClass('logopen');
             $(".tab_container").removeClass('logopen');
             $("#scrollicon").removeClass('active');
-            chrome.storage.local.set({'logopen': false});
+            ConfigStorage.set({'logopen': false});
 
             state = false;
         } else {
@@ -528,7 +528,7 @@ function startProcess() {
             $("#content").addClass('logopen');
             $(".tab_container").addClass('logopen');
             $("#scrollicon").addClass('active');
-            chrome.storage.local.set({'logopen': true});
+            ConfigStorage.set({'logopen': true});
 
             state = true;
         }
@@ -536,7 +536,7 @@ function startProcess() {
         $(this).data('state', state);
     });
 
-    chrome.storage.local.get('permanentExpertMode', function (result) {
+    ConfigStorage.get('permanentExpertMode', function (result) {
         if (result.permanentExpertMode) {
             $('input[name="expertModeCheckbox"]').prop('checked', true);
         }
@@ -553,11 +553,11 @@ function startProcess() {
         }).change();
     });
 
-    chrome.storage.local.get('cliAutoComplete', function (result) {
+    ConfigStorage.get('cliAutoComplete', function (result) {
         CliAutoComplete.setEnabled(typeof result.cliAutoComplete == 'undefined' || result.cliAutoComplete); // On by default
     });
 
-    chrome.storage.local.get('darkTheme', function (result) {
+    ConfigStorage.get('darkTheme', function (result) {
         DarkTheme.setConfig(result.darkTheme);
     });
 };
@@ -569,7 +569,7 @@ function checkForConfiguratorUpdates() {
 }
 
 function notifyOutdatedVersion(releaseData) {
-    chrome.storage.local.get('checkForConfiguratorUnstableVersions', function (result) {
+    ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
         var showUnstableReleases = false;
         if (result.checkForConfiguratorUnstableVersions) {
             showUnstableReleases = true;
