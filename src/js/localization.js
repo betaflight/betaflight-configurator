@@ -125,7 +125,7 @@ i18n.localizePage = function() {
  * returns the current locale to the callback
  */
 function getStoredUserLocale(cb) {
-    chrome.storage.local.get('userLanguageSelect', function (result) {
+    ConfigStorage.get('userLanguageSelect', function (result) {
         var userLanguage = 'DEFAULT';
         if (result.userLanguageSelect) {
             userLanguage = result.userLanguageSelect

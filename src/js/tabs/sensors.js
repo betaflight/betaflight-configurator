@@ -239,19 +239,9 @@ TABS.sensors.initialize = function (callback) {
 
             $('.tab-sensors .rate select:first').change();
 
-            chrome.storage.local.set({'graphs_enabled': checkboxes});
+            ConfigStorage.set({'graphs_enabled': checkboxes});
         });
 
-        chrome.storage.local.get('graphs_enabled', function (result) {
-            if (result.graphs_enabled) {
-                var checkboxes = $('.tab-sensors .info .checkboxes input');
-                for (var i = 0; i < result.graphs_enabled.length; i++) {
-                    checkboxes.eq(i).not(':disabled').prop('checked', result.graphs_enabled[i]).change();
-                }
-            } else {
-                $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
-            }
-        });
 
         // Always start with default/empty sensor data array, clean slate all
         initSensorData();
@@ -303,31 +293,6 @@ TABS.sensors.initialize = function (callback) {
             }
         });
 
-        // set refresh speeds according to configuration saved in storage
-        chrome.storage.local.get('sensor_settings', function (result) {
-            if (result.sensor_settings) {
-                $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
-                $('.tab-sensors select[name="gyro_scale"]').val(result.sensor_settings.scales.gyro);
-
-                $('.tab-sensors select[name="accel_refresh_rate"]').val(result.sensor_settings.rates.accel);
-                $('.tab-sensors select[name="accel_scale"]').val(result.sensor_settings.scales.accel);
-
-                $('.tab-sensors select[name="mag_refresh_rate"]').val(result.sensor_settings.rates.mag);
-                $('.tab-sensors select[name="mag_scale"]').val(result.sensor_settings.scales.mag);
-
-                $('.tab-sensors select[name="baro_refresh_rate"]').val(result.sensor_settings.rates.baro);
-                $('.tab-sensors select[name="sonar_refresh_rate"]').val(result.sensor_settings.rates.sonar);
-
-                $('.tab-sensors select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
-
-                // start polling data by triggering refresh rate change event
-                $('.tab-sensors .rate select:first').change();
-            } else {
-                // start polling immediatly (as there is no configuration saved in the storage)
-                $('.tab-sensors .rate select:first').change();
-            }
-        });
-
         $('.tab-sensors .rate select, .tab-sensors .scale select').change(function () {
             // if any of the select fields change value, all of the select values are grabbed
             // and timers are re-initialized with the new settings
@@ -353,7 +318,7 @@ TABS.sensors.initialize = function (callback) {
             var fastest = d3.min([rates.gyro, rates.accel, rates.mag]);
 
             // store current/latest refresh rates in the storage
-            chrome.storage.local.set({'sensor_settings': {'rates': rates, 'scales': scales}});
+            ConfigStorage.set({'sensor_settings': {'rates': rates, 'scales': scales}});
 
             // re-initialize domains with new scales
             gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-scales.gyro, scales.gyro]);
@@ -452,6 +417,41 @@ TABS.sensors.initialize = function (callback) {
                 }
                 samples_debug_i++;
             }
+        });
+
+        ConfigStorage.get('graphs_enabled', function (result) {
+            if (result.graphs_enabled) {
+                var checkboxes = $('.tab-sensors .info .checkboxes input');
+                for (var i = 0; i < result.graphs_enabled.length; i++) {
+                    checkboxes.eq(i).not(':disabled').prop('checked', result.graphs_enabled[i]).change();
+                }
+            } else {
+                $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
+            }
+            // set refresh speeds according to configuration saved in storage
+            ConfigStorage.get('sensor_settings', function (result) {
+                if (result.sensor_settings) {
+                    $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
+                    $('.tab-sensors select[name="gyro_scale"]').val(result.sensor_settings.scales.gyro);
+
+                    $('.tab-sensors select[name="accel_refresh_rate"]').val(result.sensor_settings.rates.accel);
+                    $('.tab-sensors select[name="accel_scale"]').val(result.sensor_settings.scales.accel);
+
+                    $('.tab-sensors select[name="mag_refresh_rate"]').val(result.sensor_settings.rates.mag);
+                    $('.tab-sensors select[name="mag_scale"]').val(result.sensor_settings.scales.mag);
+
+                    $('.tab-sensors select[name="baro_refresh_rate"]').val(result.sensor_settings.rates.baro);
+                    $('.tab-sensors select[name="sonar_refresh_rate"]').val(result.sensor_settings.rates.sonar);
+
+                    $('.tab-sensors select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
+
+                    // start polling data by triggering refresh rate change event
+                    $('.tab-sensors .rate select:first').change();
+                } else {
+                    // start polling immediatly (as there is no configuration saved in the storage)
+                    $('.tab-sensors .rate select:first').change();
+                }
+            });
         });
 
         // status data pulled via separate timer with static speed

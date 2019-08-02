@@ -345,7 +345,7 @@ GUI_control.prototype.content_ready = function (callback) {
 }
 
 GUI_control.prototype.selectDefaultTabWhenConnected = function() {
-    chrome.storage.local.get(['rememberLastTab', 'lastTab'], function (result) {
+    ConfigStorage.get(['rememberLastTab', 'lastTab'], function (result) {
         if (!(result.rememberLastTab 
                 && !!result.lastTab 
                 && result.lastTab.substring(4) != "cli")) {

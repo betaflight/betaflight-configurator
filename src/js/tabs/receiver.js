@@ -62,7 +62,7 @@ TABS.receiver.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        chrome.storage.local.get('rx_refresh_rate', function (result) {
+        ConfigStorage.get('rx_refresh_rate', function (result) {
             if (result.rx_refresh_rate) {
                 $('select[name="rx_refresh_rate"]').val(result.rx_refresh_rate).change();
             } else {
@@ -424,7 +424,7 @@ TABS.receiver.initialize = function (callback) {
             var plot_update_rate = parseInt($(this).val(), 10);
 
             // save update rate
-            chrome.storage.local.set({'rx_refresh_rate': plot_update_rate});
+            ConfigStorage.set({'rx_refresh_rate': plot_update_rate});
 
             function get_rc_data() {
                 MSP.send_message(MSPCodes.MSP_RC, false, false, update_ui);
