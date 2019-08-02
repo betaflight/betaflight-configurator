@@ -75,7 +75,7 @@ const getChangesetId = gulp.series(getHash, writeChangesetId);
 gulp.task('get-changeset-id', getChangesetId);
 
 // dist_yarn MUST be done after dist_src
-var distBuild = gulp.series(dist_src, dist_yarn, dist_locale, dist_libraries, dist_resources, getChangesetId);
+var distBuild = gulp.series(dist_src, dist_changelog, dist_yarn, dist_locale, dist_libraries, dist_resources, getChangesetId);
 var distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
 
@@ -240,8 +240,12 @@ function dist_src() {
         .pipe(gulp.src(distSources, { base: 'src' }))
         .pipe(gulp.src('manifest.json', { passthrougth: true }))
         .pipe(gulp.src('yarn.lock', { passthrougth: true }))
-        .pipe(gulp.src('changelog.html', { passthrougth: true }))
         .pipe(gulp.dest(DIST_DIR));
+}
+
+function dist_changelog() {
+    return gulp.src('changelog.html')
+        .pipe(gulp.dest(DIST_DIR+"tabs/"));
 }
 
 // This function relies on files from the dist_src function

@@ -1,0 +1,37 @@
+#tab-static {
+    background-color: inherit;
+    background-image: url(/images/osd-bg-1.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: bottom right;
+}
+
+#tab-static span {
+    display: block;
+    font-weight: bold;
+    padding-top: 16px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+#tab-static .title {
+    font-size: 16px;
+}
+
+#tab-static ul {
+    margin: 5px 0 20px 10px;
+}
+
+#tab-static li {
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+#tab-static-contents {
+    padding-top: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 40px;
+    background-color: inherit;
+    max-width: 650px;
+}
