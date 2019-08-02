@@ -947,7 +947,7 @@ li.active .ic_mission {
 #content {
     margin-top: 0px;
     padding: 0px;
-    height: calc(100% - 150px);
+    height: calc(100% - 156px);
     /*  (port picker 105px, log CLOSED 25px, status bar: 20px + padding) - was: calc(100% - 171px)*/
     background-color: white;
     overflow-x: hidden;
@@ -960,7 +960,7 @@ li.active .ic_mission {
 #content.logopen {
     margin-top: 0px;
     padding: 0px;
-    height: calc(100% - 234px); /*  (port picker, log OPEN, status bar: 20px + padding) - was: calc(100% - 171px)*/
+    height: calc(100% - 240px); /*  (port picker, log OPEN, status bar: 20px + padding) - was: calc(100% - 171px)*/
     background-color: white;
     overflow-x: hidden;
     overflow-y: auto;
