@@ -69,75 +69,81 @@
     "analyticsOptOut": {
         "message": "Opt out of the anonymised collection of statistics data"
     },
-    "userLanguageSelect": {
-        "message": "Language (need to restart the application for the changes to take effect)"
+    "language_changed": {
+        "message": "Language change saved"
+    },
+    "language_choice_message": {
+        "message": "Change language:",
+        "description": "Try and be brief"
     },
     "language_default": {
-        "message": "Default"
+        "message": "System Default"
+    },
+    "language_default_pretty": {
+        "message": "System Default ($t(detectedLanguage))"
     },
     "language_ca": {
-        "message": "Catal\u00e0 (ca)",
+        "message": "Catal\u00e0",
         "description": "Don't translate!!!"
     },
     "language_de": {
-        "message": "Deutsch (de)",
+        "message": "Deutsch",
         "description": "Don't translate!!!"
     },
     "language_en": {
-        "message": "English (en)",
+        "message": "English",
         "description": "Don't translate!!!"
     },
     "language_es": {
-        "message": "Espa\u00f1ol (es)",
+        "message": "Espa\u00f1ol",
         "description": "Don't translate!!!"
     },
     "language_fr": {
-        "message": "Fran\u00e7ais (fr)",
+        "message": "Fran\u00e7ais",
         "description": "Don't translate!!!"
     },
     "language_gl": {
-        "message": "Galego (gl)",
+        "message": "Galego",
         "description": "Don't translate!!!"
     },
     "language_hr": {
-        "message": "Hrvatski (hr)",
+        "message": "Hrvatski",
         "description": "Don't translate!!!"
     },
-    
     "language_id": {
-        "message": "Bahasa Indonesia (id)",
+        "message": "Bahasa Indonesia",
         "description": "Don't translate!!!"
     },
     "language_it": {
-        "message": "Italiano (it)",
+        "message": "Italiano",
         "description": "Don't translate!!!"
     },
     "language_ja": {
-        "message": "\u65E5\u672C\u8A9E (ja)",
+        "message": "\u65E5\u672C\u8A9E",
         "description": "Don't translate!!!"
     },
     "language_ko": {
-        "message": "\ud55c\uad6d\uc5b4 (ko)",
+        "message": "\ud55c\uad6d\uc5b4",
         "description": "Don't translate!!!"
     },
     "language_lv": {
-        "message": "Latvie\u0161u (lv)",
+        "message": "Latvie\u0161u",
         "description": "Don't translate!!!"
     },
     "language_pt": {
-        "message": "Portugu\u00EAs (pt)",
+        "message": "Portugu\u00EAs",
         "description": "Don't translate!!!"
     },
     "language_ru": {
-        "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A (ru)",
+        "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A",
         "description": "Don't translate!!!"
     },
     "language_sv": {
-        "message": "Svenska (sv)",
+        "message": "Svenska",
         "description": "Don't translate!!!"
     },
     "language_zh_CN": {
-        "message": "\u7b80\u4f53\u4e2d\u6587 (zh_CN)",
+        "message": "\u7b80\u4f53\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
 
@@ -230,6 +236,12 @@
     },
     "tabLanding": {
         "message": "Welcome"
+    },
+    "tabChangelog": {
+        "message": "Changelog"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Privacy Policy"
     },
     "tabHelp": {
         "message": "Documentation & Support"
@@ -573,14 +585,8 @@
     "defaultFacebookText": {
         "message": "We also have a <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\">Facebook Group</a>.<br />Join us to get a place to talk about Betaflight, ask configuration questions, or just hang out with fellow pilots."
     },
-    "defaultChangelogAction": {
-        "message": "Changelog"
-    },
     "defaultChangelogHead": {
         "message": "Configurator - Changelog"
-    },
-    "defaultPrivacyPolicyAction": {
-        "message": "Privacy Policy"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"

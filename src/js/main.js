@@ -134,12 +134,6 @@ function startProcess() {
         checkForConfiguratorUpdates();
     }
 
-    ConfigStorage.get('logopen', function (result) {
-        if (result.logopen) {
-            $("#showlog").trigger('click');
-        }
-    });
-
     // log webgl capability
     // it would seem the webgl "enabling" through advanced settings will be ignored in the future
     // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
@@ -398,29 +392,6 @@ function startProcess() {
                         DarkTheme.setConfig(checked);
                     }).change();
 
-                ConfigStorage.get('userLanguageSelect', function (result) {
-
-                    var userLanguage_e = $('div.userLanguage select');
-                    var languagesAvailables = i18n.getLanguagesAvailables();
-                    userLanguage_e.append('<option value="DEFAULT">' + i18n.getMessage('language_default') + '</option>');
-                    userLanguage_e.append('<option disabled>------</option>');
-                    languagesAvailables.forEach(function(element) {
-                        var languageName = i18n.getMessage('language_' + element);
-                        userLanguage_e.append('<option value="' + element + '">' + languageName + '</option>');
-                    });
-                    
-                    if (result.userLanguageSelect) {
-                        userLanguage_e.val(result.userLanguageSelect);
-                    }
-                    
-                    userLanguage_e.change(function () {
-                        var languageSelected = $(this).val();
-
-                        // Select the new language, a restart is required
-                        ConfigStorage.set({'userLanguageSelect': languageSelected});
-                    });
-                });
-
                 function close_and_cleanup(e) {
                     if (e.type == 'click' && !$.contains($('div#options-window')[0], e.target) || e.type == 'keyup' && e.keyCode == 27) {
                         $(document).unbind('click keyup', close_and_cleanup);
@@ -540,6 +511,12 @@ function startProcess() {
         }
         $(this).text(state ? i18n.getMessage('logActionHide') : i18n.getMessage('logActionShow'));
         $(this).data('state', state);
+    });
+
+    ConfigStorage.get('logopen', function (result) {
+        if (result.logopen) {
+            $("#showlog").trigger('click');
+        }
     });
 
     ConfigStorage.get('permanentExpertMode', function (result) {

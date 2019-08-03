@@ -84,7 +84,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     $('div.release_info').slideDown();
 
                 } else {
-                    self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
+                    self.flashingMessage('firmwareFlasherHexCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
                 }
             });
         }
@@ -252,7 +252,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         function buildBuildTypeOptionsList() {
             buildType_e.empty();
             buildTypesToShow.forEach((build, index) => {
-                buildType_e.append($("<option value='{0}' selected>{1}</option>".format(index, build.tag ? i18n.getMessage(build.tag) : build.title)))
+                buildType_e.append($("<option value='{0}' {1}>{2}</option>".format(index,build.tag ? 'i18n="' + build.tag + '" ' : '', build.tag ? i18n.getMessage(build.tag) : build.title)))
             });
             $('select[name="build_type"]').val($('select[name="build_type"] option:first').val());
         }
@@ -300,16 +300,17 @@ TABS.firmware_flasher.initialize = function (callback) {
             var build_type = $(this).val();
 
             $('select[name="board"]').empty()
-            .append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectBoard'))));
+            .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectBoard'></option>"));
 
             $('select[name="firmware_version"]').empty()
-            .append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
+            .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectFirmwareVersion'></option>"));
 
             if (!GUI.connect_lock) {
                 buildTypesToShow[build_type].loader();
             }
 
             chrome.storage.local.set({'selected_build_type': build_type});
+            i18n.localizePage();
         });
 
         $('select[name="board"]').change(function() {
@@ -317,7 +318,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             var target = $(this).val();
 
             if (!GUI.connect_lock) {
-                self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL)
+                self.flashingMessage('firmwareFlasherLoadFirmwareFile', self.FLASH_MESSAGE_TYPES.NEUTRAL)
                     .flashProgress(0);
 
                 $('div.git_info').slideUp();
@@ -401,7 +402,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
                                         self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
                                     } else {
-                                        self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
+                                        self.flashingMessage('firmwareFlasherHexCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
                                     }
                                 });
                             }
@@ -454,9 +455,10 @@ TABS.firmware_flasher.initialize = function (callback) {
             }
 
             function failed_to_load() {
-                $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFailedToLoadOnlineFirmware'));
+                $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');
                 $("a.load_remote_file").removeClass('disabled');
                 $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
+                i18n.localizePage();
             }
 
             var summary = $('select[name="firmware_version"] option:selected').data('summary');
@@ -466,7 +468,8 @@ TABS.firmware_flasher.initialize = function (callback) {
                 $("a.load_remote_file").addClass('disabled');
                 $.get(summary.url, onLoadSuccess).fail(failed_to_load);
             } else {
-                $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFailedToLoadOnlineFirmware'));
+                $('span.progressLabel').attr('i18n','firmwareFlasherFailedToLoadOnlineFirmware').removeClass('i18n-replaced');
+                i18n.localizePage();
             }
         });
 
@@ -512,7 +515,8 @@ TABS.firmware_flasher.initialize = function (callback) {
                             STM32DFU.connect(usbDevices, parsed_hex, options);
                         }
                     } else {
-                        $('span.progressLabel').text(i18n.getMessage('firmwareFlasherFirmwareNotLoaded'));
+                        $('span.progressLabel').attr('i18n','firmwareFlasherFirmwareNotLoaded').removeClass('i18n-replaced');
+                        i18n.localizePage();
                     }
                 }
             }
@@ -740,7 +744,13 @@ TABS.firmware_flasher.flashingMessage = function(message, type) {
             break;
     }
     if (message != null) {
-        progressLabel_e.html(message);
+        if (i18next.exists(message)) {
+            progressLabel_e.attr('i18n',message).removeClass('i18n-replaced');
+            i18n.localizePage();
+        } else {
+            progressLabel_e.removeAttr('i18n');
+            progressLabel_e.html(message);
+        }
     }
 
     return self;
