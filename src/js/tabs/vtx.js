@@ -1,0 +1,563 @@
+'use strict';
+
+TABS.vtx = {
+    supported: false,
+    MAX_POWERLEVEL_VALUES: 8,
+    MAX_BAND_VALUES: 8,
+    MAX_BAND_CHANNELS_VALUES: 8,
+    VTXTABLE_BAND_LIST: [],
+    VTXTABLE_POWERLEVEL_LIST: [],
+};
+
+TABS.vtx.initialize = function (callback) {
+
+    if (GUI.active_tab != 'vtx') {
+        GUI.active_tab = 'vtx';
+    }
+
+    this.supported = semver.gte(CONFIG.apiVersion, "1.42.0");
+
+    if (!this.supported) {
+        load_html();
+    } else {
+        read_vtx_config(load_html);
+    }
+
+    function load_html() {
+        $('#content').load("./tabs/vtx.html", process_html);
+    }
+
+    function process_html() {
+        initDisplay();
+
+        // translate to user-selected language
+        i18n.localizePage();
+
+        GUI.content_ready(callback);
+    }
+
+    // Read all the MSP data needed by the tab
+    function read_vtx_config(callback_after_msp) {
+
+        vtx_config();
+
+        function vtx_config() {
+            MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxtable_bands);
+        }
+    
+        function vtxtable_bands() {
+    
+            // Simulation of static variable
+            if (typeof vtxtable_bands.counter === 'undefined') {
+                TABS.vtx.VTXTABLE_BAND_LIST = [];
+                vtxtable_bands.counter = 1;
+            } else {
+                TABS.vtx.VTXTABLE_BAND_LIST.push(Object.assign({}, VTXTABLE_BAND));
+                vtxtable_bands.counter++;
+            }
+    
+            let buffer = [];
+            buffer.push8(vtxtable_bands.counter);
+    
+            if (vtxtable_bands.counter <= VTX_CONFIG.vtx_table_bands) {
+                MSP.send_message(MSPCodes.MSP_VTXTABLE_BAND, buffer, false, vtxtable_bands);
+            } else {
+                vtxtable_bands.counter = undefined;
+                vtxtable_powerlevels();
+            }
+    
+        }
+    
+        function vtxtable_powerlevels() {
+    
+            // Simulation of static variable
+            if (typeof vtxtable_powerlevels.counter === 'undefined') {
+                TABS.vtx.VTXTABLE_POWERLEVEL_LIST = [];
+                vtxtable_powerlevels.counter = 1;
+            } else {
+                TABS.vtx.VTXTABLE_POWERLEVEL_LIST.push(Object.assign({}, VTXTABLE_POWERLEVEL));
+                vtxtable_powerlevels.counter++;
+            }
+    
+            let buffer = [];
+            buffer.push8(vtxtable_powerlevels.counter);
+    
+            if (vtxtable_powerlevels.counter <= VTX_CONFIG.vtx_table_powerlevels) {
+                MSP.send_message(MSPCodes.MSP_VTXTABLE_POWERLEVEL, buffer, false, vtxtable_powerlevels);
+            } else {
+                vtxtable_powerlevels.counter = undefined;
+                callback_after_msp();
+            }
+        }
+    }
+
+    // Prepares all the UI elements, the MSP command has been executed before
+    function initDisplay() {
+
+        if (!TABS.vtx.supported) {
+            $(".tab-vtx").removeClass("supported");
+            return;
+        }
+
+        $(".tab-vtx").addClass("supported");
+
+        // Load all the dynamic elements
+        loadPowerLevelsTemplate();
+        loadBandsChannelsTemplate();
+        populateBandSelect();
+        populatePowerSelect();
+
+        $(".uppercase").keyup(function(){
+            this.value = this.value.toUpperCase().trim();
+        });
+
+        // Supported?
+        let vtxSupported = VTX_CONFIG.vtx_type != 0 && VTX_CONFIG.vtx_type != 255;
+        let vtxTableNotConfigured = vtxSupported && VTX_CONFIG.vtx_table_available && (VTX_CONFIG.vtx_table_bands == 0 || 
+                                                                                       VTX_CONFIG.vtx_table_channels == 0 || 
+                                                                                       VTX_CONFIG.vtx_table_powerlevels == 0);
+
+        $(".vtx_supported").toggle(vtxSupported);
+        $(".vtx_not_supported").toggle(!vtxSupported);
+        $(".vtx_table_available").toggle(vtxSupported && VTX_CONFIG.vtx_table_available);
+        $(".vtx_table_not_configured").toggle(vtxTableNotConfigured);
+
+        // Insert actual values in the fields
+        // Values of the selected mode
+        $("#vtx_frequency").val(VTX_CONFIG.vtx_frequency);
+        $("#vtx_band").val(VTX_CONFIG.vtx_band);
+
+        $("#vtx_band").change(populateChannelSelect).change();
+
+        $("#vtx_channel").val(VTX_CONFIG.vtx_channel);
+        if (VTX_CONFIG.vtx_table_available) {
+            $("#vtx_channel").attr("max", VTX_CONFIG.vtx_table_channels);
+        }
+
+        $("#vtx_power").val(VTX_CONFIG.vtx_power);
+        $("#vtx_pit_mode").prop('checked', VTX_CONFIG.vtx_pit_mode);
+        $("#vtx_pit_mode_frequency").val(VTX_CONFIG.vtx_pit_mode_frequency);
+        $("#vtx_low_power_disarm").val(VTX_CONFIG.vtx_low_power_disarm);
+
+        // Values of the current values
+        let yesMessage =  i18n.getMessage("yes");
+        let noMessage =  i18n.getMessage("no");
+
+        $("#vtx_device_ready_description").text(VTX_CONFIG.vtx_device_ready ? yesMessage : noMessage);
+        $("#vtx_type_description").text(i18n.getMessage("vtxType_" + VTX_CONFIG.vtx_type));
+        $("#vtx_channel_description").text(VTX_CONFIG.vtx_channel);
+        $("#vtx_frequency_description").text(VTX_CONFIG.vtx_frequency);
+        $("#vtx_pit_mode_description").text(VTX_CONFIG.vtx_pit_mode ? yesMessage : noMessage);
+        $("#vtx_pit_mode_frequency_description").text(VTX_CONFIG.vtx_pit_mode_frequency);
+        $("#vtx_low_power_disarm_description").text(i18n.getMessage("vtxLowPowerDisarmOption_" + VTX_CONFIG.vtx_low_power_disarm));
+
+        if (VTX_CONFIG.vtx_band == 0) {
+            $("#vtx_band_description").text(i18n.getMessage("vtxBand_0"));
+        } else {
+            if (VTX_CONFIG.vtx_table_available && TABS.vtx.VTXTABLE_BAND_LIST[VTX_CONFIG.vtx_band - 1]) {
+                let bandName = TABS.vtx.VTXTABLE_BAND_LIST[VTX_CONFIG.vtx_band - 1].vtxtable_band_name;
+                if (bandName.trim() === '') {
+                    bandName = VTX_CONFIG.vtx_band;
+                }
+                $("#vtx_band_description").text(bandName);
+            } else {
+                $("#vtx_band_description").text(VTX_CONFIG.vtx_band); 
+            }
+        }
+
+        if (VTX_CONFIG.vtx_power == 0) {
+            $("#vtx_power_description").text(i18n.getMessage("vtxPower_0"));
+        } else {
+            if (VTX_CONFIG.vtx_table_available) {
+                let powerLevel = TABS.vtx.VTXTABLE_POWERLEVEL_LIST[VTX_CONFIG.vtx_power - 1].vtxtable_powerlevel_label;
+                if (powerLevel.trim() === '') {
+                    powerLevel = i;
+                }
+                $("#vtx_power_description").text(powerLevel);
+            } else {
+                let levelText = i18n.getMessage('vtxPower_X', {powerLevel: VTX_CONFIG.vtx_power}); 
+                $("#vtx_power_description").text(levelText);
+            }
+        }
+
+        $("#vtx_table_powerlevels").val(VTX_CONFIG.vtx_table_powerlevels);
+
+        // Populate power levels
+        for (let i = 1; i <= TABS.vtx.VTXTABLE_POWERLEVEL_LIST.length; i++) {
+            $("#vtx_table_powerlevels_" + i).val(TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_value);
+            $("#vtx_table_powerlabels_" + i).val(TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label);
+        }
+
+        $("#vtx_table_bands").val(VTX_CONFIG.vtx_table_bands);
+        $("#vtx_table_channels").val(VTX_CONFIG.vtx_table_channels);
+
+        // Populate VTX Table
+        for (let i = 1; i <= TABS.vtx.VTXTABLE_BAND_LIST.length; i++) {
+            $("#vtx_table_band_name_" + i).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name);
+            $("#vtx_table_band_letter_" + i).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter);
+            $("#vtx_table_band_factory_" + i).prop("checked",TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band);
+            for (let j = 1; j <= TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies.length; j++) {
+                $("#vtx_table_band_channel_" + i + "_" + j).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies[j - 1]);
+            }
+        }
+
+        // Actions and other
+        function frequencyOrBandChannel() {
+
+            let frequencyEnabled = $(this).prop('checked');
+
+            if (frequencyEnabled) {
+                $(".field.vtx_channel").slideUp(100, function() {
+                    $(".field.vtx_band").slideUp(100, function() {
+                        $(".field.vtx_frequency").slideDown(100);
+                    });
+                });
+
+            } else {
+                $(".field.vtx_frequency").slideUp(100, function() {
+                    $(".field.vtx_band").slideDown(100,function() {
+                        $(".field.vtx_channel").slideDown(100);
+                    });
+                });
+            }
+        }
+
+        $("#vtx_frequency_channel").prop('checked', VTX_CONFIG.vtx_band == 0 && VTX_CONFIG.vtx_frequency > 0)
+                                   .change(frequencyOrBandChannel)
+                                   .change();
+
+        function showHidePowerlevels() {
+            let powerlevelsValue = $(this).val();
+
+            for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
+                $(".vtx_table_powerlevels_table td:nth-child(" + i +")").toggle(i <= powerlevelsValue);
+            }
+        }
+
+        $("#vtx_table_powerlevels").change(showHidePowerlevels).change();
+
+        function showHideBands() {
+            let bandsValue = $(this).val();
+
+            for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
+                $(".vtx_table_bands_table tr:nth-child(" + (i + 1) +")").toggle(i <= bandsValue);
+            }
+        }
+
+        $("#vtx_table_bands").change(showHideBands).change();
+
+        function showHideBandChannels() {
+            let channelsValue = $(this).val();
+
+            for (let i = 1; i <= TABS.vtx.MAX_BAND_CHANNELS_VALUES; i++) {
+                $(".vtx_table_bands_table td:nth-child(" + (i + 3) +")").toggle(i <= channelsValue);
+            }
+        }
+
+        $("#vtx_table_channels").change(showHideBandChannels).change();
+
+        /*** Helper functions */
+
+        function loadPowerLevelsTemplate() {
+
+            // Power levels title
+            let powerlevelstitle_e = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_title");
+
+            for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
+                powerlevelstitle_e.append("<td><span>" + i + "</span></td>"); 
+            }
+
+            // Power levels
+            let powerlevelsrow_e = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_values");
+
+            let powervalues_e = $("#tab-vtx-templates #tab-vtx-powerlevel-values td");
+            for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
+                let newPowerValues_e = powervalues_e.clone();
+                $(newPowerValues_e).find('input').attr('id', 'vtx_table_powerlevels_' + i);
+                powerlevelsrow_e.append(newPowerValues_e);
+            }
+            powerlevelsrow_e.append("<td><span>" + i18n.getMessage('vtxTablePowerLevelsValue') + "</span></td>");
+
+            // Power labels
+            let powerlabelsrow_e = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_labels");
+
+            let powerlabels_e = $("#tab-vtx-templates #tab-vtx-powerlevel-labels td");
+            for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
+                let newPowerLabels_e = powerlabels_e.clone();
+                $(newPowerLabels_e).find('input').attr('id', 'vtx_table_powerlabels_' + i);
+                powerlabelsrow_e.append(newPowerLabels_e);
+            }
+            powerlabelsrow_e.append("<td><span>" + i18n.getMessage('vtxTablePowerLevelsLabel') + "</span></td>");
+        }
+
+        function loadBandsChannelsTemplate() {
+            let bandstable_e = $(".vtx_table_bands_table tbody");
+
+            // Title
+            let title_e = $("#tab-vtx-templates #tab-vtx-bands-title tr");
+
+            for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
+                title_e.append("<td><span>" + i + "</span></td>"); 
+            }
+            bandstable_e.append(title_e);
+
+            // Bands
+            let band_e = $("#tab-vtx-templates #tab-vtx-bands tr");
+            let channel_e = $("#tab-vtx-templates #tab-vtx-channels td");
+            for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
+                let newBand_e = band_e.clone();
+                $(newBand_e).find('#vtx_table_band_name').attr('id', 'vtx_table_band_name_' + i);
+                $(newBand_e).find('#vtx_table_band_letter').attr('id', 'vtx_table_band_letter_' + i);
+                $(newBand_e).find('#vtx_table_band_factory').attr('id', 'vtx_table_band_factory_' + i);
+
+                // Channels
+                let newChannel_e;
+                for (let j = 1; j <= TABS.vtx.MAX_BAND_CHANNELS_VALUES; j++) {
+                    newChannel_e = channel_e.clone();
+                    $(newChannel_e).find('input').attr('id', 'vtx_table_band_channel_' + i + '_' + j);
+
+                    newBand_e.append(newChannel_e);
+                }
+
+                // Append to the end an index of the band
+                newBand_e.append("<td><span>" + i18n.getMessage("vtxBand_X", {bandName: i}) + "</span></td>")
+
+                bandstable_e.append(newBand_e);
+            }
+        }
+
+        function populateBandSelect() {
+
+            let selectBand = $(".field #vtx_band");
+
+            selectBand.append(new Option(i18n.getMessage('vtxBand_0'), 0))
+            if (VTX_CONFIG.vtx_table_available) {
+                for (let i = 1; i <= VTX_CONFIG.vtx_table_bands; i++) {
+                    let bandName = TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name;
+                    if (bandName.trim() === '') {
+                        bandName = i18n.getMessage('vtxBand_X', {bandName: i});
+                    }
+                    selectBand.append(new Option(bandName, i));
+                } 
+            } else {
+                for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
+                    selectBand.append(new Option(i18n.getMessage('vtxBand_X', {bandName: i}), i));
+                } 
+            }
+        }
+
+        function populateChannelSelect() {
+
+            let selectChannel = $(".field #vtx_channel");
+            let selectedBand = $("#vtx_band").val();
+
+            selectChannel.empty();
+
+            selectChannel.append(new Option(i18n.getMessage('vtxChannel_0'), 0))
+            if (VTX_CONFIG.vtx_table_available) {
+                if (TABS.vtx.VTXTABLE_BAND_LIST[selectedBand - 1]) {
+                    for (let i = 1; i <= TABS.vtx.VTXTABLE_BAND_LIST[selectedBand - 1].vtxtable_band_frequencies.length; i++) {
+                        let channelName = TABS.vtx.VTXTABLE_BAND_LIST[selectedBand - 1].vtxtable_band_frequencies[i - 1];
+                        if (channelName > 0) {
+                            selectChannel.append(new Option(i18n.getMessage('vtxChannel_X', {channelName: i}), i));
+                        }
+                    }
+                } 
+            } else {
+                for (let i = 1; i <= TABS.vtx.MAX_BAND_CHANNELS_VALUES; i++) {
+                    selectBand.append(new Option(i18n.getMessage('vtxChannel_X', {channelName: i}), i));
+                } 
+            }
+        }
+
+        function populatePowerSelect() {
+            let selectPower = $(".field #vtx_power");
+
+            if (VTX_CONFIG.vtx_table_available) {
+                selectPower.append(new Option(i18n.getMessage('vtxPower_0'), 0))
+                for (let i = 1; i <= VTX_CONFIG.vtx_table_powerlevels; i++) {
+                    let powerLevel = TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label;
+                    if (powerLevel.trim() === '') {
+                        powerLevel = i18n.getMessage('vtxPower_X', {powerLevel: i});
+                    }
+                    selectPower.append(new Option(powerLevel, i));
+                } 
+            } else {
+                let powerMaxMinValues = getPowerValues(VTX_CONFIG.vtx_type);
+                for (let i = powerMaxMinValues.min; i <= powerMaxMinValues.max; i++) {
+                    if (i == 0) {
+                        selectPower.append(new Option(i18n.getMessage('vtxPower_0'), 0))
+                    } else {
+                        selectPower.append(new Option(i18n.getMessage('vtxPower_X', {bandName: i}), i));
+                    }
+                } 
+            }
+        }
+
+        // Returns the power values min and max depending on the VTX Type
+        function getPowerValues(vtxType) {
+            
+            let powerMinMax = {};
+
+            if (VTX_CONFIG.vtx_table_available) {
+                powerMinMax = {min: 1, max: VTX_CONFIG.vtx_table_powerlevels}
+            } else {
+                 
+                switch (vtxType) {
+
+                case 0: // Unsupported
+                    powerMinMax = {};
+                    break;
+
+                case 1: // RTC6705
+                    powerMinMax = {min: 1, max: 3}; 
+                    break;
+
+                case 3: // SmartAudio
+                    powerMinMax = {min: 1, max: 4};
+                    break;
+
+                case 4: // Tramp
+                    powerMinMax = {min: 1, max: 5};
+                    break;
+
+                case 255: // Unknown
+                default:
+                    powerMinMax = {min: 0, max: 7};
+                }
+            }
+            return powerMinMax;
+        }
+
+        // Save function
+        $('a.save').click(function () {
+            save_vtx();
+        });
+
+    }
+
+    // Save all the values from the tab to MSP
+    function save_vtx() {
+
+        // General config
+        let frequencyEnabled = $("#vtx_frequency_channel").prop('checked');
+        if (frequencyEnabled) {
+            VTX_CONFIG.vtx_frequency = parseInt($("#vtx_frequency").val());
+            VTX_CONFIG.vtx_band = 0;
+            VTX_CONFIG.vtx_channel = 0;
+        } else {
+            VTX_CONFIG.vtx_band = parseInt($("#vtx_band").val());
+            VTX_CONFIG.vtx_channel = parseInt($("#vtx_channel").val());
+            VTX_CONFIG.vtx_frequency = 0;
+            if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
+                if (VTX_CONFIG.vtx_band > 0 || VTX_CONFIG.vtx_channel > 0) {
+                    VTX_CONFIG.vtx_frequency = (band - 1) * 8 + (channel - 1);
+                }
+            }
+        }
+        VTX_CONFIG.vtx_power = parseInt($("#vtx_power").val());
+        VTX_CONFIG.vtx_pit_mode = $("#vtx_pit_mode").prop('checked');
+        VTX_CONFIG.vtx_low_power_disarm = parseInt($("#vtx_low_power_disarm").val());
+        VTX_CONFIG.vtx_table_clear = true;
+
+        // Power levels
+        VTX_CONFIG.vtx_table_powerlevels = parseInt($("#vtx_table_powerlevels").val());
+
+        TABS.vtx.VTXTABLE_POWERLEVEL_LIST = [];
+        for (let i = 1; i <= VTX_CONFIG.vtx_table_powerlevels; i++) {
+            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1] = {};
+            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_number = i;
+            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_value = parseInt($("#vtx_table_powerlevels_" + i).val());
+            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label = $("#vtx_table_powerlabels_" + i).val();
+        }
+
+        // Bands and channels
+        VTX_CONFIG.vtx_table_bands = parseInt($("#vtx_table_bands").val());
+        VTX_CONFIG.vtx_table_channels = parseInt($("#vtx_table_channels").val());
+        TABS.vtx.VTXTABLE_BAND_LIST = [];
+        for (let i = 1; i <= VTX_CONFIG.vtx_table_bands; i++) {
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1] = {};
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_number = i;
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name = $("#vtx_table_band_name_" + i).val();
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter = $("#vtx_table_band_letter_" + i).val();
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band = $("#vtx_table_band_factory_" + i).prop('checked');
+
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies = [];
+            for (let j = 1; j <= VTX_CONFIG.vtx_table_channels; j++) {
+                TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies.push(parseInt($("#vtx_table_band_channel_" + i + "_" + j).val()));
+            }
+        }
+
+        // Start MSP saving
+        save_vtx_config();
+
+        function save_vtx_config() {
+            MSP.send_message(MSPCodes.MSP_SET_VTX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VTX_CONFIG), false, save_vtx_powerlevels);
+        }
+        
+        function save_vtx_powerlevels() {
+
+            // Simulation of static variable
+            if (typeof save_vtx_powerlevels.counter === 'undefined') {
+                save_vtx_powerlevels.counter = 0;
+            } else {
+                save_vtx_powerlevels.counter++;
+            }
+
+            
+            if (save_vtx_powerlevels.counter < VTX_CONFIG.vtx_table_powerlevels) {
+                VTXTABLE_POWERLEVEL = Object.assign({}, TABS.vtx.VTXTABLE_POWERLEVEL_LIST[save_vtx_powerlevels.counter]);
+                MSP.send_message(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL), false, save_vtx_powerlevels);
+            } else {
+                save_vtx_powerlevels.counter = undefined;
+                save_vtx_bands();
+            }
+        }
+
+        function save_vtx_bands() {
+
+            // Simulation of static variable
+            if (typeof save_vtx_bands.counter === 'undefined') {
+                save_vtx_bands.counter = 0;
+            } else {
+                save_vtx_bands.counter++;
+            }
+
+            
+            if (save_vtx_bands.counter < VTX_CONFIG.vtx_table_bands) {
+                VTXTABLE_BAND = Object.assign({}, TABS.vtx.VTXTABLE_BAND_LIST[save_vtx_bands.counter]);
+                MSP.send_message(MSPCodes.MSP_SET_VTXTABLE_BAND, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_BAND), false, save_vtx_bands);
+            } else {
+                save_vtx_bands.counter = undefined;
+                save_to_eeprom();
+            }
+        }
+
+        function save_to_eeprom() {
+            MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, save_completed);
+        }
+
+        function save_completed() {
+            GUI.log(i18n.getMessage('configurationEepromSaved'));
+
+            var oldText = $("#save_button").text();
+            $("#save_button").html(i18n.getMessage('vtxButtonSaved'));
+            setTimeout(function () {
+                $("#save_button").html(oldText);
+            }, 2000);
+
+            TABS.vtx.initialize();
+        }
+    }
+};
+
+TABS.vtx.cleanup = function (callback) {
+
+    // Add here things that need to be cleaned or closed before leaving the tab
+    this.VTXTABLE_BAND_LIST = [];
+    this.VTXTABLE_POWERLEVEL_LIST = [];
+
+    if (callback) {
+        callback();
+    }
+};

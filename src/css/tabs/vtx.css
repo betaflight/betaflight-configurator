@@ -1,0 +1,125 @@
+.tab-vtx {
+    height: 100%;
+}
+
+.tab-vtx .require-support {
+    display: none;
+}
+
+.tab-vtx.supported .require-support {
+    display: block;
+}
+
+.tab-vtx .require-upgrade {
+    display: block;
+}
+
+.tab-vtx.supported .require-upgrade {
+    display: none;
+}
+
+.tab-vtx .leftWrapper {
+    float: left;
+    width:calc(60% - 20px)
+}
+
+.tab-vtx .rightWrapper {
+    float: left;
+    width: calc(30% - 0px);
+    max-width: 300px;
+    margin: 0 0 10px 20px;
+}
+
+.tab-vtx input , .tab-vtx select {
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
+    max-width: 100px;
+
+}
+
+.tab-vtx .number input {
+    width: 55px;
+    padding-left: 3px;
+    height: 20px;
+    line-height: 20px;
+    text-align: left;
+    border-radius: 3px;
+    margin-right: 11px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.tab-vtx .gui_box span {
+    font-style: normal;
+    font-family: 'open_sansregular', Arial;
+    line-height: 19px;
+    color: var(--mutedtext);
+    font-size: 11px;
+}
+
+.tab-vtx .spacer_box .field {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    width: 100%;
+    float: left;
+}
+
+.tab-vtx .spacer_box .field:not(:last-child) {
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+.tab-vtx .select_mode .field > span {
+    margin-right: 10px;
+    display: inline-block;
+    min-width: 100px;
+}
+
+.tab-vtx input.one_digit_input {
+    width: 28px;
+}
+
+.tab-vtx input.frequency_input {
+    width: 48px;
+}
+
+.tab-vtx .vtx_table_box {
+    min-width: 750px
+}
+
+.tab-vtx .table_vtx_bands tr:first-child td, .tab-vtx .table_vtx_powerlevels tr:first-child td {
+    text-align: center;
+}
+
+
+.tab-vtx .table_vtx_bands td, .tab-vtx .table_vtx_powerlevels td {
+    padding: 0px 1px;
+    text-align: center;
+}
+
+.tab-vtx .table_vtx_bands input, .tab-vtx .table_vtx_powerlevels input {
+    display: block;
+    margin: 0 auto;
+}
+
+.tab-vtx .field_powerlevel_value input, .tab-vtx .field_powerlevel_label input {
+    width: 53px;
+
+}
+
+.tab-vtx .field_band_name input {
+    width: 71px;
+
+}
+
+.tab-vtx .field_band_letter input {
+    width: 13px;
+}
+
+.tab-vtx .vtx_table_bands_table span table, .tab-vtx .vtx_table_powerlevels_table span table {
+    float: left;
+}
+
+#tab-vtx-templates {
+    display: none;
+}

@@ -112,6 +112,9 @@ var MSPCodes = {
     MSP_COMPASS_CONFIG:             133,
     MSP_GPS_RESCUE:                 135,
 
+    MSP_VTXTABLE_BAND:              137,
+    MSP_VTXTABLE_POWERLEVEL:        138,
+
     MSP_STATUS_EX:                  150,
 
     MSP_UID:                        160,
@@ -147,6 +150,9 @@ var MSPCodes = {
     MSP_SET_GPS_CONFIG:             223,
     MSP_SET_COMPASS_CONFIG:         224,
     MSP_SET_GPS_RESCUE:             225,
+
+    MSP_SET_VTXTABLE_BAND:          227,
+    MSP_SET_VTXTABLE_POWERLEVEL:    228,
 
     MSP_MODE_RANGES_EXTRA:          238,
     MSP_SET_ACC_TRIM:               239,

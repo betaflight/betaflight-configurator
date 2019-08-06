@@ -876,6 +876,15 @@ li.active .ic_transponder {
     background-image: url(../images/icons/icon_osd_white.svg);
 }
 
+.ic_vtx {
+    background-image: url(../images/icons/cf_icon_vtx_grey.svg);
+    background-position-y: 4px;
+}
+
+.ic_vtx:hover, li.active .ic_osd {
+    background-image: url(../images/icons/cf_icon_vtx_white.svg);
+}
+
 .ic_power {
     background-image: url(../images/icons/cf_icon_power_grey.svg);
     background-position-y: 9px;
@@ -1481,9 +1490,12 @@ dialog {
 
 .cf_table td {
     border: 0px;
-    border-bottom: solid 1px var(--subtleAccent);
     padding-top: 2px;
     padding-bottom: 5px;
+}
+
+.cf_table tr:not(:last-child) td {
+    border-bottom: solid 1px var(--subtleAccent);
     border-style: dotted;
 }
 
