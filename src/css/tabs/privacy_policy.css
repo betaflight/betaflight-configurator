@@ -1,0 +1,11 @@
+.tab-privacy_policy p, 
+.tab-privacy_policy h1, 
+.tab-privacy_policy h2, 
+.tab-privacy_policy h3, 
+.tab-privacy_policy h4 {
+    margin-bottom: 10px;
+}
+
+.tab-privacy_policy li {
+    margin-bottom: 0px !important;
+}
