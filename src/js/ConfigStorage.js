@@ -5,6 +5,9 @@
 var ConfigStorage = {
     // key can be one string, or array of strings
     get: function(key, callback) {
+      if (GUI.isChromeApp()) {
+        chrome.storage.local.get(key,callback);
+      } else {
         //console.log('Abstraction.get',key);
         if (Array.isArray(key)) {
             var obj = {};
@@ -30,12 +33,17 @@ var ConfigStorage = {
                 callback({});
             }
         }
+      }
     },
     // set takes an object like {'userLanguageSelect':'DEFAULT'}
     set: function(input) {
+      if (GUI.isChromeApp()) {
+          chrome.storage.local.set(input);
+      } else {
         //console.log('Abstraction.set',input);
         Object.keys(input).forEach(function (element) {
             window.localStorage.setItem(element, JSON.stringify(input));
         });
+      }
     }
 }
