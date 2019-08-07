@@ -699,7 +699,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.42.0"))  {
-            serialRXtypes.push('DJI_HDL_7MS');
+            serialRXtypes.push(
+                'DJI_HDL_7MS',
+                'SPEKTRUM SRXL2');
         }
 
         var serialRX_e = $('select.serialRX');
