@@ -77,7 +77,8 @@ function read_hex_file(data) {
                 }
                 break;
             case 0x04: // extended linear address record
-                extended_linear_address = (parseInt(content.substr(0, 2), 16) << 24) | parseInt(content.substr(2, 2), 16) << 16;
+                // input address is UNSIGNED
+                extended_linear_address = ((parseInt(content.substr(0, 2), 16) << 24) | parseInt(content.substr(2, 2), 16) << 16) >>> 0;
                 break;
             case 0x05: // start linear address record
                 result.start_linear_address = parseInt(content, 16)
