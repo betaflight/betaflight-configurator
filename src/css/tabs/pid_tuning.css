@@ -299,6 +299,7 @@
 
 .tab-pid_tuning table.compensation .suboption {
     margin-left: 4%;
+    white-space: nowrap;
 }
 
 .tab-pid_tuning table.compensation .suboption select{
