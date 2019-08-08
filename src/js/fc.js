@@ -353,6 +353,15 @@ var FC = {
             motor_pwm_rate:             0,
             digitalIdlePercent:         0,
             gyroUse32kHz:               0,
+            motorPwmInversion:          0,
+            gyroToUse:                  0,
+            gyroHighFsr:                0,
+            gyroMovementCalibThreshold: 0,
+            gyroCalibDuration:          0,
+            gyroOffsetYaw:              0,
+            gyroCheckOverflow:          0,
+            debugMode:                  0,
+            debugModeCount:             0,
         };
 
         FILTER_CONFIG = {

@@ -4819,6 +4819,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox logging rate"
     },
+    "onboardLoggingDebugMode": {
+        "message": "Blackbox debug mode"
+    },
     "onboardLoggingSerialLogger": {
         "message": "Outboard serial logging device"
     },
