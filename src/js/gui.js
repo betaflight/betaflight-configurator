@@ -59,7 +59,26 @@ var GUI_control = function () {
     else if (navigator.appVersion.indexOf("Linux") != -1)   this.operating_system = "Linux";
     else if (navigator.appVersion.indexOf("X11") != -1)     this.operating_system = "UNIX";
     else this.operating_system = "Unknown";
+
+    // Check the method of execution
+    this.nwGui = null;
+    try {
+      this.nwGui = require('nw.gui');
+      this.Mode = GUI_Modes.NWJS;
+    } catch (ex) {
+      if (window.chrome && chrome.storage && chrome.storage.local) {
+        this.Mode = GUI_Modes.ChromeApp;
+      } else {
+        this.Mode = GUI_Modes.Other;
+      }
+    }
 };
+
+const GUI_Modes = {
+  NWJS: "NW.js",
+  ChromeApp: "Chrome",
+  Other: "Other"
+}
 
 // Timer managing methods
 
@@ -357,6 +376,17 @@ GUI_control.prototype.selectDefaultTabWhenConnected = function() {
         $("#tabs ul.mode-connected ." + result.lastTab + " a").click();
     });    
 };
+
+GUI_control.prototype.isChromeApp = function () {
+  return this.Mode == GUI_Modes.ChromeApp;
+}
+GUI_control.prototype.isNWJS = function () {
+  return this.Mode == GUI_Modes.NWJS;
+}
+GUI_control.prototype.isOther = function () {
+  return this.Mode == GUI_Modes.Other;
+}
+
 
 // initialize object into GUI variable
 var GUI = new GUI_control();

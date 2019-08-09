@@ -1,7 +1,5 @@
 'use strict';
 
-var nwGui = getNwGui();
-
 var googleAnalytics = analytics;
 var analytics = undefined;
 
@@ -15,17 +13,6 @@ $(document).ready(function () {
         });
     });
 });
-
-function getNwGui() {
-    var gui = null;
-    try {
-        gui = require('nw.gui');
-    } catch (ex) {
-        console.log("Could not require 'nw.gui', maybe inside chrome");
-    }
-
-    return gui;
-}
 
 function checkSetupAnalytics(callback) {
     if (!analytics) {
@@ -44,7 +31,7 @@ function checkSetupAnalytics(callback) {
 };
 
 function getBuildType() {
-    return nwGui ? 'NW.js' : 'Chrome';
+    return GUI.Mode;
 }
 
 function setupAnalytics(result) {
@@ -79,8 +66,8 @@ function setupAnalytics(result) {
         analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' })
     }
 
-    if (nwGui) {
-        var win = nwGui.Window.get();
+    if (GUI.isNWJS()) {
+        var win = GUI.nwGui.Window.get();
         win.on('close', function () {
             sendCloseEvent();
 
@@ -90,7 +77,7 @@ function setupAnalytics(result) {
             // do not open the window
             policy.ignore();
             // and open it in external browser
-            nwGui.Shell.openExternal(url);
+            GUI.nwGui.Shell.openExternal(url);
         });
     } else {
         // Looks like we're in Chrome - but the event does not actually get fired
@@ -293,7 +280,7 @@ function startProcess() {
                         TABS.onboard_logging.initialize(content_ready);
                         break;
                     case 'cli':
-                        TABS.cli.initialize(content_ready, nwGui);
+                        TABS.cli.initialize(content_ready, GUI.nwGui);
                         break;
 
                     default:
