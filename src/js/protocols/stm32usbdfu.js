@@ -798,6 +798,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 
                 if (erase_pages.length == 0) {
                     console.log('Aborting, No flash pages to erase');
+                    TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32InvalidHex'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
                     self.upload_procedure(99);
                     break;
                 }

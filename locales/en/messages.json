@@ -374,6 +374,9 @@
     "stm32LocalErase": {
         "message": "Executing local erase ..."
     },
+    "stm32InvalidHex": {
+        "message": "Invalid hex"
+    },
     "stm32Erase": {
         "message": "Erasing ..."
     },
