@@ -64,6 +64,7 @@ var VTXTABLE_BAND;
 var VTXTABLE_POWERLEVEL;
 var MULTIPLE_MSP;
 var DEFAULT;
+var DEFAULT_PIDS;
 
 var FC = {
     resetState: function () {
@@ -559,6 +560,12 @@ var FC = {
             dterm_notch_hz:                 260,
             yaw_lowpass_hz:                 100,
         };
+
+        DEFAULT_PIDS = [
+            42, 85, 35, 20, 90,
+            46, 90, 38, 22, 95,
+            30, 90,  0,  0, 90,
+        ];
     },
 
     getHardwareName: function () {
@@ -633,7 +640,27 @@ var FC = {
             versionFilterDefaults.dterm_lowpass_type = FC.FILTER_TYPE_FLAGS.BIQUAD;
             versionFilterDefaults.dterm_lowpass2_hz = 150;
             versionFilterDefaults.dterm_lowpass2_type = FC.FILTER_TYPE_FLAGS.BIQUAD;
-        }
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                versionFilterDefaults.gyro_lowpass_hz = 200;
+                versionFilterDefaults.gyro_lowpass_dyn_min_hz = 200;
+                versionFilterDefaults.gyro_lowpass_dyn_max_hz = 500;
+                versionFilterDefaults.gyro_lowpass_type = FC.FILTER_TYPE_FLAGS.PT1;
+                versionFilterDefaults.gyro_lowpass2_hz = 250;
+                versionFilterDefaults.gyro_lowpass2_type = FC.FILTER_TYPE_FLAGS.PT1;
+                versionFilterDefaults.dterm_lowpass_hz = 150;
+                versionFilterDefaults.dterm_lowpass_dyn_min_hz = 70;
+                versionFilterDefaults.dterm_lowpass_dyn_max_hz = 170;
+                versionFilterDefaults.dterm_lowpass_type = FC.FILTER_TYPE_FLAGS.PT1;
+                versionFilterDefaults.dterm_lowpass2_hz = 150;
+                versionFilterDefaults.dterm_lowpass2_type = FC.FILTER_TYPE_FLAGS.PT1;
+            }
+        } 
         return versionFilterDefaults;
+    },
+
+    getPidDefaults: function() {
+        var versionPidDefaults = DEFAULT_PIDS;
+        // if defaults change they should go here
+        return versionPidDefaults;
     },
 };

@@ -740,6 +740,129 @@
     width: 120px;
 }
 
+.tab-pid_tuning .tuningSlider {
+    -webkit-appearance: none;
+    width: calc(100% - 14px);
+    height: 15px;
+    border: none;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity .2s;
+    margin: 7px;
+    background: none;
+}
+
+.tab-pid_tuning .tuningSlider:hover {
+    opacity: 1;
+}
+
+.tab-pid_tuning .tuningSlider::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background: rgba(0,255,0);
+    border: solid 1px silver;
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgb(167, 255, 204) 0%, rgb(187, 252, 255) 50%, rgb(255, 90, 23) 100%);
+    height: 15px;
+}
+
+.tab-pid_tuning .tuningSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: #ffbb2a;
+    border: solid 1px #828885;
+    cursor: pointer;
+    position: relative;
+    bottom: 5px;
+}
+
+.tab-pid_tuning .sliderLabels tr {
+    border-bottom: 1px solid #ccc;
+}
+
+.tab-pid_tuning .sliderLabels tr:last-child {
+    border-bottom: none;
+}
+
+.tab-pid_tuning .sliderLabels tr td:first-child {
+    text-align: right;
+    width: 20%;
+}
+
+.tab-pid_tuning .subtab-filter .sliderLabels tr td:first-child {
+    width: 10%;
+}
+
+.tab-pid_tuning .sliderLabels tr td:nth-child(2) {
+    text-align: center;
+    width: 30px;
+}
+
+.tab-pid_tuning .sliderLabels tr td:last-child {
+    width: 30px;
+}
+
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th,
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th {
+    text-align: center;
+}
+
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th:first-child {
+    width: 20%;
+    border-right: none;
+}
+
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th:first-child {
+    width: 10%;
+    border-right: none;
+}
+
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th:nth-child(2),
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th:nth-child(2) {
+    width: 30px;
+}
+
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th:last-child,
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th:last-child {
+    width: 30px;
+}
+
+.tab-pid_tuning .slidersHighWarning, 
+.tab-pid_tuning .slidersFilterHighWarning {
+    background: #ff8a67;
+    border: 1px solid red;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.tab-pid_tuning .note-button td:nth-child(n) {
+    padding-left: 7px;
+    padding-right: 7px;
+    text-align: center;
+}
+
+.tab-pid_tuning .note-button td:first-child {
+    width: 75%;
+    border-right: none;
+}
+
+.tab-pid_tuning .note-button .regular-button {
+    display: block;
+    overflow-wrap: break-word;
+    margin: 2px;
+}
+
+.tab-pid_tuning .sliderLabels span {
+    color: black;
+    font-size: 12px;
+}
+
+.tab-pid_tuning .subtab-filter .sliderLabels input {
+    width: calc(100% - 14px);
+    box-sizing: content-box;
+}
+
 .tab-pid_tuning .subtab-rates {
     display: flex;
     flex-flow: row wrap;
@@ -760,7 +883,7 @@
 }
 
 .tab-pid_tuning .subtab-pid .cf_column {
-    min-width: 470px;
+    min-width: 472px;
     flex: 1;
 }
 
@@ -788,4 +911,14 @@
 .tab-pid_tuning .subtab-rates .ratePreview.spacer_left {
     width: 100%;
 }
+}
+
+.tab-pid_tuning .pid_titlebar .name-helpicon-flex {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.tab-pid_tuning .pid_titlebar .name-helpicon-flex .helpicon {
+    margin-right: 0;
 }
