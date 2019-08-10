@@ -400,6 +400,7 @@ var FC = {
             smartFeedforward:           0,
             itermRelax:                 0,
             itermRelaxType:             0,
+            itermRelaxCutoff:           0,
             absoluteControlGain:        0,
             throttleBoost:              0,
             acroTrainerAngleLimit:      0,

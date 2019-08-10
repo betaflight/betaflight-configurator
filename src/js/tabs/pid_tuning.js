@@ -203,6 +203,7 @@ TABS.pid_tuning.initialize = function (callback) {
             itermRelaxCheck.prop('checked', ADVANCED_TUNING.itermRelax !== 0);
             $('select[id="itermrelaxAxes"]').val(ADVANCED_TUNING.itermRelax > 0 ? ADVANCED_TUNING.itermRelax : 1);
             $('select[id="itermrelaxType"]').val(ADVANCED_TUNING.itermRelaxType);
+            $('input[name="itermRelaxCutoff"]').val(ADVANCED_TUNING.itermRelaxCutoff);
 
             itermRelaxCheck.change(function() {
                 var checked = $(this).is(':checked');
@@ -350,6 +351,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
             $('.smartfeedforward').hide();
+            $('.itermRelaxCutoff').show();
+        } else {
+            $('.itermRelaxCutoff').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -638,6 +642,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
             ADVANCED_TUNING.itermRelax = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxAxes"]').val() : 0;
             ADVANCED_TUNING.itermRelaxType = $('input[id="itermrelax"]').is(':checked') ? $('select[id="itermrelaxType"]').val() : 0;
+            ADVANCED_TUNING.itermRelaxCutoff = parseInt($('input[name="itermRelaxCutoff"]').val());
 
             ADVANCED_TUNING.absoluteControlGain = $('input[name="absoluteControlGain-number"]').val();
 

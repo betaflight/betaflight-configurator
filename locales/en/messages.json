@@ -3207,6 +3207,9 @@
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
     },
+    "pidTuningItermRelaxCutoff": {
+        "message": "Cutoff:"
+    },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Control"
     },
