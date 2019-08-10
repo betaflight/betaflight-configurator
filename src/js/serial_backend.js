@@ -90,15 +90,11 @@ function initializeSerialBackend() {
         if ($('div#flashbutton a.flash_state').hasClass('active') && $('div#flashbutton a.flash').hasClass('active')) {
             $('div#flashbutton a.flash_state').removeClass('active');
             $('div#flashbutton a.flash').removeClass('active');
-            document.getElementById("tab_landing").style.display = "block";
-            document.getElementById("tab_help").style.display = "block";
             $('#tabs ul.mode-disconnected .tab_landing a').click();
         } else {
             $('#tabs ul.mode-disconnected .tab_firmware_flasher a').click();
             $('div#flashbutton a.flash_state').addClass('active');
             $('div#flashbutton a.flash').addClass('active');
-            document.getElementById("tab_landing").style.display = "none";
-            document.getElementById("tab_help").style.display = "none";
         }
     });
 
