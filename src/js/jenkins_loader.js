@@ -52,9 +52,10 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
                 chrome.storage.local.set(object);
 
                 wrappedCallback(jobs);
-            }).error(xhr => {
+            }).fail(xhr => {
                 GUI.log(i18n.getMessage('buildServerLoadFailed', ['jobs', `HTTP ${xhr.status}`]));
-            }).fail(cachedCallback);
+                cachedCallback();
+            });
         } else {
             cachedCallback();
         }
