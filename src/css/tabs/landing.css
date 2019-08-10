@@ -180,3 +180,22 @@
     display: block;
     float: left;
 }
+
+.tab-landing .languageSwitcher .selected_language {
+    font-weight: bold;
+}
+.tab-landing .languageSwitcher {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: silver;
+}
+.tab-landing .languageSwitcher a {
+    color: silver;
+    font-weight: normal;
+    white-space: nowrap;
+}
+.tab-landing .languageSwitcher a:not(:last-child):after {
+    content: ", ";
+    font-weight: normal;
+}
