@@ -377,6 +377,10 @@ var FC = {
             dterm_notch_hz:             0,
             dterm_notch_cutoff:         0,
             yaw_lowpass_hz:             0,
+            dyn_notch_range:            0,
+            dyn_notch_width_percent:    0,
+            dyn_notch_q:                0,
+            dyn_notch_min_hz:           0,
         };
 
         ADVANCED_TUNING = {

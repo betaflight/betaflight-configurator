@@ -366,7 +366,13 @@
     border-radius: 0px;
 }
 
+.tab-pid_tuning .subtab-filter table input {
+    width: 77px;
+    float: right;
+}
+
 .tab-pid_tuning table select {
+    width: 77px;
     text-align-last: right;
 }
 
@@ -539,6 +545,10 @@
 
 .tab-pid_tuning .helpicon {
     margin-top: 1px;
+}
+
+.tab-pid_tuning .subtab-filter .newFilter .helpicon {
+    margin-right: 2px;
 }
 
 .tab-pid_tuning .number .helpicon {
