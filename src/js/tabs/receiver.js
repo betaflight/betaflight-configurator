@@ -62,14 +62,6 @@ TABS.receiver.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        ConfigStorage.get('rx_refresh_rate', function (result) {
-            if (result.rx_refresh_rate) {
-                $('select[name="rx_refresh_rate"]').val(result.rx_refresh_rate).change();
-            } else {
-                $('select[name="rx_refresh_rate"]').change(); // start with default value
-            }
-        });
-
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.deadband').hide();
         } else {
@@ -522,6 +514,14 @@ TABS.receiver.initialize = function (callback) {
 
             // enable RC data pulling
             GUI.interval_add('receiver_pull', get_rc_data, plot_update_rate, true);
+        });
+
+        ConfigStorage.get('rx_refresh_rate', function (result) {
+            if (result.rx_refresh_rate) {
+                $('select[name="rx_refresh_rate"]').val(result.rx_refresh_rate).change();
+            } else {
+                $('select[name="rx_refresh_rate"]').change(); // start with default value
+            }
         });
 
         // Setup model for preview
