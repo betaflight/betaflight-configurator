@@ -476,7 +476,10 @@ function getHash(cb) {
 
 function writeChangesetId() {
     var versionJson = new stream.Readable;
-    versionJson.push(JSON.stringify({ gitChangesetId: gitChangeSetId }, undefined, 2));
+    versionJson.push(JSON.stringify({
+        gitChangesetId: gitChangeSetId,
+        version: pkg.version
+        }, undefined, 2));
     versionJson.push(null);
     return versionJson
         .pipe(source('version.json'))

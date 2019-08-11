@@ -5,7 +5,7 @@
 function configuration_backup(callback) {
     var activeProfile = null;
 
-    var version = getManifestVersion();
+    var version = CONFIGURATOR.version;
 
     if (version.indexOf(".") === -1) {
         version = version + ".0.0";
