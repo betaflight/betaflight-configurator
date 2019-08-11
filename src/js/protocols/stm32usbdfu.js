@@ -337,6 +337,15 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
             // F40x: "@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
             // F72x: "@Internal Flash  /0x08000000/04*016Kg,01*64Kg,03*128Kg"
             // F74x: "@Internal Flash  /0x08000000/04*032Kg,01*128Kg,03*256Kg"
+
+            // H750 SPRacing H7 EXST: "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka"
+            // H750 SPRacing H7 EXST: "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka" - Early BL firmware with incorrect string, treat as above.
+
+            // H750 Partitions: Flash, Config, Firmware, 1x BB Management block + x BB Replacement blocks)
+            if (str == "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka") {
+                str = "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka" 
+            }
+
             // split main into [location, start_addr, sectors]
 
             var tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
@@ -507,7 +516,7 @@ STM32DFU_protocol.prototype.clearStatus = function (callback) {
 STM32DFU_protocol.prototype.loadAddress = function (address, callback, abort) {
     var self = this;
 
-    self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x21, address, (address >> 8), (address >> 16), (address >> 24)], function () {
+    self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x21, address & 0xff, (address >> 8) & 0xff, (address >> 16) & 0xff, (address >> 24) & 0xff], function () {
         self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
             if (data[4] == self.state.dfuDNBUSY) {
                 var delay = data[1] | (data[2] << 8) | (data[3] << 16);
@@ -560,31 +569,59 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     console.log('Failed to detect chip info, resultCode: ' + resultCode);
                     self.upload_procedure(99);
                 } else {
-                    if (typeof chipInfo.internal_flash === "undefined") {
-                        console.log('Failed to detect internal flash');
-                        self.upload_procedure(99);
-		    }
-
-	            self.chipInfo = chipInfo;
-
-                    self.flash_layout = chipInfo.internal_flash;
-                    self.available_flash_size = self.flash_layout.total_size - (self.hex.start_linear_address - self.flash_layout.start_address);
-
-                    GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
-
-                    if (self.hex.bytes_total > self.available_flash_size) {
-                        GUI.log(i18n.getMessage('dfu_error_image_size', 
-                            [(self.hex.bytes_total / 1024.0).toFixed(1), 
-                            (self.available_flash_size / 1024.0).toFixed(1)]));
-                        self.upload_procedure(99);
-                    } else {
-                        self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
-                            self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
-                            console.log('Using transfer size: ' + self.transferSize);
-                            self.clearStatus(function () {
-                                self.upload_procedure(1);
+                    if (typeof chipInfo.internal_flash !== "undefined") {
+                        // internal flash
+                        self.chipInfo = chipInfo;
+                        
+                        self.flash_layout = chipInfo.internal_flash;
+                        self.available_flash_size = self.flash_layout.total_size - (self.hex.start_linear_address - self.flash_layout.start_address);
+    
+                        GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
+    
+                        if (self.hex.bytes_total > self.available_flash_size) {
+                            GUI.log(i18n.getMessage('dfu_error_image_size', 
+                                [(self.hex.bytes_total / 1024.0).toFixed(1), 
+                                (self.available_flash_size / 1024.0).toFixed(1)]));
+                            self.upload_procedure(99);
+                        } else {
+                            self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
+                                self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                                console.log('Using transfer size: ' + self.transferSize);
+                                self.clearStatus(function () {
+                                    self.upload_procedure(1);
+                                });
                             });
-                        });
+                        }
+                    } else if (typeof chipInfo.external_flash !== "undefined") {
+                        // external flash, flash to the 3rd partition.
+                        self.chipInfo = chipInfo;
+                        self.flash_layout = chipInfo.external_flash;
+                        
+                        var firmware_partition_index = 2;
+                        var firmware_sectors = self.flash_layout.sectors[firmware_partition_index];
+                        var firmware_partition_size = firmware_sectors.total_size;
+
+                        self.available_flash_size = firmware_partition_size;
+
+                        GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
+
+                        if (self.hex.bytes_total > self.available_flash_size) {
+                            GUI.log(i18n.getMessage('dfu_error_image_size', 
+                                [(self.hex.bytes_total / 1024.0).toFixed(1), 
+                                (self.available_flash_size / 1024.0).toFixed(1)]));
+                            self.upload_procedure(99);
+                        } else {
+                            self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
+                                self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                                console.log('Using transfer size: ' + self.transferSize);
+                                self.clearStatus(function () {
+                                    self.upload_procedure(2); // no option bytes to deal with
+                                });
+                            });
+                        }
+                    } else {
+                        console.log('Failed to detect internal or external flash');
+                        self.upload_procedure(99);
                     }
                 }
             });
@@ -607,7 +644,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 		                    var delay = data[1] | (data[2] << 8) | (data[3] << 16);
 				    var total_delay = delay + 20000; // wait at least 20 seconds to make sure the user does not disconnect the board while erasing the memory
 				    var timeSpentWaiting = 0;
-				    var incr = 1000; // one sec incements
+				    var incr = 1000; // one sec increments
 		                    var waitForErase = setInterval(function () {
 
                     TABS.firmware_flasher.flashProgress(Math.min(timeSpentWaiting / total_delay, 1) * 100);
@@ -758,9 +795,17 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     }
                   }
                 }
+                
+                if (erase_pages.length === 0) {
+                    console.log('Aborting, No flash pages to erase');
+                    TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32InvalidHex'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
+                    self.upload_procedure(99);
+                    break;
+                }
+
 
                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32Erase'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
-                console.log('Executing local chip erase'); 
+                console.log('Executing local chip erase', erase_pages); 
 
                 var page = 0;
                 var total_erased = 0; // bytes
