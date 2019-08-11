@@ -684,6 +684,9 @@ TABS.firmware_flasher.initialize = function (callback) {
             }
         });
 
+        // Update Firmware button at top
+        $('div#flashbutton a.flash_state').addClass('active');
+        $('div#flashbutton a.flash').addClass('active');
         GUI.content_ready(callback);
     }
 
@@ -699,6 +702,10 @@ TABS.firmware_flasher.cleanup = function (callback) {
     // unbind "global" events
     $(document).unbind('keypress');
     $(document).off('click', 'span.progressLabel a');
+
+    // Update Firmware button at top
+    $('div#flashbutton a.flash_state').removeClass('active');
+    $('div#flashbutton a.flash').removeClass('active');
 
     analytics.resetFirmwareData();
 
