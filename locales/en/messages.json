@@ -3127,7 +3127,7 @@
         "message": "Dynamic Notch Filter tracks peak motors noise frequency and places one or two notch filters with their center at that frequency."
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Notice:</strong> The dynamic notch filter is disabled. In order to configure and use it, please enable the 'DYNAMIC_FILTER' feature in the 'Other Features' section of the 'Configuration' tab."
+        "message": "<strong>Notice:</strong> The dynamic notch filter is disabled. In order to configure and use it, please enable the 'DYNAMIC_FILTER' feature in the '$t(configurationFeatures.message)' section of the '$t(tabConfiguration.message)' tab."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Range"
@@ -3142,7 +3142,7 @@
         "message": "Dynamic Notch Min Hz"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving quads like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch quad, HIGH(230-800hz) for very high revving 2.5-3 inch quads. AUTO option selects the range depending on the value of the Dynamic Lowpass Filter's max cutoff frequency."
+        "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving quads like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch quad, HIGH(230-800hz) for very high revving 2.5-3 inch quads. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
     },
     "pidTuningDynamicNotchWidthPercentHelp": {
         "message": "This sets the width between two dynamic notch filters. Setting it at 0 will disable the second dynamic notch filter and will reduce filter delay, however it may make motor temperatures higher."
