@@ -1825,9 +1825,13 @@ TABS.pid_tuning.updateFilterWarning = function() {
     } else {
         warning_e.hide();
     }
-    if (FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
-        warningDynamicNotch_e.hide();
+    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        if (FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
+            warningDynamicNotch_e.hide();
+        } else {
+            warningDynamicNotch_e.show();
+        }
     } else {
-        warningDynamicNotch_e.show();
+        warningDynamicNotch_e.hide();
     }
 }
