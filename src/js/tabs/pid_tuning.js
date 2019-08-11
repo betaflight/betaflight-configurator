@@ -1819,9 +1819,15 @@ TABS.pid_tuning.updateFilterWarning = function() {
     var dtermDynamicLowpassEnabled = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
     var dtermLowpass1Enabled = $('input[id="dtermLowpassEnabled"]').is(':checked');
     var warning_e = $('#pid-tuning .filterWarning');
+    var warningDynamicNotch_e = $('#pid-tuning .dynamicNotchWarning');
     if (!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled)) {
         warning_e.show();
     } else {
         warning_e.hide();
+    }
+    if (FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
+        warningDynamicNotch_e.hide();
+    } else {
+        warningDynamicNotch_e.show();
     }
 }

@@ -3126,6 +3126,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Dynamic Notch Filter tracks peak motors noise frequency and places one or two notch filters with their center at that frequency."
     },
+    "pidTuningDynamicNotchFilterDisabledWarning": {
+        "message": "<span class=\"message-negative\">Warning:</span> Dynamic Notch Filter is disabled, please enable it as a feature in the Configuration tab to show related settings."
+    },
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Range"
     },
