@@ -5,8 +5,20 @@ var analytics = undefined;
 
 $(document).ready(function () {
     $.getJSON('version.json', function(data) {
+        CONFIGURATOR.version = data.version;
         CONFIGURATOR.gitChangesetId = data.gitChangesetId;
 
+        // Version in the ChromeApp's manifest takes precedence.
+        if(chrome.runtime && chrome.runtime.getManifest) {
+            var manifest = chrome.runtime.getManifest();
+            CONFIGURATOR.version = manifest.version;
+            // manifest.json for ChromeApp can't have a version
+            // with a prerelease tag eg 10.0.0-RC4
+            // Work around is to specify the prerelease version in version_name
+            if (manifest.version_name) {
+                CONFIGURATOR.version = manifest.version_name;
+            }
+        }
         i18n.init(function() {
             startProcess();
             initializeSerialBackend();
@@ -50,7 +62,7 @@ function setupAnalytics(result) {
 
     var debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', getManifestVersion(), CONFIGURATOR.gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode, getBuildType());
+    analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', CONFIGURATOR.version, CONFIGURATOR.gitChangesetId, GUI.operating_system, checkForDebugVersions, optOut, debugMode, getBuildType());
 
     function logException(exception) {
         analytics.sendException(exception.stack);
@@ -79,7 +91,7 @@ function setupAnalytics(result) {
             // and open it in external browser
             GUI.nwGui.Shell.openExternal(url);
         });
-    } else {
+    } else if (!GUI.isOther()) {
         // Looks like we're in Chrome - but the event does not actually get fired
         chrome.runtime.onSuspend.addListener(sendCloseEvent);
     }
@@ -96,9 +108,9 @@ function startProcess() {
     // alternative - window.navigator.appVersion.match(/Chrome\/([0-9.]*)/)[1];
     GUI.log(i18n.getMessage('infoVersions',{operatingSystem: GUI.operating_system, 
                                             chromeVersion: window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"), 
-                                            configuratorVersion: getManifestVersion()}));
+                                            configuratorVersion: CONFIGURATOR.version }));
 
-    $('#logo .version').text(getManifestVersion());
+    $('#logo .version').text(CONFIGURATOR.version);
     updateStatusBarVersion();
     updateTopBarVersion();
 
@@ -117,7 +129,7 @@ function startProcess() {
             break;
     }
 
-    if (GUI.operating_system !== 'ChromeOS') {
+    if (!GUI.isOther() && GUI.operating_system !== 'ChromeOS') {
         checkForConfiguratorUpdates();
     }
 
@@ -557,7 +569,7 @@ function notifyOutdatedVersion(releaseData) {
             }
         });
 
-        if (versions.length > 0 && semver.lt(getManifestVersion(), versions[0].tag_name)) {
+        if (versions.length > 0 && semver.lt(CONFIGURATOR.version, versions[0].tag_name)) {
             GUI.log(i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
 
             var dialog = $('.dialogConfiguratorUpdate')[0];
@@ -735,7 +747,7 @@ function getFirmwareVersion(firmwareVersion, firmwareId) {
 }
 
 function getConfiguratorVersion() {
-    return i18n.getMessage('versionLabelConfigurator') + ': ' + getManifestVersion();
+    return i18n.getMessage('versionLabelConfigurator') + ': ' + CONFIGURATOR.version;
 }
 
 function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
@@ -767,19 +779,6 @@ function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {
     versionText = versionText + getConfiguratorVersion() + ' (' + CONFIGURATOR.gitChangesetId + ')';
 
     $('#status-bar .version').text(versionText);
-}
-
-function getManifestVersion(manifest) {
-    if (!manifest) {
-        manifest = chrome.runtime.getManifest();
-    }
-
-    var version = manifest.version_name;
-    if (!version) {
-        version = manifest.version;
-    }
-
-    return version;
 }
 
 function showErrorDialog(message) {
