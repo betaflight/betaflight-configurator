@@ -328,7 +328,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 if (i < debugModes.length) {
                     debugModeSelect.append(new Option(debugModes[i].text, i));
                 } else {
-                    debugModeSelect.append(new Option("UNKNOWN", i));
+                    debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
                 }
             }
 

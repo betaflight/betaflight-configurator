@@ -4822,6 +4822,9 @@
     "onboardLoggingDebugMode": {
         "message": "Blackbox debug mode"
     },
+    "onboardLoggingDebugModeUnknown": {
+        "message": "UNKNOWN"
+    },
     "onboardLoggingSerialLogger": {
         "message": "Outboard serial logging device"
     },
