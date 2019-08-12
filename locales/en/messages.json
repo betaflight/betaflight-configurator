@@ -3123,6 +3123,39 @@
     "pidTuningNotchFilterHelp": {
         "message": "The Notch Filter has a Center and a Cutoff. The filter is symmetrical. The Center Frequency is the center of the filter and the Cutoff Frequency is where Notch filter starts. For example with Notch Cutoff of 160 and Notch Center of 260 it means the range is 160-360Hz with most attenuation around center"
     },
+    "pidTuningDynamicNotchFilterGroup": {
+        "message": "Dynamic Notch Filter"
+    },
+    "pidTuningDynamicNotchFilterHelp": {
+        "message": "Dynamic Notch Filter tracks peak motors noise frequency and places one or two notch filters with their center at that frequency."
+    },
+    "pidTuningDynamicNotchFilterDisabledWarning": {
+        "message": "<strong>Notice:</strong> The dynamic notch filter is disabled. In order to configure and use it, please enable the 'DYNAMIC_FILTER' feature in the '$t(configurationFeatures.message)' section of the '$t(tabConfiguration.message)' tab."
+    },
+    "pidTuningDynamicNotchRange": {
+        "message": "Dynamic Notch Filter Range"
+    },
+    "pidTuningDynamicNotchWidthPercent": {
+        "message": "Dynamic Notch Width Percent"
+    },
+    "pidTuningDynamicNotchQ": {
+        "message": "Dynamic Notch Q"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Dynamic Notch Min Hz"
+    },
+    "pidTuningDynamicNotchRangeHelp": {
+        "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving quads like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch quad, HIGH(230-800hz) for very high revving 2.5-3 inch quads. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
+    },
+    "pidTuningDynamicNotchWidthPercentHelp": {
+        "message": "This sets the width between two dynamic notch filters. Setting it at 0 will disable the second dynamic notch filter and will reduce filter delay, however it may make motor temperatures higher."
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "Q factor adjust how narrow or wide the dynamic notch filters are. Higher value makes it narrower and more precise and lower value makes it wider and broader. Having a really low value will greatly increase filter delay."
+    },
+    "pidTuningDynamicNotchMinHzHelp": {
+        "message": "Defines the lowest dynamic notch center frequency below which the dynamic notch will not go."
+    },
     "pidTuningLowpassFilterHelp": {
         "message": "The Lowpass Filters can have two variants: static and dynamic. For a determined lowpass filter number only one (static or dynamic) can be enabled at the same time. The static only has a Cutoff that is a value that defines in some way where the filter starts. The dynamic defines a min and max values, that is the range where the Cutoff is placed. This Cutoff moves from min to max at the same time than you move the throttle stick."
     },

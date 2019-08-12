@@ -696,6 +696,11 @@
                         <p i18n="filterWarning"></p>
                     </div>
                 </div>
+                <div class="note dynamicNotchWarning">
+                    <div class="note_spacer">
+                        <p i18n="pidTuningDynamicNotchFilterDisabledWarning"></p>
+                    </div>
+                </div>
 
                 <div class="cf_column two_columns">
                     <div class="gui_box grey topspacer pid_filter two_columns_first">
@@ -885,6 +890,69 @@
                                         <label>
                                             <span i18n="pidTuningGyroNotch2Cutoff"></span>
                                         </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th colspan="2">
+                                    <div class="pid_mode dynamicNotch">
+                                        <div i18n="pidTuningDynamicNotchFilterGroup" />
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchFilterHelp" />
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr class="newFilter dynamicNotch">
+                                <td>
+                                    <select name="dynamicNotchRange">
+                                        <!--  Populated on execution -->
+                                    </select>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDynamicNotchRange"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchRangeHelp" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="newFilter dynamicNotch">
+                                <td>
+                                    <input type="number" name="dynamicNotchWidthPercent" step="1" min="0" max="20"/>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDynamicNotchWidthPercent"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchWidthPercentHelp" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="newFilter dynamicNotch">
+                                <td>
+                                    <input type="number" name="dynamicNotchQ" step="1" min="1" max="1000"/>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDynamicNotchQ"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchQHelp" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="newFilter dynamicNotch">
+                                <td>
+                                    <input type="number" name="dynamicNotchMinHz" step="1" min="60" max="1000"/>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDynamicNotchMinHz"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchMinHzHelp" />
                                     </div>
                                 </td>
                             </tr>

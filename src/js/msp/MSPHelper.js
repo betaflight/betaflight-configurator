@@ -987,6 +987,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             FILTER_CONFIG.gyro_lowpass_dyn_max_hz = data.readU16();
                             FILTER_CONFIG.dterm_lowpass_dyn_min_hz = data.readU16();
                             FILTER_CONFIG.dterm_lowpass_dyn_max_hz = data.readU16();
+                            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                                FILTER_CONFIG.dyn_notch_range = data.readU8();
+                                FILTER_CONFIG.dyn_notch_width_percent = data.readU8();
+                                FILTER_CONFIG.dyn_notch_q = data.readU16();
+                                FILTER_CONFIG.dyn_notch_min_hz = data.readU16();
+                            }
                         }
                     }
                 }
@@ -1746,6 +1752,12 @@ MspHelper.prototype.crunch = function(code) {
                           .push16(FILTER_CONFIG.gyro_lowpass_dyn_max_hz)
                           .push16(FILTER_CONFIG.dterm_lowpass_dyn_min_hz)
                           .push16(FILTER_CONFIG.dterm_lowpass_dyn_max_hz);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                    buffer.push8(FILTER_CONFIG.dyn_notch_range)
+                          .push8(FILTER_CONFIG.dyn_notch_width_percent)
+                          .push16(FILTER_CONFIG.dyn_notch_q)
+                          .push16(FILTER_CONFIG.dyn_notch_min_hz);
                 }
             }
             break;

@@ -352,8 +352,20 @@ TABS.pid_tuning.initialize = function (callback) {
         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
             $('.smartfeedforward').hide();
             $('.itermRelaxCutoff').show();
+
+            if (FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
+                $('.dynamicNotch').show();
+            } else {
+                $('.dynamicNotch').hide();
+            }
+
+            $('.pid_filter select[name="dynamicNotchRange"]').val(FILTER_CONFIG.dyn_notch_range);
+            $('.pid_filter input[name="dynamicNotchWidthPercent"]').val(FILTER_CONFIG.dyn_notch_width_percent);
+            $('.pid_filter input[name="dynamicNotchQ"]').val(FILTER_CONFIG.dyn_notch_q);
+            $('.pid_filter input[name="dynamicNotchMinHz"]').val(FILTER_CONFIG.dyn_notch_min_hz);
         } else {
             $('.itermRelaxCutoff').hide();
+            $('.dynamicNotch').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -685,6 +697,12 @@ TABS.pid_tuning.initialize = function (callback) {
             ADVANCED_TUNING.useIntegratedYaw = $('input[id="useIntegratedYaw"]').is(':checked') ? 1 : 0;
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            FILTER_CONFIG.dyn_notch_range = parseInt($('.pid_filter select[name="dynamicNotchRange"]').val());
+            FILTER_CONFIG.dyn_notch_width_percent = parseInt($('.pid_filter input[name="dynamicNotchWidthPercent"]').val());
+            FILTER_CONFIG.dyn_notch_q = parseInt($('.pid_filter input[name="dynamicNotchQ"]').val());
+            FILTER_CONFIG.dyn_notch_min_hz = parseInt($('.pid_filter input[name="dynamicNotchMinHz"]').val());
+        }
     }
 
     function showAllPids() {
@@ -1067,6 +1085,22 @@ TABS.pid_tuning.initialize = function (callback) {
             selectDtermValues.forEach(function(value, key) {
                 dtermFilterSelect.append('<option value="' + key + '">' + value + '</option>');
             });
+        }
+        // Added in API 1.42.0
+        function loadDynamicNotchRangeValues() {
+            var dynamicNotchRangeValues = [
+                "HIGH", "MEDIUM", "LOW", "AUTO",
+            ];
+            return dynamicNotchRangeValues;
+        }
+        function populateDynamicNotchRangeSelect(selectDynamicNotchRangeValues) {
+            var dynamicNotchRangeSelect = $('select[name="dynamicNotchRange"]');
+            selectDynamicNotchRangeValues.forEach(function(value, key) {
+                dynamicNotchRangeSelect.append('<option value="' + key + '">' + value + '</option>');
+            });
+        }
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            populateDynamicNotchRangeSelect(loadDynamicNotchRangeValues());
         }
 
         populateFilterTypeSelector('gyroLowpassType', loadFilterTypeValues());
@@ -1785,9 +1819,19 @@ TABS.pid_tuning.updateFilterWarning = function() {
     var dtermDynamicLowpassEnabled = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
     var dtermLowpass1Enabled = $('input[id="dtermLowpassEnabled"]').is(':checked');
     var warning_e = $('#pid-tuning .filterWarning');
+    var warningDynamicNotch_e = $('#pid-tuning .dynamicNotchWarning');
     if (!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled)) {
         warning_e.show();
     } else {
         warning_e.hide();
+    }
+    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        if (FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
+            warningDynamicNotch_e.hide();
+        } else {
+            warningDynamicNotch_e.show();
+        }
+    } else {
+        warningDynamicNotch_e.hide();
     }
 }
