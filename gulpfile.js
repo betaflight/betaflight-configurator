@@ -106,10 +106,13 @@ function getInputPlatforms() {
     for (var i = 3; i < process.argv.length; i++) {
         var arg = process.argv[i].match(regEx)[1];
         if (supportedPlatforms.indexOf(arg) > -1) {
-             platforms.push(arg);
+            platforms.push(arg);
+        } else if (arg == 'nowinicon') {
+            console.log('ignoring winIco')
+            delete nwBuilderOptions['winIco'];
         } else {
-             console.log('Unknown platform: ' + arg);
-             process.exit();
+            console.log('Unknown platform: ' + arg);
+            process.exit();
         }
     }
 
