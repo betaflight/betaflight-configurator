@@ -292,6 +292,7 @@
     clear: left;
 }
 .tab-onboard_logging .blackboxRate select,
+.tab-onboard_logging .blackboxDebugMode select,
 .tab-onboard_logging .blackboxDevice select {
     float: left;
     width: 180px;
@@ -300,6 +301,7 @@
     border: 1px solid silver;
 }
 .tab-onboard_logging .blackboxRate span,
+.tab-onboard_logging .blackboxDebugMode span,
 .tab-onboard_logging .blackboxDevice span {
     line-height: 20px;
 }

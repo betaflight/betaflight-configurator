@@ -949,6 +949,17 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         let gyroUse32kHz = data.readU8();
                         if (semver.lt(CONFIG.apiVersion, "1.41.0")) {
                             PID_ADVANCED_CONFIG.gyroUse32kHz = gyroUse32kHz;
+                        } 
+                        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                            PID_ADVANCED_CONFIG.motorPwmInversion = data.readU8();
+                            PID_ADVANCED_CONFIG.gyroToUse = data.readU8();
+                            PID_ADVANCED_CONFIG.gyroHighFsr = data.readU8();
+                            PID_ADVANCED_CONFIG.gyroMovementCalibThreshold = data.readU8();
+                            PID_ADVANCED_CONFIG.gyroCalibDuration = data.readU16();
+                            PID_ADVANCED_CONFIG.gyroOffsetYaw = data.readU16();
+                            PID_ADVANCED_CONFIG.gyroCheckOverflow = data.readU8();
+                            PID_ADVANCED_CONFIG.debugMode = data.readU8();
+                            PID_ADVANCED_CONFIG.debugModeCount = data.readU8();
                         }
                     }
                 }
@@ -1246,6 +1257,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 BLACKBOX.blackboxRateDenom = data.readU8();
                 if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     BLACKBOX.blackboxPDenom = data.readU16();
+
                 }
                 break;
             case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
@@ -1714,6 +1726,16 @@ MspHelper.prototype.crunch = function(code) {
                         gyroUse32kHz = PID_ADVANCED_CONFIG.gyroUse32kHz;
                     }
                     buffer.push8(gyroUse32kHz);
+                    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                        buffer.push8(PID_ADVANCED_CONFIG.motorPwmInversion)
+                              .push8(PID_ADVANCED_CONFIG.gyroToUse)
+                              .push8(PID_ADVANCED_CONFIG.gyroHighFsr)
+                              .push8(PID_ADVANCED_CONFIG.gyroMovementCalibThreshold)
+                              .push16(PID_ADVANCED_CONFIG.gyroCalibDuration)
+                              .push16(PID_ADVANCED_CONFIG.gyroOffsetYaw)
+                              .push8(PID_ADVANCED_CONFIG.gyroCheckOverflow)
+                              .push8(PID_ADVANCED_CONFIG.debugMode);
+                    }
                 }
             }
             break;

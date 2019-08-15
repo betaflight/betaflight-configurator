@@ -27,6 +27,7 @@
 }
 
 .tab-onboard_logging .blackboxRate select,
+.tab-onboard_logging .blackboxDebugMode select,
 .tab-onboard_logging .blackboxDevice select {
     border: 1px solid #9c9c9c;
     background-color: #3a3a3a;

@@ -100,6 +100,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
             var deviceSelect = $(".blackboxDevice select");
             var loggingRatesSelect = $(".blackboxRate select");
+            var debugModeSelect = $(".blackboxDebugMode select");
 
             if (BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
@@ -110,15 +111,18 @@ TABS.onboard_logging.initialize = function (callback) {
                         BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
                         BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
                     }
-
                     BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
-                    
+                    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                        PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
+                        MSP.send_message(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG), false, save_to_eeprom);
+                    }
                     MSP.send_message(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG), false, save_to_eeprom);
                 });
             }
             
             populateLoggingRates(loggingRatesSelect);
             populateDevices(deviceSelect);
+            populateDebugModes(debugModeSelect);
 
             deviceSelect.change(function() {
                 if ($(this).val() === "0") {
@@ -248,6 +252,89 @@ TABS.onboard_logging.initialize = function (callback) {
                 
             }
             loggingRatesSelect.val(BLACKBOX.blackboxRateNum + '/' + BLACKBOX.blackboxRateDenom);
+        }
+    }
+
+    function populateDebugModes(debugModeSelect) {
+        var debugModes = [];
+
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            $('.blackboxDebugMode').show();
+
+            debugModes = [
+                {text: "NONE"},
+                {text: "CYCLETIME"},
+                {text: "BATTERY"},
+                {text: "GYRO_FILTERED"},
+                {text: "ACCELEROMETER"},
+                {text: "PIDLOOP"},
+                {text: "GYRO_SCALED"},
+                {text: "RC_INTERPOLATION"},
+                {text: "ANGLERATE"},
+                {text: "ESC_SENSOR"},
+                {text: "SCHEDULER"},
+                {text: "STACK"},
+                {text: "ESC_SENSOR_RPM"},
+                {text: "ESC_SENSOR_TMP"},
+                {text: "ALTITUDE"},
+                {text: "FFT"},
+                {text: "FFT_TIME"},
+                {text: "FFT_FREQ"},
+                {text: "RX_FRSKY_SPI"},
+                {text: "RX_SFHSS_SPI"},
+                {text: "GYRO_RAW"},
+                {text: "DUAL_GYRO"},
+                {text: "DUAL_GYRO_RAW"},
+                {text: "DUAL_GYRO_COMBINE"},
+                {text: "DUAL_GYRO_DIFF"},
+                {text: "MAX7456_SIGNAL"},
+                {text: "MAX7456_SPICLOCK"},
+                {text: "SBUS"},
+                {text: "FPORT"},
+                {text: "RANGEFINDER"},
+                {text: "RANGEFINDER_QUALITY"},
+                {text: "LIDAR_TF"},
+                {text: "ADC_INTERNAL"},
+                {text: "RUNAWAY_TAKEOFF"},
+                {text: "SDIO"},
+                {text: "CURRENT_SENSOR"},
+                {text: "USB"},
+                {text: "SMARTAUDIO"},
+                {text: "RTH"},
+                {text: "ITERM_RELAX"},
+                {text: "ACRO_TRAINER"},
+                {text: "RC_SMOOTHING"},
+                {text: "RX_SIGNAL_LOSS"},
+                {text: "RC_SMOOTHING_RATE"},
+                {text: "ANTI_GRAVITY"},
+                {text: "DYN_LPF"},
+                {text: "RX_SPEKTRUM_SPI"},
+                {text: "DSHOT_RPM_TELEMETRY"},
+                {text: "RPM_FILTER"},
+                {text: "D_MIN"},
+                {text: "AC_CORRECTION"},
+                {text: "AC_ERROR"},
+                {text: "DUAL_GYRO_SCALED"},
+                {text: "DSHOT_RPM_ERRORS"},
+                {text: "CRSF_LINK_STATISTICS_UPLINK"},
+                {text: "CRSF_LINK_STATISTICS_PWR"},
+                {text: "CRSF_LINK_STATISTICS_DOWN"},
+                {text: "BARO"},
+                {text: "GPS_RESCUE_THROTTLE_PID"},
+                {text: "DYN_IDLE"},
+            ];
+
+            for (var i = 0; i < PID_ADVANCED_CONFIG.debugModeCount; i++) {
+                if (i < debugModes.length) {
+                    debugModeSelect.append(new Option(debugModes[i].text, i));
+                } else {
+                    debugModeSelect.append(new Option(i18n.getMessage('onboardLoggingDebugModeUnknown'), i));
+                }
+            }
+
+            debugModeSelect.val(PID_ADVANCED_CONFIG.debugMode);
+        } else {
+            $('.blackboxDebugMode').hide();
         }
     }
     
