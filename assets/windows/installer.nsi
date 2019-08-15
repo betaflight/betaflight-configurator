@@ -18,6 +18,7 @@
 !define FILE_NAME_UNINSTALLER "uninstall-betaflight-configurator.exe"
 !define FILE_NAME_EXECUTABLE  "betaflight-configurator.exe"
 !define LICENSE               "..\..\LICENSE"
+!define MUI_WELCOMEFINISHPAGE_BITMAP ".\bf_installer.bmp"
 
 
 Name "${APP_NAME}"
