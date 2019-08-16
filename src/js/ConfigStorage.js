@@ -42,7 +42,9 @@ var ConfigStorage = {
       } else {
         //console.log('Abstraction.set',input);
         Object.keys(input).forEach(function (element) {
-            window.localStorage.setItem(element, JSON.stringify(input));
+            var tmpObj = {};
+            tmpObj[element] = input[element];
+            window.localStorage.setItem(element, JSON.stringify(tmpObj));
         });
       }
     }

@@ -112,6 +112,9 @@ let FirmwareCache = (function () {
      * @returns {boolean}
      */
     function has(release) {
+        if (!release) {
+            return false;
+        }
         if (!journalLoaded) {
             console.warn("Cache not yet loaded");
             return false;
