@@ -351,7 +351,6 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
             $('.smartfeedforward').hide();
-            $('.itermRelaxCutoff').show();
 
             if (FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
                 $('.dynamicNotch').show();
