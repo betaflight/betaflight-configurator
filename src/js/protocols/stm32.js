@@ -22,6 +22,8 @@ var STM32_protocol = function () {
     this.upload_time_start;
     this.upload_process_alive;
 
+    this.msp_connector = new MSPConnectorImpl();
+
     this.status = {
         ACK:    0x79, // y
         NACK:   0x1F
@@ -53,6 +55,7 @@ var STM32_protocol = function () {
 STM32_protocol.prototype.connect = function (port, baud, hex, options, callback) {
     var self = this;
     self.hex = hex;
+    self.port = port;
     self.baud = baud;
     self.callback = callback;
 
@@ -85,49 +88,120 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
             }
         });
     } else {
-        serial.connect(port, {bitrate: self.options.reboot_baud}, function (openInfo) {
-            if (openInfo) {
+
+        var startFlashing = function() {
+            // refresh device list
+            PortHandler.check_usb_devices(function(dfu_available) {
+                if(dfu_available) {
+                    STM32DFU.connect(usbDevices, hex, options);
+                } else {
+                    serial.connect(self.port, {bitrate: self.baud, parityBit: 'even', stopBits: 'one'}, function (openInfo) {
+                        if (openInfo) {
+                            self.initialize();
+                        } else {
+                            GUI.connect_lock = false;
+                            GUI.log(i18n.getMessage('serialPortOpenFail'));
+                        }
+                    });
+                }
+            });
+        };
+
+        var legacyRebootAndFlash = function() {
+            serial.connect(self.port, {bitrate: self.options.reboot_baud}, function (openInfo) {
+                if (!openInfo) {
+                    GUI.connect_lock = false;
+                    GUI.log(i18n.getMessage('serialPortOpenFail'));
+                    return;
+                } 
+
+                console.log('Using legacy reboot method');
+
                 console.log('Sending ascii "R" to reboot');
-
-                // we are connected, disabling connect button in the UI
-                GUI.connect_lock = true;
-
                 var bufferOut = new ArrayBuffer(1);
                 var bufferView = new Uint8Array(bufferOut);
 
                 bufferView[0] = 0x52;
 
                 serial.send(bufferOut, function () {
-                    serial.disconnect(function (result) {
-                        if (result) {
+                    serial.disconnect(function (disconnectionResult) {
+                        if (disconnectionResult) {
                             // delay to allow board to boot in bootloader mode
                             // required to detect if a DFU device appears
-                            setTimeout(function() {
-                                // refresh device list
-                                PortHandler.check_usb_devices(function(dfu_available) {
-                                    if(dfu_available) {
-                                        STM32DFU.connect(usbDevices, hex, options);
-                                    } else {
-                                        serial.connect(port, {bitrate: self.baud, parityBit: 'even', stopBits: 'one'}, function (openInfo) {
-                                            if (openInfo) {
-                                                self.initialize();
-                                            } else {
-                                                GUI.connect_lock = false;
-                                                GUI.log(i18n.getMessage('serialPortOpenFail'));
-                                            }
-                                        });
-                                    }
-                                });
-                            }, 1000);
+                            setTimeout(startFlashing, 1000);
                         } else {
                             GUI.connect_lock = false;
                         }
                     });
                 });
+            });
+        };
+
+        var onConnectHandler = function () {
+            
+            GUI.log(i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
+
+            if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
+                
+                self.msp_connector.disconnect(function (disconnectionResult) {
+
+                    // need some time for the port to be closed, serial port does not open if tried immediately
+                    setTimeout(legacyRebootAndFlash, 500);
+                });
             } else {
-                GUI.log(i18n.getMessage('serialPortOpenFail'));
+                console.log('Looking for capabilities via MSP');
+
+                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
+                    var rebootMode = 0; // FIRMWARE
+                    if (bit_check(CONFIG.commCapabilities, 3)) {
+                        // Board has flash bootloader
+                        GUI.log(i18n.getMessage('deviceRebooting_flashBootloader'));
+                        console.log('flash bootloader detected');
+                        rebootMode = 4; // MSP_REBOOT_BOOTLOADER_FLASH
+                    } else {
+                        GUI.log(i18n.getMessage('deviceRebooting_romBootloader'));
+                        console.log('no flash bootloader detected');
+                        rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
+                    }
+                    
+                    var buffer = [];
+                    buffer.push8(rebootMode);
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, function() {
+                        
+                        // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
+    
+                        self.msp_connector.disconnect(function (disconnectionResult) { 
+                            if (disconnectionResult) {
+                                // delay to allow board to boot in bootloader mode
+                                // required to detect if a DFU device appears
+                                setTimeout(startFlashing, 1000);
+                            } else {
+                                GUI.connect_lock = false;
+                            }
+                        });
+                        
+                    }, function () {
+                        console.log('Reboot request recevied by device');
+                    });
+                });
             }
-        });
+        }
+
+        var onTimeoutHandler = function() {
+            GUI.connect_lock = false;
+            console.log('Looking for capabilities via MSP failed');
+            
+            TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
+        }
+        
+        var onFailureHandler = function() {
+            GUI.connect_lock = false;
+        };
+        
+        GUI.connect_lock = true;
+        TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloader'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
+        
+        self.msp_connector.connect(self.port, self.options.reboot_baud, onConnectHandler, onTimeoutHandler, onFailureHandler);
     }
 };
 
