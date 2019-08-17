@@ -322,6 +322,8 @@ TABS.onboard_logging.initialize = function (callback) {
                 {text: "BARO"},
                 {text: "GPS_RESCUE_THROTTLE_PID"},
                 {text: "DYN_IDLE"},
+                {text: "FF_LIMIT"},
+                {text: "FF_INTERPOLATED"},
             ];
 
             for (var i = 0; i < PID_ADVANCED_CONFIG.debugModeCount; i++) {
