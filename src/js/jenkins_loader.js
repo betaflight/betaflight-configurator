@@ -104,9 +104,10 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
                 chrome.storage.local.set(object);
 
                 self._parseBuilds(jobUrl, jobName, builds, callback);
-            }).error(xhr => {
+            }).fail(xhr => {
                 GUI.log(i18n.getMessage('buildServerLoadFailed', [jobName, `HTTP ${xhr.status}`]));
-            }).fail(cachedCallback);
+                cachedCallback();
+            });
         } else {
             cachedCallback();
         }
