@@ -322,6 +322,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'CW 270° flip'
         ];
 
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            alignments.push('Custom');
+        }
+
         var gyro_align_content_e = $('.tab-configuration .gyro_align_content');
         var legacy_gyro_alignment_e = $('.tab-configuration .legacy_gyro_alignment');
         var legacy_accel_alignment_e = $('.tab-configuration .legacy_accel_alignment');
