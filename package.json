@@ -35,6 +35,9 @@
   },
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
+  "engines": {
+    "node": "10.x"
+  },
   "dependencies": {
     "bluebird": "^3.5.5",
     "i18next": "^17.0.11",

@@ -48,7 +48,7 @@ Unstable testing versions of the lates builds of the configurator for most platf
 
 ### Development
 
-1. Install node.js
+1. Install node.js (version 10 required)
 2. Install yarn: `npm install yarn -g`
 3. Change to project folder and run `yarn install`.
 4. Run `yarn start`.
