@@ -58,6 +58,9 @@ var FILTER_CONFIG;
 var ADVANCED_TUNING;
 var SENSOR_CONFIG;
 var COPY_PROFILE;
+var VTX_CONFIG;
+var VTXTABLE_BAND;
+var VTXTABLE_POWERLEVEL;
 var DEFAULT;
 
 var FC = {
@@ -482,6 +485,37 @@ var FC = {
         };
 
         RXFAIL_CONFIG = [];
+
+        VTX_CONFIG = {
+            vtx_type:                       0,
+            vtx_band:                       0,
+            vtx_channel:                    0,
+            vtx_power:                      0,
+            vtx_pit_mode:                   false,
+            vtx_frequency:                  0,
+            vtx_device_ready:               false,
+            vtx_low_power_disarm:           0,
+            vtx_pit_mode_frequency:         0,
+            vtx_table_available:            false,
+            vtx_table_bands:                0,
+            vtx_table_channels:             0,
+            vtx_table_powerlevels:          0,
+            vtx_table_clear:                false,
+        };
+
+        VTXTABLE_BAND = {
+            vtxtable_band_number:           0,
+            vtxtable_band_name:             '',
+            vtxtable_band_letter:           '',
+            vtxtable_band_is_factory_band:  false,
+            vtxtable_band_frequencies:      [],
+        };
+
+        VTXTABLE_POWERLEVEL = {
+            vtxtable_powerlevel_number:     0,
+            vtxtable_powerlevel_value:      0,
+            vtxtable_powerlevel_label:      0,
+        };
 
         DEFAULT = {
             gyro_lowpass_hz:                100,
