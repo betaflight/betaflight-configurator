@@ -15,8 +15,9 @@ TABS.firmware_flasher.initialize = function (callback) {
     }
 
 
-    var intel_hex = false, // standard intel hex in string format
-        parsed_hex = false; // parsed raw hex in array format
+    var intel_hex = false; // standard intel hex in string format
+    var parsed_hex = false; // parsed raw hex in array format
+    var targetConfig; // the Unified Target configuration to be spliced into the configuration
 
         /**
          * Change boldness of firmware option depending on cache status
@@ -365,7 +366,15 @@ TABS.firmware_flasher.initialize = function (callback) {
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, undefined);
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'file');
 
-            chrome.fileSystem.chooseEntry({type: 'openFile', accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
+            chrome.fileSystem.chooseEntry({
+                type: 'openFile',
+                accepts: [
+                    {
+                        description: 'target files',
+                        extensions: ['hex', 'config']
+                    }
+                ]
+            }, function (fileEntry) {
                 if (chrome.runtime.lastError) {
                     console.error(chrome.runtime.lastError.message);
 
@@ -383,28 +392,30 @@ TABS.firmware_flasher.initialize = function (callback) {
                         var reader = new FileReader();
 
                         reader.onloadend = function(e) {
-
                             if (e.total != 0 && e.total == e.loaded) {
-
                                 console.log('File loaded (' + e.loaded + ')');
 
-                                intel_hex = e.target.result;
+                                if (file.name.split('.').pop() === "hex") {
+                                    intel_hex = e.target.result;
 
-                                analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHECKSUM, objectHash.sha1(intel_hex));
+                                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHECKSUM, objectHash.sha1(intel_hex));
 
-                                parse_hex(intel_hex, function (data) {
-                                    parsed_hex = data;
+                                    parse_hex(intel_hex, function (data) {
+                                        parsed_hex = data;
 
-                                    if (parsed_hex) {
-                                        analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, parsed_hex.bytes_total);
+                                        if (parsed_hex) {
+                                            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, parsed_hex.bytes_total);
 
-                                        self.enableFlashing(true);
+                                            self.enableFlashing(true);
 
-                                        self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
-                                    } else {
-                                        self.flashingMessage('firmwareFlasherHexCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
-                                    }
-                                });
+                                            self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                                        } else {
+                                            self.flashingMessage('firmwareFlasherHexCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
+                                        }
+                                    });
+                                } else {
+                                    targetConfig = e.target.result;
+                                }
                             }
                         };
 
@@ -473,46 +484,66 @@ TABS.firmware_flasher.initialize = function (callback) {
             }
         });
 
+        function flashFirmware(firmware) {
+            var options = {};
+
+            var eraseAll = false;
+            if ($('input.erase_chip').is(':checked')) {
+                options.erase_chip = true;
+
+                eraseAll = true
+            }
+            analytics.setFirmwareData(analytics.DATA.FIRMWARE_ERASE_ALL, eraseAll.toString());
+
+            if (String($('div#port-picker #port').val()) != 'DFU') {
+                if (String($('div#port-picker #port').val()) != '0') {
+                    var port = String($('div#port-picker #port').val()), baud;
+                    baud = 115200;
+
+                    if ($('input.updating').is(':checked')) {
+                        options.no_reboot = true;
+                    } else {
+                        options.reboot_baud = parseInt($('div#port-picker #baud').val());
+                    }
+
+                    if ($('input.flash_manual_baud').is(':checked')) {
+                        baud = parseInt($('#flash_manual_baud_rate').val());
+                    }
+
+                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing');
+
+                    STM32.connect(port, baud, firmware, options);
+                } else {
+                    console.log('Please select valid serial port');
+                    GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
+                }
+            } else {
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing');
+
+                STM32DFU.connect(usbDevices, firmware, options);
+            }
+        }
+
         $('a.flash_firmware').click(function () {
             if (!$(this).hasClass('disabled')) {
                 if (!GUI.connect_lock) { // button disabled while flashing is in progress
                     if (parsed_hex != false) {
-                        var options = {};
+                        try {
+                            if (targetConfig && !parsed_hex.configInserted) {
+                                var configInserter = new ConfigInserter();
 
-                        var eraseAll = false;
-                        if ($('input.erase_chip').is(':checked')) {
-                            options.erase_chip = true;
-
-                            eraseAll = true
-                        }
-                        analytics.setFirmwareData(analytics.DATA.FIRMWARE_ERASE_ALL, eraseAll.toString());
-
-                        if (String($('div#port-picker #port').val()) != 'DFU') {
-                            if (String($('div#port-picker #port').val()) != '0') {
-                                var port = String($('div#port-picker #port').val()), baud;
-                                baud = 115200;
-
-                                if ($('input.updating').is(':checked')) {
-                                    options.no_reboot = true;
+                                if (configInserter.insertConfig(parsed_hex, targetConfig)) {
+                                    parsed_hex.configInserted = true;
                                 } else {
-                                    options.reboot_baud = parseInt($('div#port-picker #baud').val());
+                                    console.log('Firmware does not support custom defaults.');
+
+                                    targetConfig = undefined;
                                 }
-
-                                if ($('input.flash_manual_baud').is(':checked')) {
-                                    baud = parseInt($('#flash_manual_baud_rate').val());
-                                }
-
-                                analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing');
-
-                                STM32.connect(port, baud, parsed_hex, options);
-                            } else {
-                                console.log('Please select valid serial port');
-                                GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
                             }
-                        } else {
-                            analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing');
 
-                            STM32DFU.connect(usbDevices, parsed_hex, options);
+                            flashFirmware(parsed_hex);
+                        } catch (e) {
+                            console.log(`Flashing failed: ${e.message}`);
                         }
                     } else {
                         $('span.progressLabel').attr('i18n','firmwareFlasherFirmwareNotLoaded').removeClass('i18n-replaced');
