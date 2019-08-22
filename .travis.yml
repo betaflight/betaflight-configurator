@@ -1,3 +1,7 @@
+branches:
+  except:
+  - l10n_master
+
 os:
   - linux
   - osx
@@ -21,6 +25,20 @@ node_js:
 
 addons:
   chrome: stable
+
+before_install:
+  - |
+    echo "Target branch: $TRAVIS_BRANCH"
+    echo "Commit range: $TRAVIS_COMMIT_RANGE"
+    if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+      COMMIT_RANGE="$TRAVIS_BRANCH"
+    else
+      COMMIT_RANGE="$TRAVIS_COMMIT_RANGE"
+    fi
+    git diff --name-only $COMMIT_RANGE | grep -qvE '(\.md)|(^(locales|resources/osd))/' || {
+      echo "Only files not used in the build process were updated, aborting."
+      exit
+    }
 
 script:
   - yarn test
