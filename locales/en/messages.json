@@ -1452,7 +1452,7 @@
     },
     "pidTuningAntiGravityMode": {
         "message": "Mode",
-        "description": "One of the modes of anti gravity"
+        "description": "Anti Gravity mode selection parameter"
     },
     "pidTuningAntiGravityModeOptionSmooth": {
         "message": "Smooth",
@@ -1486,7 +1486,7 @@
        "description": "Advance of the D Min feature"
     },
     "pidTuningDMinHelp": {
-        "message": "Gain adjusts how fast D min gets up to its maximum value and is based on gyro to determine sharp moves and propwash events. Advance makes D min go up earlier by using setpoint instead of gyro to determine sharp moves.",
+        "message": "D Min provides a way to have a lower level of D in normal flight and a higher level for quick maneuvers that might cause overshoot, like flips and rolls. It also brings D up during prop wash. Gain adjusts how fast D gets up to its maximum value and is based on gyro to determine sharp moves and propwash events. Advance makes D go up earlier by using setpoint instead of gyro to determine sharp moves.",
         "description": "D Min feature helpicon message"
     },
     "pidTuningPidSettings": {
