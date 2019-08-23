@@ -47,8 +47,6 @@
 .tab-pid_tuning .throttle_curve {
     float: right;
     width: 100%;
-    border: 1px solid silver;
-    border-radius: 3px;
     background-image: var(--paper);
     background-size: 200%;
     background-position: center;
@@ -60,34 +58,10 @@
     margin-right: 10px;
 }
 
-.tab-pid_tuning .rc_curve {
-    float: right;
-}
-
-.tab-pid_tuning .rc_curve th {
-    background-color: var(--quietHeader);
-    padding: 4px;
-    border-left: 0px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: var(--quietText);
-    text-align: left;
-}
-
-.tab-pid_tuning .rc_curve th:first-child {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .rc_curve th:last-child {
-    border-top-right-radius: 3px;
-}
-
 .tab-pid_tuning .rate_curve {
     height: 100%;
-    min-height: 230px;
+    min-height: 234px;
     min-width: 200px;
-    border: 1px solid silver;
-    border-radius: 3px;
     background-image: var(--paper);
     background-size: 200%;
     background-position: center;
@@ -427,7 +401,7 @@
 }
 
 .tab-pid_tuning .cf .throttleCurvePreview {
-    padding: 0 0 0 2px;
+    padding: 0px;
 }
 
 .pid_roll {
@@ -655,9 +629,6 @@
     background-image: var(--paper);
     background-size: 100%;
     background-position: center;
-    border: 1px solid silver;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 
 .tab-pid_tuning .pidTuning td {
@@ -693,23 +664,13 @@
     border-bottom-right-radius: 0px;
 }
 
-.tab-pid_tuning .rc_curve .cf tr  {
-    border-bottom: 1px solid silver;
-}
-
 .tab-pid_tuning .rc_curve .cf tr td {
-    border: none;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
     padding: 0px;
 }
 
 .tab-pid_tuning .rc_curve_bg {
     float: left;
-    background: #ddd;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    }
+}
 
 .tab-pid_tuning .new_rates_last-child {
     border-bottom: none;

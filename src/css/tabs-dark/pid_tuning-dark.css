@@ -40,10 +40,6 @@
     color: white;
 }
 
-.tab-pid_tuning .throttle_curve {
-    border: 1px solid #9c9c9c;
-}
-
 .tab-pid_tuning .throttle table th {
     border-right: 1px solid #9c9c9c;
 }
@@ -64,14 +60,6 @@
     border: 1px solid #9c9c9c;
     background-color: #3a3a3a;
     color: white;
-}
-
-.tab-pid_tuning .rc_curve th {
-    border-bottom: 1px solid #00000000;
-}
-
-.tab-pid_tuning .rate_curve {
-    border: 1px solid #9c9c9c;
 }
 
 .tab-pid_tuning table, .tab-pid_tuning table td {
@@ -210,20 +198,8 @@
     border: 1px solid #9c9c9c;
 }
 
-.tab-pid_tuning .rates_preview {
-    border: 1px solid #9c9c9c;
-}
-
 .tab-pid_tuning .pidTuning tr {
     border-bottom: 1px solid #9c9c9c;
-}
-
-.tab-pid_tuning .rc_curve .cf tr  {
-    border-bottom: 1px solid #9c9c9c;
-}
-
-.tab-pid_tuning .rc_curve_bg {
-    background: #393b3a;
 }
 
 .tabarea {
