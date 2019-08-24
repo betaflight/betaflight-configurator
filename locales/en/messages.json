@@ -217,6 +217,12 @@
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Rebooting</span>"
     },
+    "deviceRebooting_flashBootloader": {
+        "message": "Device - <span class=\"message-negative\">Rebooting to FLASH BOOTLOADER</span>"
+    },
+    "deviceRebooting_romBootloader": {
+        "message": "Device - <span class=\"message-negative\">Rebooting to ROM BOOTLOADER</span>"
+    },
     "deviceReady": {
         "message": "Device - <span class=\"message-positive\">Ready</span>"
     },
@@ -369,6 +375,12 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU not found"
+    },
+    "stm32RebootingToBootloader": {
+        "message": "Initiating reboot to bootloader ..."
+    },
+    "stm32RebootingToBootloaderFailed": {
+        "message": "Rebooting device to bootloader: FAILED"
     },
     "stm32TimedOut": {
         "message": "STM32 - timed out, programming: FAILED"
