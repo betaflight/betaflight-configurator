@@ -250,6 +250,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             let releases = {};
             let unifiedConfigs = {};
             let items = {};
+            let baseTargets =  {};
             data.forEach(function(target) {
                 let targetName = target.name;
                 if (targetName.endsWith('.config')) {
@@ -258,16 +259,23 @@ TABS.firmware_flasher.initialize = function (callback) {
                     return;
                 }
                 unifiedConfigs[targetName]=target.download_url;
-                items[targetName] = target.download_url;
+                items[targetName] = "something";
             });
             Object.keys(builds).forEach(function (key) {
+                // unifiedTargets is our list above of 4 targets
                 if (unifiedTargets.includes(key)) {
                     items[key] = "something";
                     releases[key] = builds[key];
                 } else {
                     var legacyKey = key + " (Legacy)";
-                    items[legacyKey] = "something";
-                    releases[legacyKey] = builds[key];
+                    if (unifiedConfigs[key] === undefined) {
+                        items[key] = "something";
+                        releases[key] = builds[key];
+                    } else {
+                        items[legacyKey] = "i18nplz";
+                        baseTargets[legacyKey] = key;
+                        releases[legacyKey] = builds[key];
+                    }
                 }
             });
             $('select[name="board"]').empty()
@@ -281,7 +289,10 @@ TABS.firmware_flasher.initialize = function (callback) {
             Object.keys(items)
                 .sort()
                 .forEach(function(target, i) {
-                    var select_e = $("<option value='{0}'>{0}</option>".format(target));
+                    //console.log(items);console.log('target', items[target]);
+                    var select_e = $("<option value='{0}'>{1}</option>".format(target,
+                        items[target] === "i18nplz" ? i18n.getMessage("firmwareFlasherLegacyLabel",
+                        {target: baseTargets[target]}) : target));
                     boards_e.append(select_e);
                 });
             TABS.firmware_flasher.releases = releases;
@@ -462,7 +473,9 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     targetConfig = undefined;
                                     isConfigLocal = false;
                                     unifiedConfig= undefined;
-                                    GUI.log('failed to load a unified config');
+                                    let baseFileName = TABS.firmware_flasher.unifiedConfigs[target].reverse()[0];
+                                    GUI.log(i18n.getMessage('firmwareFlasherFailedToLoadUnifiedConfig',
+                                        {remote_file: baseFileName}));
                                 });
                             } else {
                                 console.log('We have the config cached for', target);
