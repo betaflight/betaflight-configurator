@@ -803,6 +803,10 @@
     flex: 1;
 }
 
+.tab-pid_tuning .subtab-pid .note {
+    flex: 0 0 100%;
+}
+
 .tab-pid_tuning table.filterTable {
     table-layout: auto;
 }

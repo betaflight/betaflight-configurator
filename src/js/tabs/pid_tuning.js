@@ -332,6 +332,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.dtermLowpass2TypeGroup').hide();
 
             $('.dminGroup').hide();
+            $('.dMinDisabledNote').hide();
             //dmin column
             $('#pid_main tr :nth-child(5)').hide();
 
@@ -399,6 +400,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('.pid_tuning input[name="dMinRoll"]').val(ADVANCED_TUNING.dMinRoll);
                     $('.pid_tuning input[name="dMinPitch"]').val(ADVANCED_TUNING.dMinPitch);
                     $('.pid_tuning input[name="dMinYaw"]').val(ADVANCED_TUNING.dMinYaw);
+                    $('.dMinDisabledNote').hide();
                     $('.dminGroup .suboption').show();
                     $('#pid_main tr :nth-child(5)').show();
                     $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
@@ -409,6 +411,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('.pid_tuning input[name="dMinPitch"]').val(0);
                     $('.pid_tuning input[name="dMinYaw"]').val(0);
                     $('.dminGroup .suboption').hide();
+                    $('.dMinDisabledNote').show();
                     $('#pid_main tr :nth-child(5)').hide();
                     $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
                     $('.helpicon[i18n_title="pidTuningPidTuningTipFeedforward"]').show();
@@ -1419,6 +1422,20 @@ TABS.pid_tuning.initialize = function (callback) {
                 self.updatePidControllerParameters();
             });
         }
+
+        $(window).resize(function() {
+            let width = $(this).width();
+            if (width <= 1265) {
+                $('.pidControllerAdvancedSettings').removeClass('spacer_left');
+            } else if (width >= 1283) {
+                $('.pidControllerAdvancedSettings').addClass('spacer_left');
+            }
+            if (width <= 1405) {
+                $('.ratePreview').removeClass('spacer_left');
+            } else if (width >= 1423) {
+                $('.ratePreview').addClass('spacer_left');
+            }
+        });
 
         // update == save.
         $('a.update').click(function () {
