@@ -1478,7 +1478,7 @@
         "description": "Table header of the D Min feature in the PIDs tab" 
     },
     "pidTuningDMinDisabledNote": {
-        "message": "<strong>Note:</strong> D Min feature is disabled and its paramaters are hidden. To use D Min please enable it in $t(pidTuningPidSettings.message)."
+        "message": "<strong>Note:</strong> D Min feature is disabled and its parameters are hidden. To use D Min please enable it in $t(pidTuningPidSettings.message)."
     },
     "pidTuningDMinGain": {
        "message": "Gain",
