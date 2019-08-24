@@ -419,37 +419,37 @@ TABS.sensors.initialize = function (callback) {
             }
         });
 
-        ConfigStorage.get('graphs_enabled', function (result) {
-            if (result.graphs_enabled) {
-                var checkboxes = $('.tab-sensors .info .checkboxes input');
-                for (var i = 0; i < result.graphs_enabled.length; i++) {
-                    checkboxes.eq(i).not(':disabled').prop('checked', result.graphs_enabled[i]).change();
-                }
-            } else {
-                $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
-            }
+        ConfigStorage.get('sensor_settings', function (result) {
             // set refresh speeds according to configuration saved in storage
-            ConfigStorage.get('sensor_settings', function (result) {
-                if (result.sensor_settings) {
-                    $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
-                    $('.tab-sensors select[name="gyro_scale"]').val(result.sensor_settings.scales.gyro);
+            if (result.sensor_settings) {
+                $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
+                $('.tab-sensors select[name="gyro_scale"]').val(result.sensor_settings.scales.gyro);
 
-                    $('.tab-sensors select[name="accel_refresh_rate"]').val(result.sensor_settings.rates.accel);
-                    $('.tab-sensors select[name="accel_scale"]').val(result.sensor_settings.scales.accel);
+                $('.tab-sensors select[name="accel_refresh_rate"]').val(result.sensor_settings.rates.accel);
+                $('.tab-sensors select[name="accel_scale"]').val(result.sensor_settings.scales.accel);
 
-                    $('.tab-sensors select[name="mag_refresh_rate"]').val(result.sensor_settings.rates.mag);
-                    $('.tab-sensors select[name="mag_scale"]').val(result.sensor_settings.scales.mag);
+                $('.tab-sensors select[name="mag_refresh_rate"]').val(result.sensor_settings.rates.mag);
+                $('.tab-sensors select[name="mag_scale"]').val(result.sensor_settings.scales.mag);
 
-                    $('.tab-sensors select[name="baro_refresh_rate"]').val(result.sensor_settings.rates.baro);
-                    $('.tab-sensors select[name="sonar_refresh_rate"]').val(result.sensor_settings.rates.sonar);
+                $('.tab-sensors select[name="baro_refresh_rate"]').val(result.sensor_settings.rates.baro);
+                $('.tab-sensors select[name="sonar_refresh_rate"]').val(result.sensor_settings.rates.sonar);
 
-                    $('.tab-sensors select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
+                $('.tab-sensors select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
 
-                    // start polling data by triggering refresh rate change event
-                    $('.tab-sensors .rate select:first').change();
+                // start polling data by triggering refresh rate change event
+                $('.tab-sensors .rate select:first').change();
+            } else {
+                // start polling immediatly (as there is no configuration saved in the storage)
+                $('.tab-sensors .rate select:first').change();
+            }
+            ConfigStorage.get('graphs_enabled', function (resultGraphs) {
+                if (resultGraphs.graphs_enabled) {
+                    var checkboxes = $('.tab-sensors .info .checkboxes input');
+                    for (var i = 0; i < resultGraphs.graphs_enabled.length; i++) {
+                        checkboxes.eq(i).not(':disabled').prop('checked', resultGraphs.graphs_enabled[i]).change();
+                    }
                 } else {
-                    // start polling immediatly (as there is no configuration saved in the storage)
-                    $('.tab-sensors .rate select:first').change();
+                    $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
                 }
             });
         });
