@@ -799,7 +799,7 @@
 }
 
 .tab-pid_tuning .subtab-pid .cf_column {
-    min-width: 500px;
+    min-width: 470px;
     flex: 1;
 }
 
@@ -813,4 +813,18 @@
 
 .tab-pid_tuning table.filterTable td:first-child {
     width: 25%;
+}
+
+@media only screen and (max-width: 1205px) {
+
+.tab-pid_tuning .subtab-pid .spacer_left {
+    width: 100%;
+}
+}
+
+@media only screen and (max-width: 1405px) {
+    
+.tab-pid_tuning .subtab-rates .ratePreview.spacer_left {
+    width: 100%;
+}
 }

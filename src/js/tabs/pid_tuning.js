@@ -1429,20 +1429,6 @@ TABS.pid_tuning.initialize = function (callback) {
             });
         }
 
-        $(window).resize(function() {
-            let width = $(this).width();
-            if (width <= 1265) {
-                $('.pidControllerAdvancedSettings').removeClass('spacer_left');
-            } else if (width >= 1283) {
-                $('.pidControllerAdvancedSettings').addClass('spacer_left');
-            }
-            if (width <= 1405) {
-                $('.ratePreview').removeClass('spacer_left');
-            } else if (width >= 1423) {
-                $('.ratePreview').addClass('spacer_left');
-            }
-        });
-
         // update == save.
         $('a.update').click(function () {
             form_to_pid_and_rc();
