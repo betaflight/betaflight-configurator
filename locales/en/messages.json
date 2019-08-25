@@ -1527,6 +1527,14 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
+    "receiverRcSmoothingAutoSmoothness": {
+        "message": "Auto Smoothness",
+        "description": "Auto Smoothness parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoSmoothnessHelp": {
+        "message": "Adjusts the Auto smoothing calculation, 10 is the default smoothing to delay ratio. Increasing the number will smooth RC inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs. ",
+        "description": "Auto Smoothness parameter help message"
+    },
     "receiverRcDerivativeTypeSelect": {
         "message": "Derivative Cutoff Type"
     },

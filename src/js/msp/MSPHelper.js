@@ -896,6 +896,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             RX_CONFIG.rcSmoothingDerivativeCutoff = data.readU8();
                             RX_CONFIG.rcSmoothingInputType = data.readU8();
                             RX_CONFIG.rcSmoothingDerivativeType = data.readU8();
+                            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                                RX_CONFIG.usbCdcHidType = data.readU8();
+                                RX_CONFIG.rcSmoothingAutoSmoothness = data.readU8();
+                            }
                         }
                     } else {
                         RX_CONFIG.rxSpiProtocol = 0;
@@ -1687,6 +1691,10 @@ MspHelper.prototype.crunch = function(code) {
                             .push8(RX_CONFIG.rcSmoothingDerivativeCutoff)
                             .push8(RX_CONFIG.rcSmoothingInputType)
                             .push8(RX_CONFIG.rcSmoothingDerivativeType);
+                        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                            buffer.push8(RX_CONFIG.usbCdcHidType)
+                                .push8(RX_CONFIG.rcSmoothingAutoSmoothness);
+                        }
                     }
                 }
             }
