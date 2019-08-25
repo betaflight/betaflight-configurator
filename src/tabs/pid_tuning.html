@@ -6,7 +6,7 @@
         </div>
         <div class="cf_column">
             <div class="profile single-field">
-                <div class="helpicon cf_tip" i18n_title="pidTuningProfileTip" style="margin-top: 5px;"></div>
+                <div class="helpicon cf_tip topspacer" i18n_title="pidTuningProfileTip"></div>
                 <div class="head" i18n="pidTuningProfile"></div>
                 <div class="bottomarea">
                     <select name="profile">
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="rate_profile single-field">
-                <div class="helpicon cf_tip" i18n_title="pidTuningRateProfileTip" style="margin-top: 5px;"></div>
+                <div class="helpicon cf_tip topspacer" i18n_title="pidTuningRateProfileTip"></div>
                 <div class="head" i18n="pidTuningRateProfile"></div>
                 <div class="bottomarea">
                     <select name="rate_profile">
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="controller single-field">
-                <div class="helpicon cf_tip" i18n_title="pidTuningPidControllerTip" style="margin-top: 5px;"></div>
+                <div class="helpicon cf_tip topspacer" i18n_title="pidTuningPidControllerTip"></div>
                 <div class="head" i18n="pidTuningControllerHead"></div>
                 <div class="bottomarea">
                     <select name="controller">
@@ -53,6 +53,9 @@
                     <td class="pid active">
                         <a href="#" i18n="pidTuningSubTabPid" />
                     </td>
+                    <td class="rates">
+                        <a href="#" i18n="pidTuningSubTabRates" />
+                    </td>
                     <td class="filter">
                         <a href="#" i18n="pidTuningSubTabFilter" />
                     </td>
@@ -64,26 +67,29 @@
         <form name="pid-tuning" id="pid-tuning">
             <div class="subtab-pid">
                 <div class="clear-both"></div>
-                <div class="cf_column twothird">
-                    <div class="gui_box grey topspacer" style="margin-top: 0px;">
+                <div class="cf_column">
+                    <div class="note dMinDisabledNote">
+                        <div class="note_spacer">
+                            <p i18n="pidTuningDMinDisabledNote"></p>
+                        </div>
+                    </div>
+                    <div class="gui_box grey">
                         <table id="pid_main" class="pid_tuning">
                             <tr class="pid_titlebar">
                                 <th class="name"></th>
                                 <th class="proportional" i18n="pidTuningProportional"></th>
                                 <th class="integral" i18n="pidTuningIntegral"></th>
                                 <th class="derivative" i18n="pidTuningDerivative"></th>
+                                <th class="dmin" i18n="pidTuningDMin"></th>
                                 <th class="feedforward" i18n="pidTuningFeedforward"></th>
-                                <th class="rc_rate" i18n="pidTuningRcRate"></th>
-                                <th class="rate" i18n="pidTuningRate"></th>
-                                <th class="new_rates maxVel" i18n="pidTuningMaxVel"></th>
-                                <th class="rc_expo" i18n="pidTuningRcExpo"></th>
                             </tr>
                             <tr class="pid_titlebar2">
-                                <th colspan="9">
+                                <th colspan="6">
                                     <div class="pid_mode">
                                         <div i18n="pidTuningBasic" style="float:left;"></div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningPidTuningTip"></div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningPidTuningTipFeedforward"></div>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningPidTuningTipDMin"></div>
                                     </div>
                                 </th>
                             </tr>
@@ -93,18 +99,9 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="200" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="200" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="200" /></td>
+                                <td class="pid_data"><input type="number" name="dMinRoll" step="1" min="0" max="100" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
-                                <td rowspan="2" class="inputBackground">
-                                    <input type="number" name="rc_rate" step="0.01" min="0.01" max="2.55" />
-                                    <div class="bracket"></div>
-                                </td>
-                                <td class="roll_rate"><input type="number" name="roll_rate" step="0.01" min="0" max="1.00" /></td>
-                                <td class="roll_pitch_rate" rowspan="2"><input type="number" name="roll_pitch_rate" step="0.01" min="0" max="1.00" /></td>
-                                <td class="new_rates maxAngularVelRoll"></td>
-                                <td rowspan="2" class="inputBackground">
-                                    <input type="number" name="rc_expo" step="0.01" min="0" max="1" />
-                                    <div class="bracket"></div>
-                                </td>
+
                             </tr>
                             <tr class="PITCH">
                                 <!-- 1 -->
@@ -112,11 +109,8 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="200" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="200" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="200" /></td>
+                                <td class="pid_data"><input type="number" name="dMinPitch" step="1" min="0" max="100" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
-                                <td><input type="number" name="rc_rate_pitch" step="0.01" min="0.01" max="2.55" /></td>
-                                <td class="pitch_rate"><input type="number" name="pitch_rate" step="0.01" min="0" max="1.00" /></td>
-                                <td class="new_rates maxAngularVelPitch"></td>
-                                <td><input type="number" name="rc_pitch_expo" step="0.01" min="0" max="1" /></td>
                             </tr>
                             <tr class="YAW">
                                 <!-- 2 -->
@@ -124,11 +118,8 @@
                                 <td class="pid_data"><input type="number" name="p" step="1" min="0" max="200" /></td>
                                 <td class="pid_data"><input type="number" name="i" step="1" min="0" max="200" /></td>
                                 <td class="pid_data"><input type="number" name="d" step="1" min="0" max="200" /></td>
+                                <td class="pid_data"><input type="number" name="dMinYaw" step="1" min="0" max="100" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
-                                <td rowspan="1"><input type="number" name="rc_rate_yaw" step="0.01" min="0.01" max="2.55" /></td>
-                                <td><input type="number" name="yaw_rate" step="0.01" min="0" max="2.55" /></td>
-                                <td class="new_rates maxAngularVelYaw"></td>
-                                <td><input type="number" name="rc_yaw_expo" step="0.01" min="0" max="1" /></td>
                             </tr>
                             <tr class="YAW_JUMP_PREVENTION">
                                 <td colspan="3">
@@ -142,6 +133,8 @@
                             </tr>
                         </table>
                     </div>
+
+                    <!-- BARO, MAG, GPS -->
                     <div id="pid_baro_mag_gps" class="pid_optional needed_by_ALT needed_by_VEL needed_by_MAG needed_by_Pos needed_by_PosR needed_by_NavR gui_box grey topspacer pid_tuning">
                         <table class="pid_titlebar needed_by_ALT needed_by_VEL needed_by_MAG">
                             <tr class="needed_by_ALT needed_by_VEL needed_by_MAG">
@@ -263,48 +256,11 @@
                             </tr>
                         </table>
                     </div>
+                </div>
 
-                    <div class="dminGroup topspacer tpa">
-                        <table class="cf">
-                            <thead>
-                                <tr>
-                                    <th colspan="5">
-                                        <span i18n="pidTuningDMin" />
-                                        <span class="helpicon cf_tip" i18n_title="pidTuningDMinHelp" />
-                                    </th>
-                                </tr>
-
-                                <tr>
-                                    <th i18n="pidTuningDMinRoll" />
-                                    <th i18n="pidTuningDMinPitch" />
-                                    <th i18n="pidTuningDMinYaw" />
-                                    <th i18n="pidTuningDMinGain" />
-                                    <th i18n="pidTuningDMinAdvance" />
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="number" name="dMinRoll" step="1" min="0" max="100" />
-                                    </td>
-                                    <td>
-                                        <input type="number" name="dMinPitch" step="1" min="0" max="100" />
-                                    </td>
-                                    <td>
-                                        <input type="number" name="dMinYaw" step="1" min="0" max="100" />
-                                    </td>
-                                    <td>
-                                        <input type="number" name="dMinGain" step="1" min="0" max="100" />
-                                    </td>
-                                    <td>
-                                        <input type="number" name="dMinAdvance" step="1" min="0" max="200" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="gui_box grey topspacer pidTuningFeatures">
+                <div class="cf_column">
+                    <!-- Pid controller advanced settings -->
+                    <div class="gui_box grey pidTuningFeatures spacer_left">
                         <table class="pid_titlebar new_rates">
                             <tr>
                                 <th i18n="pidTuningNonProfilePidSettings"></th>
@@ -316,7 +272,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="gui_box grey topspacer">
+                    <div class="gui_box grey pidControllerAdvancedSettings spacer_left">
                         <table class="pid_titlebar new_rates">
                             <tr>
                                 <th i18n="pidTuningPidSettings"></th>
@@ -333,19 +289,18 @@
                                 <td>
                                     <div>
                                         <label for="delta-select">
-                                        <span i18n="pidTuningDelta"></span>
+                                            <span i18n="pidTuningDelta"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningDeltaTip"></div>
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="dtermSetpoint" style="height:30px;">
+                            <tr class="dtermSetpoint">
                                 <td><input type="number" name="dtermSetpoint-number" step="0.01" min="0.00" max="20"/></td>
-                                <td class="slider"><input type="range" name="dtermSetpoint-range" step="0.01" min="0.00" max="20"/></td>
                                 <td>
                                     <div>
                                         <label>
-                                        <span i18n="pidTuningDtermSetpoint"></span>
+                                            <span i18n="pidTuningDtermSetpoint"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningDtermSetpointHelp"></div>
                                     </div>
@@ -353,15 +308,14 @@
                             </tr>
                             <tr class="dtermSetpointTransition">
                                 <td><input type="number" name="dtermSetpointTransition-number" step="0.01" min="0.01" max="1.00"/></td>
-                                <td class="slider"><input type="range" name="dtermSetpointTransition-range" step="0.01" min="0.01" max="1.00"/></td>
-                                 <td colspan="1">
+                                <td colspan="1">
                                     <div>
                                         <label>
-                                        <span i18n="pidTuningDtermSetpointTransition"></span>
+                                            <span i18n="pidTuningDtermSetpointTransition"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningDtermSetpointTransitionHelp"></div>
                                     </div>
-                                 </td>
+                                </td>
                             </tr>
                             <tr class="dtermSetpointTransitionWarning">
                                 <td colspan="3">
@@ -369,13 +323,12 @@
                                 </td>
                             </tr>
 
-                            <tr class="feedforwardTransition" style="height:30px;">
+                            <tr class="feedforwardTransition">
                                 <td><input type="number" name="feedforwardTransition-number" step="0.01" min="0.00" max="1.00"/></td>
-                                <td class="slider"><input type="range" name="feedforwardTransition-range" step="0.01" min="0.00" max="1.00"/></td>
                                 <td colspan="1">
                                     <div>
                                         <label>
-                                        <span i18n="pidTuningFeedforwardTransition"></span>
+                                            <span i18n="pidTuningFeedforwardTransition"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardTransitionHelp"></div>
                                     </div>
@@ -384,41 +337,38 @@
 
                             <tr class="acroTrainerAngleLimit">
                                 <td><input type="number" name="acroTrainerAngleLimit-number" step="1" min="10" max="80"/></td>
-                                <td class="slider"><input type="range" name="acroTrainerAngleLimit-range" step="1" min="10" max="80"/></td>
-                                 <td colspan="1">
+                                <td colspan="1">
                                     <div>
                                         <label>
-                                        <span i18n="pidTuningAcroTrainerAngleLimit"></span>
+                                            <span i18n="pidTuningAcroTrainerAngleLimit"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningAcroTrainerAngleLimitHelp"></div>
                                     </div>
-                                 </td>
+                                </td>
                             </tr>
 
                             <tr class="throttleBoost">
                                 <td><input type="number" name="throttleBoost-number" step="1" min="0" max="100"/></td>
-                                <td class="slider"><input type="range" name="throttleBoost-range" step="1" min="0" max="100"/></td>
-                                 <td colspan="1">
+                                <td colspan="1">
                                     <div>
                                         <label>
-                                        <span i18n="pidTuningThrottleBoost"></span>
+                                            <span i18n="pidTuningThrottleBoost"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningThrottleBoostHelp"></div>
                                     </div>
-                                 </td>
+                                </td>
                             </tr>
 
                             <tr class="absoluteControlGain">
                                 <td><input type="number" name="absoluteControlGain-number" step="1" min="0" max="20"/></td>
-                                <td class="slider"><input type="range" name="absoluteControlGain-range" step="1" min="0" max="20"/></td>
-                                 <td colspan="1">
+                                <td colspan="1">
                                     <div>
                                         <label>
-                                        <span i18n="pidTuningAbsoluteControlGain"></span>
+                                            <span i18n="pidTuningAbsoluteControlGain"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningAbsoluteControlGainHelp"></div>
                                     </div>
-                                 </td>
+                                </td>
                             </tr>
 
                             <tr class="itermrotation">
@@ -426,7 +376,7 @@
                                 <td colspan="2">
                                     <div>
                                         <label for="itermrotation">
-                                        <span i18n="pidTuningItermRotation"></span>
+                                            <span i18n="pidTuningItermRotation"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningItermRotationHelp"></div>
                                     </div>
@@ -438,7 +388,7 @@
                                 <td colspan="2">
                                     <div>
                                         <label for="vbatpidcompensation">
-                                        <span i18n="pidTuningVbatPidCompensation"></span>
+                                            <span i18n="pidTuningVbatPidCompensation"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningVbatPidCompensationHelp"></div>
                                     </div>
@@ -450,16 +400,30 @@
                                 <td colspan="2">
                                     <div>
                                         <label for="smartfeedforward">
-                                        <span i18n="pidTuningSmartFeedforward"></span>
+                                            <span i18n="pidTuningSmartFeedforward"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningSmartFeedforwardHelp"></div>
                                     </div>
                                 </td>
                             </tr>
 
+                            <tr class="integratedYaw">
+                                <td><input type="checkbox" id="useIntegratedYaw" class="toggle" /></td>
+                                <td colspan="2">
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningIntegratedYawHelp"></div>
+                                    <span>
+                                        <label for="useIntegratedYaw">
+                                            <span i18n="pidTuningIntegratedYaw" />
+                                        </label>
+                                    </span>
+                                    <span class="spacer_left" id="pidTuningIntegratedYawCaution" i18n="pidTuningIntegratedYawCaution" />
+                                </td>
+                            </tr>
+
                             <tr class="itermrelax">
                                 <td><input type="checkbox" id="itermrelax" class="toggle" /></td>
                                 <td colspan="2">
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningItermRelaxHelp"></div>
                                     <span>
                                         <label for="itermrelax">
                                             <span i18n="pidTuningItermRelax" />
@@ -467,107 +431,170 @@
                                     </span>
 
                                     <span class="suboption">
-                                        <label for="itermrelaxAxes">
-                                            <span i18n="pidTuningItermRelaxAxes" />
-                                        </label>
                                         <select id="itermrelaxAxes">
                                             <option i18n="pidTuningItermRelaxAxesOptionRP"     value="1">
                                             <option i18n="pidTuningItermRelaxAxesOptionRPY"    value="2"/>
                                             <option i18n="pidTuningItermRelaxAxesOptionRPInc"  value="3"/>
                                             <option i18n="pidTuningItermRelaxAxesOptionRPYInc" value="4"/>
                                         </select>
+                                        <label for="itermrelaxAxes">
+                                            <span i18n="pidTuningItermRelaxAxes" />
+                                        </label>
                                     </span>
 
                                     <span class="suboption">
-                                        <label for="itermrelaxType">
-                                            <span i18n="pidTuningItermRelaxType" />
-                                        </label>
                                         <select id="itermrelaxType">
                                             <option i18n="pidTuningItermRelaxTypeOptionGyro"     value="0"/> 
                                             <option i18n="pidTuningItermRelaxTypeOptionSetpoint" value="1"/>
                                         </select>
+                                        <label for="itermrelaxType">
+                                            <span i18n="pidTuningItermRelaxType" />
+                                        </label>
                                     </span>
 
                                     <span class="itermRelaxCutoff suboption">
+                                        <input type="number" name="itermRelaxCutoff" step="1" min="1" max="100" />
                                         <label for="itermRelaxCutoff">
                                             <span i18n="pidTuningItermRelaxCutoff" />
                                         </label>
-                                        <input type="number" name="itermRelaxCutoff" step="1" min="1" max="100" />
                                     </span>
-
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningItermRelaxHelp"></div>
                                 </td>
                             </tr>
 
-                            <tr class="integratedYaw">
-                                <td><input type="checkbox" id="useIntegratedYaw" class="toggle" /></td>
-                                <td colspan="2">
-
+                            <tr class="dminGroup">
+                                <td><input type="checkbox" id="dMinSwitch" class="toggle" /></td>
+                                <td colspan="3">
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMinHelp"></div>
                                     <span>
-                                        <label for="useIntegratedYaw">
-                                            <span i18n="pidTuningIntegratedYaw" />
+                                        <label for="dminGroup">
+                                            <span i18n="pidTuningDMin" />
                                         </label>
                                     </span>
 
-                                    <span class="suboption" id="pidTuningIntegratedYawCaution" i18n="pidTuningIntegratedYawCaution" />
+                                    <span class="suboption">
+                                        <input type="number" name="dMinGain" step="1" min="0" max="100" />
+                                        <label for="dMinGain">
+                                            <span i18n="pidTuningDMinGain" />
+                                        </label>
+                                    </span>
 
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningIntegratedYawHelp"></div>
-
+                                    <span class="suboption">
+                                        <input type="number" name="dMinAdvance" step="1" min="0" max="200" />
+                                        <label for="dMinAdvance">
+                                            <span i18n="pidTuningDMinAdvance" />
+                                        </label>
+                                    </span>
                                 </td>
                             </tr>
 
-                        </table>
-                    </div>
+                            <tr class="antigravity">
+                                    <td><input type="checkbox" id="antiGravitySwitch" class="toggle" /></td>
+                                    <td colspan="3">
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningAntiGravityHelp"></div>
+                                        <span>
+                                            <label for="antiGravity">
+                                                <span i18n="pidTuningAntiGravity" />
+                                            </label>
+                                        </span>
+    
+                                        <span class="suboption antiGravityMode">
+                                            <select id="antiGravityMode">
+                                                <option i18n="pidTuningAntiGravityModeOptionSmooth"     value="0"/>
+                                                <option i18n="pidTuningAntiGravityModeOptionStep"       value="1"/>
+                                            </select>
+                                            <label for="antiGravityMode">
+                                                <span i18n="pidTuningAntiGravityMode" />
+                                            </label>
+                                        </span>
+    
+                                        <span class="suboption">
+                                            <input type="number" name="itermAcceleratorGain" step="0.1" min="1.1" max="30" />
+                                            <label for="antiGravityGain">
+                                                <span i18n="pidTuningAntiGravityGain" />
+                                            </label>
+                                        </span>
 
-                    <div class="antigravity topspacer tpa">
-                        <table class="cf">
-                            <thead>
-                                <tr>
-                                    <th i18n="pidTuningAntiGravityMode"></th>
-                                    <th i18n="pidTuningAntiGravityGain"></th>
-                                    <th i18n="pidTuningAntiGravityThres"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="height: 35px;">
-                                    <td>
-                                        <select id="antiGravityMode">
-                                            <option i18n="pidTuningAntiGravityModeOptionSmooth" value="0">
-                                            <option i18n="pidTuningAntiGravityModeOptionStep"   value="1">
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="itermAcceleratorGain" step="0.1" min="1" max="30" />
-                                    </td>
-                                    <td>
-                                        <input type="number" name="itermThrottleThreshold" step="10" min="20" max="1000" />
+                                        <span class="suboption antiGravityThres">
+                                            <input type="number" name="itermThrottleThreshold" step="10" min="20" max="1000" />
+                                            <label for="antiGravityThres">
+                                                <span i18n="pidTuningAntiGravityThres" />
+                                            </label>
+                                        </span>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="gui_box grey topspacer">
-                        <table class="pid_titlebar">
-                            <thead>
-                                <tr>
-                                    <th i18n="pidTuningRatesPreview"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="rates_preview_cell">
-                                        <div class="rates_preview">
-                                            <canvas id="canvas"></canvas>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="cf_column third_right">
-                    <div class="spacer_left rc_curve">
+            </div>
+
+            <!-- RATES SUBTAB -->
+            <div class="subtab-rates" style="display: none;">
+                <div class="clear-both"></div>
+                <div class="cf_column">
+                    <div class="gui_box grey rateSetup">
+                        <table id="rateSetup" class="pid_tuning">
+                            <tr class="pid_titlebar">
+                                <th class="name"></th>
+                                <th class="rc_rate" i18n="pidTuningRcRate"></th>
+                                <th class="rate" i18n="pidTuningRate"></th>
+                                <th class="rc_expo" i18n="pidTuningRcExpo"></th>
+                                <th class="new_rates maxVel" i18n="pidTuningMaxVel"></th>
+                            </tr>
+                            <tr class="pid_titlebar2">
+                                <th colspan="5">
+                                    <div class="pid_mode">
+                                        <div i18n="pidTuningRateSetup" style="float:left;"></div>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningRatesTuningHelp"></div>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr class="ROLL">
+                                <td class="pid_roll"></td>
+                                <td class="rc_rate">
+                                    <input type="number" name="rc_rate" step="0.01" min="0.01" max="2.55" />
+                                </td>
+                                <td class="roll_rate">
+                                    <input type="number" name="roll_rate" step="0.01" min="0" max="1.00" />
+                                </td>
+                                <td class="roll_pitch_rate" rowspan="2">
+                                    <input type="number" name="roll_pitch_rate" step="0.01" min="0" max="1.00" />
+                                </td>
+                                <td rowspan="2" class="inputBackground">
+                                    <input type="number" name="rc_expo" step="0.01" min="0" max="1" />
+                                    <div class="bracket"></div>
+                                </td>
+                                <td class="new_rates maxAngularVelRoll"></td>
+                            </tr>
+                            <tr class="PITCH">
+                                <td class="pid_pitch"></td>
+                                <td>
+                                    <input type="number" name="rc_rate_pitch" step="0.01" min="0.01" max="2.55" />
+                                </td>
+                                <td class="pitch_rate">
+                                    <input type="number" name="pitch_rate" step="0.01" min="0" max="1.00" />
+                                </td>
+                                <td>
+                                    <input type="number" name="rc_pitch_expo" step="0.01" min="0" max="1" />
+                                </td>
+                                <td class="new_rates maxAngularVelPitch"></td>
+                            </tr>
+                            <tr class="YAW">
+                                <td class="pid_yaw"></td>
+                                <td rowspan="1">
+                                    <input type="number" name="rc_rate_yaw" step="0.01" min="0.01" max="2.55" />
+                                </td>
+                                <td>
+                                    <input type="number" name="yaw_rate" step="0.01" min="0" max="2.55" />
+                                </td>
+                                <td>
+                                    <input type="number" name="rc_yaw_expo" step="0.01" min="0" max="1" />
+                                </td>
+                                <td class="new_rates maxAngularVelYaw"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="gui_box rc_curve">
                         <div class="rc_curve_bg">
                             <table class="cf rc_curve">
                                 <thead>
@@ -583,11 +610,9 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="2">
-                                            <div class="spacer" style="margin-top: 10px; margin-bottom: 8px;">
-                                                <div class="rate_curve" style="position:relative;" >
-                                                    <canvas id="rate_curve_layer0" height="120px" style="position:absolute; top: 0; left: 0; z-index: 0; height:100%; width:100%;"></canvas>
-                                                    <canvas id="rate_curve_layer1" height="120px" style="position:absolute; top: 0; left: 0; z-index: 1; height:100%; width:100%;"></canvas>
-                                                </div>
+                                            <div class="rate_curve" style="position:relative;" >
+                                                <canvas id="rate_curve_layer0" height="120px" style="position:absolute; top: 0; left: 0; z-index: 0; height:100%; width:100%;"></canvas>
+                                                <canvas id="rate_curve_layer1" height="120px" style="position:absolute; top: 0; left: 0; z-index: 1; height:100%; width:100%;"></canvas>
                                             </div>
                                         </td>
                                     </tr>
@@ -595,41 +620,10 @@
                             </table>
                         </div>
                     </div>
-                    <div class="spacer_left topspacer throttle">
-                        <table class="cf">
-                            <thead>
-                                <tr>
-                                    <th i18n="receiverThrottleMid"></th>
-                                    <th i18n="receiverThrottleExpo"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="height: 35px;">
-                                    <td><input type="number" name="mid" step="0.01" min="0" max="1" /></td>
-                                    <td><input type="number" name="expo" step="0.01" min="0" max="1" /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="spacer_left topspacer throttle">
-                        <table class="cf">
-                            <thead>
-                                <tr>
-                                    <th colspan="2" i18n="throttle"></th>
-                                </tr>
-                            </thead>
-                            <tr>
-                                <td colspan="2">
-                                    <div class="spacer" style="margin-top: 10px; margin-bottom: 10px;">
-                                        <div class="throttle_curve">
-                                            <canvas height="120px" style="width: 100%; height: 100%"></canvas>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="spacer_left topspacer tpa">
+                </div>
+
+                <div class="cf_column">
+                    <div class="gui_box tpa spacer_left">
                         <table class="cf">
                             <thead>
                                 <tr>
@@ -638,7 +632,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr style="height: 35px;">
+                                <tr>
                                     <td class="leftzero"><input type="number" name="tpa" step="0.01" min="0"
                                         max="1.00" /></td>
                                     <td class="tpa-breakpoint"><input type="number" name="tpa-breakpoint" step="10" min="1000" max="2000" /></td>
@@ -646,7 +640,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="spacer_left topspacer throttle_limit">
+
+                    <div class="gui_box throttle_limit spacer_left">
                         <table class="cf">
                             <thead>
                                 <tr>
@@ -665,7 +660,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr style="height: 35px;">
+                                <tr>
                                     <td>
                                         <select id="throttleLimitType">
                                             <option i18n="pidTuningThrottleLimitTypeOff" value="0">
@@ -679,19 +674,73 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="gui_box throttle spacer_left">
+                        <table class="cf">
+                            <thead>
+                                <tr>
+                                    <th i18n="receiverThrottleMid"></th>
+                                    <th i18n="receiverThrottleExpo"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="number" name="mid" step="0.01" min="0" max="1" /></td>
+                                    <td><input type="number" name="expo" step="0.01" min="0" max="1" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="gui_box throttle spacer_left">
+                        <table class="cf">
+                            <thead>
+                                <tr>
+                                    <th i18n="pidTuningThrottleCurvePreview" colspan="2"></th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td colspan="2" class="throttleCurvePreview">
+                                    <div class="throttle_curve">
+                                        <canvas height="164px" style="width: 100%; height: 100%"></canvas>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="cf_column">
+                    <div class="gui_box ratePreview grey spacer_left">
+                        <table class="pid_titlebar">
+                            <thead>
+                                <tr>
+                                    <th i18n="pidTuningRatesPreview"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="rates_preview_cell">
+                                        <div class="rates_preview">
+                                            <canvas id="canvas"></canvas>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- FILTER SUBTAB -->
-
             <div class="subtab-filter" style="display: none;">
                 <div class="clear-both"></div>
-                <div class="note topspacer" style="margin-top: 0px;">
+                <div class="note">
                     <div class="note_spacer">
                         <p i18n="tuningHelp"></p>
                     </div>
                 </div>
-                <div class="note topspacer filterWarning" style="margin-top: 0px;">
+                <div class="note filterWarning">
                     <div class="note_spacer">
                         <p i18n="filterWarning"></p>
                     </div>
@@ -710,7 +759,7 @@
                             </tr>
                         </table>
 
-                        <table>
+                        <table class="filterTable">
                             <tr>
                                 <th colspan="2">
                                     <div class="pid_mode">
@@ -724,7 +773,7 @@
                                 <td>
                                     <span class="groupSwitchValue">
                                         <span class="inputSwitch"><input type="checkbox" id="gyroLowpassDynEnabled" class="toggle" /></span>
-                                        <span class="inputValue"><input type="number" name="gyroLowpassDynMinFrequency" step="1" min="1" max="16000"/></span>
+                                        <span class="inputValue"><input type="number" name="gyroLowpassDynMinFrequency" step="1" min="1" max="1000"/></span>
                                     </span>
                                 </td>
                                 <td>
@@ -738,7 +787,7 @@
 
                             <tr class="gyroLowpassDyn">
                                 <td>
-                                    <span class="inputValue"><input type="number" name="gyroLowpassDynMaxFrequency" step="1" min="1" max="16000"/></span>
+                                    <span class="inputValue"><input type="number" name="gyroLowpassDynMaxFrequency" step="1" min="1" max="1000"/></span>
                                 </td>
                                 <td>
                                     <div>
@@ -965,8 +1014,7 @@
                             </tr>
                         </table>
 
-                        <table>
-
+                        <table class="filterTable">
                             <tr>
                                 <th colspan="2">
                                     <div class="pid_mode">
@@ -982,7 +1030,7 @@
                                 <td>
                                     <span class="groupSwitchValue">
                                         <span class="inputSwitch"><input type="checkbox" id="dtermLowpassDynEnabled" class="toggle" /></span>
-                                        <span class="inputValue"><input type="number" name="dtermLowpassDynMinFrequency" step="1" min="1" max="16000"/></span>
+                                        <span class="inputValue"><input type="number" name="dtermLowpassDynMinFrequency" step="1" min="1" max="1000"/></span>
                                     </span>
                                 </td>
                                 <td>
@@ -996,7 +1044,7 @@
 
                             <tr class="dtermLowpassDyn">
                                 <td>
-                                    <span class="inputValue"><input type="number" name="dtermLowpassDynMaxFrequency" step="1" min="1" max="16000"/></span>
+                                    <span class="inputValue"><input type="number" name="dtermLowpassDynMaxFrequency" step="1" min="1" max="1000"/></span>
                                 </td>
                                 <td>
                                     <div>
@@ -1184,5 +1232,4 @@
             <a href="#" class="dialogCopyProfile-cancelbtn regular-button" i18n="dialogCopyProfileClose"></a> 
         </div>
     </dialog>
-
 </div>

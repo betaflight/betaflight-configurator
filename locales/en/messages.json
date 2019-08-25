@@ -1452,7 +1452,10 @@
         "message": "<span class=\"message-negative\">Changing PID controller disabled - you can change it via the CLI.</span>  You have firmware with API version <span class=\"message-negative\">$1</span>, but this functionality requires <span class=\"message-positive\">$2</span>."
     },
     "pidTuningSubTabPid": {
-        "message": "PID Settings"
+        "message": "PID Profile Settings"
+    },
+    "pidTuningSubTabRates": {
+        "message": "Rateprofile Settings"
     },
     "pidTuningSubTabFilter": {
         "message": "Filter Settings"
@@ -1467,8 +1470,12 @@
         "message": "Profile independent PID Controller Settings"
     },
 
+    "pidTuningAntiGravity": {
+        "message": "Anti Gravity"
+    },
     "pidTuningAntiGravityMode": {
-        "message": "Anti Gravity Mode"
+        "message": "Mode",
+        "description": "Anti Gravity mode selection parameter"
     },
     "pidTuningAntiGravityModeOptionSmooth": {
         "message": "Smooth",
@@ -1479,30 +1486,22 @@
         "description": "One of the modes of anti gravity"
     },
     "pidTuningAntiGravityGain": {
-        "message": "Anti Gravity Gain"
+        "message": "Gain",
+        "description": "Anti Gravity Gain Parameter"
     },
     "pidTuningAntiGravityThres": {
-        "message": "Anti Gravity Threshold"
+        "message": "Threshold",
+        "description": "Anti Gravity Threshold Parameter"
     },
-    "pidTuningDMinHelp": {
-        "message": "D Min provides a way to have a lower level of D in normal flight and a higher level for quick manoeuvres that might cause overshoot, like flips and rolls. It also brings D up during prop wash. The craft will have a dynamic D Term varying from D Min (under normal flight) to the standard D (under fast roll and flips). A value of zero will disable the feature. The Gain determines how strongly D is boosted during quick stick inputs. The Advance speeds up of onset of the boost effect. This can be helpful if you have overshoot with very high rate flips on very responsive quads.",
-        "description": "Help message for D Min feature"
+    "pidTuningAntiGravityHelp": {
+        "message": "Anti Gravity boosts the I term when fast throttle changes are detected. Higher gain values provide stability and better attitude hold when you pump the throttle."
     },
     "pidTuningDMin": {
         "message": "D Min",
-       "description": "Table header of the D Min feature in the PIDs tab" 
+        "description": "Table header of the D Min feature in the PIDs tab" 
     },
-    "pidTuningDMinRoll": {
-       "message": "Roll",
-       "description": "Axis to apply D Min feature" 
-    },
-    "pidTuningDMinPitch": {
-       "message": "Pitch",
-       "description": "Axis to apply D Min feature"
-    },
-    "pidTuningDMinYaw": {
-       "message": "Yaw",
-       "description": "Axis to apply D Min feature"
+    "pidTuningDMinDisabledNote": {
+        "message": "<strong>Note:</strong> D Min feature is disabled and its parameters are hidden. To use D Min please enable it in $t(pidTuningPidSettings.message)."
     },
     "pidTuningDMinGain": {
        "message": "Gain",
@@ -1510,9 +1509,12 @@
     },
     "pidTuningDMinAdvance": {
        "message": "Advance",
-       "description": "Advane of the D Min feature"
+       "description": "Advance of the D Min feature"
     },
-
+    "pidTuningDMinHelp": {
+        "message": "D Min provides a way to have a lower level of D in normal flight and a higher level for quick maneuvers that might cause overshoot, like flips and rolls. It also brings D up during prop wash. Gain adjusts how fast D gets up to its maximum value and is based on gyro to determine sharp moves and propwash events. Advance makes D go up earlier by using setpoint instead of gyro to determine sharp moves.",
+        "description": "D Min feature helpicon message"
+    },
     "pidTuningPidSettings": {
         "message": "PID Controller Settings"
     },
@@ -1654,6 +1656,9 @@
     "pidTuningRatesPreview": {
         "message": "Rates Preview"
     },
+    "pidTuningRatesTuningHelp": {
+        "message": "<b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting."
+    },
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
@@ -1662,6 +1667,9 @@
     },
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
+    },
+    "pidTuningThrottleCurvePreview": {
+        "message": "Throttle Curve Preview"
     },
     "pidTuningThrottleLimitType": {
         "message": "Throttle Limit"
@@ -1691,7 +1699,7 @@
         "message": "Frequency"
     },
     "pidTuningRatesCurve": {
-        "message": "Rates"
+        "message": "Rates Preview"
     },
     "throttle": {
         "message": "Throttle"
@@ -3249,7 +3257,8 @@
         "message": "Limits the accumulation of I Term when fast movements happen. This helps specially to reduce the bounceback at the end of rolls and other fast movements. You can choose the axes in which this is active, and if the fast movement is detectd using the Gyro or the Setpoint (stick)."
     },
     "pidTuningItermRelaxAxes": {
-        "message": "Axes:"
+        "message": "Axes",
+        "description": "Iterm Relax Axes selection"
     },
     "pidTuningItermRelaxAxesOptionRP": {
         "message": "RP"
@@ -3264,7 +3273,8 @@
         "message": "RPY (increment only)"
     },
     "pidTuningItermRelaxType": {
-        "message": "Type:"
+        "message": "Type",
+        "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
         "message": "Gyro"
@@ -3273,7 +3283,8 @@
         "message": "Setpoint"
     },
     "pidTuningItermRelaxCutoff": {
-        "message": "Cutoff:"
+        "message": "Cutoff",
+        "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Control"
@@ -5045,6 +5056,13 @@
     "pidTuningRateProfileTip": {
         "message": "Up to 3 different rateprofiles per profile can be stored on the flight controller. The rateprofiles include the settings for 'RC Rate', 'Rate', 'RC Expo', 'Throttle', and 'TPA'. Switching between rateprofiles is possible in-flight, by setting up a 3 position switch for 'Rate Profile Selection' on the 'Adjustments' tab."
     },
+    "pidTuningRateSetup": {
+        "message": "Basic/Acro Rates"
+    },
+    "pidTuningRateSetupHelp": {
+        "message": "Adjust these values to set your rates. Use RC Rate to increase maximum rate overall, use Super Rate to have higher rates at the end of the stick travel, use RC Expo to make the middle stick feel smooth.",
+        "description": "Rate table helpicon message"
+    },
     "pidTuningDelta": {
         "message": "Derivative Method"
     },
@@ -5064,10 +5082,13 @@
         "message": "<b>Gyro Soft Filter:</b> Lowpass filter for gyro. Use lower value for more filtering.<br><b>D Term Filter:</b> Lowpass filter for Dterm. Can affect D tuning. Use lower value for more filtering. <br><b>Yaw Filter:</b> Filters yaw output. It can help on setups with noisy yaw axis."
     },
     "pidTuningPidTuningTip": {
-        "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise<br><b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting"
+        "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise."
     },
     "pidTuningPidTuningTipFeedforward": {
-        "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise<br><b>Feedforward:</b> Usually the PID controller reacts to the error. The Feedforward anticipates the error based on the stick input, giving responsiveness to the quad.<br><b>Rates and Expo</b>: Determine your stick feel based on these parameters. Use the graph and live 3D model to find your favourite rate setting"
+        "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise<br><b>Feedforward:</b> Usually the PID controller reacts to the error. The Feedforward anticipates the error based on the stick input, giving responsiveness to the quad."
+    },
+    "pidTuningPidTuningTipDMin": {
+        "message": "<b>Proportional:</b> You will notice a very strong resistant force to any attempts to move the MultiRotor<br><b>Integral:</b> Increase the ability to hold overall initial position and reduce drift, but also increase the delay in returning to initial position.<br><b>Derivative:</b> Improves the speed at which deviations are recovered, but increases noise<br><b>Feedforward:</b> Usually the PID controller reacts to the error. The Feedforward anticipates the error based on the stick input, giving responsiveness to the quad.<br><b>D Min:</b> D Min provides a way to have a lower level of D in normal flight and a higher level for quick maneuvers that might cause overshoot, like flips and rolls. It also brings D up during prop wash. A value of zero will disable the feature."
     },
     "pidTuningRatesTip": {
         "message": "Play with the rates and see how those affect the stick curve"

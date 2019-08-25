@@ -1,21 +1,3 @@
-.tab-pid_tuning .tpa th {
-    background-color: #828885;
-    padding: 4px;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: white;
-    text-align: left;
-}
-
-.tab-pid_tuning .throttle_limit th {
-    background-color: #828885;
-    padding: 4px;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: white;
-    text-align: left;
-}
-
 .tab-pid_tuning .cf tr {
     background-color: #DEDEDE;
 }
@@ -24,10 +6,19 @@
     border-right: solid 1px silver;
     height: 19px;
     font-weight: normal;
+    padding: 4px;
+    color:white;
+    text-align: left;
+    background: var(--quietHeader);
+}
+
+.tab-pid_tuning .cf th:first-child {
+    border-top-left-radius: 3px;
 }
 
 .tab-pid_tuning .cf th:last-child {
     border-right: 0px;
+    border-top-right-radius: 3px;
 }
 
 .tab-pid_tuning .cf td:first-child {
@@ -53,153 +44,24 @@
     border: 1px solid silver;
 }
 
+.tab-pid_tuning .throttle_curve {
+    float: right;
+    width: 100%;
+    background-image: var(--paper);
+    background-size: 200%;
+    background-position: center;
+    height: 164px;
+}
+
 .tab-pid_tuning .curves {
     float: left;
     margin-right: 10px;
 }
 
-.tab-pid_tuning .throttle_curve {
-    float: right;
-    width: calc(100% - 2px); /* - ( "virtual" margin) */
-    margin: 0 2px 0px 0;
-    border: 1px solid silver;
-    border-radius: 3px;
-    background-image: var(--paper);
-    background-size: 200%;
-    background-position: center;
-}
-
-.tab-pid_tuning .throttle {
-    float: right;
-    width: 45%;
-}
-
-.tab-pid_tuning .throttle table {
-    border-collapse: collapse;
-    width: calc(100% - 2px);
-}
-
-.tab-pid_tuning .throttle table, .tab-pid_tuning .throttle table th, .tab-pid_tuning .throttle table td {
-    padding: 4px;
-    text-align: left;
-    padding-left: 6px;
-}
-
-.tab-pid_tuning .throttle table th {
-    background: var(--quietHeader);
-    color: var(--quietText);
-    border-right: 1px solid silver;
-    font-weight: normal;
-}
-
-.tab-pid_tuning .throttle table th:first-child {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .throttle table th:last-child {
-    border-top-right-radius: 3px;
-    border-right: 0px;
-}
-
-.tab-pid_tuning .throttle table td {
-    background: #DEDEDE;
-    border-right: 1px solid silver;
-    padding: 1px;
-}
-
-.tab-pid_tuning .throttle table td:first-child {
-    border-bottom-left-radius: 3px;
-}
-
-.tab-pid_tuning .throttle table td:last-child {
-    border-bottom-right-radius: 3px;
-    border-right: 0px;
-}
-
-.tab-pid_tuning .throttle {
-    float: right;
-    width: 45%;
-}
-
-.tab-pid_tuning .throttle table {
-    border-collapse: collapse;
-    width: calc(100% - 2px);
-}
-
-.tab-pid_tuning .throttle table, .tab-pid_tuning .throttle table th, .tab-pid_tuning .throttle table td {
-    padding: 4px;
-    text-align: left;
-    padding-left: 6px;
-}
-
-.tab-pid_tuning .throttle table tr:nth-child(odd) {
-    background-color: #ececec;
-}
-
-.tab-pid_tuning .throttle table input {
-    width: calc(100% - 8px);
-    border: 1px solid silver;
-    border-radius: 3px;
-    height: 20px;
-    margin: 3px;
-    line-height: 20px;
-    text-align: right;
-}
-
-.tab-pid_tuning .tpa th:nth-child(2) {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .tpa th:first-child {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .tpa th:last-child {
-    border-top-right-radius: 3px;
-}
-
-.tab-pid_tuning .throttle_limit th:nth-child(2) {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .throttle_limit th:first-child {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .throttle_limit th:last-child {
-    border-top-right-radius: 3px;
-}
-
-.tab-pid_tuning .rc_curve {
-    float: right;
-    width: calc(100% - 2px); /* - ( "virtual" margin) */
-}
-
-.tab-pid_tuning .rc_curve th {
-    background-color: var(--quietHeader);
-    padding: 4px;
-    border-left: 0px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-    color: var(--quietText);
-    text-align: left;
-}
-
-.tab-pid_tuning .rc_curve th:first-child {
-    border-top-left-radius: 3px;
-}
-
-.tab-pid_tuning .rc_curve th:last-child {
-    border-top-right-radius: 3px;
-}
-
 .tab-pid_tuning .rate_curve {
-    margin: 0 4px 0px 0;
     height: 100%;
-    min-height: 250px;
+    min-height: 234px;
     min-width: 200px;
-    border: 1px solid silver;
-    border-radius: 3px;
     background-image: var(--paper);
     background-size: 200%;
     background-position: center;
@@ -218,7 +80,12 @@
 }
 
 .tab-pid_tuning .gui_box {
-    margin-bottom: 0px;
+    margin-bottom: 5px;
+    display: table;
+}
+
+.tab-pid_tuning .subtab-filter .gui_box {
+    float: none;
 }
 
 .tab-pid_tuning table .inputBackground {
@@ -247,10 +114,12 @@
 
 .tab-pid_tuning .pid_titlebar th:first-child {
     text-align: left;
+    border-top-left-radius: 3px;
 }
 
 .tab-pid_tuning .pid_titlebar th:last-child {
     border-right: none;
+    border-top-right-radius: 3px;
 }
 
 .tab-pid_tuning table tr td:first-child {
@@ -279,40 +148,57 @@
 }
 
 .tab-pid_tuning table.compensation tr {
-    height: 25px;
+    height: 30px;
+    border-bottom: 1px solid #ccc;
+}
+
+.tab-pid_tuning table.compensation tr:last-child {
+    border-bottom: none;
 }
 
 .tab-pid_tuning table.compensation td {
-    width: 60%;
     padding-left: 5px;
     padding-right: 5px;
 }
 
 .tab-pid_tuning table.compensation td:first-child {
-    width: 10%;
-    text-align: right;
+    width: 65px;
+    text-align: center;
+    vertical-align: top;
+    padding-top: 4px;
 }
 
 .tab-pid_tuning table.compensation td:last-child {
-    width: 30%;
+    width: 100%;
+}
+
+.tab-pid_tuning table.compensation .helpicon {
+    margin-top: 3px
 }
 
 .tab-pid_tuning table.compensation .suboption {
-    margin-left: 4%;
-    white-space: nowrap;
+    margin-left: 2%;
+    display: flex;
+    flex-flow: row wrap-reverse;
+    align-items: center;
+    padding-bottom: 2px;
 }
 
-.tab-pid_tuning table.compensation .suboption select{
-    text-align-last: left;
+.tab-pid_tuning table.compensation .suboption select {
+    width: 80px;
+    text-align-last: right;
     font-size: 1.1em;
     color: darkslategrey;
-    padding-left: 5px;
+    box-sizing: border-box;
 }
 
-.tab-pid_tuning table.compensation .suboption input{
-    display: inline-block;
-    width: 45px;
-    padding-left: 5px;
+.tab-pid_tuning table.compensation .suboption input {
+    width: 80px;
+    box-sizing: border-box;
+}
+
+.tab-pid_tuning table.compensation .suboption label {
+    margin-left: 5px;
 }
 
 .tab-pid_tuning .pidTuningFeatures td {
@@ -362,18 +248,21 @@
     height: 20px;
     line-height: 20px;
     text-align: right;
-    border: 0px solid #ccc;
-    border-radius: 0px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
-.tab-pid_tuning .subtab-filter table input {
+.tab-pid_tuning .subtab-filter table input,
+.tab-pid_tuning .subtab-filter table select {
     width: 77px;
     float: right;
+    box-sizing: border-box;
 }
 
 .tab-pid_tuning table select {
-    width: 77px;
     text-align-last: right;
+    border-radius: 3px;
+    border: 1px solid #ccc;
 }
 
 .tab-pid_tuning .tab_container {
@@ -393,12 +282,10 @@
 
 .tab-pid_tuning .tab_container td:first-child {
     border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
 }
 
 .tab-pid_tuning .tab_container td:last-child {
     border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
     background-color: #2e2e2e;
 }
 
@@ -441,17 +328,7 @@
 }
 
 .tab-pid_tuning .new_rates {
-    text-align: left;
-}
-
-.tab-pid_tuning .tpa {
-    float: right;
-    width: calc(100% - 2px); /* - ( "virtual" margin) */
-}
-
-.tab-pid_tuning .throttle_limit {
-    float: right;
-    width: calc(100% - 2px); /* - ( "virtual" margin) */
+    text-align: center;
 }
 
 .tab-pid_tuning .top-buttons {
@@ -507,12 +384,24 @@
     float: left;
 }
 
+.tab-pid_tuning .pid_mode .helpicon {
+    margin-top: 0px;
+}
+
 .tab-pid_tuning .pid_titlebar {
     color: #fff;
     background-color: var(--quietHeader);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     height: 20px;
+}
+
+.tab-pid_tuning .pid_titlebar.needed_by_LEVEL {
+    border-radius: 0px;
+}
+
+.tab-pid_tuning .cf .throttleCurvePreview {
+    padding: 0px;
 }
 
 .pid_roll {
@@ -562,7 +451,7 @@
 }
 
 .tab-pid_tuning .spacer_left {
-    padding-left: 15px;
+    padding-left: 0px;
     float: right;
     width: calc(100% - 20px)
 }
@@ -637,10 +526,6 @@
     padding-left: 0px;
 }
 
-.tab-pid_tuning .tpa-breakpoint {
-    border-top-left-radius: 0px;
-}
-
 .tab-pid_tuning .roll {
     border-bottom-left-radius: 3px;
 }
@@ -661,7 +546,7 @@
 }
 
 .tab-pid_tuning .topspacer {
-    margin-top:15px;
+    margin-top: 5px;
 }
 
 .tab-pid_tuning .bottomarea {
@@ -675,6 +560,7 @@
     padding-top: 5px;
     padding-bottom: 5px;
     background-color: #f9f9f9;
+    height: 20px;
 }
 
 .tab-pid_tuning .profile {
@@ -731,7 +617,7 @@
 .tab-pid_tuning .rates_preview_cell {
     position: relative;
     width: 100%;
-    height: 320px;
+    height: 362px;
 }
 
 .tab-pid_tuning .rates_preview {
@@ -743,10 +629,6 @@
     background-image: var(--paper);
     background-size: 100%;
     background-position: center;
-    border: 1px solid silver;
-    margin-top: -1px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 
 .tab-pid_tuning .pidTuning td {
@@ -770,7 +652,7 @@
 }
 
 .tab-pid_tuning .pidTuning td {
-width: 40%;
+    width: 40%;
 }
 
 .tab-pid_tuning .new_rates td:first-child {
@@ -782,23 +664,13 @@ width: 40%;
     border-bottom-right-radius: 0px;
 }
 
-.tab-pid_tuning .rc_curve .cf tr  {
-    border-bottom: 1px solid silver;
-}
-
 .tab-pid_tuning .rc_curve .cf tr td {
-    border: none;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
-    padding-bottom: 3px;
+    padding: 0px;
 }
 
 .tab-pid_tuning .rc_curve_bg {
     float: left;
-    background: #ddd;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    }
+}
 
 .tab-pid_tuning .new_rates_last-child {
     border-bottom: none;
@@ -905,4 +777,54 @@ width: 40%;
     border: 1px solid silver;
     margin-left: 5px;
     width: 120px;
+}
+
+.tab-pid_tuning .subtab-rates {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.tab-pid_tuning .subtab-rates .cf_column {
+    min-width: 380px;
+    flex: 1;
+}
+
+.tab-pid_tuning .subtab-pid {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.tab-pid_tuning .subtab-pid .cf_column {
+    min-width: 470px;
+    flex: 1;
+}
+
+.tab-pid_tuning .subtab-pid .note {
+    flex: 0 0 100%;
+}
+
+.tab-pid_tuning table.filterTable {
+    table-layout: auto;
+}
+
+.tab-pid_tuning table.filterTable td:first-child {
+    width: 25%;
+}
+
+@media only screen and (max-width: 1205px) {
+
+.tab-pid_tuning .subtab-pid .spacer_left {
+    width: 100%;
+}
+}
+
+@media only screen and (max-width: 1405px) {
+    
+.tab-pid_tuning .subtab-rates .ratePreview.spacer_left {
+    width: 100%;
+}
 }

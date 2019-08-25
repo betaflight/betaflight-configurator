@@ -19,7 +19,7 @@
 }
 
 .tab-pid_tuning .cf tr {
-    background-color: #393b3a;
+    background-color: #414443;
 }
 
 .tab-pid_tuning .cf th {
@@ -40,40 +40,26 @@
     color: white;
 }
 
-.tab-pid_tuning .throttle_curve {
-    border: 1px solid #9c9c9c;
-}
-
 .tab-pid_tuning .throttle table th {
     border-right: 1px solid #9c9c9c;
 }
 
 .tab-pid_tuning .throttle table td {
-    background: #414443;
     border-right: 1px solid #9c9c9c;
 }
 
 .tab-pid_tuning .throttle table td {
-    background: #414443;
     border-right: 1px solid #9c9c9c;
 }
 
 .tab-pid_tuning .throttle table tr:nth-child(odd) {
-    background-color: #393b3a;
+    background-color: #414443;
 }
 
 .tab-pid_tuning .throttle table input {
     border: 1px solid #9c9c9c;
     background-color: #3a3a3a;
     color: white;
-}
-
-.tab-pid_tuning .rc_curve th {
-    border-bottom: 1px solid #00000000;
-}
-
-.tab-pid_tuning .rate_curve {
-    border: 1px solid #9c9c9c;
 }
 
 .tab-pid_tuning table, .tab-pid_tuning table td {
@@ -104,12 +90,13 @@
 }
 
 .tab-pid_tuning table input,.inputBackground {
-    border: 0px solid #9c9c9c;
+    border: 1px solid #9c9c9c;
     background-color: #3a3a3a;
     color: white;
 }
 
 .tab-pid_tuning table select {
+    border: 1px solid #9c9c9c;
     text-align-last: right;
     background-color: #3a3a3a;
     color: white;
@@ -161,8 +148,8 @@
 
 
 .pid_mode {
-    background-color: #1f1f1f;
-    border-bottom: 1px solid #1f1f1f;
+    background-color: #3c3c3c;
+    border-bottom: 1px solid #3c3c3c;
     color: white;
 }
 
@@ -211,20 +198,8 @@
     border: 1px solid #9c9c9c;
 }
 
-.tab-pid_tuning .rates_preview {
-    border: 1px solid #9c9c9c;
-}
-
 .tab-pid_tuning .pidTuning tr {
     border-bottom: 1px solid #9c9c9c;
-}
-
-.tab-pid_tuning .rc_curve .cf tr  {
-    border-bottom: 1px solid #9c9c9c;
-}
-
-.tab-pid_tuning .rc_curve_bg {
-    background: #393b3a;
 }
 
 .tabarea {
@@ -244,4 +219,16 @@
 
 .tab-pid_tuning dialog select {
     border: 1px solid #9c9c9c;
+}
+
+.tab-pid_tuning input:disabled,
+.tab-pid_tuning .cf input:disabled,
+.tab-pid_tuning select:disabled,
+.tab-pid_tuning .cf select:disabled {
+    color: rgb(105, 105, 105);
+    background-color: #2d2d2d;
+}
+
+.tab-pid_tuning table.compensation tr {
+    border-bottom: 1px solid #6b6b6b;
 }
