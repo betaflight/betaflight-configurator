@@ -4749,7 +4749,7 @@
     },
 
     "vtxHelp": {
-        "message": "You can configure here the values for your Video Trasmitter (VTX). You can consult and configure the values of the transmission including the VTX Tables if the flight controller and the VTX support it",
+        "message": "Here you can configure the values for your Video Transmitter (VTX). You can view and change the transmission values, including the VTX Tables, if the flight controller and VTX support it",
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
