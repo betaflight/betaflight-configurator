@@ -1693,7 +1693,7 @@ MspHelper.prototype.crunch = function(code) {
                             .push8(RX_CONFIG.rcSmoothingDerivativeType);
                         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                             buffer.push8(RX_CONFIG.usbCdcHidType)
-                                .push8(RX_CONFIG.rcSmoothingAutoSmoothness);
+                                  .push8(RX_CONFIG.rcSmoothingAutoSmoothness);
                         }
                     }
                 }

@@ -647,12 +647,12 @@ function updateInterpolationView() {
     $('.tab-receiver .rcSmoothing-derivative-manual').show();
     $('.tab-receiver .rcSmoothing-input-manual').show();
     if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
-        if (parseInt(RX_CONFIG.rcSmoothingDerivativeCutoff) === 0 || parseInt(RX_CONFIG.rcSmoothingInputCutoff) === 0) {
+        if (RX_CONFIG.rcSmoothingDerivativeCutoff == 0 || RX_CONFIG.rcSmoothingInputCutoff == 0) {
             $('.tab-receiver .rcSmoothing-auto-smoothness').show();
         }
     }
 
-    if (parseInt(RX_CONFIG.rcSmoothingType) === 0) {
+    if (RX_CONFIG.rcSmoothingType == 0) {
         $('.tab-receiver .rcInterpolation').show();
         $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
         $('.tab-receiver .rcSmoothing-input-cutoff').hide();
@@ -662,10 +662,10 @@ function updateInterpolationView() {
         $('.tab-receiver .rcSmoothing-input-manual').hide();
         $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
     }
-    if (parseInt(RX_CONFIG.rcSmoothingDerivativeCutoff) === 0) {
+    if (RX_CONFIG.rcSmoothingDerivativeCutoff == 0) {
         $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
     }
-    if (parseInt(RX_CONFIG.rcSmoothingInputCutoff) === 0) {
+    if (RX_CONFIG.rcSmoothingInputCutoff == 0) {
         $('.tab-receiver .rcSmoothing-input-cutoff').hide();
     }
 }
