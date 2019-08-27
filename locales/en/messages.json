@@ -4909,7 +4909,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "This table represents the different values of power that can be used for the VTX. They are divided into two: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> each power level requires a value that is defined by the hardware manufacturer. Ask your manufacturer for the correct value or consult the Betaflight wiki of VTX Tables to grab some samples. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> you can put here the label you want for each power level value. It can be numbers (25, 200, 600, 1.2), letters (OFF, MIN, MAX) or a mix of them. <br><br>You must configure <b>only</b> the power levels that are legal at your contry.",
+        "message": "This table represents the different values of power that can be used for the VTX. They are divided into two: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> each power level requires a value that is defined by the hardware manufacturer. Ask your manufacturer for the correct value or consult the Betaflight wiki of VTX Tables to grab some samples. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> you can put here the label you want for each power level value. It can be numbers (25, 200, 600, 1.2), letters (OFF, MIN, MAX) or a mix of them. <br><br>You must configure <b>only</b> the power levels that are legal at your country.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
