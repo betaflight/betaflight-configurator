@@ -2298,6 +2298,22 @@
     "motorsSensorAccelSelect":{
         "message": "accel"
     },
+    "motorsTelemetryHelp": {
+        "message": "This numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (in RPM), the error rate of the telemetry link and the temperature of the ESCs.",
+        "description": "Help text for the telemetry values in the motors tab."
+    },
+    "motorsRPM": {
+        "message": "R: {{motorsRpmValue}}",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
+    },
+    "motorsRPMError": {
+        "message": "E: {{motorsErrorValue}}%",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
+    },
+    "motorsESCTemperature": {
+        "message": "T: {{motorsESCTempValue}}&deg;C",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
+    },
     "motorsMaster": {
         "message": "Master"
     },

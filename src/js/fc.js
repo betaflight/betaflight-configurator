@@ -26,6 +26,7 @@ var SERVO_RULES;
 var SERIAL_CONFIG;
 var SENSOR_DATA;
 var MOTOR_DATA;
+var MOTOR_TELEMETRY_DATA;
 var SERVO_DATA;
 var GPS_DATA;
 var ANALOG;
@@ -210,6 +211,15 @@ var FC = {
         MOTOR_DATA =                    new Array(8);
         SERVO_DATA =                    new Array(8);
 
+        MOTOR_TELEMETRY_DATA = {
+            rpm:                        [0, 0, 0, 0, 0, 0, 0, 0],
+            invalidPercent:             [0, 0, 0, 0, 0, 0, 0, 0],
+            temperature:                [0, 0, 0, 0, 0, 0, 0, 0],
+            voltage:                    [0, 0, 0, 0, 0, 0, 0, 0],
+            current:                    [0, 0, 0, 0, 0, 0, 0, 0],
+            consumption:                [0, 0, 0, 0, 0, 0, 0, 0],
+        };
+
         GPS_DATA = {
             fix:                        0,
             numSat:                     0,
@@ -277,6 +287,10 @@ var FC = {
             minthrottle:                0,
             maxthrottle:                0,
             mincommand:                 0,
+            motor_count:                0,
+            motor_poles:                0,
+            use_dshot_telemetry:        false,
+            use_esc_sensor:             false,
         };
 
         GPS_CONFIG = {
