@@ -233,7 +233,9 @@ TABS.receiver.initialize = function (callback) {
 
         // UI Hooks
         $('a.refresh').click(function () {
-	    // Todo: refresh data here
+            tab.refresh(function () {
+                GUI.log(i18n.getMessage('receiverDataRefreshed'));
+            });
         });
 
         $('a.update').click(function () {
@@ -333,7 +335,7 @@ TABS.receiver.initialize = function (callback) {
 
             var rcSmoothingnNumberElement = $('input[name="rcSmoothingInputHz-number"]');
             var rcSmoothingnDerivativeNumberElement = $('input[name="rcSmoothingDerivativeCutoff-number"]');
-            
+
             $('.tab-receiver .rcSmoothing-input-cutoff').show();
             $('select[name="rcSmoothing-input-manual-select"]').val("1");
             $('.tab-receiver .rc-smoothing-input-blank').hide();
@@ -371,7 +373,7 @@ TABS.receiver.initialize = function (callback) {
                     rcSmoothingnDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
                 }
             });
-            
+
             rcSmoothingnNumberElement.change(function () {
                 RX_CONFIG.rcSmoothingInputCutoff = $(this).val();
             });
@@ -397,6 +399,25 @@ TABS.receiver.initialize = function (callback) {
             });
             rc_smoothing_input_type.val(RX_CONFIG.rcSmoothingInputType);
 
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                $('select[name="rcSmoothing-input-manual-select"], select[name="rcSmoothing-input-derivative-select"]').change(function() {
+                    if ($('select[name="rcSmoothing-input-manual-select"]').val() == 0 || $('select[name="rcSmoothing-input-derivative-select"]').val() == 0) {
+                        $('.tab-receiver .rcSmoothing-auto-smoothness').show();
+                    } else {
+                        $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
+                    }
+                });
+                $('select[name="rcSmoothing-input-manual-select"]').change();
+
+                var rc_smoothing_auto_smoothness = $('input[name="rcSmoothingAutoSmoothness-number"]');
+                rc_smoothing_auto_smoothness.change(function() {
+                    RX_CONFIG.rcSmoothingAutoSmoothness = $(this).val();
+                });
+                rc_smoothing_auto_smoothness.val(RX_CONFIG.rcSmoothingAutoSmoothness);
+            } else {
+                $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
+            }
+
             updateInterpolationView();
         } else {
             $('.tab-receiver .rcInterpolation').show();
@@ -407,6 +428,7 @@ TABS.receiver.initialize = function (callback) {
             $('.tab-receiver .rcSmoothing-derivative-manual').hide();
             $('.tab-receiver .rcSmoothing-input-manual').hide();
             $('.tab-receiver .rc-smoothing-type').hide();
+            $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
         }
 
         // Only show the MSP control sticks if the MSP Rx feature is enabled
@@ -455,7 +477,7 @@ TABS.receiver.initialize = function (callback) {
                 }
 
                 // Remove old data from array
-                while (RX_plot_data.length > 300) {
+                while (RX_plot_data[0].length > 300) {
                     for (var i = 0; i < RX_plot_data.length; i++) {
                         RX_plot_data[i].shift();
                     }
@@ -594,6 +616,18 @@ TABS.receiver.cleanup = function (callback) {
     if (callback) callback();
 };
 
+TABS.receiver.refresh = function (callback) {
+    var self = this;
+
+    GUI.tab_switch_cleanup(function () {
+        self.initialize();
+
+        if (callback) {
+            callback();
+        }
+    });
+};
+
 TABS.receiver.updateRcInterpolationParameters = function () {
     if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
         if ($('select[name="rcInterpolation-select"]').val() === '3') {
@@ -612,8 +646,13 @@ function updateInterpolationView() {
     $('.tab-receiver .rcSmoothing-input-type').show();
     $('.tab-receiver .rcSmoothing-derivative-manual').show();
     $('.tab-receiver .rcSmoothing-input-manual').show();
+    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        if (RX_CONFIG.rcSmoothingDerivativeCutoff == 0 || RX_CONFIG.rcSmoothingInputCutoff == 0) {
+            $('.tab-receiver .rcSmoothing-auto-smoothness').show();
+        }
+    }
 
-    if (parseInt(RX_CONFIG.rcSmoothingType) === 0) {
+    if (RX_CONFIG.rcSmoothingType == 0) {
         $('.tab-receiver .rcInterpolation').show();
         $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
         $('.tab-receiver .rcSmoothing-input-cutoff').hide();
@@ -621,11 +660,12 @@ function updateInterpolationView() {
         $('.tab-receiver .rcSmoothing-input-type').hide();
         $('.tab-receiver .rcSmoothing-derivative-manual').hide();
         $('.tab-receiver .rcSmoothing-input-manual').hide();
+        $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
     }
-    if (parseInt(RX_CONFIG.rcSmoothingDerivativeCutoff) === 0) {
+    if (RX_CONFIG.rcSmoothingDerivativeCutoff == 0) {
         $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
     }
-    if (parseInt(RX_CONFIG.rcSmoothingInputCutoff) === 0) {
+    if (RX_CONFIG.rcSmoothingInputCutoff == 0) {
         $('.tab-receiver .rcSmoothing-input-cutoff').hide();
     }
 }

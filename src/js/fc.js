@@ -461,6 +461,8 @@ var FC = {
             rcSmoothingDerivativeCutoff:  0, 
             rcSmoothingInputType:         0,
             rcSmoothingDerivativeType:    0,
+            rcSmoothingAutoSmoothness:    0,
+            usbCdcHidType:                0,
         };
 
         FAILSAFE_CONFIG = {
