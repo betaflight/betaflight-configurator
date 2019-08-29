@@ -345,12 +345,9 @@ GUI_control.prototype.content_ready = function (callback) {
 
     // loading tooltip
     jQuery(document).ready(function($) {
-        $('cf_tip').each(function() { // Grab all ".cf_tip" elements, and for each...
-        log(this); // ...print out "this", which now refers to each ".cf_tip" DOM element
-    });
 
-    $('.cf_tip').each(function() {
-        $(this).jBox('Tooltip', {            
+        new jBox('Tooltip', {
+            attach: '.cf_tip',
             delayOpen: 100,
             delayClose: 100,
             position: {
@@ -358,10 +355,9 @@ GUI_control.prototype.content_ready = function (callback) {
                 y: 'center'
             },
             outside: 'x'
-            });
         });
-    });
 
+    });
 
     if (callback) callback();
 }
