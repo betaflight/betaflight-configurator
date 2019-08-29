@@ -61,6 +61,7 @@ var COPY_PROFILE;
 var VTX_CONFIG;
 var VTXTABLE_BAND;
 var VTXTABLE_POWERLEVEL;
+var MULTIPLE_MSP;
 var DEFAULT;
 
 var FC = {
@@ -517,6 +518,10 @@ var FC = {
             vtxtable_powerlevel_number:     0,
             vtxtable_powerlevel_value:      0,
             vtxtable_powerlevel_label:      0,
+        };
+
+        MULTIPLE_MSP = {
+            msp_commands:                   [],
         };
 
         DEFAULT = {
