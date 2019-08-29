@@ -115,6 +115,8 @@ var MSPCodes = {
     MSP_VTXTABLE_BAND:              137,
     MSP_VTXTABLE_POWERLEVEL:        138,
 
+    MSP_MOTOR_TELEMETRY:            139,
+
     MSP_STATUS_EX:                  150,
 
     MSP_UID:                        160,

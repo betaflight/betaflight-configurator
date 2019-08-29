@@ -142,6 +142,17 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     MOTOR_DATA[i] = data.readU16();
                 }
                 break;
+            case MSPCodes.MSP_MOTOR_TELEMETRY:
+                var telemMotorCount = data.readU8();
+                for (let i = 0; i < telemMotorCount; i++) {
+                    MOTOR_TELEMETRY_DATA.rpm[i] = data.readU32();   // RPM
+                    MOTOR_TELEMETRY_DATA.invalidPercent[i] = data.readU16();   // 10000 = 100.00%
+                    MOTOR_TELEMETRY_DATA.temperature[i] = data.readU8();       // degrees celsius
+                    MOTOR_TELEMETRY_DATA.voltage[i] = data.readU16();          // 0.01V per unit
+                    MOTOR_TELEMETRY_DATA.current[i] = data.readU16();          // 0.01A per unit
+                    MOTOR_TELEMETRY_DATA.consumption[i] = data.readU16();      // mAh
+                }
+                break;
             case MSPCodes.MSP_RC:
                 RC.active_channels = data.byteLength / 2;
                 for (var i = 0; i < RC.active_channels; i++) {
@@ -392,6 +403,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 MOTOR_CONFIG.minthrottle = data.readU16(); // 0-2000
                 MOTOR_CONFIG.maxthrottle = data.readU16(); // 0-2000
                 MOTOR_CONFIG.mincommand = data.readU16(); // 0-2000
+                if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                    MOTOR_CONFIG.motor_count = data.readU8();
+                    MOTOR_CONFIG.motor_poles = data.readU8();
+                    MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
+                    MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
+                }
                 break;
             case MSPCodes.MSP_COMPASS_CONFIG:
                 COMPASS_CONFIG.mag_declination = data.read16() / 100; // -18000-18000
@@ -1608,7 +1625,10 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push16(MOTOR_CONFIG.minthrottle)
                 .push16(MOTOR_CONFIG.maxthrottle)
                 .push16(MOTOR_CONFIG.mincommand);
-                break;
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                buffer.push8(MOTOR_CONFIG.motor_poles);
+            }
+            break;
         case MSPCodes.MSP_SET_GPS_CONFIG:
             buffer.push8(GPS_CONFIG.provider)
                 .push8(GPS_CONFIG.ublox_sbas);

@@ -45,7 +45,15 @@ TABS.motors.initialize = function (callback) {
     }
 
     function load_motor_data() {
-        MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_mixer_config);
+        MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_motor_telemetry_data);
+    }
+
+    function load_motor_telemetry_data() {
+        if (MOTOR_CONFIG.use_dshot_telemetry || MOTOR_CONFIG.use_esc_sensor) {
+            MSP.send_message(MSPCodes.MSP_MOTOR_TELEMETRY, false, false, load_mixer_config);
+        } else {
+            load_mixer_config();
+        }
     }
 
     function load_mixer_config() {
@@ -215,6 +223,15 @@ TABS.motors.initialize = function (callback) {
         }
 
         $('#motorsEnableTestMode').prop('checked', false);
+
+        if (semver.lt(CONFIG.apiVersion, "1.42.0") || !(MOTOR_CONFIG.use_dshot_telemetry || MOTOR_CONFIG.use_esc_sensor)) {
+            $(".motor_testing .telemetry").hide();
+        } else {
+            // Hide telemetry from unused motors (to hide the tooltip in an empty blank space)
+            for (let i = MOTOR_CONFIG.motor_count; i < MOTOR_DATA.length; i++) {
+                $(".motor_testing .telemetry .motor-" + i).hide();
+            }
+        }
 
         update_model(MIXER_CONFIG.mixer);
 
@@ -434,7 +451,7 @@ TABS.motors.initialize = function (callback) {
         }
 
         var motors_wrapper = $('.motors .bar-wrapper'),
-        servos_wrapper = $('.servos .bar-wrapper');
+            servos_wrapper = $('.servos .bar-wrapper');
 
         for (var i = 0; i < 8; i++) {
             motors_wrapper.append('\
@@ -592,7 +609,15 @@ TABS.motors.initialize = function (callback) {
         }
 
         function get_motor_data() {
-            MSP.send_message(MSPCodes.MSP_MOTOR, false, false, get_servo_data);
+            MSP.send_message(MSPCodes.MSP_MOTOR, false, false, get_motor_telemetry_data);
+        }
+
+        function get_motor_telemetry_data() {
+            if (MOTOR_CONFIG.use_dshot_telemetry || MOTOR_CONFIG.use_esc_sensor) {
+                MSP.send_message(MSPCodes.MSP_MOTOR_TELEMETRY, false, false, get_servo_data);
+            } else {
+                get_servo_data();
+            }
         }
 
         function get_servo_data() {
@@ -618,6 +643,48 @@ TABS.motors.initialize = function (callback) {
                     'height' : height + 'px',
                     'background-color' : 'rgba(255,187,0,1.'+ color +')'
                 });
+
+                if (i < MOTOR_CONFIG.motor_count && (MOTOR_CONFIG.use_dshot_telemetry || MOTOR_CONFIG.use_esc_sensor)) {
+
+                    const MAX_INVALID_PERCENT = 100,
+                          MAX_VALUE_SIZE = 6;
+
+                    let rpmMotorValue = MOTOR_TELEMETRY_DATA.rpm[i];
+
+                    // Reduce the size of the value if too big
+                    if (rpmMotorValue > 999999) {
+                        rpmMotorValue = (rpmMotorValue / 1000000).toFixed(5 - (rpmMotorValue / 1000000).toFixed(0).toString().length) + "M";  
+                    }
+
+                    rpmMotorValue = rpmMotorValue.toString().padStart(MAX_VALUE_SIZE);
+                    let telemetryText = i18n.getMessage('motorsRPM', {motorsRpmValue: rpmMotorValue});
+
+                    
+                    if (MOTOR_CONFIG.use_dshot_telemetry) {
+
+                        let invalidPercent = MOTOR_TELEMETRY_DATA.invalidPercent[i];
+
+                        let classError = (invalidPercent > MAX_INVALID_PERCENT) ? "warning" : "";
+                        invalidPercent = (invalidPercent / 100).toFixed(2).toString().padStart(MAX_VALUE_SIZE);
+
+                        telemetryText += "<br><span class='" + classError + "'>";
+                        telemetryText += i18n.getMessage('motorsRPMError', {motorsErrorValue: invalidPercent});
+                        telemetryText += "</span>";
+                    }
+
+                    if (MOTOR_CONFIG.use_esc_sensor) {
+
+                        let escTemperature = MOTOR_TELEMETRY_DATA.temperature[i];
+
+                        telemetryText += "<br>";
+                        escTemperature = escTemperature.toString().padStart(MAX_VALUE_SIZE);
+                        telemetryText += i18n.getMessage('motorsESCTemperature', {motorsESCTempValue: escTemperature});
+                    }
+
+                    $('.motor_testing .telemetry .motor-' + i).html(telemetryText);
+                }
+                
+
             }
 
             // servo indicators are still using old (not flexible block scale), it will be changed in the future accordingly
