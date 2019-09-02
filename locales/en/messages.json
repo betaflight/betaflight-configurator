@@ -1880,6 +1880,10 @@
     "auxiliaryMax": {
         "message": "Max"
     },
+    "auxiliaryDisabled": {
+        "message": "(DISABLED)",
+        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+    },    
     "auxiliaryAddRange": {
         "message": "Add Range"
     },
