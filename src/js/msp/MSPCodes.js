@@ -156,6 +156,8 @@ var MSPCodes = {
     MSP_SET_VTXTABLE_BAND:          227,
     MSP_SET_VTXTABLE_POWERLEVEL:    228,
 
+    MSP_MULTIPLE_MSP:               230,
+
     MSP_MODE_RANGES_EXTRA:          238,
     MSP_SET_ACC_TRIM:               239,
     MSP_ACC_TRIM:                   240,

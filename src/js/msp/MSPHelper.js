@@ -35,6 +35,8 @@ function MspHelper () {
     };
 
     self.SIGNATURE_LENGTH = 32;
+
+    self.mspMultipleCache = [];
 }
 
 MspHelper.prototype.reorderPwmProtocols = function (protocol) {
@@ -1469,6 +1471,51 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_RTC:
                 console.log('Real time clock set');
                 break;
+
+            case MSPCodes.MSP_MULTIPLE_MSP:
+
+                let hasReturnedSomeCommand = false; // To avoid infinite loops
+
+                while (data.offset < data.byteLength) {
+
+                    hasReturnedSomeCommand = true;
+
+                    let command = self.mspMultipleCache.shift();
+                    let payloadSize = data.readU8();
+
+                    if (payloadSize != 0) {
+
+                        let currentDataHandler = {
+                                code         : command,
+                                dataView     : new DataView(data.buffer, data.offset, payloadSize),
+                                callbacks    : [],
+                        }
+    
+                        self.process_data(currentDataHandler);
+
+                        data.offset += payloadSize;
+                    }
+                }
+
+                if (hasReturnedSomeCommand) {
+                    // Send again MSP messages missing, the buffer in the FC was too small
+                    if (self.mspMultipleCache.length > 0) {
+    
+                        var partialBuffer = [];
+                        for (let i = 0; i < self.mspMultipleCache.length; i++) {
+                            partialBuffer.push8(self.mspMultipleCache[i]);
+                        }
+    
+                        MSP.send_message(MSPCodes.MSP_MULTIPLE_MSP, partialBuffer, false, dataHandler.callbacks);
+                        dataHandler.callbacks = [];
+                    }
+                } else {
+                    console.log("MSP Multiple can't process the command");
+                    self.mspMultipleCache = [];
+                }
+
+                break;
+
             default:
                 console.log('Unknown code detected: ' + code);
         } else {
@@ -1508,6 +1555,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 MspHelper.prototype.crunch = function(code) {
     var buffer = [];
     var self = this;
+
     switch (code) {
         case MSPCodes.MSP_SET_FEATURE_CONFIG:
             var featureMask = FEATURE_CONFIG.features.getMask();
@@ -2060,6 +2108,18 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(VTXTABLE_BAND.vtxtable_band_frequencies.length);
             for (let i = 0; i < VTXTABLE_BAND.vtxtable_band_frequencies.length; i++) {
                 buffer.push16(VTXTABLE_BAND.vtxtable_band_frequencies[i]);
+            }
+
+            break;
+
+        case MSPCodes.MSP_MULTIPLE_MSP:
+
+            while (MULTIPLE_MSP.msp_commands.length > 0) {
+
+                let mspCommand = MULTIPLE_MSP.msp_commands.shift();
+
+                self.mspMultipleCache.push(mspCommand);
+                buffer.push8(mspCommand);
             }
 
             break;
