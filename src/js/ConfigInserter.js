@@ -60,6 +60,9 @@ function generateData(firmware, input, startAddress) {
         throw new Error('Configuration area in firmware not free.');
     }
 
+    // Add 0 terminator
+    input = input + '\0';
+
     var inputIndex = 0;
     while (inputIndex < input.length) {
         var remaining = input.length - inputIndex;
