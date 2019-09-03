@@ -370,13 +370,12 @@
 }
 
 .tab-configuration .gui_box {
-    font-style: bold;
-    font-family: 'open_sanssemibold', Arial;
+    font-weight: bold;
 }
 
 .tab-configuration .gui_box span {
     font-style: normal;
-    font-family: 'open_sansregular', Arial;
+    font-weight: normal;
     line-height: 19px;
     color: #4f4f4f;
     font-size: 11px;

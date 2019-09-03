@@ -267,7 +267,7 @@
 
 .tab-pid_tuning .tab_container {
     float: left;
-    width: 396px;
+    width: 408px;
     height: 29px;
     border-right-width: 0px;
     background: #fff;
@@ -347,7 +347,6 @@
   font-size: 12px;
   border-bottom: 1px solid #ccc;
   color: #828282;
-  /* font-family: 'open_sans', Arial; */
   background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .2) 100%, transparent);
 }
 
@@ -371,7 +370,7 @@
     font-size: 12px;
     border-bottom: 1px solid #ccc;
     color: #828282;
-    font-family: 'open_sans', Arial;
+    font-weight: normal;
     background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%,
         rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%,
         rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%,
@@ -490,7 +489,7 @@
 
 .tab-pid_tuning .gui_box span {
     font-style: normal;
-    font-family: 'open_sansregular', Arial;
+    font-weight: normal;
     line-height: 19px;
     color: #7d7d7d;
     font-size: 11px;
@@ -733,44 +732,6 @@
 
 .tab-pid_tuning dialog h3 {
     margin-bottom: 0.5em;
-}
-
-.tab-pid_tuning .regular-button {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    margin-right: 10px;
-    background-color: var(--accent);
-    border-radius: 3px;
-    border: 1px solid #dba718;
-    color: #000;
-    font-family: 'open_sansbold', Arial;
-    font-size: 12px;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
-    display: inline-block;
-    cursor: pointer;
-    transition: all ease 0.2s;
-    padding: 0px;
-    padding-left: 9px;
-    padding-right: 9px;
-    line-height: 28px;
-}
-.tab-pid_tuning .regular-button:hover {
-    background-color: #ffcc3e;
-    transition: all ease 0.2s;
-}
-.tab-pid_tuning .regular-button:active {
-    background-color: #ffcc3e;
-    transition: all ease 0.0s;
-    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
-}
-.tab-pid_tuning .regular-button.disabled {
-    cursor: default;
-    color: #fff;
-    background-color: #AFAFAF;
-    border: 1px solid #AFAFAF;
-    pointer-events: none;
-    text-shadow: none;
-    opacity: 0.5;
 }
 
 .tab-pid_tuning dialog select {

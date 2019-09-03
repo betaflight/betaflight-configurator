@@ -19,6 +19,7 @@
 
 .tab-osd .spacer_box_title {
   float: none;
+  font-weight: normal;
 }
 
 .tab-osd .spacer_box_title .profileOsdHeader {
@@ -269,7 +270,7 @@
     border-radius: 2px;
     font-size: 11px;
     font-weight: normal;
-    font-family: 'open_sansregular', 'Segoe UI', Tahoma, sans-serif;
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif;
 }
 
 .tab-osd .preview .gui_box_bottombar {
@@ -370,7 +371,7 @@
 
 button {
   padding: 4px 10px !important;
-  font-family: 'open_sanssemibold', Arial;
+  font-weight: 600;
   font-size: 9pt !important;
   cursor: pointer;
 }
@@ -424,7 +425,6 @@ button {
 .spacer_box_title span {
   font-size: 11px;
   font-weight: normal;
-  font-family: 'open_sansregular', 'Segoe UI', Tahoma, sans-serif;
 }
 
 .spacer_box div input {
