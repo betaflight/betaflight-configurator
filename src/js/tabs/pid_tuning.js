@@ -9,7 +9,8 @@ TABS.pid_tuning = {
     currentRateProfile: null,
     SETPOINT_WEIGHT_RANGE_LOW: 2.55,
     SETPOINT_WEIGHT_RANGE_HIGH: 20,
-    SETPOINT_WEIGHT_RANGE_LEGACY: 2.54
+    SETPOINT_WEIGHT_RANGE_LEGACY: 2.54,
+    activeSubtab: 'pid',
 };
 
 TABS.pid_tuning.initialize = function (callback) {
@@ -891,34 +892,29 @@ TABS.pid_tuning.initialize = function (callback) {
             self.currentRates.rc_expo_pitch = self.currentRates.rc_expo;
         }
 
-        $('.tab-pid_tuning .tab_container .pid').on('click', function () {
-            $('.tab-pid_tuning .subtab-pid').show();
-            $('.tab-pid_tuning .subtab-rates').hide();
-            $('.tab-pid_tuning .subtab-filter').hide();
-
+        function activateSubtab(subtabName) {
+            const names = ['pid', 'rates', 'filter'];
+            if (!names.includes(subtabName)) {
+                console.debug('Invalid subtab name: "' + subtabName + '"');
+                return;
+            }
+            for (name of names) {
+                const el = $('.tab-pid_tuning .subtab-' + name);
+                el[name == subtabName ? 'show' : 'hide']();
+            }
             $('.tab-pid_tuning .tab_container td').removeClass('active');
-            $(this).addClass('active');
-        });
+            $('.tab-pid_tuning .tab_container .' + subtabName).addClass('active');
+            self.activeSubtab = subtabName;
+        }
 
-        $('.tab-pid_tuning .tab_container .rates').on('click', function () {
-            $('.tab-pid_tuning .subtab-rates').show();
-            $('.tab-pid_tuning .subtab-pid').hide();
-            $('.tab-pid_tuning .subtab-filter').hide();
+        activateSubtab(self.activeSubtab);
 
-            $('.tab-pid_tuning .tab_container td').removeClass('active');
-            $(this).addClass('active');
-        });
+        $('.tab-pid_tuning .tab_container .pid').on('click', () => activateSubtab('pid'));
 
-        $('.tab-pid_tuning .tab_container .filter').on('click', function () {
-            $('.tab-pid_tuning .subtab-filter').show();
-            $('.tab-pid_tuning .subtab-pid').hide();
-            $('.tab-pid_tuning .subtab-rates').hide();
+        $('.tab-pid_tuning .tab_container .rates').on('click', () => activateSubtab('rates'));
 
-            $('.tab-pid_tuning .tab_container td').removeClass('active');
-            $(this).addClass('active');
-        });
+        $('.tab-pid_tuning .tab_container .filter').on('click', () => activateSubtab('filter'));
 
-        
         function loadProfilesList() {
             var numberOfProfiles = 3;
             if (semver.gte(CONFIG.apiVersion, "1.20.0")
