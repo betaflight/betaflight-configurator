@@ -1189,6 +1189,18 @@
     "configurationDigitalIdlePercentHelp": {
         "message": "This is the 'idle' value in percent of maximum throttle that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the percent value to gain more idle speed."
     },
+    "configurationMotorPoles": {
+        "message": "Motor poles",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesLong": {
+        "message": "$t(configurationMotorPoles.message) (number of magnets on the motor bell)",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesHelp": {
+        "message": "This setting is used for some features like the RPM Filter.<br><br>Represents the number of magnets that are on the bell of the motor. <b>Do NOT count the stators</b> where the windings are located. Typical 5\" motors have 14 magnets, smaller ones like 3\" or less usually have 12 magnets.",
+        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
     "configurationThrottleMinimum": {
         "message": "Minimum Throttle (Lowest ESC value when armed)"
     },
@@ -3286,6 +3298,9 @@
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro Lowpass 2 Filter Type"
     },
+    "pidTuningLowpassFilterHelp": {
+        "message": "The Lowpass Filters can have two variants: static and dynamic. For a determined lowpass filter number only one (static or dynamic) can be enabled at the same time. The static only has a Cutoff that is a value that defines in some way where the filter starts. The dynamic defines a min and max values, that is the range where the Cutoff is placed. This Cutoff moves from min to max at the same time than you move the throttle stick."
+    },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filters"
     },
@@ -3337,8 +3352,29 @@
     "pidTuningDynamicNotchMinHzHelp": {
         "message": "Defines the lowest dynamic notch center frequency below which the dynamic notch will not go."
     },
-    "pidTuningLowpassFilterHelp": {
-        "message": "The Lowpass Filters can have two variants: static and dynamic. For a determined lowpass filter number only one (static or dynamic) can be enabled at the same time. The static only has a Cutoff that is a value that defines in some way where the filter starts. The dynamic defines a min and max values, that is the range where the Cutoff is placed. This Cutoff moves from min to max at the same time than you move the throttle stick."
+    "pidTuningRpmFilterGroup": {
+        "message": "Gyro RPM Filter",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmFilterHelp": {
+        "message": "RPM filtering is a bank of notch filters on gyro which use the RPM telemetry data to remove motor noise with surgical precision.<br><br><b><span class=\"message-positive\">IMPORTANT</span>: The ESC must support the Bidirectional DShot protocol and the value of the $t(configurationMotorPoles.message) in the $t(tabConfiguration.message) tab must be correct for this filter to work.</b>",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmHarmonics": {
+        "message": "Gyro RPM Filter Harmonics Number",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmHarmonicsHelp": {
+        "message": "Number of harmonics per motor. A value of 3 (recommended for most quads) will generate 3 notch filters, per motor for each axis, totaling 36 notches. One at the base motor frequency and two harmonics at multiples of that base frequency.",
+        "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHz": {
+        "message": "Gyro RPM Filter Min Frequency [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHzHelp": {
+        "message": "Minimum frequency that will be used by the RPM Filter.",
+        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profile dependent Filter Settings"
@@ -5156,6 +5192,14 @@
     },
     "configurationUnsyncedPWMFreq": {
         "message": "Motor PWM frequency"
+    },
+    "configurationDshotBidir": {
+        "message": "Bidirectional DShot (requires supported ESC firmware)",
+        "description": "Feature for the ESC/Motor"
+    },
+    "configurationDshotBidirHelp": {
+        "message": "When enabled lets the DSHOT protocol receive information directly from the ESC, needed by the RPM Filter and other features.<br><br>This requires the JESC firmware from jflight.net on BLHELI_S or the latest BLHELI_32 firmware.",
+        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
         "message": "Gyro update frequency"

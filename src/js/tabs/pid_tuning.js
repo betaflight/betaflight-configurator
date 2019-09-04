@@ -45,6 +45,8 @@ TABS.pid_tuning.initialize = function (callback) {
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_RC_DEADBAND);
     }).then(function() {
+        return MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
+    }).then(function() {
         MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
     });
 
@@ -351,9 +353,29 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter input[name="dynamicNotchQ"]').val(FILTER_CONFIG.dyn_notch_q);
             $('.pid_filter input[name="dynamicNotchMinHz"]').val(FILTER_CONFIG.dyn_notch_min_hz);
 
+            $('.rpmFilter').toggle(MOTOR_CONFIG.use_dshot_telemetry);
+
+            $('.pid_filter input[name="rpmFilterHarmonics"]').val(FILTER_CONFIG.gyro_rpm_notch_harmonics);
+            $('.pid_filter input[name="rpmFilterMinHz"]').val(FILTER_CONFIG.gyro_rpm_notch_min_hz);
+
+            $('.pid_filter #rpmFilterEnabled').change(function() {
+
+                let harmonics = $('.pid_filter input[name="rpmFilterHarmonics"]').val();
+                let checked = $(this).is(':checked') && harmonics != 0;
+
+                $('.pid_filter input[name="rpmFilterHarmonics"]').attr('disabled', !checked);
+                $('.pid_filter input[name="rpmFilterMinHz"]').attr('disabled', !checked);
+
+                if (harmonics == 0) {
+                    $('.pid_filter input[name="rpmFilterHarmonics"]').val(FILTER_DEFAULT.gyro_rpm_notch_harmonics);
+                }
+            }).prop('checked', FILTER_CONFIG.gyro_rpm_notch_harmonics != 0).change();
+
+
         } else {
             $('.itermRelaxCutoff').hide();
             $('.dynamicNotch').hide();
+            $('.rpmFilter').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -723,6 +745,10 @@ TABS.pid_tuning.initialize = function (callback) {
             FILTER_CONFIG.dyn_notch_width_percent = parseInt($('.pid_filter input[name="dynamicNotchWidthPercent"]').val());
             FILTER_CONFIG.dyn_notch_q = parseInt($('.pid_filter input[name="dynamicNotchQ"]').val());
             FILTER_CONFIG.dyn_notch_min_hz = parseInt($('.pid_filter input[name="dynamicNotchMinHz"]').val());
+
+            let rpmFilterEnabled = $('.pid_filter #rpmFilterEnabled').is(':checked');
+            FILTER_CONFIG.gyro_rpm_notch_harmonics = rpmFilterEnabled ? parseInt($('.pid_filter input[name="rpmFilterHarmonics"]').val()) : 0;
+            FILTER_CONFIG.gyro_rpm_notch_min_hz = parseInt($('.pid_filter input[name="rpmFilterMinHz"]').val());
         }
     }
 
