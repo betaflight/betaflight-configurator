@@ -57,7 +57,6 @@
   border-radius: 3px;
   border: 1px solid #e8b423;
   color: #000;
-  font-family: 'open_sansbold', Arial;
   font-size: 10px;
   line-height: 17px;
   text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
@@ -200,7 +199,7 @@
     padding-bottom: 2px;
     text-align: center;
     font-size: 12px;
-    font-family: 'open_sanslight', Arial;
+    font-weight: 300;
 }
 
 .tab-motors .titles {

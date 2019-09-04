@@ -73,7 +73,7 @@
     margin-top: 38px;
     margin-left: 15px;
     font-size: 12px;
-    font-family: 'open_sansregular', sans-serif;
+    font-weight: normal;
 }
 
 .tab-failsafe .radiobuttons input {
@@ -174,14 +174,14 @@
 
 .tab-failsafe .gui_box {
     font-style: normal;
-    font-family: 'open_sanssemibold', sans-serif;
+    font-weight: bold;
     margin-bottom: 15px;
     float: left;
 }
 
 .tab-failsafe .gui_box span {
     font-style: normal;
-    font-family: 'open_sansregular', sans-serif;
+    font-weight: normal;
     line-height: 19px;
     color: #4f4f4f;
     font-size: 11px;
@@ -205,8 +205,7 @@
     border-radius: 3px;
     border: 1px solid #686c6a;
     color: #fff !important;
-    font-weight: normal;
-    font-family: 'open_sanssemibold', sans-serif;
+    font-weight: 600 !important;
     padding-left: 3px;
     padding-right: 3px;
     margin-right: 3px;

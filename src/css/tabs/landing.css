@@ -39,7 +39,7 @@
     width: 800px;
     color: var(--defaultText);
     font-size: 14px;
-    font-family: 'open_sanslight', Arial;
+    font-weight: 300;
 }
 
 .tab-landing .logowrapper img {
@@ -49,7 +49,7 @@
 
 .tab-landing .logowrapper span {
     font-size: 22px;
-    font-family: 'open_sanslight', Arial;
+    font-weight: 300;
 }
 
 /* sponsors blocks */
@@ -83,7 +83,7 @@
     line-height: 22px;
     color: white;
     font-weight: normal;
-    font-family: 'open_sanslight', Arial;
+    font-weight: 300;
 }
 
 .sponsors li a:hover {
@@ -95,7 +95,6 @@
     margin-top: 15px;
     margin-bottom: 15px;
     font-weight: normal;
-    font-family: 'open_sansregular', Arial;
     font-size: 12px;
 }
 

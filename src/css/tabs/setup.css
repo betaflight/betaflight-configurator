@@ -222,7 +222,7 @@
     border-radius: 4px;
     border: 1px solid #ffbb00;
     color: #ffbb00;
-    font-family: 'open_sanssemibold', Arial;
+    font-weight: bold;
     font-size: 12px;
     line-height: 13px;
     transition: all ease 0.2s;
@@ -245,7 +245,7 @@
     border-radius: 4px;
     border: 1px solid #ffbb00;
     color: #ffbb00;
-    font-family: 'open_sanssemibold', Arial;
+    font-weight: bold;
     font-size: 12px;
     line-height: 13px;
     transition: all ease 0.2s;
@@ -266,7 +266,6 @@
     border-radius: 3px;
     border: 1px solid #dba718;
     color: #000;
-    font-family: 'open_sansbold', Arial;
     font-size: 12px;
     text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
     display: inline-block;
