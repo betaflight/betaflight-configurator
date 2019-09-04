@@ -1,6 +1,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
     font-size: 12px;
+    background-color: var(--sideBackground);
     color: #303030;
     margin: 10px;
     overflow: hidden;
