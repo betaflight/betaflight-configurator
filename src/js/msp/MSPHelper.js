@@ -2102,8 +2102,12 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push8(VTXTABLE_BAND.vtxtable_band_name.charCodeAt(i));
             }
 
-            buffer.push8(VTXTABLE_BAND.vtxtable_band_letter.charCodeAt(0))
-                  .push8(VTXTABLE_BAND.vtxtable_band_is_factory_band ? 1 : 0);
+            if (VTXTABLE_BAND.vtxtable_band_letter != '') {
+                buffer.push8(VTXTABLE_BAND.vtxtable_band_letter.charCodeAt(0))
+            } else {
+                buffer.push8(' '.charCodeAt(0));
+            }
+            buffer.push8(VTXTABLE_BAND.vtxtable_band_is_factory_band ? 1 : 0);
 
             buffer.push8(VTXTABLE_BAND.vtxtable_band_frequencies.length);
             for (let i = 0; i < VTXTABLE_BAND.vtxtable_band_frequencies.length; i++) {
