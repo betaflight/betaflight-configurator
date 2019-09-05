@@ -227,17 +227,13 @@
 }
 
 .tab-failsafe .channelsetting {
-    float:left;    
-    width:25%;    
+    float:left;
+    width:25%;
 }
 
 .tab-failsafe .auxiliary {
-    float:left;    
-    width:15%;    
-}
-
-.tab-failsafe .note {
-    margin-bottom: 20px;
+    float:left;
+    width:15%;
 }
 
 .tab-failsafe .cf_tooltiptext {

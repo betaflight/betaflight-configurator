@@ -1050,20 +1050,16 @@ dialog {
 .note {
     background-color: #fff7cd;
     border: 1px solid #ffe55f;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
     margin-top: 0px;
     border-radius: 3px;
     font-size: 11px;
     font-weight: normal;
-}
-
-.note_spacer {
     padding: 5px 7px 5px 7px;
 }
 
 .tab_wrapper {
     padding: 20px 15px 15px 15px;
-
 }
 
 .content_wrapper {
