@@ -1,5 +1,5 @@
 'use strict';
-//i18n
+
 TABS.firmware_flasher = {
     releases: null,
     releaseChecker: new ReleaseChecker('firmware', 'https://api.github.com/repos/betaflight/betaflight/releases'),
@@ -21,14 +21,10 @@ TABS.firmware_flasher.initialize = function (callback) {
     var isConfigLocal = false; // Set to true if the user loads one locally
     var unifiedConfig; // Unified target configuration loaded from the menu, used when throwing out a local config
 
-    // Is there a list of these elsewhere?, used in parseUnifiedBuilds and ... look for unifiedTargets[0]
-    var unifiedTargets = [ 'STM32F411', 'STM32F405', 'STM32F745', 'STM32F7X2' ];
     self.peekTargetConfig = function () { // This maybe should get removed before merging.
         return targetConfig;
     }
-    var unifiedSource = 'https://api.github.com/repos/betaflight/unified-targets/contents/configs';
-    //unifiedSource = 'https://api.github.com/repos/betaflight/betaflight/contents/unified_targets/configs';
-    //unifiedSource = 'http://localhost'; // handy way to force a failure
+    var unifiedSource = 'https://api.github.com/repos/betaflight/unified-targets/contents/configs/default';
 
 
         /**
@@ -160,8 +156,8 @@ TABS.firmware_flasher.initialize = function (callback) {
             var releases = {};
             var sortedTargets = [];
             var unsortedTargets = [];
-            releaseData.forEach(function(release){
-                release.assets.forEach(function(asset){
+            releaseData.forEach(function(release) {
+                release.assets.forEach(function(asset) {
                     var targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
                     var match = targetFromFilenameExpression.exec(asset.name);
                     if ((!showDevReleases && release.prerelease) || !match) {
@@ -177,11 +173,11 @@ TABS.firmware_flasher.initialize = function (callback) {
             sortedTargets.forEach(function(release) {
                 releases[release] = [];
             });
-            releaseData.forEach(function(release){
+            releaseData.forEach(function(release) {
                 var versionFromTagExpression = /v?(.*)/;
                 var matchVersionFromTag = versionFromTagExpression.exec(release.tag_name);
                 var version = matchVersionFromTag[1];
-                release.assets.forEach(function(asset){
+                release.assets.forEach(function(asset) {
                     var targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
                     var match = targetFromFilenameExpression.exec(asset.name);
                     if ((!showDevReleases && release.prerelease) || !match) {
@@ -193,7 +189,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         return;
                     }
                     var date = new Date(release.published_at);
-                    var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0"+(date.getMonth()+1)).slice(-2) + "-" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+                    var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
                     var descriptor = {
                         "releaseUrl": release.html_url,
                         "name"      : version,
@@ -208,35 +204,36 @@ TABS.firmware_flasher.initialize = function (callback) {
                 });
             });
             loadUnifiedBuilds(releases);
-            //TABS.firmware_flasher.saveReleases = releases;
-            //console.log('loaded some board options for later');
         };
 
         function loadUnifiedBuilds(builds) {
-            var expirationPeriod = 3600; // One of your earth hours.
-            var checkTime = Math.floor(Date.now()/1000); // Lets deal in seconds.
-            // unifiedTargets[0] is STM32F411
-            if (builds && builds[unifiedTargets[0]]) {
+            var expirationPeriod = 3600 * 2; // Two of your earth hours.
+            var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
+            // Come back to this, how to handle build type without unified targets?
+            if (builds && builds["STM32F411"]) {
                 console.log('loaded some builds for later');
                 var storageTag = 'unifiedSourceCache';
                 chrome.storage.local.get(storageTag, function (result) {
                     let storageObj = result[storageTag];
                     if(!storageObj || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod ) {
                         console.log('go get', unifiedSource);
-                        $.get(unifiedSource, function(data,textStatus,jqXHR) {
-                            let newObj = {};
-                            newObj[storageTag]={};
-                            newObj[storageTag].lastUpdate=checkTime;
-                            newObj[storageTag].data=data;
-                            chrome.storage.local.set(newObj);
+                        $.get(unifiedSource, function(data, textStatus, jqXHR) {
+                            // Cache the information for later use.
+                            let newStorageObj = {};
+                            let newDataObj = {};
+                            newDataObj.lastUpdate = checkTime;
+                            newDataObj.data = data;
+                            newStorageObj[storageTag] = newDataObj;
+                            chrome.storage.local.set(newStorageObj);
+
                             parseUnifiedBuilds(data, builds);
                         }).fail(xhr => {
-                            console.log('failed to get new', unifiedSource, 'cached data',Math.floor((checkTime - storageObj.lastUpdate)/60),'mins old');
+                            console.log('failed to get new', unifiedSource, 'cached data', Math.floor((checkTime - storageObj.lastUpdate) / 60), 'mins old');
                             parseUnifiedBuilds(storageObj.data, builds);
                         });
                     } else {
                       // In the event that the cache is okay
-                      console.log('unified config cached data',Math.floor((checkTime - storageObj.lastUpdate)/60),'mins old');
+                      console.log('unified config cached data', Math.floor((checkTime - storageObj.lastUpdate)/60), 'mins old');
                       parseUnifiedBuilds(storageObj.data, builds);
                     }
                 });
@@ -262,20 +259,16 @@ TABS.firmware_flasher.initialize = function (callback) {
                 items[targetName] = "something";
             });
             Object.keys(builds).forEach(function (key) {
-                // unifiedTargets is our list above of 4 targets
-                if (unifiedTargets.includes(key)) {
+                // releases is under the hood, so we can have duplicate entries
+                var legacyKey = key + " (Legacy)";
+                if (unifiedConfigs[key] === undefined) {
                     items[key] = "something";
                     releases[key] = builds[key];
                 } else {
-                    var legacyKey = key + " (Legacy)";
-                    if (unifiedConfigs[key] === undefined) {
-                        items[key] = "something";
-                        releases[key] = builds[key];
-                    } else {
-                        items[legacyKey] = "i18nplz";
-                        baseTargets[legacyKey] = key;
-                        releases[legacyKey] = builds[key];
-                    }
+                    items[legacyKey] = "i18nplz";
+                    baseTargets[legacyKey] = key;
+                    releases[legacyKey] = builds[key];
+                    releases[key] = builds[key];
                 }
             });
             $('select[name="board"]').empty()
@@ -289,7 +282,6 @@ TABS.firmware_flasher.initialize = function (callback) {
             Object.keys(items)
                 .sort()
                 .forEach(function(target, i) {
-                    //console.log(items);console.log('target', items[target]);
                     var select_e = $("<option value='{0}'>{1}</option>".format(target,
                         items[target] === "i18nplz" ? i18n.getMessage("firmwareFlasherLegacyLabel",
                         {target: baseTargets[target]}) : target));
@@ -370,7 +362,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         var expertMode_e = $('.tab-firmware_flasher input.expert_mode');
         expertMode_e.prop('checked', globalExpertMode_e.is(':checked'));
-        $('input.show_development_releases').change(showOrHideBuildTypes); //.change(); 
+        $('input.show_development_releases').change(showOrHideBuildTypes).change();
         expertMode_e.change(showOrHideBuildTypeSelect).change();
 
         // translate to user-selected language
@@ -403,9 +395,8 @@ TABS.firmware_flasher.initialize = function (callback) {
                 versions_element.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
                 targetVersions.forEach(function(descriptor) {
                     var select_e =
-                        $("<option value='{0}'>{0} - {1} - {2}</option>".format(
+                        $("<option value='{0}'>{0} - {1}</option>".format(
                                 descriptor.version,
-                                descriptor.target,
                                 descriptor.date
                         ))
                         .css("font-weight", FirmwareCache.has(descriptor)
@@ -449,14 +440,12 @@ TABS.firmware_flasher.initialize = function (callback) {
                     if (TABS.firmware_flasher.unifiedConfigs[target]) {
                         var storageTag = 'unifiedConfigLast';
                         var expirationPeriod = 3600; // One of your earth hours.
-                        var checkTime = Math.floor(Date.now()/1000); // Lets deal in seconds.
+                        var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
                         chrome.storage.local.get(storageTag, function (result) {
                             let storageObj = result[storageTag];
                             let bareBoard = null;
-                            //bareBoard = 'STM32F405';
                             if (!storageObj || !storageObj.target || storageObj.target != target) {
                                 // Have to go and try and get the unified config, and then do stuff
-                                //console.log('url',TABS.firmware_flasher.unifiedConfigs[target]);
                                 $.get(TABS.firmware_flasher.unifiedConfigs[target], function(data) {
                                     console.log('got unified config');
                                     let tempObj = {};
