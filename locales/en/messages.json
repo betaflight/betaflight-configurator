@@ -2757,6 +2757,13 @@
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Failed to load remote firmware"
     },
+    "firmwareFlasherFailedToLoadUnifiedConfig": {
+        "message": "Failed to load remote config for {{remote_file}}"
+    },
+    "firmwareFlasherLegacyLabel": {
+        "message": "{{target}} (Legacy)",
+        "description": "If we have a Unified target and a old style target available, we are labeling the older one"
+    },
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>No firmware selected to load</b>"
     },
