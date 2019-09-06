@@ -308,7 +308,8 @@ TABS.firmware_flasher.initialize = function (callback) {
 
             ConfigStorage.get('selected_board', function (result) {
                 if (result.selected_board) {
-                    var boardReleases = unifiedConfigs[result.selected_board]
+                    var boardReleases = TABS.firmware_flasher.unifiedConfigs[result.selected_board]
+                        || TABS.firmware_flasher.releases[result.selected_board];
                     $('select[name="board"]').val(boardReleases ? result.selected_board : 0).trigger('change');
                 }
             });
@@ -430,6 +431,26 @@ TABS.firmware_flasher.initialize = function (callback) {
             }
         }
 
+        function grabBuildNameFromConfig(config) {
+            return config.split("\n")[0].split(' ')[3];
+        }
+
+        function setUnifiedConfig(target, configText, bareBoard) {
+            if (bareBoard == target) {
+                console.log(bareBoard, '==', target);
+                if (!isConfigLocal) {
+                    targetConfig = undefined;
+                    unifiedConfig = undefined;
+                } else {
+                    unifiedConfig = undefined;
+                }
+            } else {
+                targetConfig = configText;
+                isConfigLocal = false;
+                unifiedConfig = configText;
+            }
+        }
+
         $('select[name="board"]').change(function() {
             $("a.load_remote_file").addClass('disabled');
             var target = $(this).val();
@@ -468,15 +489,18 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 // Have to go and try and get the unified config, and then do stuff
                                 $.get(TABS.firmware_flasher.unifiedConfigs[target], function(data) {
                                     console.log('got unified config');
+                                    // cache it for later
                                     let tempObj = {};
                                     tempObj['data'] = data;
                                     tempObj['target'] = target;
                                     tempObj['checkTime'] = checkTime;
-                                    targetConfig = data;
-                                    isConfigLocal = false;
-                                    unifiedConfig = data;
-                                    bareBoard = data.split("\n")[0].split(' ')[3];
-                                    populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard],target);
+                                    let newStorageObj = {};
+                                    newStorageObj[storageTag] = tempObj;
+                                    chrome.storage.local.set(newStorageObj);
+
+                                    bareBoard = grabBuildNameFromConfig(data);
+                                    setUnifiedConfig(target, data, bareBoard);
+                                    populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard], target);
                                 }).fail(xhr => {
                                     //TODO error, populate nothing?
                                     targetConfig = undefined;
@@ -489,16 +513,10 @@ TABS.firmware_flasher.initialize = function (callback) {
                             } else {
                                 console.log('We have the config cached for', target);
                                 var data = storageObj.data;
-                                targetConfig = data;
-                                isConfigLocal = false;
-                                unifiedConfig = data;
-                                bareBoard = data.split("\n")[0].split(' ')[3];
-                                if (bareBoard == target) {
-                                    // TODO test this, should skip a placeholder unified target
-                                    targetConfig = undefined;
-                                    unifiedConfig = undefined;
-                                }
-                                populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard],target);
+
+                                bareBoard = grabBuildNameFromConfig(data);
+                                setUnifiedConfig(target, data, bareBoard);
+                                populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard], target);
                             }
                         });
                     } else {
