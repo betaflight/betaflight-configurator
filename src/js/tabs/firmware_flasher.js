@@ -206,11 +206,27 @@ TABS.firmware_flasher.initialize = function (callback) {
             loadUnifiedBuilds(releases);
         };
 
+        function checkOneVersionForUnification(version) {
+            return semver.gte(version.split(' ')[0], '4.1.0-RC1');
+        }
+
+        function checkBuildsForUnification(builds) {
+            // Find a build that is newer than 4.1.0, return true if found
+            let foundSuitable = false;
+            Object.keys(builds).forEach(function (key) {
+                builds[key].forEach(function(target) {
+                    if (checkOneVersionForUnification(target.version)) {
+                        foundSuitable = true;
+                    }
+                });
+            });
+            return foundSuitable;
+        }
+
         function loadUnifiedBuilds(builds) {
             var expirationPeriod = 3600 * 2; // Two of your earth hours.
             var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
-            // Come back to this, how to handle build type without unified targets?
-            if (builds && builds["STM32F411"]) {
+            if (builds && checkBuildsForUnification(builds)) {
                 console.log('loaded some builds for later');
                 var storageTag = 'unifiedSourceCache';
                 chrome.storage.local.get(storageTag, function (result) {
@@ -394,6 +410,9 @@ TABS.firmware_flasher.initialize = function (callback) {
             if (targetVersions) {
                 versions_element.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
                 targetVersions.forEach(function(descriptor) {
+                    if (unifiedConfig && !checkOneVersionForUnification(descriptor.version)) {
+                        return;
+                    }
                     var select_e =
                         $("<option value='{0}'>{0} - {1}</option>".format(
                                 descriptor.version,
@@ -444,6 +463,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         chrome.storage.local.get(storageTag, function (result) {
                             let storageObj = result[storageTag];
                             let bareBoard = null;
+                            // Check to see if the cached configuration is the one we want.
                             if (!storageObj || !storageObj.target || storageObj.target != target) {
                                 // Have to go and try and get the unified config, and then do stuff
                                 $.get(TABS.firmware_flasher.unifiedConfigs[target], function(data) {
@@ -473,6 +493,11 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 isConfigLocal = false;
                                 unifiedConfig = data;
                                 bareBoard = data.split("\n")[0].split(' ')[3];
+                                if (bareBoard == target) {
+                                    // TODO test this, should skip a placeholder unified target
+                                    targetConfig = undefined;
+                                    unifiedConfig = undefined;
+                                }
                                 populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard],target);
                             }
                         });
