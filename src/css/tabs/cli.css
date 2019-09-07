@@ -11,10 +11,6 @@
     border: 0px dotted silver;
 }
 
-.tab-cli .note {
-    margin-bottom: 20px;
-}
-
 .tab-cli .backdrop {
     border: 1px solid silver;
     background-color: rgba(0, 0, 0, 0.75);
