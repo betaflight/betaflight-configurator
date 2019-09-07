@@ -19,6 +19,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
     if (GUI.active_tab !== 'pid_tuning') {
         GUI.active_tab = 'pid_tuning';
+        self.activeSubtab = 'pid';
     }
 
     // Update filtering defaults based on API version
