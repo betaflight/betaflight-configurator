@@ -369,7 +369,7 @@ TABS.pid_tuning.initialize = function (callback) {
             var dValue = parseInt(dElement.val());
             var dMinValue = parseInt(dMinElement.val());
 
-            var dMinLimit = dValue > 0 ? dValue - 1 : 0;
+            var dMinLimit = Math.min(Math.max(dValue - 1, 0), 100);
             if (dMinValue > dMinLimit) {
                 dMinElement.val(dMinLimit);
             }
@@ -398,10 +398,11 @@ TABS.pid_tuning.initialize = function (callback) {
             dMinSwitch.change(function() {
                 var checked = $(this).is(':checked');
                 if (checked) {
-                    if (ADVANCED_TUNING.dMinRoll == 0 && ADVANCED_TUNING.dMinPitch == 0 && ADVANCED_TUNING.dMinYaw == 0) {
-                        $('.pid_tuning input[name="dMinRoll"]').val(Math.round(PIDs[0][2] * 0.57));
-                        $('.pid_tuning input[name="dMinPitch"]').val(Math.round(PIDs[1][2] * 0.57));
-                        $('.pid_tuning input[name="dMinYaw"]').val(Math.round(PIDs[2][2] * 0.57));
+                    if ($('.pid_tuning input[name="dMinRoll"]').val() == 0 && $('.pid_tuning input[name="dMinPitch"]').val() == 0 && $('.pid_tuning input[name="dMinYaw"]').val() == 0) {
+                        // when enabling dmin set its value based on 0.57x of actual dmax, dmin is limited to 100
+                        $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.57), 100));
+                        $('.pid_tuning input[name="dMinPitch"]').val(Math.min(Math.round($('.pid_tuning .PITCH input[name="d"]').val() * 0.57), 100));
+                        $('.pid_tuning input[name="dMinYaw"]').val(Math.min(Math.round($('.pid_tuning .YAW input[name="d"]').val() * 0.57), 100));
                     } else {
                         $('.pid_tuning input[name="dMinRoll"]').val(ADVANCED_TUNING.dMinRoll);
                         $('.pid_tuning input[name="dMinPitch"]').val(ADVANCED_TUNING.dMinPitch);
