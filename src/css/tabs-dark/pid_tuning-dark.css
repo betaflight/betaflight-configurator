@@ -1,10 +1,12 @@
 .tab-pid_tuning .profile .helpicon,
-.tab-pid_tuning .rate_profile .helpicon {
+.tab-pid_tuning .rate_profile .helpicon,
+.tab-pid_tuning .pid_titlebar .helpicon {
     background-image: url(../../images/icons/cf_icon_info_grey.svg);
     opacity: 0.4;
 }
 .tab-pid_tuning .profile .helpicon:hover,
-.tab-pid_tuning .rate_profile .helpicon:hover {
+.tab-pid_tuning .rate_profile .helpicon:hover,
+.tab-pid_tuning .pid_titlebar .helpicon:hover {
     opacity: 1;
 }
 
@@ -219,6 +221,12 @@
 
 .tab-pid_tuning dialog select {
     border: 1px solid #9c9c9c;
+}
+
+.tab-pid_tuning .sliderLabels th {
+    background: #414443;
+    color: white;
+    border-right: solid 1px #9c9c9c;
 }
 
 .tab-pid_tuning input:disabled,
