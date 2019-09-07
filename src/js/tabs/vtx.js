@@ -272,7 +272,7 @@ TABS.vtx.initialize = function (callback) {
             }
         }
 
-        $("#vtx_table_powerlevels").change(showHidePowerlevels).change();
+        $("#vtx_table_powerlevels").on('input', showHidePowerlevels).trigger('input');
 
         function showHideBands() {
             let bandsValue = $(this).val();
@@ -282,7 +282,7 @@ TABS.vtx.initialize = function (callback) {
             }
         }
 
-        $("#vtx_table_bands").change(showHideBands).change();
+        $("#vtx_table_bands").on('input', showHideBands).trigger('input');
 
         function showHideBandChannels() {
             let channelsValue = $(this).val();
@@ -292,7 +292,7 @@ TABS.vtx.initialize = function (callback) {
             }
         }
 
-        $("#vtx_table_channels").change(showHideBandChannels).change();
+        $("#vtx_table_channels").on('input', showHideBandChannels).trigger('input');
 
         /*** Helper functions */
 
