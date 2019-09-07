@@ -78,7 +78,7 @@ var Features = function (config) {
         if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             features.push(
                 {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
-                {bit: 27, group: 'other', name: 'ESC_SENSOR'}
+                {bit: 27, group: 'esc', name: 'ESC_SENSOR'}
             );
         }
 
