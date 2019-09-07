@@ -1099,7 +1099,45 @@
                                     </div>
                                 </td>
                             </tr>
-                            
+
+                            <tr>
+                                <th colspan="2">
+                                    <div class="pid_mode rpmFilter">
+                                        <div i18n="pidTuningRpmFilterGroup" />
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningRpmFilterHelp" />
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr class="newFilter rpmFilter">
+                                <td>
+                                    <span class="groupSwitchValue">
+                                        <span class="inputSwitch"><input type="checkbox" id="rpmFilterEnabled" class="toggle" /></span>
+                                        <span class="inputValue"><input type="number" class="nonProfile" name="rpmFilterHarmonics" step="1" min="1" max="3"/></span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningRpmHarmonics"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningRpmHarmonicsHelp" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="newFilter rpmFilter">
+                                <td>
+                                    <input type="number" name="rpmFilterMinHz" step="1" min="50" max="200"/>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningRpmMinHz"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningRpmMinHzHelp" />
+                                    </div>
+                                </td>
+                            </tr>
+
                             <tr>
                                 <th colspan="2">
                                     <div class="pid_mode dynamicNotch">
@@ -1162,6 +1200,7 @@
                                     </div>
                                 </td>
                             </tr>
+
                         </table>
                     </div>
                     <div class="gui_box grey topspacer pid_filter two_columns_second">

@@ -1026,6 +1026,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                 FILTER_CONFIG.dyn_notch_width_percent = data.readU8();
                                 FILTER_CONFIG.dyn_notch_q = data.readU16();
                                 FILTER_CONFIG.dyn_notch_min_hz = data.readU16();
+
+                                FILTER_CONFIG.gyro_rpm_notch_harmonics = data.readU8();
+                                FILTER_CONFIG.gyro_rpm_notch_min_hz = data.readU8();
                             }
                         }
                     }
@@ -1675,6 +1678,7 @@ MspHelper.prototype.crunch = function(code) {
                 .push16(MOTOR_CONFIG.mincommand);
             if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                 buffer.push8(MOTOR_CONFIG.motor_poles);
+                buffer.push8(MOTOR_CONFIG.use_dshot_telemetry ? 1 : 0);
             }
             break;
         case MSPCodes.MSP_SET_GPS_CONFIG:
@@ -1920,7 +1924,9 @@ MspHelper.prototype.crunch = function(code) {
                     buffer.push8(FILTER_CONFIG.dyn_notch_range)
                           .push8(FILTER_CONFIG.dyn_notch_width_percent)
                           .push16(FILTER_CONFIG.dyn_notch_q)
-                          .push16(FILTER_CONFIG.dyn_notch_min_hz);
+                          .push16(FILTER_CONFIG.dyn_notch_min_hz)
+                          .push8(FILTER_CONFIG.gyro_rpm_notch_harmonics)
+                          .push8(FILTER_CONFIG.gyro_rpm_notch_min_hz);
                 }
             }
             break;

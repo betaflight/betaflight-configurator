@@ -2,6 +2,7 @@
 
 TABS.configuration = {
     DSHOT_PROTOCOL_MIN_VALUE: 5,
+    PROSHOT_PROTOCOL_VALUE: 0,
     SHOW_OLD_BATTERY_CONFIG: false,
     analyticsChanges: {},
 };
@@ -417,6 +418,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 escprotocols.push('PROSHOT1000');
+                self.PROSHOT_PROTOCOL_VALUE = escprotocols.length - 1; 
             }
         }
 
@@ -437,7 +439,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[id="unsyncedPWMSwitch"]').prop('checked', PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0).change();
         $('input[name="unsyncedpwmfreq"]').val(PID_ADVANCED_CONFIG.motor_pwm_rate);
         $('input[name="digitalIdlePercent"]').val(PID_ADVANCED_CONFIG.digitalIdlePercent);
-
+        $('input[id="dshotBidir"]').prop('checked', MOTOR_CONFIG.use_dshot_telemetry).change();
+        $('input[name="motorPoles"]').val(MOTOR_CONFIG.motor_poles);
 
         esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
         esc_protocol_e.change(function () {
@@ -458,6 +461,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.unsyncedpwmfreq').hide();
 
                 $('div.digitalIdlePercent').show();
+
+                $('div.checkboxDshotBidir').toggle(semver.gte(CONFIG.apiVersion, "1.42.0") && escProtocolValue < self.PROSHOT_PROTOCOL_VALUE);
+                $('div.motorPoles').toggle(semver.gte(CONFIG.apiVersion, "1.42.0"));
+
             } else {
                 $('div.minthrottle').show();
                 $('div.maxthrottle').show();
@@ -467,7 +474,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $("input[id='unsyncedPWMSwitch']").change();
 
                 $('div.digitalIdlePercent').hide();
+
+                $('div.checkboxDshotBidir').hide();
+                $('div.motorPoles').hide();
             }
+
         }).change();
 
 
@@ -1068,6 +1079,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
             MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
             MOTOR_CONFIG.mincommand = parseInt($('input[name="mincommand"]').val());
+            if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                MOTOR_CONFIG.motor_poles = parseInt($('input[name="motorPoles"]').val());
+                MOTOR_CONFIG.use_dshot_telemetry = $('input[id="dshotBidir"]').prop('checked'); 
+            }
 
             if(self.SHOW_OLD_BATTERY_CONFIG) {
                 MISC.vbatmincellvoltage = parseFloat($('input[name="mincellvoltage"]').val());
