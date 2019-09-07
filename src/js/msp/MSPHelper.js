@@ -975,7 +975,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         } 
                         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                             PID_ADVANCED_CONFIG.motorPwmInversion = data.readU8();
-                            PID_ADVANCED_CONFIG.gyroToUse = data.readU8();
+                            SENSOR_ALIGNMENT.gyro_to_use = data.readU8(); // We don't want to double up on storing this state
                             PID_ADVANCED_CONFIG.gyroHighFsr = data.readU8();
                             PID_ADVANCED_CONFIG.gyroMovementCalibThreshold = data.readU8();
                             PID_ADVANCED_CONFIG.gyroCalibDuration = data.readU16();
@@ -1869,7 +1869,7 @@ MspHelper.prototype.crunch = function(code) {
                     buffer.push8(gyroUse32kHz);
                     if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                         buffer.push8(PID_ADVANCED_CONFIG.motorPwmInversion)
-                              .push8(PID_ADVANCED_CONFIG.gyroToUse)
+                              .push8(SENSOR_ALIGNMENT.gyro_to_use) // We don't want to double up on storing this state
                               .push8(PID_ADVANCED_CONFIG.gyroHighFsr)
                               .push8(PID_ADVANCED_CONFIG.gyroMovementCalibThreshold)
                               .push16(PID_ADVANCED_CONFIG.gyroCalibDuration)
