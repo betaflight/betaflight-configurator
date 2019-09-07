@@ -111,7 +111,13 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     load_configuration_from_fc();
 
     function load_configuration_from_fc() {
-        MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, on_configuration_loaded_handler);
+        if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            MSP.promise(MSPCodes.MSP_VTX_CONFIG).then(function() {
+                return MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, on_configuration_loaded_handler);
+            });
+        } else {
+            MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, on_configuration_loaded_handler);
+        }
 
         function on_configuration_loaded_handler() {
             $('#content').load("./tabs/ports.html", on_tab_loaded_handler);
@@ -272,6 +278,30 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             }
 
             ports_e.find('tbody').append(port_configuration_e);
+        }
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            var vtxTableNotConfigured = VTX_CONFIG.vtx_table_available &&
+                                        (VTX_CONFIG.vtx_table_bands == 0 ||
+                                        VTX_CONFIG.vtx_table_channels == 0 ||
+                                        VTX_CONFIG.vtx_table_powerlevels == 0);
+            const pheripheralsSelectElement = $('select[name="function-peripherals"]');
+            pheripheralsSelectElement.change(function() {
+                let vtxControlSelected = false;
+                pheripheralsSelectElement.each(function() {
+                    const el = $(this);
+                    if (el.val() == "TBS_SMARTAUDIO" || el.val() == "IRC_TRAMP") {
+                        vtxControlSelected = true;
+                    }
+                });
+                if (vtxControlSelected && vtxTableNotConfigured) {
+                    $('.vtxTableNotSet').show();
+                } else {
+                    $('.vtxTableNotSet').hide();
+                }
+            });
+            pheripheralsSelectElement.change();
+        } else {
+            $('.vtxTableNotSet').hide();
         }
     }
 
