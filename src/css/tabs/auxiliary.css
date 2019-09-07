@@ -40,6 +40,14 @@
     background: #828885;
 }
 
+.tab-auxiliary .mode.disabled .info {
+    background: var(--error);
+    color: var(--quietText);}
+
+.tab-auxiliary .mode.disabled:nth-child(odd) .info {
+    background: var(--error);
+}
+
 #tab-auxiliary-templates {
     display: none;
 }
