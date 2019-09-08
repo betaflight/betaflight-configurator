@@ -141,7 +141,7 @@
                                     </label>
                                 </div>
                                 <div class="number checkboxPwm">
-                                    <div style="float: left; height: 20px; margin-right: 5px; margin-left: 3px;">
+                                    <div style="float: left; height: 20px; margin-right: 14px; margin-left: 3px;">
                                         <input type="checkbox" id="unsyncedPWMSwitch" class="toggle" />
                                     </div>
                                     <span class="freelabel" i18n="configurationunsyndePwm"></span>
@@ -154,22 +154,9 @@
                                         <span i18n="configurationUnsyncedPWMFreq"></span>
                                     </label>
                                 </div>
-                                <div class="number checkboxDshotBidir">
-                                    <div style="float: left; height: 20px; margin-right: 5px; margin-left: 3px;">
-                                        <input type="checkbox" id="dshotBidir" class="toggle" />
-                                    </div>
-                                    <span class="freelabel" i18n="configurationDshotBidir" />
-                                    <div class="helpicon cf_tip" i18n_title="configurationDshotBidirHelp" />
-                                </div>
-                                <table cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
-                                    <tbody class="features esc">
-                                        <!-- table generated here -->
-                                    </tbody>
-                                </table>
-                                <!--   -->
                                 <div class="disarm">
                                     <div class="checkbox">
-                                        <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                                        <div style="float: left; height: 20px; margin-right: 14px; margin-left: 3px;">
                                             <input type="checkbox" id="disarmkillswitch" class="toggle" />
                                         </div>
                                         <span class="freelabel" i18n="configurationDisarmKillSwitch"></span>
@@ -184,14 +171,18 @@
                                         </label>
                                     </div>
                                 </div>
+                                <table cellpadding="0" cellspacing="0" style="margin-bottom: 5px;">
+                                    <tbody class="features esc">
+                                        <!-- table generated here -->
+                                    </tbody>
+                                </table>
                                 <!--   -->
-                                <div class="number digitalIdlePercent">
-                                    <label>
-                                        <div class="numberspacer">
-                                            <input type="number" name="digitalIdlePercent" min="0.00" max="20.00" step="0.01"/>
-                                        </div>
-                                        <span i18n="configurationDigitalIdlePercent"></span>
-                                    </label>
+                                <div class="number checkboxDshotBidir">
+                                    <div style="float: left; height: 20px; margin-right: 14px; margin-left: 3px;">
+                                        <input type="checkbox" id="dshotBidir" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationDshotBidir" />
+                                    <div class="helpicon cf_tip" i18n_title="configurationDshotBidirHelp" />
                                     <div class="helpicon cf_tip" i18n_title="configurationDigitalIdlePercentHelp"></div>
                                 </div>
                                 <div class="number motorPoles">
@@ -202,6 +193,15 @@
                                         <span i18n="configurationMotorPolesLong"></span>
                                     </label>
                                     <div class="helpicon cf_tip" i18n_title="configurationMotorPolesHelp"></div>
+                                </div>
+                                <div class="number digitalIdlePercent">
+                                    <label>
+                                        <div class="numberspacer">
+                                            <input type="number" name="digitalIdlePercent" min="0.00" max="20.00" step="0.01"/>
+                                        </div>
+                                        <span i18n="configurationDigitalIdlePercent"></span>
+                                    </label>
+                                    <div class="helpicon cf_tip" i18n_title="configurationDigitalIdlePercentHelp"></div>
                                 </div>
                                 <div class="number minthrottle">
                                     <label>

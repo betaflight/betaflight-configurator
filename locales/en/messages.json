@@ -1019,7 +1019,7 @@
         "message": "SPI RX support"
     },
     "featureESC_SENSOR": {
-        "message": "Use KISS/BLHeli_32 ESC telemetry as sensor"
+        "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Forward aux channels to servo outputs"
