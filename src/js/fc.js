@@ -373,7 +373,6 @@ var FC = {
             digitalIdlePercent:         0,
             gyroUse32kHz:               0,
             motorPwmInversion:          0,
-            gyroToUse:                  0,
             gyroHighFsr:                0,
             gyroMovementCalibThreshold: 0,
             gyroCalibDuration:          0,
