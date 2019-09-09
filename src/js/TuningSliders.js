@@ -298,7 +298,7 @@ TuningSliders.calculateNewPids = function() {
     PID_names.forEach(function(elementPid, indexPid) {
         let searchRow = $('.pid_tuning .' + elementPid + ' input');
         searchRow.each(function (indexInput) {
-            if (indexPid < 3) {
+            if (indexPid < 3 && indexInput < 3) {
                 $(this).val(PIDs[indexPid][indexInput]);
             }
         });
