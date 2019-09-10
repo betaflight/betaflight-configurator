@@ -2,7 +2,6 @@
 
 TABS.configuration = {
     DSHOT_PROTOCOL_MIN_VALUE: 5,
-    PROSHOT_PROTOCOL_VALUE: 0,
     SHOW_OLD_BATTERY_CONFIG: false,
     analyticsChanges: {},
 };
@@ -418,7 +417,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 escprotocols.push('PROSHOT1000');
-                self.PROSHOT_PROTOCOL_VALUE = escprotocols.length - 1; 
             }
         }
 
@@ -453,31 +451,21 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             self.analyticsChanges['EscProtocol'] = newValue;
 
             //hide not used setting for DSHOT protocol
-            if (escProtocolValue >= self.DSHOT_PROTOCOL_MIN_VALUE) {
-                $('div.minthrottle').hide();
-                $('div.maxthrottle').hide();
-                $('div.mincommand').hide();
-                $('div.checkboxPwm').hide();
-                $('div.unsyncedpwmfreq').hide();
+            let digitalProtocol = (escProtocolValue >= self.DSHOT_PROTOCOL_MIN_VALUE);
 
-                $('div.digitalIdlePercent').show();
+            $('div.minthrottle').toggle(!digitalProtocol);
+            $('div.maxthrottle').toggle(!digitalProtocol);
+            $('div.mincommand').toggle(!digitalProtocol);
+            $('div.checkboxPwm').toggle(!digitalProtocol);
+            $('div.unsyncedpwmfreq').toggle(!digitalProtocol);
 
-                $('div.checkboxDshotBidir').toggle(semver.gte(CONFIG.apiVersion, "1.42.0") && escProtocolValue < self.PROSHOT_PROTOCOL_VALUE);
-                $('div.motorPoles').toggle(semver.gte(CONFIG.apiVersion, "1.42.0"));
+            $('div.digitalIdlePercent').toggle(digitalProtocol);
 
-            } else {
-                $('div.minthrottle').show();
-                $('div.maxthrottle').show();
-                $('div.mincommand').show();
-                $('div.checkboxPwm').show();
-                //trigger change unsyncedPWMSwitch to show/hide Motor PWM freq input
-                $("input[id='unsyncedPWMSwitch']").change();
+            $('div.checkboxDshotBidir').toggle(semver.gte(CONFIG.apiVersion, "1.42.0") && digitalProtocol);
+            $('div.motorPoles').toggle(semver.gte(CONFIG.apiVersion, "1.42.0"));
 
-                $('div.digitalIdlePercent').hide();
-
-                $('div.checkboxDshotBidir').hide();
-                $('div.motorPoles').hide();
-            }
+            //trigger change unsyncedPWMSwitch to show/hide Motor PWM freq input
+            $("input[id='unsyncedPWMSwitch']").change();
 
         }).change();
 
