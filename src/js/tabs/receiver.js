@@ -338,11 +338,9 @@ TABS.receiver.initialize = function (callback) {
 
             $('.tab-receiver .rcSmoothing-input-cutoff').show();
             $('select[name="rcSmoothing-input-manual-select"]').val("1");
-            $('.tab-receiver .rc-smoothing-input-blank').hide();
             if (RX_CONFIG.rcSmoothingInputCutoff == 0) {
                 $('.tab-receiver .rcSmoothing-input-cutoff').hide();
                 $('select[name="rcSmoothing-input-manual-select"]').val("0");
-                $('.tab-receiver .rc-smoothing-input-blank').show();
             }
             $('select[name="rcSmoothing-input-manual-select"]').change(function () {
                 if ($(this).val() == 0) {
@@ -357,11 +355,9 @@ TABS.receiver.initialize = function (callback) {
 
             $('.tab-receiver .rcSmoothing-derivative-cutoff').show();
             $('select[name="rcSmoothing-input-derivative-select"]').val("1");
-            $('.tab-receiver .rc-smoothing-derivative-blank').hide();
             if (RX_CONFIG.rcSmoothingDerivativeCutoff == 0) {
                 $('select[name="rcSmoothing-input-derivative-select"]').val("0");
                 $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
-                $('.tab-receiver .rc-smoothing-derivative-blank').show();
             }
             $('select[name="rcSmoothing-input-derivative-select"]').change(function () {
                 if ($(this).val() == 0) {

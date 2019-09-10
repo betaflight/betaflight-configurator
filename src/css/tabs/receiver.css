@@ -136,14 +136,19 @@
     background-color: #14407a;
 }
 
+.tab-receiver .fc_column {
+    float: right;
+    width: 50%;
+    margin-left: 20px;
+}
+
 .tab-receiver .tunings {
     float: right;
     position: relative;
-    margin: 0px 0px 20px 0;
+    margin: 0px 0px 10px 0;
     width: 100%;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background-color: #DEDEDE;
 }
 
 .tab-receiver .tunings .head {
@@ -185,13 +190,7 @@
 }
 
 .tab-receiver .tunings table td {
-    background: #DEDEDE;
     border-right: 1px solid var(--subtleAccent);
-}
-
-.tab-receiver .smoothing table td {
-    background: #DEDEDE;
-    border-right: 0px;
 }
 
 .tab-receiver .tunings table td:first-child {
@@ -207,38 +206,54 @@
     padding: 1px;
 }
 
-.tab-receiver .tunings table tr:nth-child(odd) {
-    background-color: #ececec;
-}
-
 .tab-receiver .tunings table input {
     width: calc(100% - 8px);
     border: 1px solid var(--subtleAccent);
     border-radius: 3px;
-    height: 20px;
-    margin: 3px;
-    line-height: 20px;
+    height: 22px;
+    margin: 4px;
+    line-height: 22px;
     text-align: right;
+    box-sizing: border-box;
+}
+
+.tab-receiver .input-helpicon-flex {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.tab-receiver .input-helpicon-flex .helpicon {
+    min-width: 14px;
+    margin-left: 4px;
+}
+
+.tab-receiver .tunings .sticks th,
+.tab-receiver .tunings .deadband th {
+    width: 33%;
 }
 
 .tab-receiver .rssi_channel_wrapper {
     float: right;
-    margin: 0px 0px 20px 0;
+    margin: 0px 0px 10px 0;
     border-left: 0;
     width: 30%;
+    box-sizing: border-box;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    background-color: #DEDEDE;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .tab-receiver .rcmap_wrapper {
     float: right;
     position: relative;
-    margin: 0px 0px 20px 0;
-    width: calc(70% - 0px);
+    margin: 0px 0px 10px 0;
+    width: 70%;
+    box-sizing: border-box;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background-color: #DEDEDE;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .tab-receiver .rssi_channel_wrapper .head,
@@ -258,6 +273,10 @@
 }
 .tab-receiver .rssi_channel_wrapper .head {
     border-top-right-radius: 3px;
+}
+
+.tab-receiver .rssi_channel_wrapper select {
+    width: calc(100% - 10px);
 }
 
 .tab-receiver .hybrid_element {
@@ -288,6 +307,7 @@
     height: 22px;
     padding-left: 5px;
     border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
     margin: 4px;
 }
 
@@ -306,15 +326,22 @@
     width: 100%;
 }
 
-.tab-receiver .rcInterpolation-label {
-    margin-top: 6px;
+.tab-receiver .rcSmoothing table td {
     border-right: none;
+}
+
+.tab-receiver .rcSmoothing table select,
+.tab-receiver .rcSmoothing table input {
+    width: 90%;
+}
+
+.tab-receiver .rcSmoothing table .helpicon {
+    margin-top: 0px;
 }
 
 .tab-receiver .rcSmoothing td:first-child {
     width: 120px;
-    padding-left:8px;
-    border-right: none;
+    padding-left: 8px;
 }
 
 .tab-receiver .rcSmoothing td:last-child {
@@ -323,22 +350,6 @@
 
 .tab-receiver .rcInterpolation .slider input {
     -webkit-appearance: slider-horizontal;
-}
-
-.tab-receiver .curves {
-    float: left;
-    margin-right: 10px;
-}
-
-.tab-receiver .throttle_curve {
-    margin: 0 0px 0px 0;
-    width: 200px;
-    height: 117px;
-    border: 1px solid silver;
-    border-radius: 3px;
-    background-image: var(--paper);
-    background-size: 200%;
-    background-position: center;
 }
 
 .tab-receiver select[name="rx_refresh_rate"] {
