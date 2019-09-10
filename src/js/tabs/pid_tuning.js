@@ -1567,6 +1567,8 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter input, .pid_filter select').on('input', () => TuningSliders.updateFilterSlidersDisplay());
             // update on filter switch changes
             $('.inputSwitch input').change(() => TuningSliders.updateFilterSlidersDisplay());
+
+            $('.tuningHelp').hide();
         } else {
             $('.tuningPIDSliders').hide();
             $('.slidersDisabled').hide();
@@ -1574,6 +1576,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.tuningFilterSliders').hide();
             $('.slidersFilterDisabled').hide();
             $('.slidersFilterHighWarning').hide();
+            $('.tuningHelpSliders').hide();
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
