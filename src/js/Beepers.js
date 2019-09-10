@@ -87,7 +87,7 @@ Beepers.prototype.generateElements = function (template, destination) {
             destination.append(element);
 
             var input_e = $(element).find('input');
-            var label_e = $(element).find('label');
+            var label_e = $(element).find('div');
             var span_e = $(element).find('span');
 
             input_e.attr('id', 'beeper-' + i);
@@ -96,7 +96,6 @@ Beepers.prototype.generateElements = function (template, destination) {
             input_e.prop('checked', bit_check(self._beeperMask, self._beepers[i].bit) == 0);
             input_e.data('bit', self._beepers[i].bit);
 
-            label_e.attr('for', 'beeper-' + i);
             label_e.text(self._beepers[i].name);
 
             span_e.attr('i18n', 'beeper' + self._beepers[i].name);
