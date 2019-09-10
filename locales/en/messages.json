@@ -2582,9 +2582,6 @@
     "firmwareFlasherReleaseDate": {
         "message": "Date:"
     },
-    "firmwareFlasherReleaseStatus": {
-        "message": "State:"
-    },
     "firmwareFlasherReleaseTarget": {
         "message": "Target:"
     },
@@ -2615,6 +2612,9 @@
     },
     "firmwareFlasherLoadFirmwareFile": {
         "message": "Please load firmware file"
+    },
+    "firmwareFlasherLoadedConfig": {
+        "message": "Loaded target, please load firmware file"
     },
     "firmwareFlasherNoReboot": {
         "message": "No reboot sequence"
