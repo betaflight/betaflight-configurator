@@ -759,10 +759,9 @@
 
 .tab-pid_tuning .tuningSlider::-webkit-slider-runnable-track {
     -webkit-appearance: none;
-    background: rgba(0,255,0);
     border: solid 1px silver;
     border-radius: 4px;
-    background: linear-gradient(90deg, rgb(167, 255, 204) 0%, rgb(187, 252, 255) 50%, rgb(255, 90, 23) 100%);
+    background: linear-gradient(90deg, rgb(197, 197, 197) 0%, rgb(241, 241, 241) 50%, rgb(255, 84, 14) 100%);
     height: 15px;
 }
 
@@ -776,6 +775,7 @@
     cursor: pointer;
     position: relative;
     bottom: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .tab-pid_tuning .sliderLabels tr {
