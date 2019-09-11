@@ -1,5 +1,5 @@
 .tab-receiver select {
-    background-color: #414443;
+    background-color: #3a3a3a;
     color: white;
 }
 
@@ -31,15 +31,16 @@
 .tab-receiver .rssi_channel_wrapper {
     background-color: #414443;
     border-bottom: 1px solid #4d4d4d;
+    border-right: 1px solid #4d4d4d;
 }
 
 .tab-receiver .rcmap_wrapper {
     background-color: #414443;
+    border-left: 1px solid #4d4d4d;
+    border-bottom: 1px solid #4d4d4d;
 }
 
 .tab-receiver .hybrid_element {
-    border-bottom: 1px solid #4d4d4d;
-    border-left: 1px solid #4d4d4d;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
