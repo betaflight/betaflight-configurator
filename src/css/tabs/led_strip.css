@@ -12,7 +12,7 @@
 .tab-led-strip .section {
     color: #565656;
     margin: 20px 0 5px 0;
-    border-bottom: 1px solid silver;
+    border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-led-strip .mainGrid {
@@ -22,7 +22,7 @@
     margin-right: 10px;
     border-radius: 3px;
     background-color: #dcdcdc;
-    border: silver;
+    border: var(--subtleAccent);
 }
 
 .tab-led-strip .mainGrid .gPoint {
@@ -183,7 +183,7 @@
 .tab-led-strip button {
     text-align: center;
     font-weight: bold;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     background-color: #ececec;
     border-radius: 3px;
     padding: 7px 6px;
@@ -221,9 +221,11 @@
 /* .tab-led-strip .select .function-b {    background: white;    color:black;} */
 .tab-led-strip .select .function-r {    background: #acacac;}
 
-.tab-led-strip .select .functionSelect option {
-    background: white;
-    color: black;
+.tab-led-strip .select .functionSelect {
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
+    background: var(--boxBackground);
+    color: var(--defaultText);
 }
 
 

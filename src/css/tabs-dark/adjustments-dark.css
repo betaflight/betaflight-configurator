@@ -12,7 +12,6 @@
 }
 
 .tab-adjustments .adjustment select {
-    border: 1px solid silver; 
     background-color: #3a3a3a;
     color: white;
 }

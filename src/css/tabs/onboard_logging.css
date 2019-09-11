@@ -41,7 +41,7 @@
 .tab-onboard_logging .speed {
     margin-top: 5px;
     width: 80px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
 }
 
 .tab-onboard_logging .info {
@@ -77,7 +77,7 @@
 .tab-onboard_logging .sdcard-contents {
     margin-top: 15px;
     margin-bottom:26px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     background-color: #eee;
     display: flex;
     flex-direction: row;
@@ -260,7 +260,8 @@
     width: 180px;
     height: 20px;
     margin: 0 10px 5px 0;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
 }
 .tab-onboard_logging .blackboxRate span,
 .tab-onboard_logging .blackboxDebugMode span,

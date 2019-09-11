@@ -25,7 +25,6 @@
 }
 
 .tab-auxiliary .range .channel,.logic,.linkedTo {
-    border: 1px solid #9c9c9c;
     background-color: #3a3a3a;
     color: white;
 }

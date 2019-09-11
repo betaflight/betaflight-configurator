@@ -47,7 +47,7 @@
   width: 100%;
   height: 26px;
   border-radius: 5px;
-  border: 1px solid silver;
+  border: 1px solid var(--subtleAccent);
 }
 
 .info .progress {
@@ -115,7 +115,7 @@
 .tab-osd .options select {
   width: 300px;
   height: 20px;
-  border: 1px solid silver;
+  border: 1px solid var(--subtleAccent);
 }
 
 .tab-osd .options .releases select {
@@ -156,7 +156,7 @@
   text-align: center;
   font-weight: bold;
   color: white;
-  border-bottom: 1px solid silver;
+  border-bottom: 1px solid var(--subtleAccent);
   background-color: #3f4241;
 }
 
@@ -183,7 +183,7 @@
 .tab-osd .git_info {
   display: none;
   margin-bottom: 10px;
-  border: 1px solid silver;
+  border: 1px solid var(--subtleAccent);
 }
 
 .tab-osd .git_info .title {
@@ -191,7 +191,7 @@
   text-align: center;
   font-weight: bold;
   color: white;
-  border-bottom: 1px solid silver;
+  border-bottom: 1px solid var(--subtleAccent);
   background-color: #3f4241;
 }
 
@@ -267,7 +267,7 @@
 
 .tab-osd .preview .gui_box_titlebar select {
     max-width: 100px;
-    border-radius: 2px;
+    border-radius: 3px;
     font-size: 11px;
     font-weight: normal;
     font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif;
@@ -384,7 +384,7 @@ button {
 }
 
 .fontpresets {
-  border: 1px solid #cccccc;
+  border: 1px solid var(--subtleAccent);
 }
 
 .tab-osd .switchable-field {
@@ -395,20 +395,23 @@ button {
 
 .tab-osd .switchable-field.mouseover {
   background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid var(--subtleAccent);
   font-weight: 800;
 }
 
 .tab-osd .switchable-field input {
   border-radius: 3px;
   border: 1px solid var(--subtleAccent);
-  padding:2px;
-  margin-top: -2px;
+  padding: 2px;
 }
 
 .tab-osd .switchable-field input[type=number] {
   float: right;
   display: none;
+  line-height: 23px;
+  height: 23px;
+  box-sizing: border-box;
+  padding-right: 0px;
 }
 
 .tab-osd .switchable-field label {
@@ -443,6 +446,7 @@ button {
 .tab-osd input,
 .tab-osd select {
   border: 1px solid var(--subtleAccent);
+  border-radius: 3px;
 }
 
 .tab-osd .preview {

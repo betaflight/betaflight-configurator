@@ -45,9 +45,6 @@
   box-sizing: border-box;
 }
 
-.tab-motors .plot-control .sensor {
-}
-
 .tab-motors .plot_control .row-container {
   display: table-row-group;
 }
@@ -82,7 +79,8 @@
 }
 .tab-motors .plot_control select {
   width: 100%;
-  border: 1px solid silver;
+  border: 1px solid var(--subtleAccent);
+  border-radius: 3px;
 }
 
 .tab-motors .plot_control .value {
@@ -331,7 +329,7 @@
     float: right;
     width: calc(40% - 24px);
     padding: 5px;
-    border: 2px solid #ccc;
+    border: 2px solid var(--subtleAccent);
     border-radius: 3px;
     background-color: #FFFFFF;
     font-size: 11px;

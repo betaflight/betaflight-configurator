@@ -34,7 +34,8 @@
     border: 1px solid var(--subtleAccent);
     border-radius: 3px;
     max-width: 100px;
-
+    background: var(--boxBackground);
+    color: var(--defaultText);
 }
 
 .tab-vtx .number input {

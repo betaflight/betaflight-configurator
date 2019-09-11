@@ -10,14 +10,6 @@
     background-color: #393b3a;
 }
 
-.tab-servos table input {
-    border: 1px solid #9c9c9c;
-}
-
-.tab-servos table select {
-    border: 1px solid #9c9c9c;
-}
-
 .tab-servos table input[type="number"] {
     background-color: #3a3a3a;
     color: white;

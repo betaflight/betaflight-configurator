@@ -1,6 +1,5 @@
 .tab-setup #interactive_block {
     background-color: #393b3a;
-    border: 1px solid #9c9c9c;
 }
 
 .tab-setup .attitude_info {
@@ -9,14 +8,9 @@
 
 .tab-setup #interactive_block a.reset {
     color: white;
-    border: 1px solid #9c9c9c;
     background-color: #575757;
 }
 
 .tab-setup #interactive_block a.reset:hover {
     background-color: #393b3a;
-}
-
-.tab-setup .regular-button.disabled {
-    border: 1px solid #9c9c9c;
 }

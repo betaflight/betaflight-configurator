@@ -14,11 +14,13 @@
     height: 20px;
     line-height: 20px;
     text-align: left;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
     margin-right: 11px;
     font-size: 12px;
     font-weight: normal;
+    background: var(--boxBackground);
+    color: var(--defaultText);
 }
 
 .tab-transponder .text .disabled {
@@ -83,5 +85,8 @@
 
 .tab-transponder select {
     min-width: 100px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
+    background: var(--boxBackground);
+    color: var(--defaultText);
 }
