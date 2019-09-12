@@ -37,7 +37,7 @@
     height: 20px;
     line-height: 20px;
     text-align: left;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
     margin-right: 11px;
     font-size: 12px;
@@ -59,7 +59,8 @@
 }
 
 .tab-power .battery-configuration select {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
     margin-right: 5px;
     float: left;
     width: 150px;

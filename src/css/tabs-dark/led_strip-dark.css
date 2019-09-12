@@ -1,15 +1,12 @@
 .tab-led-strip .section {
-    border-bottom: 1px solid #9c9c9c;
     color: #c4c4c4;
 }
 
 .tab-led-strip .mainGrid {
     background-color: #4e4e4e;
-    border: #9c9c9c;
 }
 
 .tab-led-strip button {
-    border: 1px solid #9c9c9c;
     background-color: #6b6b6b;
     color: white;
 }
@@ -17,10 +14,6 @@
 .tab-led-strip button:hover {
     border: 1px solid #ffffff;
     background-color: #393b3a;
-}
-
-.tab-led-strip .colorDefineSliders {
-    border-color: #9c9c9c;
 }
 
 .tab-led-strip .gridSections,

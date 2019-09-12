@@ -1,24 +1,14 @@
-.tab-cli p {
-    border: 0px dotted #9c9c9c;
-}
-
-.tab-cli .backdrop {
-    border: 1px solid #9c9c9c;
-}
-
 .tab-cli textarea[name='commands']::placeholder {
     color: silver;
 }
 
 .tab-cli textarea[name='commands'] {
-    border: 1px solid #9c9c9c;
     background: black;
     color: white;
 }
 
 /* AutoComplete */
 .cli-textcomplete-dropdown {
-    border: 1px solid #9c9c9c;
     background-color: #393b3a;
 }
 .cli-textcomplete-dropdown a {

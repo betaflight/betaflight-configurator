@@ -86,7 +86,7 @@
     float: left;
     display: block;
     margin-left: 10px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
 }
 
 .gui_box grey .block .head {
@@ -94,7 +94,7 @@
     text-align: center;
     line-height: 20px;
     font-weight: bold;
-    border-bottom: 1px solid silver;
+    border-bottom: 1px solid var(--subtleAccent);
     background-color: #ececec;
 }
 
@@ -103,7 +103,7 @@
     margin-bottom: 10px;
     vertical-align: top;
     font-size: 12px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
 }
 
 .block.info .fields {

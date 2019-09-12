@@ -3,7 +3,6 @@
 }
 
 .tab-motors .plot_control select {
-  border: 1px solid #9c9c9c;
   background-color: #3a3a3a;
   color: white;
 }
@@ -22,10 +21,8 @@
 
 .tab-motors .m-block .meter-bar {
     background-color: #393b3a;
-    border: 1px solid #9c9c9c;
 }
 
 .tab-motors .motor_testing .notice {
-    border: 2px solid #9c9c9c;
     background-color: #4e4e4e;
 }

@@ -8,11 +8,11 @@
 
 .tab-cli p {
     padding: 0px;
-    border: 0px dotted silver;
+    border: 0px dotted var(--subtleAccent);
 }
 
 .tab-cli .backdrop {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     background-color: rgba(0, 0, 0, 0.75);
     margin-top: 0px;
     height: calc(100% - 90px); /* - (p, textarea) */
@@ -45,7 +45,7 @@
     height: 22px;
     line-height: 20px;
     padding-left: 5px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     resize: none;
 }
 

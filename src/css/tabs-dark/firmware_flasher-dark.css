@@ -6,12 +6,7 @@
     color: black;
 }
 
-.tab-firmware_flasher .info .progress {
-    border: 1px solid #9c9c9c;
-}
-
 .tab-firmware_flasher .options select {
-    border: 1px solid #9c9c9c;
     background-color: #3a3a3a;
     color: white;
 }
@@ -25,16 +20,8 @@
     color: white;
 }
 
-.tab-firmware_flasher .release_info .title {
-    border-bottom: 1px solid #9c9c9c;
-}
-
 .tab-firmware_flasher .release_info .target {
     color: #98ddff;
-}
-
-.tab-firmware_flasher .buttons a {
-    border: 1px solid #9c9c9c;
 }
 
 .tab-firmware_flasher .cf_table td {

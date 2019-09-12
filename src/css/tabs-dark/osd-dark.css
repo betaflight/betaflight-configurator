@@ -1,22 +1,9 @@
-.info .progress {
-  border: 1px solid #9c9c9c;
-}
-
 .fontpresets {
-  border: 1px solid #9c9c9c;
   background-color: #3c3c3c;
   color: white;
 }
 
 /* Above two items are related to jbox, and serve as a reminder to look in src/css/tabs/osd.css */
-
-.tab-osd .options select {
-  border: 1px solid #9c9c9c;
-}
-
-.tab-osd .release_info .title {
-  border-bottom: 1px solid #9c9c9c;
-}
 
 .tab-osd .display-layout input.position{
   border-bottom: 1px solid red;

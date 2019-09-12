@@ -3,7 +3,7 @@
 }
 
 .tab-pid_tuning .cf th {
-    border-right: solid 1px silver;
+    border-right: solid 1px var(--subtleAccent);
     height: 19px;
     font-weight: normal;
     padding: 4px;
@@ -34,14 +34,14 @@
 .tab-pid_tuning .cf input {
     margin: 4px;
     width: calc(100% - 10px);
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
 }
 
 .tab-pid_tuning .cf select {
     margin: 4px;
     width: calc(100% - 10px);
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning .throttle_curve {
@@ -94,7 +94,7 @@
 
 .tab-pid_tuning table, .tab-pid_tuning table td {
     padding: 1px;
-    border-bottom: 0px solid #ccc;
+    border-bottom: 0px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning table th {
@@ -109,7 +109,7 @@
 .tab-pid_tuning .pid_titlebar th {
     padding: 5px;
     text-align: left;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning .pid_titlebar th:first-child {
@@ -128,7 +128,7 @@
 }
 
 .tab-pid_tuning table tr td:last-child {
-    border-right: 0px solid #ccc;
+    border-right: 0px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning #pid_optional table th {
@@ -149,7 +149,7 @@
 
 .tab-pid_tuning table.compensation tr {
     height: 30px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning table.compensation tr:last-child {
@@ -225,7 +225,7 @@
 .tab-pid_tuning table td {
     padding: 1px;
     padding-left: 5px;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning table tr td {
@@ -247,7 +247,7 @@
     height: 20px;
     line-height: 20px;
     text-align: right;
-    border: 1px solid #ccc;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
 }
 
@@ -261,7 +261,7 @@
 .tab-pid_tuning table select {
     text-align-last: right;
     border-radius: 3px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning .tab_container {
@@ -315,7 +315,7 @@
 
 .tab-pid_tuning .single-field .head {
     text-align: left;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--subtleAccent);
     background-color: var(--quietHeader);
     color: var(--quietText);
     height: 19px;
@@ -344,7 +344,7 @@
   background-color: #D6D6D6;
   padding-top: 8px;
   font-size: 12px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--subtleAccent);
   color: #828282;
   background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .2) 100%, transparent);
 }
@@ -367,7 +367,7 @@
     line-height: 13px;
     padding-top: 5px;
     font-size: 12px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--subtleAccent);
     color: #828282;
     font-weight: normal;
     background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%,
@@ -481,7 +481,7 @@
     height: 20px;
     line-height: 20px;
     text-align: left;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
     margin-right: 11px;
     font-weight: normal;
@@ -551,9 +551,9 @@
 .tab-pid_tuning .bottomarea {
     float: left;
     width: calc(100% - 2px);
-    border-bottom: 1px solid silver;
-    border-left: 1px solid silver;
-    border-right: 1px solid silver;
+    border-bottom: 1px solid var(--subtleAccent);
+    border-left: 1px solid var(--subtleAccent);
+    border-right: 1px solid var(--subtleAccent);
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
     padding-top: 5px;
@@ -567,7 +567,8 @@
 }
 
 .tab-pid_tuning .profile select {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
     margin-left: 5px;
     width: calc(100% - 10px);
 }
@@ -578,7 +579,8 @@
 }
 
 .tab-pid_tuning .rate_profile select {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
     margin-left: 5px;
     width: calc(100% - 10px);
 }
@@ -589,7 +591,7 @@
 }
 
 .tab-pid_tuning .controller select {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     margin-left: 5px;
     width: calc(100% - 10px);
 }
@@ -599,7 +601,7 @@
 }
 
 .tab-pid_tuning .delta select {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     margin-left: 5px;
     width: calc(100% - 10px);
 }
@@ -712,11 +714,11 @@
     padding-left: 10px;
     position: relative;
     padding: 10px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     margin-top: -10px;
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
-    border-top: 0px solid silver;
+    border-top: 0px solid var(--subtleAccent);
      background: #f9f9f9;
 }
 
@@ -735,7 +737,7 @@
 }
 
 .tab-pid_tuning dialog select {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     margin-left: 5px;
     width: 120px;
 }
@@ -758,7 +760,7 @@
 
 .tab-pid_tuning .tuningSlider::-webkit-slider-runnable-track {
     -webkit-appearance: none;
-    border: solid 1px silver;
+    border: solid 1px var(--subtleAccent);
     border-radius: 4px;
     background: linear-gradient(90deg, rgb(197, 197, 197) 0%, rgb(241, 241, 241) 50%, rgb(255, 84, 14) 100%);
     height: 15px;
@@ -778,7 +780,7 @@
 }
 
 .tab-pid_tuning .sliderLabels tr {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-pid_tuning .sliderLabels tr:last-child {
@@ -830,9 +832,9 @@
 
 .tab-pid_tuning .slidersHighWarning, 
 .tab-pid_tuning .slidersFilterHighWarning {
-    background: #ff8a67;
+    background: #ffb3b3;
     border: 1px solid red;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 12px;
 }
 

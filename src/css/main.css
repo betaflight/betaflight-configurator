@@ -1,13 +1,13 @@
 :root {
     --accent: #ffbb00;
     --error: red; 
-    --subtleAccent: #dddddd;
+    --subtleAccent: silver;
     --quietText: #ffffff;
     --quietHeader: #828885;
     --defaultText: #000000;
     --subtleText: #c0c0c0;
     --mutedText: #616161;
-    --boxBackground: #eeeeee;
+    --boxBackground: #ffffff;
     --alternativeBackground: #f9f9f9;
     --sideBackground: #ffffff;
     --paper: url(../../images/paper.jpg);

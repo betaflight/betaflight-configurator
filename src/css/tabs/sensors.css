@@ -60,7 +60,8 @@
 .tab-sensors .plot_control select {
     float: right;
     width: 80px;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
 }
 
 .tab-sensors .plot_control .x {

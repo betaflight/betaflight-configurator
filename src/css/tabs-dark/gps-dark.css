@@ -1,5 +1,4 @@
 .tab-gps .GPS_info .head, .tab-gps .GPS_signal_strength .head {
-    border-bottom: 1px solid #9c9c9c;
     background-color: #393b3a;
 }
 
@@ -9,7 +8,6 @@
 
 .tab-gps #loadmap .controls a {
     background-color: #393b3a;
-    border: 1px #9c9c9c solid;
 }
 
 .tab-gps #loadmap .controls a:hover {

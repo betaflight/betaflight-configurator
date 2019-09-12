@@ -25,7 +25,7 @@
 
 .tab-adjustments td {
     border-top: 1px solid #fff;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-adjustments .range:first-child {
@@ -63,7 +63,7 @@
 .tab-adjustments .adjustment select {
     /* outline: 1px solid silver; */
     border-radius: 3px;
-    border: 1px solid silver;    
+    border: 1px solid var(--subtleAccent);    
 }
 
 .tab-adjustments .adjustment td {

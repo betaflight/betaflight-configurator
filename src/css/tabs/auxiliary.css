@@ -113,7 +113,7 @@
     padding-top: 15px;
     padding-left: 0px;
     border-top: 1px solid #fff;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid var(--subtleAccent);
     background-color: #ececec;
     padding-bottom: 5px;
 }
@@ -124,7 +124,7 @@
     padding-top: 15px;
     padding-left: 15px;
     border-top: 1px solid #fff;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid var(--subtleAccent);
     background-color: #ececec;
     padding-bottom: 5px;
 }
@@ -163,13 +163,13 @@
 }
 
 .tab-auxiliary .range .channel {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
     margin-bottom: 3px;
 }
 
 .tab-auxiliary .logic {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
 }
 
@@ -194,7 +194,7 @@
 }
 
 .tab-auxiliary .link .linkedTo {
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
     border-radius: 3px;
     margin-bottom: 3px;
 }

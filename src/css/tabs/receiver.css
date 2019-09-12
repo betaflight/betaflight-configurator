@@ -160,7 +160,7 @@
     background: #828885;
     color: white;
     border-top-left-radius: 3px;
-    border-right: 1px solid silver;
+    border-right: 1px solid var(--subtleAccent);
 }
 .tab-receiver .tunings table {
     width: 100%;
@@ -240,8 +240,8 @@
     box-sizing: border-box;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-right: 1px solid var(--subtleAccent);
+    border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-receiver .rcmap_wrapper {
@@ -252,8 +252,8 @@
     box-sizing: border-box;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    border-left: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-left: 1px solid var(--subtleAccent);
+    border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-receiver .rssi_channel_wrapper .head,
@@ -354,7 +354,7 @@
 
 .tab-receiver select[name="rx_refresh_rate"] {
     float: right;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
 }
 
 .tab-receiver #RX_plot {

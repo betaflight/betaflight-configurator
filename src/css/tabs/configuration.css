@@ -111,7 +111,7 @@
     width: 100px;
     height: 20px;
     margin: 0 10px 5px 0;
-    border: 1px solid silver;
+    border: 1px solid var(--subtleAccent);
 }
 
 .tab-configuration .gps span {
@@ -221,6 +221,9 @@
 
 .tab-configuration .board_align_inputs input {
     width: 3.5em;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 3px;
 }
 
 .tab-configuration .board_align_inputs label,
@@ -230,8 +233,7 @@
     text-overflow: ellipsis;
 }
 
-.tab-configuration .selectProtocol
- {
+.tab-configuration .selectProtocol {
     margin-bottom: 5px;
     clear: left;
     padding-bottom: 5px;
@@ -337,8 +339,10 @@
 .tab-configuration select {
     border: 1px solid var(--subtleAccent);
     width: 230px;
+    height: 20px;
     float: left;
     margin-right: 15px;
+    border-radius: 3px;
 }
 
 
@@ -385,8 +389,7 @@
     width: 15px;
     height: 15px;
     float: left;
-    margin-left: -1px;
-    margin-right: 3px;
+    margin: 3px;
 }
 
 .tab-configuration .pitch {
