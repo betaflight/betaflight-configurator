@@ -28,6 +28,7 @@
         "serial",
         "usb",
         "storage",
+        "clipboardRead",
         "fileSystem",
         "fileSystem.write",
         "fileSystem.retainEntries",

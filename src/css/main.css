@@ -1152,7 +1152,7 @@ dialog {
 
 /** Hack to change the "display: none" by a "visibility:hidden", to apply 
     the margin-left: auto needed by the first element to align to the right the buttons */
-.toolbar_fixed_bottom .content_toolbar div[style='display: none;'] {
+.toolbar_fixed_bottom .content_toolbar div[style='display: none;']:first-child {
     visibility: hidden;
     display: block !important;
 }

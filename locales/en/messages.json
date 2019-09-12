@@ -5155,6 +5155,14 @@
         "message": "<span class=\"message-negative\">Error</span> while loading the VTX Config file",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadClipboardOk": {
+        "message": "VTX Config info <span class=\"message-positive\">loaded</span> from clipboard",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },    
+    "vtxLoadClipboardKo": {
+        "message": "<span class=\"message-negative\">Error</span> while loading the VTX Config info from clipboard. Maybe the contents are not correct",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
     "vtxButtonSaveFile": {
         "message": "Save to file",
         "description": "Save to file button in the VTX tab"
@@ -5162,6 +5170,10 @@
     "vtxButtonLoadFile": {
         "message": "Load from file",
         "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "Load from clipboard",
+        "description": "Paste from clipboard button in the VTX tab"
     },
     "vtxButtonSave": {
         "message": "Save",

@@ -160,6 +160,9 @@ TABS.vtx.initialize = function (callback) {
         $(".vtx_table_not_configured").toggle(vtxTableNotConfigured);
         $(".vtx_table_save_pending").toggle(TABS.vtx.vtxTableSavePending);
 
+        // Buttons
+        $('.clipboard_available').toggle(Clipboard.available && Clipboard.readAvailable);
+
         // Insert actual values in the fields
         // Values of the selected mode
         $("#vtx_frequency").val(VTX_CONFIG.vtx_frequency);
@@ -476,6 +479,10 @@ TABS.vtx.initialize = function (callback) {
             load_json();
         });
 
+        $('a.load_clipboard').click(function () {
+            load_clipboard_json();
+        });
+
         $('a.save').click(function () {
             save_vtx();
         });
@@ -585,6 +592,36 @@ TABS.vtx.initialize = function (callback) {
                 GUI.log(i18n.getMessage('vtxLoadFileKo'));
             });
         });
+    }
+
+    function load_clipboard_json() {
+
+        try {
+
+            Clipboard.readText(
+                function(text) {
+
+                    console.log('Pasted content: ', text);
+
+                    let vtxConfig = JSON.parse(text);
+                    read_vtx_config_json(vtxConfig, load_html);
+
+                    TABS.vtx.vtxTableSavePending = true;
+
+                    console.log('Load VTX clipboard end');
+                    GUI.log(i18n.getMessage('vtxLoadClipboardOk'));
+
+                }, function(err) {
+                    GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
+                    console.error('Failed to read clipboard contents: ', err);
+                }
+            );
+
+        } catch (err) {
+            console.error('Failed loading VTX file config: ' + err);
+            GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
+        }
+
     }
 
     // Save all the values from the tab to MSP
