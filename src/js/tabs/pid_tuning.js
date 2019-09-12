@@ -1434,6 +1434,16 @@ TABS.pid_tuning.initialize = function (callback) {
             // filter and tuning sliders
             TuningSliders.initialize();
 
+            // UNSCALED non expert slider constrain values
+            const NON_EXPERT_SLIDER_MAX = 1.25;
+            const NON_EXPERT_SLIDER_MIN = 0.7;
+
+            $('input[name="expertModeCheckbox"]').change(function() {
+                TuningSliders.setExpertMode($(this).is(':checked'));
+                TuningSliders.updatePidSlidersDisplay();
+                TuningSliders.updateFilterSlidersDisplay();
+            });
+
             $('#dMinSwitch').change(function() {
                 TuningSliders.setDMinFeatureEnabled($(this).is(':checked'));
                 // switch dmin and dmax values on dmin on/off if sliders available
@@ -1461,6 +1471,13 @@ TABS.pid_tuning.initialize = function (callback) {
                     slider.attr('step', 0.05);
                 } else {
                     slider.attr('step', 0.1);
+                }
+                if (!TuningSliders.expertMode) {
+                    if (slider.val() > NON_EXPERT_SLIDER_MAX) {
+                        slider.val(NON_EXPERT_SLIDER_MAX);
+                    } else if (slider.val() < NON_EXPERT_SLIDER_MIN) {
+                        slider.val(NON_EXPERT_SLIDER_MIN);
+                    }
                 }
                 const scaledValue = TuningSliders.scaleSliderValue(slider.val());
                 if (slider.is('#tuningMasterSlider')) {
@@ -1519,6 +1536,13 @@ TABS.pid_tuning.initialize = function (callback) {
             // filter slider inputs
             $('#tuningGyroFilterSlider, #tuningDTermFilterSlider').on('input', function() {
                 const slider = $(this);
+                if (!TuningSliders.expertMode) {
+                    if (slider.val() > NON_EXPERT_SLIDER_MAX) {
+                        slider.val(NON_EXPERT_SLIDER_MAX);
+                    } else if (slider.val() < NON_EXPERT_SLIDER_MIN) {
+                        slider.val(NON_EXPERT_SLIDER_MIN);
+                    }
+                }
                 const scaledValue = TuningSliders.scaleSliderValue(slider.val());
                 if (slider.is('#tuningGyroFilterSlider')) {
                     TuningSliders.gyroFilterSliderValue = scaledValue;
@@ -1571,11 +1595,10 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.tuningHelp').hide();
         } else {
             $('.tuningPIDSliders').hide();
-            $('.slidersDisabled').hide();
-            $('.slidersHighWarning').hide();
             $('.tuningFilterSliders').hide();
-            $('.slidersFilterDisabled').hide();
-            $('.slidersFilterHighWarning').hide();
+            $('.slidersDisabled').hide();
+            $('.slidersWarning').hide();
+            $('.nonExpertModeSlidersNote').hide();
             $('.tuningHelpSliders').hide();
         }
 

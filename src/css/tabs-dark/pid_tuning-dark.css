@@ -154,7 +154,6 @@
     border-bottom: 1px solid #6b6b6b;
 }
 
-.tab-pid_tuning .slidersHighWarning,
-.tab-pid_tuning .slidersFilterHighWarning {
+.tab-pid_tuning .slidersWarning {
     background: #542415;
 }

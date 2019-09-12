@@ -20,6 +20,8 @@ var TuningSliders = {
     cachedPidSliderValues: false,
     cachedGyroSliderValues: false,
     cachedDTermSliderValues: false,
+
+    expertMode: false,
 };
 
 TuningSliders.initialize = function() {
@@ -27,6 +29,7 @@ TuningSliders.initialize = function() {
     this.FILTER_DEFAULT = FC.getFilterDefaults();
 
     this.setDMinFeatureEnabled($('#dMinSwitch').is(':checked'));
+    this.setExpertMode($('input[name="expertModeCheckbox"]').is(':checked'));
 
     this.initPidSlidersPosition();
     this.initGyroFilterSliderPosition();
@@ -47,6 +50,17 @@ TuningSliders.setDMinFeatureEnabled = function(dMinFeatureEnabled) {
         this.defaultPDRatio = this.PID_DEFAULT[0] / this.PID_DEFAULT[2];
     } else {
         this.defaultPDRatio = this.PID_DEFAULT[0] / this.PID_DEFAULT[3];
+    }
+};
+
+TuningSliders.setExpertMode = function(expertMode) {
+    this.expertMode = expertMode;
+    const allTuningSliderElements = $('#tuningMasterSlider, #tuningPDRatioSlider, #tuningPDGainSlider,\
+                                    #tuningResponseSlider, #tuningGyroFilterSlider, #tuningDTermFilterSlider');
+    if (this.expertMode) {
+        allTuningSliderElements.removeClass('nonExpertModeSliders');
+    } else {
+        allTuningSliderElements.addClass('nonExpertModeSliders');
     }
 };
 
@@ -90,8 +104,8 @@ TuningSliders.initPidSlidersPosition = function() {
 };
 
 TuningSliders.initGyroFilterSliderPosition = function() {
-    this.gyroFilterSliderValue = Math.round((FILTER_CONFIG.gyro_lowpass_dyn_min_hz + FILTER_CONFIG.gyro_lowpass2_hz) / 
-                                (this.FILTER_DEFAULT.gyro_lowpass_dyn_min_hz + this.FILTER_DEFAULT.gyro_lowpass2_hz) * 100) / 100;
+    this.gyroFilterSliderValue = Math.round((FILTER_CONFIG.gyro_lowpass_dyn_min_hz + FILTER_CONFIG.gyro_lowpass_dyn_max_hz + FILTER_CONFIG.gyro_lowpass2_hz) / 
+                                (this.FILTER_DEFAULT.gyro_lowpass_dyn_min_hz + this.FILTER_DEFAULT.gyro_lowpass_dyn_max_hz + this.FILTER_DEFAULT.gyro_lowpass2_hz) * 100) / 100;
     $('output[name="tuningGyroFilterSlider-number"]').val(this.gyroFilterSliderValue);
     $('#tuningGyroFilterSlider').val(this.downscaleSliderValue(this.gyroFilterSliderValue));
 };
@@ -139,10 +153,9 @@ TuningSliders.resetDTermFilterSlider = function() {
 TuningSliders.updatePidSlidersDisplay = function() {
     // check if pid values changed manually by saving current values, doing the slider based calculation, and comaparing
     // if values before and after calculation, if all of them are equal the values haven't been changed manually
-    // and the sliders are shown, otherwise sliders are grayed out and centered
-    const WARNING_P_GAIN = 110;
+    const WARNING_P_GAIN = 70;
     const WARNING_I_GAIN = 120;
-    const WARNING_DMAX_GAIN = 70;
+    const WARNING_DMAX_GAIN = 60;
     const WARNING_DMIN_GAIN = 40;
 
     this.pidSlidersUnavailable = false;
@@ -172,26 +185,21 @@ TuningSliders.updatePidSlidersDisplay = function() {
         this.pidSlidersUnavailable = true;
     }
 
-    if (this.pidSlidersUnavailable) {
-        $('.tuningPIDSliders').hide();
-        $('.slidersDisabled').show();
-    } else {
-        $('.tuningPIDSliders').show();
-        $('.slidersDisabled').hide();
+    if (!this.pidSlidersUnavailable) {
         this.cachedPidSliderValues = true;
     }
 
-    if ((PIDs[1][0] > WARNING_P_GAIN || PIDs[1][1] > WARNING_I_GAIN || PIDs[1][2] > WARNING_DMAX_GAIN || ADVANCED_TUNING.dMinPitch > WARNING_DMIN_GAIN) && !this.pidSlidersUnavailable) {
-        $('.slidersHighWarning').show();
-    } else {
-        $('.slidersHighWarning').hide();
-    }
+    $('.tuningPIDSliders').toggle(!this.pidSlidersUnavailable);
+    $('.subtab-pid .slidersDisabled').toggle(this.pidSlidersUnavailable);
+    $('.subtab-pid .nonExpertModeSlidersNote').toggle(!this.pidSlidersUnavailable && !this.expertMode);
+    $('.subtab-pid .slidersWarning').toggle((PIDs[1][0] > WARNING_P_GAIN || PIDs[1][1] > WARNING_I_GAIN || PIDs[1][2] > WARNING_DMAX_GAIN ||
+                                                ADVANCED_TUNING.dMinPitch > WARNING_DMIN_GAIN) && !this.pidSlidersUnavailable);
 };
 
 TuningSliders.updateFilterSlidersDisplay = function() {
     // check if filters changed manually by comapring current value and those based on slider position
-    // if equal filter slider is shown, otherwise it is grayed out and centered
-    const WARNING_FILTER_GAIN = 1.4;
+    const WARNING_FILTER_HIGH_GAIN = 1.4;
+    const WARNING_FILTER_LOW_GAIN = 0.7;
 
     this.filterGyroSliderUnavailable = false;
     this.filterDTermSliderUnavailable = false;
@@ -222,27 +230,22 @@ TuningSliders.updateFilterSlidersDisplay = function() {
         this.cachedDTermSliderValues = true;
     }
 
-    if (this.filterGyroSliderUnavailable && this.filterDTermSliderUnavailable) {
-        $('.tuningFilterSliders').hide();
-    } else {
-        $('.tuningFilterSliders').show();
-    }
-    if (this.filterGyroSliderUnavailable || this.filterDTermSliderUnavailable) {
-        $('.slidersFilterDisabled').show();
-    } else {
-        $('.slidersFilterDisabled').hide();
-    }
-
-    if ((this.gyroFilterSliderValue >= WARNING_FILTER_GAIN && !this.filterGyroSliderUnavailable) || (this.dtermFilterSliderValue >= WARNING_FILTER_GAIN && !this.filterDTermSliderUnavailable)) {
-        $('.slidersFilterHighWarning').show();
-    } else {
-        $('.slidersFilterHighWarning').hide();
-    }
+    $('.tuningFilterSliders').toggle(!(this.filterGyroSliderUnavailable && this.filterDTermSliderUnavailable));
+    $('.subtab-filter .slidersDisabled').toggle(this.filterGyroSliderUnavailable || this.filterDTermSliderUnavailable);
+    $('.subtab-filter .nonExpertModeSlidersNote').toggle((!this.filterGyroSliderUnavailable || !this.filterDTermSliderUnavailable) && !this.expertMode);
+    $('.subtab-filter .slidersWarning').toggle(((this.gyroFilterSliderValue >= WARNING_FILTER_HIGH_GAIN ||
+                                                    this.gyroFilterSliderValue <= WARNING_FILTER_LOW_GAIN) && !this.filterGyroSliderUnavailable) ||
+                                                    ((this.dtermFilterSliderValue >= WARNING_FILTER_HIGH_GAIN ||
+                                                     this.dtermFilterSliderValue <= WARNING_FILTER_LOW_GAIN) && !this.filterDTermSliderUnavailable));
 };
 
 TuningSliders.calculateNewPids = function() {
     // this is the main calculation for PID sliders, inputs are in form of slider position values
     // values get set both into forms and their respective variables
+    const MAX_PID_GAIN = 200;
+    const MAX_DMIN_GAIN = 100;
+    const MAX_FF_GAIN = 2000;
+
     if (this.dMinFeatureEnabled) {
         //dmin
         ADVANCED_TUNING.dMinRoll = Math.round(this.PID_DEFAULT[3] * this.PDGainSliderValue);
@@ -277,16 +280,16 @@ TuningSliders.calculateNewPids = function() {
     //master slider multiplication, max value 200 for main PID values
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            PIDs[j][i] = Math.min(Math.round(PIDs[j][i] * this.MasterSliderValue), 200);
+            PIDs[j][i] = Math.min(Math.round(PIDs[j][i] * this.MasterSliderValue), MAX_PID_GAIN);
         }
     }
-    ADVANCED_TUNING.feedforwardRoll = Math.round(ADVANCED_TUNING.feedforwardRoll * this.MasterSliderValue);
-    ADVANCED_TUNING.feedforwardPitch = Math.round(ADVANCED_TUNING.feedforwardPitch * this.MasterSliderValue);
-    ADVANCED_TUNING.feedforwardYaw = Math.round(ADVANCED_TUNING.feedforwardYaw * this.MasterSliderValue);
+    ADVANCED_TUNING.feedforwardRoll = Math.min(Math.round(ADVANCED_TUNING.feedforwardRoll * this.MasterSliderValue), MAX_FF_GAIN);
+    ADVANCED_TUNING.feedforwardPitch = Math.min(Math.round(ADVANCED_TUNING.feedforwardPitch * this.MasterSliderValue), MAX_FF_GAIN);
+    ADVANCED_TUNING.feedforwardYaw = Math.min(Math.round(ADVANCED_TUNING.feedforwardYaw * this.MasterSliderValue), MAX_FF_GAIN);
     if (this.dMinFeatureEnabled) {
-        ADVANCED_TUNING.dMinRoll = Math.round(ADVANCED_TUNING.dMinRoll * this.MasterSliderValue);
-        ADVANCED_TUNING.dMinPitch = Math.round(ADVANCED_TUNING.dMinPitch * this.MasterSliderValue);
-        ADVANCED_TUNING.dMinYaw = Math.round(ADVANCED_TUNING.dMinYaw * this.MasterSliderValue);
+        ADVANCED_TUNING.dMinRoll = Math.min(Math.round(ADVANCED_TUNING.dMinRoll * this.MasterSliderValue), MAX_DMIN_GAIN);
+        ADVANCED_TUNING.dMinPitch = Math.min(Math.round(ADVANCED_TUNING.dMinPitch * this.MasterSliderValue), MAX_DMIN_GAIN);
+        ADVANCED_TUNING.dMinYaw = Math.min(Math.round(ADVANCED_TUNING.dMinYaw * this.MasterSliderValue), MAX_DMIN_GAIN);
     }
 
     $('output[name="tuningMasterSlider-number"]').val(this.MasterSliderValue);
