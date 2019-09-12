@@ -1814,6 +1814,10 @@
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">IMPORTANT:</span> We recommend using the sliders to change filter settings. Move both sliders together.<br>It is best to make relatively small changes and test fly after each change. Check the motor temperatures closely before making further changes.<br>Less filtering (sliders to the right, higher cutoff values) will improve propwash, but will let more noise through to the motors, making them hotter, possibly hot enough to burn out.  Less filtering is possible on most clean builds and if rpm filtering is enabled.<br>Unusually high or low filter settings may cause flyaways on arming. The defaults are safe for typical 5\" quads.<br><strong>Note:</strong> Changing profiles will only change the D-term filter settings. Gyro filter settings are the same for all profiles.",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the craft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D Term Dynamic Lowpass or D Term Lowpass 1</b>."
     },
