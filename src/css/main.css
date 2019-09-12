@@ -2113,3 +2113,8 @@ input {
     height: 9px;
     border:1px solid var(--accent);
 }
+
+#dialogResetToCustomDefaults-content {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

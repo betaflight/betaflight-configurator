@@ -95,12 +95,13 @@ var FC = {
             runawayTakeoffPreventionDisabled: false,
             boardIdentifier:                  "",
             boardVersion:                     0,
-            commCapabilities:                 0,
+            targetCapabilities:               0,
             targetName:                       "",
             boardName:                        "",
             manufacturerId:                   "",
             signature:                        [],
             mcuTypeId:                        255,
+            configurationState:               0,
         };
 
         BF_CONFIG = {
@@ -607,15 +608,25 @@ var FC = {
         return FC.MCU_TYPES[CONFIG.mcuTypeId];
     },
 
-    COMM_CAPABILITIES_FLAGS: {
-        HAS_VCP: 0x01,
-        HAS_SOFTSERIAL: 0x02,
+    CONFIGURATION_STATES: {
+        DEFAULTS_BARE: 0,
+        DEFAULTS_CUSTOM: 1,
+        CONFIGURED: 2,
+    },
+
+    TARGET_CAPABILITIES_FLAGS: {
+        HAS_VCP: 0,
+        HAS_SOFTSERIAL: 1,
+        IS_UNIFIED: 2,
+        HAS_FLASH_BOOTLOADER: 3,
+        SUPPORTS_CUSTOM_DEFAULTS: 4,
+        HAS_CUSTOM_DEFAULTS: 5,
     },
 
     boardHasVcp: function () {
         var hasVcp = false;
         if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
-            hasVcp = (CONFIG.commCapabilities & FC.COMM_CAPABILITIES_FLAGS.HAS_VCP) !== 0;
+            hasVcp = bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_VCP);
         } else {
             hasVcp = BOARD.find_board_definition(CONFIG.boardIdentifier).vcp;
         }
