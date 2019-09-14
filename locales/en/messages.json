@@ -56,6 +56,9 @@
     "close": {
         "message": "Close"
     },
+    "cancel": {
+        "message": "Cancel"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
     },
@@ -466,6 +469,12 @@
     },
     "firmwareUpgradeRequired": {
         "message": "The firmware on this device needs upgrading to a newer version. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "There are custom defaults for this board available. Normally, a board will not work properly unless custom defaults are applied.<br />Do you want to apply the custom defaults for this board?"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Apply Custom Defaults"
     },
 
     "infoVersions": {

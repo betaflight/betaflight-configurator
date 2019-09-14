@@ -153,7 +153,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
                     var rebootMode = 0; // FIRMWARE
-                    if (bit_check(CONFIG.commCapabilities, 3)) {
+                    if (bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
                         // Board has flash bootloader
                         GUI.log(i18n.getMessage('deviceRebooting_flashBootloader'));
                         console.log('flash bootloader detected');

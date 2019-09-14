@@ -258,6 +258,29 @@ function onOpen(openInfo) {
                                     updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
                                     updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
 
+                                    if (bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
+                                        var dialog = $('#dialogResetToCustomDefaults')[0];
+
+                                        $('#dialogResetToCustomDefaults-content').html(i18n.getMessage('resetToCustomDefaultsDialog'));
+
+                                        $('#dialogResetToCustomDefaults-acceptbtn').click(function() {
+                                            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'AcceptResetToCustomDefaults');
+
+                                            var buffer = [];
+                                            buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
+                                            MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
+
+                                            dialog.close();
+                                        });
+
+                                        $('#dialogResetToCustomDefaults-cancelbtn').click(function() {
+                                            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CancelResetToCustomDefaults');
+
+                                            dialog.close();
+                                        });
+
+                                        dialog.showModal();
+                                    }
                                     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
                                         var uniqueDeviceIdentifier = CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16);
 
@@ -281,7 +304,7 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefused');
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareType');
 
                         var dialog = $('.dialogConnectWarning')[0];
 
@@ -297,7 +320,7 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
-                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefused');
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareVersion');
 
                 var dialog = $('.dialogConnectWarning')[0];
 

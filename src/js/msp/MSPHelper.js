@@ -34,6 +34,11 @@ function MspHelper () {
         MSC_UTC: 3
     };
 
+    self.RESET_TYPES = {
+        BASE_DEFAULTS: 0,
+        CUSTOM_DEFAULTS: 1,
+    };
+
     self.SIGNATURE_LENGTH = 32;
 
     self.mspMultipleCache = [];
@@ -751,14 +756,14 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 CONFIG.targetName = "";
                 if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
-                    CONFIG.commCapabilities = data.readU8();
+                    CONFIG.targetCapabilities = data.readU8();
 
                     let length = data.readU8();
                     for (let i = 0; i < length; i++) {
                         CONFIG.targetName += String.fromCharCode(data.readU8());
                     }
                 } else {
-                    CONFIG.commCapabilities = 0;
+                    CONFIG.targetCapabilities = 0;
                 }
 
                 CONFIG.boardName = "";
@@ -782,6 +787,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     CONFIG.mcuTypeId = data.readU8();
+
+                    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                        CONFIG.configurationState = data.readU8();
+                    }
                 } else {
                     CONFIG.mcuTypeId = 255;
                 }
