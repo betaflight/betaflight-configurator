@@ -44,7 +44,7 @@ function getCliCommand(command, cliBuffer) {
     return commandWithBackSpaces(command, buffer, noOfCharsToDelete);
 }
 
-function copyToClipboard(text, nwGui) {
+function copyToClipboard(text) {
     function onCopySuccessful() {
         const button = $('.tab-cli .copy');
         const origText = button.text();
@@ -67,26 +67,10 @@ function copyToClipboard(text, nwGui) {
         console.warn(ex);
     }
 
-    function nwCopy(text) {
-        try {
-            let clipboard = nwGui.Clipboard.get();
-            clipboard.set(text, "text");
-            onCopySuccessful();
-        } catch (ex) {
-            onCopyFailed(ex);
-        }
-    }
-
-    function webCopy(text) {
-        navigator.clipboard.writeText(text)
-            .then(onCopySuccessful, onCopyFailed);
-    }
-
-    let copyFunc = nwGui ? nwCopy : webCopy;
-    copyFunc(text);
+    Clipboard.writeText(text, onCopySuccessful, onCopyFailed);
 }
 
-TABS.cli.initialize = function (callback, nwGui) {
+TABS.cli.initialize = function (callback) {
     var self = this;
 
     if (GUI.active_tab != 'cli') {
@@ -96,8 +80,6 @@ TABS.cli.initialize = function (callback, nwGui) {
     self.outputHistory = "";
     self.cliBuffer = "";
 
-    // nwGui variable is set in main.js
-    const clipboardCopySupport = !(nwGui == null && !navigator.clipboard);
     const enterKeyCode = 13;
 
     function executeCommands(out_string) {
@@ -194,14 +176,14 @@ TABS.cli.initialize = function (callback, nwGui) {
             $('.tab-cli .window .wrapper').empty();
         });
 
-        if (clipboardCopySupport) {
+        if (Clipboard.available) {
             $('.tab-cli .copy').click(function() {
-                copyToClipboard(self.outputHistory, nwGui);
+                copyToClipboard(self.outputHistory);
             });
         } else {
             $('.tab-cli .copy').hide();
         }
-        
+
         $('.tab-cli .load').click(function() {
             var accepts = [
                 {
