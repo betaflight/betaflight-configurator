@@ -6,7 +6,7 @@
 
 var i18n = {}
 
-const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'gl', 'hr', 'id', 'it', 'ja', 'ko', 'lv', 'pt', 'ru', 'sv', 'zh_CN'];
+var languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'gl', 'hr', 'id', 'it', 'ja', 'ko', 'lv', 'pt', 'ru', 'sv', 'zh_CN'];
 
 /**
  * Functions that depend on the i18n framework
@@ -14,6 +14,13 @@ const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'gl', 'hr', 'id', 'it
 i18n.init = function(cb) {
 
     getStoredUserLocale(function(userLanguage){
+        if (typeof _jipt === "object") {
+            languagesAvailables.push('ach');
+            if (window && window.location.href.split('/').slice(-1)[0] == 'main_crowdin.html') {
+                console.log('Detected crowdin jipt, using ach as language');
+                userLanguage = 'ach';
+            }
+        }
 
         i18next
             .use(i18nextXHRBackend)
@@ -40,19 +47,25 @@ i18n.init = function(cb) {
     });
     // This function should do the same things that the i18n.localizePage function below does.
     i18next.on('languageChanged', function (newLang) {
-      var translate = function(messageID) {
-        return i18n.getMessage(messageID);
-      };
-      i18n.localizePage(true);
-      updateStatusBarVersion();
+        var translate = function(messageID) {
+            return i18n.getMessage(messageID);
+        };
+        i18n.localizePage(true);
+        updateStatusBarVersion();
     });
 }
 
 i18n.changeLanguage = function(languageSelected) {
-  ConfigStorage.set({'userLanguageSelect': languageSelected});
-  i18next.changeLanguage(getValidLocale(languageSelected));
-  i18n.selectedLanguage = languageSelected;
-  GUI.log(i18n.getMessage('language_changed'));
+    ConfigStorage.set({'userLanguageSelect': languageSelected});
+    if(typeof _jipt === "object" && languageSelected == 'ach') {
+        window.location.href = "/main_crowdin.html";
+    } else {
+        i18next.changeLanguage(getValidLocale(languageSelected));
+        i18n.selectedLanguage = languageSelected;
+        GUI.log(i18n.getMessage('language_changed'));
+        // redirect should be conditional
+        window.location.href = "/main.html";
+    }
 }
 i18n.getMessage = function(messageID, parameters) {
 
@@ -169,6 +182,10 @@ function getStoredUserLocale(cb) {
 }
 
 function getValidLocale(userLocale) {
+    // If an invalid language is selected, try to auto-detect but don't correct it
+    if (languagesAvailables.indexOf(userLocale) == -1) {
+        userLocale = 'DEFAULT';
+    }
 
     if (userLocale == 'DEFAULT') {
         userLocale = window.navigator.userLanguage || window.navigator.language;

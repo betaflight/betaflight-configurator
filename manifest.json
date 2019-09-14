@@ -18,10 +18,10 @@
         }
     },
     "permissions": [
+        "https://cdn.crowdin.com/*",
         "https://api.openstreetmap.org/",
         "https://*.github.com/",
         "https://*.githubusercontent.com/",
-        "http://*.baseflight.net/",
         "https://*.amazonaws.com/",
         "https://*.betaflight.tech/",
         "https://www.google-analytics.com/",

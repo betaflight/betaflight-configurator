@@ -7,8 +7,21 @@
 
 function startApplication() {
     var applicationStartTime = new Date().getTime();
+    let main = 'main.html';
+    if (window && window.localStorage && window.localStorage.userLanguageSelect) {
+        try {
+            let fs = require('fs');
+            let temp = JSON.parse(window.localStorage.userLanguageSelect);
+            if (temp.userLanguageSelect == 'ach' && fs.existsSync('main_crowdin.html')) {
+                main = 'main_crowdin.html';
+            }
+        } catch(e) {;} // do nothing
+    }
+/*    if (chrome && chrome.storage && chrome.storage.local) {
+chrome.storage.local.get('userLanguageSelect',function(result){console.log(result.userLanguageSelect);});
+    }*/
 
-    chrome.app.window.create('main.html', {
+    chrome.app.window.create(main, {
         id: 'main-window',
         frame: 'chrome',
         innerBounds: {
