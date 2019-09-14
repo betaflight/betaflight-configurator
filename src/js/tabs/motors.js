@@ -9,8 +9,24 @@ TABS.motors = {
         sensorAccelRate: 20,
         sensorAccelScale: 2,
         sensorSelectValues: {
-            "gyroScale": {"50":50,"100":100,"200":200,"300":300,"400":400,"500":500,"1000":1000,"2000":2000},
-            "accelScale": {"0.05":0.05,"0.1":0.1,"0.2":0.2,"0.3":0.3,"0.4":0.4,"0.5":0.5,"1":1,"2":2}
+            "gyroScale": {"10" : 10, 
+                          "25" : 25, 
+                          "50" : 50, 
+                          "100" : 100, 
+                          "200" : 200, 
+                          "300" : 300, 
+                          "400" : 400,
+                          "500" : 500,
+                          "1000" : 1000,
+                          "2000" : 2000},
+            "accelScale": {"0.05" : 0.05,
+                           "0.1" : 0.1,
+                           "0.2" : 0.2,
+                           "0.3" : 0.3,
+                           "0.4" : 0.4,
+                           "0.5" : 0.5,
+                           "1" : 1,
+                           "2" : 2}
         },
         // These are translated into proper Dshot values on the flight controller
         DSHOT_DISARMED_VALUE: 1000,
