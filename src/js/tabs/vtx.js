@@ -260,9 +260,17 @@ TABS.vtx.initialize = function (callback) {
             }
         }
 
-        $("#vtx_frequency_channel").prop('checked', VTX_CONFIG.vtx_band == 0 && VTX_CONFIG.vtx_frequency > 0)
-                                   .change(frequencyOrBandChannel)
-                                   .change();
+        $("#vtx_frequency_channel").prop('checked', VTX_CONFIG.vtx_band == 0 && VTX_CONFIG.vtx_frequency > 0).change(frequencyOrBandChannel);
+
+        if ($("#vtx_frequency_channel").prop('checked')) {
+            $(".field.vtx_channel").hide();
+            $(".field.vtx_band").hide();
+            $(".field.vtx_frequency").show();
+        } else {
+            $(".field.vtx_channel").show();
+            $(".field.vtx_band").show();
+            $(".field.vtx_frequency").hide();
+        }
 
         function showHidePowerlevels() {
             let powerlevelsValue = $(this).val();
