@@ -1,7 +1,11 @@
 {
-    "windowTitle": {
-        "message": "Betaflight Configurator",
-        "description": "Title of the application window, usually not translated"
+    "yes": {
+        "message": "Ja",
+        "description": "General Yes message to be used across the application"
+    },
+    "no": {
+        "message": "Nej",
+        "description": "General No message to be used across the application"
     },
     "error": {
         "message": "Fel: {{errorMessage}}"
@@ -64,13 +68,84 @@
         "message": "Öppna senaste fliken vid anslutning"
     },
     "analyticsOptOut": {
-        "message": "Välj bort anonymiserad insamling av statistikdata"
+        "message": "Avstå från anonymiserad insamling av statistikdata"
     },
-    "userLanguageSelect": {
-        "message": "Språk (programmet behöver startas om för att ändringarna ska börja gälla)"
+    "language_changed": {
+        "message": "Språk ändrat"
+    },
+    "language_choice_message": {
+        "message": "Byt språk:",
+        "description": "Try and be brief"
     },
     "language_default": {
-        "message": "Standard"
+        "message": "Systemstandard"
+    },
+    "language_default_pretty": {
+        "message": "Systemstandard ($t(detectedLanguage))"
+    },
+    "language_ca": {
+        "message": "Català",
+        "description": "Don't translate!!!"
+    },
+    "language_de": {
+        "message": "Deutsch",
+        "description": "Don't translate!!!"
+    },
+    "language_en": {
+        "message": "English",
+        "description": "Don't translate!!!"
+    },
+    "language_es": {
+        "message": "Español",
+        "description": "Don't translate!!!"
+    },
+    "language_fr": {
+        "message": "Français",
+        "description": "Don't translate!!!"
+    },
+    "language_gl": {
+        "message": "Galego",
+        "description": "Don't translate!!!"
+    },
+    "language_hr": {
+        "message": "Hrvatski",
+        "description": "Don't translate!!!"
+    },
+    "language_id": {
+        "message": "Bahasa Indonesia",
+        "description": "Don't translate!!!"
+    },
+    "language_it": {
+        "message": "Italiano",
+        "description": "Don't translate!!!"
+    },
+    "language_ja": {
+        "message": "日本語",
+        "description": "Don't translate!!!"
+    },
+    "language_ko": {
+        "message": "한국어",
+        "description": "Don't translate!!!"
+    },
+    "language_lv": {
+        "message": "Latviešu",
+        "description": "Don't translate!!!"
+    },
+    "language_pt": {
+        "message": "Português",
+        "description": "Don't translate!!!"
+    },
+    "language_ru": {
+        "message": "Русский язык",
+        "description": "Don't translate!!!"
+    },
+    "language_sv": {
+        "message": "Svenska",
+        "description": "Don't translate!!!"
+    },
+    "language_zh_CN": {
+        "message": "简体中文",
+        "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
         "message": "Inget dataflash-<br>chip hittades",
@@ -116,7 +191,7 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusSonar": {
-        "message": "Sonar \/ Avståndsmätare"
+        "message": "Sonar / Avståndsmätare"
     },
     "sensorStatusSonarShort": {
         "message": "Sonar",
@@ -126,16 +201,22 @@
         "message": "Visa uppdateringsnotifieringar för icke-stabila versioner av konfiguratorn"
     },
     "configuratorUpdateNotice": {
-        "message": "Du använder en utdaterad version av <b>Betaflight-konfiguratorn<\/b>.<br>Version <b>$1<\/b> är tillgänglig online, besök <a href=\"$2\" target=\"_blank\">utgivningssidan<\/a> för att ladda ner senaste versionen med korrigeringar och förbättringar.<br>Stäng konfigurator-fönstret innan uppdateringen."
+        "message": "Du använder en utdaterad version av <b>Betaflight-konfiguratorn</b>.<br>Version <b>$1</b> är tillgänglig online, besök <a href=\"$2\" target=\"_blank\">utgivningssidan</a> för att ladda ner senaste versionen med korrigeringar och förbättringar.<br>Stäng konfigurator-fönstret innan uppdateringen."
     },
     "configuratorUpdateWebsite": {
         "message": "Gå till utgivningssidan"
     },
     "deviceRebooting": {
-        "message": "Enhet - <span class=\"message-negative\">Startar om<\/span>"
+        "message": "Enhet - <span class=\"message-negative\">Startar om</span>"
+    },
+    "deviceRebooting_flashBootloader": {
+        "message": "Enhet - <span class=\"message-negative\">Startar om till FLASH BOOTLOADER</span>"
+    },
+    "deviceRebooting_romBootloader": {
+        "message": "Enhet - <span class=\"message-negative\">Startar om till ROM BOOTLOADER</span>"
     },
     "deviceReady": {
-        "message": "Enhet - <span class=\"message-positive\">Redo<\/span>"
+        "message": "Enhet - <span class=\"message-positive\">Redo</span>"
     },
     "backupFileIncompatible": {
         "message": "Den försedda backup-filen är skapad för en tidigare version av konfiguratorn och är inte kompatibel med den här versionen av konfiguratorn. Tyvärr"
@@ -157,6 +238,12 @@
     },
     "tabLanding": {
         "message": "Välkommen"
+    },
+    "tabChangelog": {
+        "message": "Ändringslogg"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Sekretesspolicy"
     },
     "tabHelp": {
         "message": "Dokumentation & Support"
@@ -194,6 +281,9 @@
     "tabOsd": {
         "message": "OSD"
     },
+    "tabVtx": {
+        "message": "Videosändare"
+    },
     "tabPower": {
         "message": "Kraft & batteri"
     },
@@ -230,38 +320,50 @@
     "logActionShow": {
         "message": "Visa logg"
     },
+    "serialErrorFrameError": {
+        "message": "Fel i seriell anslutning: framing-fel"
+    },
+    "serialErrorParityError": {
+        "message": "Fel i seriell anslutning: paritetsfel"
+    },
     "serialPortOpened": {
-        "message": "Anslutning till serieport <span class=\"message-positive\">lyckades<\/span> med ID: $1"
+        "message": "Anslutning till serieport <span class=\"message-positive\">lyckades</span> med ID: $1"
     },
     "serialPortOpenFail": {
-        "message": "Anslutning till serieport <span class=\"message-negative\">misslyckades<\/span>"
+        "message": "Anslutning till serieport <span class=\"message-negative\">misslyckades</span>"
     },
     "serialPortClosedOk": {
-        "message": "Frånkoppling av serieport <span class=\"message-positive\">lyckades<\/span>"
+        "message": "Frånkoppling av serieport <span class=\"message-positive\">lyckades</span>"
     },
     "serialPortClosedFail": {
-        "message": "Frånkoppling av serieport <span class=\"message-negative\">misslyckades<\/span>"
+        "message": "Frånkoppling av serieport <span class=\"message-negative\">misslyckades</span>"
     },
     "serialUnrecoverable": {
-        "message": "Oåterkalleligt <span class=\"message-negative\">fel<\/span> i seriell anslutning, kopplar bort..."
+        "message": "Oåterkalleligt <span class=\"message-negative\">fel</span> i seriell anslutning, kopplar bort..."
     },
     "usbDeviceOpened": {
-        "message": "Anslutning till USB-enhet <span class=\"message-positive\">lyckades<\/span> med ID: $1"
+        "message": "Anslutning till USB-enhet <span class=\"message-positive\">lyckades</span> med ID: $1"
     },
     "usbDeviceOpenFail": {
-        "message": "Frånkoppling av USB-enhet<span class=\"message-negative\">misslyckades<\/span>"
+        "message": "Frånkoppling av USB-enhet<span class=\"message-negative\">misslyckades</span>"
     },
     "usbDeviceClosed": {
-        "message": "Frånkoppling av USB-enhet <span class=\"message-positive\">lyckades<\/span>"
+        "message": "Frånkoppling av USB-enhet <span class=\"message-positive\">lyckades</span>"
     },
     "usbDeviceCloseFail": {
-        "message": "Frånkoppling av USB-enhet <span class=\"message-negative\">misslyckades<\/span>"
+        "message": "Frånkoppling av USB-enhet <span class=\"message-negative\">misslyckades</span>"
     },
     "usbDeviceUdevNotice": {
-        "message": "Är <strong>udev rules<\/strong> korrekt installerat? Se dokumentation för instruktioner"
+        "message": "Är <strong>udev rules</strong> korrekt installerat? Se dokumentation för instruktioner"
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU hittades inte"
+    },
+    "stm32RebootingToBootloader": {
+        "message": "Påbörjar omstart till bootloader..."
+    },
+    "stm32RebootingToBootloaderFailed": {
+        "message": "Omstart till bootloader: MISSLYCKAT"
     },
     "stm32TimedOut": {
         "message": "STM32 - time out, programmering: MISSLYCKADES"
@@ -289,6 +391,9 @@
     },
     "stm32LocalErase": {
         "message": "Utför lokal radering ..."
+    },
+    "stm32InvalidHex": {
+        "message": "Ogiltigt hexvärde"
     },
     "stm32Erase": {
         "message": "Raderar ..."
@@ -333,26 +438,26 @@
         "message": "Det gick inte att initiera upplåsnings-rutin"
     },
     "noConfigurationReceived": {
-        "message": "Ingen konfiguration mottagen inom <span class=\"message-negative\">10 sekunder<\/span>, kommunikation <span class=\"message-negative\">misslyckades<\/span>"
+        "message": "Ingen konfiguration mottagen inom <span class=\"message-negative\">10 sekunder</span>, kommunikation <span class=\"message-negative\">misslyckades</span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "Denna firmwareversion<span class=\"message-negative\">stöds inte<\/span>. Uppgradera till en firmware som stöder api-version <strong>$1<\/strong> eller högre. Säkerhetskopiera i CLI innan du flashar. CLI-säkerhetskopierings\/återställningsförfarandet finns i dokumentationen.<br \/>Alternativt kan du ladda ner och använda en gammal version av konfiguratorn om du inte vill uppgradera."
+        "message": "Denna firmwareversion<span class=\"message-negative\">stöds inte</span>. Uppgradera till en firmware som stöder api-version <strong>$1</strong> eller högre. Säkerhetskopiera i CLI innan du flashar. CLI-säkerhetskopierings/återställningsförfarandet finns i dokumentationen.<br />Alternativt kan du ladda ner och använda en gammal version av konfiguratorn om du inte vill uppgradera."
     },
     "firmwareTypeNotSupported": {
-        "message": "Firmware för icke Cleanflight\/Betaflight <span class=\"message-negative\">stöds inte<\/span>, förutom i CLI."
+        "message": "Firmware för icke Cleanflight/Betaflight <span class=\"message-negative\">stöds inte</span>, förutom i CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "Firmwaren på den här enheten behöver uppgraderas till en nyare version. Använd CLI för säkerhetskopiering innan du flashar. CLI-säkerhetskopierings\/återställningsförfarandet finns i dokumentationen.<br \/>Alternativt kan du ladda ner och använda en gammal version av konfiguratorn om du inte vill uppgradera."
+        "message": "Firmwaren på den här enheten behöver uppgraderas till en nyare version. Använd CLI för säkerhetskopiering innan du flashar. CLI-säkerhetskopierings/återställningsförfarandet finns i dokumentationen.<br />Alternativt kan du ladda ner och använda en gammal version av konfiguratorn om du inte vill uppgradera."
     },
     "infoVersions": {
-        "message": "Kör - OS: <strong>{{operatingSystem}}<\/strong>, Chrome: <strong>{{chromeVersion}}<\/strong>, Konfigurator: <strong>{{configuratorVersion}}<\/strong>",
+        "message": "Kör - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "buildServerLoaded": {
         "message": "Hämtade versionsinformation för $1 från versionsservern."
     },
     "buildServerLoadFailed": {
-        "message": "<b>Fråga mot versionsservern för $1-utgåvor misslyckades, använder cachelagrad information. Orsak: <code>$2<\/code><\/b>"
+        "message": "<b>Fråga mot versionsservern för $1-utgåvor misslyckades, använder cachelagrad information. Orsak: <code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "Använder cachelagrad versionsinformation för $1."
@@ -361,7 +466,7 @@
         "message": "Hämtade release-information för $1 från GitHub."
     },
     "releaseCheckFailed": {
-        "message": "<b>GitHub-förfrågan för $1-utgåvor misslyckades, använder cachelagrad information. Orsak: <code>$2<\/code><\/b>"
+        "message": "<b>GitHub-förfrågan för $1-utgåvor misslyckades, använder cachelagrad information. Orsak: <code>$2</code></b>"
     },
     "releaseCheckCached": {
         "message": "Använder cachelagrad utgivningsinformation för $1-utgåvor."
@@ -370,46 +475,46 @@
         "message": "Ingen utgivningsinformation är tillgänglig för $1."
     },
     "tabSwitchConnectionRequired": {
-        "message": "Du måste <strong>ansluta<\/strong> innan du kan visa flikarna."
+        "message": "Du måste <strong>ansluta</strong> innan du kan visa flikarna."
     },
     "tabSwitchWaitForOperation": {
-        "message": "Du <span class=\"message-negative\">kan inte<\/span> göra detta just nu, vänta tills den pågående processen är avsluten."
+        "message": "Du <span class=\"message-negative\">kan inte</span> göra detta just nu, vänta tills den pågående processen är avsluten."
     },
     "tabSwitchUpgradeRequired": {
-        "message": "Du måste <strong>uppgradera<\/strong> din firmware till den senaste versionen av Betaflight innan du kan använda $1 fliken."
+        "message": "Du måste <strong>uppgradera</strong> din firmware till den senaste versionen av Betaflight innan du kan använda $1 fliken."
     },
     "firmwareVersion": {
-        "message": "Firmware-version: <strong>$1<\/strong>"
+        "message": "Firmware-version: <strong>$1</strong>"
     },
     "apiVersionReceived": {
-        "message": "MultiWii API-version: <strong>$1<\/strong>"
+        "message": "MultiWii API-version: <strong>$1</strong>"
     },
     "uniqueDeviceIdReceived": {
-        "message": "Unikt enhets-ID: <strong>0x$1<\/strong>"
+        "message": "Unikt enhets-ID: <strong>0x$1</strong>"
     },
     "craftNameReceived": {
-        "message": "Farkostnamn: <strong>$1<\/strong>"
+        "message": "Farkostnamn: <strong>$1</strong>"
     },
     "armingDisabled": {
-        "message": "<strong>Motoraktivering avstängd<\/strong>"
+        "message": "<strong>Motoraktivering avstängd</strong>"
     },
     "armingEnabled": {
-        "message": "<strong>Motoraktivering påslagen<\/strong>"
+        "message": "<strong>Motoraktivering påslagen</strong>"
     },
     "runawayTakeoffPreventionDisabled": {
-        "message": "<strong>Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention) tillfälligt inaktiverad<\/strong>"
+        "message": "<strong>Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention) tillfälligt inaktiverad</strong>"
     },
     "runawayTakeoffPreventionEnabled": {
-        "message": "<strong>Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention) aktiverad<\/strong>"
+        "message": "<strong>Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention) aktiverad</strong>"
     },
     "boardInfoReceived": {
-        "message": "Kort: <strong>$1<\/strong>, version: <strong>$2<\/strong>"
+        "message": "Kort: <strong>$1</strong>, version: <strong>$2</strong>"
     },
     "buildInfoReceived": {
-        "message": "Kör firmware publicerad: <strong>$1<\/strong>"
+        "message": "Kör firmware publicerad: <strong>$1</strong>"
     },
     "fcInfoReceived": {
-        "message": "Flygkontroller-info, identifierare: <strong>$1<\/strong>, version: <strong>$2<\/strong>"
+        "message": "Flygkontroller-info, identifierare: <strong>$1</strong>, version: <strong>$2</strong>"
     },
     "versionLabelTarget": {
         "message": "Mål"
@@ -451,55 +556,49 @@
         "message": "Använd Firmware-Flasharen för åtkomst till DFU-enheter"
     },
     "dfu_erased_kilobytes": {
-        "message": "Raderade $1 kB av flash <span class=\"message-positive\">framgångsrikt<\/span>"
+        "message": "Raderade $1 kB av flash <span class=\"message-positive\">framgångsrikt</span>"
     },
     "dfu_device_flash_info": {
         "message": "Enhet upptäckt med total flashstorlek $1 KiB"
     },
     "dfu_error_image_size": {
-        "message": "<span class=\"message-negative\">Fel<\/span>: Bifogad avbild är större än tillgängligt flashminne på chip! Avbild: $1 KiB, Max = $2 KiB"
+        "message": "<span class=\"message-negative\">Fel</span>: Bifogad avbild är större än tillgängligt flashminne på chip! Avbild: $1 KiB, Max = $2 KiB"
     },
     "eeprom_saved_ok": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "defaultWelcomeIntro": {
-        "message": "Välkommmen till <strong>Betaflight - Configurator<\/strong>, ett verktyg utformat för att förenkla uppdateringen, konfigurationen och inställningen av din flygkontroller."
+        "message": "Välkommmen till <strong>Betaflight - Configurator</strong>, ett verktyg utformat för att förenkla uppdateringen, konfigurationen och inställningen av din flygkontroller."
     },
     "defaultWelcomeHead": {
         "message": "Hårdvara"
     },
     "defaultWelcomeText": {
-        "message": "Detta program stödjer all hårdvara som kan köra Betaflight. Se fullständig lista över hårdvara som stöds under flash-fliken.<br><br> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\"> Ladda ner Betaflight Blackbox Log Viewer<\/a><br \/><br \/>Firmware-källkoden kan laddas ner <a href=\"https:\/\/github.com\/betaflight\/betaflight\" title=\"www.github.com\" target=\"_blank\">här<\/a><br \/><br \/>De senaste <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">CP210x-drivrutinerna<\/a> kan laddas ner <a href=\"http:\/\/www.silabs.com\/products\/mcu\/pages\/usbtouartbridgevcpdrivers.aspx\" title=\"http:\/\/www.silabs.com\" target=\"_blank\">här<\/a><br \/>De senaste <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">STM USB VCP-drivrutinerna<\/a> kan laddas ner <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" title=\"http:\/\/www.st.com\" target=\"_blank\">här<\/a><br \/>Den senaste <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">Zadig<\/a> för Windows USB drivrutinsinstallationen kan laddas ner <a href=\"http:\/\/zadig.akeo.ie\/\" title=\"http:\/\/zadig.akeo.ie\" target=\"_blank\">här<\/a><br \/>"
+        "message": "Detta program stödjer all hårdvara som kan köra Betaflight. Se fullständig lista över hårdvara som stöds under flash-fliken.<br><br> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\"> Ladda ner Betaflight Blackbox Log Viewer</a><br /><br />Firmware-källkoden kan laddas ner <a href=\"https://github.com/betaflight/betaflight\" title=\"www.github.com\" target=\"_blank\">här</a><br /><br />De senaste <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">CP210x-drivrutinerna</a> kan laddas ner <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">här</a><br />De senaste <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">STM USB VCP-drivrutinerna</a> kan laddas ner <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">här</a><br />Den senaste <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">Zadig</a> för Windows USB drivrutinsinstallationen kan laddas ner <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">här</a><br />"
     },
     "defaultContributingHead": {
         "message": "Medverka"
     },
     "defaultContributingText": {
-        "message": "Om du vill vara med och göra Betaflight ännu bättre kan du hjälpa till på många sätt, tex:<br \/><ul><li>Svara på andra användares frågor i forumen och på IRC.<\/li><li>Bidra med kod till firmwaren och konfiguratorn - nya funktioner, korrigeringar och förbättringar.<\/li><li>Testa <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\">nya funktioner\/korrigeringar<\/a> och ge feedback.<\/li><li>Hjälpa till med <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\">problem och kommentera funktionsförfrågningar<\/a>.<\/li><li>Samarbeta genom att <a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator\" target=\"_blank\">översätta konfiguratorn<\/a> till ditt språk.<\/li><li><\/li><\/ul>"
+        "message": "Om du vill vara med och göra Betaflight ännu bättre kan du hjälpa till på många sätt, tex:<br /><ul><li>Svara på andra användares frågor i forumen och på IRC.</li><li>Bidra med kod till firmwaren och konfiguratorn - nya funktioner, korrigeringar och förbättringar.</li><li>Testa <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">nya funktioner/korrigeringar</a> och ge feedback.</li><li>Hjälpa till med <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">problem och kommentera funktionsförfrågningar</a>.</li><li>Samarbeta genom att <a href=\"https://crowdin.com/project/betaflight-configurator\" target=\"_blank\">översätta konfiguratorn</a> till ditt språk.</li><li></li></ul>"
     },
     "defaultFacebookText": {
-        "message": "Vi har också en <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\">Facebookgrupp<\/a>.<br \/>Gå med oss för att prata om Betaflight, ställa konfigurationsfrågor, eller bara hänga med andra piloter."
-    },
-    "defaultChangelogAction": {
-        "message": "Ändringslogg"
+        "message": "Vi har också en <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\">Facebookgrupp</a>.<br />Gå med oss för att prata om Betaflight, ställa konfigurationsfrågor, eller bara hänga med andra piloter."
     },
     "defaultChangelogHead": {
         "message": "Configurator - Ändringslogg"
-    },
-    "defaultPrivacyPolicyAction": {
-        "message": "Sekretesspolicy"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware-flashare"
     },
     "defaultDonateHead": {
-        "message": "Öppen källkod- \/ Donations-notis"
+        "message": "Öppen källkod- / Donations-notis"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> är en flygkontrollerprogramvara som bygger på <strong>öppen källkod<\/strong> och är tillgänglig utan kostnad <strong>utan garanti<\/strong> för alla användare.<\/p><p>Om du tycker att Betaflight eller Betaflight configurator är användbar kanske du vill <strong>stödja<\/strong> utvecklingen genom en donation.<\/p>"
+        "message": "<p><strong>Betaflight</strong> är en flygkontrollerprogramvara som bygger på <strong>öppen källkod</strong> och är tillgänglig utan kostnad <strong>utan garanti</strong> för alla användare.</p><p>Om du tycker att Betaflight eller Betaflight configurator är användbar kanske du vill <strong>stödja</strong> utvecklingen genom en donation.</p>"
     },
     "defaultDonateBottom": {
-        "message": "<p>Om du vill fortsätta bidra ekonomiskt bör du överväga att bli en \"patron\" för oss på <a href='https:\/\/www.patreon.com\/betaflight'>Patreon<\/a>.<\/p>"
+        "message": "<p>Om du vill fortsätta bidra ekonomiskt bör du överväga att bli en \"patron\" för oss på $t(patreonLink.message).</p>"
     },
     "defaultDonate": {
         "message": "Donera"
@@ -508,16 +607,16 @@
         "message": "Sponsorer"
     },
     "defaultDocumentationHead": {
-        "message": "Dokumentation \/ Manual"
+        "message": "Dokumentation / Manual"
     },
     "defaultDocumentation": {
-        "message": "Betaflight-dokumentation finns i versionskommentarerna och wiki.<br \/><br \/>"
+        "message": "Betaflight-dokumentation finns i versionskommentarerna och wiki.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "Betaflight wiki är en utmärkt informationskälla, den kan hittas <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\" target=\"_blank\">här<\/a>."
+        "message": "Betaflight wiki är en utmärkt informationskälla, den kan hittas <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\">här</a>."
     },
     "defaultDocumentation2": {
-        "message": "Utgåvenoteringarna för firmware kan läsas på GitHubs utgåvesida, <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\"> här<\/a>."
+        "message": "Utgåvenoteringarna för firmware kan läsas på GitHubs utgåvesida, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\"> här</a>."
     },
     "defaultSupportHead": {
         "message": "Support"
@@ -529,37 +628,37 @@
         "message": "Utvecklare"
     },
     "defaultSupport": {
-        "message": "För support, var vänlig sök i forumen och wikin först eller kontakta din försäljare.<br \/><br \/>"
+        "message": "För support, var vänlig sök i forumen och wikin först eller kontakta din försäljare.<br /><br />"
     },
     "defaultSupport1": {
-        "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups-tråd<\/a>"
+        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups-tråd</a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"http:\/\/betaflight.info\" target=\"_blank\">Betaflight Wiki<\/a>"
+        "message": "<a href=\"http://betaflight.info\" target=\"_blank\">Betaflight Wiki</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight Videos<\/a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight Videos</a>"
     },
     "defaultSupport4": {
-        "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\">GitHub<\/a>"
+        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https:\/\/slack.betaflight.com\" target=\"_blank\">Betaflight-utvecklare på slack<\/a>"
+        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\">Betaflight-utvecklare på slack</a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
-        "message": "<span class=\"message-negative\">Säkerhetskopierings- och återställningsfunktioner inaktiverade.<\/span> Du har firmware med API-version <span class=\"message-negative\">$1<\/span>, säkerhetskopiering och återställning kräver <span class=\"message-positive\">$2<\/span>.  Vänligen säkerhetskopiera dina inställningar via CLI, se Betaflight-dokumentation för förfarandet."
+        "message": "<span class=\"message-negative\">Säkerhetskopierings- och återställningsfunktioner inaktiverade.</span> Du har firmware med API-version <span class=\"message-negative\">$1</span>, säkerhetskopiering och återställning kräver <span class=\"message-positive\">$2</span>.  Vänligen säkerhetskopiera dina inställningar via CLI, se Betaflight-dokumentation för förfarandet."
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Kalibrera Accelerometer"
     },
     "initialSetupCalibrateAccelText": {
-        "message": "Placera kontrollkortet eller ramen på en <strong>plan<\/strong> yta, fortsätt med kalibrering, säkerställ att plattformen inte rör sig under kalibrering"
+        "message": "Placera kontrollkortet eller ramen på en <strong>plan</strong> yta, fortsätt med kalibrering, säkerställ att plattformen inte rör sig under kalibrering"
     },
     "initialSetupButtonCalibrateMag": {
         "message": "Kalibrera Magnetometer"
     },
     "initialSetupCalibrateMagText": {
-        "message": "Rotera multirotorn minst <strong>360<\/strong> grader kring alla rotationsaxlar, du har 30 sekunder för att utföra denna uppgift"
+        "message": "Rotera multirotorn minst <strong>360</strong> grader kring alla rotationsaxlar, du har 30 sekunder för att utföra denna uppgift"
     },
     "initialSetupButtonCalibratingText": {
         "message": "Kalibrerar..."
@@ -568,7 +667,7 @@
         "message": "Återställ Inställningar"
     },
     "initialSetupResetText": {
-        "message": "Återställ till <strong>standardinställningarna<\/strong>"
+        "message": "Återställ till <strong>standardinställningarna</strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Säkerhetskopiera"
@@ -577,19 +676,19 @@
         "message": "Återställ"
     },
     "initialSetupButtonRebootBootloader": {
-        "message": "Aktivera Boot Loader \/ DFU"
+        "message": "Aktivera Boot Loader / DFU"
     },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>Säkerhetskopiera<\/strong> din konfiguration i händelse av ett missöde, <strong>CLI<\/strong>-inställningar inkluderas <span class=\"message-negative\">inte<\/span> - använd kommandot 'diff all' i CLI för detta."
+        "message": "<strong>Säkerhetskopiera</strong> din konfiguration i händelse av ett missöde, <strong>CLI</strong>-inställningar inkluderas <span class=\"message-negative\">inte</span> - använd kommandot 'diff all' i CLI för detta."
     },
     "initialSetupRebootBootloaderText": {
-        "message": "Starta om i <strong>boot loader \/ DFU<\/strong>-läge."
+        "message": "Starta om i <strong>boot loader / DFU</strong>-läge."
     },
     "initialSetupBackupSuccess": {
-        "message": "Säkerhetskopiering <span class=\"message-positive\">lyckades<\/span>"
+        "message": "Säkerhetskopiering <span class=\"message-positive\">lyckades</span>"
     },
     "initialSetupRestoreSuccess": {
-        "message": "Återställning av konfiguration <span class=\"message-positive\">lyckades<\/span>"
+        "message": "Återställning av konfiguration <span class=\"message-positive\">lyckades</span>"
     },
     "initialSetupButtonResetZaxis": {
         "message": "Återställ Z-axel, offset: 0 grader"
@@ -680,87 +779,99 @@
     },
     "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
         "message": "Ingen gyro detekterad",
-        "description": "Description of the NO GYRO arming disable flag"
+        "description": "Message that pops up to describe the NO_GYRO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
         "message": "Failsafe är aktiv",
-        "description": "Description of the FAILSAFE arming disable flag"
+        "description": "Message that pops up to describe the FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
         "message": "Ingen giltig mottagarsignal detekterad",
-        "description": "Description of the RX_FAILSAFE arming disable flag"
+        "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
         "message": "Din mottagare har just återställts från Failsafe, men aktiveringsswitchen är på",
-        "description": "Description of the BAD_RX_RECOVERY arming disable flag"
+        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "'FAILSAFE'-switchen aktiverades",
-        "description": "Description of the BOXFAILSAFE arming disable flag"
+        "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
         "message": "Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention) har aktiverats",
-        "description": "Description of the RUNAWAY_TAKEOFF arming disable flag"
+        "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCRASH": {
+        "message": "Inaktiverad via kraschdetektering",
+        "description": "Message that pops up to describe the CRASH arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "Trottelkanalen är för hög",
-        "description": "Description of the THROTTLE arming disable flag"
+        "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
         "message": "Farkosten är inte (tillräckligt) horisontell",
-        "description": "Description of the ANGLE arming disable flag"
+        "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
         "message": "Aktiverad för snabbt efter strömpåslag",
-        "description": "Description of the BOOT_GRACE_TIME arming disable flag"
+        "description": "Message that pops up to describe the BOOT_GRACE_TIME arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNOPREARM": {
         "message": "Föraktiveringsswitchen är inte aktiv, eller föraktivering har inte återställts efter avaktivering",
-        "description": "Description of the NOPREARM arming disable flag"
+        "description": "Message that pops up to describe the NOPREARM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Belastningen på systemet är för hög för säker flygning",
-        "description": "Description of the LOAD arming disable flag"
+        "description": "Message that pops up to describe the LOAD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
         "message": "Sensorkalibrering pågår fortfarande",
-        "description": "Description of the CALIBRATING arming disable flag"
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI är aktiv",
-        "description": "Description of the CLI arming disable flag"
+        "description": "Message that pops up to describe the CLI arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
         "message": "CMS (konfigureringsmeny) är aktiv - över OSD eller annan display",
-        "description": "Description of the CMS_MENU arming disable flag"
+        "description": "Message that pops up to describe the CMS_MENU arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
         "message": "OSD-menyn är aktiv",
-        "description": "Description of the OSD_MENU arming disable flag"
+        "description": "Message that pops up to describe the OSD_MENU arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "En Black Sheep Telemetry-enhet (TBS Core Pro t ex) avaktiverades och förhindrar aktivering",
-        "description": "Description of the BST arming disable flag"
+        "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
         "message": "En MSP-koppling är aktiv, troligen via denna Betaflight-konfigurator",
-        "description": "Description of the MSP arming disable flag"
+        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Paralyze-läge har aktiverats",
-        "description": "Description of the PARALYZE arming disable flag"
+        "description": "Message that pops up to describe the PARALYZE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipGPS": {
         "message": "GPS-räddningsläge är konfigurerat, men tillräckligt antal satelliter har inte hittats",
-        "description": "Description of the GPS arming disable flag"
+        "description": "Message that pops up to describe the GPS arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRESC": {
         "message": "'GPS Rescue'-switchen aktiverades",
-        "description": "Description of the RESC arming disable flag"
+        "description": "Message that pops up to describe the RESC arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
+        "message": "RPM-baserad filtrering är aktiverad, men en eller flera ESCar stödjer inte giltig DSHOT-telemetri. Kontrollera att ESCarna har stöd och har rätt firmware installerad för att kunna stödja dubbelriktad DSHOT-telemetri.",
+        "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+        "message": "En konfigurationsändring kräver en omstart",
+        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "En av de andra avaktiveringsflaggorna är aktiv vid aktivering",
-        "description": "Description of the ARM_SWITCH arming disable flag"
+        "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
     },
     "initialSetupGPSHead": {
         "message": "GPS"
@@ -781,19 +892,19 @@
         "message": "Accelerometer kalibrering startad"
     },
     "initialSetupAccelCalibEnded": {
-        "message": "Accelerometer kalibrering <span class=\"message-positive\">avslutad<\/span>"
+        "message": "Accelerometer kalibrering <span class=\"message-positive\">avslutad</span>"
     },
     "initialSetupMagCalibStarted": {
         "message": "Magnetometer kalibrering startad."
     },
     "initialSetupMagCalibEnded": {
-        "message": "Magnetometer kalibrering <span class=\"message-positive\">avslutad<\/span>"
+        "message": "Magnetometer kalibrering <span class=\"message-positive\">avslutad</span>"
     },
     "initialSetupSettingsRestored": {
-        "message": "Inställningarna återställda till<strong>standard<\/strong>"
+        "message": "Inställningarna återställda till<strong>standard</strong>"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "featureNone": {
         "message": "&lt;Välj En&gt;"
@@ -815,6 +926,9 @@
     },
     "featureSERVO_TILT": {
         "message": "Servo-gimbal"
+    },
+    "featureSERVO_TILTTip": {
+        "message": "Denna funktion aktiverar CAMSTAB-läge, vilket kan användas för att stabilisera upp till två axlar genom användning av accelerometern"
     },
     "featureSOFTSERIAL": {
         "message": "Aktivera CPU-baserade seriella portar"
@@ -874,7 +988,7 @@
         "message": "SPI RX-stöd"
     },
     "featureESC_SENSOR": {
-        "message": "Använd KISS\/BLHeli_32 ESC-telemetri som sensor"
+        "message": "Använd KISS/BLHeli_32 ESC-telemetri <b>över en separat kabel</b>"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "Vidarebefodra aux-kanaler till servoutgångar"
@@ -913,7 +1027,7 @@
         "message": "Aktivera Failsafe"
     },
     "featureFAILSAFETip": {
-        "message": "<strong>Observera:<\/strong> När Steg 2 är INAKTIVERAT, används reservinställningen <strong>Auto<\/strong> i stället för användarinställningarna för alla flygkanaler (Roll, Looping, Gir och Trottel)."
+        "message": "<strong>Observera:</strong> När Steg 2 är INAKTIVERAT, används reservinställningen <strong>Auto</strong> i stället för användarinställningarna för alla flygkanaler (Roll, Looping, Gir och Trottel)."
     },
     "featureFAILSAFEOldTip": {
         "message": "Tillämpa Failsafe-inställningar vid RX-signalförlust"
@@ -946,19 +1060,19 @@
         "message": "RSSI är ett mått på signalstyrka och är väldigt praktiskt då du vet om din farkost är påväg utom räckvidd eller om det lider av RF-störningar."
     },
     "configurationEscFeatures": {
-        "message": "ESC\/Motor-funktioner"
+        "message": "ESC/Motor-funktioner"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Observera:<\/strong> Alla kombinationer av funktioner är inte giltiga. När flygkontrollerfirmwaren uppäcker ogiltiga funktionskombinationer kommer motstridiga funktioner att inaktiveras.<br \/><strong>Observera:<\/strong> Konfigurera seriella portar <span class=\"message-negative\">innan<\/span> funktioner som använder dessa portar aktiveras."
+        "message": "<strong>Observera:</strong> Alla kombinationer av funktioner är inte giltiga. När flygkontrollerfirmwaren uppäcker ogiltiga funktionskombinationer kommer motstridiga funktioner att inaktiveras.<br /><strong>Observera:</strong> Konfigurera seriella portar <span class=\"message-negative\">innan</span> funktioner som använder dessa portar aktiveras."
     },
     "configurationSerialRXHelp": {
-        "message": "<strong>Observera:<\/strong> Kom ihåg att konfigurera en seriell port (via fliken Portar) och välja en seriell mottagartyp när du använder RX_SERIAL-funktionen."
+        "message": "<strong>Observera:</strong> Kom ihåg att konfigurera en seriell port (via fliken Portar) och välja en seriell mottagartyp när du använder RX_SERIAL-funktionen."
     },
     "configurationSpiRxHelp": {
-        "message": "<strong>Observera:<\/strong> SPI RX-typen fungerar bara om maskinvaran som krävs finns på styrkortet eller är ansluten till en SPI-buss."
+        "message": "<strong>Observera:</strong> SPI RX-typen fungerar bara om maskinvaran som krävs finns på styrkortet eller är ansluten till en SPI-buss."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>Observera:<\/strong> Alla funktioner stöds inte av alla flygkontrollers. Om du aktiverar en specifik funktion och den är inaktiverad när du tryckt 'Spara och Starta om' innebär det att denna funktion inte stöds av ditt styrkort."
+        "message": "<strong>Observera:</strong> Alla funktioner stöds inte av alla flygkontrollers. Om du aktiverar en specifik funktion och den är inaktiverad när du tryckt 'Spara och Starta om' innebär det att denna funktion inte stöds av ditt styrkort."
     },
     "configurationBoardAlignment": {
         "message": "Kort- och sensor-justering"
@@ -976,10 +1090,10 @@
         "message": "GYRO-orientering"
     },
     "configurationSensorGyroToUse": {
-        "message": "GYRO\/ACCEL"
+        "message": "GYRO/ACCEL"
     },
     "configurationSensorGyroToUseNotFound": {
-        "message": "Varning: Ingen Gyro\/Acc hittad"
+        "message": "Varning: Ingen Gyro/Acc hittad"
     },
     "configurationSensorGyroToUseFirst": {
         "message": "Första"
@@ -1027,7 +1141,7 @@
         "message": "Omvänd motor-rotation"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Detta alternativ konfigurerar mixern så att den utgår från att motorrotationen är omvänd och att propellrarna sitter korrekt utifrån rotationen. <strong>Varning:<\/strong> Detta omvänder inte motorrotationen. Använd konfigurationsverktyget för dina ESC:er eller byt ordning på ESC-kablarna för att uppnå detta. Se också till att, utan propellrar, bekräfta att motorerna roterar enligt diagrammet ovan innan aktivering sker."
+        "message": "Detta alternativ konfigurerar mixern så att den utgår från att motorrotationen är omvänd och att propellrarna sitter korrekt utifrån rotationen. <strong>Varning:</strong> Detta omvänder inte motorrotationen. Använd konfigurationsverktyget för dina ESC:er eller byt ordning på ESC-kablarna för att uppnå detta. Se också till att, utan propellrar, bekräfta att motorerna roterar enligt diagrammet ovan innan aktivering sker."
     },
     "configurationAutoDisarmDelay": {
         "message": "Avaktivera motorerna efter specifik fördröjning [seconds] (Kräver MOTOR_STOP-funktionen)"
@@ -1069,7 +1183,7 @@
         "message": "Signalfyr-ton"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Dshot-signalfyren använder ESC:erna och motorerna för att producera ljud. Detta innebär att Dshot-signalfyren inte kan användas medan motorerna roterar. I Betaflight 3.4 och nyare, när motoraktivering påbörjas medan Dshot-signalfyren är aktiv, blir det en 2-sekunders paus efter den sista Dshot-signalfyrtonen innan farkosten aktiveras. Detta är för att förhindra att Dshot-signalfyrfunktionen stör Dshot-kommandon som sänds vid motoraktivering.<br\/><strong>Varning:<\/strong> Eftersom Dshot-signalfyren skickar ström genom motorerna när den är aktiv, kan detta orsaka alltför stor värmeproduktion och skador på motorerna och \/ eller ESC:erna om signalfyrens styrka är för hög. Använd BLHeli Configurator eller BLHeli Suite för att justera och testa signalfyrens styrka."
+        "message": "Dshot-signalfyren använder ESC:erna och motorerna för att producera ljud. Detta innebär att Dshot-signalfyren inte kan användas medan motorerna roterar. I Betaflight 3.4 och nyare, när motoraktivering påbörjas medan Dshot-signalfyren är aktiv, blir det en 2-sekunders paus efter den sista Dshot-signalfyrtonen innan farkosten aktiveras. Detta är för att förhindra att Dshot-signalfyrfunktionen stör Dshot-kommandon som sänds vid motoraktivering.<br/><strong>Varning:</strong> Eftersom Dshot-signalfyren skickar ström genom motorerna när den är aktiv, kan detta orsaka alltför stor värmeproduktion och skador på motorerna och / eller ESC:erna om signalfyrens styrka är för hög. Använd BLHeli Configurator eller BLHeli Suite för att justera och testa signalfyrens styrka."
     },
     "configurationBeeper": {
         "message": "Konfiguration av ljudsignal"
@@ -1081,7 +1195,7 @@
         "message": "Pip när TX har stängs av eller signalen tappats (repeteras tills TX är ok igen)"
     },
     "beeperRX_LOST_LANDING": {
-        "message": "Pip SOS när farkosten är aktiv och TX stängs av eller signalen tappas (autolandning\/autoinaktivering)"
+        "message": "Pip SOS när farkosten är aktiv och TX stängs av eller signalen tappas (autolandning/autoinaktivering)"
     },
     "beeperDISARMING": {
         "message": "Pip när flygkontrollern inaktiveras"
@@ -1129,7 +1243,7 @@
         "message": "Pip när blackbox-radering slutförs"
     },
     "beeperCRASH_FLIP": {
-        "message": "Pip när kraschflippläge är aktivt"
+        "message": "Pip när kraschflipp-läge är aktivt"
     },
     "beeperCAM_CONNECTION_OPEN": {
         "message": "Pip när 5-knappskamerakontrollen aktiveras"
@@ -1141,7 +1255,7 @@
         "message": "Varningspip när styrkortet är aktiverat och rc-utjämning inte har initierat filter"
     },
     "configuration3d": {
-        "message": "3D ESC\/Motorfunktioner"
+        "message": "3D ESC/Motorfunktioner"
     },
     "configuration3dDeadbandLow": {
         "message": "3D dödband låg"
@@ -1162,13 +1276,13 @@
         "message": "Flygkontrollerns loop-tid"
     },
     "configurationCalculatedCyclesSec": {
-        "message": "Cykler\/sek [Hz]"
+        "message": "Cykler/sek [Hz]"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Observera:<\/strong> Säkerställ att din flygkontroller klarar dessa hastigheter! Kontrollera CPU och cykeltidsstabiliteten. Ändringar här kan kräva ändringar av PID-inställningar. TIPS: Avaktivera accelerometer och andra sensorer för att få bättre prestanda."
+        "message": "<strong>Observera:</strong> Säkerställ att din flygkontroller klarar dessa hastigheter! Kontrollera CPU och cykeltidsstabiliteten. Ändringar här kan kräva ändringar av PID-inställningar. TIPS: Avaktivera accelerometer och andra sensorer för att få bättre prestanda."
     },
     "configurationLoopTimeNo32KhzHelp": {
-        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Notering om 32 kHz samplingsmode för gyro:<\/strong> Stöd för 32kHz samplingsmode för gyro lades till i Betaflight som en experimentell funktion. Under de år den funnits tillgänglig har den aldrig visat sig ha några fördelar gentemot 8 kHz samplingsmode för gyro, på grund av känsligheten för vibrationer och den höga brusnivån som kräver aggressiv filtrering, som i sin tur leder till fördröjningar i styrloopen. Av detta skäl har <strong>stödet för 32kHz samplingsmode för gyro tagits bort<\/strong> i Betaflight 4.0."
+        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Notering om 32 kHz samplingsmode för gyro:</strong> Stöd för 32kHz samplingsmode för gyro lades till i Betaflight som en experimentell funktion. Under de år den funnits tillgänglig har den aldrig visat sig ha några fördelar gentemot 8 kHz samplingsmode för gyro, på grund av känsligheten för vibrationer och den höga brusnivån som kräver aggressiv filtrering, som i sin tur leder till fördröjningar i styrloopen. Av detta skäl har <strong>stödet för 32kHz samplingsmode för gyro tagits bort</strong> i Betaflight 4.0."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1189,7 +1303,7 @@
         "message": "Auto-konfiguration"
     },
     "configurationGPSHelp": {
-        "message": "<strong>Observera:<\/strong> Kom ihåg att konfigurera en seriell port (via fliken Portar) vid användning av GPS-funktionen."
+        "message": "<strong>Observera:</strong> Kom ihåg att konfigurera en seriell port (via fliken Portar) vid användning av GPS-funktionen."
     },
     "configurationSerialRX": {
         "message": "Seriell mottagartyp"
@@ -1198,7 +1312,7 @@
         "message": "SPI-buss mottagartyp"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "configurationButtonSave": {
         "message": "Spara och starta om"
@@ -1207,7 +1321,7 @@
         "message": "Identifierare"
     },
     "portsConfiguration": {
-        "message": "Konfiguration\/MSP"
+        "message": "Konfiguration/MSP"
     },
     "portsSerialRx": {
         "message": "Seriell Rx"
@@ -1222,13 +1336,13 @@
         "message": "Kringutrustning"
     },
     "portsHelp": {
-        "message": "<strong>Observera:<\/strong> Alla kombinationer är inte giltiga. När flygkontrollerns firmware upptäcker detta kommer serieportskonfigurationen att återställas."
+        "message": "<strong>Observera:</strong> Alla kombinationer är inte giltiga. När flygkontrollerns firmware upptäcker detta kommer serieportskonfigurationen att återställas."
     },
     "portsMSPHelp": {
-        "message": "<strong>Observera:<\/strong> Inaktivera <span class=\"message-negative\">inte<\/span> MSP på den första seriella porten om du inte är fullständigt medveten om vad du gör. Du kan bli tvungen att läsa in firmware på nytt och radera din konfiguration."
+        "message": "<strong>Observera:</strong> Inaktivera <span class=\"message-negative\">inte</span> MSP på den första seriella porten om du inte är fullständigt medveten om vad du gör. Du kan bli tvungen att läsa in firmware på nytt och radera din konfiguration."
     },
     "portsFirmwareUpgradeRequired": {
-        "message": "Firmware-uppdatering <span class=\"message-negative\">krävs<\/span>.  Serieportkonfiguration för firmware &lt; 1.8.0 stöds ej."
+        "message": "Firmware-uppdatering <span class=\"message-negative\">krävs</span>.  Serieportkonfiguration för firmware &lt; 1.8.0 stöds ej."
     },
     "portsButtonSave": {
         "message": "Spara och starta om"
@@ -1300,10 +1414,13 @@
         "message": "Benewake LIDAR"
     },
     "pidTuningUpgradeFirmwareToChangePidController": {
-        "message": "<span class=\"message-negative\">Inte möjligt att ändra PID-kontroller - du kan ändra den via CLI.<\/span>  Din firmware har API-version <span class=\"message-negative\">$1<\/span>, men denna funktion kräver <span class=\"message-positive\">$2<\/span>."
+        "message": "<span class=\"message-negative\">Inte möjligt att ändra PID-kontroller - du kan ändra den via CLI.</span>  Din firmware har API-version <span class=\"message-negative\">$1</span>, men denna funktion kräver <span class=\"message-positive\">$2</span>."
     },
     "pidTuningSubTabPid": {
-        "message": "PID-inställningar"
+        "message": "Inställningar för PID-profil"
+    },
+    "pidTuningSubTabRates": {
+        "message": "Inställningar för Rate-profil"
     },
     "pidTuningSubTabFilter": {
         "message": "Filter-inställningar"
@@ -1317,8 +1434,12 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Profiloberoende PID-kontrollerinställningar"
     },
+    "pidTuningAntiGravity": {
+        "message": "Antigravitation"
+    },
     "pidTuningAntiGravityMode": {
-        "message": "Antigravitations-läge"
+        "message": "Läge",
+        "description": "Anti Gravity mode selection parameter"
     },
     "pidTuningAntiGravityModeOptionSmooth": {
         "message": "Utjämnat",
@@ -1329,30 +1450,19 @@
         "description": "One of the modes of anti gravity"
     },
     "pidTuningAntiGravityGain": {
-        "message": "Anti Gravity-ökning"
+        "message": "Ökning",
+        "description": "Anti Gravity Gain Parameter"
     },
     "pidTuningAntiGravityThres": {
-        "message": "Antigravitations-tröskel"
-    },
-    "pidTuningDMinHelp": {
-        "message": "D Min ger möjlighet att ha en lägre nivå av D under normal flygning och en högre nivå för snabba manövrer där man riskerar att ta i för mycket, som flippar och rollar. Den ökar också D vid propellerströmmar. Farkosten kommer att ha en dynamisk D Term som varierar mellan D Min (vid normal flygning) och standard-D (vid snabba rollar och flippar). Värdet noll stänger av funktionen. Ökningen bestämmer hur mycket D förstärks under snabba styrspaksrörelser. Advance får förstärkningseffekten att börja tidigare. Detta kan vara bra om du får för höga utslag vid snabba flippar på extra responsiva quadar.",
-        "description": "Help message for D Min feature"
+        "message": "Tröskel",
+        "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningDMin": {
         "message": "D Min",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
-    "pidTuningDMinRoll": {
-        "message": "Roll",
-        "description": "Axis to apply D Min feature"
-    },
-    "pidTuningDMinPitch": {
-        "message": "Looping",
-        "description": "Axis to apply D Min feature"
-    },
-    "pidTuningDMinYaw": {
-        "message": "Gir",
-        "description": "Axis to apply D Min feature"
+    "pidTuningDMinDisabledNote": {
+        "message": "<strong>Note:</strong> D Min-funktionen är avaktiverad och dess parametrar visas ej. Aktivera D Min i $t(pidTuningPidSettings.message) för att använda den."
     },
     "pidTuningDMinGain": {
         "message": "Ökning",
@@ -1360,7 +1470,7 @@
     },
     "pidTuningDMinAdvance": {
         "message": "Advance",
-        "description": "Advane of the D Min feature"
+        "description": "Advance of the D Min feature"
     },
     "pidTuningPidSettings": {
         "message": "PID-kontrollerinställningar"
@@ -1373,6 +1483,10 @@
     },
     "receiverRcSmoothingManual": {
         "message": "Manuell"
+    },
+    "receiverRcSmoothingAutoSmoothness": {
+        "message": "Automatisk utjämning",
+        "description": "Auto Smoothness parameter for RC smoothing"
     },
     "receiverRcDerivativeTypeSelect": {
         "message": "Derivativ cutoff-typ"
@@ -1432,7 +1546,7 @@
         "message": "RC-Interpolering"
     },
     "receiverRcInterpolationHelp": {
-        "message": "RC TX\/RX-system är inte lika snabba som PID-loopar. Det innebär att PID-loopar har luckor i informationsströmmen från RC-systemen. Detta alternativ aktiverar interpolering av RC-input under de perioder inga RC-värden tas emot. Alternativet ger också renare P- och D-beteende eftersom det inte finns några hopp i inputvärdena."
+        "message": "RC TX/RX-system är inte lika snabba som PID-loopar. Det innebär att PID-loopar har luckor i informationsströmmen från RC-systemen. Detta alternativ aktiverar interpolering av RC-input under de perioder inga RC-värden tas emot. Alternativet ger också renare P- och D-beteende eftersom det inte finns några hopp i inputvärdena."
     },
     "receiverRcInterpolationIntervalHelp": {
         "message": "Interpolationsintervall för manuellt RC-interpoleringsläge i millisekunder"
@@ -1471,10 +1585,10 @@
         "message": "Med denna parameter kan D setpoint-vikten reduceras nära mitten av spakarna, vilket resulterar i jämnare avslut på flippar och rollar.<br> Värdet representerar en böjningspunkt: 0 - spaken centrerad, 1 - full böjning. När spaken är över denna punkt, hålls setpoint-vikten konstant vid sitt konfigurerade värde. När spaken är under denna punkt, reduceras setpoint-vikten proportionellt, och blir 0 vid spakens mittposition.<br> Värdet 1 ger maximal utjämningseffekt, medan värdet 0 håller setpoint-vikten konstant vid sitt konfigurerade värde över hela spakens räckvidd."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "Denna parameter bestämmer spakens accelerationseffekt inom den derivativa komponenten.<br> Värdet 0 innebär en äldre mätbaserad metod där D endast följer gyron, och värdet 1 innebär en äldre felbaserad metod där gyro- och spakar följs likvärdigt.<br> Lägre värden innebär långsammare\/jämnare spakrespons, och högre värden ger en mer accelererande spakrespons.<br> Observera att aktivering av RC-interpolering rekommenderas vid högre värden för att undvika att plötsliga ändringar orsakar brus."
+        "message": "Denna parameter bestämmer spakens accelerationseffekt inom den derivativa komponenten.<br> Värdet 0 innebär en äldre mätbaserad metod där D endast följer gyron, och värdet 1 innebär en äldre felbaserad metod där gyro- och spakar följs likvärdigt.<br> Lägre värden innebär långsammare/jämnare spakrespons, och högre värden ger en mer accelererande spakrespons.<br> Observera att aktivering av RC-interpolering rekommenderas vid högre värden för att undvika att plötsliga ändringar orsakar brus."
     },
     "pidTuningDtermSetpointTransitionWarning": {
-        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Användning av en D setpoint-övergång mellan 0 och 0.1 avråds bestämt. Det kan resultera i instabilitet och sämre spakrespons när spakarna korsar mittpunkten.<\/span>"
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Användning av en D setpoint-övergång mellan 0 och 0.1 avråds bestämt. Det kan resultera i instabilitet och sämre spakrespons när spakarna korsar mittpunkten.</span>"
     },
     "pidTuningProportional": {
         "message": "Proportionell"
@@ -1492,7 +1606,7 @@
         "message": "RC Rate"
     },
     "pidTuningMaxVel": {
-        "message": "Max Vel [grader\/s]"
+        "message": "Max Vel [grader/s]"
     },
     "pidTuningRate": {
         "message": "Rate"
@@ -1512,6 +1626,9 @@
     "pidTuningTPABreakPoint": {
         "message": "TPA Brytpunkt"
     },
+    "pidTuningThrottleCurvePreview": {
+        "message": "Trottelkurva förhandsgranskning"
+    },
     "pidTuningThrottleLimitType": {
         "message": "Trottelbegränsning"
     },
@@ -1528,7 +1645,7 @@
         "message": "KLIPP"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Välj typ av trottelbegränsning. <b>AV<\/b> avaktiverar funktionen, <b>SKALA<\/b> transformerar trottelns räckvidd från 0 till den valda procentnivån med fullt spakutslag, <b>KLIPP<\/b> sätter en maxprocentnivå, och spakutslag över den nivån har ingen ytterligare effekt"
+        "message": "Välj typ av trottelbegränsning. <b>AV</b> avaktiverar funktionen, <b>SKALA</b> transformerar trottelns räckvidd från 0 till den valda procentnivån med fullt spakutslag, <b>KLIPP</b> sätter en maxprocentnivå, och spakutslag över den nivån har ingen ytterligare effekt"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Sätt den önskade trottelbegränsningsprocenten. Värdet 100% inaktiverar funktionen."
@@ -1540,7 +1657,7 @@
         "message": "Frekvens"
     },
     "pidTuningRatesCurve": {
-        "message": "Rates"
+        "message": "Rates förhandsgranskning"
     },
     "throttle": {
         "message": "Trottel"
@@ -1588,31 +1705,31 @@
         "message": "Laddade standard-profilvärden."
     },
     "pidTuningReceivedProfile": {
-        "message": "Flygkontrollern aktiverade profil: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Flygkontrollern aktiverade profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "Flygkontrollern aktiverade rate-profil: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Flygkontrollern aktiverade rate-profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": "Laddade profil: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Laddade profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": "Laddade rate-profil: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "Laddade rate-profil: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": "PID-data <strong>uppdaterat<\/strong>"
+        "message": "PID-data <strong>uppdaterat</strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "receiverHelp": {
-        "message": "Läs kapitlet om mottagare i dokumentationen. Konfigurera en seriell port (om nödvändigt), mottagarläge (seriell\/ppm\/pwm), typ (för seriella mottagare), koppla mottagaren, välj kanalmappning, konfigurera kanalernas slutvärden\/räckvidd så att alla kanaler går från ~1000 till ~2000. Sätt mittlägena (standardvärde 1500), trimma kanalerna till 1500, konfigurera spakarnas dödband, säkerställ funktionen när TX är avstängd eller utom räckhåll.<br \/><span class=\"message-negative\">VIKTIGT:<\/span> Före flygning, läs kapitlet om failsafe i dokumentationen och konfigurera failsafe."
+        "message": "Läs kapitlet om mottagare i dokumentationen. Konfigurera en seriell port (om nödvändigt), mottagarläge (seriell/ppm/pwm), typ (för seriella mottagare), koppla mottagaren, välj kanalmappning, konfigurera kanalernas slutvärden/räckvidd så att alla kanaler går från ~1000 till ~2000. Sätt mittlägena (standardvärde 1500), trimma kanalerna till 1500, konfigurera spakarnas dödband, säkerställ funktionen när TX är avstängd eller utom räckhåll.<br /><span class=\"message-negative\">VIKTIGT:</span> Före flygning, läs kapitlet om failsafe i dokumentationen och konfigurera failsafe."
     },
     "tuningHelp": {
-        "message": "<b>Inställningstips<\/b><br \/><span class=\"message-negative\">VIKTIGT:<\/span> Det är viktigt att kontrollera motorernas temperatur under de första flygningarna. Ett högre filtervärde kan ge en bättre flygning, men det kommer också att ge mer brus i motorerna.<br>Standardvärdet 100 Hz är optimalt, men om du drabbas av brus kan du försöka sänka Dterm-filtret till 50 Hz och eventuellt också gyrofiltret."
+        "message": "<b>Inställningstips</b><br /><span class=\"message-negative\">VIKTIGT:</span> Det är viktigt att kontrollera motorernas temperatur under de första flygningarna. Ett högre filtervärde kan ge en bättre flygning, men det kommer också att ge mer brus i motorerna.<br>Standardvärdet 100 Hz är optimalt, men om du drabbas av brus kan du försöka sänka Dterm-filtret till 50 Hz och eventuellt också gyrofiltret."
     },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Varning:<\/b><\/span> Filtervärdet är farligt lågt. Farkosten blir troligen svår att styra, och risken ökar för att den flyger iväg okontrollerat. Det är starkt rekommenderat att du <b>aktiverar åtminstone ett av Gyro dynamiskt lågpass eller Gyro lågpass 1, och åtminstone ett av D Term dynamiskt lågpass eller D Term lågpass 1<\/b>."
+        "message": "<span class=\"message-negative\"><b>Varning:</b></span> Filtervärdet är farligt lågt. Farkosten blir troligen svår att styra, och risken ökar för att den flyger iväg okontrollerat. Det är starkt rekommenderat att du <b>aktiverar åtminstone ett av Gyro dynamiskt lågpass eller Gyro lågpass 1, och åtminstone ett av D Term dynamiskt lågpass eller D Term lågpass 1</b>."
     },
     "receiverThrottleMid": {
         "message": "Trottel MITT"
@@ -1624,7 +1741,7 @@
         "message": "'Spak låg'-tröskel"
     },
     "receiverHelpStickMin": {
-        "message": "Maxvärdet (i μs) för att bestämma om en spak är i låg \/ vänster-läge vid kommandoinput (MIN_CHECK)."
+        "message": "Maxvärdet (i μs) för att bestämma om en spak är i låg / vänster-läge vid kommandoinput (MIN_CHECK)."
     },
     "receiverStickCenter": {
         "message": "Spak-mittläge"
@@ -1636,7 +1753,7 @@
         "message": "'Spak hög'-tröskel"
     },
     "receiverHelpStickMax": {
-        "message": "Minimivärdet (i μs) för att bestämma om en spak är i hög \/ höger-läge vid kommandoinput (MAX_CHECK)."
+        "message": "Minimivärdet (i μs) för att bestämma om en spak är i hög / höger-läge vid kommandoinput (MAX_CHECK)."
     },
     "receiverDeadband": {
         "message": "RC dödband"
@@ -1648,13 +1765,13 @@
         "message": "Gir dödband"
     },
     "receiverHelpYawDeadband": {
-        "message": "Dessa är värden (i μs) som anger hur mycket RC-input kan förändras innan det anses giltigt. För sändare med brus kan detta värde ökas om RC-inputvärdena rör sig fast reglagen inte används.<strong>Denna inställning gäller endast Gir.<\/strong>"
+        "message": "Dessa är värden (i μs) som anger hur mycket RC-input kan förändras innan det anses giltigt. För sändare med brus kan detta värde ökas om RC-inputvärdena rör sig fast reglagen inte används.<strong>Denna inställning gäller endast Gir.</strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "3D-trottel dödband"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": "Dessa är värden (i μx). Öka värdet för att bredda den neutrala zonen. <strong>Denna inställning är endast för 3D-trottel.<\/strong>"
+        "message": "Dessa är värden (i μx). Öka värdet för att bredda den neutrala zonen. <strong>Denna inställning är endast för 3D-trottel.</strong>"
     },
     "receiverChannelMap": {
         "message": "Kanalmappning"
@@ -1684,22 +1801,22 @@
         "message": "Styrspakar"
     },
     "receiverDataRefreshed": {
-        "message": "RC-justeringsdata <strong>uppdaterat<\/strong>"
+        "message": "RC-justeringsdata <strong>uppdaterat</strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "receiverModelPreview": {
         "message": "Förhandsvisa"
     },
     "receiverMspWarningText": {
-        "message": "Dessa spakar låter Betaflight aktiveras och testas utan tillgång till sändare eller mottagare. <strong>Denna funktion är dock inte avsedd för flygning, och propellrar får inte vara monterade.<\/strong><br><br>Denna funktion kan inte garantera tillförlitlig kontroll över farkosten. <strong>Risk för allvarlig skada om propellrarna lämnas på.<\/strong>"
+        "message": "Dessa spakar låter Betaflight aktiveras och testas utan tillgång till sändare eller mottagare. <strong>Denna funktion är dock inte avsedd för flygning, och propellrar får inte vara monterade.</strong><br><br>Denna funktion kan inte garantera tillförlitlig kontroll över farkosten. <strong>Risk för allvarlig skada om propellrarna lämnas på.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Aktivera kontroller"
     },
     "auxiliaryHelp": {
-        "message": "Konfigurera lägen här med en kombination av räckvidder och\/eller länkar till andra lägen (länkar stöds på BF 4.0 och senare). Använd <strong>räckvidder<\/strong> för att definiera styrspakarna på din radiosändare och de motsvarande lägesbindningarna. En mottagarkanal som ger ett utslag mellan min och max för en räckvidd kommer att aktivera läget. Använd en <strong>länk<\/strong> för att aktivera ett läge när ett annat läge är aktivt. <strong>Undantag:<\/strong> ARM kan inte länkas till eller från ett annat läge, lägen kan inte länkas till andra lägen som är konfigurerade med en länk (kedjade länkar). Multipla räckvidder\/länkar kan användas för att aktivera valfria lägen. Om det finns mer än en räckvidd\/länk definierad för ett läge, kan var och en av dem sättas till <strong>AND<\/strong> eller <strong>OR<\/strong>. Ett läge aktiveras när:<br \/>- ALLA <strong>AND<\/strong>-räckvidder\/länkar är aktiva; ELLER<br \/>- åtminstone en <strong>OR<\/strong>räckvidd\/länk är aktiv.<br \/><br \/>Kom ihåg att spara dina inställningar med Spara-knappen."
+        "message": "Konfigurera lägen här med en kombination av räckvidder och/eller länkar till andra lägen (länkar stöds på BF 4.0 och senare). Använd <strong>räckvidder</strong> för att definiera styrspakarna på din radiosändare och de motsvarande lägesbindningarna. En mottagarkanal som ger ett utslag mellan min och max för en räckvidd kommer att aktivera läget. Använd en <strong>länk</strong> för att aktivera ett läge när ett annat läge är aktivt. <strong>Undantag:</strong> ARM kan inte länkas till eller från ett annat läge, lägen kan inte länkas till andra lägen som är konfigurerade med en länk (kedjade länkar). Multipla räckvidder/länkar kan användas för att aktivera valfria lägen. Om det finns mer än en räckvidd/länk definierad för ett läge, kan var och en av dem sättas till <strong>AND</strong> eller <strong>OR</strong>. Ett läge aktiveras när:<br />- ALLA <strong>AND</strong>-räckvidder/länkar är aktiva; ELLER<br />- åtminstone en <strong>OR</strong>räckvidd/länk är aktiv.<br /><br />Kom ihåg att spara dina inställningar med Spara-knappen."
     },
     "auxiliaryToggleUnused": {
         "message": "Dölj oanvända lägen"
@@ -1709,6 +1826,10 @@
     },
     "auxiliaryMax": {
         "message": "Max"
+    },
+    "auxiliaryDisabled": {
+        "message": "(AVSTÄNGD)",
+        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Lägg till intervall"
@@ -1720,7 +1841,7 @@
         "message": "Spara"
     },
     "auxiliaryEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "auxiliaryAutoChannelSelect": {
         "message": "AUTO"
@@ -1732,16 +1853,19 @@
         "message": "OCH"
     },
     "adjustmentsHelp": {
-        "message": "Konfigurera justerings-switchar. Se avsnittet 'In-flight adjustments' i manualen för detaljer. Ändringarna som justeringsfunktionerna utför sparas inte automatiskt. Det finns 4 platser. Varje switch som används för att göra samtidiga justeringar kräver exklusiv användning av en plats."
+        "message": "Konfigurera justeringsswitchar. Se sektionen 'in-flight adjustments' i manualen för detaljer. Ändringarna som görs av justeringsfunktionerna sparas inte automatiskt."
+    },
+    "adjustmentSlotsHelp": {
+        "message": "Det finns 4 platser. Varje switch som används för samtidiga justeringar kräver exklusiv användning av en plats."
     },
     "adjustmentsExamples": {
-        "message": "Exempel"
+        "message": "Exempel:"
     },
     "adjustmentsExample1": {
-        "message": "Använd plats 1 och en 3POS-switch på AUX1 för att välja mellan Looping\/Roll P, I och D och en annan 3POS-switch på AUX2 för att öka eller minska värdet när den fälls uppåt eller nedåt."
+        "message": "Använd en trepositionsswitch på AUX1 för att välja mellan Looping/Roll P, I och D och en annan trepositionsswitch på AUX2 för att öka eller minska värdet när den fälls uppåt eller nedåt."
     },
     "adjustmentsExample2": {
-        "message": "Använd plats 2 och en 3POS-switch på AUX4 för att aktivera Rate-profilval via samma 3POS-switch på samma kanal."
+        "message": "Använd en trepositionsswitch på AUX4 för att välja Rate-profilval via samma trepositionsswitch på samma kanal."
     },
     "adjustmentsColumnEnable": {
         "message": "Om aktiverad"
@@ -1882,7 +2006,7 @@
         "message": "Spara"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "transponderNotSupported": {
         "message": "Din flygkontrollers firmware stödjer inte transponderfunktionalitet."
@@ -1927,16 +2051,16 @@
         "message": "Enbart hexadecimala tecken, 0-9, A-F"
     },
     "transponderHelp1": {
-        "message": "Konfigurera din transponder-kod här. Obs: Endast giltiga koder kommer att kännas igen av race timing-systemen. Giltiga transponder-koder kan erhållas från <a href=\"http:\/\/seriouslypro.com\/transponder-codes\" target=\"_blank\">Seriously Pro<\/a>."
+        "message": "Konfigurera din transponder-kod här. Obs: Endast giltiga koder kommer att kännas igen av race timing-systemen. Giltiga transponder-koder kan erhållas från <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a>."
     },
     "transponderHelp2": {
-        "message": "För ytterligare information besök <a href=\"http:\/\/www.arcitimer.com\/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer webbsite<\/a>"
+        "message": "För ytterligare information besök <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer webbsite</a>"
     },
     "transponderDataHelp3": {
         "message": "Välj ERLT-ID 0-63"
     },
     "transponderHelp3": {
-        "message": "För ytterligare information besök <a href=\"https:\/\/github.com\/polyvision\/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer webbsite<\/a>"
+        "message": "För ytterligare information besök <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer webbsite</a>"
     },
     "transponderButtonSave": {
         "message": "Spara"
@@ -1945,10 +2069,10 @@
         "message": "Spara och starta om"
     },
     "transponderDataInvalid": {
-        "message": "Transponderdata är <span class=\"message-negative\">ogiltigt<\/span>"
+        "message": "Transponderdata är <span class=\"message-negative\">ogiltigt</span>"
     },
     "transponderEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "servosFirmwareUpgradeRequired": {
         "message": "Servon kräver firmware &gt;= 1.10.0. och målstöd."
@@ -1990,7 +2114,7 @@
         "message": "Omvänd"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -2008,10 +2132,10 @@
         "message": "3D-fix:"
     },
     "gpsFixTrue": {
-        "message": "<span class=\"fixtrue\">Sann<\/span>"
+        "message": "<span class=\"fixtrue\">Sann</span>"
     },
     "gpsFixFalse": {
-        "message": "<span class=\"fixfalse\">Falsk<\/span>"
+        "message": "<span class=\"fixfalse\">Falsk</span>"
     },
     "gpsAltitude": {
         "message": "Höjd:"
@@ -2127,17 +2251,29 @@
     "motorsSensorAccelSelect": {
         "message": "accel"
     },
+    "motorsRPM": {
+        "message": "R: {{motorsRpmValue}}",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
+    },
+    "motorsRPMError": {
+        "message": "E: {{motorsErrorValue}}%",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
+    },
+    "motorsESCTemperature": {
+        "message": "T: {{motorsESCTempValue}}&deg;C",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
+    },
     "motorsMaster": {
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motortestläge \/ aktiveringsnotering:<\/strong><br \/>Flytt av reglagen eller motoraktivering via radiosändaren kommer att få motorerna att <strong>börja rotera<\/strong>.<br \/>För att undvika skador <strong class=\"message-negative\">ta bort ALLA propellrar<\/strong> innan denna funktion används.<br \/>Aktivering av motortestläge kommer också att tillfälligt inaktivera Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention), för att undvika att den funktionen stoppar motorerna vid tester utan propellrar.<br \/>"
+        "message": "<strong>Motortestläge / aktiveringsnotering:</strong><br />Flytt av reglagen eller motoraktivering via radiosändaren kommer att få motorerna att <strong>börja rotera</strong>.<br />För att undvika skador <strong class=\"message-negative\">ta bort ALLA propellrar</strong> innan denna funktion används.<br />Aktivering av motortestläge kommer också att tillfälligt inaktivera Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention), för att undvika att den funktionen stoppar motorerna vid tester utan propellrar.<br />"
     },
     "motorsEnableControl": {
-        "message": "<strong>Jag förstår riskerna<\/strong>, propellrarna är borttagna - tillåt motorkontroll och motoraktivering, och inaktivera Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention)."
+        "message": "<strong>Jag förstår riskerna</strong>, propellrarna är borttagna - tillåt motorkontroll och motoraktivering, och inaktivera Förhindrande av oavsiktlig uppstigning (Runaway Takeoff Prevention)."
     },
     "sensorsInfo": {
-        "message": "Tänk på att användning av snabba uppdateringsperioder och många grafer samtidigt är resurskrävande och kommer att dra ur batteriet snabbare om du använder en bärbar dator.<br \/>Vi rekommenderar att bara visa grafer för sensorer du är intresserad av, och använda rimliga uppdateringsperioder."
+        "message": "Tänk på att användning av snabba uppdateringsperioder och många grafer samtidigt är resurskrävande och kommer att dra ur batteriet snabbare om du använder en bärbar dator.<br />Vi rekommenderar att bara visa grafer för sensorer du är intresserad av, och använda rimliga uppdateringsperioder."
     },
     "sensorsRefresh": {
         "message": "Uppdat:"
@@ -2164,7 +2300,7 @@
         "message": "Felsökning"
     },
     "sensorsGyroTitle": {
-        "message": "Gyroskop - grader\/s"
+        "message": "Gyroskop - grader/s"
     },
     "sensorsAccelTitle": {
         "message": "Accelerometer - g"
@@ -2182,10 +2318,13 @@
         "message": "Felsök"
     },
     "cliInfo": {
-        "message": "<strong>Notering:<\/strong> Om fliken CLI lämnas eller vid val av Koppla från kommer \"<strong>exit<\/strong>\" att sändas <strong>automatiskt<\/strong> till styrkortet. Med den senaste firmwaren kommer detta att <strong>starta om<\/strong> kontrollern, och osparade ändringar kommer att <strong>förloras<\/strong>.<p><strong><span class=\"message-negative\">Varning:<\/span><\/strong> Vissa CLI-kommandon kan leda till att slumpmässiga signaler skickas ut till motorerna. Detta kan få motorerna att sätta igång om ett batteri är inkopplat. Därför är det rekommenderat att säkerställa att <strong>inget batteri är anslutet innan CLI-kommandon anges<\/strong>."
+        "message": "<strong>Notering:</strong> Om fliken CLI lämnas eller vid val av Koppla från kommer \"<strong>exit</strong>\" att sändas <strong>automatiskt</strong> till styrkortet. Med den senaste firmwaren kommer detta att <strong>starta om</strong> kontrollern, och osparade ändringar kommer att <strong>förloras</strong>.<p><strong><span class=\"message-negative\">Varning:</span></strong> Vissa CLI-kommandon kan leda till att slumpmässiga signaler skickas ut till motorerna. Detta kan få motorerna att sätta igång om ett batteri är inkopplat. Därför är det rekommenderat att säkerställa att <strong>inget batteri är anslutet innan CLI-kommandon anges</strong>."
     },
     "cliInputPlaceholder": {
-        "message": "Skriv ditt kommando här"
+        "message": "Skriv ditt kommando här. Tryck Tab för AutoComplete."
+    },
+    "cliInputPlaceholderBuilding": {
+        "message": "Vänta medan AutoComplete-cachen byggs upp..."
     },
     "cliEnter": {
         "message": "CLI-läge upptäckt"
@@ -2205,8 +2344,20 @@
     "cliCopySuccessful": {
         "message": "Kopierat!"
     },
+    "cliLoadFromFileBtn": {
+        "message": "Ladda från fil"
+    },
+    "cliConfirmSnippetDialogTitle": {
+        "message": "Granska laddade kommandon"
+    },
+    "cliConfirmSnippetNote": {
+        "message": "<strong>Observera</strong>: Du kan granska och redigera kommandon innan de verkställs."
+    },
+    "cliConfirmSnippetBtn": {
+        "message": "Verkställ"
+    },
     "loggingNote": {
-        "message": "Data kommer <span class=\"message-negative\">endast<\/span> att loggas när denna flik är aktiv; om fliken lämnas kommer loggningen att <span class=\"message-negative\">avbrytas<\/span> och applikationen återgår till sitt normala <strong>\"konfigurations\"<\/strong> -läge.<br \/> Du kan fritt välja global uppdateringsperiod, data kommer att skrivas till loggen <strong>1<\/strong> gång per sekund av prestandaskäl."
+        "message": "Data kommer <span class=\"message-negative\">endast</span> att loggas när denna flik är aktiv; om fliken lämnas kommer loggningen att <span class=\"message-negative\">avbrytas</span> och applikationen återgår till sitt normala <strong>\"konfigurations\"</strong> -läge.<br /> Du kan fritt välja global uppdateringsperiod, data kommer att skrivas till loggen <strong>1</strong> gång per sekund av prestandaskäl."
     },
     "loggingSamplesSaved": {
         "message": "Samplingar sparade:"
@@ -2224,10 +2375,10 @@
         "message": "Stoppa loggning"
     },
     "loggingBack": {
-        "message": "Lämna loggning \/ Koppla från"
+        "message": "Lämna loggning / Koppla från"
     },
     "loggingErrorNotConnected": {
-        "message": "Du behöver <strong>ansluta<\/strong> först"
+        "message": "Du behöver <strong>ansluta</strong> först"
     },
     "loggingErrorLogFile": {
         "message": "Välj en loggfil"
@@ -2236,7 +2387,7 @@
         "message": "Välj minst en egenskap att logga"
     },
     "loggingAutomaticallyRetained": {
-        "message": "Laddade automatiskt föregående loggfil: <strong>$1<\/strong>"
+        "message": "Laddade automatiskt föregående loggfil: <strong>$1</strong>"
     },
     "blackboxNotSupported": {
         "message": "Din flygkontrollers firmware stödjer inte Blackbox-loggning."
@@ -2296,7 +2447,7 @@
         "message": "Spara flashminne till fil (utfasad)"
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Att spara blackbox-loggar via konfiguratorn är en långsam och relativt felkänslig process. Rekommendationen är att istället använda '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (nedan) för att aktivera masslagringsläge, och koppla dig mot flygkontrollern som en lagringsenhet för att ladda ner loggfilerna."
+        "message": "Att spara blackbox-loggar via konfiguratorn är en långsam och relativt felkänslig process. Rekommendationen är att istället använda '<b>$t(onboardLoggingRebootMscText.message)</b>' (nedan) för att aktivera masslagringsläge, och koppla dig mot flygkontrollern som en lagringsenhet för att ladda ner loggfilerna."
     },
     "dataflashButtonErase": {
         "message": "Radera flashminne"
@@ -2353,7 +2504,7 @@
         "message": "Utgåve-info"
     },
     "firmwareFlasherReleaseName": {
-        "message": "Namn\/Version:"
+        "message": "Namn/Version:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Besök utgåvesida."
@@ -2364,9 +2515,6 @@
     "firmwareFlasherReleaseDate": {
         "message": "Datum:"
     },
-    "firmwareFlasherReleaseStatus": {
-        "message": "Tillstånd:"
-    },
     "firmwareFlasherReleaseTarget": {
         "message": "Mål:"
     },
@@ -2374,13 +2522,13 @@
         "message": "Binärfil:"
     },
     "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\"> VIKTIGT: denna firmware-utgåva är markerad som en utgåve-kandidat.  Vänligen rapportera eventuella problem omedelbart.<\/span>"
+        "message": "<span class=\"message-negative\"> VIKTIGT: denna firmware-utgåva är markerad som en utgåve-kandidat.  Vänligen rapportera eventuella problem omedelbart.</span>"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Ladda ner manuellt."
     },
     "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">VIKTIGT<\/span>: Se till att du flashar en fil som är lämplig för ditt mål. Att flasha en binärfil för fel mål kan få <span class=\"message-negative\">dåliga<\/span> saker att hända."
+        "message": "<span class=\"message-negative\">VIKTIGT</span>: Se till att du flashar en fil som är lämplig för ditt mål. Att flasha en binärfil för fel mål kan få <span class=\"message-negative\">dåliga</span> saker att hända."
     },
     "firmwareFlasherPath": {
         "message": "Sökväg:"
@@ -2437,7 +2585,7 @@
         "message": "Manuell baudhastighet"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "Manuellt val av överföringshastighet för styrkort som inte stödjer standardhastigheten, eller för uppdatering via bluetooth.<br \/><span class=\"message-negative\">Observera:<\/span> Används inte vid uppdatering via USB DFU"
+        "message": "Manuellt val av överföringshastighet för styrkort som inte stödjer standardhastigheten, eller för uppdatering via bluetooth.<br /><span class=\"message-negative\">Observera:</span> Används inte vid uppdatering via USB DFU"
     },
     "firmwareFlasherBaudRate": {
         "message": "Baudhastighet"
@@ -2467,7 +2615,7 @@
         "message": "3.4 AKK & RDQ VTX-patch"
     },
     "firmwareFlasherOptionLabelSelectFirmware": {
-        "message": "Välj Firmware \/ Styrkort"
+        "message": "Välj Firmware / Styrkort"
     },
     "firmwareFlasherOptionLabelSelectBoard": {
         "message": "Välj ett styrkort"
@@ -2509,13 +2657,13 @@
         "message": "Meddelande:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Försök <span class=\"message-negative\">inte<\/span> uppdatera <strong>icke-Betaflight<\/strong>-hårdvara med denna firmware-uppdaterare.<br \/><strong>Koppla<\/strong> <span class=\"message-negative\">inte<\/span> <strong>bort<\/strong> styrkortet eller <strong>stäng av <\/strong> din dator medan uppdatering pågår.<br \/><br \/><strong>Observera: <\/strong>STM32-bootloadern är lagrad i ROM, den kan inte förstöras.<br \/><strong>Observera: <\/strong><span class=\"message-negative\">Anslut automatiskt<\/span> är alltid inaktiverad medan Firmware-uppdateraren är aktiv.<br \/><strong>Observera: <\/strong>Säkerställ att du har gjort en säkerhetskopia; vissa uppdateringar\/nedgraderingar kommer att radera din konfiguration.<br \/><strong>Observera:<\/strong> Om du har problem med att uppdatera, <strong>försök att koppla loss alla kablar från din flygkontroller<\/strong> först, starta om, uppgradera Chrome, uppgradera drivrutiner.<br \/><strong>Observera:<\/strong> Vid uppdatering av styrkort som har direktanslutna USB-uttag (de flesta nyare styrkort), läs först USB Flashing-sektionen i Betaflight-manualen och se till att rätt programvara och drivrutiner är installerade."
+        "message": "Försök <span class=\"message-negative\">inte</span> uppdatera <strong>icke-Betaflight</strong>-hårdvara med denna firmware-uppdaterare.<br /><strong>Koppla</strong> <span class=\"message-negative\">inte</span> <strong>bort</strong> styrkortet eller <strong>stäng av </strong> din dator medan uppdatering pågår.<br /><br /><strong>Observera: </strong>STM32-bootloadern är lagrad i ROM, den kan inte förstöras.<br /><strong>Observera: </strong><span class=\"message-negative\">Anslut automatiskt</span> är alltid inaktiverad medan Firmware-uppdateraren är aktiv.<br /><strong>Observera: </strong>Säkerställ att du har gjort en säkerhetskopia; vissa uppdateringar/nedgraderingar kommer att radera din konfiguration.<br /><strong>Observera:</strong> Om du har problem med att uppdatera, <strong>försök att koppla loss alla kablar från din flygkontroller</strong> först, starta om, uppgradera Chrome, uppgradera drivrutiner.<br /><strong>Observera:</strong> Vid uppdatering av styrkort som har direktanslutna USB-uttag (de flesta nyare styrkort), läs först USB Flashing-sektionen i Betaflight-manualen och se till att rätt programvara och drivrutiner är installerade."
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Återställning \/ tappad kommunikation<\/strong>"
+        "message": "<strong>Återställning / tappad kommunikation</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Om du har tappat kommunikationen med ditt styrkort, följ dessa steg för att återställa kommunikationen: <ul><li>Stäng av strömmen<\/li><li>Aktivera 'Ingen omstartssekvens', aktivera 'Fullständing chip-radering'.<\/li><li>Bygla BOOT-pinnarna eller håll in BOOT-knappen.<\/li><li>Slå på strömmen (aktivitets-LED:en kommer INTE att blinka om utfört korrekt).<\/li><li>Installera alla STM32-drivrutiner och Zadig om det krävs (se <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a>-sektionen i Betaflight-manualen).<\/li><li>Stäng Configurator, Stäng alla öppna instanser av Chrome, stäng alla Chrome-appar, starta om Configurator.<\/li><li>Släpp BOOT-knappen om din flygkontroller har en sådan.<\/li><li>Uppdatera med korrekt firmware (använd manuell baudhastighet om en sådan specificeras i flygkontrollerns manual).<\/li><li>Stäng av strömmen.<\/li><li>Ta bort BOOT-byglingen.<\/li><li>Slå på strömmen (aktivitets-LED:en ska blinka).<\/li><li>Anslut på vanligt sätt.<\/li><\/ul>"
+        "message": "Om du har tappat kommunikationen med ditt styrkort, följ dessa steg för att återställa kommunikationen: <ul><li>Stäng av strömmen</li><li>Aktivera 'Ingen omstartssekvens', aktivera 'Fullständing chip-radering'.</li><li>Bygla BOOT-pinnarna eller håll in BOOT-knappen.</li><li>Slå på strömmen (aktivitets-LED:en kommer INTE att blinka om utfört korrekt).</li><li>Installera alla STM32-drivrutiner och Zadig om det krävs (se <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">USB Flashing</a>-sektionen i Betaflight-manualen).</li><li>Stäng Configurator, Stäng alla öppna instanser av Chrome, stäng alla Chrome-appar, starta om Configurator.</li><li>Släpp BOOT-knappen om din flygkontroller har en sådan.</li><li>Uppdatera med korrekt firmware (använd manuell baudhastighet om en sådan specificeras i flygkontrollerns manual).</li><li>Stäng av strömmen.</li><li>Ta bort BOOT-byglingen.</li><li>Slå på strömmen (aktivitets-LED:en ska blinka).</li><li>Anslut på vanligt sätt.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Lämna firmware-uppdaterare"
@@ -2526,32 +2674,42 @@
     "firmwareFlasherFirmwareLocalLoaded": {
         "message": "Laddade lokal firmware: ($1 bytes)"
     },
+    "firmwareFlasherFirmwareOnlineLoaded": {
+        "message": "Laddade online-firmware: ($1 bytes)"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX-filen verkar vara korrupt"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
-        "message": "<span class=\"message-positive\">Remote-firmware laddad, klar att uppdatera<\/span>"
+        "message": "<span class=\"message-positive\">Remote-firmware laddad, klar att uppdatera</span>"
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Misslyckades med att ladda remote-firmware"
     },
+    "firmwareFlasherFailedToLoadUnifiedConfig": {
+        "message": "Misslyckades med att ladda fjärrkonfiguration för {{remote_file}}"
+    },
+    "firmwareFlasherLegacyLabel": {
+        "message": "{{target}} (Äldre)",
+        "description": "If we have a Unified target and a old style target available, we are labeling the older one"
+    },
     "firmwareFlasherNoFirmwareSelected": {
-        "message": "<b>Ingen firmware vald för laddning<\/b>"
+        "message": "<b>Ingen firmware vald för laddning</b>"
     },
     "firmwareFlasherNoValidPort": {
-        "message": "<span class=\"message-negative\">Välj en giltig seriell port<\/span>"
+        "message": "<span class=\"message-negative\">Välj en giltig seriell port</span>"
     },
     "firmwareFlasherWritePermissions": {
-        "message": "Du saknar <span class=\"message-negative\">skrivrättigheter<\/span> för den här filen"
+        "message": "Du saknar <span class=\"message-negative\">skrivrättigheter</span> för den här filen"
     },
     "firmwareFlasherFlashTrigger": {
-        "message": "Upptäckte: <strong>$1<\/strong> - initierar flashning vid anslutning"
+        "message": "Upptäckte: <strong>$1</strong> - initierar flashning vid anslutning"
     },
     "firmwareFlasherPreviousDevice": {
-        "message": "Upptäckte: <strong>$1<\/strong> - föregående enhet flashas fortfarande, plugga i och ur för att försöka igen"
+        "message": "Upptäckte: <strong>$1</strong> - föregående enhet flashas fortfarande, plugga i och ur för att försöka igen"
     },
     "ledStripHelp": {
-        "message": "Flygkontrollern kan styra färger och effekter på individuella LED:er på en remsa.<br \/> Konfigurera LED:er i rutnätet, konfigurera kabeldragningsordning, anslut sedan LED:er på farkosten i enlighet med positionerna i rutnätet. LED:er utan kabelordningsnummer kommer inte att sparas.<br \/> Dubbelklicka på en färg för att redigera HSV-värdena."
+        "message": "Flygkontrollern kan styra färger och effekter på individuella LED:er på en remsa.<br /> Konfigurera LED:er i rutnätet, konfigurera kabeldragningsordning, anslut sedan LED:er på farkosten i enlighet med positionerna i rutnätet. LED:er utan kabelordningsnummer kommer inte att sparas.<br /> Dubbelklicka på en färg för att redigera HSV-värdena."
     },
     "ledStripButtonSave": {
         "message": "Spara"
@@ -2585,7 +2743,7 @@
         "description": "In the LED STRIP, clear all leds"
     },
     "ledStripEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sparad<\/span>"
+        "message": "EEPROM <span class=\"message-positive\">sparad</span>"
     },
     "ledStripVtxOverlay": {
         "message": "VTX (använder vtx-frekvens för att bestämma färg)"
@@ -2723,7 +2881,7 @@
         "description": "One of the modes in Led Strip"
     },
     "ledStripWiringMode": {
-        "message": "Ledningsordningsläge",
+        "message": "Kabelordningsläge",
         "description": "One of the wiring modes in Led Strip"
     },
     "ledStripWiringClearControl": {
@@ -2735,7 +2893,7 @@
         "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripWiringMessage": {
-        "message": "LED:er utan ordningsnummer kommer inte att sparas.",
+        "message": "LED:er utan kabelordningsnummer kommer inte att sparas.",
         "description": "Message in the wiring modes in Led Strip"
     },
     "ledStripVtxFunction": {
@@ -2862,7 +3020,7 @@
         "message": "AUX 16"
     },
     "pidTuningBasic": {
-        "message": "Basic\/Acro"
+        "message": "Basic/Acro"
     },
     "pidTuningYawJumpPrevention": {
         "message": "Förhindrande av gir-hopp"
@@ -2877,13 +3035,13 @@
         "message": "Exponenten som används vid beräkning av RC Expo. I Betaflight-versioner före 3.0 är värdet satt till 3."
     },
     "pidTuningLevel": {
-        "message": "Angle\/Horizon"
+        "message": "Angle/Horizon"
     },
     "pidTuningAltitude": {
-        "message": "Barometer & Sonar\/Höjd"
+        "message": "Barometer & Sonar/Höjd"
     },
     "pidTuningMag": {
-        "message": "Magnetometer\/Riktning"
+        "message": "Magnetometer/Riktning"
     },
     "pidTuningGps": {
         "message": "GPS-navigering"
@@ -2912,6 +3070,58 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profiloberoende filterinställningar"
     },
+    "pidTuningSliderLowFiltering": {
+        "message": "Mindre filtrering",
+        "description": "Filter tuning slider low header"
+    },
+    "pidTuningSliderDefaultFiltering": {
+        "message": "Standardfiltrering",
+        "description": "Filter tuning slider default header"
+    },
+    "pidTuningSliderHighFiltering": {
+        "message": "Mer filtrering",
+        "description": "Filter tuning slider high header"
+    },
+    "pidTuningGyroFilterSlider": {
+        "message": "Gyrofiltermultiplikator:",
+        "description": "Gyro filter tuning slider label"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "D Term-filtermultiplikator:",
+        "description": "D Term filter tuning slider label"
+    },
+    "pidTuningSliderEnableButton": {
+        "message": "Aktivera reglage",
+        "description": "Button label for enabling sliders"
+    },
+    "pidTuningSliderLow": {
+        "message": "Låg",
+        "description": "Tuning Slider Low header"
+    },
+    "pidTuningSliderDefault": {
+        "message": "Standard",
+        "description": "Tuning Slider Default header"
+    },
+    "pidTuningSliderHigh": {
+        "message": "Hög",
+        "description": "Tuning Slider High header"
+    },
+    "pidTuningMasterSlider": {
+        "message": "Master-multiplikator:",
+        "description": "Master tuning slider label"
+    },
+    "pidTuningPDRatioSlider": {
+        "message": "PD-balans:",
+        "description": "PD balance tuning slider label"
+    },
+    "pidTuningPDGainSlider": {
+        "message": "P- och D-ökning:",
+        "description": "P and D gain tuning slider label"
+    },
+    "pidTuningResponseSlider": {
+        "message": "Spakresponsökning:",
+        "description": "Response tuning slider label"
+    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro lågpassfilter"
     },
@@ -2936,6 +3146,9 @@
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro lågpassfiltertyp 2"
     },
+    "pidTuningLowpassFilterHelp": {
+        "message": "Lågpassfiltren finns i två varianter: statiska och dynamiska. För ett förutbestämt lågpassfilternummer kan bara ett (statiskt eller dynamiskt) vara aktivt samtidigt. Det statiska filtret har ett Cutoff-värde som på något sätt definierar var filtret startar. Det dynamiska filtret sätter ett min- och ett maxvärde, som är Cutoff-omfånget. Denna Cutoff förflyttas från min till max samtidigt som styrspaken flyttas."
+    },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro bandspärrfilter"
     },
@@ -2954,8 +3167,38 @@
     "pidTuningNotchFilterHelp": {
         "message": "Bandspärrfiltret har ett centrum och en cutoff. Filtret är symmetriskt. Centrumfrekvensen är filtrets centrum och cutoff-frekvensen är där bandspärrfiltret börjar. Exempelvis så kommer en cutoff på 160 och centrum på 260 att ge ett omfång på 160-360Hz med mest försvagning kring centrum"
     },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Lågpassfiltren finns i två varianter: statiska och dynamiska. För ett förutbestämt lågpassfilternummer kan bara ett (statiskt eller dynamiskt) vara aktivt samtidigt. Det statiska filtret har ett Cutoff-värde som på något sätt definierar var filtret startar. Det dynamiska filtret sätter ett min- och ett maxvärde, som är Cutoff-omfånget. Denna Cutoff förflyttas från min till max samtidigt som styrspaken flyttas."
+    "pidTuningDynamicNotchFilterGroup": {
+        "message": "Dynamiskt bandspärrfilter"
+    },
+    "pidTuningDynamicNotchFilterHelp": {
+        "message": "Dynamiskt bandspärrfilter spårar motorernas högsta brusfrekvens och sätter ett eller två bandspärrfilter med centrum vid den frekvensen."
+    },
+    "pidTuningDynamicNotchFilterDisabledWarning": {
+        "message": "<strong>Observera:</strong> Det dynamiska bandspärrfiltret är avstängt. För att konfigurera och använda det, aktivera funktionen 'DYNAMIC_FILTER' i sektionen '$t(configurationFeatures.message)' under fliken '$t(tabConfiguration.message)'."
+    },
+    "pidTuningDynamicNotchRange": {
+        "message": "Dynamiskt bandspärrfilteromfång"
+    },
+    "pidTuningDynamicNotchWidthPercent": {
+        "message": "Dynamisk bandspärrviddsprocent"
+    },
+    "pidTuningDynamicNotchQ": {
+        "message": "Dynamisk bandspärr Q"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Dynamisk bandspärr Min Hz"
+    },
+    "pidTuningDynamicNotchRangeHelp": {
+        "message": "Den dynamiska bandspärren kan arbeta i tre frekvensomfång: LOW(80-330hz) för långsamt roterande quadar, som 6 tum eller större, MEDIUM(140-550hz) för en normal 5-tumsquad, HIGH(230-800hz) för snabbt roterande 2.5-3-tumsquadar. Alternativet AUTO väljer omfång utifrån värdet på den maximala cutoff-frekvensen på gyrons dynamiska lågpassfilter 1."
+    },
+    "pidTuningDynamicNotchWidthPercentHelp": {
+        "message": "Denna sätter vidden mellan två dynamiska bandspärrfilter. Om den sätts till 0 kommer det andra dynamiska bandspärrfiltret att avaktiveras och filterfördröjningen minskar, dock kan detta medföra ökade motortemperaturer."
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "Q-faktorn justerar hur snäva eller breda de dynamiska bandspärrfiltren är. Ett högre värde gör dem snävare och mer precisa, och ett lägre värde gör dem bredare. Ett riktigt lågt värde kommer att öka filterfördröjningen märkbart."
+    },
+    "pidTuningDynamicNotchMinHzHelp": {
+        "message": "Definierar den lägsta dynamiska bandspärrscentrumfrekvensen som den dynamiska bandspärren inte kan understiga."
     },
     "pidTuningFilterSettings": {
         "message": "Profilberoende filterinställningar"
@@ -3024,7 +3267,8 @@
         "message": "Begränsar ackumuleringen av I Term när snabba rörelser inträffar. Detta hjälper särskilt till med att reducera tillbakastuds vid slutet av rollar och andra snabba rörelser. Du kan välja vilka axlar detta ska aktiveras på, och om den snabba rörelsen ska upptäckas av gyron eller setpointen (spaken)."
     },
     "pidTuningItermRelaxAxes": {
-        "message": "Axlar:"
+        "message": "Axlar",
+        "description": "Iterm Relax Axes selection"
     },
     "pidTuningItermRelaxAxesOptionRP": {
         "message": "RP"
@@ -3039,13 +3283,18 @@
         "message": "RPY (endast ökning)"
     },
     "pidTuningItermRelaxType": {
-        "message": "Typ:"
+        "message": "Typ",
+        "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
         "message": "Gyro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
+    },
+    "pidTuningItermRelaxCutoff": {
+        "message": "Cutoff",
+        "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolut kontroll"
@@ -3069,22 +3318,22 @@
         "message": "Integrerad Gir"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">VARNING<\/span>: om du aktiverar denna funktion måste du justera GIR PID på lämpligt sätt. Mer information finns <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Integrated-Yaw\" target=\"_blank\">här<\/a>"
+        "message": "<span class=\"message-negative\">VARNING</span>: om du aktiverar denna funktion måste du justera GIR PID på lämpligt sätt. Mer information finns <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\">här</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrerad Gir är en funktion som korrigerar ett fundamentalt problem med quadstyrning: looping- och roll-axlarna styrs av tryckskillnader som genereras av propellrarna, men gir fungerar annorlunda. Integrerad Gir löser detta genom att integrera utdatat från gir-pid och sedan tillämpa det på mixern. Detta normaliserar pid-funktionen. Du kan nu justera den som de andra axlarna. Det kräver absolut kontroll eftersom inget I behövs med Integrerad Gir."
     },
     "configHelp2": {
-        "message": "Godtycklig styrkortsrotation i grader, för att möjliggöra montering sidledes \/ upp och ner \/ roterat etc. Vid användning av externa sensorer, använd sensorinriktning (Gyro, Acc, Mag) för att definiera sensorpositionen oberoende från styrkortsrotationen."
+        "message": "Godtycklig styrkortsrotation i grader, för att möjliggöra montering sidledes / upp och ner / roterat etc. Vid användning av externa sensorer, använd sensorinriktning (Gyro, Acc, Mag) för att definiera sensorpositionen oberoende från styrkortsrotationen."
     },
     "failsafeFeaturesHelpOld": {
-        "message": "Konfigurationen av Failsafe har förändrats kraftigt. Använd Betaflight <strong>v1.12.0+<\/strong> för att aktivera den förbättrade konfigurationspanelen."
+        "message": "Konfigurationen av Failsafe har förändrats kraftigt. Använd Betaflight <strong>v1.12.0+</strong> för att aktivera den förbättrade konfigurationspanelen."
     },
     "failsafePaneTitleOld": {
         "message": "Mottagar-failsafe"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Failsafe har två etapper. <strong>Etapp 1<\/strong> påbörjas när en flygkanal har ogiltig pulslängd, mottagaren rapporterar failsafe-läge eller om mottagaren inte får någon signal alls. Kanalens reservinställningar tillämpas på <span class=\"message-negative\">alla kanaler<\/span> och under en kort tidsperiod är det möjligt att återhämta från felläget. <strong>Etapp 2<\/strong> påbörjas när felläget kvarstår under längre tid än den konfigurerade väntetiden medan farkosten är <span class=\"message-negative\">aktiverad<\/span>. Alla kanaler kommer att behålla de tillämpade reservinställningarna om dessa inte övertrumfas av den valda proceduren.<br \/> <strong>Observera:<\/strong> Innan etapp 1 påbörjas kommer reservinställningar även att tillämpas på individuella AUX-kanaler som har ogiltiga pulser."
+        "message": "Failsafe har två etapper. <strong>Etapp 1</strong> påbörjas när en flygkanal har ogiltig pulslängd, mottagaren rapporterar failsafe-läge eller om mottagaren inte får någon signal alls. Kanalens reservinställningar tillämpas på <span class=\"message-negative\">alla kanaler</span> och under en kort tidsperiod är det möjligt att återhämta från felläget. <strong>Etapp 2</strong> påbörjas när felläget kvarstår under längre tid än den konfigurerade väntetiden medan farkosten är <span class=\"message-negative\">aktiverad</span>. Alla kanaler kommer att behålla de tillämpade reservinställningarna om dessa inte övertrumfas av den valda proceduren.<br /> <strong>Observera:</strong> Innan etapp 1 påbörjas kommer reservinställningar även att tillämpas på individuella AUX-kanaler som har ogiltiga pulser."
     },
     "failsafePulsrangeTitle": {
         "message": "Giltiga pulslängdsinställningar"
@@ -3102,13 +3351,13 @@
         "message": "Standardinställningar för kanaler"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "Dessa inställningar tillämpas på ogiltiga individuella AUX-kanaler eller på alla kanaler när etapp 1 påbörjas. <strong>Observera:<\/strong> värden sparas i steg om 25 μs, vilket innebär att mindre ändringar kommer att försvinna"
+        "message": "Dessa inställningar tillämpas på ogiltiga individuella AUX-kanaler eller på alla kanaler när etapp 1 påbörjas. <strong>Observera:</strong> värden sparas i steg om 25 μs, vilket innebär att mindre ändringar kommer att försvinna"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto<\/strong> innebär Roll, Looping och Gir i centerläge och Trottel låg. <strong>Hold<\/strong> innebär att det senaste mottagna giltiga värdet behålls"
+        "message": "<strong>Auto</strong> innebär Roll, Looping och Gir i centerläge och Trottel låg. <strong>Hold</strong> innebär att det senaste mottagna giltiga värdet behålls"
     },
     "failsafeChannelFallbackSettingsHold": {
-        "message": "<strong>Hold<\/strong> innebär att det senaste mottagna giltiga värdet behålls. <strong>Set<\/strong> innebär att värdet som anges här kommer att användas"
+        "message": "<strong>Hold</strong> innebär att det senaste mottagna giltiga värdet behålls. <strong>Set</strong> innebär att värdet som anges här kommer att användas"
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Etapp 2 - Inställningar"
@@ -3156,7 +3405,7 @@
         "message": "Nedstigningsavstånd (meter)"
     },
     "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Markhastighet (meter\/sekund)"
+        "message": "Markhastighet (meter/sekund)"
     },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Trottelminimum"
@@ -3186,7 +3435,7 @@
         "message": "Failsafe Stäng av-switch (konfigurera Failsafe i fliken Lägen)"
     },
     "failsafeKillSwitchHelp": {
-        "message": "Aktivera detta alternativ för att låta failsafe-switchen (fliken Lägen) fungera som en avstängningsswitch, så att den övertrumfar den valda failsafe-proceduren. <strong>Observera:<\/strong> Motoraktivering kan blockeras med failsafe-avstängningsswitchen i ON-position"
+        "message": "Aktivera detta alternativ för att låta failsafe-switchen (fliken Lägen) fungera som en avstängningsswitch, så att den övertrumfar den valda failsafe-proceduren. <strong>Observera:</strong> Motoraktivering kan blockeras med failsafe-avstängningsswitchen i ON-position"
     },
     "failsafeSwitchTitle": {
         "message": "Failsafe-switch"
@@ -3195,7 +3444,7 @@
         "message": "Failsafe-switchåtgärd"
     },
     "failsafeSwitchModeHelp": {
-        "message": "Detta alternativ avgör vad som händer när Failsafe aktiveras via en AUX-switch:<br\/><strong>Etapp 1<\/strong> aktiverar Failsafe Etapp 1. Detta kan användas om du vill simulera exakt vad som händer när signalen tappas.<br\/><strong>Etapp 2<\/strong> hoppar över Etapp 1 och aktiverar proceduren för Etapp 2 direkt<br\/><strong>Stäng av<\/strong> utför en omedelbar avaktivering (farkosten kommer att krascha)"
+        "message": "Detta alternativ avgör vad som händer när Failsafe aktiveras via en AUX-switch:<br/><strong>Etapp 1</strong> aktiverar Failsafe Etapp 1. Detta kan användas om du vill simulera exakt vad som händer när signalen tappas.<br/><strong>Etapp 2</strong> hoppar över Etapp 1 och aktiverar proceduren för Etapp 2 direkt<br/><strong>Stäng av</strong> utför en omedelbar avaktivering (farkosten kommer att krascha)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Etapp 1"
@@ -3210,7 +3459,7 @@
         "message": "Spara"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": "Firmware-uppdatering <span class=\"message-negative\">krävs<\/span>. Batteri\/Ampere\/Volt-konfiguration via API &lt; 1.33.0 (Betaflight utgåva &lt;= 3.17) stöds ej."
+        "message": "Firmware-uppdatering <span class=\"message-negative\">krävs</span>. Batteri/Ampere/Volt-konfiguration via API &lt; 1.33.0 (Betaflight utgåva &lt;= 3.17) stöds ej."
     },
     "powerBatteryVoltageMeterSource": {
         "message": "Spänningsmätnings-källa"
@@ -3240,7 +3489,7 @@
         "message": "ESC-Sensor"
     },
     "powerBatteryCurrentMeterTypeMsp": {
-        "message": "MSP-sensor\/OSD-slav"
+        "message": "MSP-sensor/OSD-slav"
     },
     "powerBatteryMinimum": {
         "message": "Minsta cellspänning"
@@ -3251,11 +3500,47 @@
     "powerBatteryWarning": {
         "message": "Varningsnivå för cellspänning"
     },
+    "powerCalibrationManagerButton": {
+        "message": "Kalibrering"
+    },
+    "powerCalibrationManagerTitle": {
+        "message": "Kalibreringshanterare"
+    },
+    "powerCalibrationManagerHelp": {
+        "message": "För att kalibrera, använd en multimeter för att mäta den faktiska spänningen / strömförbrukningen för din farkost (med ett batteri inkopplat), och ange värdena nedan. Klicka sedan [Calibrate], med samma batteri fortfarande inkopplat."
+    },
+    "powerCalibrationManagerNote": {
+        "message": "<strong>Observera:</strong> Före kalibrering av skalan, se till att divisor- och multiplikatorvärdena för spänning och offset för strömstyrka är korrekt angivna.<br>Om värdena lämnas kvar på 0 kommer kalibreringen inte att tillämpas.</br><strong>Kom ihåg att ta bort propellrarna innan ett batteri kopplas in!</strong>"
+    },
+    "powerCalibrationManagerWarning": {
+        "message": "<span class=\"message-negative\">Varning:</span> Batteriet <span class=\"message-negative\">är inte inkopplat</span> eller så är spännings- eller strömstyrkemätarkällorna <span class=\"message-negative\">inte korrekt angivna</span>. Se till att spänning och/eller strömstyrka visar ett värde över 0, annars går det inte att kalibrera med detta verktyg."
+    },
+    "powerCalibrationManagerSourceNote": {
+        "message": "<span class=\"message-negative\">Varning:</span> Spännings- och/eller strömstyrkemätarkällorna <strong>har ändrats men inte sparats.</strong> Ange korrekta mätarkällor och spara dem innan kalibrering påbörjas."
+    },
+    "powerCalibrationSave": {
+        "message": "Kalibrera"
+    },
+    "powerCalibrationApply": {
+        "message": "Tillämpa kalibrering"
+    },
+    "powerCalibrationDiscard": {
+        "message": "Överge kalibrering"
+    },
+    "powerCalibrationConfirmHelp": {
+        "message": "Nya kalibreringsskalor visas här. <br>Tillämpning av dem kommer att aktivera skalorna men <strong>kommer inte att spara dem.</strong></br>\n<br>Se till att de nya värdena för spänning och ström är korrekta när de sparats.</br>"
+    },
     "powerVoltageHead": {
         "message": "Spänningsmätare"
     },
     "powerVoltageValue": {
         "message": "$1 V"
+    },
+    "powerVoltageCalibration": {
+        "message": "Uppmätt spänning"
+    },
+    "powerVoltageCalibratedScale": {
+        "message": "Kalibrerad spänningsskala:"
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -3333,7 +3618,7 @@
         "message": "Skala"
     },
     "powerVoltageDivider": {
-        "message": "Divisionsvärde"
+        "message": "Divisorvärde"
     },
     "powerVoltageMultiplier": {
         "message": "Multiplikatorvärde"
@@ -3393,16 +3678,22 @@
         "message": "$1 mAh"
     },
     "powerAmperageScale": {
-        "message": "Skala [1\/10-dels mV\/A]"
+        "message": "Skala [1/10-dels mV/A]"
     },
     "powerAmperageOffset": {
         "message": "Offset [mA]"
+    },
+    "powerAmperageCalibration": {
+        "message": "Uppmätt strömstyrka"
+    },
+    "powerAmperageCalibratedScale": {
+        "message": "Kalibrerad strömstyrkeskala:"
     },
     "powerBatteryHead": {
         "message": "Batteri"
     },
     "powerStateHead": {
-        "message": "Kraftläge"
+        "message": "Strömläge"
     },
     "powerBatteryConnected": {
         "message": "Ansluten"
@@ -3420,7 +3711,7 @@
         "message": "mAh använt"
     },
     "powerBatteryAmperage": {
-        "message": "Amperestyrka"
+        "message": "Strömstyrka"
     },
     "powerBatteryCapacity": {
         "message": "Kapacitet (mAh)"
@@ -3429,13 +3720,13 @@
         "message": "OSD"
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Observera:<\/strong> OSD-förhandsvisningen visar kanske inte det faktiska teckensnittet som är installerat på flygkontrollern."
+        "message": "<strong>Observera:</strong> OSD-förhandsgranskningen kanske inte visar det typsnitt som finns installerat på flygkontrollern. Layouten för enskilda element kan se annorlunda ut när äldre versioner av firmwaren används - kontrollera utseendet genom dina goggles före flygning."
     },
     "osdSetupUnsupportedNote1": {
         "message": "Din flygkontroller svarar inte på OSD-kommandon. Detta innebär förmodligen att den inte har en integrerad BetaFlight-OSD."
     },
     "osdSetupUnsupportedNote2": {
-        "message": "Notera att vissa flygkontrollers har en inbyggd <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD<\/a> som kan flashas och konfigureras med <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>, dock kan MinimOSD inte konfigureras via detta gränssnitt."
+        "message": "Notera att vissa flygkontrollers har en inbyggd <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a> som kan flashas och konfigureras med <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, dock kan MinimOSD inte konfigureras via detta gränssnitt."
     },
     "osdSetupProfilesTitle": {
         "message": "OSD-profilnummer",
@@ -3450,7 +3741,11 @@
     },
     "osdSetupPreviewSelectProfileTitle": {
         "message": "Förhandsgranskning för",
-        "description": "Label of the selector for the OSD Profile in the preview"
+        "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
+    },
+    "osdSetupPreviewForTitle": {
+        "message": "En ändring av profilen eller teckensnittet här kommer INTE att ändra profilen eller teckensnittet i flygkontrollern, ändringen syns bara i förhandsgranskningsfönstret. Om du vill ändra dem måste du använda alternativet '$t(osdSetupSelectedProfileTitle.message)' eller knappen '$t(osdSetupFontManager.message)' för respektive ändring.",
+        "description": "Help content for the OSD profile and font PREVIEW"
     },
     "osdSetupSelectedProfileTitle": {
         "message": "Aktiv OSD-profil",
@@ -3464,14 +3759,35 @@
         "message": "OSD-profil {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
-    "osdSetupPreviewTitleTip": {
-        "message": "Visa eller dölj logo i förhandsvisningen. Detta ändrar inga inställningar i flygkontrollern."
+    "osdSetupPreviewSelectFontElement": {
+        "message": "Teckensnitt {{fontName}}",
+        "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupVideoFormatTitle": {
         "message": "Videoformat"
     },
+    "osdSetupVideoFormatOptionAuto": {
+        "message": "Auto",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionPal": {
+        "message": "PAL",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionNtsc": {
+        "message": "NTSC",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Enheter"
+    },
+    "osdSetupUnitsOptionImperial": {
+        "message": "Engelska mått",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionMetric": {
+        "message": "Metrisk",
+        "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
         "message": "Timers"
@@ -3497,6 +3813,10 @@
     "osdSetupFontPresetsSelector": {
         "message": "Välj förinställningar för teckensnitt:"
     },
+    "osdSetupFontPresetsSelectorCustomOption": {
+        "message": "Användardefinierat teckensnitt",
+        "description": "Option to show as selected when the user selects a custom local font"
+    },
     "osdSetupFontPresetsSelectorOr": {
         "message": "eller"
     },
@@ -3519,7 +3839,7 @@
         "message": "Måste innehålla gröna, svarta och vita bildpunkter"
     },
     "osdSetupCustomLogoInfoUploadHint": {
-        "message": "Klicka <b>$t(osdSetupUploadFont.message)<\/b> för att behålla den anpassade logon"
+        "message": "Klicka <b>$t(osdSetupUploadFont.message)</b> för att behålla den anpassade logon"
     },
     "osdSetupCustomLogoImageSizeError": {
         "message": "Ogiltig bildstorlek: {{width}}×{{height}} (förväntat $t(logoWidthPx)×$t(logoHeightPx))"
@@ -3529,6 +3849,12 @@
     },
     "osdSetupUploadFont": {
         "message": "Ladda upp teckensnitt"
+    },
+    "osdSetupUploadingFont": {
+        "message": "Laddar upp..."
+    },
+    "osdSetupUploadingFontEnd": {
+        "message": "Laddade upp alla {{length}} tecken till OSD"
     },
     "osdSetupSave": {
         "message": "Spara"
@@ -3548,260 +3874,686 @@
     "osdSetupCameraConnected": {
         "message": "Kamera ansluten"
     },
-    "osdSetupCameraConnectedValueYes": {
-        "message": "Ja"
-    },
-    "osdSetupCameraConnectedValueNo": {
-        "message": "Nej"
-    },
     "osdSetupResetText": {
         "message": "Återställ OSD till standardinställning"
     },
     "osdSetupButtonReset": {
         "message": "Återställ inställningar"
     },
+    "osdTextElementMainBattVoltage": {
+        "message": "Batterispänning",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementMainBattVoltage": {
         "message": "Ögonblicklig huvudbatterispänning (blinkar om larmtröskeln ej överskridits)"
+    },
+    "osdTextElementRssiValue": {
+        "message": "RSSI-värde",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
         "message": "Ögonblickligt RSSI-värde (blinkar om larmtröskeln ej överskridits)"
     },
+    "osdTextElementTimer": {
+        "message": "Timer",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementTimer": {
+        "message": "En flygtimer"
+    },
+    "osdTextElementThrottlePosition": {
+        "message": "Trottelposition",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementThrottlePosition": {
         "message": "Aktuellt trottelkanalvärde"
+    },
+    "osdTextElementCpuLoad": {
+        "message": "CPU-belastning",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCpuLoad": {
+        "message": "Aktuell CPU-belastning"
+    },
+    "osdTextElementVtxChannel": {
+        "message": "VTX-kanal",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementVtxChannel": {
+        "message": "Aktuell VTX-kanal och styrka"
+    },
+    "osdTextElementVoltageWarning": {
+        "message": "Batterispänningsvarning",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementVoltageWarning": {
+        "message": "Visar en varning när spänningen understiger larmvärdet"
+    },
+    "osdTextElementArmed": {
+        "message": "Aktiverad",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementArmed": {
         "message": "Textmeddelande vid motoraktivering"
     },
+    "osdTextElementDisarmed": {
+        "message": "Inaktiverad",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementDisarmed": {
         "message": "Textmeddelande vid motoravaktivering"
+    },
+    "osdTextElementCrosshairs": {
+        "message": "Hårkors",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementCrosshairs": {
         "message": "Hårkors för skärmens mittpunkt"
     },
+    "osdTextElementArtificialHorizon": {
+        "message": "Artificiell horisont",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementArtificialHorizon": {
         "message": "Grafisk artificiell horisontindikator"
+    },
+    "osdTextElementHorizonSidebars": {
+        "message": "Sidopaneler för artificiell horisont",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementHorizonSidebars": {
         "message": "Staplar runt grafisk artificiell horisontindikator"
     },
+    "osdTextElementCurrentDraw": {
+        "message": "Aktuell batteriförbrukning",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementCurrentDraw": {
         "message": "Ögonblicklig aktuell batteriförbrukning"
+    },
+    "osdTextElementMahDrawn": {
+        "message": "Batteriets aktuella mAh-förbrukning",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementMahDrawn": {
         "message": "Total använd batterikapacitet"
     },
+    "osdTextElementCraftName": {
+        "message": "Farkostnamn",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementCraftName": {
         "message": "Farkostnamnet som det angivits i Konfigurationsfliken"
     },
-    "osdDescElementDisplayName": {
-        "message": "Visningsnamnet som det har satts med cli-kommandot \"display_name\""
+    "osdTextElementAltitude": {
+        "message": "Höjd",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementAltitude": {
         "message": "Aktuell höjd (blinkar om larmtröskeln överskridits)"
     },
+    "osdTextElementOnTime": {
+        "message": "Aktiv tid",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementOnTime": {
         "message": "Total tid farkosten varit påslagen"
+    },
+    "osdTextElementFlyTime": {
+        "message": "Flygtid",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementFlyTime": {
         "message": "Total tid farkosten har varit aktiverad i aktuell strömcykel (blinkar om larmtröskeln överskridits)"
     },
+    "osdTextElementFlyMode": {
+        "message": "Flygläge",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementFlyMode": {
         "message": "Aktuellt flygläge"
+    },
+    "osdTextElementGPSSpeed": {
+        "message": "GPS-hastighet",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSSpeed": {
         "message": "Hastighet enligt GPS"
     },
+    "osdTextElementGPSSats": {
+        "message": "GPS-satelliter",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementGPSSats": {
         "message": "Antal satelliter för GPS-fix"
     },
+    "osdTextElementGPSLon": {
+        "message": "GPS-longitud",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementGPSLon": {
-        "message": "GPS-longitud"
+        "message": "GPS longitudkoordinat"
+    },
+    "osdTextElementGPSLat": {
+        "message": "GPS-latitud",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLat": {
-        "message": "GPS-latitud"
+        "message": "GPS latitudkoordinat"
+    },
+    "osdTextElementDebug": {
+        "message": "Felsökning",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementDebug": {
         "message": "Felsökningsvariabler"
     },
+    "osdTextElementPIDRoll": {
+        "message": "PID roll",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementPIDRoll": {
         "message": "Roll-axel PID-ökningar"
+    },
+    "osdTextElementPIDPitch": {
+        "message": "PID looping",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDPitch": {
         "message": "Looping-axel PID-ökningar"
     },
+    "osdTextElementPIDYaw": {
+        "message": "PID gir",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementPIDYaw": {
         "message": "Gir-axel PID-ökningar"
+    },
+    "osdTextElementPower": {
+        "message": "Ström",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementPower": {
         "message": "Ögonblicklig elektrisk ström-konsumtion"
     },
+    "osdTextElementPIDRateProfile": {
+        "message": "Profil: PID och rate",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementPIDRateProfile": {
         "message": "Numerisk visning av aktiva PID- och rate-profiler"
+    },
+    "osdTextElementBatteryWarning": {
+        "message": "Batterivarning",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementBatteryWarning": {
         "message": "Varningstext som visas när batteriets spänning sjunker under varningströskeln"
     },
+    "osdTextElementAvgCellVoltage": {
+        "message": "Genomsnittlig battericellspänning",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementAvgCellVoltage": {
-        "message": "Genomsnittlig cellspänning (full batterispänning \/ antal celler)"
+        "message": "Genomsnittlig cellspänning (full batterispänning / antal celler)"
+    },
+    "osdTextElementPitchAngle": {
+        "message": "Angle: looping",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementPitchAngle": {
         "message": "Numerisk looping-vinkel i grader"
     },
+    "osdTextElementRollAngle": {
+        "message": "Angle: roll",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementRollAngle": {
         "message": "Numerisk roll-vinkel i grader"
+    },
+    "osdTextElementMainBattUsage": {
+        "message": "Batteriförbrukning",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattUsage": {
         "message": "Grafisk representation av batterianvändning"
     },
+    "osdTextElementArmedTime": {
+        "message": "Timer: aktiverad tid",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementArmedTime": {
         "message": "Tid sedan farkosten senast aktiverades"
     },
-    "osdDescElementWarnings": {
-        "message": "Larm (t ex lågt batteri), varningar (t ex aktiveringshinder, kritiskt lågt batteri) och visuell ljudsignal (4 blinkande asterisker)."
-    },
-    "osdDescElementEscTemperature": {
-        "message": "Temperatur enligt ESC-telemetri"
-    },
-    "osdDescElementEscRpm": {
-        "message": "Varvtal enligt ESC-telemetri"
-    },
-    "osdDescElementEscRpmFreq": {
-        "message": "RPM-frekvens enligt ESC-telemetri"
-    },
-    "osdDescElementRtcDateTime": {
-        "message": "Datum \/ tid från realtidsklocka"
-    },
-    "osdDescElementAdjustmentRange": {
-        "message": "Inställning och värde för justeringsområde som är aktivt nu"
+    "osdTextElementHomeDirection": {
+        "message": "Riktning hem",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementHomeDirection": {
         "message": "Pil som visar riktning till hemposition"
     },
+    "osdTextElementHomeDistance": {
+        "message": "Distans hem",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementHomeDistance": {
         "message": "Avstånd till hemposition (i fot eller meter baserat på enhetssysteminställning)"
+    },
+    "osdTextElementNumericalHeading": {
+        "message": "Riktning numeriskt",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementNumericalHeading": {
         "message": "Numerisk avläsning av aktuell riktning i grader"
     },
+    "osdTextElementNumericalVario": {
+        "message": "Numerisk vario",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementNumericalVario": {
         "message": "Numerisk avläsning av vertikal hastighet (i fot eller meter baserat på enhetssysteminställning)"
+    },
+    "osdTextElementCompassBar": {
+        "message": "Kompassnål",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementCompassBar": {
         "message": "Grafisk kompass som visar aktuell riktning"
     },
-    "osdDescElementFlipArrow": {
-        "message": "Pil som visar vilken motorsida som pekar uppåt i sköldpaddsläge (turtle mode)"
+    "osdTextElementWarnings": {
+        "message": "Varningar",
+        "description": "One of the elements of the OSD"
     },
-    "osdDescElementLinkQuality": {
-        "message": "Alternativ indikator för 'länkkvalitet' baserat på bildförlust - använd med försiktighet"
+    "osdDescElementWarnings": {
+        "message": "Larm (t ex lågt batteri), varningar (t ex aktiveringshinder, kritiskt lågt batteri) och visuell ljudsignal (4 blinkande asterisker)."
     },
-    "osdDescElementFlightDist": {
-        "message": "Avverkad distans under denna flygning."
+    "osdTextElementEscTemperature": {
+        "message": "ESC-temperatur",
+        "description": "One of the elements of the OSD"
     },
-    "osdDescElementStickOverlayLeft": {
-        "message": "Överlagring för vänster spakposition."
+    "osdDescElementEscTemperature": {
+        "message": "Temperatur enligt ESC-telemetri"
     },
-    "osdDescElementStickOverlayRight": {
-        "message": "Överlagring för höger spakposition."
+    "osdTextElementEscRpm": {
+        "message": "ESC RPM",
+        "description": "One of the elements of the OSD"
     },
-    "osdDescElementTimer1": {
-        "message": "Visar värdet på timer 1"
+    "osdDescElementEscRpm": {
+        "message": "Varvtal enligt ESC-telemetri"
     },
-    "osdDescElementTimer2": {
-        "message": "Visar värdet på timer 2"
+    "osdTextElementRemaningTimeEstimate": {
+        "message": "Timer: uppskattad kvarvarande tid",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementRemaningTimeEstimate": {
         "message": "Uppskattad återstående flygtid"
     },
-    "osdDescElementUnknown": {
-        "message": "Okänt element (detaljer tillkommer i en kommande utgåva)"
+    "osdTextElementRtcDateTime": {
+        "message": "RTC datum och tid",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRtcDateTime": {
+        "message": "Datum / tid från realtidsklocka"
+    },
+    "osdTextElementAdjustmentRange": {
+        "message": "Justeringsintervall",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementAdjustmentRange": {
+        "message": "Inställning och värde för justeringsområde som är aktivt nu"
+    },
+    "osdTextElementTimer1": {
+        "message": "Timer 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementTimer1": {
+        "message": "Visar värdet på timer 1"
+    },
+    "osdTextElementTimer2": {
+        "message": "Timer 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementTimer2": {
+        "message": "Visar värdet på timer 2"
+    },
+    "osdTextElementCoreTemperature": {
+        "message": "Kärntemperatur",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementCoreTemperature": {
         "message": "Temperatur på STM32 MCU-kärna"
     },
+    "osdTextAntiGravity": {
+        "message": "Antigravitation",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescAntiGravity": {
         "message": "Aktiverar en indikator när anti-gravity är påslagen"
+    },
+    "osdTextGForce": {
+        "message": "G-kraft",
+        "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
         "message": "Visar hur stor G-kraft farkosten utsätts för"
     },
+    "osdTextElementMotorDiag": {
+        "message": "Motordiagnostik",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementMotorDiag": {
         "message": "Visar ett diagram över utmatningen från respektive motor"
+    },
+    "osdTextElementLogStatus": {
+        "message": "Blackbox loggstatus",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementLogStatus": {
         "message": "Blackbox-nummer och varningar"
     },
+    "osdTextElementFlipArrow": {
+        "message": "Kraschflipp-pil",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementFlipArrow": {
+        "message": "Pil som visar vilken motorsida som pekar uppåt i sköldpaddsläge (turtle mode)"
+    },
+    "osdTextElementLinkQuality": {
+        "message": "Länkkvalitet",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementLinkQuality": {
+        "message": "Alternativ indikator för 'länkkvalitet' baserat på bildförlust - använd med försiktighet"
+    },
+    "osdTextElementFlightDist": {
+        "message": "Flygdistans",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementFlightDist": {
+        "message": "Avverkad distans under denna flygning."
+    },
+    "osdTextElementStickOverlayLeft": {
+        "message": "Spak-överlagring vänster",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementStickOverlayLeft": {
+        "message": "Överlagring för vänster spakposition."
+    },
+    "osdTextElementStickOverlayRight": {
+        "message": "Spak-överlagring höger",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementStickOverlayRight": {
+        "message": "Överlagring för höger spakposition."
+    },
+    "osdTextElementDisplayName": {
+        "message": "Visningsnamn",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDisplayName": {
+        "message": "Visningsnamnet som det har satts med cli-kommandot \"display_name\""
+    },
+    "osdTextElementEscRpmFreq": {
+        "message": "ESC RPM-frekvens",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementEscRpmFreq": {
+        "message": "RPM-frekvens enligt ESC-telemetri"
+    },
+    "osdTextElementRateProfileName": {
+        "message": "Profil: Rateprofilnamn",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRateProfileName": {
+        "message": "Visar namn på aktuell rate-profil"
+    },
+    "osdTextElementPidProfileName": {
+        "message": "Profil: PID-profilnamn",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPidProfileName": {
+        "message": "Visar namn på aktuell PID-profil"
+    },
+    "osdTextElementOsdProfileName": {
+        "message": "Profil: OSD-profilnamn",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementOsdProfileName": {
+        "message": "OSD-profilnamn som det satts i CLI-variablerna \"osd_profile_1_name\", \"osd_profile_2_name\" och \"osd_profile_3_name\""
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "RSSI dBm-värde",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Värde i dBm för RSSI-signalen, om tillgänglig"
+    },
+    "osdTextElementUnknown": {
+        "message": "Okänd $1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementUnknown": {
+        "message": "Okänt element (detaljer tillkommer i en kommande utgåva)"
+    },
+    "osdTextStatMaxSpeed": {
+        "message": "Maxhastighet",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMaxSpeed": {
         "message": "Högsta registrerade hastighet"
+    },
+    "osdTextStatMinBattery": {
+        "message": "Minsta batterispänning",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinBattery": {
         "message": "Lägsta registrerade huvudbatterispänning"
     },
+    "osdTextStatMinRssi": {
+        "message": "RSSI-minimum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMinRssi": {
         "message": "Lägsta registrerade RSSI"
+    },
+    "osdTextStatMaxCurrent": {
+        "message": "Maximal aktuell batteriförbrukning",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxCurrent": {
         "message": "Högsta registrerade stömmuttag"
     },
+    "osdTextStatUsedMah": {
+        "message": "Batteriförbrukning i mAh",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatUsedMah": {
         "message": "Använd batterikapacitet"
+    },
+    "osdTextStatMaxAltitude": {
+        "message": "Maximal höjd",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxAltitude": {
         "message": "Högsta registrerade höjd"
     },
+    "osdTextStatBlackbox": {
+        "message": "Blackbox-användning",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatBlackbox": {
         "message": "Procentandel av total blackbox-användning"
+    },
+    "osdTextStatEndBattery": {
+        "message": "Slutlig batterispänning",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEndBattery": {
         "message": "Batterispänning vid tiden för avaktivering"
     },
+    "osdTextStatFlyTime": {
+        "message": "Total flygtid",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatFlyTime": {
         "message": "Total tid farkosten har varit aktiverad i aktuell strömcykel"
+    },
+    "osdTextStatArmedTime": {
+        "message": "Flygtid efter senaste aktivering",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatArmedTime": {
         "message": "Tid sedan farkosten senast aktiverades"
     },
+    "osdTextStatMaxDistance": {
+        "message": "Maximal distans hem",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMaxDistance": {
         "message": "Största avstånd från hemposition"
+    },
+    "osdTextStatBlackboxLogNumber": {
+        "message": "Blackbox-nummer",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackboxLogNumber": {
         "message": "Logg-nummer för denna flygnings Blackbox-logg"
     },
+    "osdTextStatTimer1": {
+        "message": "Timer 1",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatTimer1": {
         "message": "Värdet på timer 1 vid tiden för avaktivering"
+    },
+    "osdTextStatTimer2": {
+        "message": "Timer 2",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer2": {
         "message": "Värdet på timer 2 vid tiden för avaktivering"
     },
+    "osdTextStatRtcDateTime": {
+        "message": "RTC datum och tid",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatRtcDateTime": {
         "message": "Datum och tid från realtidsklocka"
+    },
+    "osdTextStatBattery": {
+        "message": "Batterispänning",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBattery": {
         "message": "Batterispänning i realtid"
     },
+    "osdTextStatGForce": {
+        "message": "Maximal G-kraft",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatGForce": {
         "message": "Den maximala G-kraft farkosten utsatts för"
+    },
+    "osdTextStatEscTemperature": {
+        "message": "Högsta ESC-temperatur",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEscTemperature": {
         "message": "Maximal ESC-temperatur"
     },
+    "osdTextStatEscRpm": {
+        "message": "Högsta ESC-varvtal",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatEscRpm": {
         "message": "Maximalt ESC-varvtal"
+    },
+    "osdTextStatMinLinkQuality": {
+        "message": "Lägsta länkkvalitet",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinLinkQuality": {
         "message": "Minimivärde för den alternativa indikatorn för 'länkkvalitet' baserat på bildförlust"
     },
+    "osdTextStatFlightDistance": {
+        "message": "Flygdistans",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatFlightDistance": {
         "message": "Total färdsträcka under flygningen"
     },
+    "osdTextStatMaxFFT": {
+        "message": "FFT-maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMaxFFT": {
         "message": "Toppvärde FFT-frekvens"
+    },
+    "osdTextStatTotalFlights": {
+        "message": "Totalt antal flygningar",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTotalFlights": {
+        "message": "Totalt antal flygningar"
+    },
+    "osdTextStatTotalFlightTime": {
+        "message": "Total flygtid",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTotalFlightTime": {
+        "message": "Total flygtid"
+    },
+    "osdTextStatTotalFlightDistance": {
+        "message": "Total flygdistans",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTotalFlightDistance": {
+        "message": "Total färdsträcka"
+    },
+    "osdTextStatMinRssiDbm": {
+        "message": "RSSI dBm-minimum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRssiDbm": {
+        "message": "Minsta RSSI dBm-värde"
+    },
+    "osdTextStatUnknown": {
+        "message": "Okänd $1",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUnknown": {
+        "message": "Okänt element (detaljer tillkommer i en kommande utgåva)"
+    },
+    "osdDescribeFontVersion1": {
+        "message": "Teckensnittsversion: 1 (Betaflight 4.0 eller äldre)"
+    },
+    "osdDescribeFontVersion2": {
+        "message": "Teckensnittsversion: 2 (Betaflight 4.1 eller nyare)"
+    },
+    "osdDescribeFontVersionCUSTOM": {
+        "message": "Typsnittsversion: från användaren"
     },
     "osdTimerSource": {
         "message": "Källa:"
     },
     "osdTimerSourceTooltip": {
-        "message": "Välj timer-källa, detta styr varaktigheten\/händelsen som timern mäter"
+        "message": "Välj timer-källa, detta styr varaktigheten/händelsen som timern mäter"
+    },
+    "osdTimerSourceOptionOnTime": {
+        "message": "Aktiv tid",
+        "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
+    },
+    "osdTimerSourceOptionTotalArmedTime": {
+        "message": "Total aktiveringstid",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+    },
+    "osdTimerSourceOptionLastArmedTime": {
+        "message": "Senast aktiverad",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+    },
+    "osdTimerSourceOptionOnArmTime": {
+        "message": "Aktiv/aktiverad tid",
+        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Precision:"
@@ -3809,53 +4561,153 @@
     "osdTimerPrecisionTooltip": {
         "message": "Välj timer-precision, detta styr vilken precision tiden rapporteras i"
     },
+    "osdTimerPrecisionOptionSecond": {
+        "message": "Sekund",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
+    "osdTimerPrecisionOptionHundredth": {
+        "message": "Hundradel",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
+    "osdTimerPrecisionOptionTenth": {
+        "message": "Tiondel",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
     "osdTimerAlarm": {
         "message": "Larm:"
     },
     "osdTimerAlarmTooltip": {
         "message": "Välj tidslarmets tröskel i minuter, när tiden överskrider detta värde kommer OSD-elementet att blinka, sätt denna till 0 för att inaktivera larmet"
     },
-    "osdWarningUnknown": {
-        "message": "Okänd varning (detaljer tillkommer i en kommande utgåva)"
+    "osdTimerAlarmOptionRssi": {
+        "message": "RSSI",
+        "description": "Text of the RSSI alarm"
+    },
+    "osdTimerAlarmOptionCapacity": {
+        "message": "Kapacitet",
+        "description": "Text of the capacity alarm"
+    },
+    "osdTimerAlarmOptionAltitude": {
+        "message": "Höjd",
+        "description": "Text of the altitude alarm"
+    },
+    "osdWarningTextArmingDisabled": {
+        "message": "Aktivering avstängd",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningArmingDisabled": {
         "message": "Rapporterar den viktigaste orsaken till att motoraktivering inte är tillåten"
     },
+    "osdWarningTextBatteryNotFull": {
+        "message": "Batteri ej fulladdat",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningBatteryNotFull": {
         "message": "Varnar när ett ej fullt laddat batteri ansluts"
+    },
+    "osdWarningTextBatteryWarning": {
+        "message": "Batterivarning",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningBatteryWarning": {
         "message": "Varnar när batteriets spänning sjunker under varningströskeln"
     },
+    "osdWarningTextBatteryCritical": {
+        "message": "Batterinivå kritisk",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningBatteryCritical": {
         "message": "Varnar när batteriets spänning sjunker under minsta genomsnittliga cellspänning"
+    },
+    "osdWarningTextVisualBeeper": {
+        "message": "Visuell signal",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningVisualBeeper": {
         "message": "Visar en visualisering av ljudsignalen (visas som 4 asterisker)"
     },
+    "osdWarningTextCrashFlipMode": {
+        "message": "Kraschflipp-läge",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningCrashFlipMode": {
-        "message": "Varnar när \"flippa över efter krasch\"-läge aktiveras"
+        "message": "Varnar när kraschflipp-läge aktiveras"
+    },
+    "osdWarningTextEscFail": {
+        "message": "ESC-avbrott",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningEscFail": {
-        "message": "Räknar upp en lista med de ESC:er\/motorer som fallerar (RPM eller temperatur är utanför konfigurerade tröskelvärden)"
+        "message": "Räknar upp en lista med de ESC:er/motorer som fallerar (RPM eller temperatur är utanför konfigurerade tröskelvärden)"
+    },
+    "osdWarningTextCoreTemperature": {
+        "message": "Kärntemperatur",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCoreTemperature": {
         "message": "Varnar när MCU-kärntemperaturen överskrider ett konfigurerat tröskelvärde"
     },
+    "osdWarningTextRcSmoothingFailure": {
+        "message": "RC-utjämning misslyckad",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningRcSmoothingFailure": {
         "message": "Varnar när initiering av rc-utjämning misslyckades"
+    },
+    "osdWarningTextFailsafe": {
+        "message": "Failsafe",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningFailsafe": {
         "message": "Varnar när Failsafe inträffar"
     },
+    "osdWarningTextLaunchControl": {
+        "message": "Launch control",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningLaunchControl": {
         "message": "Varnar när Launch Control-läget aktiveras"
+    },
+    "osdWarningTextGpsRescueUnavailable": {
+        "message": "GPS-räddning ej tillgänglig",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueUnavailable": {
         "message": "Varnar när GPS-räddning inte är tillgänglig och inte kan aktiveras"
     },
+    "osdWarningTextGpsRescueDisabled": {
+        "message": "GPS-räddning avstängd",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningGpsRescueDisabled": {
         "message": "Varnar när GPS-räddning är avstängd"
+    },
+    "osdWarningTextRSSI": {
+        "message": "RSSI",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRSSI": {
+        "message": "Varnar när RSSI underskrider larminställning"
+    },
+    "osdWarningTextLinkQuality": {
+        "message": "Länkkvalitet",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLinkQuality": {
+        "message": "Varnar när länkkvaliteten underskrider larminställning"
+    },
+    "osdWarningTextRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRssiDbm": {
+        "message": "Varnar när RSSI dBm-värdet understiger larminställning"
+    },
+    "osdWarningTextUnknown": {
+        "message": "Okänd $1"
+    },
+    "osdWarningUnknown": {
+        "message": "Okänd varning (detaljer tillkommer i en kommande utgåva)"
     },
     "osdSectionHelpElements": {
         "message": "Aktivera eller avaktivera OSD-element."
@@ -3882,10 +4734,202 @@
         "message": "OSD-inställningar sparade"
     },
     "osdWritePermissions": {
-        "message": "Du har inga <span class=\"message-negative\">skrivrättigheter<\/span> för den här filen"
+        "message": "Du har inga <span class=\"message-negative\">skrivrättigheter</span> för den här filen"
     },
     "osdButtonSaved": {
         "message": "Sparat"
+    },
+    "vtxFrequencyChannel": {
+        "message": "Ange frekvens direkt",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxSelectedMode": {
+        "message": "Valt läge",
+        "description": "Title for the actual mode header of the VTX"
+    },
+    "vtxActualState": {
+        "message": "Aktuella värden",
+        "description": "Title for the actual values header of the VTX"
+    },
+    "vtxType": {
+        "message": "VTX-typ",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxType_0": {
+        "message": "Stöds inte",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_1": {
+        "message": "RTC607",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_3": {
+        "message": "SmartAudio",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_255": {
+        "message": "Okänt",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxBand": {
+        "message": "Band",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxBandHelp": {
+        "message": "Här kan du välja VTX-band",
+        "description": "Help text for the band field of the VTX tab"
+    },
+    "vtxBand_0": {
+        "message": "Ingen",
+        "description": "Text of one of the options for the band field of the VTX tab"
+    },
+    "vtxBand_X": {
+        "message": "Band {{bandName}}",
+        "description": "Text of one of the options for the band field of the VTX tab"
+    },
+    "vtxChannel_0": {
+        "message": "Ingen",
+        "description": "Text of one of the options for the channel field of the VTX tab"
+    },
+    "vtxChannel_X": {
+        "message": "Kanal {{channelName}}",
+        "description": "Text of one of the options for the channel field of the VTX tab"
+    },
+    "vtxPower_0": {
+        "message": "Ingen",
+        "description": "Text of one of the options for the power field of the VTX tab"
+    },
+    "vtxPower_X": {
+        "message": "Nivå {{powerLevel}}",
+        "description": "Text of one of the options for the power field of the VTX tab"
+    },
+    "vtxChannel": {
+        "message": "Kanal",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxChannelHelp": {
+        "message": "Här kan du välja VTX-kanal",
+        "description": "Help text for the channel field of the VTX tab"
+    },
+    "vtxFrequency": {
+        "message": "Frekvens",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxFrequencyHelp": {
+        "message": "Här kan du välja VTX-frekvens om den stöds",
+        "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxDeviceReady": {
+        "message": "Enhet redo",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPower": {
+        "message": "Ström",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPowerHelp": {
+        "message": "Detta är den ström som valts för VTX. Den kan modifieras om $t(vtxPitMode.message) eller $t(vtxLowPowerDisarm.message) är aktiverat",
+        "description": "Help text for the power field of the VTX tab"
+    },
+    "vtxPitMode": {
+        "message": "Depåläge",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPitModeFrequency": {
+        "message": "Depålägesfrekvens",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPitModeFrequencyHelp": {
+        "message": "Den frekvens där depåläget ändras om aktiverat.",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxLowPowerDisarm": {
+        "message": "Avaktivering vid låg ström",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxLowPowerDisarmOption_0": {
+        "message": "Av",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxLowPowerDisarmOption_1": {
+        "message": "På",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxLowPowerDisarmOption_2": {
+        "message": "På till första aktivering",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxTable": {
+        "message": "VTX-tabell",
+        "description": "Text of the header of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevels": {
+        "message": "Antal strömnivåer",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsHelp": {
+        "message": "Detta bestämmer antalet strömnivåer som stöds av din VTX",
+        "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsValue": {
+        "message": "Värde",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsLabel": {
+        "message": "Etikett",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBands": {
+        "message": "Antal band",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableChannels": {
+        "message": "Antal kanaler per band",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleName": {
+        "message": "Namn",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleLetter": {
+        "message": "Bokstav",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleFactory": {
+        "message": "Fabriks",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxSavedFileOk": {
+        "message": "VTX-konfigureringsfil <span class=\"message-positive\">sparad</span>",
+        "description": "Message in the GUI log when the VTX Config file is saved"
+    },
+    "vtxSavedFileKo": {
+        "message": "<span class=\"message-negative\">Fel</span> medan VTX-konfigurationsfilen sparades",
+        "description": "Message in the GUI log when the VTX Config file is saved"
+    },
+    "vtxLoadFileOk": {
+        "message": "VTX-konfigureringsfil <span class=\"message-positive\">laddad</span>",
+        "description": "Message in the GUI log when the VTX Config file is loaded"
+    },
+    "vtxLoadFileKo": {
+        "message": "<span class=\"message-negative\">Fel</span> medan VTX-konfigurationsfilen laddades",
+        "description": "Message in the GUI log when the VTX Config file is loaded"
+    },
+    "vtxButtonSaveFile": {
+        "message": "Spara till fil",
+        "description": "Save to file button in the VTX tab"
+    },
+    "vtxButtonLoadFile": {
+        "message": "Ladda från fil",
+        "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonSave": {
+        "message": "Spara",
+        "description": "Save button in the VTX tab"
+    },
+    "vtxButtonSaved": {
+        "message": "Sparat",
+        "description": "Saved action button in the VTX tab"
     },
     "mainHelpArmed": {
         "message": "Motoraktivering"
@@ -3897,10 +4941,10 @@
         "message": "Seriell länkstatus"
     },
     "configurationEscProtocol": {
-        "message": "ESC\/Motor-protokoll"
+        "message": "ESC/Motor-protokoll"
     },
     "configurationEscProtocolHelp": {
-        "message": "Välj ditt motorprotokoll.<br>Säkerställ att protokollet stöds av din ESC, denna information bör finnas på tillverkarens hemsida.<br><b>Var försiktig med att använda DSHOT900 och DSHOT1200 eftersom de stöds av relativt få ESC:er!<\/b>"
+        "message": "Välj ditt motorprotokoll.<br>Säkerställ att protokollet stöds av din ESC, denna information bör finnas på tillverkarens hemsida.<br><b>Var försiktig med att använda DSHOT900 och DSHOT1200 eftersom de stöds av relativt få ESC:er!</b>"
     },
     "configurationunsyndePwm": {
         "message": "Motor PWM-hastighet separerad från PID-hastighet"
@@ -3915,7 +4959,7 @@
         "message": "PID-loopfrekvens"
     },
     "configurationPidProcessDenomHelp": {
-        "message": "Maxfrekvensen för PID-loopen begränsas av den maximala frekvens som vald ESC \/ motorprotokoll kan skicka uppdateringar."
+        "message": "Maxfrekvensen för PID-loopen begränsas av den maximala frekvens som vald ESC / motorprotokoll kan skicka uppdateringar."
     },
     "configurationGyroUse32kHz": {
         "message": "Aktivera 32 kHz samplingsmode för gyro"
@@ -3966,7 +5010,7 @@
         "message": "Strömsensor"
     },
     "configurationCurrentScale": {
-        "message": "Skala utspänningen till milliampere [1\/10-dels mV\/A]"
+        "message": "Skala utspänningen till milliampere [1/10-dels mV/A]"
     },
     "configurationCurrentOffset": {
         "message": "Offset i millivolt-steg"
@@ -3978,13 +5022,16 @@
         "message": "Profil"
     },
     "pidTuningProfileTip": {
-        "message": "Upp till 3 (2 för vissa kontrollers) olika pid-profiler kan lagras på flygkontrollern. Pid-profilerna inkluderar pid, d setpoint och angle\/horizon-inställningar på denna flik. Väl i fältet kan enkla spakkommandon (se instruktioner online) användas för att växla mellan profilerna."
+        "message": "Upp till 3 (2 för vissa kontrollers) olika pid-profiler kan lagras på flygkontrollern. Pid-profilerna inkluderar pid, d setpoint och angle/horizon-inställningar på denna flik. Väl i fältet kan enkla spakkommandon (se instruktioner online) användas för att växla mellan profilerna."
     },
     "pidTuningRateProfile": {
         "message": "Rate-profil"
     },
     "pidTuningRateProfileTip": {
         "message": "Upp till 3 olika rate-profiler per profil kan lagras på flygkontrollern. Rate-profilerna inkluderar inställningar för 'RC Rate', 'Rate', 'RC Expo', 'Throttle' och 'TPA'. Det går att att växla mellan rate-profiler under flygning, genom att konfigurera en 3-positionsswitch för 'Val av rate-profil' på fliken 'Justeringar'."
+    },
+    "pidTuningRateSetup": {
+        "message": "Basic/Acro-rates"
     },
     "pidTuningDelta": {
         "message": "Derivativ Metod"
@@ -3996,19 +5043,13 @@
         "message": "Mätning"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivativ från Fel<\/b> ger en mer direkt spakrespons och föredras oftast för racing.<br><br><b>Derivativ från Mätning<\/b> ger en mjukare spakrespons och är mer lämplig för freestyling"
+        "message": "<b>Derivativ från Fel</b> ger en mer direkt spakrespons och föredras oftast för racing.<br><br><b>Derivativ från Mätning</b> ger en mjukare spakrespons och är mer lämplig för freestyling"
     },
     "pidTuningPidControllerTip": {
-        "message": "<b>Legacy vs Betaflight (float):<\/b> PID-skalning och PID-logik är exakt samma. Omjustering behövs inte nödvändigtvis. Legacy är en äldre version som är en grundläggande PID-kontroller baserad på heltalsmatematik. Betaflight PID-kontroller använder flyttalsmatematik och har många nya funktioner som designats specifikt för multirotorapplikationer<br><b>Float vs Integer:<\/b>PID-skalning och PID-logik är exakt samma. Ingen omjustering behövs. F1-kort har ingen inbyggd FPU och flyttalsmatematik ökar belastningen på CPU:n. Heltalsmatematik ger bättre prestanda, men flyttalsmatematik kan ge något bättre precision."
+        "message": "<b>Legacy vs Betaflight (float):</b> PID-skalning och PID-logik är exakt samma. Omjustering behövs inte nödvändigtvis. Legacy är en äldre version som är en grundläggande PID-kontroller baserad på heltalsmatematik. Betaflight PID-kontroller använder flyttalsmatematik och har många nya funktioner som designats specifikt för multirotorapplikationer<br><b>Float vs Integer:</b>PID-skalning och PID-logik är exakt samma. Ingen omjustering behövs. F1-kort har ingen inbyggd FPU och flyttalsmatematik ökar belastningen på CPU:n. Heltalsmatematik ger bättre prestanda, men flyttalsmatematik kan ge något bättre precision."
     },
     "pidTuningFilterTip": {
-        "message": "<b>Gyro Soft Filter:<\/b> Lågpassfilter för gyro. Använd ett lägre värde för ökad filtrering.<br><b>D Term Filter:<\/b> Lågpassfilter för Dterm. Kan påverka D tuning. Använd ett lägre värde för ökad filtrering. <br><b>Gir-filter:<\/b> Filtrerar gir-output. Det kan hjälpa system med brus i gir-axeln."
-    },
-    "pidTuningPidTuningTip": {
-        "message": "<b>Proportionell:<\/b> En mycket stark motkraft märks vid alla försök att flytta multirotorn<br><b>Integral:<\/b> Ökar förmågan att hålla det initiala läget och minska avdrift, men ökar också fördröjningen för att återvända till initalt läge<br><b>Derivativ:<\/b> Ger en snabbare återhämtning från avvikelser, men ökar bruset<br><b>Rates och Expo<\/b>: Bestäm spakkänslan baserat på dessa parametrar. Använd grafen och live 3D-modellen för att hitta din favoritinställning för rate"
-    },
-    "pidTuningPidTuningTipFeedforward": {
-        "message": "<b>Proportionell:<\/b> En mycket stark motkraft märks vid alla försök att flytta multirotorn<br><b>Integration:<\/b> Ökar förmågan att hålla det initiala läget och minska avdrift, men ökar också fördröjningen för att återvända till initalt läge<br><b>Derivering:<\/b> Ger en snabbare återhämtning från avvikelser, men ökar brus<br><b>Framkoppling (Feedforward):<\/b><br> Normalt reagerar PID-kontrollern på avvikelsen. Framkoppling förutser avvikelsen baserat på spakens läge, och gör multirotorn mer responsiv.<b>Rates och Expo<\/b>: Bestäm spakkänslan baserat på dessa parametrar. Använd grafen och live 3D-modellen för att hitta din favoritinställning för rate"
+        "message": "<b>Gyro Soft Filter:</b> Lågpassfilter för gyro. Använd ett lägre värde för ökad filtrering.<br><b>D Term Filter:</b> Lågpassfilter för Dterm. Kan påverka D tuning. Använd ett lägre värde för ökad filtrering. <br><b>Gir-filter:</b> Filtrerar gir-output. Det kan hjälpa system med brus i gir-axeln."
     },
     "pidTuningRatesTip": {
         "message": "Testa olika rate-värden och se hur de påverkar spakkurvan"
@@ -4031,6 +5072,12 @@
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox loggningshastighet"
     },
+    "onboardLoggingDebugMode": {
+        "message": "Blackbox debugläge"
+    },
+    "onboardLoggingDebugModeUnknown": {
+        "message": "OKÄNT"
+    },
     "onboardLoggingSerialLogger": {
         "message": "Extern seriell loggenhet"
     },
@@ -4047,7 +5094,7 @@
         "message": "Masslagringsläge"
     },
     "onboardLoggingMscNote": {
-        "message": "Starta om i <strong>masslagringsenhets (MSC)<\/strong>-läge. När det aktiverats kommer datorn att identifiera styrkortets flash- eller SD-kort på flygkontrollern som en lagringsenhet, och tillåta nerladdning av loggfiler. Koppla ur och starta om din flygkontroller för att lämna masslagringsenhetsläget."
+        "message": "Starta om i <strong>masslagringsenhets (MSC)</strong>-läge. När det aktiverats kommer datorn att identifiera styrkortets flash- eller SD-kort på flygkontrollern som en lagringsenhet, och tillåta nerladdning av loggfiler. Koppla ur och starta om din flygkontroller för att lämna masslagringsenhetsläget."
     },
     "onboardLoggingRebootMscText": {
         "message": "Aktivera masslagringsenhets-läge"
@@ -4078,5 +5125,11 @@
     },
     "flashTab": {
         "message": "Uppdatera firmware"
+    },
+    "cliAutoComplete": {
+        "message": "Avancerad CLI AutoComplete"
+    },
+    "darkTheme": {
+        "message": "Använd mörkt färgtema"
     }
 }
