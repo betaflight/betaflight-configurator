@@ -3222,8 +3222,8 @@
         "message": "Sliders to adjust the quad flight characteristics (PID gains)<br><br>Master Multiplier: Raises or Lowers all the PID gains (above) holding the proportional difference between the gains.<br><br>PD Balance: Adjusts the balance (ratio \\ proportional difference) between the P and D terms ('the spring' [p-term] and 'shock absorber' [d-term]).<br><br>PD Gain: Raises or Lowers the P&D gains together - holding the ratio (balance) between the two - for more (or less) PID control authority.<br><br>Stick Response Gain: Raises or Lowers the FeedForward gains to control the stick response feel of the quad.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
-    "pidTuningSliderHighWarning": {
-        "message": "<span class=\"message-negative\">CAUTION</span>: Pushing sliders this high may cause flyaways, motor damage or unsafe craft behaviour. Please proceed with caution.",
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">CAUTION</span>: Current slider positions may cause flyaways, motor damage or unsafe craft behaviour. Please proceed with caution.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -3233,6 +3233,10 @@
     "pidTuningSliderEnableButton": {
         "message": "Enable Sliders",
         "description": "Button label for enabling sliders"
+    },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>Note:</strong> Sliders range is restricted because you are not in expert mode. This range should be suitable for most builds and beginners.",
+        "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
         "message": "Low",

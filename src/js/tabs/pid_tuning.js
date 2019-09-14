@@ -11,6 +11,7 @@ TABS.pid_tuning = {
     SETPOINT_WEIGHT_RANGE_HIGH: 20,
     SETPOINT_WEIGHT_RANGE_LEGACY: 2.54,
     activeSubtab: 'pid',
+    analyticsChanges: {},
 };
 
 TABS.pid_tuning.initialize = function (callback) {
@@ -1434,6 +1435,18 @@ TABS.pid_tuning.initialize = function (callback) {
             // filter and tuning sliders
             TuningSliders.initialize();
 
+            self.analyticsChanges = {};
+
+            // UNSCALED non expert slider constrain values
+            const NON_EXPERT_SLIDER_MAX = 1.25;
+            const NON_EXPERT_SLIDER_MIN = 0.7;
+
+            $('input[name="expertModeCheckbox"]').change(function() {
+                TuningSliders.setExpertMode($(this).is(':checked'));
+                TuningSliders.updatePidSlidersDisplay();
+                TuningSliders.updateFilterSlidersDisplay();
+            });
+
             $('#dMinSwitch').change(function() {
                 TuningSliders.setDMinFeatureEnabled($(this).is(':checked'));
                 // switch dmin and dmax values on dmin on/off if sliders available
@@ -1462,6 +1475,13 @@ TABS.pid_tuning.initialize = function (callback) {
                 } else {
                     slider.attr('step', 0.1);
                 }
+                if (!TuningSliders.expertMode) {
+                    if (slider.val() > NON_EXPERT_SLIDER_MAX) {
+                        slider.val(NON_EXPERT_SLIDER_MAX);
+                    } else if (slider.val() < NON_EXPERT_SLIDER_MIN) {
+                        slider.val(NON_EXPERT_SLIDER_MIN);
+                    }
+                }
                 const scaledValue = TuningSliders.scaleSliderValue(slider.val());
                 if (slider.is('#tuningMasterSlider')) {
                     TuningSliders.MasterSliderValue = scaledValue;
@@ -1473,6 +1493,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     TuningSliders.ResponseSliderValue = scaledValue;
                 }
                 TuningSliders.calculateNewPids();
+                self.analyticsChanges['PidTuningSliders'] = "On";
             });
             $('#tuningMasterSlider, #tuningPDRatioSlider, #tuningPDGainSlider, #tuningResponseSlider').mousedown(function() {
                 // adjust step for more smoothness above 1x on mousedown
@@ -1514,18 +1535,28 @@ TABS.pid_tuning.initialize = function (callback) {
                 if ($('input[id="useIntegratedYaw"]').is(':checked')) {
                     $('input[id="useIntegratedYaw"]').prop('checked', true).click();
                 }
+                self.analyticsChanges['PidTuningSliders'] = "On";
             });
 
             // filter slider inputs
             $('#tuningGyroFilterSlider, #tuningDTermFilterSlider').on('input', function() {
                 const slider = $(this);
+                if (!TuningSliders.expertMode) {
+                    if (slider.val() > NON_EXPERT_SLIDER_MAX) {
+                        slider.val(NON_EXPERT_SLIDER_MAX);
+                    } else if (slider.val() < NON_EXPERT_SLIDER_MIN) {
+                        slider.val(NON_EXPERT_SLIDER_MIN);
+                    }
+                }
                 const scaledValue = TuningSliders.scaleSliderValue(slider.val());
                 if (slider.is('#tuningGyroFilterSlider')) {
                     TuningSliders.gyroFilterSliderValue = scaledValue;
                     TuningSliders.calculateNewGyroFilters();
+                    self.analyticsChanges['GyroFilterTuningSlider'] = "On";
                 } else if (slider.is('#tuningDTermFilterSlider')) {
                     TuningSliders.dtermFilterSliderValue = scaledValue;
                     TuningSliders.calculateNewDTermFilters();
+                    self.analyticsChanges['DTermFilterTuningSlider'] = "On";
                 }
             });
             $('#tuningGyroFilterSlider, #tuningDTermFilterSlider').mouseup(function() {
@@ -1552,30 +1583,42 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('input[id="gyroLowpassEnabled"]').prop('checked', true).click();
                     $('input[id="gyroLowpass2Enabled"]').prop('checked', false).click();
                     TuningSliders.resetGyroFilterSlider();
+                    self.analyticsChanges['GyroFilterTuningSlider'] = "On";
                 }
                 if (TuningSliders.filterDTermSliderUnavailable) {
                     $('input[id="dtermLowpassDynEnabled"]').prop('checked', false).click();
                     $('input[id="dtermLowpassEnabled"]').prop('checked', true).click();
                     $('input[id="dtermLowpass2Enabled"]').prop('checked', false).click();
                     TuningSliders.resetDTermFilterSlider();
+                    self.analyticsChanges['DTermFilterTuningSlider'] = "On";
                 }
             });
 
             // update on pid table inputs
-            $('#pid_main input').on('input', () => TuningSliders.updatePidSlidersDisplay());
+            $('#pid_main input').on('input', function() {
+                TuningSliders.updatePidSlidersDisplay();
+                self.analyticsChanges['PidTuningSliders'] = "Off";
+            });
             // update on filter value or type changes
-            $('.pid_filter input, .pid_filter select').on('input', () => TuningSliders.updateFilterSlidersDisplay());
+            $('.pid_filter input, .pid_filter select').on('input', function() {
+                TuningSliders.updateFilterSlidersDisplay();
+                if (TuningSliders.filterGyroSliderUnavailable) {
+                    self.analyticsChanges['GyroFilterTuningSlider'] = "Off";
+                }
+                if (TuningSliders.filterDTermSliderUnavailable) {
+                    self.analyticsChanges['DTermFilterTuningSlider'] = "Off";
+                }
+            });
             // update on filter switch changes
-            $('.inputSwitch input').change(() => TuningSliders.updateFilterSlidersDisplay());
+            $('.inputSwitch input').change(() => $('.pid_filter input').trigger('input'));
 
             $('.tuningHelp').hide();
         } else {
             $('.tuningPIDSliders').hide();
-            $('.slidersDisabled').hide();
-            $('.slidersHighWarning').hide();
             $('.tuningFilterSliders').hide();
-            $('.slidersFilterDisabled').hide();
-            $('.slidersFilterHighWarning').hide();
+            $('.slidersDisabled').hide();
+            $('.slidersWarning').hide();
+            $('.nonExpertModeSlidersNote').hide();
             $('.tuningHelpSliders').hide();
         }
 
@@ -1622,6 +1665,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
                 GUI.log(i18n.getMessage('pidTuningEepromSaved'));
             });
+
+            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            self.analyticsChanges = {};
         });
 
         // Setup model for rates preview

@@ -751,7 +751,7 @@
     opacity: 0.8;
     transition: opacity .2s;
     margin: 7px;
-    background: none;
+    background: var(--boxBackground);
 }
 
 .tab-pid_tuning .tuningSlider:hover {
@@ -764,6 +764,13 @@
     border-radius: 4px;
     background: linear-gradient(90deg, rgb(197, 197, 197) 0%, rgb(241, 241, 241) 50%, rgb(255, 84, 14) 100%);
     height: 15px;
+}
+
+.tab-pid_tuning .nonExpertModeSliders.tuningSlider::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgb(197, 197, 197) -50%, rgb(241, 241, 241) 50%, rgb(255, 84, 14) 150%);
+    background-size: 55%;
+    background-position: 44%;
+    background-repeat: no-repeat;
 }
 
 .tab-pid_tuning .tuningSlider::-webkit-slider-thumb {
@@ -830,12 +837,17 @@
     width: 30px;
 }
 
-.tab-pid_tuning .slidersHighWarning, 
-.tab-pid_tuning .slidersFilterHighWarning {
-    background: #ffb3b3;
+.tab-pid_tuning .slidersWarning {
+    background: #ffa3a3;
     border: 1px solid red;
     font-weight: 600;
     font-size: 12px;
+}
+
+.tab-pid_tuning .nonExpertModeSlidersNote {
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .tab-pid_tuning .note-button td:nth-child(n) {
