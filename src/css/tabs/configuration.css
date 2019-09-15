@@ -455,6 +455,15 @@
     margin-right: 5px;
 }
 
+.tab-configuration #dialogRpmFilter table tr td:first-child{
+    width: auto;
+}
+
+.tab-configuration #dialogRpmFilter .number {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
     .tab-configuration .gui_box span {
         line-height: 17px;

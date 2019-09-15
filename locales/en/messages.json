@@ -5230,6 +5230,14 @@
         "message": "When enabled lets the DSHOT protocol receive information directly from the ESC, needed by the RPM Filter and other features.<br><br>This requires the JESC firmware from jflight.net on BLHELI_S or the latest BLHELI_32 firmware.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
+    "dialogRpmFilterApplySettings": {
+        "message": "Apply Settings",
+        "description": "Apply in rpm filter settings dialog"
+    },
+    "dialogRpmFilterNote": {
+        "message": "Changing Bidirectional DShot also enables or disables RPM Filter therefore it is recommended to change Dynamic Notch Filter settings. These are the recommended settings.<br>You may choose to use different Dynamic Notch Filter setting and in that case disregard this dialog by clicking Cancel<br><span class=\"message-negative\">IMPORTANT:</span> For RPM filter to work you must also make sure motor pole count is correct. Remember to click $t(configurationButtonSave.message) after applying these settings.",
+        "description": "Rpm filter dialog note"
+    },
     "configurationGyroSyncDenom": {
         "message": "Gyro update frequency"
     },

@@ -786,4 +786,40 @@
             </div>
         </div>
     </div>
+
+    <dialog id="dialogRpmFilter">
+        <div class="content">
+            <div class="note">
+                <p i18n="dialogRpmFilterNote"></p>
+            </div>
+            <table>
+                <tr>
+                    <td i18n="pidTuningDynamicNotchRange"></td>
+                    <td><output type="number" name="dynamicNotchRange"></output></td>
+                </tr>
+                <tr>
+                    <td i18n="pidTuningDynamicNotchWidthPercent"></td>
+                    <td><output type="number" name="dynamicNotchWidthPercent"></output></td>
+                </tr>
+                <tr>
+                    <td i18n="pidTuningDynamicNotchQ"></td>
+                    <td><output type="number" name="dynamicNotchQ"></output></td>
+                </tr>
+                <tr>
+                    <td i18n="pidTuningDynamicNotchMinHz"></td>
+                    <td><output type="number" name="dynamicNotchMinHz"></output></td>
+                </tr>
+            </table>
+            <div class="number motorPoles">
+                <div class="numberspacer">
+                    <input type="number" name="motorPoles" min="4" max="255" step="1"/>
+                </div>
+                <span i18n="configurationMotorPolesLong"></span>
+            </div>
+        </div>
+        <div class="buttons">
+            <a href="#" id="dialogRpmFilter-applybtn" class="regular-button" i18n="dialogRpmFilterApplySettings"></a>
+            <a href="#" id="dialogRpmFilter-cancelbtn" class="regular-button" i18n="cancel"></a>
+        </div>
+    </dialog>
 </div>

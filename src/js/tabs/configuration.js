@@ -181,9 +181,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_rx_config() {
-        var next_callback = load_html;
+        var next_callback = load_filter_config;
         if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+    function load_filter_config() {
+        var next_callback = load_html;
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            MSP.send_message(MSPCodes.MSP_FILTER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -469,6 +478,48 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         }).change();
 
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            const dialogRpmFilter = $('#dialogRpmFilter')[0];
+            let FILTER_DEFAULT = FC.getFilterDefaults();
+
+            let dynNotchRangeValues = [
+                "HIGH", "MEDIUM", "LOW", "AUTO",
+            ];
+            let newDynNotchRange, newDynNotchWidthPercent, newDynNotchQ, newDynNotchMinHz;
+            let dshotBidirEnabled = MOTOR_CONFIG.use_dshot_telemetry;
+
+            $('input[id="dshotBidir"]').change(function() {
+                const rpmFilterEnabled = $(this).prop('checked');
+                if (rpmFilterEnabled != dshotBidirEnabled) {
+                    newDynNotchRange = rpmFilterEnabled ? 2 : FILTER_DEFAULT.dyn_notch_range;
+                    newDynNotchWidthPercent = rpmFilterEnabled ? 0 : FILTER_DEFAULT.dyn_notch_width_percent;
+                    newDynNotchQ = rpmFilterEnabled ? 250 : FILTER_DEFAULT.dyn_notch_q;
+                    newDynNotchMinHz = rpmFilterEnabled ? 100 : FILTER_DEFAULT.dyn_notch_min_hz;
+
+                    $('output[name="dynamicNotchRange"]').val(dynNotchRangeValues[newDynNotchRange]);
+                    $('output[name="dynamicNotchWidthPercent"]').val(newDynNotchWidthPercent);
+                    $('output[name="dynamicNotchQ"]').val(newDynNotchQ);
+                    $('output[name="dynamicNotchMinHz"]').val(newDynNotchMinHz);
+
+                    $('#dialogRpmFilter input[name="motorPoles"]').val($('input[name="motorPoles"]').val());
+                    $('#dialogRpmFilter div.motorPoles').toggle(rpmFilterEnabled);
+                    dialogRpmFilter.showModal();
+                }
+            });
+            $('#dialogRpmFilter-applybtn').click(function() {
+                FILTER_CONFIG.dyn_notch_range = newDynNotchRange;
+                FILTER_CONFIG.dyn_notch_width_percent = newDynNotchWidthPercent;
+                FILTER_CONFIG.dyn_notch_q = newDynNotchQ;
+                FILTER_CONFIG.dyn_notch_min_hz = newDynNotchMinHz;
+                $('input[name="motorPoles"]').val($('#dialogRpmFilter input[name="motorPoles"]').val());
+
+                dshotBidirEnabled = $('input[id="dshotBidir"]').prop('checked');
+                dialogRpmFilter.close();
+            });
+            $('#dialogRpmFilter-cancelbtn').click(function() {
+                dialogRpmFilter.close();
+            });
+        }
 
         // Gyro and PID update
         var gyroUse32kHz_e = $('input[id="gyroUse32kHz"]');
@@ -1252,9 +1303,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_rx_config() {
-                var next_callback = save_to_eeprom;
+                var next_callback = save_filter_config;
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_filter_config() {
+                var next_callback = save_to_eeprom;
+                if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }
