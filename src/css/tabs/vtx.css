@@ -2,6 +2,10 @@
     height: 100%;
 }
 
+.tab-vtx .cf_table {
+  -webkit-border-horizontal-spacing: 1px;
+}
+
 .tab-vtx .require-support {
     display: none;
 }
@@ -16,6 +20,23 @@
 
 .tab-vtx.supported .require-upgrade {
     display: none;
+}
+
+.tab-vtx .columnsWrapper {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   justify-content: space-between;
+}
+
+.tab-vtx .columnsWrapper .leftColumn {
+   width: calc(100% - (250px + 25px));
+}
+
+.tab-vtx .columnsWrapper .rightColumn {
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: 250px;
 }
 
 .tab-vtx .leftWrapper {
