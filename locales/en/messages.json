@@ -3715,6 +3715,9 @@
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">Warning:</span> Voltage and/or amperage meter sources <strong>have been changed but not saved.</strong> Please set the correct meter sources and save them before trying to calibrate."
     },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "Calibration Manager Confirmation"
+    },
     "powerCalibrationSave": {
         "message": "Calibrate"
     },
