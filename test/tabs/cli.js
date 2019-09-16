@@ -1,5 +1,12 @@
-describe('TABS.cli', () => {
+class MockAnalytics {
+    EVENT_CATEGORIES = {};
 
+    sendEvent() {}
+}
+
+var analytics;
+
+describe('TABS.cli', () => {
     function toArrayBuffer(string) {
         var bufferOut = new ArrayBuffer(string.length);
         var bufView = new Uint8Array(bufferOut);
@@ -22,6 +29,8 @@ describe('TABS.cli', () => {
         CliAutoComplete.setEnabled(false); // not testing the client-side autocomplete
 
         before(() => {
+            analytics = new MockAnalytics();
+
             $('body')
                 .append(cliTab);
 

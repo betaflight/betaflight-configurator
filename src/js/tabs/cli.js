@@ -46,6 +46,7 @@ function getCliCommand(command, cliBuffer) {
 
 function copyToClipboard(text) {
     function onCopySuccessful() {
+        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliCopyToClipboard', text.length);
         const button = $('.tab-cli .copy');
         const origText = button.text();
         const origWidth = button.css("width");
@@ -207,13 +208,16 @@ TABS.cli.initialize = function (callback) {
                 
                 let previewArea = $("#snippetpreviewcontent textarea#preview");
 
-                function executeSnippet() {
+                function executeSnippet(fileName) {
                     const commands = previewArea.val();
+
+                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliExecuteFromFile', fileName);
+
                     executeCommands(commands);
                     self.GUI.snippetPreviewWindow.close();
                 }
 
-                function previewCommands(result) {
+                function previewCommands(result, fileName) {
                     if (!self.GUI.snippetPreviewWindow) {
                         self.GUI.snippetPreviewWindow = new jBox("Modal", {
                             id: "snippetPreviewWindow",
@@ -222,10 +226,10 @@ TABS.cli.initialize = function (callback) {
                             closeButton: 'title',
                             animation: false,
                             isolateScroll: false,
-                            title: i18n.getMessage("cliConfirmSnippetDialogTitle"),
+                            title: i18n.getMessage("cliConfirmSnippetDialogTitle", { fileName: fileName }),
                             content: $('#snippetpreviewcontent'),
                             onCreated: () =>  
-                                $("#snippetpreviewcontent a.confirm").click(() => executeSnippet())
+                                $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName))
                             ,
                         });
                     }
@@ -236,7 +240,7 @@ TABS.cli.initialize = function (callback) {
                 entry.file((file) => {
                     let reader = new FileReader();
                     reader.onload = 
-                        () => previewCommands(reader.result);
+                        () => previewCommands(reader.result, file.name);
                     reader.onerror = () => console.error(reader.error);
                     reader.readAsText(file);
                 });

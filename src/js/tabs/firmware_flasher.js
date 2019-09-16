@@ -6,6 +6,12 @@ TABS.firmware_flasher = {
     jenkinsLoader: new JenkinsLoader('https://ci.betaflight.tech'),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
+    intel_hex: undefined, // standard intel hex in string format
+    parsed_hex: undefined, // parsed raw hex in array format
+    unifiedTargetConfig: undefined, // the Unified Target configuration to be spliced into the configuration
+    unifiedTargetConfigName: undefined,
+    isConfigLocal: false, // Set to true if the user loads one locally
+    remoteUnifiedTargetConfig: undefined, // Unified target configuration loaded from the menu, used when throwing out a local config
 };
 
 TABS.firmware_flasher.initialize = function (callback) {
@@ -15,24 +21,14 @@ TABS.firmware_flasher.initialize = function (callback) {
         GUI.active_tab = 'firmware_flasher';
     }
 
-    TABS.firmware_flasher.selectedBoard = undefined;
-    TABS.firmware_flasher.localFirmwareLoaded = false;
-    var intel_hex = false; // standard intel hex in string format
-    var parsed_hex = false; // parsed raw hex in array format
-    var targetConfig; // the Unified Target configuration to be spliced into the configuration
-    var isConfigLocal = false; // Set to true if the user loads one locally
-    var unifiedConfig; // Unified target configuration loaded from the menu, used when throwing out a local config
+    self.selectedBoard = undefined;
+    self.localFirmwareLoaded = false;
+    self.isConfigLocal = false;
+    self.intel_hex = undefined;
+    self.parsed_hex = undefined;
 
     var unifiedSource = 'https://api.github.com/repos/betaflight/unified-targets/contents/configs/default';
 
-
-    // These two functions are handy for peeking under the hood. Please don't call them in code.
-    self.peekTargetConfig = function () {
-        return targetConfig;
-    }
-    self.peekHex = function () {
-        return parsed_hex;
-    }
 
         /**
          * Change boldness of firmware option depending on cache status
@@ -64,7 +60,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             worker.postMessage(str);
         }
         function show_loaded_hex(summary) {
-            self.flashingMessage('<a class="save_firmware" href="#" title="Save Firmware">' + i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', parsed_hex.bytes_total) + '</a>',
+            self.flashingMessage('<a class="save_firmware" href="#" title="Save Firmware">' + i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', self.parsed_hex.bytes_total) + '</a>',
                      self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             self.enableFlashing(true);
@@ -83,18 +79,16 @@ TABS.firmware_flasher.initialize = function (callback) {
             $('div.release_info').slideDown();
         }
         function process_hex(data, summary) {
-            intel_hex = data;
+            self.intel_hex = data;
 
-            analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHECKSUM, objectHash.sha1(intel_hex));
+            parse_hex(self.intel_hex, function (data) {
+                self.parsed_hex = data;
 
-            parse_hex(intel_hex, function (data) {
-                parsed_hex = data;
-
-                if (parsed_hex) {
-                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, parsed_hex.bytes_total);
+                if (self.parsed_hex) {
+                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, self.parsed_hex.bytes_total);
 
                     if (!FirmwareCache.has(summary)) {
-                        FirmwareCache.put(summary, intel_hex);
+                        FirmwareCache.put(summary, self.intel_hex);
                     }
                     show_loaded_hex(summary)
 
@@ -418,7 +412,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             if (targetVersions) {
                 versions_element.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
                 targetVersions.forEach(function(descriptor) {
-                    if (unifiedConfig && !checkOneVersionForUnification(descriptor.version)) {
+                    if (self.remoteUnifiedTargetConfig && !checkOneVersionForUnification(descriptor.version)) {
                         return;
                     }
                     var select_e =
@@ -453,24 +447,27 @@ TABS.firmware_flasher.initialize = function (callback) {
             // a target might request a firmware with the same name, remove configuration in this case.
             if (bareBoard == target) {
                 console.log(bareBoard, '==', target);
-                if (!isConfigLocal) {
-                    targetConfig = undefined;
-                    unifiedConfig = undefined;
+                if (!self.isConfigLocal) {
+                    self.unifiedTargetConfig = undefined;
+                    self.unifiedTargetConfigName = undefined;
+                    self.remoteUnifiedTargetConfig = undefined;
                 } else {
-                    unifiedConfig = undefined;
+                    self.remoteUnifiedTargetConfig = undefined;
                 }
             } else {
-                targetConfig = configText;
-                isConfigLocal = false;
-                unifiedConfig = configText;
+                self.unifiedTargetConfig = configText;
+                self.unifiedTargetConfigName = `${target}.config`;
+                self.isConfigLocal = false;
+                self.remoteUnifiedTargetConfig = configText;
             }
         }
         function clearBufferedFirmware() {
-            isConfigLocal = false;
-            targetConfig = undefined;
-            unifiedConfig = undefined;
-            intel_hex = false;
-            parsed_hex = false;
+            self.isConfigLocal = false;
+            self.unifiedTargetConfig = undefined;
+            self.unifiedTargetConfigName = undefined;
+            self.remoteUnifiedTargetConfig = undefined;
+            self.intel_hex = undefined;
+            self.parsed_hex = undefined;
             self.localFirmwareLoaded = false;
         }
 
@@ -481,10 +478,11 @@ TABS.firmware_flasher.initialize = function (callback) {
             if (!GUI.connect_lock) {
                 if (TABS.firmware_flasher.selectedBoard != target) {
                     // We're sure the board actually changed
-                    if (isConfigLocal) {
+                    if (self.isConfigLocal) {
                         console.log('Board changed, unloading local config');
-                        isConfigLocal = false;
-                        targetConfig = undefined;
+                        self.isConfigLocal = false;
+                        self.unifiedTargetConfig = undefined;
+                        self.unifiedTargetConfigName = undefined;
                     }
                 }
                 ConfigStorage.set({'selected_board': target});
@@ -541,9 +539,10 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard], target);
                                 }).fail(xhr => {
                                     //TODO error, populate nothing?
-                                    targetConfig = undefined;
-                                    isConfigLocal = false;
-                                    unifiedConfig= undefined;
+                                    self.unifiedTargetConfig = undefined;
+                                    self.unifiedTargetConfigName = undefined;
+                                    self.isConfigLocal = false;
+                                    self.remoteUnifiedTargetConfig = undefined;
                                     let baseFileName = TABS.firmware_flasher.unifiedConfigs[target].reverse()[0];
                                     GUI.log(i18n.getMessage('firmwareFlasherFailedToLoadUnifiedConfig',
                                         {remote_file: baseFileName}));
@@ -559,11 +558,12 @@ TABS.firmware_flasher.initialize = function (callback) {
                             }
                         });
                     } else {
-                        if (!isConfigLocal) {
-                            targetConfig = undefined;
-                            unifiedConfig = undefined;
+                        if (!self.isConfigLocal) {
+                            self.unifiedTargetConfig = undefined;
+                            self.unifiedTargetConfigName = undefined;
+                            self.remoteUnifiedTargetConfig = undefined;
                         } else {
-                            unifiedConfig = undefined;
+                            self.remoteUnifiedTargetConfig = undefined;
                         }
                         TABS.firmware_flasher.bareBoard = target;
                         populateVersions(versions_e, TABS.firmware_flasher.releases[target], target);
@@ -575,16 +575,16 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         function flashingMessageLocal() {
             // used by the a.load_file hook, evaluate the loaded information, and enable flashing if suitable
-            if (isConfigLocal && !parsed_hex) {
+            if (self.isConfigLocal && !self.parsed_hex) {
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadedConfig'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
-            if (isConfigLocal && parsed_hex && !self.localFirmwareLoaded) {
+            if (self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) {
                 self.enableFlashing(true);
-                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
             if (self.localFirmwareLoaded) {
                 self.enableFlashing(true);
-                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
         }
         // UI Hooks
@@ -625,16 +625,15 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 console.log('File loaded (' + e.loaded + ')');
 
                                 if (file.name.split('.').pop() === "hex") {
-                                    intel_hex = e.target.result;
+                                    self.intel_hex = e.target.result;
 
-                                    analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHECKSUM, objectHash.sha1(intel_hex));
+                                    parse_hex(self.intel_hex, function (data) {
+                                        self.parsed_hex = data;
 
-                                    parse_hex(intel_hex, function (data) {
-                                        parsed_hex = data;
-
-                                        if (parsed_hex) {
-                                            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, parsed_hex.bytes_total);
+                                        if (self.parsed_hex) {
+                                            analytics.setFirmwareData(analytics.DATA.FIRMWARE_SIZE, self.parsed_hex.bytes_total);
                                             self.localFirmwareLoaded = true;
+
                                             flashingMessageLocal();
                                         } else {
                                             self.flashingMessage('firmwareFlasherHexCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
@@ -642,8 +641,9 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     });
                                 } else {
                                     clearBufferedFirmware();
-                                    targetConfig = e.target.result;
-                                    isConfigLocal = true;
+                                    self.unifiedTargetConfig = e.target.result;
+                                    self.unifiedTargetConfigName = file.name;
+                                    self.isConfigLocal = true;
                                     flashingMessageLocal();
                                 }
                             }
@@ -664,11 +664,11 @@ TABS.firmware_flasher.initialize = function (callback) {
             if (!self.localFirmwareLoaded) {
                 self.enableFlashing(false);
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
-                if(parsed_hex && parsed_hex.bytes_total) {
+                if(self.parsed_hex && self.parsed_hex.bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
                     console.log('throw out loaded hex');
-                    intel_hex = false;
-                    parsed_hex = false;
+                    self.intel_hex = undefined;
+                    self.parsed_hex = undefined;
                 }
             }
 
@@ -711,7 +711,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
             var summary = $('select[name="firmware_version"] option:selected').data('summary');
             if (summary) { // undefined while list is loading or while running offline
-                if (isConfigLocal && FirmwareCache.has(summary)) {
+                if (self.isConfigLocal && FirmwareCache.has(summary)) {
                     // Load the .hex from Cache if available when the user is providing their own config.
                     analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'cache');
                     FirmwareCache.get(summary, cached => {
@@ -757,7 +757,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         baud = parseInt($('#flash_manual_baud_rate').val());
                     }
 
-                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing');
+                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing', self.unifiedTargetConfigName || null);
 
                     STM32.connect(port, baud, firmware, options);
                 } else {
@@ -765,7 +765,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             } else {
-                analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing');
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing', self.unifiedTargetConfigName || null);
 
                 STM32DFU.connect(usbDevices, firmware, options);
             }
@@ -774,21 +774,22 @@ TABS.firmware_flasher.initialize = function (callback) {
         $('a.flash_firmware').click(function () {
             if (!$(this).hasClass('disabled')) {
                 if (!GUI.connect_lock) { // button disabled while flashing is in progress
-                    if (parsed_hex != false) {
+                    if (self.parsed_hex != false) {
                         try {
-                            if (targetConfig && !parsed_hex.configInserted) {
+                            if (self.unifiedTargetConfig && !self.parsed_hex.configInserted) {
                                 var configInserter = new ConfigInserter();
 
-                                if (configInserter.insertConfig(parsed_hex, targetConfig)) {
-                                    parsed_hex.configInserted = true;
+                                if (configInserter.insertConfig(self.parsed_hex, self.unifiedTargetConfig)) {
+                                    self.parsed_hex.configInserted = true;
                                 } else {
                                     console.log('Firmware does not support custom defaults.');
 
-                                    targetConfig = undefined;
+                                    self.unifiedTargetConfig = undefined;
+                                    self.unifiedTargetConfigName = undefined;
                                 }
                             }
 
-                            flashFirmware(parsed_hex);
+                            flashFirmware(self.parsed_hex);
                         } catch (e) {
                             console.log(`Flashing failed: ${e.message}`);
                         }
@@ -814,7 +815,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     // check if file is writable
                     chrome.fileSystem.isWritableEntry(fileEntry, function (isWritable) {
                         if (isWritable) {
-                            var blob = new Blob([intel_hex], {type: 'text/plain'});
+                            var blob = new Blob([self.intel_hex], {type: 'text/plain'});
 
                             fileEntry.createWriter(function (writer) {
                                 var truncated = false;
@@ -1007,7 +1008,6 @@ TABS.firmware_flasher.FLASH_MESSAGE_TYPES = {NEUTRAL : 'NEUTRAL',
                                              ACTION  : 'ACTION'};
 
 TABS.firmware_flasher.flashingMessage = function(message, type) {
-
     let self = this;
     
     let progressLabel_e = $('span.progressLabel');

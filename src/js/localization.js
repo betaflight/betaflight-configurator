@@ -12,8 +12,7 @@ const languagesAvailables = ['ca', 'de', 'en', 'es', 'fr', 'gl', 'hr', 'id', 'it
  * Functions that depend on the i18n framework
  */
 i18n.init = function(cb) {
-
-    getStoredUserLocale(function(userLanguage){
+    getStoredUserLocale(function(userLanguage) {
 
         i18next
             .use(i18nextXHRBackend)

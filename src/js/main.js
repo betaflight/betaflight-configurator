@@ -21,6 +21,11 @@ $(document).ready(function () {
         }
         i18n.init(function() {
             startProcess();
+
+            checkSetupAnalytics(function (analytics) {
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
+            });
+
             initializeSerialBackend();
         });
     });
@@ -106,7 +111,7 @@ function startProcess() {
     i18n.localizePage();
 
     // alternative - window.navigator.appVersion.match(/Chrome\/([0-9.]*)/)[1];
-    GUI.log(i18n.getMessage('infoVersions',{operatingSystem: GUI.operating_system, 
+    GUI.log(i18n.getMessage('infoVersions', { operatingSystem: GUI.operating_system,
                                             chromeVersion: window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"), 
                                             configuratorVersion: CONFIGURATOR.version }));
 
@@ -391,7 +396,7 @@ function startProcess() {
                         var checked = $(this).is(':checked');
 
                         ConfigStorage.set({'darkTheme': checked});
-                        DarkTheme.setConfig(checked);
+                        setDarkTheme(checked);
                     }).change();
 
                 function close_and_cleanup(e) {
@@ -543,9 +548,17 @@ function startProcess() {
     });
 
     ConfigStorage.get('darkTheme', function (result) {
-        DarkTheme.setConfig(result.darkTheme);
+        setDarkTheme(result.darkTheme);
     });
 };
+
+function setDarkTheme(enabled) {
+    DarkTheme.setConfig(enabled);
+
+    checkSetupAnalytics(function (analytics) {
+        analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', enabled);
+    });
+}
 
 function checkForConfiguratorUpdates() {
     var releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');

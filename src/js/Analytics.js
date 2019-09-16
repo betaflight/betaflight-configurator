@@ -35,7 +35,6 @@ var Analytics = function (trackingId, userId, appName, appVersion, changesetId, 
         FIRMWARE_TYPE: 'firmwareType',
         FIRMWARE_VERSION: 'firmwareVersion',
         FIRMWARE_NAME: 'firmwareName',
-        FIRMWARE_CHECKSUM: 'firmwareChecksum',
         FIRMWARE_SOURCE: 'firmwareSource',
         FIRMWARE_CHANNEL: 'firmwareChannel',
         FIRMWARE_ERASE_ALL: 'firmwareEraseAll',
@@ -158,7 +157,6 @@ Analytics.prototype._rebuildFirmwareEvent = function () {
     this.setDimension(this.DIMENSIONS.FIRMWARE_ERASE_ALL, this._firmwareData[this.DATA.FIRMWARE_ERASE_ALL]);
     this.setDimension(this.DIMENSIONS.FIRMWARE_CHANNEL, this._firmwareData[this.DATA.FIRMWARE_CHANNEL]);
     this.setMetric(this.METRICS.FIRMWARE_SIZE, this._firmwareData[this.DATA.FIRMWARE_SIZE]);
-    this._googleAnalytics.set('eventLabel', this._firmwareData[this.DATA.FIRMWARE_CHECKSUM]);
 }
 
 Analytics.prototype.setFirmwareData = function (property, value) {

@@ -2461,7 +2461,7 @@
         "message": "Load from file"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "Review loaded commands"
+        "message": "Loaded file <strong>{{fileName}}</strong>. Review the loaded commands"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Note</strong>: You can review and edit commands before execution."
@@ -3714,6 +3714,9 @@
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">Warning:</span> Voltage and/or amperage meter sources <strong>have been changed but not saved.</strong> Please set the correct meter sources and save them before trying to calibrate."
+    },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "Calibration Manager Confirmation"
     },
     "powerCalibrationSave": {
         "message": "Calibrate"

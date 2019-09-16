@@ -176,6 +176,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             blackbox_baudrate_e.append('<option value="' + blackboxBaudRates[i] + '">' + blackboxBaudRates[i] + '</option>');
         }
 
+        let lastVtxControlSelected;
         var ports_e = $('.tab-ports .ports');
         var port_configuration_template_e = $('#tab-ports-templates .portConfiguration');
 
@@ -259,6 +260,10 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
                         if (serialPort.functions.indexOf(functionName) >= 0) {
                             select_e.val(functionName);
+
+                            if (column === 'peripherals' && (functionName === "TBS_SMARTAUDIO" || functionName === "IRC_TRAMP")) {
+                                lastVtxControlSelected = functionName;
+                            }
                         }
 
                         if (column === 'telemetry') {
@@ -279,30 +284,42 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
             ports_e.find('tbody').append(port_configuration_e);
         }
+
+        let vtxTableNotConfigured = true;
         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
-            var vtxTableNotConfigured = VTX_CONFIG.vtx_table_available &&
+            vtxTableNotConfigured = VTX_CONFIG.vtx_table_available &&
                                         (VTX_CONFIG.vtx_table_bands == 0 ||
                                         VTX_CONFIG.vtx_table_channels == 0 ||
                                         VTX_CONFIG.vtx_table_powerlevels == 0);
-            const pheripheralsSelectElement = $('select[name="function-peripherals"]');
-            pheripheralsSelectElement.change(function() {
-                let vtxControlSelected = false;
-                pheripheralsSelectElement.each(function() {
-                    const el = $(this);
-                    if (el.val() == "TBS_SMARTAUDIO" || el.val() == "IRC_TRAMP") {
-                        vtxControlSelected = true;
-                    }
-                });
+        } else {
+            $('.vtxTableNotSet').hide();
+        }
+
+        const pheripheralsSelectElement = $('select[name="function-peripherals"]');
+        pheripheralsSelectElement.change(function() {
+            let vtxControlSelected = undefined;
+            pheripheralsSelectElement.each(function() {
+                const el = $(this);
+                if (el.val() === "TBS_SMARTAUDIO" || el.val() === "IRC_TRAMP") {
+                    vtxControlSelected = el.val();
+                }
+            });
+
+            if (lastVtxControlSelected !== vtxControlSelected) {
+                self.analyticsChanges['VtxControl'] = vtxControlSelected;
+
+                lastVtxControlSelected = vtxControlSelected;
+            }
+
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                 if (vtxControlSelected && vtxTableNotConfigured) {
                     $('.vtxTableNotSet').show();
                 } else {
                     $('.vtxTableNotSet').hide();
                 }
-            });
-            pheripheralsSelectElement.change();
-        } else {
-            $('.vtxTableNotSet').hide();
-        }
+            }
+        });
+        pheripheralsSelectElement.change();
     }
 
     function on_tab_loaded_handler() {

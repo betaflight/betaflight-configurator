@@ -8,13 +8,17 @@ TABS.vtx = {
     MAX_BAND_CHANNELS_VALUES: 8,
     VTXTABLE_BAND_LIST: [],
     VTXTABLE_POWERLEVEL_LIST: [],
+    analyticsChanges: {},
 };
 
 TABS.vtx.initialize = function (callback) {
+    var self = this;
 
     if (GUI.active_tab != 'vtx') {
         GUI.active_tab = 'vtx';
     }
+
+    self.analyticsChanges = {};
 
     this.supported = semver.gte(CONFIG.apiVersion, "1.42.0");
 
@@ -304,6 +308,13 @@ TABS.vtx.initialize = function (callback) {
         }
 
         $("#vtx_table_channels").on('input', showHideBandChannels).trigger('input');
+        $("#vtx_table").change(function() {
+            let fromScratch = true;
+            if (self.analyticsChanges['VtxTableLoadFromClipboard'] !== undefined || self.analyticsChanges['VtxTableLoadFromFile'] !== undefined) {
+                fromScratch = false;
+            }
+            self.analyticsChanges['VtxTableEdit'] = fromScratch ? 'modificationOnly' : 'fromTemplate';
+        });
 
         /*** Helper functions */
 
@@ -527,19 +538,19 @@ TABS.vtx.initialize = function (callback) {
                 };
 
                 writer.onwriteend = function() {
-
-                    // we get here at the end of the truncate method, change to the new end
-                    writer.onwriteend = function() {
-                        console.log('Write VTX file end');
-                        GUI.log(i18n.getMessage('vtxSavedFileOk'));
-                    }
-
                     dump_html_to_msp();
                     let vtxConfig = createVtxConfigInfo();
                     let text = JSON.stringify(vtxConfig, null, 4);
                     let data = new Blob([text], { type: "application/json" });
-                    writer.write(data);
 
+                    // we get here at the end of the truncate method, change to the new end
+                    writer.onwriteend = function() {
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
+                        console.log('Write VTX file end');
+                        GUI.log(i18n.getMessage('vtxSavedFileOk'));
+                    }
+
+                    writer.write(data);
                 };
 
                 writer.truncate(0);
@@ -584,6 +595,9 @@ TABS.vtx.initialize = function (callback) {
 
                         TABS.vtx.vtxTableSavePending = true;
 
+                        self.analyticsChanges['VtxTableLoadFromClipboard'] = undefined;
+                        self.analyticsChanges['VtxTableLoadFromFile'] = file.name;
+
                         console.log('Load VTX file end');
                         GUI.log(i18n.getMessage('vtxLoadFileOk'));
 
@@ -616,6 +630,9 @@ TABS.vtx.initialize = function (callback) {
 
                     TABS.vtx.vtxTableSavePending = true;
 
+                    self.analyticsChanges['VtxTableLoadFromFile'] = undefined;
+                    self.analyticsChanges['VtxTableLoadFromClipboard'] = text.length;
+
                     console.log('Load VTX clipboard end');
                     GUI.log(i18n.getMessage('vtxLoadClipboardOk'));
 
@@ -639,6 +656,8 @@ TABS.vtx.initialize = function (callback) {
 
         // Start MSP saving
         save_vtx_config();
+
+        analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
 
         function save_vtx_config() {
             MSP.send_message(MSPCodes.MSP_SET_VTX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VTX_CONFIG), false, save_vtx_powerlevels);
