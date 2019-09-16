@@ -603,9 +603,11 @@ function release_rpm(arch, done) {
     // The buildRpm does not generate the folder correctly, manually
     createDirIfNotExists(RELEASE_DIR);
 
+    var regex = /-/g;
+
     var options = {
              name: pkg.name,
-             version: pkg.version,
+             version: pkg.version.replace(regex, '_'), // RPM does not like release candidate versions
              buildArch: getLinuxPackageArch('rpm', arch),
              vendor: pkg.author,
              summary: pkg.description,
