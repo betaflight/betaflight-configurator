@@ -83,7 +83,7 @@ TuningSliders.downscaleSliderValue = function(value) {
 TuningSliders.initPidSlidersPosition = function() {
     // used to estimate PID slider positions based on PIDF values, and set respective slider position
     // provides only an estimation due to limitation of feature without firmware support, to be improved in later versions
-    this.MasterSliderValue = Math.round(PIDs[2][0] / this.PID_DEFAULT[10] * 10) / 10;
+    this.MasterSliderValue = Math.round(PIDs[2][1] / this.PID_DEFAULT[11] * 10) / 10;
     this.PDRatioSliderValue = Math.round(PIDs[0][0] / PIDs[0][2] / this.defaultPDRatio * 10) / 10;
     if (this.dMinFeatureEnabled) {
         this.PDGainSliderValue = Math.round(ADVANCED_TUNING.dMinRoll / this.MasterSliderValue / this.PID_DEFAULT[3] * 10) / 10;
@@ -259,6 +259,8 @@ TuningSliders.calculateNewPids = function() {
         PIDs[0][2] = Math.round(this.PID_DEFAULT[3] * this.PDGainSliderValue);
         PIDs[1][2] = Math.round(this.PID_DEFAULT[8] * this.PDGainSliderValue);
     }
+    PIDs[2][0] = Math.round(this.PID_DEFAULT[10] * this.PDGainSliderValue);
+
     // p
     PIDs[0][0] = Math.round(PIDs[0][2] * this.defaultPDRatio * this.PDRatioSliderValue);
     PIDs[1][0] = Math.round(PIDs[1][2] * this.defaultPDRatio * this.PDRatioSliderValue);
@@ -272,8 +274,7 @@ TuningSliders.calculateNewPids = function() {
     PIDs[0][1] = this.PID_DEFAULT[1];
     PIDs[1][1] = this.PID_DEFAULT[6];
     PIDs[2][1] = this.PID_DEFAULT[11];
-    // yaw p,d, dmin
-    PIDs[2][0] = this.PID_DEFAULT[10];
+    // yaw d, dmin
     PIDs[2][2] = this.PID_DEFAULT[12];
     ADVANCED_TUNING.dMinYaw = this.PID_DEFAULT[13];
 
