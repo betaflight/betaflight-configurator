@@ -11,6 +11,8 @@
     --paper: url(../../images/paper-dark.jpg);
     --ledAccent: #6e6e6e;
     --ledBackground: #424242;
+    --gimbalBackground: var(--subtleAccent);
+    --gimbalCrosshair: var(--mutedText);
     --switcherysecond: #858585;
 }
 
@@ -149,7 +151,7 @@ button {
 }
 
 .noUi-pips {
-    color: #dbdbdb;
+    color: var(--mutedText);
 }
 
 .jBox-container {
@@ -163,4 +165,8 @@ button {
     border-bottom: 1px solid #9c9c9c;
     text-shadow: 0 1px 1px #ffffff;
     color: white;
+}
+
+.jBox-pointer:after {
+    background: #393b3a;
 }

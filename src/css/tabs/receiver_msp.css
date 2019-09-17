@@ -8,7 +8,7 @@ body {
 }
 
 .control-gimbals {
-    /* A generous padding around the window edges ensures that we continue to receive mousemove events (since 
+    /* A generous padding around the window edges ensures that we continue to receive mousemove events (since
      * cursor stays in the window for longer)
      */
     padding: 25px;
@@ -21,7 +21,7 @@ body {
     position: relative;
     width: 120px;
     height: 120px;
-    background-color: #eee;
+    background-color: var(--gimbalBackground);
     margin-left: 1em;
     margin-right: 1em;
     margin-bottom: 2em;
@@ -33,7 +33,7 @@ body {
 .crosshair {
     display: block;
     position: absolute;
-    background-color: var(--subtleAccent);
+    background-color: var(--gimbalCrosshair);
 }
 
 .crosshair-vert {

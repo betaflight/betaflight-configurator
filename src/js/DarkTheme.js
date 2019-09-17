@@ -29,27 +29,28 @@ var css_dark = [
 var DarkTheme = {
     configEnabled: undefined,
 };
-
-DarkTheme.setConfig = function(result) {
+DarkTheme.isDarkThemeEnabled = function (val) {
+    return val === 0 || val === 2 && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+DarkTheme.setConfig = function (result) {
     if (this.configEnabled != result) {
         this.configEnabled = result;
 
-        if (this.configEnabled === 0 || this.configEnabled === 2 && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        if (this.isDarkThemeEnabled(this.configEnabled)) {
             this.applyDark();
         } else {
             this.applyNormal();
         }
+
+        windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), 'darkTheme', this.isDarkThemeEnabled(this.configEnabled));
+
     }
 };
 
-DarkTheme.applyDark = function() {
-    for (var i = 0; i < css_dark.length; i++) {
-        $('link[href="' + css_dark[i] + '"]').prop('disabled', false);
-    }
+DarkTheme.applyDark = function () {
+    css_dark.forEach((el) => $('link[href="' + el + '"]').prop('disabled', false));
 };
 
-DarkTheme.applyNormal = function() {
-    for (var i = 0; i < css_dark.length; i++) {
-        $('link[href="' + css_dark[i] + '"]').prop('disabled', true);
-    }
+DarkTheme.applyNormal = function () {
+    css_dark.forEach((el) => $('link[href="' + el + '"]').prop('disabled', true));
 };
