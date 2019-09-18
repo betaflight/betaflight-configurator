@@ -348,6 +348,9 @@ GUI_control.prototype.content_ready = function (callback) {
 
         new jBox('Tooltip', {
             attach: '.cf_tip',
+            trigger: 'mouseenter',
+            closeOnMouseleave: true,
+            closeOnClick: 'body',
             delayOpen: 100,
             delayClose: 100,
             position: {
