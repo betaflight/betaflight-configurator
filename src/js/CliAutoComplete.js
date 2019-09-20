@@ -521,4 +521,43 @@ CliAutoComplete._initTextcomplete = function() {
             }),
         ]);
     }
+
+
+    // diff command
+    var diffArgs1 = ["master", "profile", "rates", "all"];
+    var diffArgs2 = [];
+
+    if (semver.lt(CONFIG.flightControllerVersion, "3.4.0")) {
+        diffArgs2.push("showdefaults");
+    } else {
+        // above 3.4.0
+        diffArgs2.push("defaults");
+        if (semver.gte(CONFIG.flightControllerVersion, "4.0.0")) {
+            diffArgs1.push("hardware");
+            diffArgs2.push("bare");
+        }
+    }
+
+    diffArgs1.sort();
+    diffArgs2.sort();
+
+    $textarea.textcomplete('register', [
+        strategy({ // "diff arg1"
+            match: /^(\s*diff\s+)(\w*)$/i,
+            search:  function(term, callback, match) {
+                sendOnEnter = true;
+                searcher(term, callback, diffArgs1, 1, true);
+            },
+            template: highlighterPrefix
+        }),
+
+        strategy({ // "diff arg1 arg2"
+            match: /^(\s*diff\s+\w+\s+)(\w*)$/i,
+            search:  function(term, callback, match) {
+                sendOnEnter = true;
+                searcher(term, callback, diffArgs2, 1, true);
+            },
+            template: highlighterPrefix
+        })
+    ]);
 };
