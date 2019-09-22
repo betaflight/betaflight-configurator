@@ -1442,9 +1442,11 @@ TABS.pid_tuning.initialize = function (callback) {
             const NON_EXPERT_SLIDER_MIN = 0.7;
 
             $('input[name="expertModeCheckbox"]').change(function() {
-                TuningSliders.setExpertMode($(this).is(':checked'));
-                TuningSliders.updatePidSlidersDisplay();
-                TuningSliders.updateFilterSlidersDisplay();
+                if (TuningSliders.expertMode !== $(this).is(':checked')) {
+                    TuningSliders.setExpertMode($(this).is(':checked'));
+                    TuningSliders.updatePidSlidersDisplay();
+                    TuningSliders.updateFilterSlidersDisplay();
+                }
             });
 
             $('#dMinSwitch').change(function() {
@@ -1600,7 +1602,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 self.analyticsChanges['PidTuningSliders'] = "Off";
             });
             // update on filter value or type changes
-            $('.pid_filter input, .pid_filter select').on('input', function() {
+            $('.pid_filter tr:not(.newFilter) input, .pid_filter tr:not(.newFilter) select').on('input', function() {
                 TuningSliders.updateFilterSlidersDisplay();
                 if (TuningSliders.filterGyroSliderUnavailable) {
                     self.analyticsChanges['GyroFilterTuningSlider'] = "Off";
@@ -1610,7 +1612,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 }
             });
             // update on filter switch changes
-            $('.inputSwitch input').change(() => $('.pid_filter input').trigger('input'));
+            $('.pid_filter tr:not(.newFilter) .inputSwitch input').change(() => $('.pid_filter input').triggerHandler('input'));
 
             $('.tuningHelp').hide();
         } else {
