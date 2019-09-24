@@ -27,14 +27,14 @@ var css_dark = [
 ]
 
 var DarkTheme = {
-    configEnabled: false,
+    configEnabled: undefined,
 };
 
 DarkTheme.setConfig = function(result) {
     if (this.configEnabled != result) {
         this.configEnabled = result;
 
-        if (this.configEnabled) {
+        if (this.configEnabled === 0 || this.configEnabled === 2 && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             this.applyDark();
         } else {
             this.applyNormal();
