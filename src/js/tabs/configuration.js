@@ -516,6 +516,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('input[name="motorPoles"]').val(MOTOR_CONFIG.motor_poles);
         }
 
+        $('#escProtocolTooltip').toggle(semver.lt(CONFIG.apiVersion, "1.42.0"));
+        $('#escProtocolTooltipNoDSHOT1200').toggle(semver.gte(CONFIG.apiVersion, "1.42.0"));
+
         esc_protocol_e.val(PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
         esc_protocol_e.change(function () {
             var escProtocolValue = parseInt($(this).val()) - 1;
