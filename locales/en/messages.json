@@ -14,6 +14,15 @@
         "message": "No",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "On"
+    },
+    "off": {
+        "message": "Off"
+    },
+    "auto": {
+        "message": "Auto"
+    },
     "error": {
         "message": "Error: {{errorMessage}}"
     },

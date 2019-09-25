@@ -455,7 +455,11 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 #options-window select {
-    margin-right: 3em;
+    margin-right: 2px;
+    background: var(--boxBackground);
+    color: var(--defaultText);
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
 }
 
 #options-window span {

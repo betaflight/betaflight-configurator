@@ -390,13 +390,13 @@ function startProcess() {
                         CliAutoComplete.setEnabled(checked);
                     }).change();
 
-                $('div.darkTheme input')
-                    .prop('checked', DarkTheme.configEnabled)
+                $('#darkThemeSelect')
+                    .val(DarkTheme.configEnabled)
                     .change(function () {
-                        var checked = $(this).is(':checked');
+                        var value = parseInt($(this).val());
 
-                        ConfigStorage.set({'darkTheme': checked});
-                        setDarkTheme(checked);
+                        ConfigStorage.set({'darkTheme': value});
+                        setDarkTheme(value);
                     }).change();
 
                 function close_and_cleanup(e) {
@@ -548,7 +548,12 @@ function startProcess() {
     });
 
     ConfigStorage.get('darkTheme', function (result) {
-        setDarkTheme(result.darkTheme);
+        if (result.darkTheme === undefined || typeof result.darkTheme !== "number") {
+            // sets dark theme to auto if not manually changed
+            setDarkTheme(2);
+        } else {
+            setDarkTheme(result.darkTheme);
+        }
     });
 };
 
