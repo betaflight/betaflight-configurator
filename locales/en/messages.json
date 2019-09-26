@@ -5228,6 +5228,9 @@
     "configurationEscProtocolHelp": {
         "message": "Select your motor protocol. <br>Make sure to verify the protocol is supported by your ESC, this information should be on the makers website. <br> <b>Be carefull using DSHOT900 and DSHOT1200 as not many ESC's support it!</b>"
     },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "Select your motor protocol. <br>Make sure to verify the protocol is supported by your ESC, this information should be on the makers website."
+    },
     "configurationunsyndePwm": {
         "message": "Motor PWM speed Separated from PID speed"
     },
