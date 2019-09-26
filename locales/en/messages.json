@@ -2812,6 +2812,9 @@
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
     },
+    "firmwareFlasherConfigCorrupted": {
+        "message": "Config file appears to be corrupted, ASCII accepted (chars 0-127)"
+    },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">Remote Firmware loaded, ready for flashing</span>"
     },

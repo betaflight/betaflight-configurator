@@ -587,6 +587,12 @@ TABS.firmware_flasher.initialize = function (callback) {
                 self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
         }
+        function checkAsciiLimits(input) {
+            for (let i=0; i < input.length; i++) {
+                if (input.charCodeAt(i) > 127) { return false; }
+            }
+            return true;
+        }
         // UI Hooks
         $('a.load_file').click(function () {
             self.enableFlashing(false);
@@ -641,10 +647,14 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     });
                                 } else {
                                     clearBufferedFirmware();
-                                    self.unifiedTargetConfig = e.target.result;
-                                    self.unifiedTargetConfigName = file.name;
-                                    self.isConfigLocal = true;
-                                    flashingMessageLocal();
+                                    if (checkAsciiLimits(e.target.result)) {
+                                        self.unifiedTargetConfig = e.target.result;
+                                        self.unifiedTargetConfigName = file.name;
+                                        self.isConfigLocal = true;
+                                        flashingMessageLocal();
+                                    } else {
+                                        self.flashingMessage('firmwareFlasherConfigCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
+                                    }
                                 }
                             }
                         };
