@@ -1729,6 +1729,7 @@ TABS.pid_tuning.cleanup = function (callback) {
 
     if (self.model) {
         $(window).off('resize', $.proxy(self.model.resize, self.model));
+        self.model.dispose();
     }
 
     $(window).off('resize', $.proxy(this.updateRatesLabels, this));

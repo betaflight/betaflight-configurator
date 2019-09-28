@@ -605,6 +605,7 @@ TABS.receiver.cleanup = function (callback) {
     $(window).off('resize', this.resize);
     if (this.model) {
         $(window).off('resize', $.proxy(this.model.resize, this.model));
+        this.model.dispose();
     }
 
     this.keepRendering = false;
