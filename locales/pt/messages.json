@@ -2340,9 +2340,6 @@
     "cliLoadFromFileBtn": {
         "message": "Carregar do arquivo"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Revisar comandos carregados"
-    },
     "cliConfirmSnippetNote": {
         "message": "<strong>Nota:</strong> É possível ver e modificar os comandos antes de executar."
     },
@@ -3101,10 +3098,6 @@
     "pidTuningPidSlidersHelp": {
         "message": "Sliders para ajustes das características de voo (Ganhos PID)<br><br>Multiplicador mestre: Aumenta ou diminui todos os ganhos PID (acima) mantendo a diferença proporcional entre os ganhos.<br><br>Equilíbrio PD: Ajusta o equilíbrio (razão / diferença proporcional) entre os Termos P e D ('a mola' [p-term] e o 'amortecedor' [d-term]).<br><br>Ganho PD: Aumenta ou diminui juntos os ganhos dos Termos P e D - mantendo a razão (balanço) entre os dois - para mais (ou menos) autoridade do controlador PID.<br><br>Ganho na resposta: Aumenta ou diminui o ganho do FeedForward para controlar a sensação de resposta dos sticks na aeronave.",
         "description": "Overall helpicon message for PID tuning sliders"
-    },
-    "pidTuningSliderHighWarning": {
-        "message": "<span class=\"message-negative\">CUIDADO</span>: Utilizar valores altos pode causar perda de controle, danos aos motores ou comportamento inseguro da aeronave. Prossiga com cuidado.",
-        "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Nota:</strong> Os sliders foram desativados por que os valores foram modificados manualmente. Pressionar o botão '$t(pidTuningSliderEnableButton.message)' irá ativa-los novamente. Isto porem irá reverter os valores e qualquer alteração não salva será perdida.",

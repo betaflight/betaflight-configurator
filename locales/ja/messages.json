@@ -7,6 +7,15 @@
         "message": "いいえ",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "ON"
+    },
+    "off": {
+        "message": "OFF"
+    },
+    "auto": {
+        "message": "自動"
+    },
     "error": {
         "message": "エラー: {{errorMessage}}"
     },
@@ -49,6 +58,9 @@
     "close": {
         "message": "閉じる"
     },
+    "cancel": {
+        "message": "キャンセル"
+    },
     "autoConnectEnabled": {
         "message": "自動接続: 有効 - Configuratorは自動的に新しいポートが検出されたときに接続を試みます。"
     },
@@ -84,11 +96,11 @@
         "message": "システム初期値 ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
-        "message": "データ書込みできません<br>チップを確認しました",
+        "message": "データ書き込み不可<br>チップを確認しました",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "データ書込み: 空き領域",
+        "message": "データ書き込み: 空き領域",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
@@ -335,7 +347,7 @@
         "message": "消去中..."
     },
     "stm32Flashing": {
-        "message": "書込み中..."
+        "message": "書き込み中..."
     },
     "stm32Verifying": {
         "message": "検証中..."
@@ -365,7 +377,7 @@
         "message": "正常にインポートされました。"
     },
     "stm32UnprotectUnplug": {
-        "message": "必要な処置: DFUモードでフライトコントローラとのケーブルを抜き、再度接続して書換えを再試行して下さい！"
+        "message": "必要な処置: DFUモードでフライトコントローラとのケーブルを抜き、再度接続して書き換えを再試行して下さい！"
     },
     "stm32UnprotectFailed": {
         "message": "FCボードの保護を解除できませんでした"
@@ -385,6 +397,12 @@
     "firmwareUpgradeRequired": {
         "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書換えする前にCLIを使用してバックアップして下さい。 CLIのバックアップ / リストア手順はドキュメントに記載されています。<br />または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用して下さい。"
     },
+    "resetToCustomDefaultsDialog": {
+        "message": "このFCボードにはカスタムされた初期値が適用されています。通常、カスタム初期値が適用されない場合はFCボードが正常に動作しません。<br />このFCボードにカスタム初期値を適用しますか？"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "カスタム初期値を適用"
+    },
     "infoVersions": {
         "message": "実行中 - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
@@ -393,7 +411,7 @@
         "message": "サーバから $1 の開発情報が読み込まれました。"
     },
     "buildServerLoadFailed": {
-        "message": "<b>サーバからの $1 リリース情報の読込みに失敗した為、キャッシュ情報を使用します。理由：<code>$2</code></b>"
+        "message": "<b>サーバからの $1 リリース情報の読み込みに失敗した為、キャッシュ情報を使用します。理由：<code>$2</code></b>"
     },
     "buildServerUsingCached": {
         "message": "$1 開発情報のキャッシュを参照します。"
@@ -402,7 +420,7 @@
         "message": "$1 GitHubよりリリース情報が読み込まれました。"
     },
     "releaseCheckFailed": {
-        "message": "<b>GitHub情報 $1リリースの読込みに失敗した為、キャッシュ情報を使用します。理由: <code>$2</code></b>"
+        "message": "<b>GitHub情報 $1リリースの読み込みに失敗した為、キャッシュ情報を使用します。理由: <code>$2</code></b>"
     },
     "releaseCheckCached": {
         "message": "$1リリースのキャッシュされた情報を使用します。"
@@ -453,7 +471,7 @@
         "message": "フライトコントローラ情報 ID: <strong>$1</strong> バージョン: <strong>$2</strong>"
     },
     "versionLabelTarget": {
-        "message": "Target"
+        "message": "対象"
     },
     "versionLabelFirmware": {
         "message": "ファーム"
@@ -922,6 +940,9 @@
     },
     "featureRX_SPI": {
         "message": "SPI受信サポート"
+    },
+    "featureESC_SENSOR": {
+        "message": "KISS/BLHeli_32 ESCテレメトリーを<b>別配線で使用しています</b>"
     },
     "featureCHANNEL_FORWARDING": {
         "message": "AUXチャンネルをサーボ出力に転送"
@@ -1500,7 +1521,7 @@
         "message": "D値 フィルタータイプ"
     },
     "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "オフ"
+        "message": "OFF"
     },
     "receiverRcSmoothingChannel": {
         "message": "スムージングチャンネル"
@@ -1515,7 +1536,7 @@
         "message": "ミリ秒単位での手動RC補間モードにおける補間間隔"
     },
     "receiverRcInterpolationOff": {
-        "message": "オフ"
+        "message": "OFF"
     },
     "receiverRcSmoothingType": {
         "message": "スムージングタイプ"
@@ -1618,7 +1639,7 @@
         "message": "スロットルリミット %"
     },
     "pidTuningThrottleLimitTypeOff": {
-        "message": "オフ"
+        "message": "OFF"
     },
     "pidTuningThrottleLimitTypeScale": {
         "message": "スケール"
@@ -1709,6 +1730,10 @@
     },
     "tuningHelp": {
         "message": "<b>チューニングTips</b><br /><span class=\"message-negative\">重要:</span> 最初のフライト中はモーターの温度を確認することが重要です。フィルター値が高くなるほど飛行が軽快となりますが、モーターにはより多くのノイズが発生します。<br>デフォルト値である100Hzが最適値となりますが、ノイズ低減設定ではD値フィルターを50Hzに、またはジャイロフィルターの値を下げてみて下さい。"
+    },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">重要:</span> スライダーを使用してフィルター設定を変更することを推奨します。<br>比較的少ない変更を行い、それぞれ変更後にテストを実行するのが最善です。さらに変更する前に、モーター温度をよく確認してください。<br>フィルター減少 (右側スライダー、カットオフ高値) はプロップウォッシュを改善しますが、モーターにより多くのノイズを発生させ、モーターをより高温に、おそらく燃え尽きてしまうほど高温になってしまいます。また、ほとんどの初期出荷時およびRPMフィルタリングが有効になっている場合、フィルタリングを減らすことができます。<br>異常に高いまたは低いフィルター設定は、アーム時のふらつきを引き起こす場合があります。初期値は一般的な5インチ機に対して安全な値となっています。<br><strong>注:</strong> プロファイルを変更しても、D-Termフィルター設定のみが変更されます。ジャイロフィルターの設定は、すべてのプロファイルで同じ設定となります。",
+        "description": "Filter tuning subtab note"
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ないです。これは機体制御が困難となる可能性があり、飛行中に大きく影響する可能性があります。<b>『ジャイロダイナミックローパス』または『ジャイロローパス 1』の少なくとも1つと『D値ダイナミックローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
@@ -2334,7 +2359,7 @@
         "message": "ファイルからロード"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "ロードしたコマンドを確認します"
+        "message": "ロードファイル <strong>{{fileName}}</strong> より、読み出されたコマンドをレビューします。"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>備考</strong>: 実行前にコマンドを確認及び編集することができます。"
@@ -2466,7 +2491,7 @@
         "message": "キャンセル"
     },
     "dataflashFileWriteFailed": {
-        "message": "選択されたファイルへの書込みが失敗しました。フォルダの管理者権限を確認するか、別の場所を選択して下さい。"
+        "message": "選択されたファイルへの書き込みが失敗しました。フォルダの管理者権限を確認するか、別の場所を選択して下さい。"
     },
     "sdcardStatusNoCard": {
         "message": "カードが挿入されていません"
@@ -2502,7 +2527,7 @@
         "message": "日付:"
     },
     "firmwareFlasherReleaseTarget": {
-        "message": "Target:"
+        "message": "対象:"
     },
     "firmwareFlasherReleaseFile": {
         "message": "Binary:"
@@ -2514,7 +2539,7 @@
         "message": "手動でダウンロードして下さい。"
     },
     "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">重要:</span> チップセットに即したファームウェアを書込みするようにして下さい。間違ったファームウェアを書込みさせると、<span class=\"message-negative\">最悪な問題</span>が起こってしまう可能性があります。"
+        "message": "<span class=\"message-negative\">重要:</span> チップセットに即したファームウェアを書き込みするようにして下さい。間違ったファームウェアを書き込みさせると、<span class=\"message-negative\">最悪な問題</span>が発生してしまう可能性があります。"
     },
     "firmwareFlasherPath": {
         "message": "パス:"
@@ -2530,6 +2555,9 @@
     },
     "firmwareFlasherLoadFirmwareFile": {
         "message": "ファームウェアファイルを選択して下さい"
+    },
+    "firmwareFlasherLoadedConfig": {
+        "message": "対象をロードしました。ファームウェアファイルをロードしてください。"
     },
     "firmwareFlasherNoReboot": {
         "message": "再起動シーケンスなし"
@@ -2547,7 +2575,7 @@
         "message": "FCがBOOTモードの場合に有効とします。具体的にはブートローダーのピンをジャンパさせたり、BOOTボタンを押しながらFCの電源を入れた場合に有効とします。"
     },
     "firmwareFlasherFlashOnConnect": {
-        "message": "接続時に書込み"
+        "message": "接続時に書き込み"
     },
     "firmwareFlasherFlashOnConnectDescription": {
         "message": "FCボードへ自動的にフラッシュします。(新たに検出されたシリアルポートによって起動)"
@@ -2562,7 +2590,7 @@
         "message": "開発中のファームウェアを適用"
     },
     "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": "最新の (未検証) 開発ファームウェアを書込みします。"
+        "message": "最新の (未検証) 開発ファームウェアを書き込みします。"
     },
     "firmwareFlasherManualPort": {
         "message": "ポート"
@@ -2571,7 +2599,7 @@
         "message": "伝送速度の手動選択"
     },
     "firmwareFlasherManualBaudDescription": {
-        "message": "シリアル接続に対しデフォルト伝送速度に対応しない、またはBluetooth経由で書込みするFCボードの伝送速度を手動で選択します。<br /><span class=\"message-negative\">注:</span> USB DFUで書き込みさせる場合は使用しません。"
+        "message": "シリアル接続に対しデフォルト伝送速度に対応しない、またはBluetooth経由で書き込みするFCボードの伝送速度を手動で選択します。<br /><span class=\"message-negative\">注:</span> USB DFUで書き込みさせる場合は使用しません。"
     },
     "firmwareFlasherBaudRate": {
         "message": "伝送速度"
@@ -2686,13 +2714,13 @@
         "message": "<span class=\"message-negative\">有効なシリアルポートを選択して下さい</span>"
     },
     "firmwareFlasherWritePermissions": {
-        "message": "このファイルに対する<span class=\"message-negative\">書込み権限</span>がありません"
+        "message": "このファイルに対する<span class=\"message-negative\">書き込み権限</span>がありません"
     },
     "firmwareFlasherFlashTrigger": {
         "message": "検出: <strong>$1</strong> - 接続時フラッシュをトリガーとします"
     },
     "firmwareFlasherPreviousDevice": {
-        "message": "検出: <strong>$1</strong> - 以前のデバイスがまだ書込まれています。再接続してもう一度お試し下さい。"
+        "message": "検出: <strong>$1</strong> - 以前のデバイスがまだ書き込まれています。再接続してもう一度お試し下さい。"
     },
     "ledStripHelp": {
         "message": "フライトコントローラは、個々のLEDストリップの色や効果を制御できます。<br/>グリッド上にLEDを配置、配線順序を設定し、グリッド位置に従って機体にLEDを取り付けます。 ワイヤーオーダー番号のないLEDは保存されません。<br />HSV値を編集するには、色を選択、ダブルクリックします。"
@@ -3092,8 +3120,8 @@
         "message": "機体の飛行特性 (PID値) を調整するスライダー<br><br>基準乗算値: PID値の間における比例差を保持しながら、すべての(上記) PID値[ゲイン] を増減します。<br><br>PD値バランス: P値とD値 (スプリング [p-term] およびショックアブソーバー [d-term]) 間のバランス (比率\\比例差) を調整します。<br><br>PD値: PID制御の強さを増やす (または減らす) ために、P&D値ゲインを一緒に増減します。(2つの間の比率 (バランス) を保持します) <br><brスティック応答: フィードフォワード値を増減して、機体のスティック応答感覚を制御します。",
         "description": "Overall helpicon message for PID tuning sliders"
     },
-    "pidTuningSliderHighWarning": {
-        "message": "<span class=\"message-negative\">警告:</span> このスライダーの高い値を適用すると、ふらついた飛行やモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">警告:</span> 現在のスライダー位置は、ふらついた飛行やモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -3103,6 +3131,10 @@
     "pidTuningSliderEnableButton": {
         "message": "スライダー有効",
         "description": "Button label for enabling sliders"
+    },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>注:</strong> エキスパートモードではないため、スライダー範囲が制限されています。この範囲は、ほとんどの機体と初心者に適しているはずです。",
+        "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
         "message": "低",
@@ -3568,6 +3600,9 @@
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">警告:</span> 電圧および/または電流メーター情報は<strong>変更されましたが保存していません。</strong> 正しいメーター情報を設定して一度保存してから調整してください。"
     },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "キャリブレーションマネージャーの確認"
+    },
     "powerCalibrationSave": {
         "message": "キャリブレート"
     },
@@ -3776,7 +3811,7 @@
         "message": "お使いのフライトコントローラはBetaFlight OSDに対応していないようです。"
     },
     "osdSetupUnsupportedNote2": {
-        "message": "いくつかのフライトコントローラにはオンボード<a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a>があり、これを<a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>で設定および書込みができますが、MinimOSDはこのインターフェイスでは設定できません。"
+        "message": "いくつかのフライトコントローラにはオンボード<a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a>があり、これを<a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>で設定および書き込みができますが、MinimOSDはこのインターフェイスでは設定できません。"
     },
     "osdSetupProfilesTitle": {
         "message": "OSDプロファイル番号",
@@ -3817,7 +3852,7 @@
         "message": "映像形式"
     },
     "osdSetupVideoFormatOptionAuto": {
-        "message": "Auto",
+        "message": "自動",
         "description": "Option for the video format in the OSD"
     },
     "osdSetupVideoFormatOptionPal": {
@@ -4784,10 +4819,14 @@
         "message": "OSD設定を保存しました"
     },
     "osdWritePermissions": {
-        "message": "このファイルに対する<span class = \"message-negative\">書込み権限</span>がありません"
+        "message": "このファイルに対する<span class = \"message-negative\">書き込み権限</span>がありません"
     },
     "osdButtonSaved": {
         "message": "保存しました"
+    },
+    "vtxHelp": {
+        "message": "ここで映像伝送用送信機 (VTX) の値を設定します。フライトコントローラとVTXがサポートしている場合、VTXテーブルを含む送信値を表示および変更できます。<br>VTXを設定するには次の手順となります。<br>1. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">このページ</a>に進みます;<br>2. 地域およびVTXモデルに適した設定ファイルを見つけてダウンロードします;<br>3.『 $t(vtxButtonLoadFile.message) 』をクリックして、VTX設定ファイルを選択し、ロードしてください;<br>4. 正しく設定されていることを確認してください;<br>5.『 \n $t(vtxButtonSave.message) 』をクリックし、フライトコントローラにVTX設定を保存します。",
+        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">注意:</span> VTXが設定されていないかサポートされていません。フライトコントローラはTrampやSmartAudio等のプロトコルを使用してVTXと接続しており、必要に応じて、$t(tabPorts.message)タブで設定を修正する必要があります。",
@@ -5005,6 +5044,14 @@
         "message": "VTX設定ファイルのロード中に<span class=\"message-negative\">エラーが発生しました</span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadClipboardOk": {
+        "message": "VTX設定を<span class=\"message-positive\">ロードしました</span>",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxLoadClipboardKo": {
+        "message": "クリップボードからVTX設定情報をロード中に<span class=\"message-negative\">エラー</span>が発生しました。たぶん内容が正しくありません。",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
     "vtxButtonSaveFile": {
         "message": "ファイルへ保存",
         "description": "Save to file button in the VTX tab"
@@ -5012,6 +5059,10 @@
     "vtxButtonLoadFile": {
         "message": "ファイルからロード",
         "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "クリップボードから読み込み",
+        "description": "Paste from clipboard button in the VTX tab"
     },
     "vtxButtonSave": {
         "message": "保存",
@@ -5035,6 +5086,9 @@
     },
     "configurationEscProtocolHelp": {
         "message": "モータープロトコルを選択して下さい。<br>プロトコルがESCによってサポートされていることを確認して下さい。この情報はメーカーのWebサイトを確認して下さい。<br> <b>DSHOT900とDSHOT1200は、現在それほど多くのESCをサポートしていないため、使用の際はご注意下さい！</b>"
+    },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "モータープロトコルを選択してください。<br>そのプロトコルがESC側でサポートされているかを確認してください。サポート情報はメーカーのWebサイトをご覧ください。"
     },
     "configurationunsyndePwm": {
         "message": "PIDからモーターPWMを分離"

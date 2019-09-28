@@ -2244,9 +2244,6 @@
     "cliLoadFromFileBtn": {
         "message": "Carica da file"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Controlla i comandi caricati"
-    },
     "cliConfirmSnippetNote": {
         "message": "<strong>Nota</strong>: Puoi ricontrollare e modificare i comandi prima dell esecuzione."
     },

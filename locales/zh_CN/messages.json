@@ -7,6 +7,15 @@
         "message": "否",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "开启"
+    },
+    "off": {
+        "message": "关闭"
+    },
+    "auto": {
+        "message": "自动"
+    },
     "error": {
         "message": "错误: {{errorMessage}}"
     },
@@ -48,6 +57,9 @@
     },
     "close": {
         "message": "关闭"
+    },
+    "cancel": {
+        "message": "取消"
     },
     "autoConnectEnabled": {
         "message": "自动连接：开启 - 地面站会自动连接新发现的端口"
@@ -225,7 +237,7 @@
         "message": "上一版本地面站生成的备份文件不能移植到当前版本的地面站"
     },
     "configMigrationFrom": {
-        "message": "正在移植地面站设置文件: $1"
+        "message": "正在迁移配置器生成的配置文件: $1"
     },
     "configMigratedTo": {
         "message": "地面站设置文件 $1 已移植"
@@ -448,6 +460,12 @@
     },
     "firmwareUpgradeRequired": {
         "message": "飞控固件需要更新到新的版本，使用CLI 来备份设置。具体操作信息请参考 Betaflight 文档。<br />如果不想更新到最新的固件，可以使用支持该固件的地面站来设置使用。"
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "存在适用于此飞控板的自定义默认设置。通常来说，只有在使用了自定义默认设置之后飞控板才能正常工作。<br />您是否要为此飞控板应用自定义默认设置？"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "应用自定义默认设置"
     },
     "infoVersions": {
         "message": "操作系统: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, 配置程序: <strong>{{configuratorVersion}}</strong>",
@@ -1167,7 +1185,7 @@
         "description": "One of the fields of the ESC/Motor configuration"
     },
     "configurationMotorPolesHelp": {
-        "message": "此选项用于设置一些功能，比如说RPM滤波器。<br><br>它表示电机转子上的磁铁数量。<b>不要计算</b>绕组所在的定子数量。典型的5寸机的电机有14个磁铁，较小的飞机比如说3寸或更小的飞机电机通常有12个磁铁。",
+        "message": "此选项用于设置一些功能，比如说 RPM 滤波器。<br><br>它表示电机转子上的磁铁数量。<b>不要计算</b>绕组所在的定子数量。典型的5寸机的电机有14个磁铁，较小的飞机比如说3寸或更小的飞机电机通常有12个磁铁。",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
@@ -1519,7 +1537,7 @@
         "description": "Auto Smoothness parameter help message"
     },
     "receiverRcDerivativeTypeSelect": {
-        "message": "导数 (Derivative) 截止类型"
+        "message": "导数(Derivative) 截止类型"
     },
     "receiverRcInputTypeSelect": {
         "message": "输入截止类型"
@@ -1603,7 +1621,7 @@
         "message": "前馈过渡阈值"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "通过这个参数， 前馈值可以被降低到接近摇杆中点，使翻滚动作的结束更平滑一些。<br> 该值表示摇杆偏移量：0代表摇杆居中，1代表摇杆打满。当摇杆实际位置大于该值时，前馈值保持在用户设定的数字不变。当摇杆实际位置小于该值时，前馈值会按比例下降，在摇杆居中时降低到0。<br> 设置为1可以获得最平滑的效果，而设置为0将保持前馈值在全程都保持在用户设定的数字不变。"
+        "message": "通过这个参数， 前馈值在接近摇杆中点附近时被降低，使翻滚动作的结束过程更平滑一些。<br> 该值表示摇杆偏移量：0代表摇杆居中，1代表摇杆打满。当摇杆实际位置大于该值时，前馈值保持在用户设定的数字不变。当摇杆实际位置小于该值时，前馈值会按比例下降，在摇杆居中时降低到0。<br> 设置为1可以获得最平滑的效果，而设置为0将保持前馈值在整个行程内都保持在用户设定的数字不变。"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D 设定点转换阈值"
@@ -1631,21 +1649,21 @@
         "message": "Integral"
     },
     "pidTuningIntegralHelp": {
-        "message": "控制飞机保持整体设定点位置的力度的强弱。<br>类似 P 值的行为，但更针对长期的因素例如飞机的重心偏移或者外界侵扰（风力影响）。<br><br>更高的增益提供更紧凑的行迹（如连续过弯时），但也会让飞机对摇杆响应显得有些僵硬。<br>如果相对于 D 值太高可能会导致低频抖动。",
+        "message": "控制飞机保持设定点整体位置的力度的强弱。<br>类似于 P ，但更针对长期的偏差例如飞机的重心偏移或者外界扰动(持续的风) 。<br><br>更高的增益提供更紧凑的轨迹(如连续过弯时) ，但也会让飞机对摇杆响应显得有些僵硬。<br>如果相对于 D-term 太高则可能会导致低频抖动。",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivative"
     },
     "pidTuningDerivativeHelp": {
-        "message": "控制缓冲任何移动的阻尼的强弱。对摇杆控制的移动，D 值会缓冲控制。对外界侵扰（洗桨或阵风）D 值会缓冲侵扰。<br><br>更高的增益提供更多的阻尼，减少 P 值和 FF 造成的过冲。<br>然而 D 值对陀螺仪的高频振动非常敏感（噪音会被指数级放大）。<br><br>如果 D 增益太高或陀螺仪噪音没有被妥善滤波处理（见滤波页），高频噪音会导致电机过热甚至烧毁。<br><br>把 D 指想象成车辆上的避震器，但是具有会放大高频陀螺仪噪音的不利特性。",
+        "message": "控制缓冲任何移动的阻尼的强弱。对打杆动作，D-term 会缓冲命令。对外界扰动(洗桨或微风) D-term 会缓冲扰动。<br><br>更高的增益将提供更多的阻尼，以减少 P 和 FF 造成的过冲。<br>然而 D-term 对陀螺仪的高频振动非常敏感(噪音会被按频率放大)。<br><br>如果 D 增益太高或陀螺仪噪音没有被妥善滤波处理(见滤波页) ，高频噪音则会导致电机过热甚至烧毁。<br><br>把 D-term 想象成车辆上的避震器，但是具有放大陀螺仪高频噪音的负面效果。",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "Feedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "是一个基于摇杆输入的推动增益。FF 帮助 P 值来推动飞机更快响应摇杆的移动。<br><br>P 值基于摇杆的设定点（度/秒）和陀螺仪读数的当前滚转速率（度/秒）之间的差异来推动飞机。FF 只基于摇杆的移动来推动飞机。<br><br>更高的增益值可以使飞机感觉更贴手。<br>太高的值会导致过冲，电机发热量增加和电机饱和（电机无法跟上期望的速率）。<br>较低或零值可使飞机手感更为平滑。",
+        "message": "前馈是一个基于摇杆输入的额外提升参数。FF 帮助 P 值来推动飞机更快地响应摇杆的移动。<br><br>P-term 基于摇杆的设定点(度/秒) 和陀螺仪读数的当前角速度(度/秒) 之间的误差来推动飞机。FF 只基于摇杆的移动量来推动飞机。<br><br>更高的增益值可以使飞机感觉更贴手。<br>太高的值会导致过冲、电机发热量增加和电机饱和（电机无法跟上期望的速率）。<br>较低或零值可使飞机手感更为平滑。",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningRcRate": {
@@ -1777,6 +1795,10 @@
     "tuningHelp": {
         "message": "<b> 调校技巧</b><br /><span class=\"message-negative\">重要：</span>调校后的初次飞行需注意电机温度。滤波值越高，飞行效果可能越好，但也会导致更多的信号“噪音”进入电机。<br>100Hz 是默认较佳的数值，但对震动较严重的情况，你可以尝试把 Dterm 和 Gyro 滤波器降低到50Hz。"
     },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">重要信息：</span> 我们建议使用滑块来更改滤波器设置。请同时移动两个滑块。<br>最好做出相对较小的变更，并在每次做出变更后进行测试飞行。在做出进一步改动之前请仔细检查电机温度。<br>较少的滤波(滑块向右滑，以得到更高的截止频率) 将改善“洗桨”现象，但会让更多的电机噪声通过，从而使电机更烫，温度过高则有可能烧毁电机。 对于大多数的较新飞行器以及在启用 RPM 滤波的情况下，可以采用较少的滤波。<br>异常高或异常低的滤波器设置可能会导致飞行器在解锁时发生\"起飞暴走\" 现象。 默认设置对于常见的5' 穿越机是安全的。<br><strong>注意：</strong> 更改配置文件只会更改 D Term 过滤器设置。陀螺仪滤波器设置对于所有的配置文件来说都是相同的。",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>警告：</b></span>你使用的滤波器数量非常少。这可能会导致飞机难以控制，并可能导致起飞暴走。强烈建议您<b>至少启用一个陀螺仪动态低通滤波器或者陀螺仪低通滤波器1和一个Dterm动态低通滤波器或Dterm低通滤波器1</b>"
     },
@@ -1790,7 +1812,7 @@
         "message": "'摇杆低位' 阈值"
     },
     "receiverHelpStickMin": {
-        "message": "摇杆最小值（摇杆最低点和摇杆最左）的数值 （微秒）（大于这个值飞控认为遥控信号正常）"
+        "message": "摇杆最小值(摇杆最低/最左) 的数值 (微秒) (大于这个值飞控认为遥控信号正常)"
     },
     "receiverStickCenter": {
         "message": "摇杆中点"
@@ -1802,7 +1824,7 @@
         "message": "'摇杆高位' 阈值"
     },
     "receiverHelpStickMax": {
-        "message": "摇杆最大值（摇杆最高和摇杆最右）的数值 （微秒）（小于这个值飞控认为遥控信号正常）"
+        "message": "摇杆最大值(摇杆最高/最右) 的数值 (微秒) (小于这个值飞控认为遥控信号正常)"
     },
     "receiverDeadband": {
         "message": "RC 死区区间"
@@ -2401,7 +2423,7 @@
         "message": "从文件加载"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "查看已加载的命令"
+        "message": "已加载文件<strong>{{fileName}}</strong>。查看已加载的命令"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>注意</strong>: 您可以在执行前查看和编辑命令。"
@@ -3162,8 +3184,8 @@
         "message": "滑块来调整飞行器飞行特性(PID增益)<br><br>主乘数: 保持各参数增益比例差别的同时升高或降低(以上) 所有 PID 增益。<br><br>PD平衡: 调整 P和D( \"弹簧\" [p-term] 和 \"缓冲\" [d-term]) 之间的平衡(比率\\比例差别)。<br><br>PD增益: 同时增加或降低 P&D 的增益——保持两者间的比率(平衡)——以适配高(或低) PID 权重。<br><br>摇杆响应增益: 提高或降低前馈增益，以控制对飞行器的摇杆响应感。",
         "description": "Overall helpicon message for PID tuning sliders"
     },
-    "pidTuningSliderHighWarning": {
-        "message": "<span class=\"message-negative\">小心</span>: 将滑块推高至这么高将导致起飞暴走、电机损坏或飞行器出现其他不安全的行为。请谨慎行事。",
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">小心</span>: 当前的滑块位置可能导致起飞失控、电机损坏或飞行器出现其他不安全的行为。请谨慎行事。",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -3173,6 +3195,10 @@
     "pidTuningSliderEnableButton": {
         "message": "开启滑块",
         "description": "Button label for enabling sliders"
+    },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>注意:</strong> 滑块范围受限，因为未使用专家模式。此范围应该适用于大多数飞行器以及初学者。",
+        "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
         "message": "低",
@@ -3297,7 +3323,7 @@
         "message": "定义动态陷波滤波器最低中心频率，动态陷波滤波器不会低于此值运行。"
     },
     "pidTuningRpmFilterGroup": {
-        "message": "陀螺仪RPM滤波器",
+        "message": "陀螺仪 RPM 滤波器",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
@@ -3305,7 +3331,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
-        "message": "陀螺仪RPM滤波器谐波数量",
+        "message": "陀螺仪 RPM 滤波器谐波数量",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmHarmonicsHelp": {
@@ -3637,6 +3663,9 @@
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">警告：</span>电压计和/或电流计测量源<strong>已经更改，但未保存</strong>。请在校准之前设置并保存正确的测量源。"
+    },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "校准管理器确认信息"
     },
     "powerCalibrationSave": {
         "message": "校准"
@@ -4859,6 +4888,10 @@
     "osdButtonSaved": {
         "message": "已保存"
     },
+    "vtxHelp": {
+        "message": "您可以在此配置图传(VTX) 的值。如果飞行控制器和图传支持相应功能，则您可以查看和更改传输值(包括图传表) 。<br>请按以下步骤操作以配置您的图传: <br>1. 前往<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">这个</a>页面；<br>2. 找到适用于您所在国家/地区以及您的图传型号的图传配置文件并下载；<br>3. 点击下方的“$t(vtxButtonLoadFile.message)”，选择图传配置文件并加载；<br>4. 验证这些设置正确无误；<br>5. 点击“$t(vtxButtonSave.message)”以将图传配置存储在飞行控制器上。",
+        "description": "Introduction message in the VTX tab"
+    },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">注意:</span>您的图传未配置或不支持。所以您不能在此修改图传值。只有当图传使用Tramp或SmartAudio等协议，连接到飞行控制器，并在$t(tabPorts.message)页面中正确配置后，才可以使用。",
         "description": "Message to show when the VTX is not supported in the VTX tab"
@@ -5075,6 +5108,14 @@
         "message": "<span class=\"message-negative\">错误</span>加载图传配置文件",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadClipboardOk": {
+        "message": "已从剪贴板 <span class=\"message-positive\">加载</span> 图传配置信息",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxLoadClipboardKo": {
+        "message": "当从剪贴板加载图传配置信息时发生<span class=\"message-negative\">错误</span>。内容可能不正确",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
     "vtxButtonSaveFile": {
         "message": "保存到文件",
         "description": "Save to file button in the VTX tab"
@@ -5082,6 +5123,10 @@
     "vtxButtonLoadFile": {
         "message": "从文件加载",
         "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "从剪贴板加载",
+        "description": "Paste from clipboard button in the VTX tab"
     },
     "vtxButtonSave": {
         "message": "保存",

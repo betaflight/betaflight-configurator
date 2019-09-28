@@ -1,4 +1,21 @@
 {
+    "yes": {
+        "message": "Da",
+        "description": "General Yes message to be used across the application"
+    },
+    "no": {
+        "message": "Ne",
+        "description": "General No message to be used across the application"
+    },
+    "on": {
+        "message": "Uključeno"
+    },
+    "off": {
+        "message": "Isključeno"
+    },
+    "auto": {
+        "message": "Automatski"
+    },
     "error": {
         "message": "Greška: {{errorMessage}}"
     },
@@ -41,6 +58,9 @@
     "close": {
         "message": "Zatvori"
     },
+    "cancel": {
+        "message": "Poništi"
+    },
     "autoConnectEnabled": {
         "message": "Automatsko povezivanje: Omogućeno - Konfigurator će se sam povezati kada otkrije novi priključak"
     },
@@ -61,6 +81,19 @@
     },
     "analyticsOptOut": {
         "message": "Isključi anonimno prikupljanje statističkih podataka"
+    },
+    "language_changed": {
+        "message": "Promjena jezika spremljena"
+    },
+    "language_choice_message": {
+        "message": "Promijeni jezik:",
+        "description": "Try and be brief"
+    },
+    "language_default": {
+        "message": "Zadano"
+    },
+    "language_default_pretty": {
+        "message": "Zadano ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
         "message": "Memorijski čip <br> nije pronađen",
@@ -148,6 +181,12 @@
     "tabLanding": {
         "message": "Dobrodošli"
     },
+    "tabChangelog": {
+        "message": "Popis promjena"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Pravila o privatnosti"
+    },
     "tabHelp": {
         "message": "Dokumentacija i podrška"
     },
@@ -183,6 +222,9 @@
     },
     "tabOsd": {
         "message": "OSD"
+    },
+    "tabVtx": {
+        "message": "Video odašiljač"
     },
     "tabPower": {
         "message": "Napajanje i baterija"
@@ -253,6 +295,9 @@
     "stm32UsbDfuNotFound": {
         "message": "USB DFU nije pronađen"
     },
+    "stm32RebootingToBootloader": {
+        "message": "Ponovno pokretanje u bootloader ..."
+    },
     "stm32TimedOut": {
         "message": "STM32 - vrijeme isteklo, programiranje: NEUSPJEŠNO"
     },
@@ -279,6 +324,9 @@
     },
     "stm32LocalErase": {
         "message": "Izvršavanje lokalnog brisanja ..."
+    },
+    "stm32InvalidHex": {
+        "message": "Neispravna hex datoteka"
     },
     "stm32Erase": {
         "message": "Brisanje..."
@@ -333,6 +381,9 @@
     },
     "firmwareUpgradeRequired": {
         "message": "Firmware na ovom uređaju potrebno je ažurirati na noviju verziju. Koristite CLI za stvaranje sigurnosne kopije prije ažuriranja. CLI procedura za sigurnosnu kopiju je u dokumentaciji. <br />U suprotnom, preuzmite i koristite stariju verziju konfiguratora ako niste spremni za ažuriranje firmwarea."
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Primijeni prilagođene tvorničke postavke"
     },
     "infoVersions": {
         "message": "Koristi se - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurator: <strong>{{configuratorVersion}}</strong>",
@@ -481,6 +532,9 @@
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight</strong> je software za kontrolere leta koji je <strong>open source</strong>, potpuno je besplatan i <strong>bez garancije</strong> za sve korisnike.</p><p>Ako su vam Betaflight ili Betaflight konfigurator poslužili svrsi, <strong>podržite</strong> daljnji razvoj donacijom.</p>"
+    },
+    "defaultDonateBottom": {
+        "message": "<p>Ako želite doprinjeti financiski na mjesečnoj bazi, razmislite o doniranju putem <a href='https://www.patreon.com/betaflight'>Patreona</a>.</p>"
     },
     "defaultDonate": {
         "message": "Donirajte"
@@ -1030,6 +1084,14 @@
     "configurationDigitalIdlePercentHelp": {
         "message": "Ovo je 'idle' vrijednost u postocima maksimalnog gasa/throttlea koja se šalje ESCovima kada je letjelica armirana i kada je gas na minimalnoj poziciji. Povećajte ovu vrijednost da biste dobili veću brzinu motora u praznom hodu. Povećajte ovu vrijednost u slučaju 'desyncova'."
     },
+    "configurationMotorPoles": {
+        "message": "Polovi motora",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesLong": {
+        "message": "$t(configurationMotorPoles.message) (broj magneta na rotoru motora)",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
     "configurationThrottleMinimum": {
         "message": "Minimalni gas/throttle (Najniža vrijednost prema ESCu kada je letjelica armirana)"
     },
@@ -1288,6 +1350,12 @@
     "pidTuningUpgradeFirmwareToChangePidController": {
         "message": "<span class=\"message-negative\">Mijenjanje postavki PID kontrolera onemogućeno - možete ih mijenjati kroz CLI.</span> Firmware koji koristite ima API verziju<span class=\"message-negative\">$1</span>, ali ova mogućnost zahtijeva verziju <span class=\"message-positive\">$2</span>."
     },
+    "pidTuningSubTabPid": {
+        "message": "Postavke PID profila"
+    },
+    "pidTuningSubTabRates": {
+        "message": "Postavke Rateprofila"
+    },
     "pidTuningSubTabFilter": {
         "message": "Postavke filtera"
     },
@@ -1300,6 +1368,13 @@
     "pidTuningNonProfilePidSettings": {
         "message": "Profilno neovisne postavke PID kontrolera"
     },
+    "pidTuningAntiGravity": {
+        "message": "Anti Gravity"
+    },
+    "pidTuningAntiGravityMode": {
+        "message": "Način rada",
+        "description": "Anti Gravity mode selection parameter"
+    },
     "pidTuningAntiGravityModeOptionSmooth": {
         "message": "Glatko",
         "description": "One of the modes of anti gravity"
@@ -1307,6 +1382,14 @@
     "pidTuningAntiGravityModeOptionStep": {
         "message": "Korak",
         "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityGain": {
+        "message": "Pojačanje",
+        "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityThres": {
+        "message": "Prag",
+        "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningDMin": {
         "message": "D Min",
@@ -1331,6 +1414,10 @@
     },
     "receiverRcSmoothingManual": {
         "message": "Ručno"
+    },
+    "receiverRcSmoothingAutoSmoothness": {
+        "message": "Auto poravnavanje",
+        "description": "Auto Smoothness parameter for RC smoothing"
     },
     "receiverRcDerivativeTypeSelect": {
         "message": "Način odrezivanja derivacijskog filtera"
@@ -1470,6 +1557,9 @@
     "pidTuningTPABreakPoint": {
         "message": "TPA točka prijeloma"
     },
+    "pidTuningThrottleCurvePreview": {
+        "message": "Prikaz krivulje gasa/throttlea"
+    },
     "pidTuningThrottleLimitType": {
         "message": "Način limitiranja gasa/throttlea"
     },
@@ -1496,6 +1586,9 @@
     },
     "pidTuningFilterFrequency": {
         "message": "Frekvencija"
+    },
+    "pidTuningRatesCurve": {
+        "message": "Rate prikaz"
     },
     "throttle": {
         "message": "Gas/Throttle krivulja"
@@ -1665,6 +1758,10 @@
     "auxiliaryMax": {
         "message": "Max"
     },
+    "auxiliaryDisabled": {
+        "message": "(ONEMOGUĆENO)",
+        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+    },
     "auxiliaryAddRange": {
         "message": "Dodaj raspon"
     },
@@ -1686,8 +1783,17 @@
     "auxiliaryModeLogicAND": {
         "message": "I"
     },
+    "adjustmentsHelp": {
+        "message": "Konfigurirajte prekidače prilagodbi. Pogledajte poglavlje 'in-flight adjustments' u dokumentaciji. Promjene koje ove funkcije naprave nisu automatski spremljene. Postoje 4 slota. Svaki prekidač traži zaseban slot."
+    },
     "adjustmentsExamples": {
         "message": "Primjeri:"
+    },
+    "adjustmentsExample1": {
+        "message": "Koristite Slot 1 i 3POS prekidač na AUX1 kako biste odabrali između Pitch/Roll P, I i D i drugi 3POS prekidač na AUX2 za povećavanje ili smanjivanje vrijednosti kad se zadrži u gornjoj, odnsno donjoj poziciji."
+    },
+    "adjustmentsExample2": {
+        "message": "Koristite Slot 2 i 3POS prekidač na AUX4 da omogućite odabir rateprofila istim 3POS prekidačem na istom kanalu."
     },
     "adjustmentsColumnEnable": {
         "message": "Ako je omogućeno"
@@ -2073,6 +2179,18 @@
     "motorsSensorAccelSelect": {
         "message": "accel"
     },
+    "motorsRPM": {
+        "message": "R: {{motorsRpmValue}}",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
+    },
+    "motorsRPMError": {
+        "message": "E: {{motorsErrorValue}}%",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
+    },
+    "motorsESCTemperature": {
+        "message": "T: {{motorsESCTempValue}}&deg;C",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
+    },
     "motorsMaster": {
         "message": "Master"
     },
@@ -2156,9 +2274,6 @@
     },
     "cliLoadFromFileBtn": {
         "message": "Učitaj iz datoteke"
-    },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Pregledaj učitane komande"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Napomena</strong>: Možete vidjeti i uređivati komande prije izvršavanja."
@@ -2495,6 +2610,10 @@
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Učitavanje firmwarea nije uspjelo"
+    },
+    "firmwareFlasherLegacyLabel": {
+        "message": "{{target}} (Legacy)",
+        "description": "If we have a Unified target and a old style target available, we are labeling the older one"
     },
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Firmware nije odabran za učitavanje</b>"
@@ -2873,6 +2992,54 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profilno neovisne postavke filtera"
     },
+    "pidTuningSliderLowFiltering": {
+        "message": "Manje filtriranja",
+        "description": "Filter tuning slider low header"
+    },
+    "pidTuningSliderDefaultFiltering": {
+        "message": "Zadano filtriranje",
+        "description": "Filter tuning slider default header"
+    },
+    "pidTuningSliderHighFiltering": {
+        "message": "Više filtriranja",
+        "description": "Filter tuning slider high header"
+    },
+    "pidTuningGyroFilterSlider": {
+        "message": "Žiro Filter Množitelj:",
+        "description": "Gyro filter tuning slider label"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "D Term Filter Množitelj:",
+        "description": "D Term filter tuning slider label"
+    },
+    "pidTuningSliderEnableButton": {
+        "message": "Omogući klizače",
+        "description": "Button label for enabling sliders"
+    },
+    "pidTuningSliderLow": {
+        "message": "Nisko",
+        "description": "Tuning Slider Low header"
+    },
+    "pidTuningSliderDefault": {
+        "message": "Zadano",
+        "description": "Tuning Slider Default header"
+    },
+    "pidTuningSliderHigh": {
+        "message": "Visoko",
+        "description": "Tuning Slider High header"
+    },
+    "pidTuningMasterSlider": {
+        "message": "Glavni Množitelj:",
+        "description": "Master tuning slider label"
+    },
+    "pidTuningPDRatioSlider": {
+        "message": "PD Balans:",
+        "description": "PD balance tuning slider label"
+    },
+    "pidTuningPDGainSlider": {
+        "message": "P i D gain:",
+        "description": "P and D gain tuning slider label"
+    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filteri"
     },
@@ -2917,6 +3084,25 @@
     },
     "pidTuningNotchFilterHelp": {
         "message": "Notch filter ima centar i cutoff. Filter je simetričan. Centralna frekvencija je centar filtera a cutoff frekvencije je gdje notch filter započinje. Na primjer sa notch cutoffom 160 i notch centrom na 260, znači da je raspon 160-360Hz sa najviše atenuacije oko centra"
+    },
+    "pidTuningDynamicNotchFilterGroup": {
+        "message": "Dinamički gyro notch filter"
+    },
+    "pidTuningRpmFilterGroup": {
+        "message": "Gyro RPM Filter",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmHarmonics": {
+        "message": "Gyro RPM Filter broj harmonija",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHz": {
+        "message": "Gyro RPM Filter minimalna frekvencija [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHzHelp": {
+        "message": "Minimalna frekvencija koja će biti korištena za RPM filtriranje.",
+        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Profilno ovisne postavke filtera"
@@ -2984,6 +3170,10 @@
     "pidTuningItermRelaxHelp": {
         "message": "Ograničava akumulaciju I Terma kod brzih pokreta. Ovo pomaže smanjiti bounceback na kraju rollova i drugih brzih pokreta. Možete odabrati za koje osi se ovo primjenjuje, i prepoznaju li se brzi pokreti koristeći žiroskop ili određenu razinu kontrole."
     },
+    "pidTuningItermRelaxAxes": {
+        "message": "Osi",
+        "description": "Iterm Relax Axes selection"
+    },
     "pidTuningItermRelaxAxesOptionRP": {
         "message": "RP"
     },
@@ -2996,11 +3186,19 @@
     "pidTuningItermRelaxAxesOptionRPYInc": {
         "message": "RPY (increment only)"
     },
+    "pidTuningItermRelaxType": {
+        "message": "Vrsta",
+        "description": "Iterm Relax Type selection"
+    },
     "pidTuningItermRelaxTypeOptionGyro": {
         "message": "Žiro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
+    },
+    "pidTuningItermRelaxCutoff": {
+        "message": "Cutoff",
+        "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Apsolutna kontrola"
@@ -4413,6 +4611,166 @@
     "osdButtonSaved": {
         "message": "Spremljeno"
     },
+    "vtxFrequencyChannel": {
+        "message": "Unesi frekvenciju direktno",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxSelectedMode": {
+        "message": "Odabrani način rada",
+        "description": "Title for the actual mode header of the VTX"
+    },
+    "vtxActualState": {
+        "message": "Aktualna vrijednost",
+        "description": "Title for the actual values header of the VTX"
+    },
+    "vtxType": {
+        "message": "VTX tip",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxType_0": {
+        "message": "Nepodržano",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_1": {
+        "message": "RTC607",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_3": {
+        "message": "SmartAudio",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_4": {
+        "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_255": {
+        "message": "Nepoznato",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxBand": {
+        "message": "Pojas",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxBand_0": {
+        "message": "Ništa",
+        "description": "Text of one of the options for the band field of the VTX tab"
+    },
+    "vtxBand_X": {
+        "message": "Pojas {{bandName}}",
+        "description": "Text of one of the options for the band field of the VTX tab"
+    },
+    "vtxChannel_0": {
+        "message": "Ništa",
+        "description": "Text of one of the options for the channel field of the VTX tab"
+    },
+    "vtxChannel_X": {
+        "message": "Kanal{{channelName}}",
+        "description": "Text of one of the options for the channel field of the VTX tab"
+    },
+    "vtxPower_0": {
+        "message": "Ništa",
+        "description": "Text of one of the options for the power field of the VTX tab"
+    },
+    "vtxPower_X": {
+        "message": "Razina {{powerLevel}}",
+        "description": "Text of one of the options for the power field of the VTX tab"
+    },
+    "vtxChannel": {
+        "message": "Kanal",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxFrequency": {
+        "message": "Frekvencija",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxDeviceReady": {
+        "message": "Uređaj spreman",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPower": {
+        "message": "Snaga",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPitMode": {
+        "message": "Pit način rada",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPitModeFrequency": {
+        "message": "Frekvencija u pit načinu rada",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxLowPowerDisarm": {
+        "message": "Niska snaga kod disarma",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxLowPowerDisarmOption_0": {
+        "message": "Isključeno",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxLowPowerDisarmOption_1": {
+        "message": "Uključeno",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxLowPowerDisarmOption_2": {
+        "message": "Uključeno do prvog arminga",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxTable": {
+        "message": "VTX tablica",
+        "description": "Text of the header of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevels": {
+        "message": "Broj razina snage",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsValue": {
+        "message": "Vrijednost",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsLabel": {
+        "message": "Oznaka",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBands": {
+        "message": "Broj pojasa",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableChannels": {
+        "message": "Broj kanala po pojasu",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleName": {
+        "message": "Ime",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleLetter": {
+        "message": "Slovo",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleFactory": {
+        "message": "Tvorničke",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxButtonSaveFile": {
+        "message": "Spremi u datoteku",
+        "description": "Save to file button in the VTX tab"
+    },
+    "vtxButtonLoadFile": {
+        "message": "Učitaj iz datoteke",
+        "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "Učitaj iz međuspremnika",
+        "description": "Paste from clipboard button in the VTX tab"
+    },
+    "vtxButtonSave": {
+        "message": "Spremi",
+        "description": "Save button in the VTX tab"
+    },
+    "vtxButtonSaved": {
+        "message": "Spremljeno",
+        "description": "Saved action button in the VTX tab"
+    },
     "mainHelpArmed": {
         "message": "Arming motora"
     },
@@ -4433,6 +4791,10 @@
     },
     "configurationUnsyncedPWMFreq": {
         "message": "PWM frekvencija motora"
+    },
+    "configurationDshotBidir": {
+        "message": "Dvosmjerni DShot (zahtijeva podržani ESC firmware)",
+        "description": "Feature for the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
         "message": "Frekvencija uzorkovanja stanja žiroskopa"
@@ -4512,6 +4874,9 @@
     "pidTuningRateProfileTip": {
         "message": "Do 3 različita rateprofila po profilu mogu biti spremljena na kontroler leta. Rateprofili uključuju postavke za 'RC Rate', 'Rate', 'RC Expo', 'Throttle' i 'TPA'. Mijenjanje između rateprofila je moguće u letu postavljanjem 3 pozicijskog prekidača u Rate Profile odabiru u karitici Prilagodbe."
     },
+    "pidTuningRateSetup": {
+        "message": "Basic/Acro Rateovi"
+    },
     "pidTuningDelta": {
         "message": "Derivacijska metoda"
     },
@@ -4550,6 +4915,12 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Brzina zapisivanja u crnu kutiju"
+    },
+    "onboardLoggingDebugMode": {
+        "message": "Debug način za crnu kutiju"
+    },
+    "onboardLoggingDebugModeUnknown": {
+        "message": "NEPOZNATO"
     },
     "onboardLoggingSerialLogger": {
         "message": "Vanjski serijski uređaj zapisivanja"

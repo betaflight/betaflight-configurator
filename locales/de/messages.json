@@ -2298,9 +2298,6 @@
     "cliLoadFromFileBtn": {
         "message": "Aus Datei laden"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Geladene Befehle überprüfen"
-    },
     "cliConfirmSnippetNote": {
         "message": "<strong>Hinweis</strong>: Du kannst Befehle vor der Ausführung überprüfen und bearbeiten."
     },

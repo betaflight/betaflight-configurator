@@ -7,6 +7,15 @@
         "message": "No",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "Activado"
+    },
+    "off": {
+        "message": "Desactivado"
+    },
+    "auto": {
+        "message": "Auto"
+    },
     "error": {
         "message": "Error: {{errorMessage}}"
     },
@@ -48,6 +57,9 @@
     },
     "close": {
         "message": "Cerrar"
+    },
+    "cancel": {
+        "message": "Cancelar"
     },
     "autoConnectEnabled": {
         "message": "Auto-Conectar: Activado - El configurador intenta conectar automáticamente cuando detecta un nuevo puerto"
@@ -384,6 +396,12 @@
     },
     "firmwareUpgradeRequired": {
         "message": "El firmware de este dispositivo necesita actualizarse a una nueva versión. Use CLI para hacer una copia de seguridad antes de flashear. El proceso de copia/restauración con CLI está en la documentación.<br />Alternativamente puede descargar y usar una versión anterior del configurador si no está preparado para actualizar."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "Hay valores por defecto personalizados disponibles para esta placa. Normalmente, una placa no funcionará correctamente a menos que se apliquen valores por defecto personalizados.<br />¿Quieres aplicar los valores por defecto personalizados para esta placa?"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Aplicar Valores Personalizados"
     },
     "infoVersions": {
         "message": "Ejecutando - SO: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
@@ -2341,7 +2359,7 @@
         "message": "Cargar desde archivo"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "Revisar los comandos cargados"
+        "message": "Cargado archivo <strong>{{fileName}}</strong>. Revisa los comandos cargados"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Nota</strong>: puedes revisar y editar los comandos antes de su ejecución."
@@ -3102,8 +3120,8 @@
         "message": "Deslizadores para ajustar las características de vuelo del quad (valores PID).<br><br>Multiplicador Maestro: Aumenta o disminuye todos los valores del PID manteniendo la diferencia proporcional entre ellos.<br><br>Balance PD: Ajusta el balance (ratio o diferencia proporcional) entre los Términos P y D ('el muelle' [Término P] y 'el amortiguador' [Término D]).<br><br>Ganancia P y D: Aumenta o disminuye los valores de P y D juntos - manteniendo el ratio (balance) entre los dos -para más (o menos) control de la autoridad del PID.<br><br>Sensibilidad del Mando: Aumenta o disminuye el valor de la Prealimentación para controlar la sensación de respuesta al mando del quad.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
-    "pidTuningSliderHighWarning": {
-        "message": "<span class=\"message-negative\">ATENCIÓN</span>: Mover los deslizadores tan arriba puede causar que se vaya volando, daño en los motores o comportamientos no seguros de la aeronave. Procede con precaución.",
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">ATENCIÓN</span>: Los valores actuales de los deslizadores puede causar que se vaya volando, daño a los motores o comportamiento no seguro de la aeronave. Por favor procede con precaución.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -3113,6 +3131,10 @@
     "pidTuningSliderEnableButton": {
         "message": "Activar Deslizadores",
         "description": "Button label for enabling sliders"
+    },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> El rango de los deslizadores está restringido porque no estás en modo experto. Este rango debería ser adecuado para todos los aparatos y principiantes.",
+        "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
         "message": "Bajo",
@@ -3577,6 +3599,9 @@
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">Atención:</span> Los orígenes de los sensores de voltaje y/o corriente <strong>han cambiado pero no han sido salvados.</strong> Por favor configura los orígenes de los sensores correctamente y guárdalo antes de intentar calibrar."
+    },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "Confirmación de Asistente de Calibración"
     },
     "powerCalibrationSave": {
         "message": "Calibrar"
@@ -5019,6 +5044,14 @@
         "message": "<span class=\"message-negative\">Error</span> al cargar el archivo de Configuración VTX",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadClipboardOk": {
+        "message": "Información de Configuración VTX <span class=\"message-positive\">cargada</span> desde el portapapeles",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxLoadClipboardKo": {
+        "message": "<span class=\"message-negative\">Error</span> al cargar la información de Configuración VTX desde el portapapeles. Puede que el contenido no sea correcto.",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
     "vtxButtonSaveFile": {
         "message": "Guardar en archivo",
         "description": "Save to file button in the VTX tab"
@@ -5026,6 +5059,10 @@
     "vtxButtonLoadFile": {
         "message": "Cargar desde archivo",
         "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "Cargar desde el portapapeles",
+        "description": "Paste from clipboard button in the VTX tab"
     },
     "vtxButtonSave": {
         "message": "Guardar",
@@ -5049,6 +5086,9 @@
     },
     "configurationEscProtocolHelp": {
         "message": "Elige tu protocolo para el motor.<br>Asegúrate de verificar en las características de tu ESC que protocolos soporta. <br><b>¡Cuidado si seleccionas DSHOT900 o DSHOT1200 ya que la mayoría de ESCs no lo soportan!</b>"
+    },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "Elige tu protocolo para el motor.<br>Asegúrate de verificar que el protocolo está soportado por tu ESC, esta información la podrás encontrar en la web del fabricante."
     },
     "configurationunsyndePwm": {
         "message": "Velocidad PWM del motor independiente de velocidad PID"

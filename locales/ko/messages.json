@@ -7,6 +7,15 @@
         "message": "아니오",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "켜기"
+    },
+    "off": {
+        "message": "끄기"
+    },
+    "auto": {
+        "message": "자동"
+    },
     "error": {
         "message": "오류: {{errorMessage}}"
     },
@@ -48,6 +57,9 @@
     },
     "close": {
         "message": "닫기"
+    },
+    "cancel": {
+        "message": "취소"
     },
     "autoConnectEnabled": {
         "message": "자동-연결: 활성화됨 - 새로운 포트가 감지되면 컨피규레이터가 자동으로 연결을 시도합니다."
@@ -448,6 +460,12 @@
     },
     "firmwareUpgradeRequired": {
         "message": "이 기기의 펌웨어는 최신 버전으로 업그레이드해야합니다. 플래시하기 전에 CLI를 사용하여 백업하십시오. CLI 백업/복원 절차는 문서를 참고하십시오. <br />또는 업그레이드 준비가 되지 않은 경우 이전 버전의 컨피규레이터를 다운로드하여 사용하십시오."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "이 보드에 대한 사용자 정의 기본값이 있습니다. 일반적으로 보드는 사용자 정의 기본값을 적용하지 않으면 제대로 작동하지 않습니다.<br />이 보드에 대한 사용자 정의 기본값을 적용하시겠습니까?"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "사용자 정의 기본값 적용"
     },
     "infoVersions": {
         "message": "운영-OS: <strong>{{operatingSystem}}</strong>, 크롬: <strong>{{chromeVersion}}</strong>, 컨피규레이터: <strong>{{configuratorVersion}}</strong>",
@@ -1781,6 +1799,10 @@
     "tuningHelp": {
         "message": "<b>튜닝 팁</b><br /><span class=\"message-negative\">중요:</span> 첫 비행 중 모터 온도를 확인하는 것이 중요합니다. 필터 값이 높을수록 더 잘 날 수 있지만 모터에 더 많은 노이즈가 들리게 됩니다. <br> 기본값 100Hz가 최적이지만, 노이즈 설정을 위하여 D텀 필터를 50Hz로 낮출 수 있으며, 자이로 필터를 낮추는 것 또한 가능합니다."
     },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">중요:</span>필터 설정을 변경하기 위해 슬라이더를 사용할 것을 권장합니다. 두 슬라이더를 함께 이동하십시오.<br>변경할 때마다 비교적 작은 변화를 주고 시험 비행을 하는 것이 가장 좋습니다. 추가로 변경하기 전에 모터 온도를 자세히 점검하십시오.<br>적은 필터링(오른쪽으로 슬라이더, 컷오프 값이 더 높음) 은 프롭워시를 개선하지만, 모터까지 더 많은 소음이 전달되어 더 뜨겁고, 소진될 수 있을 정도로 뜨거워질 수 있습니다. 대부분의 클린 빌드 및 rpm 필터링을 활성화한 경우 적은 필터링이 가능합니다.<br> 평소와 달리 필터 설정이 높거나 낮으면 아밍시 기체가 멀리 날아갈 수 있습니다. 기본값은 일반적인 5\" 쿼드에 대해 안전합니다.<br><strong>노트:</strong>프로파일을 변경하면 D-텀 필터 설정만 변경됩니다. 자이로 필터 설정은 모든 프로파일에 대해 동일합니다.",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>경고:</b></span> 당신이 사용하는 필터링 양은 위험할 정도로 낮습니다. 이는 기체를 제어하기 힘들게 하고, 분실을 초래할 수 있습니다. <b>최소한 하나의 자이로 다이나믹 저역통과 또는 자이로 저역통과 1과 최소한 하나의 D 텀 다이나믹 저역통과 또는 D 텀 저역통과 1을 활성화</b>할 것을 강력히 권장합니다."
     },
@@ -2405,7 +2427,7 @@
         "message": "파일로부터 불러오기"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "로드된 명령 검토"
+        "message": "파일 <strong>{{fileName}}</strong> 로드됨. 로드된 명령어를 검토하세요."
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>노트</strong>: 실행하기 전에 명령을 검토하고 편집할 수 있습니다."
@@ -3166,8 +3188,8 @@
         "message": "쿼드 비행 특성(PID 게인) 을 조정하는 슬라이더<br><br>마스터 승수: (위의) 모든 PID 게인이 게인 사이의 비례적 차이를 유지하도록 증가시키거나 감소시킵니다.<br><br>PD 밸런스: P와 D텀('스프링' [p-term] 과 '쇽 옵져버' [d-term]) 사이의 균형(비율 \\ 비례 차이) 을 조정합니다.<br><br>PD 게인: P&D 게인을 함께 증가 또는 감소합니다 - 더 많은 (또는 적은) PID 제어 권한을 위하여 둘 사이의 비율(밸런스) 를 유지합니다.<br><br>스틱 반응 게인: 피드포워드 게인을 올리거나 낮추어 쿼드의 스틱 반응 감각을 제어합니다.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
-    "pidTuningSliderHighWarning": {
-        "message": "<span class=\"message-negative\">주의</span>: 슬라이더를 이렇게 높게 밀면 기체가 멀리 날아가거나, 모터 손상 또는 안전하지 않은 기체 동작이 발생할 수 있습니다. 신중하게 진행하십시오.",
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">주의</span>: 현재 슬라이더 위치는 기체가 멀리 날아가거나, 모터 손상 또는 안전하지 않은 기체 동작이 발생할 수 있습니다. 신중하게 진행하십시오.",
         "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
@@ -3177,6 +3199,10 @@
     "pidTuningSliderEnableButton": {
         "message": "슬라이더 사용",
         "description": "Button label for enabling sliders"
+    },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>노트:</strong> 당신이 전문가 모드가 아니므로 슬라이더 범위가 제한됩니다. 이 범위는 대부분의 빌드와 초보자에게 적합합니다.",
+        "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
         "message": "낮음",
@@ -3641,6 +3667,9 @@
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">경고:</span> 전압과/또는 전류 측정소스가 <strong>변경되었지만 저장되지 않았습니다.</strong> 교정을 시도하기 전에 올바른 측정소스를 설정하고 저장하세요."
+    },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "교정 관리자 확인"
     },
     "powerCalibrationSave": {
         "message": "교정"
@@ -5083,6 +5112,14 @@
         "message": "VTX 환경설정 파일을 로딩하는 동안 <span class=\"message-negative\">오류</span> 발생",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadClipboardOk": {
+        "message": "VTX 환경설정 정보가 클립보드로부터 <span class=\"message-positive\">로드됨</span>",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxLoadClipboardKo": {
+        "message": "VTX 환경설정 정보를 클립보드로부터 로딩중 <span class=\"message-negative\">오류</span>가 발생하였습니다. 내용이 올바르지 않을 것입니다.",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
     "vtxButtonSaveFile": {
         "message": "파일로 저장",
         "description": "Save to file button in the VTX tab"
@@ -5090,6 +5127,10 @@
     "vtxButtonLoadFile": {
         "message": "파일로부터 불러오기",
         "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "클립보드로부터 로드",
+        "description": "Paste from clipboard button in the VTX tab"
     },
     "vtxButtonSave": {
         "message": "저장",
@@ -5113,6 +5154,9 @@
     },
     "configurationEscProtocolHelp": {
         "message": "모터 프로토콜을 선택하십시오. <br>프로토콜이 ESC에서 지원되는지 확인하십시오. 이 정보는 제조업체 웹사이트에 있습니다. <br> <b>DSHOT900과 DSHOT1200을 지원하는 ESC가 많지 않으므로 주의하십시오!</b>"
+    },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "모터 프로토콜을 선택하십시오. <br>프로토콜이 ESC에서 지원되는지 확인하십시오. 이 정보는 제조업체 웹사이트에 있습니다."
     },
     "configurationunsyndePwm": {
         "message": "모터 PWM 속도가 PID 속도로부터 분리됨"
