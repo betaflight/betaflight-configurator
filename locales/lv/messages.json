@@ -2230,9 +2230,6 @@
     "cliLoadFromFileBtn": {
         "message": "Ielādēt no faila"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Caurskatīt ielādētās komandas"
-    },
     "cliConfirmSnippetNote": {
         "message": "<strong>Piezīme</strong>: Jūs varat caurskatīt un izmainīt komandas pirms izpildes."
     },
