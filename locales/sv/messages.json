@@ -2347,9 +2347,6 @@
     "cliLoadFromFileBtn": {
         "message": "Ladda från fil"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Granska laddade kommandon"
-    },
     "cliConfirmSnippetNote": {
         "message": "<strong>Observera</strong>: Du kan granska och redigera kommandon innan de verkställs."
     },
