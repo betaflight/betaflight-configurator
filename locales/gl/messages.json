@@ -10,6 +10,15 @@
         "message": "No",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "Activo"
+    },
+    "off": {
+        "message": "Apagado"
+    },
+    "auto": {
+        "message": "Auto"
+    },
     "error": {
         "message": "Erro: {{errorMessage}} "
     },
@@ -51,6 +60,9 @@
     },
     "close": {
         "message": "Pechar"
+    },
+    "cancel": {
+        "message": "Cancelar"
     },
     "autoConnectEnabled": {
         "message": "Conexión automática: Activada - O configurador intentase conectarse automaticamente cando un porto novo é detectado"
@@ -387,6 +399,12 @@
     },
     "firmwareUpgradeRequired": {
         "message": "O firmware neste dispositivo necesita actualización a unha nova versión. Empregue o CLI para backup antes de flashear. O procedemento CLI de backup/recuperación atópase na documentación.<br />Se o prefire tamén pode descargar e usar unha versión antigua do configurador se non desexa actualizar."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "Hai predeterminados personalizados para este taboleiro dispoñibles. Normalmente, un taboleiro non funcionará correctamente a menos que se apliquen valores predeterminados personalizados. <br/>¿Quere aplicar os valores predeterminados personalizados para este taboleiro?"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Aplicar valores predeterminados personalizados"
     },
     "infoVersions": {
         "message": "Executando - OS: <strong> {{operatingSystem}} </strong>, Chrome: <strong>{{chromeVersion}} </strong>, Configurador: <strong> {{configuratorVersion}} </strong>",
@@ -926,6 +944,9 @@
     "featureRX_SPI": {
         "message": "Soporte de receptores SPI"
     },
+    "featureESC_SENSOR": {
+        "message": "Use KISS/BLHeli_32 telemetría ESC <b>nun fío separado</b>"
+    },
     "featureCHANNEL_FORWARDING": {
         "message": "Enviar os canles aux ás saídas de servos."
     },
@@ -1093,6 +1114,18 @@
     },
     "configurationDigitalIdlePercentHelp": {
         "message": "Este é o valor 'a ralentí' en porcentaxe do acelerador máximo que se envía aos ESCs cando a aeronave está armada e o stick está en posición mínima. Aumente o porcentaxe de valor para gañar máis velocidade do ralentí."
+    },
+    "configurationMotorPoles": {
+        "message": "Postes do motor",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesLong": {
+        "message": "$t(configurationMotorPoles.message) (número de imáns na campana do motor)",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesHelp": {
+        "message": "Esta configuración úsase para algunhas funcións como o Filtro RPM.<br><br> Representa o número de imáns que están na campana do motor. <b>Non conte os estators</b> onde están os enrolamentos. Os motores típicos de 5\" teñen 14 imáns, os máis pequenos como os de 3\" ou menos adoitan ter 12 imáns.",
+        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
         "message": "Minimun Throttle (Valor minimo do ESC ó armar)"
@@ -1274,6 +1307,9 @@
     "portsHelp": {
         "message": "<strong> Nota: </strong> non todas as combinacións son válidas. Cando o firmware do controlador de voo detecte isto, restablecerase a configuración do porto serie."
     },
+    "portsVtxTableNotSet": {
+        "message": "<span class=\"message-negative\">ADVERTENCIA:</span> A táboa VTX non se configurou correctamente e sen ela o control do VTX non será posible. Configure a táboa VTX na lapela $t(tabVtx.message)."
+    },
     "portsMSPHelp": {
         "message": "<strong>Nota:</strong><span class=\"message-negative\">NON</span> desactive o MSP do primeiro porto serie a non ser que saiva o que está a facer. E posible que teña que reflashear e borrar a súa configuración si o fai."
     },
@@ -1411,6 +1447,14 @@
         "message": "Ascenso",
         "description": "Advance of the D Min feature"
     },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min proporciona un xeito de ter un nivel máis baixo de D no voo normal e un nivel máis alto para as manobras rápidas que poden causar unha sobrecarga, como os flips e os rolls. Tamén mantén a D alta durante o prop wash. A ganancia axusta o rápido que D aumenta ao seu máximo valor e baséase no xiro para determinar os movementos máis fortes e os acontecementos. O avance fai que D aumentase antes empregando punto de referencia en vez de xiro para determinar os movementos máis pronunciados.",
+        "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Controla a forza de amortecemento (D-term) nun voo normal cara adiante.<br>Con D_min activado, a ganancia D activa cambia durante o voo. Nun voo normal cara adiante, a D_min ten ganancia baixa. Durante un movemento pronunciado ou durante o prop wash, a ganancia D activa aumenta as ganancias derivadas especificadas á esquerda.<br><br>As ganancias de derivados completos alcánzanse con entradas de stick afiadas, pero só se conseguen parciais durante o prop wash.<br>Axusta o D_Min Gain e Advance para controlar a sensibilidade e a sincronización de aumento.",
+        "description": "D Min helpicon message on PID table titlebar"
+    },
     "pidTuningPidSettings": {
         "message": "Configuración do controlador PID"
     },
@@ -1536,14 +1580,30 @@
     "pidTuningProportional": {
         "message": "Proporcional"
     },
+    "pidTuningProportionalHelp": {
+        "message": "Controla a forza de que a máquina rastrexa os sticks (o punto de referencia).<br><br> O maior valor (as ganancias) proporcionan un seguimento máis axustado, pero pode causar unha sobrecarga se é demasiado elevada en proporción ao derivado (D-term). Pense no P-term como o resorte nun coche.",
+        "description": "Proportional Term helpicon message on PID table titlebar"
+    },
     "pidTuningIntegral": {
         "message": "Integral"
+    },
+    "pidTuningIntegralHelp": {
+        "message": "Controla a resistencia de como a máquina mantén a posición total do punto de referencia. <br>Semellante á proporcional, pero para sesgos máis longos na aeronave como un centro de gravidade compensado (CoG) ou unha influencia exterior persistente (vento constante). <br><br> As ganancias máis elevadas proporcionan un seguimento máis estricto (por exemplo: por xiros rápidos), pero poden facer que a aeronave se sinta ríxida para as entradas de sticks.<br>Se é moi elevado en proporción a D-term, pode provocar oscilacións lentas.",
+        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivada"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "Controla a forza de amortecer a calquera movemento na aeronave. Para os desprazamentos de stick, o termo D amortiza o comando. Para unha influencia exterior (prop wash ou refachos de vento) o termo D amortiza a influencia.<br><br>As maiores ganancias proporcionan máis amortecemento e reducen o exceso de termos P e FF.<br>Non obstante, o termo D é MÁIS sensible ás vibracións de alta frecuencia de xiro (ruído | aumenta de 10x a 100x).<br><br>O ruído de alta frecuencia pode causar calor do motor e queimar motores se as ganancias D son demasiado altas ou o ruído de xiro non se filtra ben (consulte a pestana Filtros).<br><br>Pense no termo D como o amortecedor do seu coche, pero coa propiedade inherente negativa de ampliar o ruído de alta frecuencia do xiro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
         "message": "Anticipativo"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "É un termo de apertura adicional (resorte) baseado na entrada de stick. FF axuda o termo P a empurrar a aeronave para os movementos de stick.<br><br> O termo P presiona en función da diferenza entre o punto de referencia comandado (deg/seg) e a lectura de xiro da velocidade de rotación actual (deg/sec). A presión FF baseada no cambio de comando só de sticks.<br><br>Valores máis altos (ganancias) producirán unha resposta máis forte da máquina á entrada de sticks <br>Os valores demasiado elevados poden producir un exceso de motor, aumentado calor e saturación de motores (onde os motores non poden seguir a velocidade de cambio desexada).<br>Os valores inferiores ou cero (0) producirán unha resposta máis lenta e suave ás entradas de stick.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
@@ -1572,6 +1632,9 @@
     "pidTuningTPABreakPoint": {
         "message": "TPA Breakpoint"
     },
+    "pidTuningThrottleCurvePreview": {
+        "message": "Vista previa das curvas do acelerador"
+    },
     "pidTuningThrottleLimitType": {
         "message": "Límite Throttle"
     },
@@ -1598,6 +1661,9 @@
     },
     "pidTuningFilterFrequency": {
         "message": "Frecuencia"
+    },
+    "pidTuningRatesCurve": {
+        "message": "Vista previa Rates"
     },
     "throttle": {
         "message": "Throttle"
@@ -1667,6 +1733,10 @@
     },
     "tuningHelp": {
         "message": "<b>Consellos de axuste</b><br/><span class=\"message-negative\"> IMPORTANTE: </span> É importante verificar as temperaturas do motor durante os primeiros voos. Canto maior sexa o valor do filtro, mellor pode voar, pero tamén conseguirá máis ruído nos motores. <br> O valor predeterminado de 100Hz é óptimo, pero para configuracións de ruído pode intentar baixar o filtro Dterm a 50Hz e posiblemente tamén o filtro xiratorio."
+    },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">IMPORTANTE:</span> Recomendamos usar os controis deslizantes para cambiar a configuración dos filtros. Mover os dous deslizadores xuntos.<br>É mellor facer cambios relativamente pequenos e probar a voar despois de cada cambio. Comprobe de preto as temperaturas do motor antes de facer máis cambios.<br>Menos filtros (deslizadores á dereita, maiores valores de corte) mellorarán o prop wash, pero deixarán máis ruído aos motores, facéndoos máis quentes, posiblemente quentes para que se queimen. É posible que se filtren menos filtros na maioría das obras limpas e se o filtrado de rpm está activado.<br>Axustes do filtro inusualmente altos ou baixos poden causar disparos no armado. Os valores predeterminados son seguros para quads típicos de 5\". <br><strong>Nota:</strong>O cambio de perfís só cambiará a configuración do filtro a tempo D. A configuración do filtro de xiro é igual para todos os perfís.",
+        "description": "Filter tuning subtab note"
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Aviso: </b></span> A cantidade de filtrado que está a usar é perigosamente baixa. É probable que sexa difícil de controlar. É altamente recomendable que <b> habilite polo menos un dos Gyro Dynamic Lowpass ou Gyro Lowpass 1 e polo menos un dos D Term Dynamic Lowpass ou D Term Lowpass 1</b>."
@@ -1766,6 +1836,10 @@
     },
     "auxiliaryMax": {
         "message": "Máx"
+    },
+    "auxiliaryDisabled": {
+        "message": "(DESACTIVO)",
+        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Engadir Rango"
@@ -2187,6 +2261,22 @@
     "motorsSensorAccelSelect": {
         "message": "accel"
     },
+    "motorsTelemetryHelp": {
+        "message": "Estes números mostran a información de telemetría recibida dos CES se está dispoñible. Pode amosar a velocidade real dos motores (en RPM), a velocidade de erro do enlace de telemetría e a temperatura dos CES.",
+        "description": "Help text for the telemetry values in the motors tab."
+    },
+    "motorsRPM": {
+        "message": "R: {{motorsRpmValue}}",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
+    },
+    "motorsRPMError": {
+        "message": "E: {{motorsErrorValue}}%",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
+    },
+    "motorsESCTemperature": {
+        "message": "T: {{motorsESCTempValue}}&deg;C",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
+    },
     "motorsMaster": {
         "message": "Master"
     },
@@ -2272,7 +2362,7 @@
         "message": "Lectura dende arquivo"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "Revisar os comandos gardados"
+        "message": "Arquivo cargado <strong>{{fileName}}</strong>. Revise os comandos cargados"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Nota</strong>: Voste pode editar e revisar os comandos anates da súa execución."
@@ -2469,6 +2559,9 @@
     "firmwareFlasherLoadFirmwareFile": {
         "message": "Por favor, cargue o arquivo do firmware"
     },
+    "firmwareFlasherLoadedConfig": {
+        "message": "Cargado o destino, cargue o ficheiro do firmware"
+    },
     "firmwareFlasherNoReboot": {
         "message": "Sen secuencia de reinicio"
     },
@@ -2609,6 +2702,13 @@
     },
     "firmwareFlasherFailedToLoadOnlineFirmware": {
         "message": "Erro ó cargar o firmware remoto"
+    },
+    "firmwareFlasherFailedToLoadUnifiedConfig": {
+        "message": "Erro ao cargar a configuración remota para {{remote_file}}"
+    },
+    "firmwareFlasherLegacyLabel": {
+        "message": "{{target}} (Legacy)",
+        "description": "If we have a Unified target and a old style target available, we are labeling the older one"
     },
     "firmwareFlasherNoFirmwareSelected": {
         "message": "<b>Non se seleccionou ningún firmware para cargar</b>"
@@ -2986,6 +3086,90 @@
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Axustes do perfil de Filtros independentes"
+    },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Os controles deslizantes para axustar o filtrado do termo D e o xiro do quad.<br><br>Máis filtrado proporciona un voo máis suave, pero tamén aumenta o retraso do sinal do xiroscopio (retraso de fase) ao bucle PID, o que producirá un rendemento de voo peor agresivo, prop wash, resposta de stick e se é excesivo pode provocar oscilacións.<br><br>Menos Filtrado reduce o retraso do sinal de xiro, pero pode aumentar as temperaturas do motor debido ao termo D reaccionando ás vibracións do motor de alta frecuencia (ruído).<br>Ademais, se o filtrado é excesivamente baixo, provocará unha diminución do rendemento do voo (maior ruído da sinal).",
+        "description": "Overall helpicon message for filter tuning sliders"
+    },
+    "pidTuningSliderLowFiltering": {
+        "message": "Menos filtrado",
+        "description": "Filter tuning slider low header"
+    },
+    "pidTuningSliderDefaultFiltering": {
+        "message": "Filtrado predeterminado",
+        "description": "Filter tuning slider default header"
+    },
+    "pidTuningSliderHighFiltering": {
+        "message": "Máis filtrado",
+        "description": "Filter tuning slider high header"
+    },
+    "pidTuningGyroFilterSlider": {
+        "message": "Multiplicador de filtro Gyro:",
+        "description": "Gyro filter tuning slider label"
+    },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "Aumenta ou reduce os filtros predeterminados de Gyro Lowpass en proporción entre si. O filtrado de xiros aplícase antes do bucle PID.<br>Rango de ruído xeral do motor por clase: <br><br>6\"+ quads - xeralmente entre 100hz e 330hz<br>5\" quads - xeralmente entre 220hz e 500hz<br>Whoop a 3\" quads - xeralmente dentro de 300hz a 850hz<br><br>Xeralmente, desexa establecer o control deslizante para que o rango de corte mínimo / máximo dinámico Gyro Lowpass 1 cubra o anterior. os voos usan máis filtrado no control deslizante. Para obter unha sintonía de filtro máis agresiva, use menos filtrado no control deslizante.<br><br>Con menos filtrado ATENCIÓN para non chegar a ser radical para provocar voos ou queimar motores.<br>Nota de problemas de resonancia de frame, malos rodamentos e accesorios de batería poden causar máis filtros.",
+        "description": "Gyro filtering tuning slider helpicon message"
+    },
+    "pidTuningDTermFilterSlider": {
+        "message": "D Multiplicador de filtro de prazo:",
+        "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Aumenta ou reduce os filtros de pasos baixos por termos D por defecto en proporción entre si.<br>O filtrado en termos D aplícase despois do bucle PID, SÓ no termo D, xa que é o termo máis sensible ao ruído e pode amplifique calquera ruído de alta frecuencia de 10x a 100x máis.<br><br>Xeralmente desexa mover o control deslizante Filtro de terminación D co control deslizante Gyro Filter. Quere ter os cortes de filtro de duración D moi por baixo do rango de ruído do motor para un filtrado máis duro a D, entón o que se aplica en todo o sinal de xiro co multiplicador de filtro de Gyro.<br>Ese diferencial recomendado está integrado no predeterminado e no control deslizante. escalado.",
+        "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Deslizadores para axustar as características de voo do quad (ganancias PID)<br><br>Multiplicador mestre: aumenta ou baixa todas as ganancias PID (arriba) mantendo a diferenza proporcional entre as ganancias.<br><br>Balance PD: Axusta o saldo (relación \\ diferenza proporcional) entre os termos P e D (\"primavera\" [termo p] e \"amortecedor\" [termo d]).<br><br>Ganancia PD: aumenta ou deixa que os beneficios de P&D se unan - mantendo a relación (equilibrio) entre os dous - para máis (ou menos) autoridade de control PID.<br><br>Stick Response Gain: aumenta ou deixa o FeedForward para controlar a sensación de resposta do stick.",
+        "description": "Overall helpicon message for PID tuning sliders"
+    },
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">ATENCIÓN</span>: As posicións deslizantes actuais poden causar volantes, danos no motor ou comportamentos seguros. Proceda con precaución.",
+        "description": "Warning shown when tuning slider are above safe limits"
+    },
+    "pidTuningSlidersDisabled": {
+        "message": "<strong>Nota:</strong>>Os deslizadores están desactivados porque os valores cambiaron manualmente. Premendo no botón '$t(pidTuningSliderEnableButton.message)' volveu activalos. Isto restablecerá os valores e perderanse os cambios non gardados.",
+        "description": "Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningSliderEnableButton": {
+        "message": "Activa os control deslizantes",
+        "description": "Button label for enabling sliders"
+    },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> O rango de control deslizante está restrinxido porque non se atopa no modo experto. Este rango debe ser adecuado para a maioría de compilacións e principiantes.",
+        "description": "Sliders restricted message"
+    },
+    "pidTuningSliderLow": {
+        "message": "Baixo",
+        "description": "Tuning Slider Low header"
+    },
+    "pidTuningSliderDefault": {
+        "message": "Por defecto",
+        "description": "Tuning Slider Default header"
+    },
+    "pidTuningSliderHigh": {
+        "message": "Alto",
+        "description": "Tuning Slider High header"
+    },
+    "pidTuningMasterSlider": {
+        "message": "Mestre multiplicador:",
+        "description": "Master tuning slider label"
+    },
+    "pidTuningPDRatioSlider": {
+        "message": "Balance de PD:",
+        "description": "PD balance tuning slider label"
+    },
+    "pidTuningPDGainSlider": {
+        "message": "Ganancia P e D:",
+        "description": "P and D gain tuning slider label"
+    },
+    "pidTuningResponseSlider": {
+        "message": "Ganancia de resposta de stick:",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningMasterSliderHelp": {
+        "message": "Xeralmente, os quads máis grandes necesitan ganancias PID maiores por ter unha relación potencia / peso menor.<br><br>Os quads máis pequenos (micros) normalmente necesitan ganancias PID máis baixas debido á maior relación potencia / peso.<br><br>Valores máis altos. son para quads de autoridade inferior. Valores inferiores son para quads de maior autoridade.",
+        "description": "Master gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Paso Baixo do Xiro"
