@@ -2631,8 +2631,11 @@
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release info"
     },
-    "firmwareFlasherReleaseName": {
-        "message": "Name/Version:"
+    "firmwareFlasherReleaseManufacturer": {
+        "message": "Manufacturer:"
+    },
+    "firmwareFlasherReleaseVersion": {
+        "message": "Version:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Visit release page."

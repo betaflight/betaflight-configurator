@@ -65,7 +65,19 @@ TABS.firmware_flasher.initialize = function (callback) {
 
             self.enableFlashing(true);
 
-            $('div.release_info .target').text(TABS.firmware_flasher.selectedBoard);
+            let targetName = TABS.firmware_flasher.selectedBoard;
+            const TARGET_REGEXP = /^([^+-]+)(?:\+(.{1,4})|-legacy)?$/;
+            let targetParts = targetName.match(TARGET_REGEXP);
+            if (targetParts) {
+                targetName = targetParts[1];
+                if (targetParts[2]) {
+                    $('div.release_info #manufacturerInfo').show();
+                    $('div.release_info #manufacturer').text(targetParts[2]);
+                } else {
+                    $('div.release_info #manufacturerInfo').hide();
+                }
+	    }
+            $('div.release_info .target').text(targetName);
             $('div.release_info .name').text(summary.version).prop('href', summary.releaseUrl);
             $('div.release_info .date').text(summary.date);
             $('div.release_info .file').text(summary.file).prop('href', summary.url);
@@ -264,44 +276,57 @@ TABS.firmware_flasher.initialize = function (callback) {
             let releases = {};
             let unifiedConfigs = {};
             let items = {};
-            let baseTargets =  {};
+            let unifiedTargetNames = [];
             data.forEach(function(target) {
-                let targetName = target.name;
-                if (targetName.endsWith('.config')) {
-                    targetName = targetName.slice(0,targetName.indexOf('.config'));
-                } else {
+                const TARGET_REGEXP = /^(?:([^-]{1,4})-)?(.*).config$/;
+                let targetParts = target.name.match(TARGET_REGEXP);
+                if (!targetParts) {
                     return;
                 }
-                unifiedConfigs[targetName]=target.download_url;
-                items[targetName] = "something";
+                let boardName = targetParts[2];
+                let manufacturerId = targetParts[1];
+                let targetName;
+                let displayName;
+                if (manufacturerId) {
+                    targetName = `${boardName}+${manufacturerId}`;
+                    displayName = `${boardName} (${manufacturerId})`;
+                } else {
+                    targetName = boardName;
+                }
+                unifiedTargetNames.push(boardName);
+                unifiedConfigs[targetName] = target.download_url;
+                items[targetName] = { displayName: displayName };
+                // Chicken and egg problem: We need to know what Unified Target this configuration uses before reading the configuration.
+                // Solving this by assuming that all Unified Targets have the same availability for now.
+                const DEFAULT_UNIFIED_TARGET_NAME = "STM32F405";
+                releases[targetName] = builds[DEFAULT_UNIFIED_TARGET_NAME];
             });
             Object.keys(builds).forEach(function (key) {
-                // releases is under the hood, so we can have duplicate entries
-                var legacyKey = key + " (Legacy)";
-                if (unifiedConfigs[key] === undefined) {
-                    items[key] = "something";
-                    releases[key] = builds[key];
+                let targetName;
+                let displayName;
+                if (unifiedTargetNames.includes(key)) {
+                    targetName = `${key}-legacy`;
+                    displayName = i18n.getMessage("firmwareFlasherLegacyLabel", { target: key });
                 } else {
-                    items[legacyKey] = "i18nplz";
-                    baseTargets[legacyKey] = key;
-                    releases[legacyKey] = builds[key];
-                    releases[key] = builds[key];
+                    targetName = key;
                 }
+                items[targetName] = { displayName: displayName };
+                releases[targetName] = builds[key];
             });
-            $('select[name="board"]').empty()
-                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectBoard'></option>"));
-
-            $('select[name="firmware_version"]').empty()
-                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectFirmwareVersion'></option>"));
             var boards_e = $('select[name="board"]');
             var versions_e = $('select[name="firmware_version"]');
+            boards_e.empty()
+                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectBoard'></option>"));
+
+            versions_e.empty()
+                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectFirmwareVersion'></option>"));
             var selectTargets = [];
             Object.keys(items)
                 .sort()
                 .forEach(function(target, i) {
-                    var select_e = $("<option value='{0}'>{1}</option>".format(target,
-                        items[target] === "i18nplz" ? i18n.getMessage("firmwareFlasherLegacyLabel",
-                        {target: baseTargets[target]}) : target));
+                    let item = items[target];
+
+                    var select_e = $("<option value='{0}'>{1}</option>".format(target, items[target].displayName || target));
                     boards_e.append(select_e);
                 });
             TABS.firmware_flasher.releases = releases;
