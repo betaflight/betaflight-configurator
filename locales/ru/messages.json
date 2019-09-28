@@ -2186,9 +2186,6 @@
     "cliLoadFromFileBtn": {
         "message": "Загрузить из файла"
     },
-    "cliConfirmSnippetDialogTitle": {
-        "message": "Просмотр загруженных команд"
-    },
     "cliConfirmSnippetNote": {
         "message": "<strong>Примечание</strong>: Вы можете просматривать и редактировать команды перед выполнением."
     },
