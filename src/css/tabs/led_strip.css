@@ -239,13 +239,13 @@
     display: inline-block;
     position: absolute;
     z-index: 10000;
-    background: white;
+    background: var(--boxBackground);
     padding: 5px;
-    margin: 10px;
     border-color: #565656;
     border-style: solid;
     border-radius: 6px;
     border-width: 2px;
+    width: 167px;
 }
 
 .tab-led-strip .color-1 {background: white;}
@@ -346,7 +346,6 @@
     position: relative;
     float: left;
     width: 285px;
-    margin-right: 10px;
 }
 
 .colorDefineSliderValue,
