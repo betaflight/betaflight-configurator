@@ -13,7 +13,7 @@
                 <div class="checkboxes">
                     <label><input type="checkbox" name="gyro_on" class="first" /><span i18n="sensorsGyroSelect"/></label> <label><input
                         type="checkbox" name="accel_on" /><span i18n="sensorsAccelSelect"/></label> <label><input type="checkbox"
-                        name="mag_on" /><span i18n="sensorsMagSelect"/></label> <label><input type="checkbox" name="baro_on" /><span i18n="sensorsBaroSelect"/></label> <label><input
+                        name="mag_on" /><span i18n="sensorsMagSelect"/></label> <label><input type="checkbox" name="altitude_on" /><span i18n="sensorsAltitudeSelect"/></label> <label><input
                         type="checkbox" name="sonar_on" /><span i18n="sensorsSonarSelect"/></label> <label><input type="checkbox" name="debug_on" /><span i18n="sensorsDebugSelect"/></label>
                 </div>
             </div>
@@ -154,14 +154,17 @@
                 <div class="clear-both"></div>
             </div>
         </div>
-        <div class="wrapper baro">
+        <div class="wrapper altitude">
             <div class="gui_box grey">
                 <div class="plot_control">
-                    <div class="title" i18n="sensorsBaroTitle"></div>
+                    <div>
+                        <div class="title" i18n="sensorsAltitudeTitle"></div>
+                        <div id="sensorsAltitudeHint" class="helpicon cf_tip" i18n_title="sensorsAltitudeHint"/>
+                    </div>
                     <dl>
                         <dt i18n="sensorsRefresh"></dt>
                         <dd class="rate">
-                            <select name="baro_refresh_rate">
+                            <select name="altitude_refresh_rate">
                                 <option value="10">10 ms</option>
                                 <option value="20">20 ms</option>
                                 <option value="30">30 ms</option>
@@ -178,7 +181,7 @@
                     </dl>
                 </div>
 
-                <svg id="baro">
+                <svg id="altitude">
             <g class="grid x" transform="translate(40, 120)"></g>
             <g class="grid y" transform="translate(40, 10)"></g>
             <g class="data" transform="translate(41, 10)"></g>

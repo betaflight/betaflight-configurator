@@ -2411,8 +2411,8 @@
     "sensorsMagSelect": {
         "message": "Magnetometer"
     },
-    "sensorsBaroSelect": {
-        "message": "Barometer"
+    "sensorsAltitudeSelect": {
+        "message": "Altitude"
     },
     "sensorsSonarSelect": {
         "message": "Sonar"
@@ -2429,8 +2429,11 @@
     "sensorsMagTitle": {
         "message": "Magnetometer - Ga"
     },
-    "sensorsBaroTitle": {
-        "message": "Barometer - meters"
+    "sensorsAltitudeTitle": {
+        "message": "Altitude - meters"
+    },
+    "sensorsAltitudeHint": {
+        "message": "The altitude is calculated by combining the output of the barometer (if available) with the altitude output from the GPS (if available). If a GPS connected and the GPS has a fix, the absolute altitude above sea level will be shown when disarmed. When armed, the altitude relative to the position when arming will be shown."
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"

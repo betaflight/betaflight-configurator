@@ -35,6 +35,7 @@
     padding-left: 10px;
     padding-top: 10px;
     text-align: left;
+    float: left;
 }
 
 .tab-sensors .plot_control dl {
