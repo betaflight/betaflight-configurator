@@ -144,3 +144,8 @@ Model.prototype.resize = function () {
 
     this.render();
 };
+
+Model.prototype.dispose = function () {
+    this.renderer.forceContextLoss();
+    this.renderer.dispose();
+};
