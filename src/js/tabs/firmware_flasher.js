@@ -587,11 +587,27 @@ TABS.firmware_flasher.initialize = function (callback) {
                 self.flashingMessage(i18n.getMessage('firmwareFlasherFirmwareLocalLoaded', self.parsed_hex.bytes_total), self.FLASH_MESSAGE_TYPES.NEUTRAL);
             }
         }
-        function checkAsciiLimits(input) {
+        function cleanUnifiedConfigFile(input) {
+            let output = [];
+            let inComment = false;
             for (let i=0; i < input.length; i++) {
-                if (input.charCodeAt(i) > 127) { return false; }
+                if (input.charAt(i) == "\n" || input.charAt(i) == "\r") {
+                    inComment = false;
+                }
+                if (input.charAt(i) == "#") {
+                    inComment = true;
+                }
+                if (!inComment && input.charCodeAt(i) > 255) {
+                    // Note: we're not showing this error in betaflight-configurator
+                    throw new Error('commands are limited to characters 0-255, comments have no limitation');
+                }
+                if (input.charCodeAt(i) > 255) {
+                    output.push('_');
+                } else {
+                    output.push(input.charAt(i));
+                }
             }
-            return true;
+            return output.join('');
         }
         // UI Hooks
         $('a.load_file').click(function () {
@@ -647,13 +663,14 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     });
                                 } else {
                                     clearBufferedFirmware();
-                                    if (checkAsciiLimits(e.target.result)) {
-                                        self.unifiedTargetConfig = e.target.result;
+                                    try {
+                                        self.unifiedTargetConfig = cleanUnifiedConfigFile(e.target.result);
                                         self.unifiedTargetConfigName = file.name;
                                         self.isConfigLocal = true;
                                         flashingMessageLocal();
-                                    } else {
+                                    } catch(err) {
                                         self.flashingMessage('firmwareFlasherConfigCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
+                                        GUI.log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
                                     }
                                 }
                             }

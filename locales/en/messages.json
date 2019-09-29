@@ -2813,7 +2813,12 @@
         "message": "HEX file appears to be corrupted"
     },
     "firmwareFlasherConfigCorrupted": {
-        "message": "Config file appears to be corrupted, ASCII accepted (chars 0-127)"
+        "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",
+        "description": "shown in the progress bar at the bottom, be brief"
+    },
+    "firmwareFlasherConfigCorruptedLogMessage": {
+        "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255), characters outside of this range are allowed as comments",
+        "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">Remote Firmware loaded, ready for flashing</span>"
