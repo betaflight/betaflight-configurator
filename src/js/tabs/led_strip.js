@@ -265,22 +265,10 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             updateBulkCmd();
         });
 
-        $('.colors').on('dblclick', 'button', function(e) {
-
-            var pp = $('.tab-led-strip').position();
-            var moveLeft = $('.tab-led-strip').position().left + ($('.colorDefineSliders').width() / 2);
-            var moveUp =   $('.tab-led-strip').position().top  + $('.colorDefineSliders').height() + 20;
-
-            $('.colorDefineSliders').css('left', e.pageX - e.offsetX - moveLeft);
-            $('.colorDefineSliders').css('top', e.pageY - e.offsetY - moveUp);
+        $('.colors').on('dblclick', 'button', function() {
+            $('.colorDefineSliders').css('left', $(this).position().left - $('.colorDefineSliders').width() / 2 + $(this).width());
+            $('.colorDefineSliders').css('top', $(this).position().top + 26);
             $('.colorDefineSliders').show();
-
-        });
-
-        $('.colorDefineSliders').on({
-            mouseleave: function () {
-                $('.colorDefineSliders').hide();
-            }
         });
 
         $('.colors').children().on({
