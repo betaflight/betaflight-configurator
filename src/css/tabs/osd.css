@@ -384,7 +384,10 @@ button {
 }
 
 .fontpresets {
+  background: var(--boxBackground);
+  color: var(--defaultText);
   border: 1px solid var(--subtleAccent);
+  border-radius: 3px;
 }
 
 .tab-osd .switchable-field {
@@ -394,7 +397,7 @@ button {
 }
 
 .tab-osd .switchable-field.mouseover {
-  background: #fff;
+  background: var(--boxBackground);
   border: 1px solid var(--subtleAccent);
   font-weight: 800;
 }
@@ -445,6 +448,8 @@ button {
 
 .tab-osd input,
 .tab-osd select {
+  background: var(--boxBackground);
+  color: var(--defaultText);
   border: 1px solid var(--subtleAccent);
   border-radius: 3px;
 }
