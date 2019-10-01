@@ -73,7 +73,7 @@ stages:
     - script: yarn install
       displayName: 'Run yarn install'
     - script: yarn gulp release --linux32 --linux64
-      displayName: 'Run gulp release'
+      displayName: 'Run yarn gulp release'
     - script: cd $(System.DefaultWorkingDirectory)/release; find -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
       displayName: 'Clean release folders'
 
