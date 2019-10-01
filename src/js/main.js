@@ -537,7 +537,7 @@ function startProcess() {
                 analytics.setDimension(analytics.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
             });
 
-            if (FEATURE_CONFIG) {
+            if (FEATURE_CONFIG && FEATURE_CONFIG.features !== 0) {
                 updateTabList(FEATURE_CONFIG.features);
             }
         }).change();
