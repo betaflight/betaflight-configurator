@@ -860,6 +860,7 @@ li.active .ic_flasher {
 
 .ic_transponder {
     background-image: url(../images/icons/cf_icon_transponder_grey.svg);
+    background-position-y: 2px;
 }
 
 .ic_transponder:hover {
@@ -881,10 +882,9 @@ li.active .ic_transponder {
 
 .ic_vtx {
     background-image: url(../images/icons/cf_icon_vtx_grey.svg);
-    background-position-y: 4px;
 }
 
-.ic_vtx:hover, li.active .ic_osd {
+.ic_vtx:hover, li.active .ic_vtx {
     background-image: url(../images/icons/cf_icon_vtx_white.svg);
 }
 
