@@ -1,4 +1,4 @@
- 'use strict;'
+'use strict';
 
 var JenkinsLoader = function (url) {
     this._url = url;
@@ -46,7 +46,7 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
                 })
 
                 // cache loaded info
-                object = {}
+                let object = {}
                 object[jobsDataTag] = jobs;
                 object[cacheLastUpdateTag] = $.now();
                 chrome.storage.local.set(object);
@@ -98,7 +98,7 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
                     }));
 
                 // cache loaded info
-                object = {}
+                let object = {}
                 object[buildsDataTag] = builds;
                 object[cacheLastUpdateTag] = $.now();
                 chrome.storage.local.set(object);
