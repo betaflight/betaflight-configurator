@@ -3303,6 +3303,7 @@
     },
     "pidTuningDynamicNotchWidthPercent": {
         "message": "动态陷波滤波器宽度百分比"
+        "description": "Edited in crowdin by DusKing1."
     },
     "pidTuningDynamicNotchQ": {
         "message": "动态陷波滤波器Q"
