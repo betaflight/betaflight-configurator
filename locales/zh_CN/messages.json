@@ -238,6 +238,7 @@
     },
     "configMigrationFrom": {
         "message": "正在迁移配置器生成的配置文件: $1"
+        "description": "Edited in crowdin by DusKing1."
     },
     "configMigratedTo": {
         "message": "地面站设置文件 $1 已移植"
