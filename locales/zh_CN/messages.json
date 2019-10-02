@@ -237,7 +237,7 @@
         "message": "上一版本地面站生成的备份文件不能移植到当前版本的地面站"
     },
     "configMigrationFrom": {
-        "message": "正在迁移配置器生成的配置文件: $1"
+        "message": "正在迁移配置器生成的配置文件: $1",
         "description": "Edited in crowdin by DusKing1."
     },
     "configMigratedTo": {
