@@ -14,7 +14,8 @@
         "message": "Isključeno"
     },
     "auto": {
-        "message": "Automatski"
+        "message": "Automatski",
+        "description": "Edited in Crowdin by IvoFPV"
     },
     "error": {
         "message": "Greška: {{errorMessage}}"
