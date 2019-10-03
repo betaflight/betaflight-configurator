@@ -191,6 +191,7 @@
 
 .tab-receiver .tunings table td {
     border-right: 1px solid var(--subtleAccent);
+    padding: 1px;
 }
 
 .tab-receiver .tunings table td:first-child {
@@ -200,10 +201,6 @@
 .tab-receiver .tunings table td:last-child {
     border-bottom-right-radius: 3px;
     border-right: 0px;
-}
-
-.tab-receiver .tunings table td {
-    padding: 1px;
 }
 
 .tab-receiver .tunings table input {

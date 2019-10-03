@@ -97,6 +97,9 @@
     border-radius: 5px;
     max-height: 50%;
     overflow: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .cli-textcomplete-dropdown::-webkit-scrollbar {
@@ -119,12 +122,6 @@
 
 .cli-textcomplete-dropdown .active {
     background-color: rgb(255, 187, 0);
-}
-
-.cli-textcomplete-dropdown {
-    list-style: none;
-    padding: 0;
-    margin: 0;
 }
 
 .cli-textcomplete-dropdown a:hover {

@@ -39,9 +39,6 @@ i18n.init = function(cb) {
     });
     // This function should do the same things that the i18n.localizePage function below does.
     i18next.on('languageChanged', function (newLang) {
-      var translate = function(messageID) {
-        return i18n.getMessage(messageID);
-      };
       i18n.localizePage(true);
       updateStatusBarVersion();
     });

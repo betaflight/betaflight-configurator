@@ -17,17 +17,13 @@
 }
 
 .tab-configuration table td {
-    padding-left: 5px;
+    padding: 5px 3px;
     border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-configuration table tr td:first-child {
     text-align: left;
     width: 55px;
-}
-
-.tab-configuration table td {
-    padding: 5px 3px;
 }
 
 .tab-configuration table thead tr:first-child {

@@ -16,6 +16,16 @@
 .tab-failsafe .number {
     margin-bottom: 5px;
     clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--subtleAccent);
+    width: 100%;
+    float: left;
+}
+
+.tab-failsafe .number:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .tab-failsafe .number input {
@@ -149,19 +159,6 @@
     width: calc(100% - 20px);
 }
 
-.tab-failsafe .number {
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--subtleAccent);
-    width: 100%;
-    float: left;
-}
-
-.tab-failsafe .number:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
-
 .tab-failsafe .gui_box_titlebar {
     margin-bottom: 0;
 }
@@ -293,6 +290,3 @@
     min-width: 80px;
 }
 
-@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
-
-}
