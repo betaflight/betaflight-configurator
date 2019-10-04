@@ -264,47 +264,45 @@
     border: 1px solid var(--subtleAccent);
 }
 
-.tab-pid_tuning .tab_container {
-    float: left;
-    width: 408px;
-    height: 29px;
+.tab-pid_tuning .tab-container {
+    border-bottom: 3px solid var(--accent);
     border-right-width: 0px;
-    background: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 29px;
+    justify-content: start;
+    width: 100%;
 }
 
-.tab-pid_tuning .tab_container td {
+.tab-pid_tuning .tab-container > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #2e2e2e;
-    padding-left: 8px;
+    padding: 0 12px;
     border-right: 1px solid white;
-
 }
 
-.tab-pid_tuning .tab_container td:first-child {
-    border-top-left-radius: 5px;
+.tab-pid_tuning .tab-container > div:first-child {
+    border-top-left-radius: 4px;
 }
 
-.tab-pid_tuning .tab_container td:last-child {
-    border-top-right-radius: 5px;
-    background-color: #2e2e2e;
+.tab-pid_tuning .tab-container > div:last-child {
+    border-top-right-radius: 4px;
 }
 
-.tab-pid_tuning .tab_container td a {
+.tab-pid_tuning .tab-container > div a {
+    display: block;
+    white-space: nowrap;
     color: #999999;
 }
 
-.tab-pid_tuning .tab_container td.active {
+.tab-pid_tuning .tab-container > div.active,
+.tab-pid_tuning .tab-container > div.active a {
     background-color: var(--accent);
     color: #000;
     transition: none;
-    height: 27px;
-    padding-left: 8px;
-
-}
-
-.tab-pid_tuning .tab_container td.active a {
-    background-color: var(--accent);
-    color: #000;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.45);
 }
 
 .tab-pid_tuning .single-field {
@@ -700,26 +698,16 @@
     height: fit-content;
 }
 
-.tab-pid_tuning .tabboarder {
-    background-color: var(--accent);
-    float: left;
-    width: 100%;
-    height: 3px;
-    margin-bottom: 10px;
-}
-
 .tabarea {
-    float: left;
     width: calc(100% - 22px);
     padding-left: 10px;
     position: relative;
     padding: 10px;
     border: 1px solid var(--subtleAccent);
-    margin-top: -10px;
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
     border-top: 0px solid var(--subtleAccent);
-     background: #f9f9f9;
+    background: #f9f9f9;
 }
 
 .tab-pid_tuning dialog {
@@ -921,7 +909,7 @@
 }
 
 @media only screen and (max-width: 1405px) {
-    
+
 .tab-pid_tuning .subtab-rates .ratePreview.spacer_left {
     width: 100%;
 }
