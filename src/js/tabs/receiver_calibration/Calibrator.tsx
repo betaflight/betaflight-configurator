@@ -15,7 +15,7 @@ interface Props {
 }
 
 const Calibrator: React.FunctionComponent<Props> = ({txValues}) => {
-    const [step, setStep] = useState('initial');
+    const [step, setStep] = useState(steps.INITIAL);
 
     function handleStartCalibration() {
         setStep(steps.CALIBRATE);

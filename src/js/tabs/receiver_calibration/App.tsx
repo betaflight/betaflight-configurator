@@ -1,10 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Calibrator from './Calibrator';
 
 import styles from './App.module.css';
 
 export default () => {
-    const [showTx, setShowTx] = useState(false);
+    useEffect(() => {
+        window.addEventListener("message", handleTxValueUpdate, false);
+
+        return () => window.removeEventListener("message", handleTxValueUpdate, false);
+    });
+
+    const handleTxValueUpdate = ({data}: {data: Array<number>}) => setTxValue(data);
 
     const [txValue, setTxValue] = useState([
         1500,

@@ -54,11 +54,10 @@ const Calibrate: React.FunctionComponent<Props> = ({txValues, onRestart, onDone}
         return prev;
       }, {});
 
-    const mapping = CHANNELS.map((channel, i) => {
+    return CHANNELS.map((channel, i) => {
       const ch = txToChannels[i];
       return CHANNELS[ch].code;
     });
-    return mapping;
   }
 
   function getRxRange() {
@@ -143,7 +142,7 @@ const Calibrate: React.FunctionComponent<Props> = ({txValues, onRestart, onDone}
         styles.restartButton,
         "button",
         "button-outline"
-        )} >Restart</button>}
+        )}>Restart</button>}
 
       {currentChannel < CHANNELS.length &&
       <button onClick={handleNext} disabled={currentChannel === Object.keys(detectedChannels).length} className={cx(

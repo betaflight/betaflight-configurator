@@ -19,7 +19,7 @@ const Initial: React.FunctionComponent<Props> = ({onStart}) => {
     if (!isRxRangeDefault(rxRanges)) {
       setRxRanges(rxRanges.map(() => [DEFAULT_RX_RANGE_MIN, DEFAULT_RX_RANGE_MAX]))
     }
-    onStart && onStart();
+    onStart();
   }
 
   return rxRanges === null ? <div>'Loading'</div> : <div>
@@ -27,14 +27,14 @@ const Initial: React.FunctionComponent<Props> = ({onStart}) => {
     <ol>
       {!isRxRangeDefault(rxRanges) && <li>Your rxrange setting has custom values. Running this calibration will reset these</li>}
       <li>It is recommended that you reset any custom endpoints and/or trims on your transmitter</li>
-      <li>Power up you receiver and transmitter (Don't forget to remove your props if applicable)</li>
+      <li>Power up you receiver and transmitter (Don't forget to remove your props)</li>
     </ol>
 
     <div className={styles.buttons}>
       <button onClick={handleStart} className="button">Start Calibration</button>
     </div>
 
-    {false && rxRanges.map(([min, max]: [number, number], i: number) => <div key={i}>{min} - {max}</div>)}
+    {rxRanges.map(([min, max]: [number, number], i: number) => <div key={i}>{min} - {max}</div>)}
   </div>
 };
 
