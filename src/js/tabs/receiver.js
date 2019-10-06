@@ -219,6 +219,18 @@ TABS.receiver.initialize = function (callback) {
             $('input[name="rcmap"]').val($(this).val());
         });
 
+        // Calibrate
+
+        const calibrateModal = document.querySelector('.calibrateModal');
+
+        $('#calibrate_btn').click(() => {
+            calibrateModal.showModal();
+        });
+
+        $('.dialogCalibrate-cancelbtn').click(function() {
+            calibrateModal.close();
+        });
+
         // rssi
         var rssi_channel_e = $('select[name="rssi_channel"]');
         rssi_channel_e.append('<option value="0">' + i18n.getMessage("receiverRssiChannelDisabledOption") + '</option>');

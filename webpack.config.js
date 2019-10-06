@@ -10,20 +10,47 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.js$/,
+                test: /\.jsx?$/,
                 use: {
                     loader: "babel-loader"
                 },
                 exclude: /node_modules/,
-            }
+            },
+            {
+                test: /\.css$/,
+                exclude: /\.module\.css$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'typings-for-css-modules-loader',
+                        options: {
+                            modules: true,
+                            namedExport: true
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.module\.css$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'typings-for-css-modules-loader',
+                        options: {
+                            modules: true,
+                            namedExport: true
+                        }
+                    }
+                ]
+            },
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.tsx', '.ts', ".js", ".jsx", ".css"]
     },
     output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'react')
+        filename: 'receiver_calibration.js',
+        path: path.resolve(__dirname, 'dist/js/tabs')
     },
     devtool: 'inline-source-map',
 };

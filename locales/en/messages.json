@@ -1805,6 +1805,9 @@
     "dialogCopyProfileClose": {
         "message": "Cancel"
     },
+    "dialogCalibrateCancel": {
+        "message": "Cancel"
+    },
     "pidTuningResetProfile": {
         "message": "Reset all profile values"
     },
@@ -1893,6 +1896,9 @@
     },
     "receiverChannelMapTitle": {
         "message": "You can define your own channel map by clicking inside the box"
+    },
+    "receiverCalibration": {
+        "message": "Calibrate RX"
     },
     "receiverRssiChannel": {
         "message": "RSSI Channel"
