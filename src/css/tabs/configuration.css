@@ -11,7 +11,6 @@
 }
 
 .tab-configuration table th {
-    padding-left: 3px;
     padding: 3px;
     border-bottom: 1px solid var(--subtleAccent);
 }
