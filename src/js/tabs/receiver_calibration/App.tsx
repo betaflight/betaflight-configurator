@@ -4,27 +4,12 @@ import Calibrator from './Calibrator';
 import styles from './App.module.css';
 
 export default () => {
-    useEffect(() => {
-        window.addEventListener("message", handleTxValueUpdate, false);
-
-        return () => window.removeEventListener("message", handleTxValueUpdate, false);
-    });
-
-    const handleTxValueUpdate = ({data}: {data: Array<number>}) => setTxValue(data);
-
-    const [txValue, setTxValue] = useState([
-        1500,
-        1500,
-        1500,
-        1500
-    ]);
-
     return <div className={styles.App}>
         <header className="App-header">
             <img src="https://raw.githubusercontent.com/wiki/betaflight/betaflight/images/betaflight/bf_logo.png"
                  style={{float: "right", width: "200px", padding: "2px 0 0 0"}} />
             <h1>Calibration</h1>
         </header>
-        <Calibrator txValues={txValue} />
+        <Calibrator />
     </div>
 }

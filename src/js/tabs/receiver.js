@@ -484,8 +484,6 @@ TABS.receiver.initialize = function (callback) {
                     RX_plot_data[i].push([samples, RC.channels[i]]);
                 }
 
-                calibrateModal.postMessage(RC.active_channels.map(i => RC.channels[i]), "*");
-
                 // Remove old data from array
                 while (RX_plot_data[0].length > 300) {
                     for (var i = 0; i < RX_plot_data.length; i++) {

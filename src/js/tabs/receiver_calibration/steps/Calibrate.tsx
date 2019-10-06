@@ -29,12 +29,12 @@ interface IObjectIndexSignature {
 }
 
 interface Props {
-  txValues: Array<number>
   onRestart: () => void
   onDone: () => void
 }
 
-const Calibrate: React.FunctionComponent<Props> = ({txValues, onRestart, onDone}) => {
+const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
+  const [txValues, setTxValues] = useMsp(MSPCodes.MSP_RC);
 
   if (txValues === null) {
     return <div>'Loading'</div>
@@ -44,8 +44,8 @@ const Calibrate: React.FunctionComponent<Props> = ({txValues, onRestart, onDone}
   const [detectedChannels, setDetectedChannels] = useState({});
   const [initialMins, setMins] = useState(txValues);
   const [initialMaxs, setMaxs] = useState(txValues);
-  const [rxRange, setRxRange] = useMsp('rxrange');
-  const [rxMap, setRxMap] = useMsp('rxmap');
+  const [rxRange, setRxRange] = useMsp(MSPCodes.MSP_RX_RANGE);
+  const [rxMap, setRxMap] = useMsp(MSPCodes.MSP_RX_MAP);
 
   function detectedChannelsToChannelMapping(detectedChannels: IObjectIndexSignature) {
     const txToChannels: IObjectIndexSignature = Object.keys(detectedChannels)

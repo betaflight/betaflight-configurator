@@ -10,11 +10,7 @@ const steps = {
     DONE: 'done'
 };
 
-interface Props {
-    txValues: Array<number>
-}
-
-const Calibrator: React.FunctionComponent<Props> = ({txValues}) => {
+const Calibrator: React.FunctionComponent = () => {
     const [step, setStep] = useState(steps.INITIAL);
 
     function handleStartCalibration() {
@@ -32,7 +28,7 @@ const Calibrator: React.FunctionComponent<Props> = ({txValues}) => {
     return (
         <div className={styles.Calibrator}>
             {step === steps.INITIAL && <Initial onStart={handleStartCalibration} />}
-            {step === steps.CALIBRATE && <Calibrate txValues={txValues} onDone={handleDone} onRestart={handleRestart} />}
+            {step === steps.CALIBRATE && <Calibrate onDone={handleDone} onRestart={handleRestart} />}
             {step === steps.DONE && <Done onRestart={handleRestart} />}
         </div>
     )
