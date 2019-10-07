@@ -9,6 +9,7 @@ TABS.vtx = {
     VTXTABLE_BAND_LIST: [],
     VTXTABLE_POWERLEVEL_LIST: [],
     analyticsChanges: {},
+    updating: true,
 };
 
 TABS.vtx.initialize = function (callback) {
@@ -38,6 +39,7 @@ TABS.vtx.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
+        self.updating = false;
         GUI.content_ready(callback);
     }
 
@@ -503,7 +505,9 @@ TABS.vtx.initialize = function (callback) {
         });
 
         $('a.save').click(function () {
-            save_vtx();
+            if (!self.updating) {
+                save_vtx();
+            }
         });
 
     }
@@ -651,6 +655,7 @@ TABS.vtx.initialize = function (callback) {
 
     // Save all the values from the tab to MSP
     function save_vtx() {
+        self.updating = true;
 
         dump_html_to_msp();
 
