@@ -44,13 +44,7 @@ var GUI_control = function () {
         'servos',
         'vtx',
     ];
-    this.defaultAllowedOSDTabsWhenConnected = [
-        'setup_osd',
-        'osd',
-        'power',
-        'sensors',
-        'transponder',
-    ];
+
     this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 
     // check which operating system is user running
@@ -79,7 +73,7 @@ const GUI_Modes = {
   NWJS: "NW.js",
   ChromeApp: "Chrome",
   Other: "Other"
-}
+};
 
 // Timer managing methods
 
@@ -221,7 +215,7 @@ GUI_control.prototype.timeout_remove = function (name) {
     return false;
 };
 
-// no input paremeters
+// no input parameters
 // return = returns timers killed in last call
 GUI_control.prototype.timeout_kill_all = function () {
     var timers_killed = 0;
@@ -274,58 +268,35 @@ GUI_control.prototype.tab_switch_cleanup = function (callback) {
 
 GUI_control.prototype.switchery = function() {
     $('.togglesmall').each(function(index, elem) {
-        if(DarkTheme.configEnabled) {
             var switchery = new Switchery(elem, {
               size: 'small',
-              color: '#ffbb00',
-              secondaryColor: '#858585'
+              color: 'var(--accent)',
+              secondaryColor: 'var(--switcherysecond)'
             });
-        } else {
-            var switchery = new Switchery(elem, {
-              size: 'small',
-              color: '#ffbb00',
-              secondaryColor: '#c4c4c4'
-            });
-        }
-        $(elem).on("change", function (evt) {
+        $(elem).on("change", function () {
             switchery.setPosition();
         });
         $(elem).removeClass('togglesmall');
     });
 
     $('.toggle').each(function(index, elem) {
-        if(DarkTheme.configEnabled) {
             var switchery = new Switchery(elem, {
-              color: '#ffbb00',
-              secondaryColor: '#858585'
+                color: 'var(--accent)',
+                secondaryColor: 'var(--switcherysecond)'
             });
-        } else {
-            var switchery = new Switchery(elem, {
-                color: '#ffbb00',
-                secondaryColor: '#c4c4c4'
-            });
-        }
-        $(elem).on("change", function (evt) {
+        $(elem).on("change", function () {
             switchery.setPosition();
         });
         $(elem).removeClass('toggle');
     });
 
     $('.togglemedium').each(function(index, elem) {
-        if(DarkTheme.configEnabled) {
             var switchery = new Switchery(elem, {
                 className: 'switcherymid',
-                color: '#ffbb00',
-                secondaryColor: '#858585'
+                color: 'var(--accent)',
+                secondaryColor: 'var(--switcherysecond)'
              });
-        } else {
-            var switchery = new Switchery(elem, {
-                className: 'switcherymid',
-                color: '#ffbb00',
-                secondaryColor: '#c4c4c4'
-             });
-        }
-         $(elem).on("change", function (evt) {
+         $(elem).on("change", function () {
              switchery.setPosition();
          });
          $(elem).removeClass('togglemedium');
@@ -344,7 +315,7 @@ GUI_control.prototype.content_ready = function (callback) {
     }
 
     // loading tooltip
-    jQuery(document).ready(function($) {
+    jQuery(document).ready(function() {
 
         new jBox('Tooltip', {
             attach: '.cf_tip',
@@ -363,7 +334,7 @@ GUI_control.prototype.content_ready = function (callback) {
     });
 
     if (callback) callback();
-}
+};
 
 GUI_control.prototype.selectDefaultTabWhenConnected = function() {
     ConfigStorage.get(['rememberLastTab', 'lastTab'], function (result) {
@@ -379,13 +350,13 @@ GUI_control.prototype.selectDefaultTabWhenConnected = function() {
 
 GUI_control.prototype.isChromeApp = function () {
   return this.Mode == GUI_Modes.ChromeApp;
-}
+};
 GUI_control.prototype.isNWJS = function () {
   return this.Mode == GUI_Modes.NWJS;
-}
+};
 GUI_control.prototype.isOther = function () {
   return this.Mode == GUI_Modes.Other;
-}
+};
 
 
 // initialize object into GUI variable
