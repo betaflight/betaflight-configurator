@@ -8,6 +8,7 @@
   "scripts": {
     "start": "gulp debug",
     "gulp": "gulp",
+    "release": "gulp release",
     "test": "karma start test/karma.conf.js"
   },
   "window": {
