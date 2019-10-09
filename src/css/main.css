@@ -1961,6 +1961,9 @@ button.active {
     max-width: 180px;
 }
 
+.jBox-Widetip {
+    max-width: 300px;
+}
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
 
