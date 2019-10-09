@@ -360,6 +360,20 @@ GUI_control.prototype.content_ready = function (callback) {
             outside: 'x'
         });
 
+        new jBox('Tooltip', {
+            theme: 'Widetip',
+            attach: '.cf_tip_wide',
+            trigger: 'mouseenter',
+            closeOnMouseleave: true,
+            closeOnClick: 'body',
+            delayOpen: 100,
+            delayClose: 100,
+            position: {
+                x: 'right',
+                y: 'center'
+            },
+            outside: 'x'
+        });
     });
 
     if (callback) callback();
