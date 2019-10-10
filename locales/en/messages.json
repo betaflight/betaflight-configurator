@@ -918,6 +918,10 @@
         "message": "A configuration change requires a reboot",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+        "message": "Bitbanged DSHOT is not working properly and the motors can't be controlled. Likely caused by a timer conflict with other features enabled on the flight controller.",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
