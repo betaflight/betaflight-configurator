@@ -219,7 +219,7 @@ TABS.receiver.initialize = function (callback) {
             $('input[name="rcmap"]').val($(this).val());
         });
 
-        // Calibrate
+        // Calibrate RX
 
         const calibrateModal = document.querySelector('.calibrateModal');
 
@@ -229,6 +229,25 @@ TABS.receiver.initialize = function (callback) {
 
         $('.dialogCalibrate-cancelbtn').click(function() {
             calibrateModal.close();
+        });
+
+        calibrateModal.addEventListener('message', ({data: {type, payload}}) => {
+            // TODO use payload.key
+            if (type === 'msp_get') {
+                MSP.send_message(MSPCodes.MSP_RC);
+            }
+
+            if (type === 'msp_set') {
+                // TODO use payload.key
+                // TODO use crunch?
+                MSP.send_message(MSPCodes.MSP_SET_RC, payload.data);
+            }
+        }, false);
+
+        // TODO listen in data from serial
+        calibrateModal.postMessage({
+            type: 'msp_get',
+            payload: data
         });
 
         // rssi
