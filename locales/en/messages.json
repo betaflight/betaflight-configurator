@@ -5105,7 +5105,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "When enabled, the VTX enters in a very low power mode to let the quad be on at the bench without disturbing other pilots. Usually the range of this mode is less than 5m.<br><br>NOTE: Some protocols, like SmartAudio, can't enable Pit Mode via software after power-up.'",
+        "message": "When enabled, the VTX enters in a very low power mode to let the quad be on at the bench without disturbing other pilots. Usually the range of this mode is less than 5m.<br><br>NOTE: Some protocols, like SmartAudio, can't enable Pit Mode via software after power-up.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -5169,7 +5169,7 @@
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsHelp": {
-        "message": "This defines the number of bands and the number of channels by band that you that you want for your VTX.",
+        "message": "This defines the number of bands and the number of channels by band that you want for your VTX.",
         "description": "Help for the number of bands and channels field of the VTX Table element in the VTX tab"
     },
     "vtxTableBandTitleName": {
