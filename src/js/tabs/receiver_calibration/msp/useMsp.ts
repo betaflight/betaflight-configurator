@@ -1,39 +1,25 @@
 import {useEffect, useState} from "react";
 
-export default function useMsp(key: string) {
+function parseRc(data: any) {
+    const noOfChannels = data.byteLength / 2;
+    return [...Array(noOfChannels).keys()]
+        .map(idx => data.getUint8(idx * 2) + data.getUint8((idx * 2) + 1) * 256)
+}
+
+function parseMspData(data: any, code: number): object {
+    return {
+        [MSPCodes.MSP_RC]: parseRc
+    }[code](data)
+}
+
+export default function useMsp(code: number): any {
+    const [response, setResponse] = useState(null);
+
     useEffect(() => {
-        window.parent.postMessage({
-            type: 'msp_get',
-            payload: {
-                key
-            }
-        }, "*")
+        MSP.send_message(code, null, null, ({data}: {data: any}) =>
+            setResponse(parseMspData(data, code))
+        );
     }, []);
 
-    useEffect(() => {
-        window.addEventListener("message", handleDataUpdate, false);
-
-        return () => window.removeEventListener("message", handleDataUpdate, false);
-    });
-
-    const [data, setData] = useState();
-
-    const handleDataUpdate = ({data: {type, payload}}: {data: any}) => {
-        if (type === 'msp_get' && payload.key === key) {
-            // payload.data
-        }
-        // TODO Process data
-        // Check for presence of key
-        setData(data);
-    };
-
-    return [data, (data: any) => {
-        window.parent.postMessage({
-            type: 'msp_set',
-            payload: {
-                key,
-                data
-            }
-        }, "*")
-    }]
+    return response;
 }

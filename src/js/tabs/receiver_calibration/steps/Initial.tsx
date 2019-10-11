@@ -10,7 +10,13 @@ interface Props {
 }
 
 const Initial: React.FunctionComponent<Props> = ({onStart}) => {
-  const [rxRanges, setRxRanges] = useMsp(MSPCodes.MSP_RX_RANGE);
+  // const [rxRanges, setRxRanges] = useMsp(MSPCodes.MSP_RX_RANGE);
+
+  const rxRanges: any[] = [
+
+  ];
+
+  const setRxRanges = (a: any) => {}
 
   const isRxRangeDefault = (channels: Array<Array<number>>) =>
       channels.every(([min, max]) => min === DEFAULT_RX_RANGE_MIN && max === DEFAULT_RX_RANGE_MAX);
@@ -22,7 +28,7 @@ const Initial: React.FunctionComponent<Props> = ({onStart}) => {
     onStart();
   }
 
-  return rxRanges === null ? <div>'Loading'</div> : <div>
+  return !rxRanges ? <div>Loading</div> : <div>
     <p>Before you start:</p>
     <ol>
       {!isRxRangeDefault(rxRanges) && <li>Your rxrange setting has custom values. Running this calibration will reset these</li>}

@@ -10,7 +10,8 @@
     "gulp": "gulp",
     "release": "gulp release",
     "test": "karma start test/karma.conf.js",
-    "webpack": "webpack --mode development"
+    "webpack": "webpack --mode development",
+    "webpack-start": "webpack --mode development && gulp debug"
   },
   "window": {
     "show": false,
@@ -64,8 +65,8 @@
     "babel-preset-react-app": "^3.1.2",
     "chai": "^4.2.0",
     "command-exists": "^1.2.8",
-    "del": "^5.0.0",
     "css-loader": "^1.0.1",
+    "del": "^5.0.0",
     "follow-redirects": "^1.6.1",
     "fs-extra": "^8.1.0",
     "gulp": "^4.0.2",
@@ -93,14 +94,14 @@
     "style-loader": "^0.23.1",
     "targz": "^1.0.1",
     "temp": "^0.9.0",
-    "vinyl-source-stream": "^2.0.0",
-    "yarn": "^1.17.3",
     "ts-loader": "^5.3.3",
     "typescript": "^3.4.4",
     "typings-for-css-modules-loader": "^1.7.0",
+    "vinyl-source-stream": "^2.0.0",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.3.1"
+    "webpack-dev-server": "^3.3.1",
+    "yarn": "^1.17.3"
   },
   "optionalDependencies": {
     "gulp-appdmg": "^1.0.3"

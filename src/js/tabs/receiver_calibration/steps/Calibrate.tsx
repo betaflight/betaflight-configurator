@@ -5,6 +5,7 @@ import styles from './Calibrate.module.css';
 import cx from 'classnames';
 import {objectValues} from "../utils";
 
+
 const CHANNELS = [
   {
     name: 'Throttle',
@@ -34,18 +35,14 @@ interface Props {
 }
 
 const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
-  const [txValues, setTxValues] = useMsp(MSPCodes.MSP_RC);
-
-  if (txValues === null) {
-    return <div>'Loading'</div>
-  }
+  const txValues: number[] = useMsp(MSPCodes.MSP_RC);
 
   const [currentChannel, setCurrentChannel] = useState(0);
   const [detectedChannels, setDetectedChannels] = useState({});
   const [initialMins, setMins] = useState(txValues);
   const [initialMaxs, setMaxs] = useState(txValues);
-  const [rxRange, setRxRange] = useMsp(MSPCodes.MSP_RX_RANGE);
-  const [rxMap, setRxMap] = useMsp(MSPCodes.MSP_RX_MAP);
+  //const rxRange = useMsp(MSPCodes.MSP_RX_RANGE);
+  //const rxMap = useMsp(MSPCodes.MSP_RX_MAP);
 
   function detectedChannelsToChannelMapping(detectedChannels: IObjectIndexSignature) {
     const txToChannels: IObjectIndexSignature = Object.keys(detectedChannels)
@@ -61,7 +58,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
   }
 
   function getRxRange() {
-    return minVals.map((v, i) => [v, maxVals[i]]);
+    return minVals.map((v: number, i: number) => [v, maxVals[i]]);
   }
 
   function handleNext() {
@@ -82,25 +79,25 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
   function handleApply() {
     const mapping = detectedChannelsToChannelMapping(detectedChannels);
 
-    setRxMap(`${mapping.join('')}1234`);
-    setRxRange(getRxRange());
+    //setRxMap(`${mapping.join('')}1234`);
+    //setRxRange(getRxRange());
 
     onDone();
   }
 
-  const minVals = txValues.map((val, i) => Math.min(initialMins[i], val));
-  const maxVals = txValues.map((val, i) => Math.max(initialMaxs[i], val));
+  const minVals = txValues && txValues.map((val: number, i: number) => Math.min(initialMins[i], val));
+  const maxVals = txValues && txValues.map((val: number, i: number) => Math.max(initialMaxs[i], val));
 
-  if (!initialMaxs.every((val, i) => val === maxVals[i])) {
+  if (maxVals && !initialMaxs.every((val: number, i: number) => val === maxVals[i])) {
     setMaxs(maxVals);
   }
 
-  if (!initialMins.every((val, i) => val === minVals[i])) {
+  if (minVals && !initialMins.every((val: number, i: number) => val === minVals[i])) {
     setMins(minVals);
   }
 
-  return <div className={styles.Calibrate}>
-    {currentChannel !== CHANNELS.length && txValues.map((value, i) => {
+  return !txValues ? <div>Loading</div> : <div className={styles.Calibrate}>
+    {currentChannel !== CHANNELS.length && txValues.map((value: number, i: number) => {
       const channelIsAssigned = objectValues(detectedChannels).indexOf(i);
       return (
         <div key={i} className={styles.txChannelWrapper}>
@@ -160,7 +157,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
           <ul>
             <li>rxrange:
               <ul>
-                {getRxRange().map(([min, max]) => <li>{`${min} - ${max}`}</li>)}
+                {getRxRange().map(([min, max] : [number, number]) => <li>{`${min} - ${max}`}</li>)}
               </ul>
             </li>
             <li>Channel mapping: {detectedChannelsToChannelMapping(detectedChannels)}</li>

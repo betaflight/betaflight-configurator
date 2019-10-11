@@ -5,7 +5,7 @@ const MATCH_THRESHOLD = 450;
 
 interface Props {
   name: string
-  txValues: Array<number>
+  txValues: number[]
   detectedChannels: Object
   onDetect: (match: number) => void
 }
