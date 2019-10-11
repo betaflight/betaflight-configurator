@@ -203,7 +203,8 @@
         "message": "Selezione Modo di volo"
     },
     "tabServos": {
-        "message": "Servi"
+        "message": "Servocomandi",
+        "description": "Edited in crowdin by IllusionFpv."
     },
     "tabFailsafe": {
         "message": "Failsafe"
@@ -1441,10 +1442,12 @@
         "message": "Seleziona se la frequenza di taglio del filtro derivativo del setpoint viene calcolata automaticamente (consigliata) o selezionata manualmente dall'utente. L'uso di \"Manuale\" non è raccomandato per i protocolli di ricezione come Crossfire che possono cambiare in volo."
     },
     "receiverRcSmoothingInputHz": {
-        "message": "Frequenza Cutoff d'ingresso"
+        "message": "Frequenza di Cutoff d'ingresso",
+        "description": "Edited in crowdin by IllusionFpv."
     },
     "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frequenza Cutoff Derivative"
+        "message": "Frequenza di Cutoff Derivativa",
+        "description": "Edited in crowdin by IllusionFpv."
     },
     "receiverRcInputType": {
         "message": "Tipo filtro di input"
