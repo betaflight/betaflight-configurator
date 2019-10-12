@@ -1475,6 +1475,26 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 break;
 
+            case MSPCodes.MSP_SET_TUNING_SLIDERS:
+                console.log("Tuning Sliders data sent");
+                break;
+
+            case MSPCodes.MSP_TUNING_SLIDERS:
+                FC.TUNING_SLIDERS.slider_pids_mode = data.readU8();
+                FC.TUNING_SLIDERS.slider_master_multiplier = data.readU8();
+                FC.TUNING_SLIDERS.slider_roll_pitch_ratio = data.readU8();
+                FC.TUNING_SLIDERS.slider_i_gain = data.readU8();
+                FC.TUNING_SLIDERS.slider_pd_ratio = data.readU8();
+                FC.TUNING_SLIDERS.slider_pd_gain = data.readU8();
+                FC.TUNING_SLIDERS.slider_dmin_ratio = data.readU8();
+                FC.TUNING_SLIDERS.slider_ff_gain = data.readU8();
+                FC.TUNING_SLIDERS.slider_dterm_filter = data.readU8();
+                FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = data.readU8();
+                FC.TUNING_SLIDERS.slider_gyro_filter = data.readU8();
+                FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = data.readU8();
+
+                break;
+
             case MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL:
                 console.log("VTX powerlevel sent");
                 break;
@@ -2272,6 +2292,22 @@ MspHelper.prototype.crunch = function(code) {
 
         case MSPCodes.MSP2_SEND_DSHOT_COMMAND:
             buffer.push8(1);
+            break;
+
+        case MSPCodes.MSP_SET_TUNING_SLIDERS:
+            buffer.push8(FC.TUNING_SLIDERS.slider_pids_mode)
+                  .push8(FC.TUNING_SLIDERS.slider_master_multiplier)
+                  .push8(FC.TUNING_SLIDERS.slider_roll_pitch_ratio)
+                  .push8(FC.TUNING_SLIDERS.slider_i_gain)
+                  .push8(FC.TUNING_SLIDERS.slider_pd_ratio)
+                  .push8(FC.TUNING_SLIDERS.slider_pd_gain)
+                  .push8(FC.TUNING_SLIDERS.slider_dmin_ratio)
+                  .push8(FC.TUNING_SLIDERS.slider_ff_gain)
+                  .push8(FC.TUNING_SLIDERS.slider_dterm_filter)
+                  .push8(FC.TUNING_SLIDERS.slider_dterm_filter_multiplier)
+                  .push8(FC.TUNING_SLIDERS.slider_gyro_filter)
+                  .push8(FC.TUNING_SLIDERS.slider_gyro_filter_multiplier);
+
             break;
 
         default:

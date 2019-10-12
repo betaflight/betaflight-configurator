@@ -61,7 +61,7 @@
     },
     "portOverrideText": {
         "message": "Port:"
-    },    
+    },
     "autoConnect": {
         "message": "Auto-Connect"
     },
@@ -1642,7 +1642,7 @@
     },
     "pidTuningDMin": {
         "message": "D Min",
-        "description": "Table header of the D Min feature in the PIDs tab" 
+        "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {
         "message": "<strong>Note:</strong> D Min feature is disabled and its parameters are hidden. To use D Min please enable it in $t(pidTuningPidSettings.message)."
@@ -2099,7 +2099,7 @@
     "auxiliaryDisabled": {
         "message": "(DISABLED)",
         "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
-    },    
+    },
     "auxiliaryAddRange": {
         "message": "Add Range"
     },
@@ -2828,7 +2828,7 @@
     },
     "dataflashLogsSpace": {
         "message": "Free space for logs"
-    },    
+    },
     "dataflashNote": {
         "message": "Flight logs can be recorded to your flight controller's onboard dataflash chip."
     },
@@ -2883,25 +2883,25 @@
     "dataflashFileWriteFailed": {
         "message": "Failed to write to the file you selected, are the permissions on that folder okay?"
     },
-    
+
     "sdcardStatusNoCard": {
         "message": "No card inserted"
-    },    
+    },
     "sdcardStatusReboot": {
         "message": "Fatal error<br>Reboot to retry"
-    },    
+    },
     "sdcardStatusReady": {
         "message": "Card ready"
-    },    
+    },
     "sdcardStatusStarting": {
         "message": "Card starting..."
-    },    
+    },
     "sdcardStatusFileSystem": {
         "message": "Filesystem starting..."
-    },    
+    },
     "sdcardStatusUnknown": {
         "message": "Unknown state $1"
-    },    
+    },
 
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Release info"
@@ -3008,7 +3008,7 @@
     },
     "firmwareFlasherBaudRate": {
         "message": "Baud Rate"
-    },    
+    },
     "firmwareFlasherShowDevelopmentReleases":{
         "message": "Show unstable releases"
     },
@@ -3594,6 +3594,22 @@
         "message": "Master Multiplier:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Roll Pitch Ratio:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Roll Pitch Ratio",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "I Gain:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "I Gain",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "PD Balance:",
         "description": "PD balance tuning slider label"
@@ -3601,6 +3617,14 @@
     "pidTuningPDGainSlider": {
         "message": "P and D Gain:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "D Min Ratio:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "D Min Ratio",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Stick Response Gain:",
@@ -3735,7 +3759,7 @@
     },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Lowpass Filters"
-    },    
+    },
     "pidTuningDTermLowpassType": {
         "message": "D Term Lowpass 1 Filter Type"
     },
@@ -3762,7 +3786,7 @@
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filters"
-    },    
+    },
     "pidTuningDTermNotchFrequency": {
         "message": "D Term Notch Filter Center Frequency [Hz]"
     },
@@ -3771,7 +3795,7 @@
     },
     "pidTuningYawLospassFiltersGroup": {
         "message": "Yaw Lowpass Filters"
-    },    
+    },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass Cutoff Frequency [Hz]"
     },
@@ -4462,7 +4486,7 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
     },
-    
+
     "osdSetupSave": {
         "message": "Save"
     },
@@ -5618,7 +5642,7 @@
     "vtxLoadClipboardOk": {
         "message": "VTX Config info <span class=\"message-positive\">loaded</span> from clipboard",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
-    },    
+    },
     "vtxLoadClipboardKo": {
         "message": "<span class=\"message-negative\">Error</span> while loading the VTX Config info from clipboard. Maybe the contents are not correct",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"

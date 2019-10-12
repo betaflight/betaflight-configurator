@@ -148,6 +148,7 @@ const FC = {
     SERVO_DATA: null,
     SERVO_RULES: null,
     TRANSPONDER: null,
+    TUNING_SLIDERS: null,
     VOLTAGE_METERS: null,
     VOLTAGE_METER_CONFIGS: null,
     VTXTABLE_BAND: null,
@@ -648,6 +649,21 @@ const FC = {
         ];
 
         this.VTX_DEVICE_STATUS = null;
+
+        this.TUNING_SLIDERS = {
+            slider_pids_mode:                   0,
+            slider_master_multiplier:           0,
+            slider_roll_pitch_ratio:            0,
+            slider_i_gain:                      0,
+            slider_pd_ratio:                    0,
+            slider_pd_gain:                     0,
+            slider_dmin_ratio:                  0,
+            slider_ff_gain:                     0,
+            slider_dterm_filter:                0,
+            slider_dterm_filter_multiplier:     0,
+            slider_gyro_filter:                 0,
+            slider_gyro_filter_multiplier:      0,
+        };
     },
 
     getSerialRxTypes: () => {
