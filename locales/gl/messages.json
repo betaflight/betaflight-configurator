@@ -2,6 +2,10 @@
     "translation_version": {
         "message": "0"
     },
+    "windowTitle": {
+        "message": "Betaflight Configurator",
+        "description": "Title of the application window, usually not translated"
+    },
     "yes": {
         "message": "Si",
         "description": "General Yes message to be used across the application"
@@ -97,6 +101,70 @@
     },
     "language_default_pretty": {
         "message": "Sistema Predeterminado ($t(detectedLanguage))"
+    },
+    "language_ca": {
+        "message": "Català",
+        "description": "Don't translate!!!"
+    },
+    "language_de": {
+        "message": "Deutsch",
+        "description": "Don't translate!!!"
+    },
+    "language_en": {
+        "message": "English",
+        "description": "Don't translate!!!"
+    },
+    "language_es": {
+        "message": "Español",
+        "description": "Don't translate!!!"
+    },
+    "language_fr": {
+        "message": "Français",
+        "description": "Don't translate!!!"
+    },
+    "language_gl": {
+        "message": "Galego",
+        "description": "Don't translate!!!"
+    },
+    "language_hr": {
+        "message": "Hrvatski",
+        "description": "Don't translate!!!"
+    },
+    "language_id": {
+        "message": "Bahasa Indonesia",
+        "description": "Don't translate!!!"
+    },
+    "language_it": {
+        "message": "Italiano",
+        "description": "Don't translate!!!"
+    },
+    "language_ja": {
+        "message": "日本語",
+        "description": "Don't translate!!!"
+    },
+    "language_ko": {
+        "message": "한국어",
+        "description": "Don't translate!!!"
+    },
+    "language_lv": {
+        "message": "Latviešu",
+        "description": "Don't translate!!!"
+    },
+    "language_pt": {
+        "message": "Português",
+        "description": "Don't translate!!!"
+    },
+    "language_ru": {
+        "message": "Русский язык",
+        "description": "Don't translate!!!"
+    },
+    "language_sv": {
+        "message": "Svenska",
+        "description": "Don't translate!!!"
+    },
+    "language_zh_CN": {
+        "message": "简体中文",
+        "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
         "message": "Memoria flash <br> non dispoñible",
@@ -556,6 +624,10 @@
     },
     "defaultDonateBottom": {
         "message": "<p> Se quere contribuír financeiramente de xeito continuado, ten que considerar converterse en patrón para nós en $t(patreonLink.message).</p>"
+    },
+    "patreonLink": {
+        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\">Patrocinador</a>",
+        "description": "Patreon is name, and should not require translation"
     },
     "defaultDonate": {
         "message": "Doar"
@@ -2304,8 +2376,8 @@
     "sensorsMagSelect": {
         "message": "Magnetómetro"
     },
-    "sensorsBaroSelect": {
-        "message": "Barómetro"
+    "sensorsAltitudeSelect": {
+        "message": "Altitude"
     },
     "sensorsSonarSelect": {
         "message": "Sonar"
@@ -2322,8 +2394,11 @@
     "sensorsMagTitle": {
         "message": "Magnetómetro - Ga"
     },
-    "sensorsBaroTitle": {
-        "message": "Barómetro - metros"
+    "sensorsAltitudeTitle": {
+        "message": "Altitude - metros"
+    },
+    "sensorsAltitudeHint": {
+        "message": "A altitude calcúlase combinando a saída do barómetro (se está dispoñible) coa saída de altitude do GPS (se está dispoñible). Se un GPS está conectado e o GPS resolve, a altitude absoluta sobre o nivel do mar mostrarase cando desarmada. Cando está armado, mostrarase a altitude relativa á posición cando se arma."
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -2517,8 +2592,11 @@
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Información de versión"
     },
-    "firmwareFlasherReleaseName": {
-        "message": "Nome/Versión:"
+    "firmwareFlasherReleaseManufacturer": {
+        "message": "Fabricante:"
+    },
+    "firmwareFlasherReleaseVersion": {
+        "message": "Versión:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Visitar páxina desta versión."
@@ -2696,6 +2774,14 @@
     },
     "firmwareFlasherHexCorrupted": {
         "message": "O arquivo HEX parece estar corrupto"
+    },
+    "firmwareFlasherConfigCorrupted": {
+        "message": "Parece que o ficheiro de configuración está corrompido, aceptado ASCII (caracteres 0-255)",
+        "description": "shown in the progress bar at the bottom, be brief"
+    },
+    "firmwareFlasherConfigCorruptedLogMessage": {
+        "message": "Parece que o ficheiro de configuración está corrompido, aceptado ASCII (caracteres 0-255), permítense caracteres fóra deste rango como comentarios",
+        "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">Firmware remoto cargado, listo para instalar</span>"
@@ -3171,6 +3257,18 @@
         "message": "Xeralmente, os quads máis grandes necesitan ganancias PID maiores por ter unha relación potencia / peso menor.<br><br>Os quads máis pequenos (micros) normalmente necesitan ganancias PID máis baixas debido á maior relación potencia / peso.<br><br>Valores máis altos. son para quads de autoridade inferior. Valores inferiores son para quads de maior autoridade.",
         "description": "Master gain tuning slider helpicon message"
     },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Baixo balance PD reducirá a resposta global, pero tamén reducirá a posibilidade de rebote rápido despois dun flip ou un roll.<br><br>Non obstante, se o balance de PD é demasiado elevado, obterás oscilacións despois dun flip ou roll e oscilacións prolongadas durante o prop wash.",
+        "description": "PD balance tuning slider helpicon message"
+    },
+    "pidTuningPDGainSliderHelp": {
+        "message": "Unha ganancia baixa de P e D producirá motores máis fríos, pero dará lugar a unha maior oscilación de propwash. Un valor demasiado baixo pode facer que o quad sexa inestable.<br><br>Os termos P e D traballan xuntos para reducir o propwash.<br><br>Valores máis altos aumentarán a calor do motor e poderán aumentar as oscilacións durante un voo cara a diante debido a unha ganancia maior D-term.",
+        "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "Os valores máis baixos empeorarán a resposta da barra e poden provocar un retroceso lento ao final dunflip ou roll (rematar termo I).<br><br>O maior valor terá unha mellor resposta de stick para os movementos máis pronunciados. Non obstante, os valores demasiado elevados poden causar superación e retroceso rápido ao final dun flip ou roll.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Paso Baixo do Xiro"
     },
@@ -3215,6 +3313,63 @@
     },
     "pidTuningNotchFilterHelp": {
         "message": "O Filtro Notch ten un Centro e un Corte. O filtro é simétrico. A Frecuencia Central é o centro do filtro e a Frecuencia de Corte é donde o filtro Notch empeza. Por exemplo cunha Frecuencia de Corte de 160 e unha Frecuencia Central de 260 o rango é 160-360Hz cunha maior atenuación en torno ó centro"
+    },
+    "pidTuningDynamicNotchFilterGroup": {
+        "message": "Filtro dinámico de Notch"
+    },
+    "pidTuningDynamicNotchFilterHelp": {
+        "message": "Filtro dinámico de Notch rastrea a frecuencia de ruído dos motores máximos e coloca un ou dous filtros de notch co seu centro a esa frecuencia."
+    },
+    "pidTuningDynamicNotchFilterDisabledWarning": {
+        "message": "<strong>Aviso:</strong>O filtro de notch dinámico está desactivado. Para configuralo e utilizalo, active a función 'DYNAMIC_FILTER' na sección '$t(configurationFeatures.message)' da ventá '$t(tabConfiguration.message)'."
+    },
+    "pidTuningDynamicNotchRange": {
+        "message": "Rango de filtro dinámico Notch"
+    },
+    "pidTuningDynamicNotchWidthPercent": {
+        "message": "Notch dinámico de porcentaxe ancho"
+    },
+    "pidTuningDynamicNotchQ": {
+        "message": "Notch Q Dinámico"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Notch dinámico Min Hz"
+    },
+    "pidTuningDynamicNotchRangeHelp": {
+        "message": "O Notch dinámico ten tres intervalos de frecuencia nos que pode operar: BAIXO (80-330 Hz) para baixas revolucións en quads como 6+ polgadas, MEDIO (140-550Hz) para un quad normal de 5 polgadas, ALTO (230-800Hz) para moi altas revolucións en quads de 2,5-3 polgadas. A opción AUTO selecciona o rango en función do valor da frecuencia de corte máxima do filtro Gyro Dynamic Lowpass 1."
+    },
+    "pidTuningDynamicNotchWidthPercentHelp": {
+        "message": "Establece o ancho entre dous filtros de notch dinámica. Opcións a 0 desactivará o segundo filtro dinámico e reducirá o atraso do filtro, pero pode que as temperaturas do motor sexan máis altas."
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "O factor Q axusta como de estreito ou amplo é o filtro notch dinámico. Un valor maior faino máis estreito e preciso e un valor máis baixo fai que sexa máis amplo. Ter un valor realmente baixo aumentará considerablemente o atraso do filtro."
+    },
+    "pidTuningDynamicNotchMinHzHelp": {
+        "message": "Define a frecuencia de centro notch dinámica máis baixa por debaixo da cal non pasará a notch dinámico."
+    },
+    "pidTuningRpmFilterGroup": {
+        "message": "Filtro Gyro RPM",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmFilterHelp": {
+        "message": "O filtrado RPM é un banco de filtros notch de gyro que utilizan os datos de telemetría RPM para eliminar o ruído do motor con precisión cirúrxica.<br><br><b><span class=\"message-positive\">IMPORTANTE</span>:ESC debe soportar o protocolo DShot bidireccional e o valor do $t(configurationMotorPoles.message)na pestana $t(tabConfiguration.message) debe ser o correcto para que este filtro funcione.</b>",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmHarmonics": {
+        "message": "Número de armónicos do filtro Gyro RPM",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmHarmonicsHelp": {
+        "message": "Número de armónicos por motor. Un valor de 3 (recomendado para a maioría dos quads) xerará 3 filtros notch, por motor para cada eixe, un total de 36 notch. Un na frecuencia do motor base e dous harmónicos no múltiple desa frecuencia base.",
+        "description": "Help text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHz": {
+        "message": "Frecuencia mínima do filtro RPM de Gyro [Hz]",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmMinHzHelp": {
+        "message": "Frecuencia mínima que empregará o filtro RPM.",
+        "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
         "message": "Axustes de Filtros dependentes do Perfil"
@@ -3282,6 +3437,10 @@
     "pidTuningItermRelaxHelp": {
         "message": "Limita a acumulación de Termo I cando se producen movementos rápidos. Isto axuda especialmente a reducir o retroceso ao final dos rolls e outros movementos rápidos. Pode escoller os eixes nos que está activo e se o movemento rápido está detectado usando o Xiro ou o Setpoint (stick)."
     },
+    "pidTuningItermRelaxAxes": {
+        "message": "Eixos",
+        "description": "Iterm Relax Axes selection"
+    },
     "pidTuningItermRelaxAxesOptionRP": {
         "message": "RP"
     },
@@ -3294,11 +3453,19 @@
     "pidTuningItermRelaxAxesOptionRPYInc": {
         "message": "RPY (solo incremento)"
     },
+    "pidTuningItermRelaxType": {
+        "message": "Tipo",
+        "description": "Iterm Relax Type selection"
+    },
     "pidTuningItermRelaxTypeOptionGyro": {
         "message": "Xiro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Valor obxetivo"
+    },
+    "pidTuningItermRelaxCutoff": {
+        "message": "Corte",
+        "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Control Absoluto"
@@ -3507,6 +3674,9 @@
     "powerCalibrationManagerButton": {
         "message": "Calibración"
     },
+    "powerCalibrationManagerTitle": {
+        "message": "Xestor de calibración"
+    },
     "powerCalibrationManagerHelp": {
         "message": "Para calibrar, use un multímetro para medir a tensión / corrente real da súa aeronave (cunha batería conectada) e introduza os valores seguintes. Entón, coa mesma batería aínda conectada, faga clic en [Calibrate]."
     },
@@ -3518,6 +3688,9 @@
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class = \"message-negative\"> Aviso: </span> As fontes de medición de tensión e / ou amperage <strong> modificáronse pero non se gardaron. </strong> Configure as fontes correctas do medidor e gárdeas antes de intentar calibrar."
+    },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "Confirmación Xestor de calibración"
     },
     "powerCalibrationSave": {
         "message": "Calibrado"
@@ -3767,8 +3940,28 @@
     "osdSetupVideoFormatTitle": {
         "message": "Formato de vídeo"
     },
+    "osdSetupVideoFormatOptionAuto": {
+        "message": "Auto",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionPal": {
+        "message": "PAL",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionNtsc": {
+        "message": "NTSC",
+        "description": "Option for the video format in the OSD"
+    },
     "osdSetupUnitsTitle": {
         "message": "Unidades"
+    },
+    "osdSetupUnitsOptionImperial": {
+        "message": "Imperial",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionMetric": {
+        "message": "Métrica",
+        "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
         "message": "Temporizadores"
@@ -3834,6 +4027,9 @@
     "osdSetupUploadingFont": {
         "message": "Cargando..."
     },
+    "osdSetupUploadingFontEnd": {
+        "message": "Cargou tódolos {{length}} caracteres na OSD"
+    },
     "osdSetupSave": {
         "message": "Gardar"
     },
@@ -3858,260 +4054,649 @@
     "osdSetupButtonReset": {
         "message": "Reiniciar Axustes"
     },
+    "osdTextElementMainBattVoltage": {
+        "message": "Voltaxe da batería",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementMainBattVoltage": {
         "message": "Voltaxe instantáneo da batería principal (parpadea por debaixo do limiar de alarma)"
+    },
+    "osdTextElementRssiValue": {
+        "message": "Valor RSSI",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
         "message": "Valor instantáneo RSSI (parpadea por debaixo do limiar de alarma)"
     },
+    "osdTextElementTimer": {
+        "message": "Temporizador",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementTimer": {
+        "message": "Temporizador de voo"
+    },
+    "osdTextElementThrottlePosition": {
+        "message": "Posición Throttle",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementThrottlePosition": {
         "message": "Valor actual do canle do acelerador"
+    },
+    "osdTextElementCpuLoad": {
+        "message": "Carga da CPU",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCpuLoad": {
+        "message": "Carga actual da CPU"
+    },
+    "osdTextElementVtxChannel": {
+        "message": "Canle VTX",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementVtxChannel": {
+        "message": "Canle e potencia actual do VTX"
+    },
+    "osdTextElementVoltageWarning": {
+        "message": "Aviso voltaxe da batería",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementVoltageWarning": {
+        "message": "Mostra un aviso cando o voltaxe está por baixo do valor de alarma"
+    },
+    "osdTextElementArmed": {
+        "message": "Armado",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementArmed": {
         "message": "Mensaxe de texto armado"
     },
+    "osdTextElementDisarmed": {
+        "message": "Desarmado",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementDisarmed": {
         "message": "Mensaxe de texto desarmado"
+    },
+    "osdTextElementCrosshairs": {
+        "message": "Punto de mira",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementCrosshairs": {
         "message": "Punto de mira no centro da pantalla"
     },
+    "osdTextElementArtificialHorizon": {
+        "message": "Horizonte artificial",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementArtificialHorizon": {
         "message": "Indicador gráfico do horizonte artificial"
+    },
+    "osdTextElementHorizonSidebars": {
+        "message": "Barras laterais de horizonte artificial",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementHorizonSidebars": {
         "message": "Barras laterais do indicador do horizonte artificial"
     },
+    "osdTextElementCurrentDraw": {
+        "message": "Corrente da Lipo",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementCurrentDraw": {
         "message": "Consumo instantáneo de corriente da batería"
+    },
+    "osdTextElementMahDrawn": {
+        "message": "Corrente da Lipo mAh",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementMahDrawn": {
         "message": "Capacidad total usada da batería"
     },
+    "osdTextElementCraftName": {
+        "message": "Nome da aeronave",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementCraftName": {
         "message": "Nome da aeronave tal como está no apartado Configuración"
+    },
+    "osdTextElementAltitude": {
+        "message": "Altitude",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementAltitude": {
         "message": "Altitude actual (parpadea por riba do limiar de alarma)"
     },
+    "osdTextElementOnTime": {
+        "message": "Unha vez",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementOnTime": {
         "message": "Tempo total que a aeronave estivo encendida"
+    },
+    "osdTextElementFlyTime": {
+        "message": "Tempo de voo",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementFlyTime": {
         "message": "Tempo total que a aeronave estivo armada no ciclo actual de enerxía (parpadea por riba do limiar de alarma)"
     },
+    "osdTextElementFlyMode": {
+        "message": "Modo de Voo",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementFlyMode": {
         "message": "Modo de voo actual"
+    },
+    "osdTextElementGPSSpeed": {
+        "message": "Velocidade GPS",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSSpeed": {
         "message": "Velocidade proporcionada polo GPS"
     },
+    "osdTextElementGPSSats": {
+        "message": "Satélites GPS",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementGPSSats": {
         "message": "Número de satélites GPS fixados"
+    },
+    "osdTextElementGPSLon": {
+        "message": "Lonxitude GPS",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLon": {
         "message": "Coordenada lonxitude GPS"
     },
+    "osdTextElementGPSLat": {
+        "message": "Latitude GPS",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementGPSLat": {
         "message": "Coordenada latitude GPS"
+    },
+    "osdTextElementDebug": {
+        "message": "Depuración",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementDebug": {
         "message": "Variables de Debug"
     },
+    "osdTextElementPIDRoll": {
+        "message": "PID roll",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementPIDRoll": {
         "message": "Valores PID do eixo roll"
+    },
+    "osdTextElementPIDPitch": {
+        "message": "PID pitch",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDPitch": {
         "message": "Valores PID do eixo pitch"
     },
+    "osdTextElementPIDYaw": {
+        "message": "PID yaw",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementPIDYaw": {
         "message": "Valores PID do eixo yaw"
+    },
+    "osdTextElementPower": {
+        "message": "Potencia",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementPower": {
         "message": "Potencia eléctrica instantánea consumida"
     },
+    "osdTextElementPIDRateProfile": {
+        "message": "Perfil: PID e taxa",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementPIDRateProfile": {
         "message": "Visualización numérica do perfil activo de PID e rates"
+    },
+    "osdTextElementBatteryWarning": {
+        "message": "Aviso batería",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementBatteryWarning": {
         "message": "Texto de aviso que aparece cando o voltaxe da batería cae por debaixo do limiar de alarma"
     },
+    "osdTextElementAvgCellVoltage": {
+        "message": "Voltaxe medio celdas da batería",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementAvgCellVoltage": {
         "message": "Voltaxe medio das baterías (voltaxe principal da batería / número de celdas)"
+    },
+    "osdTextElementPitchAngle": {
+        "message": "Ángulo: pitch",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementPitchAngle": {
         "message": "Ángulo numérico do pitch en grados"
     },
+    "osdTextElementRollAngle": {
+        "message": "Ángulo: roll",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementRollAngle": {
         "message": "Ángulo numérico do roll en grados"
+    },
+    "osdTextElementMainBattUsage": {
+        "message": "Uso da batería",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattUsage": {
         "message": "Representación gráfica da capacidad da batería usada"
     },
+    "osdTextElementArmedTime": {
+        "message": "Temporizador: Tempo armado",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementArmedTime": {
         "message": "Tempo dende que a aeronave foi armada por última vez"
+    },
+    "osdTextElementHomeDirection": {
+        "message": "Dirección casa",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementHomeDirection": {
         "message": "Flecha mostrando a dirección da posición da casa"
     },
+    "osdTextElementHomeDistance": {
+        "message": "Distancia casa",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementHomeDistance": {
         "message": "Distancia cara a posición casa (en pes ou en metros basada no axuste de unidades do sistema)"
+    },
+    "osdTextElementNumericalHeading": {
+        "message": "Rumbo numérico",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementNumericalHeading": {
         "message": "Lectura numérica da dirección actual en grados"
     },
+    "osdTextElementNumericalVario": {
+        "message": "Numérico",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementNumericalVario": {
         "message": "Lectura numérica da velocidade vertical (en pes ou metros basada no axuste de unidades do sistema)"
+    },
+    "osdTextElementCompassBar": {
+        "message": "Barra de compás",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementCompassBar": {
         "message": "Barra gráfica cuna brúxula mostrando a dirección actual"
     },
+    "osdTextElementWarnings": {
+        "message": "Avisos",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementWarnings": {
         "message": "Alertas (p.ej. batería baixa), avisos (p.ej. razons para non armar, batería baixa crítica) e pitido visual (4 asteriscos parpadeando)."
+    },
+    "osdTextElementEscTemperature": {
+        "message": "Temperatura ESC",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementEscTemperature": {
         "message": "Temperatura reportada pola telemetría dos ESC"
     },
+    "osdTextElementEscRpm": {
+        "message": "ESC RPM",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementEscRpm": {
         "message": "RPM reportadas por la telemetría dos ESC"
+    },
+    "osdTextElementRemaningTimeEstimate": {
+        "message": "Temporizador: estimación do tempo restante",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementRemaningTimeEstimate": {
         "message": "Tempo estimado restante de voo"
     },
+    "osdTextElementRtcDateTime": {
+        "message": "RTC data e hora",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Data / Hora en tempo real"
+    },
+    "osdTextElementAdjustmentRange": {
+        "message": "Axustar o intervalo",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementAdjustmentRange": {
         "message": "Axuste de rango e valor do elemento activo actualmente"
     },
+    "osdTextElementTimer1": {
+        "message": "Temporizador 1",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementTimer1": {
         "message": "Mostra o valor do temporizador 1"
+    },
+    "osdTextElementTimer2": {
+        "message": "Temporizador 2",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer2": {
         "message": "Mostra o valor do temporizador 2"
     },
+    "osdTextElementCoreTemperature": {
+        "message": "Temperatura procesador",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementCoreTemperature": {
         "message": "Temperatura do núcleo do STM32 MCU"
+    },
+    "osdTextAntiGravity": {
+        "message": "Anti Gravidade",
+        "description": "One of the elements of the OSD"
     },
     "osdDescAntiGravity": {
         "message": "Activa un indicador cando a anti gravidade está activa"
     },
+    "osdTextGForce": {
+        "message": "Forza G",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescGForce": {
         "message": "Mostra canta Forza G está experimentando a aeronave"
+    },
+    "osdTextElementMotorDiag": {
+        "message": "Diagnósticos do motor",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementMotorDiag": {
         "message": "Mostra un gráfico coa saída de cada motor"
     },
+    "osdTextElementLogStatus": {
+        "message": "Estado do rexistro de Blackbox",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementLogStatus": {
         "message": "Número de caixa negra e avisos"
+    },
+    "osdTextElementFlipArrow": {
+        "message": "Flip despois da frecha do accidente",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
         "message": "Flecha que indica que lado ten os motores arriba en modo tartaruga"
     },
+    "osdTextElementLinkQuality": {
+        "message": "Calidade de ligazón",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementLinkQuality": {
         "message": "Indicador alternativo para 'calidade do enlace' basado na pérdida de paquetes - empregar con precaución"
+    },
+    "osdTextElementFlightDist": {
+        "message": "Distancia de voo",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementFlightDist": {
         "message": "Distancia recorrida durante este voo."
     },
+    "osdTextElementStickOverlayLeft": {
+        "message": "Stick superposición á esquerda",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementStickOverlayLeft": {
         "message": "Superposición da posición do mando esquerdo do transmisor."
+    },
+    "osdTextElementStickOverlayRight": {
+        "message": "Stick superposición á dereita",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayRight": {
         "message": "Superposición da posición do mando dereito do transmisor."
     },
+    "osdTextElementDisplayName": {
+        "message": "Mostrar nome",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementDisplayName": {
         "message": "Mostrar nome configurado có comando cli \"display_name\""
+    },
+    "osdTextElementEscRpmFreq": {
+        "message": "Frecuencia RPM ESC",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementEscRpmFreq": {
         "message": "Frecuencia RPM reportada pola telemetría dos ESC"
     },
+    "osdTextElementRateProfileName": {
+        "message": "Perfil: nome do perfil rate",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementRateProfileName": {
         "message": "Mostra o nome do perfil de taxa actual"
+    },
+    "osdTextElementPidProfileName": {
+        "message": "Perfil: nome do perfil PID",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementPidProfileName": {
         "message": "Mostra o nome do perfil PID actual"
     },
+    "osdTextElementOsdProfileName": {
+        "message": "Perfil: nome do perfil OSD",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementOsdProfileName": {
         "message": "O nome do perfil OSD definido nas variables CLI \"osd_profile_1_name\", \"osd_profile_2_name\" and \"osd_profile_3_name\""
+    },
+    "osdTextElementRssiDbmValue": {
+        "message": "Valor dBm RSSI",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRssiDbmValue": {
+        "message": "Valor en dBm do sinal RSSI se está dispoñible"
+    },
+    "osdTextElementUnknown": {
+        "message": "Descoñecido $1",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementUnknown": {
         "message": "Elemento descoñecido (os detalles añadiranse nunha futura versión)"
     },
+    "osdTextStatMaxSpeed": {
+        "message": "Máxima velocidade",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMaxSpeed": {
         "message": "Máxima velocidade rexistrada"
+    },
+    "osdTextStatMinBattery": {
+        "message": "Mínimo voltaxe da batería",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinBattery": {
         "message": "Mínimo voltaxe da batería principal rexistrado"
     },
+    "osdTextStatMinRssi": {
+        "message": "Mínimo valor RSSI",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMinRssi": {
         "message": "Mínimo RSSI rexistrado"
+    },
+    "osdTextStatMaxCurrent": {
+        "message": "Máxima corriente da batería",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxCurrent": {
         "message": "Consumo máximo de corrente rexistrado"
     },
+    "osdTextStatUsedMah": {
+        "message": "mAh usados da batería",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatUsedMah": {
         "message": "Capacidade usada da batería"
+    },
+    "osdTextStatMaxAltitude": {
+        "message": "Máxima altitude",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxAltitude": {
         "message": "Máxima altitude rexistrada"
     },
+    "osdTextStatBlackbox": {
+        "message": "Uso caixanegra",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatBlackbox": {
         "message": "Porcentaxe total do uso da caixa negra"
+    },
+    "osdTextStatEndBattery": {
+        "message": "Voltaxe final da batería",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEndBattery": {
         "message": "Voltaxe da batería no momento do desarme"
     },
+    "osdTextStatFlyTime": {
+        "message": "Tempo total de voo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatFlyTime": {
         "message": "Tempo total que a aeronave estivo armada no actual ciclo de enerxía"
+    },
+    "osdTextStatArmedTime": {
+        "message": "O tempo voou dende o último armado",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatArmedTime": {
         "message": "Tempo dende que a aeronave foi armada por última vez"
     },
+    "osdTextStatMaxDistance": {
+        "message": "Máxima distancia a casa",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatMaxDistance": {
         "message": "Distancia máxima a posición de casa"
+    },
+    "osdTextStatBlackboxLogNumber": {
+        "message": "Número caixa negra",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBlackboxLogNumber": {
         "message": "Número de rexistro para este voo na caixa negra"
     },
+    "osdTextStatTimer1": {
+        "message": "Temporizador 1",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatTimer1": {
         "message": "Valor do temporizador 1 no momento do desarme"
+    },
+    "osdTextStatTimer2": {
+        "message": "Temporizador 2",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer2": {
         "message": "Valor do temporizador 2 no momento do desarme"
     },
+    "osdTextStatRtcDateTime": {
+        "message": "RTC data e hora",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatRtcDateTime": {
         "message": "Data e hora real"
+    },
+    "osdTextStatBattery": {
+        "message": "Voltaxe da batería",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBattery": {
         "message": "Voltaxe da batería en tempo real"
     },
+    "osdTextStatGForce": {
+        "message": "Máxima forza G",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatGForce": {
         "message": "Máxima forza G experimentada pola aeronave"
+    },
+    "osdTextStatEscTemperature": {
+        "message": "Máxima temperatura ESC",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEscTemperature": {
         "message": "Temperatura máxima ESC"
     },
+    "osdTextStatEscRpm": {
+        "message": "Máxima RPM ESC",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatEscRpm": {
         "message": "RPM máximos ESC"
+    },
+    "osdTextStatMinLinkQuality": {
+        "message": "Calidade mínima do enlace",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinLinkQuality": {
         "message": "Mínimo do indicador alternativo para 'calidade do enlace' basado na pérdida de paquetes"
     },
+    "osdTextStatFlightDistance": {
+        "message": "Distancia de voo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatFlightDistance": {
         "message": "Distancia total percorrida durante o voo"
+    },
+    "osdTextStatMaxFFT": {
+        "message": "Máximo FFT",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxFFT": {
         "message": "Pico de frecuencia FFT"
     },
+    "osdTextStatTotalFlights": {
+        "message": "Contador total de voos",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatTotalFlights": {
         "message": "Número total de voos"
+    },
+    "osdTextStatTotalFlightTime": {
+        "message": "Tempo total de voo",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTotalFlightTime": {
         "message": "Tempo total invertido voando"
     },
+    "osdTextStatTotalFlightDistance": {
+        "message": "Distancia de voo total",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatTotalFlightDistance": {
         "message": "Distancia total percorrida"
+    },
+    "osdTextStatMinRssiDbm": {
+        "message": "Mínimo dBm RSSI",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRssiDbm": {
+        "message": "Valor mínimo dBm RSSI"
+    },
+    "osdTextStatUnknown": {
+        "message": "Descoñecido $1",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatUnknown": {
+        "message": "Aviso descoñecido (os detalles añadiranse nunha futura versión)"
     },
     "osdDescribeFontVersion1": {
         "message": "Versión da fonte: 1 (Betaflight 4.0 ou superior)"
@@ -4128,11 +4713,39 @@
     "osdTimerSourceTooltip": {
         "message": "Elixe o orixen do temporizador, isto controla a duración/evento que este temporizador mide"
     },
+    "osdTimerSourceOptionOnTime": {
+        "message": "Unha vez",
+        "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
+    },
+    "osdTimerSourceOptionTotalArmedTime": {
+        "message": "Tempo total de armado",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+    },
+    "osdTimerSourceOptionLastArmedTime": {
+        "message": "Último tempo de armado",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+    },
+    "osdTimerSourceOptionOnArmTime": {
+        "message": "Tempo de armado",
+        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+    },
     "osdTimerPrecision": {
         "message": "Precisión:"
     },
     "osdTimerPrecisionTooltip": {
         "message": "Elixe a precisión do temporizador, isto controla a precisión coa que o tiempo é reportado"
+    },
+    "osdTimerPrecisionOptionSecond": {
+        "message": "Segundo",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
+    "osdTimerPrecisionOptionHundredth": {
+        "message": "Centenario",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
+    "osdTimerPrecisionOptionTenth": {
+        "message": "Décimo",
+        "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerAlarm": {
         "message": "Alarma:"
@@ -4140,50 +4753,132 @@
     "osdTimerAlarmTooltip": {
         "message": "Elixe o limiar de alarma do temporizador en minutos, cando o tempo excede este valor o elemento do OSD parpadeará, indicando 0 se desactiva a alarma"
     },
+    "osdTimerAlarmOptionRssi": {
+        "message": "RSSI",
+        "description": "Text of the RSSI alarm"
+    },
+    "osdTimerAlarmOptionCapacity": {
+        "message": "Capacidade",
+        "description": "Text of the capacity alarm"
+    },
+    "osdTimerAlarmOptionAltitude": {
+        "message": "Altitude",
+        "description": "Text of the altitude alarm"
+    },
+    "osdWarningTextArmingDisabled": {
+        "message": "Armado Desactivado",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningArmingDisabled": {
         "message": "Avisa da razón máis importante para non armar"
+    },
+    "osdWarningTextBatteryNotFull": {
+        "message": "Batería non chea",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningBatteryNotFull": {
         "message": "Alerta cando a batería está conectada pero non cargada totalmente"
     },
+    "osdWarningTextBatteryWarning": {
+        "message": "Aviso batería",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningBatteryWarning": {
         "message": "Alerta cando o voltaxe da LIPO baixe do límite establecido"
+    },
+    "osdWarningTextBatteryCritical": {
+        "message": "Batería crítica",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningBatteryCritical": {
         "message": "Alerta cando a voltaxe da batería baixe da media mínima por celda"
     },
+    "osdWarningTextVisualBeeper": {
+        "message": "Beeper visual",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningVisualBeeper": {
         "message": "Mostra unha visualización dos avisos acústicos (muestrase como 4 asteriscos)"
+    },
+    "osdWarningTextCrashFlipMode": {
+        "message": "Modo anti-tartaruga",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCrashFlipMode": {
         "message": "Advertir ao voltearse despois de activar o modo de choque"
     },
+    "osdWarningTextEscFail": {
+        "message": "Fallo ESC",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningEscFail": {
         "message": "Enumera unha lista cos ESCs/motores que están fallando (RPM ou temperatura están fora do limiar configurado)"
+    },
+    "osdWarningTextCoreTemperature": {
+        "message": "Temperatura procesador",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCoreTemperature": {
         "message": "Avisa cando a temperatura do núcleo MCU excede un rango configurado"
     },
+    "osdWarningTextRcSmoothingFailure": {
+        "message": "Fallo suavizado RC",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningRcSmoothingFailure": {
         "message": "Avisa cuando a inicialización do Suavizado RC fallou"
+    },
+    "osdWarningTextFailsafe": {
+        "message": "Failsafe",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningFailsafe": {
         "message": "Avisa cuando se executa o Modo de Seguridade"
     },
+    "osdWarningTextLaunchControl": {
+        "message": "Control de lanzamento",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningLaunchControl": {
         "message": "Avisa cuando o Control de Lanzamento está activado"
+    },
+    "osdWarningTextGpsRescueUnavailable": {
+        "message": "GPS Rescue Inoperativo",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueUnavailable": {
         "message": "Avisa cando o GPS Rescue non está dispoñible e non pode ser activado"
     },
+    "osdWarningTextGpsRescueDisabled": {
+        "message": "GPS Rescue desabilitado",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningGpsRescueDisabled": {
         "message": "Avisa cando o GPS Rescue está desactivado"
+    },
+    "osdWarningTextRSSI": {
+        "message": "RSSI",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningRSSI": {
         "message": "Avisa cando o RSSI está por debaixo da alarma configurada"
     },
+    "osdWarningTextLinkQuality": {
+        "message": "Calidade do enlace",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningLinkQuality": {
         "message": "Avisa cando a Calidad do Enlace está por debaixo da alarma configurada"
+    },
+    "osdWarningTextRssiDbm": {
+        "message": "RSSI dBm",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRssiDbm": {
+        "message": "Advirte cando o valor dBm de RSSI está por debaixo da configuración de alarma"
+    },
+    "osdWarningTextUnknown": {
+        "message": "Descoñecido $1"
     },
     "osdWarningUnknown": {
         "message": "Aviso descoñecido (os detalles añadiranse nunha futura versión)"
@@ -4218,6 +4913,254 @@
     "osdButtonSaved": {
         "message": "Gardado"
     },
+    "vtxHelp": {
+        "message": "Aquí pode configurar os valores do seu transmisor de vídeo (VTX). Pode ver e cambiar os valores de transmisión, incluídas as táboas VTX, se o controlador de voo e a VTX o admiten.<br>Para configurar o VTX, siga os seguintes pasos:<br>1. Vaia a<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\"> esta páxina;</a><br> 2. Busque o ficheiro de configuración VTX adecuado para o seu país e o seu modelo VTX e descárgueo;<br>3. Faga clic en '$t(vtxButtonLoadFile.message)' embaixo, seleccione o ficheiro de configuración VTX, cargueo;<br>4. Asegúrese de que a configuración sexa correcta;<br>5. Faga clic en '$t(vtxButtonSave.message)' para almacenar a configuración da VTX no controlador de voo.",
+        "description": "Introduction message in the VTX tab"
+    },
+    "vtxMessageNotSupported": {
+        "message": "<span class=\"message-negative\">Atención:</span>O seu VTX non está configurado ou non é compatible. Polo tanto, non pode modificar os valores VTX desde aquí. Isto só será posible se o controlador de voo está unido ó VTX usando algún protocolo como Tramp ou SmartAudio e está configurado correctamente na pestana $t(tabPorts.message) se fose necesario.",
+        "description": "Message to show when the VTX is not supported in the VTX tab"
+    },
+    "vtxMessageTableNotConfigured": {
+        "message": "<span class=\"message-negative\">Atención:</span> Debe configurar e gardar PRIMEIRO a táboa VTX na parte inferior antes de que poida facer uso dos campos $t(vtxSelectedMode.message).",
+        "description": "Message to show when the VTX is not supported in the VTX tab"
+    },
+    "vtxMessageVerifyTable": {
+        "message": "<span class=\"message-negative\">Atención:</span>Cargáronse os valores da táboa VTX, pero aínda non se almacenaron no controlador de voo. Debe verificar e modificar os valores para asegurarse de que sexan válidos e legais no seu país e logo prema o botón $t(vtxButtonSave.message) para gardalos no controlador de voo.",
+        "description": "Message to show when the VTX Table has been loaded from a external source"
+    },
+    "vtxFrequencyChannel": {
+        "message": "Ingrese a frecuencia directamente",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxFrequencyChannelHelp": {
+        "message": "Se activa isto, o configurador permitiralle seleccionar unha frecuencia no lugar da banda / canle habitual. Para que isto funcione, o seu VTX debe soportar esta función.",
+        "description": "Help text for the frequency or channel select field of the VTX tab"
+    },
+    "vtxSelectedMode": {
+        "message": "Modo seleccionado",
+        "description": "Title for the actual mode header of the VTX"
+    },
+    "vtxActualState": {
+        "message": "Valor actual",
+        "description": "Title for the actual values header of the VTX"
+    },
+    "vtxType": {
+        "message": "Tipo VTX",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxType_0": {
+        "message": "Non compatible",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_1": {
+        "message": "RTC607",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_3": {
+        "message": "SmartAudio",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_4": {
+        "message": "Tramp",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxType_255": {
+        "message": "Descoñecido",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
+    "vtxBand": {
+        "message": "Banda",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxBandHelp": {
+        "message": "Pode escoller aquí a banda para o seu VTX",
+        "description": "Help text for the band field of the VTX tab"
+    },
+    "vtxBand_0": {
+        "message": "Ningunha",
+        "description": "Text of one of the options for the band field of the VTX tab"
+    },
+    "vtxBand_X": {
+        "message": "Banda {{bandName}}",
+        "description": "Text of one of the options for the band field of the VTX tab"
+    },
+    "vtxChannel_0": {
+        "message": "Ningunha",
+        "description": "Text of one of the options for the channel field of the VTX tab"
+    },
+    "vtxChannel_X": {
+        "message": "Canle {{channelName}}",
+        "description": "Text of one of the options for the channel field of the VTX tab"
+    },
+    "vtxPower_0": {
+        "message": "Ningunha",
+        "description": "Text of one of the options for the power field of the VTX tab"
+    },
+    "vtxPower_X": {
+        "message": "Nivel {{powerLevel}}",
+        "description": "Text of one of the options for the power field of the VTX tab"
+    },
+    "vtxChannel": {
+        "message": "Canle",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxChannelHelp": {
+        "message": "Pode seleccionar aquí a canle para o seu VTX",
+        "description": "Help text for the channel field of the VTX tab"
+    },
+    "vtxFrequency": {
+        "message": "Frecuencia",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxFrequencyHelp": {
+        "message": "Aquí pode seleccionar a frecuencia para o seu VTX se é compatible",
+        "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxDeviceReady": {
+        "message": "Dispositivo Preparado",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPower": {
+        "message": "Potencia",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPowerHelp": {
+        "message": "Esta é a potencia seleccionada para o VTX. Pódese modificar se está activado o $t(vtxPitMode.message) ou o $t(vtxLowPowerDisarm.message)",
+        "description": "Help text for the power field of the VTX tab"
+    },
+    "vtxPitMode": {
+        "message": "Pit Mode",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPitModeHelp": {
+        "message": "Se está habilitado, o VTX entra nun modo de pouca potencia para deixar que o quad estea no banco sen perturbar a outros pilotos. O rango deste modo normalmente é inferior a 5 metros.<br><br>NOTA: Algúns protocolos, como SmartAudio, non poden habilitar o Pit Mode a través de software despois do acendido. \"",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxPitModeFrequency": {
+        "message": "Frecuencia do Pit Mode",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPitModeFrequencyHelp": {
+        "message": "Frecuencia a que o Pit Mode cambia cando está activado.",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
+    "vtxLowPowerDisarm": {
+        "message": "Desarmado potencia baixa",
+        "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxLowPowerDisarmHelp": {
+        "message": "Se está activado, o VTX usa a enerxía máis baixa dispoñible cando está desarmado (excepto se se produciu un fallo).",
+        "description": "Help text for the low power disarm field of the VTX tab"
+    },
+    "vtxLowPowerDisarmOption_0": {
+        "message": "Apagado",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxLowPowerDisarmOption_1": {
+        "message": "Activo",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxLowPowerDisarmOption_2": {
+        "message": "Encendido ata o primeiro armado",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxTable": {
+        "message": "Tabla VTX",
+        "description": "Text of the header of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevels": {
+        "message": "Numero de nivel de potencia",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsHelp": {
+        "message": "Isto define o número de niveis de potencia soportados polo VTX",
+        "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsTableHelp": {
+        "message": "Esta táboa representa os diferentes valores de potencia que se poden usar para o VTX. Divídense en dous:<br><b>- $t(vtxTablePowerLevelsValue.message):</b>cada nivel de potencia require un valor definido polo fabricante de hardware. Pregunte ao seu fabricante polo valor correcto ou consulte a wiki do Betaflight as Táboas VTX para obter algunhas mostras.<br><b>- $t(vtxTablePowerLevelsLabel.message):</b>pode poñer aquí a etiqueta que desexe para cada valor de nivel de potencia. Poden ser números (25, 200, 600, 1.2), letras (OFF, MIN, MAX) ou unha mestura.<br><br>Debe configurar<b>só</b>os niveis de potencia legais no seu país.",
+        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
+    },
+    "vtxTablePowerLevelsValue": {
+        "message": "Valor",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTablePowerLevelsLabel": {
+        "message": "Etiqueta",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBands": {
+        "message": "Numero de bandas",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableChannels": {
+        "message": "Número de canles por banda",
+        "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsChannelsHelp": {
+        "message": "Isto define o número de bandas e o número de canles por banda que desexa para a súa VTX.",
+        "description": "Help for the number of bands and channels field of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleName": {
+        "message": "Nome",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleLetter": {
+        "message": "Carta",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandTitleFactory": {
+        "message": "Factory",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsChannelsTableHelp": {
+        "message": "Esta táboa representa todas as frecuencias que se poden usar para o seu VTX. Pode ter varias bandas e para cada banda debe configurar:<br><b>- $t(vtxTableBandTitleName.message):</b>Nome que desexa asignar a esta banda, como BOSCAM_A, FATSHARK ou RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b>Carta breve que fai referencia á banda.<br><b>- $t(vtxTableBandTitleFactory.message):</b>Isto indica se se trata dunha banda de fábrica. Se está activado, Betaflight envía ao VTX un número de banda e canle. O VTX empregará entón a súa táboa de frecuencias incorporada e as frecuencias configuradas aquí só mostran o valor na OSD e noutros lugares. Se non está activado, Betaflight enviará á VTX a frecuencia real configurada aquí.<br><b>-Frecuencias:</b>Frecuencias desta banda.<br><br>Lembre que non todas as frecuencias son legais, no seu país. Debe poñer un valor de<b>cero</b>a cada índice de frecuencia que non se lle permite usar para deshabilitalo.",
+        "description": "Help for the table of bands-channels that appears in the VTX tab"
+    },
+    "vtxSavedFileOk": {
+        "message": "Arquivo de configuración VTX <span class=\"message-positive\">gardado</span>",
+        "description": "Message in the GUI log when the VTX Config file is saved"
+    },
+    "vtxSavedFileKo": {
+        "message": "<span class=\"message-negative\">Erro</span>ao gardar o ficheiro de configuración VTX",
+        "description": "Message in the GUI log when the VTX Config file is saved"
+    },
+    "vtxLoadFileOk": {
+        "message": "Arquivo de configuración VTX <span class=\"message-positive\">gardado</span>",
+        "description": "Message in the GUI log when the VTX Config file is loaded"
+    },
+    "vtxLoadFileKo": {
+        "message": "<span class=\"message-negative\">Erro</span>ao cargar o ficheiro de configuración VTX",
+        "description": "Message in the GUI log when the VTX Config file is loaded"
+    },
+    "vtxLoadClipboardOk": {
+        "message": "Información configuración VTX <span class=\"message-positive\">cargado</span>dende o portapapeis",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxLoadClipboardKo": {
+        "message": "<span class=\"message-negative\">Erro</span>ao cargar a información de configuración de VTX desde o portapapeis. Quizais os contidos non sexan correctos",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxButtonSaveFile": {
+        "message": "Gardar nun arquivo",
+        "description": "Save to file button in the VTX tab"
+    },
+    "vtxButtonLoadFile": {
+        "message": "Cargar dende arquivo",
+        "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "Cargar dende o portapapeis",
+        "description": "Paste from clipboard button in the VTX tab"
+    },
+    "vtxButtonSave": {
+        "message": "Gardar",
+        "description": "Save button in the VTX tab"
+    },
+    "vtxButtonSaved": {
+        "message": "Gardado",
+        "description": "Saved action button in the VTX tab"
+    },
     "mainHelpArmed": {
         "message": "Armado de Motores"
     },
@@ -4233,11 +5176,22 @@
     "configurationEscProtocolHelp": {
         "message": "Elixa o seu protocolo para o motor.<br>Asegúrese de verificar nas características do seu ESC que protocolos soporta. <br><b>¡Coidado si selecciona DSHOT900 ou DSHOT1200 xa que a maioría de ESCs non o soportan!</b>"
     },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "Seleccione o seu protocolo de motor.<br>Asegúrese de verificar que o protocolo é compatible co seu ESC, esta información debería estar no sitio web dos responsables."
+    },
     "configurationunsyndePwm": {
         "message": "Velocidade PWM do motor separada da velocidade PID"
     },
     "configurationUnsyncedPWMFreq": {
         "message": "Frecuencia Motor PWM"
+    },
+    "configurationDshotBidir": {
+        "message": "DShot bidireccional (require o firmware ESC soportado)",
+        "description": "Feature for the ESC/Motor"
+    },
+    "configurationDshotBidirHelp": {
+        "message": "Cando está activado, o protocolo DSHOT recibe información directamente do ESC, necesaria polo filtro RPM e outras funcións.<br><br>Isto require o firmware JESC de jflight.net no BLHELI_S ou o último firmware BLHELI_32.",
+        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
         "message": "Frecuencia do xiroscopo actualizada"
@@ -4317,6 +5271,13 @@
     "pidTuningRateProfileTip": {
         "message": "Asta 3 Perfís de Tasas diferentes por perfil poden ser almacenados no controlador de voo. Os perfís de tasas incluen axustes para 'Tasa RC', 'Tasa', 'Expo RC', 'Acelerador' e 'TPA'. Cambiar entre perfís de tasas é posible en voo, configurando un interruptor de 3 posicións como 'Selección de Perfil de Tasas' no apartado de ' Axustes'."
     },
+    "pidTuningRateSetup": {
+        "message": "Basic/Acro Rates"
+    },
+    "pidTuningRateSetupHelp": {
+        "message": "Axuste estes valores para os seus rates. Use RC Rate para aumentar a taxa máxima global, use Super Rate para ter taxas máis altas ao final da viaxe de stick, use RC Expo para que o stick medio se sinta suave.",
+        "description": "Rate table helpicon message"
+    },
     "pidTuningDelta": {
         "message": "Método Derivativo"
     },
@@ -4355,6 +5316,12 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Tasa de rexistro da caixa negra"
+    },
+    "onboardLoggingDebugMode": {
+        "message": "Modo de depuración Caixa negra"
+    },
+    "onboardLoggingDebugModeUnknown": {
+        "message": "DESCOÑECIDO"
     },
     "onboardLoggingSerialLogger": {
         "message": "Dispositivo externo de rexistro"
@@ -4406,5 +5373,8 @@
     },
     "cliAutoComplete": {
         "message": "AutoCompletar CLI Avanzado"
+    },
+    "darkTheme": {
+        "message": "Activa o tema escuro"
     }
 }
