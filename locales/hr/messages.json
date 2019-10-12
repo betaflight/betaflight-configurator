@@ -8,15 +8,13 @@
         "description": "General No message to be used across the application"
     },
     "on": {
-        "message": "Uključeno",
-        "description": "Edited in Crowdin by IvoFPV"
+        "message": "Uključeno"
     },
     "off": {
         "message": "Isključeno"
     },
     "auto": {
-        "message": "Automatski",
-        "description": "Edited in Crowdin by IvoFPV"
+        "message": "Automatski"
     },
     "error": {
         "message": "Greška: {{errorMessage}}"
@@ -2220,9 +2218,6 @@
     "sensorsMagSelect": {
         "message": "Magnetometar"
     },
-    "sensorsBaroSelect": {
-        "message": "Barometar"
-    },
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
@@ -2237,9 +2232,6 @@
     },
     "sensorsMagTitle": {
         "message": "Magnetometar - Ga"
-    },
-    "sensorsBaroTitle": {
-        "message": "Barometar - metri"
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -2429,9 +2421,6 @@
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informacije o izdanju"
-    },
-    "firmwareFlasherReleaseName": {
-        "message": "Ime/Verzija:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Posjetite stranicu izdanja."
