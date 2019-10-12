@@ -1727,9 +1727,6 @@
     "sensorsMagSelect": {
         "message": "Magnetòmetre"
     },
-    "sensorsBaroSelect": {
-        "message": "Baròmetre"
-    },
     "sensorsSonarSelect": {
         "message": "Sònar"
     },
@@ -1744,9 +1741,6 @@
     },
     "sensorsMagTitle": {
         "message": "Magnetòmetre - Ga"
-    },
-    "sensorsBaroTitle": {
-        "message": "Baròmetre - metres"
     },
     "sensorsSonarTitle": {
         "message": "Sònar - cm"
@@ -1903,9 +1897,6 @@
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Info del llançament"
-    },
-    "firmwareFlasherReleaseName": {
-        "message": "Nom/Versió:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Visita la pàgina de llançament."

@@ -1,7 +1,7 @@
 {
     "yes": {
         "message": "是",
-        "description": "Edited in crowdin by DusKing1."
+        "description": "General Yes message to be used across the application"
     },
     "no": {
         "message": "否",
@@ -237,8 +237,7 @@
         "message": "上一版本地面站生成的备份文件不能移植到当前版本的地面站"
     },
     "configMigrationFrom": {
-        "message": "正在迁移配置器生成的配置文件: $1",
-        "description": "Edited in crowdin by DusKing1."
+        "message": "正在迁移配置器生成的配置文件: $1"
     },
     "configMigratedTo": {
         "message": "地面站设置文件 $1 已移植"
@@ -887,6 +886,10 @@
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
         "message": "配置更改需要重启",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+        "message": "Bitbanged Dshot 无法正常工作，无法正常控制电机。可能是由于在飞控上启用了其他功能造成了定时器冲突。",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解锁时有一个阻止解锁的标志处于活跃状态",
@@ -2366,8 +2369,8 @@
     "sensorsMagSelect": {
         "message": "磁场计"
     },
-    "sensorsBaroSelect": {
-        "message": "高度计"
+    "sensorsAltitudeSelect": {
+        "message": "高度"
     },
     "sensorsSonarSelect": {
         "message": "声呐"
@@ -2384,8 +2387,11 @@
     "sensorsMagTitle": {
         "message": "磁场计 - Ga"
     },
-    "sensorsBaroTitle": {
-        "message": "高度计 - 米"
+    "sensorsAltitudeTitle": {
+        "message": "高度 - 米"
+    },
+    "sensorsAltitudeHint": {
+        "message": "高度的计算方法是将气压计(如果可用) 的输出与 GPS(如果可用) 的高度输出结合起来。如果已连接到一个 GPS 模块且 GPS 模块定位成功后，则将在未解锁时显示相对于海平面的绝对高度。解锁后，显示相对于解锁时的相对高度。"
     },
     "sensorsSonarTitle": {
         "message": "声呐 - 厘米"
@@ -2579,8 +2585,11 @@
     "firmwareFlasherReleaseSummaryHead": {
         "message": "发布信息"
     },
-    "firmwareFlasherReleaseName": {
-        "message": "名称/版本："
+    "firmwareFlasherReleaseManufacturer": {
+        "message": "制造商:"
+    },
+    "firmwareFlasherReleaseVersion": {
+        "message": "版本:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "访问发布信息页面"
@@ -2632,6 +2641,9 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "选择你的飞控型号"
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "从Betaflight 4.1 开始，Betaflight引入了对<strong>统一目标</strong>的支持。统一目标的概念意味着使用相同MCU (F4、F7) 的飞控板可以使用相同的 .hex 固件文件。为了使不同的飞控板使用相同的固件，在刷写统一目标时，将在固件旁边部署一个特定的配置文件。<br>此版本的Betaflight 配置器支持一步刷写带有各自飞控板特定配置的统一目标。下拉列表中显示了每个飞控板可用的不同固件类型，如下所示: <br><br><strong>&lt;board name&gt;</strong>或<br><strong>&lt;board name&gt;(旧格式)</strong>:<br>非统一目标，或4.1版本之前的统一目标。<br><br><strong>&lt;board name&gt;(&lt;manufacturer id&gt;)</strong>:<br>(4字母制造商ID)<br>统一目标。<br><br><strong>若统一目标可用请使用统一目标。</strong>如果你在使用统一目标时遇到问题，请打开一个<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>然后使用非统一目标，直至问题解决。"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "选择对应你飞控型号的固件版本"
@@ -2758,6 +2770,14 @@
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX文件似乎已损坏"
+    },
+    "firmwareFlasherConfigCorrupted": {
+        "message": "配置文件似乎已损坏，ASCII(字符0-255) 码已接收",
+        "description": "shown in the progress bar at the bottom, be brief"
+    },
+    "firmwareFlasherConfigCorruptedLogMessage": {
+        "message": "配置文件似乎已损坏，ASCII(字符0-255) 码已接收，此范围外的字符将被作为注释",
+        "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">固件加载成功，可供烧录</span>"
@@ -3303,8 +3323,7 @@
         "message": "动态陷波滤波器范围"
     },
     "pidTuningDynamicNotchWidthPercent": {
-        "message": "动态陷波滤波器宽度百分比",
-        "description": "Edited in crowdin by DusKing1."
+        "message": "动态陷波滤波器宽度百分比"
     },
     "pidTuningDynamicNotchQ": {
         "message": "动态陷波滤波器Q"
@@ -5152,6 +5171,9 @@
     },
     "configurationEscProtocolHelp": {
         "message": "选择电调协议。<br>请确认你的电调支持该协议，电调制造商应该有提供这些信息。<br> <b>选择 DSHOT900 或 DSHOT1200 时请注意，目前没有很多电调支持这个协议！</b>"
+    },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "选择您的电机协议。<br>请验证您的电调支持此协议，此信息应在制造商的网站上。"
     },
     "configurationunsyndePwm": {
         "message": "电机PWM速度独立于PID速度"

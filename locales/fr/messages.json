@@ -7,6 +7,15 @@
         "message": "Non",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "On"
+    },
+    "off": {
+        "message": "Off"
+    },
+    "auto": {
+        "message": "Auto"
+    },
     "error": {
         "message": "Erreur : {{errorMessage}}"
     },
@@ -877,6 +886,10 @@
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
         "message": "Une modification de configuration nécessite un redémarrage",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+        "message": "Le DSHOT Bitbanged ne fonctionne pas correctement. Les moteurs ne peuvent pas être contrôlés, probablement à cause un conflit de timer avec d'autres fonctionnalités activées sur le contrôleur de vol.",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un des autres drapeaux désarmés est actif lors de l'armement",
@@ -2353,8 +2366,8 @@
     "sensorsMagSelect": {
         "message": "Magnétomètre"
     },
-    "sensorsBaroSelect": {
-        "message": "Baromètre"
+    "sensorsAltitudeSelect": {
+        "message": "Altitude"
     },
     "sensorsSonarSelect": {
         "message": "Sonar"
@@ -2371,8 +2384,11 @@
     "sensorsMagTitle": {
         "message": "Magnétomètre - Ga"
     },
-    "sensorsBaroTitle": {
-        "message": "Baromètre - mètres"
+    "sensorsAltitudeTitle": {
+        "message": "Altitude - mètres"
+    },
+    "sensorsAltitudeHint": {
+        "message": "L'altitude est calculée en combinant les données du baromètre (si disponibles) avec les données d'altitude du GPS (si disponibles). Si un GPS est présent et connecté aux satallites, l'altitude absolue au-dessus du niveau de la mer sera affichée lorsque l'appareil est désarmé. Lorsqu'il est armé, l'altitude relative à la position lors de l'armement sera affichée."
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -2566,8 +2582,11 @@
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Informations de la version"
     },
-    "firmwareFlasherReleaseName": {
-        "message": "Nom/Version:"
+    "firmwareFlasherReleaseManufacturer": {
+        "message": "Fabricant :"
+    },
+    "firmwareFlasherReleaseVersion": {
+        "message": "Version :"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Aller sur la page des versions."
@@ -2619,6 +2638,9 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Sélectionnez votre carte pour voir les microprogrammes disponibles - Sélectionnez le microprogramme approprié à votre carte."
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Avec la version 4.1, Betaflight supporte les <strong>Cibles Unifiées</strong>. Le concept de Cibles Unifiées signifie que le même fichier .hex du firmware est utilisé pour toutes les cartes de même MCU (F4, F7). Un fichier de configuration spécifique à la carte est utilisé lors du flash de la Cible Unifiée.<br>Cette version de Betaflight Configurator permet le flash de Cibles Unifiées avec les fichiers de configuration propres à chaque carte en une seule étape. Les différents types de firmwares de chaque carte sont affichés dans le menu déroulant comme suit:<br><br><strong>&lt;nom de la carte&gt;</strong> ou<br><strong>&lt;nom de la carte&gt; (Legacy)</strong>:<br>Cible non Unifiée, ou version pre-4.1 du firmware pour Cible Unifiée.<br><br><strong>&lt;nom de la carte&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 caractères id fabricant)<br>Cible Unifiée.<br><br><strong>Veuillez utiliser les Cibles Unifiées lorsque disponibles.</strong> Si vous rencontrez des problèmes lors de l'utilisation de Cibles Unifiées, veuillez signaler le<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problème</a> puis utiliser le firmware non unifié jusqu'à la résolution du problème."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Sélectionnez la version du microprogramme pour votre carte."
@@ -2745,6 +2767,14 @@
     },
     "firmwareFlasherHexCorrupted": {
         "message": "Le fichier HEX semble corrompu"
+    },
+    "firmwareFlasherConfigCorrupted": {
+        "message": "Le fichier de configuration semble corrompu. ASCII accepté (caractères 0 - 255)",
+        "description": "shown in the progress bar at the bottom, be brief"
+    },
+    "firmwareFlasherConfigCorruptedLogMessage": {
+        "message": "Le fichier de configuration semble corrompu. ASCII accepté (caractères 0 - 255). Les caractères en-dehors de cette plage sont acceptés en commentaires",
+        "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">Microprogramme chargé, prêt pour le flashage</span>"
@@ -5138,6 +5168,9 @@
     },
     "configurationEscProtocolHelp": {
         "message": "Sélectionnez votre protocole ESC. <br> Assurez-vous de vérifier que le protocole est pris en charge par votre ESC, cette information devrait être sur le site Web des fabricants. <br> <b> Soyez prudent en utilisant DSHOT900 et DSHOT1200 car peu d'ESC le supportent!</ b>"
+    },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "Sélectionnez votre protocole moteur. <br>Vérifiez bien que le protocole est pris en charge par votre ESC. Cette information devrait se trouver sur le site web du fabricant."
     },
     "configurationunsyndePwm": {
         "message": "Vitesse du moteur PWM séparée de la vitesse PID"

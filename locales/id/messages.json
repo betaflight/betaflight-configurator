@@ -1933,9 +1933,6 @@
     "sensorsMagSelect": {
         "message": "Magnetometer"
     },
-    "sensorsBaroSelect": {
-        "message": "Barometer"
-    },
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
@@ -1950,9 +1947,6 @@
     },
     "sensorsMagTitle": {
         "message": "Magnetometer - Ga"
-    },
-    "sensorsBaroTitle": {
-        "message": "Barometer - meter"
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -2112,9 +2106,6 @@
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Info Rilis"
-    },
-    "firmwareFlasherReleaseName": {
-        "message": "Nama/Versi:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Kunjungi halaman rilis."

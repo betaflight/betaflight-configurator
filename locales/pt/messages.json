@@ -7,6 +7,15 @@
         "message": "Não",
         "description": "General No message to be used across the application"
     },
+    "on": {
+        "message": "Ligado"
+    },
+    "off": {
+        "message": "Desligado"
+    },
+    "auto": {
+        "message": "Auto"
+    },
     "error": {
         "message": "Erro: {{errorMessage}}"
     },
@@ -48,6 +57,9 @@
     },
     "close": {
         "message": "Fechar"
+    },
+    "cancel": {
+        "message": "Cancelar"
     },
     "autoConnectEnabled": {
         "message": "Auto-Conectar: Ativado - O Configurador tenta se conectar automaticamente assim que uma nova porta é detectada"
@@ -384,6 +396,12 @@
     },
     "firmwareUpgradeRequired": {
         "message": "O firmware deste dispositivo precisa ser atualizado para uma versão mais recente. Use a Linha de comandos (CLI) para realizar uma cópia de segurança antes da atualização. O procedimento para fazer uma cópia de segurança/restaurar encontra-se na documentação.<br />Como alternativa faça o download e use uma versão antiga do configurador, caso não esteja preparado para efetuar a atualização."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "Um padrão personalizado está disponível para esta placa. Normalmente a placa não irá funcionar corretamente a menos que esses padrões sejam aplicados.<br />Deseja aplicar os padrões personalizados nesta placa?"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Aplicar Padrões Personalizados"
     },
     "infoVersions": {
         "message": "Executando - SO: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
@@ -799,7 +817,7 @@
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
         "message": "Filtragem baseada em RPM está habilitada, mas um ou mais ESCs não estão fornecendo telemetria DSHOT. Verifique se os ESCs são capazes e se o firmware necessário está instalado para suportar telemetria DSHOT bidirecional.",
-        "description": "Edited in crowdin by leobottaro"
+        "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
         "message": "Uma das alterações de configuração requer uma reinicialização",
@@ -2283,8 +2301,8 @@
     "sensorsMagSelect": {
         "message": "Magnetômetro"
     },
-    "sensorsBaroSelect": {
-        "message": "Barômetro"
+    "sensorsAltitudeSelect": {
+        "message": "Altitude"
     },
     "sensorsSonarSelect": {
         "message": "Sonar"
@@ -2301,8 +2319,11 @@
     "sensorsMagTitle": {
         "message": "Magnetômetro - Ga"
     },
-    "sensorsBaroTitle": {
-        "message": "Barômetro - metros"
+    "sensorsAltitudeTitle": {
+        "message": "Altitude - metros"
+    },
+    "sensorsAltitudeHint": {
+        "message": "A altitude é calculada com uma combinação de dados do barômetro (se disponível) e dados do GPS (se disponível). Se um GPS estiver conectado e com sinal dos satélites, quando desarmado, será exibida a altitude absoluta acima do nível do mar. Quando armado, será exibida a altitude relativa à posição onde foi armado."
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -2339,6 +2360,9 @@
     },
     "cliLoadFromFileBtn": {
         "message": "Carregar do arquivo"
+    },
+    "cliConfirmSnippetDialogTitle": {
+        "message": "O arquivo <strong>{{fileName}}</strong> foi carregado. Revise os comandos"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>Nota:</strong> É possível ver e modificar os comandos antes de executar."
@@ -2493,8 +2517,11 @@
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Notas de lançamento"
     },
-    "firmwareFlasherReleaseName": {
-        "message": "Nome/Versão:"
+    "firmwareFlasherReleaseManufacturer": {
+        "message": "Fabricante:"
+    },
+    "firmwareFlasherReleaseVersion": {
+        "message": "Versão:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Visite a página de lançamentos."
@@ -2546,6 +2573,9 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecione a sua placa para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Começando com a versão 4.1 o Betaflight está introduzindo suporte a <strong>Destinos Unificados</strong>. O conceito de Destinos Unificados significa que o mesmo arquivo .hex pode ser utilizado em todas as placas com o mesmo MCU (F4, F7). Para que as diferentes placas funcionem com o mesmo firmware, um arquivo de configuração específico para a placa é enviado junto do firmware quando um Destino Unificado é atualizado.<br>Esta versão do Configurador Betaflight suporta atualizar Destinos Unificados com as configurações específicas da placa em uma única ação. Os diferentes tipos de firmware disponíveis para cada placa são exibidos na lista suspensa da seguinte forma:<br><br><strong>&lt;Nome da placa&gt;</strong> ou <br><strong>&lt;Nome da placa&gt; (Legado)</strong>:<br>são respectivamente Destinos que ainda não foram Unificados e versões anteriores a 4.1 de Destinos Unificados<br><br><strong>&lt;Nome da placa&gt; (&lt;(ID de 4 caracteres do fabricante)&gt;)</strong>:<br>são Destinos Unificados.<br><br><strong>Por favor, use o Destino Unificado sempre que disponível.</strong> Se encontrar problemas com um Destino Unificado, por favor abra uma <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue</a> e use o Destino Não-Unificado até que o problema seja resolvido."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecione a versão do firmware para sua placa."
@@ -2672,6 +2702,14 @@
     },
     "firmwareFlasherHexCorrupted": {
         "message": "Parece que o arquivo HEX está corrompido"
+    },
+    "firmwareFlasherConfigCorrupted": {
+        "message": "O arquivo de configuração está corrompido, ASCII aceito (caracteres 0-255)",
+        "description": "shown in the progress bar at the bottom, be brief"
+    },
+    "firmwareFlasherConfigCorruptedLogMessage": {
+        "message": "O arquivo de configuração está corrompido, ASCII aceito (caracteres 0-255), caracteres fora desse valor são aceitos como comentários",
+        "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">Firmware Remoto carregado, pronto para atualizar</span>"
@@ -3099,6 +3137,10 @@
         "message": "Sliders para ajustes das características de voo (Ganhos PID)<br><br>Multiplicador mestre: Aumenta ou diminui todos os ganhos PID (acima) mantendo a diferença proporcional entre os ganhos.<br><br>Equilíbrio PD: Ajusta o equilíbrio (razão / diferença proporcional) entre os Termos P e D ('a mola' [p-term] e o 'amortecedor' [d-term]).<br><br>Ganho PD: Aumenta ou diminui juntos os ganhos dos Termos P e D - mantendo a razão (balanço) entre os dois - para mais (ou menos) autoridade do controlador PID.<br><br>Ganho na resposta: Aumenta ou diminui o ganho do FeedForward para controlar a sensação de resposta dos sticks na aeronave.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">CUIDADO</span>: Os valores atuais dos sliders podem causar perda de controle, danos aos motores ou comportamento inseguro da aeronave. Prossiga com cuidado.",
+        "description": "Warning shown when tuning slider are above safe limits"
+    },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Nota:</strong> Os sliders foram desativados por que os valores foram modificados manualmente. Pressionar o botão '$t(pidTuningSliderEnableButton.message)' irá ativa-los novamente. Isto porem irá reverter os valores e qualquer alteração não salva será perdida.",
         "description": "Tuning sliders disabled note when manual changes are detected"
@@ -3106,6 +3148,10 @@
     "pidTuningSliderEnableButton": {
         "message": "Habilitar Sliders",
         "description": "Button label for enabling sliders"
+    },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> O alcance dos sliders está limitado porque você não está no modo avançado. Este intervalo é adequado para a maioria das aeronaves e para iniciantes.",
+        "description": "Sliders restricted message"
     },
     "pidTuningSliderLow": {
         "message": "Baixo",
@@ -3570,6 +3616,9 @@
     },
     "powerCalibrationManagerSourceNote": {
         "message": "<span class=\"message-negative\">Aviso:</span> Sensores de voltagem e/ou corrente <strong>foram alterados mas não foram salvos.</strong> Por favor, defina os sensores corretos e pressione salvar antes de tentar calibrar."
+    },
+    "powerCalibrationManagerConfirmationTitle": {
+        "message": "Confirmação do Gerenciador de Calibração"
     },
     "powerCalibrationSave": {
         "message": "Calibrar"
@@ -5012,6 +5061,14 @@
         "message": "<span class=\"message-negative\">Erro</span> ao carregar o arquivo de configuração do VTX",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadClipboardOk": {
+        "message": "Configuração do VTX foi <span class=\"message-positive\">carregado</span> da área de transferência",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxLoadClipboardKo": {
+        "message": "<span class=\"message-negative\">Erro</span> ao carregar a configuração do VTX da área de transferência. Verifique se o conteúdo está correto",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
     "vtxButtonSaveFile": {
         "message": "Salvar em um arquivo",
         "description": "Save to file button in the VTX tab"
@@ -5019,6 +5076,10 @@
     "vtxButtonLoadFile": {
         "message": "Carregar do arquivo",
         "description": "Load to file button in the VTX tab"
+    },
+    "vtxButtonLoadClipboard": {
+        "message": "Carregar da área de transferência",
+        "description": "Paste from clipboard button in the VTX tab"
     },
     "vtxButtonSave": {
         "message": "Salvar",
@@ -5042,6 +5103,9 @@
     },
     "configurationEscProtocolHelp": {
         "message": "Selecione o protocolo do seu motor. <br>Tenha a certeza de que o protocolo é suportado pelo seu ESC, esta informação deve estar disponível no site do fabricante. <br><b>Tenha cuidado ao usar DSHOT900 e DSHOT1200, uma vez que muitos ESCs não os suportam!</b>"
+    },
+    "configurationEscProtocolHelpNoDSHOT1200": {
+        "message": "Selecione o protocolo do seu motor. <br>Tenha a certeza de que o protocolo é suportado pelo seu ESC, esta informação deve estar disponível no site do fabricante."
     },
     "configurationunsyndePwm": {
         "message": "Velocidade do PWM do Motor independente da velocidade do PID"

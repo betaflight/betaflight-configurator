@@ -2173,9 +2173,6 @@
     "sensorsMagSelect": {
         "message": "Magnetometrs"
     },
-    "sensorsBaroSelect": {
-        "message": "Barometrs"
-    },
     "sensorsSonarSelect": {
         "message": "Sonārs"
     },
@@ -2190,9 +2187,6 @@
     },
     "sensorsMagTitle": {
         "message": "Magnetometrs - Ga"
-    },
-    "sensorsBaroTitle": {
-        "message": "Barometrs - metri"
     },
     "sensorsSonarTitle": {
         "message": "Sonārs - cm"
@@ -2382,9 +2376,6 @@
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Relīzes informācija"
-    },
-    "firmwareFlasherReleaseName": {
-        "message": "Vārds/Versija:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Apmeklējiet relīzes lapu."
