@@ -823,6 +823,10 @@
         "message": "Un cambio en la configuración requiere reiniciar",
         "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+        "message": "Bitbanging DSHOT no está funcionando correctamente y los motores no pueden ser controlados. Probablemente causado por algún conflicto en un timer con otras funcionalidades activadas del controlador de vuelo.",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Una de las otras banderas de desarmado estaba activa al armar",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2301,8 +2305,8 @@
     "sensorsMagSelect": {
         "message": "Magnetómetro"
     },
-    "sensorsBaroSelect": {
-        "message": "Barómetro"
+    "sensorsAltitudeSelect": {
+        "message": "Altitud"
     },
     "sensorsSonarSelect": {
         "message": "Sonar"
@@ -2319,8 +2323,11 @@
     "sensorsMagTitle": {
         "message": "Magnetómetro - Ga"
     },
-    "sensorsBaroTitle": {
-        "message": "Barómetro - metros"
+    "sensorsAltitudeTitle": {
+        "message": "Altitud - metros"
+    },
+    "sensorsAltitudeHint": {
+        "message": "La altitud se calcula combinando la salida del barómetro (si está disponible) con la salida de altitud del GPS (si está disponible). Si hay un GPS conectado y el GPS está fijado, mientras esté desarmado se mostrará la altitud absoluta sobre el nivel del mar. Cuando esté armado, se mostrará la altitud relativa a la posición en la que se armó."
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -2514,8 +2521,11 @@
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Info de la versión"
     },
-    "firmwareFlasherReleaseName": {
-        "message": "Nombre/Version:"
+    "firmwareFlasherReleaseManufacturer": {
+        "message": "Fabricante:"
+    },
+    "firmwareFlasherReleaseVersion": {
+        "message": "Versión:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Visitar página de versiones."
@@ -2567,6 +2577,9 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecciona tu placa para ver las versiones de firmware disponibles online - Elige el firmware adecuado para tu placa."
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Empezando en Betaflight 4.1, se ha incluido soporte para <strong>Placas Unificadas</strong>. El concepto de Placas Unificadas implica que el mismo archivo .hex de firmware puede utilizarse en todas las placas que usen la misma MCU (F4, F7). Para conseguir que diferentes placas funcionen con el mismo firmware, se proporciona un archivo de configuración específico cuando se instala una Placa Unificada.<br>Esta versión de Betaflight Configurator soporta la instalación de Placas Unificadas junto a la respectiva configuración específica de la placa en un sólo paso. Los diferentes tipos de firmware que están disponibles para cada placa se muestran en el desplegado como sigue:<br><br><strong>&lt;nombre de placa&gt;</strong> o <br><strong>&lt;nombre de placa&gt; (Obsoleto)</strong>:<br>Placa NO Unificada, o versión pre-4.1 del firmware para Placas Unificadas.<br><br><strong>&lt;nombre de placa&gt; (&lt;id de fabricante&gt;)</strong>:<br>(id de fabricante de 4 caracteres)<br>Placa Unificada.<br><br><strong>Por favor, utiliza Placas Unificadas siempre que sea posible.</strong>Si encuentras problemas usando la Placa Unificada, por favor abre una <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">incidencia</a> y utiliza la la placa no unificada hasta que la incidencia sea resuelta."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Elige la versión de firmware para tu placa."
@@ -2693,6 +2706,14 @@
     },
     "firmwareFlasherHexCorrupted": {
         "message": "El archivo HEX parece estar corrupto"
+    },
+    "firmwareFlasherConfigCorrupted": {
+        "message": "Archivo de configuración corrupto, aceptado ASCII (caracteres 0-255)",
+        "description": "shown in the progress bar at the bottom, be brief"
+    },
+    "firmwareFlasherConfigCorruptedLogMessage": {
+        "message": "Archivo de configuración corrupto, aceptado ASCII (caracteres 0-255), sólo se admiten caracteres fuera de este rango para los comentarios",
+        "description": "shown in the log, more wordy"
     },
     "firmwareFlasherRemoteFirmwareLoaded": {
         "message": "<span class=\"message-positive\">Firmware remoto cargado, listo para instalar</span>"
