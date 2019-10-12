@@ -2290,9 +2290,6 @@
     "sensorsMagSelect": {
         "message": "Magnetometer"
     },
-    "sensorsBaroSelect": {
-        "message": "Barometer"
-    },
     "sensorsSonarSelect": {
         "message": "Sonar"
     },
@@ -2307,9 +2304,6 @@
     },
     "sensorsMagTitle": {
         "message": "Magnetometer - Ga"
-    },
-    "sensorsBaroTitle": {
-        "message": "Barometer - meter"
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -2499,9 +2493,6 @@
     },
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Utgåve-info"
-    },
-    "firmwareFlasherReleaseName": {
-        "message": "Namn/Version:"
     },
     "firmwareFlasherReleaseVersionUrl": {
         "message": "Besök utgåvesida."
