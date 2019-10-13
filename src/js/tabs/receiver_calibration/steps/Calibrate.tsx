@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ChannelDetect from './calibrate/ChannelDetect';
-import useMsp from "../msp/useMsp";
+import {useMsp, useMspPolling} from "../msp/useMsp";
 import styles from './Calibrate.module.css';
 import cx from 'classnames';
 import {objectValues} from "../utils";
@@ -35,14 +35,31 @@ interface Props {
 }
 
 const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
-  const txValues: number[] = useMsp(MSPCodes.MSP_RC);
+  const txValues: number[] = useMspPolling(MSPCodes.MSP_RC, 10);
 
-  const [currentChannel, setCurrentChannel] = useState(0);
+  const [mins, setMins] = useState([]);
+  const [maxs, setMaxs] = useState([]);
+
   const [detectedChannels, setDetectedChannels] = useState({});
-  const [initialMins, setMins] = useState(txValues);
-  const [initialMaxs, setMaxs] = useState(txValues);
+  const [currentChannel, setCurrentChannel] = useState(0);
   //const rxRange = useMsp(MSPCodes.MSP_RX_RANGE);
   //const rxMap = useMsp(MSPCodes.MSP_RX_MAP);
+
+  useEffect(() => {
+    if (txValues) {
+      const minVals = txValues.map((val: number, i: number) => Math.min(mins[i], val));
+      const maxVals = txValues.map((val: number, i: number) => Math.max(maxs[i], val));
+
+      if (!mins.every((val: number, i: number) => val === minVals[i])) {
+        setMins(minVals);
+      }
+
+      if (!maxs.every((val: number, i: number) => val === maxVals[i])) {
+        setMaxs(maxVals);
+      }
+    }
+  }, [txValues]);
+
 
   function detectedChannelsToChannelMapping(detectedChannels: IObjectIndexSignature) {
     const txToChannels: IObjectIndexSignature = Object.keys(detectedChannels)
@@ -58,7 +75,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
   }
 
   function getRxRange() {
-    return minVals.map((v: number, i: number) => [v, maxVals[i]]);
+    return mins.map((v: number, i: number) => [v, maxs[i]]);
   }
 
   function handleNext() {
@@ -85,17 +102,6 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
     onDone();
   }
 
-  const minVals = txValues && txValues.map((val: number, i: number) => Math.min(initialMins[i], val));
-  const maxVals = txValues && txValues.map((val: number, i: number) => Math.max(initialMaxs[i], val));
-
-  if (maxVals && !initialMaxs.every((val: number, i: number) => val === maxVals[i])) {
-    setMaxs(maxVals);
-  }
-
-  if (minVals && !initialMins.every((val: number, i: number) => val === minVals[i])) {
-    setMins(minVals);
-  }
-
   return !txValues ? <div>Loading</div> : <div className={styles.Calibrate}>
     {currentChannel !== CHANNELS.length && txValues.map((value: number, i: number) => {
       const channelIsAssigned = objectValues(detectedChannels).indexOf(i);
@@ -112,8 +118,8 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
                   `fill${i}`
                 )}
                 style={{
-                  left: `${((minVals[i] - 1000) / 10)}%`,
-                  right: `${((2000 - maxVals[i]) / 10)}%`
+                  left: `${((mins[i] - 1000) / 10)}%`,
+                  right: `${((2000 - maxs[i]) / 10)}%`
                 }}>
               </div>
               <div className={styles.label}>{value}</div>

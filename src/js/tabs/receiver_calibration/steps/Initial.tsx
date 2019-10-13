@@ -1,5 +1,5 @@
 import React from 'react';
-import useMsp from "../msp/useMsp";
+import {useMsp} from "../msp/useMsp";
 import styles from './Initial.module.css';
 
 const DEFAULT_RX_RANGE_MIN = 1000;
