@@ -646,37 +646,50 @@ function update_live_status() {
                            });
        }
     }
+
     if (ANALOG != undefined) {
-    var nbCells = Math.floor(ANALOG.voltage / BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
-    if (ANALOG.voltage == 0)
-           nbCells = 1;
+        var nbCells = Math.floor(ANALOG.voltage / BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
+
+        if (ANALOG.voltage == 0) {
+               nbCells = 1;
+        }
 
        var min = BATTERY_CONFIG.vbatmincellvoltage * nbCells;
        var max = BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
        var warn = BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
 
-       $(".battery-status").css({
-          width: ((ANALOG.voltage - min) / (max - min) * 100) + "%",
-          display: 'inline-block'
-       });
+       const NO_BATTERY_VOLTAGE_MAXIMUM = 0.5; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions  
 
-       if (active) {
-           $(".linkicon").css({
-               'background-image': 'url(images/icons/cf_icon_link_active.svg)'
+       if (ANALOG.voltage < min && ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
+           $(".battery-status").addClass('state-empty').removeClass('state-ok').removeClass('state-warning');
+           $(".battery-status").css({
+               width: "100%",
            });
        } else {
-           $(".linkicon").css({
-               'background-image': 'url(images/icons/cf_icon_link_grey.svg)'
+           $(".battery-status").css({
+               width: ((ANALOG.voltage - min) / (max - min) * 100) + "%",
            });
-       }
 
-       if (ANALOG.voltage < warn) {
-           $(".battery-status").css('background-color', '#D42133');
-       } else  {
-           $(".battery-status").css('background-color', '#59AA29');
+           if (ANALOG.voltage < warn) {
+               $(".battery-status").addClass('state-warning').removeClass('state-empty').removeClass('state-ok');
+           } else  {
+               $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
+           }
        }
+       
+       let cellsText = (ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM)? nbCells + 'S' : 'USB';
+       $(".battery-legend").text(ANALOG.voltage.toFixed(2) + "V (" + cellsText + ")");
 
-       $(".battery-legend").text(ANALOG.voltage + " V");
+    }
+
+    if (active) {
+        $(".linkicon").css({
+            'background-image': 'url(images/icons/cf_icon_link_active.svg)'
+        });
+    } else {
+        $(".linkicon").css({
+            'background-image': 'url(images/icons/cf_icon_link_grey.svg)'
+        });
     }
 
     statuswrapper.show();
