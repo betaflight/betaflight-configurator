@@ -1,6 +1,6 @@
 :root {
     --accent: #ffbb00;
-    --error: red; 
+    --error: red;
     --subtleAccent: silver;
     --quietText: #ffffff;
     --quietHeader: #828885;
@@ -13,6 +13,8 @@
     --paper: url(../../images/paper.jpg);
     --ledAccent: #adadad;
     --ledBackground: #e9e9e9;
+    --gimbalBackground: #eee;
+    --gimbalCrosshair: var(--subtleAccent);
     --switcherysecond: #c4c4c4;
 }
 
@@ -1155,7 +1157,7 @@ dialog {
     margin-left: auto;
 }
 
-/** Hack to change the "display: none" by a "visibility:hidden", to apply 
+/** Hack to change the "display: none" by a "visibility:hidden", to apply
     the margin-left: auto needed by the first element to align to the right the buttons */
 .toolbar_fixed_bottom .content_toolbar div[style='display: none;']:first-child {
     visibility: hidden;
@@ -2140,4 +2142,34 @@ input {
 #dialogResetToCustomDefaults-content {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+/*
+   noUi slider stylings
+*/
+
+.noUi-target {
+    background: var(--alternativeBackground);
+    border-color: var(--subtleAccent);
+    box-shadow: none;
+}
+
+.noUi-handle {
+    background: var(--sideBackground);
+    border-color: var(--subtleAccent);
+    box-shadow: none;
+}
+
+.noUi-handle:before,
+.noUi-handle:after {
+    background-color: var(--subtleAccent);
+}
+
+.noUi-background {
+    background: var(--alternativeBackground);
+    box-shadow: none;
+}
+
+.noUi-connect {
+    box-shadow: none;
 }
