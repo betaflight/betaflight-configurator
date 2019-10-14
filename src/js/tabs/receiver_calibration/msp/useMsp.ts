@@ -1,15 +1,36 @@
 import {useState, useEffect} from "react";
 import useInterval from "../hooks/useInterval";
 
-function parseRc(data: any) {
+function parseRc(data: any): number[] {
     const noOfChannels = data.byteLength / 2;
     return [...Array(noOfChannels).keys()]
         .map(idx => data.getUint8(idx * 2) + data.getUint8((idx * 2) + 1) * 256)
 }
 
-function parseMspData(data: any, code: number): object {
+function parseRxrangeConfig(data: any): number[][] {
+    const noOfChannels = data.byteLength / 4;
+    return [...Array(noOfChannels).keys()]
+        .map(idx => [
+                data.getUint8(idx * 2) + data.getUint8((idx * 2) + 1) * 256,
+                data.getUint8(idx * 2) + data.getUint8((idx * 2) + 1) * 256,
+            ]
+        );
+
+    const rxRangeChannelCount = data.byteLength / 4;
+    for (var i = 0; i < rxRangeChannelCount; i++) {
+        RXRANGE_CONFIG.push({
+            min: data.readU16(),
+            max: data.readU16()
+        });
+    }
+
+    return data
+}
+
+function parseMspData(data: any, code: number): any {
     return {
-        [MSPCodes.MSP_RC]: parseRc
+        [MSPCodes.MSP_RC]: parseRc,
+        [MSPCodes.MSP_RXRANGE_CONFIG]: parseRxrangeConfig,
     }[code](data)
 }
 

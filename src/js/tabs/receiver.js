@@ -40,7 +40,7 @@ TABS.receiver.initialize = function (callback) {
     }
 
     function load_rx_config() {
-        var next_callback = load_mixer_config;
+        var next_callback = load_rxrange_config;
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
             MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
         } else {
@@ -50,6 +50,15 @@ TABS.receiver.initialize = function (callback) {
 
     function load_mixer_config() {
         MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
+    }
+
+    function load_rxrange_config() {
+        var next_callback = load_mixer_config();
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            MSP.send_message(MSPCodes.MSP_RXRANGE_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
     }
 
     function load_html() {
@@ -83,6 +92,22 @@ TABS.receiver.initialize = function (callback) {
             $('.sticks input[name="stick_min"]').val(RX_CONFIG.stick_min);
             $('.sticks input[name="stick_center"]').val(RX_CONFIG.stick_center);
             $('.sticks input[name="stick_max"]').val(RX_CONFIG.stick_max);
+
+        }
+
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            const elems = RXRANGE_CONFIG.map((config, idx) => {
+                const PWM_PULSE_MIN = 750;
+                const PWM_PULSE_MAX = 2250;
+                return `<tr>
+                            <td>${idx}</td>
+                            <td><input type="number" name="rxrange_min" min="${PWM_PULSE_MIN}" max="${PWM_PULSE_MAX}" value="${config.min}" /></td>
+                            <td><input type="number" name="rxrange_max" min="${PWM_PULSE_MIN}" max="${PWM_PULSE_MAX}" value="${config.max}" /></td>
+                        </tr>`;
+            });
+            $('.rxrange .rxrange_channels').html(elems);
+        } else {
+            $('.rxrange').hide();
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
@@ -265,10 +290,19 @@ TABS.receiver.initialize = function (callback) {
             // catch rssi aux
             RSSI_CONFIG.channel = parseInt($('select[name="rssi_channel"]').val());
 
-
             if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                 RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
                 RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
+            }
+
+            if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                RXRANGE_CONFIG = RXRANGE_CONFIG.map((config, idx) => {
+                    const elem = $('.rxrange .rxrange_channels tr').get(idx);
+                    return {
+                        min: $('[name=rxrange_min]', elem).val(),
+                        max: $('[name=rxrange_max]', elem).val()
+                    }
+                })
             }
 
             function save_rssi_config() {
@@ -285,9 +319,18 @@ TABS.receiver.initialize = function (callback) {
             }
 
             function save_rx_config() {
-                var next_callback = save_to_eeprom;
+                var next_callback = save_rxrange_config;
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_rxrange_config() {
+                var next_callback = save_to_eeprom;
+                if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_RXRANGE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RXRANGE_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }

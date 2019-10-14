@@ -10,13 +10,9 @@ interface Props {
 }
 
 const Initial: React.FunctionComponent<Props> = ({onStart}) => {
-  // const [rxRanges, setRxRanges] = useMsp(MSPCodes.MSP_RX_RANGE);
+  const rxRanges = useMsp(MSPCodes.MSP_RXRANGE_CONFIG);
 
-  const rxRanges: any[] = [
-
-  ];
-
-  const setRxRanges = (a: any) => {}
+  const setRxRanges = (a: any) => {};
 
   const isRxRangeDefault = (channels: Array<Array<number>>) =>
       channels.every(([min, max]) => min === DEFAULT_RX_RANGE_MIN && max === DEFAULT_RX_RANGE_MAX);

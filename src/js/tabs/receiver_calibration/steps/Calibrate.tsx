@@ -42,7 +42,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
 
   const [detectedChannels, setDetectedChannels] = useState({});
   const [currentChannel, setCurrentChannel] = useState(0);
-  //const rxRange = useMsp(MSPCodes.MSP_RX_RANGE);
+  const rxRange = useMsp(MSPCodes.MSP_RXRANGE_CONFIG);
   //const rxMap = useMsp(MSPCodes.MSP_RX_MAP);
 
   useEffect(() => {

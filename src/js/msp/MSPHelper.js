@@ -944,6 +944,16 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 
                 break;
 
+            case MSPCodes.MSP_RXRANGE_CONFIG:
+                const rxRangeChannelCount = data.byteLength / 4;
+                for (var i = 0; i < rxRangeChannelCount; i++) {
+                    RXRANGE_CONFIG.push({
+                        min: data.readU16(),
+                        max: data.readU16()
+                    });
+                }
+                break;
+
             case MSPCodes.MSP_FAILSAFE_CONFIG:
                 FAILSAFE_CONFIG.failsafe_delay = data.readU8();
                 FAILSAFE_CONFIG.failsafe_off_delay = data.readU8();
@@ -1779,6 +1789,14 @@ MspHelper.prototype.crunch = function(code) {
                     }
                 }
             }
+
+            break;
+
+        case MSPCodes.MSP_SET_RXRANGE_CONFIG:
+            RXRANGE_CONFIG.forEach(config => {
+                buffer.push16(config.min);
+                buffer.push16(config.max);
+            });
 
             break;
 
