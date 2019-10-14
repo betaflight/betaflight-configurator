@@ -1,6 +1,7 @@
 .tab-firmware_flasher .info {
     padding: 2px 18px;
     position: relative;
+    flex-grow: 100;
 }
 
 .tab-firmware_flasher .info .progressLabel {
@@ -20,10 +21,6 @@
 
 .tab-firmware_flasher .spacer_box_title {
     float: none;
-}
-
-.tab-firmware_flasher .info {
-    flex-grow: 100;
 }
 
 .tab-firmware_flasher .info .progressLabel a {
@@ -54,9 +51,6 @@
     height: 26px;
     border-radius: 5px;
     border: 1px solid var(--subtleAccent);
-}
-
-.tab-firmware_flasher .info .progress {
     -webkit-appearance: none;
 }
 

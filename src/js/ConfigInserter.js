@@ -43,8 +43,6 @@ function getCustomDefaultsArea(firmware) {
         return;
     }
 
-    var result = {};
-
     result.startAddress = readUint32(firmware, index);
     result.endAddress = readUint32(firmware, index);
 

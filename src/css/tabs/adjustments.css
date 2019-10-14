@@ -21,6 +21,7 @@
 .tab-adjustments .adjustments {
     width: 100%;
     border-spacing: 0px;
+    background-color: #e4e4e4;
 }
 
 .tab-adjustments td {
@@ -54,10 +55,6 @@
 
 .tab-adjustments .adjustment:nth-child(odd) {
     background-color: #f4f4f4;
-}
-
-.tab-adjustments .adjustments {
-    background-color: #e4e4e4;
 }
 
 .tab-adjustments .adjustment select {
