@@ -47,22 +47,17 @@
                 </div>
             </div>
         </div>
-        <div class="tab_container">
-            <table>
-                <tr>
-                    <td class="pid active">
-                        <a href="#" i18n="pidTuningSubTabPid" />
-                    </td>
-                    <td class="rates">
-                        <a href="#" i18n="pidTuningSubTabRates" />
-                    </td>
-                    <td class="filter">
-                        <a href="#" i18n="pidTuningSubTabFilter" />
-                    </td>
-                </tr>
-            </table>
+        <div class="tab-container">
+            <div class="tab pid active">
+                <a href="#" i18n="pidTuningSubTabPid"></a>
+            </div>
+            <div class="tab rates">
+                <a href="#" i18n="pidTuningSubTabRates"></a>
+            </div>
+            <div class="tab filter">
+                <a href="#" i18n="pidTuningSubTabFilter"></a>
+            </div>
         </div>
-        <div class="tabboarder"></div>
         <div class="tabarea">
         <form name="pid-tuning" id="pid-tuning">
             <div class="subtab-pid">
@@ -534,7 +529,7 @@
 
                                     <span class="suboption">
                                         <select id="itermrelaxType">
-                                            <option i18n="pidTuningItermRelaxTypeOptionGyro"     value="0"/> 
+                                            <option i18n="pidTuningItermRelaxTypeOptionGyro"     value="0"/>
                                             <option i18n="pidTuningItermRelaxTypeOptionSetpoint" value="1"/>
                                         </select>
                                         <label for="itermrelaxType">
@@ -588,7 +583,7 @@
                                                 <span i18n="pidTuningAntiGravityMode" />
                                             </label>
                                         </span>
-    
+
                                         <span class="suboption">
                                             <input type="number" name="itermAcceleratorGain" step="0.1" min="1.1" max="30" />
                                             <label for="antiGravityGain">
@@ -1199,7 +1194,7 @@
                                         <div i18n="pidTuningDTermLowpassFiltersGroup" />
                                         <div class="helpicon cf_tip" i18n_title="pidTuningLowpassFilterHelp" />
                                     </div>
-                                        
+
                                     </div>
                                 </th>
                             </tr>
@@ -1316,7 +1311,7 @@
                                         <div  i18n="pidTuningDTermNotchFiltersGroup" />
                                         <div class="helpicon cf_tip" i18n_title="pidTuningNotchFilterHelp" />
                                     </div>
-                                    
+
                                 </th>
                             </tr>
 
@@ -1407,7 +1402,7 @@
         </div>
         <div class="buttons">
             <a href="#" class="dialogCopyProfile-confirmbtn regular-button" i18n="dialogCopyProfileConfirm"></a>
-            <a href="#" class="dialogCopyProfile-cancelbtn regular-button" i18n="dialogCopyProfileClose"></a> 
+            <a href="#" class="dialogCopyProfile-cancelbtn regular-button" i18n="dialogCopyProfileClose"></a>
         </div>
     </dialog>
 </div>

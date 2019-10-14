@@ -56,27 +56,9 @@
     color: white;
 }
 
-.tab-pid_tuning .tab_container {
-    background-color: #393b3a;
-}
-
-.tab-pid_tuning .tab_container td {
+.tab-pid_tuning .tab-container > div {
     background-color: #535655;
     border-right: 1px solid #393b3a;
-}
-
-.tab-pid_tuning .tab_container td:last-child {
-    background-color: #535655;
-}
-
-.tab-pid_tuning .tab_container td.active {
-    background-color: #ffbb2a;
-    color: black;
-}
-
-.tab-pid_tuning .tab_container td.active a {
-    background-color: #ffbb2a;
-    color: black;
 }
 
 .fancy.header {
