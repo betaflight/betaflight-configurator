@@ -11,26 +11,22 @@ function parseRxrangeConfig(data: any): number[][] {
     const noOfChannels = data.byteLength / 4;
     return [...Array(noOfChannels).keys()]
         .map(idx => [
-                data.getUint8(idx * 2) + data.getUint8((idx * 2) + 1) * 256,
-                data.getUint8(idx * 2) + data.getUint8((idx * 2) + 1) * 256,
+                data.getUint8(idx * 4) + data.getUint8((idx * 4) + 1) * 256,
+                data.getUint8((idx * 4) + 2) + data.getUint8((idx * 4) + 3) * 256,
             ]
         );
+}
 
-    const rxRangeChannelCount = data.byteLength / 4;
-    for (var i = 0; i < rxRangeChannelCount; i++) {
-        RXRANGE_CONFIG.push({
-            min: data.readU16(),
-            max: data.readU16()
-        });
-    }
-
-    return data
+function parseRxMap(data: any) {
+    return [...Array(data.byteLength).keys()]
+        .map(idx => data.getUint8(idx))
 }
 
 function parseMspData(data: any, code: number): any {
     return {
         [MSPCodes.MSP_RC]: parseRc,
         [MSPCodes.MSP_RXRANGE_CONFIG]: parseRxrangeConfig,
+        [MSPCodes.MSP_RX_MAP]: parseRxMap,
     }[code](data)
 }
 
@@ -56,4 +52,8 @@ export function useMspPolling(code: number, interval: number): any {
     }, interval);
 
     return response;
+}
+
+export function setMsp(code: number, payload: any): void {
+
 }

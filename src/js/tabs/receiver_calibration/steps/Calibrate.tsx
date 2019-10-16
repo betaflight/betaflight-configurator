@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ChannelDetect from './calibrate/ChannelDetect';
-import {useMsp, useMspPolling} from "../msp/useMsp";
+import {setMsp, useMsp, useMspPolling} from "../msp/msp";
 import styles from './Calibrate.module.css';
 import cx from 'classnames';
 import {objectValues} from "../utils";
@@ -43,18 +43,18 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
   const [detectedChannels, setDetectedChannels] = useState({});
   const [currentChannel, setCurrentChannel] = useState(0);
   const rxRange = useMsp(MSPCodes.MSP_RXRANGE_CONFIG);
-  //const rxMap = useMsp(MSPCodes.MSP_RX_MAP);
+  const rxMap = useMsp(MSPCodes.MSP_RX_MAP);
 
   useEffect(() => {
     if (txValues) {
-      const minVals = txValues.map((val: number, i: number) => Math.min(mins[i], val));
-      const maxVals = txValues.map((val: number, i: number) => Math.max(maxs[i], val));
+      const minVals = txValues.map((val: number, i: number) => Math.min(mins[i] || val, val));
+      const maxVals = txValues.map((val: number, i: number) => Math.max(maxs[i] || val, val));
 
-      if (!mins.every((val: number, i: number) => val === minVals[i])) {
+      if (!mins.length || mins.some((val: number, i: number) => val !== minVals[i])) {
         setMins(minVals);
       }
 
-      if (!maxs.every((val: number, i: number) => val === maxVals[i])) {
+      if (!maxs.length || maxs.some((val: number, i: number) => val !== maxVals[i])) {
         setMaxs(maxVals);
       }
     }
@@ -75,7 +75,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
   }
 
   function getRxRange() {
-    return mins.map((v: number, i: number) => [v, maxs[i]]);
+    return mins.map((v: number, i: number) => [v, maxs[i]]).slice(0, 4);
   }
 
   function handleNext() {
@@ -96,14 +96,14 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
   function handleApply() {
     const mapping = detectedChannelsToChannelMapping(detectedChannels);
 
-    //setRxMap(`${mapping.join('')}1234`);
-    //setRxRange(getRxRange());
+    setMsp(MSPCodes.MSP_SET_RX_MAP, `${mapping.join('')}1234`);
+    setMsp(MSPCodes.MSP_SET_RXRANGE_CONFIG, getRxRange());
 
     onDone();
   }
 
   return !txValues ? <div>Loading</div> : <div className={styles.Calibrate}>
-    {currentChannel !== CHANNELS.length && txValues.map((value: number, i: number) => {
+    {currentChannel !== CHANNELS.length && txValues.slice(0, 4).map((value: number, i: number) => {
       const channelIsAssigned = objectValues(detectedChannels).indexOf(i);
       return (
         <div key={i} className={styles.txChannelWrapper}>
@@ -115,7 +115,8 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
               <div
                 className={cx(
                   styles.fill,
-                  `fill${i}`
+                  // @ts-ignore
+                  styles[`fill${i}`]
                 )}
                 style={{
                   left: `${((mins[i] - 1000) / 10)}%`,
@@ -133,7 +134,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
       {CHANNELS.map(({name}, i) => {
         return currentChannel === i &&
           <ChannelDetect name={name}
-                         txValues={txValues}
+                         txValues={txValues.slice(0, 4)}
                          detectedChannels={detectedChannels}
                          onDetect={handleDetect}
                          key={name} />
@@ -169,11 +170,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
             <li>Channel mapping: {detectedChannelsToChannelMapping(detectedChannels)}</li>
           </ul>
         </div>
-        <button onClick={handleRestart} className={cx(
-          styles.restartButton,
-          "button",
-          "button-outline"
-        )}>Restart</button>
+        <button onClick={handleRestart} className={`${styles.restartButton} button button-outline`}>Restart</button>
 
         <button onClick={handleApply} className="button">Apply settings</button>
       </div>

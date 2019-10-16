@@ -1,5 +1,5 @@
 import React from 'react';
-import {useMsp} from "../msp/useMsp";
+import {useMsp, setMsp} from "../msp/msp";
 import styles from './Initial.module.css';
 
 const DEFAULT_RX_RANGE_MIN = 1000;
@@ -12,14 +12,12 @@ interface Props {
 const Initial: React.FunctionComponent<Props> = ({onStart}) => {
   const rxRanges = useMsp(MSPCodes.MSP_RXRANGE_CONFIG);
 
-  const setRxRanges = (a: any) => {};
-
   const isRxRangeDefault = (channels: Array<Array<number>>) =>
       channels.every(([min, max]) => min === DEFAULT_RX_RANGE_MIN && max === DEFAULT_RX_RANGE_MAX);
 
   function handleStart() {
     if (!isRxRangeDefault(rxRanges)) {
-      setRxRanges(rxRanges.map(() => [DEFAULT_RX_RANGE_MIN, DEFAULT_RX_RANGE_MAX]))
+      setMsp(MSPCodes.MSP_SET_RXRANGE_CONFIG, rxRanges.map(() => [DEFAULT_RX_RANGE_MIN, DEFAULT_RX_RANGE_MAX]))
     }
     onStart();
   }

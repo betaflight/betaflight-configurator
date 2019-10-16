@@ -173,6 +173,6 @@ var MSPCodes = {
     MSP_DEBUGMSG:                   253, // Not used
     MSP_DEBUG:                      254,
 
-    MSP_RXRANGE_CONFIG:             250,
-    MSP_SET_RXRANGE_CONFIG:         251
+    MSP_RXRANGE_CONFIG:             243,
+    MSP_SET_RXRANGE_CONFIG:         244
 };

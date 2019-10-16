@@ -161,6 +161,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
             case MSPCodes.MSP_RC:
+                console.log('MSP_RC')
                 RC.active_channels = data.byteLength / 2;
                 for (var i = 0; i < RC.active_channels; i++) {
                     RC.channels[i] = data.readU16();
@@ -946,12 +947,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_RXRANGE_CONFIG:
                 const rxRangeChannelCount = data.byteLength / 4;
-                for (var i = 0; i < rxRangeChannelCount; i++) {
-                    RXRANGE_CONFIG.push({
-                        min: data.readU16(),
-                        max: data.readU16()
-                    });
-                }
+
+                RXRANGE_CONFIG = [...Array(rxRangeChannelCount).keys()].map(() => ({
+                    min: data.readU16(),
+                    max: data.readU16()
+                }));
+
                 break;
 
             case MSPCodes.MSP_FAILSAFE_CONFIG:
@@ -1492,6 +1493,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_SET_RTC:
                 console.log('Real time clock set');
+                break;
+            case MSPCodes.MSP_SET_RXRANGE_CONFIG:
+                console.log('RX Range set');
                 break;
 
             case MSPCodes.MSP_MULTIPLE_MSP:

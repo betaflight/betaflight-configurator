@@ -53,7 +53,7 @@ TABS.receiver.initialize = function (callback) {
     }
 
     function load_rxrange_config() {
-        var next_callback = load_mixer_config();
+        var next_callback = load_mixer_config;
         if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
             MSP.send_message(MSPCodes.MSP_RXRANGE_CONFIG, false, false, next_callback);
         } else {
@@ -329,7 +329,7 @@ TABS.receiver.initialize = function (callback) {
 
             function save_rxrange_config() {
                 var next_callback = save_to_eeprom;
-                if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RXRANGE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RXRANGE_CONFIG), false, next_callback);
                 } else {
                     next_callback();
@@ -361,7 +361,7 @@ TABS.receiver.initialize = function (callback) {
             }, function(createdWindow) {
                 // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
                 createdWindow.contentWindow.setRawRx = function(channels) {
-                    if (CONFIGURATOR.connectionValid && GUI.active_tab != 'cli') {
+                    if (CONFIGURATOR.connectionValid && GUI.active_tab !== 'cli') {
                         mspHelper.setRawRx(channels);
                         return true;
                     } else {
