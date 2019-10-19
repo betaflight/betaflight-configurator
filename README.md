@@ -108,6 +108,10 @@ Dont forget to add your user into dialout group "sudo usermod -aG dialout YOUR_U
 
 If you have 3D model animation problems, enable "Override software rendering list" in Chrome flags chrome://flags/#ignore-gpu-blacklist
 
+### Windows users
+
+If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the .exe executable file with the --disable-gpu command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
+
 ## Support
 
 If you need help please reach out on the [betaflightgroup](https://betaflightgroup.slack.com) slack channel before raising issues on github. Register and [request slack access here](https://slack.betaflight.com).
