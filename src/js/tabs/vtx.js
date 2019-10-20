@@ -496,6 +496,10 @@ TABS.vtx.initialize = function (callback) {
             save_json();
         });
 
+        $('a.save_lua').click(function () {
+            save_lua();
+        });
+
         $('a.load_file').click(function () {
             load_json();
         });
@@ -512,6 +516,88 @@ TABS.vtx.initialize = function (callback) {
 
     }
 
+    function save_lua() {
+        let suggestedName = 'model01';
+        let suffix = 'lua';
+
+        var filename;
+        if(CONFIG.name && CONFIG.name.trim() !== '') {
+            filename = CONFIG.name.trim().replace(' ', '_');
+        }else{
+            filename = suggestedName
+        }
+        filename += '.' + suffix;
+
+        let accepts = [{
+            description: suffix.toUpperCase() + ' files', extensions: [suffix],
+        }];
+
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
+
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                return;
+            }
+
+            if (!entry) {
+                console.log('No file selected');
+                return;
+            }
+
+            entry.createWriter(function (writer) {
+
+                writer.onerror = function(){
+                    console.error('Failed to write VTX table lua file');
+                    GUI.log(i18n.getMessage('vtxSavedFileKo'));
+                };
+
+                writer.onwriteend = function() {
+                    dump_html_to_msp();
+                    let vtxConfig = createVtxConfigInfo();
+                    let bands = "bandTable = { [0]=\"U\"";
+                    let frequencies = "frequencyTable = {\n";
+                    let freqBands = "frequenciesPerBand = ";
+                    let powers = "powerTable = { "
+                    let a = vtxConfig.vtx_table.bands_list;
+                    let b = vtxConfig.vtx_table.powerlevels_list;
+                    var index, len, i , l;
+                    for (index = 0, len = a.length; index < len; ++index) {
+                        bands += ", \"" + a[index].letter + "\"";
+                        frequencies += "    { "
+                        for (i = 0, l = a[index].frequencies.length; i < l; ++i) {
+                            frequencies += a[index].frequencies[i] + ", ";
+                        }
+                        frequencies += "},\n"
+                    }
+                    bands += " }\n";
+                    frequencies += "}\n"
+                    freqBands += a[1].frequencies.length + "\n";
+                    for (index = 0, len = b.length; index < len; ++index) {
+                        powers += "[" + b[index].value +"]=" + b[index].label + ", ";
+                    }
+                    powers += "}\n"
+                    let text = frequencies + freqBands + bands + powers;
+                    let data = new Blob([text], { type: "application/text" });
+
+                    // we get here at the end of the truncate method, change to the new end
+                    writer.onwriteend = function() {
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
+                        console.log(vtxConfig)
+                        console.log('Write VTX table lua file end');
+                        GUI.log(i18n.getMessage('vtxSavedFileOk'));
+                    }
+
+                    writer.write(data);
+                };
+
+                writer.truncate(0);
+
+            }, function (){
+                console.error('Failed to get VTX table lua file writer');
+                GUI.log(i18n.getMessage('vtxSavedFileKo'));
+            });
+        });
+    }
     function save_json() {
         let suggestedName = 'vtxtable';
         let suffix = 'json';
@@ -550,6 +636,7 @@ TABS.vtx.initialize = function (callback) {
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
+                        console.log(vtxConfig)
                         console.log('Write VTX file end');
                         GUI.log(i18n.getMessage('vtxSavedFileOk'));
                     }

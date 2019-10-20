@@ -5225,6 +5225,10 @@
         "message": "Save to file",
         "description": "Save to file button in the VTX tab"
     },
+    "vtxButtonSaveLua": {
+        "message": "Save Lua Script",
+        "description": "Save Lua script button in the VTX tab"
+    },
     "vtxButtonLoadFile": {
         "message": "Load from file",
         "description": "Load to file button in the VTX tab"
