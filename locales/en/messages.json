@@ -118,6 +118,10 @@
         "message": "Espa\u00f1ol",
         "description": "Don't translate!!!"
     },
+    "language_eu": {
+        "message": "Euskera",
+        "description": "Don't translate!!!"
+    },
     "language_fr": {
         "message": "Fran\u00e7ais",
         "description": "Don't translate!!!"
