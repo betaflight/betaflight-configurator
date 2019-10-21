@@ -5,6 +5,7 @@ body {
     color: #303030;
     margin: 10px;
     overflow: hidden;
+    user-select: none;
 }
 
 .control-gimbals {
