@@ -925,6 +925,11 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.tab-pid_tuning .tab-container .tab').removeClass('active');
             $('.tab-pid_tuning .tab-container .' + subtabName).addClass('active');
             self.activeSubtab = subtabName;
+            if (subtabName == 'rates') {
+                // force drawing of throttle curve once the throttle curve container element is available
+                // deferring drawing like this is needed to acquire the exact pixel size of the canvas
+                redrawThrottleCurve(true);
+            }
         }
 
         activateSubtab(self.activeSubtab);
@@ -1344,6 +1349,9 @@ TABS.pid_tuning.initialize = function (callback) {
                 return;
             }
 
+            throttleCurve.width = throttleCurve.height * 
+                (throttleCurve.clientWidth / throttleCurve.clientHeight);
+
             var canvasHeight = throttleCurve.height;
             var canvasWidth = throttleCurve.width;
 
@@ -1374,11 +1382,22 @@ TABS.pid_tuning.initialize = function (callback) {
             context.arc(thrpos.x, thrpos.y, 4, 0, 2 * Math.PI);
             context.fillStyle = context.strokeStyle;
             context.fill();
+            context.save();
+            let fontSize = 10;
+            context.font = fontSize + "pt Verdana, Arial, sans-serif";
+            let realthr = thrPercent * 100.0,
+                expothr = 100 - (thrpos.y / canvasHeight) * 100.0,
+                thrlabel = Math.round(thrPercent <= 0 ? 0 : realthr) + "%" +
+                    " = " + Math.round(thrPercent <= 0 ? 0 : expothr) + "%",
+                textWidth = context.measureText(thrlabel);
+            context.fillStyle = '#000';
+            context.scale(textWidth / throttleCurve.clientWidth, 1);
+            context.fillText(thrlabel, 5, 5 + fontSize);
+            context.restore();
         }
 
         $('.throttle input')
-            .on('input change', () => setTimeout(() => redrawThrottleCurve(true), 0))
-            .trigger('input');
+            .on('input change', () => setTimeout(() => redrawThrottleCurve(true), 0));
 
         TABS.pid_tuning.throttleDrawInterval = setInterval(redrawThrottleCurve, 100);
 
