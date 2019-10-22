@@ -397,12 +397,13 @@ TABS.auxiliary.initialize = function (callback) {
         });
 
        
-        function box_highlight(auxChannelIndex, channelPosition) {
+        function limit_channel(channelPosition) {
             if (channelPosition < 900) {
                 channelPosition = 900;
             } else if (channelPosition > 2100) {
                 channelPosition = 2100;
             }
+            return channelPosition;
         }
         
         function update_marker(auxChannelIndex, channelPosition) {
@@ -486,9 +487,9 @@ TABS.auxiliary.initialize = function (callback) {
             var auxChannelCount = RC.active_channels - 4;
 
             for (var i = 0; i < (auxChannelCount); i++) {
-                box_highlight(i, RC.channels[i + 4]);
-                update_marker(i, RC.channels[i + 4]);
+                update_marker(i, limit_channel(RC.channels[i + 4]));
             }
+
         }
 
         /**
