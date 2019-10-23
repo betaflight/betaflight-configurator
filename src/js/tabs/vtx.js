@@ -554,35 +554,12 @@ TABS.vtx.initialize = function (callback) {
                 writer.onwriteend = function() {
                     dump_html_to_msp();
                     let vtxConfig = createVtxConfigInfo();
-                    let bands = "bandTable = { [0]=\"U\"";
-                    let frequencies = "frequencyTable = {\n";
-                    let freqBands = "frequenciesPerBand = ";
-                    let powers = "powerTable = { "
-                    let a = vtxConfig.vtx_table.bands_list;
-                    let b = vtxConfig.vtx_table.powerlevels_list;
-                    var index, len, i , l;
-                    for (index = 0, len = a.length; index < len; ++index) {
-                        bands += ", \"" + a[index].letter + "\"";
-                        frequencies += "    { "
-                        for (i = 0, l = a[index].frequencies.length; i < l; ++i) {
-                            frequencies += a[index].frequencies[i] + ", ";
-                        }
-                        frequencies += "},\n"
-                    }
-                    bands += " }\n";
-                    frequencies += "}\n"
-                    freqBands += a[1].frequencies.length + "\n";
-                    for (index = 0, len = b.length; index < len; ++index) {
-                        powers += "[" + b[index].value +"]=" + b[index].label + ", ";
-                    }
-                    powers += "}\n"
-                    let text = frequencies + freqBands + bands + powers;
+                    let text = creatLuaTables(vtxConfig);
                     let data = new Blob([text], { type: "application/text" });
-
+                    
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
-                        console.log(vtxConfig)
                         console.log('Write VTX table lua file end');
                         GUI.log(i18n.getMessage('vtxSavedFileOk'));
                     }
@@ -892,6 +869,33 @@ TABS.vtx.initialize = function (callback) {
         }
 
         return vtxConfig;
+    }
+
+    function creatLuaTables(vtxConfig) {
+        let bandsString = "bandTable = { [0]=\"U\"";
+        let frequencieString = "frequencyTable = {\n";
+        let freqBandsString = "frequenciesPerBand = ";
+        let powersString = "powerTable = { ";
+        let bands_list = vtxConfig.vtx_table.bands_list;
+        let power_list = vtxConfig.vtx_table.powerlevels_list;
+        var index, len, i, l;
+        for (index = 0, len = bands_list.length; index < len; ++index) {
+            bandsString += ", \"" + bands_list[index].letter + "\"";
+            frequencieString += "    { ";
+            for (i = 0, l = bands_list[index].frequencies.length; i < l; ++i) {
+                frequencieString += bands_list[index].frequencies[i] + ", ";
+            }
+            frequencieString += "},\n";
+        }
+        bandsString += " }\n";
+        frequencieString += "}\n";
+        freqBandsString += bands_list[1].frequencies.length + "\n";
+        for (index = 0, len = power_list.length; index < len; ++index) {
+            powersString += "[" + power_list[index].value + "]=" + power_list[index].label + ", ";
+        }
+        powersString += "}\n";
+        let text = frequencieString + freqBandsString + bandsString + powersString;
+        return text;
     }
 
 };
