@@ -1,7 +1,7 @@
 "use strict";
 
 let css_dark = [
-    '/css/main-dark.css'
+    '/css/dark-theme.css'
   ];
 
 
