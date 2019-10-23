@@ -239,6 +239,9 @@ TABS.setup.initialize = function (callback) {
                 disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD',
                                                                 'DSHOT_BBANG']);
             }
+            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                disarmFlagElements = disarmFlagElements.concat(['ACC_CALIB']);
+            }
 
             // Always the latest element
             disarmFlagElements = disarmFlagElements.concat(['ARM_SWITCH']);

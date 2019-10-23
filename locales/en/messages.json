@@ -118,6 +118,10 @@
         "message": "Espa\u00f1ol",
         "description": "Don't translate!!!"
     },
+    "language_eu": {
+        "message": "Euskera",
+        "description": "Don't translate!!!"
+    },
     "language_fr": {
         "message": "Fran\u00e7ais",
         "description": "Don't translate!!!"
@@ -921,6 +925,10 @@
     "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
         "message": "Bitbanged DSHOT is not working properly and the motors can't be controlled. Likely caused by a timer conflict with other features enabled on the flight controller.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipACC_CALIB": {
+        "message": "The accelerometer has not been calibrated and features are enabled that rely on it. Calibrate the accelerometer.",
+        "description": "Message that pops up to describe the ACC_CALIB arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
@@ -2560,7 +2568,7 @@
     },
 
     "serialLoggingSupportedNote": {
-        "message": "You can log to an external logging device (such as an OpenLog or compatible clone) by using a serial port. Configure the port on the Ports tab."
+        "message": "You can log to an external logging device (such as an OpenLager) by using a serial port. Configure the port on the Ports tab."
     },
     "sdcardNote": {
         "message": "Flight logs can be recorded to your flight controller's onboard SD card slot."

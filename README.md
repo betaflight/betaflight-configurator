@@ -96,9 +96,9 @@ If you prefer to have the application in English or any other language, you can 
 
 ## Notes
 
-### WebGL
+### Graphics Issues
 
-Make sure Settings -> System -> "User hardware acceleration when available" is checked to achieve the best performance
+If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the betaflight-configurator executable file with the --disable-gpu command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
 
 ### Linux users
 

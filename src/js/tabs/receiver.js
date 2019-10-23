@@ -108,7 +108,7 @@ TABS.receiver.initialize = function (callback) {
                 tab.yawDeadband = parseInt($(this).val());
             }).change();
         }
-        
+
         if (semver.lt(CONFIG.apiVersion, "1.15.0")) {
             $('.sticks').hide();
         } else {
@@ -377,6 +377,9 @@ TABS.receiver.initialize = function (callback) {
                         return false;
                     }
                 }
+
+                windowWatcherUtil.passValue(createdWindow, 'darkTheme', DarkTheme.isDarkThemeEnabled(DarkTheme.configEnabled));
+
             });
         });
 
@@ -408,7 +411,7 @@ TABS.receiver.initialize = function (callback) {
                 if ($(this).val() == 1) {
                     rcSmoothingnNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
                     $('.tab-receiver .rcSmoothing-input-cutoff').show();
-                } 
+                }
             });
 
             $('.tab-receiver .rcSmoothing-derivative-cutoff').show();
@@ -636,7 +639,7 @@ TABS.receiver.initModelPreview = function () {
     if (CONFIG.flightControllerIdentifier == 'BTFL' && semver.lt(CONFIG.flightControllerVersion, '2.8.0')) {
         useOldRateCurve = true;
     }
-        
+
     this.rateCurve = new RateCurve(useOldRateCurve);
 
     $(window).on('resize', $.proxy(this.model.resize, this.model));
