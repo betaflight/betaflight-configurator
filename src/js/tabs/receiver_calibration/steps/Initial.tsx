@@ -17,7 +17,10 @@ const Initial: React.FunctionComponent<Props> = ({onStart}) => {
 
   function handleStart() {
     if (!isRxRangeDefault(rxRanges)) {
-      setMsp(MSPCodes.MSP_SET_RXRANGE_CONFIG, rxRanges.map(() => [DEFAULT_RX_RANGE_MIN, DEFAULT_RX_RANGE_MAX]))
+      setMsp(
+          MSPCodes.MSP_SET_RXRANGE_CONFIG,
+          serializeRxRange(rxRanges.map(() => [DEFAULT_RX_RANGE_MIN, DEFAULT_RX_RANGE_MAX]))
+      )
     }
     onStart();
   }

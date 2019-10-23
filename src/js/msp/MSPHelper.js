@@ -161,7 +161,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
             case MSPCodes.MSP_RC:
-                console.log('MSP_RC')
                 RC.active_channels = data.byteLength / 2;
                 for (var i = 0; i < RC.active_channels; i++) {
                     RC.channels[i] = data.readU16();
@@ -948,10 +947,10 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_RXRANGE_CONFIG:
                 const rxRangeChannelCount = data.byteLength / 4;
 
-                RXRANGE_CONFIG = [...Array(rxRangeChannelCount).keys()].map(() => ({
-                    min: data.readU16(),
-                    max: data.readU16()
-                }));
+                RXRANGE_CONFIG = [...Array(rxRangeChannelCount).keys()].map(() => [
+                    data.readU16(),
+                    data.readU16()
+                ]);
 
                 break;
 
@@ -1495,7 +1494,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('Real time clock set');
                 break;
             case MSPCodes.MSP_SET_RXRANGE_CONFIG:
-                console.log('RX Range set');
+                console.log('RX Range saved');
                 break;
 
             case MSPCodes.MSP_MULTIPLE_MSP:
@@ -1654,11 +1653,6 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push16(RC_tuning.yaw_rate_limit);
             }
             break;
-        case MSPCodes.MSP_SET_RX_MAP:
-            for (var i = 0; i < RC_MAP.length; i++) {
-                buffer.push8(RC_MAP[i]);
-            }
-            break;
         case MSPCodes.MSP_SET_ACC_TRIM:
             buffer.push16(CONFIG.accelerometerTrims[0])
                 .push16(CONFIG.accelerometerTrims[1]);
@@ -1793,14 +1787,6 @@ MspHelper.prototype.crunch = function(code) {
                     }
                 }
             }
-
-            break;
-
-        case MSPCodes.MSP_SET_RXRANGE_CONFIG:
-            RXRANGE_CONFIG.forEach(config => {
-                buffer.push16(config.min);
-                buffer.push16(config.max);
-            });
 
             break;
 

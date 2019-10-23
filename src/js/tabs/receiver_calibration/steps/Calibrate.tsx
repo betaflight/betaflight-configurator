@@ -96,8 +96,8 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
   function handleApply() {
     const mapping = detectedChannelsToChannelMapping(detectedChannels);
 
-    setMsp(MSPCodes.MSP_SET_RX_MAP, `${mapping.join('')}1234`);
-    setMsp(MSPCodes.MSP_SET_RXRANGE_CONFIG, getRxRange());
+    setMsp(MSPCodes.MSP_SET_RX_MAP, serializeRxMap(rxMapLettersToNumber(`${mapping.join('')}1234`)));
+    setMsp(MSPCodes.MSP_SET_RXRANGE_CONFIG, serializeRxRange(getRxRange()));
 
     onDone();
   }
@@ -140,13 +140,12 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
                          key={name} />
       })}
 
-
       {currentChannel !== CHANNELS.length &&
       <button onClick={handleRestart} className={cx(
         styles.restartButton,
         "button",
         "button-outline"
-        )}>Restart</button>}
+      )}>Restart</button>}
 
       {currentChannel < CHANNELS.length &&
       <button onClick={handleNext} disabled={currentChannel === Object.keys(detectedChannels).length} className={cx(
@@ -164,7 +163,7 @@ const Calibrate: React.FunctionComponent<Props> = ({onRestart, onDone}) => {
           <ul>
             <li>rxrange:
               <ul>
-                {getRxRange().map(([min, max] : [number, number]) => <li>{`${min} - ${max}`}</li>)}
+                {getRxRange().map(([min, max] : [number, number], i: number) => <li key={i}>{`${min} - ${max}`}</li>)}
               </ul>
             </li>
             <li>Channel mapping: {detectedChannelsToChannelMapping(detectedChannels)}</li>

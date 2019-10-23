@@ -55,5 +55,5 @@ export function useMspPolling(code: number, interval: number): any {
 }
 
 export function setMsp(code: number, payload: any): void {
-
+    MSP.send_message(code, payload);
 }

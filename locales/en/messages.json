@@ -1935,7 +1935,7 @@
         "message": "Enable controls"
     },
     "receiverRxRangeChannel": {
-        "message": "Channel"
+        "message": "RX Range Channel"
     },
     "receiverRxRangeMin": {
         "message": "Min"
