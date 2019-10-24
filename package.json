@@ -9,9 +9,7 @@
     "start": "gulp debug",
     "gulp": "gulp",
     "release": "gulp release",
-    "test": "karma start test/karma.conf.js",
-    "webpack": "webpack --mode development",
-    "webpack-start": "webpack --mode development && gulp debug"
+    "test": "karma start test/karma.conf.js"
   },
   "window": {
     "show": false,
