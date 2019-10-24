@@ -1813,9 +1813,6 @@
     "dialogCopyProfileClose": {
         "message": "Cancel"
     },
-    "dialogCalibrateCancel": {
-        "message": "Cancel"
-    },
     "pidTuningResetProfile": {
         "message": "Reset all profile values"
     },
