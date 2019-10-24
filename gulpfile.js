@@ -282,7 +282,7 @@ function dist_webpack() {
         const webpackConfig = require('./webpack.config');
         webpack(webpackConfig, (err, stats) => {
             if (err) {
-                return reject(err)
+                return reject(JSON.stringify(err))
             }
             if (stats.hasErrors()) {
                 return reject(new Error(stats.compilation.errors.join('\n')))
