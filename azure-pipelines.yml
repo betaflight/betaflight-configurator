@@ -27,8 +27,8 @@ stages:
       displayName: 'Install Node.js 10.16.3'
     - script: yarn install
       displayName: 'Run yarn install'
-    - script: gulp release --win32 --win64
-      displayName: 'Run gulp release'
+    - script: yarn gulp release --win32 --win64
+      displayName: 'Run yarn gulp release'
     - powershell: Set-Content -Path '$(System.DefaultWorkingDirectory)/release/log.txt' -Value $env:BUILD_SOURCEVERSIONMESSAGE
 
     - task: PublishPipelineArtifact@1
@@ -51,8 +51,8 @@ stages:
       displayName: 'Install Gulp'
     - script: yarn install
       displayName: 'Run yarn install'
-    - script: gulp release --osx64
-      displayName: 'Run gulp release'
+    - script: yarn gulp release --osx64
+      displayName: 'Run yarn gulp release'
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish MacOS release'
@@ -72,7 +72,7 @@ stages:
       displayName: 'Install Node.js 10.16.3'
     - script: yarn install
       displayName: 'Run yarn install'
-    - script: gulp release --linux32 --linux64
+    - script: yarn gulp release --linux32 --linux64
       displayName: 'Run gulp release'
     - script: cd $(System.DefaultWorkingDirectory)/release; find -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
       displayName: 'Clean release folders'
