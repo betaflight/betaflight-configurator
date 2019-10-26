@@ -1,7 +1,7 @@
 {
     "yes": {
         "message": "Jā",
-        "description": "General Yes message to be used across the application"
+        "description": "Edited in crowdin by EGParadox."
     },
     "no": {
         "message": "Nē",
