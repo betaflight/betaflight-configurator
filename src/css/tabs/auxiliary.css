@@ -180,6 +180,7 @@
     height: 13px;
     width: 6px;
     margin-left: -3px;
+    z-index: 1000;
 }
 
 .tab-auxiliary .range .channel-slider {

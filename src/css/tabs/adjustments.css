@@ -94,6 +94,7 @@
     width: 6px;
     margin-left: -3px;
     border-radius: 3px;
+    z-index: 1000;
 }
 
 .tab-adjustments .adjustment .functionSelection {
