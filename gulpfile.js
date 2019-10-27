@@ -282,11 +282,24 @@ function dist_webpack() {
         const webpackConfig = require('./webpack.config');
         webpack(webpackConfig, (err, stats) => {
             if (err) {
-                return reject(JSON.stringify(err))
+                console.error(err.stack || err);
+                if (err.details) {
+                    console.error(err.details);
+                }
+                return reject(err);
             }
+
+            const info = stats.toJson();
+
             if (stats.hasErrors()) {
-                return reject(new Error(stats.compilation.errors.join('\n')))
+                console.error(info.errors);
+                return reject(info.errors);
             }
+
+            if (stats.hasWarnings()) {
+                console.warn(info.warnings);
+            }
+
             resolve()
         })
     })
