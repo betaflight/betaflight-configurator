@@ -1,6 +1,8 @@
 const path = require('path');
 
 module.exports = {
+    mode: 'development',
+    stats: 'verbose',
     entry: './src/js/tabs/receiver_calibration.tsx',
     module: {
         rules: [
@@ -8,13 +10,6 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/
-            },
-            {
-                test: /\.jsx?$/,
-                use: {
-                    loader: "babel-loader"
-                },
-                exclude: /node_modules/,
             },
             {
                 test: /\.css$/,
@@ -46,7 +41,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', ".js", ".jsx", ".css"]
+        extensions: ['.tsx', '.ts', ".js", ".css"]
     },
     output: {
         filename: 'receiver_calibration.js',

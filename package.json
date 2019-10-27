@@ -61,7 +61,6 @@
     "chai": "^4.2.0",
     "command-exists": "^1.2.8",
     "css-loader": "^1.0.1",
-    "css-modules-typescript-loader": "^3.0.1",
     "del": "^5.0.0",
     "follow-redirects": "^1.6.1",
     "fs-extra": "^8.1.0",
