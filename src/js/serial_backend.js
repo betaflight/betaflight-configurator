@@ -571,35 +571,6 @@ function have_sensor(sensors_detected, sensor_code) {
     return false;
 }
 
-function update_dataflash_global() {
-    var supportsDataflash = DATAFLASH.totalSize > 0;
-    if (supportsDataflash){
-
-         $(".noflash_global").css({
-             display: 'none'
-         });
-
-         $(".dataflash-contents_global").css({
-             display: 'block'
-         });
-
-         $(".dataflash-free_global").css({
-             width: (100-(DATAFLASH.totalSize - DATAFLASH.usedSize) / DATAFLASH.totalSize * 100) + "%",
-             display: 'block'
-         });
-         $(".dataflash-free_global div").text('Dataflash: free ' + formatFilesize(DATAFLASH.totalSize - DATAFLASH.usedSize));
-    } else {
-         $(".noflash_global").css({
-             display: 'block'
-         });
-
-         $(".dataflash-contents_global").css({
-             display: 'none'
-         });
-    }
-
-}
-
 function startLiveDataRefreshTimer() {
     // live data refresh
     GUI.timeout_add('data_refresh', function () { update_live_status(); }, 100);
