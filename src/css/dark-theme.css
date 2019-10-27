@@ -1,0 +1,836 @@
+:root {
+    --accent: #ffbb00;
+    --subtleAccent: #9c9c9c;
+    --quietHeader: #bf8606;
+    --defaultText: #ffffff;
+    --subtleText: #c0c0c0;
+    --mutedText: #d6d6d6;
+    --boxBackground: #3a3a3a;
+    --alternativeBackground: #4e4e4e;
+    --sideBackground: #404040;
+    --paper: url(../../images/paper-dark.jpg);
+    --ledAccent: #6e6e6e;
+    --ledBackground: #424242;
+    --gimbalBackground: var(--subtleAccent);
+    --gimbalCrosshair: var(--mutedText);
+    --switcherysecond: #858585;
+}
+
+body {
+    color: white;
+}
+
+a {
+    color: #ffc549;
+}
+
+#options-window {
+    background-color: #393b3a;
+}
+
+#content {
+    background-color: #393b3a;
+}
+
+#content.logopen {
+    background-color: #393b3a;
+}
+
+#status-bar {
+    background-color: #414443;
+}
+
+#status-bar div {
+    border-right: 1px solid #9c9c9c;
+}
+
+dialog {
+    background-color: #3a3d3c;
+    color:white;
+    border: 1px solid #ffbb2a;
+}
+
+/* Note */
+.note {
+    background-color: #4e4e4e;
+    color: white;
+}
+
+.content_toolbar {
+    background-color: #555857;
+}
+
+.content_toolbar .btn a {
+    border: 1px solid #ffbb2a;
+}
+
+.content_toolbar .btn a.disabled {
+    border: 1px solid #ffbb2a;
+}
+
+.gui_box {
+    border: 1px solid #4d4d4d;
+    background-color: #393b3a;
+}
+
+.gui_box grey .block {
+    border: 1px solid #9c9c9c;
+}
+
+.gui_box grey .block .head {
+    border-bottom: 1px solid #9c9c9c;
+    background-color: #393b3a;
+}
+
+.gui_box grey .block.info {
+    border: 1px solid #9c9c9c;
+}
+
+.gui_warning {
+    background: #393b3a;
+}
+
+.gui_note {
+    background: #393b3a;
+}
+
+.grey {
+    background-color: #414443
+}
+
+.gui_box_bottombar {
+    background-color: #393b3a;
+}
+
+.fixed_band {
+    background-color: #393b3a;
+}
+
+.default_btn a.disabled {
+    background-color: #393b3a;
+    border: 1px solid #ffbb2a;
+}
+
+.small a {
+    border: 1px solid #ffbb2a;
+}
+
+#quad-status_wrapper {
+    color: #393b3a;
+}
+
+button {
+    border: 1px solid #ffbb2a;
+    background-color: #ffbb2a;
+    color: black;
+}
+
+.helpicon {
+    background-image: url(../images/icons/cf_icon_info_white.svg);
+    opacity: 0.3;
+}
+.cf .helpicon {
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
+    opacity: 0.4;
+}
+.cf .helpicon:hover {
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
+    opacity: 1;
+}
+
+.gui_box_titlebar .helpicon {
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
+}
+
+.cf_table td {
+    border-style: solid;
+}
+
+.noboarder td {
+    border-style: unset;
+}
+
+.noUi-pips {
+    color: var(--mutedText);
+}
+
+.jBox-container {
+    background: #393b3a;
+    color:white;
+}
+
+.jBox-Modal .jBox-title,
+.jBox-Confirm .jBox-title {
+    background: #393b3a;
+    border-bottom: 1px solid #9c9c9c;
+    text-shadow: 0 1px 1px #ffffff;
+    color: white;
+}
+
+.jBox-pointer:after {
+    background: #393b3a;
+}
+
+
+/* ADJUSTMENTS TAB */
+
+.tab-adjustments .adjustment:nth-child(odd) {
+    background-color: #2f2f2f;
+}
+
+.tab-adjustments .adjustments {
+    background-color: #393b3a;
+}
+
+.tab-adjustments .adjustments td {
+    border-top: 1px solid #00000000;
+    border-bottom: 1px solid #00000000;
+}
+
+.tab-adjustments .adjustment select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+
+/* AUXILIARY TAB */
+
+.tab-auxiliary .toolbox {
+    color: white;
+}
+
+.tab-auxiliary .mode {
+    background-color: #393b3a;
+}
+
+.tab-auxiliary .mode .info {
+    background-color: #9e9e9e;
+    color: white;
+}
+
+.tab-auxiliary .ranges {
+    border-bottom: 5px solid #8a8a8a;
+    background-color: #676767;
+}
+
+.tab-auxiliary .range {
+    background-color: #484848;
+}
+
+.tab-auxiliary .link {
+    background-color: #484848;
+}
+
+.tab-auxiliary .range .channel,.logic,.linkedTo {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-auxiliary .buttons a {
+    background-color: #333333;
+    color: white;
+}
+
+.tab-auxiliary .buttons a:hover {
+    background-color: #393b3a;
+}
+
+
+/* CLI TAB */
+
+.tab-cli textarea[name='commands']::placeholder {
+    color: silver;
+}
+
+.tab-cli textarea[name='commands'] {
+    background: black;
+    color: white;
+}
+
+/* AutoComplete */
+.cli-textcomplete-dropdown {
+    background-color: #393b3a;
+}
+.cli-textcomplete-dropdown a {
+    color: white;
+}
+.cli-textcomplete-dropdown .active {
+    background-color: var(--quietHeader);
+}
+
+
+/* CONFIGURATION TAB */
+
+.tab-configuration .mixerPreview {
+    background-color: #393b3a;
+}
+
+.tab-configuration .gui_box span {
+    color: white;
+}
+
+.tab-configuration input,
+.tab-configuration select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+
+/* FAILSAFE TAB */
+
+.tab-failsafe .number input {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-failsafe .number input:disabled {
+    background-color: #393b3a;
+    color: grey;
+}
+
+.tab-failsafe .radioarea {
+    background-color: #393b3a;
+}
+
+.tab-failsafe .gui_box span {
+    color: white;
+}
+
+.tab-failsafe .stage1 select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-failsafe .modename {
+    background-color: #393b3a;
+}
+
+.tab-failsafe .switchMode {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-failsafe .pro1 {
+    background-image: url(../../images/icons/cf_failsafe_procedure1-dark.svg);
+}
+
+.tab-failsafe .pro2 {
+    background-image: url(../../images/icons/cf_failsafe_procedure2-dark.svg);
+}
+
+.tab-failsafe .pro4 {
+    background-image: url(../../images/icons/cf_failsafe_procedure4-dark.svg);
+}
+
+
+/* FIRMWARE FLASHER TAB */
+
+.btn .disabled {
+    background-color: #393b3a;
+}
+
+.gui_note .gui_box_titlebar {
+    color: black;
+}
+
+.tab-firmware_flasher .options select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-firmware_flasher .options .description {
+    color: #b9b9b9;
+}
+
+.tab-firmware_flasher .options .manual_baud_rate select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-firmware_flasher .release_info .target {
+    color: #98ddff;
+}
+
+.tab-firmware_flasher .cf_table td {
+    border-bottom: solid 1px #4f4f4f;
+}
+
+
+/* GPS TAB */
+
+.tab-gps .GPS_info .head, .tab-gps .GPS_signal_strength .head {
+    background-color: #393b3a;
+}
+
+.tab-gps #loadmap .controls {
+    background-color: #393b3a;
+}
+
+.tab-gps #loadmap .controls a {
+    background-color: #393b3a;
+}
+
+.tab-gps #loadmap .controls a:hover {
+    background-color: #393b3a;
+}
+
+.tab-gps #loadmap .controls a:active {
+    background-color: #393b3a;
+}
+
+progress[value]::-webkit-progress-bar {
+    background-color: #393b3a;
+}
+
+
+/* LANDING */
+
+.tab-landing .content_top {
+    background-color: #00000000;
+}
+
+.tab-landing .content_mid {
+    background-color: #3e3e3e;
+}
+
+.tab-landing .logowrapper img {
+    content:url(/images/cf_logo_black.svg);
+}
+
+.tab-landing .content_mid .text3 .wrap2 {
+    background: #5f5f5f;
+}
+
+
+/* LED STRIP TAB */
+
+.tab-led-strip .section {
+    color: #c4c4c4;
+}
+
+.tab-led-strip .mainGrid {
+    background-color: #4e4e4e;
+}
+
+.tab-led-strip button {
+    background-color: #6b6b6b;
+    color: white;
+}
+
+.tab-led-strip button:hover {
+    border: 1px solid #ffffff;
+    background-color: #393b3a;
+}
+
+.tab-led-strip .gridSections,
+.tab-led-strip .gridSections .block {
+    border: none;
+}
+
+
+/* LOGGING TAB */
+
+.tab-logging .speed {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+
+/* MOTORS TAB */
+
+.tab-motors .plot_control {
+    background-color: #393b3a;
+}
+
+.tab-motors .plot_control select {
+  background-color: #3a3a3a;
+  color: white;
+}
+
+.tab-motors .motorblock {
+    background-color: #393b3a;
+}
+
+.tab-motors .m-block {
+    background-color: #393b3a;
+}
+
+.tab-motors .m-block .label {
+    color: white;
+}
+
+.tab-motors .m-block .meter-bar {
+    background-color: #393b3a;
+}
+
+.tab-motors .motor_testing .notice {
+    background-color: #4e4e4e;
+}
+
+
+/* ONBOARD LOGGING TAB */
+
+.tab-onboard_logging .regular-button.disabled {
+    background-color: #393b3a;
+}
+
+.tab-onboard_logging .dataflash-contents,
+.tab-onboard_logging .sdcard-contents {
+    background-color: #393b3a;
+}
+
+.tab-onboard_logging .dataflash-used,
+.tab-onboard_logging .sdcard-other {
+    background-color: #848484;
+}
+
+.tab-onboard_logging progress::-webkit-progress-bar {
+    background-color: #393b3a;
+}
+
+.tab-onboard_logging .blackboxRate select,
+.tab-onboard_logging .blackboxDebugMode select,
+.tab-onboard_logging .blackboxDevice select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-onboard_logging .sdcard-icon {
+    background-color: #393b3a;
+}
+
+
+/* OSD TAB */
+
+.tab-osd .display-layout input.position {
+    border-bottom: 1px solid red;
+}
+
+.tab-osd .preview {
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../../images/osd-bg-1.jpg);
+    background-size: cover;
+}
+
+/* these two items replace the look of the checkboxes in only CSS */
+.tab-osd input[type='checkbox']:after {
+    line-height: 1.5em;
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-top: -1px;
+    margin-left: -1px;
+    border: 1px solid #404040;
+    border-radius: 0.25em;
+    background: #4d4d4d;
+}
+
+.tab-osd input[type='checkbox']:checked:after {
+    background: #ffbb00;
+    border: 1px solid #404040;
+}
+
+
+/* PID TUNING TAB */
+
+.tab-pid_tuning .profile .helpicon,
+.tab-pid_tuning .rate_profile .helpicon,
+.tab-pid_tuning .pid_titlebar .helpicon {
+    background-image: url(../../images/icons/cf_icon_info_grey.svg);
+    opacity: 0.4;
+}
+.tab-pid_tuning .profile .helpicon:hover,
+.tab-pid_tuning .rate_profile .helpicon:hover,
+.tab-pid_tuning .pid_titlebar .helpicon:hover {
+    opacity: 1;
+}
+
+.tab-pid_tuning .throttle_limit th {
+    background-color: #393b3a;
+    border-bottom: 1px solid #5e5e5e;
+}
+
+.tab-pid_tuning .cf tr {
+    background-color: #414443;
+}
+
+.tab-pid_tuning .cf th {
+    background-color: var(--quietHeader);
+    color: white;
+}
+
+.tab-pid_tuning .cf input {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-pid_tuning .cf select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+/* These values should have been inherited from the regular style, but are not */
+.tab-pid_tuning .pid_titlebar .wide_header {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.tab-pid_tuning table.compensation .suboption select{
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-pid_tuning table input,.inputBackground {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-pid_tuning table select {
+    text-align-last: right;
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-pid_tuning .tab-container > div {
+    background-color: #535655;
+    border-right: 1px solid #393b3a;
+}
+
+.fancy.header {
+  background-color: #393b3a;
+}
+
+.pid_roll {
+    background-color: #A00000;
+}
+
+.pid_pitch {
+    background-color: #00A000;
+}
+
+.pid_yaw {
+    background-color: #0000A0;
+}
+
+.pid_mode {
+    background-color: #3c3c3c;
+    border-bottom: 1px solid #3c3c3c;
+    color: white;
+}
+
+.pid_titlebar {
+    background-color: #393b3a;
+}
+
+.tab-pid_tuning .number input {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-pid_tuning .gui_box span {
+    color: white;
+}
+
+.tab-pid_tuning .bottomarea {
+    background-color: #393b3a;
+}
+
+.tab-pid_tuning .profile select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-pid_tuning .rate_profile select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tabarea {
+    background: #393b3a;
+}
+
+.tab-pid_tuning .regular-button.disabled {
+    background-color: #393b3a;
+}
+
+.tab-pid_tuning .sliderLabels th {
+    background: #414443;
+    color: white;
+}
+
+.tab-pid_tuning input:disabled,
+.tab-pid_tuning .cf input:disabled,
+.tab-pid_tuning select:disabled,
+.tab-pid_tuning .cf select:disabled {
+    color: rgb(105, 105, 105);
+    background-color: #2d2d2d;
+}
+
+.tab-pid_tuning table.compensation tr {
+    border-bottom: 1px solid #6b6b6b;
+}
+
+.tab-pid_tuning .slidersWarning {
+    background: #542415;
+}
+
+
+/* PORTS TAB */
+
+.tab-ports table td:first-child {
+    border-left: none;
+}
+.tab-ports table td:last-child {
+    border-right: none;
+}
+
+.tab-ports .ports tr:last-child,
+.tab-ports .ports tr:last-child td {
+    border-bottom: none;
+}
+
+.tab-ports table td {
+    border-bottom: 1px solid #575757;
+    border-left: 1px solid #575757;
+    border-right: 1px solid #575757;
+}
+
+
+/* POWER TAB */
+
+.tab-power .number input {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-power .battery-configuration select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+
+/* RECEIVER TAB */
+
+.tab-receiver select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-receiver .bars .meter-bar {
+    background-color: #393b3a;
+}
+
+.tab-receiver .bars .meter-bar .label {
+    color: white;
+}
+
+.tab-receiver .tunings {
+    background-color: #393b3a;
+}
+
+.tab-receiver .tunings table td {
+    background: #414443;
+}
+
+.tab-receiver .tunings table tr:nth-child(odd) {
+    background-color: #393b3a;
+}
+
+.tab-receiver .tunings table input {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-receiver .rssi_channel_wrapper {
+    background-color: #414443;
+    border-bottom: 1px solid #4d4d4d;
+    border-right: 1px solid #4d4d4d;
+}
+
+.tab-receiver .rcmap_wrapper {
+    background-color: #414443;
+    border-left: 1px solid #4d4d4d;
+    border-bottom: 1px solid #4d4d4d;
+}
+
+.tab-receiver .hybrid_element {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.tab-receiver .hybrid_element input {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+
+/* SENSORS TAB */
+
+.tab-sensors .plot_control {
+    background-color: #2f2f2f;
+}
+
+.tab-sensors .plot_control select {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-sensors text {
+    fill: white;
+}
+
+
+/* SERVOS TAB */
+
+.tab-servos table th {
+    background: #828885;
+}
+
+.tab-servos table tr:nth-child(even) {
+    background-color: #2f2f2f;
+}
+
+.tab-servos table .main {
+    background-color: #393b3a;
+}
+
+.tab-servos table input[type="number"] {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+.tab-servos .direction .rate {
+    background-color: #3a3a3a;
+    color: white;
+}
+
+
+/* SETUP TAB */
+
+.tab-setup #interactive_block {
+    background-color: #393b3a;
+}
+
+.tab-setup .attitude_info {
+    color: white;
+}
+
+.tab-setup #interactive_block a.reset {
+    color: white;
+    background-color: #575757;
+}
+
+.tab-setup #interactive_block a.reset:hover {
+    background-color: #393b3a;
+}
+
+
+/* TRANSPONDER TAB */
+
+.tab-transponder .text .disabled {
+    background-color: #393b3a;
+}
+
+.tab-transponder .gui_box span {
+    color: white;
+}
