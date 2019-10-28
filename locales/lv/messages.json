@@ -153,6 +153,7 @@
     },
     "backupFileUnmigratable": {
         "message": "Rezerves kopijas failu uzģenerēja iepriekšējās versijas konfigurators un tas nav migrējams. Piedodiet."
+        "description": "Edited in crowdin by EGParadox."
     },
     "configMigrationFrom": {
         "message": "Migrēšanas konfigurācijas failu uzģenerēja konfigurators: $1"
