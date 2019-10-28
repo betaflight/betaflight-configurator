@@ -12,29 +12,14 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.css$/,
-                exclude: /\.module\.css$/,
+                test: /\.css$/i,
                 use: [
                     'style-loader',
                     {
-                        loader: 'typings-for-css-modules-loader',
+                        loader: 'css-loader',
                         options: {
                             modules: true,
-                            namedExport: true
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.module\.css$/,
-                use: [
-                    'style-loader',
-                    {
-                        loader: 'typings-for-css-modules-loader',
-                        options: {
-                            modules: true,
-                            namedExport: true
-                        }
+                        },
                     }
                 ]
             },
