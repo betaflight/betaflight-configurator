@@ -51,6 +51,7 @@
     },
     "autoConnectEnabled": {
         "message": "Automātiskā savienošanās: Ieslēgta - Konfigurators mēģinās automātiski savienoties, kad tiks detektēts jauns ports"
+        "description": "Edited in crowdin by EGParadox."
     },
     "autoConnectDisabled": {
         "message": "Automātiskā savienošanās: Atslēgta - Lietotājam nepieciešams pašam izvēlēties pareizo seriālo portu un nospiest uz pogas \"Savienot\""
