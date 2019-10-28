@@ -2,12 +2,14 @@
 #
 # After building, artifacts are released to a seperate repository.
 #
-# Requires Azure Pipelines added to Github repositories:
-# https://azure.microsoft.com/services/devops/pipelines/
+# Azure Pipelines requires the following extensions to be installed:
+# - GitHub Tool: https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools
 #
-# Azure Pipelines requires tasks to be installed:
-# - Github Release: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/github-release
-# - File content to variable: https://marketplace.visualstudio.com/items?itemName=maikvandergaag.maikvandergaag-file-to-variable
+# You'll also need to setup the follwing pipeline variables: 
+#     "releaseNotes" - This is used to add the release notes in the windows job in the build stage so they can be published as part of the github release in the release stage
+#     "endpoint" - The name of the github endpoint link setup in AzDo - setup when linking AzDo and GitHub
+#     "owner" - The owner of the repository to release to e.g. betaflight
+#     "repoName" - The name of the repository to release to e.g. betaflight-configurator-nightly
 
 trigger:
 - master
@@ -28,7 +30,7 @@ stages:
     - script: yarn install
       displayName: 'Run yarn install'
     - script: yarn gulp release --win32 --win64
-      displayName: 'Run yarn gulp release'
+      displayName: 'Run gulp release'
     - powershell: Set-Content -Path '$(System.DefaultWorkingDirectory)/release/log.txt' -Value $env:BUILD_SOURCEVERSIONMESSAGE
 
     - task: PublishPipelineArtifact@1
@@ -36,7 +38,6 @@ stages:
       inputs:
         targetPath: '$(System.DefaultWorkingDirectory)/release'
         artifact: 'betaflight-configurator-windows'
-
 
   - job: 'MacOS'
     pool:
@@ -52,14 +53,13 @@ stages:
     - script: yarn install
       displayName: 'Run yarn install'
     - script: yarn gulp release --osx64
-      displayName: 'Run yarn gulp release'
+      displayName: 'Run gulp release'
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish MacOS release'
       inputs: 
           artifactName: betaflight-configurator-macos
           targetPath: '$(System.DefaultWorkingDirectory)/release'
-
 
   - job: 'Linux'
     pool:
@@ -73,7 +73,7 @@ stages:
     - script: yarn install
       displayName: 'Run yarn install'
     - script: yarn gulp release --linux32 --linux64
-      displayName: 'Run yarn gulp release'
+      displayName: 'Run gulp release'
     - script: cd $(System.DefaultWorkingDirectory)/release; find -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
       displayName: 'Clean release folders'
 
@@ -93,19 +93,24 @@ stages:
       inputs:
         buildType: 'current'
         targetPath: '$(Pipeline.Workspace)'
+    - powershell: Write-Output ("##vso[task.setvariable variable=releaseNotes;]$(gc $(Pipeline.Workspace)/betaflight-configurator-windows/log.txt)")
 
-    - task: GitHubRelease@1
+    - task: GitHubReleasePublish@1
       inputs:
-        gitHubConnection: 'Betaflight GitHub'
-        repositoryName: '$(Build.Repository.Name)'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: userSpecifiedTag
-        tag: '$(Build.BuildNumber) '
-        isPreRelease: true
-        changeLogCompareToRelease: lastNonDraftRelease
-        changeLogType: 'commitBased'
-        assets: |
+        githubEndpoint: '$(endpoint)'
+        manuallySetRepository: true
+        githubOwner: '$(owner)'
+        githubRepositoryName: '$(repoName)'
+        githubReleaseNotes: '$(releaseNotes)'
+        githubReleaseDraft: false
+        githubReleasePrerelease: false
+        githubIgnoreAssets: false
+        githubReleaseAsset: |
           $(Pipeline.Workspace)/betaflight-configurator-windows/**
           $(Pipeline.Workspace)/betaflight-configurator-macos/**
           $(Pipeline.Workspace)/betaflight-configurator-linux/**
+        githubReuseRelease: true
+        githubReuseDraftOnly: true
+        githubSkipDuplicatedAssets: false
+        githubEditRelease: false
+        githubDeleteEmptyTag: false
