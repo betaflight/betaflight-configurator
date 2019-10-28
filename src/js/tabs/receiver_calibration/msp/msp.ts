@@ -8,11 +8,11 @@ function parseRc(data: any): number[] {
 }
 
 function parseRxrangeConfig(data: any): number[][] {
-    const noOfChannels = data.byteLength / 4;
+    const noOfChannels = data.getUint8(0);
     return [...Array(noOfChannels).keys()]
         .map(idx => [
-                data.getUint8(idx * 4) + data.getUint8((idx * 4) + 1) * 256,
-                data.getUint8((idx * 4) + 2) + data.getUint8((idx * 4) + 3) * 256,
+                data.getUint8(idx * 4) + 1 + data.getUint8((idx * 4) + 2) * 256,
+                data.getUint8((idx * 4) + 3) + data.getUint8((idx * 4) + 4) * 256,
             ]
         );
 }

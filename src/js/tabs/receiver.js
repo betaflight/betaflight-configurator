@@ -16,6 +16,7 @@ function serializeRxMap(map) {
 
 function serializeRxRange(range) {
     const buffer = [];
+    buffer.push8(range.length);
     range.forEach(([min, max]) => {
         buffer.push16(min);
         buffer.push16(max);
