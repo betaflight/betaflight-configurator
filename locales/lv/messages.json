@@ -23,7 +23,7 @@
         "message": "Jūsu aparatūra neatbalsta šo operāciju."
     },
     "storageDeviceNotReady": {
-        "message": "Atmiņas ierīce nav gatava. MikroSD kartes gadījumā, pārliecināties, ka lidojuma kontrolieris ir atbilstoši atpazinis to."
+        "message": "Atmiņas ierīce nav gatava. MikroSD kartes gadījumā, pārliecināties, ka lidojuma kontrolieris ir atbilstoši atpazinis to.",
         "description": "Edited in crowdin by EGParadox."
     },
     "options_title": {
