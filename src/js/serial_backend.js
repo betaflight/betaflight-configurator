@@ -598,23 +598,15 @@ function update_live_status() {
     for (var i = 0; i < AUX_CONFIG.length; i++) {
        if (AUX_CONFIG[i] == 'ARM') {
                if (bit_check(CONFIG.mode, i))
-                       $(".armedicon").css({
-                               'background-image': 'url(images/icons/cf_icon_armed_active.svg)'
-                           });
+                       $(".armedicon").addClass('active');
                else
-                       $(".armedicon").css({
-                               'background-image': 'url(images/icons/cf_icon_armed_grey.svg)'
-                           });
+                       $(".armedicon").removeClass('active');
        }
        if (AUX_CONFIG[i] == 'FAILSAFE') {
                if (bit_check(CONFIG.mode, i))
-                       $(".failsafeicon").css({
-                               'background-image': 'url(images/icons/cf_icon_failsafe_active.svg)'
-                           });
+                       $(".failsafeicon").addClass('active');
                else
-                       $(".failsafeicon").css({
-                               'background-image': 'url(images/icons/cf_icon_failsafe_grey.svg)'
-                           });
+                       $(".failsafeicon").removeClass('active');
        }
     }
 
@@ -654,13 +646,9 @@ function update_live_status() {
     }
 
     if (active) {
-        $(".linkicon").css({
-            'background-image': 'url(images/icons/cf_icon_link_active.svg)'
-        });
+        $(".linkicon").addClass('active');
     } else {
-        $(".linkicon").css({
-            'background-image': 'url(images/icons/cf_icon_link_grey.svg)'
-        });
+        $(".linkicon").removeClass('active');
     }
 
     statuswrapper.show();

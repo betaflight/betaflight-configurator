@@ -290,7 +290,6 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .gyroicon.active {
     background-image: url(../images/icons/sensor_gyro_on.png);
-    color: #61d514;
     color: #818181;
 }
 
@@ -309,7 +308,6 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .accicon.active {
     background-image: url(../images/icons/sensor_acc_on.png);
-    color: #61d514;
     color: #818181;
 }
 
@@ -1940,12 +1938,22 @@ dialog {
 .armedicon {
     background-image: url(../images/icons/cf_icon_armed_grey.svg);
 }
+.armedicon.active {
+    background-image: url(../images/icons/cf_icon_armed_active.svg);
+}
+
 .failsafeicon {
     background-image: url(../images/icons/cf_icon_failsafe_grey.svg);
+}
+.failsafeicon.active {
+    background-image: url(../images/icons/cf_icon_failsafe_active.svg);
 }
 
 .linkicon {
     background-image: url(../images/icons/cf_icon_link_grey.svg);
+}
+.linkicon.active {
+    background-image: url(../images/icons/cf_icon_link_active.svg);
 }
 
 .bottomStatusIcons {
