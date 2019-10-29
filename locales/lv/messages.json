@@ -50,7 +50,7 @@
         "message": "Aizvērt"
     },
     "autoConnectEnabled": {
-        "message": "Automātiskā savienošanās: Ieslēgta - Konfigurators mēģinās automātiski savienoties, kad tiks detektēts jauns ports"
+        "message": "Automātiskā savienošanās: Ieslēgta - Konfigurators mēģinās automātiski savienoties, kad tiks detektēts jauns ports",
         "description": "Edited in crowdin by EGParadox."
     },
     "autoConnectDisabled": {
