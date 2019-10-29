@@ -496,6 +496,10 @@ TABS.vtx.initialize = function (callback) {
             save_json();
         });
 
+        $('a.save_lua').click(function () {
+            save_lua();
+        });
+
         $('a.load_file').click(function () {
             load_json();
         });
@@ -512,6 +516,65 @@ TABS.vtx.initialize = function (callback) {
 
     }
 
+    function save_lua() {
+        let suggestedName = 'model01';
+        let suffix = 'lua';
+
+        var filename;
+        if(CONFIG.name && CONFIG.name.trim() !== '') {
+            filename = CONFIG.name.trim().replace(' ', '_');
+        }else{
+            filename = suggestedName
+        }
+        filename += '.' + suffix;
+
+        let accepts = [{
+            description: suffix.toUpperCase() + ' files', extensions: [suffix],
+        }];
+
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
+
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                return;
+            }
+
+            if (!entry) {
+                console.log('No file selected');
+                return;
+            }
+
+            entry.createWriter(function (writer) {
+
+                writer.onerror = function(){
+                    console.error('Failed to write VTX table lua file');
+                    GUI.log(i18n.getMessage('vtxSavedFileKo'));
+                };
+
+                writer.onwriteend = function() {
+                    dump_html_to_msp();
+                    let vtxConfig = createVtxConfigInfo();
+                    let text = creatLuaTables(vtxConfig);
+                    let data = new Blob([text], { type: "application/text" });
+                    
+                    // we get here at the end of the truncate method, change to the new end
+                    writer.onwriteend = function() {
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
+                        console.log('Write VTX table lua file end');
+                        GUI.log(i18n.getMessage('vtxSavedFileOk'));
+                    }
+
+                    writer.write(data);
+                };
+
+                writer.truncate(0);
+
+            }, function (){
+                console.error('Failed to get VTX table lua file writer');
+                GUI.log(i18n.getMessage('vtxSavedFileKo'));
+            });
+        });
+    }
     function save_json() {
         let suggestedName = 'vtxtable';
         let suffix = 'json';
@@ -550,6 +613,7 @@ TABS.vtx.initialize = function (callback) {
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
+                        console.log(vtxConfig)
                         console.log('Write VTX file end');
                         GUI.log(i18n.getMessage('vtxSavedFileOk'));
                     }
@@ -805,6 +869,33 @@ TABS.vtx.initialize = function (callback) {
         }
 
         return vtxConfig;
+    }
+
+    function creatLuaTables(vtxConfig) {
+        let bandsString = "bandTable = { [0]=\"U\"";
+        let frequencieString = "frequencyTable = {\n";
+        let freqBandsString = "frequenciesPerBand = ";
+        let powersString = "powerTable = { ";
+        let bands_list = vtxConfig.vtx_table.bands_list;
+        let power_list = vtxConfig.vtx_table.powerlevels_list;
+        var index, len, i, l;
+        for (index = 0, len = bands_list.length; index < len; ++index) {
+            bandsString += ", \"" + bands_list[index].letter + "\"";
+            frequencieString += "    { ";
+            for (i = 0, l = bands_list[index].frequencies.length; i < l; ++i) {
+                frequencieString += bands_list[index].frequencies[i] + ", ";
+            }
+            frequencieString += "},\n";
+        }
+        bandsString += " }\n";
+        frequencieString += "}\n";
+        freqBandsString += bands_list[1].frequencies.length + "\n";
+        for (index = 0, len = power_list.length; index < len; ++index) {
+            powersString += "[" + power_list[index].value + "]=" + power_list[index].label + ", ";
+        }
+        powersString += "}\n";
+        let text = frequencieString + freqBandsString + bandsString + powersString;
+        return text;
     }
 
 };
