@@ -152,7 +152,7 @@
         "message": "Rezerves kopijas fails tika uzģenerēts iepriekšējajai konfiguratora versijai un nav saderīgs ar šo konfiguratora versiju. Piedodiet"
     },
     "backupFileUnmigratable": {
-        "message": "Rezerves kopijas failu uzģenerēja iepriekšējās versijas konfigurators un tas nav migrējams. Piedodiet."
+        "message": "Rezerves kopijas failu uzģenerēja iepriekšējās versijas konfigurators un tas nav migrējams. Piedodiet.",
         "description": "Edited in crowdin by EGParadox."
     },
     "configMigrationFrom": {
