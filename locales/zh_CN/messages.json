@@ -541,7 +541,7 @@
         "message": "固件"
     },
     "versionLabelConfigurator": {
-        "message": "配置程序"
+        "message": "配置程序",
         "description": "Edited in crowdin by Elvin (Github username: isilcala)."
     },
     "notifications_app_just_updated_to_version": {
