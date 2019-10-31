@@ -464,22 +464,27 @@ TABS.receiver.initialize = function (callback) {
             }
 
             function update_ui() {
-                // update bars with latest data
-                for (var i = 0; i < RC.active_channels; i++) {
-                    meter_fill_array[i].css('width', ((RC.channels[i] - meter_scale.min) / (meter_scale.max - meter_scale.min) * 100).clamp(0, 100) + '%');
-                    meter_label_array[i].text(RC.channels[i]);
-                }
 
-                // push latest data to the main array
-                for (var i = 0; i < RC.active_channels; i++) {
-                    RX_plot_data[i].push([samples, RC.channels[i]]);
-                }
+                if (RC.active_channels > 0) {
 
-                // Remove old data from array
-                while (RX_plot_data[0].length > 300) {
-                    for (var i = 0; i < RX_plot_data.length; i++) {
-                        RX_plot_data[i].shift();
+                    // update bars with latest data
+                    for (var i = 0; i < RC.active_channels; i++) {
+                        meter_fill_array[i].css('width', ((RC.channels[i] - meter_scale.min) / (meter_scale.max - meter_scale.min) * 100).clamp(0, 100) + '%');
+                        meter_label_array[i].text(RC.channels[i]);
                     }
+    
+                    // push latest data to the main array
+                    for (var i = 0; i < RC.active_channels; i++) {
+                        RX_plot_data[i].push([samples, RC.channels[i]]);
+                    }
+    
+                    // Remove old data from array
+                    while (RX_plot_data[0].length > 300) {
+                        for (var i = 0; i < RX_plot_data.length; i++) {
+                            RX_plot_data[i].shift();
+                        }
+                    }
+
                 }
 
                 // update required parts of the plot
