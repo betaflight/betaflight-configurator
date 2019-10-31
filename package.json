@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "bluebird": "^3.5.5",
-    "i18next": "^17.0.11",
+    "i18next": "^18.0.1",
     "i18next-xhr-backend": "^3.1.1",
     "inflection": "1.12.0",
     "jbox": "1.0.5",

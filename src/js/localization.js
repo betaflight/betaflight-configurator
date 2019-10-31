@@ -31,17 +31,17 @@ i18n.init = function(cb) {
                         console.log('i18n system loaded');
                         var detectedLanguage = i18n.getMessage('language_' + getValidLocale("DEFAULT"));
                         i18n.addResources({"detectedLanguage": detectedLanguage });
+                        i18next.on('languageChanged', function (newLang) {
+                            i18n.localizePage(true);
+                            updateStatusBarVersion();
+                        });
                     }
                     if (cb !== undefined) {
                         cb();
                     }
             });
     });
-    // This function should do the same things that the i18n.localizePage function below does.
-    i18next.on('languageChanged', function (newLang) {
-      i18n.localizePage(true);
-      updateStatusBarVersion();
-    });
+
 }
 
 i18n.changeLanguage = function(languageSelected) {
