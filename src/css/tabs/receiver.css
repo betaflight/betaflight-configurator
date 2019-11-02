@@ -474,9 +474,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: var(--paper);
-    background-size: 100%;
-    background-position: center;
     margin-top: -1px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;

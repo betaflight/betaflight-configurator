@@ -8,12 +8,15 @@
     --boxBackground: #3a3a3a;
     --alternativeBackground: #4e4e4e;
     --sideBackground: #404040;
-    --paper: url(../../images/paper-dark.jpg);
     --ledAccent: #6e6e6e;
     --ledBackground: #424242;
     --gimbalBackground: var(--subtleAccent);
     --gimbalCrosshair: var(--mutedText);
     --switcherysecond: #858585;
+}
+
+.background_paper {
+    background-image: url(../images/paper-dark.png);
 }
 
 body {

@@ -47,9 +47,7 @@
 .tab-pid_tuning .throttle_curve {
     float: right;
     width: 100%;
-    background-image: var(--paper);
     background-size: 200%;
-    background-position: center;
     height: 164px;
 }
 
@@ -62,9 +60,7 @@
     height: 100%;
     min-height: 234px;
     min-width: 200px;
-    background-image: var(--paper);
     background-size: 200%;
-    background-position: center;
 }
 
 .tab-pid_tuning input[type="number"]::-webkit-inner-spin-button {
@@ -625,9 +621,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: var(--paper);
     background-size: 100%;
-    background-position: center;
 }
 
 .tab-pid_tuning .pidTuning td {

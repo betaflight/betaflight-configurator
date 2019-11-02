@@ -10,7 +10,6 @@
     --boxBackground: #ffffff;
     --alternativeBackground: #f9f9f9;
     --sideBackground: #ffffff;
-    --paper: url(../../images/paper.jpg);
     --ledAccent: #adadad;
     --ledBackground: #e9e9e9;
     --gimbalBackground: #eee;
@@ -54,6 +53,12 @@ a.disabled {
     pointer-events: none;
     cursor: default;
     color: #999;
+}
+
+.background_paper {
+    background-size: 100%;
+    background-image: url(../images/paper.png);
+    background-position: center;
 }
 
 /* Help-Icon  */
