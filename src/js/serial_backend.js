@@ -621,7 +621,7 @@ function update_live_status() {
        var max = BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
        var warn = BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
 
-       const NO_BATTERY_VOLTAGE_MAXIMUM = 0.5; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions  
+       const NO_BATTERY_VOLTAGE_MAXIMUM = 1; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions  
 
        if (ANALOG.voltage < min && ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
            $(".battery-status").addClass('state-empty').removeClass('state-ok').removeClass('state-warning');
