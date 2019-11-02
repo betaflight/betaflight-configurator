@@ -2,103 +2,115 @@
 #
 # After building, artifacts are released to a seperate repository.
 #
-# Requires Azure Pipelines added to Github repositories:
-# https://azure.microsoft.com/services/devops/pipelines/
+# Azure Pipelines requires the following extensions to be installed:
+# - GitHub Tool: https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools
 #
-# Azure Pipelines requires tasks to be installed:
-# - Github Release: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/github-release
-# - File content to variable: https://marketplace.visualstudio.com/items?itemName=maikvandergaag.maikvandergaag-file-to-variable
+# You'll also need to setup the follwing pipeline variables: 
+#     "releaseNotes" - This is used to add the release notes in the windows job in the build stage so they can be published as part of the github release in the release stage
+#     "endpoint" - The name of the github endpoint link setup in AzDo - setup when linking AzDo and GitHub
+#     "owner" - The owner of the repository to release to e.g. betaflight
+#     "repoName" - The name of the repository to release to e.g. betaflight-configurator-nightly
 
 trigger:
-# TODO: change to master once pull request merged
-- azure-pipelines
+- master
 
-jobs:
-- job: 'Windows'
+stages:
+- stage: Build
+  jobs:
 
-  pool:
-    vmImage: 'vs2017-win2016'
+  - job: 'Windows'
+    pool:
+      vmImage: 'vs2017-win2016'
 
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '8.11.2'    
-    displayName: 'Install Node.js'
+    steps:
+    - task: UseNode@1
+      inputs:
+        version: '10.16.3'
+      displayName: 'Install Node.js 10.16.3'
+    - script: yarn install
+      displayName: 'Run yarn install'
+    - script: yarn release --win32 --win64
+      displayName: 'Run gulp release'
+    - powershell: Set-Content -Path '$(System.DefaultWorkingDirectory)/release/log.txt' -Value $env:BUILD_SOURCEVERSIONMESSAGE
 
-  - script: npm install -g npm@6.0.1
-    displayName: 'Install NPM'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Windows release'
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/release'
+        artifact: 'betaflight-configurator-windows'
 
-  - script: npm install -g gulp
-    displayName: 'Install Gulp'
+  - job: 'MacOS'
+    pool:
+      vmImage: 'macos-10.13'
 
-  - script: npm install
-    displayName: 'Run npm install'
+    steps:
+    - task: UseNode@1
+      inputs:
+        version: '10.16.3'
+      displayName: 'Install Node.js 10.16.3'
+    - script: npm install -g gulp
+      displayName: 'Install Gulp'
+    - script: yarn install
+      displayName: 'Run yarn install'
+    - script: yarn gulp release --osx64
+      displayName: 'Run release'
 
-  - script: gulp release --win32
-    displayName: 'Run gulp release'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish MacOS release'
+      inputs: 
+          artifactName: betaflight-configurator-macos
+          targetPath: '$(System.DefaultWorkingDirectory)/release'
 
-  - powershell: Set-Content -Path '$(System.DefaultWorkingDirectory)/release/log.txt' -Value $env:BUILD_SOURCEVERSIONMESSAGE
+  - job: 'Linux'
+    pool:
+      vmImage: 'ubuntu-16.04'
 
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish Windows release'
-    inputs: 
-      artifactName: betaflight-configurator-windows
-      targetPath: '$(System.DefaultWorkingDirectory)/release'
+    steps:
+    - task: UseNode@1
+      inputs:
+        version: '10.16.3'
+      displayName: 'Install Node.js 10.16.3'
+    - script: yarn install
+      displayName: 'Run yarn install'
+    - script: yarn release --linux32 --linux64
+      displayName: 'Run gulp release'
+    - script: cd $(System.DefaultWorkingDirectory)/release; find -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
+      displayName: 'Clean release folders'
 
-- job: 'Linux'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Linux release'
+      inputs: 
+        artifactName: betaflight-configurator-linux
+        targetPath: '$(System.DefaultWorkingDirectory)/release'
 
-  pool:
-    vmImage: 'ubuntu-16.04'
 
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '8.11.2'    
-    displayName: 'Install Node.js'
+- stage: Release
+  jobs:
+  - job: Release
 
-  - script: npm install -g npm@6.0.1
-    displayName: 'Install NPM'
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        targetPath: '$(Pipeline.Workspace)'
+    - powershell: Write-Output ("##vso[task.setvariable variable=releaseNotes;]$(gc $(Pipeline.Workspace)/betaflight-configurator-windows/log.txt)")
 
-  - script: npm install -g gulp
-    displayName: 'Install Gulp'
-
-  - script: npm install
-    displayName: 'Run npm install'
-
-  - script: gulp release --linux32 --linux64
-    displayName: 'run gulp release'
-
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish Linux release'
-    inputs: 
-      artifactName: betaflight-configurator-linux
-      targetPath: '$(System.DefaultWorkingDirectory)/release'
-
-- job: 'MacOS'
-
-  pool:
-    vmImage: 'macos-10.13'
-
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '8.11.2'    
-    displayName: 'Install Node.js'
-
-  - script: npm install -g npm@6.0.1
-    displayName: 'Install NPM'
-
-  - script: npm install -g gulp
-    displayName: 'Install Gulp'
-
-  - script: npm install
-    displayName: 'Run rpm install'
-
-  - script: gulp release --osx64
-    displayName: 'Run gulp release'
-
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish MacOS release'
-    inputs: 
-      artifactName: betaflight-configurator-macos
-      targetPath: '$(System.DefaultWorkingDirectory)/release'
+    - task: GitHubReleasePublish@1
+      inputs:
+        githubEndpoint: '$(endpoint)'
+        manuallySetRepository: true
+        githubOwner: '$(owner)'
+        githubRepositoryName: '$(repoName)'
+        githubReleaseNotes: '$(releaseNotes)'
+        githubReleaseDraft: false
+        githubReleasePrerelease: false
+        githubIgnoreAssets: false
+        githubReleaseAsset: |
+          $(Pipeline.Workspace)/betaflight-configurator-windows/**
+          $(Pipeline.Workspace)/betaflight-configurator-macos/**
+          $(Pipeline.Workspace)/betaflight-configurator-linux/**
+        githubReuseRelease: true
+        githubReuseDraftOnly: true
+        githubSkipDuplicatedAssets: false
+        githubEditRelease: false
+        githubDeleteEmptyTag: false
