@@ -32,8 +32,8 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         /**
          * Change boldness of firmware option depending on cache status
-         * 
-         * @param {Descriptor} release 
+         *
+         * @param {Descriptor} release
          */
     function onFirmwareCacheUpdate(release) {
         $("option[value='{0}']".format(release.version))
@@ -76,7 +76,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                 } else {
                     $('div.release_info #manufacturerInfo').hide();
                 }
-	    }
+            }
             $('div.release_info .target').text(targetName);
             $('div.release_info .name').text(summary.version).prop('href', summary.releaseUrl);
             $('div.release_info .date').text(summary.date);
@@ -113,8 +113,8 @@ TABS.firmware_flasher.initialize = function (callback) {
         function onLoadSuccess(data, summary) {
             self.localFirmwareLoaded = false;
             // The path from getting a firmware doesn't fill in summary.
-            summary = typeof summary === "object" 
-                ? summary 
+            summary = typeof summary === "object"
+                ? summary
                 : $('select[name="firmware_version"] option:selected').data('summary');
             process_hex(data, summary);
             $("a.load_remote_file").removeClass('disabled');
@@ -1054,14 +1054,14 @@ TABS.firmware_flasher.enableFlashing = function (enabled) {
     }
 }
 
-TABS.firmware_flasher.FLASH_MESSAGE_TYPES = {NEUTRAL : 'NEUTRAL', 
-                                             VALID   : 'VALID', 
+TABS.firmware_flasher.FLASH_MESSAGE_TYPES = {NEUTRAL : 'NEUTRAL',
+                                             VALID   : 'VALID',
                                              INVALID : 'INVALID',
                                              ACTION  : 'ACTION'};
 
 TABS.firmware_flasher.flashingMessage = function(message, type) {
     let self = this;
-    
+
     let progressLabel_e = $('span.progressLabel');
     switch (type) {
         case self.FLASH_MESSAGE_TYPES.VALID:

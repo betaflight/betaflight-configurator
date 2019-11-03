@@ -39,9 +39,9 @@ TABS.setup.initialize = function (callback) {
         // initialize 3D Model
         self.initModel();
 
-		// set roll in interactive block
+        // set roll in interactive block
         $('span.roll').text(i18n.getMessage('initialSetupAttitude', [0]));
-		// set pitch in interactive block
+        // set pitch in interactive block
         $('span.pitch').text(i18n.getMessage('initialSetupAttitude', [0]));
         // set heading in interactive block
         $('span.heading').text(i18n.getMessage('initialSetupAttitude', [0]));
@@ -202,10 +202,10 @@ TABS.setup.initialize = function (callback) {
         // We add all the arming/disarming flags available, and show/hide them if needed.
         var prepareDisarmFlags = function() {
 
-            var disarmFlagElements = ['NO_GYRO', 
-                                      'FAILSAFE', 
-                                      'RX_FAILSAFE', 
-                                      'BAD_RX_RECOVERY', 
+            var disarmFlagElements = ['NO_GYRO',
+                                      'FAILSAFE',
+                                      'RX_FAILSAFE',
+                                      'BAD_RX_RECOVERY',
                                       'BOXFAILSAFE',
                                       'THROTTLE',
                                       'ANGLE',
@@ -221,7 +221,7 @@ TABS.setup.initialize = function (callback) {
                                      ];
 
             if (semver.gte(CONFIG.apiVersion, "1.38.0")) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF'); 
+                disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
             }
 
             if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
@@ -300,8 +300,8 @@ TABS.setup.initialize = function (callback) {
 
         function get_fast_data() {
             MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
-	            roll_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[0]]));
-	            pitch_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[1]]));
+                roll_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[0]]));
+                pitch_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[1]]));
                 heading_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[2]]));
 
                 self.renderModel();
