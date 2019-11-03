@@ -76,19 +76,6 @@ dialog {
     background-color: #393b3a;
 }
 
-.gui_box grey .block {
-    border: 1px solid #9c9c9c;
-}
-
-.gui_box grey .block .head {
-    border-bottom: 1px solid #9c9c9c;
-    background-color: #393b3a;
-}
-
-.gui_box grey .block.info {
-    border: 1px solid #9c9c9c;
-}
-
 .gui_warning {
     background: #393b3a;
 }

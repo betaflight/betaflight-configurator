@@ -75,34 +75,6 @@
     height: 100% !important;
 }
 
-.gui_box grey .block_wrapper {
-    font-size: 0;
-}
-/**/
-.gui_box grey .block {
-    float: left;
-    display: block;
-    margin-left: 10px;
-    border: 1px solid var(--subtleAccent);
-}
-
-.gui_box grey .block .head {
-    display: block;
-    text-align: center;
-    line-height: 20px;
-    font-weight: bold;
-    border-bottom: 1px solid var(--subtleAccent);
-    background-color: #ececec;
-}
-
-.gui_box grey .block.info {
-    display: inline-block;
-    margin-bottom: 10px;
-    vertical-align: top;
-    font-size: 12px;
-    border: 1px solid var(--subtleAccent);
-}
-
 .block.info .fields {
     padding: 5px 5px 3px 5px;
 }
