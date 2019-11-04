@@ -1,0 +1,148 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "description",
+    "version",
+    "vtx_table"
+  ],
+  "properties": {
+    "description": {
+      "$id": "#/properties/description",
+      "type": "string",
+      "title": "The Description Schema",
+      "default": "",
+      "examples": [
+        "Betaflight VTX Config file for SmartAudio 2.0 (US version)"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "version": {
+      "$id": "#/properties/version",
+      "type": "string",
+      "title": "The Version Schema",
+      "default": "",
+      "examples": [
+        "1.0"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "vtx_table": {
+      "$id": "#/properties/vtx_table",
+      "type": "object",
+      "title": "The Vtx_table Schema",
+      "required": [
+        "bands_list",
+        "powerlevels_list"
+      ],
+      "properties": {
+        "bands_list": {
+          "$id": "#/properties/vtx_table/properties/bands_list",
+          "type": "array",
+          "title": "The Bands_list Schema",
+          "items": {
+            "$id": "#/properties/vtx_table/properties/bands_list/items",
+            "type": "object",
+            "title": "The Items Schema",
+            "required": [
+              "name",
+              "letter",
+              "is_factory_band",
+              "frequencies"
+            ],
+            "properties": {
+              "name": {
+                "$id": "#/properties/vtx_table/properties/bands_list/items/properties/name",
+                "type": "string",
+                "title": "The Name Schema",
+                "default": "",
+                "examples": [
+                  "BOSCAM_A"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "letter": {
+                "$id": "#/properties/vtx_table/properties/bands_list/items/properties/letter",
+                "type": "string",
+                "title": "The Letter Schema",
+                "default": "",
+                "examples": [
+                  "A"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "is_factory_band": {
+                "$id": "#/properties/vtx_table/properties/bands_list/items/properties/is_factory_band",
+                "type": "boolean",
+                "title": "The Is_factory_band Schema",
+                "default": false,
+                "examples": [
+                  true
+                ]
+              },
+              "frequencies": {
+                "$id": "#/properties/vtx_table/properties/bands_list/items/properties/frequencies",
+                "type": "array",
+                "title": "The Frequencies Schema",
+                "items": {
+                  "$id": "#/properties/vtx_table/properties/bands_list/items/properties/frequencies/items",
+                  "type": "integer",
+                  "title": "The Items Schema",
+                  "default": 0,
+                  "examples": [
+                    5865,
+                    5845,
+                    5825,
+                    5805,
+                    5785,
+                    5765,
+                    5745,
+                    5725
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "powerlevels_list": {
+          "$id": "#/properties/vtx_table/properties/powerlevels_list",
+          "type": "array",
+          "title": "The Powerlevels_list Schema",
+          "items": {
+            "$id": "#/properties/vtx_table/properties/powerlevels_list/items",
+            "type": "object",
+            "title": "The Items Schema",
+            "required": [
+              "value",
+              "label"
+            ],
+            "properties": {
+              "value": {
+                "$id": "#/properties/vtx_table/properties/powerlevels_list/items/properties/value",
+                "type": "integer",
+                "title": "The Value Schema",
+                "default": 0,
+                "examples": [
+                  0
+                ]
+              },
+              "label": {
+                "$id": "#/properties/vtx_table/properties/powerlevels_list/items/properties/label",
+                "type": "string",
+                "title": "The Label Schema",
+                "default": "",
+                "examples": [
+                  "25 "
+                ],
+                "pattern": "^(.*)$"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
