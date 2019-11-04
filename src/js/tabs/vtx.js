@@ -10,6 +10,7 @@ TABS.vtx = {
     VTXTABLE_POWERLEVEL_LIST: [],
     analyticsChanges: {},
     updating: true,
+    env: new djv(),
 };
 
 TABS.vtx.initialize = function (callback) {
@@ -51,9 +52,9 @@ TABS.vtx.initialize = function (callback) {
         function vtx_config() {
             MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxtable_bands);
         }
-    
+
         function vtxtable_bands() {
-    
+
             // Simulation of static variable
             if (typeof vtxtable_bands.counter === 'undefined') {
                 TABS.vtx.VTXTABLE_BAND_LIST = [];
@@ -62,21 +63,21 @@ TABS.vtx.initialize = function (callback) {
                 TABS.vtx.VTXTABLE_BAND_LIST.push(Object.assign({}, VTXTABLE_BAND));
                 vtxtable_bands.counter++;
             }
-    
+
             let buffer = [];
             buffer.push8(vtxtable_bands.counter);
-    
+
             if (vtxtable_bands.counter <= VTX_CONFIG.vtx_table_bands) {
                 MSP.send_message(MSPCodes.MSP_VTXTABLE_BAND, buffer, false, vtxtable_bands);
             } else {
                 vtxtable_bands.counter = undefined;
                 vtxtable_powerlevels();
             }
-    
+
         }
-    
+
         function vtxtable_powerlevels() {
-    
+
             // Simulation of static variable
             if (typeof vtxtable_powerlevels.counter === 'undefined') {
                 TABS.vtx.VTXTABLE_POWERLEVEL_LIST = [];
@@ -85,10 +86,10 @@ TABS.vtx.initialize = function (callback) {
                 TABS.vtx.VTXTABLE_POWERLEVEL_LIST.push(Object.assign({}, VTXTABLE_POWERLEVEL));
                 vtxtable_powerlevels.counter++;
             }
-    
+
             let buffer = [];
             buffer.push8(vtxtable_powerlevels.counter);
-    
+
             if (vtxtable_powerlevels.counter <= VTX_CONFIG.vtx_table_powerlevels) {
                 MSP.send_message(MSPCodes.MSP_VTXTABLE_POWERLEVEL, buffer, false, vtxtable_powerlevels);
             } else {
@@ -96,6 +97,35 @@ TABS.vtx.initialize = function (callback) {
                 callback_after_msp();
             }
         }
+    }
+
+    // Validates the vtxConfig object against a JSON Schema
+    function validateVtxJson(vtxConfig, callback_valid, callback_error) {
+
+        // At minimum the version must be defined
+        if (!vtxConfig.version) {
+            console.error("Validation against schema failed, version missing");
+            callback_error();
+        }
+
+        // Load schema
+        const urlVtxSchema = chrome.runtime.getURL(`resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`);
+
+        fetch(urlVtxSchema)
+            .then(response => response.json())
+            .catch(error => console.error('Error fetching VTX Schema:', error))
+            .then(schemaJson => {
+
+                let valid = false;
+                if (schemaJson !== undefined) {
+                    // Validate
+                    valid = (TABS.vtx.env.validate(schemaJson, vtxConfig) === undefined);
+                }
+
+                console.log("Validation against schema result:", valid);
+                valid ? callback_valid() : callback_error();
+            });
+
     }
 
     // Emulates the MSP read from a vtxConfig object (JSON)
@@ -156,8 +186,8 @@ TABS.vtx.initialize = function (callback) {
 
         // Supported?
         let vtxSupported = VTX_CONFIG.vtx_type != 0 && VTX_CONFIG.vtx_type != 255;
-        let vtxTableNotConfigured = vtxSupported && VTX_CONFIG.vtx_table_available && (VTX_CONFIG.vtx_table_bands == 0 || 
-                                                                                       VTX_CONFIG.vtx_table_channels == 0 || 
+        let vtxTableNotConfigured = vtxSupported && VTX_CONFIG.vtx_table_available && (VTX_CONFIG.vtx_table_bands == 0 ||
+                                                                                       VTX_CONFIG.vtx_table_channels == 0 ||
                                                                                        VTX_CONFIG.vtx_table_powerlevels == 0);
 
         $(".vtx_supported").toggle(vtxSupported);
@@ -208,7 +238,7 @@ TABS.vtx.initialize = function (callback) {
                 }
                 $("#vtx_band_description").text(bandName);
             } else {
-                $("#vtx_band_description").text(VTX_CONFIG.vtx_band); 
+                $("#vtx_band_description").text(VTX_CONFIG.vtx_band);
             }
         }
 
@@ -222,7 +252,7 @@ TABS.vtx.initialize = function (callback) {
                 }
                 $("#vtx_power_description").text(powerLevel);
             } else {
-                let levelText = i18n.getMessage('vtxPower_X', {powerLevel: VTX_CONFIG.vtx_power}); 
+                let levelText = i18n.getMessage('vtxPower_X', {powerLevel: VTX_CONFIG.vtx_power});
                 $("#vtx_power_description").text(levelText);
             }
         }
@@ -326,7 +356,7 @@ TABS.vtx.initialize = function (callback) {
             let powerlevelstitle_e = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_title");
 
             for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
-                powerlevelstitle_e.append("<td><span>" + i + "</span></td>"); 
+                powerlevelstitle_e.append("<td><span>" + i + "</span></td>");
             }
 
             // Power levels
@@ -359,7 +389,7 @@ TABS.vtx.initialize = function (callback) {
             let title_e = $("#tab-vtx-templates #tab-vtx-bands-title tr");
 
             for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
-                title_e.append("<td><span>" + i + "</span></td>"); 
+                title_e.append("<td><span>" + i + "</span></td>");
             }
             bandstable_e.append(title_e);
 
@@ -400,11 +430,11 @@ TABS.vtx.initialize = function (callback) {
                         bandName = i18n.getMessage('vtxBand_X', {bandName: i});
                     }
                     selectBand.append(new Option(bandName, i));
-                } 
+                }
             } else {
                 for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
                     selectBand.append(new Option(i18n.getMessage('vtxBand_X', {bandName: i}), i));
-                } 
+                }
             }
         }
 
@@ -424,11 +454,11 @@ TABS.vtx.initialize = function (callback) {
                             selectChannel.append(new Option(i18n.getMessage('vtxChannel_X', {channelName: i}), i));
                         }
                     }
-                } 
+                }
             } else {
                 for (let i = 1; i <= TABS.vtx.MAX_BAND_CHANNELS_VALUES; i++) {
                     selectBand.append(new Option(i18n.getMessage('vtxChannel_X', {channelName: i}), i));
-                } 
+                }
             }
         }
 
@@ -443,7 +473,7 @@ TABS.vtx.initialize = function (callback) {
                         powerLevel = i18n.getMessage('vtxPower_X', {powerLevel: i});
                     }
                     selectPower.append(new Option(powerLevel, i));
-                } 
+                }
             } else {
                 let powerMaxMinValues = getPowerValues(VTX_CONFIG.vtx_type);
                 for (let i = powerMaxMinValues.min; i <= powerMaxMinValues.max; i++) {
@@ -452,19 +482,19 @@ TABS.vtx.initialize = function (callback) {
                     } else {
                         selectPower.append(new Option(i18n.getMessage('vtxPower_X', {bandName: i}), i));
                     }
-                } 
+                }
             }
         }
 
         // Returns the power values min and max depending on the VTX Type
         function getPowerValues(vtxType) {
-            
+
             let powerMinMax = {};
 
             if (VTX_CONFIG.vtx_table_available) {
                 powerMinMax = {min: 1, max: VTX_CONFIG.vtx_table_powerlevels}
             } else {
-                 
+
                 switch (vtxType) {
 
                 case 0: // Unsupported
@@ -472,7 +502,7 @@ TABS.vtx.initialize = function (callback) {
                     break;
 
                 case 1: // RTC6705
-                    powerMinMax = {min: 1, max: 3}; 
+                    powerMinMax = {min: 1, max: 3};
                     break;
 
                 case 3: // SmartAudio
@@ -556,7 +586,7 @@ TABS.vtx.initialize = function (callback) {
                     let vtxConfig = createVtxConfigInfo();
                     let text = creatLuaTables(vtxConfig);
                     let data = new Blob([text], { type: "application/text" });
-                    
+
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
@@ -579,7 +609,7 @@ TABS.vtx.initialize = function (callback) {
         let suggestedName = 'vtxtable';
         let suffix = 'json';
 
-        var filename = generateFilename(suggestedName, suffix); 
+        var filename = generateFilename(suggestedName, suffix);
 
         let accepts = [{
             description: suffix.toUpperCase() + ' files', extensions: [suffix],
@@ -658,16 +688,32 @@ TABS.vtx.initialize = function (callback) {
 
                     let text = e.target.result;
                     try {
+
                         let vtxConfig = JSON.parse(text);
-                        read_vtx_config_json(vtxConfig, load_html);
 
-                        TABS.vtx.vtxTableSavePending = true;
+                        validateVtxJson(
+                            vtxConfig,
+                            function() {
 
-                        self.analyticsChanges['VtxTableLoadFromClipboard'] = undefined;
-                        self.analyticsChanges['VtxTableLoadFromFile'] = file.name;
+                                // JSON is valid
+                                read_vtx_config_json(vtxConfig, load_html);
 
-                        console.log('Load VTX file end');
-                        GUI.log(i18n.getMessage('vtxLoadFileOk'));
+                                TABS.vtx.vtxTableSavePending = true;
+
+                                self.analyticsChanges['VtxTableLoadFromClipboard'] = undefined;
+                                self.analyticsChanges['VtxTableLoadFromFile'] = file.name;
+
+                                console.log('Load VTX file end');
+                                GUI.log(i18n.getMessage('vtxLoadFileOk'));
+                            },
+                            function() {
+
+                                // JSON is NOT valid
+                                console.error('VTX Config from file failed validation against schema');
+                                GUI.log(i18n.getMessage('vtxLoadFileKo'));
+
+                            }
+                        );
 
                     } catch (err) {
                         console.error('Failed loading VTX file config');
@@ -694,15 +740,29 @@ TABS.vtx.initialize = function (callback) {
                     console.log('Pasted content: ', text);
 
                     let vtxConfig = JSON.parse(text);
-                    read_vtx_config_json(vtxConfig, load_html);
 
-                    TABS.vtx.vtxTableSavePending = true;
+                    validateVtxJson(
+                        vtxConfig,
+                        function() {
 
-                    self.analyticsChanges['VtxTableLoadFromFile'] = undefined;
-                    self.analyticsChanges['VtxTableLoadFromClipboard'] = text.length;
+                            // JSON is valid
+                            read_vtx_config_json(vtxConfig, load_html);
 
-                    console.log('Load VTX clipboard end');
-                    GUI.log(i18n.getMessage('vtxLoadClipboardOk'));
+                            TABS.vtx.vtxTableSavePending = true;
+
+                            self.analyticsChanges['VtxTableLoadFromFile'] = undefined;
+                            self.analyticsChanges['VtxTableLoadFromClipboard'] = text.length;
+
+                            console.log('Load VTX clipboard end');
+                            GUI.log(i18n.getMessage('vtxLoadClipboardOk'));
+                        },
+                        function() {
+
+                            // JSON is NOT valid
+                            GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
+                            console.error('VTX Config from clipboard failed validation against schema');
+                        }
+                    );
 
                 }, function(err) {
                     GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
@@ -731,7 +791,7 @@ TABS.vtx.initialize = function (callback) {
         function save_vtx_config() {
             MSP.send_message(MSPCodes.MSP_SET_VTX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VTX_CONFIG), false, save_vtx_powerlevels);
         }
-        
+
         function save_vtx_powerlevels() {
 
             // Simulation of static variable
@@ -741,7 +801,7 @@ TABS.vtx.initialize = function (callback) {
                 save_vtx_powerlevels.counter++;
             }
 
-            
+
             if (save_vtx_powerlevels.counter < VTX_CONFIG.vtx_table_powerlevels) {
                 VTXTABLE_POWERLEVEL = Object.assign({}, TABS.vtx.VTXTABLE_POWERLEVEL_LIST[save_vtx_powerlevels.counter]);
                 MSP.send_message(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL), false, save_vtx_powerlevels);
@@ -760,7 +820,7 @@ TABS.vtx.initialize = function (callback) {
                 save_vtx_bands.counter++;
             }
 
-            
+
             if (save_vtx_bands.counter < VTX_CONFIG.vtx_table_bands) {
                 VTXTABLE_BAND = Object.assign({}, TABS.vtx.VTXTABLE_BAND_LIST[save_vtx_bands.counter]);
                 MSP.send_message(MSPCodes.MSP_SET_VTXTABLE_BAND, mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_BAND), false, save_vtx_bands);
@@ -788,7 +848,7 @@ TABS.vtx.initialize = function (callback) {
             TABS.vtx.initialize();
         }
     }
-    
+
     function dump_html_to_msp() {
 
         // General config
