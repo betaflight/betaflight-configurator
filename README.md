@@ -45,7 +45,7 @@ Please note - the application will automatically update itself when new versions
 
 ### Unstable Testing Versions
 
-Unstable testing versions of the lates builds of the configurator for most platforms can be downloaded from [here](https://ci.betaflight.tech/job/BetaFlight_Configurator/).
+Unstable testing versions of the lates builds of the configurator for most platforms can be downloaded from [here](https://github.com/betaflight/betaflight-configurator-nightlies/releases/).
 
 **Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
 
@@ -92,7 +92,7 @@ You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64
 
 Betaflight Configurator has been translated into several languages. The application will try to detect and use your system language if a translation into this language is available. You can help [translating the application into your language](https://crowdin.com/project/betaflight-configurator).
 
-If you prefer to have the application in English or any other language, you can select your desired language in the options menu of the application.
+If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
 
 ## Notes
 
