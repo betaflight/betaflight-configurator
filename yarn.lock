@@ -9,6 +9,11 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@korzio/djv-draft-04@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@korzio/djv-draft-04/-/djv-draft-04-2.0.1.tgz#2984289426cac5ed622b26a58c3af8584aefbdfe"
+  integrity sha512-MeTVcNsfCIYxK6T7jW1sroC7dBAb4IfLmQe6RoCqlxHN5NFkzNpgdnBPR+/0D2wJDUJHM9s9NQv+ouhxKjvUjg==
+
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.3.tgz#3a582bdb53804c6ba6d146579c46e52130cf4a3b"
@@ -1334,6 +1339,13 @@ dir-glob@^3.0.1:
   integrity sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==
   dependencies:
     path-type "^4.0.0"
+
+djv@^2.1.3-alpha.0:
+  version "2.1.3-alpha.0"
+  resolved "https://registry.yarnpkg.com/djv/-/djv-2.1.3-alpha.0.tgz#554daa91f22e0e8e9f48c9550766a6c07e8ce180"
+  integrity sha512-vrKAFr/wbhMjfqo+eoXZRIx/6YbN1DSZlxUsE3tHDPYB0zWRtOBhqmKbcgCjfP3+KevqidBGn2jNRnqRhjIzYg==
+  optionalDependencies:
+    "@korzio/djv-draft-04" "^2.0.1"
 
 dom-serialize@^2.2.0:
   version "2.2.1"
