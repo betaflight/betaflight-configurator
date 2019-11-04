@@ -111,20 +111,26 @@ TABS.vtx.initialize = function (callback) {
         // Load schema
         const urlVtxSchema = chrome.runtime.getURL(`resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`);
 
-        fetch(urlVtxSchema)
-            .then(response => response.json())
-            .catch(error => console.error('Error fetching VTX Schema:', error))
-            .then(schemaJson => {
+        if (GUI.Mode === GUI_Modes.ChromeApp) {
+            // FIXME the ChromeOs don't let us use a Schema Validator because almost all of them use eval, and/or use require
+            callback_valid();
+        } else {
+            fetch(urlVtxSchema)
+                .then(response => response.json())
+                .catch(error => console.error('Error fetching VTX Schema:', error))
+                .then(schemaJson => {
 
-                let valid = false;
-                if (schemaJson !== undefined) {
-                    // Validate
-                    valid = (TABS.vtx.env.validate(schemaJson, vtxConfig) === undefined);
+                    let valid = false;
+                    if (schemaJson !== undefined) {
+                        // Validate
+                        valid = (TABS.vtx.env.validate(schemaJson, vtxConfig) === undefined);
+                    }
+
+                    console.log("Validation against schema result:", valid);
+                    valid ? callback_valid() : callback_error();
                 }
-
-                console.log("Validation against schema result:", valid);
-                valid ? callback_valid() : callback_error();
-            });
+            );
+        }
 
     }
 
