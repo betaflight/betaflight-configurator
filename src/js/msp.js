@@ -147,25 +147,20 @@ var MSP = {
     clearListeners: function() {
         this.listeners = [];  
     },
-    send_message: function (code, data, callback_sent, callback_msp, callback_onerror) {
+    send_message: function (code, data, callback_sent, callback_msp, doCallbackOnError) {
         if (code === undefined) {
-            debugger;
+            return;
         }
-        var bufferOut,
-            bufView;
 
-         if (!callback_onerror) {
-             var callbackOnError = false;
-         } else {
-             var callbackOnError = true;
-         }
+        let bufferOut;
+
         // always reserve 6 bytes for protocol overhead !
         if (data) {
             var size = data.length + 6,
                 checksum = 0;
 
             bufferOut = new ArrayBuffer(size);
-            bufView = new Uint8Array(bufferOut);
+            let bufView = new Uint8Array(bufferOut);
 
             bufView[0] = 36; // $
             bufView[1] = 77; // M
@@ -184,7 +179,7 @@ var MSP = {
             bufView[5 + data.length] = checksum;
         } else {
             bufferOut = new ArrayBuffer(6);
-            bufView = new Uint8Array(bufferOut);
+            let bufView = new Uint8Array(bufferOut);
 
             bufView[0] = 36; // $
             bufView[1] = 77; // M
@@ -194,7 +189,7 @@ var MSP = {
             bufView[5] = bufView[3] ^ bufView[4]; // checksum
         }
 
-        var obj = {'code': code, 'requestBuffer': bufferOut, 'callback': (callback_msp) ? callback_msp : false, 'timer': false, 'callbackOnError': callbackOnError};
+        var obj = {'code': code, 'requestBuffer': bufferOut, 'callback': callback_msp ? callback_msp : false, 'timer': false, 'callbackOnError': doCallbackOnError};
 
         var requestExists = false;
         for (var i = 0; i < MSP.callbacks.length; i++) {
@@ -219,13 +214,16 @@ var MSP = {
         if (data || !requestExists) {
             serial.send(bufferOut, function (sendInfo) {
                 if (sendInfo.bytesSent == bufferOut.byteLength) {
-                    if (callback_sent) callback_sent();
+                    if (callback_sent) {
+                        callback_sent();
+                    }
                 }
             });
         }
 
         return true;
     },
+
     /**
      * resolves: {command: code, data: data, length: message_length}
      */
