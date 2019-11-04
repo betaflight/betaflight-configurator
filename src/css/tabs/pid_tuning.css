@@ -694,7 +694,6 @@
 
 .tabarea {
     width: calc(100% - 22px);
-    padding-left: 10px;
     position: relative;
     padding: 10px;
     border: 1px solid var(--subtleAccent);

@@ -8,19 +8,19 @@
 'use strict';
 
 var STM32_protocol = function () {
-    this.baud;
+    this.baud = null;
     this.options = {};
-    this.callback; // ref
-    this.hex; // ref
-    this.verify_hex;
+    this.callback = null;
+    this.hex = null;
+    this.verify_hex = [];
 
-    this.receive_buffer;
+    this.receive_buffer = [];
 
-    this.bytes_to_read = 0; // ref
-    this.read_callback; // ref
+    this.bytes_to_read = 0;
+    this.read_callback = null;
 
-    this.upload_time_start;
-    this.upload_process_alive;
+    this.upload_time_start = 0;
+    this.upload_process_alive = false;
 
     this.msp_connector = new MSPConnectorImpl();
 
@@ -113,7 +113,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                     GUI.connect_lock = false;
                     GUI.log(i18n.getMessage('serialPortOpenFail'));
                     return;
-                } 
+                }
 
                 console.log('Using legacy reboot method');
 
@@ -138,11 +138,11 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
         };
 
         var onConnectHandler = function () {
-            
+
             GUI.log(i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
 
             if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
-                
+
                 self.msp_connector.disconnect(function (disconnectionResult) {
 
                     // need some time for the port to be closed, serial port does not open if tried immediately
@@ -163,14 +163,14 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                         console.log('no flash bootloader detected');
                         rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
                     }
-                    
+
                     var buffer = [];
                     buffer.push8(rebootMode);
                     MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, function() {
-                        
+
                         // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
-    
-                        self.msp_connector.disconnect(function (disconnectionResult) { 
+
+                        self.msp_connector.disconnect(function (disconnectionResult) {
                             if (disconnectionResult) {
                                 // delay to allow board to boot in bootloader mode
                                 // required to detect if a DFU device appears
@@ -179,7 +179,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                                 GUI.connect_lock = false;
                             }
                         });
-                        
+
                     }, function () {
                         console.log('Reboot request recevied by device');
                     });
@@ -190,17 +190,17 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
         var onTimeoutHandler = function() {
             GUI.connect_lock = false;
             console.log('Looking for capabilities via MSP failed');
-            
+
             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
         }
-        
+
         var onFailureHandler = function() {
             GUI.connect_lock = false;
         };
-        
+
         GUI.connect_lock = true;
         TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloader'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
-        
+
         self.msp_connector.connect(self.port, self.options.reboot_baud, onConnectHandler, onTimeoutHandler, onFailureHandler);
     }
 };
@@ -282,18 +282,18 @@ STM32_protocol.prototype.retrieve = function (n_bytes, callback) {
     }
 };
 
-// Array = array of bytes that will be send over serial
+// bytes_to_send = array of bytes that will be send over serial
 // bytes_to_read = received bytes necessary to trigger read_callback
 // callback = function that will be executed after received bytes = bytes_to_read
-STM32_protocol.prototype.send = function (Array, bytes_to_read, callback) {
+STM32_protocol.prototype.send = function (bytes_to_send, bytes_to_read, callback) {
     // flip flag
     this.upload_process_alive = true;
 
-    var bufferOut = new ArrayBuffer(Array.length);
+    var bufferOut = new ArrayBuffer(bytes_to_send.length);
     var bufferView = new Uint8Array(bufferOut);
 
-    // set Array values inside bufferView (alternative to for loop)
-    bufferView.set(Array);
+    // set bytes_to_send values inside bufferView (alternative to for loop)
+    bufferView.set(bytes_to_send);
 
     // update references
     this.bytes_to_read = bytes_to_read;
@@ -311,7 +311,7 @@ STM32_protocol.prototype.send = function (Array, bytes_to_read, callback) {
 // result = true/false
 STM32_protocol.prototype.verify_response = function (val, data) {
     var self = this;
-    
+
     if (val != data[0]) {
         var message = 'STM32 Communication failed, wrong response, expected: ' + val + ' (0x' + val.toString(16) + ') received: ' + data[0] + ' (0x' + data[0].toString(16) + ')';
         console.error(message);
@@ -501,14 +501,14 @@ STM32_protocol.prototype.upload_procedure = function (step) {
 
             if (self.useExtendedErase) {
                 if (self.options.erase_chip) {
-            
+
                     var message = 'Executing global chip erase (via extended erase)';
                     console.log(message);
                     TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32GlobalEraseExtended'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
-    
+
                     self.send([self.command.extended_erase, 0xBB], 1, function (reply) {
                         if (self.verify_response(self.status.ACK, reply)) {
-                            self.send( [0xFF, 0xFF, 0x00], 1, function (reply) { 
+                            self.send( [0xFF, 0xFF, 0x00], 1, function (reply) {
                                 if (self.verify_response(self.status.ACK, reply)) {
                                     console.log('Executing global chip extended erase: done');
                                     self.upload_procedure(5);
@@ -516,15 +516,15 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                             });
                         }
                     });
-                    
+
                 } else {
-                    var message = 'Executing local erase (via extended erase)'; 
+                    var message = 'Executing local erase (via extended erase)';
                     console.log(message);
                     TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32LocalEraseExtended'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 
                     self.send([self.command.extended_erase, 0xBB], 1, function (reply) {
                         if (self.verify_response(self.status.ACK, reply)) {
-                        
+
                             // For reference: https://code.google.com/p/stm32flash/source/browse/stm32.c#723
 
                             var max_address = self.hex.data[self.hex.data.length - 1].address + self.hex.data[self.hex.data.length - 1].bytes - 0x8000000,
@@ -541,18 +541,18 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                             buff.push(pg_byte);
                             checksum ^= pg_byte;
 
-                            
+
                             for (var i = 0; i < erase_pages_n; i++) {
-                                pg_byte = i >> 8; 
+                                pg_byte = i >> 8;
                                 buff.push(pg_byte);
                                 checksum ^= pg_byte;
-                                pg_byte = i & 0xFF; 
+                                pg_byte = i & 0xFF;
                                 buff.push(pg_byte);
                                 checksum ^= pg_byte;
                             }
 
                             buff.push(checksum);
-                            console.log('Erasing. pages: 0x00 - 0x' + erase_pages_n.toString(16) + ', checksum: 0x' + checksum.toString(16)); 
+                            console.log('Erasing. pages: 0x00 - 0x' + erase_pages_n.toString(16) + ', checksum: 0x' + checksum.toString(16));
 
                             self.send(buff, 1, function (reply) {
                                 if (self.verify_response(self.status.ACK, reply)) {
@@ -563,8 +563,8 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                             });
                         }
                     });
-                    
-                
+
+
                 }
                 break;
             }
@@ -586,7 +586,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                     }
                 });
             } else {
-                var message = 'Executing local erase'; 
+                var message = 'Executing local erase';
                 console.log(message);
                 TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32LocalErase'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL);
 

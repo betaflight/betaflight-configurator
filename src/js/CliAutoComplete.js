@@ -54,7 +54,7 @@ CliAutoComplete.initialize = function($textarea, sendLine, writeToOutput) {
     analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'CliAutoComplete', this.configEnabled);
 
     this.$textarea = $textarea;
-    this.forceOpen = false,
+    this.forceOpen = false;
     this.sendLine = sendLine;
     this.writeToOutput = writeToOutput;
     this.cleanup();

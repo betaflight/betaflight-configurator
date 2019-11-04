@@ -28,17 +28,17 @@ TABS.servos.initialize = function (callback) {
         $('#content').load("./tabs/servos.html", process_html);
     }
     get_servo_configurations();
-    
+
     function update_ui() {
-            
+
         if (semver.lt(CONFIG.apiVersion, "1.12.0") || SERVO_CONFIG.length == 0) {
-            
+
             $(".tab-servos").removeClass("supported");
             return;
         }
-        
+
         $(".tab-servos").addClass("supported");
-            
+
         var servoCheckbox = '';
         var servoHeader = '';
         for (var i = 0; i < RC.active_channels-4; i++) {
@@ -57,9 +57,9 @@ TABS.servos.initialize = function (callback) {
         $('div.tab-servos table.fields tr.main').append(servoHeader);
 
         function process_servos(name, alternate, obj) {
-        
+
             $('div.supported_wrapper').show();
-            
+
             $('div.tab-servos table.fields').append('\
                 <tr> \
                     <td style="text-align: center">' + name + '</td>\
@@ -91,9 +91,9 @@ TABS.servos.initialize = function (callback) {
             select.val(SERVO_CONFIG[obj].rate);
 
             $('div.tab-servos table.fields tr:last').data('info', {'obj': obj});
-            
+
             // UI hooks
-            
+
             // only one checkbox for indicating a channel to forward can be selected at a time, perhaps a radio group would be best here.
             $('div.tab-servos table.fields tr:last td.channel input').click(function () {
                 if($(this).is(':checked')) {
@@ -112,10 +112,10 @@ TABS.servos.initialize = function (callback) {
                 if (channelIndex == -1) {
                     channelIndex = undefined;
                 }
-                
+
                 SERVO_CONFIG[info.obj].indexOfChannelToForward = channelIndex;
 
-                
+
                 SERVO_CONFIG[info.obj].middle = parseInt($('.middle input', this).val());
                 SERVO_CONFIG[info.obj].min = parseInt($('.min input', this).val());
                 SERVO_CONFIG[info.obj].max = parseInt($('.max input', this).val());
@@ -123,7 +123,7 @@ TABS.servos.initialize = function (callback) {
                 var val = parseInt($('.direction select', this).val());
                 SERVO_CONFIG[info.obj].rate = val;
             });
-            
+
             //
             // send data to FC
             //
@@ -132,7 +132,7 @@ TABS.servos.initialize = function (callback) {
             function send_servo_mixer_rules() {
                 mspHelper.sendServoConfigurations(save_to_eeprom);
             }
-            
+
             function save_to_eeprom() {
                 if (save_configuration_to_eeprom) {
                     MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
@@ -147,7 +147,7 @@ TABS.servos.initialize = function (callback) {
         $('div.tab-servos table.fields tr:not(:first)').remove();
 
         for (var servoIndex = 0; servoIndex < 8; servoIndex++) {
-            process_servos('Servo ' + servoIndex, '', servoIndex, false);
+            process_servos('Servo ' + servoIndex, '', servoIndex);
         }
 
         // UI hooks for dynamically generated elements
@@ -157,20 +157,20 @@ TABS.servos.initialize = function (callback) {
                 GUI.timeout_add('servos_update', servos_update, 10);
             }
         });
-        
+
         $('a.update').click(function () {
             servos_update(true);
         });
-        
+
     }
 
     function process_html() {
-    
+
         update_ui();
 
         // translate to user-selected language
         i18n.localizePage();
-        
+
         // status data pulled via separate timer with static speed
         GUI.interval_add('status_pull', function () {
             MSP.send_message(MSPCodes.MSP_STATUS);
