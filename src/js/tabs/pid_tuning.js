@@ -1083,7 +1083,7 @@ TABS.pid_tuning.initialize = function (callback) {
         if (!semver.gte(CONFIG.apiVersion, "1.16.0")) {
             $('#pid-tuning .delta').hide();
             $('.tab-pid_tuning .note').hide();
-		}
+        }
 
         // Add a name to each row of PIDs if empty
         $('.pid_tuning tr').each(function(){
@@ -1312,9 +1312,9 @@ TABS.pid_tuning.initialize = function (callback) {
                 return;
             }
 
-            /* 
-            Quadratic curve formula taken from: 
-                https://stackoverflow.com/a/9195706/176210 
+            /*
+            Quadratic curve formula taken from:
+                https://stackoverflow.com/a/9195706/176210
             */
 
             function getQBezierValue(t, p1, p2, p3) {
@@ -1349,7 +1349,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 return;
             }
 
-            throttleCurve.width = throttleCurve.height * 
+            throttleCurve.width = throttleCurve.height *
                 (throttleCurve.clientWidth / throttleCurve.clientHeight);
 
             var canvasHeight = throttleCurve.height;

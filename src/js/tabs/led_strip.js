@@ -869,8 +869,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             // set mode colors visibility
 
             if (semver.gte(CONFIG.apiVersion, "1.20.0"))
-	            if (activeFunction == "function-f")
-	                $('.mode_colors').show();
+                if (activeFunction == "function-f")
+                    $('.mode_colors').show();
 
             // set special colors visibility
             $('.special_colors').show();

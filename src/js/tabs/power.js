@@ -263,7 +263,7 @@ TABS.power.initialize = function (callback) {
         if (haveFc) {
             currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeVirtual'));
             currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeEsc'));
-            
+
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeMsp'));
             }
@@ -390,7 +390,7 @@ TABS.power.initialize = function (callback) {
                 $('.srcchange').hide();
             }
         });
-        
+
         $('input[name="vbatcalibration"]').val(0);
         $('input[name="amperagecalibration"]').val(0);
 
@@ -413,7 +413,7 @@ TABS.power.initialize = function (callback) {
                 var amperageoffset = CURRENT_METER_CONFIGS[ampsource - 1].offset / 1000;
                 if (amperagecalibration != 0) {
                     if (CURRENT_METERS[ampsource - 1].amperage != amperageoffset && amperagecalibration != amperageoffset) {
-                        var amperagenewscale = Math.round(CURRENT_METER_CONFIGS[ampsource - 1].scale * 
+                        var amperagenewscale = Math.round(CURRENT_METER_CONFIGS[ampsource - 1].scale *
                             ((CURRENT_METERS[ampsource - 1].amperage -  amperageoffset) / (amperagecalibration - amperageoffset)));
                         if (amperagenewscale > -16000 && amperagenewscale < 16000 && amperagenewscale != 0) {
                             CURRENT_METER_CONFIGS[ampsource - 1].scale = amperagenewscale;
@@ -440,11 +440,11 @@ TABS.power.initialize = function (callback) {
                 $('a.applycalibration').click(function() {
                     if (vbatscalechanged) {
                         self.analyticsChanges['PowerVBatUpdated'] = 'Calibrated';
-		    }
+            }
 
                     if (amperagescalechanged) {
                         self.analyticsChanges['PowerAmperageUpdated'] = 'Calibrated';
-		    }
+            }
 
                     calibrationconfirmed = true;
                     GUI.calibrationManagerConfirmation.close();
@@ -454,7 +454,7 @@ TABS.power.initialize = function (callback) {
 
                 $('a.discardcalibration').click(function() {
                     GUI.calibrationManagerConfirmation.close();
-                }); 
+                });
             } else {
                 GUI.calibrationManagerConfirmation.close();
             }
