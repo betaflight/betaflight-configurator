@@ -2,9 +2,8 @@
 
 TABS.servos = {};
 TABS.servos.initialize = function (callback) {
-    var self = this;
 
-    if (GUI.active_tab != 'servos') {
+    if (GUI.active_tab !== 'servos') {
         GUI.active_tab = 'servos';
     }
 
@@ -31,7 +30,7 @@ TABS.servos.initialize = function (callback) {
 
     function update_ui() {
 
-        if (semver.lt(CONFIG.apiVersion, "1.12.0") || SERVO_CONFIG.length == 0) {
+        if (semver.lt(CONFIG.apiVersion, "1.12.0") || SERVO_CONFIG.length === 0) {
 
             $(".tab-servos").removeClass("supported");
             return;
@@ -39,16 +38,16 @@ TABS.servos.initialize = function (callback) {
 
         $(".tab-servos").addClass("supported");
 
-        var servoCheckbox = '';
-        var servoHeader = '';
-        for (var i = 0; i < RC.active_channels-4; i++) {
+        let servoCheckbox = '';
+        let servoHeader = '';
+        for (let i = 0; i < RC.active_channels-4; i++) {
             servoHeader = servoHeader + '\
                 <th >A' + (i+1) + '</th>\
             ';
         }
         servoHeader = servoHeader + '<th style="width: 110px" i18n="servosDirectionAndRate"></th>';
 
-        for (var i = 0; i < RC.active_channels; i++) {
+        for (let i = 0; i < RC.active_channels; i++) {
             servoCheckbox = servoCheckbox + '\
                 <td class="channel"><input type="checkbox"/></td>\
             ';
@@ -56,7 +55,7 @@ TABS.servos.initialize = function (callback) {
 
         $('div.tab-servos table.fields tr.main').append(servoHeader);
 
-        function process_servos(name, alternate, obj) {
+        function process_servos(name, obj) {
 
             $('div.supported_wrapper').show();
 
@@ -81,9 +80,9 @@ TABS.servos.initialize = function (callback) {
                 <select class="rate" name="rate"></select>\
             ');
 
-            var select = $('div.tab-servos table.fields tr:last td.direction select');
+            const select = $('div.tab-servos table.fields tr:last td.direction select');
 
-            for (var i = 100; i > -101; i--) {
+            for (let i = 100; i > -101; i--) {
                 select.append('<option value="' + i + '">Rate: ' + i + '%</option>');
             }
 
@@ -104,12 +103,12 @@ TABS.servos.initialize = function (callback) {
 
         function servos_update(save_configuration_to_eeprom) {
             $('div.tab-servos table.fields tr:not(".main")').each(function () {
-                var info = $(this).data('info');
+                const info = $(this).data('info');
 
 
-                var selection = $('.channel input', this);
-                var channelIndex = parseInt(selection.index(selection.filter(':checked')));
-                if (channelIndex == -1) {
+                const selection = $('.channel input', this);
+                let channelIndex = parseInt(selection.index(selection.filter(':checked')));
+                if (channelIndex === -1) {
                     channelIndex = undefined;
                 }
 
@@ -120,7 +119,7 @@ TABS.servos.initialize = function (callback) {
                 SERVO_CONFIG[info.obj].min = parseInt($('.min input', this).val());
                 SERVO_CONFIG[info.obj].max = parseInt($('.max input', this).val());
 
-                var val = parseInt($('.direction select', this).val());
+                const val = parseInt($('.direction select', this).val());
                 SERVO_CONFIG[info.obj].rate = val;
             });
 
@@ -146,8 +145,8 @@ TABS.servos.initialize = function (callback) {
         // drop previous table
         $('div.tab-servos table.fields tr:not(:first)').remove();
 
-        for (var servoIndex = 0; servoIndex < 8; servoIndex++) {
-            process_servos('Servo ' + servoIndex, '', servoIndex);
+        for (let servoIndex = 0; servoIndex < 8; servoIndex++) {
+            process_servos('Servo ' + servoIndex, servoIndex);
         }
 
         // UI hooks for dynamically generated elements
@@ -181,5 +180,7 @@ TABS.servos.initialize = function (callback) {
 };
 
 TABS.servos.cleanup = function (callback) {
-    if (callback) callback();
+    if (callback) {
+        callback();
+    }
 };
