@@ -13,9 +13,9 @@
 'use strict';
 
 var STM32DFU_protocol = function () {
-    this.callback; // ref
-    this.hex; // ref
-    this.verify_hex;
+    this.callback = null;
+    this.hex = null;
+    this.verify_hex = [];
 
     this.handle = null; // connection handle
 

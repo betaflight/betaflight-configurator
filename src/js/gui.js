@@ -8,12 +8,12 @@ var GUI_control = function () {
     this.connecting_to = false;
     this.connected_to = false;
     this.connect_lock = false;
-    this.active_tab;
+    this.active_tab = null;
     this.tab_switch_in_progress = false;
-    this.operating_system;
+    this.operating_system = null;
     this.interval_array = [];
     this.timeout_array = [];
-    
+
     this.defaultAllowedTabsWhenDisconnected = [
         'landing',
         'changelog',
@@ -352,14 +352,14 @@ GUI_control.prototype.content_ready = function (callback) {
 
 GUI_control.prototype.selectDefaultTabWhenConnected = function() {
     ConfigStorage.get(['rememberLastTab', 'lastTab'], function (result) {
-        if (!(result.rememberLastTab 
-                && !!result.lastTab 
+        if (!(result.rememberLastTab
+                && !!result.lastTab
                 && result.lastTab.substring(4) != "cli")) {
             $('#tabs ul.mode-connected .tab_setup a').click();
             return;
         }
         $("#tabs ul.mode-connected ." + result.lastTab + " a").click();
-    });    
+    });
 };
 
 GUI_control.prototype.isChromeApp = function () {
