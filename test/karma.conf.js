@@ -25,7 +25,7 @@ module.exports = function(config) {
         },
         tfsReporter: {
             outputDir: 'testresults',
-            outputFile: 'test_results.xml'
+            outputFile: 'test_results.xml',
         },
         singleRun: true,
     });
