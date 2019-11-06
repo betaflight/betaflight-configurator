@@ -11,6 +11,7 @@ apps/
 dist/
 debug/
 release/
+testresults/
 
 # OSX
 .DS_store

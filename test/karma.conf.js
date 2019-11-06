@@ -1,5 +1,6 @@
 module.exports = function(config) {
     config.set({
+        reporters: ['tfs'],
         basePath: '../',
         frameworks: ['mocha', 'chai', 'sinon-chai'],
         files: [
@@ -21,6 +22,10 @@ module.exports = function(config) {
                 flags: ['--no-sandbox']
             }
         },
-        singleRun: true
+        tfsReporter: {
+            outputDir: 'testresults',
+            outputFile: 'test_results.xml'
+        },
+        singleRun: true,
     });
 };
