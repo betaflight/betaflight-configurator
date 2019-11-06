@@ -423,6 +423,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
                     GPS_CONFIG.auto_config = data.readU8();
                     GPS_CONFIG.auto_baud = data.readU8();
+
+                    if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                        GPS_CONFIG.home_point_once = data.readU8() !== 0;
+                        GPS_CONFIG.ublox_use_galileo = data.readU8() !== 0;
+                    }
                 }
                 break;
             case MSPCodes.MSP_GPS_RESCUE:
@@ -1693,6 +1698,11 @@ MspHelper.prototype.crunch = function(code) {
             if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
                 buffer.push8(GPS_CONFIG.auto_config)
                     .push8(GPS_CONFIG.auto_baud);
+
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    buffer.push8(GPS_CONFIG.home_point_once ? 1 : 0)
+                          .push8(GPS_CONFIG.ublox_use_galileo ? 1 : 0);
+                }
             }
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
