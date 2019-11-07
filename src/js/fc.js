@@ -502,6 +502,10 @@ var FC = {
             throttleHover:                  0,
             sanityChecks:                   0,
             minSats:                        0,
+            ascendRate:                     0,
+            descendRate:                    0,
+            allowArmingWithoutFix:          0,
+            altitudeMode:                   0,
         };
 
         RXFAIL_CONFIG = [];

@@ -44,7 +44,7 @@
                     <div class="spacer_box_title" i18n="failsafeSwitchTitle"></div>
                 </div>
                 <div class="spacer_box">
-                    <div class="selectSwitchMode">
+                    <div class="number">
                         <label>
                             <select class="switchMode" name="failsafe_switch_mode">
                                 <option value="0" i18n="failsafeSwitchOptionStage1"></option>
@@ -153,11 +153,36 @@
                                 </label>
                             </div>
                             <div class="number">
+                                <label> <input type="number" name="gps_rescue_ascend_rate" min="1.00" max="25.00" step="0.01" /> <span
+                                    i18n="failsafeGpsRescueItemAscendRate"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label> <input type="number" name="gps_rescue_descend_rate" min="1.00" max="5.00" step="0.01" /> <span
+                                    i18n="failsafeGpsRescueItemDescendRate"></span>
+                                </label>
+                            </div>
+                            <div class="number">
                                 <label> <input type="number" name="gps_rescue_min_sats" min="5" max="50" /> <span
                                     i18n="failsafeGpsRescueItemMinSats"></span>
                                 </label>
                             </div>
-                            <div class="selectSwitchMode">
+                            <div class="number">
+                                <label> <input type="checkbox" name="gps_rescue_allow_arming_without_fix" class="toggle" /> <span
+                                    i18n="failsafeGpsRescueItemAllowArmingWithoutFix"></span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label>
+                                    <select class="switchMode" name="gps_rescue_altitude_mode">
+                                        <option value="0" i18n="failsafeGpsRescueItemAltitudeModeMaxAlt"></option>
+                                        <option value="1" i18n="failsafeGpsRescueItemAltitudeModeFixedAlt"></option>
+                                        <option value="2" i18n="failsafeGpsRescueItemAltitudeModeCurrentAlt"></option>
+                                    </select>
+                                <span i18n="failsafeGpsRescueItemAltitudeMode"></span>
+                                </label>
+                            </div>
+                            <div class="number">
                                 <label>
                                     <select class="switchMode" name="gps_rescue_sanity_checks">
                                         <option value="0" i18n="failsafeGpsRescueItemSanityChecksOff"></option>
