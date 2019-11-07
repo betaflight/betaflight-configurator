@@ -709,11 +709,24 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gps_protocol_e.append('<option value="' + i + '">' + gpsProtocols[i] + '</option>');
         }
 
+        const gps_ublox_galileo_e = $('.gps_ublox_galileo');
+
         gps_protocol_e.change(function () {
             GPS_CONFIG.provider = parseInt($(this).val());
-        });
 
-        gps_protocol_e.val(GPS_CONFIG.provider);
+            const enableGalileoVisible = semver.gte(CONFIG.apiVersion, "1.43.0") && GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
+            gps_ublox_galileo_e.toggle(enableGalileoVisible);
+        });
+        gps_protocol_e.val(GPS_CONFIG.provider).change();
+
+        $('input[name="gps_ublox_galileo"]').change(function() {
+            GPS_CONFIG.ublox_use_galileo = $(this).is(':checked');
+        }).prop('checked', GPS_CONFIG.ublox_use_galileo).change();
+
+        $('.gps_home_once').toggle(semver.gte(CONFIG.apiVersion, "1.43.0"));
+        $('input[name="gps_home_once"]').change(function() {
+            GPS_CONFIG.home_point_once = $(this).is(':checked');
+        }).prop('checked', GPS_CONFIG.home_point_once).change();
 
         $('input[name="gps_auto_baud"]').prop('checked', GPS_CONFIG.auto_baud == 1);
         $('input[name="gps_auto_config"]').prop('checked', GPS_CONFIG.auto_config == 1);

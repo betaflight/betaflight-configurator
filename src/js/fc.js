@@ -301,6 +301,8 @@ var FC = {
             ublox_sbas:                 0,
             auto_config:                0,
             auto_baud:                  0,
+            home_point_once:            false,
+            ublox_use_galileo:          false,
         };
 
         COMPASS_CONFIG = {

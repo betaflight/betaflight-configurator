@@ -1378,6 +1378,22 @@
     "configurationGPSAutoConfig": {
         "message": "Auto Config"
     },
+    "configurationGPSGalileo": {
+        "message": "Use Galileo",
+        "description": "Option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSGalileoHelp": {
+        "message": "When enabled, this removes the QZSS system (Japanese) and replaces it for the Galileo system (European).",
+        "description": "Help text for the option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSHomeOnce": {
+        "message": "Set Home Point Once",
+        "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSHomeOnceHelp": {
+        "message": "When enabled, only the first arm after the battery is connected will be used as home point. If not enabled, every time the quad is armed, the home point will be updated.",
+        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
     "configurationGPSHelp": {
         "message": "<strong>Note:</strong> Remember to configure a Serial Port (via Ports tab) when using GPS feature."
     },
