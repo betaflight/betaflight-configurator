@@ -11,8 +11,13 @@
 #     "owner" - The owner of the repository to release to e.g. betaflight
 #     "repoName" - The name of the repository to release to e.g. betaflight-configurator-nightly
 
+name: $(Date:yyyyMMdd).$(BuildID)
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
+pr: none
 
 stages:
 - stage: Build
@@ -29,10 +34,17 @@ stages:
       displayName: 'Install Node.js 10.16.3'
     - script: yarn install
       displayName: 'Run yarn install'
+    - script: yarn test
+      displayName: 'Run yarn test'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'VSTest'
+        testResultsFiles: '**/test_results.xml'
+        testRunTitle: 'Windows'
+        buildPlatform: 'Win32'
     - script: yarn release --win32
-      displayName: 'Run gulp release'
+      displayName: 'Run yarn release for win32'
     - powershell: Set-Content -Path '$(System.DefaultWorkingDirectory)/release/log.txt' -Value $env:BUILD_SOURCEVERSIONMESSAGE
-
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Windows release'
       inputs:
@@ -53,8 +65,7 @@ stages:
     - script: yarn install
       displayName: 'Run yarn install'
     - script: yarn gulp release --osx64
-      displayName: 'Run release'
-
+      displayName: 'Run yarn release for OSX64'
     - task: PublishPipelineArtifact@1
       displayName: 'Publish MacOS release'
       inputs: 
@@ -73,10 +84,9 @@ stages:
     - script: yarn install
       displayName: 'Run yarn install'
     - script: yarn release --linux64
-      displayName: 'Run gulp release'
+      displayName: 'Run yarn release for linux64'
     - script: cd $(System.DefaultWorkingDirectory)/release; find -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
       displayName: 'Clean release folders'
-
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Linux release'
       inputs: 
@@ -94,7 +104,6 @@ stages:
         buildType: 'current'
         targetPath: '$(Pipeline.Workspace)'
     - powershell: Write-Output ("##vso[task.setvariable variable=releaseNotes;]$(gc $(Pipeline.Workspace)/betaflight-configurator-windows/log.txt)")
-
     - task: GitHubReleasePublish@1
       inputs:
         githubEndpoint: '$(endpoint)'

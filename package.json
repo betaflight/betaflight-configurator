@@ -75,6 +75,7 @@
     "karma-mocha": "^1.3.0",
     "karma-sinon": "^1.0.5",
     "karma-sinon-chai": "^2.0.2",
+    "karma-tfs-reporter": "^1.0.2",
     "makensis": "^0.18.1",
     "mocha": "^6.1.4",
     "nw-builder": "^3.5.7",

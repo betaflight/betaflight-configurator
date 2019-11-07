@@ -81,7 +81,7 @@ describe('TABS.cli', () => {
             expect(cliPrompt.val()).to.equal('serialpassthrough');
         });
 
-        it("escape characters (i.e. \033[K) are skipped", () => {
+        it("escape characters are skipped", () => {
             TABS.cli.read({
                 data: toArrayBuffer('\033[K')
             });
