@@ -140,8 +140,8 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .message-negative {
-    color: var(--error);
-    font-weight: bold;
+    color: var(--error) !important;
+    font-weight: bold !important;
 }
 
 .headerbar {

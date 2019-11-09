@@ -3665,10 +3665,31 @@
     "failsafeGpsRescueItemThrottleHover": {
         "message": "Throttle hover"
     },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Ascend rate (meters/second)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Descend rate (meters/second)"
+    },    
     "failsafeGpsRescueItemMinSats": {
         "message": "Minimum satellites"
     },
-    "failsafeGpsRescueItemSanityChecks": {
+    "failsafeGpsRescueItemAllowArmingWithoutFix": {
+        "message": "Allow arming without fix - <span class=\"message-negative\">WARNING: the GPS Rescue will not be available</span>"
+    },
+    "failsafeGpsRescueItemAltitudeMode": { 
+        "message": "Altitude mode"
+    },
+    "failsafeGpsRescueItemAltitudeModeMaxAlt": { 
+        "message": "Maximum altitude"
+    },
+    "failsafeGpsRescueItemAltitudeModeFixedAlt": { 
+        "message": "Fixed altitude"
+    },
+    "failsafeGpsRescueItemAltitudeModeCurrentAlt": { 
+        "message": "Current altitude"
+    },
+    "failsafeGpsRescueItemSanityChecks": { 
         "message": "Sanity checks"
     },
     "failsafeGpsRescueItemSanityChecksOff": {

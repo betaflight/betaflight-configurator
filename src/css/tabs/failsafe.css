@@ -41,6 +41,10 @@
     font-weight: normal;
 }
 
+.tab-failsafe .number .switchery {
+    margin-right: 16px;
+}
+
 .tab-failsafe .number input:disabled {
     background-color: #ececec;
 }
@@ -275,12 +279,6 @@
 
 .tab-failsafe table {
     width: 100%;
-}
-
-.tab-failsafe .selectSwitchMode {
-    clear: left;
-    width: 100%;
-    float: left;
 }
 
 .tab-failsafe .switchMode {

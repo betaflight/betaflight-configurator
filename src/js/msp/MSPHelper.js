@@ -440,6 +440,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 GPS_RESCUE.throttleHover     = data.readU16();
                 GPS_RESCUE.sanityChecks      = data.readU8();
                 GPS_RESCUE.minSats           = data.readU8();
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    GPS_RESCUE.ascendRate            = data.readU16();
+                    GPS_RESCUE.descendRate           = data.readU16();
+                    GPS_RESCUE.allowArmingWithoutFix = data.readU8();
+                    GPS_RESCUE.altitudeMode          = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
                 RSSI_CONFIG.channel = data.readU8();
@@ -1715,6 +1721,13 @@ MspHelper.prototype.crunch = function(code) {
                   .push16(GPS_RESCUE.throttleHover)
                   .push8(GPS_RESCUE.sanityChecks)
                   .push8(GPS_RESCUE.minSats);
+
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    buffer.push16(GPS_RESCUE.ascendRate)
+                          .push16(GPS_RESCUE.descendRate)
+                          .push8(GPS_RESCUE.allowArmingWithoutFix)
+                          .push8(GPS_RESCUE.altitudeMode);
+                }
             break;
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
             buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));
