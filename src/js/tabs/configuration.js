@@ -720,13 +720,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         gps_protocol_e.val(GPS_CONFIG.provider).change();
 
         $('input[name="gps_ublox_galileo"]').change(function() {
-            GPS_CONFIG.ublox_use_galileo = $(this).is(':checked');
-        }).prop('checked', GPS_CONFIG.ublox_use_galileo).change();
+            GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
+        }).prop('checked', GPS_CONFIG.ublox_use_galileo > 0).change();
 
         $('.gps_home_once').toggle(semver.gte(CONFIG.apiVersion, "1.43.0"));
         $('input[name="gps_home_once"]').change(function() {
-            GPS_CONFIG.home_point_once = $(this).is(':checked');
-        }).prop('checked', GPS_CONFIG.home_point_once).change();
+            GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
+        }).prop('checked', GPS_CONFIG.home_point_once > 0).change();
 
         $('input[name="gps_auto_baud"]').prop('checked', GPS_CONFIG.auto_baud == 1);
         $('input[name="gps_auto_config"]').prop('checked', GPS_CONFIG.auto_config == 1);
