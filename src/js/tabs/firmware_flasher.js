@@ -105,7 +105,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     show_loaded_hex(summary)
 
                 } else {
-                    self.flashingMessage('firmwareFlasherHexCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
+                    self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
                 }
             });
         }
@@ -515,7 +515,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                 TABS.firmware_flasher.bareBoard = undefined;
                 console.log('board changed to', target);
 
-                self.flashingMessage('firmwareFlasherLoadFirmwareFile', self.FLASH_MESSAGE_TYPES.NEUTRAL)
+                self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL)
                     .flashProgress(0);
 
                 $('div.git_info').slideUp();
@@ -683,7 +683,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
                                             flashingMessageLocal();
                                         } else {
-                                            self.flashingMessage('firmwareFlasherHexCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
+                                            self.flashingMessage(i18n.getMessage('firmwareFlasherHexCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
                                         }
                                     });
                                 } else {
@@ -694,7 +694,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                         self.isConfigLocal = true;
                                         flashingMessageLocal();
                                     } catch(err) {
-                                        self.flashingMessage('firmwareFlasherConfigCorrupted', self.FLASH_MESSAGE_TYPES.INVALID);
+                                        self.flashingMessage(i18n.getMessage('firmwareFlasherConfigCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
                                         GUI.log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
                                     }
                                 }
@@ -1009,6 +1009,8 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         });
 
+        self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+
         $(document).keypress(function (e) {
             if (e.which == 13) { // enter
                 // Trigger regular Flashing sequence
@@ -1082,13 +1084,7 @@ TABS.firmware_flasher.flashingMessage = function(message, type) {
             break;
     }
     if (message != null) {
-        if (i18next.exists(message)) {
-            progressLabel_e.attr('i18n',message).removeClass('i18n-replaced');
-            i18n.localizePage();
-        } else {
-            progressLabel_e.removeAttr('i18n');
-            progressLabel_e.html(message);
-        }
+        progressLabel_e.html(message);
     }
 
     return self;
