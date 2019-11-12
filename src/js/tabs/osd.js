@@ -1798,6 +1798,7 @@ OSD.msp = {
         d.state = {};
         d.state.haveSomeOsd = (d.flags != 0)
         d.state.haveMax7456Video = bit_check(d.flags, 4) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
+        d.state.isMax7456Detected = bit_check(d.flags, 5) || (d.state.haveMax7456Video && semver.lt(CONFIG.apiVersion, "1.43.0"));
         d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
         d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(CONFIG.apiVersion, "1.34.0");
 
@@ -2364,6 +2365,11 @@ TABS.osd.initialize = function (callback) {
 
                     if (!OSD.data.state.haveMax7456Video) {
                         $('.requires-max7456').hide();
+                        $('.requires-detected-max7456').hide();
+                    }
+
+                    if (!OSD.data.state.haveMax7456Video || !OSD.data.state.isMax7456Detected) {
+                        $('.requires-detected-max7456').hide();
                     }
 
                     if (!OSD.data.state.haveOsdFeature) {
