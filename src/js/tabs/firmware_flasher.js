@@ -34,7 +34,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             const option_e = $(this);
             const optionRelease = option_e.data("summary");
             if (optionRelease && optionRelease.file === release.file) {
-                option_e.css("font-weight", FirmwareCache.has(release) ? "bold" : "normal");
+                option_e.toggleClass("cached", FirmwareCache.has(release));
             }
         });
     }
@@ -477,11 +477,10 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     versionName,
                                     version.descriptor.date,
                                     versionLabel
-                            ))
-                            .css("font-weight", FirmwareCache.has(version.descriptor)
-                                    ? "bold"
-                                    : "normal"
-                            );
+                            ));
+                        if (FirmwareCache.has(version.descriptor)) {
+                            select_e.addClass("cached");
+                        }
                         select_e.data('summary', version.descriptor);
                         versions_element.append(select_e);
                     });
