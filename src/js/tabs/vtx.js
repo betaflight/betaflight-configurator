@@ -939,7 +939,7 @@ TABS.vtx.initialize = function (callback) {
 
     function creatLuaTables(vtxConfig) {
         let bandsString = "bandTable = { [0]=\"U\"";
-        let frequencieString = "frequencyTable = {\n";
+        let frequenciesString = "frequencyTable = {\n";
         let freqBandsString = "frequenciesPerBand = ";
         let powersString = "powerTable = { ";
         let bands_list = vtxConfig.vtx_table.bands_list;
@@ -947,21 +947,20 @@ TABS.vtx.initialize = function (callback) {
         var index, len, i, l;
         for (index = 0, len = bands_list.length; index < len; ++index) {
             bandsString += ", \"" + bands_list[index].letter + "\"";
-            frequencieString += "    { ";
+            frequenciesString += "        { ";
             for (i = 0, l = bands_list[index].frequencies.length; i < l; ++i) {
-                frequencieString += bands_list[index].frequencies[i] + ", ";
+                frequenciesString += bands_list[index].frequencies[i] + ", ";
             }
-            frequencieString += "},\n";
+            frequenciesString += "},\n";
         }
-        bandsString += " }\n";
-        frequencieString += "}\n";
-        freqBandsString += bands_list[1].frequencies.length + "\n";
+        bandsString += " },\n";
+        frequenciesString += "    },\n";
+        freqBandsString += bands_list[1].frequencies.length + ",\n";
         for (index = 0, len = power_list.length; index < len; ++index) {
             powersString += "[" + power_list[index].value + "]=" + power_list[index].label + ", ";
         }
-        powersString += "}\n";
-        let text = frequencieString + freqBandsString + bandsString + powersString;
-        return text;
+        powersString += "},\n";
+        return `return {\n    ${frequenciesString}    ${freqBandsString}    ${bandsString}    ${powersString}}`;
     }
 
 };
