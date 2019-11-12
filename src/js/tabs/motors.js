@@ -31,7 +31,8 @@ TABS.motors = {
         // These are translated into proper Dshot values on the flight controller
         DSHOT_DISARMED_VALUE: 1000,
         DSHOT_MAX_VALUE: 2000,
-        DSHOT_3D_NEUTRAL: 1500
+        DSHOT_3D_NEUTRAL: 1500,
+        MAX_TELEMETRY_VALUE_SIZE: 6,
 };
 
 TABS.motors.initialize = function (callback) {
@@ -642,9 +643,31 @@ TABS.motors.initialize = function (callback) {
 
         var full_block_scale = rangeMax - rangeMin;
 
+        function reduceTelemetryValueSize(valueToReduce, defaultDecimalsAllowed = 0) {
+
+            let resultingValue = valueToReduce;
+            let resultingDecimals = defaultDecimalsAllowed;
+            let suffix = '';
+
+            if (resultingValue > 999999) {
+                resultingValue = resultingValue / 1000000;
+                suffix = 'M';
+                resultingDecimals = self.MAX_TELEMETRY_VALUE_SIZE - 1;
+            }
+
+            const finalValueIntegerPartLength = resultingValue.toFixed(0).toString.length;
+            const finalValueDecimalPartLength = (resultingDecimals - finalValueIntegerPartLength) >= 0 ? (resultingDecimals - finalValueIntegerPartLength) : 0;
+            resultingValue = resultingValue.toFixed(finalValueDecimalPartLength);
+            resultingValue = `${resultingValue}${suffix}`;
+
+            return resultingValue;
+        }
+
         function update_ui() {
             var previousArmState = self.armed;
             var block_height = $('div.m-block:first').height();
+
+            const MAX_INVALID_PERCENT = 100;
 
             for (var i = 0; i < MOTOR_DATA.length; i++) {
                 var motorValue = MOTOR_DATA[i];
@@ -662,40 +685,45 @@ TABS.motors.initialize = function (callback) {
 
                 if (i < MOTOR_CONFIG.motor_count && (MOTOR_CONFIG.use_dshot_telemetry || MOTOR_CONFIG.use_esc_sensor)) {
 
-                    const MAX_INVALID_PERCENT = 100,
-                          MAX_VALUE_SIZE = 6;
+                    let rpmMotorValue = reduceTelemetryValueSize(MOTOR_TELEMETRY_DATA.rpm[i]);
 
-                    let rpmMotorValue = MOTOR_TELEMETRY_DATA.rpm[i];
-
-                    // Reduce the size of the value if too big
-                    if (rpmMotorValue > 999999) {
-                        rpmMotorValue = (rpmMotorValue / 1000000).toFixed(5 - (rpmMotorValue / 1000000).toFixed(0).toString().length) + "M";  
-                    }
-
-                    rpmMotorValue = rpmMotorValue.toString().padStart(MAX_VALUE_SIZE);
+                    rpmMotorValue = rpmMotorValue.toString().padStart(self.MAX_TELEMETRY_VALUE_SIZE);
                     let telemetryText = i18n.getMessage('motorsRPM', {motorsRpmValue: rpmMotorValue});
-
                     
                     if (MOTOR_CONFIG.use_dshot_telemetry) {
 
                         let invalidPercent = MOTOR_TELEMETRY_DATA.invalidPercent[i];
 
                         let classError = (invalidPercent > MAX_INVALID_PERCENT) ? "warning" : "";
-                        invalidPercent = (invalidPercent / 100).toFixed(2).toString().padStart(MAX_VALUE_SIZE);
+                        invalidPercent = (invalidPercent / 100).toFixed(2).toString().padStart(self.MAX_TELEMETRY_VALUE_SIZE);
 
                         telemetryText += "<br><span class='" + classError + "'>";
                         telemetryText += i18n.getMessage('motorsRPMError', {motorsErrorValue: invalidPercent});
                         telemetryText += "</span>";
                     }
 
+                    let motorVoltage;
                     if (MOTOR_CONFIG.use_esc_sensor) {
 
                         let escTemperature = MOTOR_TELEMETRY_DATA.temperature[i];
 
                         telemetryText += "<br>";
-                        escTemperature = escTemperature.toString().padStart(MAX_VALUE_SIZE);
+                        escTemperature = escTemperature.toString().padStart(self.MAX_TELEMETRY_VALUE_SIZE);
                         telemetryText += i18n.getMessage('motorsESCTemperature', {motorsESCTempValue: escTemperature});
+
+                        motorVoltage = MOTOR_TELEMETRY_DATA.voltage[i];
+                    } else {
+                        motorVoltage = ANALOG.voltage * (MOTOR_DATA[i] - rangeMin) / full_block_scale;
                     }
+
+                    // Add KV value
+                    let kvValue = motorVoltage > 0 ? MOTOR_TELEMETRY_DATA.rpm[i] / motorVoltage : 0;
+
+                    kvValue = reduceTelemetryValueSize(kvValue, 2);
+
+                    telemetryText += "<br>";
+                    kvValue = kvValue.toString().padStart(self.MAX_TELEMETRY_VALUE_SIZE);
+                    telemetryText += i18n.getMessage('motorsKV', {motorsKvValue: kvValue});
 
                     $('.motor_testing .telemetry .motor-' + i).html(telemetryText);
                 }
