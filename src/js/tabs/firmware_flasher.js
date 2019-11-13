@@ -128,11 +128,11 @@ TABS.firmware_flasher.initialize = function (callback) {
 
             var boards_e = $('select[name="board"]');
             boards_e.empty();
-            boards_e.append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectBoard'></option>"));
+            boards_e.append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectBoard")}</option>`));
 
             var versions_e = $('select[name="firmware_version"]');
             versions_e.empty();
-            versions_e.append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectFirmwareVersion'></option>"));
+            versions_e.append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectFirmwareVersion")}</option>`));
 
 
             var selectTargets = [];
@@ -292,10 +292,10 @@ TABS.firmware_flasher.initialize = function (callback) {
             var boards_e = $('select[name="board"]');
             var versions_e = $('select[name="firmware_version"]');
             boards_e.empty()
-                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectBoard'></option>"));
+                .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectBoard")}</option>`));
 
             versions_e.empty()
-                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectFirmwareVersion'></option>"));
+                .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectFirmwareVersion")}</option>`));
             var selectTargets = [];
             Object.keys(items)
                 .sort()
@@ -394,11 +394,10 @@ TABS.firmware_flasher.initialize = function (callback) {
             var build_type = $(this).val();
 
             $('select[name="board"]').empty()
-            .append($("<option value='0' i18n='firmwareFlasherOptionLoading'></option>"));
+            .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`));
 
             $('select[name="firmware_version"]').empty()
-            .append($("<option value='0' i18n='firmwareFlasherOptionLoading'></option>"));
-            i18n.localizePage();
+            .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`));
 
             if (!GUI.connect_lock) {
                 TABS.firmware_flasher.unifiedConfigs = {};
