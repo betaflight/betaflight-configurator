@@ -4802,6 +4802,13 @@
     "osdDescStatMinRssiDbm": {
         "message": "Minimum RSSI dBm value"
     },
+    "osdTextElementRcChannels": {
+        "message": "RC Channels",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescElementRcChannels": {
+        "message": "Display at most 4 channels values. The channels must be specified with the CLI variable 'osd_rcchannels'"
+    },    
     "osdTextStatUnknown": {
         "message": "Unknown $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"

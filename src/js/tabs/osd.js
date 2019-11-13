@@ -1072,6 +1072,15 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: FONT.symbol(SYM.RSSI) + '-130'
         },
+        RC_CHANNELS: {
+            name: 'OSD_RC_CHANNELS',
+            text: 'osdTextElementRcChannels',
+            desc: 'osdDescElementRcChannels',
+            default_position: -1,
+            draw_order: 395,
+            positionable: true,
+            preview: [ "-1000", "  545", "  689", " 1000"],
+        },
     };
 };
 
@@ -1469,8 +1478,13 @@ OSD.chooseFields = function () {
                                                     F.RATE_PROFILE_NAME,
                                                     F.PID_PROFILE_NAME,
                                                     F.OSD_PROFILE_NAME,
-                                                    F.RSSI_DBM_VALUE
+                                                    F.RSSI_DBM_VALUE,
                                                 ]);
+                                                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                                                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                                                        F.RC_CHANNELS,
+                                                    ]);
+                                                }
                                             }
                                         }
                                     }
