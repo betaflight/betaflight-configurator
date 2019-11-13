@@ -115,6 +115,10 @@
     color: #818181;
 }
 
+.tab-firmware_flasher .options select option.cached {
+    font-weight: bold;
+}
+
 .tab-firmware_flasher .cf_table td:last-child {
     text-align: left;
 }

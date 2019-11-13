@@ -29,17 +29,14 @@ TABS.firmware_flasher.initialize = function (callback) {
 
     var unifiedSource = 'https://api.github.com/repos/betaflight/unified-targets/contents/configs/default';
 
-
-        /**
-         * Change boldness of firmware option depending on cache status
-         *
-         * @param {Descriptor} release
-         */
     function onFirmwareCacheUpdate(release) {
-        $("option[value='{0}']".format(release.version))
-            .css("font-weight", FirmwareCache.has(release)
-                ? "bold"
-                : "normal");
+        $('select[name="firmware_version"] option').each(function () {
+            const option_e = $(this);
+            const optionRelease = option_e.data("summary");
+            if (optionRelease && optionRelease.file === release.file) {
+                option_e.toggleClass("cached", FirmwareCache.has(release));
+            }
+        });
     }
 
     function onDocumentLoad() {
@@ -131,11 +128,11 @@ TABS.firmware_flasher.initialize = function (callback) {
 
             var boards_e = $('select[name="board"]');
             boards_e.empty();
-            boards_e.append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectBoard'></option>"));
+            boards_e.append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectBoard")}</option>`));
 
             var versions_e = $('select[name="firmware_version"]');
             versions_e.empty();
-            versions_e.append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectFirmwareVersion'></option>"));
+            versions_e.append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectFirmwareVersion")}</option>`));
 
 
             var selectTargets = [];
@@ -219,27 +216,23 @@ TABS.firmware_flasher.initialize = function (callback) {
             loadUnifiedBuilds(releases);
         };
 
-        function checkOneVersionForUnification(version) {
+        function supportsUnifiedTargets(version) {
             return semver.gte(version.split(' ')[0], '4.1.0-RC1');
         }
 
-        function checkBuildsForUnification(builds) {
+        function hasUnifiedTargetBuild(builds) {
             // Find a build that is newer than 4.1.0, return true if found
-            let foundSuitable = false;
-            Object.keys(builds).forEach(function (key) {
-                builds[key].forEach(function(target) {
-                    if (checkOneVersionForUnification(target.version)) {
-                        foundSuitable = true;
-                    }
+            return Object.keys(builds).some(function (key) {
+                return builds[key].some(function(target) {
+                    return supportsUnifiedTargets(target.version);
                 });
             });
-            return foundSuitable;
         }
 
         function loadUnifiedBuilds(builds) {
             var expirationPeriod = 3600 * 2; // Two of your earth hours.
             var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
-            if (builds && checkBuildsForUnification(builds)) {
+            if (builds && hasUnifiedTargetBuild(builds)) {
                 console.log('loaded some builds for later');
                 var storageTag = 'unifiedSourceCache';
                 chrome.storage.local.get(storageTag, function (result) {
@@ -272,61 +265,44 @@ TABS.firmware_flasher.initialize = function (callback) {
         }
 
         function parseUnifiedBuilds(data, builds) {
-            if (!data) { return; }
+            if (!data) {
+                return;
+            }
             let releases = {};
             let unifiedConfigs = {};
             let items = {};
-            let unifiedTargetNames = [];
+            // Get the legacy builds
+            Object.keys(builds).forEach(function (targetName) {
+                items[targetName] = { };
+                releases[targetName] = builds[targetName];
+            });
+            // Get the Unified Target configurations
             data.forEach(function(target) {
-                const TARGET_REGEXP = /^(?:([^-]{1,4})-)?(.*).config$/;
+                const TARGET_REGEXP = /^([^-]{1,4})-(.*).config$/;
                 let targetParts = target.name.match(TARGET_REGEXP);
                 if (!targetParts) {
                     return;
                 }
-                let boardName = targetParts[2];
-                let manufacturerId = targetParts[1];
-                let targetName;
-                let displayName;
-                if (manufacturerId) {
-                    targetName = `${boardName}+${manufacturerId}`;
-                    displayName = `${boardName} (${manufacturerId})`;
-                } else {
-                    targetName = boardName;
-                }
-                unifiedTargetNames.push(boardName);
-                unifiedConfigs[targetName] = target.download_url;
-                items[targetName] = { displayName: displayName };
-                // Chicken and egg problem: We need to know what Unified Target this configuration uses before reading the configuration.
-                // Solving this by assuming that all Unified Targets have the same availability for now.
-                const DEFAULT_UNIFIED_TARGET_NAME = "STM32F405";
-                releases[targetName] = builds[DEFAULT_UNIFIED_TARGET_NAME];
-            });
-            Object.keys(builds).forEach(function (key) {
-                let targetName;
-                let displayName;
-                if (unifiedTargetNames.includes(key)) {
-                    targetName = `${key}-legacy`;
-                    displayName = i18n.getMessage("firmwareFlasherLegacyLabel", { target: key });
-                } else {
-                    targetName = key;
-                }
-                items[targetName] = { displayName: displayName };
-                releases[targetName] = builds[key];
+                const targetName = targetParts[2];
+                const manufacturerId = targetParts[1];
+                items[targetName] = { };
+                unifiedConfigs[targetName] = (unifiedConfigs[targetName] || {});
+                unifiedConfigs[targetName][manufacturerId] = target.download_url;
             });
             var boards_e = $('select[name="board"]');
             var versions_e = $('select[name="firmware_version"]');
             boards_e.empty()
-                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectBoard'></option>"));
+                .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectBoard")}</option>`));
 
             versions_e.empty()
-                .append($("<option value='0' i18n='firmwareFlasherOptionLabelSelectFirmwareVersion'></option>"));
+                .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectFirmwareVersion")}</option>`));
             var selectTargets = [];
             Object.keys(items)
                 .sort()
                 .forEach(function(target, i) {
                     let item = items[target];
 
-                    var select_e = $("<option value='{0}'>{1}</option>".format(target, items[target].displayName || target));
+                    const select_e = $(`<option value='${target}'>${target}</option>"`);
                     boards_e.append(select_e);
                 });
             TABS.firmware_flasher.releases = releases;
@@ -418,11 +394,10 @@ TABS.firmware_flasher.initialize = function (callback) {
             var build_type = $(this).val();
 
             $('select[name="board"]').empty()
-            .append($("<option value='0' i18n='firmwareFlasherOptionLoading'></option>"));
+            .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`));
 
             $('select[name="firmware_version"]').empty()
-            .append($("<option value='0' i18n='firmwareFlasherOptionLoading'></option>"));
-            i18n.localizePage();
+            .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`));
 
             if (!GUI.connect_lock) {
                 TABS.firmware_flasher.unifiedConfigs = {};
@@ -432,27 +407,83 @@ TABS.firmware_flasher.initialize = function (callback) {
             chrome.storage.local.set({'selected_build_type': build_type});
         });
 
-        function populateVersions(versions_element, targetVersions, target) {
-            versions_element.empty();
+        function populateBuilds(builds, target, manufacturerId, duplicateName, targetVersions, callback) {
             if (targetVersions) {
-                versions_element.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
                 targetVersions.forEach(function(descriptor) {
-                    if (self.remoteUnifiedTargetConfig && !checkOneVersionForUnification(descriptor.version)) {
+                    const versionRegex = /^(\d.\d.\d(?:-\w+)?)(?: #(\d+))?$/;
+                    const versionParts = descriptor.version.match(versionRegex);
+                    if (!versionParts) {
                         return;
                     }
-                    var select_e =
-                        $("<option value='{0}'>{0} - {1}</option>".format(
-                                descriptor.version,
-                                descriptor.date
-                        ))
-                        .css("font-weight", FirmwareCache.has(descriptor)
-                                ? "bold"
-                                : "normal"
-                        );
-                    select_e.data('summary', descriptor);
-                    versions_element.append(select_e);
+                    let version = versionParts[1];
+                    const buildNumber = versionParts[2] ? `${versionParts[2]}` : '';
+
+                    const build = { descriptor };
+                    if (manufacturerId) {
+                        if (!supportsUnifiedTargets(descriptor.version)) {
+                            return;
+                        }
+
+                        version = `${version}+${buildNumber}${manufacturerId}`;
+                        build.manufacturerId = manufacturerId;
+                        build.duplicateName = duplicateName;
+                    } else {
+                        version = `${version}+${buildNumber}-legacy`;
+                        build.isLegacy = true;
+                    }
+                    builds[version] = build;
                 });
-                // Assume flashing latest, so default to it.
+            }
+
+            if (callback) {
+                callback();
+            }
+        }
+
+        function populateVersions(versions_element, builds, target) {
+            const sortVersions = function (a, b) {
+                return -semver.compareBuild(a, b);
+            };
+
+            versions_element.empty();
+            const targetVersions = Object.keys(builds);
+            if (targetVersions.length > 0) {
+                versions_element.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
+                targetVersions
+                    .sort(sortVersions)
+                    .forEach(function(versionName) {
+                        const version = builds[versionName];
+                        if (!version.isLegacy && !supportsUnifiedTargets(version.descriptor.version)) {
+                            return;
+                        }
+
+                        let versionLabel;
+                        if (version.isLegacy && Object.values(builds).some(function (build) {
+                                return build.descriptor.version === version.descriptor.version && !build.isLegacy;
+                            })) {
+                            versionLabel = i18n.getMessage("firmwareFlasherLegacyLabel", { target: version.descriptor.version });
+                        } else if (!version.isLegacy && Object.values(builds).some(function (build) {
+                                return build.descriptor.version === version.descriptor.version && build.manufacturerId !== version.manufacturerId && !build.isLegacy;
+                            })) {
+                            versionLabel = `${version.descriptor.version} (${version.manufacturerId})`;
+                        } else {
+                            versionLabel = version.descriptor.version;
+                        }
+
+
+                        var select_e =
+                            $("<option value='{0}'>{2} - {1}</option>".format(
+                                    versionName,
+                                    version.descriptor.date,
+                                    versionLabel
+                            ));
+                        if (FirmwareCache.has(version.descriptor)) {
+                            select_e.addClass("cached");
+                        }
+                        select_e.data('summary', version.descriptor);
+                        versions_element.append(select_e);
+                    });
+                    // Assume flashing latest, so default to it.
                 versions_element.prop("selectedIndex", 1).change();
             }
         }
@@ -471,7 +502,6 @@ TABS.firmware_flasher.initialize = function (callback) {
         function setUnifiedConfig(target, configText, bareBoard) {
             // a target might request a firmware with the same name, remove configuration in this case.
             if (bareBoard == target) {
-                console.log(bareBoard, '==', target);
                 if (!self.isConfigLocal) {
                     self.unifiedTargetConfig = undefined;
                     self.unifiedTargetConfigName = undefined;
@@ -486,6 +516,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                 self.remoteUnifiedTargetConfig = configText;
             }
         }
+
         function clearBufferedFirmware() {
             self.isConfigLocal = false;
             self.unifiedTargetConfig = undefined;
@@ -526,7 +557,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                 }
 
                 var versions_e = $('select[name="firmware_version"]');
-                if(target == 0) {
+                if (target == 0) {
                     // target == 0 is the "Choose a Board" option. Throw out anything loaded
                     clearBufferedFirmware();
 
@@ -536,65 +567,86 @@ TABS.firmware_flasher.initialize = function (callback) {
                     // Show a loading message as there is a delay in loading a configuration
                     versions_e.empty();
                     versions_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLoading'))));
+
                     let selecteBuild = buildTypesToShow[$('select[name="build_type"]').val()];
+                    const builds = [];
+
+                    const finishPopulatingBuilds = function () {
+                        if (TABS.firmware_flasher.releases[target]) {
+                            TABS.firmware_flasher.bareBoard = target;
+                            populateBuilds(builds, target, undefined, false, TABS.firmware_flasher.releases[target]);
+                        }
+
+                        populateVersions(versions_e, builds, target);
+                    };
+
                     if (TABS.firmware_flasher.unifiedConfigs[target]) {
                         var storageTag = 'unifiedConfigLast';
                         var expirationPeriod = 3600; // One of your earth hours.
                         var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
                         chrome.storage.local.get(storageTag, function (result) {
                             let storageObj = result[storageTag];
-                            let bareBoard = null;
-                            // Check to see if the cached configuration is the one we want.
-                            if (!storageObj || !storageObj.target || storageObj.target != target) {
-                                // Have to go and try and get the unified config, and then do stuff
-                                $.get(TABS.firmware_flasher.unifiedConfigs[target], function(data) {
-                                    console.log('got unified config');
-                                    // cache it for later
-                                    let tempObj = {};
-                                    tempObj['data'] = data;
-                                    tempObj['target'] = target;
-                                    tempObj['checkTime'] = checkTime;
-                                    let newStorageObj = {};
-                                    newStorageObj[storageTag] = tempObj;
-                                    chrome.storage.local.set(newStorageObj);
+                            const unifiedConfigBoard = TABS.firmware_flasher.unifiedConfigs[target];
+                            const duplicateName = Object.keys(unifiedConfigBoard).length > 1;
+                            const manufacturerIds = Object.keys(unifiedConfigBoard);
 
-                                    bareBoard = grabBuildNameFromConfig(data);
+                            const processManufacturer = function(index) {
+                                const processNext = function () {
+                                    if (index < manufacturerIds.length - 1) {
+                                        processManufacturer(index + 1);
+                                    } else {
+                                        finishPopulatingBuilds();
+                                    }
+                                };
+
+                                const manufacturerId = manufacturerIds[index];
+                                const targetId = `${target}+${manufacturerId}`;
+                                // Check to see if the cached configuration is the one we want.
+                                if (!storageObj || !storageObj.target || storageObj.target !== targetId) {
+                                    // Have to go and try and get the unified config, and then do stuff
+                                    $.get(unifiedConfigBoard[manufacturerId], function(response) {
+                                        console.log('got unified config');
+                                        // cache it for later
+                                        let tempObj = {};
+                                        tempObj['data'] = response;
+                                        tempObj['target'] = targetId;
+                                        tempObj['checkTime'] = checkTime;
+                                        let newStorageObj = {};
+                                        newStorageObj[storageTag] = tempObj;
+                                        chrome.storage.local.set(newStorageObj);
+
+                                        const bareBoard = grabBuildNameFromConfig(response);
+                                        TABS.firmware_flasher.bareBoard = bareBoard;
+                                        setUnifiedConfig(target, response, bareBoard);
+                                        populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
+                                    }).fail(xhr => {
+                                        //TODO error, populate nothing?
+                                        self.unifiedTargetConfig = undefined;
+                                        self.unifiedTargetConfigName = undefined;
+                                        self.isConfigLocal = false;
+                                        self.remoteUnifiedTargetConfig = undefined;
+                                        const baseFileName = unifiedConfigBoard[manufacturerId].reverse()[0];
+                                        GUI.log(i18n.getMessage('firmwareFlasherFailedToLoadUnifiedConfig',
+                                            {remote_file: baseFileName}));
+                                    });
+                                } else {
+                                    console.log('We have the config cached for', targetId);
+                                    var data = storageObj.data;
+
+                                    const bareBoard = grabBuildNameFromConfig(data);
                                     TABS.firmware_flasher.bareBoard = bareBoard;
                                     setUnifiedConfig(target, data, bareBoard);
-                                    populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard], target);
-                                }).fail(xhr => {
-                                    //TODO error, populate nothing?
-                                    self.unifiedTargetConfig = undefined;
-                                    self.unifiedTargetConfigName = undefined;
-                                    self.isConfigLocal = false;
-                                    self.remoteUnifiedTargetConfig = undefined;
-                                    let baseFileName = TABS.firmware_flasher.unifiedConfigs[target].reverse()[0];
-                                    GUI.log(i18n.getMessage('firmwareFlasherFailedToLoadUnifiedConfig',
-                                        {remote_file: baseFileName}));
-                                });
-                            } else {
-                                console.log('We have the config cached for', target);
-                                var data = storageObj.data;
+                                    populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
+                                }
+                            };
 
-                                bareBoard = grabBuildNameFromConfig(data);
-                                TABS.firmware_flasher.bareBoard = bareBoard;
-                                setUnifiedConfig(target, data, bareBoard);
-                                populateVersions(versions_e, TABS.firmware_flasher.releases[bareBoard], target);
-                            }
+                            processManufacturer(0);
                         });
                     } else {
-                        if (!self.isConfigLocal) {
-                            self.unifiedTargetConfig = undefined;
-                            self.unifiedTargetConfigName = undefined;
-                            self.remoteUnifiedTargetConfig = undefined;
-                        } else {
-                            self.remoteUnifiedTargetConfig = undefined;
-                        }
-                        TABS.firmware_flasher.bareBoard = target;
-                        populateVersions(versions_e, TABS.firmware_flasher.releases[target], target);
+                        setUnifiedConfig(target, null, target);
+                        finishPopulatingBuilds();
                     }
                 }
-
             }
         });
 
