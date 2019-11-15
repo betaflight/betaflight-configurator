@@ -2320,6 +2320,7 @@ TABS.osd.initialize = function (callback) {
                                 $field.append('<label for="' + field.name + '" class="char-label">' + titleizeField(field) + '</label>');
 
                                 // Insert in alphabetical order, with unknown fields at the end
+                                $field.name = field.name;
                                 insertOrdered($statsFields, $field);
                             }
 
@@ -2357,6 +2358,7 @@ TABS.osd.initialize = function (callback) {
                                 $field.append('<label for="' + field.name + '" class="char-label">' + finalFieldName + '</label>');
 
                                 // Insert in alphabetical order, with unknown fields at the end
+                                $field.name = field.name;
                                 insertOrdered($warningFields, $field);
 
                             }
@@ -2493,6 +2495,7 @@ TABS.osd.initialize = function (callback) {
                         }
 
                         // Insert in alphabetical order, with unknown fields at the end
+                        $field.name = field.name;
                         insertOrdered($displayFields, $field);
 
                     }
