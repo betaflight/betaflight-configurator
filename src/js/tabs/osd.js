@@ -1223,7 +1223,7 @@ OSD.constants = {
         FLIGHT_DISTANCE: {
             name: 'FLIGHT_DISTANCE',
             text: 'osdTextStatFlightDistance',
-            desc: 'osdTextStatFlightDistance'
+            desc: 'osdDescStatFlightDistance',
         },
         MAX_FFT: {
             name: 'MAX_FFT',
