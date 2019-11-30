@@ -383,6 +383,11 @@ TABS.receiver.initialize = function (callback) {
             });
             rcSmoothingnDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
             var rc_smoothing_derivative_type = $('select[name="rcSmoothingDerivativeType-select"]');
+
+            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                rc_smoothing_derivative_type.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingDerivativeTypeAuto")}</option>`));
+            }
+
             rc_smoothing_derivative_type.change(function () {
                 RX_CONFIG.rcSmoothingDerivativeType = $(this).val();
             });
