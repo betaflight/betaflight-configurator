@@ -1625,7 +1625,7 @@
         "message": "The channels smoothing applies to"
     },
     "rcSmoothingDerivativeTypeHelp": {
-        "message": "The type of filtering method used for the setpoint derivative. Most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
+        "message": "The type of filtering method used for the setpoint derivative. Starting with 4.2 the default value of \"Auto\" is recommended. For 4.1 and earlier most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
     },
     "rcSmoothingInputTypeHelp": {
         "message": "The type of filtering method used for the input. Most users should use the default \"BIQUAD\" value as it provides a good balance between smoothness and delay. \"PT1\" reduces the delay slightly but provides less smoothing."
@@ -1650,6 +1650,9 @@
     },
     "receiverRcSmoothingDerivativeTypeOff": {
         "message": "Off"
+    },
+    "receiverRcSmoothingDerivativeTypeAuto": {
+        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Channels Smoothed"
