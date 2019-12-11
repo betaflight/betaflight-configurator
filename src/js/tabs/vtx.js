@@ -957,7 +957,7 @@ TABS.vtx.initialize = function (callback) {
         frequenciesString += "    },\n";
         freqBandsString += bands_list[1].frequencies.length + ",\n";
         for (index = 0, len = power_list.length; index < len; ++index) {
-            powersString += "[" + power_list[index].value + "]=" + power_list[index].label + ", ";
+            powersString += "[" + (index + 1) + "]=" + power_list[index].label + ", ";
         }
         powersString += "},\n";
         return `return {\n    ${frequenciesString}    ${freqBandsString}    ${bandsString}    ${powersString}}`;
