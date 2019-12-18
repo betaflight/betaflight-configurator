@@ -12,6 +12,7 @@ var LED_COLORS;
 var LED_MODE_COLORS;
 var PID;
 var PID_names;
+var PIDS_ACTIVE;
 var PIDs;
 var RC_MAP;
 var RC;
@@ -56,6 +57,7 @@ var GPS_RESCUE;
 var RXFAIL_CONFIG;
 var PID_ADVANCED_CONFIG;
 var FILTER_CONFIG;
+var ADVANCED_TUNING_ACTIVE;
 var ADVANCED_TUNING;
 var SENSOR_CONFIG;
 var COPY_PROFILE;
@@ -147,8 +149,10 @@ var FC = {
         };
 
         PID_names =                     [];
+        PIDS_ACTIVE = new Array(10);
         PIDs = new Array(10);
         for (var i = 0; i < 10; i++) {
+            PIDS_ACTIVE[i] = new Array(3);
             PIDs[i] = new Array(3);
         }
 
@@ -453,6 +457,7 @@ var FC = {
             useIntegratedYaw:           0,
             integratedYawRelax:         0,
         };
+        ADVANCED_TUNING_ACTIVE = { ...ADVANCED_TUNING };
 
         SENSOR_CONFIG = {
             acc_hardware:               0,

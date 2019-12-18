@@ -363,7 +363,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 for (var i = 0, needle = 0; i < (data.byteLength / 3); i++, needle += 3) {
                     // main for loop selecting the pid section
                     for (var j = 0; j < 3; j++) {
-                        PIDs[i][j] = data.readU8();
+                        PIDS_ACTIVE[i][j] = data.readU8();
+                        PIDs[i][j] = PIDS_ACTIVE[i][j];
                     }
                 }
                 break;
@@ -587,6 +588,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_SET_PID:
                 console.log('PID settings saved');
+                PIDS_ACTIVE = PIDs.map(array => array.slice());
                 break;
             case MSPCodes.MSP_SET_RC_TUNING:
                 console.log('RC Tuning saved');
@@ -1053,6 +1055,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_SET_PID_ADVANCED:
                 console.log("Advanced PID settings saved");
+                ADVANCED_TUNING_ACTIVE = { ...ADVANCED_TUNING };
                 break;
             case MSPCodes.MSP_PID_ADVANCED:
                 ADVANCED_TUNING.rollPitchItermIgnoreRate = data.readU16();
@@ -1114,6 +1117,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         }
                     }
                 }
+                ADVANCED_TUNING_ACTIVE = { ...ADVANCED_TUNING };
                 break;
             case MSPCodes.MSP_SENSOR_CONFIG:
                 SENSOR_CONFIG.acc_hardware = data.readU8();

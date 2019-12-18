@@ -606,6 +606,8 @@ TABS.pid_tuning.initialize = function (callback) {
         $('input[id="dtermLowpassDynEnabled"]').prop('checked', FILTER_CONFIG.dterm_lowpass_dyn_min_hz != 0 && FILTER_CONFIG.dterm_lowpass_dyn_min_hz < FILTER_CONFIG.dterm_lowpass_dyn_max_hz).change();
         $('input[id="dtermLowpass2Enabled"]').prop('checked', FILTER_CONFIG.dterm_lowpass2_hz != 0).change();
         $('input[id="yawLowpassEnabled"]').prop('checked', FILTER_CONFIG.yaw_lowpass_hz != 0).change();
+
+        self.updatePIDColors();
     }
 
     function form_to_pid_and_rc() {
@@ -1712,6 +1714,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }).then(function () {
               return MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
             }).then(function () {
+                self.updatePIDColors();
                 return MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
@@ -2126,4 +2129,33 @@ TABS.pid_tuning.updateFilterWarning = function() {
     } else {
         warningDynamicNotch_e.hide();
     }
-}
+};
+
+TABS.pid_tuning.updatePIDColors = function(clear = false) {
+    const setTuningElementColor = function(element, mspValue, currentValue) {
+        if (clear) {
+            element.css({ "background-color": "white" });
+            return;
+        }
+
+        if (currentValue === undefined || mspValue === undefined) {
+            return;
+        }
+
+        const change = (currentValue - mspValue) / 50;
+        element.css({ "background-color": cssUtil.getColorForPercentage(change, cssUtil.colorTables.pidSlider) });
+    };
+
+    PID_names.forEach(function(elementPid, indexPid) {
+        $(".pid_tuning ." + elementPid + " input").each(function(indexInput) {
+            setTuningElementColor($(this), PIDS_ACTIVE[indexPid][indexInput], PIDs[indexPid][indexInput]);
+        });
+    });
+
+    setTuningElementColor($('.pid_tuning input[name="dMinRoll"]'), ADVANCED_TUNING_ACTIVE.dMinRoll, ADVANCED_TUNING.dMinRoll);
+    setTuningElementColor($('.pid_tuning input[name="dMinPitch"]'), ADVANCED_TUNING_ACTIVE.dMinPitch, ADVANCED_TUNING.dMinPitch);
+    setTuningElementColor($('.pid_tuning input[name="dMinYaw"]'), ADVANCED_TUNING_ACTIVE.dMinYaw, ADVANCED_TUNING.dMinYaw);
+    setTuningElementColor($('.pid_tuning .ROLL input[name="f"]'), ADVANCED_TUNING_ACTIVE.feedforwardRoll, ADVANCED_TUNING.feedforwardRoll);
+    setTuningElementColor($('.pid_tuning .PITCH input[name="f"]'), ADVANCED_TUNING_ACTIVE.feedforwardPitch, ADVANCED_TUNING.feedforwardPitch);
+    setTuningElementColor($('.pid_tuning .YAW input[name="f"]'), ADVANCED_TUNING_ACTIVE.feedforwardYaw, ADVANCED_TUNING.feedforwardYaw);
+};

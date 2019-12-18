@@ -185,7 +185,9 @@ TuningSliders.updatePidSlidersDisplay = function() {
         this.pidSlidersUnavailable = true;
     }
 
-    if (!this.pidSlidersUnavailable) {
+    if (this.pidSlidersUnavailable) {
+        TABS.pid_tuning.updatePIDColors(true);
+    } else {
         this.cachedPidSliderValues = true;
     }
 
@@ -313,6 +315,8 @@ TuningSliders.calculateNewPids = function() {
     $('.pid_tuning .ROLL input[name="f"]').val(ADVANCED_TUNING.feedforwardRoll);
     $('.pid_tuning .PITCH input[name="f"]').val(ADVANCED_TUNING.feedforwardPitch);
     $('.pid_tuning .YAW input[name="f"]').val(ADVANCED_TUNING.feedforwardYaw);
+
+    TABS.pid_tuning.updatePIDColors();
 };
 
 TuningSliders.calculateNewGyroFilters = function() {
