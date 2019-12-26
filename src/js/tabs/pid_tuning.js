@@ -2134,7 +2134,7 @@ TABS.pid_tuning.updateFilterWarning = function() {
 TABS.pid_tuning.updatePIDColors = function(clear = false) {
     const setTuningElementColor = function(element, mspValue, currentValue) {
         if (clear) {
-            element.css({ "background-color": "white" });
+            element.css({ "background-color": "transparent" });
             return;
         }
 
