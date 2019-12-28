@@ -158,6 +158,10 @@
         "message": "Portugu\u00EAs",
         "description": "Don't translate!!!"
     },
+    "language_pt_BR": {
+        "message": "Portugu\u00EAs Brasileiro",
+        "description": "Don't translate!!!"
+    },
     "language_ru": {
         "message": "\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A",
         "description": "Don't translate!!!"

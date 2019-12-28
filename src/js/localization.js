@@ -6,7 +6,13 @@
 
 var i18n = {}
 
-const languagesAvailables = ['ca', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'hr', 'id', 'it', 'ja', 'ko', 'lv', 'pt', 'ru', 'sv', 'zh_CN'];
+const languagesAvailables = ['ca', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'hr', 'id', 'it', 'ja', 'ko', 'lv', 'pt', 'pt_BR', 'ru', 'sv', 'zh_CN'];
+
+const languageFallback = {
+                            'pt': ['pt_BR', 'en'],
+                            'pt_BR': ['pt', 'en'],
+                            'default': ['en'],
+};
 
 /**
  * Functions that depend on the i18n framework
@@ -22,7 +28,7 @@ i18n.init = function(cb) {
                 debug: true,
                 ns: ['messages'],
                 defaultNS:['messages'],
-                fallbackLng: 'en',
+                fallbackLng: languageFallback,
                 backend: { loadPath: '/_locales/{{lng}}/{{ns}}.json' }
                 }, function(err, t) {
                     if (err !== undefined) {
@@ -194,8 +200,8 @@ function getValidLocale(userLocale) {
 }
 
 i18n.addResources = function(bundle) {
-    var takeFirst = obj => obj.hasOwnProperty("length") && 0 < obj.length ? obj[0] : obj;
-    var lang = takeFirst(i18next.options.fallbackLng),
-        ns = takeFirst(i18next.options.defaultNS);
+    const takeFirst = obj => obj.hasOwnProperty("length") && 0 < obj.length ? obj[0] : obj;
+    const lang = takeFirst(i18next.options.fallbackLng['default']);
+    const ns = takeFirst(i18next.options.defaultNS);
     i18next.addResourceBundle(lang, ns, bundle, true, true);
 };
