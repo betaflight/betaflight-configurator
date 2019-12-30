@@ -22,9 +22,7 @@ files: [
   #
   "languages_mapping" : {
     "two_letters_code" : {
-      "es-ES" : "es",
-      "pt-PT" : "pt",
-      "sv-SE" : "sv",
+      "pt-BR" : "pt_BR",
       "zh-CN" : "zh_CN"
      }
   }
