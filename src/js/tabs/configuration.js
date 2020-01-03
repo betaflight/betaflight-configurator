@@ -35,7 +35,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_serial_config() {
-        MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, load_board_alignment_config);
+        mspHelper.loadSerialConfig(load_board_alignment_config);
     }
 
     function load_board_alignment_config() {
@@ -1210,7 +1210,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_serial_config() {
                 var next_callback = save_feature_config;
-                MSP.send_message(MSPCodes.MSP_SET_CF_SERIAL_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CF_SERIAL_CONFIG), false, next_callback);
+                mspHelper.sendSerialConfig(next_callback);
             }
 
             function save_feature_config() {

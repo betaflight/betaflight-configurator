@@ -29,7 +29,7 @@ TABS.auxiliary.initialize = function (callback) {
     }
 
     function get_serial_config() {
-        MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, load_html);
+        mspHelper.loadSerialConfig(load_html);
     }
 
     function load_html() {

@@ -836,8 +836,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 } else {
                     SERIAL_CONFIG.ports = [];
                     var bytesPerPort = 1 + 2 + (1 * 4);
-                    var serialPortCount = data.byteLength / bytesPerPort;
 
+                    var serialPortCount = data.byteLength / bytesPerPort;
                     for (var i = 0; i < serialPortCount; i++) {
                         var serialPort = {
                             identifier: data.readU8(),
@@ -853,8 +853,32 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
                 break;
 
+            case MSPCodes.MSP2_COMMON_SERIAL_CONFIG:
+                const count = data.readU8();
+                const portConfigSize = data.remaining() / count;
+                for (let ii = 0; ii < count; ii++) {
+                    const start = data.remaining();
+                    const serialPort = {
+                        identifier: data.readU8(),
+                        functions: self.serialPortFunctionMaskToFunctions(data.readU32()),
+                        msp_baudrate: self.BAUD_RATES[data.readU8()],
+                        gps_baudrate: self.BAUD_RATES[data.readU8()],
+                        telemetry_baudrate: self.BAUD_RATES[data.readU8()],
+                        blackbox_baudrate: self.BAUD_RATES[data.readU8()],
+                    };
+                    SERIAL_CONFIG.ports.push(serialPort);
+                    while(start - data.remaining() < portConfigSize && data.remaining() > 0) {
+                        data.readU8();
+                    }
+                }
+                break;
+
             case MSPCodes.MSP_SET_CF_SERIAL_CONFIG:
                 console.log('Serial config saved');
+                break;
+
+            case MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG:
+                console.log('Serial config saved (MSPv2)');
                 break;
 
             case MSPCodes.MSP_MODE_RANGES:
@@ -1854,10 +1878,29 @@ MspHelper.prototype.crunch = function(code) {
                     var functionMask = self.serialPortFunctionsToMask(serialPort.functions);
                     buffer.push16(functionMask)
                         .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
+                        .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
                         .push8(self.BAUD_RATES.indexOf(serialPort.gps_baudrate))
                         .push8(self.BAUD_RATES.indexOf(serialPort.telemetry_baudrate))
                         .push8(self.BAUD_RATES.indexOf(serialPort.blackbox_baudrate));
                 }
+            }
+            break;
+
+        case MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG:
+            buffer.push8(SERIAL_CONFIG.ports.length);
+
+            for (let i = 0; i < SERIAL_CONFIG.ports.length; i++) {
+                const serialPort = SERIAL_CONFIG.ports[i];
+
+                buffer.push8(serialPort.identifier);
+
+                const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
+                buffer.push32(functionMask)
+                    .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
+                    .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
+                    .push8(self.BAUD_RATES.indexOf(serialPort.gps_baudrate))
+                    .push8(self.BAUD_RATES.indexOf(serialPort.telemetry_baudrate))
+                    .push8(self.BAUD_RATES.indexOf(serialPort.blackbox_baudrate));
             }
             break;
 
@@ -2689,6 +2732,16 @@ MspHelper.prototype.setArmingEnabled = function(doEnable, disableRunawayTakeoffP
         }
     }
 }
+
+MspHelper.prototype.loadSerialConfig = function(callback) {
+    const mspCode = semver.gte(CONFIG.apiVersion, "1.43.0") ? MSPCodes.MSP2_COMMON_SERIAL_CONFIG : MSPCodes.MSP_CF_SERIAL_CONFIG;
+    MSP.send_message(mspCode, false, false, callback);
+};
+
+MspHelper.prototype.sendSerialConfig = function(callback) {
+    const mspCode = semver.gte(CONFIG.apiVersion, "1.43.0") ? MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG : MSPCodes.MSP_SET_CF_SERIAL_CONFIG;
+    MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
+};
 
 MSP.SDCARD_STATE_NOT_PRESENT = 0; //TODO, move these to better place
 MSP.SDCARD_STATE_FATAL       = 1;

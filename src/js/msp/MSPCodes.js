@@ -171,5 +171,9 @@ var MSPCodes = {
 
     MSP_EEPROM_WRITE:               250,
     MSP_DEBUGMSG:                   253, // Not used
-    MSP_DEBUG:                      254
+    MSP_DEBUG:                      254,
+
+    // MSPv2
+    MSP2_COMMON_SERIAL_CONFIG:      0x1009,
+    MSP2_COMMON_SET_SERIAL_CONFIG:  0x100A,
 };
