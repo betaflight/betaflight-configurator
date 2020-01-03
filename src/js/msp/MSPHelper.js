@@ -24,7 +24,8 @@ function MspHelper () {
     'TELEMETRY_IBUS': 12,
     'IRC_TRAMP': 13,
     'RUNCAM_DEVICE_CONTROL': 14, // support communitate with RunCam Device
-    'LIDAR_TF': 15
+    'LIDAR_TF': 15,
+    'FRSKY_OSD': 16,
   };
 
     self.REBOOT_TYPES = {

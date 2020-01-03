@@ -53,6 +53,10 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push({ name: 'LIDAR_TF', groups: ['peripherals'], maxPorts: 1 });
     }
 
+    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+        functionRules.push({ name: 'FRSKY_OSD', groups: ['peripherals'], maxPorts: 1 });
+    }
+
     for (var i = 0; i < functionRules.length; i++) {
         functionRules[i].displayName = i18n.getMessage('portsFunction_' + functionRules[i].name);
     }
