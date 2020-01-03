@@ -1881,8 +1881,10 @@ OSD.msp = {
 
         d.state = {};
         d.state.haveSomeOsd = (d.flags != 0)
-        d.state.haveMax7456Video = bit_check(d.flags, 4) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
-        d.state.isMax7456Detected = bit_check(d.flags, 5) || (d.state.haveMax7456Video && semver.lt(CONFIG.apiVersion, API_VERSION_1_43));
+        d.state.haveMax7456Configured = bit_check(d.flags, 4) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
+        d.state.haveFrSkyOSDConfigured = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) && bit_check(d.flags, 3);
+        d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
+        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5) || (d.state.haveMax7456FontDeviceConfigured && semver.lt(CONFIG.apiVersion, API_VERSION_1_43));
         d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
         d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(CONFIG.apiVersion, "1.34.0");
 
@@ -2258,7 +2260,7 @@ TABS.osd.initialize = function (callback) {
 
                     OSD.msp.decode(info);
 
-                    if (!OSD.data.state.haveMax7456Video || !OSD.data.state.isMax7456Detected) {
+                    if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected) {
                         $('.noOsdChipDetect').show();
                     }
 
@@ -2495,12 +2497,12 @@ TABS.osd.initialize = function (callback) {
                         }
                     }
 
-                    if (!OSD.data.state.haveMax7456Video) {
+                    if (!OSD.data.state.haveMax7456Configured) {
                         $('.requires-max7456').hide();
                     }
 
-                    if (!OSD.data.state.haveMax7456Video || !OSD.data.state.isMax7456Detected) {
-                        $('.requires-detected-max7456').addClass('disabled');
+                    if (!OSD.data.state.isMax7456FontDeviceDetected || !OSD.data.state.haveMax7456FontDeviceConfigured) {
+                        $('.requires-max7456-font-device-detected').addClass('disabled');
                     }
 
                     if (!OSD.data.state.haveOsdFeature) {
