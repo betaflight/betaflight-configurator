@@ -105,7 +105,7 @@ If you experience graphics display problems or smudged/dithered fonts display is
 In most Linux distributions your user won't have access to serial interfaces by default. To add this access right type the following command in a terminal, log out your user and log in again:
 
 ```
-sudo usermod -aG dialout $USERNAME
+sudo usermod -aG dialout ${USER}
 ```
 
 ### Linux / MacOS X users
