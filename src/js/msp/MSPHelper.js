@@ -99,7 +99,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                       // Read flight mode flags
                       var byteCount = data.readU8();
-                      for (var i = 0; i < byteCount; i++) {
+                      for (let i = 0; i < byteCount; i++) {
                         data.readU8();
                       }
 
@@ -136,13 +136,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_SERVO:
                 var servoCount = data.byteLength / 2;
-                for (var i = 0; i < servoCount; i++) {
+                for (let i = 0; i < servoCount; i++) {
                     SERVO_DATA[i] = data.readU16();
                 }
                 break;
             case MSPCodes.MSP_MOTOR:
                 var motorCount = data.byteLength / 2;
-                for (var i = 0; i < motorCount; i++) {
+                for (let i = 0; i < motorCount; i++) {
                     MOTOR_DATA[i] = data.readU16();
                 }
                 break;
@@ -159,7 +159,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_RC:
                 RC.active_channels = data.byteLength / 2;
-                for (var i = 0; i < RC.active_channels; i++) {
+                for (let i = 0; i < RC.active_channels; i++) {
                     RC.channels[i] = data.readU16();
                 }
                 break;
@@ -201,7 +201,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_VOLTAGE_METERS:
                 VOLTAGE_METERS = [];
                 var voltageMeterLength = 2;
-                for (var i = 0; i < (data.byteLength / voltageMeterLength); i++) {
+                for (let i = 0; i < (data.byteLength / voltageMeterLength); i++) {
                     var voltageMeter = {};
                     voltageMeter.id = data.readU8();
                     voltageMeter.voltage = data.readU8() / 10.0;
@@ -213,7 +213,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 CURRENT_METERS = [];
                 var currentMeterLength = 5;
-                for (var i = 0; i < (data.byteLength / currentMeterLength); i++) {
+                for (let i = 0; i < (data.byteLength / currentMeterLength); i++) {
                     var currentMeter = {};
                     currentMeter.id = data.readU8();
                     currentMeter.mAhDrawn = data.readU16(); // mAh
@@ -248,7 +248,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     VOLTAGE_METER_CONFIGS = [];
                     var voltage_meter_count = data.readU8();
 
-                    for (var i = 0; i < voltage_meter_count; i++) {
+                    for (let i = 0; i < voltage_meter_count; i++) {
                         var subframe_length = data.readU8();
                         if (subframe_length != 5) {
                             for (var j = 0; j < subframe_length; j++) {
@@ -277,7 +277,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     var offset = 0;
                     CURRENT_METER_CONFIGS = [];
                     var current_meter_count = data.readU8();
-                    for (var i = 0; i < current_meter_count; i++) {
+                    for (let i = 0; i < current_meter_count; i++) {
                         var currentMeterConfig = {};
                         var subframe_length = data.readU8();
 
@@ -360,7 +360,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_PID:
                 // PID data arrived, we need to scale it and save to appropriate bank / array
-                for (var i = 0, needle = 0; i < (data.byteLength / 3); i++, needle += 3) {
+                for (let i = 0, needle = 0; i < (data.byteLength / 3); i++, needle += 3) {
                     // main for loop selecting the pid section
                     for (var j = 0; j < 3; j++) {
                         PIDS_ACTIVE[i][j] = data.readU8();
@@ -463,7 +463,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 AUX_CONFIG = []; // empty the array as new data is coming in
 
                 var buff = [];
-                for (var i = 0; i < data.byteLength; i++) {
+                for (let i = 0; i < data.byteLength; i++) {
                     var char = data.readU8();
                     if (char == 0x3B) { // ; (delimeter char)
                         AUX_CONFIG.push(String.fromCharCode.apply(null, buff)); // convert bytes into ASCII and save as strings
@@ -479,7 +479,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 PID_names = []; // empty the array as new data is coming in
 
                 var buff = [];
-                for (var i = 0; i < data.byteLength; i++) {
+                for (let i = 0; i < data.byteLength; i++) {
                     var char = data.readU8();
                     if (char == 0x3B) { // ; (delimeter char)
                         PID_names.push(String.fromCharCode.apply(null, buff)); // convert bytes into ASCII and save as strings
@@ -494,7 +494,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_BOXIDS:
                 AUX_CONFIG_IDS = []; // empty the array as new data is coming in
 
-                for (var i = 0; i < data.byteLength; i++) {
+                for (let i = 0; i < data.byteLength; i++) {
                     AUX_CONFIG_IDS.push(data.readU8());
                 }
                 break;
@@ -505,7 +505,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 SERVO_CONFIG = []; // empty the array as new data is coming in
                 if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
                     if (data.byteLength % 12 == 0) {
-                        for (var i = 0; i < data.byteLength; i += 12) {
+                        for (let i = 0; i < data.byteLength; i += 12) {
                             var arr = {
                                 'min':                      data.readU16(),
                                 'max':                      data.readU16(),
@@ -520,7 +520,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                 } else if (semver.gte(CONFIG.apiVersion, "1.12.0")) {
                     if (data.byteLength % 14 == 0) {
-                        for (var i = 0; i < data.byteLength; i += 14) {
+                        for (let i = 0; i < data.byteLength; i += 14) {
                             var arr = {
                                 'min':                      data.readU16(),
                                 'max':                      data.readU16(),
@@ -537,7 +537,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                 } else {
                     if (data.byteLength % 7 == 0) {
-                        for (var i = 0; i < data.byteLength; i += 7) {
+                        for (let i = 0; i < data.byteLength; i += 7) {
                             var arr = {
                                 'min':                      data.readU16(),
                                 'max':                      data.readU16(),
@@ -632,7 +632,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG:
                 console.log('Voltage config saved');
             case MSPCodes.MSP_DEBUG:
-                for (var i = 0; i < 4; i++)
+                for (let i = 0; i < 4; i++)
                     SENSOR_DATA.debug[i] = data.read16();
                 break;
             case MSPCodes.MSP_SET_MOTOR:
@@ -654,7 +654,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (data.byteLength > 0) {
                     var numCh = data.readU8();
 
-                    for (var i = 0; i < numCh; i++) {
+                    for (let i = 0; i < numCh; i++) {
                         GPS_DATA.chn[i] = data.readU8();
                         GPS_DATA.svid[i] = data.readU8();
                         GPS_DATA.quality[i] = data.readU8();
@@ -666,7 +666,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_RX_MAP:
                 RC_MAP = []; // empty the array as new data is coming in
 
-                for (var i = 0; i < data.byteLength; i++) {
+                for (let i = 0; i < data.byteLength; i++) {
                     RC_MAP.push(data.readU8());
                 }
                 break;
@@ -725,7 +725,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_FC_VARIANT:
                 var identifier = '';
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     identifier += String.fromCharCode(data.readU8());
                 }
                 CONFIG.flightControllerIdentifier = identifier;
@@ -738,13 +738,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_BUILD_INFO:
                 var dateLength = 11;
                 var buff = [];
-                for (var i = 0; i < dateLength; i++) {
+                for (let i = 0; i < dateLength; i++) {
                     buff.push(data.readU8());
                 }
                 buff.push(32); // ascii space
 
                 var timeLength = 8;
-                for (var i = 0; i < timeLength; i++) {
+                for (let i = 0; i < timeLength; i++) {
                     buff.push(data.readU8());
                 }
                 CONFIG.buildInfo = String.fromCharCode.apply(null, buff);
@@ -752,7 +752,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_BOARD_INFO:
                 var identifier = '';
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     identifier += String.fromCharCode(data.readU8());
                 }
                 CONFIG.boardIdentifier = identifier;
@@ -821,9 +821,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_CF_SERIAL_CONFIG:
                 if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
                     SERIAL_CONFIG.ports = [];
-                    var serialPortCount = (data.byteLength - (4 * 4)) / 2;
-                    for (var i = 0; i < serialPortCount; i++) {
-                        var serialPort = {
+                    const serialPortCount = (data.byteLength - (4 * 4)) / 2;
+                    for (let i = 0; i < serialPortCount; i++) {
+                        const serialPort = {
                             identifier: data.readU8(),
                             scenario: data.readU8()
                         }
@@ -835,11 +835,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     SERIAL_CONFIG.gpsPassthroughBaudRate = data.readU32();
                 } else {
                     SERIAL_CONFIG.ports = [];
-                    var bytesPerPort = 1 + 2 + (1 * 4);
+                    const bytesPerPort = 1 + 2 + (1 * 4);
 
-                    var serialPortCount = data.byteLength / bytesPerPort;
-                    for (var i = 0; i < serialPortCount; i++) {
-                        var serialPort = {
+                    const serialPortCount = data.byteLength / bytesPerPort;
+                    for (let i = 0; i < serialPortCount; i++) {
+                        const serialPort = {
                             identifier: data.readU8(),
                             functions: self.serialPortFunctionMaskToFunctions(data.readU16()),
                             msp_baudrate: self.BAUD_RATES[data.readU8()],
@@ -886,7 +886,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 var modeRangeCount = data.byteLength / 4; // 4 bytes per item.
 
-                for (var i = 0; i < modeRangeCount; i++) {
+                for (let i = 0; i < modeRangeCount; i++) {
                     var modeRange = {
                         id: data.readU8(),
                         auxChannelIndex: data.readU8(),
@@ -904,7 +904,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 var modeRangeExtraCount = data.readU8();
 
-                for (var i = 0; i < modeRangeExtraCount; i++) {
+                for (let i = 0; i < modeRangeExtraCount; i++) {
                     var modeRangeExtra = {
                         id: data.readU8(),
                         modeLogic: data.readU8(),
@@ -919,7 +919,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 var adjustmentRangeCount = data.byteLength / 6; // 6 bytes per item.
 
-                for (var i = 0; i < adjustmentRangeCount; i++) {
+                for (let i = 0; i < adjustmentRangeCount; i++) {
                     var adjustmentRange = {
                         slotIndex: data.readU8(),
                         auxChannelIndex: data.readU8(),
@@ -993,7 +993,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 RXFAIL_CONFIG = []; // empty the array as new data is coming in
 
                 var channelCount = data.byteLength / 3;
-                for (var i = 0; i < channelCount; i++) {
+                for (let i = 0; i < channelCount; i++) {
                     var rxfailChannel = {
                         mode:  data.readU8(),
                         value: data.readU16()
@@ -1174,7 +1174,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     // Following byte is the current LED profile
                     ledCount = (data.byteLength - 2) / 4;
                 }
-                for (var i = 0; i < ledCount; i++) {
+                for (let i = 0; i < ledCount; i++) {
 
                     if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
                         var directionMask = data.readU16();
@@ -1186,7 +1186,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             }
                         }
 
-                        var functionMask = data.readU16();
+                        const functionMask = data.readU16();
 
                         var functions = [];
                         for (var functionLetterIndex = 0; functionLetterIndex < ledFunctionLetters.length; functionLetterIndex++) {
@@ -1252,7 +1252,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                 var colorCount = data.byteLength / 4;
 
-                for (var i = 0; i < colorCount; i++) {
+                for (let i = 0; i < colorCount; i++) {
 
                     var color = {
                         h: data.readU16(),
@@ -1273,7 +1273,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                     var colorCount = data.byteLength / 3;
 
-                    for (var i = 0; i < colorCount; i++) {
+                    for (let i = 0; i < colorCount; i++) {
 
                         var mode_color = {
                             mode: data.readU8(),
@@ -1343,7 +1343,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     TRANSPONDER.supported = providerCount > 0;
                     TRANSPONDER.providers = [];
 
-                    for (var i = 0; i < providerCount; i++) {
+                    for (let i = 0; i < providerCount; i++) {
                         var provider = {
                             id: data.readU8(),
                             dataLength: data.readU8()
@@ -1367,7 +1367,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     TRANSPONDER.provider = TRANSPONDER.providers[0].id;
                 }
                 TRANSPONDER.data = [];
-                for (var i = 0; i < bytesRemaining; i++) {
+                for (let i = 0; i < bytesRemaining; i++) {
                     TRANSPONDER.data.push(data.readU8());
                 }
                 break;
@@ -1578,7 +1578,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
         }
     }
     // trigger callbacks, cleanup/remove callback after trigger
-    for (var i = dataHandler.callbacks.length - 1; i >= 0; i--) { // itterating in reverse because we use .splice which modifies array length
+    for (let i = dataHandler.callbacks.length - 1; i >= 0; i--) { // itterating in reverse because we use .splice which modifies array length
         if (dataHandler.callbacks[i].code == code) {
             // save callback reference
             var callback = dataHandler.callbacks[i].callback;
@@ -1634,8 +1634,8 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(PID.controller);
             break;
         case MSPCodes.MSP_SET_PID:
-            for (var i = 0; i < PIDs.length; i++) {
-                for (var j = 0; j < 3; j++) {
+            for (let i = 0; i < PIDs.length; i++) {
+                for (let j = 0; j < 3; j++) {
                     buffer.push8(parseInt(PIDs[i][j]));
                 }
             }
@@ -1677,7 +1677,7 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
         case MSPCodes.MSP_SET_RX_MAP:
-            for (var i = 0; i < RC_MAP.length; i++) {
+            for (let i = 0; i < RC_MAP.length; i++) {
                 buffer.push8(RC_MAP[i]);
             }
             break;
@@ -1845,13 +1845,13 @@ MspHelper.prototype.crunch = function(code) {
             if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
                 buffer.push8(TRANSPONDER.provider); //
             }
-            for (var i = 0; i < TRANSPONDER.data.length; i++) {
+            for (let i = 0; i < TRANSPONDER.data.length; i++) {
                 buffer.push8(TRANSPONDER.data[i]);
             }
             break;
 
         case MSPCodes.MSP_SET_CHANNEL_FORWARDING:
-            for (var i = 0; i < SERVO_CONFIG.length; i++) {
+            for (let i = 0; i < SERVO_CONFIG.length; i++) {
                 var out = SERVO_CONFIG[i].indexOfChannelToForward;
                 if (out == undefined) {
                     out = 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
@@ -1862,7 +1862,7 @@ MspHelper.prototype.crunch = function(code) {
         case MSPCodes.MSP_SET_CF_SERIAL_CONFIG:
             if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
 
-                for (var i = 0; i < SERIAL_CONFIG.ports.length; i++) {
+                for (let i = 0; i < SERIAL_CONFIG.ports.length; i++) {
                     buffer.push8(SERIAL_CONFIG.ports[i].scenario);
                 }
                 buffer.push32(SERIAL_CONFIG.mspBaudRate)
@@ -1870,12 +1870,12 @@ MspHelper.prototype.crunch = function(code) {
                     .push32(SERIAL_CONFIG.gpsBaudRate)
                     .push32(SERIAL_CONFIG.gpsPassthroughBaudRate);
             } else {
-                for (var i = 0; i < SERIAL_CONFIG.ports.length; i++) {
-                    var serialPort = SERIAL_CONFIG.ports[i];
+                for (let i = 0; i < SERIAL_CONFIG.ports.length; i++) {
+                    const serialPort = SERIAL_CONFIG.ports[i];
 
                     buffer.push8(serialPort.identifier);
 
-                    var functionMask = self.serialPortFunctionsToMask(serialPort.functions);
+                    const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
                     buffer.push16(functionMask)
                         .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
                         .push8(self.BAUD_RATES.indexOf(serialPort.msp_baudrate))
@@ -2086,7 +2086,7 @@ MspHelper.prototype.crunch = function(code) {
 
         case MSPCodes.MSP_SET_NAME:
             var MSP_BUFFER_SIZE = 64;
-            for (var i = 0; i<CONFIG.name.length && i<MSP_BUFFER_SIZE; i++) {
+            for (let i = 0; i<CONFIG.name.length && i<MSP_BUFFER_SIZE; i++) {
                 buffer.push8(CONFIG.name.charCodeAt(i));
             }
             break;
@@ -2225,7 +2225,7 @@ MspHelper.prototype.crunch = function(code) {
 MspHelper.prototype.setRawRx = function(channels) {
     var buffer = [];
 
-    for (var i = 0; i < channels.length; i++) {
+    for (let i = 0; i < channels.length; i++) {
         buffer.push16(channels[i]);
     }
 
@@ -2310,7 +2310,7 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
         if (semver.lt(CONFIG.apiVersion, "1.12.0")) {
             // send all in one go
             // 1.9.0 had a bug where the MSP input buffer was too small, limit to 8.
-            for (var i = 0; i < SERVO_CONFIG.length && i < 8; i++) {
+            for (let i = 0; i < SERVO_CONFIG.length && i < 8; i++) {
                 buffer.push16(SERVO_CONFIG[i].min)
                     .push16(SERVO_CONFIG[i].max)
                     .push16(SERVO_CONFIG[i].middle)
@@ -2352,7 +2352,7 @@ MspHelper.prototype.sendServoConfigurations = function(onCompleteCallback) {
     function send_channel_forwarding() {
         var buffer = [];
 
-        for (var i = 0; i < SERVO_CONFIG.length; i++) {
+        for (let i = 0; i < SERVO_CONFIG.length; i++) {
             var out = SERVO_CONFIG[i].indexOfChannelToForward;
             if (out == undefined) {
                 out = 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
@@ -2538,7 +2538,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
             }
             buffer.push16(directionMask);
 
-            var functionMask = 0;
+            let functionMask = 0;
             for (var functionLetterIndex = 0; functionLetterIndex < led.functions.length; functionLetterIndex++) {
                 var bitIndex = ledFunctionLetters.indexOf(led.functions[functionLetterIndex]);
                 if (bitIndex >= 0) {
