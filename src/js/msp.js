@@ -194,7 +194,7 @@ var MSP = {
                 this._dispatch_message(data[i]);
                 break;
             default:
-                console.log('Unknown state detected: ' + this.state);
+                console.log(`Unknown state detected: ${this.state}`);
             }
         }
         this.last_received_timestamp = Date.now();
@@ -208,7 +208,7 @@ var MSP = {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
         } else {
-            console.log('code: ' + this.code + ' - crc failed');
+            console.log(`code: ${this.code} - crc failed`);
             this.packet_error++;
             this.crcError = true;
             this.dataView = new DataView(new ArrayBuffer(0));
@@ -334,7 +334,7 @@ var MSP = {
 
         if (!requestExists) {
             obj.timer = setInterval(function () {
-                console.log('MSP data request timed-out: ' + code);
+                console.log(`MSP data request timed-out: ${code}`);
 
                 serial.send(bufferOut, false);
             }, 1000); // we should be able to define timeout in the future
