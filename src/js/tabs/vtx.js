@@ -14,9 +14,9 @@ TABS.vtx = {
 };
 
 TABS.vtx.initialize = function (callback) {
-    var self = this;
+    const self = this;
 
-    if (GUI.active_tab != 'vtx') {
+    if (GUI.active_tab !== 'vtx') {
         GUI.active_tab = 'vtx';
     }
 
@@ -64,7 +64,7 @@ TABS.vtx.initialize = function (callback) {
                 vtxtable_bands.counter++;
             }
 
-            let buffer = [];
+            const buffer = [];
             buffer.push8(vtxtable_bands.counter);
 
             if (vtxtable_bands.counter <= VTX_CONFIG.vtx_table_bands) {
@@ -87,7 +87,7 @@ TABS.vtx.initialize = function (callback) {
                 vtxtable_powerlevels.counter++;
             }
 
-            let buffer = [];
+            const buffer = [];
             buffer.push8(vtxtable_powerlevels.counter);
 
             if (vtxtable_powerlevels.counter <= VTX_CONFIG.vtx_table_powerlevels) {
@@ -191,10 +191,9 @@ TABS.vtx.initialize = function (callback) {
         });
 
         // Supported?
-        let vtxSupported = VTX_CONFIG.vtx_type != 0 && VTX_CONFIG.vtx_type != 255;
-        let vtxTableNotConfigured = vtxSupported && VTX_CONFIG.vtx_table_available && (VTX_CONFIG.vtx_table_bands == 0 ||
-                                                                                       VTX_CONFIG.vtx_table_channels == 0 ||
-                                                                                       VTX_CONFIG.vtx_table_powerlevels == 0);
+        const vtxSupported = VTX_CONFIG.vtx_type !== 0 && VTX_CONFIG.vtx_type !== 255;
+        const vtxTableNotConfigured = vtxSupported && VTX_CONFIG.vtx_table_available &&
+            (VTX_CONFIG.vtx_table_bands === 0 || VTX_CONFIG.vtx_table_channels === 0 || VTX_CONFIG.vtx_table_powerlevels === 0);
 
         $(".vtx_supported").toggle(vtxSupported);
         $(".vtx_not_supported").toggle(!vtxSupported);
@@ -223,18 +222,18 @@ TABS.vtx.initialize = function (callback) {
         $("#vtx_low_power_disarm").val(VTX_CONFIG.vtx_low_power_disarm);
 
         // Values of the current values
-        let yesMessage =  i18n.getMessage("yes");
-        let noMessage =  i18n.getMessage("no");
+        const yesMessage =  i18n.getMessage("yes");
+        const noMessage =  i18n.getMessage("no");
 
         $("#vtx_device_ready_description").text(VTX_CONFIG.vtx_device_ready ? yesMessage : noMessage);
-        $("#vtx_type_description").text(i18n.getMessage("vtxType_" + VTX_CONFIG.vtx_type));
+        $("#vtx_type_description").text(i18n.getMessage(`vtxType_${VTX_CONFIG.vtx_type}`));
         $("#vtx_channel_description").text(VTX_CONFIG.vtx_channel);
         $("#vtx_frequency_description").text(VTX_CONFIG.vtx_frequency);
         $("#vtx_pit_mode_description").text(VTX_CONFIG.vtx_pit_mode ? yesMessage : noMessage);
         $("#vtx_pit_mode_frequency_description").text(VTX_CONFIG.vtx_pit_mode_frequency);
-        $("#vtx_low_power_disarm_description").text(i18n.getMessage("vtxLowPowerDisarmOption_" + VTX_CONFIG.vtx_low_power_disarm));
+        $("#vtx_low_power_disarm_description").text(i18n.getMessage(`vtxLowPowerDisarmOption_${VTX_CONFIG.vtx_low_power_disarm}`));
 
-        if (VTX_CONFIG.vtx_band == 0) {
+        if (VTX_CONFIG.vtx_band === 0) {
             $("#vtx_band_description").text(i18n.getMessage("vtxBand_0"));
         } else {
             if (VTX_CONFIG.vtx_table_available && TABS.vtx.VTXTABLE_BAND_LIST[VTX_CONFIG.vtx_band - 1]) {
@@ -248,7 +247,7 @@ TABS.vtx.initialize = function (callback) {
             }
         }
 
-        if (VTX_CONFIG.vtx_power == 0) {
+        if (VTX_CONFIG.vtx_power === 0) {
             $("#vtx_power_description").text(i18n.getMessage("vtxPower_0"));
         } else {
             if (VTX_CONFIG.vtx_table_available) {
@@ -258,7 +257,7 @@ TABS.vtx.initialize = function (callback) {
                 }
                 $("#vtx_power_description").text(powerLevel);
             } else {
-                let levelText = i18n.getMessage('vtxPower_X', {powerLevel: VTX_CONFIG.vtx_power});
+                const levelText = i18n.getMessage('vtxPower_X', {powerLevel: VTX_CONFIG.vtx_power});
                 $("#vtx_power_description").text(levelText);
             }
         }
@@ -267,8 +266,8 @@ TABS.vtx.initialize = function (callback) {
 
         // Populate power levels
         for (let i = 1; i <= TABS.vtx.VTXTABLE_POWERLEVEL_LIST.length; i++) {
-            $("#vtx_table_powerlevels_" + i).val(TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_value);
-            $("#vtx_table_powerlabels_" + i).val(TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label);
+            $(`#vtx_table_powerlevels_${i}`).val(TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_value);
+            $(`#vtx_table_powerlabels_${i}`).val(TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label);
         }
 
         $("#vtx_table_bands").val(VTX_CONFIG.vtx_table_bands);
@@ -276,18 +275,18 @@ TABS.vtx.initialize = function (callback) {
 
         // Populate VTX Table
         for (let i = 1; i <= TABS.vtx.VTXTABLE_BAND_LIST.length; i++) {
-            $("#vtx_table_band_name_" + i).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name);
-            $("#vtx_table_band_letter_" + i).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter);
-            $("#vtx_table_band_factory_" + i).prop("checked",TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band);
+            $(`#vtx_table_band_name_${i}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name);
+            $(`#vtx_table_band_letter_${i}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter);
+            $(`#vtx_table_band_factory_${i}`).prop("checked",TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band);
             for (let j = 1; j <= TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies.length; j++) {
-                $("#vtx_table_band_channel_" + i + "_" + j).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies[j - 1]);
+                $(`#vtx_table_band_channel_${i}_${j}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies[j - 1]);
             }
         }
 
         // Actions and other
         function frequencyOrBandChannel() {
 
-            let frequencyEnabled = $(this).prop('checked');
+            const frequencyEnabled = $(this).prop('checked');
 
             if (frequencyEnabled) {
                 $(".field.vtx_channel").slideUp(100, function() {
@@ -305,7 +304,7 @@ TABS.vtx.initialize = function (callback) {
             }
         }
 
-        $("#vtx_frequency_channel").prop('checked', VTX_CONFIG.vtx_band == 0 && VTX_CONFIG.vtx_frequency > 0).change(frequencyOrBandChannel);
+        $("#vtx_frequency_channel").prop('checked', VTX_CONFIG.vtx_band === 0 && VTX_CONFIG.vtx_frequency > 0).change(frequencyOrBandChannel);
 
         if ($("#vtx_frequency_channel").prop('checked')) {
             $(".field.vtx_channel").hide();
@@ -318,30 +317,30 @@ TABS.vtx.initialize = function (callback) {
         }
 
         function showHidePowerlevels() {
-            let powerlevelsValue = $(this).val();
+            const powerlevelsValue = $(this).val();
 
             for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
-                $(".vtx_table_powerlevels_table td:nth-child(" + i +")").toggle(i <= powerlevelsValue);
+                $(`.vtx_table_powerlevels_table td:nth-child(${i})`).toggle(i <= powerlevelsValue);
             }
         }
 
         $("#vtx_table_powerlevels").on('input', showHidePowerlevels).trigger('input');
 
         function showHideBands() {
-            let bandsValue = $(this).val();
+            const bandsValue = $(this).val();
 
             for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
-                $(".vtx_table_bands_table tr:nth-child(" + (i + 1) +")").toggle(i <= bandsValue);
+                $(`.vtx_table_bands_table tr:nth-child(${(i + 1)})`).toggle(i <= bandsValue);
             }
         }
 
         $("#vtx_table_bands").on('input', showHideBands).trigger('input');
 
         function showHideBandChannels() {
-            let channelsValue = $(this).val();
+            const channelsValue = $(this).val();
 
             for (let i = 1; i <= TABS.vtx.MAX_BAND_CHANNELS_VALUES; i++) {
-                $(".vtx_table_bands_table td:nth-child(" + (i + 3) +")").toggle(i <= channelsValue);
+                $(`.vtx_table_bands_table td:nth-child(${(i + 3)})`).toggle(i <= channelsValue);
             }
         }
 
@@ -359,76 +358,75 @@ TABS.vtx.initialize = function (callback) {
         function loadPowerLevelsTemplate() {
 
             // Power levels title
-            let powerlevelstitle_e = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_title");
+            const powerLevelsTitleEle = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_title");
 
             for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
-                powerlevelstitle_e.append("<td><span>" + i + "</span></td>");
+                powerLevelsTitleEle.append(`<td><span>${i}</span></td>`);
             }
 
             // Power levels
-            let powerlevelsrow_e = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_values");
+            const powerLevelsRowEle = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_values");
 
-            let powervalues_e = $("#tab-vtx-templates #tab-vtx-powerlevel-values td");
+            const powerValuesEle = $("#tab-vtx-templates #tab-vtx-powerlevel-values td");
             for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
-                let newPowerValues_e = powervalues_e.clone();
-                $(newPowerValues_e).find('input').attr('id', 'vtx_table_powerlevels_' + i);
-                powerlevelsrow_e.append(newPowerValues_e);
+                const newPowerValuesEle = powerValuesEle.clone();
+                $(newPowerValuesEle).find('input').attr('id', `vtx_table_powerlevels_${i}`);
+                powerLevelsRowEle.append(newPowerValuesEle);
             }
-            powerlevelsrow_e.append("<td><span>" + i18n.getMessage('vtxTablePowerLevelsValue') + "</span></td>");
+            powerLevelsRowEle.append(`<td><span>${i18n.getMessage('vtxTablePowerLevelsValue')}</span></td>`);
 
             // Power labels
-            let powerlabelsrow_e = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_labels");
+            const powerLabelsRowEle = $(".vtx_table_powerlevels_table .vtx_table_powerlevels_labels");
 
-            let powerlabels_e = $("#tab-vtx-templates #tab-vtx-powerlevel-labels td");
+            const powerLabelsEle = $("#tab-vtx-templates #tab-vtx-powerlevel-labels td");
             for (let i = 1; i <= TABS.vtx.MAX_POWERLEVEL_VALUES; i++) {
-                let newPowerLabels_e = powerlabels_e.clone();
-                $(newPowerLabels_e).find('input').attr('id', 'vtx_table_powerlabels_' + i);
-                powerlabelsrow_e.append(newPowerLabels_e);
+                const newPowerLabelsEle = powerLabelsEle.clone();
+                $(newPowerLabelsEle).find('input').attr('id', `vtx_table_powerlabels_${i}`);
+                powerLabelsRowEle.append(newPowerLabelsEle);
             }
-            powerlabelsrow_e.append("<td><span>" + i18n.getMessage('vtxTablePowerLevelsLabel') + "</span></td>");
+            powerLabelsRowEle.append(`<td><span>${i18n.getMessage('vtxTablePowerLevelsLabel')}</span></td>`);
         }
 
         function loadBandsChannelsTemplate() {
-            let bandstable_e = $(".vtx_table_bands_table tbody");
+            const bandsTableEle = $(".vtx_table_bands_table tbody");
 
             // Title
-            let title_e = $("#tab-vtx-templates #tab-vtx-bands-title tr");
+            const titleEle = $("#tab-vtx-templates #tab-vtx-bands-title tr");
 
             for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
-                title_e.append("<td><span>" + i + "</span></td>");
+                titleEle.append(`<td><span>${i}</span></td>`);
             }
-            bandstable_e.append(title_e);
+            bandsTableEle.append(titleEle);
 
             // Bands
-            let band_e = $("#tab-vtx-templates #tab-vtx-bands tr");
-            let channel_e = $("#tab-vtx-templates #tab-vtx-channels td");
+            const bandEle = $("#tab-vtx-templates #tab-vtx-bands tr");
+            const channelEle = $("#tab-vtx-templates #tab-vtx-channels td");
             for (let i = 1; i <= TABS.vtx.MAX_BAND_VALUES; i++) {
-                let newBand_e = band_e.clone();
-                $(newBand_e).find('#vtx_table_band_name').attr('id', 'vtx_table_band_name_' + i);
-                $(newBand_e).find('#vtx_table_band_letter').attr('id', 'vtx_table_band_letter_' + i);
-                $(newBand_e).find('#vtx_table_band_factory').attr('id', 'vtx_table_band_factory_' + i);
+                const newBandEle = bandEle.clone();
+                $(newBandEle).find('#vtx_table_band_name').attr('id', `vtx_table_band_name_${i}`);
+                $(newBandEle).find('#vtx_table_band_letter').attr('id', `vtx_table_band_letter_${i}`);
+                $(newBandEle).find('#vtx_table_band_factory').attr('id', `vtx_table_band_factory_${i}`);
 
                 // Channels
-                let newChannel_e;
                 for (let j = 1; j <= TABS.vtx.MAX_BAND_CHANNELS_VALUES; j++) {
-                    newChannel_e = channel_e.clone();
-                    $(newChannel_e).find('input').attr('id', 'vtx_table_band_channel_' + i + '_' + j);
+                    const newChannelEle = channelEle.clone();
+                    $(newChannelEle).find('input').attr('id', `vtx_table_band_channel_${i}_${j}`);
 
-                    newBand_e.append(newChannel_e);
+                    newBandEle.append(newChannelEle);
                 }
 
                 // Append to the end an index of the band
-                newBand_e.append("<td><span>" + i18n.getMessage("vtxBand_X", {bandName: i}) + "</span></td>")
+                newBandEle.append(`<td><span>${i18n.getMessage("vtxBand_X", {bandName: i})}</span></td>`);
 
-                bandstable_e.append(newBand_e);
+                bandsTableEle.append(newBandEle);
             }
         }
 
         function populateBandSelect() {
 
-            let selectBand = $(".field #vtx_band");
+            const selectBand = $(".field #vtx_band");
 
-            selectBand.append(new Option(i18n.getMessage('vtxBand_0'), 0))
+            selectBand.append(new Option(i18n.getMessage('vtxBand_0'), 0));
             if (VTX_CONFIG.vtx_table_available) {
                 for (let i = 1; i <= VTX_CONFIG.vtx_table_bands; i++) {
                     let bandName = TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name;
@@ -446,16 +444,16 @@ TABS.vtx.initialize = function (callback) {
 
         function populateChannelSelect() {
 
-            let selectChannel = $(".field #vtx_channel");
-            let selectedBand = $("#vtx_band").val();
+            const selectChannel = $(".field #vtx_channel");
+            const selectedBand = $("#vtx_band").val();
 
             selectChannel.empty();
 
-            selectChannel.append(new Option(i18n.getMessage('vtxChannel_0'), 0))
+            selectChannel.append(new Option(i18n.getMessage('vtxChannel_0'), 0));
             if (VTX_CONFIG.vtx_table_available) {
                 if (TABS.vtx.VTXTABLE_BAND_LIST[selectedBand - 1]) {
                     for (let i = 1; i <= TABS.vtx.VTXTABLE_BAND_LIST[selectedBand - 1].vtxtable_band_frequencies.length; i++) {
-                        let channelName = TABS.vtx.VTXTABLE_BAND_LIST[selectedBand - 1].vtxtable_band_frequencies[i - 1];
+                        const channelName = TABS.vtx.VTXTABLE_BAND_LIST[selectedBand - 1].vtxtable_band_frequencies[i - 1];
                         if (channelName > 0) {
                             selectChannel.append(new Option(i18n.getMessage('vtxChannel_X', {channelName: i}), i));
                         }
@@ -469,10 +467,10 @@ TABS.vtx.initialize = function (callback) {
         }
 
         function populatePowerSelect() {
-            let selectPower = $(".field #vtx_power");
+            const selectPower = $(".field #vtx_power");
 
             if (VTX_CONFIG.vtx_table_available) {
-                selectPower.append(new Option(i18n.getMessage('vtxPower_0'), 0))
+                selectPower.append(new Option(i18n.getMessage('vtxPower_0'), 0));
                 for (let i = 1; i <= VTX_CONFIG.vtx_table_powerlevels; i++) {
                     let powerLevel = TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label;
                     if (powerLevel.trim() === '') {
@@ -481,10 +479,10 @@ TABS.vtx.initialize = function (callback) {
                     selectPower.append(new Option(powerLevel, i));
                 }
             } else {
-                let powerMaxMinValues = getPowerValues(VTX_CONFIG.vtx_type);
+                const powerMaxMinValues = getPowerValues(VTX_CONFIG.vtx_type);
                 for (let i = powerMaxMinValues.min; i <= powerMaxMinValues.max; i++) {
-                    if (i == 0) {
-                        selectPower.append(new Option(i18n.getMessage('vtxPower_0'), 0))
+                    if (i === 0) {
+                        selectPower.append(new Option(i18n.getMessage('vtxPower_0'), 0));
                     } else {
                         selectPower.append(new Option(i18n.getMessage('vtxPower_X', {bandName: i}), i));
                     }
@@ -498,7 +496,7 @@ TABS.vtx.initialize = function (callback) {
             let powerMinMax = {};
 
             if (VTX_CONFIG.vtx_table_available) {
-                powerMinMax = {min: 1, max: VTX_CONFIG.vtx_table_powerlevels}
+                powerMinMax = {min: 1, max: VTX_CONFIG.vtx_table_powerlevels};
             } else {
 
                 switch (vtxType) {
@@ -553,22 +551,22 @@ TABS.vtx.initialize = function (callback) {
     }
 
     function save_lua() {
-        let suggestedName = 'model01';
-        let suffix = 'lua';
+        const suggestedName = 'model01';
+        const suffix = 'lua';
 
-        var filename;
+        let filename;
         if(CONFIG.name && CONFIG.name.trim() !== '') {
             filename = CONFIG.name.trim().replace(' ', '_');
         }else{
-            filename = suggestedName
+            filename = suggestedName;
         }
-        filename += '.' + suffix;
+        filename += `.${suffix}`;
 
-        let accepts = [{
-            description: suffix.toUpperCase() + ' files', extensions: [suffix],
+        const accepts = [{
+            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
         }];
 
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts}, function(entry) {
 
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError.message);
@@ -589,16 +587,16 @@ TABS.vtx.initialize = function (callback) {
 
                 writer.onwriteend = function() {
                     dump_html_to_msp();
-                    let vtxConfig = createVtxConfigInfo();
-                    let text = creatLuaTables(vtxConfig);
-                    let data = new Blob([text], { type: "application/text" });
+                    const vtxConfig = createVtxConfigInfo();
+                    const text = creatLuaTables(vtxConfig);
+                    const data = new Blob([text], { type: "application/text" });
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableLuaSave', text.length);
                         console.log('Write VTX table lua file end');
                         GUI.log(i18n.getMessage('vtxSavedFileOk'));
-                    }
+                    };
 
                     writer.write(data);
                 };
@@ -612,16 +610,16 @@ TABS.vtx.initialize = function (callback) {
         });
     }
     function save_json() {
-        let suggestedName = 'vtxtable';
-        let suffix = 'json';
+        const suggestedName = 'vtxtable';
+        const suffix = 'json';
 
-        var filename = generateFilename(suggestedName, suffix);
+        const filename = generateFilename(suggestedName, suffix);
 
-        let accepts = [{
-            description: suffix.toUpperCase() + ' files', extensions: [suffix],
+        const accepts = [{
+            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
         }];
 
-        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
+        chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts}, function(entry) {
 
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError.message);
@@ -642,17 +640,17 @@ TABS.vtx.initialize = function (callback) {
 
                 writer.onwriteend = function() {
                     dump_html_to_msp();
-                    let vtxConfig = createVtxConfigInfo();
-                    let text = JSON.stringify(vtxConfig, null, 4);
-                    let data = new Blob([text], { type: "application/json" });
+                    const vtxConfig = createVtxConfigInfo();
+                    const text = JSON.stringify(vtxConfig, null, 4);
+                    const data = new Blob([text], { type: "application/json" });
 
                     // we get here at the end of the truncate method, change to the new end
                     writer.onwriteend = function() {
                         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'VtxTableSave', text.length);
-                        console.log(vtxConfig)
+                        console.log(vtxConfig);
                         console.log('Write VTX file end');
                         GUI.log(i18n.getMessage('vtxSavedFileOk'));
-                    }
+                    };
 
                     writer.write(data);
                 };
@@ -668,13 +666,13 @@ TABS.vtx.initialize = function (callback) {
 
     function load_json() {
 
-        let suffix = 'json';
+        const suffix = 'json';
 
-        let accepts = [{
-            description: suffix.toUpperCase() + ' files', extensions: [suffix],
+        const accepts = [{
+            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
         }];
 
-        chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(entry) {
+        chrome.fileSystem.chooseEntry({type: 'openFile', accepts}, function(entry) {
 
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError.message);
@@ -688,14 +686,14 @@ TABS.vtx.initialize = function (callback) {
 
             entry.file(function(file) {
 
-                let reader = new FileReader();
+                const reader = new FileReader();
 
                 reader.onload = function(e) {
 
-                    let text = e.target.result;
+                    const text = e.target.result;
                     try {
 
-                        let vtxConfig = JSON.parse(text);
+                        const vtxConfig = JSON.parse(text);
 
                         validateVtxJson(
                             vtxConfig,
@@ -745,7 +743,7 @@ TABS.vtx.initialize = function (callback) {
 
                     console.log('Pasted content: ', text);
 
-                    let vtxConfig = JSON.parse(text);
+                    const vtxConfig = JSON.parse(text);
 
                     validateVtxJson(
                         vtxConfig,
@@ -777,7 +775,7 @@ TABS.vtx.initialize = function (callback) {
             );
 
         } catch (err) {
-            console.error('Failed loading VTX file config: ' + err);
+            console.error(`Failed loading VTX file config: ${err}`);
             GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
         }
 
@@ -845,7 +843,7 @@ TABS.vtx.initialize = function (callback) {
 
             TABS.vtx.vtxTableSavePending = false;
 
-            var oldText = $("#save_button").text();
+            const oldText = $("#save_button").text();
             $("#save_button").html(i18n.getMessage('vtxButtonSaved'));
             setTimeout(function () {
                 $("#save_button").html(oldText);
@@ -858,7 +856,7 @@ TABS.vtx.initialize = function (callback) {
     function dump_html_to_msp() {
 
         // General config
-        let frequencyEnabled = $("#vtx_frequency_channel").prop('checked');
+        const frequencyEnabled = $("#vtx_frequency_channel").prop('checked');
         if (frequencyEnabled) {
             VTX_CONFIG.vtx_frequency = parseInt($("#vtx_frequency").val());
             VTX_CONFIG.vtx_band = 0;
@@ -885,8 +883,8 @@ TABS.vtx.initialize = function (callback) {
         for (let i = 1; i <= VTX_CONFIG.vtx_table_powerlevels; i++) {
             TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1] = {};
             TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_number = i;
-            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_value = parseInt($("#vtx_table_powerlevels_" + i).val());
-            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label = $("#vtx_table_powerlabels_" + i).val();
+            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_value = parseInt($(`#vtx_table_powerlevels_${i}`).val());
+            TABS.vtx.VTXTABLE_POWERLEVEL_LIST[i - 1].vtxtable_powerlevel_label = $(`#vtx_table_powerlabels_${i}`).val();
         }
 
         // Bands and channels
@@ -896,13 +894,13 @@ TABS.vtx.initialize = function (callback) {
         for (let i = 1; i <= VTX_CONFIG.vtx_table_bands; i++) {
             TABS.vtx.VTXTABLE_BAND_LIST[i - 1] = {};
             TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_number = i;
-            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name = $("#vtx_table_band_name_" + i).val();
-            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter = $("#vtx_table_band_letter_" + i).val();
-            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band = $("#vtx_table_band_factory_" + i).prop('checked');
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name = $(`#vtx_table_band_name_${i}`).val();
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter = $(`#vtx_table_band_letter_${i}`).val();
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band = $(`#vtx_table_band_factory_${i}`).prop('checked');
 
             TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies = [];
             for (let j = 1; j <= VTX_CONFIG.vtx_table_channels; j++) {
-                TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies.push(parseInt($("#vtx_table_band_channel_" + i + "_" + j).val()));
+                TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies.push(parseInt($(`#vtx_table_band_channel_${i}_${j}`).val()));
             }
         }
 
@@ -911,10 +909,10 @@ TABS.vtx.initialize = function (callback) {
     // Copies from the MSP data to the vtxInfo object (JSON)
     function createVtxConfigInfo() {
 
-        let vtxConfig = {};
-
-        vtxConfig.description = "Betaflight VTX Config file";
-        vtxConfig.version = "1.0";
+        const vtxConfig = {
+            description: "Betaflight VTX Config file",
+            version: "1.0",
+        };
 
         vtxConfig.vtx_table = {};
 
@@ -938,28 +936,31 @@ TABS.vtx.initialize = function (callback) {
     }
 
     function creatLuaTables(vtxConfig) {
+
         let bandsString = "bandTable = { [0]=\"U\"";
         let frequenciesString = "frequencyTable = {\n";
-        let freqBandsString = "frequenciesPerBand = ";
-        let powersString = "powerTable = { ";
-        let bands_list = vtxConfig.vtx_table.bands_list;
-        let power_list = vtxConfig.vtx_table.powerlevels_list;
-        var index, len, i, l;
-        for (index = 0, len = bands_list.length; index < len; ++index) {
-            bandsString += ", \"" + bands_list[index].letter + "\"";
+
+        const bandsList = vtxConfig.vtx_table.bands_list;
+        for (let index = 0, len = bandsList.length; index < len; ++index) {
+            bandsString += `, "${bandsList[index].letter}"`;
             frequenciesString += "        { ";
-            for (i = 0, l = bands_list[index].frequencies.length; i < l; ++i) {
-                frequenciesString += bands_list[index].frequencies[i] + ", ";
+            for (let i = 0, l = bandsList[index].frequencies.length; i < l; ++i) {
+                frequenciesString += `${bandsList[index].frequencies[i]}, `;
             }
             frequenciesString += "},\n";
         }
         bandsString += " },\n";
         frequenciesString += "    },\n";
-        freqBandsString += bands_list[1].frequencies.length + ",\n";
-        for (index = 0, len = power_list.length; index < len; ++index) {
-            powersString += "[" + (index + 1) + "]=" + power_list[index].label + ", ";
+
+        const freqBandsString = `frequenciesPerBand = ${bandsList[1].frequencies.length},\n`;
+
+        const powerList = vtxConfig.vtx_table.powerlevels_list;
+        let powersString = "powerTable = { ";
+        for (let index = 0, len = powerList.length; index < len; ++index) {
+            powersString += `[${(index + 1)}]=${powerList[index].label}, `;
         }
         powersString += "},\n";
+
         return `return {\n    ${frequenciesString}    ${freqBandsString}    ${bandsString}    ${powersString}}`;
     }
 
