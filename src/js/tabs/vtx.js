@@ -253,7 +253,7 @@ TABS.vtx.initialize = function (callback) {
             if (VTX_CONFIG.vtx_table_available) {
                 let powerLevel = TABS.vtx.VTXTABLE_POWERLEVEL_LIST[VTX_CONFIG.vtx_power - 1].vtxtable_powerlevel_label;
                 if (powerLevel.trim() === '') {
-                    powerLevel = i;
+                    powerLevel = VTX_CONFIG.vtx_power;
                 }
                 $("#vtx_power_description").text(powerLevel);
             } else {
