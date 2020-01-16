@@ -102,7 +102,11 @@ If you experience graphics display problems or smudged/dithered fonts display is
 
 ### Linux users
 
-Dont forget to add your user into dialout group "sudo usermod -aG dialout YOUR_USERNAME" for serial access
+In most Linux distributions your user won't have access to serial interfaces by default. To add this access right type the following command in a terminal, log out your user and log in again:
+
+```
+sudo usermod -aG dialout ${USER}
+```
 
 ### Linux / MacOS X users
 
