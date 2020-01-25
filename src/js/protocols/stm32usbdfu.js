@@ -803,6 +803,19 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 var page = 0;
                 var total_erased = 0; // bytes
 
+                var erase_page_next = function() {
+                    TABS.firmware_flasher.flashProgress((page + 1) / erase_pages.length * 100);
+                    page++;
+
+                    if(page == erase_pages.length) {
+                        console.log("Erase: complete");
+                        GUI.log(i18n.getMessage('dfu_erased_kilobytes', (total_erased / 1024).toString()));
+                        self.upload_procedure(4);
+                    } else {
+                        erase_page();
+                    }
+                }
+
                 var erase_page = function() {
                     var page_addr = erase_pages[page].page * self.flash_layout.sectors[erase_pages[page].sector].page_size +
                             self.flash_layout.sectors[erase_pages[page].sector].start_address;
@@ -818,18 +831,32 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
                                 setTimeout(function () {
                                     self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
-                                        if (data[4] == self.state.dfuDNLOAD_IDLE) {
-                                            // update progress bar
-                                            TABS.firmware_flasher.flashProgress((page + 1) / erase_pages.length * 100);
-                                            page++;
 
-                                            if(page == erase_pages.length) {
-                                                console.log("Erase: complete");
-                                                GUI.log(i18n.getMessage('dfu_erased_kilobytes', (total_erased / 1024).toString()));
-                                                self.upload_procedure(4);
-                                            }
-                                            else
-                                                erase_page();
+                                        if (data[4] == self.state.dfuDNBUSY) {
+
+                                            // 
+                                            // H743 Rev.V (probably other H7 Rev.Vs also) remains in dfuDNBUSY state after the specified delay time.
+                                            // STM32CubeProgrammer deals with behavior with an undocumented procedure as follows.
+                                            //     1. Issue DFU_CLRSTATUS, which ends up with (14,10) = (errUNKNOWN, dfuERROR)
+                                            //     2. Issue another DFU_CLRSTATUS which delivers (0,2) = (OK, dfuIDLE)
+                                            //     3. Treat the current erase successfully finished.
+                                            // Here, we call clarStatus to get to the dfuIDLE state.
+                                            //
+
+                                            console.log('erase_page: dfuDNBUSY after timeout, clearing');
+
+                                            self.clearStatus(function() {
+                                                self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
+                                                    if (data[4] == self.state.dfuIDLE) {
+                                                        erase_page_next();
+                                                    } else {
+                                                        console.log('Failed to erase page 0x' + page_addr.toString(16) + ' (did not reach dfuIDLE after clearing');
+                                                        self.upload_procedure(99);
+                                                    }
+                                                })
+                                            });
+                                        } else if (data[4] == self.state.dfuDNLOAD_IDLE) {
+                                            erase_page_next();
                                         } else {
                                             console.log('Failed to erase page 0x' + page_addr.toString(16));
                                             self.upload_procedure(99);
