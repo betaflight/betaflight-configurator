@@ -39,7 +39,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     }
 
     function get_ports_config() {
-        MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, get_rc_data);
+        mspHelper.loadSerialConfig(get_rc_data);
     }
 
     function get_rc_data() {

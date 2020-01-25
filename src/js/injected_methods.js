@@ -90,3 +90,7 @@ DataView.prototype.read32 = function() {
         return null;
     }
 };
+
+DataView.prototype.remaining = function() {
+    return this.byteLength - this.offset;
+};

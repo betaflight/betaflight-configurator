@@ -111,13 +111,15 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     load_configuration_from_fc();
 
     function load_configuration_from_fc() {
+        let promise;
         if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
-            MSP.promise(MSPCodes.MSP_VTX_CONFIG).then(function() {
-                return MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, on_configuration_loaded_handler);
-            });
+            promise = MSP.promise(MSPCodes.MSP_VTX_CONFIG);
         } else {
-            MSP.send_message(MSPCodes.MSP_CF_SERIAL_CONFIG, false, false, on_configuration_loaded_handler);
+            promise = Promise.resolve();
         }
+        promise.then(function() {
+            mspHelper.loadSerialConfig(on_configuration_loaded_handler);
+        });
 
         function on_configuration_loaded_handler() {
             $('#content').load("./tabs/ports.html", on_tab_loaded_handler);
@@ -392,7 +394,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             SERIAL_CONFIG.ports.push(serialPort);
         });
 
-        MSP.send_message(MSPCodes.MSP_SET_CF_SERIAL_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CF_SERIAL_CONFIG), false, save_to_eeprom);
+        mspHelper.sendSerialConfig(save_to_eeprom);
 
         function save_to_eeprom() {
             MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, on_saved_handler);
