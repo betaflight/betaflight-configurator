@@ -48,22 +48,27 @@ function initializeSerialBackend() {
             GUI.configuration_loaded = false;
 
             var selected_baud = parseInt($('div#port-picker #baud').val());
-            var selected_port = $('div#port-picker #port option:selected').data().isManual ?
-                    $('#port-override').val() :
-                    String($('div#port-picker #port').val());
-            if (selected_port === 'DFU') {
-                GUI.log(i18n.getMessage('dfu_connect_message'));
+            const selectedPort = $('div#port-picker #port option:selected');
+
+            let portName;
+            if (selectedPort.data().isManual) {
+                portName = $('#port-override').val();
+            } else {
+                portName = String($('div#port-picker #port').val());
             }
-            else if (selected_port != '0') {
+
+            if (selectedPort.data().isDFU) {
+                $('select#baud').hide();
+            } else if (portName !== '0') {
                 if (!clicks) {
-                    console.log('Connecting to: ' + selected_port);
-                    GUI.connecting_to = selected_port;
+                    console.log(`Connecting to: ${portName}`);
+                    GUI.connecting_to = portName;
 
                     // lock port select & baud while we are connecting / connected
                     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
                     $('div.connect_controls a.connect_state').text(i18n.getMessage('connecting'));
 
-                    serial.connect(selected_port, {bitrate: selected_baud}, onOpen);
+                    serial.connect(portName, {bitrate: selected_baud}, onOpen);
 
                     toggleStatus();
                 } else {

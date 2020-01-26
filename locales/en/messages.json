@@ -2811,6 +2811,9 @@
     "firmwareFlasherButtonDownloading": {
         "message": "Downloading..."
     },
+    "firmwareFlasherExitDfu": {
+        "message": "Exit DFU Mode"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Flash Firmware"
     },

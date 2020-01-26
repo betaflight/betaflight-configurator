@@ -89,7 +89,7 @@ function read_hex_file(data) {
     if (result.end_of_file && hexfile_valid) {
         postMessage(result);
     } else {
-        postMessage(false);
+        postMessage(null);
     }
 }
 
