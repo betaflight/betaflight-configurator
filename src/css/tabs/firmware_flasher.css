@@ -215,6 +215,17 @@
     background-color: #dedcdc;
 }
 
+.tab-firmware_flasher .buttons a.exit_dfu.locked {
+    float: left;
+    background-color: #b8b8b8;
+}
+
+.tab-firmware_flasher .buttons a.exit_dfu.locked:hover {
+    float: left;
+    cursor: default;
+    background-color: #b8b8b8;
+}
+
 .tab-firmware_flasher .buttons a.flash_firmware.locked {
     background-color: #b8b8b8;
 }

@@ -150,15 +150,17 @@ PortHandler.check = function () {
 
 PortHandler.check_usb_devices = function (callback) {
     chrome.usb.getDevices(usbDevices, function (result) {
+        const portPickerElement = $("div#port-picker #port");
+        const dfuElement = portPickerElement.children("[value='DFU']");
         if (result.length) {
-            if (!$("div#port-picker #port [value='DFU']").length) {
-                $('div#port-picker #port').append($('<option/>', {value: "DFU", text: "DFU", data: {isDFU: true}}));
-                $('div#port-picker #port').val('DFU');
+            if (!dfuElement.length) {
+                portPickerElement.append($('<option/>', {value: "DFU", text: "DFU", data: {isDFU: true}}));
+                portPickerElement.val('DFU').change();
             }
             self.dfu_available = true;
         } else {
-            if ($("div#port-picker #port [value='DFU']").length) {
-               $("div#port-picker #port [value='DFU']").remove();
+            if (dfuElement.length) {
+               dfuElement.remove();
             }
             self.dfu_available = false;
         }
@@ -168,15 +170,15 @@ PortHandler.check_usb_devices = function (callback) {
 };
 
 PortHandler.update_port_select = function (ports) {
-    $('div#port-picker #port').html(''); // drop previous one
+    const portPickerElement = $("div#port-picker #port");
+    portPickerElement.empty();
 
     for (var i = 0; i < ports.length; i++) {
-        $('div#port-picker #port').append($("<option/>", {value: ports[i], text: ports[i], data: {isManual: false}}));
+        portPickerElement.append($("<option/>", {value: ports[i], text: ports[i], data: {isManual: false}}));
     }
 
-    $('div#port-picker #port').append($("<option/>", {value: 'manual', i18n: 'portsSelectManual', data: {isManual: true}}));
+    portPickerElement.append($("<option/>", {value: 'manual', i18n: 'portsSelectManual', data: {isManual: true}}));
     i18n.localizePage();
-
 };
 
 PortHandler.port_detected = function(name, code, timeout, ignore_timeout) {
