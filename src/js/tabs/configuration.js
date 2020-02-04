@@ -557,57 +557,73 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }).change();
 
         // Gyro and PID update
-        var gyroUse32kHz_e = $('input[id="gyroUse32kHz"]');
-        var gyro_select_e = $('select.gyroSyncDenom');
-        var pid_select_e = $('select.pidProcessDenom');
+        const gyroUse32kHzElement = $('input[id="gyroUse32kHz"]');
+        const gyroTextElement = $('input.gyroFrequency');
+        const gyroSelectElement = $('select.gyroSyncDenom');
+        const pidSelectElement = $('select.pidProcessDenom');
 
-         function addDenomOption(element, denom, baseFreq) {
-            element.append('<option value="' + denom + '">' + ((baseFreq / denom * 100).toFixed(0) / 100) + ' kHz</option>');
+        function addDenomOption(element, denom, baseFreq) {
+            let denomDescription;
+            if (baseFreq === 0) {
+                denomDescription = i18n.getMessage('configurationSpeedPidNoGyro', {'value' : denom});
+            } else {
+                denomDescription = i18n.getMessage('configurationKHzUnitLabel', { 'value' : (baseFreq / denom).toFixed(2)});
+            }
+            element.append(`<option value="${denom}">${denomDescription}</option>`);
         }
 
-        var updateGyroDenom = function (gyroBaseFreq) {
-            var originalGyroDenom = gyro_select_e.val();
+        const updateGyroDenom = function (gyroBaseFreq) {
 
-            gyro_select_e.empty();
+            gyroTextElement.hide();
 
-            var denom = 1;
-            while (denom <= 8) {
-                addDenomOption(gyro_select_e, denom, gyroBaseFreq);
-                denom ++;
+            const originalGyroDenom = gyroSelectElement.val();
+
+            gyroSelectElement.empty();
+
+            const MAX_DENOM = semver.gte(CONFIG.apiVersion, "1.25.0") ? 32 : 8;
+            for (let denom = 1; denom <= MAX_DENOM; denom++) {
+                addDenomOption(gyroSelectElement, denom, gyroBaseFreq);
             }
 
-            if (semver.gte(CONFIG.apiVersion, "1.25.0")) {
-                while (denom <= 32) {
-                     addDenomOption(gyro_select_e, denom, gyroBaseFreq);
+            gyroSelectElement.val(originalGyroDenom);
 
-                     denom ++;
-                }
-            }
+            gyroSelectElement.change();
+         };
 
-            gyro_select_e.val(originalGyroDenom);
+         const updateGyroDenomReadOnly = function (gyroFrequency) {
+             gyroSelectElement.hide();
 
-            gyro_select_e.change();
-        };
+             let gyroContent;
+             if (gyroFrequency === 0) {
+                gyroContent = i18n.getMessage('configurationSpeedGyroNoGyro');
+             } else {
+                gyroContent = i18n.getMessage('configurationKHzUnitLabel', { 'value' : (gyroFrequency / 1000).toFixed(2)});
+             }
+             gyroTextElement.val(gyroContent);
+         };
 
-        if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0")) {
-            gyroUse32kHz_e.prop('checked', PID_ADVANCED_CONFIG.gyroUse32kHz !== 0);
+         if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0")) {
+             gyroUse32kHzElement.prop('checked', PID_ADVANCED_CONFIG.gyroUse32kHz !== 0);
 
-            gyroUse32kHz_e.change(function () {
-                var gyroBaseFreq;
-                if ($(this).is(':checked')) {
-                    gyroBaseFreq = 32;
-                } else {
-                    gyroBaseFreq = 8;
-                }
+             gyroUse32kHzElement.change(function () {
+                 const gyroBaseFreq = ($(this).is(':checked'))? 32 : 8;
 
-                updateGyroDenom(gyroBaseFreq);
-            }).change();
-        } else {
-            $('div.gyroUse32kHz').hide();
+                 updateGyroDenom(gyroBaseFreq);
+             }).change();
 
-            updateGyroDenom(8);
+         } else {
+
+             $('div.gyroUse32kHz').hide();
+
+             if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                 updateGyroDenomReadOnly(CONFIG.sampleRateHz);
+             } else {
+                 updateGyroDenom(8);
+             }
+
+            gyroSelectElement.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
+
         }
-
 
         if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
             $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeNo32KhzHelp'));
@@ -615,39 +631,32 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeHelp'));
         }
 
-        gyro_select_e.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
+        gyroSelectElement.change(function () {
+            const originalPidDenom = pidSelectElement.val();
 
-        gyro_select_e.change(function () {
-            var originalPidDenom = pid_select_e.val();
-
-            var pidBaseFreq = 8;
-            if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0") && gyroUse32kHz_e.is(':checked')) {
-                pidBaseFreq = 32;
-            }
-
-            pidBaseFreq = pidBaseFreq / parseInt($(this).val());
-
-            pid_select_e.empty();
-
-            var denom = 1;
-
-            while (denom <= 8) {
-                addDenomOption(pid_select_e, denom, pidBaseFreq);
-                denom ++;
-            }
-
-            if (semver.gte(CONFIG.apiVersion, "1.24.0")) {
-                while (denom <= 16) {
-                    addDenomOption(pid_select_e, denom, pidBaseFreq);
-
-                    denom ++;
+            let pidBaseFreq;
+            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                pidBaseFreq = CONFIG.sampleRateHz / 1000;
+            } else {
+                pidBaseFreq = 8;
+                if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0") && gyroUse32kHzElement.is(':checked')) {
+                    pidBaseFreq = 32;
                 }
+                pidBaseFreq = pidBaseFreq / parseInt($(this).val());
             }
 
-            pid_select_e.val(originalPidDenom);
+            pidSelectElement.empty();
+
+            const MAX_DENOM = semver.gte(CONFIG.apiVersion, "1.24.0") ? 16 : 8;
+
+            for (let denom = 1; denom <= MAX_DENOM; denom++) {
+                addDenomOption(pidSelectElement, denom, pidBaseFreq);
+            }
+
+            pidSelectElement.val(originalPidDenom);
         }).change();
 
-        pid_select_e.val(PID_ADVANCED_CONFIG.pid_process_denom);
+        pidSelectElement.val(PID_ADVANCED_CONFIG.pid_process_denom);
 
         $('input[id="accHardwareSwitch"]').prop('checked', SENSOR_CONFIG.acc_hardware !== 1);
         $('input[id="baroHardwareSwitch"]').prop('checked', SENSOR_CONFIG.baro_hardware !== 1);
@@ -1194,8 +1203,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             PID_ADVANCED_CONFIG.fast_pwm_protocol = parseInt(esc_protocol_e.val()-1);
             PID_ADVANCED_CONFIG.use_unsyncedPwm = $('input[id="unsyncedPWMSwitch"]').is(':checked') ? 1 : 0;
             PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
-            PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyro_select_e.val());
-            PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pid_select_e.val());
+            PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyroSelectElement.val());
+            PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pidSelectElement.val());
             PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
             if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0")) {
                 PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;

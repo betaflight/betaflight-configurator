@@ -432,8 +432,16 @@
     width: 100%;
 }
 
-.tab-configuration .gyroSyncDenom, .tab-configuration .pidProcessDenom {
+.tab-configuration .gyroSyncDenom, .tab-configuration .pidProcessDenom, .tab-configuration .gyroFrequency {
     width:90px;
+}
+
+.tab-configuration .gyroFrequency {
+    border: none;
+    background-color: var(--alternativeBackground);
+    padding-left: 6px;
+    margin-right: 10px;
+    font-weight: bold;
 }
 
 .tab-configuration ._3dSettings {

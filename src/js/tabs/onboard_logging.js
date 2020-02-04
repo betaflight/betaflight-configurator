@@ -192,15 +192,21 @@ TABS.onboard_logging.initialize = function (callback) {
     function populateLoggingRates(loggingRatesSelect) {
 
         // Offer a reasonable choice of logging rates (if people want weird steps they can use CLI)
-        var loggingRates = [];
-        var pidRateBase = 8000;
+        let loggingRates = [];
 
-        if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0") && PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
-            pidRateBase = 32000;
+        let pidRate;
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            pidRate = CONFIG.sampleRateHz / PID_ADVANCED_CONFIG.pid_process_denom;
+
+        } else {
+
+            let pidRateBase = 8000;
+
+            if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0") && PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
+                pidRateBase = 32000;
+            }
+            pidRate = pidRateBase / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom;
         }
-
-        var pidRate = pidRateBase / PID_ADVANCED_CONFIG.gyro_sync_denom /
-        PID_ADVANCED_CONFIG.pid_process_denom;
 
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             loggingRates = [

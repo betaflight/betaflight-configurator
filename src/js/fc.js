@@ -104,6 +104,7 @@ var FC = {
             signature:                        [],
             mcuTypeId:                        255,
             configurationState:               0,
+            sampleRateHz:                     0,
         };
 
         BF_CONFIG = {
