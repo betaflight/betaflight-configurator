@@ -416,6 +416,7 @@ var FC = {
             dyn_notch_width_percent:    0,
             dyn_notch_q:                0,
             dyn_notch_min_hz:           0,
+            dyn_notch_max_hz:           0,
             gyro_rpm_notch_harmonics:   0,
             gyro_rpm_notch_min_hz:      0,
         };

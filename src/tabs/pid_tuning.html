@@ -1123,7 +1123,7 @@
                                     </div>
                                 </th>
                             </tr>
-                            <tr class="newFilter dynamicNotch">
+                            <tr class="newFilter dynamicNotch dynamicNotchRange">
                                 <td>
                                     <select name="dynamicNotchRange">
                                         <!--  Populated on execution -->
@@ -1174,6 +1174,19 @@
                                             <span i18n="pidTuningDynamicNotchMinHz"></span>
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchMinHzHelp" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="newFilter dynamicNotch dynamicNotchMaxHz">
+                                <td>
+                                    <input type="number" name="dynamicNotchMaxHz" step="1" min="200" max="1000"/>
+                                </td>
+                                <td>
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningDynamicNotchMaxHz"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningDynamicNotchMaxHzHelp" />
                                     </div>
                                 </td>
                             </tr>

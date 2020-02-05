@@ -1078,6 +1078,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                 FILTER_CONFIG.gyro_rpm_notch_harmonics = data.readU8();
                                 FILTER_CONFIG.gyro_rpm_notch_min_hz = data.readU8();
                             }
+                            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                                FILTER_CONFIG.dyn_notch_max_hz = data.readU16();
+                            }
                         }
                     }
                 }
@@ -2006,6 +2009,9 @@ MspHelper.prototype.crunch = function(code) {
                           .push16(FILTER_CONFIG.dyn_notch_min_hz)
                           .push8(FILTER_CONFIG.gyro_rpm_notch_harmonics)
                           .push8(FILTER_CONFIG.gyro_rpm_notch_min_hz);
+                }
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    buffer.push16(FILTER_CONFIG.dyn_notch_max_hz);
                 }
             }
             break;
