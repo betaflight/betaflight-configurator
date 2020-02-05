@@ -800,6 +800,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                     if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                         CONFIG.configurationState = data.readU8();
+
+                        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                            CONFIG.sampleRateHz = data.readU16();
+                        }
+
                     }
                 } else {
                     CONFIG.mcuTypeId = 255;
