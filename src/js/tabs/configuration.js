@@ -625,11 +625,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
-            $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeNo32KhzHelp'));
-        } else {
-            $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeHelp'));
-        }
+        $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeHelp'));
 
         gyroSelectElement.change(function () {
             const originalPidDenom = pidSelectElement.val();
