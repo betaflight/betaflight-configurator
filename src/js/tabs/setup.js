@@ -240,7 +240,7 @@ TABS.setup.initialize = function (callback) {
                                                                 'DSHOT_BBANG']);
             }
             if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
-                disarmFlagElements = disarmFlagElements.concat(['ACC_CALIB']);
+                disarmFlagElements = disarmFlagElements.concat(['NO_ACC_CAL']);
             }
 
             // Always the latest element

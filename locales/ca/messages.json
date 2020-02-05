@@ -827,9 +827,9 @@
         "message": "El DSHOT bitbanged no funciona correctament i no es poden controlar els motors. Probablement causat per un conflicte de temporitzador amb altres funcions activades al controlador de vol.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipACC_CALIB": {
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "L'acceleròmetre no s'ha calibrat i estan habilitades funcions que es basen en ell. Calibrar l’acceleròmetre.",
-        "description": "Message that pops up to describe the ACC_CALIB arming disable flag"
+        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un dels altres desarmar banderes està actiu quan es fa armament",
