@@ -349,10 +349,17 @@ TABS.pid_tuning.initialize = function (callback) {
             } else {
                 $('.dynamicNotch').hide();
             }
+            $('.dynamicNotchRange').toggle(semver.lt(CONFIG.apiVersion, "1.43.0"));
             $('.pid_filter select[name="dynamicNotchRange"]').val(FILTER_CONFIG.dyn_notch_range);
             $('.pid_filter input[name="dynamicNotchWidthPercent"]').val(FILTER_CONFIG.dyn_notch_width_percent);
             $('.pid_filter input[name="dynamicNotchQ"]').val(FILTER_CONFIG.dyn_notch_q);
             $('.pid_filter input[name="dynamicNotchMinHz"]').val(FILTER_CONFIG.dyn_notch_min_hz);
+            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                $('.pid_filter input[name="dynamicNotchMinHz"]').attr("max","250");
+                $('.pid_filter input[name="dynamicNotchMaxHz"]').val(FILTER_CONFIG.dyn_notch_max_hz);
+            } else {
+                $('.dynamicNotchMaxHz').hide();
+            }
 
             $('.rpmFilter').toggle(MOTOR_CONFIG.use_dshot_telemetry);
 
@@ -752,6 +759,10 @@ TABS.pid_tuning.initialize = function (callback) {
             let rpmFilterEnabled = $('.pid_filter #rpmFilterEnabled').is(':checked');
             FILTER_CONFIG.gyro_rpm_notch_harmonics = rpmFilterEnabled ? parseInt($('.pid_filter input[name="rpmFilterHarmonics"]').val()) : 0;
             FILTER_CONFIG.gyro_rpm_notch_min_hz = parseInt($('.pid_filter input[name="rpmFilterMinHz"]').val());
+        }
+
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            FILTER_CONFIG.dyn_notch_max_hz = parseInt($('.pid_filter input[name="dynamicNotchMaxHz"]').val());
         }
     }
 
