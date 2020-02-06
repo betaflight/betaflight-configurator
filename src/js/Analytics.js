@@ -26,7 +26,7 @@ var Analytics = function (trackingId, userId, appName, appVersion, changesetId, 
     this.EVENT_CATEGORIES = {
         APPLICATION: 'Application',
         FLIGHT_CONTROLLER: 'FlightController',
-        FIRMWARE: 'Firmware',
+        FLASHING: 'Flashing',
     };
 
     this.DATA = {
