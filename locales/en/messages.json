@@ -1373,9 +1373,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Note:</strong> Make sure your FC is able to operate at these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance."
     },
-    "configurationLoopTimeNo32KhzHelp": {
-        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Note about 32 kHz gyro sampling mode:</strong> Support for 32 kHz gyro sampling mode was added to Betaflight as an experimental feature. In the years that it was available, it has never shown that it has any advantage over 8 kHz gyro sampling mode, due to its susceptibility to vibrations, and its high noise level which require aggressive filtering, causing delays in the control loop. For this reason, <strong>support for 32 kHz gyro sampling mode has been dropped</strong> in Betaflight 4.0."
-    },
     "configurationGPS": {
         "message": "GPS"
     },
