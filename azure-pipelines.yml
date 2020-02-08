@@ -53,7 +53,7 @@ stages:
 
   - job: 'MacOS'
     pool:
-      vmImage: 'macos-10.13'
+      vmImage: 'macos-10.15'
 
     steps:
     - task: UseNode@1
