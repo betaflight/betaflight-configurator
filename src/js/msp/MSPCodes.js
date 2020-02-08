@@ -173,7 +173,10 @@ var MSPCodes = {
     MSP_DEBUGMSG:                   253, // Not used
     MSP_DEBUG:                      254,
 
-    // MSPv2
+    // MSPv2 Common
     MSP2_COMMON_SERIAL_CONFIG:      0x1009,
     MSP2_COMMON_SET_SERIAL_CONFIG:  0x100A,
+
+    // MSPv2 Betaflight specific
+    MSP2_BETAFLIGHT_BIND:           0x3000,
 };

@@ -634,6 +634,7 @@ var FC = {
         HAS_FLASH_BOOTLOADER: 3,
         SUPPORTS_CUSTOM_DEFAULTS: 4,
         HAS_CUSTOM_DEFAULTS: 5,
+        SUPPORTS_RX_BIND: 6,
     },
 
     boardHasVcp: function () {

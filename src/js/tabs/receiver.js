@@ -325,6 +325,18 @@ TABS.receiver.initialize = function (callback) {
             });
         });
 
+        let showBindButton = false;
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            showBindButton = bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_RX_BIND);
+
+            $("a.bind").click(function() {
+                MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
+
+                GUI.log(i18n.getMessage('receiverButtonBindMessage'));
+            });
+        }
+        $(".bind_btn").toggle(showBindButton);
+
         // RC Smoothing
         if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
             $('.tab-receiver .rcSmoothing').show();
