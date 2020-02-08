@@ -925,28 +925,6 @@ TABS.pid_tuning.initialize = function (callback) {
             self.currentRates.rc_expo_pitch = self.currentRates.rc_expo;
         }
 
-        function activateSubtab(subtabName) {
-            const names = ['pid', 'rates', 'filter'];
-            if (!names.includes(subtabName)) {
-                console.debug('Invalid subtab name: "' + subtabName + '"');
-                return;
-            }
-            for (name of names) {
-                const el = $('.tab-pid_tuning .subtab-' + name);
-                el[name == subtabName ? 'show' : 'hide']();
-            }
-            $('.tab-pid_tuning .tab-container .tab').removeClass('active');
-            $('.tab-pid_tuning .tab-container .' + subtabName).addClass('active');
-            self.activeSubtab = subtabName;
-            if (subtabName == 'rates') {
-                // force drawing of throttle curve once the throttle curve container element is available
-                // deferring drawing like this is needed to acquire the exact pixel size of the canvas
-                redrawThrottleCurve(true);
-            }
-        }
-
-        activateSubtab(self.activeSubtab);
-
         $('.tab-pid_tuning .tab-container .pid').on('click', () => activateSubtab('pid'));
 
         $('.tab-pid_tuning .tab-container .rates').on('click', () => activateSubtab('rates'));
@@ -1153,6 +1131,28 @@ TABS.pid_tuning.initialize = function (callback) {
         populateFilterTypeSelector('dtermLowpassDynType', loadFilterTypeValues());
 
         pid_and_rc_to_form();
+
+        function activateSubtab(subtabName) {
+            const names = ['pid', 'rates', 'filter'];
+            if (!names.includes(subtabName)) {
+                console.debug('Invalid subtab name: "' + subtabName + '"');
+                return;
+            }
+            for (name of names) {
+                const el = $('.tab-pid_tuning .subtab-' + name);
+                el[name == subtabName ? 'show' : 'hide']();
+            }
+            $('.tab-pid_tuning .tab-container .tab').removeClass('active');
+            $('.tab-pid_tuning .tab-container .' + subtabName).addClass('active');
+            self.activeSubtab = subtabName;
+            if (subtabName == 'rates') {
+                // force drawing of throttle curve once the throttle curve container element is available
+                // deferring drawing like this is needed to acquire the exact pixel size of the canvas
+                redrawThrottleCurve(true);
+            }
+        }
+
+        activateSubtab(self.activeSubtab);
 
         var pidController_e = $('select[name="controller"]');
 
