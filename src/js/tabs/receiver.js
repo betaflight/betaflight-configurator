@@ -331,6 +331,8 @@ TABS.receiver.initialize = function (callback) {
 
             $("a.bind").click(function() {
                 MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
+
+                GUI.log(i18n.getMessage('receiverButtonBindMessage'));
             });
         }
         $(".bind_btn").toggle(showBindButton);

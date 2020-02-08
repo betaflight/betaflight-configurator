@@ -1955,6 +1955,9 @@
     "receiverButtonBind": {
         "message": "Bind Receiver"
     },
+    "receiverButtonBindMessage": {
+        "message": "Bind request sent to the flight controller."
+    },
     "receiverButtonSticks": {
         "message": "Control sticks"
     },
