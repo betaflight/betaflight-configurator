@@ -717,7 +717,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                         baud = parseInt($('#flash_manual_baud_rate').val());
                     }
 
-                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing', self.unifiedTargetConfigName || null);
+                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'Flashing', self.unifiedTargetConfigName || null);
 
                     STM32.connect(port, baud, firmware, options);
                 } else {
@@ -725,7 +725,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
                 }
             } else {
-                analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'Flashing', self.unifiedTargetConfigName || null);
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'Flashing', self.unifiedTargetConfigName || null);
 
                 STM32DFU.connect(usbDevices, firmware, options);
             }
@@ -963,7 +963,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         exitDfuElement.click(function () {
             if (!$(this).hasClass('disabled')) {
                 if (!GUI.connect_lock) { // button disabled while flashing is in progress
-                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'ExitDfu', null);
+                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'ExitDfu', null);
                     try {
                         STM32DFU.connect(usbDevices, self.parsed_hex, { exitDfu: true });
                     } catch (e) {
@@ -1043,7 +1043,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                         return;
                                     }
 
-                                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FIRMWARE, 'SaveFirmware', path);
+                                    analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'SaveFirmware', path);
                                 };
 
                                 writer.write(blob);
