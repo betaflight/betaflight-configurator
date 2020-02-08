@@ -834,9 +834,9 @@
         "message": "DSHOT bitbanged ez da behar bezala funtzionatzen eta motorrak ezin dira kontrolatu. Litekeena da hegaldiaren kontroladorean gaitutako beste funtzio batzuekin tenporizadore baten gatazka.",
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipACC_CALIB": {
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "Azelerometroa ez da kalibratu eta haren mende dauden funtzioak gaituta daude. Azelerometroa kalibratu.",
-        "description": "Message that pops up to describe the ACC_CALIB arming disable flag"
+        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Desarmatzeko beste banderietako bat gaituta zegoen armatzerakoan",
