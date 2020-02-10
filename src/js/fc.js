@@ -458,6 +458,9 @@ var FC = {
             motorOutputLimit:           0,
             autoProfileCellCount:       0,
             idleMinRpm:                 0,
+            ff_interpolate_sp:          0,
+            ff_smooth_factor:           0,
+            ff_boost:                   0,
         };
         ADVANCED_TUNING_ACTIVE = { ...ADVANCED_TUNING };
 

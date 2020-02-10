@@ -1761,6 +1761,33 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
     },
+    "pidTuningFfInterpolateSp": {
+        "message": "FF Interpolate"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "The following options fine-tune feed forward from race/aggressive to smooth/HD.<br><br> Mode: set to NO_AVG for race, AVG_2 for race/fast freestyle, AVG_3 for HD recording, AVG_4 for HD cinematic smoothness.<br><br> Smoothness: limits the amount of change that any one incoming radio step can make, increase for smoother FF signal, decrease for more aggressive FF responses.<br><br> Boost: helps overcome motor lag with quick stick inputs, can increase jitter. Try 10 for HD, 20 for racers. Up to 30 may be useful for low authority quads but can cause micro overshoot or jitter."
+    },
+    "pidTuningFfInterpolate": {
+        "message": "Mode"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "No AVG"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "AVG 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "AVG 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "AVG 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Smoothness"
+    },
+    "pidTuningFfBoost": {
+        "message": "Boost"
+    },
     "pidTuningProportional": {
         "message": "Proportional"
     },

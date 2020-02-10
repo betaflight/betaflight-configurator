@@ -474,6 +474,40 @@
                                     </div>
                                 </td>
                             </tr>
+							
+                            <tr class="ffInterpolateSp">
+                                <td><input type="checkbox" id="ffInterpolateSp" class="toggle" /></td>
+                                <td colspan="2">
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningFfInterpolateSpHelp"></div>
+                                    <span i18n="pidTuningFfInterpolateSp" />
+
+                                    <span class="ffInterpolate suboption">
+                                        <select id="ffInterpolate">
+                                            <option i18n="pidTuningFfInterpolateSpOptionNoAverage"     value="1">
+                                            <option i18n="pidTuningFfInterpolateSpOptionAverage2"      value="2"/>
+                                            <option i18n="pidTuningFfInterpolateSpOptionAverage3"      value="3"/>
+                                            <option i18n="pidTuningFfInterpolateSpOptionAverage4"      value="4"/>
+                                        </select>
+                                        <label for="ffInterpolate">
+                                            <span i18n="pidTuningFfInterpolate" />
+                                        </label>
+                                    </span>
+
+                                    <span class="ffSmoothFactor suboption">
+                                        <input type="number" name="ffSmoothFactor" step="1" min="0" max="75" />
+                                        <label for="ffSmoothFactor">
+                                            <span i18n="pidTuningFfSmoothFactor" />
+                                        </label>
+                                    </span>
+
+                                    <span class="ffBoost suboption">
+                                        <input type="number" name="ffBoost" step="1" min="0" max="50" />
+                                        <label for="ffBoost">
+                                            <span i18n="pidTuningFfBoost" />
+                                        </label>
+                                    </span>
+                                </td>
+                            </tr>
 
                             <tr class="acroTrainerAngleLimit">
                                 <td><input type="number" name="acroTrainerAngleLimit-number" step="1" min="10" max="80"/></td>

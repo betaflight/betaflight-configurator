@@ -395,8 +395,6 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('.pid_filter input[name="rpmFilterHarmonics"]').val(FILTER_DEFAULT.gyro_rpm_notch_harmonics);
                 }
             }).prop('checked', FILTER_CONFIG.gyro_rpm_notch_harmonics != 0).change();
-
-
         } else {
             $('.itermRelaxCutoff').hide();
             $('.dynamicNotch').hide();
@@ -436,6 +434,25 @@ TABS.pid_tuning.initialize = function (callback) {
             self.currentRatesType = null;
             self.previousRatesType = null;
             $('.rates_type').hide();
+        }
+
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+            // FF Interpolate
+            const ffInterpolateCheck = $('input[id="ffInterpolateSp"]');
+
+            ffInterpolateCheck.prop('checked', ADVANCED_TUNING.ff_interpolate_sp !== 0);
+            $('select[id="ffInterpolate"]').val(ADVANCED_TUNING.ff_interpolate_sp > 0 ? ADVANCED_TUNING.ff_interpolate_sp : 2);
+            $('input[name="ffSmoothFactor"]').val(ADVANCED_TUNING.ff_smooth_factor);
+            $('input[name="ffBoost"]').val(ADVANCED_TUNING.ff_boost);
+
+            ffInterpolateCheck.change(function() {
+                const checked = $(this).is(':checked');
+                $('.ffInterpolateSp .suboption').toggle(checked);
+            });
+            ffInterpolateCheck.change();
+
+        } else {
+            $('.ffInterpolateSp').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -898,7 +915,11 @@ TABS.pid_tuning.initialize = function (callback) {
 
             RC_tuning.rates_type = selectedRatesType;
         }
+
         if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+            ADVANCED_TUNING.ff_interpolate_sp = $('input[id="ffInterpolateSp"]').is(':checked') ? $('select[id="ffInterpolate"]').val() : 0;
+            ADVANCED_TUNING.ff_smooth_factor = parseInt($('input[name="ffSmoothFactor"]').val());
+            ADVANCED_TUNING.ff_boost = parseInt($('input[name="ffBoost"]').val());
             FILTER_CONFIG.dyn_lpf_curve_expo = parseInt($('.pid_filter input[name="dtermLowpassDynExpo"]').val());
         }
     }
