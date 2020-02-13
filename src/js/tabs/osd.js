@@ -397,7 +397,35 @@ OSD.drawStickOverlayPreview = function () {
         }
     }
     return stickOverlay;
-}
+};
+
+OSD.drawCameraFramePreview = function () {
+
+    const FRAME_WIDTH = OSD.data.parameters.cameraFrameWidth;
+    const FRAME_HEIGHT = OSD.data.parameters.cameraFrameHeight;
+
+    const cameraFrame = [];
+
+    for (let x = 0; x < FRAME_WIDTH; x++) {
+        const sym = (x === 0 || x === (FRAME_WIDTH -1)) ? SYM.STICK_OVERLAY_CENTER : SYM.STICK_OVERLAY_HORIZONTAL;
+        const frameUp = { x, y : 0, sym };
+        const frameDown = { x, y : FRAME_HEIGHT - 1, sym };
+
+        cameraFrame.push(frameUp);
+        cameraFrame.push(frameDown);
+    }
+
+    for (let y = 1; y < FRAME_HEIGHT - 1; y++) {
+        const sym = SYM.STICK_OVERLAY_VERTICAL;
+        const frameLeft = { x : 0, y, sym };
+        const frameRight = { x : FRAME_WIDTH - 1, y, sym };
+
+        cameraFrame.push(frameLeft);
+        cameraFrame.push(frameRight);
+    }
+
+    return cameraFrame;
+};
 
 OSD.loadDisplayFields = function() {
 
@@ -1077,10 +1105,20 @@ OSD.loadDisplayFields = function() {
             text: 'osdTextElementRcChannels',
             desc: 'osdDescElementRcChannels',
             default_position: -1,
-            draw_order: 395,
+            draw_order: 445,
             positionable: true,
             preview: [ "-1000", "  545", "  689", " 1000"],
         },
+        CAMERA_FRAME: {
+            name: 'OSD_CAMERA_FRAME',
+            text: 'osdTextElementCameraFrame',
+            desc: 'osdDescElementCameraFrame',
+            default_position: -1,
+            draw_order: 450,
+            positionable: true,
+            preview: OSD.drawCameraFramePreview,
+        },
+
     };
 };
 
@@ -1483,6 +1521,7 @@ OSD.chooseFields = function () {
                                                 if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
                                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                         F.RC_CHANNELS,
+                                                        F.CAMERA_FRAME,
                                                     ]);
                                                 }
                                             }
@@ -1752,6 +1791,13 @@ OSD.msp = {
                     result.push32(warningFlags);
 
                     result.push8(OSD.data.osd_profiles.selected + 1);
+
+                    result.push8(OSD.data.parameters.overlayRadioMode);
+                }
+
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    result.push8(OSD.data.parameters.cameraFrameWidth);
+                    result.push8(OSD.data.parameters.cameraFrameHeight);
                 }
             }
 
@@ -1820,6 +1866,11 @@ OSD.msp = {
         d.stat_items = [];
         d.warnings = [];
         d.timers = [];
+
+        d.parameters = {};
+        d.parameters.overlayRadioMode = 0;
+        d.parameters.cameraFrameWidth = 24;
+        d.parameters.cameraFrameHeight = 11;
 
         // Read display element positions, the parsing is done later because we need the number of profiles
         var items_positions_read = [];
@@ -1902,13 +1953,23 @@ OSD.msp = {
             }
         }
 
-        // OSD profiles
         if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            // OSD profiles
             d.osd_profiles.number = view.readU8();
             d.osd_profiles.selected = view.readU8() - 1;
+
+            // Overlay radio mode
+            d.parameters.overlayRadioMode = view.readU8();
+
         } else {
             d.osd_profiles.number = 1;
             d.osd_profiles.selected = 0;
+        }
+
+        // Camera frame size
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            d.parameters.cameraFrameWidth = view.readU8();
+            d.parameters.cameraFrameHeight = view.readU8();
         }
 
         // Now we have the number of profiles, process the OSD elements
