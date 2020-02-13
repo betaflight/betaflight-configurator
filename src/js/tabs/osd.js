@@ -1332,6 +1332,11 @@ OSD.constants = {
             text: 'osdWarningTextRssiDbm',
             desc: 'osdWarningRssiDbm'
         },
+        OVER_CAP: {
+            name: 'OVER_CAP',
+            text: 'osdWarningTextOverCap',
+            desc: 'osdWarningOverCap',
+        },
 
     },
     FONT_TYPES: [
@@ -1626,6 +1631,11 @@ OSD.chooseFields = function () {
             F.RSSI,
             F.LINK_QUALITY,
             F.RSSI_DBM,
+        ]);
+    }
+    if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
+            F.OVER_CAP,
         ]);
     }
 };
