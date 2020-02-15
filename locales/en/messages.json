@@ -5036,6 +5036,13 @@
     "osdWarningRssiDbm": {
         "message": "Warns when RSSI dBm value is below alarm setting"
     },
+    "osdWarningTextOverCap": {
+        "message": "Battery over capacity",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningOverCap": {
+        "message": "Warns when the consumed mAh exceeds the configured capacity limit"
+    },
     "osdWarningTextUnknown": {
         "message": "Unknown $1"
     },
