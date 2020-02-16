@@ -3542,7 +3542,7 @@
         "message": "I Term Relax"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Limits the accumulation of I Term when fast movements happen. This helps specially to reduce the bounceback at the end of rolls and other fast movements. You can choose the axes in which this is active, and if the fast movement is detectd using the Gyro or the Setpoint (stick)."
+        "message": "Limits the accumulation of I Term when fast movements happen. This helps specially to reduce the bounceback at the end of rolls and other fast movements. You can choose the axes in which this is active, and if the fast movement is detectd using the Gyro or the Setpoint (stick). <br><br>Cutoff: lower values suppress bounce-back after flips in low authority quads, high values increase high-rate turn precision for racing.<br>Set to 30-40 for racing, 20 for responsive freestyle builds, 10 for heavier freestyle quads, 3-5 for X-class."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Axes",

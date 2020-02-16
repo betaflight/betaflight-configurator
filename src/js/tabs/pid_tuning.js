@@ -234,6 +234,10 @@ TABS.pid_tuning.initialize = function (callback) {
             $('select[id="itermrelaxType"]').val(ADVANCED_TUNING.itermRelaxType);
             $('input[name="itermRelaxCutoff"]').val(ADVANCED_TUNING.itermRelaxCutoff);
 
+            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                $('.itermrelax input[name="itermRelaxCutoff"]').attr("max","50");
+            }
+
             itermRelaxCheck.change(function() {
                 var checked = $(this).is(':checked');
 
