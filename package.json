@@ -86,7 +86,7 @@
     "targz": "^1.0.1",
     "temp": "^0.9.0",
     "vinyl-source-stream": "^2.0.0",
-    "yarn": "^1.17.3"
+    "yarn": "^1.22.0"
   },
   "optionalDependencies": {
     "gulp-appdmg": "^1.0.3"
