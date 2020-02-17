@@ -588,7 +588,7 @@ TABS.vtx.initialize = function (callback) {
                 writer.onwriteend = function() {
                     dump_html_to_msp();
                     const vtxConfig = createVtxConfigInfo();
-                    const text = creatLuaTables(vtxConfig);
+                    const text = createLuaTables(vtxConfig);
                     const data = new Blob([text], { type: "application/text" });
 
                     // we get here at the end of the truncate method, change to the new end
@@ -935,7 +935,7 @@ TABS.vtx.initialize = function (callback) {
         return vtxConfig;
     }
 
-    function creatLuaTables(vtxConfig) {
+    function createLuaTables(vtxConfig) {
 
         let bandsString = "bandTable = { [0]=\"U\"";
         let frequenciesString = "frequencyTable = {\n";
@@ -957,7 +957,7 @@ TABS.vtx.initialize = function (callback) {
         const powerList = vtxConfig.vtx_table.powerlevels_list;
         let powersString = "powerTable = { ";
         for (let index = 0, len = powerList.length; index < len; ++index) {
-            powersString += `[${(index + 1)}]=${powerList[index].label}, `;
+            powersString += `[${(index + 1)}]="${powerList[index].label}", `;
         }
         powersString += "},\n";
 
