@@ -620,10 +620,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
              } else {
                  updateGyroDenom(8);
              }
-
-            gyroSelectElement.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
-
         }
+
+        gyroSelectElement.val(PID_ADVANCED_CONFIG.gyro_sync_denom);
 
         $('.systemconfigNote').html(i18n.getMessage('configurationLoopTimeHelp'));
 
