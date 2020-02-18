@@ -3,6 +3,7 @@
 TABS.vtx = {
     supported: false,
     vtxTableSavePending: false,
+    vtxTableFactoryBandsSupported: false,
     MAX_POWERLEVEL_VALUES: 8,
     MAX_BAND_VALUES: 8,
     MAX_BAND_CHANNELS_VALUES: 8,
@@ -195,11 +196,14 @@ TABS.vtx.initialize = function (callback) {
         const vtxTableNotConfigured = vtxSupported && VTX_CONFIG.vtx_table_available &&
             (VTX_CONFIG.vtx_table_bands === 0 || VTX_CONFIG.vtx_table_channels === 0 || VTX_CONFIG.vtx_table_powerlevels === 0);
 
+        TABS.vtx.vtxTableFactoryBandsSupported = VTX_CONFIG.vtx_type === 3;
+
         $(".vtx_supported").toggle(vtxSupported);
         $(".vtx_not_supported").toggle(!vtxSupported);
         $(".vtx_table_available").toggle(vtxSupported && VTX_CONFIG.vtx_table_available);
         $(".vtx_table_not_configured").toggle(vtxTableNotConfigured);
         $(".vtx_table_save_pending").toggle(TABS.vtx.vtxTableSavePending);
+        $(".factory_band").toggle(TABS.vtx.vtxTableFactoryBandsSupported);
 
         // Buttons
         $('.clipboard_available').toggle(Clipboard.available && Clipboard.readAvailable);
@@ -277,7 +281,7 @@ TABS.vtx.initialize = function (callback) {
         for (let i = 1; i <= TABS.vtx.VTXTABLE_BAND_LIST.length; i++) {
             $(`#vtx_table_band_name_${i}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name);
             $(`#vtx_table_band_letter_${i}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter);
-            $(`#vtx_table_band_factory_${i}`).prop("checked",TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band);
+            $(`#vtx_table_band_factory_${i}`).prop("checked", TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band);
             for (let j = 1; j <= TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies.length; j++) {
                 $(`#vtx_table_band_channel_${i}_${j}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies[j - 1]);
             }
@@ -896,7 +900,7 @@ TABS.vtx.initialize = function (callback) {
             TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_number = i;
             TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name = $(`#vtx_table_band_name_${i}`).val();
             TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter = $(`#vtx_table_band_letter_${i}`).val();
-            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band = $(`#vtx_table_band_factory_${i}`).prop('checked');
+            TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band = TABS.vtx.vtxTableFactoryBandsSupported ? $(`#vtx_table_band_factory_${i}`).prop('checked') : false;
 
             TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies = [];
             for (let j = 1; j <= VTX_CONFIG.vtx_table_channels; j++) {
