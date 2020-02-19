@@ -71,6 +71,7 @@
 .tab-auxiliary .mode .info {
     text-align: center;
     width: 10%;
+    white-space: nowrap;
     position: relative;
     background-color: #e4e4e4;
     border-bottom: 5px solid white;
@@ -160,6 +161,7 @@
     min-width: 90px;
     text-align: center;
     margin-top: -4px;
+    margin-left: 5px;
 }
 
 .tab-auxiliary .range .channel {
@@ -185,9 +187,9 @@
 
 .tab-auxiliary .range .channel-slider {
     float: left;
-    width: 80%;
+    width: 77%;
     margin-left: 20px;
-    margin-top: 1px;
+    margin-top: -4px;
 }
 
 .tab-auxiliary .mode .link .modeInfo {
