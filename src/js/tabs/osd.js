@@ -1013,7 +1013,7 @@ OSD.loadDisplayFields = function() {
             default_position: -1,
             draw_order: 390,
             positionable: true,
-            preview: FONT.symbol(SYM.LINK_QUALITY) + '8'
+            preview: FONT.symbol(SYM.LINK_QUALITY) + '4:100'
         },
         FLIGHT_DIST: {
             name: 'FLIGHT_DISTANCE',
