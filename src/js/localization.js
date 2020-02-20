@@ -6,7 +6,7 @@
 
 window.i18n = {};
 
-const languagesAvailables = ['ca', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'hr', 'id', 'it', 'ja', 'ko', 'lv', 'pt', 'pt_BR', 'ru', 'sv', 'zh_CN'];
+const languagesAvailables = ['ca', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'hr', 'id', 'it', 'ja', 'ko', 'lv', 'pt', 'pt_BR', 'pl', 'ru', 'sv', 'zh_CN'];
 
 const languageFallback = {
                             'pt': ['pt_BR', 'en'],
