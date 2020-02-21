@@ -2100,6 +2100,11 @@ TABS.pid_tuning.updateRatesLabels = function() {
                 {value: parseInt(maxAngularVelPitch), balloon: function() {drawBalloonLabel(stickContext, maxAngularVelPitch, curveWidth, rateScale * (maxAngularVel - parseInt(maxAngularVelPitch)), 'right', BALLOON_COLORS.pitch, balloonsDirty);}},
                 {value: parseInt(maxAngularVelYaw), balloon: function() {drawBalloonLabel(stickContext, maxAngularVelYaw,   curveWidth, rateScale * (maxAngularVel - parseInt(maxAngularVelYaw)),   'right', BALLOON_COLORS.yaw, balloonsDirty);}}
             ];
+            // show warning message if any axis angular velocity exceeds 1800d/s
+            const MAX_RATE_WARNING = 1800;
+            const warningRates = (parseInt(maxAngularVelRoll) > MAX_RATE_WARNING || parseInt(maxAngularVelPitch) > MAX_RATE_WARNING || parseInt(maxAngularVelYaw) > MAX_RATE_WARNING);
+            $('.maxRateWarning').toggle(warningRates);
+
             // and sort them in descending order so the largest value is at the top always
             balloons.sort(function(a,b) {return (b.value - a.value)});
 
