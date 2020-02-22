@@ -1108,9 +1108,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
               var checked = $(this).is(':checked');
               if (checked) {
-                $('._smallAngle').show()
+                $('.accelDisabled').show()
               } else {
-                $('._smallAngle').hide()
+                $('.accelDisabled').hide()
               }
             }
         });
