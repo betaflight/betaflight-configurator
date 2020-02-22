@@ -278,14 +278,18 @@ TABS.vtx.initialize = function (callback) {
         $("#vtx_table_channels").val(VTX_CONFIG.vtx_table_channels);
 
         // Populate VTX Table
+        let hasFactoryBands = false;
         for (let i = 1; i <= TABS.vtx.VTXTABLE_BAND_LIST.length; i++) {
             $(`#vtx_table_band_name_${i}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_name);
             $(`#vtx_table_band_letter_${i}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_letter);
             $(`#vtx_table_band_factory_${i}`).prop("checked", TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band);
+            hasFactoryBands = hasFactoryBands || TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_is_factory_band;
             for (let j = 1; j <= TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies.length; j++) {
                 $(`#vtx_table_band_channel_${i}_${j}`).val(TABS.vtx.VTXTABLE_BAND_LIST[i - 1].vtxtable_band_frequencies[j - 1]);
             }
         }
+
+        $(".vtx_table_factory_bands_not_supported").toggle(!TABS.vtx.vtxTableFactoryBandsSupported && hasFactoryBands);
 
         // Actions and other
         function frequencyOrBandChannel() {
