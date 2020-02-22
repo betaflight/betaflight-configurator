@@ -85,17 +85,20 @@ function setupAnalytics(result) {
     }
 
     if (GUI.isNWJS()) {
-        const win = GUI.nwGui.Window.get();
-        win.on('close', function () {
-            sendCloseEvent();
+        GUI.nwGui.Window.getAll(function (windows) {
+            windows.forEach(function (win) {
+                win.on('close', function () {
+                    sendCloseEvent();
 
-            this.close(true);
-        });
-        win.on('new-win-policy', function(frame, url, policy) {
-            // do not open the window
-            policy.ignore();
-            // and open it in external browser
-            GUI.nwGui.Shell.openExternal(url);
+                    this.close(true);
+                });
+                win.on('new-win-policy', function(frame, url, policy) {
+                    // do not open the window
+                    policy.ignore();
+                    // and open it in external browser
+                    GUI.nwGui.Shell.openExternal(url);
+                });
+            });
         });
     } else if (!GUI.isOther()) {
         // Looks like we're in Chrome - but the event does not actually get fired
