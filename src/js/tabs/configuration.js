@@ -1107,11 +1107,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[id="accHardwareSwitch"]').change(function() {
             if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
               var checked = $(this).is(':checked');
-              if (checked) {
-                $('._smallAngle').show()
-              } else {
-                $('._smallAngle').hide()
-              }
+              $('.accelNeeded').toggle(checked);
             }
         });
 
