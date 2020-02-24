@@ -58,6 +58,13 @@
     font-weight: bold;
 }
 
+.tab-configuration .featuresMultiple {
+    border-spacing: 0px;
+    margin-bottom: 5px;
+    margin-top: -5px;
+    padding: 0px;
+}
+
 .tab-configuration dl.features dt {
     float: left;
     width: 10px;
