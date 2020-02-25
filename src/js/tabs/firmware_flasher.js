@@ -604,7 +604,8 @@ TABS.firmware_flasher.initialize = function (callback) {
                                 const manufacturerId = manufacturerIds[index];
                                 const targetId = `${target}+${manufacturerId}`;
                                 // Check to see if the cached configuration is the one we want.
-                                if (!storageObj || !storageObj.target || storageObj.target !== targetId) {
+                                if (!storageObj || !storageObj.target || storageObj.target !== targetId
+                                    || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod) {
                                     // Have to go and try and get the unified config, and then do stuff
                                     $.get(unifiedConfigBoard[manufacturerId], function(response) {
                                         console.log('got unified config');
@@ -612,7 +613,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                                         let tempObj = {};
                                         tempObj['data'] = response;
                                         tempObj['target'] = targetId;
-                                        tempObj['checkTime'] = checkTime;
+                                        tempObj['lastUpdate'] = checkTime;
                                         let newStorageObj = {};
                                         newStorageObj[storageTag] = tempObj;
                                         chrome.storage.local.set(newStorageObj);
