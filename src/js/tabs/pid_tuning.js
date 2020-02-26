@@ -2102,7 +2102,8 @@ TABS.pid_tuning.updateRatesLabels = function() {
             ];
             // show warning message if any axis angular velocity exceeds 1800d/s
             const MAX_RATE_WARNING = 1800;
-            const warningRates = (parseInt(maxAngularVelRoll) > MAX_RATE_WARNING || parseInt(maxAngularVelPitch) > MAX_RATE_WARNING || parseInt(maxAngularVelYaw) > MAX_RATE_WARNING);
+            const warningRates = (parseInt(maxAngularVelRoll) > MAX_RATE_WARNING || parseInt(maxAngularVelPitch) > MAX_RATE_WARNING
+                || parseInt(maxAngularVelYaw) > MAX_RATE_WARNING);
             $('.maxRateWarning').toggle(warningRates);
 
             // and sort them in descending order so the largest value is at the top always
