@@ -544,6 +544,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('div.unsyncedpwmfreq').toggle(!digitalProtocol);
 
             $('div.digitalIdlePercent').toggle(digitalProtocol);
+            $('.escSensor').toggle(digitalProtocol);
 
             $('div.checkboxDshotBidir').toggle(semver.gte(CONFIG.apiVersion, "1.42.0") && digitalProtocol);
             $('div.motorPoles').toggle(semver.gte(CONFIG.apiVersion, "1.42.0"));
