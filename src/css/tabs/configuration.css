@@ -59,7 +59,7 @@
 }
 
 .tab-configuration .featuresMultiple {
-    border-spacing: 0px;
+    border-collapse: collapse;
     margin-bottom: 5px;
     margin-top: -5px;
     padding: 0px;
