@@ -1750,6 +1750,9 @@
         "message": "Is an additional pushing term (spring) based on stick input. FF helps the P-term push the craft for commanded stick moves.<br><br>The P-term pushes based on the difference between the commanded Setpoint (deg/sec) and the gyro reading of current rotational rate (deg/sec). FF pushes based on the commanded change of the sticks alone.<br><br>Higher values (gains) will result in a more sharp machine response to stick input.<br>Too high of values may result in some overshoot, increased motor heat, and motor saturation (where motors can not keep up with the desired rate of change).<br>Lower or zero (0) values will result in a slower and smoother response to stick inputs.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
+    "pidTuningMaxRateWarning": {
+        "message": "<span class=\"message-negative\"><b>Warning:</b></span> very high rates can result in desyncs from rapid decelerations."
+    },
     "pidTuningRcRate": {
         "message": "RC Rate"
     },
