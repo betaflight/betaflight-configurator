@@ -390,6 +390,13 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.rpmFilter').hide();
         }
 
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            $('.pid_tuning input[name="motorLimit"]').val(ADVANCED_TUNING.motorOutputLimit);
+            $('.pid_tuning input[name="cellCount"]').val(ADVANCED_TUNING.autoProfileCellCount);
+        } else {
+            $('.motorOutputLimit').hide();
+        }
+
         $('input[id="useIntegratedYaw"]').change(function() {
             var checked = $(this).is(':checked');
             $('#pidTuningIntegratedYawCaution').toggle(checked);
@@ -767,6 +774,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
             FILTER_CONFIG.dyn_notch_max_hz = parseInt($('.pid_filter input[name="dynamicNotchMaxHz"]').val());
+            ADVANCED_TUNING.motorOutputLimit = parseInt($('.pid_tuning input[name="motorLimit"]').val());
+            ADVANCED_TUNING.autoProfileCellCount = parseInt($('.pid_tuning input[name="cellCount"]').val());
         }
     }
 

@@ -3278,6 +3278,21 @@
     "pidTuningLevelHelp": {
         "message": "The values below change the behaviour of the ANGLE and HORIZON flight modes. Different PID controllers handle the values differently. Please check the documentation."
     },
+    "pidTuningMotorOutputLimit": {
+        "message": "Motor Output Limit"
+    },
+    "pidTuningMotorLimit": {
+        "message": "Attenuation %"
+    },
+    "pidTuningMotorLimitHelp": {
+        "message": "Attenuates motor commands by the set percentage. Reduces ESC current and motor heat when using higher cell count batteries, e.g. for similar performance from a 6S battery on a 4S build, try 66%; for a 4S battery on a 3S build, try 75%."
+    },
+    "pidTuningCellCount": {
+        "message": "Cell Count"
+    },
+    "pidTuningCellCountHelp": {
+        "message": "Automatically activates the first profile that has a cell count equal to the connected battery."
+    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile independent Filter Settings"
     },
