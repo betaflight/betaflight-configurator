@@ -908,7 +908,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('._smallAngle').hide();
         if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
             $('input[id="configurationSmallAngle"]').val(ARMING_CONFIG.small_angle);
-            $('.accelNeeded').toggle(SENSOR_CONFIG.acc_hardware !== 1);
+            $('._smallAngle').show();
         }
 
         // fill throttle
@@ -1108,7 +1108,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
               var checked = $(this).is(':checked');
               $('.accelNeeded').toggle(checked);
             }
-        });
+        }).change();
 
         $(features_e).filter('select').change(function () {
             var element = $(this);
