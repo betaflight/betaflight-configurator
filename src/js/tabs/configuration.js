@@ -905,10 +905,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('div.disarm').hide();
         }
 
-        $('._smallAngle').hide();
+        $('._smallAngle').toggle(semver.gte(CONFIG.apiVersion, "1.37.0"));
         if(semver.gte(CONFIG.apiVersion, "1.37.0")) {
             $('input[id="configurationSmallAngle"]').val(ARMING_CONFIG.small_angle);
-            $('._smallAngle').show();
         }
 
         // fill throttle
