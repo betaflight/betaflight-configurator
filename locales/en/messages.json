@@ -497,6 +497,15 @@
     "resetToCustomDefaultsAccept": {
         "message": "Apply Custom Defaults"
     },
+    "reportProblemsDialogHeader": {
+        "message": "The following <strong>problems with your configuration</strong> were detected:"
+    },
+    "reportProblemsDialogFooter": {
+        "message": "Please <strong>fix these problems before attempting to fly your craft</strong>."
+    },
+    "reportProblemsDialogAccCalibrationNeeded": {
+        "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>. If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the craft will be disabled until the accelerometer has been calibrated. If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
+    },
 
     "infoVersions": {
         "message" : "Running - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
