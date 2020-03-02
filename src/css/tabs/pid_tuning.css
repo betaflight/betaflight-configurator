@@ -388,7 +388,7 @@
     height: 20px;
 }
 
-.tab-pid_tuning .pid_titlebar.needed_by_LEVEL {
+.tab-pid_tuning .pid_titlebar.pid_titlebar_extended {
     border-radius: 0px;
 }
 
