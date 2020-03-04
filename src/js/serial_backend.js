@@ -254,60 +254,7 @@ function onOpen(openInfo) {
 
                                 GUI.log(i18n.getMessage('buildInfoReceived', [CONFIG.buildInfo]));
 
-                                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
-                                    analytics.setFlightControllerData(analytics.DATA.BOARD_TYPE, CONFIG.boardIdentifier);
-                                    analytics.setFlightControllerData(analytics.DATA.TARGET_NAME, CONFIG.targetName);
-                                    analytics.setFlightControllerData(analytics.DATA.BOARD_NAME, CONFIG.boardName);
-                                    analytics.setFlightControllerData(analytics.DATA.MANUFACTURER_ID, CONFIG.manufacturerId);
-                                    analytics.setFlightControllerData(analytics.DATA.MCU_TYPE, FC.getMcuType());
-
-                                    GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), CONFIG.boardVersion]));
-                                    updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
-                                    updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
-
-                                    if (bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
-                                        var dialog = $('#dialogResetToCustomDefaults')[0];
-
-                                        $('#dialogResetToCustomDefaults-content').html(i18n.getMessage('resetToCustomDefaultsDialog'));
-
-                                        $('#dialogResetToCustomDefaults-acceptbtn').click(function() {
-                                            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'AcceptResetToCustomDefaults');
-
-                                            var buffer = [];
-                                            buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
-                                            MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
-
-                                            dialog.close();
-                                        });
-
-                                        $('#dialogResetToCustomDefaults-cancelbtn').click(function() {
-                                            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CancelResetToCustomDefaults');
-
-                                            dialog.close();
-                                        });
-
-                                        dialog.showModal();
-                                    }
-                                    MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
-                                        var uniqueDeviceIdentifier = CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16);
-
-                                        analytics.setFlightControllerData(analytics.DATA.MCU_ID, objectHash.sha1(uniqueDeviceIdentifier));
-                                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
-                                        connectionTimestamp = Date.now();
-                                        GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
-
-                                        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-                                            MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
-                                                GUI.log(i18n.getMessage('craftNameReceived', [CONFIG.name]));
-
-                                                CONFIG.armingDisabled = false;
-                                                mspHelper.setArmingEnabled(false, false, setRtc);
-                                            });
-                                        } else {
-                                            setRtc();
-                                        }
-                                    });
-                                });
+                                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
                         });
                     } else {
@@ -348,15 +295,115 @@ function onOpen(openInfo) {
         console.log('Failed to open serial port');
         GUI.log(i18n.getMessage('serialPortOpenFail'));
 
-        $('div#connectbutton a.connect_state').text(i18n.getMessage('connect'));
-        $('div#connectbutton a.connect').removeClass('active');
-
-        // unlock port select & baud
-        $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
-
-        // reset data
-        $('div#connectbutton a.connect').data("clicks", false);
+        abortConnect();
     }
+}
+
+function abortConnect() {
+    $('div#connectbutton a.connect_state').text(i18n.getMessage('connect'));
+    $('div#connectbutton a.connect').removeClass('active');
+
+    // unlock port select & baud
+    $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', false);
+
+    // reset data
+    $('div#connectbutton a.connect').data("clicks", false);
+}
+
+function processBoardInfo() {
+    analytics.setFlightControllerData(analytics.DATA.BOARD_TYPE, CONFIG.boardIdentifier);
+    analytics.setFlightControllerData(analytics.DATA.TARGET_NAME, CONFIG.targetName);
+    analytics.setFlightControllerData(analytics.DATA.BOARD_NAME, CONFIG.boardName);
+    analytics.setFlightControllerData(analytics.DATA.MANUFACTURER_ID, CONFIG.manufacturerId);
+    analytics.setFlightControllerData(analytics.DATA.MCU_TYPE, FC.getMcuType());
+
+    GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), CONFIG.boardVersion]));
+    updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
+    updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
+
+    if (bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
+        var dialog = $('#dialogResetToCustomDefaults')[0];
+
+        $('#dialogResetToCustomDefaults-acceptbtn').click(function() {
+            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'AcceptResetToCustomDefaults');
+
+            var buffer = [];
+            buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
+            MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
+
+            dialog.close();
+
+            GUI.timeout_add('connecting', function () {
+                $('div.connect_controls a.connect').click(); // disconnect
+            }, 0);
+        });
+
+        $('#dialogResetToCustomDefaults-cancelbtn').click(function() {
+            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CancelResetToCustomDefaults');
+
+            dialog.close();
+
+            checkReportProblems();
+        });
+
+        dialog.showModal();
+    } else {
+        checkReportProblems();
+    }
+}
+
+function checkReportProblems() {
+    MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
+        let needsProblemReportingDialog = false;
+        const problemDialogList = $('#dialogReportProblems-list');
+        problemDialogList.empty();
+        const problemItemTemplate = $('.dialogReportProblems-listItem');
+        const PROBLEM_ANALYTICS_EVENT = 'ProblemFound';
+
+        if (have_sensor(CONFIG.activeSensors, 'acc') && bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.ACC_NEEDS_CALIBRATION)) {
+            needsProblemReportingDialog = true;
+            problemDialogList.append(problemItemTemplate.clone().html(i18n.getMessage('reportProblemsDialogAccCalibrationNeeded')));
+
+            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, 'AccNotCalibrated');
+        }
+
+        if (needsProblemReportingDialog) {
+            const problemDialog = $('#dialogReportProblems')[0];
+            $('#dialogReportProblems-closebtn').click(function() {
+                problemDialog.close();
+            });
+
+            problemDialog.showModal();
+        }
+
+        processUid();
+    });
+}
+
+function processUid() {
+    MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
+        var uniqueDeviceIdentifier = CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16);
+
+        analytics.setFlightControllerData(analytics.DATA.MCU_ID, objectHash.sha1(uniqueDeviceIdentifier));
+        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
+        connectionTimestamp = Date.now();
+        GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
+
+        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
+            processName();
+        } else {
+            setRtc();
+        }
+    });
+}
+
+function processName() {
+    MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
+        GUI.log(i18n.getMessage('craftNameReceived', [CONFIG.name]));
+
+        CONFIG.armingDisabled = false;
+        mspHelper.setArmingEnabled(false, false, setRtc);
+    });
 }
 
 function setRtc() {
@@ -593,10 +640,11 @@ function update_live_status() {
 
     if (GUI.active_tab != 'cli') {
         MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
-        if (semver.gte(CONFIG.apiVersion, "1.32.0"))
+        if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
-        else
+        } else {
             MSP.send_message(MSPCodes.MSP_STATUS, false, false);
+        }
         MSP.send_message(MSPCodes.MSP_ANALOG, false, false);
     }
 

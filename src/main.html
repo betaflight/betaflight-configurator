@@ -359,7 +359,7 @@
     <dialog id="dialogResetToCustomDefaults">
         <h3 i18n="noticeTitle"></h3>
         <div class="content">
-            <div id="dialogResetToCustomDefaults-content"></div>
+            <div id="dialogResetToCustomDefaults-content" i18n="resetToCustomDefaultsDialog"></div>
         </div>
         <div>
             <span class="buttons">
@@ -370,6 +370,26 @@
             </span>
         </div>
     </dialog>
+
+    <dialog id="dialogReportProblems">
+        <h3 i18n="warningTitle"></h3>
+        <div class="content">
+            <div id="dialogReportProblems-header" i18n="reportProblemsDialogHeader"></div>
+            <ul id="dialogReportProblems-list">
+                <!-- List elements added dynamically -->
+            </ul>
+            <div id="dialogReportProblems-footer" i18n="reportProblemsDialogFooter"></div>
+        </div>
+        <div>
+            <span class="buttons">
+                <a href="#" id="dialogReportProblems-closebtn" class="regular-button" i18n="close"></a>
+            </span>
+        </div>
+    </dialog>
+
+    <ul> <!-- Sonar says so -->
+        <li class="dialogReportProblems-listItem"></li>
+    </ul>
 
     <dialog class="dialogError">
         <h3 i18n="errorTitle"></h3>

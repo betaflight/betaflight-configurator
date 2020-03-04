@@ -2157,6 +2157,22 @@ input {
     margin-bottom: 10px;
 }
 
+#dialogReportProblems-header {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.dialogReportProblems-listItem {
+    list-style: initial;
+    list-style-type: circle;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+#dialogReportProblems-footer {
+    margin-bottom: 10px;
+}
+
 /*
    noUi slider stylings
 */
