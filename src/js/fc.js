@@ -460,6 +460,7 @@ var FC = {
             integratedYawRelax:         0,
             motorOutputLimit:           0,
             autoProfileCellCount:       0,
+            idleMinRpm:                 0,
         };
         ADVANCED_TUNING_ACTIVE = { ...ADVANCED_TUNING };
 

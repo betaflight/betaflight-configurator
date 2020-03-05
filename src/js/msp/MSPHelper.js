@@ -1146,6 +1146,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                             if(semver.gte(CONFIG.apiVersion, "1.43.0")) {
                                                 ADVANCED_TUNING.motorOutputLimit = data.readU8();
                                                 ADVANCED_TUNING.autoProfileCellCount = data.readU8();
+                                                ADVANCED_TUNING.idleMinRpm = data.readU8();
                                             }
                                         }
                                     }
@@ -2079,7 +2080,8 @@ MspHelper.prototype.crunch = function(code) {
 
                                         if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
                                             buffer.push8(ADVANCED_TUNING.motorOutputLimit)
-                                                  .push8(ADVANCED_TUNING.autoProfileCellCount);
+                                                  .push8(ADVANCED_TUNING.autoProfileCellCount)
+                                                  .push8(ADVANCED_TUNING.idleMinRpm);
                                         }
                                     }
                                 }

@@ -516,9 +516,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('input[name="motorPoles"]').val(MOTOR_CONFIG.motor_poles);
         }
 
-        function hideMotorPoles() {
-            let motorPolesVisible = $("input[id='dshotBidir']").is(':checked') || $("input[name='ESC_SENSOR']").is(':checked');
-            $('div.motorPoles').toggle(motorPolesVisible);
+        function hideRpmFeatures() {
+            let rpmFeaturesVisible = $("input[id='dshotBidir']").is(':checked') || $("input[name='ESC_SENSOR']").is(':checked');
+            $('div.motorPoles').toggle(rpmFeaturesVisible);
         }
 
         $('#escProtocolTooltip').toggle(semver.lt(CONFIG.apiVersion, "1.42.0"));
@@ -549,8 +549,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('div.checkboxDshotBidir').toggle(semver.gte(CONFIG.apiVersion, "1.42.0") && digitalProtocol);
             $('div.motorPoles').toggle(semver.gte(CONFIG.apiVersion, "1.42.0"));
             //trigger change dshotBidir and ESC_SENSOR to show/hide Motor Poles tab
-            $("input[id='dshotBidir']").change(hideMotorPoles).change();
-            $("input[name='ESC_SENSOR']").change(hideMotorPoles);
+            $("input[id='dshotBidir']").change(hideRpmFeatures).change();
+            $("input[name='ESC_SENSOR']").change(hideRpmFeatures);
 
             //trigger change unsyncedPWMSwitch to show/hide Motor PWM freq input
             $("input[id='unsyncedPWMSwitch']").change();
