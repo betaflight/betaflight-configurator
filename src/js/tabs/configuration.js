@@ -181,18 +181,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_rx_config() {
-        var next_callback = load_profile_features;
+        var next_callback = load_html;
         if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
-        } else {
-            next_callback();
-        }
-    }
-	
-    function load_profile_features() {
-        var next_callback = load_html;
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
-            MSP.send_message(MSPCodes.MSP_PID_ADVANCED, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -525,14 +516,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('input[name="motorPoles"]').val(MOTOR_CONFIG.motor_poles);
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
-            $('input[name="idleMinRpm"]').val(ADVANCED_TUNING.idleMinRpm);
-        }
-
         function hideRpmFeatures() {
             let rpmFeaturesVisible = $("input[id='dshotBidir']").is(':checked') || $("input[name='ESC_SENSOR']").is(':checked');
             $('div.motorPoles').toggle(rpmFeaturesVisible);
-            $('div.idleMinRpm').toggle(rpmFeaturesVisible);
         }
 
         $('#escProtocolTooltip').toggle(semver.lt(CONFIG.apiVersion, "1.42.0"));
@@ -562,7 +548,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             $('div.checkboxDshotBidir').toggle(semver.gte(CONFIG.apiVersion, "1.42.0") && digitalProtocol);
             $('div.motorPoles').toggle(semver.gte(CONFIG.apiVersion, "1.42.0"));
-            $('div.idleMinRpm').toggle(semver.gte(CONFIG.apiVersion, "1.43.0"));
             //trigger change dshotBidir and ESC_SENSOR to show/hide Motor Poles tab
             $("input[id='dshotBidir']").change(hideRpmFeatures).change();
             $("input[name='ESC_SENSOR']").change(hideRpmFeatures);
@@ -1182,9 +1167,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
                 MOTOR_CONFIG.motor_poles = parseInt($('input[name="motorPoles"]').val());
             }
-            if(semver.gte(CONFIG.apiVersion, "1.43.0")) {
-                ADVANCED_TUNING.idleMinRpm = parseInt($('input[name="idleMinRpm"]').val());
-            }
 
             if(self.SHOW_OLD_BATTERY_CONFIG) {
                 MISC.vbatmincellvoltage = parseFloat($('input[name="mincellvoltage"]').val());
@@ -1361,18 +1343,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_rx_config() {
-                var next_callback = save_profile_features;
+                var next_callback = save_to_eeprom;
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
-                } else {
-                    next_callback();
-                }
-            }
-			
-            function save_profile_features() {
-                var next_callback = save_to_eeprom;
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED), false, next_callback);
                 } else {
                     next_callback();
                 }

@@ -393,8 +393,10 @@ TABS.pid_tuning.initialize = function (callback) {
         if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
             $('.pid_tuning input[name="motorLimit"]').val(ADVANCED_TUNING.motorOutputLimit);
             $('.pid_tuning input[name="cellCount"]').val(ADVANCED_TUNING.autoProfileCellCount);
+            $('input[name="idleMinRpm-number"]').val(ADVANCED_TUNING.idleMinRpm);
         } else {
             $('.motorOutputLimit').hide();
+            $('.idleMinRpm').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -776,6 +778,7 @@ TABS.pid_tuning.initialize = function (callback) {
             FILTER_CONFIG.dyn_notch_max_hz = parseInt($('.pid_filter input[name="dynamicNotchMaxHz"]').val());
             ADVANCED_TUNING.motorOutputLimit = parseInt($('.pid_tuning input[name="motorLimit"]').val());
             ADVANCED_TUNING.autoProfileCellCount = parseInt($('.pid_tuning input[name="cellCount"]').val());
+            ADVANCED_TUNING.idleMinRpm = parseInt($('input[name="idleMinRpm-number"]').val());
         }
     }
 
