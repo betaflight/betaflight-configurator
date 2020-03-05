@@ -3615,7 +3615,7 @@
         "message": "Dynamic Idle Value [rpm]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Set this parameter to provide an rpm based floor-value as a safety net against motor desync.<br>A racer might prefer very good response and low rates - therefore a low idle_min_rpm and a high dshot_idle_value may be useful. Freestylers and LOS pilots will appreciate very low thrust at idle and might want to use less dshot_idle_value while using a bit more idle_min_rpm to avoid desyncs at high rates.<br><br>Visit this <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\">wiki</a> entrie for more info."
+        "message": "Set this parameter to provide an rpm based floor-value as a safety net against motor desync.<br>A racer might prefer very good response and low rates - therefore a low idle_min_rpm and a high dshot_idle_value may be useful. Freestylers and LOS pilots will appreciate very low thrust at idle and might want to use less dshot_idle_value while using a bit more idle_min_rpm to avoid desyncs at high rates.<br><br>Visit this <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\">wiki</a> entry for more info."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"
