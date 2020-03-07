@@ -85,7 +85,7 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
     
     if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
         var maxRc = 500;
-        var rcCommandf = this.rcCommand(rcData, 1, 0) / maxRc; // deadband forced to 0 to give setpoint max angle speed
+        var rcCommandf = this.rcCommand(rcData, 1, deadband) / maxRc;
         var rcCommandfAbs = Math.abs(rcCommandf);
         
         switch(TABS.pid_tuning.currentRatesType) {
