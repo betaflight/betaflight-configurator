@@ -2390,6 +2390,8 @@ TABS.pid_tuning.changeRatesType = function(rateTypeID) {
                 $('#pid-tuning .pid_titlebar .rate').text(i18n.getMessage("pidTuningRateQuickRates"));
                 $('#pid-tuning .pid_titlebar .rc_expo').text(i18n.getMessage("pidTuningRcExpoRaceflight"));
                 
+                rate_max = 2.0;
+                
                 if (!sameRatesType) {
                     rc_rate_default = (0.2).toFixed(2), rate_default = 0.67, expo_default = 0.54;
                 }
