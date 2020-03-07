@@ -5598,5 +5598,41 @@
     },
     "darkTheme": {
         "message": "Enable dark theme"
+    },
+    "pidTuningRatesType": {
+        "message": "Rates Type"
+    },
+    "pidTuningRatesTypeTip": {
+        "message": "Changing rates type will change the rates curve and the way you can set it"
+    },
+    "pidTuningRcRateRaceflight": {
+        "message": "Rate"
+    },
+    "pidTuningRcExpoRaceflight": {
+        "message": "Expo"
+    },
+    "pidTuningRateRaceflight": {
+        "message": "Acro+"
+    },
+    "pidTuningRcExpoKISS": {
+        "message": "RC Curve"
+    },
+    "pidTuningRateQuickRates": {
+        "message": "Max Rate"
+    },
+    "pidTuningRcRateActual": {
+        "message": "Center Sensitivity"
+    },
+    "dialogRatesTypeTitle": {
+        "message": "Rates type change"
+    },
+    "dialogRatesTypeNote": {
+        "message": "<span class=\"message-negative\"><b>WARNING: You are changing the rates type.</b></span> Your rates will be set to a default curve.<br><br>Nothing is saved yet and you can still return to your previous values by setting the previous rates type.<br><br>Click the Save button to apply the changes."
+    },
+    "dialogRatesTypeConfirm": {
+        "message": "Change"
+    },
+    "dialogRatesTypeCancel": {
+        "message": "Return to saved values"
     }
 }

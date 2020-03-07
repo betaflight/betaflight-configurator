@@ -572,7 +572,7 @@ TABS.receiver.initialize = function (callback) {
         tab.renderModel();
 
         // TODO: Combine two polls together
-        GUI.interval_add('receiver_pull_for_model_preview', tab.getRecieverData, 33, false);
+        GUI.interval_add('receiver_pull_for_model_preview', tab.getReceiverData, 33, false);
 
         // status data pulled via separate timer with static speed
         GUI.interval_add('status_pull', function status_pull() {
@@ -583,7 +583,7 @@ TABS.receiver.initialize = function (callback) {
     }
 };
 
-TABS.receiver.getRecieverData = function () {
+TABS.receiver.getReceiverData = function () {
     MSP.send_message(MSPCodes.MSP_RC, false, false);
 };
 
