@@ -921,3 +921,8 @@
     width: 100%;
     height: 100%;
 }
+
+.tab-pid_tuning .rates-tab-warning {
+    display: flex;
+    flex-flow: row wrap;
+}
