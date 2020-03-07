@@ -656,6 +656,37 @@
             <div class="subtab-rates" style="display: none;">
                 <div class="clear-both"></div>
                 <div class="cf_column">
+                
+                    <div class="gui_box rates_type pid_tuning">
+                        <table class="cf">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div>
+                                            <div i18n="pidTuningRatesType" style="float:left;"></div>
+                                            <div class="helpicon cf_tip" i18n_title="pidTuningRatesTypeTip"></div>
+                                        </div>
+                                    </th>
+                                    <th class="rates_logo_bg"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select id="ratesType">
+                                            <!-- list generated here -->
+                                        </select>
+                                    </td>
+                                    <td class="rates_logo_bg">
+                                        <div class="rates_logo_div">
+                                            <img id="ratesLogo" src="../images/rate_logos/betaflight.svg" class="rates_logo"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                
                     <div class="note maxRateWarning">
                         <p i18n="pidTuningMaxRateWarning"></p>
                     </div>
@@ -679,16 +710,16 @@
                             <tr class="ROLL">
                                 <td class="pid_roll"></td>
                                 <td class="rc_rate">
-                                    <input type="number" name="rc_rate" step="0.01" min="0.01" max="2.55" />
+                                    <input type="number" class="rc_rate_input" name="rc_rate" step="0.01" min="0.01" max="2.55" />
                                 </td>
                                 <td class="roll_rate">
-                                    <input type="number" name="roll_rate" step="0.01" min="0" max="1.00" />
+                                    <input type="number" class="rate_input" name="roll_rate" step="0.01" min="0" max="1.00" />
                                 </td>
                                 <td class="roll_pitch_rate" rowspan="2">
                                     <input type="number" name="roll_pitch_rate" step="0.01" min="0" max="1.00" />
                                 </td>
                                 <td rowspan="2" class="inputBackground">
-                                    <input type="number" name="rc_expo" step="0.01" min="0" max="1" />
+                                    <input type="number" class="expo_input" name="rc_expo" step="0.01" min="0" max="1" />
                                     <div class="bracket"></div>
                                 </td>
                                 <td class="new_rates maxAngularVelRoll"></td>
@@ -696,26 +727,26 @@
                             <tr class="PITCH">
                                 <td class="pid_pitch"></td>
                                 <td>
-                                    <input type="number" name="rc_rate_pitch" step="0.01" min="0.01" max="2.55" />
+                                    <input type="number" class="rc_rate_input" name="rc_rate_pitch" step="0.01" min="0.01" max="2.55" />
                                 </td>
                                 <td class="pitch_rate">
-                                    <input type="number" name="pitch_rate" step="0.01" min="0" max="1.00" />
+                                    <input type="number" class="rate_input" name="pitch_rate" step="0.01" min="0" max="1.00" />
                                 </td>
                                 <td>
-                                    <input type="number" name="rc_pitch_expo" step="0.01" min="0" max="1" />
+                                    <input type="number" class="expo_input" name="rc_pitch_expo" step="0.01" min="0" max="1" />
                                 </td>
                                 <td class="new_rates maxAngularVelPitch"></td>
                             </tr>
                             <tr class="YAW">
                                 <td class="pid_yaw"></td>
                                 <td rowspan="1">
-                                    <input type="number" name="rc_rate_yaw" step="0.01" min="0.01" max="2.55" />
+                                    <input type="number" class="rc_rate_input" name="rc_rate_yaw" step="0.01" min="0.01" max="2.55" />
                                 </td>
                                 <td>
-                                    <input type="number" name="yaw_rate" step="0.01" min="0" max="2.55" />
+                                    <input type="number" class="rate_input" name="yaw_rate" step="0.01" min="0" max="2.55" />
                                 </td>
                                 <td>
-                                    <input type="number" name="rc_yaw_expo" step="0.01" min="0" max="1" />
+                                    <input type="number" class="expo_input" name="rc_yaw_expo" step="0.01" min="0" max="1" />
                                 </td>
                                 <td class="new_rates maxAngularVelYaw"></td>
                             </tr>
@@ -1467,6 +1498,18 @@
         <div class="buttons">
             <a href="#" class="dialogCopyProfile-confirmbtn regular-button" i18n="dialogCopyProfileConfirm"></a>
             <a href="#" class="dialogCopyProfile-cancelbtn regular-button" i18n="dialogCopyProfileClose"></a>
+        </div>
+    </dialog>
+    
+    <dialog class="dialogRatesType">
+        <h3 i18n="dialogRatesTypeTitle"></h3>
+        <div class="content">
+            <div i18n="dialogRatesTypeNote" style="margin-top: 10px"></div>
+
+        </div>
+        <div class="buttons">
+            <a href="#" class="dialogRatesType-confirmbtn regular-button" i18n="dialogRatesTypeConfirm"></a>
+            <a href="#" class="dialogRatesType-cancelbtn regular-button" i18n="dialogRatesTypeCancel"></a>
         </div>
     </dialog>
 </div>

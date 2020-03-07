@@ -908,3 +908,16 @@
 .tab-pid_tuning .pid_titlebar .name-helpicon-flex .helpicon {
     margin-right: 0;
 }
+
+.tab-pid_tuning .cf .rates_logo_bg {
+    background-color: #ebeced;
+}
+
+.tab-pid_tuning .rates_logo_div {
+    margin-top: -10%;
+}
+
+.tab-pid_tuning .rates_logo {
+    width: 100%;
+    height: 100%;
+}

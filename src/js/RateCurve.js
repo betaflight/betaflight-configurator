@@ -82,38 +82,81 @@ var RateCurve = function (useLegacyCurve) {
 
 RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit) {
     var angleRate;
+    
     if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
-        if (rcRate > 2) {
-            rcRate = rcRate + (rcRate - 2) * 14.54;
-        }
-
-        var maxRc = 500 * rcRate;
-        var rcCommandf = this.rcCommand(rcData, rcRate, deadband) / maxRc;
+        var maxRc = 500;
+        var rcCommandf = this.rcCommand(rcData, 1, 0) / maxRc; // deadband forced to 0 to give setpoint max angle speed
         var rcCommandfAbs = Math.abs(rcCommandf);
-        var expoPower;
-        var rcRateConstant;
+        
+        switch(TABS.pid_tuning.currentRatesType) {
+            case 1: // RaceFlight
+                angleRate = ((1 + 0.01 * rcExpo * (rcCommandf * rcCommandf - 1.0)) * rcCommandf);
+                angleRate = (angleRate * (rcRate + (Math.abs(angleRate) * rcRate * rate * 0.01)));
 
-        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
-            expoPower = 3;
-            rcRateConstant = 200;
-        } else {
-            expoPower = 2;
-            rcRateConstant = 205.85;
+                break;
+
+            case 2: // KISS
+                var kissRpy = 1 - Math.abs(rcCommandf) * rate;
+                var kissTempCurve = rcCommandf * rcCommandf;
+                rcCommandf = ((rcCommandf * kissTempCurve) * rcExpo + rcCommandf * (1 - rcExpo)) * (rcRate / 10);
+                angleRate = ((2000.0 * (1.0 / kissRpy)) * rcCommandf);
+
+                break;
+
+            case 3: // Actual
+                rcRate = rcRate * 1000;
+                rate = rate * 1000;
+                var expof = rcCommandfAbs * ((Math.pow(rcCommandf, 5) * rcExpo) + (rcCommandf * (1 - rcExpo)));
+                
+                angleRate = Math.max(0, rate-rcRate);
+                angleRate = (rcCommandf * rcRate) + (angleRate * expof);
+
+                break;
+
+            case 4: // QuickRates
+                rcRate = rcRate * 200;
+                rate = Math.max(rate, rcRate);
+                
+                var superExpoConfig = (((rate / rcRate) - 1) / (rate / rcRate));
+                var curve = Math.pow(rcCommandfAbs, 3) * rcExpo + rcCommandfAbs * (1 - rcExpo);
+                angleRate = 1.0 / (1.0 - (curve * superExpoConfig));
+                angleRate = rcCommandf * rcRate * angleRate;
+
+                break;
+
+            // add future rates types here
+            default: // BetaFlight
+                if (rcRate > 2) {
+                    rcRate = rcRate + (rcRate - 2) * 14.54;
+                }
+
+                var expoPower;
+                var rcRateConstant;
+
+                if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
+                    expoPower = 3;
+                    rcRateConstant = 200;
+                } else {
+                    expoPower = 2;
+                    rcRateConstant = 205.85;
+                }
+
+                if (rcExpo > 0) {
+                    rcCommandf =  rcCommandf * Math.pow(rcCommandfAbs, expoPower) * rcExpo + rcCommandf * (1-rcExpo);
+                }
+
+                if (superExpoActive) {
+                    var rcFactor = 1 / this.constrain(1 - rcCommandfAbs * rate, 0.01, 1);
+                    angleRate = rcRateConstant * rcRate * rcCommandf; // 200 should be variable checked on version (older versions it's 205,9)
+                    angleRate = angleRate * rcFactor;
+                } else {
+                    angleRate = (((rate * 100) + 27) * rcCommandf / 16) / 4.1; // Only applies to old versions ?
+                }
+
+                angleRate = this.constrain(angleRate, -1 * limit, limit); // Rate limit from profile
+
+                break;
         }
-
-        if (rcExpo > 0) {
-            rcCommandf =  rcCommandf * Math.pow(rcCommandfAbs, expoPower) * rcExpo + rcCommandf * (1-rcExpo);
-        }
-
-        if (superExpoActive) {
-            var rcFactor = 1 / this.constrain(1 - rcCommandfAbs * rate, 0.01, 1);
-            angleRate = rcRateConstant * rcRate * rcCommandf; // 200 should be variable checked on version (older versions it's 205,9)
-            angleRate = angleRate * rcFactor;
-        } else {
-            angleRate = (((rate * 100) + 27) * rcCommandf / 16) / 4.1; // Only applies to old versions ?
-        }
-
-        angleRate = this.constrain(angleRate, -1 * limit, limit); // Rate limit from profile
     }
 
     return angleRate;
