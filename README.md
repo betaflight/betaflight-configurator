@@ -41,7 +41,6 @@ Changes to the security model used in the latest versions of MacOS X 10.14 (Moja
 
 Please note - the application will automatically update itself when new versions are released.  Please ensure you maintain configuration backups as described in the Betaflight documentation.
 
-(A deprecated legacy version for all platforms is also available [here](https://chrome.google.com/webstore/detail/betaflight-configurator/kdaghagfopacdngbohiknlhcocjccjao).)
 
 ### Unstable Testing Versions
 
