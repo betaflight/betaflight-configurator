@@ -2335,7 +2335,7 @@ TABS.pid_tuning.updatePIDColors = function(clear = false) {
 };
 
 TABS.pid_tuning.changeRatesType = function(rateTypeID) {
-    let self = this;
+    const self = this;
     const dialogRatesType = $('.dialogRatesType')[0];
     let sameRatesType = true;
 
@@ -2366,11 +2366,13 @@ TABS.pid_tuning.changeRatesType = function(rateTypeID) {
 };
 
 TABS.pid_tuning.changeRatesSystem = function(sameType) {
-    let self = this;
+    const self = this;
 
     let rcRateMax = 2.55, rcRateMin = 0.01, rcRateStep = 0.01;
-    let rateMax = 1.0, rateMin = 0, rateStep = 0.01;
-    let expoMax = 1.0, expoMin = 0, expoStep = 0.01;
+    let rateMax = 1.0, rateStep = 0.01;
+    let expoMax = 1.0, expoStep = 0.01;
+    const rateMin = 0;
+    const expoMin = 0;
 
     const pitch_rate_e = $('.pid_tuning input[name="pitch_rate"]');
     const roll_rate_e = $('.pid_tuning input[name="roll_rate"]');
@@ -2515,7 +2517,7 @@ TABS.pid_tuning.changeRatesSystem = function(sameType) {
 };
 
 TABS.pid_tuning.changeRatesTypeLogo = function() {
-    let self = this;
+    const self = this;
 
     const ratesLogoElement = $('.rates_type img[id="ratesLogo"]');
 
