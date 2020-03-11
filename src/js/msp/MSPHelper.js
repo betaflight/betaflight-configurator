@@ -357,6 +357,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     RC_tuning.pitch_rate_limit = data.readU16();
                     RC_tuning.yaw_rate_limit = data.readU16();
                 }
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    RC_tuning.rates_type = data.readU8();
+                }
                 break;
             case MSPCodes.MSP_PID:
                 // PID data arrived, we need to scale it and save to appropriate bank / array
@@ -1688,6 +1691,9 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push16(RC_tuning.roll_rate_limit);
                 buffer.push16(RC_tuning.pitch_rate_limit);
                 buffer.push16(RC_tuning.yaw_rate_limit);
+            }
+            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                buffer.push8(RC_tuning.rates_type);
             }
             break;
         case MSPCodes.MSP_SET_RX_MAP:

@@ -56,7 +56,7 @@ var RateCurve = function (useLegacyCurve) {
         context.moveTo(0, height);
         context.quadraticCurveTo(width * 11 / 20, height - ((rateY / 2) * (1 - rcExpo)), width, height - rateY);
         context.stroke();
-    }
+    };
 
     this.drawStickPosition = function (rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit, maxAngularVel, context, stickColor) {
 
@@ -76,20 +76,15 @@ var RateCurve = function (useLegacyCurve) {
             context.restore();
         }
         return (Math.abs(currentValue)<0.5)?0:currentValue.toFixed(0); // The calculated value in deg/s is returned from the function call for further processing.
-    }
+    };
 
-};
+    this.getBetaflightRates = function (rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo, superExpoActive, limit) {
+        let angularVel;
 
-RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit) {
-    var angleRate;
-    if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
         if (rcRate > 2) {
             rcRate = rcRate + (rcRate - 2) * 14.54;
         }
 
-        var maxRc = 500 * rcRate;
-        var rcCommandf = this.rcCommand(rcData, rcRate, deadband) / maxRc;
-        var rcCommandfAbs = Math.abs(rcCommandf);
         var expoPower;
         var rcRateConstant;
 
@@ -107,13 +102,90 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 
         if (superExpoActive) {
             var rcFactor = 1 / this.constrain(1 - rcCommandfAbs * rate, 0.01, 1);
-            angleRate = rcRateConstant * rcRate * rcCommandf; // 200 should be variable checked on version (older versions it's 205,9)
-            angleRate = angleRate * rcFactor;
+            angularVel = rcRateConstant * rcRate * rcCommandf; // 200 should be variable checked on version (older versions it's 205,9)
+            angularVel = angularVel * rcFactor;
         } else {
-            angleRate = (((rate * 100) + 27) * rcCommandf / 16) / 4.1; // Only applies to old versions ?
+            angularVel = (((rate * 100) + 27) * rcCommandf / 16) / 4.1; // Only applies to old versions ?
         }
 
-        angleRate = this.constrain(angleRate, -1 * limit, limit); // Rate limit from profile
+        angularVel = this.constrain(angularVel, -1 * limit, limit); // Rate limit from profile
+
+        return angularVel;
+    };
+
+    this.getRaceflightRates = function (rcCommandf, rate, rcRate, rcExpo) {
+        let angularVel = ((1 + 0.01 * rcExpo * (rcCommandf * rcCommandf - 1.0)) * rcCommandf);
+        angularVel = (angularVel * (rcRate + (Math.abs(angularVel) * rcRate * rate * 0.01)));
+        return angularVel;
+    };
+
+    this.getKISSRates = function (rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo) {
+        const kissRpy = 1 - rcCommandfAbs * rate;
+        const kissTempCurve = rcCommandf * rcCommandf;
+        rcCommandf = ((rcCommandf * kissTempCurve) * rcExpo + rcCommandf * (1 - rcExpo)) * (rcRate / 10);
+        return ((2000.0 * (1.0 / kissRpy)) * rcCommandf);
+    };
+
+    this.getActualRates = function (rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo) {
+        let angularVel;
+        const expof = rcCommandfAbs * ((Math.pow(rcCommandf, 5) * rcExpo) + (rcCommandf * (1 - rcExpo)));
+
+        angularVel = Math.max(0, rate-rcRate);
+        angularVel = (rcCommandf * rcRate) + (angularVel * expof);
+
+        return angularVel;
+    };
+
+    this.getQuickRates = function (rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo) {
+        rcRate = rcRate * 200;
+        rate = Math.max(rate, rcRate);
+
+        let angularVel;
+        const superExpoConfig = (((rate / rcRate) - 1) / (rate / rcRate));
+        const curve = Math.pow(rcCommandfAbs, 3) * rcExpo + rcCommandfAbs * (1 - rcExpo);
+
+        angularVel = 1.0 / (1.0 - (curve * superExpoConfig));
+        angularVel = rcCommandf * rcRate * angularVel;
+
+        return angularVel;
+    };
+
+};
+
+RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcRate, rcExpo, superExpoActive, deadband, limit) {
+    var angleRate;
+
+    if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
+        const rcCommandf = this.rcCommand(rcData, 1, deadband) / 500;
+        var rcCommandfAbs = Math.abs(rcCommandf);
+
+        switch(TABS.pid_tuning.currentRatesType) {
+            case TABS.pid_tuning.RATES_TYPE.RACEFLIGHT:
+                angleRate=this.getRaceflightRates(rcCommandf, rate, rcRate, rcExpo);
+
+                break;
+
+            case TABS.pid_tuning.RATES_TYPE.KISS:
+                angleRate=this.getKISSRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
+
+                break;
+
+            case TABS.pid_tuning.RATES_TYPE.ACTUAL:
+                angleRate=this.getActualRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
+
+                break;
+
+            case TABS.pid_tuning.RATES_TYPE.QUICKRATES:
+                angleRate=this.getQuickRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo);
+
+                break;
+
+            // add future rates types here
+            default: // BetaFlight
+                angleRate=this.getBetaflightRates(rcCommandf, rcCommandfAbs, rate, rcRate, rcExpo, superExpoActive, limit);
+
+                break;
+        }
     }
 
     return angleRate;
