@@ -5627,12 +5627,12 @@
         "message": "Rates type change"
     },
     "dialogRatesTypeNote": {
-        "message": "<span class=\"message-negative\"><b>WARNING: You are changing the rates type.</b></span> Your rates will be set to a default curve.<br><br>Nothing is saved yet and you can still return to your previous values by setting the previous rates type.<br><br>Click the Save button to apply the changes."
+        "message": "<span class=\"message-negative\"><b>WARNING: You are changing the rates type.</b></span> If you change the rates type your rates will be set to a default curve.<br><br>Nothing is saved yet and you can still return to the values saved in the model by clicking the \"Return to saved values\" button.</br></br>If you want to continue editing your rates without changing rates type just click \"Cancel\"."
     },
     "dialogRatesTypeConfirm": {
         "message": "Change"
     },
-    "dialogRatesTypeCancel": {
+    "dialogRatesTypeToSaved": {
         "message": "Return to saved values"
     }
 }

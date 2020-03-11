@@ -156,7 +156,13 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
     var angleRate;
 
     if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
-        const rcCommandf = this.rcCommand(rcData, 1, deadband) / 500;
+        let rcCommandf = this.rcCommand(rcData, 1, deadband);
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            rcCommandf = rcCommandf / (500 - deadband);
+        } else {
+            rcCommandf = rcCommandf / 500;
+        }
+
         var rcCommandfAbs = Math.abs(rcCommandf);
 
         switch(TABS.pid_tuning.currentRatesType) {

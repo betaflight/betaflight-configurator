@@ -8,6 +8,7 @@ TABS.pid_tuning = {
     currentProfile: null,
     currentRateProfile: null,
     currentRatesType: null,
+    previousRatesType: null,
     RATES_TYPE: {
         BETAFLIGHT: 0,
         RACEFLIGHT: 1,
@@ -422,6 +423,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }
 
             self.currentRatesType = RC_tuning.rates_type;
+            self.previousRatesType = null;
             ratesTypeListElement.val(self.currentRatesType);
 
             self.changeRatesType(self.currentRatesType); // update rate type code when updating the tab
@@ -2337,32 +2339,42 @@ TABS.pid_tuning.updatePIDColors = function(clear = false) {
 TABS.pid_tuning.changeRatesType = function(rateTypeID) {
     const self = this;
     const dialogRatesType = $('.dialogRatesType')[0];
-    let sameRatesType = true;
 
-    self.currentRatesType = rateTypeID;
+    if (self.previousRatesType == null) {
+        self.currentRatesType = rateTypeID;
+        self.changeRatesTypeLogo();
+        self.changeRatesSystem(true);
+        self.previousRatesType = self.currentRatesType;
+        return;
+    }
 
-    if (self.currentRatesType !== RC_tuning.rates_type) {
-        sameRatesType = false;
+    if (!dialogRatesType.hasAttribute('open')) {
         dialogRatesType.showModal();
 
         $('.dialogRatesType-cancelbtn').click(function() {
-            sameRatesType = true;
+            $('.rates_type select[id="ratesType"]').val(self.currentRatesType);
+            self.previousRatesType = self.currentRatesType;
+            dialogRatesType.close();
+        });
+
+        $('.dialogRatesType-tosavedbtn').click(function() {
             self.currentRatesType = RC_tuning.rates_type;
-            $('.rates_type select[id="ratesType"]').val(RC_tuning.rates_type);
+            $('.rates_type select[id="ratesType"]').val(self.currentRatesType);
             self.changeRatesTypeLogo();
-            self.changeRatesSystem(sameRatesType);
+            self.changeRatesSystem(true);
+            self.previousRatesType = self.currentRatesType;
             dialogRatesType.close();
         });
 
         $('.dialogRatesType-confirmbtn').click(function() {
+            self.currentRatesType = rateTypeID;
             self.changeRatesTypeLogo();
-            self.changeRatesSystem(sameRatesType);
+            self.changeRatesSystem(false);
+            self.previousRatesType = self.currentRatesType;
             dialogRatesType.close();
         });
-    } else {
-        self.changeRatesTypeLogo();
-        self.changeRatesSystem(sameRatesType);
     }
+
 };
 
 TABS.pid_tuning.changeRatesSystem = function(sameType) {
