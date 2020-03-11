@@ -156,7 +156,10 @@ STM32DFU_protocol.prototype.claimInterface = function (interfaceNumber) {
     var self = this;
 
     chrome.usb.claimInterface(this.handle, interfaceNumber, function claimed() {
-        if(self.checkChromeError()) {
+        // Don't perform the error check on MacOS at this time as there seems to be a bug
+        // where it always reports the Chrome error "Error claiming interface." even though
+        // the interface is in fact successfully claimed.
+        if (self.checkChromeError() && (GUI.operating_system !== "MacOS")) {
             console.log('Failed to claim USB device!');
             self.cleanup();
         }
