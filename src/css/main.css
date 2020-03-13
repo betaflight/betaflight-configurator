@@ -2162,7 +2162,7 @@ input {
     margin-bottom: 5px;
 }
 
-#dialogReportProblems-listItem {
+.dialogReportProblems-listItem {
     list-style: initial;
     list-style-type: circle;
     margin-left: 20px;
