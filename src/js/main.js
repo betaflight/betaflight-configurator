@@ -646,7 +646,7 @@ function getValidatedInput(inputElement, isFloat) {
         value = Math.max(parseInt(inputElement.prop('min')), Math.min(value, parseInt(inputElement.prop('max'))));
     }
 
-    if (value!=previousValue) {
+    if (value!==previousValue) {
         GUI.log(i18n.getMessage('settingOutOfLimits', inputElement.attr("name")));
     }
 
