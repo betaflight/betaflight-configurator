@@ -2357,15 +2357,6 @@ TABS.pid_tuning.changeRatesType = function(rateTypeID) {
             dialogRatesType.close();
         });
 
-        $('.dialogRatesType-tosavedbtn').click(function() {
-            self.currentRatesType = RC_tuning.rates_type;
-            $('.rates_type select[id="ratesType"]').val(self.currentRatesType);
-            self.changeRatesTypeLogo();
-            self.changeRatesSystem(true);
-            self.previousRatesType = self.currentRatesType;
-            dialogRatesType.close();
-        });
-
         $('.dialogRatesType-confirmbtn').click(function() {
             self.currentRatesType = rateTypeID;
             self.changeRatesTypeLogo();
