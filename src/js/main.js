@@ -630,6 +630,29 @@ function bytesToSize(bytes) {
     return outputBytes;
 }
 
+function getValidatedInput(inputElement, isFloat) {
+    let previousValue;
+    if (isFloat) {
+        previousValue = parseFloat(inputElement.val());
+    } else {
+        previousValue = parseInt(inputElement.val());
+    }
+
+    let value = previousValue;
+
+    if (isFloat) {
+        value = Math.max(parseFloat(inputElement.prop('min')), Math.min(value, parseFloat(inputElement.prop('max'))));
+    } else {
+        value = Math.max(parseInt(inputElement.prop('min')), Math.min(value, parseInt(inputElement.prop('max'))));
+    }
+
+    if (value!=previousValue) {
+        GUI.log(i18n.getMessage('settingOutOfLimits', inputElement.attr("name")));
+    }
+
+    return value;
+}
+
 function isExpertModeEnabled() {
     return $('input[name="expertModeCheckbox"]').is(':checked');
 }

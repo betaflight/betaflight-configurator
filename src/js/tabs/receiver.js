@@ -240,12 +240,12 @@ TABS.receiver.initialize = function (callback) {
 
         $('a.update').click(function () {
             if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
-                RX_CONFIG.stick_max = parseInt($('.sticks input[name="stick_max"]').val());
-                RX_CONFIG.stick_center = parseInt($('.sticks input[name="stick_center"]').val());
-                RX_CONFIG.stick_min = parseInt($('.sticks input[name="stick_min"]').val());
-                RC_DEADBAND_CONFIG.yaw_deadband = parseInt($('.deadband input[name="yaw_deadband"]').val());
-                RC_DEADBAND_CONFIG.deadband = parseInt($('.deadband input[name="deadband"]').val());
-                RC_DEADBAND_CONFIG.deadband3d_throttle = ($('.deadband input[name="3ddeadbandthrottle"]').val());
+                RX_CONFIG.stick_max = getValidatedInput($('.sticks input[name="stick_max"]'), false);
+                RX_CONFIG.stick_center = getValidatedInput($('.sticks input[name="stick_center"]'), false);
+                RX_CONFIG.stick_min = getValidatedInput($('.sticks input[name="stick_min"]'), false);
+                RC_DEADBAND_CONFIG.yaw_deadband = getValidatedInput($('.deadband input[name="yaw_deadband"]'), false);
+                RC_DEADBAND_CONFIG.deadband = getValidatedInput($('.deadband input[name="deadband"]'), false);
+                RC_DEADBAND_CONFIG.deadband3d_throttle = getValidatedInput($('.deadband input[name="3ddeadbandthrottle"]'), false);
             }
 
             // catch rc map
@@ -262,7 +262,7 @@ TABS.receiver.initialize = function (callback) {
 
             if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                 RX_CONFIG.rcInterpolation = parseInt($('select[name="rcInterpolation-select"]').val());
-                RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
+                RX_CONFIG.rcInterpolationInterval = getValidatedInput($('input[name="rcInterpolationInterval-number"]'), false);
             }
 
             function save_rssi_config() {
@@ -386,12 +386,12 @@ TABS.receiver.initialize = function (callback) {
             });
 
             rcSmoothingnNumberElement.change(function () {
-                RX_CONFIG.rcSmoothingInputCutoff = $(this).val();
+                RX_CONFIG.rcSmoothingInputCutoff = getValidatedInput($(this), false);
             });
             rcSmoothingnNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
 
             rcSmoothingnDerivativeNumberElement.change(function () {
-                RX_CONFIG.rcSmoothingDerivativeCutoff = $(this).val();
+                RX_CONFIG.rcSmoothingDerivativeCutoff = getValidatedInput($(this), false);
             });
             rcSmoothingnDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
             var rc_smoothing_derivative_type = $('select[name="rcSmoothingDerivativeType-select"]');
@@ -427,7 +427,7 @@ TABS.receiver.initialize = function (callback) {
 
                 var rc_smoothing_auto_smoothness = $('input[name="rcSmoothingAutoSmoothness-number"]');
                 rc_smoothing_auto_smoothness.change(function() {
-                    RX_CONFIG.rcSmoothingAutoSmoothness = $(this).val();
+                    RX_CONFIG.rcSmoothingAutoSmoothness = getValidatedInput($(this), false);
                 });
                 rc_smoothing_auto_smoothness.val(RX_CONFIG.rcSmoothingAutoSmoothness);
             } else {

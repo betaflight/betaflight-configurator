@@ -5634,5 +5634,8 @@
     },
     "dialogRatesTypeCancel": {
         "message": "Return to saved values"
+    },
+    "settingOutOfLimits": {
+        "message": "<span class=\"message-negative\">$1 was out of its limits. Please, check before flying</span>"
     }
 }
