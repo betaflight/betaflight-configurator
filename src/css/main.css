@@ -2101,7 +2101,10 @@ input {
     position: initial;
 }
 
+}
 
+.hidden {
+    display: none;
 }
 
 @media only screen and (max-height: 750px) , only screen and (max-device-height: 750px) {
