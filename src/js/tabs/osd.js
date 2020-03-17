@@ -1092,7 +1092,7 @@ OSD.loadDisplayFields = function() {
             preview: 'OSD_1'
         },
         RSSI_DBM_VALUE: {
-            name: 'OSD_PROFILE_NAME',
+            name: 'RSSI_DBM_VALUE',
             text: 'osdTextElementRssiDbmValue',
             desc: 'osdDescElementRssiDbmValue',
             default_position: -1,
