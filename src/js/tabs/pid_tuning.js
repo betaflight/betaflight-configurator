@@ -181,7 +181,9 @@ TABS.pid_tuning.initialize = function (callback) {
             antiGravitySwitch.change(function() {
                 var checked = $(this).is(':checked');
                 if (checked) {
-                    $('.antigravity input[name="itermAcceleratorGain"]').val(Math.max(ADVANCED_TUNING.itermAcceleratorGain / 1000, 1.1));
+                    const MAX_ACCELERATOR_GAIN = semver.gte(CONFIG.apiVersion, "1.43.0") ? 3.5 : 1.1;
+                    const itermAcceleratorGain = Math.max(ADVANCED_TUNING.itermAcceleratorGain / 1000, MAX_ACCELERATOR_GAIN);
+                    $('.antigravity input[name="itermAcceleratorGain"]').val(itermAcceleratorGain);
                     $('.antigravity .suboption').show();
                     if (ADVANCED_TUNING.antiGravityMode == 0) {
                         $('.antigravity .antiGravityThres').hide();
