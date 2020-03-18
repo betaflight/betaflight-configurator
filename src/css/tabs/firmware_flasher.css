@@ -192,63 +192,6 @@
     text-decoration: underline;
 }
 
-.tab-firmware_flasher .buttons {
-    width: calc(100% - 20px);
-    margin-top: 10px;
-    bottom: 10px;
-}
-
-.tab-firmware_flasher .buttons a {
-    display: block;
-    float: left;
-    margin: 0 10px 0 0;
-    padding: 0 15px 0 15px;
-    height: 28px;
-    line-height: 28px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid var(--subtleAccent);
-    background-color: #ececec;
-}
-
-.tab-firmware_flasher .buttons a:hover {
-    background-color: #dedcdc;
-}
-
-.tab-firmware_flasher .buttons a.exit_dfu.locked {
-    float: left;
-    background-color: #b8b8b8;
-}
-
-.tab-firmware_flasher .buttons a.exit_dfu.locked:hover {
-    float: left;
-    cursor: default;
-    background-color: #b8b8b8;
-}
-
-.tab-firmware_flasher .buttons a.flash_firmware.locked {
-    background-color: #b8b8b8;
-}
-
-.tab-firmware_flasher .buttons a.flash_firmware.locked:hover {
-    cursor: default;
-    background-color: #b8b8b8;
-}
-
-.tab-firmware_flasher .buttons a.load_remote_file.locked {
-    background-color: #b8b8b8;
-}
-
-.tab-firmware_flasher .buttons a.load_remote_file.locked:hover {
-    cursor: default;
-    background-color: #b8b8b8;
-}
-
-.tab-firmware_flasher .buttons .back {
-    float: right;
-    margin: 0;
-}
-
 .btn .disabled {
     cursor: default;
     color: #fff;
@@ -257,4 +200,17 @@
     pointer-events: none;
     text-shadow: none;
     opacity: 0.5;
+}
+
+#dialogUnstableFirmwareAcknoledgement .content {
+    margin-top: 10px;
+}
+
+#dialogUnstableFirmwareAcknoledgement .content div {
+    margin-bottom: 10px;
+}
+
+#dialogUnstableFirmwareAcknoledgement .content ul {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

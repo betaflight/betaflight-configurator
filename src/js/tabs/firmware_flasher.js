@@ -12,6 +12,7 @@ TABS.firmware_flasher = {
     unifiedTargetConfigName: undefined,
     isConfigLocal: false, // Set to true if the user loads one locally
     remoteUnifiedTargetConfig: undefined, // Unified target configuration loaded from the menu, used when throwing out a local config
+    developmentFirmwareLoaded: false, // Is the firmware to be flashed from the development branch?
 };
 
 TABS.firmware_flasher.initialize = function (callback) {
@@ -236,7 +237,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
             if (builds && hasUnifiedTargetBuild(builds)) {
                 console.log('loaded some builds for later');
-                var storageTag = 'unifiedSourceCache';
+                const storageTag = 'unifiedSourceCache';
                 chrome.storage.local.get(storageTag, function (result) {
                     let storageObj = result[storageTag];
                     if(!storageObj || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod ) {
@@ -350,7 +351,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             buildTypesToShow.forEach((build, index) => {
                 buildType_e.append($("<option value='{0}'>{1}</option>".format(index, build.tag ? i18n.getMessage(build.tag) : build.title)))
             });
-            $('select[name="build_type"]').val($('select[name="build_type"] option:first').val());
+            buildType_e.val($('select[name="build_type"] option:first').val());
         }
 
         function showOrHideBuildTypes() {
@@ -583,7 +584,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                     };
 
                     if (TABS.firmware_flasher.unifiedConfigs[target]) {
-                        var storageTag = 'unifiedConfigLast';
+                        const storageTag = 'unifiedConfigLast';
                         var expirationPeriod = 3600; // One of your earth hours.
                         var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
                         chrome.storage.local.get(storageTag, function (result) {
@@ -814,7 +815,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         // UI Hooks
         $('a.load_file').click(function () {
             self.enableFlashing(false);
-            //self.localFileLoaded = true;
+            self.developmentFirmwareLoaded = false;
 
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, undefined);
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'file');
@@ -910,6 +911,9 @@ TABS.firmware_flasher.initialize = function (callback) {
                     FirmwareCache.get(release, cached => {
                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, release.file);
                         console.info("Release found in cache: " + release.file);
+
+                        self.developmentFirmwareLoaded = buildTypesToShow[$('select[name="build_type"]').val()].tag === 'firmwareFlasherOptionLabelBuildTypeDevelopment';
+
                         onLoadSuccess(cached.hexdata, release);
                     });
                 }
@@ -923,6 +927,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         $('a.load_remote_file').click(function (evt) {
             self.enableFlashing(false);
             self.localFirmwareLoaded = false;
+            self.developmentFirmwareLoaded = buildTypesToShow[$('select[name="build_type"]').val()].tag === 'firmwareFlasherOptionLabelBuildTypeDevelopment';
 
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'http');
 
@@ -984,33 +989,97 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         $('a.flash_firmware').click(function () {
             if (!$(this).hasClass('disabled')) {
-                if (!GUI.connect_lock) { // button disabled while flashing is in progress
-                    if (self.parsed_hex) {
-                        try {
-                            if (self.unifiedTargetConfig && !self.parsed_hex.configInserted) {
-                                var configInserter = new ConfigInserter();
-
-                                if (configInserter.insertConfig(self.parsed_hex, self.unifiedTargetConfig)) {
-                                    self.parsed_hex.configInserted = true;
-                                } else {
-                                    console.log('Firmware does not support custom defaults.');
-
-                                    self.unifiedTargetConfig = undefined;
-                                    self.unifiedTargetConfigName = undefined;
-                                }
-                            }
-
-                            flashFirmware(self.parsed_hex);
-                        } catch (e) {
-                            console.log(`Flashing failed: ${e.message}`);
-                        }
-                    } else {
-                        $('span.progressLabel').attr('i18n','firmwareFlasherFirmwareNotLoaded').removeClass('i18n-replaced');
-                        i18n.localizePage();
-                    }
+                if (self.developmentFirmwareLoaded) {
+                    checkShowAcknowledgementDialog();
+                } else {
+                    startFlashing();
                 }
             }
         });
+
+        function checkShowAcknowledgementDialog() {
+            const DAY_MS = 86400 * 1000;
+            const storageTag = 'lastDevelopmentWarningTimestamp';
+
+            function setAcknowledgementTimestamp() {
+                const storageObj = {};
+                storageObj[storageTag] = Date.now();
+                chrome.storage.local.set(storageObj);
+            }
+
+            chrome.storage.local.get(storageTag, function (result) {
+                if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
+
+                    showAcknowledgementDialog(setAcknowledgementTimestamp);
+                } else {
+                    startFlashing();
+                }
+            });
+        }
+
+        function showAcknowledgementDialog(acknowledgementCallback) {
+            const dialog = $('#dialogUnstableFirmwareAcknoledgement')[0];
+            const flashButtonElement = $('#dialogUnstableFirmwareAcknoledgement-flashbtn');
+            const acknowledgeCheckboxElement = $('input[name="dialogUnstableFirmwareAcknoledgement-acknowledge"]');
+
+            acknowledgeCheckboxElement.change(function () {
+                if ($(this).is(':checked')) {
+                    flashButtonElement.removeClass('disabled');
+                } else {
+                    flashButtonElement.addClass('disabled');
+                }
+            });
+
+            flashButtonElement.click(function() {
+                dialog.close();
+
+                if (acknowledgeCheckboxElement.is(':checked')) {
+                    if (acknowledgementCallback) {
+                        acknowledgementCallback();
+                    }
+
+                    startFlashing();
+                }
+            });
+
+            $('#dialogUnstableFirmwareAcknoledgement-cancelbtn').click(function() {
+                dialog.close();
+            });
+
+            dialog.addEventListener('close', function () {
+                acknowledgeCheckboxElement.prop('checked', false).change();
+            });
+
+            dialog.showModal();
+        }
+
+        function startFlashing() {
+            if (!GUI.connect_lock) { // button disabled while flashing is in progress
+                if (self.parsed_hex) {
+                    try {
+                        if (self.unifiedTargetConfig && !self.parsed_hex.configInserted) {
+                            var configInserter = new ConfigInserter();
+
+                            if (configInserter.insertConfig(self.parsed_hex, self.unifiedTargetConfig)) {
+                                self.parsed_hex.configInserted = true;
+                            } else {
+                                console.log('Firmware does not support custom defaults.');
+
+                                self.unifiedTargetConfig = undefined;
+                                self.unifiedTargetConfigName = undefined;
+                            }
+                        }
+
+                        flashFirmware(self.parsed_hex);
+                    } catch (e) {
+                        console.log(`Flashing failed: ${e.message}`);
+                    }
+                } else {
+                    $('span.progressLabel').attr('i18n','firmwareFlasherFirmwareNotLoaded').removeClass('i18n-replaced');
+                    i18n.localizePage();
+                }
+            }
+        }
 
         $('span.progressLabel a.save_firmware').click(function () {
             var summary = $('select[name="firmware_version"] option:selected').data('summary');
