@@ -4696,6 +4696,13 @@
     "osdDescElementCameraFrame": {
         "message": "Adds an adjustable outline element designed to represent the field of view of the pilot's HD camera for visual framing.<br><br>You can adjust the width and height in CLI with 'osd_camera_frame_width' and 'osd_camera_frame_height'"
     },    
+    "osdTextElementEfficiency": {
+        "message": "Efficiency",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementEfficiency": {
+        "message": "Shows current energy consumption in mAh/distance"
+    },
     
     "osdTextElementUnknown": {
         "message": "Unknown $1",
