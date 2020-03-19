@@ -7,9 +7,10 @@
 # ${VERSION} - Version to generate (x.y.z)
 # ${PLATFORM} - Platform to generate (win32 or win64)
 # ${DEST_FOLDER} - Destination folder for the installer files
+# ${SOURCE_FOLDER} - Source folder for the application files
 
 # Some definitions
-!define SOURCE_FILES          "..\..\apps\betaflight-configurator\${PLATFORM}\*"
+!define SOURCE_FILES          "..\..\${SOURCE_FOLDER}\betaflight-configurator\${PLATFORM}\*"
 !define APP_NAME              "Betaflight Configurator"
 !define COMPANY_NAME          "The Betaflight open source project."
 !define GROUP_NAME            "Betaflight"
