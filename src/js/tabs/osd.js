@@ -62,6 +62,8 @@ SYM.loadSymbols = function() {
     SYM.ALTITUDE = 0x7F;
     SYM.PITCH = 0x15;
     SYM.ROLL = 0x14;
+    SYM.KM = 0x7d;
+    SYM.MILES = 0x7e;
 
     /* Versions before Betaflight 4.1 use font V1
      * To maintain this list at minimum, we only add here:
@@ -1118,6 +1120,17 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: OSD.drawCameraFramePreview,
         },
+        OSD_EFFICIENCY: {
+            name: 'OSD_EFFICIENCY',
+            text: 'osdTextElementEfficiency',
+            desc: 'osdDescElementEfficiency',
+            default_position: -1,
+            draw_order: 455,
+            positionable: true,
+            preview: function (osdData) {
+                return `1234${FONT.symbol(SYM.MAH)}/${FONT.symbol(osdData.unit_mode === 0 ? SYM.MILES : SYM.KM)}`;
+            },
+        },
 
     };
 };
@@ -1527,6 +1540,7 @@ OSD.chooseFields = function () {
                                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                         F.RC_CHANNELS,
                                                         F.CAMERA_FRAME,
+                                                        F.OSD_EFFICIENCY,
                                                     ]);
                                                 }
                                             }
