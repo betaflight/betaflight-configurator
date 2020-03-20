@@ -2244,6 +2244,10 @@ TABS.osd.initialize = function (callback) {
 
                     OSD.msp.decode(info);
 
+                    if (!OSD.data.state.haveMax7456Video || !OSD.data.state.isMax7456Detected) {
+                        $('.noOsdChipDetect').show();
+                    }
+
                     if (OSD.data.state.haveSomeOsd == 0) {
                         $('.unsupported').fadeIn();
                         return;
@@ -2466,11 +2470,10 @@ TABS.osd.initialize = function (callback) {
 
                     if (!OSD.data.state.haveMax7456Video) {
                         $('.requires-max7456').hide();
-                        $('.requires-detected-max7456').hide();
                     }
 
                     if (!OSD.data.state.haveMax7456Video || !OSD.data.state.isMax7456Detected) {
-                        $('.requires-detected-max7456').hide();
+                        $('.requires-detected-max7456').addClass('disabled');
                     }
 
                     if (!OSD.data.state.haveOsdFeature) {

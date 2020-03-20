@@ -1382,6 +1382,7 @@ dialog {
     display: block;
     transition: all ease 0.2s;
     text-decoration:none;
+    cursor: pointer;
 }
 
 .default_btn a.disabled {
