@@ -1145,7 +1145,7 @@ TABS.pid_tuning.initialize = function (callback) {
         showAllPids();
         updatePidDisplay();
 
-        showAllButton.on('click', function(){
+        showAllButton.on('click', function() {
             self.showAllPids = !self.showAllPids;
 
             updatePidDisplay();

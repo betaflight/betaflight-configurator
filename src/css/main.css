@@ -1044,6 +1044,48 @@ dialog {
     border: 1px solid silver;
 }
 
+dialog .dialog_toolbar .btn a {
+    /*  common styles for content toolbar buttons */
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 20px;
+    background-color: var(--accent);
+    border-radius: 3px;
+    border: 1px solid #dba718;
+    color: #000;
+    float: left;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    display: block;
+    cursor: pointer;
+    transition: all ease 0.2s;
+    padding: 0px;
+    padding-left: 9px;
+    padding-right: 9px;
+    line-height: 28px;
+}
+
+dialog .dialog_toolbar .btn a:hover {
+    background-color: #ffcc3e;
+    transition: all ease 0.2s;
+}
+
+dialog .dialog_toolbar .btn a:active {
+    background-color: var(--accent);
+    transition: all ease 0.0s;
+    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+}
+
+dialog .dialog_toolbar .btn a.disabled {
+    cursor: default;
+    color: #fff;
+    background-color: #AFAFAF;
+    border: 1px solid #AFAFAF;
+    pointer-events: none;
+    text-shadow: none;
+    opacity: 0.5;
+}
 /* Border of the Tab */
 
 /* Tab Title */
