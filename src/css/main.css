@@ -1424,6 +1424,7 @@ dialog .dialog_toolbar .btn a.disabled {
     display: block;
     transition: all ease 0.2s;
     text-decoration:none;
+    cursor: pointer;
 }
 
 .default_btn a.disabled {
