@@ -431,6 +431,8 @@ TABS.pid_tuning.initialize = function (callback) {
             self.changeRatesType(self.currentRatesType); // update rate type code when updating the tab
 
         } else {
+            self.currentRatesType = null;
+            self.previousRatesType = null;
             $('.rates_type').hide();
         }
 
