@@ -105,6 +105,7 @@ var FC = {
             mcuTypeId:                        255,
             configurationState:               0,
             sampleRateHz:                     0,
+            configurationProblems:            0,
         };
 
         BF_CONFIG = {
@@ -638,7 +639,11 @@ var FC = {
         SUPPORTS_CUSTOM_DEFAULTS: 4,
         HAS_CUSTOM_DEFAULTS: 5,
         SUPPORTS_RX_BIND: 6,
-        ACC_NEEDS_CALIBRATION: 7,
+    },
+
+    CONFIGURATION_PROBLEM_FLAGS: {
+        ACC_NEEDS_CALIBRATION: 0,
+        MOTOR_PROTOCOL_DISABLED: 1,
     },
 
     boardHasVcp: function () {

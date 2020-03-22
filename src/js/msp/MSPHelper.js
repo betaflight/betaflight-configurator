@@ -767,7 +767,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     CONFIG.boardType = 0;
                 }
 
-                CONFIG.targetName = "";
                 if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
                     CONFIG.targetCapabilities = data.readU8();
 
@@ -777,11 +776,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                 } else {
                     CONFIG.targetCapabilities = 0;
+                    CONFIG.targetName = "";
                 }
 
-                CONFIG.boardName = "";
-                CONFIG.manufacturerId = "";
-                CONFIG.signature = [];
                 if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
                     let length = data.readU8();
                     for (let i = 0; i < length; i++) {
@@ -796,22 +793,29 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     for (let i = 0; i < self.SIGNATURE_LENGTH; i++) {
                         CONFIG.signature.push(data.readU8());
                     }
+                } else {
+                    CONFIG.boardName = "";
+                    CONFIG.manufacturerId = "";
+                    CONFIG.signature = [];
                 }
 
                 if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
                     CONFIG.mcuTypeId = data.readU8();
-
-                    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
-                        CONFIG.configurationState = data.readU8();
-
-                        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
-                            CONFIG.sampleRateHz = data.readU16();
-                        }
-
-                    }
                 } else {
                     CONFIG.mcuTypeId = 255;
                 }
+
+                if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                    CONFIG.configurationState = data.readU8();
+                }
+
+                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    CONFIG.sampleRateHz = data.readU16();
+                    CONFIG.configurationProblems = data.readU32();
+                } else {
+                    CONFIG.configurationProblems = 0;
+                }
+
                 break;
 
             case MSPCodes.MSP_NAME:

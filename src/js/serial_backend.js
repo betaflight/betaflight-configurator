@@ -353,19 +353,31 @@ function processBoardInfo() {
 }
 
 function checkReportProblems() {
+    const PROBLEM_ANALYTICS_EVENT = 'ProblemFound';
+    const problemItemTemplate = $('#dialogReportProblems-listItemTemplate');
+
+    function checkReportProblem(problemName, problemDialogList) {
+        if (bit_check(CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
+            problemItemTemplate.clone().html(i18n.getMessage(`reportProblemsDialog${problemName}`)).appendTo(problemDialogList);
+
+            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, problemName);
+
+            return true;
+        }
+
+        return false;
+    }
+
     MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
         let needsProblemReportingDialog = false;
         const problemDialogList = $('#dialogReportProblems-list');
         problemDialogList.empty();
-        const problemItemTemplate = $('.dialogReportProblems-listItem');
-        const PROBLEM_ANALYTICS_EVENT = 'ProblemFound';
 
-        if (have_sensor(CONFIG.activeSensors, 'acc') && bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.ACC_NEEDS_CALIBRATION)) {
-            needsProblemReportingDialog = true;
-            problemDialogList.append(problemItemTemplate.clone().html(i18n.getMessage('reportProblemsDialogAccCalibrationNeeded')));
-
-            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, 'AccNotCalibrated');
+        if (have_sensor(CONFIG.activeSensors, 'acc')) {
+            needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problemDialogList) || needsProblemReportingDialog;
         }
+
+        needsProblemReportingDialog = checkReportProblem('MOTOR_PROTOCOL_DISABLED', problemDialogList) || needsProblemReportingDialog;
 
         if (needsProblemReportingDialog) {
             const problemDialog = $('#dialogReportProblems')[0];
