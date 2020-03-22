@@ -708,6 +708,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'Japanese MSAS',
             'Indian GAGAN'
         ];
+        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            gpsSbas.push('NONE');
+        }
 
         var gps_protocol_e = $('select.gps_protocol');
         for (var i = 0; i < gpsProtocols.length; i++) {
