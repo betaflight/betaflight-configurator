@@ -166,6 +166,10 @@ PortHandler.check_usb_devices = function (callback) {
         }
 
         if(callback) callback(self.dfu_available);
+
+        if (!$('option:selected', portPickerElement).data().isDFU) {
+            portPickerElement.trigger('change');
+        }
     });
 };
 
