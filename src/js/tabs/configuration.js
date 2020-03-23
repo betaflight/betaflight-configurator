@@ -861,13 +861,27 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 );
             }
 
+            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                spiRxTypes.push(
+                    'REDPINE',
+                );
+            }
+
             var spiRx_e = $('select.spiRx');
             for (var i = 0; i < spiRxTypes.length; i++) {
                 spiRx_e.append('<option value="' + i + '">' + spiRxTypes[i] + '</option>');
             }
 
             spiRx_e.change(function () {
-                RX_CONFIG.rxSpiProtocol = parseInt($(this).val());
+                const value = parseInt($(this).val());
+
+                let newValue = undefined;
+                if (value !== RX_CONFIG.rxSpiProtocol) {
+                    newValue = $(this).find('option:selected').text();
+                }
+                self.analyticsChanges['SPIRXProtocol'] = newValue;
+
+                RX_CONFIG.rxSpiProtocol = value;
             });
 
             // select current serial RX type
