@@ -702,14 +702,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         ];
 
         var gpsSbas = [
-            'Auto-detect',
-            'European EGNOS',
-            'North American WAAS',
-            'Japanese MSAS',
-            'Indian GAGAN'
+            i18n.getMessage('gpsSbasAutoDetect'),
+            i18n.getMessage('gpsSbasEuropeanEGNOS'),
+            i18n.getMessage('gpsSbasNorthAmericanWAAS'),
+            i18n.getMessage('gpsSbasJapaneseMSAS'),
+            i18n.getMessage('gpsSbasIndianGAGAN')
         ];
         if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
-            gpsSbas.push('NONE');
+            gpsSbas.push(i18n.getMessage('gpsSbasNone'));
         }
 
         var gps_protocol_e = $('select.gps_protocol');

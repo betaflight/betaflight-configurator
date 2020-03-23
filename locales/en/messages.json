@@ -5656,5 +5656,23 @@
     },
     "dialogRatesTypeConfirm": {
         "message": "Change"
+    },
+    "gpsSbasAutoDetect": {
+        "message": "Auto-detect"
+    },
+    "gpsSbasEuropeanEGNOS": {
+        "message": "European EGNOS" 
+    },
+    "gpsSbasNorthAmericanWAAS": {
+        "message": "North American WAAS" 
+    },
+    "gpsSbasJapaneseMSAS": {
+        "message": "Japanese MSAS"
+    },
+    "gpsSbasIndianGAGAN": {
+        "message": "Indian GAGAN"
+    },
+    "gpsSbasNone": {
+        "message": "None"
     }
 }
