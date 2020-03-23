@@ -5658,21 +5658,27 @@
         "message": "Change"
     },
     "gpsSbasAutoDetect": {
-        "message": "Auto-detect"
+        "message": "Auto-detect",
+        "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasEuropeanEGNOS": {
-        "message": "European EGNOS" 
+        "message": "European EGNOS",
+        "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasNorthAmericanWAAS": {
-        "message": "North American WAAS" 
+        "message": "North American WAAS",
+        "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasJapaneseMSAS": {
-        "message": "Japanese MSAS"
+        "message": "Japanese MSAS",
+        "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasIndianGAGAN": {
-        "message": "Indian GAGAN"
+        "message": "Indian GAGAN",
+        "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasNone": {
-        "message": "None"
+        "message": "None",
+        "description": "One of the options selectable for the GPS SBAS system"
     }
 }
