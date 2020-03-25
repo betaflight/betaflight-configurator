@@ -355,7 +355,7 @@ function writeLineToOutput(text) {
         return; // suppress output if in building state
     }
 
-    if (text.startsWith("###ERROR: ")) {
+    if (text.startsWith("###ERROR")) {
         writeToOutput('<span class="error_message">' + text + '</span><br>');
     } else {
         writeToOutput(text + "<br>");
