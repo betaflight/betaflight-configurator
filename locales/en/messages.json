@@ -2704,7 +2704,7 @@
         "message": "Release info"
     },
     "firmwareFlasherReleaseManufacturer": {
-        "message": "Manufacturer:"
+        "message": "Manufacturer ID:"
     },
     "firmwareFlasherReleaseVersion": {
         "message": "Version:"
@@ -2724,8 +2724,14 @@
     "firmwareFlasherReleaseFile": {
         "message": "Binary:"
     },
-    "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\">IMPORTANT: This firmware release is currently marked as a release candidate.  Please report any issues immediately.</span>"
+    "firmwareFlasherUnifiedTargetName": {
+        "message": "Unified Target:"
+    },
+    "firmwareFlasherUnifiedTargetFileUrl": {
+        "message": "Show config."
+    },
+    "firmwareFlasherUnifiedTargetDate": {
+        "message": "Date:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Download manually."
