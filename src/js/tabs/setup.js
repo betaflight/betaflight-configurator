@@ -29,11 +29,11 @@ TABS.setup.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        if (semver.lt(CONFIG.apiVersion, CONFIGURATOR.backupRestoreMinApiVersionAccepted)) {
+        if (semver.lt(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE)) {
             $('#content .backup').addClass('disabled');
             $('#content .restore').addClass('disabled');
 
-            GUI.log(i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [CONFIG.apiVersion, CONFIGURATOR.backupRestoreMinApiVersionAccepted]));
+            GUI.log(i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE]));
         }
 
         // initialize 3D Model
@@ -239,7 +239,7 @@ TABS.setup.initialize = function (callback) {
                 disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD',
                                                                 'DSHOT_BBANG']);
             }
-            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 disarmFlagElements = disarmFlagElements.concat(['NO_ACC_CAL', 'MOTOR_PROTO']);
             }
 

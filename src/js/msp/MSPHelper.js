@@ -357,7 +357,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     RC_tuning.pitch_rate_limit = data.readU16();
                     RC_tuning.yaw_rate_limit = data.readU16();
                 }
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     RC_tuning.rates_type = data.readU8();
                 }
                 break;
@@ -428,7 +428,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     GPS_CONFIG.auto_config = data.readU8();
                     GPS_CONFIG.auto_baud = data.readU8();
 
-                    if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                         GPS_CONFIG.home_point_once = data.readU8();
                         GPS_CONFIG.ublox_use_galileo = data.readU8();
                     }
@@ -444,7 +444,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 GPS_RESCUE.throttleHover     = data.readU16();
                 GPS_RESCUE.sanityChecks      = data.readU8();
                 GPS_RESCUE.minSats           = data.readU8();
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     GPS_RESCUE.ascendRate            = data.readU16();
                     GPS_RESCUE.descendRate           = data.readU16();
                     GPS_RESCUE.allowArmingWithoutFix = data.readU8();
@@ -809,7 +809,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     CONFIG.configurationState = data.readU8();
                 }
 
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     CONFIG.sampleRateHz = data.readU16();
                     CONFIG.configurationProblems = data.readU32();
                 } else {
@@ -1085,7 +1085,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                 FILTER_CONFIG.gyro_rpm_notch_harmonics = data.readU8();
                                 FILTER_CONFIG.gyro_rpm_notch_min_hz = data.readU8();
                             }
-                            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                                 FILTER_CONFIG.dyn_notch_max_hz = data.readU16();
                             }
                         }
@@ -1150,7 +1150,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                         if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
                                             ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
 
-                                            if(semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                                            if(semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                                                 ADVANCED_TUNING.motorOutputLimit = data.readU8();
                                                 ADVANCED_TUNING.autoProfileCellCount = data.readU8();
                                                 ADVANCED_TUNING.idleMinRpm = data.readU8();
@@ -1696,7 +1696,7 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push16(RC_tuning.pitch_rate_limit);
                 buffer.push16(RC_tuning.yaw_rate_limit);
             }
-            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 buffer.push8(RC_tuning.rates_type);
             }
             break;
@@ -1757,7 +1757,7 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push8(GPS_CONFIG.auto_config)
                     .push8(GPS_CONFIG.auto_baud);
 
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     buffer.push8(GPS_CONFIG.home_point_once)
                           .push8(GPS_CONFIG.ublox_use_galileo);
                 }
@@ -1774,7 +1774,7 @@ MspHelper.prototype.crunch = function(code) {
                   .push8(GPS_RESCUE.sanityChecks)
                   .push8(GPS_RESCUE.minSats);
 
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     buffer.push16(GPS_RESCUE.ascendRate)
                           .push16(GPS_RESCUE.descendRate)
                           .push8(GPS_RESCUE.allowArmingWithoutFix)
@@ -2026,7 +2026,7 @@ MspHelper.prototype.crunch = function(code) {
                           .push8(FILTER_CONFIG.gyro_rpm_notch_harmonics)
                           .push8(FILTER_CONFIG.gyro_rpm_notch_min_hz);
                 }
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     buffer.push16(FILTER_CONFIG.dyn_notch_max_hz);
                 }
             }
@@ -2088,7 +2088,7 @@ MspHelper.prototype.crunch = function(code) {
                                     if(semver.gte(CONFIG.apiVersion, "1.42.0")) {
                                         buffer.push8(ADVANCED_TUNING.itermRelaxCutoff);
 
-                                        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                                        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                                             buffer.push8(ADVANCED_TUNING.motorOutputLimit)
                                                   .push8(ADVANCED_TUNING.autoProfileCellCount)
                                                   .push8(ADVANCED_TUNING.idleMinRpm);
@@ -2765,12 +2765,12 @@ MspHelper.prototype.setArmingEnabled = function(doEnable, disableRunawayTakeoffP
 }
 
 MspHelper.prototype.loadSerialConfig = function(callback) {
-    const mspCode = semver.gte(CONFIG.apiVersion, "1.43.0") ? MSPCodes.MSP2_COMMON_SERIAL_CONFIG : MSPCodes.MSP_CF_SERIAL_CONFIG;
+    const mspCode = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) ? MSPCodes.MSP2_COMMON_SERIAL_CONFIG : MSPCodes.MSP_CF_SERIAL_CONFIG;
     MSP.send_message(mspCode, false, false, callback);
 };
 
 MspHelper.prototype.sendSerialConfig = function(callback) {
-    const mspCode = semver.gte(CONFIG.apiVersion, "1.43.0") ? MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG : MSPCodes.MSP_SET_CF_SERIAL_CONFIG;
+    const mspCode = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) ? MSPCodes.MSP2_COMMON_SET_SERIAL_CONFIG : MSPCodes.MSP_SET_CF_SERIAL_CONFIG;
     MSP.send_message(mspCode, mspHelper.crunch(mspCode), false, callback);
 };
 

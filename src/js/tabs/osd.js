@@ -1536,7 +1536,7 @@ OSD.chooseFields = function () {
                                                     F.OSD_PROFILE_NAME,
                                                     F.RSSI_DBM_VALUE,
                                                 ]);
-                                                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                                                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                         F.RC_CHANNELS,
                                                         F.CAMERA_FRAME,
@@ -1686,7 +1686,7 @@ OSD.chooseFields = function () {
             F.RSSI_DBM,
         ]);
     }
-    if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.OVER_CAP,
         ]);
@@ -1819,7 +1819,7 @@ OSD.msp = {
                     result.push8(OSD.data.parameters.overlayRadioMode);
                 }
 
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     result.push8(OSD.data.parameters.cameraFrameWidth);
                     result.push8(OSD.data.parameters.cameraFrameHeight);
                 }
@@ -1882,7 +1882,7 @@ OSD.msp = {
         d.state = {};
         d.state.haveSomeOsd = (d.flags != 0)
         d.state.haveMax7456Video = bit_check(d.flags, 4) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
-        d.state.isMax7456Detected = bit_check(d.flags, 5) || (d.state.haveMax7456Video && semver.lt(CONFIG.apiVersion, "1.43.0"));
+        d.state.isMax7456Detected = bit_check(d.flags, 5) || (d.state.haveMax7456Video && semver.lt(CONFIG.apiVersion, API_VERSION_1_43));
         d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
         d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(CONFIG.apiVersion, "1.34.0");
 
@@ -2004,7 +2004,7 @@ OSD.msp = {
         }
 
         // Camera frame size
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             d.parameters.cameraFrameWidth = view.readU8();
             d.parameters.cameraFrameHeight = view.readU8();
         }

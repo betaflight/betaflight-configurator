@@ -641,7 +641,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
              $('div.gyroUse32kHz').hide();
 
-             if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+             if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                  updateGyroDenomReadOnly(CONFIG.sampleRateHz);
              } else {
                  updateGyroDenom(8);
@@ -656,7 +656,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             const originalPidDenom = pidSelectElement.val();
 
             let pidBaseFreq;
-            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 pidBaseFreq = CONFIG.sampleRateHz / 1000;
             } else {
                 pidBaseFreq = 8;
@@ -733,7 +733,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             i18n.getMessage('gpsSbasJapaneseMSAS'),
             i18n.getMessage('gpsSbasIndianGAGAN'),
         ];
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             gpsSbas.push(i18n.getMessage('gpsSbasNone'));
         }
 
@@ -747,7 +747,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         gps_protocol_e.change(function () {
             GPS_CONFIG.provider = parseInt($(this).val());
 
-            const enableGalileoVisible = semver.gte(CONFIG.apiVersion, "1.43.0") && GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
+            const enableGalileoVisible = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) && GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
             gps_ublox_galileo_e.toggle(enableGalileoVisible);
         });
         gps_protocol_e.val(GPS_CONFIG.provider).change();
@@ -756,7 +756,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', GPS_CONFIG.ublox_use_galileo > 0).change();
 
-        $('.gps_home_once').toggle(semver.gte(CONFIG.apiVersion, "1.43.0"));
+        $('.gps_home_once').toggle(semver.gte(CONFIG.apiVersion, API_VERSION_1_43));
         $('input[name="gps_home_once"]').change(function() {
             GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', GPS_CONFIG.home_point_once > 0).change();
@@ -889,7 +889,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 );
             }
 
-            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 spiRxTypes.push(
                     'REDPINE',
                 );

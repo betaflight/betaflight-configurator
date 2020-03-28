@@ -238,13 +238,13 @@ function onOpen(openInfo) {
 
             GUI.log(i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
 
-            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.apiVersionAccepted)) {
+            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
 
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
                     analytics.setFlightControllerData(analytics.DATA.FIRMWARE_TYPE, CONFIG.flightControllerIdentifier);
                     if (CONFIG.flightControllerIdentifier === 'BTFL') {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
-                             analytics.setFlightControllerData(analytics.DATA.FIRMWARE_VERSION, CONFIG.flightControllerVersion);
+                            analytics.setFlightControllerData(analytics.DATA.FIRMWARE_VERSION, CONFIG.flightControllerVersion);
 
                             GUI.log(i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
                             updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier);
@@ -278,7 +278,7 @@ function onOpen(openInfo) {
 
                 var dialog = $('.dialogConnectWarning')[0];
 
-                $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.apiVersionAccepted]));
+                $('.dialogConnectWarning-content').html(i18n.getMessage('firmwareVersionNotSupported', [CONFIGURATOR.API_VERSION_ACCEPTED]));
 
                 $('.dialogConnectWarning-closebtn').click(function() {
                     dialog.close();
@@ -373,11 +373,21 @@ function checkReportProblems() {
         const problemDialogList = $('#dialogReportProblems-list');
         problemDialogList.empty();
 
-        if (have_sensor(CONFIG.activeSensors, 'acc')) {
-            needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problemDialogList) || needsProblemReportingDialog;
+        if (semver.gt(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
+            const problemName = 'API_VERSION_MAX_SUPPORTED';
+            problemItemTemplate.clone().html(i18n.getMessage(`reportProblemsDialog${problemName}`,
+                [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.version, CONFIG.flightControllerVersion])).appendTo(problemDialogList);
+            needsProblemReportingDialog = true;
+
+            analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT,
+                `${problemName};${CONFIGURATOR.API_VERSION_MAX_SUPPORTED};${CONFIG.apiVersion}`);
         }
 
         needsProblemReportingDialog = checkReportProblem('MOTOR_PROTOCOL_DISABLED', problemDialogList) || needsProblemReportingDialog;
+
+        if (have_sensor(CONFIG.activeSensors, 'acc')) {
+            needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problemDialogList) || needsProblemReportingDialog;
+        }
 
         if (needsProblemReportingDialog) {
             const problemDialog = $('#dialogReportProblems')[0];

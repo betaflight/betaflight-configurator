@@ -334,7 +334,7 @@ function configuration_restore(callback) {
 
 
                     // validate
-                    if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.backupFileMinVersionAccepted)) {
+                    if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.BACKUP_FILE_VERSION_MIN_SUPPORTED)) {
                         if (!compareVersions(configuration.generatedBy, "1.14.0") && !migrate(configuration)) {
                             GUI.log(i18n.getMessage('backupFileUnmigratable'));
                             return;
