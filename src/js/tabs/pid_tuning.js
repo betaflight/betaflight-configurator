@@ -760,7 +760,15 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
-            ADVANCED_TUNING.vbatPidCompensation = $('input[id="vbatpidcompensation"]').is(':checked') ? 1 : 0;
+            const element = $('input[id="vbatpidcompensation"]');
+            const value = element.is(':checked') ? 1 : 0;
+            let analyticsValue = undefined;
+            if (value !== ADVANCED_TUNING.vbatPidCompensation) {
+                analyticsValue = element.is(':checked');
+            }
+            self.analyticsChanges['VbatPidCompensation'] = analyticsValue;
+
+            ADVANCED_TUNING.vbatPidCompensation = value;
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
@@ -867,7 +875,7 @@ TABS.pid_tuning.initialize = function (callback) {
             ADVANCED_TUNING.idleMinRpm = parseInt($('input[name="idleMinRpm-number"]').val());
 
             const selectedRatesType = $('select[id="ratesType"]').val(); // send analytics for rates type
-            let selectedRatesTypeName = null;
+            let selectedRatesTypeName = undefined;
             if (selectedRatesType !== RC_tuning.rates_type) {
                 selectedRatesTypeName = $('select[id="ratesType"]').find('option:selected').text();
             }
@@ -1665,8 +1673,6 @@ TABS.pid_tuning.initialize = function (callback) {
             // filter and tuning sliders
             TuningSliders.initialize();
 
-            self.analyticsChanges = {};
-
             // UNSCALED non expert slider constrain values
             const NON_EXPERT_SLIDER_MAX = 1.25;
             const NON_EXPERT_SLIDER_MIN = 0.7;
@@ -1918,6 +1924,8 @@ TABS.pid_tuning.initialize = function (callback) {
         GUI.interval_add('status_pull', function status_pull() {
             MSP.send_message(MSPCodes.MSP_STATUS);
         }, 250, true);
+
+        self.analyticsChanges = {};
 
         GUI.content_ready(callback);
     }
