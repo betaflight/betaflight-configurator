@@ -1928,13 +1928,19 @@ OSD.msp = {
                         text: c.text,
                         desc: c.desc,
                         index: i,
-                        enabled: v === 1
+                        enabled: v === 1,
                     });
 
                 // Read all the data for any statistics we don't know about
                 } else {
                     let statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
-                    d.stat_items.push({name: 'UNKNOWN', text: ['osdTextStatUnknown', statisticNumber], desc: 'osdDescStatUnknown', index: i, enabled: v === 1 });
+                    d.stat_items.push({
+                        name: 'UNKNOWN',
+                        text: ['osdTextStatUnknown', statisticNumber],
+                        desc: 'osdDescStatUnknown',
+                        index: i,
+                        enabled: v === 1,
+                    });
                 }
             }
 
@@ -1966,12 +1972,19 @@ OSD.msp = {
 
                 // Known warning field
                 if (i < OSD.constants.WARNINGS.length) {
-                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled: (warningFlags & (1 << i)) != 0 }));
+                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], {
+                        enabled: (warningFlags & (1 << i)) !== 0,
+                    }));
 
                 // Push Unknown Warning field
                 } else {
                     var warningNumber = i - OSD.constants.WARNINGS.length + 1;
-                    d.warnings.push({name: 'UNKNOWN', text: ['osdWarningTextUnknown', warningNumber], desc: 'osdWarningUnknown', enabled: (warningFlags & (1 << i)) != 0 });
+                    d.warnings.push({
+                        name: 'UNKNOWN',
+                        text: ['osdWarningTextUnknown', warningNumber],
+                        desc: 'osdWarningUnknown',
+                        enabled: (warningFlags & (1 << i)) !== 0,
+                    });
 
                 }
             }
@@ -2150,7 +2163,10 @@ OSD.GUI.preview = {
 };
 
 
-TABS.osd = {};
+TABS.osd = {
+    analyticsChanges: {},
+};
+
 TABS.osd.initialize = function (callback) {
     var self = this;
 
@@ -2413,7 +2429,14 @@ TABS.osd.initialize = function (callback) {
                                         .attr('checked', field.enabled)
                                         .change(function (e) {
                                             var field = $(this).data('field');
+
                                             field.enabled = !field.enabled;
+
+                                            if (self.analyticsChanges[`OSDStatistic${field.name}`] === undefined) {
+                                                self.analyticsChanges[`OSDStatistic${field.name}`] = 0;
+                                            }
+                                            self.analyticsChanges[`OSDStatistic${field.name}`] += field.enabled ? 1 : -1;
+
                                             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeStatistics(field))
                                                 .then(function () {
                                                     updateOsdView();
@@ -2450,6 +2473,12 @@ TABS.osd.initialize = function (callback) {
                                         .change(function (e) {
                                             var field = $(this).data('field');
                                             field.enabled = !field.enabled;
+
+                                            if (self.analyticsChanges[`OSDWarning${field.name}`] === undefined) {
+                                                self.analyticsChanges[`OSDWarning${field.name}`] = 0;
+                                            }
+                                            self.analyticsChanges[`OSDWarning${field.name}`] += field.enabled ? 1 : -1;
+
                                             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther())
                                                 .then(function () {
                                                     updateOsdView();
@@ -2564,6 +2593,12 @@ TABS.osd.initialize = function (callback) {
                                             var profile = $(this).data('osd_profile');
                                             var $position = $(this).parent().find('.position.' + field.name);
                                             field.isVisible[profile] = !field.isVisible[profile];
+
+                                            if (self.analyticsChanges[`OSDElement${field.name}`] === undefined) {
+                                                self.analyticsChanges[`OSDElement${field.name}`] = 0;
+                                            }
+                                            self.analyticsChanges[`OSDElement${field.name}`] += field.isVisible[profile] ? 1 : -1;
+
                                             if (field.isVisible[OSD.getCurrentPreviewProfile()]) {
                                                 $position.show();
                                             } else {
@@ -2764,14 +2799,27 @@ TABS.osd.initialize = function (callback) {
         });
 
         $('a.save').click(function () {
-            var self = this;
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             GUI.log(i18n.getMessage('osdSettingsSaved'));
             var oldText = $(this).text();
             $(this).html(i18n.getMessage('osdButtonSaved'));
             setTimeout(function () {
-                $(self).html(oldText);
+                $(this).html(oldText);
             }, 2000);
+
+            Object.keys(self.analyticsChanges).forEach(function (change) {
+                const value = self.analyticsChanges[change];
+                if (value > 0) {
+                    self.analyticsChanges[change] = 'On';
+                } else if (value < 0) {
+                    self.analyticsChanges[change] = 'Off';
+                } else {
+                    self.analyticsChanges[change] = undefined;
+                }
+            });
+
+            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            self.analyticsChanges = {};
         });
 
         // font preview window
@@ -2886,6 +2934,8 @@ TABS.osd.initialize = function (callback) {
                 $('a.flash_font').click();
             }
         });
+
+        self.analyticsChanges = {};
 
         GUI.content_ready(callback);
     });
