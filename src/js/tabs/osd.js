@@ -1970,11 +1970,11 @@ OSD.msp = {
             }
             for (var i = 0; i < warningCount; i++) {
 
+                const enabled = (warningFlags & (1 << i)) !== 0;
+
                 // Known warning field
                 if (i < OSD.constants.WARNINGS.length) {
-                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], {
-                        enabled: (warningFlags & (1 << i)) !== 0,
-                    }));
+                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled: enabled }));
 
                 // Push Unknown Warning field
                 } else {
@@ -1983,7 +1983,7 @@ OSD.msp = {
                         name: 'UNKNOWN',
                         text: ['osdWarningTextUnknown', warningNumber],
                         desc: 'osdWarningUnknown',
-                        enabled: (warningFlags & (1 << i)) !== 0,
+                        enabled: enabled,
                     });
 
                 }
@@ -2168,8 +2168,6 @@ TABS.osd = {
 };
 
 TABS.osd.initialize = function (callback) {
-    var self = this;
-
     if (GUI.active_tab != 'osd') {
         GUI.active_tab = 'osd';
     }
