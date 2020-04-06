@@ -479,6 +479,11 @@ TABS.pid_tuning.initialize = function (callback) {
                         $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.57), 100));
                         $('.pid_tuning input[name="dMinPitch"]').val(Math.min(Math.round($('.pid_tuning .PITCH input[name="d"]').val() * 0.57), 100));
                         $('.pid_tuning input[name="dMinYaw"]').val(Math.min(Math.round($('.pid_tuning .YAW input[name="d"]').val() * 0.57), 100));
+                        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                            $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.65), 100));
+                            $('.pid_tuning input[name="dMinPitch"]').val(Math.min(Math.round($('.pid_tuning .PITCH input[name="d"]').val() * 0.65), 100));
+                            $('.pid_tuning input[name="dMinYaw"]').val(Math.min(Math.round($('.pid_tuning .YAW input[name="d"]').val() * 0.65), 100));
+                        }
                     } else {
                         $('.pid_tuning input[name="dMinRoll"]').val(ADVANCED_TUNING.dMinRoll);
                         $('.pid_tuning input[name="dMinPitch"]').val(ADVANCED_TUNING.dMinPitch);
