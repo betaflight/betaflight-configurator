@@ -690,15 +690,8 @@ var FC = {
     },
 
     getPidDefaults: function() {
-        // if defaults change they should go here
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
-            DEFAULT_PIDS = [
-                42, 85, 35, 23, 90,
-                46, 90, 38, 25, 95,
-                30, 90,  0,  0, 90,
-            ];
-        }
         var versionPidDefaults = DEFAULT_PIDS;
+        // if defaults change they should go here
         return versionPidDefaults;
     },
 };

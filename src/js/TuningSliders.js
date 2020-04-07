@@ -26,6 +26,10 @@ var TuningSliders = {
 
 TuningSliders.initialize = function() {
     this.PID_DEFAULT = FC.getPidDefaults();
+    if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        this.PID_DEFAULT[3] = 23;
+        this.PID_DEFAULT[8] = 25;
+    }
     this.FILTER_DEFAULT = FC.getFilterDefaults();
 
     this.setDMinFeatureEnabled($('#dMinSwitch').is(':checked'));
