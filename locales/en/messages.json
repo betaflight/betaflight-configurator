@@ -3627,7 +3627,7 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "Lower values suppress bounce-back after flips in low authority quads, high values increase high-rate turn precision for racing.<br>Set to 30-40 for racing, 20 for responsive freestyle builds, 10 for heavier freestyle quads, 3-5 for X-class."
+        "message": "Lower values suppress bounce-back after flips in low authority quads, high values increase high-rate turn precision for racing.<br>Set to 30-40 for racing, 15 for responsive freestyle builds, 10 for heavier freestyle quads, 3-5 for X-class."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Control"
@@ -3645,7 +3645,7 @@
         "message": "Dynamic Idle Value [rpm]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Set this parameter to provide an rpm based floor-value as a safety net against motor desync.<br>A racer might prefer very good response and low rates - therefore a low idle_min_rpm and a high dshot_idle_value may be useful. Freestylers and LOS pilots will appreciate very low thrust at idle and might want to use less dshot_idle_value while using a bit more idle_min_rpm to avoid desyncs at high rates.<br><br>Visit this <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\">wiki</a> entry for more info."
+        "message": "Set this parameter to provide an rpm based floor-value as a safety net against motor desync.<br>A racer might prefer very good response and low rates - therefore a low Dynamic Idle[rpm] and a high Dshot Idle value may be useful. Freestylers and LOS pilots will appreciate very low thrust at idle and might want to use less Dshot Idle value while using a bit more Dynamic Idle[rpm] to avoid desyncs at high rates. Note that the Dynamic Idle[rpm] value always must be less than Dshot Idle value.<br><br>Visit this <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\">wiki</a> entry for more info."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"
