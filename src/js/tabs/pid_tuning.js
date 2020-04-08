@@ -493,6 +493,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('.dminGroup .suboption').show();
                     $('#pid_main tr :nth-child(5)').show();
                     $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
+                    $('.derivativeText').text(i18n.getMessage("pidTuningDMax"));
                 } else {
                     $('.pid_tuning input[name="dMinRoll"]').val(0);
                     $('.pid_tuning input[name="dMinPitch"]').val(0);
@@ -501,6 +502,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('.dminGroup .suboption').hide();
                     $('#pid_main tr :nth-child(5)').hide();
                     $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
+                    $('.derivativeText').text(i18n.getMessage("pidTuningDerivative"));
                 }
             });
             dMinSwitch.change();
