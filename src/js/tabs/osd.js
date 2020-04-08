@@ -670,7 +670,7 @@ OSD.loadDisplayFields = function() {
             default_position: -1,
             draw_order: 90,
             positionable: true,
-            preview: 'STAB'
+            preview: 'ANGL'
         },
         GPS_SPEED: {
             name: 'GPS_SPEED',
