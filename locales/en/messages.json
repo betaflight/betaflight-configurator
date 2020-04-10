@@ -1468,6 +1468,14 @@
     "configurationButtonSave": {
         "message": "Save and Reboot"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Dynamic Notch values change"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>WARNING: Some dynamic notch values have been changed to default values</b></span> because the RPM filtering has been activated/deactivated.<br> Please, check before flying"
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK",
 
     "portsIdentifier": {
         "message": "Identifier"

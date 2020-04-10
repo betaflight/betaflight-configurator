@@ -2,11 +2,17 @@
 
 TABS.configuration = {
     SHOW_OLD_BATTERY_CONFIG: false,
+    previousDshotBidir: null,
+    previousFilterDynQ: null,
+    previousFilterDynWidth: null,
     analyticsChanges: {},
 };
 
 TABS.configuration.initialize = function (callback, scrollPosition) {
     var self = this;
+
+    // Update filtering defaults based on API version
+    const FILTER_DEFAULT = FC.getFilterDefaults();
 
     if (GUI.active_tab != 'configuration') {
         GUI.active_tab = 'configuration';
@@ -171,9 +177,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_rx_config() {
-        var next_callback = load_html;
+        const next_callback = load_filter_config;
         if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
             MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+    function load_filter_config() {
+        const next_callback = load_html;
+        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            MSP.send_message(MSPCodes.MSP_FILTER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -497,6 +512,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             let dshotBidirectional_e = $('input[id="dshotBidir"]');
             dshotBidirectional_e.prop('checked', MOTOR_CONFIG.use_dshot_telemetry).change();
 
+            self.previousDshotBidir = MOTOR_CONFIG.use_dshot_telemetry;
+            self.previousFilterDynQ = FILTER_CONFIG.dyn_notch_q;
+            self.previousFilterDynWidth = FILTER_CONFIG.dyn_notch_width_percent;
+
             dshotBidirectional_e.change(function () {
                 let value = $(this).prop('checked');
 
@@ -507,6 +526,31 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 self.analyticsChanges['BidirectionalDshot'] = newValue;
 
                 MOTOR_CONFIG.use_dshot_telemetry = value;
+
+                FILTER_CONFIG.dyn_notch_width_percent = self.previousFilterDynWidth;
+                FILTER_CONFIG.dyn_notch_q = self.previousFilterDynQ;
+
+                if (FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0) { // if rpm filter is active
+                    if (value && !self.previousDshotBidir) {
+                        FILTER_CONFIG.dyn_notch_width_percent = FILTER_DEFAULT.dyn_notch_width_percent_rpm;
+                        FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q_rpm;
+                    } else if (!value && self.previousDshotBidir) {
+                        FILTER_CONFIG.dyn_notch_width_percent = FILTER_DEFAULT.dyn_notch_width_percent;
+                        FILTER_CONFIG.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q;
+                    }
+                }
+
+                if (FILTER_CONFIG.dyn_notch_width_percent !== self.previousFilterDynWidth) {
+                    const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
+
+                    if (!dialogDynFiltersChange.hasAttribute('open')) {
+                        dialogDynFiltersChange.showModal();
+
+                        $('.dialogDynFiltersChange-confirmbtn').click(function() {
+                            dialogDynFiltersChange.close();
+                        });
+                    }
+                }
             });
 
             $('input[name="motorPoles"]').val(MOTOR_CONFIG.motor_poles);
@@ -1391,9 +1435,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_rx_config() {
-                var next_callback = save_to_eeprom;
+                const next_callback = save_filter_config;
                 if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_filter_config() {
+                const next_callback = save_to_eeprom;
+                if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }

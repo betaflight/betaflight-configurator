@@ -359,6 +359,9 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            const dynamicNotchWidthPercent_e = $('.pid_filter input[name="dynamicNotchWidthPercent"]');
+            const dynamicNotchQ_e = $('.pid_filter input[name="dynamicNotchQ"]');
+
             $('.smartfeedforward').hide();
 
             if (FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
@@ -368,8 +371,8 @@ TABS.pid_tuning.initialize = function (callback) {
             }
             $('.dynamicNotchRange').toggle(semver.lt(CONFIG.apiVersion, API_VERSION_1_43));
             $('.pid_filter select[name="dynamicNotchRange"]').val(FILTER_CONFIG.dyn_notch_range);
-            $('.pid_filter input[name="dynamicNotchWidthPercent"]').val(FILTER_CONFIG.dyn_notch_width_percent);
-            $('.pid_filter input[name="dynamicNotchQ"]').val(FILTER_CONFIG.dyn_notch_q);
+            dynamicNotchWidthPercent_e.val(FILTER_CONFIG.dyn_notch_width_percent);
+            dynamicNotchQ_e.val(FILTER_CONFIG.dyn_notch_q);
             $('.pid_filter input[name="dynamicNotchMinHz"]').val(FILTER_CONFIG.dyn_notch_min_hz);
             if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 $('.pid_filter input[name="dynamicNotchMinHz"]').attr("max","250");
@@ -394,7 +397,33 @@ TABS.pid_tuning.initialize = function (callback) {
                 if (harmonics == 0) {
                     $('.pid_filter input[name="rpmFilterHarmonics"]').val(FILTER_DEFAULT.gyro_rpm_notch_harmonics);
                 }
+
+                if (checked !== (FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0)) { // if rpmFilterEnabled is not the same value as saved in the fc
+                    if (checked) {
+                        dynamicNotchWidthPercent_e.val(FILTER_DEFAULT.dyn_notch_width_percent_rpm);
+                        dynamicNotchQ_e.val(FILTER_DEFAULT.dyn_notch_q_rpm);
+                    } else {
+                        dynamicNotchWidthPercent_e.val(FILTER_DEFAULT.dyn_notch_width_percent);
+                        dynamicNotchQ_e.val(FILTER_DEFAULT.dyn_notch_q);
+                    }
+
+                    const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
+
+                    if (!dialogDynFiltersChange.hasAttribute('open')) {
+                        dialogDynFiltersChange.showModal();
+
+                        $('.dialogDynFiltersChange-confirmbtn').click(function() {
+                            dialogDynFiltersChange.close();
+                        });
+                    }
+
+                } else { // same value, return saved values
+                    dynamicNotchWidthPercent_e.val(FILTER_CONFIG.dyn_notch_width_percent);
+                    dynamicNotchQ_e.val(FILTER_CONFIG.dyn_notch_q);
+                }
+
             }).prop('checked', FILTER_CONFIG.gyro_rpm_notch_harmonics != 0).change();
+
         } else {
             $('.itermRelaxCutoff').hide();
             $('.dynamicNotch').hide();
