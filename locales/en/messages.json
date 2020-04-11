@@ -1760,6 +1760,9 @@
     "pidTuningDerivative": {
         "message": "Derivative"
     },
+    "pidTuningDMax": {
+        "message": "D Max"
+    },
     "pidTuningDerivativeHelp": {
         "message": "Controls the strength of dampening to ANY motion on the craft.  For stick moves, the D-term dampens the command. For an outside influence (prop wash OR wind gust) the D-term dampens the influence.<br><br>Higher gains provide more dampening and reduce overshoot by P-term and FF.<br>However, the D-term is VERY sensitive to gyro high frequency vibrations (noise | magnifies by 10x to 100x).<br><br>High frequency noise can cause motor heat and burn out motors if D-gains are too high or the gyro noise is not filtered well (see Filters tab).<br><br>Think of the D-term as the shock absorber on your car, but with the negative inherent property of magnifying high frequency gyro noise.",
         "description": "Derivative Term helpicon message on PID table titlebar"
