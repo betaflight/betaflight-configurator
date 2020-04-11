@@ -506,8 +506,11 @@
     "reportProblemsDialogFooter": {
         "message": "Please <strong>fix these problems before attempting to fly your craft</strong>."
     },
-    "reportProblemsDialogAccCalibrationNeeded": {
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>. If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the craft will be disabled until the accelerometer has been calibrated. If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>there is no motor output protocol selected</strong>. Please select a motor output protocol appropriate for your ESCs in '$t(configurationEscFeatures.message)' on the '$t(tabConfiguration.message)' tab. $t(escProtocolDisabledMessage.message)"
     },
 
     "infoVersions": {
@@ -1265,6 +1268,12 @@
     },
     "configurationThrottleMinimumCommandHelp": {
         "message": "This is the value that is sent to the ESCs when the craft is disarmed. Set this to a value that has the motors stopped (1000 for most ESCs)."
+    },
+    "configurationEscProtocolDisabled": {
+        "message": "Please select a motor output protocol appropriate for your ESCs. $t(escProtocolDisabledMessage.message)"
+    },
+    "escProtocolDisabledMessage": {
+        "message": "<strong>Caution:</strong> Selecting a motor output protocol that is not supported by your ESCs can lead to the <strong>ESCs spinning up as soon as a battery is connected</strong>. For this reason, <strong>always make sure to remove the props before connecting a battery for the first time after changing the motor output protocol</strong>."
     },
     "configurationDshotBeeper": {
         "message": "Dshot Beacon Configuration"
