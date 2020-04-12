@@ -195,7 +195,7 @@ TABS.onboard_logging.initialize = function (callback) {
         let loggingRates = [];
 
         let pidRate;
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             pidRate = CONFIG.sampleRateHz / PID_ADVANCED_CONFIG.pid_process_denom;
 
         } else {

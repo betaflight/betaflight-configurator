@@ -573,12 +573,18 @@ function notifyOutdatedVersion(releaseData) {
             }
         });
 
-        if (versions.length > 0 && semver.lt(CONFIGURATOR.version, versions[0].tag_name)) {
-            GUI.log(i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+        if (versions.length > 0) {
+            CONFIGURATOR.latestVersion = versions[0].tag_name;
+            CONFIGURATOR.latestVersionReleaseUrl = versions[0].html_url;
+        }
+
+        if (semver.lt(CONFIGURATOR.version, CONFIGURATOR.latestVersion)) {
+            const message = i18n.getMessage('configuratorUpdateNotice', [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl]);
+            GUI.log(message);
 
             const dialog = $('.dialogConfiguratorUpdate')[0];
 
-            $('.dialogConfiguratorUpdate-content').html(i18n.getMessage('configuratorUpdateNotice', [versions[0].tag_name, versions[0].html_url]));
+            $('.dialogConfiguratorUpdate-content').html(message);
 
             $('.dialogConfiguratorUpdate-closebtn').click(function() {
                 dialog.close();
@@ -587,7 +593,7 @@ function notifyOutdatedVersion(releaseData) {
             $('.dialogConfiguratorUpdate-websitebtn').click(function() {
                 dialog.close();
 
-                window.open(versions[0].html_url, '_blank');
+                window.open(CONFIGURATOR.latestVersionReleaseUrl, '_blank');
             });
 
             dialog.showModal();

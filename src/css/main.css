@@ -7,6 +7,7 @@
     --defaultText: #000000;
     --subtleText: #c0c0c0;
     --mutedText: #616161;
+    --linkText: #2e2ebb;
     --boxBackground: #ffffff;
     --alternativeBackground: #f9f9f9;
     --sideBackground: #ffffff;
@@ -41,7 +42,7 @@ body {
 
 a {
     text-decoration: none;
-    color: var(--defaultText);
+    color: var(--linkText);
     font-weight: bold;
 }
 

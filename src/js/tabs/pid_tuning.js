@@ -37,7 +37,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
     // requesting MSP_STATUS manually because it contains CONFIG.profile
     MSP.promise(MSPCodes.MSP_STATUS).then(function() {
-        if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
+        if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE)) {
             return MSP.promise(MSPCodes.MSP_PID_CONTROLLER);
         }
     }).then(function() {
@@ -181,7 +181,7 @@ TABS.pid_tuning.initialize = function (callback) {
             antiGravitySwitch.change(function() {
                 var checked = $(this).is(':checked');
                 if (checked) {
-                    const MAX_ACCELERATOR_GAIN = semver.gte(CONFIG.apiVersion, "1.43.0") ? 3.5 : 1.1;
+                    const MAX_ACCELERATOR_GAIN = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) ? 3.5 : 1.1;
                     const itermAcceleratorGain = Math.max(ADVANCED_TUNING.itermAcceleratorGain / 1000, MAX_ACCELERATOR_GAIN);
                     $('.antigravity input[name="itermAcceleratorGain"]').val(itermAcceleratorGain);
                     $('.antigravity .suboption').show();
@@ -245,7 +245,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('select[id="itermrelaxType"]').val(ADVANCED_TUNING.itermRelaxType);
             $('input[name="itermRelaxCutoff"]').val(ADVANCED_TUNING.itermRelaxCutoff);
 
-            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 $('.itermrelax input[name="itermRelaxCutoff"]').attr("max","50");
             }
 
@@ -364,12 +364,12 @@ TABS.pid_tuning.initialize = function (callback) {
             } else {
                 $('.dynamicNotch').hide();
             }
-            $('.dynamicNotchRange').toggle(semver.lt(CONFIG.apiVersion, "1.43.0"));
+            $('.dynamicNotchRange').toggle(semver.lt(CONFIG.apiVersion, API_VERSION_1_43));
             $('.pid_filter select[name="dynamicNotchRange"]').val(FILTER_CONFIG.dyn_notch_range);
             $('.pid_filter input[name="dynamicNotchWidthPercent"]').val(FILTER_CONFIG.dyn_notch_width_percent);
             $('.pid_filter input[name="dynamicNotchQ"]').val(FILTER_CONFIG.dyn_notch_q);
             $('.pid_filter input[name="dynamicNotchMinHz"]').val(FILTER_CONFIG.dyn_notch_min_hz);
-            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 $('.pid_filter input[name="dynamicNotchMinHz"]').attr("max","250");
                 $('.pid_filter input[name="dynamicNotchMaxHz"]').val(FILTER_CONFIG.dyn_notch_max_hz);
             } else {
@@ -401,7 +401,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.rpmFilter').hide();
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             $('.pid_tuning input[name="motorLimit"]').val(ADVANCED_TUNING.motorOutputLimit);
             $('.pid_tuning input[name="cellCount"]').val(ADVANCED_TUNING.autoProfileCellCount);
             $('input[name="idleMinRpm-number"]').val(ADVANCED_TUNING.idleMinRpm);
@@ -410,7 +410,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.idleMinRpm').hide();
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             const ratesTypeListElement = $('select[id="ratesType"]'); // generates list
             const ratesList = [
                 {name: "Betaflight"},
@@ -714,7 +714,7 @@ TABS.pid_tuning.initialize = function (callback) {
         RC_tuning.rcPitchRate = parseFloat(rc_rate_pitch_e.val());
         RC_tuning.RC_PITCH_EXPO = parseFloat(rc_pitch_expo_e.val());
 
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             switch(self.currentRatesType) {
                 case self.RATES_TYPE.RACEFLIGHT:
                     RC_tuning.pitch_rate = parseFloat(pitch_rate_e.val()) / 100;
@@ -875,7 +875,7 @@ TABS.pid_tuning.initialize = function (callback) {
             FILTER_CONFIG.gyro_rpm_notch_min_hz = parseInt($('.pid_filter input[name="rpmFilterMinHz"]').val());
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             FILTER_CONFIG.dyn_notch_max_hz = parseInt($('.pid_filter input[name="dynamicNotchMaxHz"]').val());
             ADVANCED_TUNING.motorOutputLimit = parseInt($('.pid_tuning input[name="motorLimit"]').val());
             ADVANCED_TUNING.autoProfileCellCount = parseInt($('.pid_tuning input[name="cellCount"]').val());
@@ -1051,7 +1051,7 @@ TABS.pid_tuning.initialize = function (callback) {
             self.currentRates.rc_expo_pitch = self.currentRates.rc_expo;
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             switch(RC_tuning.rates_type) {
                 case self.RATES_TYPE.RACEFLIGHT:
                     self.currentRates.roll_rate *= 100;
@@ -1351,12 +1351,12 @@ TABS.pid_tuning.initialize = function (callback) {
                 pidController_e.append('<option value="' + (i) + '">' + pidControllerList[i].name + '</option>');
             }
 
-            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion)) {
+            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE)) {
                 pidController_e.val(PID.controller);
 
                 self.updatePidControllerParameters();
             } else {
-                GUI.log(i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion]));
+                GUI.log(i18n.getMessage('pidTuningUpgradeFirmwareToChangePidController', [CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE]));
 
                 pidController_e.empty();
                 pidController_e.append('<option value="">Unknown</option>');
@@ -1449,7 +1449,7 @@ TABS.pid_tuning.initialize = function (callback) {
                         self.currentRates.rc_pitch_expo = targetValue;
                     }
 
-                    if (targetElement.attr('id') === 'ratesType' && semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                    if (targetElement.attr('id') === 'ratesType' && semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                         self.changeRatesType(targetValue);
 
                         updateNeeded = true;
@@ -1889,7 +1889,7 @@ TABS.pid_tuning.initialize = function (callback) {
             Promise.resolve(true)
             .then(function () {
                 var promise;
-                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.pidControllerChangeMinApiVersion) && semver.lt(CONFIG.apiVersion, "1.31.0")) {
+                if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE) && semver.lt(CONFIG.apiVersion, "1.31.0")) {
                     PID.controller = pidController_e.val();
                     promise = MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
                 }

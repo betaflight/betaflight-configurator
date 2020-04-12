@@ -313,7 +313,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 $('input[name="gps_rescue_min_sats"]').val(GPS_RESCUE.minSats);
                 $('select[name="gps_rescue_sanity_checks"]').val(GPS_RESCUE.sanityChecks);
 
-                if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     $('input[name="gps_rescue_ascend_rate"]').val((GPS_RESCUE.ascendRate / 100).toFixed(2));
                     $('input[name="gps_rescue_descend_rate"]').val((GPS_RESCUE.descendRate / 100).toFixed(2));
                     $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked', GPS_RESCUE.allowArmingWithoutFix > 0);
@@ -379,7 +379,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 GPS_RESCUE.sanityChecks      = $('select[name="gps_rescue_sanity_checks"]').val();
             }
 
-            if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 GPS_RESCUE.ascendRate = $('input[name="gps_rescue_ascend_rate"]').val() * 100;
                 GPS_RESCUE.descendRate = $('input[name="gps_rescue_descend_rate"]').val() * 100;
                 GPS_RESCUE.allowArmingWithoutFix = $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked') ? 1 : 0;
