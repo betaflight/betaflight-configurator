@@ -52,45 +52,6 @@
     font-weight: 300;
 }
 
-/* sponsors blocks */
-.sponsors .title {
-    text-transform: uppercase;
-    font-size: 10px;
-}
-
-.sponsors {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    color: silver;
-}
-
-.sponsors ul {
-    margin-top: 5px;
-}
-
-.sponsors li {
-    display: inline-block;
-    margin-right: 10px;
-}
-
-.sponsors li a {
-    border-radius: 3px;
-    padding: 2px;
-    padding-left: 4px;
-    padding-right: 4px;
-    font-size: 13px;
-    line-height: 22px;
-    color: white;
-    font-weight: normal;
-    font-weight: 300;
-}
-
-.sponsors li a:hover {
-    background-color: rgba(255, 255, 255, 0.30);
-    color: #fff;
-}
-
 .text1, .text2, .text3, .text4 {
     margin-top: 15px;
     margin-bottom: 15px;
@@ -150,8 +111,8 @@
     border: 1px solid var(--subtleAccent);
     border-radius: 5px;
     background: white;
-    margin-right: 25px;
-    margin-left: 20px;
+    margin-right: 20px;
+    margin-left: 10px;
     margin-top: 5px;
     min-height: 187px;
     font-size: 11px;
@@ -166,6 +127,8 @@
     padding: 15px;
     padding-top: 0px;
     padding-bottom: 0px;
+    overflow: hidden;
+    float: left;
 }
 
 .tab-landing .content_mid_bottom .logo {
@@ -176,8 +139,7 @@
 .tab-landing .content_mid_bottom .text4 {
     margin-top: 0px;
     margin-left: 5px;
-    display: block;
-    float: left;
+    display: inline-block;
 }
 
 .tab-landing .languageSwitcher .selected_language {

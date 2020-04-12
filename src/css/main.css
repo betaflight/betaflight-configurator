@@ -989,6 +989,12 @@ li.active .ic_mission {
     /* Cause the height to shrink to contain its floated contents while log is open */
 }
 
+#content li {
+    list-style: initial;
+    list-style-type: circle;
+    margin-left: 30px;
+}
+
 #status-bar {
     position: fixed;
     bottom: 0px;
