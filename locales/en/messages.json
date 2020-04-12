@@ -1246,7 +1246,7 @@
         "message": "Motor Idle Throttle Value [percent]"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "This is the 'idle' value in percent of maximum throttle that is sent to the ESCs when the craft is armed and the trottle stick is at minimum position. Increase the percent value to gain more idle speed."
+        "message": "The 'DShot idle' value is the percent of maximum throttle that is sent to the ESCs when the throttle at minimum stick position and the craft is armed. Increase it to gain more idle speed and avoid desyncs.  Too high and the craft feels floaty."
     },
     "configurationMotorPoles": {
         "message": "Motor poles",
@@ -1257,7 +1257,7 @@
         "description": "One of the fields of the ESC/Motor configuration"
     },
     "configurationMotorPolesHelp": {
-        "message": "This setting is used for some features like the RPM Filter.<br><br>Represents the number of magnets that are on the bell of the motor. <b>Do NOT count the stators</b> where the windings are located. Typical 5\" motors have 14 magnets, smaller ones like 3\" or less usually have 12 magnets.",
+        "message": "The pole count is the number of magnets on the bell of the motor. Do NOT count the stators where the windings are located. 5\" motors usually have 14 magnets, 3\" or smaller often have 12 magnets.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
@@ -5461,7 +5461,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "When enabled lets the DSHOT protocol receive information directly from the ESC, needed by the RPM Filter and other features.<br><br>This requires the JESC firmware from jflight.net on BLHELI_S or the latest BLHELI_32 firmware.",
+        "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
