@@ -35,7 +35,7 @@
         "message": "Diese Funktion wird von deinem System nicht unterstützt."
     },
     "storageDeviceNotReady": {
-        "message": "Das Speichermedium ist nicht bereit. Im Falle einer MicroSD-Karte stelle sicher, dass diese durch den Flugkontroller richtig erkannt wird."
+        "message": "Das Speichermedium ist nicht betriebsbereit. Falls es sich um eine MicroSD-Karte handelt, stelle sicher, dass diese durch den Flugkontroller richtig erkannt wird."
     },
     "options_title": {
         "message": "Einstellungen"
@@ -65,7 +65,7 @@
         "message": "Abbrechen"
     },
     "autoConnectEnabled": {
-        "message": "automatisch Verbinden: aktiv. Der Konfigurator versucht sich wieder zu verbinden, wenn ein neuer Port erkannt wird."
+        "message": "automatisch Verbinden: aktiv. Der Konfigurator versucht sich wieder zu verbinden, sobald ein neuer Port erkannt wird."
     },
     "autoConnectDisabled": {
         "message": "automatisch Verbinden: nicht aktiv. Bitte manuell verbinden"
@@ -80,7 +80,7 @@
         "message": "Expertenmodus dauerhaft aktivieren"
     },
     "rememberLastTab": {
-        "message": "Öffne die letzte Registerkarte beim Verbinden"
+        "message": "Öffne die zuletzt benutzte Registerkarte beim erneuten Verbinden"
     },
     "analyticsOptOut": {
         "message": "Keine anonymisierte Erhebung von Statistikdaten"
@@ -99,7 +99,7 @@
         "message": "Systemstandard ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
-        "message": "Keine Speichermöglichkeit<br>Chip nicht gefunden",
+        "message": "Kann nicht gespeichert werden<br>Chip nicht gefunden",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
@@ -185,7 +185,7 @@
         "message": "Migrierung erfolgreich, Änderungen eingespielt: $1"
     },
     "tabFirmwareFlasher": {
-        "message": "Firmware Flasher"
+        "message": "Firmware-Flasher"
     },
     "tabLanding": {
         "message": "Willkommen"
@@ -203,7 +203,7 @@
         "message": "Einrichtung"
     },
     "tabSetupOSD": {
-        "message": "OSD Einstellungen"
+        "message": "OSD-Einstellungen"
     },
     "tabConfiguration": {
         "message": "Konfiguration"
@@ -212,7 +212,7 @@
         "message": "Anschlüsse"
     },
     "tabPidTuning": {
-        "message": "PID Einstellungen"
+        "message": "PID-Einstellungen"
     },
     "tabReceiver": {
         "message": "Empfänger"
@@ -651,7 +651,7 @@
         "message": "Mixer Typ"
     },
     "initialSetupThrottleHead": {
-        "message": "Gas Einstellungen"
+        "message": "Gas-Einstellungen"
     },
     "initialSetupMinimum": {
         "message": "Minimum:"
@@ -982,10 +982,10 @@
         "message": "Failsafe aktivieren"
     },
     "featureFAILSAFETip": {
-        "message": "<strong> Hinweis: </strong> Wenn Failsave Stufe 2 deaktiviert ist wird die Rückfall Einstellungen <strong> AUTO </strong> übernommen statt den User Einstellungen für alle Kanäle (Roll, Pitch, Yaw, Gas)"
+        "message": "<strong> Hinweis: </strong> Wenn Failsafe Stufe 2 deaktiviert ist wird die Rückfall-Einstellungen <strong> AUTO </strong> übernommen statt den User-Einstellungen für alle Kanäle (Roll, Pitch, Yaw, Gas)"
     },
     "featureFAILSAFEOldTip": {
-        "message": "Failsave Einstellungen im Fallen eines Empfangsverlust zuweisen"
+        "message": "Failsafe-Einstellungen im Fallen eines Empfangsverlust zuweisen"
     },
     "configurationFeatureEnabled": {
         "message": "Aktiviert"
@@ -1390,10 +1390,10 @@
         "message": "PID Profileinstellungen"
     },
     "pidTuningSubTabRates": {
-        "message": "Drehratenprofil Einstellungen"
+        "message": "Drehratenprofil-Einstellungen"
     },
     "pidTuningSubTabFilter": {
-        "message": "Filter Einstellungen"
+        "message": "Filter-Einstellungen"
     },
     "pidTuningShowAllPids": {
         "message": "Zeige alle PIDs"
@@ -1402,7 +1402,7 @@
         "message": "Verstecke ungenutzt PIDs"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": "Pofilunabhänige PID Controller Einstellungen"
+        "message": "Pofilunabhänige PID-Controller-Einstellungen"
     },
     "pidTuningAntiGravity": {
         "message": "Antigravity"
@@ -1454,7 +1454,7 @@
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
-        "message": "PID Kontroller EInstellungen"
+        "message": "PID-Kontroller-EInstellungen"
     },
     "receiverRcSmoothing": {
         "message": "RC Glättung"
@@ -1688,7 +1688,7 @@
         "message": "Kopiere aktuelle Profileinstellungen nach"
     },
     "dialogCopyRateProfileText": {
-        "message": "Kopiere aktuelle Rate Einstellungen zu"
+        "message": "Kopiere aktuelle Drehraten-Einstellungen zu"
     },
     "dialogCopyProfileTitle": {
         "message": "Kopiere Profil Werte"
@@ -1809,7 +1809,7 @@
         "message": "Kontroll Sticks"
     },
     "receiverDataRefreshed": {
-        "message": "RC Einstellungen <strong>neu geladen</strong>"
+        "message": "RC-Einstellungen <strong>neu geladen</strong>"
     },
     "receiverEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">gespeichert</span>"
@@ -2594,7 +2594,7 @@
         "message": "Chip vollständig Löschen"
     },
     "firmwareFlasherFullChipEraseDescription": {
-        "message": "Löscht alle im FC gespeicherten Einstellungen."
+        "message": "Löscht alle im FC gespeicherten-Einstellungen."
     },
     "firmwareFlasherFlashDevelopmentFirmware": {
         "message": "Entwicklerfirmware verwenden"
@@ -3427,10 +3427,10 @@
         "message": "Abweichender Winkel (Grad) in dem das Board anders eingebaut wurde als vorgesehen (über Kopf, gedreht, usw.) Falls externe Sensoren (Gyro, Acc, Mag) verwendet werden, bitte diese ebenfalls neu anlernen."
     },
     "failsafeFeaturesHelpOld": {
-        "message": "Die Failsave Einstellungen haben sich geändert. Benutze Betaflight <strong>V1.12.0+</strong>um auf die verbesserten Einstellungen zuzugreifen."
+        "message": "Die Failsafe-Einstellungen haben sich geändert. Benutze Betaflight <strong>V1.12.0+</strong>um auf die verbesserten Einstellungen zuzugreifen."
     },
     "failsafePaneTitleOld": {
-        "message": "Empfänger Failsave"
+        "message": "Empfänger-Failsafe"
     },
     "failsafeFeaturesHelpNew": {
         "message": "Es gibt ein zweistufiges Failsafe System. <strong>Stufe 1</strong> tritt dann ein, wenn die Impluslänge des Empfängers nicht stimmt, der Empfänger einen Failsafe übermittelt oder kein Signal mehr empfangen wird. Die Kanal Rückfalleinstellungen werden dann <span class=\"message-negative\">für alle</span> Kanäle gesetzt und ein kurzes Zeitfenster wird geöffnet um eine erneute Verbindung zu ermöglichen. <strong>Stufe 2</strong> tritt dann ein, wenn das Signal für eine längere Zeit weg ist während der Quad / Flieger <span class=\"message-negative\">gearmt</span> ist. Alle Känale werden mit den hier gesetzten Einstellungen überschrieben.<br /><strong>Hinweis:</strong> Im Gegensatz zu Stage 1 werden hier auch Werte für Kanäle überschrieben die ungültige Daten empfangen."
@@ -3439,7 +3439,7 @@
         "message": "Einstellungen für gültige Pulslängen des Signals"
     },
     "failsafePulsrangeHelp": {
-        "message": "Pulse kürzer als das Minimum oder länger als das Maximum sorgen dafür, dass der Kanal in einen Rückfallmodus geht und die Rückfalleinstellungen greifen."
+        "message": "Pulse, die nicht zwischen Minimum und Maximum liegen sorgen dafür, dass der Kanal in den Rückfallmodus geht und die Rückfall-Einstellungen greifen."
     },
     "failsafeRxMinUsecItem": {
         "message": "Minimale Länge"
@@ -3448,10 +3448,10 @@
         "message": "Maximale Länge"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Kanal Rückfall Einstellungen"
+        "message": "Kanal-Rückfall-Einstellungen"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "Im Fall eines Stage 1 Failsafe werden diese Einstellungen den AUX Kanälen zugewiesen. <strong>Hinweis:</strong> Werte werden im Abstand von 25us gesetzt, kleinere Einstellungen werden vernachlässigt."
+        "message": "Im Fall eines Stufe 1 Failsafe werden diese Einstellungen den AUX Kanälen zugewiesen. <strong>Hinweis:</strong> Werte werden im Abstand von 25us gesetzt, kleinere Einstellungen werden vernachlässigt."
     },
     "failsafeChannelFallbackSettingsAuto": {
         "message": "<strong>Auto</strong> heißt Roll, Pitch, Yaw zentrieren sich, Gas wird niedrig gehalten. <strong>Hold</strong> bedeutet das der letzte empfangene Wert beibehalten wird."
@@ -3484,7 +3484,7 @@
         "message": "Zeitspanne in der im Landemodus verblieben wird, bis die Motoren abgeschaltet werden und das Flugerät disarmt wird."
     },
     "failsafeSubTitle1": {
-        "message": "Stufe 2 - Failsafe Einstellungen"
+        "message": "Stufe 2 - Failsafe-Einstellungen"
     },
     "failsafeProcedureItemSelect1": {
         "message": "Landen"
@@ -3535,7 +3535,7 @@
         "message": "Failsafe \"Kill Switch\" (Einstellungen im Modes Tab)"
     },
     "failsafeKillSwitchHelp": {
-        "message": "Aktiviere diese Option um den Failsafe Schalter (Modes Tab) als \"Kill Schalter\" zu benutzen. Der Schalter überschreibt dann alle Failsafe Einstellungen. <strong>Hinweis:</strong> Wenn der Schalter aktiv ist wird sich das Fluggerät nicht armen lassen"
+        "message": "Aktiviere diese Option um den Failsafe Schalter (Modes Tab) als \"Kill Schalter\" zu benutzen. Der Schalter überschreibt dann alle Failsafe-Einstellungen. <strong>Hinweis:</strong> Wenn der Schalter aktiv ist wird sich das Fluggerät nicht armen lassen"
     },
     "failsafeSwitchTitle": {
         "message": "Failsafe Schalter"
@@ -3902,7 +3902,7 @@
         "message": "Zusammenfassung nach dem Flug"
     },
     "osdSetupVtxTitle": {
-        "message": "VTX Einstellungen"
+        "message": "VTX-Einstellungen"
     },
     "osdSetupCraftNameTitle": {
         "message": "Modellname"
@@ -4834,7 +4834,7 @@
         "message": "Warnungen aktivieren oder deaktivieren die angezeigt werden."
     },
     "osdSettingsSaved": {
-        "message": "OSD Einstellungen gespeichert"
+        "message": "OSD-Einstellungen gespeichert"
     },
     "osdWritePermissions": {
         "message": "Keine <span class=\"message-negative\">Schreibrechte</span> für diese Datei"
@@ -5192,7 +5192,7 @@
         "message": "Profile"
     },
     "pidTuningProfileTip": {
-        "message": "Bis zu 3 (bei manchen FCs nur 2) verschiedene Profile für PID Einstellungen können gespeichert. Die Profile enthalten PID Einstellungen, Setpoint sowie Angle/Horzizon Einstellungen und können mit einfachen Stick-Kommandos (siehe Doku) oder per OSD umgestellt werden."
+        "message": "Bis zu 3 (bei manchen FCs nur 2) verschiedene Profile für PID-Einstellungen können gespeichert. Die Profile enthalten PID-Einstellungen, Setpoint sowie Angle- bzw. Horzizon-Einstellungen und können mit einfachen Stick-Kommandos (siehe Doku) oder per OSD umgestellt werden."
     },
     "pidTuningRateProfile": {
         "message": "Rate Profile"
