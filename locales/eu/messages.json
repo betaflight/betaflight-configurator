@@ -39,7 +39,7 @@
         "message": "Zure hardware ez du lan hau onartzen."
     },
     "storageDeviceNotReady": {
-        "message": "Biltegiratzeko gailua ez dago prest. MikroSD txartelaren kasuan, ziurtatu hegaldi kontrolatzaileak behar bezala aitortzen duela."
+        "message": "Biltegiratzeko gailua ez dago prest. MikroSD txartelaren kasuan, ziurtatu hegaldi kontroladorea behar bezala aitortzen duela."
     },
     "options_title": {
         "message": "Aplikazioaren ezarpenak"
@@ -69,10 +69,10 @@
         "message": "Ezeztatu"
     },
     "autoConnectEnabled": {
-        "message": "Konexio automatikoa: gaituta - Konfiguratzaileak ataka berria hautematen denean automatikoki konektatzen saiatzen da"
+        "message": "Konexio-Automatikoa: Gaituta - Konfiguratzaileak ataka berria hautematen denean automatikoki konektatzen saiatzen da"
     },
     "autoConnectDisabled": {
-        "message": "Konexio automatikoa: desgaituta - Erabiltzaileak serieko portu egokia hautatu behar du eta \"Konektatu\" botoia sakatu behar du"
+        "message": "Konexio-Automatikoa: desgaituta - Erabiltzaileak serieko portu egokia hautatu behar du eta \"Konektatu\" botoia sakatu behar du"
     },
     "expertMode": {
         "message": "Adituen modua"
@@ -97,10 +97,10 @@
         "description": "Try and be brief"
     },
     "language_default": {
-        "message": "Sistema lehenetsia"
+        "message": "Sistema Lehenetsia"
     },
     "language_default_pretty": {
-        "message": "Sistema lehenetsia ($t(detectedLanguage))"
+        "message": "Sistema Lehenetsia ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
         "message": "Flash memoria <br> ez dago erabilgarri",
@@ -156,7 +156,10 @@
         "message": "Erakutsi konfiguratzailearen bertsio ezegonkorretarako eguneratze jakinarazpenak"
     },
     "configuratorUpdateNotice": {
-        "message": "<b>Betaflight Configurator</b> ren bertsio zaharkitua erabiltzen ari zara. Kaixo, <br>Bertsio<b>$1</b> da eskuragarri online, bisitatu <a href=\"$2\"target=\"_blank\">oharra orriaren</a>konponketak eta hobekuntzak azken bertsioa deskargatu eta instalatu. <br>Itxi konfiguratzailearen leihoa eguneratu aurretik."
+        "message": "<b>Betaflight Konfiguratzailearen</b> bertsio zaharkitua erabiltzen ari zara.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "configuratorUpdateHelp": {
+        "message": "Firmwarearen bertsio berriak konfiguratzailearen bertsio zaharkituekin erabiltzen baduzu, ezarpen batzuk aldatzerakoan, <strong> firmware konfigurazio eta gailu hondatuak</strong> ekar daitezke. Gainera, firmwarearen zenbait ezaugarri CLI erabiltzen bakarrik konfiguratu daitezke.<br><strong> Betaflight Konfiguratzaile bertsioa <b>$1</b> sarean deskargatzeko erabilgarri dago </strong>. Mesedez bisitatu<a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">orri hau</a> azken bertsioa deskargatzeko, konponketak eta hobekuntzak jasotzen.<br>Mesedez, itxi konfiguratzaile leiho hau eguneratu aurretik."
     },
     "configuratorUpdateWebsite": {
         "message": "Bertsio agirien webgunera joan"
@@ -180,7 +183,7 @@
         "message": "Barkatu, baina, BACKUPa aurreko bertsioak egina dago eta ezin da bertsio honetan erabili."
     },
     "configMigrationFrom": {
-        "message": "$1 -kin egindako configurazioa eguneratzen"
+        "message": "Eguneratzen konfigurazio fitxategia sortuta konfiguratzaile honekin: $1"
     },
     "configMigratedTo": {
         "message": "$1 -kin egindako configurazioa eguneratua"
@@ -410,6 +413,21 @@
     "resetToCustomDefaultsAccept": {
         "message": "Aplikatu lehenetsi pertsonalizatua"
     },
+    "reportProblemsDialogHeader": {
+        "message": "Zure konfigurazioarekin <strong>lotutako arazo hauek</strong> atzeman dira:"
+    },
+    "reportProblemsDialogFooter": {
+        "message": "Mesedez, <strong> konpondu arazo hauek gailua hegan egiten saiatu aurretik </strong>."
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<strong>Erabiltzen ari zaren konfiguratzaile bertsioa ($3) firmwarean erabilita baino zaharragoa da($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Motorren irteera protokoloa ez da hautatu</strong>.<br>Mesedez, zure ESCetarako egokia den irteera protokoloa aukeratu $t(configurationEscFeatures.message) paragrafoan $t(tabConfiguration.message) fitxan.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu</strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
+    },
     "infoVersions": {
         "message": "Sistema Eragilea: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfiguratzailea: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
@@ -454,7 +472,7 @@
         "message": "Gailuaren ID bakarra: <strong>=x$1</strong>"
     },
     "craftNameReceived": {
-        "message": "Aireontziaren izena:<strong>$1</strong>"
+        "message": "Gailuaren izena:<strong>$1</strong>"
     },
     "armingDisabled": {
         "message": "<strong>Armatua desgaitua</strong>"
@@ -535,16 +553,16 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "Aplikazioak Betaflight exekutatu dezakeen hardware guztia onartzen du. Begiratu flash fitxa, hardware zerrenda osoa lortzeko.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\">Betaflight Blackbox Log Viewer Deskargatu</a><br /><br />firmware iturri kodea deskargatu daiteke <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\">hemen</a><br /><br />Berrien <b>STM USB VCP Drivers</b> hemen deskargatu daiteke<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\">hemen</a><br />CP210x USB bidez serieko txip bidez erabiltzeko ondarearen hardwarerako:<br />Berrien <b>CP210x Drivers</b> deskargatu ahal dira <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\">hemen</a><br />Azken<b>Zadig</b> Windows-erako USB kontrolatzaileen instalazioa <a href=\"http://zadig.akeo.ie/\" target=\"_blank\">hemen</a><br /> deskargatu daiteke"
+        "message": "Aplikazioak Betaflight exekutatu dezakeen hardware guztia onartzen du. Begiratu flash fitxa, hardware zerrenda osoa lortzeko.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewer Deskargatu</a><br /><br />firmware iturri kodea deskargatu daiteke <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /><br />Berrien <b>STM USB VCP Drivers</b> hemen deskargatu daiteke<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br />CP210x USB bidez serieko txip bidez erabiltzeko ondarearen hardwarerako:<br />Berrien <b>CP210x Drivers</b> deskargatu ahal dira <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br />Azken<b>Zadig</b> Windows-erako USB kontrolatzaileen instalazioa <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /> deskargatu daiteke"
     },
     "defaultContributingHead": {
         "message": "Hartu parte"
     },
     "defaultContributingText": {
-        "message": "Betafligth hobetzen lagundu nahi baduzu, era desberdinetan lagundu dezakezu.<br /><ul><li>Beste erabiltzaile batzuen galdereei erantzuten gure Foruetan eta IRC-an</li><li>Gure Firmware eta configurator kodearekin laguntzen - Ezaugarri berriak, konponketak, hobespenak </li><li> Testeatzen <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\"> Ezaugarri berriak/konponketak </a> eta zure iritzia emoten.</li><li>Arazoak eta ezaugarrien eskakizunak <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">komentatzen</a></li><li>Kolaboratu<a href=\"https://crowdin.com/project/betaflight-configurator\" target=\"_blank\"> Itzultzen Configurator aplikazioa</a> zure Hizkuntzara.</li><li></li></ul>"
+        "message": "Betaflight hobetzen lagundu nahi baduzu, modu askotan lagundu dezakezu, besteak beste:<br /><ul><li> Betaflight buruzko zure ezagutza erabiliz github-en edukia sortzeko edo eguneratzeko <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">gure wiki-an</a>, edo beste erabiltzaile batzuen galderei web foroetan erantzuten;</li><li>firmware eta konfiguratzaile <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">kodearekin laguntzen</a> -ezaugarri berriekin, konponketak, hobekuntzak;</li><li>probatzen<a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">funtzio eta konponbide berriak</a>eta berrikuspena eskainiz;</li><li>Beste erabiltzaileei <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> arazoak konpontzen laguntzen.</a> eta funtzio eskaerei buruzko eztabaidetan parte hartu;</li><li>Betaflight Konfiguratzailearen hizkuntza berri batera<a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">itzultzen</a> edo dagoeneko itzulpenak mantentzen laguntzen.</li></ul>"
     },
     "defaultFacebookText": {
-        "message": "<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\">Facebook Talde</a> bat badaukagu.<br />Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
+        "message": "<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Talde</a> bat badaukagu.<br />Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
     },
     "defaultChangelogHead": {
         "message": "Konfiguratzailea - Aldaketen zerrenda"
@@ -556,10 +574,14 @@
         "message": "Kode Irekia / dohaintza abisua"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betafligth</strong><strong> Kode irekiko</strong>, egaldi kontroladore softwarea da eta eskuragarri dago dohainik, <strong>berme barik</strong> erabiltzaile guztientzako.</p><p> Betafligth edo Betafligth configurator, erabilgarri aurkitu baduzu, mesedez kontuan euki <strong>laguntzea</strong> bere garapenera, dohaintza bat emoten.</p>"
+        "message": "<p><strong>Betafligth</strong><strong> kode irekiko</strong>, egaldi kontroladore softwarea da eta dohainik eskuragarri dago, <strong>berme barik</strong> erabiltzaile guztientzako.</p><p> Betaflight edo Betaflight Konfiguratzailea, erabilgarri aurkitu baduzu, mesedez kontuan euki <strong>laguntzea</strong> bere garapenera, dohaintza bat emoten.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Era erregular baten ekonomikoki laguntzeko idea baduzu, kontuan euki beharko zenuen \"Patron\" bilakatzea gure Patreon portalean $t(patreonLink.message)</p>"
+    },
+    "patreonLink": {
+        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
+        "description": "Patreon is name, and should not require translation"
     },
     "defaultDonate": {
         "message": "Dohanintza eman"
@@ -574,10 +596,10 @@
         "message": "Betafligth-eko dokumentazioa, bertsio oharretan eta Wiki-an eskuragarri dago.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "Betafligth Wika-a ikaragarrizko informazio iturria da. <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\"> Hemen </a>aurkitu dezakezu."
+        "message": "Betafligth Wika-a ikaragarrizko informazio iturria da. <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\"> Hemen </a>aurkitu dezakezu."
     },
     "defaultDocumentation2": {
-        "message": "Firmwarearentzako oharrak GitHub-en bertsioen orrian irakur daitezke <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\">hemen</a>."
+        "message": "Firmwarearentzako oharrak GitHub-en bertsioen orrian irakur daitezke <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a>."
     },
     "defaultSupportHead": {
         "message": "Laguntza"
@@ -592,19 +614,19 @@
         "message": "Laguntza lortzeko mesedez, bilatu foro eta wikian edo jarri harremanetan saltzaileekin. <br/> <br/>"
     },
     "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups haria</a>"
+        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups haria</a>"
     },
     "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\">Betaflight Wiki-a</a>"
+        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki-a</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight bideoak</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight bideoak</a>"
     },
     "defaultSupport4": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">Github</a>"
+        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Github</a>"
     },
     "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\">Betaflight garatzaileak Slack-en</a>"
+        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight garatzaileak Slack-en</a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">Backupak eta leheneratzea funtzioak itzalita daude.</span> Zuk daukazun firmwarearen API bertsioa <span class=\"message-negative\">$1</span>, Backupa eta leheneratzea beharrezkoak dira<span class=\"message-positive\">$2</span>.  Mezedez, gorde zure backupa CLI-re bitartez, begiratu Betaflight-ren dokumentazioa jakiteko nola egin."
@@ -835,7 +857,7 @@
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
-        "message": "Azelerometroa ez da kalibratu eta haren mende dauden funtzioak gaituta daude. Azelerometroa kalibratu.",
+        "message": "Azelerometroa ez da kalibratu eta hori behar duten ezaugarriak dituzu. Azelerometroa kalibratu.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
@@ -1110,7 +1132,7 @@
         "message": "Motorren norabidea alderantzizkoa"
     },
     "configurationReverseMotorSwitchHelp": {
-        "message": "Aukera honek nahasgailua motorraren norabidea alderantzikatu eta haizeak horren arabera egon dadin konfiguratzen du. <strong>Oharra:</strong> Horrek ez du motorraren norabidea alderantzikatzen. Erabili zure ESCetarako konfigurazio-tresna edo aldatu ESC - motorren kableatua hori lortzeko. Era berean, ziurtatu zure motorrak goiko diagraman agertzen diren norabideetan biratzen ari direla egiaztatzen armatzen saiatu aurretik."
+        "message": "Aukera honek nahasgailua motorraren norabidea alderantzikatu eta helizeen arabera egon dadin konfiguratzen du. <strong>Oharra:</strong> Horrek ez du motorraren norabidea alderantzikatzen. Erabili zure ESCetarako konfigurazio-tresna edo aldatu ESC - motorren kableatua hori lortzeko. Era berean, ziurtatu zure motorrak goiko diagraman agertzen diren norabideetan biratzen ari direla egiaztatzen armatzen saiatu aurretik."
     },
     "configurationAutoDisarmDelay": {
         "message": "Desarmatu motorrak ezarritako atzerapenaren ondoren [seconds] (MOTOR_STOP funtzioa behar du)"
@@ -1125,7 +1147,7 @@
         "message": "Motorraren Throttle Inaktiboaren balioa [percent]"
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "Aireontzia armatuta dagoenean eta azeleragailua gutxieneko egoeran dagoen ESCetara bidaltzen den gehienezko azeleragailuaren ehuneko gisa da. Abiadura handiagoa lortzeko ehunekoa handitu dezakezu aktibo dagoenean."
+        "message": "'Dshot idle' balioa ESCra igortzen den gehienezko throttle balioaren ehunekoa da, stick posizio baxua denean eta gailua armatuta dagoenean. Balio hau handitu abiadura inaktibo handiagoa lortzeko eta desinkronizazioak ekiditeko. Balio handiekin gailua oso erabilgarria sentituko da."
     },
     "configurationMotorPoles": {
         "message": "Motorren zutoinak",
@@ -1136,7 +1158,7 @@
         "description": "One of the fields of the ESC/Motor configuration"
     },
     "configurationMotorPolesHelp": {
-        "message": "Ezarpen hau ezaugarri batzuetarako erabiltzen da, adibidez, RPM iragazkiarako. <br> <br>Motorraren kanpaian dauden iman kopurua adierazten du.<b>Ez zenbatu Statoreak</b> 5 \"motor tipikoek 14 iman dituzte, 3\" edo gutxiago bezalako txikiek 12 iman izaten dituzte normalean.",
+        "message": "Zutoin kopurua, motorren kanpaiak dituen iman kopurua da. EZ ZENBATU estator tokian daudenak. Normalean 5 \" motorrek 15 iman dituzte, txikienak 3\" edo gutxiago bezala, normalean 12 iman izaten dituzte.",
         "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
@@ -1153,6 +1175,12 @@
     },
     "configurationThrottleMinimumCommandHelp": {
         "message": "ESCri bidaltzen zaion balioa Aireontzia desarmatuta dagoenean. Ezarri motorra geldirik egoteko baliora(1000 ESC gehienentzat)."
+    },
+    "configurationEscProtocolDisabled": {
+        "message": "Mesedez, zure ESCetarako egokia den irteera protokoloa aukeratu. $t(escProtocolDisabledMessage.message)"
+    },
+    "escProtocolDisabledMessage": {
+        "message": "<strong>Kontuz:</strong> Zure ESC onartzen ez duten ESC protokoloa aukeratzen baduzu, <strong>bateria konektatu bezain laster ESC eta motorrak piztu daitezke</strong>. Hori dela eta, <strong>ESC protokoloa aldatu ondoren, eta bateria konektatu aurretik, ziurtatu zure helizeak kendu dituzula</strong>."
     },
     "configurationDshotBeeper": {
         "message": "Dshot balizaren konfigurazioa"
@@ -1259,11 +1287,20 @@
     "configurationCalculatedCyclesSec": {
         "message": "Zikloak/seg [Hz]"
     },
+    "configurationSpeedGyroNoGyro": {
+        "message": "Girorik ez",
+        "description": "When no gyro is configured this appears in place of the speed of the gyro in kHz"
+    },
+    "configurationSpeedPidNoGyro": {
+        "message": "Giro / {{value}}",
+        "description": "When no gyro is configured this appears in place of the speed of the PID in kHz. Try to keep it short."
+    },
+    "configurationKHzUnitLabel": {
+        "message": "{{value}} kHz",
+        "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
+    },
     "configurationLoopTimeHelp": {
         "message": "<strong>Oharra:</strong> Ziurtatu zure FC abiadura horietan funtzionatzeko gai dela! Egiaztatu CPU eta Ziklo denboraren egonkortasuna. Aldatzean, beharrezkoa izango da PID berrezartzea. OHARRA: Errendimendu gehiago lortzeko, desgaitu azelerometroa eta bestelako sentsoreak."
-    },
-    "configurationLoopTimeNo32KhzHelp": {
-        "message": "$t(configurationLoopTimeHelp.message)<br><strong>32 kHz moduko oharra:</strong> 32 kHz giro laginketa egiteko aukera gehitu zen Betaflight-en funtzionalitate esperimental gisa. Eskuragarri egon den urteetan, inoiz ez da inolako abantailarik erakutsi 8 kHz-ko giro-laginketa moduarekin, bibrazioekiko suszeptibotasunagatik eta iragazketa oldarkorra behar duen zarata maila handiagatik. Hori dela eta, <strong>32 kHz-eko giro-laginketarako laguntza kendu da</strong> Betaflight 4.0-n."
     },
     "configurationGPS": {
         "message": "GPSa"
@@ -1625,6 +1662,9 @@
     "pidTuningDerivative": {
         "message": "Deribatiboa (D)"
     },
+    "pidTuningDMax": {
+        "message": "D Max"
+    },
     "pidTuningDerivativeHelp": {
         "message": "Nabarmentzen den indarra kontrolatzen ditu Quad-ak.  Agintearen etenguen mobimenduak, D-term-en aginteak arintzen ditu. Kampoko eraginak (propwash-a edo haize boladak) D-term-ak bere eragina arintzen du.<br><br>Irabazi altuagoak amortizazio handiagoa ematen du eta P-term-a eta FF-a overshoot-iña murrizten dute.<br>Hala ere, D-term-a oso sensiblea da giroetako maiztasun handiko bibrazioekin (zarata haundiagotu egiten du 10-tik 100-ra).<br><br>Frekuentzi handiko zaratak motorraren berotzea edota motorrak erretzea eragin dezake D-gain-s handiegiak badira edo giroaren zarata ez badira iragazten (ikusi Iragazkiñak fitxa).<br><br>Pentsa ezazu D-term-ek zure autoaren kuxina dela, baina frekuentzi handiko girotze-zarata handitzeak duen berezko efektu negatiboarekin.",
         "description": "Derivative Term helpicon message on PID table titlebar"
@@ -1635,6 +1675,9 @@
     "pidTuningFeedforwardHelp": {
         "message": "Agintearen sarreran (malgukak) oinarriturik bultzada gehigarria da. FF-k laguntzen du P-term-ek Quad-a bultzen duela aginteak mugitzerakoan.<br><br>P-term-aren bultzada aginteen eta abiapuntua-an ohinarriturik (deg/sec) eta giro irakurritakoaren (deg/sec) ezberdintazunean. FF-k sakatzen du aginteen aldaketetan bakarrik..<br><br>Balio altuagoak (irabaziak) Quad-en aginteen sarrera zorroztuko dute.<br>Balio altuegiak gainbegiratze bat, motorren beroa eta motorren saturazioa sor dezakete(motoreek nahi duzun aldaketa-tasarekin ezin dutenean eutsi).<br>Gutxieneko edo zero (0) balioak sarreran motelagoa eta leuna emango die.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
+    },
+    "pidTuningMaxRateWarning": {
+        "message": "<span class=\"message-negative\"><b>Kontuz:</b></span>tasa oso altuak deselerazio azkarretan desinkronizazioak sor ditzakete."
     },
     "pidTuningRcRate": {
         "message": "RC Tasa"
@@ -1837,6 +1880,12 @@
     },
     "receiverButtonRefresh": {
         "message": "Berritu"
+    },
+    "receiverButtonBind": {
+        "message": "Hartzailea Lotu"
+    },
+    "receiverButtonBindMessage": {
+        "message": "Lotu eskaera hegaldi-kontroladoreari bidalita."
     },
     "receiverButtonSticks": {
         "message": "Kontrol palankak"
@@ -2092,16 +2141,16 @@
         "message": "Zenbaki hexadekimalak bakarrik, 0-9, AF"
     },
     "transponderHelp1": {
-        "message": "Hemen konfiguratu zure transpondedore kodea. Oharra: lasterketen krono-sistemek bakarrik aitortuko dituzte baliozko kodeak. Baliozko transpondedor kodeak <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a> bidez lor daitezke."
+        "message": "Hemen konfiguratu zure transpondedore kodea. Oharra: lasterketen krono-sistemek bakarrik aitortuko dituzte baliozko kodeak. Baliozko transpondedor kodeak <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\">Seriously Pro</a> bidez lor daitezke."
     },
     "transponderHelp2": {
-        "message": "Informazio gehiago nahi izanez gero, <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer web-orrira</a> joan"
+        "message": "Informazio gehiago <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">aRCiTimer web-orrian</a>"
     },
     "transponderDataHelp3": {
         "message": "ERLT ID 0-63 aukeratu"
     },
     "transponderHelp3": {
-        "message": "Informazio gehiago <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer web-orrian</a>"
+        "message": "Informazio gehiago <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\">EasyRaceLapTimer web-orrian</a>"
     },
     "transponderButtonSave": {
         "message": "Gorde"
@@ -2552,7 +2601,7 @@
         "message": "Bertsioari buruzko informazioa"
     },
     "firmwareFlasherReleaseManufacturer": {
-        "message": "Fabrikatzaileak:"
+        "message": "Fabrikatzaile ID:"
     },
     "firmwareFlasherReleaseVersion": {
         "message": "Bertsioa:"
@@ -2572,8 +2621,14 @@
     "firmwareFlasherReleaseFile": {
         "message": "Bitarra:"
     },
-    "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\">GARRANTZITSUA: firmware bertsio hau bertsio hautagai bezala markatuta dago. Mesedez, jakinarazi arazo guztiak berehala.</span>"
+    "firmwareFlasherUnifiedTargetName": {
+        "message": "Target Bateratua:"
+    },
+    "firmwareFlasherUnifiedTargetFileUrl": {
+        "message": "Konfig erakutzi."
+    },
+    "firmwareFlasherUnifiedTargetDate": {
+        "message": "Data:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Eskuz deskargatu."
@@ -2692,6 +2747,9 @@
     "firmwareFlasherButtonDownloading": {
         "message": "Deskargatzen..."
     },
+    "firmwareFlasherExitDfu": {
+        "message": "Irten DFU Modutik"
+    },
     "firmwareFlasherFlashFirmware": {
         "message": "Firmwarea instalatu"
     },
@@ -2720,7 +2778,7 @@
         "message": "<strong>Berreskuratutako/Galdutako komunikazioa</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Kontroladorearekin komunikazioa galdu baduzu, jarraitu urrats hauek komunikazioa berreskuratzeko: <ul><li>Desgaitua</li><li> 'Berrabiarazi gabeko sekuentzia' gaitu, 'Txip osoa ezabatzea' gaitu.</li><li>BOOT pinak lotu edo BOOT botoia mantendu.</li><li>Piztu (jarduera LED EZ da keinuka izango behar bezala egiten bada).</li><li>STM32 kontrolatzaile guztiak instalatu eta Zadig behar izanez gero (ikus <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\"> USB flasheatzea</a> Betaflight eskuliburuaren atala). </li> <li>Konfiguratzailea itxi, Chrome apps guztiak itxi eta Konfiguratzailea berriarazi</li><li>Askatu BOOT botoia zure FC- k badu.</li><li>Flash firmware egokiarekin (eskuzko baud tasa erabiliz zure FCen eskuliburuan zehazten bada).</li><li>itzali.</li><li>Kendu BOOT jumper.</li><li>Piztu (jardueraren LEDak keinu egin behar du).</li><li>Lotu normalean.</li></ul>"
+        "message": "Kontroladorearekin komunikazioa galdu baduzu, jarraitu urrats hauek komunikazioa berreskuratzeko: <ul><li>Itzali</li><li> 'Berrabiarazi gabeko sekuentzia' gaitu, 'Txip osoa ezabatzea' gaitu.</li><li>BOOT pinak lotu edo BOOT botoia mantendu.</li><li>Piztu (jarduera LED EZ da keinuka izango behar bezala egiten bada).</li><li>STM32 kontrolatzaile guztiak instalatu eta Zadig behar izanez gero (ikusi <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\"> USB flasheatzea</a> Betaflight eskuliburuaren atala). </li> <li>Konfiguratzailea itxi, Chrome apps guztiak itxi eta Konfiguratzailea berriarazi</li><li>Askatu BOOT botoia zure FC- k badu.</li><li>Flash firmware egokiarekin (eskuzko baud tasa erabiliz zure FCen eskuliburuan zehazten bada).</li><li>itzali.</li><li>Kendu BOOT jumper.</li><li>Piztu (jardueraren LEDak keinu egin behar du).</li><li>Lotu normalean.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasheatzailea Utzi"
@@ -2769,6 +2827,15 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "<strong>$1</strong> Detektatuta - Konektatzean instalatu exekutatzen ari da"
+    },
+    "unstableFirmwareAcknoledgementDialog": {
+        "message": "<strong>Firmwaren garapen bertsioa</strong> instalatu egingo duzu. Konpilazio hauek martxan dagoen lanak dira eta kasu hauetan edozer gerta daiteke:<strong><ul><li> Firmwareak ez du osorik funtzionatzen;</li><li>ezin da hegan egin firmware onekin;</li><li> firmwarearekin segurtasun arazoak daude, hegan joan daiteke</li><li>firmwareak hegaldi kontrolatzaileak ez erantzutea edo kalte egin dezake</li></ul></strong>Firmwarea instalatzen jarraitzen baduzu, <strong>erantzukizun osoa hartzen ari zara aurreko egoeretarako batean gerta daitekeen arriskuaz</strong>. Aitortzen duzu<strong> helize gabe aulkian probak egiteko</strong> beharrezkoa dela."
+    },
+    "unstableFirmwareAcknoledgementAcknowledge": {
+        "message": "Aurrekoa irakurri dut eta <strong>erantzukizun osoa hartzen dut<strong> firmware ezegonkorra instalatzeko"
+    },
+    "unstableFirmwareAcknoledgementFlash": {
+        "message": "Flash"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "<strong>$1</strong> - aurreko gailua instalazioan dago. Mesedez berriro konektatu berriro saiatzeko"
@@ -3085,7 +3152,7 @@
         "message": "16. AUX"
     },
     "pidTuningBasic": {
-        "message": "Oinarrizko/Acro"
+        "message": "Oinarrizko/Akro"
     },
     "pidTuningYawJumpPrevention": {
         "message": "Yaw Saltoen Prebentzioa"
@@ -3131,6 +3198,21 @@
     },
     "pidTuningLevelHelp": {
         "message": "Beheko balioek ANGLE eta HORIZON hegaldi moduen portaera aldatzen dute. PID kontrolagailu desberdinak, balio ezberdinean kudeatzen dituzte. Mesedez, dokumentazioa kontsultatu."
+    },
+    "pidTuningMotorOutputLimit": {
+        "message": "Motor Irteeraren Muga"
+    },
+    "pidTuningMotorLimit": {
+        "message": "Atenuazioa %"
+    },
+    "pidTuningMotorLimitHelp": {
+        "message": "Motorren aginduak ezarritako ehunekoaren arabera murrizten ditu. ESC korrontea murrizten du eta motor beroak lortzen dira zelda kopuru altuagoko bateriak erabiltzen direnean, adibidez, 6S bateria erabili nahi baduzu 4S-rako diseinatuta gailu batean, 66% saiatu; 4S bateria erabiltzeko 3S diseinatutako gailu batean, 75% saiatu. <br>Egiaztatu osagai guztiak bateriaren tentsioa onartzen dutela."
+    },
+    "pidTuningCellCount": {
+        "message": "Zelda Kopurua"
+    },
+    "pidTuningCellCountHelp": {
+        "message": "Automatikoki aktibatzen da konektatutako bateriaren zelda kopuru berdina duen lehen profila."
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profileko iragazki-ezarpen independenteak"
@@ -3220,7 +3302,7 @@
         "description": "Master gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSliderHelp": {
-        "message": "PD balantze baxuagoa erantzun orokorra txikiagotuko du, baina errebote azkarren aukera ere murriztuko du flip edo roll baten ondoren.<br><br>PD balantze altuagoak erantzun azkarragoa eta propwash-a hobetuko dute. Dena den, zure PD balantzea oso altua bada, dardarrak jasoko dituzu flip edo roll baten ondoren etapropwash-aren bitartean oszilazioak izando dituzu.",
+        "message": "D balio nahiko altuak kontrol-erantzuna leuntzen du eta motorrak berotzea eragin dezake, baina P oszilazioak kontrolatzen lagundu beharko luke eta turbulentzia gurdiak hobetu ditzake.<br><br>D balio nahiko baxua kontrolen erantzun azkarragoa sortzen du baina turbulentzia erantzunetan ahulduko du.",
         "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningPDGainSliderHelp": {
@@ -3228,7 +3310,7 @@
         "description": "P and D gain tuning slider helpicon message"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "Balio baxuek kontrolaren erantzuna okertzen dute eta itzulketa motelak sor ditzakete iraulketa edo iraulketa amaieran (I Epearen amaiera).<br><br>Balio altuek erantzun hobea ematen dute mugimendu erasokorrei. Balio handiegiak buelta eta errebote azkarrak sor ditzakete irauli edo jaurti baten amaieran.",
+        "message": "FF balio baxuek kontrolaren erantzuna okertzen dute eta itzulketa motelak sor ditzakete iraulketa edo iraulketa amaieran (I Epearen amaiera).<br><br>FF balio altuek makila erantzun hobea ematen dute mugimendu erasokorrei. FF balio handiegiak buelta eta errebote azkarrak sor ditzakete irauli edo jaurti baten amaieran.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
@@ -3274,7 +3356,7 @@
         "message": "2. Giro Notch Iragazkiaren Ebakidura Frekuentzia [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Notch iragazkiak zentro bat eta ebaki bat ditu. Iragazkia simetrikoa da. Frekuentzia zentrala iragazkiaren erdigunea da eta Ebaketa frekuentzia Notch iragazkia hasten den lekua da. Adibidez, 160 ebakidura-frekuentziarekin eta 260 frekuentzia zentralarekin, erdigunean duen itxaropenik handiena duena 160-360Hz-ko tartea da"
+        "message": "Notch iragazkiak zentro bat eta ebaki bat ditu. Iragazkia simetrikoa da. Frekuentzia zentrala iragazkiaren erdigunea da eta Ebaketa frekuentzia Notch iragazkia hasten den lekua da. Adibidez, 160 ebakidura-frekuentziarekin eta 260 frekuentzia zentralarekin, erdigunean duen atenuazio handiena duena 160-360Hz-ko tartea da"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Notch Iragazki Dinamikoa"
@@ -3297,6 +3379,9 @@
     "pidTuningDynamicNotchMinHz": {
         "message": "Notch Dinamikoa Min Hz"
     },
+    "pidTuningDynamicNotchMaxHz": {
+        "message": "Notch Dinamikoa Max Hz"
+    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Notch dinamikoak hiru frekuentzian funtziona dezake: BAXUA (80-330hz) 6+ hazbeteko bezalako birakatze txikiagoetarako, ERDIA (140-550hz) 5 hazbeteko quad normal, ALTUA (230-800hz) oso altuerako 2,5-3 hazbeteko quad-ak berpiztea AUTO aukerak barrutia hautatzen du 1. Giro Behe-paseko Dinamiko Iragazkiaren ebakidura frekuentzia maximoaren balioaren arabera."
     },
@@ -3307,7 +3392,10 @@
         "message": "Q faktorea Notch Iragazki Dinamikoak estu edo zabal egokitzeko erabiltzen da. Balio altuagoak estuagoak eta zehatzagoak dira eta balio baxuagoak zabalagoak eta zabalagoak egiten ditu. Benetan balio txikia izateak asko handituko du iragazkien atzerapena."
     },
     "pidTuningDynamicNotchMinHzHelp": {
-        "message": "Notch Iragazki Dinamikoa zentroaren azpian dagoen gutxieneko frekuentzia definitzen du."
+        "message": "Notch dinamikoa kontrolatu behar duen zarata maiztasun txikienean ezarri."
+    },
+    "pidTuningDynamicNotchMaxHzHelp": {
+        "message": "Notch dinamikoa kontrolatu behar duen zarata maiztasun handiagoan ezarri."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Giro RPM Iragazkia",
@@ -3326,7 +3414,7 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHz": {
-        "message": "Giro RPM Iragazkiaren Min [Hz] Frekuentzia",
+        "message": "Giro RPM Iragazkiaren Min Frekuentzia [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
@@ -3429,6 +3517,9 @@
         "message": "Cutoff",
         "description": "Cutoff value of the I Term Relax"
     },
+    "pidTuningItermRelaxCutoffHelp": {
+        "message": "Balio baxuek murrizketa murrizten dute flipen ondoren agintari baxuko quads. Balio altuek lasterketetarako abiadura altuko zehaztasuna areagotzen dute.<br> Lasterketetarako 30-tik 40-ra ezarritakoa da; 15 erantzun askarreko freestyle eraikuntzarako, 10 freestyle astun quad-entzat, 3-5 X-mailakoentzat."
+    },
     "pidTuningAbsoluteControlGain": {
         "message": "Kontrol absolutua"
     },
@@ -3441,8 +3532,14 @@
     "pidTuningThrottleBoostHelp": {
         "message": "Funtzionalitate honek aldi baterako bultzadari azeleragailua ematen dio komandoaren aldaketa bizkorretan eta horrek motorraren azelerazioan momentua handitzen du eta bizkortze-erantzun askoz azkarragoa ematen du."
     },
+    "pidTuningIdleMinRpm": {
+        "message": "Idle Dinamiko Balioa [rpm]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Idle Dinamikoa rpm txikietan kontrola hobetzen du eta motorearen desyncs arriskua murrizten du. Aire-korronteak azkartzean edo atzera helizeak moteltzean eragindako arazoak zuzentzen ditu, PID autoritatea, egonkortasuna, motorra balaztatzea eta erantzuna hobetuz. Idle Dinamiko rpm-ak zure Dshot Idle balioaren (begiratu $t(tabMotorTesting.message) fitxan)baino 20% ingurukoa izan behar da. Normalean ez da zure DShot Idle balio lehenetsia aldatu beharrik. Alderantziz denbora gehiago mugitzeko, DShot Idle balioa eta Gutxieneko rpm alde berean murriztu behar lirateke. <br><br>Informazio gehiago<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">wiki sare honetan</a>."
+    },
     "pidTuningAcroTrainerAngleLimit": {
-        "message": "Acro Trainerren Angle Muga"
+        "message": "Akro Trainerren Angle Muga"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
         "message": "Angelu mugatzeko modu berri bat gehitzen du hegan ikasten ari diren pilotuentzat. Barruti baliozkoa 10-80 da eta $t(tabAuxiliary.message) fitxan etengailu batekin aktibatu behar da."
@@ -3451,7 +3548,7 @@
         "message": "Yaw Integratua"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ABISUA</span>: Ezaugarri hau gaitzen baduzu, YAW PID horren arabera egokitu behar duzu. Informazio gehiago <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\"target=\"_blank\">hemen</a>"
+        "message": "<span class=\"message-negative\">ABISUA</span>: Ezaugarri hau gaitzen baduzu, YAW PID horren arabera egokitu behar duzu. Informazio gehiago <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw barneratua quad kontrolarekin arazoa konpontzen duen ezaugarria da: pich eta roll-ardatza bultzada diferentzialen bidez kontrolatzen diren bitartean, helizeek Yaw desberdinak sortzen dituzte. Yaw barneratua konpondu egiten du yaw pid irteera nahasgailuan aplikatu aurretik. Honek Pid funtzionamendua normalizatzen du. Orain beste edozein ardatzetara sintoniza dezakezu. Yaw barneratuan I ez dagoenez kontrol absolutua erabiltzea eskatzen du."
@@ -3876,6 +3973,9 @@
     "osdSetupTitle": {
         "message": "OSD"
     },
+    "osdSetupNoOsdChipDetectWarning": {
+        "message": "<span class=\"message-negative\"><b>OHARRA:</b></span> Ez da OSD txip aurkitu. Hegaldi kontrolatzaile batzuek ez dute OSD txipa behar bezala pizten bateria konektatu arte. Mesedez, bateria konektatu USB konektatu aurretik (HELIZEAK Kendu!)."
+    },
     "osdSetupPreviewHelp": {
         "message": "<strong>Oharra:</strong> OSD aurrebistak, ezin da hegaldi kontroladorean instalatutako letra-motak erakutsi. Elementu indibidualen diseinua itxura desberdinak izan daitezke firmwarearen bertsio zaharrakerabiltzen direnean. Mesedez, begiratu betaurrekoen bidez itxura hegan egin aurretik."
     },
@@ -3883,7 +3983,7 @@
         "message": "Hegaldi kontrolatzaileak ez du OSD aginteei erantzuten. Horrek ziur asko esan nahi du ez duela BetaFlight OSD integratua."
     },
     "osdSetupUnsupportedNote2": {
-        "message": "Kontuan izan hegaldi kontrolatzaile batzuek <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a> onboard bat duela eta konfigura daiteke <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, hala ere, MinimOSD ezin da interfaze honen bidez konfiguratu."
+        "message": "Kontuan izan hegaldi kontrolatzaile batzuek <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD</a> bat barruan dutela eta konfigura daiteke <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, hala ere, MinimOSD ezin da interfaze honen bidez konfiguratu."
     },
     "osdSetupProfilesTitle": {
         "message": "OSD Profilaren Zenbakia",
@@ -4485,6 +4585,27 @@
     "osdDescElementRssiDbmValue": {
         "message": "RSSI seinalearen dBm-ko balioa erabilgarri badago"
     },
+    "osdTextElementRcChannels": {
+        "message": "RC kanalak",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRcChannels": {
+        "message": "Bistaratu gehienez 4 kanalen balioak. Kanalak 'osd_rcchannels' CLI aldagaiarekin zehaztu behar dira"
+    },
+    "osdTextElementCameraFrame": {
+        "message": "Kameraren markoa",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCameraFrame": {
+        "message": "Gehitu ingurune erregulagarri elementua, pilotuaren HD kameraren ikusmen eremua marko bisual batean irudikatzeko.<br><br>Zabalera eta altuera CLIan alda dezakezu 'osd_camera_frame_width' eta 'osd_camera_frame_height' erabiltzen"
+    },
+    "osdTextElementEfficiency": {
+        "message": "Bateriaren eraginkortasuna",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementEfficiency": {
+        "message": "Berehalako bateriaren kontsumoa mAh/distantzian. (Baliozko GPS konponbidea eskatzen du)"
+    },
     "osdTextElementUnknown": {
         "message": "Ezezaguna $1",
         "description": "One of the elements of the OSD"
@@ -4674,13 +4795,6 @@
     "osdDescStatMinRssiDbm": {
         "message": "RSSI dBm gutxieneko balioa"
     },
-    "osdTextElementRcChannels": {
-        "message": "RC kanalak",
-        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
-    },
-    "osdDescElementRcChannels": {
-        "message": "Bistaratu gehienez 4 kanalen balioak. Kanalak \"osd_rcchannels\" CLI aldagaiarekin zehaztu behar dira"
-    },
     "osdTextStatUnknown": {
         "message": "Ezezaguna $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -4867,6 +4981,13 @@
     "osdWarningRssiDbm": {
         "message": "RSSI dBm alarma ezarpenen azpitik dagoenean jakinarazi"
     },
+    "osdWarningTextOverCap": {
+        "message": "Bateriaren edukiera gainezka",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningOverCap": {
+        "message": "Abixua mAh-ak configuraturiko gehienezkoa gainditzen duenean"
+    },
     "osdWarningTextUnknown": {
         "message": "Ezezaguna $1"
     },
@@ -4914,6 +5035,10 @@
     "vtxMessageTableNotConfigured": {
         "message": "<span class=\"message-negative\">Abisua:</span> Lehenik eta behin beheko VTX taula konfiguratu eta gorde behar duzu $t(vtxSelectedMode.message) eremuak erabili ahal izateko.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
+    },
+    "vtxMessageFactoryBandsNotSupported": {
+        "message": "<span class=\"message-negative\">Arreta:</span> Aukeratutako VTX motak ez du banden \"fabrika\" ezarpena onartzen, baina zure banda batzuek ezarpen hau dute. Klik egin '$t(vtxButtonSave.message)' hau konpontzeko.",
+        "description": "Message to show when the configured VTX type does not support factory bands, but one or more of the configured bands are of this type"
     },
     "vtxMessageVerifyTable": {
         "message": "<span class=\"message-negative\">Abisua:</span> VTX taulako balioak kargatu dira, baina oraindik ez dira hegaldi kontroladorean gorde. Balioak egiaztatu eta aldatu behar dituzu zure herrialdean baliozkoak eta legezkoak direla ziurtatzeko, eta ondoren $t(vtxButtonSave.message) botoia sakatu hegaldi kontroladorean gordetzeko.",
@@ -5172,7 +5297,7 @@
         "message": "ESC/Motor protokoloa"
     },
     "configurationEscProtocolHelp": {
-        "message": "Aukeratu motorraren protokoloa. <br>Ziurtatu zure ESCren zein protokolo onartzen dituen ezaugarriak egiaztatzen.<br><b>Kontuz DSHOT900 edo DSHOT1200 hautatzen baduzu, ESC gehienek ez dutelako onartzen!</b>"
+        "message": "Aukeratu motorraren protokoloa. <br>Ziurtatu zure ESC protokoloa onartzen dutela, informazio hau fabrikatzailearen web-orrian hautatu ahal duzu. <br><b>Kontuz DSHOT900 edo DSHOT1200 hautatzen baduzu, ESC gehienek ez dute onartzen!</b>"
     },
     "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "Aukeratu zure motor protokoloa. <br>Egiaztatu zure protokoloa zure ESCrekin bateragarria dela, informazio hori fabrikatzailearen webgunean aurki daiteke."
@@ -5188,7 +5313,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "Aktibatuta dagoenean, DSHOT protokoloari ESCko informazioa zuzenean jasotzeko aukera ematen dio, RPM iragazkiarentzako eta bestelako funtzionaltasunetarako beharrezkoa dena.<br><br>JESC firmware-a jflight.net-etik BLHELI_S-rako edo BLHELI_32-ren azken firmwarerako beharrezkoa da.",
+        "message": "ESC datuak hegaldi-kontroladoreari bidali DShot telemetriaren bidez. Funtzio hau RPM iragazkia eta Idle Dinamikoa erabiltzeko beharrezkoa da. <br> <br>Oharra: ESC firmware egokia behar duzu, adibidez JESC, JazzMac, BLHeli_32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
@@ -5270,7 +5395,7 @@
         "message": "Gehienez 3 tasa profil, profil bakoitzeko gorde daitezke hegaldi kontroladorean. Rateprofilak 'RC Rate', 'Rate', 'RC Expo', 'Throttle', eta 'TPA' valioak ditu barne. Hegaldian aldatu daitezke rateprofilak, 3 posizioko etengailuan ipinita 'Rate Profileko Atala'-n ''Egokitze' fitxan."
     },
     "pidTuningRateSetup": {
-        "message": "Oinarrizko/Acro Rate-etan"
+        "message": "Oinarrizko/Akro Rate-etan"
     },
     "pidTuningRateSetupHelp": {
         "message": "Egokitu balio horiek zure rateak ezartzeko. RC Rate-ak erabili gehineko rate orokorra igotzeko, Erabili Super Rate-a stik-en bukaeran Raterik altuenak izateko, erabili RC Expo stiken erdialdea suabeagoa izateko.",
@@ -5374,5 +5499,62 @@
     },
     "darkTheme": {
         "message": "Gai iluna piztu"
+    },
+    "pidTuningRatesType": {
+        "message": "Rate Mota"
+    },
+    "pidTuningRatesTypeTip": {
+        "message": "Rate mota aldatzeak rateen kurba aldatuko du eta ezartzen duzun modua ere"
+    },
+    "pidTuningRcRateRaceflight": {
+        "message": "Rate"
+    },
+    "pidTuningRcExpoRaceflight": {
+        "message": "Expo"
+    },
+    "pidTuningRateRaceflight": {
+        "message": "Akro+"
+    },
+    "pidTuningRcExpoKISS": {
+        "message": "RC Kurba"
+    },
+    "pidTuningRateQuickRates": {
+        "message": "Rate Max"
+    },
+    "pidTuningRcRateActual": {
+        "message": "Erdiko sentsibilitatea"
+    },
+    "dialogRatesTypeTitle": {
+        "message": "Rate mota aldaketa"
+    },
+    "dialogRatesTypeNote": {
+        "message": "<span class=\"message-negative\"><b>KONTUZ: Rate mota aldatzen ari zara.</b></span>Rate mota aldatzen baduzu, zure tasak, kurba lehenetsira berrezarriko dira."
+    },
+    "dialogRatesTypeConfirm": {
+        "message": "Aldaketa"
+    },
+    "gpsSbasAutoDetect": {
+        "message": "Auto-detektatu",
+        "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "gpsSbasEuropeanEGNOS": {
+        "message": "Europako EGNOS",
+        "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "gpsSbasNorthAmericanWAAS": {
+        "message": "Ipar Amerikako WAAS",
+        "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "gpsSbasJapaneseMSAS": {
+        "message": "Japoniar MSAS",
+        "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "gpsSbasIndianGAGAN": {
+        "message": "Indiako GAGAN",
+        "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "gpsSbasNone": {
+        "message": "Bat ere ez",
+        "description": "One of the options selectable for the GPS SBAS system"
     }
 }
