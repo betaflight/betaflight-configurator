@@ -1235,7 +1235,20 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             PID_ADVANCED_CONFIG.use_unsyncedPwm = $('input[id="unsyncedPWMSwitch"]').is(':checked') ? 1 : 0;
             PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
             PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyroSelectElement.val());
-            PID_ADVANCED_CONFIG.pid_process_denom = parseInt(pidSelectElement.val());
+
+            const value = parseInt(pidSelectElement.val());
+
+            let newDenominator = undefined;
+            let newFrequency = undefined;
+            if (value !== PID_ADVANCED_CONFIG.pid_process_denom) {
+                newDenominator = value;
+                newFrequency = pidSelectElement.find('option:selected').text();
+            }
+            self.analyticsChanges['PIDLoopDenominator'] = newDenominator;
+            self.analyticsChanges['PIDLoopFrequency'] = newFrequency;
+
+            PID_ADVANCED_CONFIG.pid_process_denom = value;
+
             PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
             if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0")) {
                 PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
