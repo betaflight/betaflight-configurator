@@ -47,9 +47,9 @@ TuningSliders.initialize = function() {
 TuningSliders.setDMinFeatureEnabled = function(dMinFeatureEnabled) {
     this.dMinFeatureEnabled = dMinFeatureEnabled;
     if (this.dMinFeatureEnabled) {
-        this.defaultPDRatio = this.PID_DEFAULT[0] / this.PID_DEFAULT[2];
+        this.defaultPDRatio = this.PID_DEFAULT[2] / this.PID_DEFAULT[0];
     } else {
-        this.defaultPDRatio = this.PID_DEFAULT[0] / (this.PID_DEFAULT[2] * 0.85);
+        this.defaultPDRatio = this.PID_DEFAULT[2] / (this.PID_DEFAULT[0] * 1.18);
     }
 };
 
@@ -84,11 +84,11 @@ TuningSliders.initPidSlidersPosition = function() {
     // used to estimate PID slider positions based on PIDF values, and set respective slider position
     // provides only an estimation due to limitation of feature without firmware support, to be improved in later versions
     this.MasterSliderValue = Math.round(PIDs[2][1] / this.PID_DEFAULT[11] * 10) / 10;
-    this.PDRatioSliderValue = Math.round(PIDs[0][0] / PIDs[0][2] / this.defaultPDRatio * 10) / 10;
+    this.PDRatioSliderValue = Math.round(PIDs[0][2] / PIDs[0][0] / this.defaultPDRatio * 10) / 10;
     if (this.dMinFeatureEnabled) {
-        this.PDGainSliderValue = Math.round(ADVANCED_TUNING.dMinRoll / this.MasterSliderValue / this.PID_DEFAULT[3] * 10) / 10;
+        this.PDGainSliderValue = Math.round(ADVANCED_TUNING.dMinRoll / this.PDRatioSliderValue / this.MasterSliderValue / this.PID_DEFAULT[3] * 10) / 10;
     } else {
-        this.PDGainSliderValue = Math.round(PIDs[0][2] / this.MasterSliderValue / (this.PID_DEFAULT[2] * 0.85) * 10) / 10;
+        this.PDGainSliderValue = Math.round(PIDs[0][0] / this.MasterSliderValue / (this.PID_DEFAULT[2] * 1.18) * 10) / 10;
     }
     this.ResponseSliderValue = Math.round(ADVANCED_TUNING.feedforwardRoll / this.MasterSliderValue / this.PID_DEFAULT[4] * 10) / 10;
 
@@ -250,22 +250,21 @@ TuningSliders.calculateNewPids = function() {
 
     if (this.dMinFeatureEnabled) {
         //dmin
-        ADVANCED_TUNING.dMinRoll = Math.round(this.PID_DEFAULT[3] * this.PDGainSliderValue);
-        ADVANCED_TUNING.dMinPitch = Math.round(this.PID_DEFAULT[8] * this.PDGainSliderValue);
+        ADVANCED_TUNING.dMinRoll = Math.round(this.PID_DEFAULT[3] * this.PDGainSliderValue * this.PDRatioSliderValue);
+        ADVANCED_TUNING.dMinPitch = Math.round(this.PID_DEFAULT[8] * this.PDGainSliderValue * this.PDRatioSliderValue);
         // dmax
-        PIDs[0][2] = Math.round(this.PID_DEFAULT[2] * this.PDGainSliderValue);
-        PIDs[1][2] = Math.round(this.PID_DEFAULT[7] * this.PDGainSliderValue);
+        PIDs[0][2] = Math.round(this.PID_DEFAULT[2] * this.PDGainSliderValue * this.PDRatioSliderValue);
+        PIDs[1][2] = Math.round(this.PID_DEFAULT[7] * this.PDGainSliderValue * this.PDRatioSliderValue);
     } else {
         ADVANCED_TUNING.dMinRoll = 0;
         ADVANCED_TUNING.dMinPitch = 0;
-        PIDs[0][2] = Math.round((this.PID_DEFAULT[2] * 0.85) * this.PDGainSliderValue);
-        PIDs[1][2] = Math.round((this.PID_DEFAULT[7] * 0.85) * this.PDGainSliderValue);
+        PIDs[0][2] = Math.round((this.PID_DEFAULT[2] * 0.85) * this.PDGainSliderValue * this.PDRatioSliderValue);
+        PIDs[1][2] = Math.round((this.PID_DEFAULT[7] * 0.85) * this.PDGainSliderValue * this.PDRatioSliderValue);
     }
-    PIDs[2][0] = Math.round(this.PID_DEFAULT[10] * this.PDGainSliderValue);
-
     // p
-    PIDs[0][0] = Math.round(PIDs[0][2] * this.defaultPDRatio * this.PDRatioSliderValue);
-    PIDs[1][0] = Math.round(PIDs[1][2] * this.defaultPDRatio * this.PDRatioSliderValue);
+    PIDs[0][0] = Math.round(this.PID_DEFAULT[0] * this.PDGainSliderValue);
+    PIDs[1][0] = Math.round(this.PID_DEFAULT[5] * this.PDGainSliderValue);
+    PIDs[2][0] = Math.round(this.PID_DEFAULT[10] * this.PDGainSliderValue);
     // ff
     ADVANCED_TUNING.feedforwardRoll = Math.round(this.PID_DEFAULT[4] * this.ResponseSliderValue);
     ADVANCED_TUNING.feedforwardPitch = Math.round(this.PID_DEFAULT[9] * this.ResponseSliderValue);

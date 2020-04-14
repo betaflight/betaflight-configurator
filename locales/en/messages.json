@@ -3429,7 +3429,7 @@
         "description": "Master gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSliderHelp":{
-        "message": "Lower PD balance will lower overall response but will also reduce a possibility of fast bounceback after a flip or roll.<br><br>Higher PD balance provides faster reponse and better propwash handling. However, if your PD balance is too high you will get oscillations after a flip or roll and extended oscillations during prop wash.",
+        "message": "Relatively high D will dampen stick responsiveness and may make motors hot, but should help control P oscillations and may improve propwash wobble.<br><br>Relatively low D gives quicker stick responsiveness but may weaken propwash handling.",
         "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningPDGainSliderHelp":{
@@ -3437,7 +3437,7 @@
         "description": "P and D gain tuning slider helpicon message"
     },
     "pidTuningResponseSliderHelp":{
-        "message": "Lower values will worsen the stick response and may result in slow bounceback at the end of a flip or roll (I-term windup).<br><br>Higher value will have a better stick response for sharp moves. However, too high of values can cause overshoots and fast bounceback at the end of a flip or roll.",
+        "message": "Lower FF values will worsen the stick response and may result in slow bounceback at the end of a flip or roll (I-term windup).<br><br>Higher FF values will give snappier stick responses in sharp moves. Excessively high FF values can cause overshoots and fast bounceback at the end of a flip or roll.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
