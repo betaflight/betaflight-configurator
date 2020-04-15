@@ -701,7 +701,7 @@ var FC = {
             versionPidDefaults = [
                 42, 85, 35, 23, 90,
                 46, 90, 38, 25, 95,
-                30, 90,  0,  0, 90,
+                45, 90,  0,  0, 90,
             ];
         }
         return versionPidDefaults;
