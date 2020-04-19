@@ -2799,11 +2799,11 @@ TABS.osd.initialize = function (callback) {
         $('a.save').click(function () {
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             GUI.log(i18n.getMessage('osdSettingsSaved'));
-            var oldText = $(this).text();
+            const oldText = $(this).html();
             $(this).html(i18n.getMessage('osdButtonSaved'));
-            setTimeout(function () {
+            setTimeout(() => {
                 $(this).html(oldText);
-            }, 2000);
+            }, 1500);
 
             Object.keys(self.analyticsChanges).forEach(function (change) {
                 const value = self.analyticsChanges[change];
