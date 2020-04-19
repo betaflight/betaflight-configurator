@@ -269,7 +269,7 @@ TuningSliders.calculateNewPids = function() {
     // ff
     ADVANCED_TUNING.feedforwardRoll = Math.round(this.PID_DEFAULT[4] * this.ResponseSliderValue);
     ADVANCED_TUNING.feedforwardPitch = Math.round(this.PID_DEFAULT[9] * this.ResponseSliderValue);
-    ADVANCED_TUNING.feedforwardYaw = Math.round(this.PID_DEFAULT[14] * ((this.ResponseSliderValue - 1) / 3 + 1));
+    ADVANCED_TUNING.feedforwardYaw = Math.round(this.PID_DEFAULT[14] * this.ResponseSliderValue);
 
     // master slider part
     // these are not calculated anywhere other than master slider multiplier therefore set at default before every calculation
