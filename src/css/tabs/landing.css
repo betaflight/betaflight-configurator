@@ -96,11 +96,14 @@
 }
 
 .tab-landing .content_mid .text2 ul {
-    margin-top: 10px;
+    margin-top: 2px;
 }
 
 .tab-landing .content_mid .text2 li {
-    padding: 5px 0;
+    padding: 2px 0;
+    list-style: initial;
+    list-style-type: circle;
+    margin-left: 30px;
 }
 
 .tab-landing .content_mid .text3 {
