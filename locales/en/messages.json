@@ -3333,7 +3333,7 @@
         "message": "Attenuation %"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Attenuates motor commands by the set percentage. Reduces ESC current and motor heat when using higher cell count batteries, e.g. for similar performance from a 6S battery on a 4S build, try 66%; for a 4S battery on a 3S build, try 75%."
+        "message": "Attenuates motor commands by the set percentage. Reduces ESC current and motor heat when using higher cell count batteries, e.g. to get a performance similar to a 4S battery on a 6S build, try 66%; for a 3S performance on a 4S build, try 75%."
     },
     "pidTuningCellCount": {
         "message": "Cell Count"
