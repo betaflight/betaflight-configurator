@@ -2,8 +2,8 @@
   "name": "betaflight-configurator",
   "description": "Crossplatform configuration tool for Betaflight flight control system.",
   "version": "10.7.0",
-  "main": "main_nwjs.html",
-  "bg-script": "js/eventPage.js",
+  "main": "main.html",
+  "chromium-args" : "--disable-features=nw2",
   "default_locale": "en",
   "scripts": {
     "start": "gulp debug",
@@ -12,8 +12,10 @@
     "test": "karma start test/karma.conf.js"
   },
   "window": {
-    "show": false,
-    "icon": "images/bf_icon_128.png"
+    "icon": "images/bf_icon_128.png",
+    "id": "main-window",
+    "min_width": 1024,
+    "min_height": 550
   },
   "repository": {
     "type": "git",

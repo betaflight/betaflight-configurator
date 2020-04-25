@@ -80,33 +80,76 @@ function setupAnalytics(result) {
 
     analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
 
-    function sendCloseEvent() {
-        analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
-    }
-
-    if (GUI.isNWJS()) {
-        GUI.nwGui.Window.getAll(function (windows) {
-            windows.forEach(function (win) {
-                win.on('close', function () {
-                    sendCloseEvent();
-
-                    this.close(true);
-                });
-                win.on('new-win-policy', function(frame, url, policy) {
-                    // do not open the window
-                    policy.ignore();
-                    // and open it in external browser
-                    GUI.nwGui.Shell.openExternal(url);
-                });
-            });
-        });
-    } else if (!GUI.isOther()) {
-        // Looks like we're in Chrome - but the event does not actually get fired
-        chrome.runtime.onSuspend.addListener(sendCloseEvent);
-    }
-
     $('.connect_b a.connect').removeClass('disabled');
     $('.firmware_b a.flash').removeClass('disabled');
+}
+
+function closeSerial() {
+    // automatically close the port when application closes
+    const connectionId = serial.connectionId;
+
+    if (connectionId && CONFIGURATOR.connectionValid) {
+        // code below is handmade MSP message (without pretty JS wrapper), it behaves exactly like MSP.send_message
+        // sending exit command just in case the cli tab was open.
+        // reset motors to default (mincommand)
+
+        let bufferOut = new ArrayBuffer(5),
+        bufView = new Uint8Array(bufferOut);
+
+        bufView[0] = 0x65; // e
+        bufView[1] = 0x78; // x
+        bufView[2] = 0x69; // i
+        bufView[3] = 0x74; // t
+        bufView[4] = 0x0D; // enter
+
+        chrome.serial.send(connectionId, bufferOut, function () {
+            console.log('Send exit');
+        });
+
+        setTimeout(function() {
+            bufferOut = new ArrayBuffer(22);
+            bufView = new Uint8Array(bufferOut);
+            let checksum = 0;
+
+            bufView[0] = 36; // $
+            bufView[1] = 77; // M
+            bufView[2] = 60; // <
+            bufView[3] = 16; // data length
+            bufView[4] = 214; // MSP_SET_MOTOR
+
+            checksum = bufView[3] ^ bufView[4];
+
+            for (let i = 0; i < 16; i += 2) {
+                bufView[i + 5] = MOTOR_CONFIG.mincommand & 0x00FF;
+                bufView[i + 6] = MOTOR_CONFIG.mincommand >> 8;
+
+                checksum ^= bufView[i + 5];
+                checksum ^= bufView[i + 6];
+            }
+
+            bufView[5 + 16] = checksum;
+
+            chrome.serial.send(connectionId, bufferOut, function () {
+                chrome.serial.disconnect(connectionId, function (result) {
+                    console.log(`SERIAL: Connection closed - ${result}`);
+                });
+            });
+        }, 100);
+    } else if (connectionId) {
+        chrome.serial.disconnect(connectionId, function (result) {
+            console.log(`SERIAL: Connection closed - ${result}`);
+        });
+    }
+}
+
+function closeHandler() {
+    this.hide();
+
+    analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
+
+    closeSerial();
+
+    this.close(true);
 }
 
 //Process to execute to real start the app
@@ -119,6 +162,22 @@ function startProcess() {
         chromeVersion: window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"),
         configuratorVersion: CONFIGURATOR.version }));
 
+    if (GUI.isNWJS()) {
+        let nwWindow = GUI.nwGui.Window.get();
+        nwWindow.on('new-win-policy', function(frame, url, policy) {
+            // do not open the window
+            policy.ignore();
+            // and open it in external browser
+            GUI.nwGui.Shell.openExternal(url);
+        });
+        nwWindow.on('close', closeHandler);
+    } else if (!GUI.isOther()) {
+        chrome.app.window.onClosed.addListener(closeHandler);
+        // This event does not actually get fired:
+        chrome.runtime.onSuspend.addListener(closeHandler);
+    }
+
+    $('.connect_b a.connect').removeClass('disabled');
     $('#logo .version').text(CONFIGURATOR.version);
     updateStatusBarVersion();
     updateTopBarVersion();
