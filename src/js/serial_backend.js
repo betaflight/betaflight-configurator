@@ -165,6 +165,9 @@ function finishClose(finishedCallback) {
 
     GUI.connected_to = false;
     GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
+    // close problems dialog
+    $('#dialogReportProblems-closebtn').click();
+
     // Reset various UI elements
     $('span.i2c-error').text(0);
     $('span.cycle-time').text(0);
