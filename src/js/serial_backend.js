@@ -156,6 +156,9 @@ function finishClose(finishedCallback) {
 
         connectedTime = undefined;
     }
+    // close reset to custom defaults dialog
+    $('#dialogResetToCustomDefaults-cancelbtn').click();
+
     analytics.resetFlightControllerData();
 
     serial.disconnect(onClosed);
