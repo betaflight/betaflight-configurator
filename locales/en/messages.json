@@ -185,6 +185,10 @@
         "message": "\u7b80\u4f53\u4e2d\u6587",
         "description": "Don't translate!!!"
     },
+    "language_zh_TW": {
+        "message": "\u7e41\u9ad4\u4e2d\u6587",
+        "description": "Don't translate!!!"
+    },
 
     "sensorDataFlashNotFound": {
         "message": "No dataflash <br>chip found",
