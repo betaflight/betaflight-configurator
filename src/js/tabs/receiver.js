@@ -430,9 +430,6 @@ TABS.receiver.initialize = function (callback) {
                 $('select[name="rcSmoothing-input-manual-select"]').change();
 
                 var rc_smoothing_auto_smoothness = $('input[name="rcSmoothingAutoSmoothness-number"]');
-                rc_smoothing_auto_smoothness.change(function() {
-                    RX_CONFIG.rcSmoothingAutoSmoothness = $(this).val();
-                });
                 rc_smoothing_auto_smoothness.val(RX_CONFIG.rcSmoothingAutoSmoothness);
             } else {
                 $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
