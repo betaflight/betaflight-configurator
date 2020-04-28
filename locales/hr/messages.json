@@ -148,9 +148,6 @@
     "checkForConfiguratorUnstableVersions": {
         "message": "Prikaži obavijesti o ažuriranjima za nestabilne verzije konfiguratora"
     },
-    "configuratorUpdateNotice": {
-        "message": "Koristite zastarjelu verziju <b>Betaflight konfiguratora</b>.<br>Verzija <b>$1</b> je dostupna online, molimo posjetite <a href=\"$2\" target=\"_blank\">stranicu</a> da biste preuzeli i instalirali najnoviju verziju.<br>Molimo zatvorite konfigurator prije ažuriranja."
-    },
     "configuratorUpdateWebsite": {
         "message": "Idi na stranicu s izdanjima"
     },
@@ -509,17 +506,8 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "Ova aplikacija podržava sav hardware koji može pokrenuti Betaflight. Provjerite alat za ažuriranje firmwarea za cijeli popis hardwarea.<br><br> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\"> Preuzmite Betaflight Blackbox Log Viewer</a><br /><br />Izvorni kod firmwarea može se preuzeti<a href=\"https://github.com/betaflight/betaflight\" title=\"www.github.com\" target=\"_blank\"> ovdje</a><br /><br />Posljednji <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">CP210x Driveri</a> mogu se preuzeti<a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\"> ovdje</a><br />Posljednji <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">STM USB VCP Driveri</a> mogu se preuzeti<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\"> ovdje</a><br />Posljednji <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">Zadig</a> za Windows USB driver instalaciju može se preuzeti<a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\"> ovdje</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Pridonošenje"
-    },
-    "defaultContributingText": {
-        "message": "Ako biste htjeli Betaflight učinit još boljim možete pomoći na razne načine, uključujući:<br /><ul><li>Odgovaranjem na upite drugih korisnika na forumima i IRC-u</li><li>Dodavanjem programskog koda firmwareu i konfiguratoru - nove mogućnosti, popravci i nadogradnje</li><li>Testiranjem <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">novih mogućnosti</a> i davanje povratnih informacija.</li><li>Pomaganjem <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">problemima i komentiranjem na nove </a>.</li><li>Kolaboracijom u <a href=\"https://crowdin.com/project/betaflight-configurator\" target=\"_blank\">prevođenju aplikacije za konfiguriranje</a> na svoj jezik.</li><li></li></ul>"
-    },
-    "defaultFacebookText": {
-        "message": "Imamo i svoju <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\">Facebook grupu</a>.<br />Pridružite nam se i postavite pitanja o Betaflightu, konfiguriranju i ostalom."
     },
     "defaultChangelogHead": {
         "message": "Konfigurator - zapis o promjenama"
@@ -529,9 +517,6 @@
     },
     "defaultDonateHead": {
         "message": "Napomena za doniranje"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> je software za kontrolere leta koji je <strong>open source</strong>, potpuno je besplatan i <strong>bez garancije</strong> za sve korisnike.</p><p>Ako su vam Betaflight ili Betaflight konfigurator poslužili svrsi, <strong>podržite</strong> daljnji razvoj donacijom.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Ako želite doprinjeti financiski na mjesečnoj bazi, razmislite o doniranju putem <a href='https://www.patreon.com/betaflight'>Patreona</a>.</p>"
@@ -548,12 +533,6 @@
     "defaultDocumentation": {
         "message": "Betaflight dokumentacija je dostupna u napomenama izdanja i na Betaflight wikiju.<br /><br />"
     },
-    "defaultDocumentation1": {
-        "message": "Betaflight wiki je odličan izvor informacija, može se naći <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\">ovdje</a>."
-    },
-    "defaultDocumentation2": {
-        "message": "Napomene izdanja za firmware možete pročitati na GitHubu <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\">ovdje</a>."
-    },
     "defaultSupportHead": {
         "message": "Podrška"
     },
@@ -565,21 +544,6 @@
     },
     "defaultSupport": {
         "message": "Za podršku molimo potražite na forumima i na Betaflight wikiju ili kontaktirajte vašek proizvođaća<br /><br />"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups thread</a>"
-    },
-    "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\">Betaflight Wiki</a>"
-    },
-    "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight Videos</a>"
-    },
-    "defaultSupport4": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\">Betaflight developeri na Slack platformi</a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">Izrada i korištenje sigurnosnih kopija onemogućeno.</span> Koristite firmware s API verzijom <span class=\"message-negative\">$1</span>, sigurnosne kopije zahtijevaju <span class=\"message-positive\">$2</span>.  Molimo napravite sigurnosne kopije postavki kroz CLI sučelje, pogledajte Betaflight dokumentaciju za proceduru."
@@ -1081,9 +1045,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Vrijednost gasa/throttlea u praznom hodu [percent]"
     },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Ovo je 'idle' vrijednost u postocima maksimalnog gasa/throttlea koja se šalje ESCovima kada je letjelica armirana i kada je gas na minimalnoj poziciji. Povećajte ovu vrijednost da biste dobili veću brzinu motora u praznom hodu. Povećajte ovu vrijednost u slučaju 'desyncova'."
-    },
     "configurationMotorPoles": {
         "message": "Polovi motora",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -1214,9 +1175,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Napomena:</strong> Provjerite da vaš kontroler leta može raditi na odabranim brzinama! Provjerite CPU opterećenje i stabilnost vremena ciklusa. Mjenjanje ovih postavki će možda utjecati na postavke PID kontrolera. SAVJET: Onemogućite akcelerometa i ostale senzore koje ne koristite kako bi oslobodili procesor."
-    },
-    "configurationLoopTimeNo32KhzHelp": {
-        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Napomena o korištenju 32kHz frekvencije uzorkovanja stanja žiroskopa</strong>Podrška za 32kHz je dodana u Betaflight kao eksperimentalna mogućnost. Dosad nikad nije dokazano da postoji prednost nad 8 kHz uzorkovanjem, zbog podložnosti vibracijama koje zahtjevaju dodatno filtriranje, stvarajući kašnjenja u kontrolnoj petlji. Stoga, <strong> podrška za 32kHz uzorkovanje je ukinuta</strong> u Betaflight verziji 4.0."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1442,9 +1400,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Poravnavanje kanale se primjenjuje na"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Vrsta metode filtriranje korištena za setpont D filter. Većina korisnike bi trebala koristiti zadanu \"BIQUAD\" opciju jer ona daje odličnu ravnotežu između poravnatosti i kašnjenja. \"PT1\" smanjuje kašnjenje, ali i poravnanja."
     },
     "rcSmoothingInputTypeHelp": {
         "message": "Vrsta metode filtriranje korištena za ulazne kontrole. Većina korisnike bi trebala koristiti zadanu \"BIQUAD\" opciju jer ona daje odličnu ravnotežu između poravnatosti i kašnjenja. \"PT1\" smanjuje kašnjenje, ali i poravnanja."
@@ -1978,17 +1933,8 @@
     "transponderDataHelp1": {
         "message": "Samo heksadekadske znamenke, 0-9, A-F"
     },
-    "transponderHelp1": {
-        "message": "Ovdje konfigurirajte kod transpondera. Napomena: Samo ispravni kodovi će biti prepoznati u sustavu praćenja vremena. Ispravne kodove možete pronaći na <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a>."
-    },
-    "transponderHelp2": {
-        "message": "Za više informacija posjetite stranicu <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer</a>"
-    },
     "transponderDataHelp3": {
         "message": "Odaberi ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Za više informacija posjetite stranicu <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer</a>"
     },
     "transponderButtonSave": {
         "message": "Spremi"
@@ -2332,9 +2278,6 @@
     "blackboxLoggingSerial": {
         "message": "Serijski port"
     },
-    "serialLoggingSupportedNote": {
-        "message": "Možete zapisivati na vanjski uređaj zapisivanja (kao što je OpenLog ili kompatibilni klon) koristeći serijski port. Konfigurirajte port na kartici za portove."
-    },
     "sdcardNote": {
         "message": "Zapisi leta mogu se snimiti na SD karticu u slotu na kontroleru leta."
     },
@@ -2436,9 +2379,6 @@
     },
     "firmwareFlasherReleaseFile": {
         "message": "Binary:"
-    },
-    "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\">VAŽNO: Ovo izdanje firmware je označeno kao kandidat za izdavanje. Prijavite bilo kakav problem s \n nijm</span>"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Ručno preuzimanje."
@@ -2577,9 +2517,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Oporavljanje / Izgubljena komunikacija</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Ako ste izgubili komunikaciju s pločom, pratite ove korake kako biste ponovno uspostavili komunikaciju <ul><li>Isključite sve</li><li>Omogučite 'Bez sekvence ponovnog pokretanja</li><li>Prespojite BOOT pinove ili držite BOOT tipku</li><li>Uključite (LED lampica aktivnosti ne bi trebala treptati).</li><li>Instalirajte sve STM32 drivere i Zadig ako je potrebno (pogledajte <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">'USB Flashing'</a> poglavlje u Betaflight uputstvima).</li><li>Zatvorite konfigurator, sve Chrome prozore, sve Chrome aplikacije i ponovno pokrenite konfigurator</li><li>Pustite BOOT tipku ako ju vaš FC ima.</li><li>Ažurirajte kontroler ispravnim firmwareom (koristeći ručno postavljen baud rate ako kontroler tako zahtjeva) </li><li>Isključite sve.</li><li>Uklonite BOOT prespojnicu</li><li>Uključite (LED lampica aktivnosti bi trebala treperiti).</li><li>Normalno se povežite.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Napusti firmware flasher"
@@ -3212,9 +3149,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Integrirani Yaw"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">OPREZ</span>: ako ovo omogućite, morate postaviti YAW PID kako piše <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\">ovdje</a>"
-    },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrirani Yaw je mogućnost koja popravlja fundamentalni problem upravljanja četverokoptera: pitch i roll osi su kontrolirane diferencijalnim postiskom koje stvaraju propeleri, yaw je kontroliran drugačije. Integrirani Yaw ovo popravlja integriranjem izlaza yaw Pida prije nego što se primjeni. Ovo popravlja kako Pid vrijednosti rade i sada se može postavljati kao i za sve druge osi. Zahtijeva Apsolutnu Kontrolu jer je I Term nepotreban s Integriranim Yawom."
     },
@@ -3619,9 +3553,6 @@
     },
     "osdSetupUnsupportedNote1": {
         "message": "Kontroler leta ne odgovara na OSD komande. Ovo vjerojatno znači da nema integrirani Betaflight OSD."
-    },
-    "osdSetupUnsupportedNote2": {
-        "message": "Neki kontroleri leta imaju onboard <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a> koji može biti ažuriran i konfiguriran s <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, svejedno, MinimOSD ne može biti konfiguriran kroz ovo sučelje."
     },
     "osdSetupProfilesTitle": {
         "message": "Broj profila OSD-a",

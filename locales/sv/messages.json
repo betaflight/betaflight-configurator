@@ -200,9 +200,6 @@
     "checkForConfiguratorUnstableVersions": {
         "message": "Visa uppdateringsnotifieringar för icke-stabila versioner av konfiguratorn"
     },
-    "configuratorUpdateNotice": {
-        "message": "Du använder en utdaterad version av <b>Betaflight-konfiguratorn</b>.<br>Version <b>$1</b> är tillgänglig online, besök <a href=\"$2\" target=\"_blank\">utgivningssidan</a> för att ladda ner senaste versionen med korrigeringar och förbättringar.<br>Stäng konfigurator-fönstret innan uppdateringen."
-    },
     "configuratorUpdateWebsite": {
         "message": "Gå till utgivningssidan"
     },
@@ -573,17 +570,8 @@
     "defaultWelcomeHead": {
         "message": "Hårdvara"
     },
-    "defaultWelcomeText": {
-        "message": "Detta program stödjer all hårdvara som kan köra Betaflight. Se fullständig lista över hårdvara som stöds under flash-fliken.<br><br> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\"> Ladda ner Betaflight Blackbox Log Viewer</a><br /><br />Firmware-källkoden kan laddas ner <a href=\"https://github.com/betaflight/betaflight\" title=\"www.github.com\" target=\"_blank\">här</a><br /><br />De senaste <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">CP210x-drivrutinerna</a> kan laddas ner <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">här</a><br />De senaste <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">STM USB VCP-drivrutinerna</a> kan laddas ner <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">här</a><br />Den senaste <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">Zadig</a> för Windows USB drivrutinsinstallationen kan laddas ner <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">här</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Medverka"
-    },
-    "defaultContributingText": {
-        "message": "Om du vill vara med och göra Betaflight ännu bättre kan du hjälpa till på många sätt, tex:<br /><ul><li>Svara på andra användares frågor i forumen och på IRC.</li><li>Bidra med kod till firmwaren och konfiguratorn - nya funktioner, korrigeringar och förbättringar.</li><li>Testa <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">nya funktioner/korrigeringar</a> och ge feedback.</li><li>Hjälpa till med <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">problem och kommentera funktionsförfrågningar</a>.</li><li>Samarbeta genom att <a href=\"https://crowdin.com/project/betaflight-configurator\" target=\"_blank\">översätta konfiguratorn</a> till ditt språk.</li><li></li></ul>"
-    },
-    "defaultFacebookText": {
-        "message": "Vi har också en <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\">Facebookgrupp</a>.<br />Gå med oss för att prata om Betaflight, ställa konfigurationsfrågor, eller bara hänga med andra piloter."
     },
     "defaultChangelogHead": {
         "message": "Configurator - Ändringslogg"
@@ -593,9 +581,6 @@
     },
     "defaultDonateHead": {
         "message": "Öppen källkod- / Donations-notis"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> är en flygkontrollerprogramvara som bygger på <strong>öppen källkod</strong> och är tillgänglig utan kostnad <strong>utan garanti</strong> för alla användare.</p><p>Om du tycker att Betaflight eller Betaflight configurator är användbar kanske du vill <strong>stödja</strong> utvecklingen genom en donation.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Om du vill fortsätta bidra ekonomiskt bör du överväga att bli en \"patron\" för oss på $t(patreonLink.message).</p>"
@@ -612,12 +597,6 @@
     "defaultDocumentation": {
         "message": "Betaflight-dokumentation finns i versionskommentarerna och wiki.<br /><br />"
     },
-    "defaultDocumentation1": {
-        "message": "Betaflight wiki är en utmärkt informationskälla, den kan hittas <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\">här</a>."
-    },
-    "defaultDocumentation2": {
-        "message": "Utgåvenoteringarna för firmware kan läsas på GitHubs utgåvesida, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\"> här</a>."
-    },
     "defaultSupportHead": {
         "message": "Support"
     },
@@ -629,21 +608,6 @@
     },
     "defaultSupport": {
         "message": "För support, var vänlig sök i forumen och wikin först eller kontakta din försäljare.<br /><br />"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Groups-tråd</a>"
-    },
-    "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\">Betaflight Wiki</a>"
-    },
-    "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight Videos</a>"
-    },
-    "defaultSupport4": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\">Betaflight-utvecklare på slack</a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">Säkerhetskopierings- och återställningsfunktioner inaktiverade.</span> Du har firmware med API-version <span class=\"message-negative\">$1</span>, säkerhetskopiering och återställning kräver <span class=\"message-positive\">$2</span>.  Vänligen säkerhetskopiera dina inställningar via CLI, se Betaflight-dokumentation för förfarandet."
@@ -1155,9 +1119,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Motorns tomgångstrottelvärde [percent]"
     },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Detta är det 'tomgångsvärde' i procent av maximal trottel som skickas till ESC:erna när farkosten är aktiverad och trottelspaken är i lägsta positionen. Öka procentvärdet för att få högre tomgång."
-    },
     "configurationThrottleMinimum": {
         "message": "Minimitrottel (Lägsta ESC-värde när motorerna är aktiverade)"
     },
@@ -1280,9 +1241,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Observera:</strong> Säkerställ att din flygkontroller klarar dessa hastigheter! Kontrollera CPU och cykeltidsstabiliteten. Ändringar här kan kräva ändringar av PID-inställningar. TIPS: Avaktivera accelerometer och andra sensorer för att få bättre prestanda."
-    },
-    "configurationLoopTimeNo32KhzHelp": {
-        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Notering om 32 kHz samplingsmode för gyro:</strong> Stöd för 32kHz samplingsmode för gyro lades till i Betaflight som en experimentell funktion. Under de år den funnits tillgänglig har den aldrig visat sig ha några fördelar gentemot 8 kHz samplingsmode för gyro, på grund av känsligheten för vibrationer och den höga brusnivån som kräver aggressiv filtrering, som i sin tur leder till fördröjningar i styrloopen. Av detta skäl har <strong>stödet för 32kHz samplingsmode för gyro tagits bort</strong> i Betaflight 4.0."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1511,9 +1469,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanalutjämningen gäller"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Typen av filtreringsmetod som används för setpoint-derivativen. De flesta användare bör använda standardvärdet \"BIQUAD\" eftersom det ger en bra balans mellan utjämning och fördröjning. \"PT1\" minskar fördröjningen något men ger mindre utjämning."
     },
     "rcSmoothingInputTypeHelp": {
         "message": "Typen av filtreringsmetod som används för inputen. De flesta användare bör använda standardvärdet \"BIQUAD\" eftersom det ger en bra balans mellan utjämning och fördröjning. \"PT1\" minskar fördröjningen något men ger mindre utjämning."
@@ -2050,17 +2005,8 @@
     "transponderDataHelp1": {
         "message": "Enbart hexadecimala tecken, 0-9, A-F"
     },
-    "transponderHelp1": {
-        "message": "Konfigurera din transponder-kod här. Obs: Endast giltiga koder kommer att kännas igen av race timing-systemen. Giltiga transponder-koder kan erhållas från <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a>."
-    },
-    "transponderHelp2": {
-        "message": "För ytterligare information besök <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer webbsite</a>"
-    },
     "transponderDataHelp3": {
         "message": "Välj ERLT-ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "För ytterligare information besök <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer webbsite</a>"
     },
     "transponderButtonSave": {
         "message": "Spara"
@@ -2404,9 +2350,6 @@
     "blackboxLoggingSerial": {
         "message": "Serieport"
     },
-    "serialLoggingSupportedNote": {
-        "message": "Du kan logga till en extern loggningsenhet (t ex en OpenLog eller kompatible klon) genom att använda en seriell port. Konfigurera porten på fliken Portar."
-    },
     "sdcardNote": {
         "message": "Flygloggar kan sparas till din flygkontrollers inbyggda SD-kortplats."
     },
@@ -2508,9 +2451,6 @@
     },
     "firmwareFlasherReleaseFile": {
         "message": "Binärfil:"
-    },
-    "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\"> VIKTIGT: denna firmware-utgåva är markerad som en utgåve-kandidat.  Vänligen rapportera eventuella problem omedelbart.</span>"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Ladda ner manuellt."
@@ -2649,9 +2589,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Återställning / tappad kommunikation</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Om du har tappat kommunikationen med ditt styrkort, följ dessa steg för att återställa kommunikationen: <ul><li>Stäng av strömmen</li><li>Aktivera 'Ingen omstartssekvens', aktivera 'Fullständing chip-radering'.</li><li>Bygla BOOT-pinnarna eller håll in BOOT-knappen.</li><li>Slå på strömmen (aktivitets-LED:en kommer INTE att blinka om utfört korrekt).</li><li>Installera alla STM32-drivrutiner och Zadig om det krävs (se <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">USB Flashing</a>-sektionen i Betaflight-manualen).</li><li>Stäng Configurator, Stäng alla öppna instanser av Chrome, stäng alla Chrome-appar, starta om Configurator.</li><li>Släpp BOOT-knappen om din flygkontroller har en sådan.</li><li>Uppdatera med korrekt firmware (använd manuell baudhastighet om en sådan specificeras i flygkontrollerns manual).</li><li>Stäng av strömmen.</li><li>Ta bort BOOT-byglingen.</li><li>Slå på strömmen (aktivitets-LED:en ska blinka).</li><li>Anslut på vanligt sätt.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Lämna firmware-uppdaterare"
@@ -3185,9 +3122,6 @@
     "pidTuningDynamicNotchQHelp": {
         "message": "Q-faktorn justerar hur snäva eller breda de dynamiska bandspärrfiltren är. Ett högre värde gör dem snävare och mer precisa, och ett lägre värde gör dem bredare. Ett riktigt lågt värde kommer att öka filterfördröjningen märkbart."
     },
-    "pidTuningDynamicNotchMinHzHelp": {
-        "message": "Definierar den lägsta dynamiska bandspärrscentrumfrekvensen som den dynamiska bandspärren inte kan understiga."
-    },
     "pidTuningFilterSettings": {
         "message": "Profilberoende filterinställningar"
     },
@@ -3304,9 +3238,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Integrerad Gir"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">VARNING</span>: om du aktiverar denna funktion måste du justera GIR PID på lämpligt sätt. Mer information finns <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\">här</a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrerad Gir är en funktion som korrigerar ett fundamentalt problem med quadstyrning: looping- och roll-axlarna styrs av tryckskillnader som genereras av propellrarna, men gir fungerar annorlunda. Integrerad Gir löser detta genom att integrera utdatat från gir-pid och sedan tillämpa det på mixern. Detta normaliserar pid-funktionen. Du kan nu justera den som de andra axlarna. Det kräver absolut kontroll eftersom inget I behövs med Integrerad Gir."
@@ -3712,9 +3643,6 @@
     },
     "osdSetupUnsupportedNote1": {
         "message": "Din flygkontroller svarar inte på OSD-kommandon. Detta innebär förmodligen att den inte har en integrerad BetaFlight-OSD."
-    },
-    "osdSetupUnsupportedNote2": {
-        "message": "Notera att vissa flygkontrollers har en inbyggd <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a> som kan flashas och konfigureras med <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, dock kan MinimOSD inte konfigureras via detta gränssnitt."
     },
     "osdSetupProfilesTitle": {
         "message": "OSD-profilnummer",

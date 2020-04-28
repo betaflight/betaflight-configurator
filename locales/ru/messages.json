@@ -148,9 +148,6 @@
     "checkForConfiguratorUnstableVersions": {
         "message": "Показывать уведомления о появлении нестабильных версий конфигуратора"
     },
-    "configuratorUpdateNotice": {
-        "message": "Вы используете устаревшую версию <b>Betaflight конфигуратора</b>.<br>Новая версия <b>$1</b> доступна для скачивания, пожалуйста, посетите <a href=\"$2\" target=\"_blank\">страницу с релизами</a> для загрузки и установки самой последней версии с исправлениями и улучшениями.<br>Пожалуйста, закройте окно конфигуратора перед обновлением."
-    },
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт с релизами"
     },
@@ -159,6 +156,9 @@
     },
     "deviceRebooting_flashBootloader": {
         "message": "Устройство - <span class=\"message-negative\">Перезагрузка для прошивки бутлоадера</span>"
+    },
+    "deviceRebooting_romBootloader": {
+        "message": "Устройство - <span class=\"message-negative\">Перезагрузка для загрузки бутлоадера</span>"
     },
     "deviceReady": {
         "message": "Устройство - <span class=\"message-positive\">Готово</span>"
@@ -303,6 +303,9 @@
     },
     "stm32UsbDfuNotFound": {
         "message": "USB DFU не найден"
+    },
+    "stm32RebootingToBootloader": {
+        "message": "Перезапуск в режим загрузчика..."
     },
     "stm32RebootingToBootloaderFailed": {
         "message": "Перезапуск в режим загрузчика: ОШИБКА"
@@ -521,17 +524,8 @@
     "defaultWelcomeHead": {
         "message": "Железо"
     },
-    "defaultWelcomeText": {
-        "message": "Это приложение поддерживает все устройства, которые могут запускаться в Betaflight конфигураторе. Вы также можете посмотреть весь список поддерживаемых устройств во вкладке \"Программатор\".<br><br><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\"> Скачать Betaflight Blackbox Log Viewer</a><br /><br />Исходный код прошивки можно скачать <a href=\"https://github.com/betaflight/betaflight\" title=\"www.github.com\" target=\"_blank\">здесь</a><br /><br />Последнюю версию <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">CP210x драйвера</a> можно скачать <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">здесь</a><br />Последнюю версию <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">STM USB VCP драйвера</a> можно скачать <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">здесь</a><br />Последнюю версию <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">Zadig</a> для установки USB драйвера под Windows можно скачать <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">здесь</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Содействие"
-    },
-    "defaultContributingText": {
-        "message": "Если вы хотите сделать Betaflight лучше, вы можете помочь нам несколькими способами:<br /><ul><li>Ответами на вопросы других пользователей на форумах и IRC.</li><li>Добавлением кода прошивки и конфигуратора с целью: добавления нового функционала, исправления ошибок, улучшений</li><li>Тестированием <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">нового функционала/исправленных ошибок</a> и сообщая нам результаты.</li><li>Помочь нам <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">обсудить запросы на новые функционалы</a>.</li><li>Помочь с <a href=\"http://betaflight.oneskyapp.com\" target=\"_blank\">переводом конфигуратора</a> на свой родной язык.</li><li></li></ul>"
-    },
-    "defaultFacebookText": {
-        "message": "У нас также есть </a><a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\">группа Facebook </a>.<br />Присоединяйтесь к нам, чтобы говорить о Betaflight, задавать вопросы о конфигурации или просто пообщаться с другими пилотами."
     },
     "defaultChangelogHead": {
         "message": "Список изменений конфигуратора"
@@ -541,9 +535,6 @@
     },
     "defaultDonateHead": {
         "message": "Открытый код / Пожертвование"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> является прошивкой для полётных контроллеров <strong>с открытым исходным кодом</strong> и доступна абсолютно бесплатно <strong>без гарантии</strong> для всех пользователей.</p><p>Если вы нашли Betaflight или Betaflight конфигуратор полезными, пожалуйста<strong>поддержите</strong> разработку пожертвованием.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Если вы хотите финансово помогать на постоянной основе, вы можете стать нашим покровителем на $t(patreonLink.message).</p>"
@@ -560,12 +551,6 @@
     "defaultDocumentation": {
         "message": "Betaflight документация доступна в release notes и на wiki (на сайте Github).<br /><br />"
     },
-    "defaultDocumentation1": {
-        "message": "Betaflight wiki - это отличный источник информации, который можно найти <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\">здесь</a>."
-    },
-    "defaultDocumentation2": {
-        "message": "Информацию о новых прошивках можно почитать на Github в разделе releases <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\">здесь</a>."
-    },
     "defaultSupportHead": {
         "message": "Нужна помощь?"
     },
@@ -577,21 +562,6 @@
     },
     "defaultSupport": {
         "message": "Для помощи сперва поищите на форумах и на wiki или свяжитесь с вашим продавцом.<br /><br />"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\">Обсуждения RC Groups</a>"
-    },
-    "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\">Betaflight Wiki</a>"
-    },
-    "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Betaflight видео от Джошуа Бардуэлла</a>"
-    },
-    "defaultSupport4": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\"> Разработчики Betaflight на slack</a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">Функционал создания и восстановления из резервной копии не доступен.</span> Ваша прошивка имеет API версию конфигуратора <span class=\"message-negative\">$1</span>, создание и восстановление из резервной копии требует версию <span class=\"message-positive\">$2</span>. Пожалуйста, создайте резервную копию ваших настроек через командную строку; загляните в документацию Betaflight, чтобы узнать как это сделать."
@@ -1103,9 +1073,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Минимальное значение газа (в процентах)"
     },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Это минимальное значение, посылаемое регуляторам оборотов моторов, во время арминга при нулевом значении газа. Это значение измеряется в процентах от максимального значения газа. Чем больше это значение, тем быстрее будет минимальная скорость моторов."
-    },
     "configurationMotorPoles": {
         "message": "Полюса мотора",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -1113,10 +1080,6 @@
     "configurationMotorPolesLong": {
         "message": "$t(configurationMotorPoles.message) (количество магнитов в колоколе мотора)",
         "description": "One of the fields of the ESC/Motor configuration"
-    },
-    "configurationMotorPolesHelp": {
-        "message": "Эта настройка используется для некоторых функций, таких как RPM фильтр.<br><br>Представляет количество магнитов, которые находятся на колоколе двигателя. <b>НЕ включает статоры</b>, где расположены обмотки. Обычно 5\" моторы имеют 14 магнитов, меньшие, например, 3\" или менее, имеют 12 магнитов.",
-        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
         "message": "Минимальное значение газа (Минимальное значение, посылаемое к ESC при арминге)"
@@ -1241,9 +1204,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Примечание:</strong> Убедитесь, что Ваш FC способен работать на этих скоростях! Проверьте ЦП и стабильность времени цикла. Эти изменения могут потребовать подстройки PID. Совет: Отключите Акселерометр и другие сенсоры для повышения производительности."
     },
-    "configurationLoopTimeNo32KhzHelp": {
-        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Примечание по 32 кГц дискретизации гироскопа:</strong> Поддержа режима 32 кГц дискретизации была добавлена в Betaflight как экспериментальная опция. За те годы, что он был доступен, он никогда не показывал, что у него есть какое-либо преимущество перед режимом гироскопической дискретизации 8 кГц, из-за его восприимчивости к вибрациям и высокого уровня шума, который требует агрессивной фильтрации, вызывая задержки в контуре управления. По этой причине, <strong>поддержка режима дискретизации гироскопа 32 кГц выброшена</strong> в Betaflight 4.0."
-    },
     "configurationGPS": {
         "message": "GPS"
     },
@@ -1261,6 +1221,22 @@
     },
     "configurationGPSAutoConfig": {
         "message": "Автонастройка"
+    },
+    "configurationGPSGalileo": {
+        "message": "Использовать Галилео",
+        "description": "Option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSGalileoHelp": {
+        "message": "При включении, это заменяет QZSS систему (Япония) на Galileo (Европа).",
+        "description": "Help text for the option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSHomeOnce": {
+        "message": "Установить точку \"Дом\" один раз",
+        "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSHomeOnceHelp": {
+        "message": "При включении, только первый арм после подключения батареи будет использоваться как домашняя точка. Если выключено - домашняя точка будет обновляться при каждом арме.",
+        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHelp": {
         "message": "<strong>Примечание:</strong> Не забудьте настроить GPS-порт (во вкладке \"Порты\") перед тем, как пользоваться настройками GPS."
@@ -1478,9 +1454,6 @@
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Сглаживание каналов применяется к"
     },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Тип метода фильтрации, используемый для производной заданного значения. Большинство пользователей должны использовать значение «BIQUAD» по умолчанию, поскольку оно обеспечивает хороший баланс между гладкостью и задержкой. «PT1» слегка уменьшает задержку, но обеспечивает меньшее сглаживание."
-    },
     "rcSmoothingInputTypeHelp": {
         "message": "Тип метода фильтрации, используемый для ввода. Большинство пользователей должны использовать значение «BIQUAD» по умолчанию, поскольку оно обеспечивает хороший баланс между гладкостью и задержкой. «PT1» слегка уменьшает задержку, но обеспечивает меньшее сглаживание."
     },
@@ -1504,6 +1477,9 @@
     },
     "receiverRcSmoothingDerivativeTypeOff": {
         "message": "Выкл."
+    },
+    "receiverRcSmoothingDerivativeTypeAuto": {
+        "message": "Авто"
     },
     "receiverRcSmoothingChannel": {
         "message": "Сглаженные каналы"
@@ -2016,17 +1992,8 @@
     "transponderDataHelp1": {
         "message": "Только хексдецимальные цифры, 0-9, A-F"
     },
-    "transponderHelp1": {
-        "message": "Настройте ваш транспондер здесь. Внимание: Только правильные коды будут приняты системой регистрации времени гонки. Правильные коды транспондера могут быть получены из <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a>."
-    },
-    "transponderHelp2": {
-        "message": "Для получения дополнительной информации посетите <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">сайт aRCiTimer</a>"
-    },
     "transponderDataHelp3": {
         "message": "Выберите ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Для большей информации посетите <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer site</a>"
     },
     "transponderButtonSave": {
         "message": "Сохранить"
@@ -2384,7 +2351,7 @@
         "message": "Последовательный порт"
     },
     "serialLoggingSupportedNote": {
-        "message": "Вы можете логировать на внешнее логирующее устройство (такое как OpenLog или совместимые клоны) используя последовательный порт. Настройте порт на закладке портов."
+        "message": "Вы можете логировать работу на внешнее устройство (такое как OpenLager) используя последовательный порт. Сконфигурируйте порт во вкладке Порты."
     },
     "sdcardNote": {
         "message": "Полетные логи могут быть записаны в ваш полетный контроллер оборудованный слотом SD карты."
@@ -2473,9 +2440,6 @@
     "firmwareFlasherReleaseSummaryHead": {
         "message": "Информация о выпуске"
     },
-    "firmwareFlasherReleaseManufacturer": {
-        "message": "Производитель:"
-    },
     "firmwareFlasherReleaseVersion": {
         "message": "Версия:"
     },
@@ -2493,9 +2457,6 @@
     },
     "firmwareFlasherReleaseFile": {
         "message": "Файл прошивки:"
-    },
-    "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\">ВАЖНО: Это прошивка отмечена как кандидат на релиз. Пожалуйста пишите предложения незамедлительно.</span>"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Скачать самостоятельно."
@@ -2612,7 +2573,7 @@
         "message": "Загружаеться..."
     },
     "firmwareFlasherFlashFirmware": {
-        "message": "Загрузить прошивку"
+        "message": "Прошить прошивку"
     },
     "firmwareFlasherGithubInfoHead": {
         "message": "GitHub Firmware инфо"
@@ -2637,9 +2598,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи / Восстановление связи</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Если возникла потеря связи с вашим устройством, то следуйте следующим шагам, чтобы восстановить связь:<ul><li>Отключите питание</li><li>Включите \"No reboot sequence\", включите \"Полное стирание чипа\".</li><li>Замкните контакты \"BOOT\" или удерживайте кнопку BOOT.</li><li>Включите питание (светодиод НЕ будет мигать, если всё сделано правильно).</li><li>Установите STM32 драйвера и Zadig, если это необходимо (см. раздел <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">USB Flashing</a> в инструкции Betaflight).</li><li>Закройте конфигуратор, закройте все Chrome приложения и завершите все chrome процессы, перезапустите конфигуратор.</li><li>Отпустите кнопку \"BOOT\", если она есть.</li><li>Залейте нужную прошивку (укажите ручной битрейт, если он указан в инструкции вашего полётного контроллера).</li><li>Отключите питание</li><li>Разомкните контакты \"BOOT\".</li><li>Включите питание (светодиод должен мигать).</li><li>Пробуйте подключиться.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
@@ -3098,6 +3056,10 @@
         "message": "Коэффициент реакции на движения стиков:",
         "description": "Response tuning slider label"
     },
+    "pidTuningMasterSliderHelp": {
+        "message": "В целом, большие квадрокоптеры требуют более высоких коэффициентов PID из-за низкого отношения мощности к весу.<br /><br />Маленькие (микро) квадрокоптеры обычно требует пониженных коэффициентов PID из-за высокого отношения мощности к весу.<br /><br />Высокие значения PID предназначены для менее чувствительных к изменению газа квадрокоптеров и наоборот, низкие значения PID  - для более чувствительных квадрокоптеров.",
+        "description": "Master gain tuning slider helpicon message"
+    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Гиро низкочастотные фильтры"
     },
@@ -3260,9 +3222,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Интегрированное рыскание"
-    },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\"> Внимание</span>:Если вы включите эту функцию, вы соответственно должны настроить YAW PID соответственно. Более детально <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\">тут</a>"
     },
     "configHelp2": {
         "message": "Произвольное вращение платы в градусах, для разрешения установки в другом направлении / вверх ногами / повернутое и т. д. При работе с внешними датчиками используется выравнивание датчиков (Gyro, Acc, Mag), чтобы определить положение датчика независимо от ориентации платы. "
@@ -3665,9 +3624,6 @@
     },
     "osdSetupUnsupportedNote1": {
         "message": "Ваш полётный контроллер не отвечает на команды OSD. Возможно, это означает, что в него не встроен Betaflight OSD."
-    },
-    "osdSetupUnsupportedNote2": {
-        "message": "Обратите внимание, что некоторые полётные контроллеры имеют встроенный <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a>, который можно прошить и сконфигурировать при помощи <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, однако после этого MinimOSD невозможно будет сконфигурировать в этом интерфейсе."
     },
     "osdSetupProfilesTitle": {
         "message": "Номер профиля OSD",
@@ -4230,6 +4186,10 @@
     "osdDescElementDisplayName": {
         "message": "Отображать имя, которое установлено консольной командой \"display_name\""
     },
+    "osdTextElementEscRpmFreq": {
+        "message": "Частота вращения, полученная от ESC",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementEscRpmFreq": {
         "message": "Частота RPM, сообщаемая телеметрией регуляторов оборотов"
     },
@@ -4394,8 +4354,16 @@
     "osdDescStatEscTemperature": {
         "message": "Максимальная температура ESC"
     },
+    "osdTextStatEscRpm": {
+        "message": "Максимальный RPM ESC",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
     "osdDescStatEscRpm": {
         "message": "Максимальные обороты ESC"
+    },
+    "osdTextStatMinLinkQuality": {
+        "message": "Минимальное качество связи",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMinLinkQuality": {
         "message": "Альтернативный минимальный индикатор качества основанный на потере кадров"
@@ -4406,6 +4374,10 @@
     },
     "osdDescStatFlightDistance": {
         "message": "Общее расстояние, пройденное за время полета"
+    },
+    "osdTextStatMaxFFT": {
+        "message": "максимум FFT",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatMaxFFT": {
         "message": "Пиковая частота FFT"
@@ -4659,10 +4631,6 @@
     },
     "osdButtonSaved": {
         "message": "Сохранено"
-    },
-    "vtxHelp": {
-        "message": "Здесь вы можете настроить свой видеопередатчик (VTX). Вы можете видеть и изменять настройки передачи, включая таблицы VTX, если полётный контроллер и видеопередатчик это поддерживают.<br />Чтобы настроить видеопередатчик следуйте нижеперечисленным шагам:<br />1. Ознакомьтесь с <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight/wiki/VTX-tables\">этой</a> страницей;<br />2. Найдите подходящий файл конфигурации для вашей страны, вашей модели видеопередатчика и загрузите его;<br />3. Щёлкните кнопку '$t(vtxButtonLoadFile.message)' ниже, выберите найденный файл конфигурации видеопередатчика и загрузите его;<br />4. Проверьте правильность настроек;<br />5. Щёлкните кнопку '$t(vtxButtonSave.message)' чтобы сохранить настройки видеопередатчика в полётный контроллер.",
-        "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
         "message": "<span class=\"message-negative\">ВНИМАНИЕ:</span> Ваш видеопередатчик не настроен или не поддерживается. Поэтому вы не можете изменять настройки видеопередатчика здесь. Это будет возможно только в том случае, если полётный контроллер соединён с видеопередатчиком посредством протокола Tramp или SmartAudio и корректно настроен во вкладке $t(tabPorts.message).",
@@ -4935,10 +4903,6 @@
     "configurationDshotBidir": {
         "message": "Двухсторонний DShot (требуется поддерживаемая прошивка ESC)",
         "description": "Feature for the ESC/Motor"
-    },
-    "configurationDshotBidirHelp": {
-        "message": "Если выбрано, то протокол DSHOT получает информацию, необходимую фильтру RPM и другим функциям, непосредственно из ESC.<br><br>Это требует JESC микропрограмму с jflight.net на BLHELI_S или последнюю прошивку BLHELI_32.",
-        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
         "message": "Частота обновления гироскопа"

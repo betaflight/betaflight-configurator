@@ -1,7 +1,7 @@
 {
     "yes": {
         "message": "Jā",
-        "description": "Edited in crowdin by EGParadox."
+        "description": "General Yes message to be used across the application"
     },
     "no": {
         "message": "Nē",
@@ -23,8 +23,7 @@
         "message": "Jūsu aparatūra neatbalsta šo operāciju."
     },
     "storageDeviceNotReady": {
-        "message": "Atmiņas ierīce nav gatava. MikroSD kartes gadījumā, pārliecināties, ka lidojuma kontrolieris ir atbilstoši atpazinis to.",
-        "description": "Edited in crowdin by EGParadox."
+        "message": "Atmiņas ierīce nav gatava. MikroSD kartes gadījumā, pārliecināties, ka lidojuma kontrolieris ir atbilstoši atpazinis to."
     },
     "options_title": {
         "message": "Programmas iespējas"
@@ -51,8 +50,7 @@
         "message": "Aizvērt"
     },
     "autoConnectEnabled": {
-        "message": "Automātiskā savienošanās: Ieslēgta - Konfigurators mēģinās automātiski savienoties, kad tiks detektēts jauns ports",
-        "description": "Edited in crowdin by EGParadox."
+        "message": "Automātiskā savienošanās: Ieslēgta - Konfigurators mēģinās automātiski savienoties, kad tiks detektēts jauns ports"
     },
     "autoConnectDisabled": {
         "message": "Automātiskā savienošanās: Atslēgta - Lietotājam nepieciešams pašam izvēlēties pareizo seriālo portu un nospiest uz pogas \"Savienot\""
@@ -138,9 +136,6 @@
     "checkForConfiguratorUnstableVersions": {
         "message": "Rādīt atjauninājumu paziņojumus priekš konfiguratora nestabilajām versijām"
     },
-    "configuratorUpdateNotice": {
-        "message": "Jūs lietojat novecojušu <b>Betaflight Konfiguratora</b> versiju.<br>Versija <b>$1</b> ir pieejama, lūdzu apmeklējiet <a href=\"$2\" target=\"_blank\">relīžu lapu</a>, lai lejupielādētu un uzstādītu jaunāko versiju ar labojumiem un uzlabojumiem.<br>Lūdzu aizveriet konfiguratora logu pirms atjaunināšanās."
-    },
     "configuratorUpdateWebsite": {
         "message": "Dodieties uz relīzes vietni"
     },
@@ -154,8 +149,7 @@
         "message": "Rezerves kopijas fails tika uzģenerēts iepriekšējajai konfiguratora versijai un nav saderīgs ar šo konfiguratora versiju. Piedodiet"
     },
     "backupFileUnmigratable": {
-        "message": "Rezerves kopijas failu uzģenerēja iepriekšējās versijas konfigurators un tas nav migrējams. Piedodiet.",
-        "description": "Edited in crowdin by EGParadox."
+        "message": "Rezerves kopijas failu uzģenerēja iepriekšējās versijas konfigurators un tas nav migrējams. Piedodiet."
     },
     "configMigrationFrom": {
         "message": "Migrēšanas konfigurācijas failu uzģenerēja konfigurators: $1"
@@ -503,17 +497,8 @@
     "defaultWelcomeHead": {
         "message": "Aparatūra"
     },
-    "defaultWelcomeText": {
-        "message": "Šī aplikācija atbalsta visus kontrolierus uz kuriem var darboties Betaflight. Programmatora cilnē var skatīt atbalstāmo kontrolieru sarakstu.<br><br> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\">Lejuplādēt Betaflight Blackbox Log Viewer</a><br /><br />Programmatūras izejas kods var tikt lejupielādēts <a href=\"https://github.com/betaflight/betaflight\" title=\"www.github.com\" target=\"_blank\">šeit</a><br /><br />Jaunākais <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">CP210x Drivers</a> var tikt lejuplādēts <a href=\"http://www.silabs.com/products/mcu/pages/usbtouartbridgevcpdrivers.aspx\" title=\"http://www.silabs.com\" target=\"_blank\">šeit</a><br />Jaunākais <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">STM USB VCP Drivers</a> var tikt lejuplādēts <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" title=\"http://www.st.com\" target=\"_blank\">šeit</a><br />Jaunākais <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">Zadig</a> priekš Windows USB draivera instalācijas var tikt lejuplādēts <a href=\"http://zadig.akeo.ie/\" title=\"http://zadig.akeo.ie\" target=\"_blank\">šeit</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Atbalstīt"
-    },
-    "defaultContributingText": {
-        "message": "Ja jūs vēlaties padarīt Betaflight vēl labāku jūs varat palīdzēt daudzos veidos, ieskaitot:<br /><ul><li>Atbildot uz citu lietotāju jautājumiem forumos un IRC.</li><li>Atbalstot programmatūras un konfiguratora kodu - jaunas iespējas, labojumi, uzlabojumi</li><li>Testējot <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\">jaunās iespējas/labojumus</a> sniedzot atsauksmes.</li><li>Palīdzot ar <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\">problēmām un komentējot iespēju pieprasījumus</a>.</li><li>Sadarbojoties <a href=\"https://crowdin.com/project/betaflight-configurator\" target=\"_blank\">tulkojot konfiguratora aplikāciju</a>jūsu valodā.</li><li></li></ul>"
-    },
-    "defaultFacebookText": {
-        "message": "Mums ir arī <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\">Facebook grupa</a>.<br />Pievienojies mums, lai tiktu vietā, kur runāt par Betaflight, paprasīt konfigurācijas jautājumus, vai vienkārši sapazīties ar citiem pilotiem."
     },
     "defaultChangelogHead": {
         "message": "Konfiguratora izmaiņu žurnāls"
@@ -523,9 +508,6 @@
     },
     "defaultDonateHead": {
         "message": "Atvērtā koda / ziedojuma paziņojums"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> ir lidojuma kontroliera programmatūra, kas ir <strong>atvērta koda tipa</strong> un ir pieejama bezmaksas <strong>bez garantijas</strong> visiem lietotājiem.</p><p>Ja tev Betaflight vai Betaflight konfigurators ir noderīgi, lūdzu apsver iespēju <strong>atbalstīt</strong> to izstrādi ziedojot.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Ja vēlies regulāri finansiāli palīdzēt, apsver iespēju kļūt par ziedotāju iekš $t(patreonLink.message).</p>"
@@ -542,12 +524,6 @@
     "defaultDocumentation": {
         "message": "Betaflight dokumentācija ir pieejama relīzes dokumentācijā un wiki.<br /><br />"
     },
-    "defaultDocumentation1": {
-        "message": "Betaflight wiki ir lielisks informācijas avots, to var atrast <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\">šeit</a>."
-    },
-    "defaultDocumentation2": {
-        "message": "Programmatūras relīzes dokumentācija ir pieejama GitHub relīžu lapā <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\">šeit</a>."
-    },
     "defaultSupportHead": {
         "message": "Atbalsts"
     },
@@ -559,21 +535,6 @@
     },
     "defaultSupport": {
         "message": "Palīdzībai, lūdzu, apmeklējiet forumus un wiki vai sazināties ar savu pārdevēju.<br /><br />"
-    },
-    "defaultSupport1": {
-        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\">RC Grupas diskusijas</a>"
-    },
-    "defaultSupport2": {
-        "message": "<a href=\"http://betaflight.info\" target=\"_blank\">Betaflight Wiki</a>"
-    },
-    "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\">Joshua Bardwell Betaflight Video</a>"
-    },
-    "defaultSupport4": {
-        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\">GitHub</a>"
-    },
-    "defaultSupport5": {
-        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\">Betaflight izstrādātāji iekš slack</a>"
     },
     "initialSetupBackupAndRestoreApiVersion": {
         "message": "<span class=\"message-negative\">Dublēšanas un atjaunošanas funkcionalitāte ir atslēgta.</span>Jūsu programmatūras API versija <span class=\"message-negative\">$1</span>, dublēšanai un atjaunošanai nepieciešama <span class=\"message-positive\">$2</span>.  Lūdzu, dublējat savus iestatījumus ar CLI, procedūras aprakstu skatīt Betaflight dokumentācijā."
@@ -1082,9 +1043,6 @@
     "configurationDigitalIdlePercent": {
         "message": "Motora tukšgaitas droseles vērtība [percent]"
     },
-    "configurationDigitalIdlePercentHelp": {
-        "message": "Šī ir 'tukšgaitas' vērtība procentos no maksimālās droseles vērtības, kas tiek sūtīta uz ESC, kad gaisa kuģis ir aktivizēts un droseles svira ir minimālajā pozīcijā. Palieliniet procentu vērtību, lai palielinātu tukšgaitas ātrumu."
-    },
     "configurationThrottleMinimum": {
         "message": "Droseles minimums (Zemākā ESC vērtība, kad aktivizēts)"
     },
@@ -1207,9 +1165,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Piezīme:</strong> Pārliecināties, ka jūsu kontrolieris ir spējīgs darboties šādos ātrumos! Pārbaudiet CPU un cikla laika stabilitāti. Mainot šo iespējams būs nepieciešams pārregulēt PID. IETEIKUMS: Atslēdziet Akselerometru un citus sensorus lai ietaupītu CPU resursus."
-    },
-    "configurationLoopTimeNo32KhzHelp": {
-        "message": "$t(configurationLoopTimeHelp.message)<br><strong>Piezīme par žiroskopa 32kHz mērījuma ātruma režīmā:</strong> Žiroskopa 32kHz mērījuma ātruma režīma atbalsts Betaflight tika pievienots kā eksperimentāla iespēja. Šos gadus kamēr tā bija pieejama, tā neuzrādīja nekādas priekšrocības attiecībā pret 8 kHz mērījuma ātruma režīmu, dēļ tās īpašās jūtības uz vibrācijām, un augsto trokšņu līmeni, kam nepieciešama agresīva filtrēšana, kas savukārt radīja aiztures vadības cilpās. Dēļ šī iemesla, <strong>žiroskopa 32kHz mērījuma ātruma režīma atbalsts ir pārtraukts</strong> iekš Betaflight 4.0."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1428,9 +1383,6 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanāli uz kuriem pielieto izlīdzināšanu"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Filtrēšanas metodes tips, ko pielieto iestatījuma derivative. Vairums lietotāju vajadzētu izmantot noklusēto vērtību \"BIQUAD\", jo tas nodrošina pieņemamu līdzsvaru starp gludumu un aizturi. \"PT1\" nedaudz samazina aizturi, bet dod mazāku izlīdzināšanu."
     },
     "rcSmoothingInputTypeHelp": {
         "message": "Filtrēšanas metodes tips, ko pielieto ievadei. Vairums lietotāju vajadzētu izmantot noklusēto vērtību \"BIQUAD\", jo tas nodrošina pieņemamu līdzsvaru starp gludumu un aizturi. \"PT1\" nedaudz samazina aizturi, bet dod mazāku izlīdzināšanu."
@@ -1948,17 +1900,8 @@
     "transponderDataHelp1": {
         "message": "Tikai heksadecimālie cipari, 0-9, A-F"
     },
-    "transponderHelp1": {
-        "message": "Konfigurējiet jūsu transpondera kodu šeit. Piezīme: Tikai derīgs kods tiks atpazīts sacensību taimera sistēmā. Derīgi transpondera kodi var tikt aizgūti no šejienes <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\">Seriously Pro</a>."
-    },
-    "transponderHelp2": {
-        "message": "Vairāk informācijas <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\">aRCiTimer vietnē</a>"
-    },
     "transponderDataHelp3": {
         "message": "Izvēlēties ERLT ID 0-63"
-    },
-    "transponderHelp3": {
-        "message": "Vairāk informācijai apmeklējiet <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\">EasyRaceLapTimer vietni</a>"
     },
     "transponderButtonSave": {
         "message": "Saglabāt"
@@ -2290,9 +2233,6 @@
     "blackboxLoggingSerial": {
         "message": "Seriālais ports"
     },
-    "serialLoggingSupportedNote": {
-        "message": "Jūs varat žurnalēt uz ārējās žurnalēšanas ierīces (tādas kā OpenLog vai saderīga klona) lietojot seriālo portu. Konfigurējat portu Porti cilnē."
-    },
     "sdcardNote": {
         "message": "Lidojuma žurnāli var tikt saglabāti jūsu lidojuma kontroliela esošajā SD kartē."
     },
@@ -2394,9 +2334,6 @@
     },
     "firmwareFlasherReleaseFile": {
         "message": "Binārais:"
-    },
-    "firmwareFlasherReleaseStatusReleaseCandidate": {
-        "message": "<span class=\"message-negative\">SVARĪGI: Šī programmatūra patreiz atzīmēta kā relīzes kandidāts. Lūgums nekavējoties ziņot par jebkādām kļūdām.</span>"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Lejuplādēt manuāli."
@@ -2535,9 +2472,6 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Atkopšanas / Zaudēja komunikāciju</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Ja jums pazuda savienojums ar plati veiciet šos soļus, lai atjaunotu savienojumu: <ul><li>Atvienojiet no barošanas avota</li><li>Ieslēdziet 'Nepielietot restartu', Ieslēdziet 'Pilnīga kontroliera dzēšana'.</li><li>Savienojiet ielādes kontaktus vai turiet ielādes pogu.</li><li>Pieslēdziet barošanas avotam (LED aktīvi NEmirgos, ja viss ir izdarīts pareizi).</li><li>Ieinstalējiet visus STM32 draiverus un Zadig ja nepieciešams (skatīt <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">USB Programmēšana</a> Betaflight manuāla sadaļā).</li><li>Aizveriet konfiguratoru, aizveriet visas Chrome ejošās instances, aizveriet visas Chrome aplikācijas, Pārstartējiet konfiguratoru.</li><li>Atlaidiet ielādes pogu ja tāda platei ir.</li><li> Saprogrammējiet ar pareizo programmatūru (pielietojiet specifisku datu ātrumu ja tāds ir norādīts plates manuāli).</li><li>Atvienojiet no barošanas avota.</li><li>Noņemiet ielādes savienotāju.</li><li>Pieslēdziet barošanas avotam (LED vajadzētu aktīvi mirgot).</li><li>Savienojieties kā parasti.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Pamest programmatoru"
@@ -3120,9 +3054,6 @@
     "pidTuningIntegratedYaw": {
         "message": "Integrētais Yaw"
     },
-    "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">UZMANĪBU</span>: ja tu ieslēdz šo iespēju, tev obligāti jāpieregulē YAW PID. Vairāk info <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\">here</a>"
-    },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrētais Yaw ir fīča, kas labo multirotoru fundamentālo problēmu: kamēr Pitch un Roll tiek kontrolēts ar vilkmes diferenciāli, propelleru ģenerētais Yaw ir atšķirīgs. Integrētais Yaw to labo integrējot Yaw PIDu izeju pirms to pielieto mikserī. Tas normalizē to to kā PIDi strādā. Tagad jūs varēsiet pieregulēt ka jebkuru citu asi. Tam nepieciešams izmantot Absolūtā kontroli jo integrētajam Yaw I vairs nav nepieciešams."
     },
@@ -3518,9 +3449,6 @@
     },
     "osdSetupUnsupportedNote1": {
         "message": "Jūsu lidojuma kontrolieris neatbild uz OSD komandām. Visdrīzāk tas nozīmē to, ka tam nav integrēta BetaFlight OSD."
-    },
-    "osdSetupUnsupportedNote2": {
-        "message": "Ņemiet vēra to ka dažiem lidojuma kontrolieriem uz plates ir <a href=\"https://www.youtube.com/watch?v=ikKH_6SQ-Tk\" target=\"_blank\">MinimOSD</a>, kas var būt saprogrammēts un konfigurēts ar <a href=\"https://github.com/ShikOfTheRa/scarab-osd/releases/latest\" target='_blank'>scarab-osd</a>, toties MinimOSD nevar nokonfigurēt caur šo interfeisu."
     },
     "osdSetupProfilesTitle": {
         "message": "OSD Profila numurs",
