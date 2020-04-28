@@ -328,6 +328,7 @@ function processBoardInfo() {
     updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
 
     if (bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
+        GUI.timeout_remove('connecting'); // kill connecting timer
         var dialog = $('#dialogResetToCustomDefaults')[0];
 
         $('#dialogResetToCustomDefaults-acceptbtn').click(function() {
@@ -396,6 +397,7 @@ function checkReportProblems() {
         }
 
         if (needsProblemReportingDialog) {
+            GUI.timeout_remove('connecting'); // kill connecting timer
             const problemDialog = $('#dialogReportProblems')[0];
             $('#dialogReportProblems-closebtn').click(function() {
                 problemDialog.close();
@@ -472,7 +474,6 @@ function onConnect() {
 
     $('#tabs ul.mode-disconnected').hide();
     $('#tabs ul.mode-connected-cli').show();
-
 
     // show only appropriate tabs
     $('#tabs ul.mode-connected li').hide();
