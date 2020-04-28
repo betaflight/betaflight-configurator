@@ -3668,7 +3668,7 @@
         "message": "This feature allows throttle to be temporarily boosted on quick stick movements, which increases acceleration torque to the motors, providing a much faster throttle response."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Dynamic Idle Value [rpm]"
+        "message": "Dynamic Idle Value [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. It corrects problems caused by airflow speeding up or slowing down the props, improving PID authority, stability, motor braking and responsiveness. The Dynamic Idle rpm should be set to be about 20% below the rpm of your Dshot Idle value (see the $t(tabMotorTesting.message) tab). Usually there is no need to change your DShot idle value from defaults. For longer inverted hang time, DShot idle value and Minimum rpm should be lowered together.<br><br>Visit <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
