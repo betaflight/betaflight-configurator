@@ -265,6 +265,10 @@ TABS.receiver.initialize = function (callback) {
                 RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
             }
 
+            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                RX_CONFIG.rcSmoothingAutoSmoothness = parseInt($('input[name="rcSmoothingAutoSmoothness-number"]').val());
+            }
+
             function save_rssi_config() {
                 MSP.send_message(MSPCodes.MSP_SET_RSSI_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RSSI_CONFIG), false, save_rc_configs);
             }
@@ -426,9 +430,6 @@ TABS.receiver.initialize = function (callback) {
                 $('select[name="rcSmoothing-input-manual-select"]').change();
 
                 var rc_smoothing_auto_smoothness = $('input[name="rcSmoothingAutoSmoothness-number"]');
-                rc_smoothing_auto_smoothness.change(function() {
-                    RX_CONFIG.rcSmoothingAutoSmoothness = $(this).val();
-                });
                 rc_smoothing_auto_smoothness.val(RX_CONFIG.rcSmoothingAutoSmoothness);
             } else {
                 $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
