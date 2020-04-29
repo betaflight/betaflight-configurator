@@ -265,6 +265,14 @@ TABS.receiver.initialize = function (callback) {
                 RX_CONFIG.rcInterpolationInterval = parseInt($('input[name="rcInterpolationInterval-number"]').val());
             }
 
+            if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                RX_CONFIG.rcSmoothingInputCutoff = parseInt($('input[name="rcSmoothingInputHz-number"]').val());
+                RX_CONFIG.rcSmoothingDerivativeCutoff = parseInt($('input[name="rcSmoothingDerivativeCutoff-number"]').val());
+                RX_CONFIG.rcSmoothingDerivativeType = parseInt($('select[name="rcSmoothingDerivativeType-select"]').val());
+                RX_CONFIG.rcInterpolationChannels = parseInt($('select[name="rcSmoothingChannels-select"]').val());
+                RX_CONFIG.rcSmoothingInputType = parseInt($('select[name="rcSmoothingInputType-select"]').val());
+            }
+
             if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
                 RX_CONFIG.rcSmoothingAutoSmoothness = parseInt($('input[name="rcSmoothingAutoSmoothness-number"]').val());
             }
@@ -352,9 +360,10 @@ TABS.receiver.initialize = function (callback) {
             });
             rc_smoothing_protocol_e.val(RX_CONFIG.rcSmoothingType);
 
-            var rcSmoothingnNumberElement = $('input[name="rcSmoothingInputHz-number"]');
-            var rcSmoothingnDerivativeNumberElement = $('input[name="rcSmoothingDerivativeCutoff-number"]');
-
+            const rcSmoothingNumberElement = $('input[name="rcSmoothingInputHz-number"]');
+            const rcSmoothingDerivativeNumberElement = $('input[name="rcSmoothingDerivativeCutoff-number"]');
+            rcSmoothingNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
+            rcSmoothingDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
             $('.tab-receiver .rcSmoothing-input-cutoff').show();
             $('select[name="rcSmoothing-input-manual-select"]').val("1");
             if (RX_CONFIG.rcSmoothingInputCutoff == 0) {
@@ -363,14 +372,14 @@ TABS.receiver.initialize = function (callback) {
             }
             $('select[name="rcSmoothing-input-manual-select"]').change(function () {
                 if ($(this).val() == 0) {
-                    RX_CONFIG.rcSmoothingInputCutoff = 0;
+                    rcSmoothingNumberElement.val(0);
                     $('.tab-receiver .rcSmoothing-input-cutoff').hide();
                 }
                 if ($(this).val() == 1) {
-                    rcSmoothingnNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
+                    rcSmoothingNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
                     $('.tab-receiver .rcSmoothing-input-cutoff').show();
                 }
-            });
+            }).change();
 
             $('.tab-receiver .rcSmoothing-derivative-cutoff').show();
             $('select[name="rcSmoothing-input-derivative-select"]').val("1");
@@ -381,42 +390,23 @@ TABS.receiver.initialize = function (callback) {
             $('select[name="rcSmoothing-input-derivative-select"]').change(function () {
                 if ($(this).val() == 0) {
                     $('.tab-receiver .rcSmoothing-derivative-cutoff').hide();
-                    RX_CONFIG.rcSmoothingDerivativeCutoff = 0;
+                    rcSmoothingDerivativeNumberElement.val(0);
                 }
                 if ($(this).val() == 1) {
                     $('.tab-receiver .rcSmoothing-derivative-cutoff').show();
-                    rcSmoothingnDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
+                    rcSmoothingDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
                 }
-            });
+            }).change();
 
-            rcSmoothingnNumberElement.change(function () {
-                RX_CONFIG.rcSmoothingInputCutoff = $(this).val();
-            });
-            rcSmoothingnNumberElement.val(RX_CONFIG.rcSmoothingInputCutoff);
-
-            rcSmoothingnDerivativeNumberElement.change(function () {
-                RX_CONFIG.rcSmoothingDerivativeCutoff = $(this).val();
-            });
-            rcSmoothingnDerivativeNumberElement.val(RX_CONFIG.rcSmoothingDerivativeCutoff);
             var rc_smoothing_derivative_type = $('select[name="rcSmoothingDerivativeType-select"]');
-
             if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                 rc_smoothing_derivative_type.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingDerivativeTypeAuto")}</option>`));
             }
 
-            rc_smoothing_derivative_type.change(function () {
-                RX_CONFIG.rcSmoothingDerivativeType = $(this).val();
-            });
             rc_smoothing_derivative_type.val(RX_CONFIG.rcSmoothingDerivativeType);
             var rc_smoothing_channels = $('select[name="rcSmoothingChannels-select"]');
-            rc_smoothing_channels.change(function () {
-                RX_CONFIG.rcInterpolationChannels = $(this).val();
-            });
             rc_smoothing_channels.val(RX_CONFIG.rcInterpolationChannels);
             var rc_smoothing_input_type = $('select[name="rcSmoothingInputType-select"]');
-            rc_smoothing_input_type.change(function () {
-                RX_CONFIG.rcSmoothingInputType = $(this).val();
-            });
             rc_smoothing_input_type.val(RX_CONFIG.rcSmoothingInputType);
 
             if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
