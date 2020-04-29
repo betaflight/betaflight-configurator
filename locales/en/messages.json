@@ -971,6 +971,10 @@
         "message": "One of the others disarm flags is active when arming",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "There is no motor output protocol selected",
+        "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
+    },
     "initialSetupGPSHead": {
         "message": "GPS"
     },
