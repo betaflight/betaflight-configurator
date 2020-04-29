@@ -967,12 +967,12 @@
         "message": "The accelerometer has not been calibrated and features are enabled that rely on it. Calibrate the accelerometer.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
-        "message": "One of the others disarm flags is active when arming",
-        "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
-    },
     "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
         "message": "There is no motor output protocol selected",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
+        "message": "One of the others disarm flags is active when arming",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
     },
     "initialSetupGPSHead": {
