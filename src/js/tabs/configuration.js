@@ -54,18 +54,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_motor_config() {
-        var next_callback = load_compass_config;
-        if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
-            MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, next_callback);
-        } else {
-            next_callback();
-        }
-    }
-
-    function load_compass_config() {
         var next_callback = load_gps_config;
         if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
-            MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, load_gps_config);
+            MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -930,9 +921,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[name="roll"]').val(CONFIG.accelerometerTrims[1]);
         $('input[name="pitch"]').val(CONFIG.accelerometerTrims[0]);
 
-        // fill magnetometer
-        $('input[name="mag_declination"]').val(COMPASS_CONFIG.mag_declination.toFixed(2));
-
         //fill motor disarm params and FC loop time
         if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
             $('input[name="autodisarmdelay"]').val(ARMING_CONFIG.auto_disarm_delay);
@@ -1192,7 +1180,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
-            COMPASS_CONFIG.mag_declination = parseFloat($('input[name="mag_declination"]').val());
 
             // motor disarm
             if(semver.gte(CONFIG.apiVersion, "1.8.0")) {
@@ -1314,18 +1301,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
                 }
 
-                var next_callback = save_compass_config;
-                if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG), false, next_callback);
-                } else {
-                    next_callback();
-                }
-            }
-
-            function save_compass_config() {
                 var next_callback = save_motor_3d_config;
                 if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_COMPASS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG), false, next_callback);
+                    MSP.send_message(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }

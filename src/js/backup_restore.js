@@ -120,7 +120,6 @@ function configuration_backup(callback) {
             uniqueData.push(MSPCodes.MSP_MOTOR_CONFIG);
             uniqueData.push(MSPCodes.MSP_RSSI_CONFIG);
             uniqueData.push(MSPCodes.MSP_GPS_CONFIG);
-            uniqueData.push(MSPCodes.MSP_COMPASS_CONFIG);
             uniqueData.push(MSPCodes.MSP_FEATURE_CONFIG);
         }
         if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
@@ -172,7 +171,6 @@ function configuration_backup(callback) {
                     configuration.FEATURE_CONFIG = jQuery.extend(true, {}, FEATURE_CONFIG);
                     configuration.MOTOR_CONFIG = jQuery.extend(true, {}, MOTOR_CONFIG);
                     configuration.GPS_CONFIG = jQuery.extend(true, {}, GPS_CONFIG);
-                    configuration.COMPASS_CONFIG = jQuery.extend(true, {}, COMPASS_CONFIG);
                 }
                 if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     configuration.BEEPER_CONFIG = jQuery.extend(true, {}, BEEPER_CONFIG);
@@ -829,7 +827,6 @@ function configuration_restore(callback) {
                         uniqueData.push(MSPCodes.MSP_SET_FEATURE_CONFIG);
                         uniqueData.push(MSPCodes.MSP_SET_MOTOR_CONFIG);
                         uniqueData.push(MSPCodes.MSP_SET_GPS_CONFIG);
-                        uniqueData.push(MSPCodes.MSP_SET_COMPASS_CONFIG);
                         uniqueData.push(MSPCodes.MSP_SET_RSSI_CONFIG);
                     }
                 }
@@ -851,7 +848,6 @@ function configuration_restore(callback) {
                     FEATURE_CONFIG = configuration.FEATURE_CONFIG;
                     MOTOR_CONFIG = configuration.MOTOR_CONFIG;
                     GPS_CONFIG = configuration.GPS_CONFIG;
-                    COMPASS_CONFIG = configuration.COMPASS_CONFIG;
                     RSSI_CONFIG = configuration.RSSI_CONFIG;
                     BOARD_ALIGNMENT_CONFIG = configuration.BOARD_ALIGNMENT_CONFIG;
                     CONFIG.name = configuration.CRAFT_NAME;

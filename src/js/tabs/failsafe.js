@@ -55,11 +55,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     }
 
     function load_motor_config() {
-        MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, load_compass_config);
-    }
-    
-    function load_compass_config() {
-        MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, load_gps_config);
+        MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, load_gps_config);
     }
     
     function load_gps_config() {

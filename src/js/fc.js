@@ -42,7 +42,6 @@ var FC_CONFIG;
 var MISC; // DEPRECATED
 var MOTOR_CONFIG;
 var GPS_CONFIG;
-var COMPASS_CONFIG;
 var RSSI_CONFIG;
 var MOTOR_3D_CONFIG;
 var DATAFLASH;
@@ -309,10 +308,6 @@ var FC = {
             auto_baud:                  0,
             home_point_once:            0,
             ublox_use_galileo:          0,
-        };
-
-        COMPASS_CONFIG = {
-            mag_declination:            0,
         };
 
         RSSI_CONFIG = {
