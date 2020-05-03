@@ -288,7 +288,6 @@
 }
 
 .tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
-    min-height: 290px;
     float: left;
 }
 
@@ -485,11 +484,9 @@
         margin: 0 0 10px 15px;
     }
     .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
-        min-height: 145px;
         float: left;
     }
     .tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
-        min-height: 296px;
         float: left;
     }
     .tab-configuration .board .gui_box, .tab-configuration .acc .gui_box {
