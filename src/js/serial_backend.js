@@ -397,7 +397,6 @@ function checkReportProblems() {
         }
 
         if (needsProblemReportingDialog) {
-            GUI.timeout_remove('connecting'); // kill connecting timer
             const problemDialog = $('#dialogReportProblems')[0];
             $('#dialogReportProblems-closebtn').click(function() {
                 problemDialog.close();
