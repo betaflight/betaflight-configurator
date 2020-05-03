@@ -398,10 +398,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 MISC.multiwiicurrentoutput = data.readU8();
                 RSSI_CONFIG.channel = data.readU8();
                 MISC.placeholder2 = data.readU8();
-                if (semver.lt(CONFIG.apiVersion, "1.18.0"))
-                    COMPASS_CONFIG.mag_declination = data.read16() / 10; // -1800-1800
-                else
-                    COMPASS_CONFIG.mag_declination = data.read16() / 100; // -18000-18000
+                data.read16(); // was mag_declination
                 MISC.vbatscale = data.readU8(); // was MISC.vbatscale - 10-200
                 MISC.vbatmincellvoltage = data.readU8() / 10; // 10-50
                 MISC.vbatmaxcellvoltage = data.readU8() / 10; // 10-50
@@ -417,9 +414,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     MOTOR_CONFIG.use_dshot_telemetry = data.readU8() != 0;
                     MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
                 }
-                break;
-            case MSPCodes.MSP_COMPASS_CONFIG:
-                COMPASS_CONFIG.mag_declination = data.read16() / 100; // -18000-18000
                 break;
             case MSPCodes.MSP_GPS_CONFIG:
                 GPS_CONFIG.provider = data.readU8();
@@ -1730,13 +1724,9 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(GPS_CONFIG.ublox_sbas)
                 .push8(MISC.multiwiicurrentoutput)
                 .push8(RSSI_CONFIG.channel)
-                .push8(MISC.placeholder2);
-            if (semver.lt(CONFIG.apiVersion, "1.18.0")) {
-                buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 10));
-            } else {
-                buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));
-            }
-            buffer.push8(MISC.vbatscale)
+                .push8(MISC.placeholder2)
+                .push16(0) // was mag_declination
+                .push8(MISC.vbatscale)
                 .push8(Math.round(MISC.vbatmincellvoltage * 10))
                 .push8(Math.round(MISC.vbatmaxcellvoltage * 10))
                 .push8(Math.round(MISC.vbatwarningcellvoltage * 10));
@@ -1780,9 +1770,6 @@ MspHelper.prototype.crunch = function(code) {
                           .push8(GPS_RESCUE.allowArmingWithoutFix)
                           .push8(GPS_RESCUE.altitudeMode);
                 }
-            break;
-        case MSPCodes.MSP_SET_COMPASS_CONFIG:
-            buffer.push16(Math.round(COMPASS_CONFIG.mag_declination * 100));
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
             buffer.push8(RSSI_CONFIG.channel);
