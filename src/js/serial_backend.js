@@ -157,7 +157,7 @@ function finishClose(finishedCallback) {
         connectedTime = undefined;
     }
     // close reset to custom defaults dialog
-    $('#dialogResetToCustomDefaults-cancelbtn').click();
+    $('#dialogResetToCustomDefaults')[0].close();
 
     analytics.resetFlightControllerData();
 
@@ -198,6 +198,16 @@ function finishClose(finishedCallback) {
     finishedCallback();
 }
 
+function setConnectionTimeout() {
+    // disconnect after 10 seconds with error if we don't get IDENT data
+    GUI.timeout_add('connecting', function () {
+        if (!CONFIGURATOR.connectionValid) {
+            GUI.log(i18n.getMessage('noConfigurationReceived'));
+
+            $('div.connect_controls a.connect').click(); // disconnect
+        }
+    }, 10000);
+}
 
 function onOpen(openInfo) {
     if (openInfo) {
@@ -224,14 +234,7 @@ function onOpen(openInfo) {
 
         serial.onReceive.addListener(read_serial);
 
-        // disconnect after 10 seconds with error if we don't get IDENT data
-        GUI.timeout_add('connecting', function () {
-            if (!CONFIGURATOR.connectionValid) {
-                GUI.log(i18n.getMessage('noConfigurationReceived'));
-
-                $('div.connect_controls a.connect').click(); // disconnect
-            }
-        }, 10000);
+        setConnectionTimeout();
 
         FC.resetState();
         MSP.listen(update_packet_error);
@@ -339,7 +342,7 @@ function processBoardInfo() {
 
             dialog.close();
 
-            GUI.timeout_add('connecting', function () {
+            GUI.timeout_add('disconnect', function () {
                 $('div.connect_controls a.connect').click(); // disconnect
             }, 0);
         });
@@ -349,10 +352,14 @@ function processBoardInfo() {
 
             dialog.close();
 
+            setConnectionTimeout();
+
             checkReportProblems();
         });
 
         dialog.showModal();
+
+        GUI.timeout_remove('connecting'); // kill connecting timer
     } else {
         checkReportProblems();
     }
