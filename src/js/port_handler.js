@@ -170,6 +170,9 @@ PortHandler.check_usb_devices = function (callback) {
         if (!$('option:selected', portPickerElement).data().isDFU) {
             portPickerElement.trigger('change');
         }
+        if ($('option:selected', portPickerElement).data().isManual) {
+            $('#dialogUnstableFirmwareAcknoledgement')[0].close();
+        }
     });
 };
 
