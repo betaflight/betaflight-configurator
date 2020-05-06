@@ -1627,7 +1627,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controls the strength of dampening (D-term) in normal forward flight.<br>With D_min enabled, the Active D-gain changes during flight. In normal forward flight it is at the D_min gains below. During a sharp move or during prop wash, the Active D-gain raises to the Derivative gains specified to the left.<br><br>Full Derivative gains are reached on sharp stick inputs, but only partial are achieved during prop wash.<br>Adjust the D_Min Gain and Advance to control the gain boost sensitivity and timing.",
+        "message": "Controls the strength of dampening (D-term) in normal forward flight.<br>With D_min enabled, the Active D-gain changes during flight. In normal forward flight it is at the D_min gains below. During a sharp move or during prop wash, the Active D-gain raises to the D_max gains specified to the left.<br><br>Full D_max gains are reached on sharp stick inputs, but only partial are achieved during prop wash.<br>Adjust the D_Min Gain and Advance to control the gain boost sensitivity and timing.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
