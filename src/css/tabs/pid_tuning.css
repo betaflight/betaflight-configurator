@@ -260,6 +260,10 @@
     border: 1px solid var(--subtleAccent);
 }
 
+.tab-pid_tuning .select_left_aligned table select {
+    text-align-last: left;
+}
+
 .tab-pid_tuning .tab-container {
     border-bottom: 3px solid var(--accent);
     border-right-width: 0px;
