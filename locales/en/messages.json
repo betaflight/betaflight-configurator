@@ -3333,13 +3333,13 @@
         "message": "The values below change the behaviour of the ANGLE and HORIZON flight modes. Different PID controllers handle the values differently. Please check the documentation."
     },
     "pidTuningMotorOutputLimit": {
-        "message": "Motor Output Limit"
+        "message": "Motor Output Scaling"
     },
     "pidTuningMotorLimit": {
-        "message": "Attenuation %"
+        "message": "Scale Factor (%)"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Attenuates motor commands by the set percentage. Reduces ESC current and motor heat when using higher cell count batteries, e.g. When using a 6S battery on a craft that has motors, props and tuning designed for 4S, try setting the value at 66%; when using a 4S battery on a craft intended for 3S, try 75%.<br>Always make sure that all of your components can support the voltage of the battery you are using."
+        "message": "Motor output linear scale factor (as percentage). Reduces ESC current and motor heat when using higher cell count batteries, e.g. When using a 6S battery on a craft that has motors, props and tuning designed for 4S, try setting the value at 66%; when using a 4S battery on a craft intended for 3S, try 75%.<br>Always make sure that all of your components can support the voltage of the battery you are using."
     },
     "pidTuningCellCount": {
         "message": "Cell Count"
