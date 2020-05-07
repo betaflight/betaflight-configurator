@@ -55,7 +55,7 @@ var Features = function (config) {
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             if (semver.lt(CONFIG.apiVersion, "1.20.0")) {
                 features.push(
-                    {bit: 23, group: 'pidTuning', name: 'SUPEREXPO_RATES'}
+                    {bit: 23, group: 'superexpoRates', name: 'SUPEREXPO_RATES'}
                 );
             } else if (!semver.gte(config.apiVersion, "1.33.0")) {
                 features.push(
@@ -84,7 +84,7 @@ var Features = function (config) {
 
         if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             features.push(
-                {bit: 28, group: 'other', name: 'ANTI_GRAVITY'},
+                {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
                 {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'}
             );
         }
@@ -161,15 +161,20 @@ Features.prototype.generateElements = function (featuresElements) {
             newElements.push(newElement);
             listElements.push(newElement);
         } else {
+            let featureName = '';
+            if (!self._features[i].hideName) {
+                featureName = `<td><div>${self._features[i].name}</div></td>`;
+            }
+
             var newElement = $('<tr><td><input class="feature toggle" id="feature-'
                     + i
                     + '" name="'
                     + self._features[i].name
                     + '" title="'
                     + self._features[i].name
-                    + '" type="checkbox"/></td><td><div>'
-                    + self._features[i].name
-                    + '</div></td><td><span i18n="feature' + self._features[i].name + '"></span>'
+                    + '" type="checkbox"/></td>'
+                    + featureName
+                    + '<td><span i18n="feature' + self._features[i].name + '"></span>'
                     + feature_tip_html + '</td></tr>');
 
             var feature_e = newElement.find('input.feature');
