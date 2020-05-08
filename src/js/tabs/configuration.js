@@ -728,67 +728,84 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gpsSbas.push(i18n.getMessage('gpsSbasNone'));
         }
 
-        var gps_protocol_e = $('select.gps_protocol');
-        for (var i = 0; i < gpsProtocols.length; i++) {
-            gps_protocol_e.append('<option value="' + i + '">' + gpsProtocols[i] + '</option>');
+        const gpsProtocolElement = $('select.gps_protocol');
+        const gpsAutoBaudElement = $('input[name="gps_auto_baud"]');
+        const gpsAutoBaudGroup = $('.gps_auto_baud');
+        const gpsAutoConfigElement = $('input[name="gps_auto_config"]');
+        const gpsAutoConfigGroup = $('.gps_auto_config');
+        const gpsUbloxGalileoElement = $('input[name="gps_ublox_galileo"]');
+        const gpsUbloxGalileoGroup = $('.gps_ublox_galileo');
+        const gpsUbloxSbasElement = $('select.gps_ubx_sbas');
+        const gpsUbloxSbasGroup = $('.gps_ubx_sbas');
+        const gpsHomeOnceElement = $('input[name="gps_home_once"]');
+        const gpsBaudrateElement = $('select.gps_baudrate');
+
+
+        for (let protocolIndex = 0; protocolIndex < gpsProtocols.length; protocolIndex++) {
+            gpsProtocolElement.append(`<option value="${protocolIndex}">${gpsProtocols[protocolIndex]}</option>`);
         }
 
-        const gps_ublox_galileo_e = $('.gps_ublox_galileo');
-
-        gps_protocol_e.change(function () {
+        gpsProtocolElement.change(function () {
             GPS_CONFIG.provider = parseInt($(this).val());
 
-            const enableGalileoVisible = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) && GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
-            gps_ublox_galileo_e.toggle(enableGalileoVisible);
-        });
-        gps_protocol_e.val(GPS_CONFIG.provider).change();
+            // Call this to enable or disable auto config elements depending on the protocol
+            gpsAutoConfigElement.change();
 
-        $('input[name="gps_ublox_galileo"]').change(function() {
+        }).val(GPS_CONFIG.provider).change();
+
+        gpsAutoBaudElement.prop('checked', GPS_CONFIG.auto_baud === 1);
+
+        gpsAutoConfigElement.change(function () {
+            const checked = $(this).is(":checked");
+
+            const ubloxSelected = GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
+
+            const enableGalileoVisible = checked && ubloxSelected && semver.gte(CONFIG.apiVersion, API_VERSION_1_43);
+            gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
+
+            const enableSbasVisible = checked && ubloxSelected;
+            gpsUbloxSbasGroup.toggle(enableSbasVisible);
+
+        }).prop('checked', GPS_CONFIG.auto_config === 1).change();
+
+        if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+            gpsAutoBaudGroup.show();
+            gpsAutoConfigGroup.show();
+        } else {
+            gpsAutoBaudGroup.hide();
+            gpsAutoConfigGroup.hide();
+        }
+
+        gpsUbloxGalileoElement.change(function() {
             GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', GPS_CONFIG.ublox_use_galileo > 0).change();
 
+        for (let sbasIndex = 0; sbasIndex < gpsSbas.length; sbasIndex++) {
+            gpsUbloxSbasElement.append(`<option value="${sbasIndex}">${gpsSbas[sbasIndex]}</option>`);
+        }
+
+        gpsUbloxSbasElement.change(function () {
+            GPS_CONFIG.ublox_sbas = parseInt($(this).val());
+        }).val(GPS_CONFIG.ublox_sbas);
+
         $('.gps_home_once').toggle(semver.gte(CONFIG.apiVersion, API_VERSION_1_43));
-        $('input[name="gps_home_once"]').change(function() {
+        gpsHomeOnceElement.change(function() {
             GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', GPS_CONFIG.home_point_once > 0).change();
 
-        $('input[name="gps_auto_baud"]').prop('checked', GPS_CONFIG.auto_baud == 1);
-        $('input[name="gps_auto_config"]').prop('checked', GPS_CONFIG.auto_config == 1);
-        if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
-            $('.select.gps_auto_baud').show();
-            $('.select.gps_auto_config').show();
-        } else {
-            $('.select.gps_auto_baud').hide();
-            $('.select.gps_auto_config').hide();
-        }
-
-        var gps_baudrate_e = $('select.gps_baudrate');
-        for (var i = 0; i < gpsBaudRates.length; i++) {
-            gps_baudrate_e.append('<option value="' + gpsBaudRates[i] + '">' + gpsBaudRates[i] + '</option>');
+        for (let baudRateIndex = 0; baudRateIndex < gpsBaudRates.length; baudRateIndex++) {
+            gpsBaudrateElement.append(`<option value="${gpsBaudRates[baudRateIndex]}">${gpsBaudRates[baudRateIndex]}</option>`);
         }
 
         if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
-            gps_baudrate_e.change(function () {
+            gpsBaudrateElement.change(function () {
                 SERIAL_CONFIG.gpsBaudRate = parseInt($(this).val());
             });
-            gps_baudrate_e.val(SERIAL_CONFIG.gpsBaudRate);
+            gpsBaudrateElement.val(SERIAL_CONFIG.gpsBaudRate);
         } else {
-            gps_baudrate_e.prop("disabled", true);
-            gps_baudrate_e.parent().hide();
+            gpsBaudrateElement.prop("disabled", true);
+            gpsBaudrateElement.parent().hide();
         }
-
-
-        var gps_ubx_sbas_e = $('select.gps_ubx_sbas');
-        for (var i = 0; i < gpsSbas.length; i++) {
-            gps_ubx_sbas_e.append('<option value="' + i + '">' + gpsSbas[i] + '</option>');
-        }
-
-        gps_ubx_sbas_e.change(function () {
-            GPS_CONFIG.ublox_sbas = parseInt($(this).val());
-        });
-
-        gps_ubx_sbas_e.val(GPS_CONFIG.ublox_sbas);
-
 
         // generate serial RX
         var serialRXtypes = [
