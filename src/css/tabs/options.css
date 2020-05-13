@@ -1,0 +1,16 @@
+.tab-options .freelabel {
+    margin-left: 10px;
+    position: relative;
+}
+.tab-options .switchery {
+    float: left;
+}
+.tab-options .margin-bottom {
+    margin-bottom: 10px;
+}
+.tab-options select {
+    background: var(--boxBackground);
+    color: var(--defaultText);
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
+}

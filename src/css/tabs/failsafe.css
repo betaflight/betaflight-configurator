@@ -254,8 +254,7 @@
     width: 100%;
     border-bottom: 1px solid var(--subtleAccent);
     float: left;
-    padding: 0px;
-    padding-bottom: 6px;
+    padding: 0 0 6px;
     margin-bottom: 3px;
 }
 
@@ -265,7 +264,7 @@
 
 .tab-failsafe .featuresNew td:last-child {
     width: calc(100% - 125px);
-    margin-right: 0px;
+    margin-right: 0;
 }
 
 .tab-failsafe .featuresNew td {

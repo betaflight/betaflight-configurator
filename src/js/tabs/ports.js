@@ -184,9 +184,11 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
         let lastVtxControlSelected;
         var ports_e = $('.tab-ports .ports');
+        const portIdentifierTemplateE = $('#tab-ports-templates .portIdentifier');
         var port_configuration_template_e = $('#tab-ports-templates .portConfiguration');
 
         for (var portIndex = 0; portIndex < SERIAL_CONFIG.ports.length; portIndex++) {
+            const portIdentifierE = portIdentifierTemplateE.clone();
             var port_configuration_e = port_configuration_template_e.clone();
             var serialPort = SERIAL_CONFIG.ports[portIndex];
 
@@ -216,6 +218,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             var blackbox_baudrate_e = port_configuration_e.find('select.blackbox_baudrate');
             blackbox_baudrate_e.val(blackboxBaudrate);
 
+            portIdentifierE.find('.identifier').text(portIdentifierToNameMapping[serialPort.identifier]);
             port_configuration_e.find('.identifier').text(portIdentifierToNameMapping[serialPort.identifier]);
 
             port_configuration_e.data('index', portIndex);
@@ -288,6 +291,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                 }
             }
 
+            ports_e.find('tbody').append(portIdentifierE);
             ports_e.find('tbody').append(port_configuration_e);
         }
 

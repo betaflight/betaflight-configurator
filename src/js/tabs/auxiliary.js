@@ -176,9 +176,13 @@ TABS.auxiliary.initialize = function (callback) {
         $(elementName + ' .channel-slider').Link('lower').to($(elementName + ' .lowerLimitValue'));
         $(elementName + ' .channel-slider').Link('upper').to($(elementName + ' .upperLimitValue'));
 
+        let sliderValues = [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
+        if ($(window).width() < 575) {
+            sliderValues = [1000, 1200, 1400, 1600, 1800, 2000];
+        }
         $(rangeElement).find(".pips-channel-range").noUiSlider_pips({
             mode: 'values',
-            values: [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100],
+            values: sliderValues,
             density: 4,
             stepped: true
         });
@@ -250,7 +254,7 @@ TABS.auxiliary.initialize = function (callback) {
         configureRangeTemplate(auxChannelCount);
         configureLinkTemplate();
 
-        var modeTableBodyElement = $('.tab-auxiliary .modes tbody') 
+        const modeTableBodyElement = $('.tab-auxiliary .modes');
         for (var modeIndex = 0; modeIndex < AUX_CONFIG.length; modeIndex++) {
             
             var modeId = AUX_CONFIG_IDS[modeIndex];

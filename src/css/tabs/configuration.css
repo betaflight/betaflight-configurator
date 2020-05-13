@@ -1,12 +1,42 @@
+.tab-configuration .ui-grid-col {
+    margin-bottom: 0;
+}
+.tab-configuration .mixerPreview {
+    max-width: 230px;
+    background-color: #eeeeee;
+    text-align: center;
+    float: left;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+.tab-configuration .mixerPreview img {
+    width: 90%;
+    height: 90%;
+    padding: 5%;
+}
+.tab-configuration select.batterymetertype {
+    margin-right: 5px;
+    float: left;
+    width: 150px;
+}
+.tab-configuration input,
+.tab-configuration select {
+    border: 1px solid var(--subtleAccent);
+    width: 230px;
+    height: 20px;
+    float: left;
+    margin-right: 15px;
+    border-radius: 3px;
+}
+
 .tab-configuration table {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     width: 100%;
     float: left;
 }
 
 .tab-configuration table, .tab-configuration table th, .tab-configuration table td {
-    padding: 0px;
-    padding-left: 0px;
+    padding: 0;
     text-align: left;
 }
 
@@ -40,17 +70,6 @@
     border-bottom: 1px solid var(--subtleAccent);
 }
 
-.tab-configuration .leftWrapper {
-    float: left;
-    width: calc(50% - 20px);
-}
-
-.tab-configuration .rightWrapper {
-    float: left;
-    width: calc(50% - 0px);
-    margin: 0 0 10px 20px;
-}
-
 .tab-configuration .mixerList {
     width: 100%;
     height: 20px;
@@ -62,7 +81,7 @@
     border-collapse: collapse;
     margin-bottom: 5px;
     margin-top: -5px;
-    padding: 0px;
+    padding: 0;
 }
 
 .tab-configuration dl.features dt {
@@ -96,12 +115,12 @@
 
 .tab-configuration .number .disabled {
     width: 48px;
-    padding: 0px 5px;
+    padding: 0 5px;
     background-color: #ececec;
 }
 
 .tab-configuration .number span {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .tab-configuration .gps .line {
@@ -117,9 +136,9 @@
 }
 
 .tab-configuration .gps .select > div:first-child {
-    float: left; 
-    height: 20px; 
-    margin-right: 15px; 
+    float: left;
+    height: 20px;
+    margin-right: 15px;
     margin-left: 3px;
 }
 
@@ -128,7 +147,7 @@
 }
 
 .tab-configuration .current .checkbox {
-    margin-top: 0px;
+    margin-top: 0;
     float: left;
 }
 
@@ -138,7 +157,7 @@
 }
 
 .tab-configuration .current .checkbox div input {
-    margin: 0px;
+    margin: 0;
     float: left;
 }
 
@@ -153,17 +172,17 @@
 }
 
 .tab-configuration .disarm .checkbox div {
-    margin-bottom: 0px;
-    margin-top: 0px;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 .tab-configuration .disarm .checkbox div input {
-    margin: 0px;
+    margin: 0;
     float: left;
 }
 
 .tab-configuration .disarm .checkbox span {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .tab-configuration .freelabel {
@@ -176,12 +195,12 @@
 }
 
 .tab-configuration span {
-    margin: 0px;
+    margin: 0;
 }
 
 .tab-configuration .disarm .checkbox {
     float: left;
-    padding-left: 0px;
+    padding-left: 0;
     margin-top: -5px;
     padding-bottom: 5px;
     border-bottom: 1px solid var(--subtleAccent);
@@ -210,14 +229,14 @@
 
 .tab-configuration .number,
 .tab-configuration .select
- {
+{
     margin-bottom: 5px;
     clear: left;
     padding-bottom: 5px;
     border-bottom: 1px solid var(--subtleAccent);
     width: 100%;
     float: left;
- }
+}
 
 .tab-configuration .board_align_inputs,
 .tab-configuration .gyro_alignment_inputs {
@@ -254,12 +273,12 @@
 .tab-configuration .number:last-child,
 .tab-configuration .select:last-child {
     border-bottom: none;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .tab-configuration .gui_box_titlebar {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .tab-configuration .numberspacer {
@@ -279,8 +298,8 @@
 
 .tab-configuration .rssi td {
     border-bottom: none;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
@@ -312,12 +331,6 @@
     width: 30px;
 }
 
-.tab-configuration select.batterymetertype {
-    margin-right: 5px;
-    float: left;
-    width: 150px;
-}
-
 .tab-configuration .currentmetertype {
     float: left;
     width: 150px;
@@ -340,17 +353,7 @@
 }
 
 .tab-configuration .serialRXBox, .spiRxBox {
-    padding-top: 0px;
-}
-
-.tab-configuration input,
-.tab-configuration select {
-    border: 1px solid var(--subtleAccent);
-    width: 230px;
-    height: 20px;
-    float: left;
-    margin-right: 15px;
-    border-radius: 3px;
+    padding-top: 0;
 }
 
 
@@ -361,24 +364,9 @@
 .tab-configuration .beeper-configuration tr:last-child td,
 .tab-configuration .dshotBeaconConditions tr:last-child td,
 .tab-configuration .other tr:last-child td {
-    border-bottom: 0px;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
-}
-
-.tab-configuration .mixerPreview {
-    max-width: 230px;
-    background-color: #eeeeee;
-    text-align: center;
-    float: left;
-    border-radius: 5px;
-    margin-top: 5px;
-}
-
-.tab-configuration .mixerPreview img {
-    width: 90%;
-    height: 90%;
-    padding: 5%;
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .tab-configuration .gui_box {
@@ -463,25 +451,12 @@
 }
 
 .tab-configuration .gpsSettings .note {
-    margin-top: 10px; 
-}
-
-.tab-configuration .note.note_adjust {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-top: 10px;
 }
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
     .tab-configuration .gui_box span {
         line-height: 17px;
-    }
-    .tab-configuration .leftWrapper {
-        width: calc(50% - 15px);
-    }
-    .tab-configuration .rightWrapper {
-        float: left;
-        width: calc(50% - 0px);
-        margin: 0 0 10px 15px;
     }
     .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
         float: left;
@@ -497,5 +472,38 @@
     }
     .tab-configuration .current .gui_box {
         float: left;
+    }
+}
+@media all and (max-width: 575px) {
+    .tab-configuration .mixerPreview {
+        max-width: none;
+    }
+    .tab-configuration select.escprotocol {
+        width: 100%;
+        margin-right: 0;
+    }
+    .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
+        min-height: auto;
+    }
+    .tab-configuration .current td:nth-child(2) {
+        width: auto;
+    }
+    .tab-configuration .voltage td:nth-child(2) {
+        width: auto;
+    }
+    .tab-configuration .rssi td:nth-child(2) {
+        width: auto;
+    }
+    .tab-configuration .rxFailsafe td:nth-child(2) {
+        width: auto;
+    }
+    .tab-configuration .gps td:nth-child(2) {
+        width: auto;
+    }
+    select.features.rxMode, select.serialRX, .dshotbeacon > td > div.select > div, .dshotbeacon select.dshotBeeperBeaconTone {
+        width: 100%;
+    }
+    .tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
+        min-height: auto;
     }
 }

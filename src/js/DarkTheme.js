@@ -21,8 +21,9 @@ DarkTheme.setConfig = function (result) {
         } else {
             this.applyNormal();
         }
-
-        windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), 'darkTheme', this.isDarkThemeEnabled(this.configEnabled));
+        if (chrome.app.window !== undefined) {
+            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), 'darkTheme', this.isDarkThemeEnabled(this.configEnabled));
+        }
 
     }
 };

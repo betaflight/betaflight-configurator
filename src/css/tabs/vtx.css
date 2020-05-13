@@ -114,7 +114,7 @@
 
 
 .tab-vtx .table_vtx_bands td, .tab-vtx .table_vtx_powerlevels td {
-    padding: 0px 1px;
+    padding: 0 1px;
     text-align: center;
 }
 
@@ -143,4 +143,23 @@
 
 #tab-vtx-templates {
     display: none;
+}
+
+@media all and (max-width: 575px) {
+    .tab-vtx .columnsWrapper {
+        flex-wrap: wrap;
+    }
+
+    .tab-vtx .columnsWrapper .leftColumn {
+        width: 100%;
+    }
+
+    .tab-vtx .columnsWrapper .rightColumn {
+        width: 100%;
+        flex-basis: auto;
+    }
+    .tab-vtx .leftWrapper {
+        width: 100%;
+        overflow: auto;
+    }
 }

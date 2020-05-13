@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Betaflight configurator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html, body, #loading, #webview_troubleshooting {
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif;
+            font-size: 12px;
+            color: #303030;
+            background-color: #3d3f3e;
+        }
+        #headerbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 56px;
+            padding: 0 20px;
+            background: rgba(0, 0, 0, 0.15);
+        }
+        #headerbar img {
+            height: 20px;
+        }
+        #loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+        }
+        #loading p {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #webview_troubleshooting {
+            display: none;
+            background: #ffffff;
+            padding: 20px;
+        }
+        #webview_apps {
+            list-style: inside;
+        }
+        #webview_step_btn1, #webview_step_btn2 {
+            margin-top: 10px;
+        }
+        #webview_step_btn2 {
+            display: none;
+        }
+        .box {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .box .box_titlebar {
+            width: 100%;
+            background-color: #828885;
+            color: #ffffff;
+            font-size: 13px;
+            height: 27px;
+            line-height: 27px;
+            font-weight: 600;
+            padding: 0 10px;
+        }
+        .box .box_titlebar.warning {
+            background-color: #ffbb00;
+        }
+        .box .box_body {
+            padding: 10px;
+        }
+        .divider {
+            margin: 10px 0 9px 0;
+            border-top: 1px solid #ccc;
+        }
+        .btn {
+            padding: 5px;
+            text-align: center;
+            background-color: #ffbb00;
+            border-radius: 4px;
+            border: 1px solid #dba718;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 13px;
+            transition: all ease 0.2s;
+        }
+        .btn:hover {
+            background-color: #ffcc3f;
+            text-shadow: 0 1px rgba(255, 255, 255, 0.25);
+        }
+        .btn:focus {
+            outline: none;
+            background-color: #ffcc3f;
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.css" media="all"/>
+</head>
+<body>
+    <div id="headerbar">
+        <img src="images/light-wide-2-compact.svg" alt="" />
+    </div>
+    <div id="loading">
+        <img src="images/loading-spin.svg" alt="" />
+        <p i18n="cordovaCheckingWebview"></p>
+    </div>
+    <div id="webview_troubleshooting">
+        <div class="box">
+            <div class="box_titlebar warning">
+                <em class="fas fa-exclamation-triangle"></em> <span i18n="cordovaIncompatibleWebview"></span>
+            </div>
+            <div class="box_body">
+                <p i18n="cordovaWebviewTroubleshootingMsg"></p>
+                <p i18n="cordovaWebviewTroubleshootingMsg2"></p>
+                <div class="divider"></div>
+                <p id="webview_step_msg"></p>
+                <button id="webview_step_btn1" class="btn" type="button"></button>
+                <button id="webview_step_btn2" class="btn" type="button"></button>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box_titlebar">
+                <em class="fas fa-info-circle"></em> <span i18n="cordovaAvailableWebviews"></span>
+            </div>
+            <div class="box_body">
+                <ul id="webview_apps"></ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./node_modules/i18next/i18next.min.js"></script>
+    <script type="text/javascript" src="./node_modules/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
+    <script type="text/javascript" src="./js/localization.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script>
+        const REQUIRED_WEBVIEW_VERSION = 72;
+        const WEBVIEW = {
+            chromeVersion: '',
+            majorChromeVersion: 0,
+            apps: {
+                'com.android.webview': { },
+                'com.google.android.webview': { },
+                'com.android.chrome': { },
+            },
+            matchingVersion: 0,
+            usedApp: null,
+            uptodateApps: [],
+            advices: {
+                installGoogleAndroidWebview: function(callback) {
+                    $('#webview_step_msg').html(i18n.getMessage('cordovaWebviewInstall', {
+                        app: 'Android System WebView'
+                    }));
+                    $('#webview_step_btn1').text(i18n.getMessage('cordovaWebviewInstallBtn'))
+                        .attr('app_id', 'com.google.android.webview');
+                    callback();
+                },
+                updateGoogleAndroidWebview: function(callback) {
+                    $('#webview_step_msg').html(i18n.getMessage('cordovaWebviewUpdate', {
+                        app: 'Android System WebView'
+                    }));
+                    $('#webview_step_btn1').text(i18n.getMessage('cordovaWebviewUpdateBtn'))
+                        .attr('app_id', 'com.google.android.webview');
+                    callback();
+                },
+                updateAndroidChrome: function(callback) {
+                    $('#webview_step_msg').html(i18n.getMessage('cordovaWebviewUpdate', {
+                        app: 'Google Chrome'
+                    }));
+                    $('#webview_step_btn1').text(i18n.getMessage('cordovaWebviewUpdateBtn'))
+                        .attr('app_id', 'com.android.chrome');
+                    callback();
+                },
+                uninstallGoogleAndroidWebview: function(callback) {
+                    $('#webview_step_msg').html(i18n.getMessage('cordovaWebviewUninstall', {
+                        app: 'Android System WebView'
+                    }));
+                    $('#webview_step_btn1').text(i18n.getMessage('cordovaWebviewUninstallBtn1'))
+                        .attr('app_id', 'com.google.android.webview');
+                    $('#webview_step_btn2').text(i18n.getMessage('cordovaWebviewUninstallBtn2'))
+                        .attr('app_id', 'com.google.android.webview')
+                        .show();
+                    callback();
+                },
+                selectWebview: function(id, callback) {
+                    let app;
+                    if (id === 'com.google.android.webview') {
+                        app = 'Google Android Webview'
+                    } else if (id === 'com.android.chrome') {
+                        app = 'Chrome'
+                    }
+                    $('#webview_step_msg').html(i18n.getMessage('cordovaWebviewEnable', {
+                        app: app
+                    }));
+                    $('#webview_step_btn1').hide();
+                    $('#webview_step_btn2').text(i18n.getMessage('cordovaWebviewEnableBtn')).show();
+                    callback();
+                },
+            },
+            getAdvice: function(callback) {
+                const self = this;
+                if (self.usedApp && self.usedApp !== 'com.android.webview') {
+
+                    if (self.usedApp === 'com.google.android.webview') {
+                        self.advices.updateGoogleAndroidWebview(callback);
+                    } else if (self.usedApp === 'com.android.chrome') {
+                        self.advices.updateAndroidChrome(callback);
+                    }
+
+                } else {
+
+                    if (self.uptodateApps.length > 0) {
+                        self.advices.selectWebview(callback);
+                    } else {
+                        if ((self.apps['com.google.android.webview'].installed && self.apps['com.google.android.webview'].enabled)
+                            && (self.apps['com.android.chrome'].installed && self.apps['com.android.chrome'].enabled)) {
+                            self.advices.uninstallGoogleAndroidWebview(callback);
+                        } else if (!(self.apps['com.google.android.webview'].installed && self.apps['com.google.android.webview'].enabled)
+                            && !(self.apps['com.android.chrome'].installed && self.apps['com.android.chrome'].enabled)) {
+                            self.advices.installGoogleAndroidWebview(callback);
+                        } else {
+                            if (self.apps['com.google.android.webview'].installed && self.apps['com.google.android.webview'].enabled
+                                && !self.apps['com.google.android.webview'].uptodate) {
+                                self.advices.updateGoogleAndroidWebview(callback);
+                            } else if (self.apps['com.android.chrome'].installed && self.apps['com.android.chrome'].enabled
+                                && !self.apps['com.android.chrome'].uptodate) {
+                                self.advices.updateAndroidChrome(callback);
+                            }
+                        }
+                    }
+
+                }
+            },
+            tryToFindUsedApp: function(callback) {
+                const self = this;
+                const appsId = Object.keys(self.apps);
+                for (let i=0; i<appsId.length; i++) {
+                    const id = appsId[i];
+                    if (self.matchingVersion === 1 && self.apps[id].used === 'could') {
+                        self.apps[id].used = 'yes';
+                        self.usedApp = id;
+                        $(`li[app_id='${id}']`).append(` (<span style="color: green">${i18n.getMessage('cordovaWebviewUsed')}</span>)`);
+                    }
+                    if (i === appsId.length-1) {
+                        callback();
+                    }
+                }
+            },
+            checkInstalledApps: function(callback) {
+                const self = this;
+                const appsId = Object.keys(self.apps);
+                let installedApps = 0;
+                for (let i=0; i<appsId.length; i++) {
+                    function end() {
+                        if (i === appsId.length-1) {
+                            if (installedApps === 0) {
+                                $('#webview_apps').append('<li i18n="cordovaNoWebview" style="color: red"></li>');
+                            }
+                            i18n.localizePage();
+                            callback();
+                        }
+                    }
+
+                    const id = appsId[i];
+                    appAvailability.check(id, function(info) {
+                        installedApps++;
+                        self.apps[id].installed = true;
+                        self.apps[id].enabled = info.enabled;
+                        self.apps[id].version = info.version;
+                        self.apps[id].majorVersion = parseInt(info.version.split('.')[0]);
+                        if (self.chromeVersion === self.apps[id].version) {
+                            self.apps[id].used = 'could';
+                            self.matchingVersion++;
+                        } else {
+                            self.apps[id].used = 'no';
+                        }
+                        let color;
+                        if (self.apps[id].majorVersion >= REQUIRED_WEBVIEW_VERSION) {
+                            color = 'green';
+                            self.apps[id].uptodate = true;
+                            self.uptodateApps.push(id);
+                        } else {
+                            color = 'red';
+                            self.apps[id].uptodate = false;
+                        }
+                        let app = `<li app_id="${id}">${id} (<span style="color: ${color}">${self.apps[id].version}</span>)`;
+                        if (!self.apps[id].enabled) {
+                            app += ' (<span i18n="portsTelemetryDisabled"></span>)';
+                        }
+                        app += '</li>';
+                        $('#webview_apps').append(app);
+                        end();
+                    }, function() {
+                        self.apps[id].installed = false;
+                        end();
+                    });
+                }
+            },
+            exec: function() {
+                const self = this;
+                $('#webview_troubleshooting').hide();
+                $('#loading').show();
+                self.chromeVersion = window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1");
+                self.majorChromeVersion = self.chromeVersion.split('.')[0];
+                if (self.majorChromeVersion >= REQUIRED_WEBVIEW_VERSION) {
+                    navigator.splashscreen.show();
+                    document.location.href = 'main.html';
+                } else {
+                    navigator.splashscreen.hide();
+                    self.checkInstalledApps(function() {
+                        self.tryToFindUsedApp(function() {
+                            self.getAdvice(function() {
+                                $('#loading').hide();
+                                $('#webview_troubleshooting').show();
+                            });
+                        });
+                    });
+                }
+            },
+        };
+
+
+        const cordovaApp = {
+            initialize: function() {
+                this.bindEvents();
+            },
+            bindEvents: function() {
+                document.addEventListener('deviceready', this.onDeviceReady, false);
+            },
+            onDeviceReady: function() {
+                i18n.init(function() {
+                    i18n.localizePage();
+                    WEBVIEW.exec();
+                });
+            },
+        };
+        cordovaApp.initialize();
+
+        $('#webview_step_btn1').on('click', function() {
+            const appId = $('#webview_step_btn1').attr('app_id');
+            cordova.plugins.market.open(appId);
+        });
+        $('#webview_step_btn2').on('click', function() {
+            if ($('#webview_step_btn2').attr('app_id') !== undefined) {
+                const appId = $('#webview_step_btn2').attr('app_id');
+                window.cordova.plugins.settings.open(['application_details', false, appId]);
+            } else {
+                window.cordova.plugins.settings.open('settings');
+            }
+        });
+    </script>
+</body>
+</html>

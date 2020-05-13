@@ -1,5 +1,5 @@
 .tab-servos .title {
-    margin-top: 0px;
+    margin-top: 0;
     line-height: 30px;
     text-align: center;
     font-weight: bold;
@@ -18,9 +18,9 @@
 }
 
 .tab-servos table, .tab-servos table th, .tab-servos table td {
-    border-left: 0px;
-    border-right: 0px;
-    border-top: 0px;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
 }
 
 .tab-servos input[type="number"]::-webkit-inner-spin-button {
@@ -130,7 +130,7 @@
 
 .tab-servos .live {
     float: left;
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .tab-servos .live span {
@@ -175,3 +175,16 @@
 .tab-servos .short {
     width: 40px;
 } 
+
+.tab-servos .table_overflow {
+    overflow: auto;
+}
+
+@media all and (max-width: 575px) {
+    .tab-servos table th {
+        min-width: 30px;
+    }
+    .tab-servos .min, .tab-servos .max, .tab-servos .middle {
+        min-width: 60px;
+    }
+}

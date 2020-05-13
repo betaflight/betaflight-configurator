@@ -318,7 +318,8 @@ function configuration_restore(callback) {
             };
 
             reader.onloadend = function (e) {
-                if (e.total != 0 && e.total == e.loaded) {
+                if ((e.total != 0 && e.total == e.loaded) || GUI.isCordova()) {
+                    // Cordova: Ignore verification : seem to have a bug with progressEvent returned
                     console.log('Read SUCCESSFUL');
 
                     try { // check if string provided is a valid JSON
