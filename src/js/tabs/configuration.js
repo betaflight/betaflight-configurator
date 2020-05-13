@@ -472,7 +472,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             escProtocols.push('PROSHOT1000');
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
             escProtocols.push('DISABLED');
         }
 
