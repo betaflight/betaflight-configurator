@@ -1231,8 +1231,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 newDenominator = value;
                 newFrequency = pidSelectElement.find('option:selected').text();
             }
-            self.analyticsChanges['PIDLoopDenominator'] = newDenominator;
-            self.analyticsChanges['PIDLoopFrequency'] = newFrequency;
+            self.analyticsChanges['PIDLoopSettings'] = `denominator: ${newDenominator} | frequency: ${newFrequency}`;
 
             PID_ADVANCED_CONFIG.pid_process_denom = value;
 
