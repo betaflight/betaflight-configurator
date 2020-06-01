@@ -508,7 +508,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         function setUnifiedConfig(target, bareBoard, targetConfig, manufacturerId, fileName, fileUrl, date) {
             // a target might request a firmware with the same name, remove configuration in this case.
-            if (bareBoard == target) {
+            if (bareBoard === target) {
                 self.unifiedTarget = {};
             } else {
                 self.unifiedTarget.config = targetConfig;
@@ -610,31 +610,32 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     $.get(unifiedConfig.download_url, function(targetConfig) {
                                         console.log('got unified config');
 
-                                        const bareBoard = grabBuildNameFromConfig(targetConfig);
-                                        TABS.firmware_flasher.bareBoard = bareBoard;
+                                        let config = cleanUnifiedConfigFile(targetConfig);
+                                        if (config !== null) {
+                                            const bareBoard = grabBuildNameFromConfig(config);
+                                            TABS.firmware_flasher.bareBoard = bareBoard;
 
-                                        self.gitHubApi.getFileLastCommitInfo('betaflight/unified-targets', 'master', unifiedConfig.path, function (commitInfo) {
-                                            targetConfig = self.injectTargetInfo(targetConfig, target, manufacturerId, commitInfo);
+                                            self.gitHubApi.getFileLastCommitInfo('betaflight/unified-targets', 'master', unifiedConfig.path, function (commitInfo) {
+                                                config = self.injectTargetInfo(config, target, manufacturerId, commitInfo);
 
-                                            setUnifiedConfig(target, bareBoard, targetConfig, manufacturerId, unifiedConfig.name, unifiedConfig.download_url, commitInfo.date);
+                                                setUnifiedConfig(target, bareBoard, config, manufacturerId, unifiedConfig.name, unifiedConfig.download_url, commitInfo.date);
 
-                                            // cache it for later
-                                            let newStorageObj = {};
-                                            newStorageObj[storageTag] = {
-                                                unifiedTarget: self.unifiedTarget,
-                                                targetId: targetId,
-                                                lastUpdate: checkTime,
-                                            };
-                                            chrome.storage.local.set(newStorageObj);
+                                                // cache it for later
+                                                let newStorageObj = {};
+                                                newStorageObj[storageTag] = {
+                                                    unifiedTarget: self.unifiedTarget,
+                                                    targetId: targetId,
+                                                    lastUpdate: checkTime,
+                                                };
+                                                chrome.storage.local.set(newStorageObj);
 
-                                            populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
-                                        });
+                                                populateBuilds(builds, target, manufacturerId, duplicateName, TABS.firmware_flasher.releases[bareBoard], processNext);
+                                            });
+                                        } else {
+                                            failLoading(unifiedConfig.download_url);
+                                        }
                                     }).fail(xhr => {
-                                        //TODO error, populate nothing?
-                                        self.unifiedTarget = {};
-                                        self.isConfigLocal = false;
-                                        const baseFileName = unifiedConfig.download_url;
-                                        GUI.log(i18n.getMessage('firmwareFlasherFailedToLoadUnifiedConfig', { remote_file: baseFileName }));
+                                        failLoading(unifiedConfig.download_url);
                                     });
                                 } else {
                                     console.log('We have the config cached for', targetId);
@@ -663,6 +664,14 @@ TABS.firmware_flasher.initialize = function (callback) {
             }
         });
 
+        function failLoading(downloadUrl) {
+            //TODO error, populate nothing?
+            self.unifiedTarget = {};
+            self.isConfigLocal = false;
+
+            GUI.log(i18n.getMessage('firmwareFlasherFailedToLoadUnifiedConfig', { remote_file: downloadUrl }));
+        }
+
         function flashingMessageLocal() {
             // used by the a.load_file hook, evaluate the loaded information, and enable flashing if suitable
             if (self.isConfigLocal && !self.parsed_hex) {
@@ -689,8 +698,9 @@ TABS.firmware_flasher.initialize = function (callback) {
                     inComment = true;
                 }
                 if (!inComment && input.charCodeAt(i) > 255) {
-                    // Note: we're not showing this error in betaflight-configurator
-                    throw new Error('commands are limited to characters 0-255, comments have no limitation');
+                    self.flashingMessage(i18n.getMessage('firmwareFlasherConfigCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
+                    GUI.log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
+                    return null;
                 }
                 if (input.charCodeAt(i) > 255) {
                     output.push('_');
@@ -875,14 +885,14 @@ TABS.firmware_flasher.initialize = function (callback) {
                                     });
                                 } else {
                                     clearBufferedFirmware();
-                                    try {
-                                        self.unifiedTarget.config = cleanUnifiedConfigFile(e.target.result);
+
+                                    let config = cleanUnifiedConfigFile(e.target.result);
+                                    if (config !== null) {
+                                        config = self.injectTargetInfo(config, file.name, 'UNKN', { commitHash: 'unknown', date: file.lastModifiedDate.toISOString() });
+                                        self.unifiedTarget.config = config;
                                         self.unifiedTarget.fileName = file.name;
                                         self.isConfigLocal = true;
                                         flashingMessageLocal();
-                                    } catch(err) {
-                                        self.flashingMessage(i18n.getMessage('firmwareFlasherConfigCorrupted'), self.FLASH_MESSAGE_TYPES.INVALID);
-                                        GUI.log(i18n.getMessage('firmwareFlasherConfigCorruptedLogMessage'));
                                     }
                                 }
                             }
