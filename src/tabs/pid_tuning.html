@@ -400,14 +400,14 @@
 
                 <div class="cf_column">
                     <!-- Pid controller advanced settings -->
-                    <div class="gui_box grey pidTuningFeatures spacer_left">
+                    <div class="gui_box grey pidTuningSuperexpoRates spacer_left">
                         <table class="pid_titlebar new_rates">
                             <tr>
                                 <th i18n="pidTuningNonProfilePidSettings"></th>
                             </tr>
                         </table>
-                        <table class="pidTuningFeatures new_rates">
-                            <tbody class="features pidTuning">
+                        <table class="pidTuningSuperexpoRates new_rates">
+                            <tbody class="features superexpoRates">
                                 <!-- table generated here -->
                             </tbody>
                         </table>
@@ -617,36 +617,43 @@
                             </tr>
 
                             <tr class="antigravity">
-                                    <td><input type="checkbox" id="antiGravitySwitch" class="toggle" /></td>
-                                    <td colspan="3">
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningAntiGravityHelp"></div>
-                                        <span i18n="pidTuningAntiGravity" />
+                                <td><input type="checkbox" id="antiGravitySwitch" class="toggle" /></td>
+                                <td colspan="3">
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningAntiGravityHelp"></div>
+                                    <span i18n="pidTuningAntiGravity" />
+                                    <span class="suboption">
+                                        <table>
+                                            <tbody class="features antiGravity">
+                                                <!-- table generated here -->
+                                            </tbody>
+                                        </table>
+                                    </span>
 
-                                        <span class="suboption antiGravityMode">
-                                            <select id="antiGravityMode">
-                                                <option i18n="pidTuningAntiGravityModeOptionSmooth"     value="0"/>
-                                                <option i18n="pidTuningAntiGravityModeOptionStep"       value="1"/>
-                                            </select>
-                                            <label for="antiGravityMode">
-                                                <span i18n="pidTuningAntiGravityMode" />
-                                            </label>
-                                        </span>
+                                    <span class="suboption antiGravityMode">
+                                        <select id="antiGravityMode">
+                                            <option i18n="pidTuningAntiGravityModeOptionSmooth"     value="0"/>
+                                            <option i18n="pidTuningAntiGravityModeOptionStep"       value="1"/>
+                                        </select>
+                                        <label for="antiGravityMode">
+                                            <span i18n="pidTuningAntiGravityMode" />
+                                        </label>
+                                    </span>
 
-                                        <span class="suboption">
-                                            <input type="number" name="itermAcceleratorGain" step="0.1" min="1.1" max="30" />
-                                            <label for="antiGravityGain">
-                                                <span i18n="pidTuningAntiGravityGain" />
-                                            </label>
-                                        </span>
+                                    <span class="suboption">
+                                        <input type="number" name="itermAcceleratorGain" step="0.1" min="1.1" max="30" />
+                                        <label for="antiGravityGain">
+                                            <span i18n="pidTuningAntiGravityGain" />
+                                        </label>
+                                    </span>
 
-                                        <span class="suboption antiGravityThres">
-                                            <input type="number" name="itermThrottleThreshold" step="10" min="20" max="1000" />
-                                            <label for="antiGravityThres">
-                                                <span i18n="pidTuningAntiGravityThres" />
-                                            </label>
-                                        </span>
-                                    </td>
-                                </tr>
+                                    <span class="suboption antiGravityThres">
+                                        <input type="number" name="itermThrottleThreshold" step="10" min="20" max="1000" />
+                                        <label for="antiGravityThres">
+                                            <span i18n="pidTuningAntiGravityThres" />
+                                        </label>
+                                    </span>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>

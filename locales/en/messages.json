@@ -1114,7 +1114,10 @@
         "message": "Video Transmitter"
     },
     "featureANTI_GRAVITY": {
-        "message": "Temporary boost I-Term on high throttle changes"
+        "message": "Permanently enable Anti Gravity"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "If this is disabled, the 'ANTI GRAVITY' mode can be used to enable Anti Gravity with a switch."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamic gyro notch filtering"

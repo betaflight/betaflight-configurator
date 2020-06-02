@@ -171,11 +171,6 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.antigravity input[name="itermThrottleThreshold"]').val(ADVANCED_TUNING.itermThrottleThreshold);
             $('.antigravity input[name="itermAcceleratorGain"]').val(ADVANCED_TUNING.itermAcceleratorGain / 1000);
 
-            if (FEATURE_CONFIG.features.isEnabled('ANTI_GRAVITY')) {
-                $('.antigravity').show();
-            } else {
-                $('.antigravity').hide();
-            }
             var antiGravitySwitch = $('#antiGravitySwitch');
             antiGravitySwitch.prop('checked', ADVANCED_TUNING.itermAcceleratorGain !== 1000);
             antiGravitySwitch.change(function() {
@@ -766,10 +761,6 @@ TABS.pid_tuning.initialize = function (callback) {
         FILTER_CONFIG.dterm_lowpass_hz = parseInt($('.pid_filter input[name="dtermLowpassFrequency"]').val());
         FILTER_CONFIG.yaw_lowpass_hz = parseInt($('.pid_filter input[name="yawLowpassFrequency"]').val());
 
-        if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
-            FEATURE_CONFIG.features.updateData($('input[name="SUPEREXPO_RATES"]'));
-        }
-
         if (semver.gte(CONFIG.apiVersion, "1.16.0")) {
             const element = $('input[id="vbatpidcompensation"]');
             const value = element.is(':checked') ? 1 : 0;
@@ -1000,10 +991,10 @@ TABS.pid_tuning.initialize = function (callback) {
     }
 
     function process_html() {
-        if (semver.gte(CONFIG.apiVersion, "1.16.0") && !semver.gte(CONFIG.apiVersion, "1.20.0")) {
-            FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
-        } else {
-            $('.tab-pid_tuning .pidTuningFeatures').hide();
+        FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
+
+        if (semver.lt(CONFIG.apiVersion, "1.16.0") || semver.gte(CONFIG.apiVersion, "1.20.0")) {
+            $('.tab-pid_tuning .pidTuningSuperexpoRate').hide();
         }
 
         if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
@@ -1497,7 +1488,14 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // UI Hooks
         // curves
-        $('input.feature').on('input change', updateRates);
+        $('input.feature').on('input change', function () {
+            const element = $(this);
+
+            FEATURE_CONFIG.features.updateData(element);
+
+            updateRates();
+        });
+
         $('.pid_tuning').on('input change', updateRates).trigger('input');
 
         function redrawThrottleCurve(forced) {
@@ -1907,6 +1905,8 @@ TABS.pid_tuning.initialize = function (callback) {
                 return MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING));
+            }).then(function () {
+                return MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             }).then(function () {
                 return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             }).then(function () {
