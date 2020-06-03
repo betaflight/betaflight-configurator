@@ -714,9 +714,6 @@
     "initialSetupMagHead": {
         "message": "Magnetômetro"
     },
-    "initialSetupDeclination": {
-        "message": "Declinação:"
-    },
     "initialSetupInfoHead": {
         "message": "Informações"
     },
@@ -998,9 +995,6 @@
     "featureVTX": {
         "message": "Transmissor de vídeo"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Aumenta temporariamente o termo I quando houver grandes alterações no acelerador"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Filtro Notch dinâmico do giroscópio"
     },
@@ -1117,9 +1111,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algumas opções de armar podem necessitar que o acelerômetro esteja ativado"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinação do Magnetômetro [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direção do motor é invertida"
@@ -1508,10 +1499,6 @@
     "pidTuningDMinFeatureHelp": {
         "message": "O D Min permite que o valor de D tenha um valor menor durante o voo normal e um valor maior durante manobras rápidas, como giros e rotações, que podem causar instabilidade. D min também aumenta o valor de D quando houver turbulência nas hélices. O ganho ajusta o quão rápido D alcança seu valor máximo, utilizando o giroscópio para determinar movimentos rápidos e turbulência. Avanço faz com que o valor de D aumente mais cedo, utilizando o setpoint ao invés do giroscópio para determinar movimentos rápidos.",
         "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Controla a força da atenuação (Termo D) durante o voo normal.<br>Se o D Min estiver ativo, o Termo D será alterado durante o voo.<br>Durante um voo normal, ele estará nos valores D Min abaixo. Durante movimentos rápidos ou turbulência, o Termo D será temporariamente aumentado para os valores especificados à esquerda.<br><br>O valor máximo do Termo D é alcançado durante movimentos rápidos, mas somente parcialmente alcançado durante uma turbulência.<br>Ajuste o Ganho e o Avanço para controlar a sensibilidade do ganho.",
-        "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Configurar controlador PID"
@@ -3195,12 +3182,6 @@
     "pidTuningMotorOutputLimit": {
         "message": "Limite de saída para o motor"
     },
-    "pidTuningMotorLimit": {
-        "message": "Atenuação %"
-    },
-    "pidTuningMotorLimitHelp": {
-        "message": "Reduz o sinal para o motor pela porcentagem definida. Reduz o consumo de energia dos ESCs e reduz a temperatura dos motores ao usar uma bateria de maior quantidade de células. Exemplos: Quando usar uma bateria 6S em uma aeronave com motores, hélices e regulagem projetados para uma bateria 4S, tente o valor 66%; Para usar uma bateria 4S em uma aeronave projetada para baterias 3S, tente 75%.<br>Sempre tenha certeza de que todos os seus componentes suportam a voltagem da bateria que está utilizando."
-    },
     "pidTuningCellCount": {
         "message": "Quantidade de células"
     },
@@ -3526,7 +3507,10 @@
         "message": "Esta funcionalidade permite que o acelerador seja temporáriamente impulsionado em movimentos rápidos do stick, o que aumenta o torque dos motores, resultando em uma resposta muito mais rápida ao acelerador."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Valor Ocioso Dinâmico [rpm]"
+        "message": "Valor Ocioso Dinâmico [* 100 RPM]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "O Valor Ocioso Dinâmico melhora o controle em baixa rotação e reduz o risco de dessincronização dos motores. isto corrige problemas causados pelo fluxo do ar acelerando ou reduzindo a velocidade das hélices, melhorando a autoridade do PID, estabilidade, resposta e freio do motor. O Valor Ocioso Dinâmico deve ser configurado em 20% a menos do RPM do valor DShot Ocioso (Veja na aba $t(tabMotorTesting.message)). Geralmente não é necessário alterar os valores padrão. Para ficar mais tempo no ar quando estiver invertido, o valores de DShot Ocioso e Ocioso Dinâmico devem ser reduzidos juntos.<br><br>Visite <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">esta página do Wiki</a> para mais informações."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Angulo máximo do Treinador Acro"

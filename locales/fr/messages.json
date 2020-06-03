@@ -772,9 +772,6 @@
     "initialSetupMagHead": {
         "message": "Magnetomètre"
     },
-    "initialSetupDeclination": {
-        "message": "Variation:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -1056,9 +1053,6 @@
     "featureVTX": {
         "message": "Émetteur vidéo"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Boost temporairement les I lors de grosses variations de gaz"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Filtre dynamique Notch gyro"
     },
@@ -1175,9 +1169,6 @@
     },
     "configurationArmingHelp": {
         "message": "Certaines options nécessitent l'accéléromètre pour autoriser l'armement"
-    },
-    "configurationMagDeclination": {
-        "message": "Inclinaison du magnétomètre [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Sens de rotation inversé"
@@ -1559,10 +1550,6 @@
     "pidTuningDMinFeatureHelp": {
         "message": "D Min permet d'avoir un niveau inférieur de D en vol normal et un niveau plus élevé pour les manœuvres rapides qui pourraient causer des overshoots, notamment sur les flips et les rolls. Il augmente également D pendant le propwash. Gain ajuste la vitesse à laquelle D atteint sa valeur maximale et est basé sur le gyro pour déceler les manoeuvres violentes et les propwash. Avance déclenche le D plus tôt en utilisant le setpoint au lieu du gyro pour déterminer les manoeuvres violentes.",
         "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Contrôle la force de l'amortissement (D-term) en vol normal.<br>Avec D_min activé, le gain D varie pendant le vol. En vol de croisière, il est à la valeur D_min ci-dessous. Lors d'une manoeuvre violente ou lors prop wash, le gain D augmente jusqu'à la valeur Derivative gain spécifiée à gauche.<br><br>Le maximum du gain Derivative est atteint lors de mouvement brusques sur les sticks, des valeurs partielles sont atteintes en cas de propwash.<br>Ajustez le Gain et l'Avance pour contrôler la sensibilité et le timing de D_Min.",
-        "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Réglages du Contrôleur PID"
@@ -3243,9 +3230,6 @@
     "pidTuningMotorOutputLimit": {
         "message": "Limite de sortie du moteur"
     },
-    "pidTuningMotorLimit": {
-        "message": "Atténuation %"
-    },
     "pidTuningCellCount": {
         "message": "Nombre de cellules"
     },
@@ -3561,9 +3545,6 @@
     },
     "pidTuningThrottleBoostHelp": {
         "message": "Cette fonctionnalité booste temporairement les gaz sur les mouvement rapides de sticks, accélére la montée de couple, réduit le temps de réponse des gaz."
-    },
-    "pidTuningIdleMinRpm": {
-        "message": "Valeur Idle dynamique [rpm]"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limite d'angle Acro Trainer"

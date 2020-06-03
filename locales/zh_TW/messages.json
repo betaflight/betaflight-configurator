@@ -257,7 +257,7 @@
         "message": "日誌"
     },
     "tabOnboardLogging": {
-        "message": "黑盒"
+        "message": "黑盒子"
     },
     "tabAdjustments": {
         "message": "調整"
@@ -540,7 +540,7 @@
         "message": "EEPROM <span class=\"message-positive\">已保存</span>"
     },
     "defaultWelcomeIntro": {
-        "message": "歡迎使用<strong>Betaflight - 配置程式</strong>，為簡化固件升級，設置和調校飛控而生的工具。"
+        "message": "歡迎使用<strong> Betaflight - 配置程式</strong>，為簡化固件升級，設置和調校飛控而生的工具。"
     },
     "defaultWelcomeHead": {
         "message": "硬體"
@@ -552,10 +552,10 @@
         "message": "參與開發"
     },
     "defaultContributingText": {
-        "message": "如果你想幫助Betaflight 變得更好，你可以：<br /><ul><li>用您的 Betaflight 知識來為 <a href=\"https://github.com/betaflight/betaflight/wiki\" target =\"_blank\" rel=\"noopener noreferrer\">我們的wiki</a> 創建或更新內容，或者是在論壇裡回答其他用戶的問題；</li><li>為固件和配置程序 <a href= \"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">貢獻代碼</a> - 增加新功能，解決漏洞，改善代碼；</li><li>測試 <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新功能和修改</a > 並提供測試反饋；</li><li>幫助在 <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">問題追踪器</a> 上報告問題的用戶解決問題，並參與功能請求的討論；</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md# Translators\" target=\"_blank\" rel=\"noopener noreferrer\">為 Betaflight 配置程序添加新語言的翻譯</a>，或者幫助維護既有的翻譯。 </li></ul>"
+        "message": "如果你想幫助 Betaflight 變得更好，你可以：<br /><ul><li>用您的 Betaflight 知識來為 <a href=\"https://github.com/betaflight/betaflight/wiki\" target =\"_blank\" rel=\"noopener noreferrer\">我們的wiki</a> 創建或更新內容，或者是在論壇裡回答其他用戶的問題；</li><li>為固件和配置程序 <a href= \"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">貢獻代碼</a> - 增加新功能，解決漏洞，改善代碼；</li><li>測試 <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新功能和修改</a > 並提供測試反饋；</li><li>幫助在 <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">問題追踪器</a> 上報告問題的用戶解決問題，並參與功能請求的討論；</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md# Translators\" target=\"_blank\" rel=\"noopener noreferrer\">為 Betaflight 配置程序添加新語言的翻譯</a>，或者幫助維護既有的翻譯。 </li></ul>"
     },
     "defaultFacebookText": {
-        "message": "我們還有一個<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小組</a>。<br />加入我們來一起討論 Betaflight，咨詢配置問題，或者只是和小夥伴們閒聊。"
+        "message": "我們還有一個<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\"> Facebook 小組</a>。<br />加入我們來一起討論 Betaflight，咨詢配置問題，或者只是和小夥伴們閒聊。"
     },
     "defaultChangelogHead": {
         "message": "配置程式 - 更新日誌"
@@ -714,9 +714,6 @@
     "initialSetupMagHead": {
         "message": "磁力計"
     },
-    "initialSetupDeclination": {
-        "message": "偏差:"
-    },
     "initialSetupInfoHead": {
         "message": "訊息"
     },
@@ -853,6 +850,10 @@
         "message": "已啟用了使用加速度計的功能，但加速度計未校準。請校準加速度計。",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "尚未選擇電機輸出協議",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解鎖時有一個阻止解鎖的標誌處於活躍狀態",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -954,7 +955,7 @@
         "message": "OLED 顯示屏"
     },
     "featureDISPLAYTip": {
-        "message": "當啟用該功能後，如果沒有連接屏幕（或沒有通電），則飛控的每次啟動都會有10秒鐘左右的延遲。"
+        "message": "當啟用該功能後，如果沒有連接熒幕（或沒有通電），則飛控的每次啟動都會有10秒鐘左右的延遲。"
     },
     "featureONESHOT125": {
         "message": "ONESHOT 電調支援"
@@ -997,9 +998,6 @@
     },
     "featureVTX": {
         "message": "圖傳"
-    },
-    "featureANTI_GRAVITY": {
-        "message": "油門劇烈變動時短暫提高 I 值"
     },
     "featureDYNAMIC_FILTER": {
         "message": "動態陷波濾波"
@@ -1117,9 +1115,6 @@
     },
     "configurationArmingHelp": {
         "message": "某些解鎖選項可能需要啟用加速度計"
-    },
-    "configurationMagDeclination": {
-        "message": "磁偏角 [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "反轉電機轉向"
@@ -1434,6 +1429,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "攝像頭(RunCam協議)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (FrSky 協議)"
+    },
     "pidTuningProfileOption": {
         "message": "PID 配置文件 $1"
     },
@@ -1510,7 +1508,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "控制正常前進飛行中的阻尼(D-term)。<br>當 D Min 開啟後，D 增益的有效值將在飛行中實時變化。在正常前進飛行中，有效值將是下方所設置的 D Min 增益。當發生快速移動或洗槳時，D 增益的有效值將會提高至左側指定的 D 值。<br><br>當出現非常迅速的搖桿輸入時，D 增益將升高至最大值，但在洗槳時僅會升高至一部分。<br>調整 D Min 增益和超前以控制增益增大的敏感性和時機。",
+        "message": "控制正常前進飛行中的阻尼(D-term)。 <br>當 D Min 開啟後，D 增益的有效值將在飛行中實時變化。在正常前進飛行中，有效值將是下方所設置的 D_min 增益。當發生快速移動或洗槳時，D 增益的有效值將會提高至左側指定的 D_max 值。 <br><br>當出現非常迅速的搖桿輸入時，D 增益將升高至 D_max，但在洗槳時僅會升高至一部分。 <br>調整 D Min 增益和超前以控制增益增大的敏感性和時機。",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -3196,10 +3194,10 @@
         "message": "電機輸出限制"
     },
     "pidTuningMotorLimit": {
-        "message": "衰減 %"
+        "message": "縮放因子 [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "按設置的百分比降低電機動力。用於在使用高芯數電池時降低電調電流和電機發熱，例如，在一台電機、槳和參數均已針對4S動力優化過的機器上使用6S電池，請嘗試將此值設為66% ；在一台動力設計為3S的機器上使用4S電池，請嘗試設為75%。 <br>請確保您的所有配件都支援您正在使用的電池電壓。"
+        "message": "電機輸出線性縮放因子（百分比）。用於在使用高芯數電池時降低電調電流和電機發熱，例如，在一台電機、槳和參數均已針對4S動力優化過的機器上使用6S電池，請嘗試將此值設為66% ；在一台動力設計為3S的機器上使用4S電池，請嘗試設為75%。 <br>請確保您的所有配件都支持您正在使用的電池電壓。"
     },
     "pidTuningCellCount": {
         "message": "電芯數"
@@ -3526,7 +3524,7 @@
         "message": "此功能通過根據搖桿快速移動量來短暫提高油門變化值以增加電機的加速扭矩，使得油門響應更為迅速。"
     },
     "pidTuningIdleMinRpm": {
-        "message": "動態怠速值 [rpm]"
+        "message": "動態怠速值 [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "動態怠速可以提升低轉速下的控制力，並減少電機失步的風險。它糾正了由於氣流使得螺旋槳加速或減速而引起的問題，提高了PID的權重、穩定性、電機制動和響應能力。動態怠速的 RPM 值應設置得比您的 Dshot 怠速值（請查看 $t(tabMotorTesting.message) 選項卡）對應的 RPM 值低20%。通常不需要修改默認的 Dshot 怠速值。為了延長倒掛動作的滯空時間，應該同時降低 Dshot 怠速值和動態怠速值。 <br><br>訪問<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">這個wiki</a>以獲取更多訊息。"
@@ -3964,7 +3962,7 @@
         "message": "容量 (mAh)"
     },
     "osdSetupTitle": {
-        "message": "OSD 屏幕疊加顯示"
+        "message": "OSD 熒幕疊加顯示"
     },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>警告：</b></span>未檢測到OSD晶片。部分飛控在未接入電池的情況下無法給OSD晶片正常供電。請在連接 USB 之前接入電池 (務必卸下螺旋槳！)"
@@ -4198,7 +4196,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCrosshairs": {
-        "message": "屏幕中間的十字光標"
+        "message": "熒幕中間的十字光標"
     },
     "osdTextElementArtificialHorizon": {
         "message": "人工地平線",
@@ -5003,7 +5001,7 @@
         "message": "設置OSD報警閾值"
     },
     "osdSectionHelpStats": {
-        "message": "設置飛行結束上鎖後屏幕上顯示的統計訊息"
+        "message": "設置飛行結束上鎖後熒幕上顯示的統計訊息"
     },
     "osdSectionHelpWarnings": {
         "message": "顯示或隱藏顯示在警告區域的警告訊息"

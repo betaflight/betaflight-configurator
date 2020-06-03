@@ -620,7 +620,7 @@
         "message": "기여하기"
     },
     "defaultContributingText": {
-        "message": "베타플라이트를 훨씬 더 좋게 만들고 싶다면, 다음과 같은 여러 가지 방법으로 도울 수 있습니다:<br /><ul><li>베타플라이트에 대한 지식을 활용하여 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">위키</a>에 대한 내용을 만들거나, 온라인 포럼에서 다른 사용자의 질문에 답변할 수 있습니다;</li><li>펌웨어와 컨피규레이터에 대한 코드 - 새로운 기능, 수정, 개선 사항에 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">코드를 공헌</a>할 수 있습니다;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">새로운 기능과 수정</a>을 테스트하고, 피드백을 제공할 수 있습니다;</li><li>다른 사용자들이 <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈 트랙커</a>에 보고한 문제를 해결하여 도움을 줄 수 있으며, 기능 요청에 대한 논의에 참여할 수 있습니다;</li><li>베타플라이트 컨피규레이터를 새로운 언어로 <a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">번역</a>하거나, 기존 번역을 유지하도록 도울 수 있습니다.<br />한글번역(교정) 문의: JJang FPV 류장협(oto4futur@gmail.com)</li></ul><br /><ul>처음이거나 새로운 기능에 대하여 배우고 싶다면, <a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">무료 동영상 강의(한글판)</a>를 시청할 수 있습니다.<br />OpenTX, BLheli 설정 등 <a href=\"https://www.youtube.com/c/JJangFPV\" target=\"_blank\" rel=\"noopener noreferrer\">짱JJang FPV 유튜브 채널</a>에서 더 많은 정보를 얻으십시오.</ul>"
+        "message": "베타플라이트를 훨씬 더 좋게 만들고 싶다면, 다음과 같은 여러 가지 방법으로 도울 수 있습니다:<br /><ul><li>베타플라이트에 대한 지식을 활용하여 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">위키</a>에 대한 내용을 만들거나, 온라인 포럼에서 다른 사용자의 질문에 답변할 수 있습니다;</li><li>펌웨어와 컨피규레이터에 대한 코드 - 새로운 기능, 수정, 개선 사항에 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">코드를 공헌</a>할 수 있습니다;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">새로운 기능과 수정</a>을 테스트하고, 피드백을 제공할 수 있습니다;</li><li>다른 사용자들이 <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈 트랙커</a>에 보고한 문제를 해결하여 도움을 줄 수 있으며, 기능 요청에 대한 논의에 참여할 수 있습니다;</li><li>베타플라이트 컨피규레이터를 새로운 언어로 <a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">번역</a>하거나, 기존 번역을 유지하도록 도울 수 있습니다.<br />한글번역(교정) 문의: JJang FPV 류장협(oto4futur@gmail.com)</li></ul><br /><ul>초보자를 위한 <a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 설정 가이드(한글판)</a> 동영상을 무료로 제공하고 있습니다.<br />FPV 드론 전문 채널인 <a href=\"https://www.youtube.com/c/JJangFPV\" target=\"_blank\" rel=\"noopener noreferrer\">짱JJang FPV 채널</a>을 방문하여 더 많은 정보를 얻으십시오.</ul>"
     },
     "defaultFacebookText": {
         "message": "우리는 또한 <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">페이스북 그룹</a>이 있습니다.<br />우리와 함께 베타플라이트에 대해 이야기하고, 환경설정 질문을 하거나, 동료 파일럿과 어울릴 수 있습니다."
@@ -782,9 +782,6 @@
     "initialSetupMagHead": {
         "message": "자력계"
     },
-    "initialSetupDeclination": {
-        "message": "경사:"
-    },
     "initialSetupInfoHead": {
         "message": "정보"
     },
@@ -920,6 +917,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "가속도계가 교정되지 않았으며 그에 의존하는 기능들이 활성화되어 있습니다. 가속도계를 교정하십시오.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "선택된 모터 출력 프로토콜이 없습니다",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
@@ -1067,7 +1068,10 @@
         "message": "비디오 트랜스미터"
     },
     "featureANTI_GRAVITY": {
-        "message": "높은 스로틀 변화에서 I-텀을 임시로 상승시킵니다."
+        "message": "안티그라비티 영구 사용"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "이 기능이 비활성화된 경우 'ANTI GRAVITY' 모드를 사용하여 스위치로 안티 그라비티를 활성화할 수 있습니다."
     },
     "featureDYNAMIC_FILTER": {
         "message": "다이나믹 자이로 노치 필터링"
@@ -1185,9 +1189,6 @@
     },
     "configurationArmingHelp": {
         "message": "몇몇 아밍 옵션은 가속도계 사용이 필요할 수도 있습니다."
-    },
-    "configurationMagDeclination": {
-        "message": "자력계 경사 [도]"
     },
     "configurationReverseMotorSwitch": {
         "message": "모터 방향이 반대로 됩니다."
@@ -1502,6 +1503,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "카메라 (런캠 프로토콜)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (FrSky 프로토콜)"
+    },
     "pidTuningProfileOption": {
         "message": "프로파일 $1"
     },
@@ -1578,7 +1582,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "정상 전진 비행 시 감쇠 강도(D-텀) 를 제어합니다.<br>D_최소값을 활성화하면 비행 중 능동형 D-게인이 변화합니다. 정상적인 전진 비행에서 그것은 D_최소값 이하에 있습니다. 급격한 움직임이나 프롭워시 중에는 능동형 D-게인은 좌측에 명시된 D 게인을 증가시킵니다.<br><br>날카로운 스틱 입력에서 완전한 D 게인에 도달하지만, 일부분만 프롭워시 동안에 도달합니다.<br>게인 부스트 민감도 및 타이밍을 제어하기 위해 D_최소값 게인과 가속을 조정하십시오.",
+        "message": "정상적인 전진 비행 시 감쇠 강도(D-텀)를 제어합니다.<br>D_최소값을 활성화하면  비행 중 능동형 D-게인이 변화합니다. 정상적인 전진 비행에서 D-게인을 D_최소값으로 낮춥니다. 급격한 움직임이나 프롭워시에서는 능동형 D-게인은 좌측에 명시된 D_최대값으로 게인을 증가시킵니다.<br><br>날카로운 스틱 입력에서 완전한 D_최대 게인에 도달하지만, 일부분만 프롭워시 동안에 도달합니다.<br>게인 부스트 민감도 및 타이밍을 제어하기 위해 D_최소값 게인과 가속을 조정하십시오.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -3264,10 +3268,10 @@
         "message": "모터 출력 제한"
     },
     "pidTuningMotorLimit": {
-        "message": "감쇠 %"
+        "message": "스케일 계수 [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "모터 명령을 설정된 백분율로 감쇠합니다. 더 높은 셀 수의 배터리를 사용할 때 ESC 전류와 모터 열을 감소시킵니다. 예로 4S용으로 설계된 모터, 프롭 및 튜닝한 기체에 6S 배터리를 사용할 때는 66%로, 3S용으로 설계된 기체에 4S 배터리를 사용할 때는 75%로 설정하십시오.<br>항상 모든 구성 요소가 사용 중인 배터리의 전압을 지원할 수 있는지 확인하십시오."
+        "message": "모터 출력 선형 스케일 계수 (백분율). 더 높은 셀 수의 배터리를 사용할 때 ESC 전류와 모터 열을 감소시킵니다. 예로 4S용으로 설계된 모터, 프롭 및 튜닝한 기체에 6S 배터리를 사용할 때는 66%로, 3S용으로 설계된 기체에 4S 배터리를 사용할 때는 75%로 설정하십시오.<br>항상 모든 구성 요소가 사용 중인 배터리의 전압을 지원할 수 있는지 확인하십시오."
     },
     "pidTuningCellCount": {
         "message": "셀 수"
@@ -3594,7 +3598,7 @@
         "message": "이 기능을 사용하면 빠른 스틱 움직임에 스로틀을 일시적으로 상승시켜 모터에 대한 가속 토크를 증가시킴으로써 훨씬 더 빠른 스로틀 반응을 제공합니다."
     },
     "pidTuningIdleMinRpm": {
-        "message": "다이나믹 아이들 값 [rpm]"
+        "message": "다이나믹 아이들 값 [× 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "다이나믹 아이들은 낮은 rpm에서 제어력을 향상시키고 모터 디싱크의 위험을 감소시킵니다. 그것은 프롭 속도를 높이거나 늦춰 기류에 의해 발생되는 문제를 해결하고, PID 권한, 안정성, 모터 제동 및 반응성을 향상시킵니다. 다이나믹 아이들 값은 DShot 아이들 값의 rpm보다 약 20% 낮게 설정해야 합니다($t(tabMotorTesting.message) 탭 참고). 일반적으로 DShot 아이들 값은 기본값에서 변경할 필요가 없습니다. 역 행타임을 연장하려면 DShot 아이들 값과 최소 rpm을 함께 낮춰야 합니다.<br><br>더 많은 정보는<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\"> 이 위키 엔트리</a>를 방문하세요."
@@ -4577,11 +4581,11 @@
         "message": "터틀 모드에서 어떤 모터가 올라가는지를 보여주는 화살표"
     },
     "osdTextElementLinkQuality": {
-        "message": "링크 품질",
+        "message": "링크 품질(LQ)",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementLinkQuality": {
-        "message": "프레임 손실에 따른 링크 품질에 대한 대체 표시 - 주의해서 사용"
+        "message": "프레임 손실에 따른 '링크 품질'에 대한 대체 표시 - 주의해서 사용"
     },
     "osdTextElementFlightDist": {
         "message": "비행 거리",
@@ -5029,7 +5033,7 @@
         "message": "RSSI가 알람 설정값 아래일 때 경고합니다"
     },
     "osdWarningTextLinkQuality": {
-        "message": "링크 품질",
+        "message": "링크 품질(LQ)",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningLinkQuality": {

@@ -107,7 +107,7 @@
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "Flash memoria: espazio librea",
+        "message": "DataFlash: espazio librea",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
@@ -192,7 +192,7 @@
         "message": "$1 -kin egindako configurazioa eguneratua eta ipinita"
     },
     "tabFirmwareFlasher": {
-        "message": "FIRMWARE FLASHeatzailea"
+        "message": "Firmware Flasheatzailea"
     },
     "tabLanding": {
         "message": "Ongi Etorri"
@@ -487,19 +487,19 @@
         "message": "<strong>Kontrolik gabeko aireratze prebentzio sistema aktibatuta</strong>"
     },
     "boardInfoReceived": {
-        "message": "Plaka:<strong>$1</strong>, bertsioa: <strong>$2</strong>"
+        "message": "Taula:<strong>$1</strong>, bertsioa: <strong>$2</strong>"
     },
     "buildInfoReceived": {
         "message": "<strong>$1</strong> -an argitaratutako Firmware-a exekutatzen"
     },
     "fcInfoReceived": {
-        "message": "Hegaldiaren kontroladorearen informazioa, identifikatzailea: <strong>$1</strong>, bertsioa:<strong>$2</strong>"
+        "message": "Hegaldi kontroladorearen informazioa, identifikatzailea: <strong>$1</strong>, bertsioa:<strong>$2</strong>"
     },
     "versionLabelTarget": {
         "message": "Target"
     },
     "versionLabelFirmware": {
-        "message": "Firmware"
+        "message": "Firmwarea"
     },
     "versionLabelConfigurator": {
         "message": "Konfiguratzailea"
@@ -553,13 +553,13 @@
         "message": "Hardware"
     },
     "defaultWelcomeText": {
-        "message": "Aplikazioak Betaflight exekutatu dezakeen hardware guztia onartzen du. Begiratu flash fitxa, hardware zerrenda osoa lortzeko.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewer Deskargatu</a><br /><br />firmware iturri kodea deskargatu daiteke <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /><br />Berrien <b>STM USB VCP Drivers</b> hemen deskargatu daiteke<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br />CP210x USB bidez serieko txip bidez erabiltzeko ondarearen hardwarerako:<br />Berrien <b>CP210x Drivers</b> deskargatu ahal dira <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br />Azken<b>Zadig</b> Windows-erako USB kontrolatzaileen instalazioa <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /> deskargatu daiteke"
+        "message": "Aplikazio honek Betaflight exekutatu dezakeen hardware guztia onartzen du. Begiratu flash fitxa, hardware zerrenda osoa lortzeko.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewer Deskargatu</a><br /><br />Firmware iturri kodea deskargatu daiteke <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /><br /><b>STM USB VCP Drivers</b> berrienak <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a> deskargatu daiteke<br />CP210x USB ondarearen hardwarera serie txip bidez erabiltzeko:<br /><b>CP210x Drivers</b> berrienak <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a> deskargatu ahal dira<br />Azken <b>Zadig</b> Windows-erako USB kontrolatzaileen instalazioa <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /> deskargatu daiteke"
     },
     "defaultContributingHead": {
         "message": "Hartu parte"
     },
     "defaultContributingText": {
-        "message": "Betaflight hobetzen lagundu nahi baduzu, modu askotan lagundu dezakezu, besteak beste:<br /><ul><li> Betaflight buruzko zure ezagutza erabiliz github-en edukia sortzeko edo eguneratzeko <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">gure wiki-an</a>, edo beste erabiltzaile batzuen galderei web foroetan erantzuten;</li><li>firmware eta konfiguratzaile <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">kodearekin laguntzen</a> -ezaugarri berriekin, konponketak, hobekuntzak;</li><li>probatzen<a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">funtzio eta konponbide berriak</a>eta berrikuspena eskainiz;</li><li>Beste erabiltzaileei <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> arazoak konpontzen laguntzen.</a> eta funtzio eskaerei buruzko eztabaidetan parte hartu;</li><li>Betaflight Konfiguratzailearen hizkuntza berri batera<a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">itzultzen</a> edo dagoeneko itzulpenak mantentzen laguntzen.</li></ul>"
+        "message": "Betaflight hobetzen lagundu nahi baduzu, modu askotan lagundu dezakezu, besteak beste:<br /><ul><li> Betaflight buruzko zure ezagutza erabiliz github-en edukia sortzeko edo eguneratzeko <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">gure wiki-an</a>, edo beste erabiltzaile batzuen galderei web foroetan erantzuten;</li><li>Firmware eta konfiguratzaile <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">kodearekin laguntzen</a> -ezaugarri berriekin, konponketak, hobekuntzak;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">Funtzio eta konponbide berriak</a> probatzen eta berrikuspena eskainiz;</li><li>Beste erabiltzaileei <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> arazoak konpontzen laguntzen.</a> eta funtzio eskaerei buruzko eztabaidetan parte hartu;</li><li>Betaflight Konfiguratzailearen hizkuntza berri batera <a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">itzultzen</a> edo dagoeneko itzulpenak mantentzen laguntzen.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "<a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Talde</a> bat badaukagu.<br />Egin zaitez jarraitzaile Betafligth-i buruz hitz egiteko leku bat eukitzeko, konfigurazio galderak egiteko edota beste pilotuekin hitz egiteko."
@@ -721,9 +721,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometroa"
     },
-    "initialSetupDeclination": {
-        "message": "Deklinazioa:"
-    },
     "initialSetupInfoHead": {
         "message": "Informazioa"
     },
@@ -859,6 +856,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "Azelerometroa ez da kalibratu eta hori behar duten ezaugarriak dituzu. Azelerometroa kalibratu.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Ez da motorra irteeraren protokoloa hautatu",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Desarmatzeko beste banderietako bat gaituta zegoen armatzerakoan",
@@ -1005,9 +1006,6 @@
     "featureVTX": {
         "message": "Bideo igorlea"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Aldi baterako I-Term balioa handitu azelerazio aldaketa handietan"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Giro iragazketa dinamikoa"
     },
@@ -1124,9 +1122,6 @@
     },
     "configurationArmingHelp": {
         "message": "Armatze-aukera batzuek azelerometroa gaituta izatea eskatzen dute"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometroaren deklinabidea [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motorren norabidea alderantzizkoa"
@@ -1376,7 +1371,7 @@
         "message": "<span class=\"message-negative\">KONTUZ:</span> VTX taula ez da behar bezala konfiguratu eta hori gabe VTX kontrola ezin da erabili. Mesedez VTX taula konfiguratu $t(tabVtx.message) fitxan."
     },
     "portsMSPHelp": {
-        "message": "<strong>Oharra:</strong> Ez egin <span class=\"message-negative\">EZ</span> desgaitu MSP lehen serieko atakan, zer egiten ari zaren jakin ezean. Zure konfigurazioa berriro bihurritu eta ezabatu behar izatea baliteke."
+        "message": "<strong>Oharra:</strong> <span class=\"message-negative\">EZ</span> desgaitu MSP lehen serieko ataka, zer egiten ari zaren jakin ezean. Zure konfigurazioa berriro bihurritu eta ezabatu behar izatea baliteke."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware-aren bertsioa berritzea <span class=\"message-negative\">beharrezkoa</span> da. &lt; 1.8.0 Firmwarearean Serial ataka konfigurazioak  ez  dira onartzen."
@@ -1440,6 +1435,9 @@
     },
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "Kamera (RunCam Protokoloa)"
+    },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (FrSky Protokoloa)"
     },
     "pidTuningProfileOption": {
         "message": "$1 profila"
@@ -1517,7 +1515,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Aurrerako hegaldi normaletan moteltze-indarra (D-term) kontrolatzen du.<br>D_min piztuta, D-gain hegaldian aldatzen da. Aurrerako hegaldi normaletan lehengo D_min irabazian dago. Mugimendu zorrotz edo propwhash-ean, D-gain Actiboak eratorritako irabaziak zortzen ditu, batez ere ezkerreruntz.<br><br>Alde guztietatik eratorritako irabaziak Sharp etengailuarekin berdintzen dira, baina aldezka bakarrik gertatzen dira propwhash-ean.<br>Egokitu D_Min irabazia eta Advance-k, bultzadaren sentsibilitatea eta erritmoa kontrolatzeko.",
+        "message": "Aurrerako hegaldi normaletan moteltze-indarra (D-term) kontrolatzen du.<br>D_min piztuta, D-gain hegaldian bakarrik aldatzen da. Aurrerako hegaldi normaletan D_min irabazia lehenaldian dago. Mugimendu zorrotz edo propwhash-ean, D-gain aktiboa ezkerreko zehaztutako D_max irabazietara igotzen da.<br><br>D_max osoko irabaziak makila zorrotz sarreretan lortzen dira, baina aldezka bakarrik gertatzen dira propwhash-ean.<br>Egokitu D_Min irabazia eta Aurreratua, bultzadaren sentsibilitatea eta erritmoa kontrolatzeko.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -2330,7 +2328,7 @@
         "message": "Serbo - 8"
     },
     "motorsResetMaximumButton": {
-        "message": "Berrezarri"
+        "message": "Reset"
     },
     "motorsResetMaximum": {
         "message": "Denboran geihenezko balioa berrezarri"
@@ -2361,7 +2359,7 @@
         "message": "Nagusia"
     },
     "motorsNotice": {
-        "message": "<strong>Motorea probatzeko modua/armatua oharra:</strong><br/> Labainketak edo zure artisautza transmisorearekin batera armatzeak motorrak <strong>biraketa</strong> eragingo du.<br/> Lesioa ekiditeko<strong class=\"message-negative\">kendu helize GUZTIAK</strong> eginbide hau erabili aurretik.<br/> Motorearen proba modua gaituz gero, aldi baterako, desagerrarazteko aukera ere izango da, baina artisautza probatu gabe.<br/>"
+        "message": "<strong>Motorea probatzeko modua/armatua oharra:</strong><br/> Labainketak edo zure artisautza transmisorearekin batera armatzeak motorrak <strong>biraketa</strong> eragingo du.<br/> Lesioa ekiditeko <strong class=\"message-negative\">kendu helize GUZTIAK</strong> eginbide hau erabili aurretik.<br/> Motorearen proba modua gaituz gero, aldi baterako, desagerrarazteko aukera ere izango da, baina artisautza probatu gabe.<br/>"
     },
     "motorsEnableControl": {
         "message": "<strong>Arriskuak ulertzen ditut</strong>, helizeak kendu-motore eta armatzearen kontrolak gaitu eta ihes egitea saihesteko prebentzioa desgaitu."
@@ -2433,7 +2431,7 @@
         "message": "Fitxategian gorde"
     },
     "cliClearOutputHistoryBtn": {
-        "message": "Garbitu irteerako historia"
+        "message": "Garbitu arbela"
     },
     "cliCopyToClipboardBtn": {
         "message": "Arbelean kopiatu"
@@ -2454,7 +2452,7 @@
         "message": "Exekutatu"
     },
     "loggingNote": {
-        "message": "Fitxa honetan <span class=\"message-negative\">bakarrik erregistratuko da</span>, eta fitxan <span class=\"message-negative\">bertan behera utziko du</span> erregistroa eta aplikazioa bere ohiko egoerara itzuliko da<strong>\"konfiguratzailea\"</strong> egoera.<br /> Eguneratze-aldi globala aukeratzeko askatasuna duzu. Datuak erregistroko fitxategian idatziko dira <strong> 1 </strong> segundo guztietan errendimendu arrazoiengatik."
+        "message": "Fitxa honetan <span class=\"message-negative\">bakarrik erregistratuko da</span>, eta fitxan <span class=\"message-negative\">bertan behera utziko du</span> erregistroa eta aplikazioa bere ohiko egoerara itzuliko da <strong>\"konfiguratzailea\"</strong> egoera.<br /> Eguneratze-aldi globala aukeratzeko askatasuna duzu. Datuak erregistroko fitxategian idatziko dira <strong> 1 </strong> segundo guztietan errendimendu arrazoiengatik."
     },
     "loggingSamplesSaved": {
         "message": "Laginak gordeta:"
@@ -2772,7 +2770,7 @@
         "message": "Mezua:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Mesedez, <span class=\"message-negative\">ez</span> saiatu <strong>ez-Betaflight</strong> hardwarea lantzen Firmware-Flasheatzaile honekin.<br/> <span class=\"message-negative\">Ez</span> <strong>deskonektatu</strong> kontroladorea edo <strong>itzali</strong> ordenagailua flasheatzen ari zaren bitartean.<br/><br/><strong>Oharra:</strong> STM32 abiarazlea ROMan gordetzen da, ezin da brickeatu.</strong>Oharra:</strong> <span class=\"message-negative\">Konektatu automatikoki</span> beti desgaituta dago firmware flasheatzailean zaudenean.<br/><strong>Oharra:</strong> Segurtasun kopia duzula ziurtatu; bertsio berritzaile/bertsio batzuek zure konfigurazioa ezabatu egingo dute.<br/><strong>Oharra:</strong> flasheatzen arazoa badaukazu <strong>saiatu kontroladorearen kableak deskonektatzen</strong> lehen, saiatu berrabiarazten, Chrome berritzen, gidariak berritzen.<br/><strong>Oharra:</strong>Zuzeneko konexioak dituzten USB entxufeak (kontroladore berrienak) zuzentzen direnean, ziurtatu Betaflight eskuliburuko USB Flashing atala irakurri duzula eta software eta Target egokiak instalatuta dituzula"
+        "message": "Mesedez, <span class=\"message-negative\">ez</span> saiatu <strong>Betaflight</strong> hardwarea lantzen Firmware-Flasheatzaile honekin.<br/> <span class=\"message-negative\">Ez</span> <strong>deskonektatu</strong> kontroladorea edo <strong>itzali</strong> ordenagailua flasheatzen ari zaren bitartean.<br/><br/><strong>Oharra:</strong> STM32 abiarazlea ROMan gordetzen da, ezin da brickeatu.</strong>Oharra:</strong> <span class=\"message-negative\">Konektatu automatikoki</span> beti desgaituta dago firmware flasheatzailean zaudenean.<br/><strong>Oharra:</strong> Segurtasun kopia duzula ziurtatu; bertsio berritzaile/bertsio batzuek zure konfigurazioa ezabatu egingo dute.<br/><strong>Oharra:</strong> flasheatzen arazoa badaukazu <strong>saiatu kontroladorearen kableak deskonektatzen</strong> lehen, saiatu berrabiarazten, Chrome berritzen, gidariak berritzen.<br/><strong>Oharra:</strong>Zuzeneko konexioak dituzten USB entxufeak (kontroladore berrienak) zuzentzen direnean, ziurtatu Betaflight eskuliburuko USB Flashing atala irakurri duzula eta software eta Target egokiak instalatuta dituzula"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Berreskuratutako/Galdutako komunikazioa</strong>"
@@ -3203,10 +3201,10 @@
         "message": "Motor Irteeraren Muga"
     },
     "pidTuningMotorLimit": {
-        "message": "Atenuazioa %"
+        "message": "Eskala Faktorea [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Motorren aginduak ezarritako ehunekoaren arabera murrizten ditu. ESC korrontea murrizten du eta motor beroak lortzen dira zelda kopuru altuagoko bateriak erabiltzen direnean, adibidez, 6S bateria erabili nahi baduzu 4S-rako diseinatuta gailu batean, 66% saiatu; 4S bateria erabiltzeko 3S diseinatutako gailu batean, 75% saiatu. <br>Egiaztatu osagai guztiak bateriaren tentsioa onartzen dutela."
+        "message": "Motor linear irteeraren eskala factorea(ehuneko gisa). ESC korrontea murrizten du eta motor beroak lortzen dira zelda kopuru altuagoko bateriak erabiltzen direnean, adibidez, 6S bateria erabili nahi baduzu 4S-rako diseinatuta gailu batean, 66% saiatu; 4S bateria erabiltzeko 3S diseinatutako gailu batean, 75% saiatu. <br>Egiaztatu osagai guztiak bateriaren tentsioa onartzen dutela."
     },
     "pidTuningCellCount": {
         "message": "Zelda Kopurua"
@@ -3533,7 +3531,7 @@
         "message": "Funtzionalitate honek aldi baterako bultzadari azeleragailua ematen dio komandoaren aldaketa bizkorretan eta horrek motorraren azelerazioan momentua handitzen du eta bizkortze-erantzun askoz azkarragoa ematen du."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Idle Dinamiko Balioa [rpm]"
+        "message": "Idle Dinamiko Balioa [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Idle Dinamikoa rpm txikietan kontrola hobetzen du eta motorearen desyncs arriskua murrizten du. Aire-korronteak azkartzean edo atzera helizeak moteltzean eragindako arazoak zuzentzen ditu, PID autoritatea, egonkortasuna, motorra balaztatzea eta erantzuna hobetuz. Idle Dinamiko rpm-ak zure Dshot Idle balioaren (begiratu $t(tabMotorTesting.message) fitxan)baino 20% ingurukoa izan behar da. Normalean ez da zure DShot Idle balio lehenetsia aldatu beharrik. Alderantziz denbora gehiago mugitzeko, DShot Idle balioa eta Gutxieneko rpm alde berean murriztu behar lirateke. <br><br>Informazio gehiago<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">wiki sare honetan</a>."
