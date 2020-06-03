@@ -656,9 +656,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometr"
     },
-    "initialSetupDeclination": {
-        "message": "Deklinacja:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -940,9 +937,6 @@
     "featureVTX": {
         "message": "Nadajnik wideo"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Chwilowo podbijaj I podczas dużych zmian gazu"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamiczny filtr Notch dla żyroskopu"
     },
@@ -989,7 +983,7 @@
         "message": "Ustawienia ESC/Silników"
     },
     "configurationFeaturesHelp": {
-        "message": "<strong>Uwaga:</strong> Jeśli nie wszystkie ustawienia  są poprawne to oprogramowanie kontrolera lotu wykryje błąd konfiguracji  następnie   wyłączy funkcje  która tworzy błędną konfiguracje.<br /><strong>Uwaga:</strong> Skonfiguruj port <span class=\"message-negative\">poprzez</span> włączenie funkcji która będzie go wykorzystywać."
+        "message": "<strong>Uwaga:</strong> Nie wszystkie ustawienia są akceptowalne. Jeśli oprogramowanie kontrolera lotu wykryje błąd konfiguracji wtedy kontroler lotu wyłączy funkcje która tworzy kolizję.<br /><strong>Uwaga:</strong> Skonfiguruj port <span class=\"message-negative\">zanim</span> włączysz funkcję która będzie go potrzebować."
     },
     "configurationSerialRXHelp": {
         "message": "<strong>Uwaga:</strong> Gdy używasz odbiornika typu RX_SERIAL, pamiętaj o skonfigurowaniu portu (w zakładce Porty) i wybraniu rodzaju sygnału odbiornika."
@@ -1059,9 +1053,6 @@
     },
     "configurationArmingHelp": {
         "message": "Niektóre opcje uzbrajania mogą wymagać uruchomionego akcelerometru"
-    },
-    "configurationMagDeclination": {
-        "message": "Deklinacja magnetometru [stopnie]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Kierunek silników jest odwrócony"
@@ -1438,10 +1429,6 @@
         "message": "D Min umożliwia osiągnięcie niższego poziomu D w normalnym locie i wyższego poziomu w przypadku szybkich manewrów, które mogą powodować przewrócenie modelu nieie jak flipy i beczki, podnosi on również D podczas naporu powietrza na ster kierunku podczas lotu. Maximum dostosowuje D do maksymalnej wartości i opiera się na wskazaniach żyroskopu aby określić agresywność manewrów. Wyprzedzenie sprawia, że ​​D używa wartości określonej wcześniej przez użytkownika, zamiast żyroskopu do określania ostrych manewrów.",
         "description": "D Min feature helpicon message"
     },
-    "pidTuningDMinHelp": {
-        "message": "Kontroluje siłę tłumienia (D-term) w normalnym locie do przodu. <br> Przy włączonym D_min, podczas lotu zmienia się aktywność D. W normalnym locie do przodu następuje przyrost wartości D_min. Podczas agresywnych manewrów lub podczas podmuchów powietrza na ster kierunku, aktywny zysk D zwiększa się do wartości określonych po lewej stronie. <br><br> Pełne zyski są osiągane przy ostrym wychyleniu drążka, ale tylko częściowe są osiągane podczas podmuchów powietrza na ster kierunku. <br> Dostosuj wzmocnienie i przyspieszenie D_Min, aby kontrolować czułość i czas wzmocnienia.",
-        "description": "D Min helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "Ustawienia regulatora PID"
     },
@@ -1617,10 +1604,10 @@
         "message": "RC Expo"
     },
     "pidTuningTPA": {
-        "message": "TPA"
+        "message": "TPA(wsp. tłumienia PID w zleżności od gazu)"
     },
     "pidTuningTPABreakPoint": {
-        "message": "Punkt przerwania TPA"
+        "message": "TPA(wartość gazu aktywująca TPA) "
     },
     "pidTuningThrottleCurvePreview": {
         "message": "Podgląd krzywej przepustnicy"
@@ -1768,7 +1755,7 @@
         "message": "Są to wartości maksymalnego odchyłu sygnału wejściowego RC podawane w mikro sekundach(us), które są akceptowane jako sygnał poprawny. W przypadku nadajników posiadających duży jitter w sygnale, wartość tą można zwiększyć (aby kontroler uznał go za poprawny). <strong>Nastawa ta dotyczy tylko ustawień dla odchylenia \"Yaw\"</strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": "Strefa Nieczułości Przepustnicy"
+        "message": "Strefa Nieczułości Przepustnicy (tylko tryb 3D)"
     },
     "receiverHelp3dDeadbandThrottle": {
         "message": "Są to wartości podawane w mikro sekundach(us). Aby zwiększyć zakres martwy drążka gazu, zwiększ tą wartość.<strong>Ustawienia tylko dla Gazu w trybie 3D.</strong>"
@@ -1883,7 +1870,7 @@
         "message": "kiedy kanał"
     },
     "adjustmentsColumnIsInRange": {
-        "message": "w zasięgu"
+        "message": "jest w zakresie"
     },
     "adjustmentsColumnThenApplyFunction": {
         "message": "następnie zastosuj"
@@ -2171,7 +2158,7 @@
         "message": "Natężenie:"
     },
     "motorsmAhDrawn": {
-        "message": "Pobór prądu:"
+        "message": "Zużyta pojemność:"
     },
     "motorsVoltageValue": {
         "message": "$1 V"
@@ -2325,7 +2312,7 @@
         "message": "<strong>Uwaga:</strong> opuszczenie karty wiersza poleceń lub naciśnięcie przycisku Rozłącz spowoduje <strong>automatyczne</strong>  \"<strong>wyjście</strong>\" a następnie <strong>restart</strong> kontrolera lotu. A niezapisane dane zostaną <strong>utracone</strong>.<p><strong><span class=\"message-negative\"> Ostrzeżenie: </span></strong> Niektóre polecenia w interfejsie wiersza CLI mogą powodować wysyłanie sygnałów do silników. Może to spowodować uruchchomienie silników, jeśli podłączony jest akumulator. Dlatego zalecane jest upewnienie się, że <strong>bateria nie jest podłączona przed wprowadzeniem poleceń w CLI </strong>."
     },
     "cliInputPlaceholder": {
-        "message": "Napisz tutaj swoje polecenie. Naciśnij zakładkę, aby Autouzupełnić."
+        "message": "Napisz tutaj swoje polecenie. Naciśnij TAB aby Autouzupełnić."
     },
     "cliInputPlaceholderBuilding": {
         "message": "Proszę czekać podczas tworzenia pamięci podręcznej autouzupełniania..."
@@ -2896,7 +2883,7 @@
         "description": "One of the modes in Led Strip"
     },
     "ledStripWiringMode": {
-        "message": "Typ Okablowania",
+        "message": "Tryb ustalania kolejności połączenia",
         "description": "One of the wiring modes in Led Strip"
     },
     "ledStripWiringClearControl": {
@@ -2904,7 +2891,7 @@
         "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripWiringClearAllControl": {
-        "message": "Wyczyść WSZYSTKIE okablowania",
+        "message": "Wyczyść WSZYSTKIE połączenia",
         "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripWiringMessage": {
@@ -3411,7 +3398,7 @@
         "message": "Odbiornik Failsafe"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Failsafe ma dwa etapy. <strong> Etap 1 </strong> jest wprowadzany, gdy kanał lotniczy ma nieprawidłową długość impulsu, odbiornik zgłasza tryb awaryjny lub w ogóle nie ma sygnału z odbiornika, ustawienia cofania kanału są stosowane do <span class = \"message- negatywne \"> wszystkie kanały </span> oraz krótki czas na odzyskanie danych. <strong> Etap 2 </strong> jest wprowadzany, gdy warunek błędu trwa dłużej niż skonfigurowany czas ochronny, gdy jednostka jest <span class = \"message-negative\"> uzbrojona </span>, wszystkie kanały pozostaną na stosowanym kanale ustawienie rezerwowe, chyba że zostanie anulowane przez wybraną procedurę. <br /> <strong> Uwaga: </strong> Przed wejściem do etapu 1 ustawienia zastępowania kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
+        "message": "Failsafe ma dwa etapy. <br><strong> Etap 1 </strong> jest aktywowany, gdy kanał radiowy ma nieprawidłową długość impulsu, odbiornik zgłasza tryb awaryjny lub w ogóle nie ma sygnału z odbiornika, ustawienia zastępcze kanału są stosowane do <span class = \"message-negative\"> WSZYSTKICH kanałów </span> oraz jest zarezerwowany krótki czas ochrony  na powrót trasmisji danych w kanale radiowym. <br><strong> Etap 2 </strong> jest aktywowany, gdy warunek błędu trwa dłużej niż skonfigurowany czas ochronny, gdy jednostka jest <span class = \"message-negative\"> uzbrojona </span>, wszystkie kanały zostaną ustawione na podstawie ustawień zastępczych, chyba że wybrano inną procedurę. <br /> <span class = \"message-negative\"><strong> Uwaga: </strong></span> Przed wejściem do etapu 1 ustawienia zastępcze kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
     },
     "failsafePulsrangeTitle": {
         "message": "Ustawienia akceptowalnego zakresu impulsu"
@@ -3450,7 +3437,7 @@
         "message": "Failsafe niskie opóźnienie przepustnicy [1 = 0.1 sec.]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Wystarczy rozbroić model zamiast wykonać wybraną procedurę awaryjną, aby przepustnica była nieaktywna"
+        "message": "Doprowadza do rozbrojenia maszyny zamiast wykonywać wybraną procedurę awaryjną, gdy gaz był na minimum przez dany okres czasu"
     },
     "failsafeThrottleItem": {
         "message": "Wartość przepustnicy użyta podczas lądowania"
@@ -3633,7 +3620,7 @@
         "message": "Tutaj pokazane są nowo skalibrowane skale <br>Zastosowanie ich spowoduje ustawienie skal, ale <strong>nie zapisze ich.</strong></br> <br>Po zapisaniu upewnij się, że nowe napięcie i prąd są poprawne.</br>"
     },
     "powerVoltageHead": {
-        "message": "Miernik napięcia"
+        "message": "Woltomierz"
     },
     "powerVoltageValue": {
         "message": "$1 V"
@@ -3801,7 +3788,7 @@
         "message": "Połączony"
     },
     "powerBatteryConnectedValueYes": {
-        "message": "Tak (Cel: $1)"
+        "message": "Tak (Ogniw: $1S)"
     },
     "powerBatteryConnectedValueNo": {
         "message": "Nie"
@@ -4074,11 +4061,11 @@
         "message": "Natychmiastowy pobór prądu z baterii"
     },
     "osdTextElementMahDrawn": {
-        "message": "Pobór prądu mAh",
+        "message": "Zużyta pojemność baterii mAh",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMahDrawn": {
-        "message": "Całkowita pojemność baterii"
+        "message": "Całkowita zużyta pojemność baterii"
     },
     "osdTextElementCraftName": {
         "message": "Nazwa modelu",
@@ -4137,7 +4124,7 @@
         "message": "Długość geograficzna GPS"
     },
     "osdTextElementGPSLat": {
-        "message": "Długość geograficzna GPS",
+        "message": "Szerokość geograficzna GPS",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLat": {
@@ -4148,7 +4135,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDebug": {
-        "message": "Debuguj zmienne"
+        "message": "Zmienne debugowania"
     },
     "osdTextElementPIDRoll": {
         "message": "PID roll",
@@ -4172,11 +4159,11 @@
         "message": "Wzmocnienie PID osi odchylenia (yaw)"
     },
     "osdTextElementPower": {
-        "message": "Włącz",
+        "message": "Pobierana Moc z baterii",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPower": {
-        "message": "Natychmiastowe zużycie energii elektrycznej"
+        "message": "Chwilowa wartość zużywanej mocy elektrycznej"
     },
     "osdTextElementPIDRateProfile": {
         "message": "Profil: PID i współczynników (rate)",
@@ -4700,7 +4687,7 @@
         "description": "Text of the RSSI alarm"
     },
     "osdTimerAlarmOptionCapacity": {
-        "message": "Pojemność",
+        "message": "Pojemność Baterii mAh",
         "description": "Text of the capacity alarm"
     },
     "osdTimerAlarmOptionAltitude": {
@@ -4871,7 +4858,7 @@
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
-        "message": "<span class=\"message-negative\">Uwaga:</span> Musisz skonfigurować i zapisać PIERWSZĄ tabelę VTX na dole zanim będziesz mógł korzystać z $t(vtxSelectedMode.message) pól.",
+        "message": "<span class=\"message-negative\">Uwaga:</span> Musisz skonfigurować i zapisać PIERWSZĄ tabelę VTX (na dole) zanim będziesz mógł korzystać z ustawień z kategorii $t(vtxSelectedMode.message).",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageFactoryBandsNotSupported": {
@@ -5132,7 +5119,7 @@
         "message": "Status łącza"
     },
     "configurationEscProtocol": {
-        "message": "Protokół ESC /Silnik"
+        "message": "Protokół sterowania ESC/Silnika"
     },
     "configurationEscProtocolHelp": {
         "message": "Wybierz protokół dla silników<br>Upewnij się że dany protokół jest wspierany przez twoje ESC, informacja o tym powinna być dostępna na stronie twórcy.<br><b>Bądź ostrożny używając DSHOT900 i DSHOT1200 ponieważ nie jest wspierany przez wszystkie ESC</b>"
@@ -5269,7 +5256,7 @@
         "message": "Kąt nachylenia kamery FPV [degrees]"
     },
     "onboardLoggingBlackbox": {
-        "message": "Urządzenie rejestrujące loty"
+        "message": "Urządzenie zapisu logów"
     },
     "onboardLoggingRateOfLogging": {
         "message": "Częstotliwość rejestrowania"

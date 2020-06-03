@@ -99,6 +99,10 @@
         "message": "Polski",
         "description": "Don't translate!!!"
     },
+    "language_zh_TW": {
+        "message": "繁體中文",
+        "description": "Don't translate!!!"
+    },
     "sensorDataFlashNotFound": {
         "message": "Cap dataflash <br>xip trobat",
         "description": "Text of the dataflash image in the header of the page."
@@ -550,7 +554,7 @@
         "message": "Maquinari"
     },
     "defaultWelcomeText": {
-        "message": "L’aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per trobar una llista completa del maquinari.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar visualizador de registre de Betaflight Blackbox</a><br /><br />El codi font del firmware es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopeener noreferrer\">aquí</a>< br /><br />Els últims <b>controladors STM USB VCP</b> es poden descarregar des de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari existent que utilitza un xip USB sèrie a CP210x:<br />Els últims <b>controladors CP210x</b> es poden descarregar de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \"target=\"_ blank\" rel=\"noopener noreferrer\">aquí</a><br />El darrer <b>Zadig</b> del controlador de Windows USB es pot descarregar de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />"
+        "message": "L’aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per trobar una llista completa del maquinari.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar visualizador de registre de Betaflight Blackbox</a><br /><br />El codi font del firmware es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopeener noreferrer\">aquí</a>< br />Els últims <b>controladors STM USB VCP</b> es poden descarregar des de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari existent que utilitza un convertidor USB a sèrie CP210x:<br />Els últims <b>controladors CP210x</b> es poden descarregar de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \"target=\"_ blank\" rel=\"noopener noreferrer\">aquí</a><br />El darrer <b>Zadig</b> del controlador de Windows USB es pot descarregar de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -718,9 +722,6 @@
     "initialSetupMagHead": {
         "message": "Magnetòmetre"
     },
-    "initialSetupDeclination": {
-        "message": "Declinació:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -856,6 +857,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "L'acceleròmetre no s'ha calibrat i estan habilitades funcions que es basen en ell. Calibrar l’acceleròmetre.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "No s'ha seleccionat cap protocol de sortida del motor",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un dels altres desarmar banderes està actiu quan es fa armament",
@@ -1003,7 +1008,10 @@
         "message": "Transmissor de vídeo"
     },
     "featureANTI_GRAVITY": {
-        "message": "Increment temporal del valor I en grans canvis d'acceleració"
+        "message": "Activa Anti Gravity permanentment"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Si està desactivat, es pot utilitzar el mode 'ANTI GRAVITY' habilitant Anti Gravity amb un commutador de l'emisora."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtratge Notch dinamic de giro"
@@ -1121,9 +1129,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunes opcions d'armat requereixen l'acceleròmetre habilitat"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinació del magnetòmetre [graus]"
     },
     "configurationReverseMotorSwitch": {
         "message": "La direcció dels motors és inversa"
@@ -1296,6 +1301,9 @@
         "message": "{{value}} kHz",
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
+    "configurationLoopTimeHelp": {
+        "message": "<strong>Nota:</strong> Assegureu-vos que la vostra controladora pot funcionar a aquestes velocitats. Comproveu l'estabilitat de la CPU i del cicle de temps. Si canvieu això, podreu requerir nous ajustos dels PID. CONSELL: Desactiveu l’acceleròmetre i altres sensors per obtenir més rendiment."
+    },
     "configurationGPS": {
         "message": "GPS"
     },
@@ -1435,6 +1443,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "Càmera (Protocol RunCam)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (Protocol FrSky)"
+    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1511,7 +1522,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controla la força d’amortiment (terme D) en un vol endavant normal.<br>Amb D_min activat, el guany D D actiu canvia durant el vol. En el vol endavant normal, es troba a les guanys de D_min per sota. Durant un moviment fort o durant el propwash, el guany D actiu augmenta els guanys de la derivada especificats a l’esquerra.<br><br>Els beneficis derivats complets s’obtenen en les entrades del stick, però només s’obtenen parcialment al propwash.<br>Ajustar el guany i avançament D_Min per controlar la sincronització, la sensibilitat i el temps.",
+        "message": "Controla la força d’amortiment (D-term) en un vol endavant normal.<br>Amb D_min activat, el guany D actiu canvia durant el vol. En el vol endavant normal, es troba als guanys de D_min per sota. Durant un moviment fort o durant el propwash, el guany D actiu augmenta els guanys de D_max a  l'esquerra.<br><br>El guany complet de D_Max s’obtenen amb moviments ràpids del stick, però només s’obtenen parcialment durant el propwash.<br>Ajustar el guany de D_min i avançament per controlar la sensibilitat del guany adicional, i el temps.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -3197,10 +3208,10 @@
         "message": "Límit de sortida del motor"
     },
     "pidTuningMotorLimit": {
-        "message": "Atenuació %"
+        "message": "Factor d'escala [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Atenua les ordres del motor pel percentatge establert. Redueix la calor de ESC i del motor quan s'utilitzen bateries de mès cèl·lules, p.ex. Quan utilitzeu una bateria 6S en una aeronau que tingui motors, puntals i ajustaments dissenyats per a 4S, proveu de fixar el valor en el 66%; si utilitzeu una bateria 4S en una embarcació destinada a 3S, proveu el 75%.<br> Assegureu-vos que tots els components poden suportar el voltatge de la bateria que feu servir."
+        "message": "Factor d'escala lineal de la sortida del motor (percentual). Redueix la calor actual i del motor de l’ESC quan s’utilitzen piles de mès cèl·lules, p.ex. Quan utilitzeu una bateria 6S en una aeronau que tingui motors, puntals i ajustaments dissenyats per a 4S, proveu de fixar el valor en el 66%; si utilitzeu una bateria 4S en una aeronau destinada a 3S, proveu el 75%.<br>Assegureu-vos que tots els vostres components poden suportar el voltatge de la bateria que feu servir."
     },
     "pidTuningCellCount": {
         "message": "Recompte de cel·les"
@@ -3527,7 +3538,7 @@
         "message": "Aquesta característica permet augmentar temporalment l’acceleració en moviments ràpids del stick, fet que augmenta el parell d’acceleració als motors, proporcionant una resposta de l’acceleració molt més ràpida."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Valor Dinàmic Idle [rpm]"
+        "message": "Valor Dinàmic Idle [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Dynamic Idle millora el control a baixa rpm i redueix el risc de desíncs del motor. Corregeix problemes causats per l’acceleració del flux d’aire o alentiment de hèlix, millorant l’autoritat PID, l’estabilitat, la frenada del motor i la resposta. La rpm dinàmica de ralentí hauria d'estar aproximadament un 20% inferior a la rpm del vostre valor inactiu Dshot (vegeu la pestanya $t(tabMotorTesting.message) tab). Normalment no cal canviar el valor del idle DShot per defecte. Per a un temps d’inversió invertit més llarg, s’haurien de reduir el valor idle DShot i el Mínim rpm junts.<br><br>Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada de la wiki</a> per obtenir més informació."
@@ -4867,9 +4878,15 @@
         "message": "Armant des-habilitat",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningArmingDisabled": {
+        "message": "Reporta la raó mes important per no armar"
+    },
     "osdWarningTextBatteryNotFull": {
         "message": "Bateria no plena",
         "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningBatteryNotFull": {
+        "message": "Avisa quan es connecta una bateria que no està totalment carregada"
     },
     "osdWarningTextBatteryWarning": {
         "message": "Avís de bateria",
@@ -4881,6 +4898,9 @@
     "osdWarningTextBatteryCritical": {
         "message": "Bateria critica",
         "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningBatteryCritical": {
+        "message": "Alerta quan la tensió de la bateria caigui per sota del voltatge mínim de cel·la"
     },
     "osdWarningTextVisualBeeper": {
         "message": "Beeper visual",
@@ -4979,8 +4999,14 @@
     "osdWarningUnknown": {
         "message": "Avis desconegut (Els detalls s'afegiran a publicacions futures)"
     },
+    "osdSectionHelpElements": {
+        "message": "Activa o desactiva els elements de OSD."
+    },
     "osdSectionHelpVideoMode": {
         "message": "Configura el mode de video esperat (hauria de funcionar en AUTO, d'altra forma configura-ho manualment)"
+    },
+    "osdSectionHelpUnits": {
+        "message": "Configura el sistema d’unitat utilitzat per a les lectures numèriques."
     },
     "osdSectionHelpTimers": {
         "message": "Configureu els temporitzadors de vol."
@@ -5272,6 +5298,12 @@
     "mainHelpLink": {
         "message": "Serial Link Status"
     },
+    "configurationEscProtocol": {
+        "message": "Protocol ESC/Motor"
+    },
+    "configurationEscProtocolHelp": {
+        "message": "Seleccioneu el vostre protocol de motor.<br>Assegureu-vos de verificar que el protocol és compatible amb el vostre ESC, aquesta informació ha de trobar-se al lloc web del fabricant. <br><b> Tingueu cura de fer servir DSHOT900 i DSHOT1200, ja que no són molts els ESC que ho admeten!</b>"
+    },
     "configurationEscProtocolHelpNoDSHOT1200": {
         "message": "Seleccioneu el vostre protocol de motor.<br>Assegureu-vos de verificar que el protocol és compatible amb el vostre ESC, aquesta informació ha de trobar-se al lloc web dels fabricants."
     },
@@ -5289,6 +5321,15 @@
         "message": "Envia dades de l’ESC a la FC mitjançant telemetria DShot. Necessari per RPM Filtering i Idle dinàmic.<br> <br>: Nota: requereix un ESC compatible amb el firmware adequat, per exemple, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
+    "configurationGyroSyncDenom": {
+        "message": "Freqüència d'actualització del Giroscopi"
+    },
+    "configurationPidProcessDenom": {
+        "message": "Freqüencia de llaç del PID"
+    },
+    "configurationPidProcessDenomHelp": {
+        "message": "La freqüència màxima del bucle PID està limitada per la freqüència màxima que les actualitzacions poden ser enviades pel protocol ESC/motor escollit."
+    },
     "configurationGyroUse32kHz": {
         "message": "Habilita el mode de mostreig del gyro de 32kHz"
     },
@@ -5298,8 +5339,14 @@
     "configurationAccHardware": {
         "message": "Acceleròmetre"
     },
+    "configurationBaroHardware": {
+        "message": "Baròmetre (si existeix)"
+    },
     "configurationMagHardware": {
         "message": "Magnetòmetre (si és compatible)"
+    },
+    "configurationSmallAngle": {
+        "message": "Angle máxim d'armat [graus]"
     },
     "configurationSmallAngleHelp": {
         "message": "L'aeronau no armarà si està inclinada certs graus. Només aplica si l'acceleròmetre està habilitat. Posar-ho a 180º deshabilitarà la comprovació."

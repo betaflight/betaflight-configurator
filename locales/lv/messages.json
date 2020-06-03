@@ -629,9 +629,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometrs"
     },
-    "initialSetupDeclination": {
-        "message": "Declination:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -902,9 +899,6 @@
     "featureVTX": {
         "message": "Video raidītājs"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Īslaicīgi palielināt I-Term pie lielām droseles vērtībām izmaiņām"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Žiroskopa dinamiskā joslas filtrēšana"
     },
@@ -1021,9 +1015,6 @@
     },
     "configurationArmingHelp": {
         "message": "Dažām aktivizācijas iespējām ir nepieciešams akselerometrs"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometra deklinācija [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motoru griešanās virziens ir reversā"

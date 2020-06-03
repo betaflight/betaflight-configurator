@@ -638,9 +638,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometar"
     },
-    "initialSetupDeclination": {
-        "message": "Deklinacija:"
-    },
     "initialSetupInfoHead": {
         "message": "Informacije"
     },
@@ -904,9 +901,6 @@
     "featureVTX": {
         "message": "Video odašiljač"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Privremeno pojačaj I-Term na velikim promjenama gasa/throttlea"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Dinamički gyro notch filter"
     },
@@ -1023,9 +1017,6 @@
     },
     "configurationArmingHelp": {
         "message": "Neke opcije Arminga možda će zahtijevati akcelerometar"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometarska deklinacija [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Rotacija motora je obrnuta"

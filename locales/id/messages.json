@@ -587,9 +587,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
-    "initialSetupDeclination": {
-        "message": "Deklinasi:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -758,9 +755,6 @@
     "featureVTX": {
         "message": "Transmitter Video"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Naikkan I-Term sementara pada perubahan throttle tinggi"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Filter notch gyro dinamis"
     },
@@ -856,9 +850,6 @@
     },
     "configurationArmingHelp": {
         "message": "Beberapa pilihan Arming memerlukan accelerometer diaktifkan"
-    },
-    "configurationMagDeclination": {
-        "message": "Deklinasi Magnetometer [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Arah motor dibalik"

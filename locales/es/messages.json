@@ -564,7 +564,7 @@
         "message": "Instalar Firmware"
     },
     "defaultDonateHead": {
-        "message": "Código Abierto / Aviso de Donación"
+        "message": "Software Libre / Aviso de Donación"
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight</strong> es un software controlador de vuelo que es <strong>software libre</strong> y está disponible gratuitamente <strong>sin garantía</strong> para todos los usuarios.</p><p>Si encuentras Betaflight o Betaflight Configurator útil, por favor considera <strong>ayudar</strong> al desarrollo donando.</p>"
@@ -714,9 +714,6 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
-    "initialSetupDeclination": {
-        "message": "Declinación:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -852,6 +849,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "El acelerómetro no ha sido calibrado y hay funcionalidades que lo necesitan. Calibra el acelerómetro.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "No hay ningún protocolo de salida del motor seleccionado",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Una de las otras banderas de desarmado estaba activa al armar",
@@ -999,7 +1000,10 @@
         "message": "Transmisor de Vídeo"
     },
     "featureANTI_GRAVITY": {
-        "message": "Aumento temporal I Term en cambios de acelerador bruscos"
+        "message": "Activar Anti Gravedad permanentemente"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Si se desactiva, el modo 'ANTI GRAVITY' puede usarse para activar Anti Gravedad con un interruptor."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtro notch dinámico para el giro"
@@ -1117,9 +1121,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunas opciones de Armado pueden requerir que el acelerómetro esté activado"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinación Magnetómetro [grad]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de los motores invertida"
@@ -1308,10 +1309,10 @@
         "message": "Tipo de Asistencia en Tierra"
     },
     "configurationGPSAutoBaud": {
-        "message": "Velocidad Auto"
+        "message": "Velocidad automática"
     },
     "configurationGPSAutoConfig": {
-        "message": "Configuración Auto"
+        "message": "Configuración automática"
     },
     "configurationGPSGalileo": {
         "message": "Usar Galileo",
@@ -1434,6 +1435,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "Cámara (RunCam Protocol)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (Protocolo FrSky)"
+    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1510,7 +1514,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controla la fuerza del amortiguado (Término D) en vuelo normal recto.<br>Con D Min activado, el valor de D cambia durante el vuelo. En vuelo normal recto usa el valor de D Min. Durante movimientos bruscos o durante turbulencias, la D crece hasta el valor de D especificado a la izquierda.<br><br>El valor máximo se obtiene con movimientos bruscos de los mandos, pero con turbulencias sólo se obtienen incrementos parciales.<br>Ajusta el valor de Ganancia y Avance de D Min para controlar la cantidad y temporización del incremento.",
+        "message": "Controla la fuerza del amortiguado (Término D) en vuelo normal recto.<br>Con D Min activado, el valor de D cambia durante el vuelo. En vuelo normal recto usa el valor de D Min. Durante movimientos bruscos o durante turbulencias, la D crece hasta el valor de D Max especificado a la izquierda.<br><br>El valor máximo se obtiene con movimientos bruscos de los mandos, pero con turbulencias sólo se obtienen incrementos parciales.<br>Ajusta el valor de Ganancia y Avance de D Min para controlar la cantidad y temporización del incremento.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -3196,10 +3200,10 @@
         "message": "Límite de salida del motor"
     },
     "pidTuningMotorLimit": {
-        "message": "Atenuación %"
+        "message": "Factor de Escala [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Reduce los comandos a los motores por el porcentaje establecido. Reduce la corriente en los ESC y la temperatura de los motores cuando se usan baterías con mayor número de celdas. Por ejemplo, al usar una batería 6S en una aeronave que tiene motores, hélices y un ajuste diseñado para 4S, prueba a poner este valor en el 66%; al usar una batería 4S en una aeronave diseñada para 3S, prueba un 75%.<br>Asegúrate siempre de que todos tus componentes pueden soportar el voltaje de la batería que estés usando."
+        "message": "Factor de escala de salida lineal del motor (como porcentaje). Reduce la corriente en los ESC y la temperatura de los motores cuando se usan baterías con mayor número de celdas. Por ejemplo, al usar una batería 6S en una aeronave que tiene motores, hélices y un ajuste diseñado para 4S, prueba a poner este valor en el 66%; al usar una batería 4S en una aeronave diseñada para 3S, prueba un 75%.<br>Asegúrate siempre de que todos tus componentes pueden soportar el voltaje de la batería que estés usando."
     },
     "pidTuningCellCount": {
         "message": "Número de celdas"
@@ -3379,7 +3383,7 @@
         "message": "El Filtro Notch Dinámico tiene tres rangos de frecuencias en las que puede operar: LOW (80-300Hz) para quads con pocas revoluciones como 6\" o más, MEDIUM (140-550Hz) para un quad normal de 5\", HIGH (230-800Hz) para quads de altas revoluciones como por ejemplo 2,5\"-3\". La opción AUTO selecciona el rango dependiendo del valor de la frecuencia de corte máxima del filtro Giro Paso Bajo 1 Dinámico."
     },
     "pidTuningDynamicNotchWidthPercentHelp": {
-        "message": "Este valor selecciona el ancho entre dos Filtros Notch Dinámicos. Un valor de 0 desactiva el segundo Filtro Notch Dinámico y reduce el retraso producido por el filtro, sin embargo puede producir que la temperatura de los motores sean más altas."
+        "message": "Este valor establece el ancho entre dos Filtros Notch Dinámicos. Un valor de 0 desactiva el segundo Filtro Notch Dinámico y reduce el retardo producido por el filtro, sin embargo puede producir que la temperatura de los motores sea más alta."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "El factor Q ajusta como de estrechos o anchos son los Filtros Notch Dinámicos. Valores más altos lo hacen estrecho y más preciso y valores más bajos lo hacen más ancho y extenso. Un valor muy bajo aumenta considerablemente el retraso producido por el filtro."
@@ -3526,7 +3530,7 @@
         "message": "Esta funcionalidad permite dar un impulso temporal al acelerador en cambios rápidos del mando, lo cual incrementa el par de torsión en la aceleración de los motores, proporcionando una respuesta de aceleración mucho más rápida."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Valor Ralentí Dinámico [rpm]"
+        "message": "Valor de Ralentí Dinámico [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Ralentí Dinámico mejora el control a bajas rpm y reduce el riesgo de desincronizaciones de motor. Corrige problemas causados por el flujo de aire acelerando o frenando las hélices, mejorando la autoridad del PID, la estabilidad, el frenado del motor y la respuesta. Las rpm del Ralentí Dinámico debe configurarse para ser aproximadamente un 20% por debajo de las rpm de tu valor de ralentí de Dshot (ver la pestaña $t(tabMotorTesting.message)). Normalmente no hay necesidad de cambiar el ralentí de Dshot de los valores por defecto. Para obtener más tiempo flotando invertido, el valor de ralentí Dshot y las rpm mínimas deben reducirse a la vez.<br><br>Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">esta entrada en la wiki</a> para más información."

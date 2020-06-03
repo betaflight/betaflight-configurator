@@ -714,9 +714,6 @@
     "initialSetupMagHead": {
         "message": "コンパス"
     },
-    "initialSetupDeclination": {
-        "message": "偏角"
-    },
     "initialSetupInfoHead": {
         "message": "情報"
     },
@@ -852,6 +849,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "加速度センサーはキャリブレーションされていませんが、依存する機能が有効になっています。加速度センサーをキャリブレーションしてください。",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "モーター出力プロトコルが選択されていません",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "他のフラグの1つはアーム時にフラグを解除します",
@@ -998,11 +999,8 @@
     "featureVTX": {
         "message": "VTX設定"
     },
-    "featureANTI_GRAVITY": {
-        "message": "スロットル可変時における一時的なI値のブースト"
-    },
     "featureDYNAMIC_FILTER": {
-        "message": "動的ジャイロ ノッチフィルター"
+        "message": "動的ジャイロノッチフィルター"
     },
     "featureFAILSAFE": {
         "message": "フェイルセーフ ステージ2を有効"
@@ -1117,9 +1115,6 @@
     },
     "configurationArmingHelp": {
         "message": "アーミングオプションによっては、加速度センサーを有効にする必要があります"
-    },
-    "configurationMagDeclination": {
-        "message": "コンパス偏位 [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "モーター回転方向を逆転"
@@ -1434,6 +1429,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "カメラ (RunCamプロトコル)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (FrSkyプロトコル)"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -1510,7 +1508,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "通常の直進飛行での減衰の強さ (D値) を制御します。<br>D_Minを有効にすると、飛行中に有効なD値の強さを可変させます。通常の直進飛行では、以下の強さのD_Min値となります。機敏な挙動またはプロップウォッシュが発生した際、有効なDerivative[微分制御] の強さは左に指定されたD値ゲインまで上昇します。<br><br>機敏なスティック入力の場合は完全なD値ゲインが得られますが、プロップウォッシュ時は一部のD値ゲインしか有効になりません。<br>D_Minの強さ[ゲイン] と詳細設定を調整して、ブーストの感度とタイミングを制御しましょう。",
+        "message": "通常の直進飛行での減衰の強さ (D値) を制御します。<br>D_Minを有効にすると、飛行中に有効なD値の強さを可変させます。通常の直進飛行では、以下の強さのD_Min値となります。機敏な挙動またはプロップウォッシュが発生した際、有効なD_Max値の強さは左に指定されたD値ゲインまで上昇します。<br><br>機敏なスティック入力の場合は完全なD_Max値ゲインが得られますが、プロップウォッシュ時は一部のD値ゲインしか有効になりません。<br>D_Minの強さ[ゲイン] と詳細設定を調整して、ブーストの感度とタイミングを制御しましょう。",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1806,7 +1804,7 @@
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ないです。これは機体制御が困難となる可能性があり、飛行中に大きく影響する可能性があります。<b>『ジャイロダイナミックローパス』または『ジャイロローパス 1』の少なくとも1つと『D値ダイナミックローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
+        "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ないです。これは機体制御が困難となる可能性があり、飛行中に大きく影響する可能性があります。<b>『動的ジャイロローパス』または『ジャイロローパス 1』の少なくとも1つと『D値動的ローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
     },
     "receiverThrottleMid": {
         "message": "スロットルMID"
@@ -3196,10 +3194,10 @@
         "message": "モーター出力リミット"
     },
     "pidTuningMotorLimit": {
-        "message": "減衰 %"
+        "message": "スケール係数 [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "設定したパーセンテージでモーターコマンドを減衰させます。例えばセル数の多いバッテリーを使用すると、ESC電流とモーターの熱が減少します。4S用に設計されたモーター、プロペラ、チューニングを備えた機体で6Sバッテリーを使用する場合は、値を66%に設定してください。3S向け機体で4Sバッテリーを使用する場合は75%を試してください。<br>すべてのコンポーネントが使用しているバッテリー電圧をサポート可能なことを常に確認してください。"
+        "message": "モーター出力線形スケール係数(パーセント数)です。例えばセル数の多いバッテリーを使用すると、ESC電流とモーターの熱が減少します。4S用に設計されたモーター、プロペラ、チューニングを備えた機体で6Sバッテリーを使用する場合は、値を66%に設定してください。3S向け機体で4Sバッテリーを使用する場合は75%を試してください。<br>すべてのコンポーネントが使用しているバッテリー電圧をサポート可能なことを常に確認してください。"
     },
     "pidTuningCellCount": {
         "message": "セル数"
@@ -3352,31 +3350,31 @@
         "message": "ノッチフィルターには中心周波数とカットオフ周波数があります。 フィルターは対称となり、 中心周波数はフィルターの中心位置で、カットオフ周波数はノッチフィルターの開始位置となります。 たとえばノッチフィルター カットオフ周波数が160Hz、ノッチフィルター中心周波数が260Hzの場合、範囲は160〜360Hzとなり、中心付近の減衰が最も大きくなります。"
     },
     "pidTuningDynamicNotchFilterGroup": {
-        "message": "ダイナミックノッチフィルター"
+        "message": "動的ノッチフィルター"
     },
     "pidTuningDynamicNotchFilterHelp": {
-        "message": "ダイナミックノッチフィルターは、モーターノイズのピーク周波数を追跡し、その周波数を中心に1つ、または2つのノッチフィルターを配置します。"
+        "message": "動的ノッチフィルターは、モーターノイズのピーク周波数を追跡し、その周波数を中心に1つ、または2つのノッチフィルターを配置します。"
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>注:</strong> 動的ノッチフィルターは無効です。設定して使用するには【$t(tabConfiguration.message)】タブの【$t(configurationFeatures.message)】項で『DYNAMIC_FILTER』機能を有効にしてください。"
+        "message": "<strong>注:</strong> 動的ノッチフィルターは無効です。設定して使用するには【$t(tabConfiguration.message)】タブの【$t(configurationFeatures.message)】項で『動的フィルター』機能を有効にしてください。"
     },
     "pidTuningDynamicNotchRange": {
-        "message": "ダイナミックノッチフィルター範囲"
+        "message": "動的ノッチフィルター範囲"
     },
     "pidTuningDynamicNotchWidthPercent": {
-        "message": "ダイナミックノッチ 幅％"
+        "message": "動的ノッチ 幅％"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "ダイナミックノッチ Q"
+        "message": "動的ノッチ Q"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "ダイナミックノッチ 最小Hz"
+        "message": "動的ノッチ 最小Hz"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "ダイナミックノッチ 最大Hz"
+        "message": "動的ノッチ 最大Hz"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "ダイナミックノッチには、設定可能な3つの周波数範囲があります。6インチ以上の低回転型クワッドコプターの場合はLOW(80-330hz)、通常の5インチの場合はMEDIUM(140-550hz)、2.5～3インチのような非常に高回転の場合はHIGH(230-800hz) となります。AUTOオプションは、ジャイロダイナミックローパスフィルター1の最大カットオフ周波数の値に応じて範囲を選択します。"
+        "message": "動的ノッチには、設定可能な3つの周波数範囲があります。6インチ以上の低回転型クワッドコプターの場合はLOW(80-330hz)、通常の5インチの場合はMEDIUM(140-550hz)、2.5～3インチのような非常に高回転の場合はHIGH(230-800hz) となります。AUTOオプションは、動的ジャイロローパスフィルター1の最大カットオフ周波数の値に応じて範囲を選択します。"
     },
     "pidTuningDynamicNotchWidthPercentHelp": {
         "message": "これにより、2つの動的ノッチフィルター間の幅が設定されます。0に設定すると、動的ノッチフィルター2が無効となり、フィルター遅延が減少しますが、モーターの温度が高くなる場合があります。"
@@ -3385,10 +3383,10 @@
         "message": "Q係数は動的ノッチフィルターの幅を調整します。値を大きくすると幅が狭くなり、より正確となり、値を低くすると幅が広くなります。本当に低い値を設定すると、フィルター遅延が大幅に増加します。"
     },
     "pidTuningDynamicNotchMinHzHelp": {
-        "message": "ダイナミックノッチで制御が必要なノイズ周波数の最低値を設定します。"
+        "message": "動的ノッチで制御が必要なノイズ周波数の最低値を設定します。"
     },
     "pidTuningDynamicNotchMaxHzHelp": {
-        "message": "ダイナミックノッチで制御が必要なノイズ周波数の最大値を設定します。"
+        "message": "動的ノッチで制御が必要なノイズ周波数の最大値を設定します。"
     },
     "pidTuningRpmFilterGroup": {
         "message": "ジャイロRPMフィルター",
@@ -3526,10 +3524,10 @@
         "message": "この機能は素早いスティックの動きで一時的にスロットルをブーストすることができます。これにより、モーターの加速トルクを増加させ、より速いスロットル応答を提供します。"
     },
     "pidTuningIdleMinRpm": {
-        "message": "ダイナミックアイドル値 [rpm]"
+        "message": "動的アイドル値 [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "ダイナミックアイドル値は、低回転数での制御を改善しモーターの非同期リスクを軽減します。プロペラのスピードアップまたはスローダウンによって引き起こされる問題を修正し、PID制御権限、安定性、モーター減速性および応答性を改善します。ダイナミックアイドル回転数は、Dshotアイドル値の回転数の約20%に設定する必要があります。($t(tabMotorTesting.message)タブを参照) 通常DShotアイドル値をデフォルトから変更する必要はありません。反転ハングタイムを長くするには、DShotアイドル値と最小回転数を一緒に下げる必要があります。<br><br>詳細は<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
+        "message": "動的アイドル値は、低回転数での制御を改善しモーターの非同期リスクを軽減します。プロペラのスピードアップまたはスローダウンによって引き起こされる問題を修正し、PID制御権限、安定性、モーター減速性および応答性を改善します。動的アイドル回転数は、Dshotアイドル値の回転数の約20%に設定する必要があります。($t(tabMotorTesting.message)タブを参照) 通常DShotアイドル値をデフォルトから変更する必要はありません。より長い制御不能時間を戻したい場合は、DShotアイドル値と最小回転数を一緒に下げる必要があります。<br><br>詳細は<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "アクロトレーナー 角度制限"
@@ -5306,7 +5304,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "DShotテレメトリーを介してFCボードにESCデータを送信します。RPMフィルタリングとダイナミックアイドルで必要となります。<br><br>注: JESC、Jazzmac、BLHeli-32などの適切なファームウェアを搭載した互換性のあるESCが必要です。",
+        "message": "DShotテレメトリーを介してFCボードにESCデータを送信します。RPMフィルタリングと動的アイドル値で必要となります。<br><br>注: JESC、Jazzmac、BLHeli-32などの適切なファームウェアを搭載した互換性のあるESCが必要です。",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {

@@ -134,6 +134,10 @@
         "message": "Hrvatski",
         "description": "Don't translate!!!"
     },
+    "language_hu": {
+        "message": "Magyar",
+        "description": "Don't translate!!!"
+    },
     "language_id": {
         "message": "Bahasa Indonesia",
         "description": "Don't translate!!!"
@@ -176,6 +180,10 @@
     },
     "language_zh_CN": {
         "message": "简体中文",
+        "description": "Don't translate!!!"
+    },
+    "language_zh_TW": {
+        "message": "繁體中文",
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
@@ -797,9 +805,6 @@
     "initialSetupMagHead": {
         "message": "Magnetómetro"
     },
-    "initialSetupDeclination": {
-        "message": "Declinación:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -935,6 +940,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "Non se calibrou o acelerómetro e están habilitadas funcións que dependen del. Calibre o acelerómetro.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Non hai ningún protocolo de saída do motor seleccionado",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Unha das outras sinais de desarmado está activa ao armar",
@@ -1082,7 +1091,10 @@
         "message": "Transmisor de video"
     },
     "featureANTI_GRAVITY": {
-        "message": "Incrementar temporalmente o termo I en grandes cambios de acelerador."
+        "message": "Anti Gravity activo permanentemente"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Se está desactivado, pódese empregar o modo 'ANTI GRAVITY' cun conmutador."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtrado notch dinámico do xiro"
@@ -1200,9 +1212,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunhas opcións de armado poderían necesitar que actives o acelerómetro"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinación Magnética [graos]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de motor invertida"
@@ -1517,6 +1526,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "Cámara (Protocolo RunCam)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (Protocolo FrSky)"
+    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1593,7 +1605,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controla a forza de amortecemento (D-term) nun voo normal cara adiante.<br>Con D_min activado, a ganancia D activa cambia durante o voo. Nun voo normal cara adiante, a D_min ten ganancia baixa. Durante un movemento pronunciado ou durante o prop wash, a ganancia D activa aumenta as ganancias derivadas especificadas á esquerda.<br><br>As ganancias de derivados completos alcánzanse con entradas de stick afiadas, pero só se conseguen parciais durante o prop wash.<br>Axusta o D_Min Gain e Advance para controlar a sensibilidade e a sincronización de aumento.",
+        "message": "Controla a forza de amortiguación (D-term) no voo recto normal.<br>Con D Min activado, o valor de D cambia durante o voo. En voo recto normal usa o valor de D Min. Durante movementos bruscos ou durante prop wash, o D aumenta co valor de D Max especificado á esquerda.<br><br>O valor D máximo obtense con movementos bruscos dos controis, pero có prop wash só se obteñen incrementos parciais.<br>Axuste o valor de Ganancia de D Mine e Avance para controlar a cantidade e sensibilidade do incremento.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -3279,10 +3291,10 @@
         "message": "Límite saída do motor"
     },
     "pidTuningMotorLimit": {
-        "message": "Atenuación %"
+        "message": "Factor de Escala [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Atenua os comandos do motor pola porcentaxe establecida. Reduce a corrente do ESC e o calor do motor cando se usan baterías con maior número de celas, por exemplo: Cando use unha batería 6S nunha aeronave que ten motores, hélices e axustes deseñados para 4S, intente establecer o valor no 66%; cando use unha batería 4S nunha aeronave destinada a 3S, probe o 75%.<br>Asegúrese de que tódolos seus compoñentes soporten a tensión da batería que está a usar."
+        "message": "Factor de escala lineal de potencia do motor (en porcentaxe). Reduce a corriente do ESC e o calor do motor cando se usan baterías de caldas máis elevadas, por exemplo. Cando use unha batería 6S nun quad que ten motores, hélices e axustes deseñados para 4S, intente establecer o valor no 66%; cando use unha batería 4S nun quad destinado a 3S, probe o 75%.<br>Asegúrese de que tódolos seus compoñentes soporten a tensión da batería que está a usar."
     },
     "pidTuningCellCount": {
         "message": "Contador de celdas"
@@ -3609,7 +3621,7 @@
         "message": "Esta característica permite que o acelerador sexa impulsado temporalmente nos movementos de adherencia rápida, o que aumenta o par de aceleración dos motores, proporcionando unha resposta moito máis rápida."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Valor Idle dinámico [rpm]"
+        "message": "Valor Dinámico Idle [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Dynamic Idle mellora o control a baixa rpm e reduce o risco de desyncs do motor. Corrixe os problemas provocados polo fluxo de aire o acelerar ou decelerar as hélices, mellorando a autoridade PID, a estabilidade, a freada do motor e a resposta. O Dynamic Idle rpm debe estar axustado a un 20% por debaixo da rpm do seu valor de ralentí (ver a ficha $t(tabMotorTesting.message)). Normalmente non hai necesidade de cambiar o valor predeterminado. Para un tempo de espera invertido máis longo, o valor inactivo DShot e a rpm mínima deberían reducirse xuntos.<br><br>Visite <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">a wiki</a> para máis información."

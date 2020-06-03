@@ -702,9 +702,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
-    "initialSetupDeclination": {
-        "message": "Deklination:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -978,9 +975,6 @@
     "featureVTX": {
         "message": "Videosändare"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Öka I-Term tillfälligt vid hastiga gasändringar"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Dynamisk gyro-bandspärrfiltrering"
     },
@@ -1097,9 +1091,6 @@
     },
     "configurationArmingHelp": {
         "message": "Vissa alternativ för motoraktivering kan kräva att accelerometer aktiveras"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometer-deklination [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Omvänd motor-rotation"

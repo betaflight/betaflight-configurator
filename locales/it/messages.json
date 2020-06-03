@@ -714,9 +714,6 @@
     "initialSetupMagHead": {
         "message": "Magnetometro"
     },
-    "initialSetupDeclination": {
-        "message": "Declinazione:"
-    },
     "initialSetupInfoHead": {
         "message": "Info"
     },
@@ -852,6 +849,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
         "message": "L'accelerometro non è stato calibrato ma sono abilitate delle funzioni che dipendono da esso. Calibra l'accelerometro.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Non è stato selezionato alcun protocollo di output dei motori",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Uno dei flag di disarmo è attivo mentre si arma",
@@ -998,9 +999,6 @@
     "featureVTX": {
         "message": "Trasmettitore Video"
     },
-    "featureANTI_GRAVITY": {
-        "message": "Aumenta temporaneamente I-Term in caso di forti variazioni del gas"
-    },
     "featureDYNAMIC_FILTER": {
         "message": "Filtro notch dinamico giroscopio"
     },
@@ -1117,9 +1115,6 @@
     },
     "configurationArmingHelp": {
         "message": "Alcune opzioni di armamento motori possono richiedere l'abilitazione dell'accelerometro"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinazione Magnetometro [gradi]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direzione motori invertita"
@@ -1434,6 +1429,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "Camera (Protocollo RunCam)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (Protocollo FrSky)"
+    },
     "pidTuningProfileOption": {
         "message": "Profilo $1"
     },
@@ -1510,7 +1508,7 @@
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controlla la forza dello smorzamento (D-term) nel normale volo in avanti.<br>Con D_min abilitato, il D-gain attivo varierà durante il volo. Nel volo in avanti è ai guadagni D_min seguenti. Durante un cambio brusco di direzione o durante un propwash, il D-gain attivo aumenta ai Guadagni della derivata specificati a sinistra.<br><br>I guadagni della derivata sono raggiunti completamente con movimenti rapidi degli stick, ma si ottengono solo parzialmente durante un propwash.<br>Regola il Guadagno D_Min e Advance per controllare la sensibilità e il timing dell'aumento del guadagno.",
+        "message": "Controlla la forza dello smorzamento (D-term) nel normale volo in avanti.<br>Con D_min abilitato, il D-gain attivo varierà durante il volo. Nel volo in avanti sarà uguale al D_min specificato sotto. Durante un cambio brusco di direzione o durante un propwash, il D-gain attivo aumenta fino al D_max specificato a sinistra.<br><br>I valori di D_max sono raggiunti completamente con movimenti rapidi degli stick, ma si ottengono solo parzialmente durante un propwash.<br>Regola il Guadagno D_Min e Advance per controllare la sensibilità e il timing dell'aumento del guadagno.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -3196,10 +3194,10 @@
         "message": "Limite output motore"
     },
     "pidTuningMotorLimit": {
-        "message": "% attenuazione"
+        "message": "Fattore scala [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Scala i comandi dei motori della percentuale impostata. Riduce la corrente degli ESC e il calore dei motori quando si utilizzano batterie con più celle, es. quando si utilizza una batteria 6S su un modello che ha motori, pale e tuning progettati per 4S, prova a impostare il valore al 66%; quando si utilizza una batteria 4S su un modello costruito per 3S, prova il 75%.<br>Assicurati sempre che tutti i componenti supportino il voltaggio della batteria in uso."
+        "message": "Fattore di scala lineare dell'output dei motori (percentuale). Riduce la corrente degli ESC e il calore dei motori quando si utilizzano batterie con più celle, es. quando si utilizza una batteria 6S su un modello che ha motori, pale e tuning progettati per 4S, prova a impostare il valore al 66%; quando si utilizza una batteria 4S su un modello costruito per 3S, prova il 75%.<br>Assicurati sempre che tutti i componenti supportino il voltaggio della batteria in uso."
     },
     "pidTuningCellCount": {
         "message": "Numero di celle"
@@ -3526,7 +3524,7 @@
         "message": "Questa funzione consente di aumentare temporaneamente il gas per movimenti degli stick rapidi, aumentando così la coppia di accelerazione dei motori, fornendo una risposta molto più rapida al gas."
     },
     "pidTuningIdleMinRpm": {
-        "message": "Valore idle dinamico [rpm]"
+        "message": "Valore idle dinamico [*100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "L'Idle Dinamico migliora il controllo a rpm bassi e riduce il rischio di desincronizzazione dei motori. Corregge i problemi causati dall'aria che rallenta o accelera le eliche, migliorando il controllo dei PID, stabilità, freno e reattività dei motori. Gli rpm dell'Idle Dinamico dovrebbero essere impostati circa il 20% sotto gli rpm del valore dell'Idle Dshot (vedi la scheda $t(tabMotorTesting.message)). Normalmente non c'è bisogno di cambiare il valore di default dell'Idle Dshot. Per maggior tempo a volo invertito il valore Idle Dshot e gli rpm minimi dovrebbero essere abbassati insieme.<br><br>Visita <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">questa pagina wiki</a> per maggiori informazioni."
