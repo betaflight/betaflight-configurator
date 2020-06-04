@@ -994,7 +994,7 @@ TABS.pid_tuning.initialize = function (callback) {
         FEATURE_CONFIG.features.generateElements($('.tab-pid_tuning .features'));
 
         if (semver.lt(CONFIG.apiVersion, "1.16.0") || semver.gte(CONFIG.apiVersion, "1.20.0")) {
-            $('.tab-pid_tuning .pidTuningSuperexpoRate').hide();
+            $('.tab-pid_tuning .pidTuningSuperexpoRates').hide();
         }
 
         if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
