@@ -1147,7 +1147,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
                                             if(semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                                                 ADVANCED_TUNING.motorOutputLimit = data.readU8();
-                                                ADVANCED_TUNING.autoProfileCellCount = data.readU8();
+                                                ADVANCED_TUNING.autoProfileCellCount = data.read8();
                                                 ADVANCED_TUNING.idleMinRpm = data.readU8();
                                             }
                                         }
