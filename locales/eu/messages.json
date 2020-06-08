@@ -1006,6 +1006,12 @@
     "featureVTX": {
         "message": "Bideo igorlea"
     },
+    "featureANTI_GRAVITY": {
+        "message": "Anti Gravity etengabe gaitu"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Desgaituta badago, 'ANTI GRAVITY' modua erabil dezakezu Anti Gravity-ak etengailu batekin aktibatzeko."
+    },
     "featureDYNAMIC_FILTER": {
         "message": "Giro iragazketa dinamikoa"
     },
