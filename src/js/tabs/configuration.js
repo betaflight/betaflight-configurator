@@ -1225,13 +1225,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             const value = parseInt(pidSelectElement.val());
 
-            let newDenominator = undefined;
-            let newFrequency = undefined;
             if (value !== PID_ADVANCED_CONFIG.pid_process_denom) {
-                newDenominator = value;
-                newFrequency = pidSelectElement.find('option:selected').text();
+                const newFrequency = pidSelectElement.find('option:selected').text();
+                self.analyticsChanges['PIDLoopSettings'] = `denominator: ${value} | frequency: ${newFrequency}`;
+            } else {
+                self.analyticsChanges['PIDLoopSettings'] = undefined;
             }
-            self.analyticsChanges['PIDLoopSettings'] = `denominator: ${newDenominator} | frequency: ${newFrequency}`;
 
             PID_ADVANCED_CONFIG.pid_process_denom = value;
 
