@@ -24,6 +24,8 @@ var TuningSliders = {
     expertMode: false,
 };
 
+const D_MIN_RATIO = 0.85;
+
 TuningSliders.initialize = function() {
     this.PID_DEFAULT = FC.getPidDefaults();
     this.FILTER_DEFAULT = FC.getFilterDefaults();
@@ -49,7 +51,7 @@ TuningSliders.setDMinFeatureEnabled = function(dMinFeatureEnabled) {
     if (this.dMinFeatureEnabled) {
         this.defaultPDRatio = this.PID_DEFAULT[2] / this.PID_DEFAULT[0];
     } else {
-        this.defaultPDRatio = this.PID_DEFAULT[2] / (this.PID_DEFAULT[0] * 1.18);
+        this.defaultPDRatio = this.PID_DEFAULT[2] / (this.PID_DEFAULT[0] * (1 / D_MIN_RATIO));
     }
 };
 
@@ -88,7 +90,7 @@ TuningSliders.initPidSlidersPosition = function() {
     if (this.dMinFeatureEnabled) {
         this.PDGainSliderValue = Math.round(ADVANCED_TUNING.dMinRoll / this.PDRatioSliderValue / this.MasterSliderValue / this.PID_DEFAULT[3] * 10) / 10;
     } else {
-        this.PDGainSliderValue = Math.round(PIDs[0][0] / this.MasterSliderValue / (this.PID_DEFAULT[2] * 1.18) * 10) / 10;
+        this.PDGainSliderValue = Math.round(PIDs[0][0] / this.MasterSliderValue / (this.PID_DEFAULT[2] * (1 / D_MIN_RATIO)) * 10) / 10;
     }
     this.ResponseSliderValue = Math.round(ADVANCED_TUNING.feedforwardRoll / this.MasterSliderValue / this.PID_DEFAULT[4] * 10) / 10;
 
@@ -258,8 +260,8 @@ TuningSliders.calculateNewPids = function() {
     } else {
         ADVANCED_TUNING.dMinRoll = 0;
         ADVANCED_TUNING.dMinPitch = 0;
-        PIDs[0][2] = Math.round((this.PID_DEFAULT[2] * 0.85) * this.PDGainSliderValue * this.PDRatioSliderValue);
-        PIDs[1][2] = Math.round((this.PID_DEFAULT[7] * 0.85) * this.PDGainSliderValue * this.PDRatioSliderValue);
+        PIDs[0][2] = Math.round((this.PID_DEFAULT[2] * D_MIN_RATIO) * this.PDGainSliderValue * this.PDRatioSliderValue);
+        PIDs[1][2] = Math.round((this.PID_DEFAULT[7] * D_MIN_RATIO) * this.PDGainSliderValue * this.PDRatioSliderValue);
     }
     // p
     PIDs[0][0] = Math.round(this.PID_DEFAULT[0] * this.PDGainSliderValue);
