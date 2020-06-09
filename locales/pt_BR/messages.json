@@ -850,6 +850,10 @@
         "message": "O acelerômetro não foi calibrado e os recursos habilitados dependem dele. Calibre o acelerômetro.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Nenhum protocolo de saída do motor foi selecionado",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "O Switch de armar não está em uma posição segura",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -994,6 +998,12 @@
     },
     "featureVTX": {
         "message": "Transmissor de vídeo"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "Ativar permanentemente a Anti gravidade"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Se isto estiver desabilitado, é possível ativar a Anti gravidade com o modo 'ANTI GRAVITY' configurado em um switch."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Filtro Notch dinâmico do giroscópio"
@@ -1425,6 +1435,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "Camera (Protocolo RunCam)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (Protocolo FrSky)"
+    },
     "pidTuningProfileOption": {
         "message": "Perfil $1"
     },
@@ -1499,6 +1512,10 @@
     "pidTuningDMinFeatureHelp": {
         "message": "O D Min permite que o valor de D tenha um valor menor durante o voo normal e um valor maior durante manobras rápidas, como giros e rotações, que podem causar instabilidade. D min também aumenta o valor de D quando houver turbulência nas hélices. O ganho ajusta o quão rápido D alcança seu valor máximo, utilizando o giroscópio para determinar movimentos rápidos e turbulência. Avanço faz com que o valor de D aumente mais cedo, utilizando o setpoint ao invés do giroscópio para determinar movimentos rápidos.",
         "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Controla a força da atenuação (Termo D) durante o voo normal.<br>Se o D Min estiver ativo, o Termo D será alterado durante o voo.<br>Durante um voo normal, o termo D permanecerá nos ganhos D Min configurados abaixo. Durante movimentos rápidos ou turbulência, o Termo D será temporariamente elevado ao ganhos configurados à esquerda.<br><br>O Ganho D_max é alcançado durante movimentos rápidos, e é também parcialmente ativo durante uma turbulência.<br>Ajuste o Ganho D_Min e o Avanço para controlar a sensibilidade do ganho.",
+        "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Configurar controlador PID"
@@ -3181,6 +3198,12 @@
     },
     "pidTuningMotorOutputLimit": {
         "message": "Limite de saída para o motor"
+    },
+    "pidTuningMotorLimit": {
+        "message": "Fator de Escala [%]"
+    },
+    "pidTuningMotorLimitHelp": {
+        "message": "Fator de escala linear da saída do motor (em porcentagem). Reduz o consumo de energia dos ESCs e reduz a temperatura dos motores ao usar uma bateria de maior quantidade de células. Exemplos: Quando usar uma bateria 6S em uma aeronave com motores, hélices e regulagem projetados para uma bateria 4S, tente o valor 66%; Para usar uma bateria 4S em uma aeronave projetada para baterias 3S, tente 75%.<br>Sempre tenha certeza de que todos os seus componentes suportam a voltagem da bateria que está utilizando."
     },
     "pidTuningCellCount": {
         "message": "Quantidade de células"

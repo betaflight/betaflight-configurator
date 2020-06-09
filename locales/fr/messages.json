@@ -615,6 +615,9 @@
     "defaultContributingHead": {
         "message": "Participation"
     },
+    "defaultContributingText": {
+        "message": "Si vous souhaitez contribuer à améliorer Betaflight, vous pouvez aider de nombreuses manières. incluant:<br /><ul><li>en utilisant vos connaissances de Betaflight pour créer ou mettre à jour du contenu sur <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">notre Wiki</a>, ou en répondant aux questions d'autres utilisateurs dans les forums en ligne ;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">contribuant du code</a> au firmware et au Configurateur - nouvelles fonctionnalités, corrections, améliorations, améliorations ;</li><li>tester <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nouvelles fonctionnalités et corrections</a> et fournir des commentaires;</li><li>aider les autres utilisateurs à résoudre les problèmes qu'ils signalent dans <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">notre outil de suivi de problèmes</a>, et participer aux discussions sur les demandes de fonctionnalités ;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">En traduisant</a> Betaflight Configurator dans une nouvelle langue, ou contribuant à maintenir les traductions existantes.</li></ul>"
+    },
     "defaultFacebookText": {
         "message": "Nous avons également un <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Groupe Facebook</a>.<br />\nVenez échanger à propos de Betaflight, posez des questions sur la configuration ou simplement passez du temps avec d'autres pilotes."
     },
@@ -626,6 +629,9 @@
     },
     "defaultDonateHead": {
         "message": "Open Source / Avis de dons"
+    },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight</strong>est un logiciel de contrôle de vol <strong>libre (open source)</strong> et gratuit <strong>sans aucune garantie</strong>, pour tous les utilisateurs.</p><p>Si vous trouvez Betaflight ou Betaflight Configurator utiles, veuillez envisager<strong>d'aider</strong> leur développement grâce à un don.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Si vous voulez contribuer financièrement de façon régulière, vous devriez envisager de devenir un de nos Patron sur $t(patreonLink.message).</p>"
@@ -908,6 +914,10 @@
         "message": "L'accéléromètre n'a pas été calibré, et certaines fonctionnalités actives en ont besoin. Calibrez l'accéléromètre.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Aucun protocole de sortie de moteur sélectionné",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un des autres drapeaux désarmés est actif lors de l'armement",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1053,6 +1063,12 @@
     "featureVTX": {
         "message": "Émetteur vidéo"
     },
+    "featureANTI_GRAVITY": {
+        "message": "Anti gravité permanent"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Si cette option est désactivée, le mode 'ANTI GRAVITY' peut être utilisé pour activer l'Anti gravité avec un interrupteur."
+    },
     "featureDYNAMIC_FILTER": {
         "message": "Filtre dynamique Notch gyro"
     },
@@ -1188,6 +1204,9 @@
     "configurationDigitalIdlePercent": {
         "message": "Valeur gaz minimum pour le moteur [pourcent]"
     },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "La valeur 'DShot idle' est le pourcentage de gaz max envoyé aux ESCs lorsque le manche des gaz est au minimum et que l'engin est armé. L'augmenter donne un peu plus de vitesse au ralenti et évite les désynchronisations. Trop élevé entraîne une sensation de flottement."
+    },
     "configurationMotorPoles": {
         "message": "Pôles moteur",
         "description": "One of the fields of the ESC/Motor configuration"
@@ -1195,6 +1214,10 @@
     "configurationMotorPolesLong": {
         "message": "$t(configurationMotorPoles.message) (nombre d'aimants sur la cloche moteur)",
         "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesHelp": {
+        "message": "Le nombre de pôles est le nombre d'aimants sur la cloche moteur. Il ne faut PAS compter les stators situés du côté des bobinages. En général les moteurs 5\" ont 14 aimants et les 3\" ou moins ont 12 aimants.",
+        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
     },
     "configurationThrottleMinimum": {
         "message": "Gaz minimum (Plus petite valeur envoyée à l'ESC une fois armé)"
@@ -1476,6 +1499,9 @@
     "portsFunction_RUNCAM_DEVICE_CONTROL": {
         "message": "Caméra (protocole RunCam)"
     },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (Protocole FrSky)"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -1550,6 +1576,10 @@
     "pidTuningDMinFeatureHelp": {
         "message": "D Min permet d'avoir un niveau inférieur de D en vol normal et un niveau plus élevé pour les manœuvres rapides qui pourraient causer des overshoots, notamment sur les flips et les rolls. Il augmente également D pendant le propwash. Gain ajuste la vitesse à laquelle D atteint sa valeur maximale et est basé sur le gyro pour déceler les manoeuvres violentes et les propwash. Avance déclenche le D plus tôt en utilisant le setpoint au lieu du gyro pour déterminer les manoeuvres violentes.",
         "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Contrôle la force d'amortissage (D-term) en vol normal.<br>Avec D_min activé, l'Active D-gain change pendant le vol. En vol normal, D_min correspond à la valeur ci-dessous. Lors d'une manœuvre brusque ou de propwash, le D-gain actif monte aux gains D_max spécifiés à gauche.<br><br>Les valeurs D_max sont atteintes lors de mouvements de sticks violents, mais seulement une partie est atteinte pendant un propwash.<br>Ajustez le gain D_min et l'Avance pour contrôler la sensibilité et le timing du boost de gain.",
+        "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Réglages du Contrôleur PID"
@@ -3230,6 +3260,12 @@
     "pidTuningMotorOutputLimit": {
         "message": "Limite de sortie du moteur"
     },
+    "pidTuningMotorLimit": {
+        "message": "Facteur d'échelle [%]"
+    },
+    "pidTuningMotorLimitHelp": {
+        "message": "Facteur d'échelle linéaire de sortie moteur (en pourcentage). Réduit le courant des ESC et la température des moteurs lorsqu'une batterie avec plus de cellules est utilisée, par exemple lorsqu'une batterie 6S est utilisée sur un appareil qui a des moteurs, hélices, et réglages pour du 4S, essayez de mettre la valeur à 66%; lorsqu'une batterie 4S est utilisée sur un appareil fait pour du 4S, essayez 75%.<br>Assurez-vous toujours que tous vos composants peuvent supporter la tension de la batterie que vous utilisez."
+    },
     "pidTuningCellCount": {
         "message": "Nombre de cellules"
     },
@@ -3323,9 +3359,17 @@
         "message": "En général les grands quads nécessitent des gains PID plus élevés à cause de leur faible ratio puissance / poids.<br><br> Des petits quads (micros) nécessitent généralement des gains PID plus faibles à cause d'une puissance élevée en rapport du poids.<br><br>Valeurs élevées pour petits quads. Valeurs faibles pour grands quads.",
         "description": "Master gain tuning slider helpicon message"
     },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Un D relativement élevé atténuera la réactivité aux sticks et peut faire chauffer les moteurs, mais devrait aider à contrôler les oscillations P et pourrait améliorer le propwash.<br><br>Un D relativement bas donne une meilleur réactivité aux sticks mais peut affaiblir la tenue au propwash.",
+        "description": "PD balance tuning slider helpicon message"
+    },
     "pidTuningPDGainSliderHelp": {
         "message": "Des gains P et D permettent d'avoir des moteurs froids mais plus d'oscillations propwash. Des valeurs trop basses peuvent rendre le quad instable.<br><br>P et D term travaillent ensemble pour réduire le propwash.<br><br>Des valeurs élevées augmentent les échauffements moteur et peuvent entraîner des oscillations lors de vols smooth (souples) si le D term est trop élevé.",
         "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "Des valeurs FF faibles rendront le quad moins collé aux sticks et engendrent des rebonds lents à la fin d'un flip ou d'un roll (reste de I-term).<br><br>Avec des valeurs élevées, le quad est plus collé aux sticks lors de manœuvres brusques. Des valeurs trop élevées donneront de l'overshoot et des rebonds rapides à la fin d'un flip ou d'un roll.",
+        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtres gyro passe-bas"
@@ -3545,6 +3589,12 @@
     },
     "pidTuningThrottleBoostHelp": {
         "message": "Cette fonctionnalité booste temporairement les gaz sur les mouvement rapides de sticks, accélére la montée de couple, réduit le temps de réponse des gaz."
+    },
+    "pidTuningIdleMinRpm": {
+        "message": "Valeur Idle dynamique [* 100 RPM]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Le Dynamic Idle améliore le contrôle à faible rpm et réduit le risque de désynchronisation moteurs. Il corrige les problèmes de perturbations liés à l'accélération et au ralentissement des hélices, en augmentant l'autorité PID. Améliore la stabilité, le frein moteur et la réactivité. Le Dynamic Idle rpm devrait être à 20% sous la valeur DShot Idle (voir l'onglet $t(tabMotorTesting.message) ). D'habitude, il n'y a pas besoin de modifier l'idle DShot. Pour pouvoir rester à l'envers plus longtemps, les valeurs Idle DShot et Minimum rpm doivent être diminuées en même temps.<br><br>Voir <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">le wiki</a> pour plus d'informations."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limite d'angle Acro Trainer"
@@ -5319,6 +5369,10 @@
     "configurationDshotBidir": {
         "message": "DShot bi-directionnel (requiert un firmware ESC compatible)",
         "description": "Feature for the ESC/Motor"
+    },
+    "configurationDshotBidirHelp": {
+        "message": "Envoie les données ESC à la FC via la télémétrie DShot. Nécessaire pour le filtrage RPM et idle dynamique. <br> <br>Note : Nécessite un ESC compatible avec le firmware approprié, par exemple JESC, Jazzmac, BLHeli-32.",
+        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
         "message": "Fréquence de rafraîchissement du Gyro"

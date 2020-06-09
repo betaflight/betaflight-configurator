@@ -999,6 +999,12 @@
     "featureVTX": {
         "message": "Trasmettitore Video"
     },
+    "featureANTI_GRAVITY": {
+        "message": "Abilita Anti Gravity permanentemente"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Se questo è disabilitato, la modalità 'ANTI GRAVITY' può essere utilizzata per abilitare Anti Gravity con un interruttore."
+    },
     "featureDYNAMIC_FILTER": {
         "message": "Filtro notch dinamico giroscopio"
     },

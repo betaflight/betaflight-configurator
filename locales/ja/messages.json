@@ -999,6 +999,12 @@
     "featureVTX": {
         "message": "VTX設定"
     },
+    "featureANTI_GRAVITY": {
+        "message": "アンチグラビティを常時使用"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "もし無効になっている場合は『アンチグラビティ』モードを使用してスイッチにより有効にすることができます。"
+    },
     "featureDYNAMIC_FILTER": {
         "message": "動的ジャイロノッチフィルター"
     },
