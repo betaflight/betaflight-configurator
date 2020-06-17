@@ -599,6 +599,7 @@ TABS.pid_tuning.initialize = function (callback) {
             self.updateFilterWarning();
         });
 
+        $('.dynLpfCurveExpo').toggle(semver.gte(CONFIG.apiVersion, API_VERSION_1_44));
         $('input[id="dtermLowpassDynEnabled"]').change(function() {
             var checked = $(this).is(':checked');
             var cutoff_min = FILTER_DEFAULT.dterm_lowpass_dyn_min_hz;
