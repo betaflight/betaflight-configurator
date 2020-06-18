@@ -595,6 +595,9 @@ function startProcess() {
             setDarkTheme(result.darkTheme);
         }
     });
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
+        DarkTheme.autoSet();
+    });
 }
 
 function setDarkTheme(enabled) {
