@@ -39,7 +39,7 @@ const LINUX_INSTALL_DIR = '/opt/betaflight';
 var gitChangeSetId;
 
 var nwBuilderOptions = {
-    version: '0.46.0',
+    version: '0.46.2',
     files: './dist/**/*',
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
