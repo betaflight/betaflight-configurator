@@ -291,7 +291,7 @@ TABS.adjustments.adjust_template = function () {
     var selectFunction = $('#functionSelectionSelect');
     var elementsNumber;
     
-    if (semver.gte(CONFIG.apiVersion, "1.43.0")) {
+    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
         elementsNumber = 32; // VTX Power level select
     } else if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
         elementsNumber = 31; // OSD Profile Select & LED Profile Select
