@@ -1765,22 +1765,22 @@
         "message": "FF Interpolate"
     },
     "pidTuningFfInterpolateSpHelp": {
-        "message": "The following options fine-tune feed forward from race/aggressive to smooth/HD.<br><br> Mode: set to NO_AVG for race, AVG_2 for race/fast freestyle, AVG_3 for HD recording, AVG_4 for HD cinematic smoothness.<br><br> Smoothness: limits the amount of change that any one incoming radio step can make, increase for smoother FF signal, decrease for more aggressive FF responses.<br><br> Boost: helps overcome motor lag with quick stick inputs, can increase jitter. Try 10 for HD, 20 for racers. Up to 30 may be useful for low authority quads but can cause micro overshoot or jitter."
+        "message": "The following options fine-tune feed forward from race/aggressive to smooth/HD.<br><br> Mode: set to NoAverage for race, Average 2 for race/fast freestyle, Average 3 for HD recording, Average 4 for HD cinematic smoothness.<br><br> Smoothness: limits the amount of change that any one incoming radio step can make, increase for smoother FF signal, decrease for more aggressive FF responses.<br><br> Boost: helps overcome motor lag with quick stick inputs, can increase jitter. Try 10 for HD, 20 for racers. Up to 30 may be useful for low authority quads but can cause micro overshoot or jitter."
     },
     "pidTuningFfInterpolate": {
         "message": "Mode"
     },
     "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "No AVG"
+        "message": "NoAverage"
     },
     "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "AVG 2"
+        "message": "Average 2"
     },
     "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "AVG 3"
+        "message": "Average 3"
     },
     "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "AVG 4"
+        "message": "Average 4"
     },
     "pidTuningFfSmoothFactor": {
         "message": "Smoothness"
