@@ -3587,6 +3587,9 @@
     "pidTuningDTermLowpassDynType": {
         "message": "D Term Lowpass 1 Dynamic Filter Type"
     },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "D Term Lowpass 1 Dynamic Curve Expo"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filters"
     },    
