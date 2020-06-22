@@ -2332,7 +2332,7 @@ TABS.osd.initialize = function (callback) {
                             $('.timers-container').show();
                             var $timers = $('#timer-fields').empty();
                             for (let tim of OSD.data.timers) {
-                                var $timerConfig = $('<div class="switchable-field field-' + tim.index + '"/>');
+                                var $timerConfig = $('<div class="switchable-field field-' + tim.index + '"></div>');
                                 var timerTable = $('<table />');
                                 $timerConfig.append(timerTable);
                                 var timerTableRow = $('<tr />');
@@ -2414,7 +2414,7 @@ TABS.osd.initialize = function (callback) {
                             for (let field of OSD.data.stat_items) {
                                 if (!field.name) { continue; }
 
-                                var $field = $('<div class="switchable-field field-' + field.index + '"/>');
+                                var $field = $('<div class="switchable-field field-' + field.index + '"></div>');
                                 var desc = null;
                                 if (field.desc && field.desc.length) {
                                     desc = i18n.getMessage(field.desc);
@@ -2457,7 +2457,7 @@ TABS.osd.initialize = function (callback) {
                             for (let field of OSD.data.warnings) {
                                 if (!field.name) { continue; }
 
-                                var $field = $('<div class="switchable-field field-' + field.index + '"/>');
+                                var $field = $('<div class="switchable-field field-' + field.index + '"></div>');
                                 var desc = null;
                                 if (field.desc && field.desc.length) {
                                     desc = i18n.getMessage(field.desc);
@@ -2573,7 +2573,7 @@ TABS.osd.initialize = function (callback) {
 
                         if (field.isVisible[OSD.getCurrentPreviewProfile()]) { enabledCount++; }
 
-                        var $field = $('<div class="switchable-field field-' + field.index + '"/>');
+                        var $field = $('<div class="switchable-field field-' + field.index + '"></div>');
                         var desc = null;
                         if (field.desc && field.desc.length) {
                             desc = i18n.getMessage(field.desc);
@@ -2731,7 +2731,7 @@ TABS.osd.initialize = function (callback) {
 
                     // render
                     var $preview = $('.display-layout .preview').empty();
-                    var $row = $('<div class="row"/>');
+                    var $row = $('<div class="row"></div>');
                     for (var i = 0; i < OSD.data.display_size.total;) {
                         var charCode = OSD.data.preview[i];
                         if (typeof charCode === 'object') {
@@ -2764,7 +2764,7 @@ TABS.osd.initialize = function (callback) {
                         $row.append($img);
                         if (++i % OSD.data.display_size.x == 0) {
                             $preview.append($row);
-                            $row = $('<div class="row"/>');
+                            $row = $('<div class="row"></div>');
                         }
                     }
 

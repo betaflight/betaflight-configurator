@@ -247,7 +247,7 @@ TABS.setup.initialize = function (callback) {
             disarmFlagElements = disarmFlagElements.concat(['ARM_SWITCH']);
 
             // Arming allowed flag
-            arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"/>');
+            arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"></span>');
 
             // Arming disabled flags
             for (var i = 0; i < CONFIG.armingDisableCount; i++) {
