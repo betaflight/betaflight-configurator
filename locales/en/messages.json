@@ -4151,6 +4151,9 @@
     "osdSetupTitle": {
         "message": "OSD"
     },
+    "osdSetupNoOsdChipConfigWarning": {
+        "message": "<span class=\"message-negative\"><b>WARNING:</b></span> No OSD chip is configured. Please, make sure you have <strong>osd_displayport_device</strong> set to <strong>AUTO</strong> mode or the correct value for your board using $t(tabCLI.message) tab."
+    },
     "osdSetupNoOsdChipDetectWarning": {
         "message": "<span class=\"message-negative\"><b>WARNING:</b></span> No OSD chip was detected. Some flight controllers will not properly power the OSD chip unless connected to battery power. Please connect the battery before connecting the USB (PROPS REMOVED!)."
     },

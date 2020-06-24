@@ -2260,6 +2260,10 @@ TABS.osd.initialize = function (callback) {
 
                     OSD.msp.decode(info);
 
+                    if (!OSD.data.state.haveMax7456FontDeviceConfigured) {
+                        $('.noOsdChipConfig').show();
+                    }
+
                     if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected) {
                         $('.noOsdChipDetect').show();
                     }
