@@ -87,11 +87,11 @@ var Model = function (wrapper, canvas) {
 };
 
 Model.prototype.loadJSON = function (model_file, callback) {
-    var loader = new THREE.JSONLoader();
+    const loader = new THREE.LegacyJSONLoader();
 
-    loader.load('./resources/models/' + model_file + '.json', function (geometry, materials) {
-        var modelMaterial = new THREE.MeshFaceMaterial(materials),
-            model         = new THREE.Mesh(geometry, modelMaterial);
+    loader.load(`./resources/models/${model_file}.json`, function (geometry, materials) {
+        const modelMaterial = new THREE.MeshFaceMaterial(materials);
+        const model = new THREE.Mesh(geometry, modelMaterial);
 
         model.scale.set(15, 15, 15);
 
