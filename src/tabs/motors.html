@@ -99,8 +99,8 @@
                   </div>
                 </div>
             </div>
-
             <div class="power_info">
+                <a href="#" id="motorOutputReorderDialogOpen" class="regular-button" i18n="motorOutputReorderDialogOpen"></a>
                 <span i18n="motorsVoltage" class="power_text"></span><span class="motors-bat-voltage power_value"></span>
                 <span i18n="motorsADrawing" class="power_text"></span><span class="motors-bat-mah-drawing power_value"></span>
                 <span i18n="motorsmAhDrawn" class="power_text"></span><span class="motors-bat-mah-drawn power_value"></span>
@@ -190,4 +190,14 @@
         </div>
         <div class="clear-both"></div>
     </div>
+
+    <dialog id="dialogMotorOutputReorder">
+      <div id="dialogMotorOutputReorderContentWrapper">
+        <div id="dialogMotorOutputReorderContent">
+        </div>
+        <div>
+          <a href="#" id="dialogMotorOutputReorder-closebtn"  class="regular-button right" i18n="motorOutputReorderDialogClose"></a>
+        </div>
+      </div>
+    </dialog>
 </div>

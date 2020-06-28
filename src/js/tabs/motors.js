@@ -57,7 +57,11 @@ TABS.motors.initialize = function (callback) {
     }
 
     function load_esc_protocol() {
-        MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_motor_data);
+        MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_motor_output_reordering);
+    }
+
+    function load_motor_output_reordering() {
+        MSP.send_message(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING, false, false, load_motor_data);
     }
 
     function load_motor_data() {
@@ -222,6 +226,13 @@ TABS.motors.initialize = function (callback) {
         }
 
         $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
+
+        const motorOutputReorderConfig = new MotorOutputReorderConfig(100);
+        const domMotorOutputReorderDialogOpen = $('#motorOutputReorderDialogOpen');
+
+        const isMotorReorderingAvailable = (mixerList[mixer - 1].name in motorOutputReorderConfig)
+            && (FC.MOTOR_OUTPUT_ORDER) && (FC.MOTOR_OUTPUT_ORDER.length > 0);
+        domMotorOutputReorderDialogOpen.toggle(isMotorReorderingAvailable);
     }
 
     function process_html() {
@@ -726,7 +737,50 @@ TABS.motors.initialize = function (callback) {
         // enable Status and Motor data pulling
         GUI.interval_add('motor_and_status_pull', get_status, 50, true);
 
-        GUI.content_ready(callback);
+        let zeroThrottleValue = rangeMin;
+
+        if (self.feature3DEnabled) {
+            zeroThrottleValue = neutral3d;
+        }
+
+        setup_motor_output_reordering_dialog(content_ready, zeroThrottleValue);
+
+        function content_ready() {
+            GUI.content_ready(callback);
+        }
+
+       GUI.content_ready(callback);
+    }
+
+    function setup_motor_output_reordering_dialog(callbackFunction, zeroThrottleValue)
+    {
+        const domDialogMotorOutputReorder = $('#dialogMotorOutputReorder');
+
+        const motorOutputReorderComponent = new MotorOutputReorderComponent($('#dialogMotorOutputReorderContent'),
+            callbackFunction, mixerList[FC.MIXER_CONFIG.mixer - 1].name,
+            zeroThrottleValue, zeroThrottleValue + 200);
+
+        $('#dialogMotorOutputReorder-closebtn').click(closeDialog);
+
+        function closeDialog()
+        {
+            domDialogMotorOutputReorder[0].close();
+            motorOutputReorderComponent.close();
+            $(document).off("keydown", onDocumentKeyPress);
+        }
+
+        function onDocumentKeyPress(event)
+        {
+            if (27 === event.which) {
+                closeDialog();
+            }
+        }
+
+        $('#motorOutputReorderDialogOpen').click(function()
+        {
+            $(document).on("keydown", onDocumentKeyPress);
+            domDialogMotorOutputReorder[0].showModal();
+        });
     }
 };
 

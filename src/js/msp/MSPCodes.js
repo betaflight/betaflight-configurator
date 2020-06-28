@@ -179,4 +179,6 @@ var MSPCodes = {
 
     // MSPv2 Betaflight specific
     MSP2_BETAFLIGHT_BIND:           0x3000,
+    MSP2_MOTOR_OUTPUT_REORDERING:   0x3001,
+    MSP2_SET_MOTOR_OUTPUT_REORDERING:    0x3002,
 };

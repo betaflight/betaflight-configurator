@@ -147,6 +147,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.MOTOR_DATA[i] = data.readU16();
                 }
                 break;
+            case MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING:
+                FC.MOTOR_OUTPUT_ORDER = [];
+                const arraySize = data.read8();
+                for (let i = 0; i < arraySize; i++) {
+                    FC.MOTOR_OUTPUT_ORDER[i] = data.readU8();
+                }
+                break;
             case MSPCodes.MSP_MOTOR_TELEMETRY:
                 var telemMotorCount = data.readU8();
                 for (let i = 0; i < telemMotorCount; i++) {
@@ -1549,6 +1556,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_RTC:
                 console.log('Real time clock set');
                 break;
+            case MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING:
+                console.log('Motor output reordering set');
+                break;
 
             case MSPCodes.MSP_MULTIPLE_MSP:
 
@@ -2245,6 +2255,15 @@ MspHelper.prototype.crunch = function(code) {
 
                 self.mspMultipleCache.push(mspCommand);
                 buffer.push8(mspCommand);
+            }
+
+            break;
+
+        case MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING:
+
+            buffer.push8(FC.MOTOR_OUTPUT_ORDER.length);
+            for (let i = 0; i < FC.MOTOR_OUTPUT_ORDER.length; i++) {
+                buffer.push8(FC.MOTOR_OUTPUT_ORDER[i]);
             }
 
             break;
