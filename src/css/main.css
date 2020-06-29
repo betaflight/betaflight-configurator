@@ -419,6 +419,11 @@ input[type="number"]::-webkit-inner-spin-button {
     color: #818181;
 }
 
+#sensor-status div {
+    white-space: nowrap;
+    overflow: hidden;    
+}
+
 .gyroicon {
     background-image: url(../images/icons/sensor_gyro_off.png);
     background-size: 43px;
