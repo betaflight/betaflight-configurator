@@ -104,7 +104,9 @@ TABS.onboard_logging.initialize = function (callback) {
 
             if (BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
-                    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+                        BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
+                    } else if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                         BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     } else {
                         var rate = loggingRatesSelect.val().split('/');
@@ -208,7 +210,19 @@ TABS.onboard_logging.initialize = function (callback) {
             pidRate = pidRateBase / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom;
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+            const sampleRateNum=5;
+            for (let i = 0; i < sampleRateNum; i++) {
+                let loggingFrequency = Math.round(pidRate / (2**i));
+                let loggingFrequencyUnit = "Hz";
+                if (gcd(loggingFrequency, 1000) === 1000) {
+                    loggingFrequency /= 1000;
+                    loggingFrequencyUnit = "KHz";
+                }
+                loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
+            }
+            loggingRatesSelect.val(BLACKBOX.blackboxSampleRate);
+        } else if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
             loggingRates = [
                 {text: "Disabled", hz: 0,     p_denom: 0},
                 {text: "500 Hz",   hz: 500,   p_denom: 16},
@@ -244,7 +258,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 ];
 
 
-            for (var i = 0; i < loggingRates.length; i++) {
+            for (let i = 0; i < loggingRates.length; i++) {
                 var loggingRate = Math.round(pidRate / loggingRates[i].denom);
                 var loggingRateUnit = " Hz";
                 if (loggingRate !== Infinity) {
@@ -330,7 +344,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 {text: "FF_INTERPOLATED"},
             ];
 
-            for (var i = 0; i < PID_ADVANCED_CONFIG.debugModeCount; i++) {
+            for (let i = 0; i < PID_ADVANCED_CONFIG.debugModeCount; i++) {
                 if (i < debugModes.length) {
                     debugModeSelect.append(new Option(debugModes[i].text, i));
                 } else {

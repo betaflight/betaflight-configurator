@@ -1353,7 +1353,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 BLACKBOX.blackboxRateDenom = data.readU8();
                 if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                     BLACKBOX.blackboxPDenom = data.readU16();
-
+                }
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+                    BLACKBOX.blackboxSampleRate = data.readU8();
                 }
                 break;
             case MSPCodes.MSP_SET_BLACKBOX_CONFIG:
@@ -2134,6 +2136,9 @@ MspHelper.prototype.crunch = function(code) {
                 .push8(BLACKBOX.blackboxRateDenom);
             if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
                 buffer.push16(BLACKBOX.blackboxPDenom);
+            }
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+                buffer.push8(BLACKBOX.blackboxSampleRate);
             }
             break;
 
