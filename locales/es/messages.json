@@ -1642,6 +1642,33 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> El uso de un Punto de Ajuste de Transición de D mayor que 0 y menor que 0.1 está altamente desaconsejado. Puede causar inestabilidad y reducir la respuesta de los controles al cruzar el punto central.</span>"
     },
+    "pidTuningFfInterpolateSp": {
+        "message": "Interpolar FF"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "Las siguientes opciones ajustan la prealimentación (FF) desde carrera/agresiva a suave/HD.<br><br> Modo: establecido a No promedio para carrera, Promedio 2 para la carrera/freestyle rápido, Promedio de 3 para grabaciones HD, Promedio 4 para suavidad cinematográfica HD.<br><br> Suavizado: limita la cantidad de cambio que cualquier paso de radio entrante puede realizar, incrementar para una señal FF más suave, disminuir para respuestas FF más agresivas.<br><br> Impulso: ayuda a superar el retraso del motor cuando hay entradas de los mandos rápidas, aunque puede provocar inestabilidad en la señal. Prueba 10 para HD, 20 para carreras. Hasta 30 puede ser útil para quads de baja autoridad, pero puede causar micro sobregiro o inestabilidad."
+    },
+    "pidTuningFfInterpolate": {
+        "message": "Modo"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "No promediar"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "Promediar 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "Promediar 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "Promediar 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Suavizado"
+    },
+    "pidTuningFfBoost": {
+        "message": "Impulso"
+    },
     "pidTuningProportional": {
         "message": "Proporcional (P)"
     },
@@ -3444,6 +3471,9 @@
     },
     "pidTuningDTermLowpassDynType": {
         "message": "D Term Paso Bajo 1 Dinámico Tipo de Filtro"
+    },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "D Term Paso Bajo 1 Dinámico Expo de la Curva"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtros Notch del D Term"
