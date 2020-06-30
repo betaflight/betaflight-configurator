@@ -146,7 +146,7 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "Mostrar notificaciones de actualizaciones para versiones no estables del configurador"
+        "message": "Mostrar notificación de actualización para versiones no estables del configurador"
     },
     "configuratorUpdateNotice": {
         "message": "Estás utilizando una versión desactualizada de <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
