@@ -217,7 +217,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 let loggingFrequencyUnit = "Hz";
                 if (gcd(loggingFrequency, 1000) === 1000) {
                     loggingFrequency /= 1000;
-                    loggingFrequencyUnit = "KHz";
+                    loggingFrequencyUnit = "kHz";
                 }
                 loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
             }
@@ -264,7 +264,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 if (loggingRate !== Infinity) {
                     if (gcd(loggingRate, 1000) === 1000) {
                         loggingRate /= 1000;
-                        loggingRateUnit = " KHz";
+                        loggingRateUnit = " kHz";
                     }
                 }
                 loggingRatesSelect.append('<option value="' + loggingRates[i].num + '/' + loggingRates[i].denom + '">'
