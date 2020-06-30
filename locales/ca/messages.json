@@ -554,7 +554,7 @@
         "message": "Maquinari"
     },
     "defaultWelcomeText": {
-        "message": "L’aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per trobar una llista completa del maquinari.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar visualizador de registre de Betaflight Blackbox</a><br /><br />El codi font del firmware es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopeener noreferrer\">aquí</a>< br />Els últims <b>controladors STM USB VCP</b> es poden descarregar des de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari existent que utilitza un convertidor USB a sèrie CP210x:<br />Els últims <b>controladors CP210x</b> es poden descarregar de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \"target=\"_ blank\" rel=\"noopener noreferrer\">aquí</a><br />El darrer <b>Zadig</b> del controlador de Windows USB es pot descarregar de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />"
+        "message": "L’aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per trobar una llista completa del maquinari.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregar visualizador de registre de Betaflight Blackbox</a><br /><br />El codi font del firmware es pot descarregar des de <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopeener noreferrer\">aquí</a><br />Els últims <b>controladors STM USB VCP</b> es poden descarregar des de <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />Per al maquinari existent que utilitza un convertidor USB a sèrie CP210x:<br />Els últims <b>controladors CP210x</b> es poden descarregar de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers \"target=\"_ blank\" rel=\"noopener noreferrer\">aquí</a><br />El darrer <b>Zadig</b> del controlador de Windows USB es pot descarregar de <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br />"
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -1649,6 +1649,33 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Es desaconsella l'ús d'una transició de punt de partida D superior a 0 i inferior a 0,1. Si ho fa, pot generar inestabilitat i una menor capacitat de resposta a mesura que els sticks passen pel punt central.</span>"
+    },
+    "pidTuningFfInterpolateSp": {
+        "message": "Interpolar FF"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "Les següents opcions permeten afinar el ritme de cursa/agressiu a suau/HD.<br><br> Modalitat: ajustat a NoAverage per a cursa, Mitja 2 per a cursa/freestyle ràpid, Mitjana a 3 per a enregistrament en HD, Mitjana 4 per a cinema HD suau.<br><br> Suavitat: limita la quantitat de canvis que pot fer qualsevol pas de ràdio entrant, augmentar per obtenir un senyal de FF més suau, disminueix per respostes de FF més agressives.<br><br> Potencia: ajuda a superar el retard del motor amb moviments rápid dels sticks, pot augmentar el jitter. Prova 10 per HD, 20 per cursa. Fins a 30 poden ser útils per a quads de baixa autoritat, però poden causar micro bots o jitter."
+    },
+    "pidTuningFfInterpolate": {
+        "message": "Mode"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "Sense mitja"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "Mitjana 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "Mitjana 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "Mitjana 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Suavitat"
+    },
+    "pidTuningFfBoost": {
+        "message": "Potenciador"
     },
     "pidTuningProportional": {
         "message": "Proporcional"
@@ -3452,6 +3479,9 @@
     },
     "pidTuningDTermLowpassDynType": {
         "message": "Tipus filtre Passa-baixos dinàmic 1 del D Term"
+    },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "D Term filtre passa-baixos dinàmic 1 curva Expo"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtres Notch D Term"
