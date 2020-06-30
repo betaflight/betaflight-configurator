@@ -1162,7 +1162,7 @@
         "message": "Bitte wählen Sie ein für Ihren ESC geeignetes Motorausgabeprotokoll. $t(escProtocolDisabledMessage.message)"
     },
     "escProtocolDisabledMessage": {
-        "message": "<strong>Achtung:</strong> Wenn Sie ein nicht von Ihren ESCs unterstütztes Motorausgabeprotokoll auswählen, kann es dazu führen, dass sich <strong>ihre Motoren beginnen zu  dehen, sobald eine Batterie angeschlossen wird</strong>. Aus diesem Grund <strong>Achten Sie immer darauf, die Propeller zu entfernen nachdem Sie das Motorausgabeprotokoll</strong> gewechselt haben, bevor Sie zum ersten Mal eine Batterie anschließen."
+        "message": "<strong>Achtung:</strong> Wenn Sie ein nicht von Ihren ESCs unterstütztes Motorausgabeprotokoll auswählen, kann es dazu führen, dass <strong>ihre Motoren sich sofort drehen, sobald eine Batterie angeschlossen wird</strong>. Aus diesem Grund <strong>Achten Sie immer darauf, die Propeller zu entfernen nachdem Sie das Motorausgabeprotokoll</strong> gewechselt haben, bevor Sie zum ersten Mal eine Batterie anschließen."
     },
     "configurationDshotBeeper": {
         "message": "Dshot Beacon Konfiguration"
@@ -2721,6 +2721,9 @@
     },
     "firmwareFlasherButtonDownloading": {
         "message": "Herunterladen..."
+    },
+    "firmwareFlasherExitDfu": {
+        "message": "Bootloader-Modus verlassen"
     },
     "firmwareFlasherFlashFirmware": {
         "message": "Firmware flashen"
@@ -5423,6 +5426,9 @@
     },
     "darkTheme": {
         "message": "Dunkles Design verwenden"
+    },
+    "pidTuningRcExpoRaceflight": {
+        "message": "Exponentiell"
     },
     "pidTuningRateRaceflight": {
         "message": "Acro+"
