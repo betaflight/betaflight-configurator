@@ -1629,7 +1629,7 @@
         "message": "RC Interpolazio Interbaloa [ms]"
     },
     "pidTuningFeedforwardTransition": {
-        "message": "Feed-forward trantsizioa"
+        "message": "Feedforward trantsizioa"
     },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Parametro honen bidez, palanka zentrotik gertu daudenean, Feedforward murriztu egin daiteke palankak eta biribilak leuntzeko.<br> 0-palanka zentratua, 1-erabat lekuz aldatuta. Palanka puntu horren gainetik dagoenean, elikadura aurrekoa etengabe mantentzen da ezarritako balioan. Palanka puntu horren azpitik dagoenean, FeedFordward proportzionalki murrizten da, palankaren posizio zentralean 0 izatera. <br> 1-ren balioa leuntzeko gehienezko efektua ematen du; 0-ren balioa, berriz, FeedFordward finkatuta mantentzen da palanka-barruti osoan."
@@ -1648,6 +1648,33 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message): </strong>Ezda gomendagarria 0 Setpoint-en trantsizioa 0 eta 0.1 baino txikiagoa. Hori egitean, ezegonkortasuna eta makilen erantzuna murriztea eragin dezakete, makilek erdiko puntua zeharkatzen duten bitartean.</span>"
+    },
+    "pidTuningFfInterpolateSp": {
+        "message": "FF Interpolatua"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "Aukera hauek Feedforward egokitzen du lasterketa/oldarkorratik leun/HDra.<br><br> Modua: lasterketarako EzBatezBeste ezarri, BatezBeste 2 lasterketa/Freestyle bizkorrerako, BatezBeste 3 grabazio HDrako, BatezBeste 4 HD zinematikorako.<br><br> Leuntasuna: sarrerako irratsaio batek egin dezakeen aldaketa-kopurua mugatzen du, gora egin FFaren seinalea leunagoa izateko, murriztu FFaren erantzun oldarkorragoetarako.<br><br> Bultzada: motoren laga gainditzen laguntzen du makila sarrera azkarrekin, jitter areagotu dezake. Saiatu 10 balioarekin HD-rako, 20 lasterketentzat. 30 saiatzen baliagarriak izan daitezke autoritate gutziko quad-etan, baina mikro-gainkargak edo zailtasunak sor ditzakete."
+    },
+    "pidTuningFfInterpolate": {
+        "message": "Modua"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "EzBatezBeste"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "BatezBeste 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "BatezBeste 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "BatezBeste 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Leuntasuna"
+    },
+    "pidTuningFfBoost": {
+        "message": "Bultzada"
     },
     "pidTuningProportional": {
         "message": "Proportzionala (P)"
@@ -1674,7 +1701,7 @@
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
-        "message": "Prealimentazioa (F)"
+        "message": "Feedforward"
     },
     "pidTuningFeedforwardHelp": {
         "message": "Agintearen sarreran (malgukak) oinarriturik bultzada gehigarria da. FF-k laguntzen du P-term-ek Quad-a bultzen duela aginteak mugitzerakoan.<br><br>P-term-aren bultzada aginteen eta abiapuntua-an ohinarriturik (deg/sec) eta giro irakurritakoaren (deg/sec) ezberdintazunean. FF-k sakatzen du aginteen aldaketetan bakarrik..<br><br>Balio altuagoak (irabaziak) Quad-en aginteen sarrera zorroztuko dute.<br>Balio altuegiak gainbegiratze bat, motorren beroa eta motorren saturazioa sor dezakete(motoreek nahi duzun aldaketa-tasarekin ezin dutenean eutsi).<br>Gutxieneko edo zero (0) balioak sarreran motelagoa eta leuna emango die.",
@@ -3452,6 +3479,9 @@
     "pidTuningDTermLowpassDynType": {
         "message": "1. D Term Behe-paseko Iragazkiko Iragazki Dinamikoa Mota"
     },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "1. D Term Behe-paseko Iragazki Dinamiko Kurbaren Expoa"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Tem Notch Iragazkiak"
     },
@@ -3480,7 +3510,7 @@
         "message": "Momentuko I Term bektorea behar bezala biratzen du bezte ardatzerantz, quad biraka etengabe Yaw-arekin jaurtitzen direnean roll eta beste zenbait trikimailu egitean. LOS acro pilotuengatik oso estimatua."
     },
     "pidTuningSmartFeedforward": {
-        "message": "Adimendun Feed-forward"
+        "message": "Adimendun Feedforward"
     },
     "pidTuningSmartFeedforwardHelp": {
         "message": "F terminoak PIDen eragina murrizten du. P terminoa eta F terminoa aldi berean aktiboak direnean, bakarrik bietako handienak erabiltzen du, gainezka egiteak D igo beharrik izan gabe, baina F terminoak sortutako erantzun efektua murrizten du ere P gehitzen denean."
