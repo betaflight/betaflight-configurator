@@ -448,11 +448,21 @@ TABS.pid_tuning.initialize = function (callback) {
             ffInterpolateCheck.change(function() {
                 const checked = $(this).is(':checked');
                 $('.ffInterpolateSp .suboption').toggle(checked);
-            });
-            ffInterpolateCheck.change();
+            }).change();
 
+            // Vbat Sag Compensation
+            const vbatSagCompensationCheck = $('input[id="vbatSagCompensation"]');
+
+            vbatSagCompensationCheck.prop('checked', ADVANCED_TUNING.vbat_sag_compensation !== 0);
+            $('input[name="vbatSagValue"]').val(ADVANCED_TUNING.vbat_sag_compensation > 0 ? ADVANCED_TUNING.vbat_sag_compensation : 100);
+
+            vbatSagCompensationCheck.change(function() {
+                const checked = $(this).is(':checked');
+                $('.vbatSagCompensation .suboption').toggle(checked);
+            }).change();
         } else {
             $('.ffInterpolateSp').hide();
+            $('.vbatSagCompensation').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -921,6 +931,7 @@ TABS.pid_tuning.initialize = function (callback) {
             ADVANCED_TUNING.ff_smooth_factor = parseInt($('input[name="ffSmoothFactor"]').val());
             ADVANCED_TUNING.ff_boost = parseInt($('input[name="ffBoost"]').val());
             FILTER_CONFIG.dyn_lpf_curve_expo = parseInt($('.pid_filter input[name="dtermLowpassDynExpo"]').val());
+            ADVANCED_TUNING.vbat_sag_compensation = $('input[id="vbatSagCompensation"]').is(':checked') ? parseInt($('input[name="vbatSagValue"]').val()) : 0;
         }
     }
 
