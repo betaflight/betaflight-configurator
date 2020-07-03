@@ -111,6 +111,8 @@ TABS.cli.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
+        TABS.cli.adaptPhones();
+
         CONFIGURATOR.cliActive = true;
 
         var textarea = $('.tab-cli textarea[name="commands"]');
@@ -318,6 +320,17 @@ TABS.cli.initialize = function (callback) {
 
         GUI.content_ready(callback);
     });
+};
+
+TABS.cli.adaptPhones = function() {
+    if ($(window).width() < 575) {
+        const backdropHeight = $('.note').height() + 22 + 38;
+        $('.backdrop').css('height', `calc(100% - ${backdropHeight}px)`);
+    }
+
+    if (GUI.isCordova()) {
+        UI_PHONES.initToolbar();
+    }
 };
 
 TABS.cli.history = {

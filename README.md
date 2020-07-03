@@ -48,14 +48,15 @@ Unstable testing versions of the lates builds of the configurator for most platf
 
 **Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
 
-## Native app build via NW.js
+## Native app build via NW.js (windows/linux/macos) or Cordova (android)
 
 ### Development
 
 1. Install node.js (version 10 required)
 2. Install yarn: `npm install yarn -g`
-3. Change to project folder and run `yarn install`.
-4. Run `yarn start`.
+3. (For Android platform only) Install Java JDK 8, Gradle and Android Studio (Android SDK at least level 19)
+4. Change to project folder and run `yarn install`.
+5. Run `yarn start`.
 
 ### Running tests
 
@@ -69,12 +70,14 @@ yarn gulp <taskname> [[platform] [platform] ...]
 ```
 
 List of possible values of `<task-name>`:
-* **dist** copies all the JS and CSS files in the `./dist` folder.
+* **dist** copies all the JS and CSS files in the `./dist` folder [2].
 * **apps** builds the apps in the `./apps` folder [1].
-* **debug** builds debug version of the apps in the `./debug` folder [1].
+* **debug** builds debug version of the apps in the `./debug` folder [1][3].
 * **release** zips up the apps into individual archives in the `./release` folder [1]. 
 
 [1] Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app (build for specific platform to avoid errors).
+[2] For Android platform, **dist** task will generate the `./cordova` folder
+[3] For Android platform, you need to configure an emulator or to plug an Android device with USB debugging enabled
 
 #### Build or release app for one specific platform
 To build or release only for one specific platform you can append the plaform after the `task-name`.
@@ -84,6 +87,7 @@ If no platform is provided, all the platforms will be done in sequence.
 * **Linux** use `yarn gulp <task-name> --linux64`
 * **Windows** use `yarn gulp <task-name> --win32`
 * **ChromeOS** use `yarn gulp <task-name> --chromeos`
+* **Android** use `yarn gulp <task-name> --android`
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`.
 

@@ -50,7 +50,7 @@
 
 .tab-logging .fixed_band {
     width: 100%;
-    bottom: 0px;
+    bottom: 0;
 }
 
 .tab-logging .save_btn .back {
@@ -65,5 +65,15 @@
     .tab-logging table thead tr:first-child {
         font-size: 12px;
         height: 22px;
+    }
+}
+
+@media all and (max-width: 575px) {
+    .tab-logging .properties dd {
+        width: 100%;
+        height: auto;
+    }
+    .tab-logging .properties {
+        width: auto;
     }
 }

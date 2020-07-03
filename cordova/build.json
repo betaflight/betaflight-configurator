@@ -1,0 +1,10 @@
+{
+    "android": {
+        "release": {
+            "keystore": "release.keystore",
+            "storePassword": "betaflight",
+            "alias": "betaflight",
+            "password" : "betaflight"
+        }
+    }
+}

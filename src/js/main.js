@@ -4,6 +4,12 @@ window.googleAnalytics = analytics;
 window.analytics = null;
 
 $(document).ready(function () {
+    if (typeof cordovaApp === 'undefined') {
+        appReady();
+    }
+});
+
+function appReady() {
     $.getJSON('version.json', function(data) {
         CONFIGURATOR.version = data.version;
         CONFIGURATOR.gitChangesetId = data.gitChangesetId;
@@ -29,7 +35,7 @@ $(document).ready(function () {
             initializeSerialBackend();
         });
     });
-});
+}
 
 function checkSetupAnalytics(callback) {
     if (!analytics) {
@@ -143,13 +149,17 @@ function closeSerial() {
 }
 
 function closeHandler() {
-    this.hide();
+    if (!GUI.isCordova()) {
+        this.hide();
+    }
 
     analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
 
     closeSerial();
 
-    this.close(true);
+    if (!GUI.isCordova()) {
+        this.close(true);
+    }
 }
 
 //Process to execute to real start the app
@@ -171,14 +181,16 @@ function startProcess() {
             GUI.nwGui.Shell.openExternal(url);
         });
         nwWindow.on('close', closeHandler);
-    } else if (!GUI.isOther()) {
+    } else if (GUI.isChromeApp()) {
         chrome.app.window.onClosed.addListener(closeHandler);
         // This event does not actually get fired:
         chrome.runtime.onSuspend.addListener(closeHandler);
+    } else if (GUI.isCordova()) {
+        window.addEventListener('beforeunload', closeHandler);
     }
 
     $('.connect_b a.connect').removeClass('disabled');
-    $('#logo .version').text(CONFIGURATOR.version);
+    $('#logo .version, #tab_logoversion .version').text(CONFIGURATOR.version);
     updateStatusBarVersion();
     updateTopBarVersion();
 
@@ -201,6 +213,10 @@ function startProcess() {
             {lastTab: $(this).attr("class").split(' ')[0]}
         );
     });
+
+    if (GUI.isCordova()) {
+        UI_PHONES.init();
+    }
 
     const ui_tabs = $('#tabs > ul');
     $('a', ui_tabs).click(function () {
@@ -273,6 +289,9 @@ function startProcess() {
                         break;
                     case 'privacy_policy':
                         TABS.staticTab.initialize('privacy_policy', content_ready);
+                        break;
+                    case 'options':
+                        TABS.options.initialize(content_ready);
                         break;
                     case 'firmware_flasher':
                         TABS.firmware_flasher.initialize(content_ready);
@@ -354,117 +373,6 @@ function startProcess() {
 
     $('#tabs ul.mode-disconnected li a:first').click();
 
-    // options
-    $('a#options').click(function () {
-        const el = $(this);
-
-        if (!el.hasClass('active')) {
-            el.addClass('active');
-            el.after('<div id="options-window"></div>');
-
-            $('div#options-window').load('./tabs/options.html', function () {
-                // translate to user-selected language
-                i18n.localizePage();
-
-                ConfigStorage.get('permanentExpertMode', function (result) {
-                    if (result.permanentExpertMode) {
-                        $('div.permanentExpertMode input').prop('checked', true);
-                    }
-
-                    $('div.permanentExpertMode input').change(function () {
-                        const checked = $(this).is(':checked');
-
-                        ConfigStorage.set({'permanentExpertMode': checked});
-
-                        $('input[name="expertModeCheckbox"]').prop('checked', checked).change();
-                    }).change();
-                });
-
-                ConfigStorage.get('rememberLastTab', function (result) {
-                    $('div.rememberLastTab input')
-                        .prop('checked', !!result.rememberLastTab)
-                        .change(function() { ConfigStorage.set({rememberLastTab: $(this).is(':checked')}); })
-                        .change();
-                });
-
-                if (GUI.operating_system !== 'ChromeOS') {
-                    ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
-                        if (result.checkForConfiguratorUnstableVersions) {
-                            $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
-                        }
-
-                        $('div.checkForConfiguratorUnstableVersions input').change(function () {
-                            const checked = $(this).is(':checked');
-
-                            ConfigStorage.set({'checkForConfiguratorUnstableVersions': checked});
-
-                            checkForConfiguratorUpdates();
-                        });
-                    });
-                } else {
-                    $('div.checkForConfiguratorUnstableVersions').hide();
-                }
-
-                ConfigStorage.get('analyticsOptOut', function (result) {
-                    if (result.analyticsOptOut) {
-                        $('div.analyticsOptOut input').prop('checked', true);
-                    }
-
-                    $('div.analyticsOptOut input').change(function () {
-                        const checked = $(this).is(':checked');
-
-                        ConfigStorage.set({'analyticsOptOut': checked});
-
-                        checkSetupAnalytics(function (analyticsService) {
-                            if (checked) {
-                                analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'OptOut');
-                            }
-
-                            analyticsService.setOptOut(checked);
-
-                            if (!checked) {
-                                analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'OptIn');
-                            }
-                        });
-                    }).change();
-                });
-
-                $('div.cliAutoComplete input')
-                    .prop('checked', CliAutoComplete.configEnabled)
-                    .change(function () {
-                        const checked = $(this).is(':checked');
-
-                        ConfigStorage.set({'cliAutoComplete': checked});
-                        CliAutoComplete.setEnabled(checked);
-                    }).change();
-
-                $('#darkThemeSelect')
-                    .val(DarkTheme.configEnabled)
-                    .change(function () {
-                        const value = parseInt($(this).val());
-
-                        ConfigStorage.set({'darkTheme': value});
-                        setDarkTheme(value);
-                    }).change();
-
-                function close_and_cleanup(e) {
-                    if (e.type === 'click' && !$.contains($('div#options-window')[0], e.target) || e.type === 'keyup' && e.keyCode === 27) {
-                        $(document).unbind('click keyup', close_and_cleanup);
-
-                        $('div#options-window').slideUp(250, function () {
-                            el.removeClass('active');
-                            $(this).empty().remove();
-                        });
-                    }
-                }
-
-                $(document).bind('click keyup', close_and_cleanup);
-
-                $(this).slideDown(250);
-            });
-        }
-    });
-
     // listen to all input change events and adjust the value within limits if necessary
     $("#content").on('focus', 'input[type="number"]', function () {
         const element = $(this);
@@ -535,22 +443,19 @@ function startProcess() {
     $("#showlog").on('click', function () {
         let state = $(this).data('state');
         if (state) {
-            $("#log").animate({height: 27}, 200, function () {
+            setTimeout(function() {
                 const command_log = $('div#log');
                 command_log.scrollTop($('div.wrapper', command_log).height());
-            });
+            }, 200);
             $("#log").removeClass('active');
-            $("#content").removeClass('logopen');
-            $(".tab_container").removeClass('logopen');
+            $("#tab-content-container").removeClass('logopen');
             $("#scrollicon").removeClass('active');
             ConfigStorage.set({'logopen': false});
 
             state = false;
         } else {
-            $("#log").animate({height: 111}, 200);
             $("#log").addClass('active');
-            $("#content").addClass('logopen');
-            $(".tab_container").addClass('logopen');
+            $("#tab-content-container").addClass('logopen');
             $("#scrollicon").addClass('active');
             ConfigStorage.set({'logopen': true});
 
@@ -567,11 +472,12 @@ function startProcess() {
     });
 
     ConfigStorage.get('permanentExpertMode', function (result) {
+        const experModeCheckbox = 'input[name="expertModeCheckbox"]';
         if (result.permanentExpertMode) {
-            $('input[name="expertModeCheckbox"]').prop('checked', true);
+            $(experModeCheckbox).prop('checked', true);
         }
 
-        $('input[name="expertModeCheckbox"]').change(function () {
+        $(experModeCheckbox).change(function () {
             const checked = $(this).is(':checked');
             checkSetupAnalytics(function (analyticsService) {
                 analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
@@ -819,7 +725,7 @@ function updateTopBarVersion(firmwareVersion, firmwareId, hardwareId) {
 
     const versionText = `${configuratorVersion}<br />${firmwareVersionAndId}<br />${targetVersion}`;
 
-    $('#logo .logo_text').html(versionText);
+    $('#logo .logo_text, #tab_logoversion .version').html(versionText);
 }
 
 function updateStatusBarVersion(firmwareVersion, firmwareId, hardwareId) {

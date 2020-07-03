@@ -30,13 +30,11 @@
 }
 
 .tab-auxiliary .mode.off .info {
-    background: #cb4747;
     background: #828885;
     color: white;
 }
 
 .tab-auxiliary .mode.off:nth-child(odd) .info {
-    background: #cb4747;
     background: #828885;
 }
 
@@ -54,18 +52,17 @@
 
 .tab-auxiliary .modes {
     width: 100%;
-    border-spacing: 0px;
 }
 
 .tab-auxiliary .mode {
     background-color: #f9f9f9;
     vertical-align: top;
-    border-bottom: 1px solid #000000;
+    display: flex;
 }
 
 .tab-auxiliary .mode .name {
     min-height: 80px;
-    padding: 5px 0px;
+    padding: 5px 0;
 }
 
 .tab-auxiliary .mode .info {
@@ -76,7 +73,7 @@
     background-color: #e4e4e4;
     border-bottom: 5px solid white;
     color: grey;
-    min-width: 100px;
+    min-width: 140px;
 }
 
 .tab-auxiliary .mode .info .name {
@@ -86,7 +83,7 @@
 
 .tab-auxiliary .mode .info .buttons {
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     width: 100%;
 }
 
@@ -103,16 +100,17 @@
 }
 
 .tab-auxiliary .ranges {
-    margin: 10px;
-    padding-right: 0px;
+    padding-right: 0;
     border-bottom: 5px solid white;
+    width: 90%;
+    max-width: calc(100% - 140px);
 }
 
 .tab-auxiliary .range {
     position: relative;
     height: 70px;
     padding-top: 15px;
-    padding-left: 0px;
+    padding-left: 0;
     border-top: 1px solid #fff;
     border-bottom: 1px solid var(--subtleAccent);
     background-color: #ececec;
@@ -131,25 +129,25 @@
 }
 
 .tab-auxiliary .range:first-child {
-    border-top: 0px;
+    border-top: 0;
 }
 
 .tab-auxiliary .range:last-child {
-    border-bottom: 0px;
+    border-bottom: 0;
 }
 
 .tab-auxiliary .link:first-child {
-    border-top: 0px;
+    border-top: 0;
 }
 
 .tab-auxiliary .link:last-child {
-    border-bottom: 0px;
+    border-bottom: 0;
 }
 
 .tab-auxiliary .range>.buttons {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
 }
 
 .tab-auxiliary .range>.buttons .a {
@@ -252,7 +250,7 @@
 }
 
 .tab-auxiliary .fixed_band {
-    bottom: 0px;
+    bottom: 0;
 }
 
 .tab-auxiliary .save_btn a {
@@ -261,11 +259,67 @@
 
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
     .tab-auxiliary .fixed_band {
-        margin: 0px;
         width: calc(100% - -30px);
-        margin-left: -15px;
+        margin: 0 0 0 -15px;
     }
     .tab-auxiliary .fixed_band .save_btn a {
         margin-right: 15px;
+    }
+}
+
+@media all and (max-width: 575px) {
+    .tab-auxiliary .mode {
+        flex-wrap: wrap;
+    }
+    .tab-auxiliary .mode .info {
+        width: 100%;
+        border-bottom: 0;
+    }
+    .tab-auxiliary .mode .info .name {
+        text-align: left;
+        padding-left: 10px;
+        min-height: auto;
+    }
+    .tab-auxiliary .mode .info .buttons {
+        right: 0;
+        width: auto;
+        display: flex;
+    }
+    .tab-auxiliary .mode .ranges {
+        width: 100%;
+        max-width: 100%;
+    }
+    .tab-auxiliary .range {
+        display: flex;
+        height: auto;
+        flex-wrap: wrap;
+    }
+    .tab-auxiliary .mode .range .channelInfo {
+        display: flex;
+        margin: 0 10px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .tab-auxiliary .limits {
+        width: 100%;
+        justify-content: space-between;
+        display: flex;
+    }
+    .tab-auxiliary .range .channel-slider {
+        width: 100%;
+        margin: 10px 10px 45px 10px;
+    }
+    .tab-auxiliary .delete a {
+        margin-top: 15px;
+        margin-right: 10px;
+        position: absolute;
+        float: none;
+        top: 0;
+        right: 0;
+    }
+    .tab-auxiliary .link {
+        height: auto;
+        display: flex;
+        padding-bottom: 10px;
     }
 }

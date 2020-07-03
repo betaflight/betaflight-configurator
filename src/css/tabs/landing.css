@@ -14,21 +14,20 @@
 
 .tab-landing .content_top {
     height: 140px;
-    background: #fff;
     padding: 20px;
-    background-image: url(../../images/pattern.png);
+    background: #fff url(../../images/pattern.png);
     background-size: 300px;
 }
 
 .tab-landing .content_mid {
     background-color: var(--accent);
     overflow: hidden;
+    padding: 0 15px;
 }
 
 .tab-landing .content_foot {
     clear: both;
-    padding: 20px;
-    padding-bottom: 5px;
+    padding: 20px 20px 5px;
 }
 
 /* hero block */
@@ -60,16 +59,8 @@
 }
 
 /* text columns */
-.tab-landing .content_mid .column .wrap {
-    padding: 15px;
-    padding-bottom: 0px;
-    padding-top: 0px;
-}
-
 .tab-landing .content_mid .column .wrap2 {
     padding: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
 }
 
 .tab-landing .content_mid h2 {
@@ -83,18 +74,6 @@
 
 }
 
-.tab-landing .content_mid .text1 .wrap {
-    margin-left: 0px;
-}
-
-.tab-landing .content_mid .text1 {
-    width: 37%;
-}
-
-.tab-landing .content_mid .text2 {
-    width: 40%;
-}
-
 .tab-landing .content_mid .text2 ul {
     margin-top: 2px;
 }
@@ -106,17 +85,10 @@
     margin-left: 30px;
 }
 
-.tab-landing .content_mid .text3 {
-    width: 23%;
-}
-
 .tab-landing .content_mid .text3 .wrap2 {
     border: 1px solid var(--subtleAccent);
     border-radius: 5px;
     background: white;
-    margin-right: 20px;
-    margin-left: 10px;
-    margin-top: 5px;
     min-height: 187px;
     font-size: 11px;
 }
@@ -127,11 +99,7 @@
 }
 
 .tab-landing .content_mid_bottom {
-    padding: 15px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    overflow: hidden;
-    float: left;
+    padding: 0 15px;
 }
 
 .tab-landing .content_mid_bottom .logo {
@@ -140,7 +108,7 @@
 }
 
 .tab-landing .content_mid_bottom .text4 {
-    margin-top: 0px;
+    margin-top: 0;
     margin-left: 5px;
     display: inline-block;
 }
@@ -162,4 +130,11 @@
 .tab-landing .languageSwitcher a:not(:last-child):after {
     content: ", ";
     font-weight: normal;
+}
+
+/** (phones) **/
+@media all and (max-width: 575px) {
+    .tab-landing .logowrapper, .tab-landing .logowrapper img {
+        width: auto;
+    }
 }

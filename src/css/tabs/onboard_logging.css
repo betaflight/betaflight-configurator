@@ -139,6 +139,13 @@
     margin-bottom: 0.5em;
 }
 
+@media all and (max-width: 575px) {
+    .tab-onboard_logging dialog {
+        width: calc(100% - 2em);
+        border-radius: unset;
+    }
+}
+
 .dataflash-confirm-erase .dataflash-erase-progress {
     height: 125px;
     display: none;
@@ -150,10 +157,7 @@
 }
 
 .tab-onboard_logging .save-flash .helpicon {
-    margin-left: 7px;
-    margin-right: 0px;
-    margin-top: 4px;
-    margin-bottom: 0px;
+    margin: 4px 0 0 7px;
     display: inline-block;
     float: unset;
 }
@@ -290,7 +294,7 @@
     border: 1px solid #5bbb1b;
 } 
 .tab-onboard_logging .sdcard-icon {
-	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 	width: 90px;
     height: 90px;
     background-image: url(../../images/icons/cf_icon_sdcard.svg);
@@ -302,4 +306,10 @@
     border: 1px solid #888888;
     
     border-radius: 45px;
+}
+
+@media all and (max-width: 575px) {
+    .tab-onboard_logging .blackboxRate select, .tab-onboard_logging .blackboxDebugMode select, .tab-onboard_logging .blackboxDevice select {
+        width: 120px;
+    }
 }

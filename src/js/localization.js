@@ -51,10 +51,12 @@ i18n.init = function(cb) {
 };
 
 i18n.changeLanguage = function(languageSelected) {
-  ConfigStorage.set({'userLanguageSelect': languageSelected});
-  i18next.changeLanguage(getValidLocale(languageSelected));
-  i18n.selectedLanguage = languageSelected;
-  GUI.log(i18n.getMessage('language_changed'));
+    if (typeof ConfigStorage !== 'undefined') {
+        ConfigStorage.set({'userLanguageSelect': languageSelected});
+    }
+    i18next.changeLanguage(getValidLocale(languageSelected));
+    i18n.selectedLanguage = languageSelected;
+    GUI.log(i18n.getMessage('language_changed'));
 };
 
 i18n.getMessage = function(messageID, parameters) {
@@ -159,17 +161,22 @@ i18n.localizePage = function(forceReTranslate) {
  * returns the current locale to the callback
  */
 function getStoredUserLocale(cb) {
-    ConfigStorage.get('userLanguageSelect', function (result) {
-        let userLanguage = 'DEFAULT';
-        if (result.userLanguageSelect) {
-            userLanguage = result.userLanguageSelect;
-        }
-        i18n.selectedLanguage = userLanguage;
+    if (typeof ConfigStorage !== 'undefined') {
+        ConfigStorage.get('userLanguageSelect', function (result) {
+            let userLanguage = 'DEFAULT';
+            if (result.userLanguageSelect) {
+                userLanguage = result.userLanguageSelect;
+            }
+            i18n.selectedLanguage = userLanguage;
 
-        userLanguage = getValidLocale(userLanguage);
+            userLanguage = getValidLocale(userLanguage);
 
+            cb(userLanguage);
+        });
+    } else {
+        const userLanguage = getValidLocale('DEFAULT');
         cb(userLanguage);
-    });
+    }
 }
 
 function getValidLocale(userLocale) {

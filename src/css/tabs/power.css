@@ -2,15 +2,8 @@
     display: none;
 }
 
-.tab-power .leftWrapper {
-    float: left;
-    width:calc(50% - 20px)
-}
-
-.tab-power .rightWrapper {
-    float: left;
-    width: calc(50% - 0px);
-    margin: 0 0 10px 20px;
+.tab-power .ui-grid-col {
+    margin-bottom: 0;
 }
 
 .tab-power td.configuration {
@@ -19,7 +12,7 @@
 }
 
 .tab-power .battery-state .configuration {
-    border-bottom: 0px;
+    border-bottom: 0;
 }
 
 .tab-power td.value {
@@ -49,7 +42,7 @@
 
 .tab-power .number,
 .tab-power .select
- {
+{
     margin-bottom: 5px;
     clear: left;
     padding-bottom: 5px;
@@ -69,8 +62,8 @@
 .tab-power .number:last-child,
 .tab-power .select:last-child {
     border-bottom: none;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .tab-power .require-support {

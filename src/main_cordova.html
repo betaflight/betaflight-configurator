@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Betaflight configurator</title>
+    <link type="text/css" rel="stylesheet" href="./css/main_cordova.css"/>
+    <link type="text/css" rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.css" media="all"/>
+</head>
+<body>
+    <div id="headerbar">
+        <img src="images/light-wide-2-compact.svg" alt="" />
+    </div>
+    <div id="loading">
+        <img src="images/loading-spin.svg" alt="" />
+        <p i18n="cordovaCheckingWebview"></p>
+    </div>
+    <div id="webview_troubleshooting">
+        <div class="box">
+            <div class="box_titlebar warning">
+                <em class="fas fa-exclamation-triangle"></em> <span i18n="cordovaIncompatibleWebview"></span>
+            </div>
+            <div class="box_body">
+                <p i18n="cordovaWebviewTroubleshootingMsg"></p>
+                <p i18n="cordovaWebviewTroubleshootingMsg2"></p>
+                <div class="divider"></div>
+                <p id="webview_step_msg"></p>
+                <button id="webview_step_btn1" class="btn" type="button"></button>
+                <button id="webview_step_btn2" class="btn" type="button"></button>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box_titlebar">
+                <em class="fas fa-info-circle"></em> <span i18n="cordovaAvailableWebviews"></span>
+            </div>
+            <div class="box_body">
+                <ul id="webview_apps"></ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./node_modules/i18next/i18next.min.js"></script>
+    <script type="text/javascript" src="./node_modules/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
+    <script type="text/javascript" src="./js/localization.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="./js/main_cordova.js"></script>
+</body>
+</html>

@@ -593,6 +593,11 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         updateBulkCmd();
 
+        if ($(window).width() < 575) {
+            const gridZoom = $('.tab_title').width() / 496;
+            $('.mainGrid, .gridSections').css('zoom', gridZoom);
+        }
+
         GUI.content_ready(callback);
     }
 

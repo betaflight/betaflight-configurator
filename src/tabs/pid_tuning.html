@@ -4,7 +4,7 @@
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="https://github.com/betaflight/betaflight/releases" target="_blank" rel="noopener noreferrer"></a>
         </div>
-        <div class="cf_column">
+        <div class="content_wrapper_header">
             <div class="profile single-field">
                 <div class="helpicon cf_tip topspacer" i18n_title="pidTuningProfileTip"></div>
                 <div class="head" i18n="pidTuningProfile"></div>
@@ -32,18 +32,18 @@
                     </select>
                 </div>
             </div>
-            <div class="cf_column right">
-                <div class="default_btn show showAllPids">
-                    <a href="#" id="showAllPids" i18n="pidTuningShowAllPids"></a>
-                </div>
-                <div class="default_btn resetbt">
-                    <a href="#" id="resetProfile" i18n="pidTuningResetProfile"></a>
+            <div class="content_wrapper_header_btns">
+                <div class="default_btn copyprofilebtn">
+                    <a href="#" id="copyProfile" i18n="pidTuningCopyProfile"></a>
                 </div>
                 <div class="default_btn copyrateprofilebtn">
                     <a href="#" id="copyRateProfile" i18n="pidTuningCopyRateProfile"></a>
                 </div>
-                <div class="default_btn copyprofilebtn">
-                    <a href="#" id="copyProfile" i18n="pidTuningCopyProfile"></a>
+                <div class="default_btn resetbt">
+                    <a href="#" id="resetProfile" i18n="pidTuningResetProfile"></a>
+                </div>
+                <div class="default_btn show showAllPids">
+                    <a href="#" id="showAllPids" i18n="pidTuningShowAllPids"></a>
                 </div>
             </div>
         </div>
@@ -75,19 +75,21 @@
                                 <th class="name"></th>
                                 <th class="proportional">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningProportional"></div>
+                                        <div i18n="pidTuningProportional" class="sm-min"></div>
+                                        <div class="xs">P</div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningProportionalHelp"></div>
                                     </div>
                                 </th>
                                 <th class="integral">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningIntegral"></div>
+                                        <div i18n="pidTuningIntegral" class="sm-min"></div>
+                                        <div class="xs">I</div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningIntegralHelp"></div>
                                     </div>
                                 </th>
                                 <th class="derivative">
                                     <div class="name-helpicon-flex">
-                                        <div class="derivativeText" i18n="pidTuningDerivative"></div>
+                                        <div i18n="pidTuningDerivative" class="derivativeText"></div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningDerivativeHelp"></div>
                                     </div>
                                 </th>
@@ -99,7 +101,8 @@
                                 </th>
                                 <th class="feedforward">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningFeedforward"></div>
+                                        <div i18n="pidTuningFeedforward" class="sm-min"></div>
+                                        <div class="xs">FF</div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardHelp"></div>
                                     </div>
                                 </th>
@@ -169,7 +172,7 @@
                     <div class="gui_box grey topspacer tuningPIDSliders">
                         <table class="pid_titlebar">
                             <tr>
-                                <th></th>
+                                <th scope="col" class="sm-min"></th>
                                 <th></th>
                                 <th i18n="pidTuningSliderLow"></th>
                                 <th i18n="pidTuningSliderDefault"></th>
@@ -180,8 +183,13 @@
                             </tr>
                         </table>
                         <table class="sliderLabels">
+                            <tr class="xs sliderHeaders">
+                                <td colspan="5">
+                                    <span i18n="pidTuningMasterSlider"/>
+                                </td>
+                            </tr>
                             <tr>
-                                <td>
+                                <td class="sm-min">
                                     <span i18n="pidTuningMasterSlider"></span>
                                 </td>
                                 <td>
@@ -194,8 +202,13 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningMasterSliderHelp"></div>
                                 </td>
                             </tr>
+                            <tr class="xs sliderHeaders">
+                                <td colspan="5">
+                                    <span i18n="pidTuningPDRatioSlider"></span>
+                                </td>
+                            </tr>
                             <tr>
-                                <td>
+                                <td class="sm-min">
                                     <span i18n="pidTuningPDRatioSlider"></span>
                                 </td>
                                 <td>
@@ -208,8 +221,13 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPDRatioSliderHelp"></div>
                                 </td>
                             </tr>
+                            <tr class="xs sliderHeaders">
+                                <td colspan="5">
+                                    <span i18n="pidTuningPDGainSlider"></span>
+                                </td>
+                            </tr>
                             <tr>
-                                <td>
+                                <td class="sm-min">
                                     <span i18n="pidTuningPDGainSlider"></span>
                                 </td>
                                 <td>
@@ -222,8 +240,13 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPDGainSliderHelp"></div>
                                 </td>
                             </tr>
+                            <tr class="xs sliderHeaders">
+                                <td colspan="5">
+                                    <span i18n="pidTuningResponseSlider"></span>
+                                </td>
+                            </tr>
                             <tr>
-                                <td>
+                                <td class="sm-min">
                                     <span i18n="pidTuningResponseSlider"></span>
                                 </td>
                                 <td>
@@ -966,7 +989,7 @@
                 <div class="gui_box grey topspacer tuningFilterSliders">
                     <table class="pid_titlebar">
                         <tr>
-                            <th></th>
+                            <th scope="col" class="sm-min"></th>
                             <th></th>
                             <th i18n="pidTuningSliderHighFiltering"></th>
                             <th i18n="pidTuningSliderDefaultFiltering"></th>
@@ -977,8 +1000,13 @@
                         </tr>
                     </table>
                     <table class="sliderLabels">
+                        <tr class="xs sliderHeaders">
+                            <td colspan="5">
+                                <span i18n="pidTuningGyroFilterSlider"></span>
+                            </td>
+                        </tr>
                         <tr>
-                            <td>
+                            <td class="sm-min">
                                 <span i18n="pidTuningGyroFilterSlider"></span>
                             </td>
                             <td>
@@ -991,8 +1019,13 @@
                                 <div class="helpicon cf_tip" i18n_title="pidTuningGyroFilterSliderHelp"></div>
                             </td>
                         </tr>
+                        <tr class="xs sliderHeaders">
+                            <td colspan="5">
+                                <span i18n="pidTuningDTermFilterSlider"></span>
+                            </td>
+                        </tr>
                         <tr>
-                            <td>
+                            <td class="sm-min">
                                 <span i18n="pidTuningDTermFilterSlider"></span>
                             </td>
                             <td>
