@@ -35,8 +35,8 @@ body {
     font-size: 12px;
     color: #303030;
     background-color: #3d3f3e;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     overflow: hidden;
 }
 
@@ -94,7 +94,7 @@ a.disabled {
     font-weight: bold;
     font-size: 10px;
     line-height: 17px;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     text-transform: uppercase;
     letter-spacing: 0.03em;
     display: block;
@@ -123,11 +123,6 @@ input[type="number"]::-webkit-inner-spin-button {
     float: right;
 }
 
-#main-wrapper {
-    padding: 0px 0px 0 0px; /*   padding: 5px 5px 0 5px; */
-    height: calc(100% - 7px);
-}
-
 .margin-top {
     margin-top: 20px;
 }
@@ -145,45 +140,94 @@ input[type="number"]::-webkit-inner-spin-button {
     font-weight: bold !important;
 }
 
-.headerbar {
-    height:115px;
-    width:100%;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
+
+
+/** Main wrapper **/
+#main-wrapper {
+    padding: 0;
+    height: 100%;
 }
 
 
+
+/** Background **/
+#background {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    z-index: 1500;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+}
+#side_menu_swipe {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15px;
+    height: 100%;
+    z-index: 1999;
+}
+@media all and (max-width: 575px) {
+    #side_menu_swipe {
+        display: block;
+    }
+}
+
+
+
+/** Header **/
+.headerbar {
+    height: 115px;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+}
+
+#menu_btn, #reveal_btn {
+    display: none;
+    width: 24px;
+    height: 24px;
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 24px;
+    text-align: center;
+}
+
+#menu_btn {
+    margin-right: 15px;
+}
+
+#reveal_btn {
+    margin-left: 15px;
+}
+
 #logo {
-    position: relative;
-    float: left;
     height: 70px;
-    z-index: 0;
+    width: 240px;
     background-image: url(../images/light-wide-2.svg);
     background-repeat: no-repeat;
-    width: 240px;
     background-position: left center;
     background-size: contain;
-    margin-left: 15px;
-    margin-top: 14px;
+    position: relative;
+    margin-top: -25px;
 }
 
 .logo_text {
     position: absolute;
-    height: 20px;
-    width: 300px;
     left: 80px;
-    top: 50px;
+    top: 49px;
     color: #949494;
     opacity: 0.5;
     font-size: 10px;
-}
-
-.logo_text .version {
-    float: right;
+    min-width: 210px;
 }
 
 @media all and (min-width: 1125px) {
     #logo {
-        margin-top: 9px;
         width: 340px;
     }
 
@@ -193,67 +237,147 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 #port-picker {
-    position: relative;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 }
 
 #portsinput {
-    float: right;
-    margin-top: 20px;
-    margin-right: 20px;
-    /*width:180px;*/
+    width: 180px;
+    margin-right: 15px;
 }
 
 #portsinput .dropdown {
     margin-bottom: 5px;
 }
 
+#port-picker .auto_connect, .gray {
+    color: var(--subtleAccent);
+}
 
-#port-override {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #888888;
-    width: 140px;
-    margin-left: 2px;
-    margin-top: 0px;
-    padding: 1px;
-    border-radius: 3px;
-    height: 15px;
-    float: right;
-    font-size: 12px;
+#port-override-option {
+    height: 76px;
+    margin-top: 7px;
+    margin-right: 15px;
 }
 
 #port-override-option label {
     background-color: #2b2b2b;
     border-radius: 3px;
     padding: 3px;
-    margin-bottom: 5px;
-    color: var(--subtleAccent);
-    position: absolute;
-    margin-top: -59px;
-    margin-left: -187px;
-}
-
-#port-override input {
-    width: 136px;
-}
-
-#port-picker .auto_connect, .gray {
     color: var(--subtleAccent);
 }
 
-#header_dataflash {
-    display: none;
+#port-override {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #888888;
+    width: 140px;
+    margin-left: 2px;
+    padding: 1px;
+    border-radius: 3px;
+    height: 15px;
+    font-size: 12px;
+}
+
+#header_btns {
+    display: flex;
+    align-items: center;
+}
+
+.open_firmware_flasher, .connect_controls {
+    position: relative;
+    width: 80px;
+    text-align: center;
+    height: 84px;
+}
+
+.firmware_b, .connect_b {
+    width: 52px;
+    margin: 0 14px;
+    height: 52px;
+}
+
+@media all and (min-width: 1125px) {
+    .open_firmware_flasher, .connect_controls {
+        width: 100px;
+    }
+
+    .firmware_b, .connect_b {
+        margin: 0 24px;
+    }
+}
+
+.firmware_b a.flash, .connect_b a.connect {
+    background-color: var(--accent);
+    border: 1px solid #dba718;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    float: left;
+    transition: none;
+}
+
+.firmware_b a.flash {
+    background-image: url(../images/icons/cf_icon_flasher_white.svg);
+    background-size: 30px;
+    background-position: center 10px;
+}
+
+.connect_b a.connect {
+    background-image: url(../images/icons/cf_icon_usb2_white.svg);
+    background-size: 44px;
+    background-position: center 6px;
+}
+
+.firmware_b a.flash.disabled, .connect_b a.connect.disabled {
+    background-color: #808080;
+    pointer-events: none;
+    cursor: default;
+}
+
+.firmware_b a.flash:hover, .connect_b a.connect:hover {
+    background-color: #ffcc3f;
+}
+
+.firmware_b a.flash.active, .connect_b a.connect.active {
+    background-color: #e60000;
+    border: 1px solid #fe0000;
+    transition: none;
+}
+
+.firmware_b a.flash.active {
+    background-image: url(../images/icons/cf_icon_flasher_white.svg);
+}
+
+.connect_b a.connect.active {
+    background-image: url(../images/icons/cf_icon_usb1_white.svg);
+}
+
+.firmware_b a.flash.active:hover, .connect_b a.connect.active:hover {
+    background-color: #f21212;
+}
+
+.flash_state, .connect_state {
+    color: #fff;
+    font-size: 12px;
+    font-weight: normal;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.25);
+    padding: 0 10px;
+}
+
+.header-wrapper {
+    display: flex;
 }
 
 #sensor-status {
-    margin-top: 20px;
-    float: right;
     margin-right: 10px;
     line-height: 2px;
     height: 67px;
     border-radius: 5px;
     border: 1px solid #272727;
-    box-shadow: 0px 2px 0px rgba(92, 92, 92, 0.5);
+    box-shadow: 0 2px 0 rgba(92, 92, 92, 0.5);
     background-color: #434343;
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
 }
@@ -278,125 +402,91 @@ input[type="number"]::-webkit-inner-spin-button {
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.45));
     padding-left: 5px;
     padding-right: 5px;
-    text-shadow: 0px 1px rgba(0, 0, 0, 1.0);
+    text-shadow: 0 1px rgba(0, 0, 0, 1.0);
+}
+
+.gyroicon, .accicon, .magicon, .gpsicon, .baroicon, .sonaricon {
+    background-repeat: no-repeat;
+    height: 30px;
+    margin-top: 3px;
+    width: 100%;
+    padding-top: 40px;
+    color: #4f4f4f;
+    text-align: center;
+}
+
+.gyroicon.active, .accicon.active, .magicon.active, .gpsicon.active, .baroicon.active, .sonaricon.active {
+    color: #818181;
 }
 
 .gyroicon {
     background-image: url(../images/icons/sensor_gyro_off.png);
     background-size: 43px;
     background-position: top;
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: #4f4f4f;
-    text-align: center;
 }
 
 .gyroicon.active {
     background-image: url(../images/icons/sensor_gyro_on.png);
-    color: #818181;
 }
 
 .accicon {
     background-image: url(../images/icons/sensor_acc_off.png);
     background-size: 40px;
     background-position: -5px 2px;
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: #4f4f4f;
-    text-align: center;
 }
 
 .accicon.active {
     background-image: url(../images/icons/sensor_acc_on.png);
-    color: #818181;
 }
 
 .magicon {
     background-image: url(../images/icons/sensor_mag_off.png);
     background-size: 42px;
     background-position: -5px 2px;
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: #4f4f4f;
-    text-align: center;
 }
 
 .magicon.active {
     background-image: url(../images/icons/sensor_mag_on.png);
-    color: #818181;
 }
 
 .gpsicon {
     background-image: url(../images/icons/sensor_sat_off.png);
     background-size: 42px;
     background-position: -5px 2px;
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: #4f4f4f;
-    text-align: center;
 }
 
 .gpsicon.active {
     background-image: url(../images/icons/sensor_sat_on.png);
-    color: #818181;
 }
 
 .baroicon {
     background-image: url(../images/icons/sensor_baro_off.png);
     background-size: 40px;
     background-position: -5px 2px;
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: #4f4f4f;
-    text-align: center;
 }
 
 .baroicon.active {
     background-image: url(../images/icons/sensor_baro_on.png);
-    color: #818181;
 }
 
 .sonaricon {
     background-image: url(../images/icons/sensor_sonar_off.png);
     background-size: 41px;
     background-position: -4px 1px;
-    background-repeat: no-repeat;
-    height: 30px;
-    margin-top: 3px;
-    width: 100%;
-    padding-top: 40px;
-    color: #4f4f4f;
-    text-align: center;
 }
 
 .sonaricon.active {
     background-image: url(../images/icons/sensor_sonar_on.png);
-    color: #818181;
 }
 
 #sensor-status li:last-child {
-    border-right: 0px solid #c0c0c0;
+    border-right: 0 solid #c0c0c0;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
 #sensor-status li:first-child {
-    border-left: 0px solid #c0c0c0;
+    border-left: 0 solid #c0c0c0;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
@@ -406,83 +496,349 @@ input[type="number"]::-webkit-inner-spin-button {
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.45));
 }
 
-#options {
-    float: right;
-    width: 20px;
-    height: 20px;
-    margin-top: 10px;
-    margin-right: 10px;
-    background-image: url(../images/CF_settings_white.svg);
-    background-position: -1px -1px;
-    background-repeat: no-repeat;
-    opacity: 0.4;
-}
+/* Dataflash element styling*/
 
-#options:hover {
-    opacity: 0.65;
-}
-
-#options.active {
-    opacity: 0.65;
-}
-
-#options.active:hover {
-    opacity: 0.75;
-}
-
-#options-window {
-    display: none;
-    position: fixed;
-    right: 35px;
-    top: 25px;
-    padding: 5px;
-    line-height: 20px;
-    border: 1px solid var(--subtleAccent);
-    background-color: white;
+#dataflash_wrapper_global {
+    color:white;
+    font-size:10px;
+    width:125px;
+    margin-right: 5px;
+    line-height: 12px;
+    height: 33px;
     border-radius: 5px;
-    z-index: 10000;
+    border: 1px solid #272727;
+    box-shadow: 0 1px 0 rgba(92, 92, 92, 0.5);
+    background-color: #434343;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
+    padding-top:5px;
+    display:none;
+    text-shadow: 0 1px rgba(0, 0, 0, 1.0);
+
 }
 
-#options-window input {
-    float: left;
-    margin-top: 4px;
-    margin-right: 5px;
+@media all and (min-width: 1125px) {
+    #dataflash_wrapper_global {
+        margin-right: 10px;
+    }
 }
 
-#options-window .separator {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid var(--subtleAccent);
-}
-
-#options-window .dropdown {
-    float: left;
-    width: auto;
-    margin-right: 5px;
-}
-
-#options-window select {
-    margin-right: 2px;
-    background: var(--boxBackground);
-    color: var(--defaultText);
-    border: 1px solid var(--subtleAccent);
+.dataflash-contents_global {
+    margin-top: 18px;
+    border: 1px solid #4A4A4A;
+    background-color: #4A4A4A;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
     border-radius: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
-#options-window span {
-    vertical-align: text-bottom;
+
+.dataflash-free_global {
+    background-color: var(--accent);
+    border-radius: 4px;
 }
 
-/* Log setup*/
+
+.dataflash-contents_global .notsupported_global {
+    display: none;
+}
+
+.dataflash-contents_global li {
+    height: 5px;
+    position: relative;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.20);
+    border-radius: 2px;
+
+}
+
+.dataflash-contents_global li div {
+    position: absolute;
+    top: -18px;
+    margin-top: 0;
+    left: 0;
+    right: 0;
+    width:120px;
+    text-align: left;
+    color:silver;
+}
+
+.dataflash-contents_global progress::-webkit-progress-bar {
+    height: 8px;
+    background-color: #eee;
+}
+
+.dataflash-contents progress::-webkit-progress-value {
+    background-color: #bcf;
+}
+
+.noflash_global {
+    display:none;
+    color: #868686;
+    text-align: center;
+    text-shadow: 0 1px rgba(0, 0, 0, 1.0);
+    margin-top:2px;
+}
+
+#expertMode {
+    color: var(--subtleAccent);
+    margin-top: 27px;
+    width:125px;
+    float: right;
+    margin-right: 0;
+    line-height: 12px;
+}
+
+/* Battery element styling*/
+
+#quad-status_wrapper {
+    display:none;
+    color: white;
+    font-size: 10px;
+    min-width: 90px;
+    margin-right: 10px;
+    line-height: 12px;
+    height: 67px;
+    border-radius: 5px;
+    border: 1px solid #272727;
+    box-shadow: 0 1px 0 rgba(92, 92, 92, 0.5);
+    background-color: #434343;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
+    text-shadow: 0 1px rgba(0, 0, 0, 1.0);
+}
+
+@media all and (min-width: 1125px) {
+    #quad-status_wrapper {
+        margin-right: 20px;
+    }
+}
+
+.quad-status-contents  {
+    display: none;
+    margin-top: 10px;
+    margin-left: 14px;
+    height: 10px;
+    width: 31px;
+}
+
+
+.battery-legend {
+    display: inline;
+    position: relative;
+    top: -2px;
+    margin-top: 0;
+    left: 0;
+    right: 0;
+    width: 40px;
+    text-align: left;
+    color: silver;
+    margin-left: -8px;
+    padding-right: 4px
+}
+
+.quad-status-contents progress::-webkit-progress-bar {
+    height: 12px;
+    background-color: #eee;
+}
+
+.quad-status-contents progress::-webkit-progress-value {
+    background-color: #bcf;
+}
+
+.battery-status {
+    height: 11px;
+}
+
+.battery-status.state-ok {
+    background-color: #59AA29;
+}
+.battery-status.state-warning {
+    background-color: var(--error);
+}
+
+.battery-status.state-empty {
+    animation: error-blinker 1s linear infinite;
+}
+
+@keyframes error-blinker {
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: var(--error);
+    }
+}
+
+.battery-icon {
+    background-image: url(../images/icons/cf_icon_bat_grey.svg);
+    background-size: contain;
+    background-position: center;
+    display: inline-block;
+    height: 30px;
+    width: 60px;
+    transition: none;
+    margin-top: 4px;
+    margin-left: -4px;
+    background-repeat: no-repeat;
+}
+
+
+.armedicon,
+.failsafeicon,
+.linkicon {
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 6px;
+    height: 18px;
+    width: 18px;
+    opacity: 0.8;
+    background-size: contain;
+    background-position: center;
+    transition: none;
+}
+
+.armedicon {
+    background-image: url(../images/icons/cf_icon_armed_grey.svg);
+}
+.armedicon.active {
+    background-image: url(../images/icons/cf_icon_armed_active.svg);
+}
+
+.failsafeicon {
+    background-image: url(../images/icons/cf_icon_failsafe_grey.svg);
+}
+.failsafeicon.active {
+    background-image: url(../images/icons/cf_icon_failsafe_active.svg);
+}
+
+.linkicon {
+    background-image: url(../images/icons/cf_icon_link_grey.svg);
+}
+.linkicon.active {
+    background-image: url(../images/icons/cf_icon_link_active.svg);
+}
+
+/** Header (phones) **/
+@media all and (max-width: 575px) {
+    .headerbar {
+        height: 56px;
+        background: rgba(0, 0, 0, 0.15);
+        flex-wrap: wrap;
+        align-content: flex-start;
+        padding-top: 12px;
+        box-sizing: border-box;
+        transition: all 0.2s;
+    }
+
+    .headerbar.expand {
+        height: 154px;
+    }
+
+    .headerbar.expand2 {
+        height: 118px;
+    }
+
+    #menu_btn, #reveal_btn {
+        display: block;
+    }
+
+    #menu_btn {
+        order: 1;
+    }
+
+    #logo {
+        height: 24px;
+        width: 150px;
+        background-image: url(../images/light-wide-2-compact.svg);
+        background-position: left center;
+        order: 2;
+        margin-top: 0;
+    }
+
+    #header_btns {
+        margin-left: auto;
+        order: 3;
+    }
+
+    .open_firmware_flasher, .connect_controls {
+        width: 31px;
+        height: 31px;
+        margin-left: 15px;
+    }
+
+    .firmware_b, .connect_b {
+        margin: 0;
+        zoom: 0.6;
+    }
+
+    .logo_text, #port-picker, .header-wrapper, .flash_state, .connect_state {
+        display: none !important;
+    }
+
+    #reveal_btn {
+        order: 4;
+    }
+
+    #port-picker {
+        order: 5;
+        justify-content: space-between;
+        margin-top: 15px;
+        transition: all 0.2s;
+    }
+
+    #port-picker.reveal {
+        display: flex !important;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    #port-override-option, #portsinput {
+        flex-grow: 1;
+    }
+
+    #portsinput {
+        margin-right: 0;
+    }
+
+    #port-override {
+        width: calc(100% - 40px);
+    }
+
+    .header-wrapper {
+        order: 5;
+        zoom: 62%;
+        justify-content: space-around;
+    }
+
+    .header-wrapper.reveal {
+        display: flex !important;
+        width: 100%;
+        margin-top: 24px;
+    }
+
+    #dataflash_wrapper_global, #sensor-status, #quad-status_wrapper {
+        margin-right: 0;
+    }
+}
+
+
+
+/** Log **/
 #log {
-    margin-bottom: 0px;
-    border: 0px solid silver; /* was 1px*/
     background-color: #242424;
-    color: #ccc;
     color: rgba(255, 255, 255, 0.60);
     line-height: 21px;
-    height: 27px; /* was 65*/
-    overflow-y: hidden; /* scroll*/
+    height: 27px;
+    overflow-y: hidden;
+    transition: all 0.2s;
+}
+
+#log.active {
+    overflow-y: auto;
+    box-shadow: inset 0 0 15px #000000;
+    height: 111px;
 }
 
 #scrollicon {
@@ -491,36 +847,24 @@ input[type="number"]::-webkit-inner-spin-button {
     top: 113px;
     height: 27px;
     width: 27px;
-    background-image: url(../images/icons/scroll.svg);
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-image: url(../images/icons/scroll.svg);
     opacity: 0.0;
-    transition: all ease 0.3s;
+    transition: all ease 0.2s;
 }
 
 #scrollicon.active {
-    height: 110px;
-    margin-top: 10px;
+    height: 88px;
+    margin-top: 13px;
     margin-right: 20px;
-    width: 110px;
+    width: 88px;
     opacity: 0.15;
-    background-size: 80%;
-    box-shadow: inset 0 0 5px #000000;
-    transition: all ease 0.3s;
-}
-
-#log.active {
-    overflow-y: auto;
-    box-shadow: inset 0 0 15px #000000;
 }
 
 #log .wrapper {
-    padding: 5px; /* was 5*/
-    padding-left: 10px;
-    padding-bottom: 4px;
-    -webkit-user-select: text;
+    padding: 5px 5px 4px 10px;
     position: relative;
-    bottom: 0px;
+    bottom: 0;
 }
 
 #log a {
@@ -532,43 +876,102 @@ input[type="number"]::-webkit-inner-spin-button {
     text-decoration: underline;
 }
 
-/* Log switch */
 .logswitch {
     position: absolute;
     right: 20px;
-    margin-top: -1px;
-    float: right;
     padding: 2px;
     z-index: 10;
 }
 
 .logswitch a {
     color: #656565 !important;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 
 .logswitch a:hover {
     color: #959595 !important;
     text-decoration: none !important;
-    transition: all 0.3s;
 }
 
+/** Log (phones) **/
+@media all and (max-width: 575px) {
+    #log.active {
+        box-shadow: none;
+    }
+    .logswitch {
+        background-color: #242424;
+    }
+    #scrollicon {
+        display: none;
+    }
+}
+
+
+
+/** Tabs & content container **/
+#tab-content-container {
+    display: flex;
+    height: calc(100% - 162px);
+    align-items: stretch;
+}
+
+#tab-content-container.logopen {
+    height: calc(100% - 247px);
+}
+
+#tab-content-container, .tab_container, #content {
+    transition: all 0.2s;
+}
+
+.tab_container.logopen, #content {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/** Tabs & content container (phones) **/
+@media all and (max-width: 575px) {
+    #tab-content-container {
+        height: calc(100% - 83px);
+    }
+    #tab-content-container.logopen {
+        height: calc(100% - 167px);
+    }
+    #tab-content-container.header_expanded {
+        height: calc(100% - 181px);
+    }
+    #tab-content-container.header_expanded2 {
+        height: calc(100% - 145px);
+    }
+    #tab-content-container.logopen.header_expanded {
+        height: calc(100% - 265px);
+    }
+    #tab-content-container.logopen.header_expanded2 {
+        height: calc(100% - 229px);
+    }
+}
+
+
+/** Tabs **/
 .tab_container {
-    float: left;
-    height: calc(100% - 150px);
     width: 200px;
     border-right: 4px solid var(--accent);
     background-color: #2e2e2e;
-    transition: all 0.2s;
-
 }
 
-.tab_container.logopen {
-    height: calc(100% - 235px);
-    overflow-x: hidden;
-    overflow-y: auto;
-    transition: all 0.5s;
-
+#tab_logoversion {
+    display: none;
+    background-image: url(../images/light-wide-2.svg);
+    background-repeat: no-repeat;
+    background-position: center 20px;
+    background-size: 80%;
+    height: 120px;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.30);
+}
+#tab_logoversion .logo_text {
+    display: block !important;
+    left: 100px;
+    top: 62px;
 }
 
 #tabs {
@@ -592,11 +995,11 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 #tabs li:first-child {
-    border-top: 0px;
+    border-top: 0;
 }
 
 #tabs li:last-child {
-    border-bottom: 0px;
+    border-bottom: 0;
 }
 
 #tabs li a {
@@ -608,7 +1011,7 @@ input[type="number"]::-webkit-inner-spin-button {
     color: #999999;
     height: 23px;
     display: block;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.45);
+    text-shadow: 0 1px rgba(0, 0, 0, 0.45);
     transition: none;
     border-top: solid 1px rgba(255, 255, 255, 0.05);
     /* following is just for a graceful degradation */
@@ -633,7 +1036,7 @@ input[type="number"]::-webkit-inner-spin-button {
     background-color: var(--accent);
     color: #000;
     transition: none;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.45);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.45);
 
 }
 
@@ -646,6 +1049,53 @@ input[type="number"]::-webkit-inner-spin-button {
     background-repeat: no-repeat;
     background-size: 15px;
     background-position: 13px 7px;
+}
+
+@media only screen and (max-height: 750px) , only screen and (max-device-height: 750px) {
+    .tab_container {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+}
+
+@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+    #tabs li a {
+        font-weight: normal;
+        font-size: 12px;
+        padding-left: 60px;
+        padding-top: 6px;
+        padding-bottom: 2px;
+        content: "";
+        text-shadow: none;
+        transition: none;
+        /* following is just for a graceful degradation */
+        text-overflow: clip;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .tab_container {
+        width: 42px;
+    }
+}
+
+/** Tabs (phones) **/
+@media all and (max-width: 575px) {
+    .tab_container {
+        position: fixed;
+        z-index: 2000;
+        top: 0;
+        left: -304px;
+        bottom: 0;
+        width: 300px;
+        transition: all 0.3s;
+    }
+    .tab_container.reveal {
+        left: 0;
+    }
+    #tab_logoversion {
+        display: block;
+    }
 }
 
 /* Tab-Icons */
@@ -964,35 +1414,34 @@ li.active .ic_mission {
     background-image: url(../images/icons/cf_icon_mission_white.svg);
 }
 
+
+
+/** Content **/
 #content {
-    margin-top: 0px;
-    padding: 0px;
-    height: calc(100% - 156px);
-    /*  (port picker 105px, log CLOSED 25px, status bar: 20px + padding) - was: calc(100% - 171px)*/
     background-color: white;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: 0px solid #848484;
     -webkit-transform: rotateX(0deg); /* DO NOT REMOVE! this fixes the UI freezing bug on MAC OS X */
-    transition: all 0.3s;
+    width: calc(100% - 202px);
 }
 
-#content.logopen {
-    margin-top: 0px;
-    padding: 0px;
-    height: calc(100% - 240px); /*  (port picker, log OPEN, status bar: 20px + padding) - was: calc(100% - 171px)*/
-    background-color: white;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border: 0px solid #848484;
-    -webkit-transform: rotateX(0deg); /* DO NOT REMOVE! this fixes the UI freezing bug on MAC OS X */
-    transition: all 0.5s;
-    /* Cause the height to shrink to contain its floated contents while log is open */
+@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+    #content {
+        width: calc(100% - 42px);
+    }
 }
 
+/** Content (phones) **/
+@media all and (max-width: 575px) {
+    #content {
+        width: 100%;
+    }
+}
+
+
+
+/** Status bar **/
 #status-bar {
     position: fixed;
-    bottom: 0px;
+    bottom: 0;
     width: calc(100% - 20px);
     height: 20px;
     line-height: 20px;
@@ -1014,6 +1463,15 @@ li.active .ic_mission {
     padding: 0;
     border: 0;
 }
+
+/** Status bar (phones) **/
+@media all and (max-width: 575px) {
+    #status-bar {
+        display: none;
+    }
+}
+
+
 
 #cache {
     display: none;
@@ -1047,8 +1505,8 @@ dialog {
 
 dialog .dialog_toolbar .btn a {
     /*  common styles for content toolbar buttons */
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
     margin-right: 20px;
     background-color: var(--accent);
     border-radius: 3px;
@@ -1057,13 +1515,11 @@ dialog .dialog_toolbar .btn a {
     float: left;
     font-weight: bold;
     font-size: 12px;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     display: block;
     cursor: pointer;
     transition: all ease 0.2s;
-    padding: 0px;
-    padding-left: 9px;
-    padding-right: 9px;
+    padding: 0 9px;
     line-height: 28px;
 }
 
@@ -1075,7 +1531,7 @@ dialog .dialog_toolbar .btn a:hover {
 dialog .dialog_toolbar .btn a:active {
     background-color: var(--accent);
     transition: all ease 0.0s;
-    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
 }
 
 dialog .dialog_toolbar .btn a.disabled {
@@ -1086,6 +1542,18 @@ dialog .dialog_toolbar .btn a.disabled {
     pointer-events: none;
     text-shadow: none;
     opacity: 0.5;
+}
+
+@media all and (max-width: 575px) {
+    dialog {
+        position: fixed;
+        width: calc(100% - 2em);
+        bottom: 0;
+        top: 56px;
+        border-radius: unset;
+        border: none;
+        overflow: auto;
+    }
 }
 /* Border of the Tab */
 
@@ -1104,7 +1572,7 @@ dialog .dialog_toolbar .btn a.disabled {
     background-color: #fff7cd;
     border: 1px solid #ffe55f;
     margin-bottom: 10px;
-    margin-top: 0px;
+    margin-top: 0;
     border-radius: 3px;
     font-size: 11px;
     font-weight: normal;
@@ -1116,7 +1584,7 @@ dialog .dialog_toolbar .btn a.disabled {
 }
 
 .content_wrapper {
-    padding: 20px;
+    padding: 20px 20px 20px 19px;
     position: relative;
 }
 
@@ -1133,8 +1601,8 @@ dialog .dialog_toolbar .btn a.disabled {
 
 .content_toolbar .btn a {
     /*  common styles for content toolbar buttons */
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
     margin-right: 20px;
     background-color: var(--accent);
     border-radius: 3px;
@@ -1143,13 +1611,11 @@ dialog .dialog_toolbar .btn a.disabled {
     float: right;
     font-weight: bold;
     font-size: 12px;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     display: block;
     cursor: pointer;
     transition: all ease 0.2s;
-    padding: 0px;
-    padding-left: 9px;
-    padding-right: 9px;
+    padding: 0 9px;
     line-height: 28px;
 }
 
@@ -1161,7 +1627,7 @@ dialog .dialog_toolbar .btn a.disabled {
 .content_toolbar .btn a:active {
     background-color: var(--accent);
     transition: all ease 0.0s;
-    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
 }
 
 .content_toolbar .btn a.disabled {
@@ -1193,6 +1659,7 @@ dialog .dialog_toolbar .btn a.disabled {
 
 .toolbar_fixed_bottom .content_toolbar {
     display: flex;
+    flex-wrap: wrap;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -1201,6 +1668,50 @@ dialog .dialog_toolbar .btn a.disabled {
 
 .toolbar_fixed_bottom .content_toolbar div:first-child {
     margin-left: auto;
+}
+
+.toolbar_fixed_bottom .content_toolbar.xs-compressed {
+    flex-direction: row-reverse;
+}
+
+.toolbar_fixed_bottom .content_toolbar.xs-compressed div:first-child {
+    margin-left: 0;
+}
+
+.toolbar_fixed_bottom .content_toolbar.xs-compressed div:last-child {
+    margin-left: auto;
+}
+
+.toolbar_expand_btn {
+    display: none;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    text-align: center;
+    z-index: 2000;
+}
+
+@media all and (max-width: 575px) {
+    .toolbar_fixed_bottom .content_toolbar.xs-compressed {
+        padding-left: 60px;
+        box-sizing: border-box;
+        height: 50px;
+    }
+    .toolbar_fixed_bottom .content_toolbar.xs-compressed.expanded {
+        padding-left: 15px;
+        padding-bottom: 0;
+        height: auto;
+    }
+    .toolbar_fixed_bottom .content_toolbar.xs-compressed div {
+        margin-bottom: 10px;
+    }
+    .toolbar_expand_btn {
+        display: block;
+    }
 }
 
 /** Hack to change the "display: none" by a "visibility:hidden", to apply
@@ -1213,7 +1724,7 @@ dialog .dialog_toolbar .btn a.disabled {
 /* Colums  START> */
 .cf_column {
     min-height: 20px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .full {
@@ -1331,11 +1842,11 @@ dialog .dialog_toolbar .btn a.disabled {
 .gui_box_titlebar {
     background-color: var(--quietHeader);
     color: var(--quietText);
-    border-radius: 3px 3px 0px 0px;
+    border-radius: 3px 3px 0 0;
     font-size: 13px;
     width: 100%;
     height: 27px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     float: left;
     margin-bottom: 7px;
     font-weight: 600;
@@ -1343,11 +1854,11 @@ dialog .dialog_toolbar .btn a.disabled {
 
 .gui_box_bottombar {
     background-color: #e4e4e4;
-    border-radius: 0px 0px 3px 3px;
+    border-radius: 0 0 3px 3px;
     font-size: 13px;
     width: 100%;
     height: 27px;
-    padding-top: 0px;
+    padding-top: 0;
     float: left;
     font-weight: 600;
 }
@@ -1361,7 +1872,7 @@ dialog .dialog_toolbar .btn a.disabled {
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 4px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     float: left;
 }
 
@@ -1373,13 +1884,13 @@ dialog .dialog_toolbar .btn a.disabled {
     width: calc(100% + 40px);
     margin-left: -20px;
     box-shadow: rgba(0, 0, 0, 0.00) 0 -3px 8px;
-    bottom: 0px;
-    margin-bottom: 0px;
+    bottom: 0;
+    margin-bottom: 0;
 }
 
 .fixed_band .save_btn a {
     margin-top: 9px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     margin-right: 20px;
     background-color: var(--accent);
     border-radius: 3px;
@@ -1388,13 +1899,11 @@ dialog .dialog_toolbar .btn a.disabled {
     float: right;
     font-weight: bold;
     font-size: 12px;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 1px rgba(0, 0, 0, 0.25);
     display: block;
     cursor: pointer;
     transition: all ease 0.2s;
-    padding: 0px;
-    padding-left: 9px;
-    padding-right: 9px;
+    padding: 0 9px;
     line-height: 28px;
 }
 
@@ -1408,12 +1917,12 @@ dialog .dialog_toolbar .btn a.disabled {
     width: 100%;
     position: relative;
     margin-bottom: 10px;
-    margin-top: 0px;
+    margin-top: 0;
     float: left;
 }
 
 .default_btn a {
-    padding: 5px 0px 5px 0px;
+    padding: 5px 0 5px 0;
     text-align: center;
     background-color: var(--accent);
     border-radius: 4px;
@@ -1437,7 +1946,7 @@ dialog .dialog_toolbar .btn a.disabled {
 .default_btn a:hover {
     background-color: #ffcc3f;
     color: #000;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     transition: all ease 0.2s;
     text-decoration:none;
 
@@ -1446,7 +1955,7 @@ dialog .dialog_toolbar .btn a.disabled {
 .default_btn a:active {
     background-color: #ffcc3f;
     transition: all ease 0.0s;
-    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
 }
 
 .margin-top5 {
@@ -1463,13 +1972,11 @@ dialog .dialog_toolbar .btn a.disabled {
     color: #000;
     font-weight: bold;
     font-size: 12px;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     display: inline-block;
     cursor: pointer;
     transition: all ease 0.2s;
-    padding: 0px;
-    padding-left: 9px;
-    padding-right: 9px;
+    padding: 0 9px;
     line-height: 28px;
 }
 
@@ -1477,7 +1984,7 @@ dialog .dialog_toolbar .btn a.disabled {
     width: auto;
     position: relative;
     margin-bottom: 7px;
-    margin-top: 0px;
+    margin-top: 0;
     margin-right: 5px;
     float: left;
 }
@@ -1485,7 +1992,7 @@ dialog .dialog_toolbar .btn a.disabled {
 .small a {
     padding: 3px 4px 4px 4px;
     text-align: center;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 1px rgba(0, 0, 0, 0.25);
     background-color: #acacac;
     border-radius: 3px;
     border: 1px solid #949494;
@@ -1500,7 +2007,7 @@ dialog .dialog_toolbar .btn a.disabled {
 .small a:hover {
     background-color: var(--accent);
     color: #000;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     border: 1px solid var(--accent);
     transition: all ease 0.2s;
 }
@@ -1508,12 +2015,12 @@ dialog .dialog_toolbar .btn a.disabled {
 .small a:active {
     background-color: #878787;
     transition: all ease 0.0s;
-    box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
 }
 
 .green a {
     background-color: var(--accent);
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     color: #000;
     border: 1px solid #dba718;
     transition: all ease 0.2s;
@@ -1522,7 +2029,7 @@ dialog .dialog_toolbar .btn a.disabled {
 .green a:hover {
     background-color: #ffcc3f;
     border: 1px solid #dba718;
-    text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     color: #000;
     transition: all ease 0.2s;
 }
@@ -1537,14 +2044,13 @@ dialog .dialog_toolbar .btn a.disabled {
 }
 
 .cf_table td {
-    border: 0px;
+    border: 0;
     padding-top: 2px;
     padding-bottom: 5px;
 }
 
 .cf_table tr:not(:last-child) td {
-    border-bottom: solid 1px var(--subtleAccent);
-    border-style: dotted;
+    border-bottom: dotted 1px var(--subtleAccent);
 }
 
 .third {
@@ -1577,160 +2083,6 @@ dialog .dialog_toolbar .btn a.disabled {
     margin-left: 3px;
 }
 
-/* connect button */
-.connect_controls {
-    position: relative;
-    float: right;
-    left: 0px;
-    top: 19px;
-    height: 70px;
-    width: 60px;
-    margin-right: 20px;
-    margin-left: 20px;
-}
-
-@media all and (min-width: 1125px) {
-    .connect_controls {
-        margin-left: 10px;
-        margin-right: 15px;
-    }
-}
-
-/* firmware update button */
-.open_firmware_flasher {
-    position: relative;
-    float: right;
-    left: 0px;
-    top: 19px;
-    height: 70px;
-    width: 60px;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-@media all and (min-width: 1125px) {
-    .open_firmware_flasher {
-        margin-right: 20px;
-        margin-left: 20px;
-    }
-}
-
-.connect_b {
-    float: left;
-}
-
-.connect_b a {
-    height: 50px;
-    width: 50px;
-    border-radius: 100px;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
-    float: left;
-    margin-left: 5px;
-    margin-bottom: 7px;
-    transition: none;
-}
-
-.connect_b a.connect.disabled {
-    background-color: #808080;
-    pointer-events: none;
-    cursor: default;
- }
-
-.connect_b a.connect {
-    background-color: var(--accent);
-    border: 1px solid #dba718;
-    background-image: url(../images/icons/cf_icon_usb2_white.svg);
-    background-repeat: no-repeat;
-    background-size: 44px;
-    background-position: center 6px;
-    transition: none;
-}
-
-.connect_b a.connect:hover {
-    background-color: #ffcc3f;
-}
-
-.connect_b a.connect.active {
-    background-color: #e60000;
-    border: 1px solid #fe0000;
-    background-image: url(../images/icons/cf_icon_usb1_white.svg);
-    transition: none;
-}
-
-.connect_b a.connect.active:hover {
-    background-color: #f21212;
-}
-
-.firmware_b {
-    float: left;
-}
-
-.firmware_b a {
-    height: 50px;
-    width: 50px;
-    border-radius: 100px;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
-    float: left;
-    margin-left: 5px;
-    margin-bottom: 7px;
-    transition: none;
-}
-
-.firmware_b a.flash.disabled {
-    background-color: #808080;
-    pointer-events: none;
-    cursor: default;
- }
-
-.firmware_b a.flash {
-    background-color: var(--accent);
-    border: 1px solid #dba718;
-    background-image: url(../images/icons/cf_icon_flasher_white.svg);
-    background-repeat: no-repeat;
-    background-size: 30px;
-    background-position: center 10px;
-    transition: none;
-}
-
-.firmware_b a.flash:hover {
-    background-color: #ffcc3f;
-}
-
-.firmware_b a.flash.active {
-    background-color: #e60000;
-    border: 1px solid #fe0000;
-    background-image: url(../images/icons/cf_icon_flasher_white.svg);
-    transition: none;
-}
-
-.firmware_b a.flash.active:hover {
-    background-color: #f21212;
-}
-
-.connect_state {
-    float: left;
-    height: 20px;
-    width: 100%;
-    text-align: center;
-    color: #fff;
-    font-size: 12px;
-    font-weight: normal;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
-    margin-top: -1px;
-}
-
-.flash_state {
-    float: left;
-    height: 20px;
-    width: 100%;
-    text-align: center;
-    color: #fff;
-    font-size: 12px;
-    font-weight: normal;
-    text-shadow: 0px 1px rgba(0, 0, 0, 0.25);
-    margin-top: -1px;
-}
-
 /* fixing padding for all Tabs*/
 .tab-setup, .tab-landing, .tab-adjustments, .tab-auxiliary, .tab-cli, .tab-configuration, .tab-failsafe, .tab-firmware_flasher,
     .tab-gps, .tab-help, .tab-led-strip, .tab-logging, .tab-modes, .tab-motors, .tab-pid_tuning, .tab-ports, .tab-receiver,
@@ -1756,9 +2108,7 @@ dialog .dialog_toolbar .btn a.disabled {
 /* GPS Fix styling*/
 .fixtrue {
     background-color: #56ac1d;
-    padding: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 2px 5px;
     border-radius: 3px;
     color: #fff;
     font-size: 10px;
@@ -1766,243 +2116,14 @@ dialog .dialog_toolbar .btn a.disabled {
 
 .fixfalse {
     background-color: #e60000;
-    padding: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 2px 5px;
     border-radius: 3px;
     color: #fff;
     font-size: 10px;
 }
-/* Dataflash element styling*/
-
-#dataflash_wrapper_global {
-    color:white;
-    font-size:10px;
-    margin-top: 20px;
-    width:125px;
-    float: right;
-    margin-right: 5px;
-    line-height: 12px;
-    height: 33px;
-    border-radius: 5px;
-    border: 1px solid #272727;
-    box-shadow: 0px 1px 0px rgba(92, 92, 92, 0.5);
-    background-color: #434343;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
-    padding-top:5px;
-    display:none;
-    text-shadow: 0px 1px rgba(0, 0, 0, 1.0);
-
-}
-
-@media all and (min-width: 1125px) {
-    #dataflash_wrapper_global {
-        margin-right: 10px;
-    }
-}
-
-.dataflash-contents_global {
-    margin-top: 18px;
-    border: 1px solid #4A4A4A;
-    background-color: #4A4A4A;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    border-radius: 3px;
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-
-.dataflash-free_global {
-    background-color: var(--accent);
-    border-radius: 4px;
-}
-
-
-.dataflash-contents_global .notsupported_global {
-    display: none;
-}
-
-.dataflash-contents_global li {
-    height: 5px;
-    position: relative;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.20);
-    border-radius: 2px;
-
-}
-
-.dataflash-contents_global li div {
-    position: absolute;
-    top: -18px;
-    margin-top: 0px;
-    left: 0;
-    right: 0;
-    width:120px;
-    text-align: left;
-    color:silver;
-}
-
-.dataflash-contents_global progress::-webkit-progress-bar {
-    height: 8px;
-    background-color: #eee;
-}
-
-.dataflash-contents progress::-webkit-progress-value {
-    background-color: #bcf;
-}
-
-.noflash_global {
-    display:none;
-    color: #868686;
-    text-align: center;
-    text-shadow: 0px 1px rgba(0, 0, 0, 1.0);
-    margin-top:2px;
-}
 
 .cf_tooltiptext {
     display:none;
-}
-
-#expertMode {
-    color: var(--subtleAccent);
-    margin-top: 27px;
-    width:125px;
-    float: right;
-    margin-right: 0px;
-    line-height: 12px;
-}
-
-/* Battery element styling*/
-
-#quad-status_wrapper {
-    display:none;
-    color: white;
-    font-size: 10px;
-    margin-top: 20px;
-    min-width: 90px;
-    float: right;
-    margin-right: 10px;
-    line-height: 12px;
-    height: 67px;
-    border-radius: 5px;
-    border: 1px solid #272727;
-    box-shadow: 0px 1px 0px rgba(92, 92, 92, 0.5);
-    background-color: #434343;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
-    text-shadow: 0px 1px rgba(0, 0, 0, 1.0);
-}
-
-@media all and (min-width: 1125px) {
-    #quad-status_wrapper {
-        margin-right: 20px;
-    }
-}
-
-.quad-status-contents  {
-    display: none;
-    margin-top: 10px;
-    margin-left: 14px;
-    height: 10px;
-    width: 31px;
-}
-
-
-.battery-legend {
-    display: inline;
-    position: relative;
-    top: -2px;
-    margin-top: 0px;
-    left: 0;
-    right: 0;
-    width: 40px;
-    text-align: left;
-    color: silver;
-    margin-left: -8px;
-    padding-right: 4px
-}
-
-.quad-status-contents progress::-webkit-progress-bar {
-    height: 12px;
-    background-color: #eee;
-}
-
-.quad-status-contents progress::-webkit-progress-value {
-    background-color: #bcf;
-}
-
-.battery-status {
-    height: 11px;
-}
-
-.battery-status.state-ok {
-   background-color: #59AA29;
-}
-.battery-status.state-warning {
-    background-color: var(--error);
-}
-
-.battery-status.state-empty {
-    animation: error-blinker 1s linear infinite;
-}
-
-@keyframes error-blinker {
-  0% {
-    background-color: none;
-  }
-  50% {
-    background-color: var(--error);
-  }
-}
-
-.battery-icon {
-    background-image: url(../images/icons/cf_icon_bat_grey.svg);
-    background-size: contain;
-    background-position: center;
-    display: inline-block;
-    height: 30px;
-    width: 60px;
-    transition: none;
-    margin-top: 4px;
-    margin-left: -4px;
-    background-repeat: no-repeat;
-}
-
-
-.armedicon,
-.failsafeicon,
-.linkicon {
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 6px;
-    height: 18px;
-    width: 18px;
-    opacity: 0.8;
-    background-size: contain;
-    background-position: center;
-    transition: none;
-}
-
-.armedicon {
-    background-image: url(../images/icons/cf_icon_armed_grey.svg);
-}
-.armedicon.active {
-    background-image: url(../images/icons/cf_icon_armed_active.svg);
-}
-
-.failsafeicon {
-    background-image: url(../images/icons/cf_icon_failsafe_grey.svg);
-}
-.failsafeicon.active {
-    background-image: url(../images/icons/cf_icon_failsafe_active.svg);
-}
-
-.linkicon {
-    background-image: url(../images/icons/cf_icon_link_grey.svg);
-}
-.linkicon.active {
-    background-image: url(../images/icons/cf_icon_link_active.svg);
 }
 
 .bottomStatusIcons {
@@ -2043,7 +2164,7 @@ button.active {
 @media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
 
 .content_wrapper {
-    padding: 15px;
+    padding: 15px 15px 15px 14px;
 }
 
 .tab_title {
@@ -2061,10 +2182,6 @@ button.active {
     line-height: 15px;
 }
 
-#content {
-    height: calc(100% - 151px);
-}
-
 .cf_table td {
     padding-top: 2px;
     padding-bottom: 2px;
@@ -2074,29 +2191,10 @@ button.active {
     margin-bottom: 10px;
 }
 
-#tabs li a {
-    font-weight: normal;
-    font-size: 12px;
-    padding-left: 60px;
-    padding-top: 6px;
-    padding-bottom: 2px;
-    content: "";
-    text-shadow: none;
-    transition: none;
-    /* following is just for a graceful degradation */
-    text-overflow: clip;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.tab_container {
-    width: 42px;
-}
-
 .gui_box_titlebar {
     font-size: 12px;
     height: 24px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     margin-bottom: 5px;
     float: left;
 }
@@ -2105,7 +2203,7 @@ button.active {
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 3px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     float: left;
 }
 
@@ -2123,12 +2221,12 @@ input {
     }
 
 .gps_false {
-    padding: 0px 3px 0px 3px;
+    padding: 0 3px 0 3px;
     font-size: 10px;
 }
 
 .gps_true {
-    padding: 0px 3px 0px 3px;
+    padding: 0 3px 0 3px;
     font-size: 10px;
 }
 
@@ -2149,15 +2247,6 @@ input {
 
 .hidden {
     display: none;
-}
-
-@media only screen and (max-height: 750px) , only screen and (max-device-height: 750px) {
-
-.tab_container {
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
 }
 
 .darkgrey_box {
@@ -2210,8 +2299,7 @@ input {
 }
 
 .dialogReportProblems-listItem {
-    list-style: initial;
-    list-style-type: circle;
+    list-style: circle;
     margin-left: 20px;
     margin-bottom: 5px;
 }
@@ -2248,4 +2336,157 @@ input {
 
 .noUi-connect {
     box-shadow: none;
+}
+
+/** Responsive grid **/
+@media all and (max-width: 575px) {
+    .sm, .md, .lg, .xl {
+        display: none !important;
+    }
+}
+@media all and (min-width: 576px) and (max-width: 767px) {
+    .xs, .md, .lg, .xl {
+        display: none !important;
+    }
+}
+@media all and (min-width: 768px) and (max-width: 991px) {
+    .xs, .sm, .lg, .xl {
+        display: none !important;
+    }
+}
+@media all and (min-width: 992px) and (max-width: 1139px) {
+    .xs, .sm, .md, .xl {
+        display: none !important;
+    }
+}
+@media all and (min-width: 1140px) {
+    .xs, .sm, .md, .lg {
+        display: none !important;
+    }
+}
+@media all and (min-width: 576px) {
+    .sm-max {
+        display: none !important;
+    }
+}
+@media all and (min-width: 768px) {
+    .md-max {
+        display: none !important;
+    }
+}
+@media all and (min-width: 992px) {
+    .lg-max {
+        display: none !important;
+    }
+}
+@media all and (max-width: 1139px) {
+    .lg-min {
+        display: none !important;
+    }
+}
+@media all and (max-width: 991px) {
+    .md-min {
+        display: none !important;
+    }
+}
+@media all and (max-width: 767px) {
+    .sm-min {
+        display: none !important;
+    }
+}
+.grid-row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+.grid-col {
+    margin-left: 7px;
+    margin-right: 7px;
+}
+.grid-col.col1 {
+    width: calc(8.33% - 14px);
+}
+.grid-col.col2 {
+    width: calc(16.67% - 14px);
+}
+.grid-col.col3 {
+    width: calc(25% - 14px);
+}
+.grid-col.col4 {
+    width: calc(33.33% - 14px);
+}
+.grid-col.col5 {
+    width: calc(41.67% - 14px);
+}
+.grid-col.col6 {
+    width: calc(50% - 14px);
+}
+.grid-col.col7 {
+    width: calc(58.33% - 14px);
+}
+.grid-col.col8 {
+    width: calc(66.67% - 14px);
+}
+.grid-col.col9 {
+    width: calc(75% - 14px);
+}
+.grid-col.col10 {
+    width: calc(83.33% - 14px);
+}
+.grid-col.col11 {
+    width: calc(91.67% - 14px);
+}
+.grid-col.col12 {
+    width: calc(100% - 14px);
+}
+.grid-col:first-child {
+    margin-left: 0;
+}
+.grid-col:last-child {
+    margin-right: 0;
+}
+.grid-col.col1:first-child, .grid-col.col1:last-child {
+    width: calc(8.33% - 7px);
+}
+.grid-col.col2:first-child, .grid-col.col2:last-child {
+    width: calc(16.67% - 7px);
+}
+.grid-col.col3:first-child, .grid-col.col3:last-child {
+    width: calc(25% - 7px);
+}
+.grid-col.col4:first-child, .grid-col.col4:last-child {
+    width: calc(33.33% - 7px);
+}
+.grid-col.col5:first-child, .grid-col.col5:last-child {
+    width: calc(41.67% - 7px);
+}
+.grid-col.col6:first-child, .grid-col.col6:last-child {
+    width: calc(50% - 7px);
+}
+.grid-col.col7:first-child, .grid-col.col7:last-child {
+    width: calc(58.33% - 7px);
+}
+.grid-col.col8:first-child, .grid-col.col8:last-child {
+    width: calc(66.67% - 7px);
+}
+.grid-col.col9:first-child, .grid-col.col9:last-child {
+    width: calc(75% - 7px);
+}
+.grid-col.col10:first-child, .grid-col.col10:last-child {
+    width: calc(83.33% - 7px);
+}
+.grid-col.col11:first-child, .grid-col.col11:last-child {
+    width: calc(91.67% - 7px);
+}
+.grid-col.col12:first-child, .grid-col.col12:last-child {
+    width: calc(100% - 7px);
+}
+@media all and (max-width: 575px) {
+    .grid-col.col1, .grid-col.col2, .grid-col.col3, .grid-col.col4, .grid-col.col5, .grid-col.col6, .grid-col.col7, .grid-col.col8, .grid-col.col9, .grid-col.col10, .grid-col.col11, .grid-col.col12 {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
 }

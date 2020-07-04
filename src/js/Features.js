@@ -172,9 +172,10 @@ Features.prototype.generateElements = function (featuresElements) {
                     + self._features[i].name
                     + '" title="'
                     + self._features[i].name
-                    + '" type="checkbox"/></td>'
+                    + '" type="checkbox"/></td><td><div>'
                     + featureName
-                    + '<td><span i18n="feature' + self._features[i].name + '"></span>'
+                    + '</div><span class="xs" i18n="feature' + self._features[i].name + '"></span></td>'
+                    + '<td><span class="sm-min" i18n="feature' + self._features[i].name + '"></span>'
                     + feature_tip_html + '</td></tr>');
 
             var feature_e = newElement.find('input.feature');

@@ -36,7 +36,7 @@ Clipboard._configureClipboardAsNwJs = function(nwGui) {
         if (onSuccess) {
             onSuccess(text);
         }
-    }
+    };
 
     this.readText = function(onSuccess, onError) {
 
@@ -54,8 +54,8 @@ Clipboard._configureClipboardAsNwJs = function(nwGui) {
         if (onSuccess) {
             onSuccess(text);
         }
-    }
-}
+    };
+};
 
 Clipboard._configureClipboardAsChrome = function() {
 
@@ -69,15 +69,33 @@ Clipboard._configureClipboardAsChrome = function() {
         navigator.clipboard.writeText(text)
         .then(onSuccess)
         .catch(onError);
-    }
+    };
 
     this.readText = function(onSuccess, onError) {
         navigator.clipboard.readText()
             .then(onSuccess)
             .catch(onError);
-    }
+    };
 
-}
+};
+
+Clipboard._configureClipboardAsCordova = function() {
+
+    console.log('Cordova Clipboard available');
+
+    this.available = true;
+    this.readAvailable = true;
+    this.writeAvailable = true;
+
+    this.writeText = function(text, onSuccess, onError) {
+        cordova.plugins.clipboard.copy(text, onSuccess, onError);
+    };
+
+    this.readText = function(onSuccess, onError) {
+        cordova.plugins.clipboard.paste(onSuccess, onError);
+    };
+
+};
 
 Clipboard._configureClipboardAsOther = function() {
 
@@ -89,12 +107,12 @@ Clipboard._configureClipboardAsOther = function() {
 
     this.writeText = function(text, onSuccess, onError) {
         onError('Clipboard not available');
-    }
+    };
 
     this.readText = function(onSuccess, onError) {
         onError('Clipboard not available');
-    }
-}
+    };
+};
 
 
 switch (GUI.Mode) {
@@ -104,6 +122,10 @@ case GUI_Modes.NWJS:
 
 case GUI_Modes.ChromeApp:
     Clipboard._configureClipboardAsChrome();
+    break;
+
+case GUI_Modes.Cordova:
+    Clipboard._configureClipboardAsCordova();
     break;
 
 default:

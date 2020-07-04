@@ -21,9 +21,8 @@
     float: right;
     width: 160px;
     /* border: 1px solid silver; */
-    height: 100%;
     height: 160px;
-    margin: 0px;
+    margin: 0;
     background-color: #ECECEC;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
@@ -169,4 +168,27 @@
 
 .tab-sensors .legend .item:nth-child(4) {
     fill: #4DA74D;
+}
+
+@media all and (max-width: 575px) {
+    .tab-sensors .plot_control {
+        width: 130px;
+    }
+    .tab-sensors .plot_control dt {
+        width: 60px;
+    }
+    .tab-sensors .plot_control dd {
+        width: 50px;
+    }
+    .tab-sensors .plot_control dd select {
+        width: 100%;
+    }
+    .tab-sensors .plot_control .x, .tab-sensors .plot_control .y, .tab-sensors .plot_control .z {
+        height: 18px;
+        box-sizing: border-box;
+    }
+    .tab-sensors svg {
+        width: calc(100% - 130px);
+        margin-left: 0;
+    }
 }

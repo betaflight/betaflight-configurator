@@ -442,3 +442,9 @@
     z-index: 100;
     border: 1px dotted white;
 }
+
+@media all and (max-width: 575px) {
+    .tab-led-strip .controls {
+        width: 100%;
+    }
+}

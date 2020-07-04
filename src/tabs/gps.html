@@ -6,8 +6,8 @@
         </div>
 
 
-        <div class="cf_column fourth">
-            <div class="spacer_right">
+        <div class="grid-row">
+            <div class="grid-col col3">
                 <div class="gui_box grey">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="gpsHead"></div>
@@ -46,10 +46,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="cf_column fourth">
-            <div class="spacer_right">
-                <div class="gui_box grey" style="margin-bottom: -5px;">
+            <div class="grid-col col3">
+                <div class="gui_box grey">
                     <div class="gui_box_titlebar">
                         <div class="spacer_box_title" i18n="gpsSignalStrHead"></div>
                     </div>
@@ -144,26 +142,26 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="cf_column half">
-            <div class="gui_box grey gps_map">
-                <div class="gui_box_titlebar" style="margin-bottom: 0px;">
+            <div class="grid-col col6">
+                <div class="gui_box grey gps_map">
+                    <div class="gui_box_titlebar" style="margin-bottom: 0px;">
                         <div class="spacer_box_title" i18n="gpsMapHead"></div>
-                </div>
-                <div id="connect" i18n="gpsMapMessage1">
-                    <div class="default_btn" style="width:50px; margin-left:auto; margin-right:auto; float:none;"><a id="check">retry</a></div>
-                </div>
-                <div id="waiting" >
-                    <div class="info" i18n="gpsMapMessage2"></span>
-                </div>
-            </div>
-                <div id="loadmap">
-                    <webview id="map" class="map" src="tabs/map.html" partition="persist:map"></webview>
-                    <div class="controls">
-                          <a href="#" id="zoom_in">+</a>
-                          <a href="#" id="zoom_out">–</a>
                     </div>
-                </div>
+                    <div id="connect" i18n="gpsMapMessage1">
+                        <div class="default_btn" style="width:50px; margin-left:auto; margin-right:auto; float:none;"><a id="check">retry</a></div>
+                    </div>
+                    <div id="waiting" >
+                        <div class="info" i18n="gpsMapMessage2"></span>
+                        </div>
+                    </div>
+                    <div id="loadmap">
+                        <webview id="map" class="map" src="tabs/map.html" partition="persist:map"></webview>
+                        <div class="controls">
+                            <a href="#" id="zoom_in">+</a>
+                            <a href="#" id="zoom_out">–</a>
+                        </div>
+                    </div>
+            </div>
         </div>
 
     </div>

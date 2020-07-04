@@ -1,7 +1,7 @@
 .tab-motors .modelAndGraph {
     float: left;
     width: 100%;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .tab-motors .spacer {
@@ -30,7 +30,7 @@
 .tab-motors .plot_control {
     float: right;
     width: 160px;
-    margin: 0px;
+    margin: 0;
     background-color: #ECECEC;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
@@ -56,7 +56,7 @@
   color: #000;
   font-size: 10px;
   line-height: 17px;
-  text-shadow: 0px 1px rgba(255, 255, 255, 0.25);
+  text-shadow: 0 1px rgba(255, 255, 255, 0.25);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   display: block;
@@ -172,7 +172,7 @@
 }
 
 .tab-motors .motorblock {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     background-color: #ECECEC;
     /*background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));*/
 }
@@ -291,7 +291,7 @@
 }
 
 .tab-motors .motor_testing .sliders input:first-child {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .tab-motors .motor_testing .values {
@@ -309,7 +309,7 @@
 
 .tab-motors .motor_testing .values li:first-child,
 .tab-motors .motor_testing .telemetry li:first-child {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .tab-motors .motor_testing .values li,
@@ -341,4 +341,87 @@
 
 .tab-motors .motor_testing .notice .motorsEnableTestMode {
     margin-left: 10px;
+}
+
+@media all and (max-width: 575px) {
+    .tab-motors .modelAndGraph {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .tab-motors .mixerPreview {
+        order: 1;
+        width: calc(100% - 160px);
+    }
+    .tab-motors .mixerPreview img {
+        width: calc(100% - 20px);
+    }
+    .tab-motors #graph {
+        width: 100%;
+        order: 3;
+    }
+    .tab-motors .plot_control {
+        order: 2;
+    }
+    .tab-motors .power_info {
+        order: 4;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .tab-motors .motorblock {
+        margin-bottom: 15px;
+    }
+    .tab-motors .motorblock > .spacer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .tab-motors .left.motors {
+        width: 100%;
+        order: 1;
+    }
+    .tab-motors .right.servos {
+        width: 100%;
+        order: 3;
+        margin-top: 15px;
+    }
+    .tab-motors .motor_testing {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        order: 2;
+    }
+    .tab-motors .motor_testing .notice {
+        width: 100%;
+        margin-top: 15px;
+    }
+    .tab-motors .titles li, .tab-motors .m-block {
+        width: calc((100% - 80px) / 9);
+    }
+    .tab-motors .titles li:last-child, .tab-motors .m-block:last-child {
+        margin-right: 0;
+    }
+    .tab-motors .motor_testing .left {
+        width: 100%;
+    }
+    .tab-motors .servos .m-block, .tab-motors .servos .titles li {
+        width: calc((100% - 70px) / 8);
+    }
+    .tab-motors .servos .m-block:last-child, .tab-motors .servos .titles li:last-child {
+        margin-left: 0;
+    }
+    .tab-motors .motor_testing .sliders {
+        margin-left: 2px;
+        margin-right: -2px;
+    }
+    .tab-motors .motor_testing .sliders input {
+        width: calc((100% - 108px) / 9);
+    }
+    .tab-motors .motor_testing .values li, .tab-motors .motor_testing .telemetry li {
+        width: calc((100% - 80px) / 9);
+    }
+    .tab-motors .motor_testing .values li:last-child {
+        margin-left: 4px;
+    }
+    .tab-motors .motor_testing .telemetry li {
+        font-size: 6px;
+    }
 }

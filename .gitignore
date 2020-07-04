@@ -13,6 +13,13 @@ debug/
 release/
 testresults/
 
+# Cordova
+cordova/www/
+cordova/platforms/
+cordova/plugins/
+cordova/resources/
+cordova/package-lock.json
+
 # OSX
 .DS_store
 

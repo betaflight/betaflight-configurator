@@ -41,6 +41,10 @@ TABS.vtx.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
+        if (GUI.isCordova()) {
+            UI_PHONES.initToolbar();
+        }
+
         self.updating = false;
         GUI.content_ready(callback);
     }
@@ -112,8 +116,9 @@ TABS.vtx.initialize = function (callback) {
         // Load schema
         const urlVtxSchema = chrome.runtime.getURL(`resources/jsonschema/vtxconfig_schema-${vtxConfig.version}.json`);
 
-        if (GUI.Mode === GUI_Modes.ChromeApp) {
+        if (GUI.Mode === GUI_Modes.ChromeApp || GUI.isCordova()) {
             // FIXME the ChromeOs don't let us use a Schema Validator because almost all of them use eval, and/or use require
+            // On android : Fetch API cannot load : URL scheme "file" is not supported
             callback_valid();
         } else {
             fetch(urlVtxSchema)

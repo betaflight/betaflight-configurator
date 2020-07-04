@@ -2200,6 +2200,12 @@ TABS.osd.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
+        if ($(window).width() < 390) {
+            const previewZoom = ($(window).width() - 30) / 360;
+            $('.display-layout .preview').css('zoom', previewZoom);
+        }
+
+
         // Open modal window
         OSD.GUI.fontManager = new jBox('Modal', {
             width: 750,

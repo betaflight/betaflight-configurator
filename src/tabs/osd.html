@@ -17,8 +17,8 @@
                 <div style="margin-bottom: 10px;">
                     <p class="note" i18n="osdSetupPreviewHelp"></p>
                 </div>
-                <div class="cf_column third_left elements requires-osd-feature">
-                    <div class="spacer_right">
+                <div class="grid-row">
+                    <div class="grid-col col4 elements requires-osd-feature osd-feature">
                         <div class="gui_box grey">
                             <div class="gui_box_titlebar" style="margin-bottom: 0px;">
                                 <div class="spacer_box_title">
@@ -33,13 +33,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="cf_column twothird">
+                    <div class="grid-col col4 osd-preview">
+                        <div class="gui_box grey preview requires-osd-feature">
 
-                    <div class="gui_box grey preview requires-osd-feature">
-
-                        <div class="gui_box_titlebar image">
-                            <div class="spacer_box_title">
+                            <div class="gui_box_titlebar image">
+                                <div class="spacer_box_title">
                                <span class="cf_tip" i18n_title="osdSetupPreviewForTitle">
                                    <label id="osdprofile-selector-label" i18n="osdSetupPreviewSelectProfileTitle"></label>
                                    <select class="osdprofile-selector">
@@ -49,24 +47,25 @@
                                        <!-- Populated at runtime -->
                                    </select>
                                </span>
-                            </div>
-                        </div>
-
-                        <div class="display-layout">
-                            <div class="col right">
-                                <div class="preview">
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="gui_box_bottombar">
-                            <div class="spacer_box_title">
-                                <span i18n="osdSetupPreviewTitle"></span>
+                            <div class="display-layout">
+                                <div class="col right">
+                                    <div class="preview">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
+                            <div class="gui_box_bottombar">
+                                <div class="spacer_box_title">
+                                    <span i18n="osdSetupPreviewTitle"></span>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="cf_column third_right" style="width: calc(100% - 377px);">
+                    <div class="grid-col col4 osd-profile">
                         <div class="gui_box osdprofile-selected-container grey">
                             <div class="gui_box_titlebar cf_tip">
                                 <div class="spacer_box_title" i18n="osdSetupSelectedProfileTitle"></div>
@@ -113,7 +112,7 @@
                         <div class="gui_box grey warnings-container requires-osd-feature" style="display:none;">
                             <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px;">
                                 <div class="spacer_box_title">
-                                  <div class="spacer_box_title" i18n="osdSetupWarningsTitle"></div>
+                                    <div class="spacer_box_title" i18n="osdSetupWarningsTitle"></div>
                                 </div>
                             </div>
                             <div class="spacer_box">
@@ -165,20 +164,21 @@
                         </div>
                         <!-- Boot logo setup -->
                         <h1 class="tab_title" i18n="osdSetupCustomLogoTitle"></h1>
-                        <div id="font-logo-preview-container" class="content_wrapper">
-                            <div id="font-logo-preview">
-                                <!-- this will be resized at runtime -->
+                        <div class="grid-row">
+                            <div id="font-logo-preview-container" class="content_wrapper grid-col col6">
+                                <div id="font-logo-preview">
+                                    <!-- this will be resized at runtime -->
+                                </div>
+                            </div>
+                            <div id="font-logo-info grid-col col6">
+                                <h3 i18n="osdSetupCustomLogoInfoTitle"></h3>
+                                <ul>
+                                    <li id="font-logo-info-size" i18n="osdSetupCustomLogoInfoImageSize"></li>
+                                    <li id="font-logo-info-colors" i18n="osdSetupCustomLogoInfoColorMap"></li>
+                                </ul>
+                                <p id="font-logo-info-upload-hint" i18n="osdSetupCustomLogoInfoUploadHint"></p>
                             </div>
                         </div>
-                        <div id="font-logo-info">
-                            <h3 i18n="osdSetupCustomLogoInfoTitle"></h3>
-                            <ul>
-                                <li id="font-logo-info-size" i18n="osdSetupCustomLogoInfoImageSize"></li>
-                                <li id="font-logo-info-colors" i18n="osdSetupCustomLogoInfoColorMap"></li>
-                            </ul>
-                            <p id="font-logo-info-upload-hint" i18n="osdSetupCustomLogoInfoUploadHint"></p>
-                        </div>
-                        <div class="clear-both"></div>
                         <!-- Replace logo button -->
                         <div class="default_btn" style="width:100%; float:left;">
                             <a class="replace_logo" i18n="osdSetupCustomLogoOpenImageButton"></a>

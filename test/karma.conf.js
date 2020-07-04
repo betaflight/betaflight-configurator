@@ -14,6 +14,7 @@ module.exports = function(config) {
             './src/js/gui.js',
             './src/js/CliAutoComplete.js',
             './src/js/tabs/cli.js',
+            './src/js/phones_ui.js',
             './test/**/*.js'
         ],
         browsers: ['ChromeHeadlessNoSandbox'],
