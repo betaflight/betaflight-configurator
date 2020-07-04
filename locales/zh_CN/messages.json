@@ -1063,6 +1063,9 @@
     "featureVTX": {
         "message": "图传"
     },
+    "featureANTI_GRAVITY": {
+        "message": "永久启用反重力"
+    },
     "featureDYNAMIC_FILTER": {
         "message": "动态陷波滤波"
     },
