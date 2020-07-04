@@ -298,15 +298,15 @@ button {
 }
 
 .tab-failsafe .pro1 {
-    background-image: url(../../images/icons/cf_failsafe_procedure1-dark.svg);
+    background-image: url(../images/icons/cf_failsafe_procedure1-dark.svg);
 }
 
 .tab-failsafe .pro2 {
-    background-image: url(../../images/icons/cf_failsafe_procedure2-dark.svg);
+    background-image: url(../images/icons/cf_failsafe_procedure2-dark.svg);
 }
 
 .tab-failsafe .pro4 {
-    background-image: url(../../images/icons/cf_failsafe_procedure4-dark.svg);
+    background-image: url(../images/icons/cf_failsafe_procedure4-dark.svg);
 }
 
 
@@ -381,7 +381,7 @@ progress[value]::-webkit-progress-bar {
 }
 
 .tab-landing .logowrapper img {
-    content:url(/images/cf_logo_black.svg);
+    content:url(../images/cf_logo_black.svg);
 }
 
 .tab-landing .content_mid .text3 .wrap2 {
@@ -494,7 +494,7 @@ progress[value]::-webkit-progress-bar {
 }
 
 .tab-osd .preview {
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../../images/osd-bg-1.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../images/osd-bg-1.jpg);
     background-size: cover;
 }
 
@@ -523,7 +523,7 @@ progress[value]::-webkit-progress-bar {
 .tab-pid_tuning .profile .helpicon,
 .tab-pid_tuning .rate_profile .helpicon,
 .tab-pid_tuning .pid_titlebar .helpicon {
-    background-image: url(../../images/icons/cf_icon_info_grey.svg);
+    background-image: url(../images/icons/cf_icon_info_grey.svg);
     opacity: 0.4;
 }
 .tab-pid_tuning .profile .helpicon:hover,

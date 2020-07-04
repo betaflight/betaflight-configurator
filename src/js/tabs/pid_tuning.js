@@ -2586,28 +2586,28 @@ TABS.pid_tuning.changeRatesTypeLogo = function() {
 
     switch(self.currentRatesType) {
         case self.RATES_TYPE.RACEFLIGHT:
-            ratesLogoElement.attr("src", "../images/rate_logos/raceflight.svg");
+            ratesLogoElement.attr("src", "./images/rate_logos/raceflight.svg");
 
             break;
 
         case self.RATES_TYPE.KISS:
-            ratesLogoElement.attr("src", "../images/rate_logos/kiss.svg");
+            ratesLogoElement.attr("src", "./images/rate_logos/kiss.svg");
 
             break;
 
         case self.RATES_TYPE.ACTUAL:
-            ratesLogoElement.attr("src", "../images/rate_logos/actual.svg");
+            ratesLogoElement.attr("src", "./images/rate_logos/actual.svg");
 
             break;
 
         case self.RATES_TYPE.QUICKRATES:
-            ratesLogoElement.attr("src", "../images/rate_logos/quickrates.svg");
+            ratesLogoElement.attr("src", "./images/rate_logos/quickrates.svg");
 
             break;
 
         // add future rates types here
         default: // BetaFlight
-            ratesLogoElement.attr("src", "../images/rate_logos/betaflight.svg");
+            ratesLogoElement.attr("src", "./images/rate_logos/betaflight.svg");
 
             break;
     }

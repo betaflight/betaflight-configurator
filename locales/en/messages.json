@@ -92,6 +92,9 @@
     "analyticsOptOut": {
         "message": "Opt out of the anonymised collection of statistics data"
     },
+    "cordovaForceComputerUI": {
+        "message": "Use computers interface instead of phones interface"
+    },
     "language_changed": {
         "message": "Language change saved"
     },
@@ -297,6 +300,9 @@
     },
     "tabHelp": {
         "message": "Documentation & Support"
+    },
+    "tabOptions": {
+        "message": "Options"
     },
 
     "tabSetup": {
@@ -5746,5 +5752,68 @@
     "gpsSbasNone": {
         "message": "None",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "File name"
+    },
+    "dialogFileNameDescription": {
+        "message": "The file will be saved in the '{{folder}}' folder in your internal storage."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "This file already exists!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Overwrite ?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "Checking webview applications ..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Incompatible webview"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "You must update your device's webview in order to use the configurator."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "The tool below is intended to help you to install a new webview or to update an already installed webview."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Available webview applications on your device"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Installing the <b>{{app}}</b> app can resolve this compatibility issue."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Install from the Google Play Store"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "Uninstalling the <b>{{app}}</b> app can resolve this compatibility issue. If you are not able to uninstall it, try to disable it from the settings app."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Uninstall from the Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Uninstall / disable from the settings"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "Updating the <b>{{app}}</b> app can resolve this compatibility issue."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Update from the Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Go into the tab of informations about your device in the settings and tap 10 times on the build version number to enable 'Developper options'. After that, search and go in the developper options and select <b>{{app}}</b> as webview provider."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Open settings"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Your device seems to be not compatible. Try to search other ways to update your webview"
+    },
+    "cordovaNoWebview": {
+        "message": "No webview application installed / enabled"
+    },
+    "cordovaWebviewUsed": {
+        "message": "used"
     }
 }

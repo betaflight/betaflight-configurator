@@ -15,8 +15,8 @@
             <table class="ports">
                 <thead>
                     <tr>
-                        <td i18n="portsIdentifier"/>
-                        <td i18n="portsConfiguration">
+                        <td i18n="portsIdentifier" class="sm-min"/>
+                        <td i18n="portsConfiguration" class="config">
                         <td i18n="portsSerialRx">
                         <td i18n="portsTelemetryOut">
                         <td i18n="portsSensorIn">
@@ -43,8 +43,13 @@
         <thead>
         </thead>
         <tbody>
+            <tr class="portIdentifier xs">
+                <td colspan="5">
+                    <p class="identifier"></p>
+                </td>
+            </tr>
             <tr class="portConfiguration">
-                <td class="identifierCell">
+                <td class="identifierCell sm-min">
                     <p class="identifier"></p>
                 </td>
                 <td class="functionsCell-configuration"><select class="msp_baudrate">

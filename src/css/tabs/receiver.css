@@ -13,8 +13,6 @@
 }
 
 .tab-receiver .bars {
-    float: left;
-    width: calc(50% - 20px);
     font-weight: bold;
 }
 
@@ -136,16 +134,10 @@
     background-color: #14407a;
 }
 
-.tab-receiver .fc_column {
-    float: right;
-    width: 50%;
-    margin-left: 20px;
-}
-
 .tab-receiver .tunings {
     float: right;
     position: relative;
-    margin: 0px 0px 10px 0;
+    margin: 0 0 10px 0;
     width: 100%;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
@@ -153,9 +145,8 @@
 
 .tab-receiver .tunings .head {
     height: 15px;
-    padding: 4px;
     text-align: left;
-    padding-left: 6px;
+    padding: 4px 4px 4px 6px;
     font-weight: normal;
     background: #828885;
     color: white;
@@ -168,9 +159,8 @@
 }
 
 .tab-receiver .tunings table, .tab-receiver .tunings table th, .tab-receiver .tunings table td {
-    padding: 4px;
     text-align: left;
-    padding-left: 6px;
+    padding: 4px 4px 4px 6px;
 }
 
 .tab-receiver .tunings table th {
@@ -186,7 +176,7 @@
 
 .tab-receiver .tunings table th:last-child {
     border-top-right-radius: 3px;
-    border-right: 0px;
+    border-right: 0;
 }
 
 .tab-receiver .tunings table td {
@@ -200,7 +190,7 @@
 
 .tab-receiver .tunings table td:last-child {
     border-bottom-right-radius: 3px;
-    border-right: 0px;
+    border-right: 0;
 }
 
 .tab-receiver .tunings table input {
@@ -231,7 +221,7 @@
 
 .tab-receiver .rssi_channel_wrapper {
     float: right;
-    margin: 0px 0px 10px 0;
+    margin: 0 0 10px 0;
     border-left: 0;
     width: 30%;
     box-sizing: border-box;
@@ -244,7 +234,7 @@
 .tab-receiver .rcmap_wrapper {
     float: right;
     position: relative;
-    margin: 0px 0px 10px 0;
+    margin: 0 0 10px 0;
     width: 70%;
     box-sizing: border-box;
     border-top-left-radius: 5px;
@@ -293,11 +283,9 @@
     width: calc(100% - 36px);
     height: 20px;
     z-index: 2;
-    border-radius: 0px;
     border: 1px solid var(--subtleAccent);
     margin: 4px;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-radius: 3px 0 0 3px;
 }
 
 .tab-receiver select {
@@ -333,7 +321,7 @@
 }
 
 .tab-receiver .rcSmoothing table .helpicon {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .tab-receiver .rcSmoothing td:first-child {
@@ -477,4 +465,10 @@
     margin-top: -1px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+}
+
+@media all and (max-width: 575px) {
+    .tab-receiver .bars {
+        margin-bottom: 10px;
+    }
 }

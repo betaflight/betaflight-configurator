@@ -40,7 +40,7 @@ PortHandler.check = function () {
             if (GUI.connected_to) {
                 for (var i = 0; i < removed_ports.length; i++) {
                     if (removed_ports[i] == GUI.connected_to) {
-                        $('div#port-picker a.connect').click();
+                        $('div#header_btns a.connect').click();
                     }
                 }
             }
@@ -116,7 +116,7 @@ PortHandler.check = function () {
                 // we need firmware flasher protection over here
                 if (GUI.active_tab != 'firmware_flasher') {
                     GUI.timeout_add('auto-connect_timeout', function () {
-                        $('div#port-picker a.connect').click();
+                        $('div#header_btns a.connect').click();
                     }, 100); // timeout so bus have time to initialize after being detected by the system
                 }
             }
@@ -164,7 +164,6 @@ PortHandler.check_usb_devices = function (callback) {
             }
             self.dfu_available = false;
         }
-
         if(callback) callback(self.dfu_available);
 
         if (!$('option:selected', portPickerElement).data().isDFU) {

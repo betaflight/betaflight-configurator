@@ -1,0 +1,54 @@
+{
+  "name": "[INJECTED_BY_GULPFILE]",
+  "displayName": "Betaflight Configurator",
+  "version": "[INJECTED_BY_GULPFILE]",
+  "description": "[INJECTED_BY_GULPFILE]",
+  "main": "index.js",
+  "scripts": {},
+  "author": "[INJECTED_BY_GULPFILE]",
+  "license": "[INJECTED_BY_GULPFILE]",
+  "dependencies": {
+    "cordova": "^9.0.0",
+    "cordova-android": "^8.1.0",
+    "cordova-clipboard": "^1.3.0",
+    "bf-cordova-open-native-settings": "^2.0.4",
+    "bf-cordova-plugin-appavailability": "^1.0.3",
+    "cordova-plugin-chrome-apps-common": "^1.0.7",
+    "cordova-plugin-chrome-apps-runtime": "^2.0.0",
+    "cordova-plugin-chrome-apps-storage": "^1.0.4",
+    "bf-cordova-plugin-chrome-apps-usb": "^2.0.1",
+    "cordova-plugin-dialogs": "^2.0.2",
+    "cordova-plugin-file": "^6.0.2",
+    "cordova-plugin-filechooser": "^1.2.0",
+    "cordova-plugin-market": "^1.2.0",
+    "cordova-plugin-permission": "^0.1.0",
+    "cordova-plugin-splashscreen": "^5.0.3",
+    "cordova-plugin-usb-event": "^1.0.2",
+    "cordova-plugin-whitelist": "^1.3.4",
+    "bf-cordovarduino": "^1.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-chrome-apps-common": {},
+      "cordova-plugin-chrome-apps-runtime": {},
+      "cordova-plugin-chrome-apps-storage": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-permission": {},
+      "cordova-plugin-usb-event": {},
+      "cordova-plugin-dialogs": {},
+      "bf-cordovarduino": {},
+      "cordova-plugin-file": {},
+      "cordova-plugin-filechooser": {},
+      "bf-cordova-plugin-chrome-apps-usb": {},
+      "cordova-clipboard": {},
+      "cordova-plugin-screen-orientation": {},
+      "cordova-plugin-market": {},
+      "bf-cordova-open-native-settings": {},
+      "bf-cordova-plugin-appavailability": {}
+    }
+  }
+}

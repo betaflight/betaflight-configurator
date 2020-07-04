@@ -108,3 +108,13 @@
 .tab-adjustments .adjustment .functionSwitchChannel {
     width: 5%;
 }
+
+@media all and (max-width: 575px) {
+    .tab-adjustments .overflow {
+        overflow: auto;
+    }
+
+    .tab-adjustments .range {
+        min-width: 300px;
+    }
+}

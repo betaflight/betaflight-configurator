@@ -1,6 +1,6 @@
 #tab-static {
     background-color: inherit;
-    background-image: url(/images/osd-bg-1.jpg);
+    background-image: url(../../images/osd-bg-1.jpg);
     background-attachment: fixed;
     background-size: cover;
     background-position: bottom right;

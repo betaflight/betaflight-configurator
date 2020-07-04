@@ -146,6 +146,8 @@ Model.prototype.resize = function () {
 };
 
 Model.prototype.dispose = function () {
-    this.renderer.forceContextLoss();
-    this.renderer.dispose();
+    if (this.canUseWebGLRenderer()) {
+        this.renderer.forceContextLoss();
+        this.renderer.dispose();
+    }
 };

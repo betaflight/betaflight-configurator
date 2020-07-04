@@ -17,7 +17,7 @@
 }
 
 .tab-pid_tuning .cf th:last-child {
-    border-right: 0px;
+    border-right: 0;
     border-top-right-radius: 3px;
 }
 
@@ -27,8 +27,8 @@
 
 .tab-pid_tuning .cf td:last-child {
     border-bottom-right-radius: 3px;
-    border-right: 0px;
-    padding-bottom: 0px;
+    border-right: 0;
+    padding-bottom: 0;
 }
 
 .tab-pid_tuning .cf input {
@@ -69,7 +69,7 @@
 
 .tab-pid_tuning table {
     float: left;
-    margin: 0px;
+    margin: 0;
     border-collapse: collapse;
     width: 100%;
     table-layout: fixed;
@@ -90,12 +90,12 @@
 
 .tab-pid_tuning table, .tab-pid_tuning table td {
     padding: 1px;
-    border-bottom: 0px solid var(--subtleAccent);
+    border-bottom: 0 solid var(--subtleAccent);
 }
 
 .tab-pid_tuning table th {
-    padding: 0px;
-    border: 0px;
+    padding: 0;
+    border: 0;
     height: 10px;
     font-weight: normal;
     text-overflow: ellipsis;
@@ -124,7 +124,7 @@
 }
 
 .tab-pid_tuning table tr td:last-child {
-    border-right: 0px solid var(--subtleAccent);
+    border-right: 0 solid var(--subtleAccent);
 }
 
 .tab-pid_tuning #pid_optional table th {
@@ -219,8 +219,7 @@
 }
 
 .tab-pid_tuning table td {
-    padding: 1px;
-    padding-left: 5px;
+    padding: 1px 1px 1px 5px;
     border-right: 1px solid var(--subtleAccent);
 }
 
@@ -266,22 +265,20 @@
 
 .tab-pid_tuning .tab-container {
     border-bottom: 3px solid var(--accent);
-    border-right-width: 0px;
+    border-right-width: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    height: 29px;
     justify-content: start;
     width: 100%;
 }
 
 .tab-pid_tuning .tab-container > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #2e2e2e;
-    padding: 0 12px;
+    padding: 6px 12px;
     border-right: 1px solid white;
+    box-sizing: border-box;
+    text-align: center;
 }
 
 .tab-pid_tuning .tab-container > div:first-child {
@@ -294,7 +291,6 @@
 
 .tab-pid_tuning .tab-container > div a {
     display: block;
-    white-space: nowrap;
     color: #999999;
 }
 
@@ -318,8 +314,7 @@
     color: var(--quietText);
     height: 19px;
     font-weight: normal;
-    padding: 2px;
-    padding-left: 6px;
+    padding: 2px 2px 2px 6px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
 }
@@ -335,7 +330,7 @@
 .tab-pid_tuning .fixed_band {
     position: absolute;
     width: 100%;
-    bottom: 0px;
+    bottom: 0;
 }
 
 .fancy.header {
@@ -358,12 +353,10 @@
     height: 18px;
     background-color: #D6D6D6;
     float: left;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
     text-align: left;
-    padding-left: 5px;
     line-height: 13px;
-    padding-top: 5px;
+    padding: 5px 0 0 5px;
     font-size: 12px;
     border-bottom: 1px solid var(--subtleAccent);
     color: #828282;
@@ -381,7 +374,7 @@
 }
 
 .tab-pid_tuning .pid_mode .helpicon {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .tab-pid_tuning .pid_titlebar {
@@ -393,11 +386,11 @@
 }
 
 .tab-pid_tuning .pid_titlebar.pid_titlebar_extended {
-    border-radius: 0px;
+    border-radius: 0;
 }
 
 .tab-pid_tuning .cf .throttleCurvePreview {
-    padding: 0px;
+    padding: 0;
 }
 
 .pid_roll {
@@ -419,13 +412,7 @@
 
 .show {
     width:130px;
-    float:right;
     margin-right:3px;
-}
-
-.show a {
-    margin-left: 10px;
-    width: calc(100% - 10px);
 }
 
 .tab-pid_tuning .helpicon {
@@ -439,7 +426,7 @@
 
 .tab-pid_tuning .number .helpicon {
     margin-top: 3px;
-    margin-right: 0px;
+    margin-right: 0;
 }
 
 .tab-pid_tuning .gui_box_titlebar .helpicon {
@@ -448,7 +435,7 @@
 }
 
 .tab-pid_tuning .spacer_left {
-    padding-left: 0px;
+    padding-left: 0;
     float: right;
     width: calc(100% - 20px)
 }
@@ -470,7 +457,7 @@
 
 .tab-pid_tuning .number:last-child {
     padding-bottom: 5px;
-    border-bottom: 0px;
+    border-bottom: 0;
 }
 
 .tab-pid_tuning .number input {
@@ -495,18 +482,16 @@
 
 .tab-pid_tuning .resetbt {
     width: 140px;
-    float: right;
+    margin-right: 10px;
 }
 
 .tab-pid_tuning .copyprofilebtn {
     width: 150px;
-    float: right;
     margin-right:10px;
 }
 
 .tab-pid_tuning .copyrateprofilebtn {
     width: 150px;
-    float: right;
     margin-right:10px;
 }
 
@@ -520,7 +505,7 @@
 }
 
 .tab-pid_tuning .leftzero {
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 .tab-pid_tuning .roll {
@@ -626,7 +611,7 @@
 .tab-pid_tuning .pidTuning tr {
     width: 100%;
     border-bottom: 1px solid var(--subtleAccent);
-    padding: 0px;
+    padding: 0;
 }
 
 .tab-pid_tuning .pidTuning td:first-child {
@@ -644,16 +629,16 @@
 }
 
 .tab-pid_tuning .new_rates td:first-child {
-    border-bottom-left-radius: 0px;
+    border-bottom-left-radius: 0;
     padding-left: 10px;
 }
 
 .tab-pid_tuning .new_rates td:last-child {
-    border-bottom-right-radius: 0px;
+    border-bottom-right-radius: 0;
 }
 
 .tab-pid_tuning .rc_curve .cf tr td {
-    padding: 0px;
+    padding: 0;
 }
 
 .tab-pid_tuning .rc_curve_bg {
@@ -694,7 +679,7 @@
     border: 1px solid var(--subtleAccent);
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
-    border-top: 0px solid var(--subtleAccent);
+    border-top: 0 solid var(--subtleAccent);
     background: #f9f9f9;
 }
 
@@ -716,6 +701,13 @@
     border: 1px solid var(--subtleAccent);
     margin-left: 5px;
     width: 120px;
+}
+
+@media all and (max-width: 575px) {
+    .tab-pid_tuning dialog {
+        width: calc(100% - 2em);
+        border-radius: unset;
+    }
 }
 
 .tab-pid_tuning .tuningSlider {
@@ -934,4 +926,99 @@
 
 .tab-pid_tuning .float-left {
     float: left;
+}
+
+.tab-pid_tuning .content_wrapper_header {
+    display: flex;
+}
+
+.tab-pid_tuning .content_wrapper_header_btns {
+    margin-left: auto;
+}
+
+@media all and (max-width: 575px) {
+    .tab-pid_tuning .content_wrapper_header {
+        flex-wrap: wrap;
+    }
+
+    .tab-pid_tuning .profile, .tab-pid_tuning .rate_profile,
+    .tab-pid_tuning .copyprofilebtn, .tab-pid_tuning .copyrateprofilebtn,
+    .tab-pid_tuning .resetbt, .tab-pid_tuning .show {
+        width: calc(50% - 5px);
+    }
+
+    .tab-pid_tuning .rate_profile {
+        margin-left: 5px;
+    }
+
+    .tab-pid_tuning .rate_profile, .tab-pid_tuning .controller,
+    .tab-pid_tuning .copyrateprofilebtn, .tab-pid_tuning .show {
+        margin-right: 0;
+    }
+
+    .tab-pid_tuning .controller {
+        width: 100%;
+    }
+
+    .tab-pid_tuning .content_wrapper_header_btns {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .tab-pid_tuning .tab-container > div {
+        width: calc(100% / 3);
+    }
+
+    .tab-pid_tuning .subtab-pid .cf_column, .tab-pid_tuning .subtab-rates .cf_column {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .tab-pid_tuning .spacer_left {
+        width: 100%;
+    }
+
+    .subtab-filter .two_columns {
+        flex-wrap: wrap;
+    }
+
+    .subtab-filter .two_columns .two_columns_first {
+        margin-right: 0;
+    }
+
+    .subtab-filter .two_columns .two_columns_second {
+        margin-left: 0;
+    }
+
+    .tab-pid_tuning .sliderHeaders {
+        height: 18px;
+        background-color: #D6D6D6;
+        line-height: 13px;
+        font-size: 12px;
+        border-bottom: 1px solid var(--subtleAccent);
+        color: #828282;
+        font-weight: normal;
+        background-image: linear-gradient(315deg, rgba(255, 255, 255, .2) 10%, transparent 10%, transparent 20%,
+        rgba(255, 255, 255, .2) 20%, rgba(255, 255, 255, .2) 30%, transparent 30%, transparent 40%,
+        rgba(255, 255, 255, .2) 40%, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent 60%,
+        rgba(255, 255, 255, .2) 60%, rgba(255, 255, 255, .2) 70%, transparent 70%, transparent 80%,
+        rgba(255, 255, 255, .2) 80%, rgba(255, 255, 255, .2) 90%, transparent 90%, transparent 100%,
+        rgba(255, 255, 255, .2) 100%, transparent);
+    }
+
+    .tab-pid_tuning .sliderHeaders span {
+        color: #828282;
+    }
+
+    .tab-pid_tuning .sliderLabels tr.sliderHeaders td:first-child {
+        text-align: left;
+    }
+
+    .tab-pid_tuning .tuningPIDSliders .pid_titlebar th:last-child, .tab-pid_tuning .tuningFilterSliders .pid_titlebar th:last-child {
+        width: 20%;
+    }
+
+    .tab-pid_tuning .tuningPIDSliders .pid_titlebar th:nth-child(2), .tab-pid_tuning .tuningFilterSliders .pid_titlebar th:nth-child(2) {
+        width: 20%;
+    }
 }
