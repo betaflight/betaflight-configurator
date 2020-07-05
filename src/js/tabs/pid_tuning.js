@@ -407,15 +407,7 @@ TABS.pid_tuning.initialize = function (callback) {
                         dynamicNotchQ_e.val(FILTER_DEFAULT.dyn_notch_q);
                     }
 
-                    const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
-
-                    if (!dialogDynFiltersChange.hasAttribute('open')) {
-                        dialogDynFiltersChange.showModal();
-
-                        $('.dialogDynFiltersChange-confirmbtn').click(function() {
-                            dialogDynFiltersChange.close();
-                        });
-                    }
+                    showDialogDynFiltersChange();
 
                 } else { // same value, return saved values
                     dynamicNotchWidthPercent_e.val(FILTER_CONFIG.dyn_notch_width_percent);

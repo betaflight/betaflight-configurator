@@ -541,15 +541,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 }
 
                 if (FILTER_CONFIG.dyn_notch_width_percent !== self.previousFilterDynWidth) {
-                    const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
-
-                    if (!dialogDynFiltersChange.hasAttribute('open')) {
-                        dialogDynFiltersChange.showModal();
-
-                        $('.dialogDynFiltersChange-confirmbtn').click(function() {
-                            dialogDynFiltersChange.close();
-                        });
-                    }
+                    showDialogDynFiltersChange();
                 }
             });
 
