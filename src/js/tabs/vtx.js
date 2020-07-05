@@ -474,7 +474,7 @@ TABS.vtx.initialize = function (callback) {
                 }
             } else {
                 for (let i = 1; i <= TABS.vtx.MAX_BAND_CHANNELS_VALUES; i++) {
-                    selectBand.append(new Option(i18n.getMessage('vtxChannel_X', {channelName: i}), i));
+                    selectChannel.append(new Option(i18n.getMessage('vtxChannel_X', {channelName: i}), i));
                 }
             }
         }
