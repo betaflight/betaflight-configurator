@@ -89,6 +89,9 @@
     "analyticsOptOut": {
         "message": "crwdns8831:0crwdne8831:0"
     },
+    "cordovaForceComputerUI": {
+        "message": "crwdns10174:0crwdne10174:0"
+    },
     "language_changed": {
         "message": "crwdns9482:0crwdne9482:0"
     },
@@ -289,6 +292,9 @@
     },
     "tabHelp": {
         "message": "crwdns5355:0crwdne5355:0"
+    },
+    "tabOptions": {
+        "message": "crwdns10176:0crwdne10176:0"
     },
     "tabSetup": {
         "message": "crwdns5356:0crwdne5356:0"
@@ -5677,5 +5683,68 @@
     "gpsSbasNone": {
         "message": "crwdns10040:0crwdne10040:0",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "crwdns10178:0crwdne10178:0"
+    },
+    "dialogFileNameDescription": {
+        "message": "crwdns10180:0{{folder}}crwdne10180:0"
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "crwdns10182:0crwdne10182:0"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "crwdns10184:0crwdne10184:0"
+    },
+    "cordovaCheckingWebview": {
+        "message": "crwdns10186:0crwdne10186:0"
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "crwdns10188:0crwdne10188:0"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "crwdns10190:0crwdne10190:0"
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "crwdns10192:0crwdne10192:0"
+    },
+    "cordovaAvailableWebviews": {
+        "message": "crwdns10194:0crwdne10194:0"
+    },
+    "cordovaWebviewInstall": {
+        "message": "crwdns10196:0{{app}}crwdne10196:0"
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "crwdns10198:0crwdne10198:0"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "crwdns10200:0{{app}}crwdne10200:0"
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "crwdns10202:0crwdne10202:0"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "crwdns10204:0crwdne10204:0"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "crwdns10206:0{{app}}crwdne10206:0"
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "crwdns10208:0crwdne10208:0"
+    },
+    "cordovaWebviewEnable": {
+        "message": "crwdns10210:0{{app}}crwdne10210:0"
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "crwdns10212:0crwdne10212:0"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "crwdns10214:0crwdne10214:0"
+    },
+    "cordovaNoWebview": {
+        "message": "crwdns10216:0crwdne10216:0"
+    },
+    "cordovaWebviewUsed": {
+        "message": "crwdns10218:0crwdne10218:0"
     }
 }
