@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "익명화된 통계 데이타 수집 선택 해제"
     },
+    "cordovaForceComputerUI": {
+        "message": "폰 인터페이스 대신 컴퓨터 인터페이스 사용"
+    },
     "language_changed": {
         "message": "언어 변경이 저장됨"
     },
@@ -266,6 +269,9 @@
     },
     "tabHelp": {
         "message": "문서 & 지원"
+    },
+    "tabOptions": {
+        "message": "옵션"
     },
     "tabSetup": {
         "message": "설정"
@@ -5651,5 +5657,68 @@
     "gpsSbasNone": {
         "message": "없음",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "파일 이름"
+    },
+    "dialogFileNameDescription": {
+        "message": "파일은 당신의 내부 저장소에 있는 '{{folder}}'폴더에 저장됩니다."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "이 파일이 이미 존재 합니다!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "덮어쓰기 하시겠습니까?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "웹뷰 응용 프로그램 확인중 ..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "호환 되지 않는 웹뷰"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "컨피규레이터를 사용하기 위해서 장치의 웹뷰를 업데이트해야 합니다."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "아래 도구는 새 웹뷰를 설치하거나 이미 설치된 웹뷰를 업데이트하는 데 도움을 줄 것입니다."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "장치에서 사용 가능한 웹뷰 응용 프로그램"
+    },
+    "cordovaWebviewInstall": {
+        "message": "<b>{{app}}</b> 앱을 설치하면 이 호환성 문제를 해결할 수 있습니다."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "구글 플레이 스토어에서 설치"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "<b>{{app}}</b> 앱을 제거하면 이 호환성 문제가 해결될 수 있습니다. 제거할 수 없는 경우 설정 앱에서 비활성화해 보십시오."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "구글 플레이 스토어에서 제거"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "설정에서 제거 / 비활성화"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "<b>{{app}}</b> 앱을 업데이트하면 이 호환성 문제를 해결할 수 있습니다."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "구글 플레이 스토어에서 업데이트"
+    },
+    "cordovaWebviewEnable": {
+        "message": "설정에서 디바이스에 대한 정보 탭으로 이동하여 빌드 버전 번호를 10번 눌러 '개발자 옵션'을 활성화하십시오. 그런 다음 개발자 옵션을 검색하고 들어가 웹뷰 제공자로 <b>{{app}}</b>를 선택하십시오."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "설정 열기"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "장치가 호환되지 않는 것 같습니다. 웹뷰를 업데이트하는 다른 방법을 검색하는 것을 시도하십시오."
+    },
+    "cordovaNoWebview": {
+        "message": "웹뷰 응용 프로그램이 설치 / 활성화되지 않음"
+    },
+    "cordovaWebviewUsed": {
+        "message": "사용됨"
     }
 }
