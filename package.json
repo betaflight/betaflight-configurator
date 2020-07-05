@@ -63,6 +63,7 @@
     "universal-ga": "^1.2.0"
   },
   "devDependencies": {
+    "@quanle94/innosetup": "^6.0.2",
     "chai": "^4.2.0",
     "command-exists": "^1.2.8",
     "cordova-lib": "^9.0.1",
@@ -86,7 +87,6 @@
     "karma-sinon": "^1.0.5",
     "karma-sinon-chai": "^2.0.2",
     "karma-tfs-reporter": "^1.0.2",
-    "makensis": "^0.20.3",
     "mocha": "^7.0.1",
     "nw-builder": "^3.5.7",
     "os": "^0.1.1",
