@@ -497,7 +497,7 @@ TABS.vtx.initialize = function (callback) {
                     if (i === 0) {
                         selectPower.append(new Option(i18n.getMessage('vtxPower_0'), 0));
                     } else {
-                        selectPower.append(new Option(i18n.getMessage('vtxPower_X', {bandName: i}), i));
+                        selectPower.append(new Option(i18n.getMessage('vtxPower_X', {powerLevel: i}), i));
                     }
                 }
             }
