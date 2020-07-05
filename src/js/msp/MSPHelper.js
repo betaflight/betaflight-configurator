@@ -1157,6 +1157,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                                     ADVANCED_TUNING.ff_interpolate_sp = data.readU8();
                                                     ADVANCED_TUNING.ff_smooth_factor = data.readU8();
                                                     ADVANCED_TUNING.ff_boost = data.readU8();
+                                                    ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
                                                 }
                                             }
                                         }
@@ -2098,7 +2099,8 @@ MspHelper.prototype.crunch = function(code) {
                                             if(semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
                                                 buffer.push8(ADVANCED_TUNING.ff_interpolate_sp)
                                                       .push8(ADVANCED_TUNING.ff_smooth_factor)
-                                                      .push8(ADVANCED_TUNING.ff_boost);
+                                                      .push8(ADVANCED_TUNING.ff_boost)
+                                                      .push8(ADVANCED_TUNING.vbat_sag_compensation);
                                             }
                                         }
                                     }

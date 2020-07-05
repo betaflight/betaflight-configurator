@@ -462,6 +462,7 @@ var FC = {
             ff_interpolate_sp:          0,
             ff_smooth_factor:           0,
             ff_boost:                   0,
+            vbat_sag_compensation:      0,
         };
         ADVANCED_TUNING_ACTIVE = { ...ADVANCED_TUNING };
 

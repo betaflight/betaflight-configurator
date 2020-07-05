@@ -3644,6 +3644,15 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Increases the PID values to compensate when Vbat gets lower. This will give more constant flight characteristics throughout the flight. The amount of compensation that is applied is calculated from the $t(powerBatteryMaximum.message) set in the $t(tabPower.message) page, so make sure that is set to something appropriate."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbat Sag Compensation"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by compensating for battery sag. The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br><br>Visit <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I Term Rotation"
     },
