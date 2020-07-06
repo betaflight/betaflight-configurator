@@ -38,6 +38,7 @@ const APPS_DIR = './apps/';
 const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
 const CORDOVA_DIR = './cordova/';
+const CORDOVA_DIST_DIR = './dist_cordova/';
 
 const LINUX_INSTALL_DIR = '/opt/betaflight';
 
@@ -66,7 +67,7 @@ const SELECTED_PLATFORMS = getInputPlatforms();
 //Tasks
 //-----------------
 
-gulp.task('clean', gulp.parallel(clean_dist, clean_apps, clean_debug, clean_release));
+gulp.task('clean', gulp.parallel(clean_dist, clean_apps, clean_debug, clean_release, clean_cordova));
 
 gulp.task('clean-dist', clean_dist);
 
@@ -78,7 +79,7 @@ gulp.task('clean-release', clean_release);
 
 gulp.task('clean-cache', clean_cache);
 
-gulp.task('clean-cordova', cordova_clean);
+gulp.task('clean-cordova', clean_cordova);
 
 // Function definitions are processed before function calls.
 const getChangesetId = gulp.series(getHash, writeChangesetId);
@@ -794,11 +795,14 @@ function cordova_dist() {
     const distTasks = [];
     const platforms = getPlatforms();
     if (platforms.indexOf('android') !== -1) {
-        distTasks.push(cordova_clean);
+        distTasks.push(clean_cordova);
         distTasks.push(cordova_copy_www);
         distTasks.push(cordova_locales_www);
         distTasks.push(cordova_resources);
         distTasks.push(cordova_include_www);
+        distTasks.push(cordova_copy_src);
+        distTasks.push(cordova_rename_src_config);
+        distTasks.push(cordova_rename_src_package);
         distTasks.push(cordova_packagejson);
         distTasks.push(cordova_configxml);
         distTasks.push(cordova_depedencies);
@@ -826,38 +830,54 @@ function cordova_apps() {
 }
 
 
-function cordova_clean() {
-    const patterns = ['./cordova/www/**', './cordova/resources/**'];
+function clean_cordova() {
+    const patterns = [];
     if (cordovaDependencies) {
-        patterns.push('./cordova/plugins/**');
-        patterns.push('./cordova/platforms/**');
+        patterns.push(`${CORDOVA_DIST_DIR}**`);
+    } else {
+        patterns.push(`${CORDOVA_DIST_DIR}www/**`);
+        patterns.push(`${CORDOVA_DIST_DIR}resources/**`);
     }
     return del(patterns, { force: true });
 }
 function cordova_copy_www() {
     return gulp.src(`${DIST_DIR}**`, { base: DIST_DIR })
-        .pipe(gulp.dest(`${CORDOVA_DIR}www/`));
+        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}www/`));
 }
 function cordova_locales_www(cb) {
-    fs.renameSync(`${CORDOVA_DIR}www/_locales`, `${CORDOVA_DIR}www/i18n`);
-    gulp.src(`${CORDOVA_DIR}www/js/localization.js`)
+    fs.renameSync(`${CORDOVA_DIST_DIR}www/_locales`, `${CORDOVA_DIST_DIR}www/i18n`);
+    gulp.src(`${CORDOVA_DIST_DIR}www/js/localization.js`)
         .pipe(replace('/_locales', './i18n'))
-        .pipe(gulp.dest(`${CORDOVA_DIR}www/js`));
+        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}www/js`));
     cb();
 }
 function cordova_resources() {
     return gulp.src('assets/android/**')
-        .pipe(gulp.dest(`${CORDOVA_DIR}resources/android/`));
+        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}resources/android/`));
 }
 function cordova_include_www() {
-    return gulp.src(`${CORDOVA_DIR}www/main.html`)
+    return gulp.src(`${CORDOVA_DIST_DIR}www/main.html`)
         .pipe(replace('<!-- CORDOVA_INCLUDE js/cordova_chromeapi.js -->', '<script type="text/javascript" src="./js/cordova_chromeapi.js"></script>'))
         .pipe(replace('<!-- CORDOVA_INCLUDE js/cordova_startup.js -->', '<script type="text/javascript" src="./js/cordova_startup.js"></script>'))
         .pipe(replace('<!-- CORDOVA_INCLUDE cordova.js -->', '<script type="text/javascript" src="cordova.js"></script>'))
-        .pipe(gulp.dest(`${CORDOVA_DIR}www`));
+        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}www`));
+}
+function cordova_copy_src() {
+    return gulp.src([`${CORDOVA_DIR}**`, `!${CORDOVA_DIR}config_template.xml`, `!${CORDOVA_DIR}package_template.json`])
+        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}`));
+}
+function cordova_rename_src_config() {
+    return gulp.src(`${CORDOVA_DIR}config_template.xml`)
+        .pipe(rename('config.xml'))
+        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}`));
+}
+function cordova_rename_src_package() {
+    return gulp.src(`${CORDOVA_DIR}package_template.json`)
+        .pipe(rename('package.json'))
+        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}`));
 }
 function cordova_packagejson() {
-    return gulp.src(`${CORDOVA_DIR}package.json`)
+    return gulp.src(`${CORDOVA_DIST_DIR}package.json`)
         .pipe(jeditor({
             'name': pkg.name,
             'description': pkg.description,
@@ -865,10 +885,10 @@ function cordova_packagejson() {
             'author': pkg.author,
             'license': pkg.license,
         }))
-        .pipe(gulp.dest(CORDOVA_DIR));
+        .pipe(gulp.dest(CORDOVA_DIST_DIR));
 }
 function cordova_configxml() {
-    return gulp.src([`${CORDOVA_DIR}config.xml`])
+    return gulp.src([`${CORDOVA_DIST_DIR}config.xml`])
         .pipe(xmlTransformer([
             { path: '//xmlns:name', text: pkg.productName },
             { path: '//xmlns:description', text: pkg.description },
@@ -877,10 +897,10 @@ function cordova_configxml() {
         .pipe(xmlTransformer([
             { path: '.', attr: { 'version': pkg.version } },
         ]))
-        .pipe(gulp.dest(CORDOVA_DIR));
+        .pipe(gulp.dest(CORDOVA_DIST_DIR));
 }
 function cordova_depedencies() {
-    process.chdir('cordova');
+    process.chdir('dist_cordova');
     return gulp.src(['./package.json', './yarn.lock'])
         .pipe(gulp.dest('./'))
         .pipe(yarn({
@@ -904,12 +924,12 @@ function cordova_build(cb) {
         process.chdir('../');
         cb();
     });
-    console.log('APK will be generated at cordova/platforms/android/app/build/outputs/apk/release/app-release.apk');
+    console.log('APK will be generated at dist_cordova/platforms/android/app/build/outputs/apk/release/app-release.apk');
 }
 async function cordova_release() {
     const filename = await getReleaseFilename('android', 'apk');
     console.log(`Release APK : release/${filename}`);
-    return gulp.src(`${CORDOVA_DIR}platforms/android/app/build/outputs/apk/release/app-release.apk`)
+    return gulp.src(`${CORDOVA_DIST_DIR}platforms/android/app/build/outputs/apk/release/app-release.apk`)
         .pipe(rename(filename))
         .pipe(gulp.dest(RELEASE_DIR));
 }
