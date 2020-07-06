@@ -939,6 +939,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 );
             }
 
+            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+                spiRxTypes.push(
+                    'FRSKY_X_V2',
+                    'FRSKY_X_LBT_V2'
+                );
+            }
+
             var spiRx_e = $('select.spiRx');
             for (var i = 0; i < spiRxTypes.length; i++) {
                 spiRx_e.append('<option value="' + i + '">' + spiRxTypes[i] + '</option>');
