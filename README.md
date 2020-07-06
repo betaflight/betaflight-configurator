@@ -76,7 +76,7 @@ List of possible values of `<task-name>`:
 * **release** zips up the apps into individual archives in the `./release` folder [1]. 
 
 [1] Running this task on macOS or Linux requires Wine, since it's needed to set the icon for the Windows app (build for specific platform to avoid errors).
-[2] For Android platform, **dist** task will generate the `./cordova` folder
+[2] For Android platform, **dist** task will generate folders and files in the `./dist_cordova` folder.
 [3] For Android platform, you need to configure an emulator or to plug an Android device with USB debugging enabled
 
 #### Build or release app for one specific platform
