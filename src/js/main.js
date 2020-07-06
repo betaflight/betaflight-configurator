@@ -760,3 +760,15 @@ function showErrorDialog(message) {
 
     dialog.showModal();
 }
+
+function showDialogDynFiltersChange() {
+    const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
+
+    if (!dialogDynFiltersChange.hasAttribute('open')) {
+        dialogDynFiltersChange.showModal();
+
+        $('.dialogDynFiltersChange-confirmbtn').click(function() {
+            dialogDynFiltersChange.close();
+        });
+    }
+}

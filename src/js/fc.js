@@ -581,6 +581,10 @@ var FC = {
             dterm_notch_cutoff:             160,
             dterm_notch_hz:                 260,
             yaw_lowpass_hz:                 100,
+            dyn_notch_q:                    120,
+            dyn_notch_width_percent:          8,
+            dyn_notch_q_rpm:                250, // default with rpm filtering
+            dyn_notch_width_percent_rpm:      0,
         };
 
         DEFAULT_PIDS = [
