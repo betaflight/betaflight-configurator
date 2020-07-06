@@ -3596,6 +3596,15 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "crwdns8724:0$t(powerBatteryMaximum.message)crwdnd8724:0$t(tabPower.message)crwdne8724:0"
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "crwdns10220:0crwdne10220:0"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "crwdns10222:0crwdne10222:0"
+    },
+    "pidTuningVbatSagValue": {
+        "message": "crwdns10224:0crwdne10224:0"
+    },
     "pidTuningItermRotation": {
         "message": "crwdns8787:0crwdne8787:0"
     },
