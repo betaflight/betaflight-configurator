@@ -9,16 +9,10 @@ yarn-error.log*
 cache/
 apps/
 dist/
+dist_cordova/
 debug/
 release/
 testresults/
-
-# Cordova
-cordova/www/
-cordova/platforms/
-cordova/plugins/
-cordova/resources/
-cordova/package-lock.json
 
 # OSX
 .DS_store
