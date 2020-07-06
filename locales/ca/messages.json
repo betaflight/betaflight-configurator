@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "Desactiveu la col·lecció anònima de dades d’estadístiques"
     },
+    "cordovaForceComputerUI": {
+        "message": "Utilitzeu la interfície dels ordinadors en lloc de la interfície dels telèfons"
+    },
     "language_changed": {
         "message": "S'ha desat el canvi d'idioma"
     },
@@ -206,6 +209,9 @@
     },
     "tabHelp": {
         "message": "Documentació i suport"
+    },
+    "tabOptions": {
+        "message": "Opcions"
     },
     "tabSetup": {
         "message": "Configuració"
@@ -3504,6 +3510,15 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Incrementa el valors de PIDs per compensar la caiguda del voltatge de bateria. Aquest donarà característiques de vol constants durant el vol. La quantitat de compensació que s'aplica es calcula per el valor de voltatge màxim de ceŀla definit a la pestanya de configuració, assegura't que és correcte."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Compensació del Battery Sag"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Ofereix un accelerador constant i el rendiment PID sobre el rang de tensió de la bateria que es pot utilitzar compensant el descens de la bateria. El valor de la compensació pot variar entre el 0 i el 100%. Es recomana una compensació completa (100%). <br><br>Visita <a href =\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_ blank\" rel=\"noopener noreferrer\"> aquesta entrada de wiki</a> per obtenir més informació."
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "Rotació I Term"
     },
@@ -5591,5 +5606,68 @@
     "gpsSbasNone": {
         "message": "Cap",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "Nom d’arxiu"
+    },
+    "dialogFileNameDescription": {
+        "message": "El fitxer es desarà a la carpeta \"{{folder}}\" de l'emmagatzematge intern."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "Aquest fitxer ja existeix!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Sobreescriure?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "Comprovant aplicacions de visualització web ..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Visor web incompatible"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Per utilitzar el configurador, heu d'actualitzar el visor web del dispositiu."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "L’eina següent té la finalitat d’ajudar-vos a instal·lar un nou visor web o a actualitzar una visor web ja instal·lat."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Aplicacions de visualització web disponibles al vostre dispositiu"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Instal·lant l’aplicació <b>{{app}}</b> pot resoldre aquest problema de compatibilitat."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Instal·leu des de Google Play Store"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "Desinstal·lar l’aplicació <b>{{app}}</b> pot resoldre aquest problema de compatibilitat. Si no podeu desinstal·lar-lo, intenteu desactivar-lo de l'aplicació de configuració."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Desinstal·leu de Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Desinstal·leu / desactiveu la configuració"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "L'actualització de l '<b>{{app}}</b> aplicació pot resoldre aquest problema de compatibilitat."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Actualitza des de Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Aneu a la pestanya d'informació del vostre dispositiu a la configuració i toqueu deu vegades el número de versió de creació per habilitar \"Opcions de desenvolupador\". Després d'això, busqueu i aneu a les opcions de desenvolupador i seleccioneu <b>{{app}}</b> com a proveïdor de visor web."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Obre configuració"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Sembla que el vostre dispositiu no és compatible. Proveu de cercar altres maneres d’actualitzar el vostre visor web"
+    },
+    "cordovaNoWebview": {
+        "message": "No s’ha instal·lat / activat cap aplicació de visualització web"
+    },
+    "cordovaWebviewUsed": {
+        "message": "utilitzat"
     }
 }
