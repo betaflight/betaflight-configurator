@@ -70,7 +70,7 @@ SYM.loadSymbols = function() {
      * - Symbols used in this versions
      * - That were moved or didn't exist in the font file
      */
-    if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
+    if (semver.lt(FC.CONFIG.apiVersion, "1.42.0")) {
         SYM.AH_CENTER_LINE = 0x26;
         SYM.AH_CENTER = 0x7E;
         SYM.AH_CENTER_LINE_RIGHT = 0x27;
@@ -347,16 +347,16 @@ OSD.generateTemperaturePreview = function (osd_data, temperature) {
 
 OSD.generateCraftName = function (osd_data) {
     var preview = 'CRAFT_NAME';
-    if (CONFIG.name != '') {
-        preview = CONFIG.name.toUpperCase();
+    if (FC.CONFIG.name != '') {
+        preview = FC.CONFIG.name.toUpperCase();
     }
     return preview;
 }
 
 OSD.generateDisplayName = function(osd_data) {
   var preview = 'DISPLAY_NAME';
-  if (CONFIG.displayName != '')
-      preview = CONFIG.displayName.toUpperCase();
+  if (FC.CONFIG.displayName != '')
+      preview = FC.CONFIG.displayName.toUpperCase();
   return preview;
 }
 
@@ -523,7 +523,7 @@ OSD.loadDisplayFields = function() {
             },
             draw_order: 40,
             positionable: function () {
-                return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
+                return semver.gte(FC.CONFIG.apiVersion, "1.39.0") ? true : false;
             },
             preview: function () {
                 return FONT.symbol(SYM.AH_CENTER_LINE) + FONT.symbol(SYM.AH_CENTER) + FONT.symbol(SYM.AH_CENTER_LINE_RIGHT);
@@ -542,7 +542,7 @@ OSD.loadDisplayFields = function() {
             },
             draw_order: 10,
             positionable: function () {
-                return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
+                return semver.gte(FC.CONFIG.apiVersion, "1.39.0") ? true : false;
             },
             preview: function () {
                 var artificialHorizon = new Array();
@@ -579,7 +579,7 @@ OSD.loadDisplayFields = function() {
             },
             draw_order: 50,
             positionable: function () {
-                return semver.gte(CONFIG.apiVersion, "1.39.0") ? true : false;
+                return semver.gte(FC.CONFIG.apiVersion, "1.39.0") ? true : false;
             },
             preview: function (fieldPosition) {
 
@@ -613,7 +613,7 @@ OSD.loadDisplayFields = function() {
             draw_order: 130,
             positionable: true,
             preview: function () {
-                return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 42.00' + FONT.symbol(SYM.AMP) : FONT.symbol(SYM.AMP) + '42.0';
+                return semver.gte(FC.CONFIG.apiVersion, "1.36.0") ? ' 42.00' + FONT.symbol(SYM.AMP) : FONT.symbol(SYM.AMP) + '42.0';
             }
         },
         MAH_DRAWN: {
@@ -624,7 +624,7 @@ OSD.loadDisplayFields = function() {
             draw_order: 140,
             positionable: true,
             preview: function () {
-                return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 690' + FONT.symbol(SYM.MAH) : FONT.symbol(SYM.MAH) + '690';
+                return semver.gte(FC.CONFIG.apiVersion, "1.36.0") ? ' 690' + FONT.symbol(SYM.MAH) : FONT.symbol(SYM.MAH) + '690';
             }
         },
         CRAFT_NAME: {
@@ -754,7 +754,7 @@ OSD.loadDisplayFields = function() {
             draw_order: 200,
             positionable: true,
             preview: function () {
-                return semver.gte(CONFIG.apiVersion, "1.36.0") ? ' 142W' : '142W';
+                return semver.gte(FC.CONFIG.apiVersion, "1.36.0") ? ' 142W' : '142W';
             }
         },
         PID_RATE_PROFILE: {
@@ -1434,7 +1434,7 @@ OSD.searchLimitsElement = function (arrayElements) {
 OSD.chooseFields = function () {
     var F = OSD.ALL_DISPLAY_FIELDS;
     // version 3.0.1
-    if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
         OSD.constants.DISPLAY_FIELDS = [
             F.RSSI_VALUE,
             F.MAIN_BATT_VOLTAGE,
@@ -1443,7 +1443,7 @@ OSD.chooseFields = function () {
             F.HORIZON_SIDEBARS
         ];
 
-        if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+        if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                 F.ONTIME,
                 F.FLYTIME
@@ -1466,31 +1466,31 @@ OSD.chooseFields = function () {
             F.GPS_SATS,
             F.ALTITUDE
         ]);
-        if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                 F.PID_ROLL,
                 F.PID_PITCH,
                 F.PID_YAW,
                 F.POWER
             ]);
-            if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.32.0")) {
                 OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                     F.PID_RATE_PROFILE,
-                    semver.gte(CONFIG.apiVersion, "1.36.0") ? F.WARNINGS : F.BATTERY_WARNING,
+                    semver.gte(FC.CONFIG.apiVersion, "1.36.0") ? F.WARNINGS : F.BATTERY_WARNING,
                     F.AVG_CELL_VOLTAGE
                 ]);
-                if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, "1.34.0")) {
                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                         F.GPS_LON,
                         F.GPS_LAT,
                         F.DEBUG
                     ]);
-                    if (semver.gte(CONFIG.apiVersion, "1.35.0")) {
+                    if (semver.gte(FC.CONFIG.apiVersion, "1.35.0")) {
                         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                             F.PITCH_ANGLE,
                             F.ROLL_ANGLE
                         ]);
-                        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
                             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                 F.MAIN_BATT_USAGE,
                                 F.DISARMED,
@@ -1502,22 +1502,22 @@ OSD.chooseFields = function () {
                                 F.ESC_TEMPERATURE,
                                 F.ESC_RPM
                             ]);
-                            if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                            if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
                                 OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                     F.REMAINING_TIME_ESTIMATE,
                                     F.RTC_DATE_TIME,
                                     F.ADJUSTMENT_RANGE,
                                     F.CORE_TEMPERATURE
                                 ]);
-                                if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+                                if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                         F.ANTI_GRAVITY
                                     ]);
-                                    if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+                                    if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
                                         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                             F.G_FORCE,
                                         ]);
-                                        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                                        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
                                             OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                 F.MOTOR_DIAG,
                                                 F.LOG_STATUS,
@@ -1529,14 +1529,14 @@ OSD.chooseFields = function () {
                                                 F.DISPLAY_NAME,
                                                 F.ESC_RPM_FREQ
                                             ]);
-                                            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+                                            if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
                                                 OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                     F.RATE_PROFILE_NAME,
                                                     F.PID_PROFILE_NAME,
                                                     F.OSD_PROFILE_NAME,
                                                     F.RSSI_DBM_VALUE,
                                                 ]);
-                                                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+                                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                         F.RC_CHANNELS,
                                                         F.CAMERA_FRAME,
@@ -1587,7 +1587,7 @@ OSD.chooseFields = function () {
     // that needs to be implemented here as well. Simply appending new stats does not
     // require a completely new section for the version - only reordering.
 
-    if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
+    if (semver.lt(FC.CONFIG.apiVersion, "1.39.0")) {
         OSD.constants.STATISTIC_FIELDS = [
             F.MAX_SPEED,
             F.MIN_BATTERY,
@@ -1602,7 +1602,7 @@ OSD.chooseFields = function () {
             F.MAX_DISTANCE,
             F.BLACKBOX_LOG_NUMBER
         ];
-        if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
                 F.RTC_DATE_TIME
             ]);
@@ -1624,7 +1624,7 @@ OSD.chooseFields = function () {
             F.BLACKBOX,
             F.BLACKBOX_LOG_NUMBER
         ];
-        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
                 F.MAX_G_FORCE,
                 F.MAX_ESC_TEMP,
@@ -1634,7 +1634,7 @@ OSD.chooseFields = function () {
                 F.MAX_FFT
             ]);
         }
-        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
                 F.TOTAL_FLIGHTS,
                 F.TOTAL_FLIGHT_TIME,
@@ -1655,14 +1655,14 @@ OSD.chooseFields = function () {
         F.VISUAL_BEEPER,
         F.CRASH_FLIP_MODE
     ];
-    if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.ESC_FAIL,
             F.CORE_TEMPERATURE,
             F.RC_SMOOTHING_FAILURE
         ]);
     }
-    if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.FAILSAFE,
             F.LAUNCH_CONTROL,
@@ -1676,7 +1676,7 @@ OSD.chooseFields = function () {
         'TOTAL_ARMED_TIME',
         'LAST_ARMED_TIME'
     ];
-    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
         OSD.constants.TIMER_TYPES = OSD.constants.TIMER_TYPES.concat([
             'ON_ARM_TIME'
         ]);
@@ -1686,7 +1686,7 @@ OSD.chooseFields = function () {
             F.RSSI_DBM,
         ]);
     }
-    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([
             F.OVER_CAP,
         ]);
@@ -1744,7 +1744,7 @@ OSD.msp = {
                 var default_position = typeof (c.default_position) === 'function' ? c.default_position() : c.default_position;
 
                 display_item.positionable = positionable;
-                if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
                     // size * y + x
                     display_item.position = positionable ? FONT.constants.SIZES.LINE * ((bits >> 5) & 0x001F) + (bits & 0x001F) : default_position;
 
@@ -1772,7 +1772,7 @@ OSD.msp = {
             position: function (display_item) {
                 var isVisible = display_item.isVisible;
                 var position = display_item.position;
-                if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
 
                     let packed_visible = 0;
                     for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
@@ -1790,19 +1790,19 @@ OSD.msp = {
     },
     encodeOther: function () {
         var result = [-1, OSD.data.video_system];
-        if (OSD.data.state.haveOsdFeature && semver.gte(CONFIG.apiVersion, "1.21.0")) {
+        if (OSD.data.state.haveOsdFeature && semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
             result.push8(OSD.data.unit_mode);
             // watch out, order matters! match the firmware
             result.push8(OSD.data.alarms.rssi.value);
             result.push16(OSD.data.alarms.cap.value);
-            if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+            if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
                 result.push16(OSD.data.alarms.time.value);
             } else {
                 // This value is unused by the firmware with configurable timers
                 result.push16(0);
             }
             result.push16(OSD.data.alarms.alt.value);
-            if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
                 var warningFlags = 0;
                 for (var i = 0; i < OSD.data.warnings.length; i++) {
                     if (OSD.data.warnings[i].enabled) {
@@ -1811,7 +1811,7 @@ OSD.msp = {
                 }
                 console.log(warningFlags);
                 result.push16(warningFlags);
-                if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
                     result.push32(warningFlags);
 
                     result.push8(OSD.data.osd_profiles.selected + 1);
@@ -1819,7 +1819,7 @@ OSD.msp = {
                     result.push8(OSD.data.parameters.overlayRadioMode);
                 }
 
-                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                     result.push8(OSD.data.parameters.cameraFrameWidth);
                     result.push8(OSD.data.parameters.cameraFrameHeight);
                 }
@@ -1858,18 +1858,18 @@ OSD.msp = {
         if (d.flags > 0) {
             if (payload.length > 1) {
                 d.video_system = view.readU8();
-                if (semver.gte(CONFIG.apiVersion, "1.21.0") && bit_check(d.flags, 0)) {
+                if (semver.gte(FC.CONFIG.apiVersion, "1.21.0") && bit_check(d.flags, 0)) {
                     d.unit_mode = view.readU8();
                     d.alarms = {};
                     d.alarms['rssi'] = { display_name: i18n.getMessage('osdTimerAlarmOptionRssi'), value: view.readU8() };
                     d.alarms['cap'] = { display_name: i18n.getMessage('osdTimerAlarmOptionCapacity'), value: view.readU16() };
-                    if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+                    if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
                         d.alarms['time'] = { display_name: 'Minutes', value: view.readU16() };
                     } else {
                         // This value was obsoleted by the introduction of configurable timers, and has been reused to encode the number of display elements sent in this command
                         view.readU8();
                         var tmp = view.readU8();
-                        if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+                        if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
                             displayItemsCountActual = tmp;
                         }
                     }
@@ -1881,12 +1881,12 @@ OSD.msp = {
 
         d.state = {};
         d.state.haveSomeOsd = (d.flags != 0)
-        d.state.haveMax7456Configured = bit_check(d.flags, 4) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
-        d.state.haveFrSkyOSDConfigured = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) && bit_check(d.flags, 3);
+        d.state.haveMax7456Configured = bit_check(d.flags, 4) || (d.flags == 1 && semver.lt(FC.CONFIG.apiVersion, "1.34.0"));
+        d.state.haveFrSkyOSDConfigured = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) && bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
-        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5) || (d.state.haveMax7456FontDeviceConfigured && semver.lt(CONFIG.apiVersion, API_VERSION_1_43));
-        d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags == 1 && semver.lt(CONFIG.apiVersion, "1.34.0"));
-        d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(CONFIG.apiVersion, "1.34.0");
+        d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5) || (d.state.haveMax7456FontDeviceConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_43));
+        d.state.haveOsdFeature = bit_check(d.flags, 0) || (d.flags == 1 && semver.lt(FC.CONFIG.apiVersion, "1.34.0"));
+        d.state.isOsdSlave = bit_check(d.flags, 1) && semver.gte(FC.CONFIG.apiVersion, "1.34.0");
 
         d.display_items = [];
         d.stat_items = [];
@@ -1902,7 +1902,7 @@ OSD.msp = {
         var items_positions_read = [];
         while (view.offset < view.byteLength && items_positions_read.length < displayItemsCountActual) {
             var v = null;
-            if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
                 v = view.readU16();
             } else {
                 v = view.read16();
@@ -1910,7 +1910,7 @@ OSD.msp = {
             items_positions_read.push(v);
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
             // Parse statistics display enable
             var expectedStatsCount = view.readU8();
             if (expectedStatsCount != OSD.constants.STATISTIC_FIELDS.length) {
@@ -1965,7 +1965,7 @@ OSD.msp = {
             // Parse enabled warnings
             var warningCount = OSD.constants.WARNINGS.length;
             var warningFlags = view.readU16();
-            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
                 warningCount = view.readU8();
                 // the flags were replaced with a 32bit version
                 warningFlags = view.readU32();
@@ -1992,7 +1992,7 @@ OSD.msp = {
             }
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
             // OSD profiles
             d.osd_profiles.number = view.readU8();
             d.osd_profiles.selected = view.readU8() - 1;
@@ -2006,7 +2006,7 @@ OSD.msp = {
         }
 
         // Camera frame size
-        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             d.parameters.cameraFrameWidth = view.readU8();
             d.parameters.cameraFrameHeight = view.readU8();
         }
@@ -2153,7 +2153,7 @@ OSD.GUI.preview = {
             }
         }
 
-        if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
             // unsigned now
         } else {
             if (position > OSD.data.display_size.total / 2) {
@@ -2295,7 +2295,7 @@ TABS.osd.initialize = function (callback) {
                             });
                     });
 
-                    if (semver.gte(CONFIG.apiVersion, "1.21.0")) {
+                    if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
                         // units
                         $('.units-container').show();
                         var $unitMode = $('.units').empty();
@@ -2333,7 +2333,7 @@ TABS.osd.initialize = function (callback) {
                             $alarms.append($input);
                         }
 
-                        if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+                        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
                             // Timers
                             $('.timers-container').show();
                             var $timers = $('#timer-fields').empty();
@@ -2837,7 +2837,7 @@ TABS.osd.initialize = function (callback) {
         fontPresetsElement.change(function (e) {
             var $font = $('.fontpresets option:selected');
             var fontver = 1;
-            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
                 fontver = 2;
             }
             $('.font-manager-version-info').text(i18n.getMessage('osdDescribeFontVersion' + fontver));

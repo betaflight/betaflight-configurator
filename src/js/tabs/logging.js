@@ -154,17 +154,17 @@ TABS.logging.initialize = function (callback) {
                     head += ',' + 'rssi';
                     break;
                 case 'MSP_RC':
-                    for (var chan = 0; chan < RC.active_channels; chan++) {
+                    for (var chan = 0; chan < FC.RC.active_channels; chan++) {
                         head += ',' + 'RC' + chan;
                     }
                     break;
                 case 'MSP_MOTOR':
-                    for (var motor = 0; motor < MOTOR_DATA.length; motor++) {
+                    for (var motor = 0; motor < FC.MOTOR_DATA.length; motor++) {
                         head += ',' + 'Motor' + motor;
                     }
                     break;
                 case 'MSP_DEBUG':
-                    for (var debug = 0; debug < SENSOR_DATA.debug.length; debug++) {
+                    for (var debug = 0; debug < FC.SENSOR_DATA.debug.length; debug++) {
                         head += ',' + 'Debug' + debug;
                     }
                     break;
@@ -180,43 +180,43 @@ TABS.logging.initialize = function (callback) {
         for (var i = 0; i < requested_properties.length; i++) {
             switch (requested_properties[i]) {
                 case 'MSP_RAW_IMU':
-                    sample += ',' + SENSOR_DATA.gyroscope;
-                    sample += ',' + SENSOR_DATA.accelerometer;
-                    sample += ',' + SENSOR_DATA.magnetometer;
+                    sample += ',' + FC.SENSOR_DATA.gyroscope;
+                    sample += ',' + FC.SENSOR_DATA.accelerometer;
+                    sample += ',' + FC.SENSOR_DATA.magnetometer;
                     break;
                 case 'MSP_ATTITUDE':
-                    sample += ',' + SENSOR_DATA.kinematics[0];
-                    sample += ',' + SENSOR_DATA.kinematics[1];
-                    sample += ',' + SENSOR_DATA.kinematics[2];
+                    sample += ',' + FC.SENSOR_DATA.kinematics[0];
+                    sample += ',' + FC.SENSOR_DATA.kinematics[1];
+                    sample += ',' + FC.SENSOR_DATA.kinematics[2];
                     break;
                 case 'MSP_ALTITUDE':
-                    sample += ',' + SENSOR_DATA.altitude;
+                    sample += ',' + FC.SENSOR_DATA.altitude;
                     break;
                 case 'MSP_RAW_GPS':
-                    sample += ',' + GPS_DATA.fix;
-                    sample += ',' + GPS_DATA.numSat;
-                    sample += ',' + (GPS_DATA.lat / 10000000);
-                    sample += ',' + (GPS_DATA.lon / 10000000);
-                    sample += ',' + GPS_DATA.alt;
-                    sample += ',' + GPS_DATA.speed;
-                    sample += ',' + GPS_DATA.ground_course;
+                    sample += ',' + FC.GPS_DATA.fix;
+                    sample += ',' + FC.GPS_DATA.numSat;
+                    sample += ',' + (FC.GPS_DATA.lat / 10000000);
+                    sample += ',' + (FC.GPS_DATA.lon / 10000000);
+                    sample += ',' + FC.GPS_DATA.alt;
+                    sample += ',' + FC.GPS_DATA.speed;
+                    sample += ',' + FC.GPS_DATA.ground_course;
                     break;
                 case 'MSP_ANALOG':
-                    sample += ',' + ANALOG.voltage;
-                    sample += ',' + ANALOG.amperage;
-                    sample += ',' + ANALOG.mAhdrawn;
-                    sample += ',' + ANALOG.rssi;
+                    sample += ',' + FC.ANALOG.voltage;
+                    sample += ',' + FC.ANALOG.amperage;
+                    sample += ',' + FC.ANALOG.mAhdrawn;
+                    sample += ',' + FC.ANALOG.rssi;
                     break;
                 case 'MSP_RC':
-                    for (var chan = 0; chan < RC.active_channels; chan++) {
-                        sample += ',' + RC.channels[chan];
+                    for (var chan = 0; chan < FC.RC.active_channels; chan++) {
+                        sample += ',' + FC.RC.channels[chan];
                     }
                     break;
                 case 'MSP_MOTOR':
-                    sample += ',' + MOTOR_DATA;
+                    sample += ',' + FC.MOTOR_DATA;
                     break;
                 case 'MSP_DEBUG':
-                    sample += ',' + SENSOR_DATA.debug;
+                    sample += ',' + FC.SENSOR_DATA.debug;
                     break;
             }
         }

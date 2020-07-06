@@ -2,8 +2,8 @@
 
 // return true if user has choose a special peripheral
 function isPeripheralSelected(peripheralName) {
-    for (var portIndex = 0; portIndex < SERIAL_CONFIG.ports.length; portIndex++) {
-        var serialPort = SERIAL_CONFIG.ports[portIndex];
+    for (var portIndex = 0; portIndex < FC.SERIAL_CONFIG.ports.length; portIndex++) {
+        var serialPort = FC.SERIAL_CONFIG.ports[portIndex];
         if (serialPort.functions.indexOf(peripheralName) >= 0) {
             return true;
         }

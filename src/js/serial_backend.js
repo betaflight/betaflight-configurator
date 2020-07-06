@@ -178,7 +178,7 @@ function finishClose(finishedCallback) {
     // Reset various UI elements
     $('span.i2c-error').text(0);
     $('span.cycle-time').text(0);
-    if (semver.gte(CONFIG.apiVersion, "1.20.0"))
+    if (semver.gte(FC.CONFIG.apiVersion, "1.20.0"))
         $('span.cpu-load').text('');
 
     // unlock port select & baud
@@ -247,31 +247,31 @@ function onOpen(openInfo) {
 
         // request configuration data
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
-            analytics.setFlightControllerData(analytics.DATA.API_VERSION, CONFIG.apiVersion);
+            analytics.setFlightControllerData(analytics.DATA.API_VERSION, FC.CONFIG.apiVersion);
 
-            GUI.log(i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
+            GUI.log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
 
-            if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
+            if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
 
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
-                    analytics.setFlightControllerData(analytics.DATA.FIRMWARE_TYPE, CONFIG.flightControllerIdentifier);
-                    if (CONFIG.flightControllerIdentifier === 'BTFL') {
+                    analytics.setFlightControllerData(analytics.DATA.FIRMWARE_TYPE, FC.CONFIG.flightControllerIdentifier);
+                    if (FC.CONFIG.flightControllerIdentifier === 'BTFL') {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
-                            analytics.setFlightControllerData(analytics.DATA.FIRMWARE_VERSION, CONFIG.flightControllerVersion);
+                            analytics.setFlightControllerData(analytics.DATA.FIRMWARE_VERSION, FC.CONFIG.flightControllerVersion);
 
-                            GUI.log(i18n.getMessage('fcInfoReceived', [CONFIG.flightControllerIdentifier, CONFIG.flightControllerVersion]));
-                            updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier);
-                            updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier);
+                            GUI.log(i18n.getMessage('fcInfoReceived', [FC.CONFIG.flightControllerIdentifier, FC.CONFIG.flightControllerVersion]));
+                            updateStatusBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier);
+                            updateTopBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier);
 
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
 
-                                GUI.log(i18n.getMessage('buildInfoReceived', [CONFIG.buildInfo]));
+                                GUI.log(i18n.getMessage('buildInfoReceived', [FC.CONFIG.buildInfo]));
 
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
                         });
                     } else {
-                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareType', CONFIG.flightControllerIdentifier);
+                        analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareType', FC.CONFIG.flightControllerIdentifier);
 
                         var dialog = $('.dialogConnectWarning')[0];
 
@@ -287,7 +287,7 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
-                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareVersion', CONFIG.apiVersion);
+                analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'ConnectionRefusedFirmwareVersion', FC.CONFIG.apiVersion);
 
                 var dialog = $('.dialogConnectWarning')[0];
 
@@ -324,17 +324,17 @@ function abortConnect() {
 }
 
 function processBoardInfo() {
-    analytics.setFlightControllerData(analytics.DATA.BOARD_TYPE, CONFIG.boardIdentifier);
-    analytics.setFlightControllerData(analytics.DATA.TARGET_NAME, CONFIG.targetName);
-    analytics.setFlightControllerData(analytics.DATA.BOARD_NAME, CONFIG.boardName);
-    analytics.setFlightControllerData(analytics.DATA.MANUFACTURER_ID, CONFIG.manufacturerId);
+    analytics.setFlightControllerData(analytics.DATA.BOARD_TYPE, FC.CONFIG.boardIdentifier);
+    analytics.setFlightControllerData(analytics.DATA.TARGET_NAME, FC.CONFIG.targetName);
+    analytics.setFlightControllerData(analytics.DATA.BOARD_NAME, FC.CONFIG.boardName);
+    analytics.setFlightControllerData(analytics.DATA.MANUFACTURER_ID, FC.CONFIG.manufacturerId);
     analytics.setFlightControllerData(analytics.DATA.MCU_TYPE, FC.getMcuType());
 
-    GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), CONFIG.boardVersion]));
-    updateStatusBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
-    updateTopBarVersion(CONFIG.flightControllerVersion, CONFIG.flightControllerIdentifier, FC.getHardwareName());
+    GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
+    updateStatusBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier, FC.getHardwareName());
+    updateTopBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier, FC.getHardwareName());
 
-    if (bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
+    if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
         var dialog = $('#dialogResetToCustomDefaults')[0];
 
         $('#dialogResetToCustomDefaults-acceptbtn').click(function() {
@@ -374,7 +374,7 @@ function checkReportProblems() {
     const problemItemTemplate = $('#dialogReportProblems-listItemTemplate');
 
     function checkReportProblem(problemName, problemDialogList) {
-        if (bit_check(CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
+        if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
             problemItemTemplate.clone().html(i18n.getMessage(`reportProblemsDialog${problemName}`)).appendTo(problemDialogList);
 
             analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, problemName);
@@ -390,19 +390,19 @@ function checkReportProblems() {
         const problemDialogList = $('#dialogReportProblems-list');
         problemDialogList.empty();
 
-        if (semver.gt(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
+        if (semver.gt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
             const problemName = 'API_VERSION_MAX_SUPPORTED';
             problemItemTemplate.clone().html(i18n.getMessage(`reportProblemsDialog${problemName}`,
-                [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.version, CONFIG.flightControllerVersion])).appendTo(problemDialogList);
+                [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.version, FC.CONFIG.flightControllerVersion])).appendTo(problemDialogList);
             needsProblemReportingDialog = true;
 
             analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT,
-                `${problemName};${CONFIGURATOR.API_VERSION_MAX_SUPPORTED};${CONFIG.apiVersion}`);
+                `${problemName};${CONFIGURATOR.API_VERSION_MAX_SUPPORTED};${FC.CONFIG.apiVersion}`);
         }
 
         needsProblemReportingDialog = checkReportProblem('MOTOR_PROTOCOL_DISABLED', problemDialogList) || needsProblemReportingDialog;
 
-        if (have_sensor(CONFIG.activeSensors, 'acc')) {
+        if (have_sensor(FC.CONFIG.activeSensors, 'acc')) {
             needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problemDialogList) || needsProblemReportingDialog;
         }
 
@@ -422,14 +422,14 @@ function checkReportProblems() {
 
 function processUid() {
     MSP.send_message(MSPCodes.MSP_UID, false, false, function () {
-        var uniqueDeviceIdentifier = CONFIG.uid[0].toString(16) + CONFIG.uid[1].toString(16) + CONFIG.uid[2].toString(16);
+        var uniqueDeviceIdentifier = FC.CONFIG.uid[0].toString(16) + FC.CONFIG.uid[1].toString(16) + FC.CONFIG.uid[2].toString(16);
 
         analytics.setFlightControllerData(analytics.DATA.MCU_ID, objectHash.sha1(uniqueDeviceIdentifier));
         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'Connected');
         connectionTimestamp = Date.now();
         GUI.log(i18n.getMessage('uniqueDeviceIdReceived', [uniqueDeviceIdentifier]));
 
-        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
             processName();
         } else {
             setRtc();
@@ -439,15 +439,15 @@ function processUid() {
 
 function processName() {
     MSP.send_message(MSPCodes.MSP_NAME, false, false, function () {
-        GUI.log(i18n.getMessage('craftNameReceived', [CONFIG.name]));
+        GUI.log(i18n.getMessage('craftNameReceived', [FC.CONFIG.name]));
 
-        CONFIG.armingDisabled = false;
+        FC.CONFIG.armingDisabled = false;
         mspHelper.setArmingEnabled(false, false, setRtc);
     });
 }
 
 function setRtc() {
-    if (semver.gte(CONFIG.apiVersion, "1.37.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
         MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
     } else {
         finishOpen();
@@ -457,7 +457,7 @@ function setRtc() {
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
     GUI.allowedTabs = GUI.defaultAllowedFCTabsWhenConnected.slice();
-    if (semver.lt(CONFIG.apiVersion, "1.4.0")) {
+    if (semver.lt(FC.CONFIG.apiVersion, "1.4.0")) {
         GUI.allowedTabs.splice(GUI.allowedTabs.indexOf('led_strip'), 1);
     }
 
@@ -502,7 +502,7 @@ function onConnect() {
             }
         });
 
-        if (CONFIG.boardType == 0) {
+        if (FC.CONFIG.boardType == 0) {
             if (classes.indexOf("osd-required") >= 0) {
                 found = false;
             }
@@ -511,21 +511,21 @@ function onConnect() {
         return found;
     }).show();
 
-    if (CONFIG.flightControllerVersion !== '') {
-        FEATURE_CONFIG.features = new Features(CONFIG);
-        BEEPER_CONFIG.beepers = new Beepers(CONFIG);
-        BEEPER_CONFIG.dshotBeaconConditions = new Beepers(CONFIG, [ "RX_LOST", "RX_SET" ]);
+    if (FC.CONFIG.flightControllerVersion !== '') {
+        FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
+        FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
+        FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, [ "RX_LOST", "RX_SET" ]);
 
         $('#tabs ul.mode-connected').show();
 
         MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
-        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
             MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
         }
         MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false);
 
-        if (CONFIG.boardType == 0 || CONFIG.boardType == 2) {
+        if (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) {
             startLiveDataRefreshTimer();
         }
     }
@@ -606,7 +606,7 @@ function sensor_status(sensors_detected) {
         $('.accicon', e_sensor_status).removeClass('active');
     }
 
-    if ((CONFIG.boardType == 0 || CONFIG.boardType == 2) && have_sensor(sensors_detected, 'gyro')) {
+    if ((FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) && have_sensor(sensors_detected, 'gyro')) {
         $('.gyro', e_sensor_status).addClass('on');
         $('.gyroicon', e_sensor_status).addClass('active');
     } else {
@@ -660,7 +660,7 @@ function have_sensor(sensors_detected, sensor_code) {
         case 'sonar':
             return bit_check(sensors_detected, 4);
         case 'gyro':
-            if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
                 return bit_check(sensors_detected, 5);
             } else {
                 return true;
@@ -684,7 +684,7 @@ function update_live_status() {
 
     if (GUI.active_tab != 'cli') {
         MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
-        if (semver.gte(CONFIG.apiVersion, "1.32.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.32.0")) {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         } else {
             MSP.send_message(MSPCodes.MSP_STATUS, false, false);
@@ -692,55 +692,55 @@ function update_live_status() {
         MSP.send_message(MSPCodes.MSP_ANALOG, false, false);
     }
 
-    var active = ((Date.now() - ANALOG.last_received_timestamp) < 300);
+    var active = ((Date.now() - FC.ANALOG.last_received_timestamp) < 300);
 
-    for (var i = 0; i < AUX_CONFIG.length; i++) {
-       if (AUX_CONFIG[i] == 'ARM') {
-               if (bit_check(CONFIG.mode, i))
+    for (var i = 0; i < FC.AUX_CONFIG.length; i++) {
+       if (FC.AUX_CONFIG[i] == 'ARM') {
+               if (bit_check(FC.CONFIG.mode, i))
                        $(".armedicon").addClass('active');
                else
                        $(".armedicon").removeClass('active');
        }
-       if (AUX_CONFIG[i] == 'FAILSAFE') {
-               if (bit_check(CONFIG.mode, i))
+       if (FC.AUX_CONFIG[i] == 'FAILSAFE') {
+               if (bit_check(FC.CONFIG.mode, i))
                        $(".failsafeicon").addClass('active');
                else
                        $(".failsafeicon").removeClass('active');
        }
     }
 
-    if (ANALOG != undefined) {
-        var nbCells = Math.floor(ANALOG.voltage / BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
+    if (FC.ANALOG != undefined) {
+        var nbCells = Math.floor(FC.ANALOG.voltage / FC.BATTERY_CONFIG.vbatmaxcellvoltage) + 1;
 
-        if (ANALOG.voltage == 0) {
+        if (FC.ANALOG.voltage == 0) {
                nbCells = 1;
         }
 
-       var min = BATTERY_CONFIG.vbatmincellvoltage * nbCells;
-       var max = BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
-       var warn = BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
+       var min = FC.BATTERY_CONFIG.vbatmincellvoltage * nbCells;
+       var max = FC.BATTERY_CONFIG.vbatmaxcellvoltage * nbCells;
+       var warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
 
        const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions  
 
-       if (ANALOG.voltage < min && ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
+       if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
            $(".battery-status").addClass('state-empty').removeClass('state-ok').removeClass('state-warning');
            $(".battery-status").css({
                width: "100%",
            });
        } else {
            $(".battery-status").css({
-               width: ((ANALOG.voltage - min) / (max - min) * 100) + "%",
+               width: ((FC.ANALOG.voltage - min) / (max - min) * 100) + "%",
            });
 
-           if (ANALOG.voltage < warn) {
+           if (FC.ANALOG.voltage < warn) {
                $(".battery-status").addClass('state-warning').removeClass('state-empty').removeClass('state-ok');
            } else  {
                $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
            }
        }
        
-       let cellsText = (ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM)? nbCells + 'S' : 'USB';
-       $(".battery-legend").text(ANALOG.voltage.toFixed(2) + "V (" + cellsText + ")");
+       let cellsText = (FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM)? nbCells + 'S' : 'USB';
+       $(".battery-legend").text(FC.ANALOG.voltage.toFixed(2) + "V (" + cellsText + ")");
 
     }
 
@@ -787,7 +787,7 @@ function update_dataflash_global() {
         return megabytes.toFixed(1) + "MB";
     }
 
-    var supportsDataflash = DATAFLASH.totalSize > 0;
+    var supportsDataflash = FC.DATAFLASH.totalSize > 0;
 
     if (supportsDataflash){
         $(".noflash_global").css({
@@ -799,10 +799,10 @@ function update_dataflash_global() {
         });
 
         $(".dataflash-free_global").css({
-           width: (100-(DATAFLASH.totalSize - DATAFLASH.usedSize) / DATAFLASH.totalSize * 100) + "%",
+           width: (100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100) + "%",
            display: 'block'
         });
-        $(".dataflash-free_global div").text('Dataflash: free ' + formatFilesize(DATAFLASH.totalSize - DATAFLASH.usedSize));
+        $(".dataflash-free_global div").text('Dataflash: free ' + formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize));
      } else {
         $(".noflash_global").css({
            display: 'block'

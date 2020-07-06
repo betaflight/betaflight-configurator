@@ -29,11 +29,11 @@ TABS.setup.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        if (semver.lt(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE)) {
+        if (semver.lt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE)) {
             $('#content .backup').addClass('disabled');
             $('#content .restore').addClass('disabled');
 
-            GUI.log(i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE]));
+            GUI.log(i18n.getMessage('initialSetupBackupAndRestoreApiVersion', [FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE]));
         }
 
         // initialize 3D Model
@@ -47,12 +47,12 @@ TABS.setup.initialize = function (callback) {
         $('span.heading').text(i18n.getMessage('initialSetupAttitude', [0]));
 
         // check if we have accelerometer and magnetometer
-        if (!have_sensor(CONFIG.activeSensors, 'acc')) {
+        if (!have_sensor(FC.CONFIG.activeSensors, 'acc')) {
             $('a.calibrateAccel').addClass('disabled');
             $('default_btn').addClass('disabled');
         }
 
-        if (!have_sensor(CONFIG.activeSensors, 'mag')) {
+        if (!have_sensor(FC.CONFIG.activeSensors, 'mag')) {
             $('a.calibrateMag').addClass('disabled');
             $('default_btn').addClass('disabled');
         }
@@ -61,7 +61,7 @@ TABS.setup.initialize = function (callback) {
 
         $('#arming-disable-flag').attr('title', i18n.getMessage('initialSetupArmingDisableFlagsTooltip'));
 
-        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
             if (isExpertModeEnabled()) {
                 $('.initialSetupRebootBootloader').show();
             } else {
@@ -151,7 +151,7 @@ TABS.setup.initialize = function (callback) {
 
         // reset yaw button hook
         $('div#interactive_block > a.reset').click(function () {
-            self.yaw_fix = SENSOR_DATA.kinematics[2] * - 1.0;
+            self.yaw_fix = FC.SENSOR_DATA.kinematics[2] * - 1.0;
             $(this).text(i18n.getMessage('initialSetupButtonResetZaxisValue', [self.yaw_fix]));
 
             console.log('YAW reset to 0 deg, fix: ' + self.yaw_fix + ' deg');
@@ -194,7 +194,7 @@ TABS.setup.initialize = function (callback) {
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading');
 
-        if (semver.lt(CONFIG.apiVersion, "1.36.0")) {
+        if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
             arming_disable_flags_e.hide();
         }
 
@@ -220,26 +220,26 @@ TABS.setup.initialize = function (callback) {
                                       'MSP',
                                      ];
 
-            if (semver.gte(CONFIG.apiVersion, "1.38.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.38.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
             }
 
-            if (semver.gte(CONFIG.apiVersion, "1.39.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
                 disarmFlagElements = disarmFlagElements.concat(['PARALYZE',
                                                                 'GPS']);
             }
 
-            if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
                 disarmFlagElements = disarmFlagElements.concat(['RESC']);
                 disarmFlagElements = disarmFlagElements.concat(['RPMFILTER']);
             }
-            if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
                 disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD',
                                                                 'DSHOT_BBANG']);
             }
-            if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                 disarmFlagElements = disarmFlagElements.concat(['NO_ACC_CAL', 'MOTOR_PROTO']);
             }
 
@@ -250,14 +250,14 @@ TABS.setup.initialize = function (callback) {
             arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"></span>');
 
             // Arming disabled flags
-            for (var i = 0; i < CONFIG.armingDisableCount; i++) {
+            for (var i = 0; i < FC.CONFIG.armingDisableCount; i++) {
 
                 // All the known elements but the ARM_SWITCH (it must be always the last element)
                 if (i < disarmFlagElements.length - 1) {
                     arming_disable_flags_e.append('<span id="initialSetupArmingDisableFlags' + i + '" class="cf_tip disarm-flag" title="' + i18n.getMessage('initialSetupArmingDisableFlagsTooltip' + disarmFlagElements[i]) + '" style="display: none;">' + disarmFlagElements[i] + '</span>');
 
                 // The ARM_SWITCH, always the last element
-                } else if (i == CONFIG.armingDisableCount - 1) {
+                } else if (i == FC.CONFIG.armingDisableCount - 1) {
                     arming_disable_flags_e.append('<span id="initialSetupArmingDisableFlags' + i + '" class="cf_tip disarm-flag" title="' + i18n.getMessage('initialSetupArmingDisableFlagsTooltipARM_SWITCH') + '" style="display: none;">ARM_SWITCH</span>');
 
                 // Unknown disarm flags
@@ -273,36 +273,36 @@ TABS.setup.initialize = function (callback) {
 
             MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
 
-                $('#initialSetupArmingAllowed').toggle(CONFIG.armingDisableFlags == 0);
+                $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags == 0);
 
-                for (var i = 0; i < CONFIG.armingDisableCount; i++) {
-                    $('#initialSetupArmingDisableFlags'+i).css('display',(CONFIG.armingDisableFlags & (1 << i)) == 0 ? 'none':'inline-block');
+                for (var i = 0; i < FC.CONFIG.armingDisableCount; i++) {
+                    $('#initialSetupArmingDisableFlags'+i).css('display',(FC.CONFIG.armingDisableFlags & (1 << i)) == 0 ? 'none':'inline-block');
                 }
 
             });
 
             MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
-                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [ANALOG.voltage]));
-                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [ANALOG.mAhdrawn]));
-                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [ANALOG.amperage.toFixed(2)]));
-                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((ANALOG.rssi / 1023) * 100).toFixed(0)]));
+                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
+                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
+                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
+                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
             });
 
-            if (have_sensor(CONFIG.activeSensors, 'gps')) {
+            if (have_sensor(FC.CONFIG.activeSensors, 'gps')) {
                 MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, function () {
-                    gpsFix_e.html((GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
-                    gpsSats_e.text(GPS_DATA.numSat);
-                    gpsLat_e.text((GPS_DATA.lat / 10000000).toFixed(4) + ' deg');
-                    gpsLon_e.text((GPS_DATA.lon / 10000000).toFixed(4) + ' deg');
+                    gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+                    gpsSats_e.text(FC.GPS_DATA.numSat);
+                    gpsLat_e.text((FC.GPS_DATA.lat / 10000000).toFixed(4) + ' deg');
+                    gpsLon_e.text((FC.GPS_DATA.lon / 10000000).toFixed(4) + ' deg');
                 });
             }
         }
 
         function get_fast_data() {
             MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
-                roll_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[0]]));
-                pitch_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[1]]));
-                heading_e.text(i18n.getMessage('initialSetupAttitude', [SENSOR_DATA.kinematics[2]]));
+                roll_e.text(i18n.getMessage('initialSetupAttitude', [FC.SENSOR_DATA.kinematics[0]]));
+                pitch_e.text(i18n.getMessage('initialSetupAttitude', [FC.SENSOR_DATA.kinematics[1]]));
+                heading_e.text(i18n.getMessage('initialSetupAttitude', [FC.SENSOR_DATA.kinematics[2]]));
 
                 self.renderModel();
                 self.updateInstruments();
@@ -322,9 +322,9 @@ TABS.setup.initializeInstruments = function() {
     var heading = $.flightIndicator('#heading', 'heading', options);
 
     this.updateInstruments = function() {
-        attitude.setRoll(SENSOR_DATA.kinematics[0]);
-        attitude.setPitch(SENSOR_DATA.kinematics[1]);
-        heading.setHeading(SENSOR_DATA.kinematics[2]);
+        attitude.setRoll(FC.SENSOR_DATA.kinematics[0]);
+        attitude.setPitch(FC.SENSOR_DATA.kinematics[1]);
+        heading.setHeading(FC.SENSOR_DATA.kinematics[2]);
     };
 };
 
@@ -335,9 +335,9 @@ TABS.setup.initModel = function () {
 };
 
 TABS.setup.renderModel = function () {
-    var x = (SENSOR_DATA.kinematics[1] * -1.0) * 0.017453292519943295,
-        y = ((SENSOR_DATA.kinematics[2] * -1.0) - this.yaw_fix) * 0.017453292519943295,
-        z = (SENSOR_DATA.kinematics[0] * -1.0) * 0.017453292519943295;
+    var x = (FC.SENSOR_DATA.kinematics[1] * -1.0) * 0.017453292519943295,
+        y = ((FC.SENSOR_DATA.kinematics[2] * -1.0) - this.yaw_fix) * 0.017453292519943295,
+        z = (FC.SENSOR_DATA.kinematics[0] * -1.0) * 0.017453292519943295;
 
     this.model.rotateTo(x, y, z);
 };

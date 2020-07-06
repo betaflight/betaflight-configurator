@@ -10,12 +10,12 @@ TABS.sensors.initialize = function (callback) {
 
     function initSensorData(){
         for (var i = 0; i < 3; i++) {
-            SENSOR_DATA.accelerometer[i] = 0;
-            SENSOR_DATA.gyroscope[i] = 0;
-            SENSOR_DATA.magnetometer[i] = 0;
-            SENSOR_DATA.sonar = 0;
-            SENSOR_DATA.altitude = 0;
-            SENSOR_DATA.debug[i] = 0;
+            FC.SENSOR_DATA.accelerometer[i] = 0;
+            FC.SENSOR_DATA.gyroscope[i] = 0;
+            FC.SENSOR_DATA.magnetometer[i] = 0;
+            FC.SENSOR_DATA.sonar = 0;
+            FC.SENSOR_DATA.altitude = 0;
+            FC.SENSOR_DATA.debug[i] = 0;
         }
     }
 
@@ -187,17 +187,17 @@ TABS.sensors.initialize = function (callback) {
         var checkboxes = $('.tab-sensors .info .checkboxes input');
         checkboxes.parent().show();
         
-        if (CONFIG.boardType == 0 || CONFIG.boardType == 2) { 
-            if (!have_sensor(CONFIG.activeSensors, 'acc')) {
+        if (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) { 
+            if (!have_sensor(FC.CONFIG.activeSensors, 'acc')) {
                 checkboxes.eq(1).prop('disabled', true);
             }
-            if (!have_sensor(CONFIG.activeSensors, 'mag')) {
+            if (!have_sensor(FC.CONFIG.activeSensors, 'mag')) {
                 checkboxes.eq(2).prop('disabled', true);
             }
-            if (!(have_sensor(CONFIG.activeSensors, 'baro') || (semver.gte(CONFIG.apiVersion, "1.40.0") && have_sensor(CONFIG.activeSensors, 'gps')))) {
+            if (!(have_sensor(FC.CONFIG.activeSensors, 'baro') || (semver.gte(FC.CONFIG.apiVersion, "1.40.0") && have_sensor(FC.CONFIG.activeSensors, 'gps')))) {
                 checkboxes.eq(3).prop('disabled', true);
             }
-            if (!have_sensor(CONFIG.activeSensors, 'sonar')) {
+            if (!have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
                 checkboxes.eq(4).prop('disabled', true);
             }
         } else {
@@ -243,7 +243,7 @@ TABS.sensors.initialize = function (callback) {
         });
 
         let altitudeHint_e = $('.tab-sensors #sensorsAltitudeHint');
-        if (semver.lt(CONFIG.apiVersion, "1.40.0")) {
+        if (semver.lt(FC.CONFIG.apiVersion, "1.40.0")) {
             altitudeHint_e.hide();
         }
 
@@ -367,57 +367,57 @@ TABS.sensors.initialize = function (callback) {
                 if (checkboxes[0]) {
                     updateGraphHelperSize(gyroHelpers);
 
-                    samples_gyro_i = addSampleToData(gyro_data, samples_gyro_i, SENSOR_DATA.gyroscope);
+                    samples_gyro_i = addSampleToData(gyro_data, samples_gyro_i, FC.SENSOR_DATA.gyroscope);
                     drawGraph(gyroHelpers, gyro_data, samples_gyro_i);
-                    raw_data_text_ements.x[0].text(SENSOR_DATA.gyroscope[0].toFixed(2));
-                    raw_data_text_ements.y[0].text(SENSOR_DATA.gyroscope[1].toFixed(2));
-                    raw_data_text_ements.z[0].text(SENSOR_DATA.gyroscope[2].toFixed(2));
+                    raw_data_text_ements.x[0].text(FC.SENSOR_DATA.gyroscope[0].toFixed(2));
+                    raw_data_text_ements.y[0].text(FC.SENSOR_DATA.gyroscope[1].toFixed(2));
+                    raw_data_text_ements.z[0].text(FC.SENSOR_DATA.gyroscope[2].toFixed(2));
                 }
 
                 if (checkboxes[1]) {
                     updateGraphHelperSize(accelHelpers);
 
-                    samples_accel_i = addSampleToData(accel_data, samples_accel_i, SENSOR_DATA.accelerometer);
+                    samples_accel_i = addSampleToData(accel_data, samples_accel_i, FC.SENSOR_DATA.accelerometer);
                     drawGraph(accelHelpers, accel_data, samples_accel_i);
-                    raw_data_text_ements.x[1].text(SENSOR_DATA.accelerometer[0].toFixed(2));
-                    raw_data_text_ements.y[1].text(SENSOR_DATA.accelerometer[1].toFixed(2));
-                    raw_data_text_ements.z[1].text(SENSOR_DATA.accelerometer[2].toFixed(2));
+                    raw_data_text_ements.x[1].text(FC.SENSOR_DATA.accelerometer[0].toFixed(2));
+                    raw_data_text_ements.y[1].text(FC.SENSOR_DATA.accelerometer[1].toFixed(2));
+                    raw_data_text_ements.z[1].text(FC.SENSOR_DATA.accelerometer[2].toFixed(2));
                 }
 
                 if (checkboxes[2]) {
                     updateGraphHelperSize(magHelpers);
 
-                    samples_mag_i = addSampleToData(mag_data, samples_mag_i, SENSOR_DATA.magnetometer);
+                    samples_mag_i = addSampleToData(mag_data, samples_mag_i, FC.SENSOR_DATA.magnetometer);
                     drawGraph(magHelpers, mag_data, samples_mag_i);
-                    raw_data_text_ements.x[2].text(SENSOR_DATA.magnetometer[0].toFixed(2));
-                    raw_data_text_ements.y[2].text(SENSOR_DATA.magnetometer[1].toFixed(2));
-                    raw_data_text_ements.z[2].text(SENSOR_DATA.magnetometer[2].toFixed(2));
+                    raw_data_text_ements.x[2].text(FC.SENSOR_DATA.magnetometer[0].toFixed(2));
+                    raw_data_text_ements.y[2].text(FC.SENSOR_DATA.magnetometer[1].toFixed(2));
+                    raw_data_text_ements.z[2].text(FC.SENSOR_DATA.magnetometer[2].toFixed(2));
                 }
             }
 
             function update_altitude_graph() {
                 updateGraphHelperSize(altitudeHelpers);
 
-                samples_altitude_i = addSampleToData(altitude_data, samples_altitude_i, [SENSOR_DATA.altitude]);
+                samples_altitude_i = addSampleToData(altitude_data, samples_altitude_i, [FC.SENSOR_DATA.altitude]);
                 drawGraph(altitudeHelpers, altitude_data, samples_altitude_i);
-                raw_data_text_ements.x[3].text(SENSOR_DATA.altitude.toFixed(2));
+                raw_data_text_ements.x[3].text(FC.SENSOR_DATA.altitude.toFixed(2));
             }
 
             function update_sonar_graphs() {
                 updateGraphHelperSize(sonarHelpers);
 
-                samples_sonar_i = addSampleToData(sonar_data, samples_sonar_i, [SENSOR_DATA.sonar]);
+                samples_sonar_i = addSampleToData(sonar_data, samples_sonar_i, [FC.SENSOR_DATA.sonar]);
                 drawGraph(sonarHelpers, sonar_data, samples_sonar_i);
-                raw_data_text_ements.x[4].text(SENSOR_DATA.sonar.toFixed(2));
+                raw_data_text_ements.x[4].text(FC.SENSOR_DATA.sonar.toFixed(2));
             }
 
             function update_debug_graphs() {
                 for (var i = 0; i < 4; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
 
-                    addSampleToData(debug_data[i], samples_debug_i, [SENSOR_DATA.debug[i]]);
+                    addSampleToData(debug_data[i], samples_debug_i, [FC.SENSOR_DATA.debug[i]]);
                     drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);
-                    raw_data_text_ements.x[5 + i].text(SENSOR_DATA.debug[i]);
+                    raw_data_text_ements.x[5 + i].text(FC.SENSOR_DATA.debug[i]);
                 }
                 samples_debug_i++;
             }

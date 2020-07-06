@@ -47,7 +47,7 @@ var Model = function (wrapper, canvas) {
     this.renderer.setSize(this.wrapper.width() * 2, this.wrapper.height() * 2);
 
     // load the model including materials
-    var model_file = useWebGLRenderer ? mixerList[MIXER_CONFIG.mixer - 1].model : 'fallback';
+    var model_file = useWebGLRenderer ? mixerList[FC.MIXER_CONFIG.mixer - 1].model : 'fallback';
 
     // Temporary workaround for 'custom' model until akfreak's custom model is merged.
     if (model_file == 'custom') { model_file = 'fallback'; }

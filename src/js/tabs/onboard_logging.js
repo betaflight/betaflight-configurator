@@ -61,7 +61,7 @@ TABS.onboard_logging.initialize = function (callback) {
             i18n.localizePage();
 
             var
-                dataflashPresent = DATAFLASH.totalSize > 0,
+                dataflashPresent = FC.DATAFLASH.totalSize > 0,
                 blackboxSupport;
 
             /*
@@ -69,7 +69,7 @@ TABS.onboard_logging.initialize = function (callback) {
              *
              * The best we can do on those targets is check the BLACKBOX feature bit to identify support for Blackbox instead.
              */
-            if ((BLACKBOX.supported || DATAFLASH.supported) && (semver.gte(CONFIG.apiVersion, "1.33.0") || FEATURE_CONFIG.features.isEnabled('BLACKBOX'))) {
+            if ((FC.BLACKBOX.supported || FC.DATAFLASH.supported) && (semver.gte(FC.CONFIG.apiVersion, "1.33.0") || FC.FEATURE_CONFIG.features.isEnabled('BLACKBOX'))) {
                 blackboxSupport = 'yes';
             } else {
                 blackboxSupport = 'no';
@@ -77,10 +77,10 @@ TABS.onboard_logging.initialize = function (callback) {
 
             $(".tab-onboard_logging")
                 .addClass("serial-supported")
-                .toggleClass("dataflash-supported", DATAFLASH.supported)
+                .toggleClass("dataflash-supported", FC.DATAFLASH.supported)
                 .toggleClass("dataflash-present", dataflashPresent)
-                .toggleClass("sdcard-supported", SDCARD.supported)
-                .toggleClass("blackbox-config-supported", BLACKBOX.supported)
+                .toggleClass("sdcard-supported", FC.SDCARD.supported)
+                .toggleClass("blackbox-config-supported", FC.BLACKBOX.supported)
 
                 .toggleClass("blackbox-supported", blackboxSupport === 'yes')
                 .toggleClass("blackbox-maybe-supported", blackboxSupport === 'maybe')
@@ -102,20 +102,20 @@ TABS.onboard_logging.initialize = function (callback) {
             var loggingRatesSelect = $(".blackboxRate select");
             var debugModeSelect = $(".blackboxDebugMode select");
 
-            if (BLACKBOX.supported) {
+            if (FC.BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
-                    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
-                        BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
-                    } else if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
-                        BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                        FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
+                    } else if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+                        FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     } else {
                         var rate = loggingRatesSelect.val().split('/');
-                        BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
-                        BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
+                        FC.BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
+                        FC.BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
                     }
-                    BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
-                    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
-                        PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
+                    FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
+                    if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+                        FC.PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
                         MSP.send_message(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG), false, save_to_eeprom);
                     }
                     MSP.send_message(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG), false, save_to_eeprom);
@@ -134,8 +134,8 @@ TABS.onboard_logging.initialize = function (callback) {
                 }
             }).change();
 
-            if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
-                if ((SDCARD.supported && deviceSelect.val() == 2) || (DATAFLASH.supported && deviceSelect.val() == 1)) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+                if ((FC.SDCARD.supported && deviceSelect.val() == 2) || (FC.DATAFLASH.supported && deviceSelect.val() == 1)) {
 
                     $(".tab-onboard_logging")
                         .toggleClass("msc-supported", true);
@@ -144,7 +144,7 @@ TABS.onboard_logging.initialize = function (callback) {
                          analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
 
                         var buffer = [];
-                        if (semver.gte(CONFIG.apiVersion, "1.41.0")) {
+                        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
                             if (GUI.operating_system === "Linux") {
                                 // Reboot into MSC using UTC time offset instead of user timezone
                                 // Linux seems to expect that the FAT file system timestamps are UTC based
@@ -169,26 +169,26 @@ TABS.onboard_logging.initialize = function (callback) {
     function populateDevices(deviceSelect) {
         deviceSelect.empty();
 
-        if (semver.gte(CONFIG.apiVersion, "1.33.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
             deviceSelect.append('<option value="0">' + i18n.getMessage('blackboxLoggingNone') + '</option>');
-            if (DATAFLASH.supported) {
+            if (FC.DATAFLASH.supported) {
                 deviceSelect.append('<option value="1">' + i18n.getMessage('blackboxLoggingFlash') + '</option>');
             }
-            if (SDCARD.supported) {
+            if (FC.SDCARD.supported) {
                 deviceSelect.append('<option value="2">' + i18n.getMessage('blackboxLoggingSdCard') + '</option>');
             }
             deviceSelect.append('<option value="3">' + i18n.getMessage('blackboxLoggingSerial') + '</option>');
         } else {
             deviceSelect.append('<option value="0">' + i18n.getMessage('blackboxLoggingSerial') + '</option>');
-            if (DATAFLASH.ready) {
+            if (FC.DATAFLASH.ready) {
                 deviceSelect.append('<option value="1">' + i18n.getMessage('blackboxLoggingFlash') + '</option>');
             }
-            if (SDCARD.supported) {
+            if (FC.SDCARD.supported) {
                 deviceSelect.append('<option value="2">' + i18n.getMessage('blackboxLoggingSdCard') + '</option>');
             }
         }
 
-        deviceSelect.val(BLACKBOX.blackboxDevice);
+        deviceSelect.val(FC.BLACKBOX.blackboxDevice);
     }
 
     function populateLoggingRates(loggingRatesSelect) {
@@ -197,20 +197,20 @@ TABS.onboard_logging.initialize = function (callback) {
         let loggingRates = [];
 
         let pidRate;
-        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
-            pidRate = CONFIG.sampleRateHz / PID_ADVANCED_CONFIG.pid_process_denom;
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+            pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
 
         } else {
 
             let pidRateBase = 8000;
 
-            if (semver.gte(CONFIG.apiVersion, "1.25.0") && semver.lt(CONFIG.apiVersion, "1.41.0") && PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0") && FC.PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
                 pidRateBase = 32000;
             }
-            pidRate = pidRateBase / PID_ADVANCED_CONFIG.gyro_sync_denom / PID_ADVANCED_CONFIG.pid_process_denom;
+            pidRate = pidRateBase / FC.PID_ADVANCED_CONFIG.gyro_sync_denom / FC.PID_ADVANCED_CONFIG.pid_process_denom;
         }
 
-        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_44)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             const sampleRateNum=5;
             for (let i = 0; i < sampleRateNum; i++) {
                 let loggingFrequency = Math.round(pidRate / (2**i));
@@ -221,8 +221,8 @@ TABS.onboard_logging.initialize = function (callback) {
                 }
                 loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
             }
-            loggingRatesSelect.val(BLACKBOX.blackboxSampleRate);
-        } else if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+            loggingRatesSelect.val(FC.BLACKBOX.blackboxSampleRate);
+        } else if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
             loggingRates = [
                 {text: "Disabled", hz: 0,     p_denom: 0},
                 {text: "500 Hz",   hz: 500,   p_denom: 16},
@@ -241,7 +241,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 }
             });
 
-            loggingRatesSelect.val(BLACKBOX.blackboxPDenom);
+            loggingRatesSelect.val(FC.BLACKBOX.blackboxPDenom);
         }
         else {
             loggingRates = [
@@ -271,14 +271,14 @@ TABS.onboard_logging.initialize = function (callback) {
                     + loggingRate + loggingRateUnit + ' (' + Math.round(loggingRates[i].num / loggingRates[i].denom * 100) + '%)</option>');
 
             }
-            loggingRatesSelect.val(BLACKBOX.blackboxRateNum + '/' + BLACKBOX.blackboxRateDenom);
+            loggingRatesSelect.val(FC.BLACKBOX.blackboxRateNum + '/' + FC.BLACKBOX.blackboxRateDenom);
         }
     }
 
     function populateDebugModes(debugModeSelect) {
         var debugModes = [];
 
-        if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
             $('.blackboxDebugMode').show();
 
             debugModes = [
@@ -344,7 +344,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 {text: "FF_INTERPOLATED"},
             ];
 
-            for (let i = 0; i < PID_ADVANCED_CONFIG.debugModeCount; i++) {
+            for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
                 if (i < debugModes.length) {
                     debugModeSelect.append(new Option(debugModes[i].text, i));
                 } else {
@@ -352,7 +352,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 }
             }
 
-            debugModeSelect.val(PID_ADVANCED_CONFIG.debugMode);
+            debugModeSelect.val(FC.PID_ADVANCED_CONFIG.debugMode);
         } else {
             $('.blackboxDebugMode').hide();
         }
@@ -399,23 +399,23 @@ TABS.onboard_logging.initialize = function (callback) {
     }
 
     function update_html() {
-        var dataflashPresent = DATAFLASH.totalSize > 0;
+        var dataflashPresent = FC.DATAFLASH.totalSize > 0;
 
-        update_bar_width($(".tab-onboard_logging .dataflash-used"), DATAFLASH.usedSize, DATAFLASH.totalSize, i18n.getMessage('dataflashUsedSpace'), false);
-        update_bar_width($(".tab-onboard_logging .dataflash-free"), DATAFLASH.totalSize - DATAFLASH.usedSize, DATAFLASH.totalSize, i18n.getMessage('dataflashFreeSpace'), false);
+        update_bar_width($(".tab-onboard_logging .dataflash-used"), FC.DATAFLASH.usedSize, FC.DATAFLASH.totalSize, i18n.getMessage('dataflashUsedSpace'), false);
+        update_bar_width($(".tab-onboard_logging .dataflash-free"), FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize, FC.DATAFLASH.totalSize, i18n.getMessage('dataflashFreeSpace'), false);
 
-        update_bar_width($(".tab-onboard_logging .sdcard-other"), SDCARD.totalSizeKB - SDCARD.freeSizeKB, SDCARD.totalSizeKB, i18n.getMessage('dataflashUnavSpace'), true);
-        update_bar_width($(".tab-onboard_logging .sdcard-free"), SDCARD.freeSizeKB, SDCARD.totalSizeKB, i18n.getMessage('dataflashLogsSpace'), true);
+        update_bar_width($(".tab-onboard_logging .sdcard-other"), FC.SDCARD.totalSizeKB - FC.SDCARD.freeSizeKB, FC.SDCARD.totalSizeKB, i18n.getMessage('dataflashUnavSpace'), true);
+        update_bar_width($(".tab-onboard_logging .sdcard-free"), FC.SDCARD.freeSizeKB, FC.SDCARD.totalSizeKB, i18n.getMessage('dataflashLogsSpace'), true);
 
-        $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", DATAFLASH.usedSize === 0);
+        $(".btn a.erase-flash, .btn a.save-flash").toggleClass("disabled", FC.DATAFLASH.usedSize === 0);
 
         $(".tab-onboard_logging")
-            .toggleClass("sdcard-error", SDCARD.state === MSP.SDCARD_STATE_FATAL)
-            .toggleClass("sdcard-initializing", SDCARD.state === MSP.SDCARD_STATE_CARD_INIT || SDCARD.state === MSP.SDCARD_STATE_FS_INIT)
-            .toggleClass("sdcard-ready", SDCARD.state === MSP.SDCARD_STATE_READY);
+            .toggleClass("sdcard-error", FC.SDCARD.state === MSP.SDCARD_STATE_FATAL)
+            .toggleClass("sdcard-initializing", FC.SDCARD.state === MSP.SDCARD_STATE_CARD_INIT || FC.SDCARD.state === MSP.SDCARD_STATE_FS_INIT)
+            .toggleClass("sdcard-ready", FC.SDCARD.state === MSP.SDCARD_STATE_READY);
 
-        if (semver.gte(CONFIG.apiVersion, "1.40.0")) {
-            var mscIsReady = dataflashPresent || (SDCARD.state === MSP.SDCARD_STATE_READY);
+        if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+            var mscIsReady = dataflashPresent || (FC.SDCARD.state === MSP.SDCARD_STATE_READY);
             $(".tab-onboard_logging")
                 .toggleClass("msc-not-ready", !mscIsReady);
 
@@ -427,7 +427,7 @@ TABS.onboard_logging.initialize = function (callback) {
         }
 
         var loggingStatus
-        switch (SDCARD.state) {
+        switch (FC.SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusNoCard'));
                 loggingStatus = 'SdCard: NotPresent';
@@ -449,16 +449,16 @@ TABS.onboard_logging.initialize = function (callback) {
                 loggingStatus = 'SdCard: FsInit';
             break;
             default:
-                $(".sdcard-status").text(i18n.getMessage('sdcardStatusUnknown',[SDCARD.state]));
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusUnknown',[FC.SDCARD.state]));
         }
 
-        if (dataflashPresent && SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
+        if (dataflashPresent && FC.SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
             loggingStatus = 'Dataflash';
-            analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, DATAFLASH.usedSize);
+            analytics.setFlightControllerData(analytics.DATA.LOG_SIZE, FC.DATAFLASH.usedSize);
         }
         analytics.setFlightControllerData(analytics.DATA.LOGGING_STATUS, loggingStatus);
 
-        if (SDCARD.supported && !sdcardTimer) {
+        if (FC.SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status
             sdcardTimer = setTimeout(function() {
                 sdcardTimer = false;
@@ -514,7 +514,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function flash_save_begin() {
         if (GUI.connected_to) {
             if (FC.boardHasVcp()) {
-                if (semver.gte(CONFIG.apiVersion, "1.31.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {
                     self.blockSize = self.VCP_BLOCK_SIZE_3_0;
@@ -525,7 +525,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
             // Begin by refreshing the occupied size in case it changed while the tab was open
             flash_update_summary(function() {
-                var maxBytes = DATAFLASH.usedSize;
+                var maxBytes = FC.DATAFLASH.usedSize;
 
                 prepare_file(function(fileWriter) {
                     var nextAddress = 0;
@@ -637,7 +637,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function poll_for_erase_completion() {
         flash_update_summary(function() {
             if (CONFIGURATOR.connectionValid && !eraseCancelled) {
-                if (DATAFLASH.ready) {
+                if (FC.DATAFLASH.ready) {
                     $(".dataflash-confirm-erase")[0].close();
                 } else {
                     setTimeout(poll_for_erase_completion, 500);
