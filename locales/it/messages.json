@@ -394,9 +394,6 @@
     "firmwareVersionNotSupported": {
         "message": "Questa versione del firmware <span class=\"message-negative\">non è supportata</span>. Si prega di aggiornare con un firmware che supporti la versione <strong>api $1</strong> o superiore. Usa il CLI per effettuare un backup prima di flashare la scheda. Puoi trovare la procedura nella documentazione.<br />In alternativa scarica una versione precedente del configuratore."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Il configuratore <span class=\"message-negative\">non supporta</span> firmware diversi da Cleanflight o Betaflight. Solo la modalità CLI è supportata."
-    },
     "firmwareUpgradeRequired": {
         "message": "La versione del firmware installata sul dispositivo necessita di un aggiornamento. Usa il CLI per effettuare un backup prima dell'aggiornamento. La procedura è disponibile nella documentazione. <br/>In alternativa puoi scaricare una versione precedente del configuratore."
     },
