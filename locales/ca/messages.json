@@ -409,7 +409,7 @@
         "message": "Aquest firmware <span class=\"message-negative\">no està suportat</span>. Siusplau, actualitza al firmware que suporti la versió api <strong>$1</strong> o millor. Utilitza el CLI per fer una còpia de seguretat abans de flashejar. La còpia i restauració al CLI està explicada a la documentació.<br />També pots fer servir una versió antiga del configurador si no estàs llest per actualitzar."
     },
     "firmwareTypeNotSupported": {
-        "message": "El firmware NO - Cleanflight/Betaflight <span class=\"message-negative\">no està suportat</span>, excepte pel mode CLI."
+        "message": "El firmware NO - Betaflight <span class=\"message-negative\">no està suportat</span>, excepte pel mode CLI."
     },
     "firmwareUpgradeRequired": {
         "message": "El firmware d'aquest dispositiu necessita ser actualitzat a una versió superior. Utilitza el CLI per fer una còpia de seguretat abans de flashejar. El procediment està explicat a la documentació.<br />D'altra banda pots descarregar i fer servir una versió antiga del configurador si no estàs preparat per actualitzar."
@@ -1358,6 +1358,15 @@
     },
     "configurationButtonSave": {
         "message": "Desa i Reinicia"
+    },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Valors del filtre dinàmic de banda eliminada (Notch) han canviat"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>ADVERTIMENT: alguns valors dinàmics de tall s’han canviat als valors predeterminats</b></span> perquè s’ha activat/desactivat el filtratge RPM.<br> Comproveu abans de volar."
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
     },
     "portsIdentifier": {
         "message": "Identificador"
