@@ -272,9 +272,6 @@
     "firmwareVersionNotSupported": {
         "message": "This firmware version is <span class=\"message-negative\">not supported</span>. Please upgrade to firmware that supports api version <strong>$1</strong> or higher. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Non - Cleanflight/Betaflight firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
-    },
     "firmwareUpgradeRequired": {
         "message": "יש צורך בעדכון הקושחה על בקר זה. השתמש בשורת הפקודה (CLI) לגיבוי ההגדרות לפני הצריבה. הוראות הגיבוי/שחזור מופיעות במסמכי העזרה. .<br /> לחילופין, באם אינך רוצה לשדרג את הגרסא של בקר הטיסה, הורד והשתמש בגרסא ישנה יותר של תוכנת ההגדרות (configurator)."
     },
