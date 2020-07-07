@@ -316,9 +316,6 @@
     "firmwareVersionNotSupported": {
         "message": "Tato verze firmwaru <span class=\"message-negative\">není podporována</span>. Prosím upgradujte na firmware, který podporuje API ve verzi <strong>$1</strong> nebo vyšší. Použijte CLI pro zálohování před aktualizací firmwaru. Postup pro CLI zálohu/obnovení je v dokumentaci.<br />Alternativně můžete použít starší verzi konfigurátoru, pokud nejste připraveni firmware aktualizovat."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Firmware nezaložený na Cleanflight/Betaflight <span class=\"message-negative\">není podporován</span>, pouze v CLI režimu."
-    },
     "firmwareUpgradeRequired": {
         "message": "Firmware na tomto zařízení vyžaduje aktualizaci na novější verzi. Použijte CLI režim pro zálohování před instalací. Procedura CLI zálohování a obnovení je popsána v dokumentaci.<br />Můžete také stáhnout starší verzi konfigurátoru, pokud nechcete provést aktualizaci."
     },
