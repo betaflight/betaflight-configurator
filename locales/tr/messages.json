@@ -109,9 +109,6 @@
     "firmwareVersionNotSupported": {
         "message": "Bu donanım yazılımı <span class=\"message-negative\">desteklenmiyor</span>. Lütfen api sürüm <strong>$1</strong> veya üstünü destekleyen donanım yazılımına yükseltin. Yanıp sönmeden önce yedeklemek için CLI kullanın. CLI yedekleme/geri kazanma prosedürü dökümanın içindedir.<br /> Yükseltmeye hazır değilseniz, alternatif olarak eski sürüm bir yapılandırıcıyı indirip kullanabilirsiniz."
     },
-    "firmwareTypeNotSupported": {
-        "message": "CLI modu dışında, Cleanfight/Betafight dışındaki yazılımlar <span class=\"message-negative\">desteklenmez</span>."
-    },
     "infoVersions": {
         "message": "Çalışan İşletim Sistemi: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Yapılandırıcı: <strong>{{configuratorVersion}}</strong>",
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
