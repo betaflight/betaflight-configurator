@@ -394,9 +394,6 @@
     "firmwareVersionNotSupported": {
         "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません</span>。<strong>$1</strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ / リストア手順はドキュメントに記載されています。<br/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
     },
-    "firmwareTypeNotSupported": {
-        "message": "CLIモードを除き、Cleanflight / Betaflight 以外のファームウェアは<span class=\"message-negative\">サポートされていません</span>。"
-    },
     "firmwareUpgradeRequired": {
         "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書き換えする前にCLIを使用してバックアップしてください。 CLIのバックアップ / リストア手順はドキュメントに記載されています。<br/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
     },
