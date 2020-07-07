@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "Zrezygnuj ze zbierania danych statystycznych"
     },
+    "cordovaForceComputerUI": {
+        "message": "Użyj interfejsu komputera zamiast interfejsu telefonu"
+    },
     "language_changed": {
         "message": "Zapisano zmianę języka"
     },
@@ -393,9 +396,6 @@
     },
     "firmwareVersionNotSupported": {
         "message": "Ta wersja oprogramowania kontrolera <span class=\"message-negative\">nie jest wspierana</span>. Proszę uaktualnij oprogramowaniedo wersji, która wspiera API <strong>$1</strong>, lub wyższej. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
-    },
-    "firmwareTypeNotSupported": {
-        "message": "Oprogramowanie nie będące Cleanflight/Betaflight <span class=\"message-negative\">nie jest wspierane</span>, z wyjątkiem trybu CLI."
     },
     "firmwareUpgradeRequired": {
         "message": "Oprogramowanie tego kontrolera lotu wymaga aktualizacji do nowszej wersji. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
