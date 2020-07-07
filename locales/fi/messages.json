@@ -272,9 +272,6 @@
     "firmwareVersionNotSupported": {
         "message": "Tätä laiteohjelmistoversiota <span class=\"message-negative\">ei tueta</span>. Päivitä laiteohjelmistoversioon joka tukee api-versiota <strong>$1</strong> tai sitä uudempaa. Käytä CLI: tä varmuuskopioimiseen ennen laiteohjelmiston päivitystä. CLI varmuuskopiointi/palautusprosessi lukee dokumentaatiossa.<br />Vaihtoehtoisesti lataa ja käytä configuratorin vanhaa versiota jos et ole valmis päivitykseen."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Cleanflight/Betaflight laiteohjelmiston ulkopuolisia ohjelmistoja  <span class=\"message-negative\">ei tueta</span>, CLI-tilan ulkopuolella."
-    },
     "firmwareUpgradeRequired": {
         "message": "Tämän laitteen laiteohjelmisto tarvitsee päivittää uudempaan versioon. Käytä CLI:tä varmuuskopioimiseen ennen päivittämistä.CLI varmuuskopiointi/palautusprosessista lisää tietoa dokumentaatiossa.<br />Vaihtoehtoisesti lataa ja käytä configuratorin vanhaa versiota jos et ole valmis päivitykseen."
     },
