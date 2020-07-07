@@ -492,7 +492,7 @@
         "message": "crwdns5414:0$1crwdne5414:0"
     },
     "firmwareTypeNotSupported": {
-        "message": "crwdns5415:0crwdne5415:0"
+        "message": "crwdns10232:0crwdne10232:0"
     },
     "firmwareUpgradeRequired": {
         "message": "crwdns5416:0crwdne5416:0"
@@ -1444,6 +1444,15 @@
     },
     "configurationButtonSave": {
         "message": "crwdns5649:0crwdne5649:0"
+    },
+    "dialogDynFiltersChangeTitle": {
+        "message": "crwdns10226:0crwdne10226:0"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "crwdns10228:0crwdne10228:0"
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "crwdns10230:0crwdne10230:0"
     },
     "portsIdentifier": {
         "message": "crwdns5650:0crwdne5650:0"
