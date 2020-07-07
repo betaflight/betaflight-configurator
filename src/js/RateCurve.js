@@ -88,7 +88,7 @@ var RateCurve = function (useLegacyCurve) {
         var expoPower;
         var rcRateConstant;
 
-        if (semver.gte(CONFIG.apiVersion, "1.20.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
             expoPower = 3;
             rcRateConstant = 200;
         } else {
@@ -157,7 +157,7 @@ RateCurve.prototype.rcCommandRawToDegreesPerSecond = function (rcData, rate, rcR
 
     if (rate !== undefined && rcRate !== undefined && rcExpo !== undefined) {
         let rcCommandf = this.rcCommand(rcData, 1, deadband);
-        if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             rcCommandf = rcCommandf / (500 - deadband);
         } else {
             rcCommandf = rcCommandf / 500;

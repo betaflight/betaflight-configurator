@@ -139,9 +139,9 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
         var onConnectHandler = function () {
 
-            GUI.log(i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
+            GUI.log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
 
-            if (semver.lt(CONFIG.apiVersion, "1.42.0")) {
+            if (semver.lt(FC.CONFIG.apiVersion, "1.42.0")) {
 
                 self.msp_connector.disconnect(function (disconnectionResult) {
 
@@ -153,7 +153,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
                     var rebootMode = 0; // FIRMWARE
-                    if (bit_check(CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
+                    if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
                         // Board has flash bootloader
                         GUI.log(i18n.getMessage('deviceRebooting_flashBootloader'));
                         console.log('flash bootloader detected');

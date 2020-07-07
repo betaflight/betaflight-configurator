@@ -126,8 +126,8 @@ function closeSerial() {
             checksum = bufView[3] ^ bufView[4];
 
             for (let i = 0; i < 16; i += 2) {
-                bufView[i + 5] = MOTOR_CONFIG.mincommand & 0x00FF;
-                bufView[i + 6] = MOTOR_CONFIG.mincommand >> 8;
+                bufView[i + 5] = FC.MOTOR_CONFIG.mincommand & 0x00FF;
+                bufView[i + 6] = FC.MOTOR_CONFIG.mincommand >> 8;
 
                 checksum ^= bufView[i + 5];
                 checksum ^= bufView[i + 6];
@@ -483,8 +483,8 @@ function startProcess() {
                 analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
             });
 
-            if (FEATURE_CONFIG && FEATURE_CONFIG.features !== 0) {
-                updateTabList(FEATURE_CONFIG.features);
+            if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
+                updateTabList(FC.FEATURE_CONFIG.features);
             }
         }).change();
     });
@@ -648,13 +648,13 @@ function updateTabList(features) {
         $('#tabs ul.mode-connected li.tab_osd').hide();
     }
 
-    if (semver.gte(CONFIG.apiVersion, "1.36.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
         $('#tabs ul.mode-connected li.tab_power').show();
     } else {
         $('#tabs ul.mode-connected li.tab_power').hide();
     }
 
-    if (semver.gte(CONFIG.apiVersion, "1.42.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
         $('#tabs ul.mode-connected li.tab_vtx').show();
     } else {
         $('#tabs ul.mode-connected li.tab_vtx').hide();
@@ -677,12 +677,12 @@ function generateFilename(prefix, suffix) {
     const date = new Date();
     let filename = prefix;
 
-    if (CONFIG) {
-        if (CONFIG.flightControllerIdentifier) {
-            filename = `${CONFIG.flightControllerIdentifier}_${filename}`;
+    if (FC.CONFIG) {
+        if (FC.CONFIG.flightControllerIdentifier) {
+            filename = `${FC.CONFIG.flightControllerIdentifier}_${filename}`;
         }
-        if(CONFIG.name && CONFIG.name.trim() !== '') {
-            filename = `${filename}_${CONFIG.name.trim().replace(' ', '_')}`;
+        if(FC.CONFIG.name && FC.CONFIG.name.trim() !== '') {
+            filename = `${filename}_${FC.CONFIG.name.trim().replace(' ', '_')}`;
         }
     }
 

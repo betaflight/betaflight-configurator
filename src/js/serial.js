@@ -122,8 +122,8 @@ var serial = {
                         case 'device_lost':
                         default:
                             console.log("serial disconnecting: " + info.error);
-                            CONFIG.armingDisabled = false;
-                            CONFIG.runawayTakeoffPreventionDisabled = false;
+                            FC.CONFIG.armingDisabled = false;
+                            FC.CONFIG.runawayTakeoffPreventionDisabled = false;
 
                             if (GUI.connected_to || GUI.connecting_to) {
                                 $('a.connect').click();

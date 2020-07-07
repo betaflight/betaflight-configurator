@@ -12,7 +12,7 @@ var CliAutoComplete = {
 };
 
 CliAutoComplete.isEnabled = function() {
-    return this.isBuilding() || (this.configEnabled && CONFIG.flightControllerIdentifier == "BTFL" && this.builder.state != 'fail');
+    return this.isBuilding() || (this.configEnabled && FC.CONFIG.flightControllerIdentifier == "BTFL" && this.builder.state != 'fail');
 };
 
 CliAutoComplete.isBuilding = function() {
@@ -397,7 +397,7 @@ CliAutoComplete._initTextcomplete = function() {
             search:  function(term, callback, match) {
                 sendOnEnter = false;
                 var arr = cache.resources;
-                if (semver.gte(CONFIG.flightControllerVersion, "4.0.0")) {
+                if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
                     arr = ['show'].concat(arr);
                 } else {
                     arr = ['list'].concat(arr);
@@ -509,7 +509,7 @@ CliAutoComplete._initTextcomplete = function() {
         })
     ]);
 
-    if (semver.gte(CONFIG.flightControllerVersion, "4.0.0")) {
+    if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
         $textarea.textcomplete('register', [
             strategy({ // "resource show all", from BF 4.0.0 onwards
                 match: /^(\s*resource\s+show\s+)(\w*)$/i,
@@ -527,12 +527,12 @@ CliAutoComplete._initTextcomplete = function() {
     var diffArgs1 = ["master", "profile", "rates", "all"];
     var diffArgs2 = [];
 
-    if (semver.lt(CONFIG.flightControllerVersion, "3.4.0")) {
+    if (semver.lt(FC.CONFIG.flightControllerVersion, "3.4.0")) {
         diffArgs2.push("showdefaults");
     } else {
         // above 3.4.0
         diffArgs2.push("defaults");
-        if (semver.gte(CONFIG.flightControllerVersion, "4.0.0")) {
+        if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
             diffArgs1.push("hardware");
             diffArgs2.push("bare");
         }
