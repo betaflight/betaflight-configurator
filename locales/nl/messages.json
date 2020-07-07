@@ -404,9 +404,6 @@
     "firmwareVersionNotSupported": {
         "message": "Dit besturingssysteem is <span class=\"message-negative\">niet ondersteund</span>. Upgrade alstublieft naar een besturingssysteem die wel API versie <strong>$1</strong> of hoger ondersteunt. Gebruik CLI om een backup te maken vóór het flashen. CLI backup/herstel procedure is terug te vinden in de documentatie.<br />Als alternatief kunt u een oudere versie van de configurator gebruiken als je nog niet wil upgraden."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Niet - Cleanflight/Betaflight besturingssysteem is <span class=\"message-negative\">niet ondersteund</span>, behalve de CLI modus."
-    },
     "firmwareUpgradeRequired": {
         "message": "Het besturingssysteem op dit apparaat moet worden geupgrade naar een nieuwere versie. Gebruik CLI om een backup te maken voor dat je begint met flashen. Hoe je dit moet doen staat in de documentatie.<br />Als alternatief kunt u een oudere versie van de configurator gebruiken als je nog niet wilt upgraden."
     },
