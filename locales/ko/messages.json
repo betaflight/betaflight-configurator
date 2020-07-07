@@ -469,7 +469,7 @@
         "message": "이 펌웨어 버전은 <span class=\"message-negative\">지원하지 않습니다</span>. API 버전 <strong>$1</strong> 이상을 지원하는 펌웨어로 업그레이드하십시오. 플래시하기 전에 CLI를 사용하여 백업하십시오. CLI 백업/복원 절차는 문서를 참고하십시오.<br />또는 업그레이드 준비가 되지 않은 경우 이전 버전의 컨피규레이터를 다운로드하여 사용하십시오."
     },
     "firmwareTypeNotSupported": {
-        "message": "클린플라이트/베타플라이트 펌웨어가 아닌 경우, CLI 모드를 제외하고 <span class=\"message-negative\">지원되지 않습니다.</span>"
+        "message": "베타플라이트 펌웨어가 아닌 경우, CLI 모드를 제외하고 <span class=\"message-negative\">지원되지 않습니다.</span>"
     },
     "firmwareUpgradeRequired": {
         "message": "이 기기의 펌웨어는 최신 버전으로 업그레이드해야합니다. 플래시하기 전에 CLI를 사용하여 백업하십시오. CLI 백업/복원 절차는 문서를 참고하십시오. <br />또는 업그레이드 준비가 되지 않은 경우 이전 버전의 컨피규레이터를 다운로드하여 사용하십시오."
@@ -1418,6 +1418,15 @@
     },
     "configurationButtonSave": {
         "message": "저장 및 재부팅"
+    },
+    "dialogDynFiltersChangeTitle": {
+        "message": "다이나믹 노치 값 변경"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>경고: 일부 다이나믹 노치 값이 기본값으로 변경되었습니다.</b></span> RPM 필터링이 활성화/비활성화되었기 때문에<br> 비행 전 반드시 확인하십시오."
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "확인"
     },
     "portsIdentifier": {
         "message": "식별자"
@@ -3569,6 +3578,15 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "Vbat이 낮아질 때 이를 보충하기 위해 PID 값을 증가시킵니다. 이것은 비행 내내 보다 일정한 비행 특성을 줄 것입니다. 적용되는 보정량은 $t(tabPower.message) 페이지에서 설정된 $t(powerBatteryMaximum.message)에서 계산되므로 적절한 값으로 설정되어 있는지 확인하십시오."
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbat 처짐 보상"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "배터리 처짐을 보상하여 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다. 보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br><br>더 많은 정보는 <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리</a>를 방문하십시오."
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I 텀 회전"
