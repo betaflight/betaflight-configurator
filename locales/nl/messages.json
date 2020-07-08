@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "Meld af voor het anoniem verzamelen van gegevens voor statistieken"
     },
+    "cordovaForceComputerUI": {
+        "message": "Gebruik computerschermindeling in plaats van telefoon indeling"
+    },
     "language_changed": {
         "message": "Taal aanpassing opgeslagen"
     },
@@ -211,6 +214,9 @@
     },
     "tabHelp": {
         "message": "Documentatie & ondersteuning"
+    },
+    "tabOptions": {
+        "message": "Opties"
     },
     "tabSetup": {
         "message": "Setup"
@@ -403,6 +409,9 @@
     },
     "firmwareVersionNotSupported": {
         "message": "Dit besturingssysteem is <span class=\"message-negative\">niet ondersteund</span>. Upgrade alstublieft naar een besturingssysteem die wel API versie <strong>$1</strong> of hoger ondersteunt. Gebruik CLI om een backup te maken vóór het flashen. CLI backup/herstel procedure is terug te vinden in de documentatie.<br />Als alternatief kunt u een oudere versie van de configurator gebruiken als je nog niet wil upgraden."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Firmware anders dan Betaflight is <span class=\"message-negative\">niet ondersteund</span>, behalve CLI modus."
     },
     "firmwareUpgradeRequired": {
         "message": "Het besturingssysteem op dit apparaat moet worden geupgrade naar een nieuwere versie. Gebruik CLI om een backup te maken voor dat je begint met flashen. Hoe je dit moet doen staat in de documentatie.<br />Als alternatief kunt u een oudere versie van de configurator gebruiken als je nog niet wilt upgraden."
@@ -1305,6 +1314,9 @@
     "configurationButtonSave": {
         "message": "Sla op en herstart"
     },
+    "dialogDynFiltersConfirm": {
+        "message": "Oké"
+    },
     "portsIdentifier": {
         "message": "Identificator"
     },
@@ -1440,6 +1452,10 @@
         "message": "Stap",
         "description": "One of the modes of anti gravity"
     },
+    "pidTuningAntiGravityGain": {
+        "message": "Gain",
+        "description": "Anti Gravity Gain Parameter"
+    },
     "pidTuningAntiGravityThres": {
         "message": "Drempel",
         "description": "Anti Gravity Threshold Parameter"
@@ -1457,6 +1473,14 @@
     "pidTuningDMinGain": {
         "message": "Toename",
         "description": "Gain of the D Min feature"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min biedt de mogelijkheid om standaard lagere D waardes te hebben. Maar tegelijkertijd ook weer hogere waardes bij snellere manoeuvres die zouden kunnen leiden tot een overshoot. Bijvoorbeeld bij snelle flips, rolls en prop wash. De Gain instelling regelt hoe snel de D waarde wordt verhoogd. Het verhogen of verlagen van de D waarde gebeurt met behulp van de gyro input. De Advance instelling maakt gebruik van de setpoint om te bepalen wat de D waarde moet zijn. Advance maakt geen gebruik van de gyro.",
+        "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Deze instelling regelt de dempingssterkte (D-term) bij normale voorwaartse vlucht. <br>Met D_min ingeschakeld verandert de actieve D-gain tijdens de vlucht. Bij normale voorwaartse vlucht is de waarde ingesteld op D_min. Tijdens een scherpe beweging of tijdens prop wash stijgt de actieve D-gain tot de D_max gains zoals deze hier links is gespecificeerd. <br> <br>Volledige D_max gains wordt bereikt bij scherpe stick-inputs. Echter worden deze slechts gedeeltelijk bereikt als er prop wash optreedt. <br>Pas de D_Min Gain en Advance instelling aan om de gevoeligheid en timing te regelen.",
+        "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PID Controller instellingen"
@@ -1579,6 +1603,9 @@
     "pidTuningRatesPreview": {
         "message": "Rates Voorbeeld"
     },
+    "pidTuningRatesTuningHelp": {
+        "message": "<b> Rates en Expo</b>: Bepaal uw stickgevoel op basis van deze parameters. Gebruik de grafiek en het 3D-model om uw voorkeursinstelling te vinden."
+    },
     "pidTuningRcExpo": {
         "message": "RC Expo"
     },
@@ -1660,6 +1687,9 @@
     "pidTuningReceivedProfile": {
         "message": "Vluchtcontroller stel profiel in: <strong class=\"message-positive\">$1</strong>"
     },
+    "pidTuningReceivedRateProfile": {
+        "message": "Vluchtcontroller stel profiel in: <strong class=\"message-positive\">$1</strong>"
+    },
     "pidTuningLoadedProfile": {
         "message": "Geladen profiel: <strong class=\"message-positive\">$1</strong>"
     },
@@ -1679,6 +1709,12 @@
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Waarschuwing:</b></span> De hoeveelheid filtering die u gebruikt is gevaarlijk laag. Uw drone zal hierdoor waarschijnlijk zeer moeilijk te besturen zijn en kan ook leiden tot flyaways. Het wordt ten zeerste aanbevolen dat u <b> ten minste één 'Gyro Dynamic Lowpass' of 'Gyro Lowpass 1' inschakelt. Maar ook tenminste één 'D Term Dynamic Lowpass' of 'D Term Lowpass 1'</b> inschakelt."
     },
+    "receiverThrottleMid": {
+        "message": "Throttle MID"
+    },
+    "receiverThrottleExpo": {
+        "message": "Throttle EXPO"
+    },
     "receiverStickMin": {
         "message": "'Stick Laag' drempel"
     },
@@ -1696,6 +1732,12 @@
     },
     "receiverHelpStickMax": {
         "message": "De minimale waarde (in us) voor een stick om herkend te worden als hoog / rechts voor commando-input (MAX_CHECK)."
+    },
+    "receiverDeadband": {
+        "message": "RC Deadband"
+    },
+    "receiverHelpDeadband": {
+        "message": "Dit zijn waarden (in us) die bepalen hoeveel RC-invoer er nodig is voordat deze als geldig wordt beschouwd. Voor zenders met jitter op lijn kan deze waarde worden verhoogd als bijvoorbeeld de rc-ingangen trillen tijdens inactiviteit."
     },
     "receiverHelp3dDeadbandThrottle": {
         "message": "Deze waarden zijn in us. Om de neutrale zone te verbreden dien je deze waarde te vergroten. <strong>Deze instelling is alleen voor 3D-throttle modus.</strong>"
@@ -1833,6 +1875,12 @@
     "adjustmentsFunction11": {
         "message": "Yaw D aanpassing"
     },
+    "adjustmentsFunction13": {
+        "message": "Pitch Rate"
+    },
+    "adjustmentsFunction14": {
+        "message": "Roll Rate"
+    },
     "adjustmentsFunction15": {
         "message": "Pitch P aanpassing"
     },
@@ -1853,6 +1901,9 @@
     },
     "adjustmentsFunction22_2": {
         "message": "Pitch & Roll F aanpassing"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Feedforward Transition"
     },
     "adjustmentsFunction26": {
         "message": "Pitch F aanpassing"
@@ -3294,6 +3345,9 @@
     "failsafeSwitchOptionStage2": {
         "message": "Fase 2"
     },
+    "failsafeSwitchOptionKill": {
+        "message": "Kill"
+    },
     "powerButtonSave": {
         "message": "Opslaan"
     },
@@ -3862,13 +3916,22 @@
         "message": "PID roll",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementPIDRoll": {
+        "message": "Roll axis PID gains"
+    },
     "osdTextElementPIDPitch": {
         "message": "PID pitch",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementPIDPitch": {
+        "message": "Pitch axis PID gains"
+    },
     "osdTextElementPIDYaw": {
         "message": "PID yaw",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPIDYaw": {
+        "message": "Yaw axis PID gains"
     },
     "osdTextElementPower": {
         "message": "Kracht",
@@ -4025,6 +4088,10 @@
     },
     "osdDescElementLogStatus": {
         "message": "Blackbox nummer en waarschuwingen"
+    },
+    "osdTextElementFlipArrow": {
+        "message": "Flip na crash pijl",
+        "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
         "message": "Pijl die laat zien welke kant de motoren hoger liggen in turtle modus"
@@ -4315,6 +4382,9 @@
     "osdTimerAlarm": {
         "message": "Alarm:"
     },
+    "osdTimerAlarmTooltip": {
+        "message": "Selecteer de alarmdrempel van de timer in minuten. Wanneer de tijd deze waarde overschrijdt, knippert het OSD-element. De waarde 0 zet het alarm uit"
+    },
     "osdTimerAlarmOptionRssi": {
         "message": "RSSI",
         "description": "Text of the RSSI alarm"
@@ -4338,17 +4408,29 @@
         "message": "Batterij waarschuwing",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningBatteryWarning": {
+        "message": "Waarschuwt wanneer de voltage onder de waarschuwingsdrempel komt"
+    },
     "osdWarningTextBatteryCritical": {
         "message": "Batterij kritiek",
         "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningBatteryCritical": {
+        "message": "Waarschuwt wanneer de voltage onder de minimale gemiddelde celspanning komt"
     },
     "osdWarningTextVisualBeeper": {
         "message": "Visuele pieper",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningVisualBeeper": {
+        "message": "Toont een visualisatie van de pieper (wordt weergegeven als 4 sterretjes)"
+    },
     "osdWarningTextCrashFlipMode": {
         "message": "Crash flip modus",
         "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningCrashFlipMode": {
+        "message": "Waarschuwt wanneer flip na crash modus is geactiveerd"
     },
     "osdWarningTextEscFail": {
         "message": "ESC faalt",
@@ -4364,12 +4446,26 @@
     "osdWarningCoreTemperature": {
         "message": "Waarschuwt wanneer de MCU kerntemperatuur de ingestelde drempelwaarde overschrijdt"
     },
+    "osdWarningTextRcSmoothingFailure": {
+        "message": "RC Smoothing-fout",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningRcSmoothingFailure": {
+        "message": "Waarschuwt wanneer de initialisatie van RC Smoothing is mislukt"
+    },
     "osdWarningTextFailsafe": {
         "message": "Uitval beveiliging",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningFailsafe": {
         "message": "Waarschuwt wanneer er een failsafe plaatsvindt"
+    },
+    "osdWarningTextLaunchControl": {
+        "message": "Launch control",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningLaunchControl": {
+        "message": "Waarschuwt wanneer de Launch Control-modus is geactiveerd"
     },
     "osdWarningTextGpsRescueUnavailable": {
         "message": "Redding via GPS is niet beschikbaar",
@@ -4437,6 +4533,9 @@
     "osdSectionHelpStats": {
         "message": "Stel de waarden in die zichtbaar zijn op het post-flight statistieken scherm."
     },
+    "osdSectionHelpWarnings": {
+        "message": "Schakel waarschuwingen in of uit die worden weergegeven op het WAARSCHUWINGEN-element."
+    },
     "osdSettingsSaved": {
         "message": "OSD instellingen opgeslagen"
     },
@@ -4469,6 +4568,10 @@
     "vtxFrequencyChannel": {
         "message": "Voer frequentie rechtstreeks in",
         "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxFrequencyChannelHelp": {
+        "message": "Als u dit inschakelt, laat de Configurator u een frequentie selecteren in plaats van de gebruikelijke band / kanaal. Om dit te laten werken, moet uw VTX deze functie ondersteunen.",
+        "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
         "message": "Geselecteerde modus",
@@ -4797,6 +4900,9 @@
     "pidTuningDeltaMeasurement": {
         "message": "Meting"
     },
+    "pidTuningDeltaTip": {
+        "message": "<b>Afgeleide van Fout</b> biedt meer directe stick-respons. Geniet de voorkeur bij racen. <br><br><b>Afgeleide van Meting</b> zorgt voor een soepelere stick-respons. Wordt bij freestyling vaak verkozen."
+    },
     "pidTuningRatesTip": {
         "message": "Speel met de instellingen en kijk hoe die de stick curve beïnvloeden"
     },
@@ -4896,6 +5002,9 @@
     "dialogRatesTypeTitle": {
         "message": "Rates type veranderen"
     },
+    "dialogRatesTypeNote": {
+        "message": "<span class=\"message-negative\"><b>WAARSCHUWING: U wijzigt de ratestype.</b></span> Als u deze instelling wijzigt dan zullen alle rate-instellingen terug worden gezet naar de standaard waarden."
+    },
     "dialogRatesTypeConfirm": {
         "message": "Wijzigen"
     },
@@ -4922,5 +5031,56 @@
     "gpsSbasNone": {
         "message": "Geen",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "Bestandsnaam"
+    },
+    "dialogFileNameDescription": {
+        "message": "Het bestand wordt opgeslagen in de map '{{folder}}' in uw interne opslag."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "Dit bestand bestaat al!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Overschrijven?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "Webview applicaties controleren..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Incompatibele webweergave"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Het installeren van de <b>{{app}}</b> app kan dit compatibiliteitsprobleem oplossen."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Installeer vanuit de Google Play Store"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "De-installatie van de <b>{{app}}</b> app kan dit compatibiliteitsprobleem oplossen. Als u de app niet kunt deïnstalleren, probeer deze dan uit te schakelen vanuit de instellingen app."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Deïnstalleren vanuit de Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Deïnstalleren / uitschakelen vanuit de instellingen"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "Updaten van de <b>{{app}}</b> app kan dit compatibiliteitsprobleem oplossen."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Update vanuit de Google Play Store"
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Instellingen openen"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Het lijkt erop dat uw apparaat niet compatibel is. Probeer een andere manier om uw webview bij te werken"
+    },
+    "cordovaNoWebview": {
+        "message": "Geen webview applicatie geïnstalleerd / ingeschakeld"
+    },
+    "cordovaWebviewUsed": {
+        "message": "gebruikt"
     }
 }
