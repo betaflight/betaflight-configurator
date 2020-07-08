@@ -1513,6 +1513,10 @@
         "message": "D Min umożliwia osiągnięcie niższego poziomu D w normalnym locie i wyższego poziomu w przypadku szybkich manewrów, które mogą powodować przewrócenie modelu nieie jak flipy i beczki, podnosi on również D podczas naporu powietrza na ster kierunku podczas lotu. Maximum dostosowuje D do maksymalnej wartości i opiera się na wskazaniach żyroskopu aby określić agresywność manewrów. Wyprzedzenie sprawia, że ​​D używa wartości określonej wcześniej przez użytkownika, zamiast żyroskopu do określania ostrych manewrów.",
         "description": "D Min feature helpicon message"
     },
+    "pidTuningDMinHelp": {
+        "message": "Kontroluje siłę tłumienia (D-term) w normalnym locie do przodu. <br> Przy włączonym D_min, podczas lotu zmienia się aktywność D. W normalnym locie do przodu następuje przyrost wartości D_min. Podczas agresywnych manewrów lub podczas podmuchów powietrza na ster kierunku, aktywny zysk D zwiększa się do wartości określonych po lewej stronie. <br><br> Pełne zyski są osiągane przy ostrym wychyleniu drążka, ale tylko częściowe są osiągane podczas podmuchów powietrza na ster kierunku. <br> Dostosuj wzmocnienie i przyspieszenie D_Min, aby kontrolować czułość i czas wzmocnienia.",
+        "description": "D Min helpicon message on PID table titlebar"
+    },
     "pidTuningPidSettings": {
         "message": "Ustawienia regulatora PID"
     },
@@ -1637,6 +1641,9 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): </strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. </span>"
+    },
+    "pidTuningFfInterpolateSp": {
+        "message": "Interpolacja FF"
     },
     "pidTuningFfInterpolate": {
         "message": "Tryb"
@@ -3296,6 +3303,10 @@
     "pidTuningMasterSliderHelp": {
         "message": "Zasadniczo większe modele wymagają wyższych wartości PID ze względu na niższy stosunek mocy do masy. <br> <br> Mniejsze modele (mikro) wymagają mniejszych wartości PID ze względu na wyższy stosunek mocy do masy. <br> <br> Wyższe wartości są dla większych modeli. Niższe wartości dotyczą mniejszych modeli.",
         "description": "Master gain tuning slider helpicon message"
+    },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Względnie wysokie D tłumi reakcje drążka i może powodować nagrzewanie się silników, ale powinno pomóc kontrolować oscylacje P oraz poprawić stabilizacje. <br> <br> Relatywnie niske D zapewnia szybszą reakcję drążka, ale może powodować znoszenie jednostki latającej.",
+        "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningPDGainSliderHelp": {
         "message": "Niskie wzmocnienie członów P i D może powodować większe oscylacje typu \"propwash\" w silnikach. Zbyt niska wartość wzmocnień tych parametrów może powodować niestabilność maszyny. <br><br> Parametry P i D działają w parze w w celu minimalizacji oscylacji \"propwash\".<br><br> Wysokie wartości tych parametrów mogą powodować grzanie się silników poprzez duże oscylacje wysterowania silnika które mogą wystąpić podczas płynnego lotu na wprost. Co jest powodowane wysokim parametrem D.",
