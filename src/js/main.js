@@ -15,7 +15,7 @@ function appReady() {
         CONFIGURATOR.gitChangesetId = data.gitChangesetId;
 
         // Version in the ChromeApp's manifest takes precedence.
-        if(chrome.runtime && chrome.runtime.getManifest) {
+        if(chrome.runtime && chrome.runtime.getManifest && !GUI.isCordova()) {
             const manifest = chrome.runtime.getManifest();
             CONFIGURATOR.version = manifest.version;
             // manifest.json for ChromeApp can't have a version
