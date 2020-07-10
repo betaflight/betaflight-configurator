@@ -179,6 +179,9 @@
     "deviceRebooting": {
         "message": "Apparaat - <span class=\"message-negative\">is aan het heropstarten</span>"
     },
+    "deviceRebooting_flashBootloader": {
+        "message": "Apparaat - <span class=\"message-negative\">Opnieuw opstarten naar FLASH BOOTLOADER</span>"
+    },
     "deviceRebooting_romBootloader": {
         "message": "Apparaat - <span class=\"message-negative\">is aan he herstarten naar ROM BOOTLOADER</span>"
     },
@@ -851,6 +854,10 @@
         "message": "De versnellingsmeter is niet gekalibreerd. Er zijn functies ingeschakeld die hierop vertrouwen. Kalibreer de versnellingsmeter.",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Er is geen motoruitgangsprotocol geselecteerd",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
     "initialSetupGPSHead": {
         "message": "GPS"
     },
@@ -1314,6 +1321,9 @@
     "configurationButtonSave": {
         "message": "Sla op en herstart"
     },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>WAARSCHUWING: sommige dynamische notch-waarden zijn gewijzigd naar de standaardwaarden</b></span> omdat de RPM-filtering is geactiveerd / gedeactiveerd. <br> Gelieve deze waardes te controleren voordat u gaat vliegen."
+    },
     "dialogDynFiltersConfirm": {
         "message": "Oké"
     },
@@ -1500,8 +1510,17 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Type RC smoothing gebruikt"
     },
+    "rcSmoothingInputCutoffHelp": {
+        "message": "De afsnijfrequentie in Hz die wordt gebruikt door het ingangsfilter. Het gebruik van lagere waarden resulteert in vloeiendere invoer en is geschikter voor langzamere ontvangerprotocollen. De meeste gebruikers moeten dit op 0 laten staan, wat overeenkomt met \"Auto\"."
+    },
+    "rcSmoothingDerivativeCutoffHelp": {
+        "message": "De afsnijfrequentie in Hz die wordt gebruikt door het setpoint-afgeleide filter. Het gebruik van lagere waarden resulteert in vloeiendere invoer en is geschikter voor langzamere ontvangerprotocollen. De meeste gebruikers moeten dit op 0 laten staan, wat overeenkomt met \"Auto\"."
+    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "De kanalen waarop de afvlakking invloed op heeft"
+    },
+    "rcSmoothingDerivativeTypeHelp": {
+        "message": "Het type filtermethode dat wordt gebruikt voor de setpointderivaat. Vanaf 4.2 wordt de standaardwaarde \"Auto\" aanbevolen. Voor 4.1 en eerder zouden de meeste gebruikers de standaard \"BIQUAD\" -waarde moeten gebruiken omdat het een goede balans biedt tussen soepelheid en vertraging. \"PT1\" vermindert de vertraging enigszins, maar zorgt voor minder afvlakking."
     },
     "rcSmoothingInputTypeHelp": {
         "message": "Het type filtermethode gebruikt voor de invoer. De meeste gebruikers dienen de standaardwaarde \"BIQUAD\" te gebruiken. Deze waarde biedt een goede balans tussen een vloeiende invoer en een daardoor geïntroduceerde vertraging. \"PT1\" vermindert de vertraging enigszins, maar geeft een mindere vloeiende invoer."
@@ -1509,11 +1528,20 @@
     "receiverRcSmoothingInputManual": {
         "message": "Selecteert of de invoer filter cutoff frequentie automatisch wordt berekend of handmatig wordt geselecteerd door de gebruiker. Automatisch is aanbevolen. Het gebruik van \"Handmatig\" wordt niet aanbevolen voor protocollen zoals Crossfire. Deze kunnen namelijk gedurende de vlucht veranderen."
     },
+    "receiverRcSmoothingDerivativeManual": {
+        "message": "Selecteert of de afsnijfrequentie van het setpoint-afgeleide filter automatisch wordt berekend (aanbevolen) of handmatig wordt geselecteerd door de gebruiker. Het gebruik van \"Manual\" wordt niet aanbevolen voor ontvangerprotocollen zoals Crossfire die tijdens de vlucht kunnen veranderen."
+    },
     "receiverRcSmoothingInputHz": {
         "message": "Ingang Afsnijfrequentie"
     },
+    "receiverRcSmoothingDerivativeCutoff": {
+        "message": "Afgeleide afsnijfrequentie"
+    },
     "receiverRcInputType": {
         "message": "Invoer Filter Type"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Afgeleide filtertype"
     },
     "receiverRcSmoothingDerivativeTypeOff": {
         "message": "Uit"
@@ -1554,6 +1582,9 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Het gebruik van een D Setpoint transitie tussen de 0 en 0.1 wordt afgeraden. Mocht je dit wel doen dan kan dit leiden tot instabiliteit en verminderde reactievermogen als je sticks het centrum van hun bereik passeren.</span>"
     },
+    "pidTuningFfInterpolateSp": {
+        "message": "FF Interpoleren"
+    },
     "pidTuningFfInterpolate": {
         "message": "Modus"
     },
@@ -1577,6 +1608,9 @@
     },
     "pidTuningIntegral": {
         "message": "Integraal"
+    },
+    "pidTuningDerivative": {
+        "message": "Derivaat"
     },
     "pidTuningDMax": {
         "message": "D max"
@@ -1739,6 +1773,9 @@
     "receiverHelpDeadband": {
         "message": "Dit zijn waarden (in us) die bepalen hoeveel RC-invoer er nodig is voordat deze als geldig wordt beschouwd. Voor zenders met jitter op lijn kan deze waarde worden verhoogd als bijvoorbeeld de rc-ingangen trillen tijdens inactiviteit."
     },
+    "receiverYawDeadband": {
+        "message": "Yaw Deadband"
+    },
     "receiverHelp3dDeadbandThrottle": {
         "message": "Deze waarden zijn in us. Om de neutrale zone te verbreden dien je deze waarde te vergroten. <strong>Deze instelling is alleen voor 3D-throttle modus.</strong>"
     },
@@ -1857,6 +1894,21 @@
     "adjustmentsFunction0": {
         "message": "Geen wijzigingen"
     },
+    "adjustmentsFunction1": {
+        "message": "RC Rate Aanpassing"
+    },
+    "adjustmentsFunction2": {
+        "message": "RC Expo Aanpassing"
+    },
+    "adjustmentsFunction3": {
+        "message": "Throttle Expo Aanpassing"
+    },
+    "adjustmentsFunction4": {
+        "message": "Pitch & Roll Rate Aanpassing"
+    },
+    "adjustmentsFunction5": {
+        "message": "Yaw Ratio Aanpassing"
+    },
     "adjustmentsFunction6": {
         "message": "Pitch & Roll P aanpassing"
     },
@@ -1874,6 +1926,9 @@
     },
     "adjustmentsFunction11": {
         "message": "Yaw D aanpassing"
+    },
+    "adjustmentsFunction12": {
+        "message": "Rate Profiel Selectie"
     },
     "adjustmentsFunction13": {
         "message": "Pitch Rate"
@@ -1899,8 +1954,17 @@
     "adjustmentsFunction20": {
         "message": "Roll D aanpassing"
     },
+    "adjustmentsFunction21": {
+        "message": "RC Rate Yaw"
+    },
+    "adjustmentsFunction22": {
+        "message": "D Setpoint"
+    },
     "adjustmentsFunction22_2": {
         "message": "Pitch & Roll F aanpassing"
+    },
+    "adjustmentsFunction23": {
+        "message": "D Setpoint Transition"
     },
     "adjustmentsFunction23_2": {
         "message": "Feedforward Transition"
@@ -2950,8 +3014,14 @@
     "pidTuningYawJumpPreventionHelp": {
         "message": "Voorkomt dat de quad aan het einde van een yaw omhoog te springt. Hoger waardes geeft meer demping aan het einde van een yaw bewegingen (werkt als de oude yaw D wat eigenlijk geen echte D waarde was zoals op alle andere assen)"
     },
+    "pidTuningRcExpoPower": {
+        "message": "RC Expo Power"
+    },
     "pidTuningRcExpoPowerHelp": {
         "message": "De exponent die wordt gebruikt bij het berekenen van RC Expo. In Betaflight versies vóór 3.0 is de waarde vastgezet op 3."
+    },
+    "pidTuningLevel": {
+        "message": "Hoek/horizon"
     },
     "pidTuningAltitude": {
         "message": "Barometer & Sonar/Hoogte"
@@ -3016,6 +3086,10 @@
         "message": "Sliders inschakelen",
         "description": "Button label for enabling sliders"
     },
+    "pidTuningSlidersNonExpertMode": {
+        "message": "<strong>Opmerking:</strong> het bereik van schuifregelaars is beperkt omdat u zich niet in de expertmodus bevindt. Dit bereik moet geschikt zijn voor de meeste builds en beginners.",
+        "description": "Sliders restricted message"
+    },
     "pidTuningSliderLow": {
         "message": "Laag",
         "description": "Tuning Slider Low header"
@@ -3035,6 +3109,22 @@
     "pidTuningPDRatioSlider": {
         "message": "PD Balans:",
         "description": "PD balance tuning slider label"
+    },
+    "pidTuningPDGainSlider": {
+        "message": "P and D Gain:",
+        "description": "P and D gain tuning slider label"
+    },
+    "pidTuningResponseSlider": {
+        "message": "Stick Response Gain:",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningMasterSliderHelp": {
+        "message": "Over het algemeen hebben grotere quads hogere PID-gains nodig vanwege een lagere verhouding tussen vermogen en gewicht.<br><br>Kleinere quads (micro's) hebben over het algemeen lagere PID-gains nodig vanwege een hogere verhouding tussen vermogen en gewicht.<br><br>Hogere waarden zijn voor quads met een lagere autoriteit. Lagere waarden zijn voor quads met een hogere autoriteit.",
+        "description": "Master gain tuning slider helpicon message"
+    },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Een relatief hoge D zal het reactievermogen van de stick dempen en kan resulteren in warme motoren. Maar het zorgt er ook voor dat P-oscillaties en propwash-beweging verbeteren.<br><br>Relatief lage D zorgt voor een snellere respons van de stick, maar zal niet helpen bij het verbeteren van propwash.",
+        "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filters"
@@ -3103,6 +3193,14 @@
         "message": "Gyro RPM Filter",
         "description": "Header text for the RPM Filter group"
     },
+    "pidTuningRpmHarmonics": {
+        "message": "Gyro RPM Filter Harmonics-nummer",
+        "description": "Text for one of the parameters of the RPM Filter"
+    },
+    "pidTuningRpmHarmonicsHelp": {
+        "message": "Aantal harmonischen per motor. Een waarde van 3 is aanbevolen voor de meeste quads. Deze waarde genereert 3 notch filters per motor voor elke as. Een waarde van 3 zal dus resulteren in 36 notches. (Xyz * notches * 4 motoren) In dit voorbeeld komt er dus een notch op de basismotorfrequentie en twee harmonischen op een veelvouden van die basisfrequentie.",
+        "description": "Help text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmMinHz": {
         "message": "Gyro RPM Filter Min Frequentie [Hz]",
         "description": "Text for one of the parameters of the RPM Filter"
@@ -3159,6 +3257,15 @@
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensatie"
     },
+    "pidTuningVbatPidCompensationHelp": {
+        "message": "Verhoogt de PID-waarden om te compenseren wanneer Vbat lager wordt. Dit zorgt voor meer constante vliegeigenschappen gedurende de totale vlucht. De hoeveelheid compensatie die wordt toegepast wordt berekend op basis van de $t(powerBatteryMaximum.message) die instelbaar is op de $t(tabPower.message)-pagina. Zorg ervoor dat deze correct is ingesteld."
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbat Sag Compenseren"
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I Term Rotatie"
     },
@@ -3191,12 +3298,18 @@
     "pidTuningItermRelaxTypeOptionGyro": {
         "message": "Gyro"
     },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Setpunt"
+    },
     "pidTuningItermRelaxCutoff": {
         "message": "Afsnijden",
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Controle"
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Throttle Boost"
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamische Stationaire Waarde [* 100 RPM]"
@@ -3781,6 +3894,9 @@
         "message": "RSSI waarde",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementRssiValue": {
+        "message": "Directe RSSI-waarde (knippert onder de alarmdrempel)"
+    },
     "osdTextElementTimer": {
         "message": "Timer",
         "description": "One of the elements of the OSD"
@@ -3999,6 +4115,13 @@
     },
     "osdDescElementNumericalHeading": {
         "message": "Numerieke weergave van de huidige koers in graden"
+    },
+    "osdTextElementNumericalVario": {
+        "message": "Numerieke vario",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementNumericalVario": {
+        "message": "Numerieke uitlezing van verticale snelheid (in voet of meter op basis van systeeminstelling)"
     },
     "osdTextElementCompassBar": {
         "message": "Kompas balk",
@@ -4296,6 +4419,9 @@
         "message": "Minimale linkkwaliteit",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatMinLinkQuality": {
+        "message": "Minimum van de alternatieve indicator voor 'linkkwaliteit' op basis van frameverlies"
+    },
     "osdTextStatFlightDistance": {
         "message": "Vlucht afstand",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -4356,6 +4482,9 @@
     },
     "osdTimerSource": {
         "message": "Bron:"
+    },
+    "osdTimerSourceTooltip": {
+        "message": "Selecteer de timerbron, dit regelt de duur / gebeurtenis die de timer meet"
     },
     "osdTimerSourceOptionOnTime": {
         "message": "Tijd aan",
@@ -4881,6 +5010,9 @@
     "pidTuningProfile": {
         "message": "Profiel"
     },
+    "pidTuningProfileTip": {
+        "message": "Er kunnen maximaal 3 (2 voor sommige controllers) verschillende pid-profielen worden opgeslagen op de vluchtcontroller. De pid-profielen bevatten onder andere instellingen voor pid, d setpoint en hoek / horizon instellingen. Eenmaal in het veld kunnen eenvoudige stick-commando's worden gebruikt om tussen deze profielen te schakelen. (zie de online documentatie hoe je dit kan inregelen)"
+    },
     "pidTuningRateProfile": {
         "message": "Rateprofiel"
     },
@@ -4893,6 +5025,9 @@
     "pidTuningRateSetupHelp": {
         "message": "Pas deze waarden aan om uw Rates in te stellen. Gebruik RC Rate om de maximale uiteindelijke rotatie te verhogen. Gebruik Super Rate om de rotatie aan het einde van de stick te beinvloeden. Gebruik RC Expo om het middelste bereid van de stick te beinvloeden.",
         "description": "Rate table helpicon message"
+    },
+    "pidTuningDelta": {
+        "message": "Afgeleide methode"
     },
     "pidTuningDeltaError": {
         "message": "Fout"
@@ -4947,6 +5082,9 @@
     },
     "onboardLoggingRebootMscText": {
         "message": "Massa Opslag Apparaatmodus Activeren"
+    },
+    "onboardLoggingMscNotReady": {
+        "message": "De massaopslagmodus kan niet worden geactiveerd omdat het opslagapparaat niet gereed is."
     },
     "dialogConfirmResetTitle": {
         "message": "Bevestig"
@@ -5049,6 +5187,15 @@
     },
     "cordovaIncompatibleWebview": {
         "message": "Incompatibele webweergave"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "U moet de webweergave van uw apparaat bijwerken om de configurator te gebruiken."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "De onderstaande tool is bedoeld om u te helpen bij het installeren van een nieuwe webview of het updaten van een reeds geïnstalleerde webview."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Beschikbare webview-applicaties op uw apparaat"
     },
     "cordovaWebviewInstall": {
         "message": "Het installeren van de <b>{{app}}</b> app kan dit compatibiliteitsprobleem oplossen."
