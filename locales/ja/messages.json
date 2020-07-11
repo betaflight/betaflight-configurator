@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "匿名の統計データ収集を無効"
     },
+    "cordovaForceComputerUI": {
+        "message": "電話インターフェイスの代わりにコンピュータインターフェイスを使用"
+    },
     "language_changed": {
         "message": "言語の変更を保存しました"
     },
@@ -198,6 +201,9 @@
     },
     "tabHelp": {
         "message": "マニュアル & サポート"
+    },
+    "tabOptions": {
+        "message": "オプション"
     },
     "tabSetup": {
         "message": "セットアップ"
@@ -393,6 +399,9 @@
     },
     "firmwareVersionNotSupported": {
         "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません</span>。<strong>$1</strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ / リストア手順はドキュメントに記載されています。<br/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
+    },
+    "firmwareTypeNotSupported": {
+        "message": "CLIモードを除き、Betaflight以外のファームウェアは<span class=\"message-negative\">サポートされていません</span>。"
     },
     "firmwareUpgradeRequired": {
         "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書き換えする前にCLIを使用してバックアップしてください。 CLIのバックアップ / リストア手順はドキュメントに記載されています。<br/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
@@ -1341,6 +1350,15 @@
     },
     "configurationButtonSave": {
         "message": "保存して再起動"
+    },
+    "dialogDynFiltersChangeTitle": {
+        "message": "動的ノッチ値の変更"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>警告: RPMフィルタリングが有効化/無効化されたため、一部の動的ノッチ値がデフォルト値に変更されました。</b></span><br>飛行前に確認してください。"
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
     },
     "portsIdentifier": {
         "message": "識別子"
@@ -3493,6 +3511,15 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Vbatが低下したとき、それを補正するためPID値を増加させます。 これにより、飛行中にさらに一定の飛行特性を与えられます。 適用される補正量は、 $t(tabPower.message) ページで設定された $t(powerBatteryMaximum.message) から計算されるため、適切な値に設定されていることを確認してください。"
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbat サグ値補正"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "バッテリーサグ値を補正することにより、使用可能なバッテリー電圧範囲にて一貫したスロットルとPIDパフォーマンスを提供します。補正量は0～100%の間で変更でき、完全な補正 (100%) を推奨します。<br><br>詳細は<a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">このWiki</a>にアクセスしてください。"
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I値 ローテーション"
     },
@@ -5580,5 +5607,68 @@
     "gpsSbasNone": {
         "message": "なし",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "ファイル名"
+    },
+    "dialogFileNameDescription": {
+        "message": "ファイルは内部ストレージの『{{folder}}』フォルダに保存されます。"
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "このファイルは既に存在します！"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "上書きしますか？"
+    },
+    "cordovaCheckingWebview": {
+        "message": "WebViewアプリケーションを確認しています..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "互換性のないWebView"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Betaflight Configuratorを使用するにはデバイスのWebViewを更新する必要があります。"
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "以下のツールは新しいWebViewをインストールしたり、既にインストール済のWebViewを更新したりするのに役立ちます。"
+    },
+    "cordovaAvailableWebviews": {
+        "message": "お使いのデバイスでWebViewアプリケーションは利用可能"
+    },
+    "cordovaWebviewInstall": {
+        "message": "<b>{{app}}</b> アプリをインストールすると、互換性問題が解消されます。"
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Google Playストアからインストール"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "<b>{{app}}</b>アプリをアンインストールすると、この互換性問題が解消されます。アンインストールできない場合はアプリ設定から無効にしてください。"
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Google Playストアからアンインストール"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "設定からアンインストール / 無効化"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "<b>{{app}}</b> アプリを更新すると、互換性問題が解消されます。"
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Google Playストアから更新"
+    },
+    "cordovaWebviewEnable": {
+        "message": "設定でデバイス情報タブに移動し、ビルドバージョン番号を10回タップし『開発者向けオプション』を有効にしてください。その後、開発者向けオプションを検索し、WebView Providerとして<b>{{app}}</b>を選択します。"
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "設定を開く"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "お使いのデバイスは互換性がないようです。他の方法でWebViewを更新してください。"
+    },
+    "cordovaNoWebview": {
+        "message": "WebViewアプリケーションが未インストール状態です"
+    },
+    "cordovaWebviewUsed": {
+        "message": "使用中"
     }
 }
