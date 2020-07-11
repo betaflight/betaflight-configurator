@@ -505,12 +505,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         });
 
-        $('input[id="unsyncedPWMSwitch"]').prop('checked', FC.PID_ADVANCED_CONFIGuse_unsyncedPwm !== 0).change();
+        $('input[id="unsyncedPWMSwitch"]').prop('checked', FC.PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0).change();
         $('input[name="unsyncedpwmfreq"]').val(FC.PID_ADVANCED_CONFIG.motor_pwm_rate);
         $('input[name="digitalIdlePercent"]').val(FC.PID_ADVANCED_CONFIG.digitalIdlePercent);
         if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
             let dshotBidirectional_e = $('input[id="dshotBidir"]');
-            dshotBidirectional_e.prop('checked', FC.MOTOR_CONFIGuse_dshot_telemetry).change();
+            dshotBidirectional_e.prop('checked', FC.MOTOR_CONFIG.use_dshot_telemetry).change();
 
             self.previousDshotBidir = FC.MOTOR_CONFIG.use_dshot_telemetry;
             self.previousFilterDynQ = FC.FILTER_CONFIG.dyn_notch_q;
@@ -520,7 +520,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 let value = $(this).prop('checked');
 
                 var newValue = undefined;
-                if (value !== FC.MOTOR_CONFIGuse_dshot_telemetry) {
+                if (value !== FC.MOTOR_CONFIG.use_dshot_telemetry) {
                     newValue = value ? 'On' : 'Off';
                 }
                 self.analyticsChanges['BidirectionalDshot'] = newValue;
@@ -597,7 +597,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             const escProtocolValue = parseInt($(this).val()) - 1;
 
             let newValue = undefined;
-            if (escProtocolValue !== FC.PID_ADVANCED_CONFIGfast_pwm_protocol) {
+            if (escProtocolValue !== FC.PID_ADVANCED_CONFIG.fast_pwm_protocol) {
                 newValue = $(this).find('option:selected').text();
             }
             self.analyticsChanges['EscProtocol'] = newValue;
@@ -656,7 +656,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
          };
 
          if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0")) {
-             gyroUse32kHzElement.prop('checked', FC.PID_ADVANCED_CONFIGgyroUse32kHz !== 0);
+             gyroUse32kHzElement.prop('checked', FC.PID_ADVANCED_CONFIG.gyroUse32kHz !== 0);
 
              gyroUse32kHzElement.change(function () {
                  const gyroBaseFreq = ($(this).is(':checked'))? 32 : 8;
@@ -684,7 +684,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             let pidBaseFreq;
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                pidBaseFreq = FC.CONFIGsampleRateHz / 1000;
+                pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
             } else {
                 pidBaseFreq = 8;
                 if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0") && gyroUse32kHzElement.is(':checked')) {
@@ -706,9 +706,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         pidSelectElement.val(FC.PID_ADVANCED_CONFIG.pid_process_denom);
 
-        $('input[id="accHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIGacc_hardware !== 1);
-        $('input[id="baroHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIGbaro_hardware !== 1);
-        $('input[id="magHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIGmag_hardware !== 1);
+        $('input[id="accHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIG.acc_hardware !== 1);
+        $('input[id="baroHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIG.baro_hardware !== 1);
+        $('input[id="magHardwareSwitch"]').prop('checked', FC.SENSOR_CONFIG.mag_hardware !== 1);
 
         // Only show these sections for supported FW
         if (semver.lt(FC.CONFIG.apiVersion, "1.16.0")) {
@@ -782,19 +782,19 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         gpsProtocolElement.change(function () {
-            FC.GPS_CONFIGprovider = parseInt($(this).val());
+            FC.GPS_CONFIG.provider = parseInt($(this).val());
 
             // Call this to enable or disable auto config elements depending on the protocol
             gpsAutoConfigElement.change();
 
         }).val(FC.GPS_CONFIG.provider).change();
 
-        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIGauto_baud === 1);
+        gpsAutoBaudElement.prop('checked', FC.GPS_CONFIG.auto_baud === 1);
 
         gpsAutoConfigElement.change(function () {
             const checked = $(this).is(":checked");
 
-            const ubloxSelected = FC.GPS_CONFIGprovider === gpsProtocols.indexOf('UBLOX');
+            const ubloxSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
 
             const enableGalileoVisible = checked && ubloxSelected && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43);
             gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
@@ -802,7 +802,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             const enableSbasVisible = checked && ubloxSelected;
             gpsUbloxSbasGroup.toggle(enableSbasVisible);
 
-        }).prop('checked', FC.GPS_CONFIGauto_config === 1).change();
+        }).prop('checked', FC.GPS_CONFIG.auto_config === 1).change();
 
         if (semver.gte(FC.CONFIG.apiVersion, "1.34.0")) {
             gpsAutoBaudGroup.show();
@@ -813,21 +813,21 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         gpsUbloxGalileoElement.change(function() {
-            FC.GPS_CONFIGublox_use_galileo = $(this).is(':checked') ? 1 : 0;
-        }).prop('checked', FC.GPS_CONFIGublox_use_galileo > 0).change();
+            FC.GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
+        }).prop('checked', FC.GPS_CONFIG.ublox_use_galileo > 0).change();
 
         for (let sbasIndex = 0; sbasIndex < gpsSbas.length; sbasIndex++) {
             gpsUbloxSbasElement.append(`<option value="${sbasIndex}">${gpsSbas[sbasIndex]}</option>`);
         }
 
         gpsUbloxSbasElement.change(function () {
-            FC.GPS_CONFIGublox_sbas = parseInt($(this).val());
+            FC.GPS_CONFIG.ublox_sbas = parseInt($(this).val());
         }).val(FC.GPS_CONFIG.ublox_sbas);
 
         $('.gps_home_once').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43));
         gpsHomeOnceElement.change(function() {
-            FC.GPS_CONFIGhome_point_once = $(this).is(':checked') ? 1 : 0;
-        }).prop('checked', FC.GPS_CONFIGhome_point_once > 0).change();
+            FC.GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
+        }).prop('checked', FC.GPS_CONFIG.home_point_once > 0).change();
 
         for (let baudRateIndex = 0; baudRateIndex < gpsBaudRates.length; baudRateIndex++) {
             gpsBaudrateElement.append(`<option value="${gpsBaudRates[baudRateIndex]}">${gpsBaudRates[baudRateIndex]}</option>`);
@@ -835,7 +835,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         if (semver.lt(FC.CONFIG.apiVersion, "1.6.0")) {
             gpsBaudrateElement.change(function () {
-                FC.SERIAL_CONFIGgpsBaudRate = parseInt($(this).val());
+                FC.SERIAL_CONFIG.gpsBaudRate = parseInt($(this).val());
             });
             gpsBaudrateElement.val(FC.SERIAL_CONFIG.gpsBaudRate);
         } else {
@@ -892,12 +892,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             var serialRxValue = parseInt($(this).val());
 
             var newValue;
-            if (serialRxValue !== FC.RX_CONFIGserialrx_provider) {
+            if (serialRxValue !== FC.RX_CONFIG.serialrx_provider) {
                 newValue = $(this).find('option:selected').text();
             }
             self.analyticsChanges['SerialRx'] = newValue;
 
-            FC.RX_CONFIGserialrx_provider = serialRxValue;
+            FC.RX_CONFIG.serialrx_provider = serialRxValue;
         });
 
         // select current serial RX type
@@ -955,12 +955,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 const value = parseInt($(this).val());
 
                 let newValue = undefined;
-                if (value !== FC.RX_CONFIGrxSpiProtocol) {
+                if (value !== FC.RX_CONFIG.rxSpiProtocol) {
                     newValue = $(this).find('option:selected').text();
                 }
                 self.analyticsChanges['SPIRXProtocol'] = newValue;
 
-                FC.RX_CONFIGrxSpiProtocol = value;
+                FC.RX_CONFIG.rxSpiProtocol = value;
             });
 
             // select current serial RX type
@@ -984,7 +984,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         //fill motor disarm params and FC loop time
         if(semver.gte(FC.CONFIG.apiVersion, "1.8.0")) {
             $('input[name="autodisarmdelay"]').val(FC.ARMING_CONFIG.auto_disarm_delay);
-            $('input[id="disarmkillswitch"]').prop('checked', FC.ARMING_CONFIGdisarm_kill_switch !== 0);
+            $('input[id="disarmkillswitch"]').prop('checked', FC.ARMING_CONFIG.disarm_kill_switch !== 0);
             $('div.disarm').show();
 
             $('div.cycles').show();
@@ -1019,7 +1019,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 }
 
                 batteryMeterType_e.change(function () {
-                    FC.MISCbatterymetertype = parseInt($(this).val());
+                    FC.MISC.batterymetertype = parseInt($(this).val());
                     checkUpdateVbatControls();
                 });
                 batteryMeterType_e.val(FC.MISC.batterymetertype).change();
@@ -1055,14 +1055,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             currentMeterType_e.change(function () {
-                FC.BF_CONFIGcurrentmetertype = parseInt($(this).val());
+                FC.BF_CONFIG.currentmetertype = parseInt($(this).val());
                 checkUpdateCurrentControls();
             });
             currentMeterType_e.val(FC.BF_CONFIG.currentmetertype).change();
 
             $('input[name="currentscale"]').val(FC.BF_CONFIG.currentscale);
             $('input[name="currentoffset"]').val(FC.BF_CONFIG.currentoffset);
-            $('input[name="multiwiicurrentoutput"]').prop('checked', FC.MISCmultiwiicurrentoutput !== 0);
+            $('input[name="multiwiicurrentoutput"]').prop('checked', FC.MISC.multiwiicurrentoutput !== 0);
         } else {
             $('.oldBatteryConfig').hide();
         }
@@ -1099,7 +1099,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                         $('.currentCalibration').hide();
                 }
 
-                if (FC.BF_CONFIG.currentmetertype !== 1 && FC.BF_CONFIGcurrentmetertype !== 2) {
+                if (FC.BF_CONFIG.currentmetertype !== 1 && FC.BF_CONFIG.currentmetertype !== 2) {
                     $('.currentCalibration').hide();
                 }
             } else {
@@ -1160,7 +1160,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input.feature', features_e).change(function () {
             var element = $(this);
 
-            FC.FEATURE_CONFIGfeatures.updateData(element);
+            FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
 
             switch (element.attr('name')) {
@@ -1202,7 +1202,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $(features_e).filter('select').change(function () {
             var element = $(this);
 
-            FC.FEATURE_CONFIGfeatures.updateData(element);
+            FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
 
             switch (element.attr('name')) {
@@ -1234,73 +1234,73 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         $('a.save').click(function () {
             // gather data that doesn't have automatic change event bound
-            FC.BOARD_ALIGNMENT_CONFIGroll = parseInt($('input[name="board_align_roll"]').val());
-            FC.BOARD_ALIGNMENT_CONFIGpitch = parseInt($('input[name="board_align_pitch"]').val());
-            FC.BOARD_ALIGNMENT_CONFIGyaw = parseInt($('input[name="board_align_yaw"]').val());
+            FC.BOARD_ALIGNMENT_CONFIG.roll = parseInt($('input[name="board_align_roll"]').val());
+            FC.BOARD_ALIGNMENT_CONFIG.pitch = parseInt($('input[name="board_align_pitch"]').val());
+            FC.BOARD_ALIGNMENT_CONFIG.yaw = parseInt($('input[name="board_align_yaw"]').val());
 
-            FC.CONFIGaccelerometerTrims[1] = parseInt($('input[name="roll"]').val());
-            FC.CONFIGaccelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
+            FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
+            FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
 
             // motor disarm
             if(semver.gte(FC.CONFIG.apiVersion, "1.8.0")) {
-                FC.ARMING_CONFIGauto_disarm_delay = parseInt($('input[name="autodisarmdelay"]').val());
-                FC.ARMING_CONFIGdisarm_kill_switch = $('input[id="disarmkillswitch"]').is(':checked') ? 1 : 0;
+                FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[name="autodisarmdelay"]').val());
+                FC.ARMING_CONFIG.disarm_kill_switch = $('input[id="disarmkillswitch"]').is(':checked') ? 1 : 0;
             }
             if(semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
-                FC.ARMING_CONFIGsmall_angle = parseInt($('input[id="configurationSmallAngle"]').val());
+                FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
             }
 
-            FC.MOTOR_CONFIGminthrottle = parseInt($('input[name="minthrottle"]').val());
-            FC.MOTOR_CONFIGmaxthrottle = parseInt($('input[name="maxthrottle"]').val());
-            FC.MOTOR_CONFIGmincommand = parseInt($('input[name="mincommand"]').val());
+            FC.MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
+            FC.MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
+            FC.MOTOR_CONFIG.mincommand = parseInt($('input[name="mincommand"]').val());
             if(semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
-                FC.MOTOR_CONFIGmotor_poles = parseInt($('input[name="motorPoles"]').val());
+                FC.MOTOR_CONFIG.motor_poles = parseInt($('input[name="motorPoles"]').val());
             }
 
             if(self.SHOW_OLD_BATTERY_CONFIG) {
-                FC.MISCvbatmincellvoltage = parseFloat($('input[name="mincellvoltage"]').val());
-                FC.MISCvbatmaxcellvoltage = parseFloat($('input[name="maxcellvoltage"]').val());
-                FC.MISCvbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
-                FC.MISCvbatscale = parseInt($('input[name="voltagescale"]').val());
+                FC.MISC.vbatmincellvoltage = parseFloat($('input[name="mincellvoltage"]').val());
+                FC.MISC.vbatmaxcellvoltage = parseFloat($('input[name="maxcellvoltage"]').val());
+                FC.MISC.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
+                FC.MISC.vbatscale = parseInt($('input[name="voltagescale"]').val());
 
-                FC.BF_CONFIGcurrentscale = parseInt($('input[name="currentscale"]').val());
-                FC.BF_CONFIGcurrentoffset = parseInt($('input[name="currentoffset"]').val());
-                FC.MISCmultiwiicurrentoutput = $('input[name="multiwiicurrentoutput"]').is(':checked') ? 1 : 0;
+                FC.BF_CONFIG.currentscale = parseInt($('input[name="currentscale"]').val());
+                FC.BF_CONFIG.currentoffset = parseInt($('input[name="currentoffset"]').val());
+                FC.MISC.multiwiicurrentoutput = $('input[name="multiwiicurrentoutput"]').is(':checked') ? 1 : 0;
             }
 
             if(semver.gte(FC.CONFIG.apiVersion, "1.14.0")) {
-                FC.MOTOR_3D_CONFIGdeadband3d_low = parseInt($('input[name="3ddeadbandlow"]').val());
-                FC.MOTOR_3D_CONFIGdeadband3d_high = parseInt($('input[name="3ddeadbandhigh"]').val());
-                FC.MOTOR_3D_CONFIGneutral = parseInt($('input[name="3dneutral"]').val());
+                FC.MOTOR_3D_CONFIG.deadband3d_low = parseInt($('input[name="3ddeadbandlow"]').val());
+                FC.MOTOR_3D_CONFIG.deadband3d_high = parseInt($('input[name="3ddeadbandhigh"]').val());
+                FC.MOTOR_3D_CONFIG.neutral = parseInt($('input[name="3dneutral"]').val());
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
                 FC.SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());
             }
 
-            FC.PID_ADVANCED_CONFIGfast_pwm_protocol = parseInt(esc_protocol_e.val()-1);
-            FC.PID_ADVANCED_CONFIGuse_unsyncedPwm = $('input[id="unsyncedPWMSwitch"]').is(':checked') ? 1 : 0;
-            FC.PID_ADVANCED_CONFIGmotor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
-            FC.PID_ADVANCED_CONFIGgyro_sync_denom = parseInt(gyroSelectElement.val());
+            FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = parseInt(esc_protocol_e.val()-1);
+            FC.PID_ADVANCED_CONFIG.use_unsyncedPwm = $('input[id="unsyncedPWMSwitch"]').is(':checked') ? 1 : 0;
+            FC.PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
+            FC.PID_ADVANCED_CONFIG.gyro_sync_denom = parseInt(gyroSelectElement.val());
 
             const value = parseInt(pidSelectElement.val());
 
-            if (value !== FC.PID_ADVANCED_CONFIGpid_process_denom) {
+            if (value !== FC.PID_ADVANCED_CONFIG.pid_process_denom) {
                 const newFrequency = pidSelectElement.find('option:selected').text();
                 self.analyticsChanges['PIDLoopSettings'] = `denominator: ${value} | frequency: ${newFrequency}`;
             } else {
                 self.analyticsChanges['PIDLoopSettings'] = undefined;
             }
 
-            FC.PID_ADVANCED_CONFIGpid_process_denom = value;
+            FC.PID_ADVANCED_CONFIG.pid_process_denom = value;
 
-            FC.PID_ADVANCED_CONFIGdigitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
+            FC.PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
             if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0")) {
-                FC.PID_ADVANCED_CONFIGgyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
+                FC.PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
-                FC.RX_CONFIGfpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
+                FC.RX_CONFIG.fpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
             }
 
             analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
@@ -1355,8 +1355,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_gps_config() {
                 if (semver.gte(FC.CONFIG.apiVersion, "1.34.0")) {
-                    FC.GPS_CONFIGauto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
-                    FC.GPS_CONFIGauto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
+                    FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
+                    FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
                 }
 
                 var next_callback = save_motor_3d_config;
@@ -1396,9 +1396,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_sensor_config() {
-                FC.SENSOR_CONFIGacc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
-                FC.SENSOR_CONFIGbaro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
-                FC.SENSOR_CONFIGmag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
+                FC.SENSOR_CONFIG.acc_hardware = $('input[id="accHardwareSwitch"]').is(':checked') ? 0 : 1;
+                FC.SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(':checked') ? 0 : 1;
+                FC.SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(':checked') ? 0 : 1;
 
                 var next_callback = save_name;
                 MSP.send_message(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG), false, next_callback);
@@ -1411,7 +1411,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     next_callback = save_battery;
                 }
 
-                FC.CONFIGname = $.trim($('input[name="craftName"]').val());
+                FC.CONFIG.name = $.trim($('input[name="craftName"]').val());
                 MSP.send_message(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME), false, next_callback);
             }
 
