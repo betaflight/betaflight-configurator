@@ -227,6 +227,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             updateColors(ip.eq(i).val(), i);
         }
 
+        const colorDefineSliders = $('.colorDefineSliders');
+
         // Color Buttons
         $('.colors').on('click', 'button', function(e) {
             var that = this;
@@ -266,15 +268,26 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         });
 
         $('.colors').on('dblclick', 'button', function() {
-            $('.colorDefineSliders').css('left', $(this).position().left - $('.colorDefineSliders').width() / 2 + $(this).width());
-            $('.colorDefineSliders').css('top', $(this).position().top + 26);
-            $('.colorDefineSliders').show();
+            const position = $(this).position();
+            const colorDefineSlidersWidth = colorDefineSliders.width();
+            const width = $(this).width();
+            const calc = $(this).offset().left + colorDefineSlidersWidth / 2 + width + 14;
+            if (calc > $(window).width()) {
+                colorDefineSliders.css('left', 'auto');
+                colorDefineSliders.css('right', 0);
+            } else {
+                colorDefineSliders.css('left', position.left - colorDefineSlidersWidth / 2 + width);
+                colorDefineSliders.css('right', 'auto');
+            }
+            colorDefineSliders.css('top', position.top + 26);
+            colorDefineSliders.show();
         });
 
         $('.colors').children().on({
             mouseleave: function () {
-                if (!$('.colorDefineSliders').is(":hover"))
-                    $('.colorDefineSliders').hide();
+                if (!colorDefineSliders.is(":hover")) {
+                    colorDefineSliders.hide();
+                }
             }
         });
 
@@ -585,7 +598,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         });
 
-        $('.colorDefineSliders').hide();
+        colorDefineSliders.hide();
 
         applyFunctionToSelectedLeds();
         drawColorBoxesInColorLedPoints();
