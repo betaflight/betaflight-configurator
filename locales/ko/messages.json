@@ -5738,5 +5738,11 @@
     },
     "cordovaWebviewUsed": {
         "message": "사용됨"
+    },
+    "cordovaExitAppTitle": {
+        "message": "확인"
+    },
+    "cordovaExitAppMessage": {
+        "message": "정말 컨피규레이터를 종료하시겠습니까?"
     }
 }
