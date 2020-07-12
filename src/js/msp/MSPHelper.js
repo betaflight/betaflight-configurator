@@ -1095,69 +1095,71 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.ADVANCED_TUNING_ACTIVE = { ...FC.ADVANCED_TUNING };
                 break;
             case MSPCodes.MSP_PID_ADVANCED:
-                FC.ADVANCED_TUNING.rollPitchItermIgnoreRate = data.readU16();
-                FC.ADVANCED_TUNING.yawItermIgnoreRate = data.readU16();
-                FC.ADVANCED_TUNING.yaw_p_limit = data.readU16();
-                FC.ADVANCED_TUNING.deltaMethod = data.readU8();
-                FC.ADVANCED_TUNING.vbatPidCompensation = data.readU8();
-                if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-                    if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
-                        FC.ADVANCED_TUNING.feedforwardTransition = data.readU8();
-                    } else {
-                        FC.ADVANCED_TUNING.dtermSetpointTransition = data.readU8();
-                    }
-                    FC.ADVANCED_TUNING.dtermSetpointWeight = data.readU8();
-                    FC.ADVANCED_TUNING.toleranceBand = data.readU8();
-                    FC.ADVANCED_TUNING.toleranceBandReduction = data.readU8();
-                    FC.ADVANCED_TUNING.itermThrottleGain = data.readU8();
-                    FC.ADVANCED_TUNING.pidMaxVelocity = data.readU16();
-                    FC.ADVANCED_TUNING.pidMaxVelocityYaw = data.readU16();
-                    if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
-                        FC.ADVANCED_TUNING.levelAngleLimit = data.readU8();
-                        FC.ADVANCED_TUNING.levelSensitivity = data.readU8();
+                if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
+                    FC.ADVANCED_TUNING.rollPitchItermIgnoreRate = data.readU16();
+                    FC.ADVANCED_TUNING.yawItermIgnoreRate = data.readU16();
+                    FC.ADVANCED_TUNING.yaw_p_limit = data.readU16();
+                    FC.ADVANCED_TUNING.deltaMethod = data.readU8();
+                    FC.ADVANCED_TUNING.vbatPidCompensation = data.readU8();
+                    if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
+                        if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+                            FC.ADVANCED_TUNING.feedforwardTransition = data.readU8();
+                        } else {
+                            FC.ADVANCED_TUNING.dtermSetpointTransition = data.readU8();
+                        }
+                        FC.ADVANCED_TUNING.dtermSetpointWeight = data.readU8();
+                        FC.ADVANCED_TUNING.toleranceBand = data.readU8();
+                        FC.ADVANCED_TUNING.toleranceBandReduction = data.readU8();
+                        FC.ADVANCED_TUNING.itermThrottleGain = data.readU8();
+                        FC.ADVANCED_TUNING.pidMaxVelocity = data.readU16();
+                        FC.ADVANCED_TUNING.pidMaxVelocityYaw = data.readU16();
+                        if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
+                            FC.ADVANCED_TUNING.levelAngleLimit = data.readU8();
+                            FC.ADVANCED_TUNING.levelSensitivity = data.readU8();
 
-                        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
-                            FC.ADVANCED_TUNING.itermThrottleThreshold = data.readU16();
-                            FC.ADVANCED_TUNING.itermAcceleratorGain = data.readU16();
+                            if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+                                FC.ADVANCED_TUNING.itermThrottleThreshold = data.readU16();
+                                FC.ADVANCED_TUNING.itermAcceleratorGain = data.readU16();
 
-                            if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
-                                FC.ADVANCED_TUNING.dtermSetpointWeight = data.readU16();
+                                if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
+                                    FC.ADVANCED_TUNING.dtermSetpointWeight = data.readU16();
 
-                                if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
-                                    FC.ADVANCED_TUNING.itermRotation = data.readU8();
-                                    FC.ADVANCED_TUNING.smartFeedforward = data.readU8();
-                                    FC.ADVANCED_TUNING.itermRelax = data.readU8();
-                                    FC.ADVANCED_TUNING.itermRelaxType = data.readU8();
-                                    FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
-                                    FC.ADVANCED_TUNING.throttleBoost = data.readU8();
-                                    FC.ADVANCED_TUNING.acroTrainerAngleLimit = data.readU8();
-                                    FC.ADVANCED_TUNING.feedforwardRoll  = data.readU16();
-                                    FC.ADVANCED_TUNING.feedforwardPitch = data.readU16();
-                                    FC.ADVANCED_TUNING.feedforwardYaw   = data.readU16();
-                                    FC.ADVANCED_TUNING.antiGravityMode  = data.readU8();
+                                    if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+                                        FC.ADVANCED_TUNING.itermRotation = data.readU8();
+                                        FC.ADVANCED_TUNING.smartFeedforward = data.readU8();
+                                        FC.ADVANCED_TUNING.itermRelax = data.readU8();
+                                        FC.ADVANCED_TUNING.itermRelaxType = data.readU8();
+                                        FC.ADVANCED_TUNING.absoluteControlGain = data.readU8();
+                                        FC.ADVANCED_TUNING.throttleBoost = data.readU8();
+                                        FC.ADVANCED_TUNING.acroTrainerAngleLimit = data.readU8();
+                                        FC.ADVANCED_TUNING.feedforwardRoll  = data.readU16();
+                                        FC.ADVANCED_TUNING.feedforwardPitch = data.readU16();
+                                        FC.ADVANCED_TUNING.feedforwardYaw   = data.readU16();
+                                        FC.ADVANCED_TUNING.antiGravityMode  = data.readU8();
                                     
-                                    if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
-                                        FC.ADVANCED_TUNING.dMinRoll = data.readU8();
-                                        FC.ADVANCED_TUNING.dMinPitch = data.readU8();
-                                        FC.ADVANCED_TUNING.dMinYaw = data.readU8();
-                                        FC.ADVANCED_TUNING.dMinGain = data.readU8();
-                                        FC.ADVANCED_TUNING.dMinAdvance = data.readU8();
-                                        FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
-                                        FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
+                                        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+                                            FC.ADVANCED_TUNING.dMinRoll = data.readU8();
+                                            FC.ADVANCED_TUNING.dMinPitch = data.readU8();
+                                            FC.ADVANCED_TUNING.dMinYaw = data.readU8();
+                                            FC.ADVANCED_TUNING.dMinGain = data.readU8();
+                                            FC.ADVANCED_TUNING.dMinAdvance = data.readU8();
+                                            FC.ADVANCED_TUNING.useIntegratedYaw = data.readU8();
+                                            FC.ADVANCED_TUNING.integratedYawRelax = data.readU8();
 
-                                        if(semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
-                                            FC.ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
+                                            if(semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+                                                FC.ADVANCED_TUNING.itermRelaxCutoff = data.readU8();
 
-                                            if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                                                FC.ADVANCED_TUNING.motorOutputLimit = data.readU8();
-                                                FC.ADVANCED_TUNING.autoProfileCellCount = data.read8();
-                                                FC.ADVANCED_TUNING.idleMinRpm = data.readU8();
+                                                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                                                    FC.ADVANCED_TUNING.motorOutputLimit = data.readU8();
+                                                    FC.ADVANCED_TUNING.autoProfileCellCount = data.read8();
+                                                    FC.ADVANCED_TUNING.idleMinRpm = data.readU8();
 
-                                                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                                                    FC.ADVANCED_TUNING.ff_interpolate_sp = data.readU8();
-                                                    FC.ADVANCED_TUNING.ff_smooth_factor = data.readU8();
-                                                    FC.ADVANCED_TUNING.ff_boost = data.readU8();
-                                                    FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
+                                                    if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                                                        FC.ADVANCED_TUNING.ff_interpolate_sp = data.readU8();
+                                                        FC.ADVANCED_TUNING.ff_smooth_factor = data.readU8();
+                                                        FC.ADVANCED_TUNING.ff_boost = data.readU8();
+                                                        FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
+                                                    }
                                                 }
                                             }
                                         }
@@ -2035,72 +2037,73 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
         case MSPCodes.MSP_SET_PID_ADVANCED:
-            if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
                 buffer.push16(FC.ADVANCED_TUNING.rollPitchItermIgnoreRate)
                     .push16(FC.ADVANCED_TUNING.yawItermIgnoreRate)
                     .push16(FC.ADVANCED_TUNING.yaw_p_limit)
                     .push8(FC.ADVANCED_TUNING.deltaMethod)
                     .push8(FC.ADVANCED_TUNING.vbatPidCompensation);
 
-                if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
-                    buffer.push8(FC.ADVANCED_TUNING.feedforwardTransition);
-                } else {
-                    buffer.push8(FC.ADVANCED_TUNING.dtermSetpointTransition);
-                }
+                if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
+                    if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+                        buffer.push8(FC.ADVANCED_TUNING.feedforwardTransition);
+                    } else {
+                        buffer.push8(FC.ADVANCED_TUNING.dtermSetpointTransition);
+                    }
+                    buffer.push8(Math.min(FC.ADVANCED_TUNING.dtermSetpointWeight, 254))
+                        .push8(FC.ADVANCED_TUNING.toleranceBand)
+                        .push8(FC.ADVANCED_TUNING.toleranceBandReduction)
+                        .push8(FC.ADVANCED_TUNING.itermThrottleGain)
+                        .push16(FC.ADVANCED_TUNING.pidMaxVelocity)
+                        .push16(FC.ADVANCED_TUNING.pidMaxVelocityYaw);
 
-                buffer.push8(Math.min(FC.ADVANCED_TUNING.dtermSetpointWeight, 254))
-                      .push8(FC.ADVANCED_TUNING.toleranceBand)
-                      .push8(FC.ADVANCED_TUNING.toleranceBandReduction)
-                      .push8(FC.ADVANCED_TUNING.itermThrottleGain)
-                      .push16(FC.ADVANCED_TUNING.pidMaxVelocity)
-                      .push16(FC.ADVANCED_TUNING.pidMaxVelocityYaw);
+                    if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
+                        buffer.push8(FC.ADVANCED_TUNING.levelAngleLimit)
+                            .push8(FC.ADVANCED_TUNING.levelSensitivity);
 
-                if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
-                    buffer.push8(FC.ADVANCED_TUNING.levelAngleLimit)
-                        .push8(FC.ADVANCED_TUNING.levelSensitivity);
+                        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+                            buffer.push16(FC.ADVANCED_TUNING.itermThrottleThreshold)
+                                .push16(FC.ADVANCED_TUNING.itermAcceleratorGain);
 
-                    if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
-                        buffer.push16(FC.ADVANCED_TUNING.itermThrottleThreshold)
-                            .push16(FC.ADVANCED_TUNING.itermAcceleratorGain);
+                            if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
+                                buffer.push16(FC.ADVANCED_TUNING.dtermSetpointWeight);
 
-                        if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
-                            buffer.push16(FC.ADVANCED_TUNING.dtermSetpointWeight);
+                                if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+                                    buffer.push8(FC.ADVANCED_TUNING.itermRotation)
+                                          .push8(FC.ADVANCED_TUNING.smartFeedforward)
+                                          .push8(FC.ADVANCED_TUNING.itermRelax)
+                                          .push8(FC.ADVANCED_TUNING.itermRelaxType)
+                                          .push8(FC.ADVANCED_TUNING.absoluteControlGain)
+                                          .push8(FC.ADVANCED_TUNING.throttleBoost)
+                                          .push8(FC.ADVANCED_TUNING.acroTrainerAngleLimit)
+                                          .push16(FC.ADVANCED_TUNING.feedforwardRoll)
+                                          .push16(FC.ADVANCED_TUNING.feedforwardPitch)
+                                          .push16(FC.ADVANCED_TUNING.feedforwardYaw)
+                                          .push8(FC.ADVANCED_TUNING.antiGravityMode);
 
-                            if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
-                                buffer.push8(FC.ADVANCED_TUNING.itermRotation)
-                                      .push8(FC.ADVANCED_TUNING.smartFeedforward)
-                                      .push8(FC.ADVANCED_TUNING.itermRelax)
-                                      .push8(FC.ADVANCED_TUNING.itermRelaxType)
-                                      .push8(FC.ADVANCED_TUNING.absoluteControlGain)
-                                      .push8(FC.ADVANCED_TUNING.throttleBoost)
-                                      .push8(FC.ADVANCED_TUNING.acroTrainerAngleLimit)
-                                      .push16(FC.ADVANCED_TUNING.feedforwardRoll)
-                                      .push16(FC.ADVANCED_TUNING.feedforwardPitch)
-                                      .push16(FC.ADVANCED_TUNING.feedforwardYaw)
-                                      .push8(FC.ADVANCED_TUNING.antiGravityMode);
-
-                                if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
-                                    buffer.push8(FC.ADVANCED_TUNING.dMinRoll)
-                                          .push8(FC.ADVANCED_TUNING.dMinPitch)
-                                          .push8(FC.ADVANCED_TUNING.dMinYaw)
-                                          .push8(FC.ADVANCED_TUNING.dMinGain)
-                                          .push8(FC.ADVANCED_TUNING.dMinAdvance)
-                                          .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
-                                          .push8(FC.ADVANCED_TUNING.integratedYawRelax);
+                                    if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+                                        buffer.push8(FC.ADVANCED_TUNING.dMinRoll)
+                                              .push8(FC.ADVANCED_TUNING.dMinPitch)
+                                              .push8(FC.ADVANCED_TUNING.dMinYaw)
+                                              .push8(FC.ADVANCED_TUNING.dMinGain)
+                                              .push8(FC.ADVANCED_TUNING.dMinAdvance)
+                                              .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
+                                              .push8(FC.ADVANCED_TUNING.integratedYawRelax);
                                           
-                                    if(semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
-                                        buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
+                                        if(semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+                                            buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
 
-                                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                                            buffer.push8(FC.ADVANCED_TUNING.motorOutputLimit)
-                                                  .push8(FC.ADVANCED_TUNING.autoProfileCellCount)
-                                                  .push8(FC.ADVANCED_TUNING.idleMinRpm);
+                                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                                                buffer.push8(FC.ADVANCED_TUNING.motorOutputLimit)
+                                                      .push8(FC.ADVANCED_TUNING.autoProfileCellCount)
+                                                      .push8(FC.ADVANCED_TUNING.idleMinRpm);
 
-                                            if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                                                buffer.push8(FC.ADVANCED_TUNING.ff_interpolate_sp)
-                                                      .push8(FC.ADVANCED_TUNING.ff_smooth_factor)
-                                                      .push8(FC.ADVANCED_TUNING.ff_boost)
-                                                      .push8(FC.ADVANCED_TUNING.vbat_sag_compensation);
+                                                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                                                    buffer.push8(FC.ADVANCED_TUNING.ff_interpolate_sp)
+                                                          .push8(FC.ADVANCED_TUNING.ff_smooth_factor)
+                                                          .push8(FC.ADVANCED_TUNING.ff_boost)
+                                                          .push8(FC.ADVANCED_TUNING.vbat_sag_compensation);
+                                                }
                                             }
                                         }
                                     }
@@ -2109,14 +2112,6 @@ MspHelper.prototype.crunch = function(code) {
                         }
                     }
                 }
-            }
-            // only supports 1 version pre bf 3.0
-            else {
-                buffer.push16(FC.ADVANCED_TUNING.rollPitchItermIgnoreRate)
-                   .push16(FC.ADVANCED_TUNING.yawItermIgnoreRate)
-                   .push16(FC.ADVANCED_TUNING.yaw_p_limit)
-                   .push8(FC.ADVANCED_TUNING.deltaMethod)
-                   .push8(FC.ADVANCED_TUNING.vbatPidCompensation);
             }
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
