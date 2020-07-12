@@ -187,6 +187,19 @@ function startProcess() {
         chrome.runtime.onSuspend.addListener(closeHandler);
     } else if (GUI.isCordova()) {
         window.addEventListener('beforeunload', closeHandler);
+        document.addEventListener('backbutton', function(e) {
+            e.preventDefault();
+            navigator.notification.confirm(
+                i18n.getMessage('cordovaExitAppMessage'),
+                function(stat) {
+                    if (stat === 1) {
+                        navigator.app.exitApp();
+                    }
+                },
+                i18n.getMessage('cordovaExitAppTitle'),
+                [i18n.getMessage('yes'),i18n.getMessage('no')]
+            );
+        });
     }
 
     $('.connect_b a.connect').removeClass('disabled');
