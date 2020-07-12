@@ -5764,5 +5764,11 @@
     },
     "cordovaWebviewUsed": {
         "message": "crwdns10218:0crwdne10218:0"
+    },
+    "cordovaExitAppTitle": {
+        "message": "crwdns10234:0crwdne10234:0"
+    },
+    "cordovaExitAppMessage": {
+        "message": "crwdns10236:0crwdne10236:0"
     }
 }
