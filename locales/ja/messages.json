@@ -5670,5 +5670,11 @@
     },
     "cordovaWebviewUsed": {
         "message": "使用中"
+    },
+    "cordovaExitAppTitle": {
+        "message": "確認中"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Betaflight Configuratorを終了しても良いですか？"
     }
 }
