@@ -5670,5 +5670,11 @@
     },
     "cordovaWebviewUsed": {
         "message": "usado"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Confirmación"
+    },
+    "cordovaExitAppMessage": {
+        "message": "¿Realmente quieres cerrar el configurador?"
     }
 }
