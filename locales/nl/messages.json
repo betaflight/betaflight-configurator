@@ -1321,6 +1321,9 @@
     "configurationButtonSave": {
         "message": "Sla op en herstart"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Dynamische notch-waarden veranderen"
+    },
     "dialogDynFiltersChangeNote": {
         "message": "<span class=\"message-negative\"><b>WAARSCHUWING: sommige dynamische notch-waarden zijn gewijzigd naar de standaardwaarden</b></span> omdat de RPM-filtering is geactiveerd / gedeactiveerd. <br> Gelieve deze waardes te controleren voordat u gaat vliegen."
     },
@@ -1495,11 +1498,24 @@
     "pidTuningPidSettings": {
         "message": "PID Controller instellingen"
     },
+    "receiverRcSmoothing": {
+        "message": "RC Smoothing"
+    },
     "receiverRcSmoothingAuto": {
         "message": "Auto"
     },
     "receiverRcSmoothingManual": {
         "message": "Manueel"
+    },
+    "receiverRcSmoothingAutoSmoothnessHelp": {
+        "message": "Past de berekening van Automatische afvlakking aan, 10 is de standaard verhouding tussen afvlakking en vertraging. Door het aantal te verhogen, worden RC-ingangen vloeiender maar wordt er ook vertraging toegevoegd. Dit kan handig zijn voor onbetrouwbare RC-verbindingen of voor filmisch vliegen.<br>Wees voorzichtig met nummers die de 50 naderen, de ingangsvertraging wordt dan merkbaar.<br>Gebruik het CLI-commando rc_smoothing_info terwijl je TX en RX zijn ingeschakeld om de automatisch berekende RC-afvlakking te zien. ",
+        "description": "Auto Smoothness parameter help message"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "Afgeleide afsnijdingstype"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "Input afsnijdingstype"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolatie"
@@ -1579,11 +1595,23 @@
     "pidTuningFeedforwardTransition": {
         "message": "Feedforward transitie"
     },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Met deze parameter kan de Feedforward-term worden gereduceerd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Wanneer de stick zich boven dat punt bevindt, wordt Feedforward constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt Feedforward proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 de Feedforward op zijn geconfigureerde waarde houdt over het hele stickbereik."
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Met deze parameter kan het D-setpointgewicht worden verlaagd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Als de stick zich boven dat punt bevindt, wordt het setpointgewicht constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt het setpointgewicht proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 het setpointgewicht over het gehele bereik van de stick op de geconfigureerde waarde houdt."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Deze parameter bepaalt het stickversnellende effect binnen het afgeleide component.<br>Een waarde van 0 is gelijk aan de oude meetmethode waarbij D alleen de gyro volgt. Een waarde van 1 gelijk is aan oude foutmethode met zowel de gyro als de stick tracking.<br>Een lagere waarde is gelijk aan een langzamere / vloeiendere stick-respons, terwijl een hogere waarde meer stick-acceleratierespons biedt.<br>Let op. Het is aanbevolen om RC-interpolatie in te schakelen bij een hogere ingestelde waarde."
+    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Het gebruik van een D Setpoint transitie tussen de 0 en 0.1 wordt afgeraden. Mocht je dit wel doen dan kan dit leiden tot instabiliteit en verminderde reactievermogen als je sticks het centrum van hun bereik passeren.</span>"
     },
     "pidTuningFfInterpolateSp": {
         "message": "FF Interpoleren"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "De volgende opties verfijnen de feed-forward van race / agressief naar vloeiend / HD.<br><br> Modus: NoAverage is voor race. Gemiddeld 2 voor race / snel freestyle. Gemiddeld 3 voor HD-opname. Gemiddeld 4 voor HD-film smoothness.<br><br>Smoothness: beperkt de hoeveelheid verandering die een inkomende radiostap kan maken, verhoog deze waarde voor een soepeler FF-signaal. Vermindert deze waarde voor een agressievere FF-reactie.<br><br> Boost: helpt de motorvertraging te overwinnen bij snelle stick-invoer. Deze instelling kan stotteringen veroorzaken. Probeer 10 voor HD, 20 voor racers. Tot 30 kan nuttig zijn voor quads met lage autoriteit. (grote quads). Maar deze waarde kan bij micros overshoot of stotteringen veroorzaken."
     },
     "pidTuningFfInterpolate": {
         "message": "Modus"
@@ -1599,6 +1627,9 @@
     },
     "pidTuningFfInterpolateSpOptionAverage4": {
         "message": "Gemiddeld 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Smoothness"
     },
     "pidTuningFfBoost": {
         "message": "Versterken"
@@ -1618,6 +1649,9 @@
     "pidTuningDerivativeHelp": {
         "message": "Bepaalt de sterkte van het dempend effect op alle bewegingen van je quad. Bij bewegingen die geïntroduceerd worden door jou sticks zorgt de D-term er voor dat de invoer wordt gedempt. De D-term dempt ook externe invloeden zoals propwash of een windvlaag.<br><br>Hogere waardes zorgen voor meer demping en voorkomt het overschieten van de P-term en FeedForward.<br>Echter, de D-term is ZEER gevoelig voor vibraties op hoge frequenties. De ruis wordt tussen de 10 en de 100 keer versterkt.<br><br> Hoge frequentie ruis in combinatie met een hoge D-waarde kan er voor zorgen dat motoren warm worden of zelfs uitbranden als de gyro niet correct gefilterd is. (Zie tabblad Filters)<br><br>De D-term kan worden gezien als een schokbreker van een auto. Echter met als extra eigenschap dat deze ruis van de gyro zeer sterk vergroot.",
         "description": "Derivative Term helpicon message on PID table titlebar"
+    },
+    "pidTuningFeedforward": {
+        "message": "Feedforward"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Let op:</b></span> zeer hoge waardes kunnen leiden tot desyncs tijdens snelle vertragingen."
@@ -1776,8 +1810,14 @@
     "receiverYawDeadband": {
         "message": "Yaw Deadband"
     },
+    "recevier3dDeadbandThrottle": {
+        "message": "3D Throttle Deadband"
+    },
     "receiverHelp3dDeadbandThrottle": {
         "message": "Deze waarden zijn in us. Om de neutrale zone te verbreden dien je deze waarde te vergroten. <strong>Deze instelling is alleen voor 3D-throttle modus.</strong>"
+    },
+    "receiverChannelMap": {
+        "message": "Kanaal overzicht"
     },
     "receiverChannelDefaultOption": {
         "message": "Standaard"
@@ -1817,6 +1857,12 @@
     },
     "receiverModelPreview": {
         "message": "Voorbeeld"
+    },
+    "receiverMspWarningText": {
+        "message": "Met deze sticks kan Betaflight worden ingeschakeld en worden getest zonder dat er een zender of ontvanger aangesloten is. <strong>Deze functie is echter niet bedoeld om mee te vliegen. De propellers moeten bij gebruik van deze functie verwijderd zijn.</strong><br><br>Deze functie garandeert geen betrouwbare controle over uw quad. <strong>Verwijder uw propellors. Doe je dit niet dan is de kans op letsel ZEER groot.</strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Schakel bedieningselementen in"
     },
     "auxiliaryToggleUnused": {
         "message": "Verberg ongebruikte modes"
@@ -2417,6 +2463,9 @@
     "dataflashNote": {
         "message": "Vluchtlogboek kan worden opgenomen op de dataflash chip van uw vlucht controller."
     },
+    "dataflashNotPresentNote": {
+        "message": "Uw vluchtcontroller heeft geen compatibele dataflash chip beschikbaar."
+    },
     "dataflashFirmwareUpgradeRequired": {
         "message": "Dataflash vereist firmware &gt;= 1.8.0."
     },
@@ -2504,6 +2553,9 @@
     "firmwareFlasherReleaseFile": {
         "message": "Binary:"
     },
+    "firmwareFlasherUnifiedTargetName": {
+        "message": "Uniform doel:"
+    },
     "firmwareFlasherUnifiedTargetFileUrl": {
         "message": "Toon configuratie."
     },
@@ -2545,6 +2597,9 @@
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecteer de firmwareversie voor uw bord."
+    },
+    "firmwareFlasherNoRebootDescription": {
+        "message": "Schakel in als uw vluchtcontroller in de opstartmodus staat. Dat wil zeggen als je de vluchtcontroller hebt ingeschakeld met de bootloader-pinnen verbonden of dat je de BOOT-knop van je vluchtcontroller ingedrukt houdt."
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "Flash bij het maken van verbinding"
@@ -2779,6 +2834,10 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionRingOption": {
+        "message": "Ring",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripColorModifierTitle": {
         "message": "Kleur aanpassen"
     },
@@ -2787,6 +2846,10 @@
     },
     "ledStripModeColorsModeOrientation": {
         "message": "Oriëntatie",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Headfree",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeHorizon": {
@@ -2896,6 +2959,9 @@
     },
     "ledStripBlinkLandingOverlay": {
         "message": "Knipperen bij landen"
+    },
+    "ledStripOverlayTitle": {
+        "message": "Overlay"
     },
     "ledStripWarningsOverlay": {
         "message": "Waarschuwingen"
@@ -3326,6 +3392,9 @@
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">WAARSCHUWING</span>: als je deze functie inschakelt, moet je de YAW PID instellingen aanpassen. Meer informatie <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
     },
+    "configHelp2": {
+        "message": "Willekeurige rotatie van het bord in graden. Hiermee maak je het mogelijk de vluchtcontroller gedraaid, ondersteboven of in een andere dan gebruikelijke positie te monteren. Gebruik bij externe sensoren de sensoruitlijningen (Gyro, Acc, Mag) om de sensorpositie onafhankelijk van de oriëntatie van het bord te definiëren. "
+    },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe configuratie is aanzienlijk gewijzigd. Gebruik Betaflight <strong>v1.12.0+</strong> om het verbeterde configuratiescherm in te schakelen."
     },
@@ -3334,6 +3403,9 @@
     },
     "failsafePulsrangeTitle": {
         "message": "Geldige Pulse Bereik Instellingen"
+    },
+    "failsafePulsrangeHelp": {
+        "message": "Pulsen korter dan het instelbare minimum of langer dan de maximum waarde zijn ongeldig. Dit zal resulteren in het toepassen van de individuele kanaal-fallback-instellingen voor AUX-kanalen. Of dit resulteert in fase 1 failsave"
     },
     "failsafeRxMinUsecItem": {
         "message": "Minimale lengte"
@@ -3364,6 +3436,9 @@
     },
     "failsafeThrottleLowItem": {
         "message": "Failsafe Throttle Laag vertraging [1 = 0.1 sec.]"
+    },
+    "failsafeThrottleLowHelp": {
+        "message": "Schakel het vaartuig gewoon uit in plaats van de geselecteerde failsafe-procedure uit te voeren wanneer de gashendel gedurende deze tijd laag stond"
     },
     "failsafeThrottleItem": {
         "message": "Throttle waarde die gebruikt wordt tijdens het landen"
@@ -3515,6 +3590,9 @@
     "powerCalibrationManagerHelp": {
         "message": "Om te kalibreren dient u gebruik te maken van een multimeter om de daadwerkelijke voltage/ amperage van uw drone te meten (de batterij dient ingeplugd te zijn). Voer de gemeten waardes hieronder in. Klik vervolgens op [Calibrate] terwijl u de batterij aangesloten houdt."
     },
+    "powerCalibrationManagerNote": {
+        "message": "<strong>Opmerking:</strong> voordat u de schaal kalibreert, moet u ervoor zorgen dat de verdeler en vermenigvuldiger voor spanning en offset voor stroomsterkte correct zijn ingesteld.<br>Als u de waarden op 0 laat, wordt de kalibratie niet toegepast.</br><strong>Verwijder uw propellers alvorens je een accu aansluit!</strong>"
+    },
     "powerCalibrationManagerWarning": {
         "message": "<span class=\"message-negative\">Waarschuwing:</span> De batterij <span class=\"message-negative\">is niet aangesloten</span> of de voltage en amperage bronnen zijn <span class=\"message-negative\">niet goed ingesteld.</span> Zorg ervoor dat de spanning en/of amperage een waarde boven 0 uitlezen. Anders kunt u deze tool niet gebruiken om te kalibreren."
     },
@@ -3532,6 +3610,9 @@
     },
     "powerCalibrationDiscard": {
         "message": "Kalibratie weggooien"
+    },
+    "powerCalibrationConfirmHelp": {
+        "message": "Hier worden de nieuwe gekalibreerde schalen weergegeven.<br>Door wijzigingen hier toe te passen worden de schalen ingesteld. Echter<strong> worden ze nog niet opgeslagen.</strong></br><br>Controleer na het opslaan of de nieuwe voltage en amperage waarden correct zijn.</br>"
     },
     "powerVoltageHead": {
         "message": "Voltage Meter"
@@ -3936,9 +4017,15 @@
         "message": "Ingeschakeld",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementArmed": {
+        "message": "Tekstueel armed bericht"
+    },
     "osdTextElementDisarmed": {
         "message": "Uitgeschakeld",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDisarmed": {
+        "message": "Tekstueel disarmed bericht"
     },
     "osdTextElementCrosshairs": {
         "message": "Richtkruis",
@@ -4081,6 +4168,9 @@
         "message": "Hoek: pitch",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementPitchAngle": {
+        "message": "Numerieke pitch-hoek in graden"
+    },
     "osdTextElementRollAngle": {
         "message": "Hoek: roll",
         "description": "One of the elements of the OSD"
@@ -4166,6 +4256,9 @@
         "message": "Aanpassing bereik",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementAdjustmentRange": {
+        "message": "Momenteel actieve instelling en waarde van aanpassingsbereik"
+    },
     "osdTextElementTimer1": {
         "message": "Timer 1",
         "description": "One of the elements of the OSD"
@@ -4190,6 +4283,9 @@
     "osdTextAntiGravity": {
         "message": "Anti zwaartekracht",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescAntiGravity": {
+        "message": "Schakelt een indicator in wanneer de antizwaartekracht actief is"
     },
     "osdTextGForce": {
         "message": "G-Kracht",
@@ -4300,6 +4396,9 @@
         "message": "Camera frame",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCameraFrame": {
+        "message": "Voegt een aanpasbaar omtrekelement toe dat is ontworpen om het gezichtsveld van de HD-camera van de piloot weer te geven.<br><br>Je kunt de breedte en hoogte in de CLI aanpassen met het commando 'osd_camera_frame_width' en 'osd_camera_frame_height'"
+    },
     "osdTextElementEfficiency": {
         "message": "Batterij efficiëntie",
         "description": "One of the elements of the OSD"
@@ -4367,6 +4466,9 @@
         "message": "Vluchttijd totaal",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatFlyTime": {
+        "message": "De totale tijd dat het vaartuig is ingeschakeld op de huidige stroomcyclus"
+    },
     "osdTextStatMaxDistance": {
         "message": "Maximale afstand van thuis",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -4389,6 +4491,9 @@
     "osdTextStatRtcDateTime": {
         "message": "RTC datum en tijd",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatRtcDateTime": {
+        "message": "Datum en tijd vanaf realtime klok"
     },
     "osdTextStatBattery": {
         "message": "Batterij voltage",
@@ -4866,6 +4971,10 @@
         "message": "Letter",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
+    "vtxTableBandTitleFactory": {
+        "message": "Fabrieksinstelling",
+        "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
     "vtxSavedFileOk": {
         "message": "VTX configuratiebestand <span class=\"message-positive\">opgeslagen</span>",
         "description": "Message in the GUI log when the VTX Config file is saved"
@@ -5004,6 +5113,9 @@
     "configurationCurrentScale": {
         "message": "Schaal de uitgangsspanning naar milliampère [1/10e mV/A]"
     },
+    "configurationCurrentOffset": {
+        "message": "Offset in millivolt stappen"
+    },
     "configurationBatteryMultiwiiCurrent": {
         "message": "Schakel ondersteuning in voor legacy Multiwii MSP spanning uitvoer"
     },
@@ -5079,6 +5191,9 @@
     },
     "onboardLoggingMsc": {
         "message": "Massa Opslag Modus"
+    },
+    "onboardLoggingMscNote": {
+        "message": "Start opnieuw op in de modus <strong>Massaopslagapparaat (MSC)</strong>. Eenmaal geactiveerd, wordt de ingebouwde flash of SD-kaart op uw vluchtcontroller door uw computer herkend als een opslagapparaat en kunt u uw logbestanden kopiëren. Werp uw massaopslag uit (zoals je doet met een USB stick) om de modus voor massaopslag te verlaten."
     },
     "onboardLoggingRebootMscText": {
         "message": "Massa Opslag Apparaatmodus Activeren"
@@ -5229,5 +5344,11 @@
     },
     "cordovaWebviewUsed": {
         "message": "gebruikt"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Bevestiging"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Wilt u de configurator echt sluiten?"
     }
 }
