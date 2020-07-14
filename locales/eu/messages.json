@@ -5677,5 +5677,11 @@
     },
     "cordovaWebviewUsed": {
         "message": "erabilita"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Baieztatzea"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Benetan konfiguratzailea itxi nahi duzu?"
     }
 }
