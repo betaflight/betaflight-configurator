@@ -778,6 +778,10 @@
         "message": "Geen geldig ontvanger signaal gevonden",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+        "message": "Uw ontvanger is zojuist hersteld van een ontvanger-failsafe echter is de armschakelaar nog ingeschakeld",
+        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "De 'FAILSAFE' schakelaar is geactiveerd",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -797,6 +801,10 @@
     "initialSetupArmingDisableFlagsTooltipANGLE": {
         "message": "Model niet vlak genoeg",
         "description": "Message that pops up to describe the ANGLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
+        "message": "Te snel ingeschakeld na het aansluiten van de stroom",
+        "description": "Message that pops up to describe the BOOT_GRACE_TIME arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Systeembelasting is te hoog voor een veilige vlucht",
@@ -1251,6 +1259,9 @@
     "configuration3dNeutral": {
         "message": "3D Neutraal"
     },
+    "configuration3dDeadbandThrottle": {
+        "message": "3D Doodzone Throttle"
+    },
     "configurationSystem": {
         "message": "Systeemconfiguratie"
     },
@@ -1271,6 +1282,9 @@
     "configurationKHzUnitLabel": {
         "message": "{{value}} kHz",
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
+    },
+    "configurationLoopTimeHelp": {
+        "message": "<strong>Let op:</strong> zorg ervoor dat uw FC met deze snelheden kan werken! Controleer CPU- en cyclustijdstabiliteit. Als u dit wilt wijzigen moet u mogelijk opnieuw PID re-tuning doen. TIP: Schakel de versnellingsmeter en andere sensoren uit om meer prestaties te behalen."
     },
     "configurationGPS": {
         "message": "GPS"
@@ -1487,6 +1501,10 @@
         "message": "Toename",
         "description": "Gain of the D Min feature"
     },
+    "pidTuningDMinAdvance": {
+        "message": "Voortgang",
+        "description": "Advance of the D Min feature"
+    },
     "pidTuningDMinFeatureHelp": {
         "message": "D Min biedt de mogelijkheid om standaard lagere D waardes te hebben. Maar tegelijkertijd ook weer hogere waardes bij snellere manoeuvres die zouden kunnen leiden tot een overshoot. Bijvoorbeeld bij snelle flips, rolls en prop wash. De Gain instelling regelt hoe snel de D waarde wordt verhoogd. Het verhogen of verlagen van de D waarde gebeurt met behulp van de gyro input. De Advance instelling maakt gebruik van de setpoint om te bepalen wat de D waarde moet zijn. Advance maakt geen gebruik van de gyro.",
         "description": "D Min feature helpicon message"
@@ -1598,6 +1616,12 @@
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Met deze parameter kan de Feedforward-term worden gereduceerd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Wanneer de stick zich boven dat punt bevindt, wordt Feedforward constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt Feedforward proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 de Feedforward op zijn geconfigureerde waarde houdt over het hele stickbereik."
     },
+    "pidTuningDtermSetpointTransition": {
+        "message": "D Setpoint transition"
+    },
+    "pidTuningDtermSetpoint": {
+        "message": "D Setpoint Weight"
+    },
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Met deze parameter kan het D-setpointgewicht worden verlaagd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Als de stick zich boven dat punt bevindt, wordt het setpointgewicht constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt het setpointgewicht proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 het setpointgewicht over het gehele bereik van de stick op de geconfigureerde waarde houdt."
     },
@@ -1640,6 +1664,10 @@
     "pidTuningIntegral": {
         "message": "Integraal"
     },
+    "pidTuningIntegralHelp": {
+        "message": "Bepaalt de sterkte van hoe strak de machine de algehele positie van de Setpoint vasthoudt.\n<br>Vergelijkbaar met proportioneel, maar dan voor langere duur. Of voor vaartuigen met een offset van het zwaartepunt (CoG) of aanhoudende invloed van buitenaf zoals constante wind.<br><br>Hogere waarden zorgen voor een strakkere tracking (bijv. in ruime bochten), maar kunnen de quad stijf aan laten voelen.<br>Als de waarde extreem hoog is ingesteld in verhouding tot de D-term kan dit langzame oscillaties veroorzaken.",
+        "description": "Integral Term helpicon message on PID table titlebar"
+    },
     "pidTuningDerivative": {
         "message": "Derivaat"
     },
@@ -1652,6 +1680,10 @@
     },
     "pidTuningFeedforward": {
         "message": "Feedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "Is een extra duwterm (veer) op basis van de stick-invoer. FF helpt de P-term het vaartuig te duwen naar de opgedragen stick invoer.<br><br>De P-term duwt op basis van het verschil tussen het opgedragen setpoint (graden/sec.) en de gyro-uitlezing van de huidige rotatiesnelheid (graden/sec.). FF pusht alleen op basis van de opgedragen stick verandering.<br><br>Hogere waarden (gains) zullen resulteren in een scherpere respons op de stick-invoer.<br>Te hoge waarden kunnen leiden tot overshoot, verhoogde motor warmte en motorverzadiging. (Motorverzadiging treed op wanneer de motoren de gewenste veranderingssnelheid niet kunnen bijhouden).<br>Lage waarden of nul (0) zal resulteren in een langzamere maar ook soepelere respons op de stick-input.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Let op:</b></span> zeer hoge waardes kunnen leiden tot desyncs tijdens snelle vertragingen."
@@ -1761,11 +1793,17 @@
     "pidTuningLoadedProfile": {
         "message": "Geladen profiel: <strong class=\"message-positive\">$1</strong>"
     },
+    "pidTuningLoadedRateProfile": {
+        "message": "Geladen Rateprofiel: <strong class=\"message-positive\">$1</strong>"
+    },
     "pidTuningDataRefreshed": {
         "message": "PID gegevens <strong>vernieuwd</strong>"
     },
     "pidTuningEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">opgeslagen</span>"
+    },
+    "receiverHelp": {
+        "message": "Neem alstublieft het hoofdstuk over de ontvanger door in de documentatie. Configureer seriële poort (indien nodig), ontvangermodus (serieel / ppm / pwm), provider (voor seriële ontvangers), bind ontvanger, stel kanaaloverzicht in, configureer kanaaleindpunten en het bereik op uw TX zodat alle kanalen van ~1000 tot ~2000 gaan. Stel het middelpunt in (standaard is dit 1500), trim de kanalen zodat als ze gecentreerd zijn op de waarde 1500 staan, configureer de deadband van de sticks. En controleer ook wat er gebeurt wanneer u uw zender uitgeschakeld of deze buiten bereik gaat.<br /><span class=\"message-negative\">BELANGRIJK:</span> Lees voordat u gaat vliegen het hoofdstuk over failsafe en neem de documentatie door hoe u failsafe configureerd."
     },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">BELANGRIJK:</span> Het is belangrijk om de motortemperatuur te verifiëren tijdens de eerste vluchten. Hoe hoger de filterwaarde des te beter je quad kan gaat vliegen. Echter krijgen je motoren ook meer ruis te voorduren.<br>De standaardwaarde van 100Hz is optimaal. Maar voor quads die meer ruis hebben kan je proberen om de D-Term filter te verlagen naar 50Hz en dit mogelijk ook toe te passen op de gyro-filter."
@@ -1809,6 +1847,9 @@
     },
     "receiverYawDeadband": {
         "message": "Yaw Deadband"
+    },
+    "receiverHelpYawDeadband": {
+        "message": "Dit zijn waarden (in us) die de RC-invoer dient te verschillen voordat deze als geldig wordt beschouwd. Dit kan bijvoorbeeld handig zijn voor zenders die jitter op de kanalen hebben. <strong>Deze instelling is alleen voor Yaw.</strong>"
     },
     "recevier3dDeadbandThrottle": {
         "message": "3D Throttle Deadband"
@@ -1864,6 +1905,9 @@
     "receiverMspEnableButton": {
         "message": "Schakel bedieningselementen in"
     },
+    "auxiliaryHelp": {
+        "message": "Configureer hier modi met een combinatie van bereiken en / of links naar andere modi (links worden ondersteund op BF 4.0 en hoger). Gebruik <strong>bereiken</strong> om de schakelaars op uw zender en bijbehorende modustoewijzingen te definiëren. Een ontvangerkanaal dat een waarde geeft tussen een min / max bereik, activeert de modus. Gebruik een <strong>link</strong> om een modus te activeren wanneer een andere modus is geactiveerd. <strong>Uitzonderingen:</strong> ARM kan niet worden gekoppeld aan of vanuit een andere modus, modi kunnen niet worden gekoppeld aan andere modi die zijn geconfigureerd met een link (geketende links). Meerdere bereiken / links kunnen worden gebruikt om elke modus te activeren. Als er meer dan één bereik / link is gedefinieerd voor een modus, kan elk van hen worden ingesteld op <strong> EN </strong> of <strong>OF</strong>. Een modus wordt geactiveerd wanneer:<br />- ALLE <strong>EN</strong> bereiken / links actief zijn; OF <br />- ten minste één <strong>OF</strong> bereik / link is actief.<br /><br />Vergeet niet om uw instellingen op te slaan."
+    },
     "auxiliaryToggleUnused": {
         "message": "Verberg ongebruikte modes"
     },
@@ -1898,14 +1942,26 @@
     "auxiliaryModeLogicAND": {
         "message": "EN"
     },
+    "adjustmentsHelp": {
+        "message": "Configureer de aanpassingsschakelaars. Zie het gedeelte 'aanpassingen tijdens de vlucht' in de handleiding voor details. De wijzigingen die de aanpassingsfuncties aanbrengen worden niet automatisch opgeslagen."
+    },
+    "adjustmentSlotsHelp": {
+        "message": "Er zijn 4 slots. Elke schakelaar, die wordt gebruikt om tegelijkertijd aanpassingen uit te voeren, vereist exclusief gebruik van een slot."
+    },
     "adjustmentsExamples": {
         "message": "Voorbeelden:"
     },
     "adjustmentsExample1": {
         "message": "Gebruik een 3 positie schakelaar op AUX1 om te schakelen tussen de P, I en D waarde van Pitch en Roll. En gebruik nog een drie positieschakelaar op AUX2 om de waarde van de geselecteerde instelling te verhogen of te verlagen wanneer deze in de omhoog of omlaag positie wordt geplaatst."
     },
+    "adjustmentsExample2": {
+        "message": "Gebruik een schakelaar met drie standen op AUX4 om Rate Profiel Selectie in te schakelen. Met behulp van deze schakelaar kan je schakelen tussen de drie Rate profielen."
+    },
     "adjustmentsColumnEnable": {
         "message": "Indien ingeschakeld"
+    },
+    "adjustmentsColumnUsingSlot": {
+        "message": "gebruikt slot"
     },
     "adjustmentsColumnWhenChannel": {
         "message": "wanneer kanaal"
@@ -2014,6 +2070,12 @@
     },
     "adjustmentsFunction23_2": {
         "message": "Feedforward Transition"
+    },
+    "adjustmentsFunction24": {
+        "message": "Horizon Sterkte Aanpassing"
+    },
+    "adjustmentsFunction25": {
+        "message": "PID-Audio Selectie"
     },
     "adjustmentsFunction26": {
         "message": "Pitch F aanpassing"
@@ -2304,6 +2366,9 @@
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },
+    "sensorsInfo": {
+        "message": "Houd er rekening mee dat het gebruik van snelle updateperioden en het tegelijkertijd weergeven van meerdere grafieken veel resources vergt.<br />We raden aan om alleen de grafieken weer te geven voor sensoren waarin je geïnteresseerd bent. En daarbij redelijke update periodes te gebruiken."
+    },
     "sensorsRefresh": {
         "message": "Verversen:"
     },
@@ -2387,6 +2452,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Uitvoeren"
+    },
+    "loggingNote": {
+        "message": "Gegevens worden <span class=\"message-negative\">alleen</span> op dit tabblad gelogd. Als u dit tabblad verlaat <span class=\"message-negative\">annuleert</span> u de logging en zal de applicatie terugkeren naar de normale <strong>\"configurator\"</strong> staat. <br/>U bent vrij om de globale updateperiode te wijzigen. Gegevens worden om prestatieredenen elke <strong>1</strong> seconde naar het logbestand weggeschreven."
     },
     "loggingSamplesSaved": {
         "message": "Voorbeelden opgeslagen:"
@@ -2581,7 +2649,7 @@
         "message": "Voortgang:"
     },
     "firmwareFlasherLoadFirmwareFile": {
-        "message": "Gelieve het firmware-bestand te laden"
+        "message": "Gelieve een firmware-bestand te laden"
     },
     "firmwareFlasherLoadedConfig": {
         "message": "Doel geladen, gelieve firmware bestand te laden"
@@ -2594,6 +2662,9 @@
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecteer je bord om de beschikbare online firmware releases te zien - Selecteer de juiste firmware voor je bord."
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Vanaf Betaflight 4.1 is het concept <strong>Unified Targets</strong> geintroduceerd. Met behulp van <strong>Unified Targets</strong> kan dezelfde firmware .hex-bestand worden gebruikt voor alle kaarten die dezelfde MCU gebruiken. (F4, F7) Om toch de verschillende board correct te laten werken wordt er naast de firmware een specifiek configuratiebestand geïmplementeerd.<br>Deze versie van Betaflight-configurator zorgt er voor dat bij het flashen van een Unified Targets de correcte bordspecifieke configuraties in één stap wordt geflashed. De verschillende firmwaretypen die beschikbaar zijn voor elk bord worden als volgt weergegeven in de vervolgkeuzelijst:<br><br><strong>&lt;board naam&gt;</strong> of<br><strong>&lt;board naam&gt; (Legacy)</strong>:<br>non-unified target, of pre-4.1 versies van de firmware voor Unified Targets.<br><br><strong>&lt;board naam&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 karakters manufacturer id)<br>Unified Target.<br><br><strong>Gebruik waar mogelijk Unified Targets.</strong> Als u problemen ondervindt bij het gebruik van een Unified Target, open dan een <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> en gebruik vervolgens een non-unified doel totdat het probleem is opgelost."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecteer de firmwareversie voor uw bord."
@@ -2706,6 +2777,9 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Herstellen / Communicatie verloren</strong>"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Als je de communicatie met je board bent kwijtgeraakt, volg dan de volgende stappen om de communicatie te herstellen:<ul><li>Power off</li><li>Schakel 'No reboot sequence' in, schakel 'Full chip erase' in.</li><li>Verbind de BOOT-pinnen of houd de BOOT-knop ingedrukt.</li><li>Power on (activiteits-LED knippert NIET als het correct is gedaan).</li><li>Installeer indien nodig alle STM32-stuurprogramma's. (zie <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> -gedeelte van de Betaflight-handleiding).</li><li>Sluit de configurator. Sluit alle actieve Chrome-instanties. Sluit alle Chrome-apps. Start de Configurator opnieuw op.</li><li>Laat de BOOT-knop los als uw FC er een heeft.</li><li>Flash met de juiste firmware (met handmatige baudrate indien gespecificeerd in de handleiding van uw FC).</li><li>Power off.</li><li>Verwijder de BOOT-jumper.</li><li>Power on (activiteits-LED moet knipperen).</li><li>Maak normaal verbinding.</li></ul>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasher verlaten"
     },
@@ -2754,6 +2828,9 @@
     "firmwareFlasherFlashTrigger": {
         "message": "Gedetecteerd: <strong>$1</strong> - flashen wordt gestart bij verbinding"
     },
+    "unstableFirmwareAcknoledgementDialog": {
+        "message": "U staat op het punt een <strong>ontwikkelaarsversie van de firmware</strong> te flashen. Aan deze builds wordt nog gewerkt waardoor de volgende situaties kunnen optreden:<strong><ul><li>de firmware werkt helemaal niet;</li><li>de firmware is niet vliegbaar;</li><li>er zijn veiligheidsproblemen met de firmware, bijvoorbeeld flyaways;</li><li>de firmware kan ervoor zorgen dat de vluchtcontroller niet meer reageert of beschadigd raakt.</li></ul></strong>Als u toch deze firmware gaat flashen <strong>neemt u de volledige verantwoordelijkheid voor het risico van een van de bovenstaande gebeurtenissen</strong>. Verder erkent u dat het nodig is om <strong>grondige bench tests uit te voeren met de propellors verwijderd</strong> alvorens er getracht wordt met behulp van deze firmware te vliegen."
+    },
     "unstableFirmwareAcknoledgementAcknowledge": {
         "message": "Ik heb het bovenstaande gelezen en <strong>Ik neem de volledige verantwoordelijkheid op mij<strong> voor het flashen van instabiele firmware"
     },
@@ -2762,6 +2839,9 @@
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Gedetecteerd: <strong>$1</strong> - vorig apparaat is nog aan het flashen, gelieve opnieuw te koppelen en het opnieuw te proberen"
+    },
+    "ledStripHelp": {
+        "message": "De vluchtcontroller kan de kleuren en effecten van individuele LED's op een strip regelen.<br />Configureer allereerst de LED's op het raster. Configureer daarna de bedradingsvolgorde en bevestig vervolgens de LED's op uw quad op basis van de rasterposities. LED's zonder een draadnummer worden niet opgeslagen.<br/>Dubbelklik op een kleur om de HSV-waarden te bewerken."
     },
     "ledStripButtonSave": {
         "message": "Opslaan"
@@ -3116,17 +3196,30 @@
     "pidTuningLevelSensitivity": {
         "message": "Gevoeligheid"
     },
+    "pidTuningLevelHelp": {
+        "message": "De onderstaande waarden veranderen het gedrag van de vluchtmodi ANGLE en HORIZON. Niet alle PID-controllers gaan hetzelfde om met deze waarden. Controleer de documentatie."
+    },
     "pidTuningMotorOutputLimit": {
         "message": "Motor Uitvoer Limiet"
     },
     "pidTuningMotorLimit": {
         "message": "Schaalfactor [%]"
     },
+    "pidTuningMotorLimitHelp": {
+        "message": "Motorvermogen lineaire schaalfactor (als percentage). Vermindert de ESC-amperage en derhalve de motorwarmte bij het gebruik van batterijen met een hogere aantal cellen. Bijvoorbeeld als u een 6S-batterij gebruikt op een quad met motoren, propellors en tuning die ontworpen is voor 4S. Stel dan de waarde in op 66%. En stel bijvoorbeeld 75% in wanneer u een 4S-batterij gebruikt op een quad die ontworpen is te vliegen op een 3S.<br>Zorg er altijd voor dat u zeker weet dat alle de componenten op uw quad de spanning van de batterij wel aan kan."
+    },
     "pidTuningCellCount": {
         "message": "Aantal cellen"
     },
+    "pidTuningCellCountHelp": {
+        "message": "Activeert automatisch het eerste profiel met een celgetal dat gelijk is aan de aangesloten batterij."
+    },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profielonafhankelijke Filterinstellingen"
+    },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Schuifregelaars om de quad-gyro en D-term filtering aan te passen. <br><br>Meer filtering zorgt voor een soepelere vlucht, maar verhoogt ook de vertraging van het gyrosignaal (Phase Delay) naar de PID-loop. Dit resulteert in slechtere vluchtprestaties bij agressieve bewegingen en bij prop wash. En het heeft ook invloed op de stick respons. Maak kan bovendien ook buitensporige oscillaties veroorzaken. <br><br>Minder filtering vermindert de vertraging van het gyrosignaal. Maar kan de motortemperaturen verhogen vanwege de D-term die reageert op de hoogfrequente motortrillingen (ruis).<br>Als de filtering te laag is zal dit ook weer een afname in vliegprestaties veroorzaken. (hogere verhouding tussen ruis en signaal).",
+        "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
         "message": "Minder filteren",
@@ -3144,9 +3237,29 @@
         "message": "Gyro-filtervermenigvuldiger:",
         "description": "Gyro filter tuning slider label"
     },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "Verhoogt of verlaagt de standaard Gyro Lowpass-filters in verhouding tot elkaar. De gyro-filtering wordt toegepast vóór de PID-loop.<br>Algemene motorruisbereiken verschillen per quad-klasse:<br><br>6\" en grotere quads vallen over het algemeen binnen de 100Hz tot 330Hz;<br>5\" quads vallen over het algemeen binnen de 220Hz tot 500Hz;<br>Whoop tot een grote van 3\" vallen over het algemeen binnen de 300Hz tot 850Hz.<br><br>Over het algemeen wilt u de schuifregelaar zo instellen dat het Gyro Lowpass 1 Dynamic Min / Max Cutoff-bereik het bovenstaande dekt.<br>U kunt eventueel ook meer filtering toepassen voor soepelere vluchten. Gebruik minder filtering om een agressievere filtertune te krijgen.<br><br>WEES VOORZICHTIG met te weinig filtering. Dit kan fly-aways en verbrande motoren veroorzaaken.<br>Let ook op frame resonantieproblemen, slechte lagers en versleten props kunnen ervoor zorgen dat u meer filters nodig heeft.",
+        "description": "Gyro filtering tuning slider helpicon message"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "D Term Filtervermenigvuldiger:",
         "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Verhoogt of verlaagt de standaard D-term Lowpassfilters in verhouding tot elkaar.<br>De D-term filtering wordt toegepast na de PID-loop en ook ALLEEN op de D-term. De rede hiervoor is dat de D-term het meest gevoelig is voor ruis.<br><br>Over het algemeen wilt u de D-term Filter-schuif omhoog verplaatsen gezamelijk met de Gyro Filter-schuif. Het is aan te raden de D-term filter cutoffs ruim onder het motorruisbereik te configureren. En deze ook ruimer te hebben dan wat er wordt toegepast op het hele gyrosignaal met de Gyro Filter Multiplier. <br>Het aanbevolen differentieel is ingebouwd in de standaard instellingen en is ook verwerkt in de schuifregelaren.",
+        "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Schuifregelaars om de quad-vluchtkarakteristieken aan te passen (PID-gains) <br><br>Master Multiplier: Verhoogt of verlaagt alle PID-gains (hierboven) met het proportionele verschil tussen de gains.<br><br>PD Balans: Past de balans aan (verhouding / proportioneel verschil) tussen de P- en D-termen ('de veer' [p-term] en de 'schokdemper' [d-term]).\n<br><br>PD-Gain: Verhoogt of verlaagt de P & D-Gain tezamen - houdt de verhouding (balans) tussen de twee. Voor meer (of minder) PID-controleautoriteit.<br><br>Stick Response Gain: Verhoogt of verlaagt de FeedForward-gains om het stick-responsgevoel van de quad te regelen.",
+        "description": "Overall helpicon message for PID tuning sliders"
+    },
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">VOORZICHTIG</span>: de huidige schuifposities kan leiden tot flyaways, motorschade of onveilig gedrag. Ga voorzichtig te werk.",
+        "description": "Warning shown when tuning slider are above safe limits"
+    },
+    "pidTuningSlidersDisabled": {
+        "message": "<strong>Opmerking:</strong> schuifregelaars zijn uitgeschakeld omdat de waarden handmatig gewijzigd zijn. Als u op de knop '$t(pidTuningSliderEnableButton.message)' klikt, worden ze opnieuw geactiveerd. Hierdoor worden de waarden gereset en gaan alle niet-opgeslagen wijzigingen verloren.",
+        "description": "Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningSliderEnableButton": {
         "message": "Sliders inschakelen",
@@ -3192,6 +3305,14 @@
         "message": "Een relatief hoge D zal het reactievermogen van de stick dempen en kan resulteren in warme motoren. Maar het zorgt er ook voor dat P-oscillaties en propwash-beweging verbeteren.<br><br>Relatief lage D zorgt voor een snellere respons van de stick, maar zal niet helpen bij het verbeteren van propwash.",
         "description": "PD balance tuning slider helpicon message"
     },
+    "pidTuningPDGainSliderHelp": {
+        "message": "Lagere P- en D-gain zal resulteren in koelere motoren, maar zal ook resulteren in meer propwash-oscillatie. Een te lage waarde kan ervoor zorgen dat de quad onstabiel wordt.<br> <br>P- en D-waarden werken samen om propwash te verminderen.<br><br>Hogere waarden restulteren in meer motorwarmte en kunnen ook oscillaties introduceren tijdens een soepele voorwaartse vlucht.",
+        "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "Lagere FF-waarden verslechteren de stick-respons en kunnen resulteren in een trage bounceback aan het einde van een flip of roll (I-term windup).<br><br>Hogere FF-waarden geven een snellere stick-respons in scherpe bewegingen. Te hoge FF-waarden kunnen overshoots en snelle bouncebacks veroorzaken aan het einde van een flip of roll.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filters"
     },
@@ -3216,6 +3337,9 @@
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro Lowpass 2 Filtertype"
     },
+    "pidTuningLowpassFilterHelp": {
+        "message": "De Lowpass filters zijn er in twee varianten: statisch en dynamisch. De statische filter heeft een afsnijdingswaarde die definieert waar het filter precies begint en eindigt. Bij de dynamische filter definieer je een minimum- en een maximumwaarde. Hiermee geef je het bereik van de filter aan. De bepaling waar de afsnijding precies plaats vindt wordt bepaald door de positie van de gashendel."
+    },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filters"
     },
@@ -3230,6 +3354,9 @@
     },
     "pidTuningGyroNotch2Cutoff": {
         "message": "Gyro Notch Filter 2 Afsnijfrequentie [Hz]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "Het Notch-filter heeft een midden en een afsnijding. Het filter is symmetrisch. De middenfrequentie is het midden van het filter en de afsnijfrequentie is waar het notch-filter begint. Bijvoorbeeld met Notch Cutoff van 160 en Notch Center van 260 betekent dit dat het bereik 160-360Hz is. Met daarbij de meeste verzwakking rondom het centrum"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamic Notch Filter"
@@ -3255,8 +3382,27 @@
     "pidTuningDynamicNotchMaxHz": {
         "message": "Dynamic Notch Max Hz"
     },
+    "pidTuningDynamicNotchRangeHelp": {
+        "message": "De dynamische notch heeft drie frequentiebereiken waarin hij kan werken: LOW (80-330Hz) voor quads met een lager toerental zoals 6+ inch, MEDIUM (140-550Hz) voor een normale 5 inch quad, HIGH (230-800Hz) 2 tot 3 inch quads met hoge RPMs. De AUTO-optie selecteert het bereik afhankelijk van de waarde die is ingesteld bij de maximale afsnijfrequentie van de Gyro Dynamic Lowpass 1 Filter."
+    },
+    "pidTuningDynamicNotchWidthPercentHelp": {
+        "message": "Dit stelt de breedte in tussen de twee dynamische notch-filters. Als u deze op 0 instelt wordt het tweede dynamische notch-filter uitgeschakeld en wordt de filtervertraging verkort. Maar dit kan wel de motortemperaturen verhogen."
+    },
+    "pidTuningDynamicNotchQHelp": {
+        "message": "Q-factor bepaalt hoe smal of breed de dynamische notch-filters zijn. Een hogere waarde maakt het smaller en nauwkeuriger en een lagere waarde maakt het breder en minder nauwkeurig. Een erg lage waarde zal de filtervertraging enorm vergroten."
+    },
+    "pidTuningDynamicNotchMinHzHelp": {
+        "message": "Stel dit in op de laagste inkomende ruisfrequentie die moet worden gebruikt door de dynamische notch."
+    },
+    "pidTuningDynamicNotchMaxHzHelp": {
+        "message": "Stel dit in op de hoogste inkomende ruisfrequentie die moet worden gebruikt door de dynamische notch."
+    },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM Filter",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmFilterHelp": {
+        "message": "RPM-filtering is een verzameling notch-filters op de gyro die de RPM-telemetriegegevens gebruiken om motorruis met chirurgische precisie te verwijderen.<br><br><b><span class=\"message-positive\">BELANGRIJK</span>: de ESCs moet het bidirectionele DShot-protocol ondersteunen. En de waarde van $t(configurationMotorPoles.message) op het tabblad $t(tabConfiguration.message) moet correct ingevuld zijn wil je dit filter correct laten werken.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3329,17 +3475,29 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag Compenseren"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Geeft consistente gas- en PID-prestaties over het bruikbare accuspanningsbereik door batterij sag te compenseren. Het hoeveelheid compensatie kan variëren tussen de 0 en de 100%. Volledige compensatie (100%) wordt aanbevolen. <br><br>Bezoek <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target = \"_blank\" rel=\"noopener noreferrer\">dit wiki-item</a> voor meer info."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I Term Rotatie"
     },
+    "pidTuningItermRotationHelp": {
+        "message": "Roteert de huidige I Term-vector op de juiste manier naar de andere assen wanneer de quad roteert bij continu gieren tijdens rollen en bij het uitvoeren van trechters en andere trucs. Wordt zeer gewaardeerd door LOS acro piloten."
+    },
     "pidTuningSmartFeedforward": {
         "message": "Slimme Feedforward"
     },
+    "pidTuningSmartFeedforwardHelp": {
+        "message": "Vermindert het effect van de F-term in de PID loop. Wanneer zowel de P-term als de F-term op hetzelfde moment actief zijn, wordt alleen de grootste van de twee gebruikt. Hierdoor wordt overshoot vermeden zonder dat we de D hoeven te verhogen. Maar dit vermindert ook het responsiviteitseffect dat wordt geproduceerd door de F-term wanneer toegevoegd aan P."
+    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Beperkt de accumulatie van I Term wanneer snelle bewegingen plaatsvinden. Dit helpt speciaal om de bounceback aan het einde van rollen en andere snelle bewegingen te verminderen. U kunt de assen kiezen waarin dit actief is. Maar ook of de snelle beweging wordt gedetecteerd met behulp van de Gyro of het Setpoint (stick)."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Assen",
@@ -3371,14 +3529,26 @@
         "message": "Afsnijden",
         "description": "Cutoff value of the I Term Relax"
     },
+    "pidTuningItermRelaxCutoffHelp": {
+        "message": "Lagere waarden onderdrukken bounce-back na flips in quads met een lage autoriteit, hoge waarden verhogen de hoge precisie bij het racen.<br>Stel in op 30-40 voor racen, 15 voor responsieve freestyle builds, 10 voor zwaardere freestyle quads, 3-5 voor X-klasse."
+    },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Controle"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Deze functie lost enkele onderliggende problemen van $t(pidTuningItermRotation.message) op en zou het hopelijk op een gegeven moment moeten vervangen. Deze functie accumuleert de absolute gyro-fout in quad-coördinaten en mengt een proportionele correctie in het setpoint. Om het te laten werken, moet je AirMode en $t(pidTuningItermRelax.message) inschakelen (voor $t(pidTuningItermRelaxAxesOptionRP.message)). Als u deze functie combineert met $t(pidTuningIntegratedYaw.message), kunt u $t(pidTuningItermRelax.message) inschakelen voor $t(pidTuningItermRelaxAxesOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
     },
+    "pidTuningThrottleBoostHelp": {
+        "message": "Met deze functie kan het gas tijdelijk worden opgevoerd bij snelle stick-bewegingen. Dit verhoogt het acceleratiekoppel naar de motoren wat een veel snellere gasrespons oplevert."
+    },
     "pidTuningIdleMinRpm": {
         "message": "Dynamische Stationaire Waarde [* 100 RPM]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamic Idle verbetert de controle bij een laag toerental en vermindert het risico op motor desyncs. Het corrigeert problemen die worden veroorzaakt door luchtstromen die de props versnellen of vertragen. Waardoor de PID-autoriteit, stabiliteit en reactievermogen worden verbeterd. Het dynamische stationaire toerental moet worden ingesteld op ongeveer 20% onder het toerental van uw Dshot Idle-waarde (zie het tabblad $t(tabMotorTesting.message)). Meestal is het niet nodig om uw DShot standaard idle waarde te wijzigen. Voor een langere hangtime ondersteboven dient u de idle waarde van DShot en het minimale toerental samen te verlagen. <br><br>Bezoek <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">dit wiki-item</a> voor meer info."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Hoek Limiet"
@@ -3392,6 +3562,9 @@
     "pidTuningIntegratedYawCaution": {
         "message": "<span class=\"message-negative\">WAARSCHUWING</span>: als je deze functie inschakelt, moet je de YAW PID instellingen aanpassen. Meer informatie <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a>"
     },
+    "pidTuningIntegratedYawHelp": {
+        "message": "Integrated Yaw is een functie die een fundamenteel probleem met quad-besturing corrigeert: terwijl de pitch- en roll-as worden bestuurd door de stuwkrachtdifferentiëlen, is de manier waarop yaw wordt bereikt geheel anders. Integrated Yaw lost dit op door de output van de yaw pid te integreren voordat ze op de mixer worden toegepast. Dit normaliseert de manier waarop de pids werken. U kunt nu deze as instellen zoals u ook de andere assen instelt. Het vereist het gebruik van absolute control omdat er geen I nodig is bij Integrated Yaw."
+    },
     "configHelp2": {
         "message": "Willekeurige rotatie van het bord in graden. Hiermee maak je het mogelijk de vluchtcontroller gedraaid, ondersteboven of in een andere dan gebruikelijke positie te monteren. Gebruik bij externe sensoren de sensoruitlijningen (Gyro, Acc, Mag) om de sensorpositie onafhankelijk van de oriëntatie van het bord te definiëren. "
     },
@@ -3400,6 +3573,9 @@
     },
     "failsafePaneTitleOld": {
         "message": "Ontvanger failsafe"
+    },
+    "failsafeFeaturesHelpNew": {
+        "message": "Failsafe heeft twee fasen. <strong>Fase 1</strong> wordt ingeschakeld wanneer een vluchtkanaal een ongeldige pulslengte heeft, de ontvanger een failsafe-modus meldt of er is helemaal geen signaal is ontvangen. De terugvalinstellingen van het kanaal worden toegepast op <span class=\"message-negative\">alle kanalen</span>. Er wordt dan een korte tijd gegeven om herstel mogelijk te maken. <strong>Fase 2</strong> wordt ingevoerd wanneer de foutconditie langer duurt dan de geconfigureerde tijd. Dit is van toepassing zolang de quad is <span class=\"message-negative\">ingeschakeld</span>. Alle kanalen blijven dan op de toegepaste kanaal fallback-instelling tenzij deze wordt onderdrukt door de gekozen procedure. <br /><strong>Opmerking:</strong> voordat fase 1 wordt ingevoerd, worden de terugvalinstellingen voor kanalen ook toegepast op de individuele AUX-kanalen met ongeldige pulsen."
     },
     "failsafePulsrangeTitle": {
         "message": "Geldige Pulse Bereik Instellingen"
@@ -3517,6 +3693,12 @@
     },
     "failsafeGpsRescueItemSanityChecksFSOnly": {
         "message": "Alleen Failsafe"
+    },
+    "failsafeKillSwitchItem": {
+        "message": "Failsafe Kill Switch (Configureer Failsafe in tabblad Modes)"
+    },
+    "failsafeKillSwitchHelp": {
+        "message": "Stel deze optie in om de failsafe-schakelaar (tabblad Modes) te laten werken als een directe kill-schakelaar, waarbij de geselecteerde failsafe-procedure wordt omzeild. <strong> Opmerking: </strong>Inschakelen is geblokkeerd met de failsafe kill-schakelaar in de AAN-positie"
     },
     "failsafeSwitchTitle": {
         "message": "Failsafe Schakelaar"
@@ -3971,6 +4153,9 @@
         "message": "Batterij voltage",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementMainBattVoltage": {
+        "message": "Huidige accuspanning (knippert onder de alarmdrempel)"
+    },
     "osdTextElementRssiValue": {
         "message": "RSSI waarde",
         "description": "One of the elements of the OSD"
@@ -4031,6 +4216,9 @@
         "message": "Richtkruis",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCrosshairs": {
+        "message": "Crosshair midden op het scherm"
+    },
     "osdTextElementArtificialHorizon": {
         "message": "Kunstmatige horizon",
         "description": "One of the elements of the OSD"
@@ -4044,6 +4232,16 @@
     },
     "osdDescElementHorizonSidebars": {
         "message": "Zijbalken rond kunstmatige horizon indicator"
+    },
+    "osdDescElementCurrentDraw": {
+        "message": "Onmiddellijke stroomopname van de batterij"
+    },
+    "osdTextElementMahDrawn": {
+        "message": "Batterijstroom mAh verbruikt",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementMahDrawn": {
+        "message": "Totale verbruikte batterijcapaciteit"
     },
     "osdTextElementCraftName": {
         "message": "Naam drone",
@@ -4185,6 +4383,13 @@
     "osdDescElementMainBattUsage": {
         "message": "Grafische weergave van de batterijcapaciteit"
     },
+    "osdTextElementArmedTime": {
+        "message": "Timer: armed tijd",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementArmedTime": {
+        "message": "De tijd sinds het vaartuig voor het laatst was armed"
+    },
     "osdTextElementHomeDirection": {
         "message": "Thuis richting",
         "description": "One of the elements of the OSD"
@@ -4223,6 +4428,9 @@
     "osdTextElementWarnings": {
         "message": "Waarschuwingen",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementWarnings": {
+        "message": "Waarschuwingen (bijv. bijna lege batterij), waarschuwingen (bijv. redenen om niet in te schakelen, bijna lege batterij) en visuele pieper (4 knipperende sterretjes)."
     },
     "osdTextElementEscTemperature": {
         "message": "ESC temperatuur",
@@ -4434,6 +4642,13 @@
     "osdDescStatMinRssi": {
         "message": "Minimum waargenomen RSSI"
     },
+    "osdTextStatMaxCurrent": {
+        "message": "Maximum stroomverbruik batterij",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMaxCurrent": {
+        "message": "Maximaal waargenome stroomafname"
+    },
     "osdTextStatUsedMah": {
         "message": "Batterij mAh verbruikt",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -4469,6 +4684,13 @@
     "osdDescStatFlyTime": {
         "message": "De totale tijd dat het vaartuig is ingeschakeld op de huidige stroomcyclus"
     },
+    "osdTextStatArmedTime": {
+        "message": "Vliegtijd laatst armed",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatArmedTime": {
+        "message": "Tijd sinds quad laatst was armed"
+    },
     "osdTextStatMaxDistance": {
         "message": "Maximale afstand van thuis",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -4480,13 +4702,22 @@
         "message": "Blackbox nummer",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatBlackboxLogNumber": {
+        "message": "Blackbox lognummer voor deze vlucht"
+    },
     "osdTextStatTimer1": {
         "message": "Timer 1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatTimer1": {
+        "message": "Waarde van timer 1 op het moment van disarming"
+    },
     "osdTextStatTimer2": {
         "message": "Timer 2",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTimer2": {
+        "message": "Waarde van timer 2 op het moment van disarming"
     },
     "osdTextStatRtcDateTime": {
         "message": "RTC datum en tijd",
@@ -4498,6 +4729,9 @@
     "osdTextStatBattery": {
         "message": "Batterij voltage",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBattery": {
+        "message": "Spanning van de batterij in realtime"
     },
     "osdTextStatGForce": {
         "message": "Maximale G-kracht",
@@ -4595,6 +4829,18 @@
         "message": "Tijd aan",
         "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
     },
+    "osdTimerSourceOptionTotalArmedTime": {
+        "message": "Totale tijd armed",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
+    },
+    "osdTimerSourceOptionLastArmedTime": {
+        "message": "Tijd laatste keer armed",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+    },
+    "osdTimerSourceOptionOnArmTime": {
+        "message": "Aan/Armed tijd",
+        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+    },
     "osdTimerPrecision": {
         "message": "Nauwkeurigheid:"
     },
@@ -4631,12 +4877,19 @@
         "message": "Hoogte",
         "description": "Text of the altitude alarm"
     },
+    "osdWarningTextArmingDisabled": {
+        "message": "Arming Uitgezet",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningArmingDisabled": {
         "message": "Rapporteert de belangrijkste reden voor het niet inschakelen"
     },
     "osdWarningTextBatteryNotFull": {
         "message": "Batterij niet vol",
         "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningBatteryNotFull": {
+        "message": "Waarschuwt wanneer een batterij is aangesloten die niet volledig is opgeladen"
     },
     "osdWarningTextBatteryWarning": {
         "message": "Batterij waarschuwing",
@@ -4915,6 +5168,10 @@
         "message": "Frequentie waar naar toe wordt geschakeld als de Pit Modus is ingeschakeld.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
+    "vtxLowPowerDisarm": {
+        "message": "Low Power Disarm",
+        "description": "Text of one of the fields of the VTX tab"
+    },
     "vtxLowPowerDisarmHelp": {
         "message": "Wanneer dit is ingeschakeld gebruikt de VTX het laagst mogelijke beschikbare vermogen wanneer de quad is gedisarmed (behalve als er een failsafe is opgetreden).",
         "description": "Help text for the low power disarm field of the VTX tab"
@@ -4925,6 +5182,10 @@
     },
     "vtxLowPowerDisarmOption_1": {
         "message": "Aan",
+        "description": "One of the options for the Low Power Disarm mode of the VTX"
+    },
+    "vtxLowPowerDisarmOption_2": {
+        "message": "Aan tot eerste arm",
         "description": "One of the options for the Low Power Disarm mode of the VTX"
     },
     "vtxTable": {
@@ -4974,6 +5235,10 @@
     "vtxTableBandTitleFactory": {
         "message": "Fabrieksinstelling",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsChannelsTableHelp": {
+        "message": "Deze tabel geeft alle frequenties weer die kunnen worden gebruikt door uw VTX. Je kunt meerdere banden hebben. Voor elke band dient u het volgende te configureren:<br><b>- $t(vtxTableBandTitleName.message): </b>Naam die je aan deze band wilt toewijzen, zoals BOSCAM_A, FATSHARK of RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message): </b>Korte letter die verwijst naar deze band.<br><b>- $t(vtxTableBandTitleFactory.message): </b>Dit geeft aan of het een factory band is. Als dit is ingeschakeld stuurt Betaflight een band en een kanaalnummer naar uw VTX. De VTX gebruikt dan de ingebouwde frequentietabel. De frequenties die hier dan wordt geconfigureerd gelden dan alleen als referentie en worden dan voor weergavedoeleinde gebruikt in de de OSD of andere plaatsen waar dit van toepassing is. Als dit niet is ingeschakeld dan stuurt Betaflight de geconfigureerde frequentie naar de VTX.<br><b>- Frequenties:</b> Frequenties voor deze band.<br><br>Onthoud dat mogelijk niet alle frequenties legaal zijn in uw land. U moet een <b>nul</b> waarde plaatsen voor elke frequentie-index die u niet mag gebruiken. Op deze manier schakelt u dan deze frequentie uit.",
+        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
         "message": "VTX configuratiebestand <span class=\"message-positive\">opgeslagen</span>",
@@ -5026,6 +5291,9 @@
     "vtxButtonSaved": {
         "message": "Opgeslagen",
         "description": "Saved action button in the VTX tab"
+    },
+    "mainHelpArmed": {
+        "message": "Motor Arming"
     },
     "mainHelpFailsafe": {
         "message": "Failsafe modus"
@@ -5150,6 +5418,12 @@
     "pidTuningDeltaTip": {
         "message": "<b>Afgeleide van Fout</b> biedt meer directe stick-respons. Geniet de voorkeur bij racen. <br><br><b>Afgeleide van Meting</b> zorgt voor een soepelere stick-respons. Wordt bij freestyling vaak verkozen."
     },
+    "pidTuningPidControllerTip": {
+        "message": "<b>Legacy vs Betaflight (float):</b> PID-schaling en PID-logica zijn bij beide precies hetzelfde. Het is daardoor niet noodzakelijk om opnieuw te PID-tunen. Legacy is de oude betaflight welke werkt met een PID-controller die op basis van integers werkt. De nieuwe Betaflight PID-controller maakt gebruik van floating point berekeningen. <br><b>Float vs Integer:</b> PID-schaalverdeling en PID-logica werken bij beide precies hetzelfde. Er is geen extra tuning benodigd. Integer berekeningen zijn eenvoudiger en is minder belastend voor de CPU. Bij F1 boards heeft dit de voorkeur. Berekeningen met behulp van Floats kost de CPU meer maar daar krijg je meer precisie voor terug."
+    },
+    "pidTuningFilterTip": {
+        "message": "<b>Gyro Soft-filter:</b> Lowpass-filter voor de gyro. Gebruik een lagere waarde voor meer filtering.<br><b>D Term Filter:</b> Lowpass-filter voor D-term. Kan de tuning van de D-waarde beïnvloeden. Gebruik een lagere waarde voor meer filtering.<br><b>Yaw Filter:</b> Filtert yaw. Dit kan helpen bij quads die ruis op de yaw-as hebben."
+    },
     "pidTuningRatesTip": {
         "message": "Speel met de instellingen en kijk hoe die de stick curve beïnvloeden"
     },
@@ -5233,6 +5507,9 @@
     },
     "pidTuningRatesType": {
         "message": "Rates Type"
+    },
+    "pidTuningRatesTypeTip": {
+        "message": "Als u een ratetype wijzigt, verandert de rate curve en de manier waarop u deze kunt instellen"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Rate"
