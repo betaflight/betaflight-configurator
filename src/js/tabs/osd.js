@@ -345,6 +345,12 @@ OSD.generateTemperaturePreview = function (osd_data, temperature) {
     return preview;
 }
 
+OSD.generateLQPreview = function() {
+    const CRSF_PROVIDER = 9;
+    let isXF = FC.RX_CONFIG.serialrx_provider == CRSF_PROVIDER;
+    return FONT.symbol(SYM.LINK_QUALITY) + (isXF ? '2:100' : '8');
+}
+
 OSD.generateCraftName = function (osd_data) {
     var preview = 'CRAFT_NAME';
     if (FC.CONFIG.name != '') {
@@ -1015,7 +1021,7 @@ OSD.loadDisplayFields = function() {
             default_position: -1,
             draw_order: 390,
             positionable: true,
-            preview: FONT.symbol(SYM.LINK_QUALITY) + '8'
+            preview: OSD.generateLQPreview,
         },
         FLIGHT_DIST: {
             name: 'FLIGHT_DISTANCE',
@@ -2175,7 +2181,6 @@ TABS.osd.initialize = function (callback) {
     }
 
     $('#content').load("./tabs/osd.html", function () {
-
         // Prepare symbols depending on the version
         SYM.loadSymbols();
         OSD.loadDisplayFields();
@@ -2943,7 +2948,10 @@ TABS.osd.initialize = function (callback) {
 
         self.analyticsChanges = {};
 
-        GUI.content_ready(callback);
+        MSP.promise(MSPCodes.MSP_RX_CONFIG)
+            .finally(() => {
+                GUI.content_ready(callback);
+            });
     });
 };
 
