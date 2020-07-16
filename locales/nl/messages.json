@@ -275,6 +275,9 @@
     "tabCLI": {
         "message": "CLI"
     },
+    "tabLogging": {
+        "message": "Bedrade Logboekregistratie"
+    },
     "tabOnboardLogging": {
         "message": "Blackbox"
     },
@@ -759,6 +762,9 @@
     },
     "initialSetupRSSIValue": {
         "message": "$1 %"
+    },
+    "initialSetupArmingDisableFlags": {
+        "message": "Arming Uitgezet Kenmerken:"
     },
     "initialSetupArmingAllowed": {
         "message": "Arming Toegestaan"
