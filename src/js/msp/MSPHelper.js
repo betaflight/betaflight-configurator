@@ -201,11 +201,11 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_VOLTAGE_METERS:
                 FC.VOLTAGE_METERS = [];
-                var voltageMeterLength = 2;
+                var voltageMeterLength = 3;
                 for (let i = 0; i < (data.byteLength / voltageMeterLength); i++) {
                     var voltageMeter = {};
                     voltageMeter.id = data.readU8();
-                    voltageMeter.voltage = data.readU8() / 10.0;
+                    voltageMeter.voltage = data.readU16() / 10.0;
 
                     FC.VOLTAGE_METERS.push(voltageMeter)
                 }
