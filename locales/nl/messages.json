@@ -511,7 +511,7 @@
         "message": "Flight controller info, ID: <strong>$1</strong>, versie: <strong>$2</strong>"
     },
     "versionLabelTarget": {
-        "message": "Doelwit"
+        "message": "Doel"
     },
     "versionLabelFirmware": {
         "message": "Besturingssysteem"
@@ -677,7 +677,7 @@
         "message": "Zet Boot Loader / DFU aan"
     },
     "initialSetupBackupRestoreText": {
-        "message": "<strong>Backup</strong> uw configuratie in het geval van een ongeluk, <strong>CLI</strong> instellingen zijn <span class=\"message-negative\">niet</span> meegenomen - gebruik het commando 'diff all' in de CLI."
+        "message": "<strong>Backup</strong> uw configuratie in het geval van een ongeluk, <strong>CLI</strong> instellingen worden <span class=\"message-negative\">niet</span> meegenomen - gebruik het commando 'diff all' in de CLI."
     },
     "initialSetupRebootBootloaderText": {
         "message": "Herstart in <strong>boot lader / DFU</strong> modus."
@@ -749,7 +749,7 @@
         "message": "Capaciteit verbruikt:"
     },
     "initialSetupDrawing": {
-        "message": "Spanning getrokken:"
+        "message": "Spanning verbruikt:"
     },
     "initialSetupBatteryMahValue": {
         "message": "$1 mAh"
@@ -812,6 +812,10 @@
         "message": "Te snel ingeschakeld na het aansluiten van de stroom",
         "description": "Message that pops up to describe the BOOT_GRACE_TIME arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
+        "message": "Prearm schakelaar is niet geactiveerd of de prearm is niet ingeschakeld na disarm",
+        "description": "Message that pops up to describe the NOPREARM arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "Systeembelasting is te hoog voor een veilige vlucht",
         "description": "Message that pops up to describe the LOAD arming disable flag"
@@ -872,6 +876,10 @@
         "message": "Er is geen motoruitgangsprotocol geselecteerd",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
+        "message": "Een van de andere disarm flags is actief bij arming",
+        "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
+    },
     "initialSetupGPSHead": {
         "message": "GPS"
     },
@@ -926,6 +934,9 @@
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
     },
+    "featureSERVO_TILTTip": {
+        "message": "Deze functie maakt CAMSTAB-modus mogelijk, die gebruikt kan worden om twee assen stabiel te te houden met behulp van de versnellingsmeter"
+    },
     "featureSOFTSERIAL": {
         "message": "Zet CPU gebaseerde serial ports aan"
     },
@@ -943,6 +954,9 @@
     },
     "featureTELEMETRY": {
         "message": "Telemetrie uitvoer"
+    },
+    "featureCURRENT_METER": {
+        "message": "Accuspanning monitor"
     },
     "feature3D": {
         "message": "3D-modus (alleen te gebruiken met omkeerbare ESC's)"
@@ -1133,6 +1147,15 @@
     "configurationReverseMotorSwitch": {
         "message": "Richting van de motor is omgedraaid"
     },
+    "configurationReverseMotorSwitchHelp": {
+        "message": "Deze optie configureert de mixer zodat hij om kan gaan met een omgekeerde motordraairichting.\n<strong>Waarschuwing:</strong> als je dit instelt dan veranderd de motordraairichting niet! Om dat te bereiken dien je een configuratietool zoals BLHeli of JESC te gebruiken. Een andere optie is om 2 van de 3 draden die naar de motor gaan om te wisselen. Raad de online documentatie alvorens je dit doet.\nControleer voor het vliegen of de motoren de richting op draaien die aangeven staat in het bovenstaande diagram. Verwijder de propellers alvorens u deze controle doet."
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "Disarm motoren na een ingestelde vertraging [seconds] (Vereist MOTOR_STOP functie)"
+    },
+    "configurationDisarmKillSwitch": {
+        "message": "Motoren uitschakelen ongeacht de gaswaarde (wanneer ARM is geconfigureerd in het tabblad Modussen via AUX-kanaal)"
+    },
     "configurationDisarmKillSwitchHelp": {
         "message": "Arming wordt altijd uitgeschakeld wanneer het gas niet laag is. Wees voorzichtig omdat je per ongeluk kan disarmen met een schakelaar tijdens het vliegen met deze optie actief."
     },
@@ -1156,6 +1179,9 @@
     },
     "configurationThrottleMinimum": {
         "message": "Minimale Throttle (Laagste ESC waarde wanneer gearmt)"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Dit is de 'idle'-waarde die naar de ESC's wordt gestuurd wanneer het vaartuig is ingeschakeld en de gashendel op de minimumpositie staat. Verhoog de waarde voor meer stationair toerental. Verhoog ook de waarde in het geval van desyncs!"
     },
     "configurationThrottleMaximum": {
         "message": "Maximale Throttle (Hoogste ESC waarde wanneer gearmt)"
@@ -1191,7 +1217,7 @@
         "message": "Geeft een pieptoon als de gyro is gekalibreerd"
     },
     "beeperRX_LOST": {
-        "message": "Geeft een pieptoon wanneer TX is uitgeschakeld of het signaal verloren is (herhaal totdat TX in orde is)"
+        "message": "Geeft een pieptoon wanneer de TX is uitgeschakeld of als het signaal verloren is (herhaalt totdat de TX in orde is)"
     },
     "beeperRX_LOST_LANDING": {
         "message": "Geeft SOS pieptonen wanneer gearmt en de TX uitstaat of het signaal verloren is (autoland/autodisarm)"
@@ -1296,7 +1322,7 @@
         "message": "GPS"
     },
     "configurationGPSProtocol": {
-        "message": "Protocool"
+        "message": "Protocol"
     },
     "configurationGPSBaudrate": {
         "message": "Baudrate"
@@ -1367,6 +1393,9 @@
     },
     "portsPeripherals": {
         "message": "Randapparatuur"
+    },
+    "portsHelp": {
+        "message": "<strong> Opmerking: </strong> niet alle combinaties zijn geldig. Wanneer de firmware van de vluchtcontroller dit detecteert, wordt de seriële poortconfiguratie gereset."
     },
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">WAARSCHUWING:</span> De VTX tabel is niet correct ingesteld en hierdoor zal de VTX besturing niet mogelijk zijn. Stel de VTX tabel in op het tabblad $t(tabVtx.message)."
@@ -1531,6 +1560,10 @@
     "receiverRcSmoothingManual": {
         "message": "Manueel"
     },
+    "receiverRcSmoothingAutoSmoothness": {
+        "message": "Automatische Smoothness",
+        "description": "Auto Smoothness parameter for RC smoothing"
+    },
     "receiverRcSmoothingAutoSmoothnessHelp": {
         "message": "Past de berekening van Automatische afvlakking aan, 10 is de standaard verhouding tussen afvlakking en vertraging. Door het aantal te verhogen, worden RC-ingangen vloeiender maar wordt er ook vertraging toegevoegd. Dit kan handig zijn voor onbetrouwbare RC-verbindingen of voor filmisch vliegen.<br>Wees voorzichtig met nummers die de 50 naderen, de ingangsvertraging wordt dan merkbaar.<br>Gebruik het CLI-commando rc_smoothing_info terwijl je TX en RX zijn ingeschakeld om de automatisch berekende RC-afvlakking te zien. ",
         "description": "Auto Smoothness parameter help message"
@@ -1588,6 +1621,9 @@
     },
     "receiverRcSmoothingDerivativeTypeAuto": {
         "message": "Automatisch"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "Kanalen Smoothed"
     },
     "receiverRcInterpolation": {
         "message": "RC interpolatie"
@@ -1667,6 +1703,10 @@
     "pidTuningProportional": {
         "message": "Proportioneel"
     },
+    "pidTuningProportionalHelp": {
+        "message": "Bepaalt hoe sterk jouw quad de positie van de sticks volgt. (de Setpoint).<br><br>Een hogere waarde (gains) zorgt voor het strakker volgen van de positie van de stick. Echter kan dit leiden tot over rotatie als de waarde te hoog zijn in verhouding met de Derivative (D-term). De P-waarde kan je vergeleken met de veer van een schokdemper.",
+        "description": "Proportional Term helpicon message on PID table titlebar"
+    },
     "pidTuningIntegral": {
         "message": "Integraal"
     },
@@ -1739,6 +1779,12 @@
     "pidTuningThrottleLimitTypeClip": {
         "message": "CLIP"
     },
+    "pidTuningThrottleLimitTypeTip": {
+        "message": "Selecteer het type gasbeperking. <b>UIT</b> schakelt de functie uit, <b>SCHAAL</b> verandert het gasbereik van 0 naar het geselecteerde percentage met behulp van het volledige stick bereik, <b>CLIP</b> zal een maximaal gas percentage instellen. Alles boven dit percentage zal geen effect zal hebben"
+    },
+    "pidTuningThrottleLimitPercentTip": {
+        "message": "Stel het gewenste gas percentage limiet in. Een instelling van 100% schakelt deze functie uit."
+    },
     "pidTuningFilter": {
         "message": "Filter"
     },
@@ -1777,6 +1823,9 @@
     },
     "dialogCopyProfileTitle": {
         "message": "Profielwaarden kopiëren"
+    },
+    "dialogCopyProfileNote": {
+        "message": "Alle waarden op het bestemmingsprofiel worden gewist en overschreven"
     },
     "dialogCopyProfileConfirm": {
         "message": "Kopieer"
@@ -4239,6 +4288,10 @@
     "osdDescElementHorizonSidebars": {
         "message": "Zijbalken rond kunstmatige horizon indicator"
     },
+    "osdTextElementCurrentDraw": {
+        "message": "Stroomverbruik batterij",
+        "description": "One of the elements of the OSD"
+    },
     "osdDescElementCurrentDraw": {
         "message": "Onmiddellijke stroomopname van de batterij"
     },
@@ -4341,7 +4394,7 @@
         "message": "Yaw axis PID gains"
     },
     "osdTextElementPower": {
-        "message": "Kracht",
+        "message": "Watt",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPower": {
@@ -5327,7 +5380,7 @@
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
-        "message": "Stuurt ESC gegevens naar het FC via DShot telemetry. Vereist door RPM Filtering en dynamisch idle. <br> <br>Opmerking: Vereist een compatibel ESC met de juiste firmware, bijvoorbeeld JESC, Jazzmac, BLHeli-32.",
+        "message": "Stuurt ESC gegevens naar het FC via DShot telemetry. Dit is vereist voor RPM Filtering en dynamisch idle.<br> <br>Opmerking: Vereist een compatibel ESC met de juiste firmware, bijvoorbeeld JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
     "configurationGyroSyncDenom": {
@@ -5362,6 +5415,9 @@
     },
     "configurationBatteryVoltage": {
         "message": "Batterij voltage"
+    },
+    "configurationBatteryCurrent": {
+        "message": "Batterij Stroom"
     },
     "configurationBatteryMeterType": {
         "message": "Type batterijmeter"
@@ -5615,6 +5671,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Update vanuit de Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Ga naar het tabblad met informatie over uw apparaat in de instellingen en tik 10 keer op het buildversienummer om de 'Developper-opties' in te schakelen. Zoek daarna naar de ontwikkelaaropties en selecteer <b>{{app}}</b> als webviewprovider."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Instellingen openen"
