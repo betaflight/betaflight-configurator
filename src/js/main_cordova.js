@@ -90,7 +90,7 @@ const WEBVIEW = {
     getAdvice2: function(callback) {
         const self = this;
         if (self.uptodateApps.length > 0) {
-            self.advices.selectWebview(callback);
+            self.advices.selectWebview(self.uptodateApps[0], callback);
         } else {
             if ((self.apps[WEBVIEW.appsId.googleWebview].installed && self.apps[WEBVIEW.appsId.googleWebview].enabled)
                 && (self.apps[WEBVIEW.appsId.chrome].installed && self.apps[WEBVIEW.appsId.chrome].enabled)) {
