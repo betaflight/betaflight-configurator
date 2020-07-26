@@ -233,6 +233,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
     .logo_text {
         font-size: inherit;
+        position: relative;
     }
 }
 
