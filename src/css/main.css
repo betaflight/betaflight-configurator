@@ -969,6 +969,7 @@ input[type="number"]::-webkit-inner-spin-button {
     background-image: url(../images/light-wide-2.svg);
     background-repeat: no-repeat;
     background-position: center 20px;
+    background-position-x: 12px;
     background-size: 80%;
     height: 120px;
     position: relative;
@@ -976,7 +977,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 #tab_logoversion .logo_text {
     display: block !important;
-    left: 100px;
+    left: 82px;
     top: 62px;
 }
 
