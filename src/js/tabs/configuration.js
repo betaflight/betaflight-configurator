@@ -843,52 +843,12 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gpsBaudrateElement.parent().hide();
         }
 
-        // generate serial RX
-        var serialRXtypes = [
-            'SPEKTRUM1024',
-            'SPEKTRUM2048',
-            'SBUS',
-            'SUMD',
-            'SUMH',
-            'XBUS_MODE_B',
-            'XBUS_MODE_B_RJ01'
-        ];
+        const serialRXSelectEl = $('select.serialRX');
+        FC.RX_CONFIG.getSerialRxTypes().forEach((serialRxType, index) => {
+            serialRXSelectEl.append(`<option value="${index}">${serialRxType}</option>`);
+        });
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
-            serialRXtypes.push('IBUS');
-        }
-
-        if ((FC.CONFIG.flightControllerIdentifier === 'BTFL' && semver.gte(FC.CONFIG.flightControllerVersion, "2.6.0")) ||
-            (FC.CONFIG.flightControllerIdentifier === 'CLFL' && semver.gte(FC.CONFIG.apiVersion, "1.31.0"))) {
-            serialRXtypes.push('JETIEXBUS');
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.31.0"))  {
-            serialRXtypes.push('CRSF');
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.24.0"))  {
-            serialRXtypes.push('SPEKTRUM2048/SRXL');
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.35.0"))  {
-            serialRXtypes.push('TARGET_CUSTOM');
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.37.0"))  {
-            serialRXtypes.push('FrSky FPort');
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0"))  {
-            serialRXtypes.push('SPEKTRUM SRXL2');
-        }
-
-        var serialRX_e = $('select.serialRX');
-        for (var i = 0; i < serialRXtypes.length; i++) {
-            serialRX_e.append('<option value="' + i + '">' + serialRXtypes[i] + '</option>');
-        }
-
-        serialRX_e.change(function () {
+        serialRXSelectEl.change(function () {
             var serialRxValue = parseInt($(this).val());
 
             var newValue;
@@ -901,7 +861,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         });
 
         // select current serial RX type
-        serialRX_e.val(FC.RX_CONFIG.serialrx_provider);
+        serialRXSelectEl.val(FC.RX_CONFIG.serialrx_provider);
 
         if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
             var spiRxTypes = [

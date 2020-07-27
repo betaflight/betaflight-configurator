@@ -346,8 +346,8 @@ OSD.generateTemperaturePreview = function (osd_data, temperature) {
 }
 
 OSD.generateLQPreview = function() {
-    const CRSF_PROVIDER = 9;
-    let isXF = FC.RX_CONFIG.serialrx_provider == CRSF_PROVIDER;
+    const crsfIndex = FC.RX_CONFIG.getSerialRxTypes().findIndex(name => name === 'CRSF');
+    const isXF = crsfIndex === FC.RX_CONFIG.serialrx_provider;
     return FONT.symbol(SYM.LINK_QUALITY) + (isXF ? '2:100' : '8');
 }
 
