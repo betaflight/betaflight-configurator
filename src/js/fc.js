@@ -497,6 +497,54 @@ const FC = {
             rcSmoothingDerivativeType:    0,
             rcSmoothingAutoSmoothness:    0,
             usbCdcHidType:                0,
+            serialRxTypes: [
+                'SPEKTRUM1024',
+                'SPEKTRUM2048',
+                'SBUS',
+                'SUMD',
+                'SUMH',
+                'XBUS_MODE_B',
+                'XBUS_MODE_B_RJ01',
+            ],
+
+            getSerialRxTypes: () => {
+                const apiVersion = this.CONFIG.apiVersion;
+                const flightControllerIdentifier = this.CONFIG.flightControllerIdentifier;
+                const flightControllerVersion = this.CONFIG.flightControllerVersion;
+                // js way of cloning an array
+                const result = [...this.RX_CONFIG.serialRxTypes];
+
+                if (semver.gte(apiVersion, "1.15.0")) {
+                    result.push('IBUS');
+                }
+
+                if ((flightControllerIdentifier === 'BTFL' && semver.gte(flightControllerVersion, "2.6.0")) ||
+                    (flightControllerIdentifier === 'CLFL' && semver.gte(apiVersion, "1.31.0"))) {
+                    result.push('JETIEXBUS');
+                }
+
+                if (semver.gte(apiVersion, "1.31.0")) {
+                    result.push('CRSF');
+                }
+
+                if (semver.gte(apiVersion, "1.24.0")) {
+                    result.push('SPEKTRUM2048/SRXL');
+                }
+
+                if (semver.gte(apiVersion, "1.35.0")) {
+                    result.push('TARGET_CUSTOM');
+                }
+
+                if (semver.gte(apiVersion, "1.37.0")) {
+                    result.push('FrSky FPort');
+                }
+
+                if (semver.gte(apiVersion, "1.42.0")) {
+                    result.push('SPEKTRUM SRXL2');
+                }
+
+                return result;
+            },
         };
 
         this.FAILSAFE_CONFIG = {
