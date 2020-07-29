@@ -3468,6 +3468,12 @@
     "pidTuningVbatPidCompensationHelp": {
         "message": "Zwiększa wartości PID, aby zrekompensować spadek Vbat. Zapewni to bardziej stałą charakterystykę podczas całego lotu. Zastosowana rekompensata jest obliczana na podstawie wartości $t(powerBatteryMaximum.message) ustawionej na stronie $t(tabPower.message), więc upewnij się, że jest ustawiona tak jak byś tego chciał."
     },
+    "pidTuningVbatSagCompensation": {
+        "message": "Kompensacja opadania napięcia baterii"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Daje jednostajną wydajność przepustnicy i PID-ów w zakresie użytecznego napięcia akumulatora poprzez kompensację spadku napięcia baterii (Vbat sag). Zakres kompensacji może wynosić od 0 do 100 %. Zalecana jest pełna kompensacja (100%).<br><br>Odwiedź <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">wpis na wiki</a>, aby uzyskać więcej informacji."
+    },
     "pidTuningItermRotation": {
         "message": "I Term Rotation"
     },
@@ -5552,5 +5558,26 @@
     "gpsSbasNone": {
         "message": "Brak",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Instalacja aplikacji <b>{{app}}</b> może rozwiązać ten problem z kompatybilnością."
+    },
+    "cordovaWebviewUninstall": {
+        "message": "Odinstalowanie aplikacji <b>{{app}}</b> może rozwiązać ten problem z kompatybilnością. Jeśli nie możesz go odinstalować, spróbuj go wyłączyć z poziomu ustawień aplikacji."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Odinstaluj ze sklepu Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Odinstaluj / Wyłącz w ustawieniach"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "Aktualizacja aplikacji <b>{{app}}</b> może rozwiązać ten problem z kompatybilnością."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Aktualizuj ze sklepu Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Przejdź do zakładki z informacjami o twoim urządzeniu mobilnym i naciśnij 10 razy numer wersji kompilacji - aby włączyć 'Opcje programisty'. Następnie odszukaj i przejdź do opcji programisty i wybierz <b>{{app}}</b> jako dostawcę widoku internetowego."
     }
 }
