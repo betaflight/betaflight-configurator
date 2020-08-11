@@ -3787,9 +3787,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibrált feszültség skála:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Akkumulátor"
     },
@@ -3870,6 +3867,9 @@
     },
     "powerAmperageHead": {
         "message": "Árammérő"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Akkumulátor"
