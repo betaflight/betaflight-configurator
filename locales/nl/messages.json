@@ -3854,6 +3854,9 @@
     "powerVoltageHead": {
         "message": "Voltage Meter"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Waarschuwing:</span> Waarden beperkt tot 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3862,9 +3865,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "Gekalibreerde Voltage Schaal:"
-    },
-    "powerAmperageValue": {
-        "message": "$1 A"
     },
     "powerVoltageId10": {
         "message": "Batterij"
@@ -3946,6 +3946,12 @@
     },
     "powerAmperageHead": {
         "message": "Amperage Meter"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Waarschuwing:</span> Waarden beperkt tot 63.5A."
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Batterij"
