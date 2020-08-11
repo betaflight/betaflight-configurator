@@ -3798,9 +3798,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Skalibrowana skala napięcia:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Bateria"
     },
@@ -3881,6 +3878,9 @@
     },
     "powerAmperageHead": {
         "message": "Amperomierz"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Bateria"
