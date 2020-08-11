@@ -3851,9 +3851,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Échelle de tension calibrée:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Batterie"
     },
@@ -3934,6 +3931,9 @@
     },
     "powerAmperageHead": {
         "message": "Intensité"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Batterie"
