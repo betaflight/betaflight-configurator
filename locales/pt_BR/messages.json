@@ -3790,9 +3790,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Escala de Voltagem Calibrada:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Bateria"
     },
@@ -3873,6 +3870,9 @@
     },
     "powerAmperageHead": {
         "message": "Medidor de Amperes"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Bateria"
