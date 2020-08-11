@@ -3359,9 +3359,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibririrana skala napona:"
     },
-    "powerAmperageValue": {
-        "message": "$1 V"
-    },
     "powerVoltageId10": {
         "message": "Baterija"
     },
@@ -3442,6 +3439,9 @@
     },
     "powerAmperageHead": {
         "message": "Mjerač struje"
+    },
+    "powerAmperageValue": {
+        "message": "$1 V"
     },
     "powerAmperageId10": {
         "message": "Baterija"
