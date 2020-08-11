@@ -3449,9 +3449,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibrerad spänningsskala:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Batteri"
     },
@@ -3532,6 +3529,9 @@
     },
     "powerAmperageHead": {
         "message": "Strömmätare"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Batteri"
