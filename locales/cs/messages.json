@@ -1429,14 +1429,14 @@
     "powerVoltageValue": {
         "message": "$1 V"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Baterie"
     },
     "powerAmperageHead": {
         "message": "Ampérmetr"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerMahValue": {
         "message": "$1 mAh"
