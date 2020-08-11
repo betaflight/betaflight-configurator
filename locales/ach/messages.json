@@ -3936,6 +3936,9 @@
     "powerVoltageHead": {
         "message": "crwdns6145:0crwdne6145:0"
     },
+    "powerVoltageWarning": {
+        "message": "crwdns10240:0crwdne10240:0"
+    },
     "powerVoltageValue": {
         "message": "crwdns6146:0$1crwdne6146:0"
     },
@@ -3944,9 +3947,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "crwdns9176:0crwdne9176:0"
-    },
-    "powerAmperageValue": {
-        "message": "crwdns6147:0$1crwdne6147:0"
     },
     "powerVoltageId10": {
         "message": "crwdns6148:0crwdne6148:0"
@@ -4028,6 +4028,12 @@
     },
     "powerAmperageHead": {
         "message": "crwdns6174:0crwdne6174:0"
+    },
+    "powerAmperageWarning": {
+        "message": "crwdns10242:0crwdne10242:0"
+    },
+    "powerAmperageValue": {
+        "message": "crwdns6147:0$1crwdne6147:0"
     },
     "powerAmperageId10": {
         "message": "crwdns6175:0crwdne6175:0"
