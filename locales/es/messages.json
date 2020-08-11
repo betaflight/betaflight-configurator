@@ -3838,6 +3838,9 @@
     "powerVoltageHead": {
         "message": "Medidor de Voltaje"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Atención:</span> Valores limitados a 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3846,9 +3849,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "Escala de Voltaje Calibrada:"
-    },
-    "powerAmperageValue": {
-        "message": "$1 A"
     },
     "powerVoltageId10": {
         "message": "Batería"
@@ -3930,6 +3930,12 @@
     },
     "powerAmperageHead": {
         "message": "Medidor de Amperaje"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Atención:</span> Valores limitados a 63.5A."
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Batería"
