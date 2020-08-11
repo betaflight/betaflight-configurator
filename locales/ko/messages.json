@@ -3906,6 +3906,9 @@
     "powerVoltageHead": {
         "message": "전압"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">경고:</span> 값은 25.5V로 제한되어 있습니다."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3914,9 +3917,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "교정된 전압 스케일:"
-    },
-    "powerAmperageValue": {
-        "message": "$1 A"
     },
     "powerVoltageId10": {
         "message": "배터리"
@@ -3998,6 +3998,12 @@
     },
     "powerAmperageHead": {
         "message": "전류"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">경고:</span> 값은 63.5A로 제한되어 있습니다."
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "배터리"
