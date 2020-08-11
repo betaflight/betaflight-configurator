@@ -2,10 +2,13 @@
 
 const TIMEOUT_CHECK = 500; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
-var usbDevices = { filters: [
-    {'vendorId': 1155, 'productId': 57105},
-    {'vendorId': 10473, 'productId': 393}
-] };
+var usbDevices = {
+    filters: [
+        { 'vendorId': 1155, 'productId': 57105 },
+        { 'vendorId': 10473, 'productId': 393 },
+        { 'vendorId': 9025, 'productId': 859 }  /* Arduino / H7 */
+    ]
+};
 
 var PortHandler = new function () {
     this.initial_ports = false;
@@ -22,7 +25,7 @@ PortHandler.initialize = function () {
 PortHandler.check = function () {
     var self = this;
 
-    serial.getDevices(function(current_ports) {
+    serial.getDevices(function (current_ports) {
         // port got removed or initial_ports wasn't initialized yet
         if (self.array_difference(self.initial_ports, current_ports).length > 0 || !self.initial_ports) {
             var removed_ports = self.array_difference(self.initial_ports, current_ports);
@@ -69,7 +72,7 @@ PortHandler.check = function () {
                 ConfigStorage.get('last_used_port', function (result) {
                     // if last_used_port was set, we try to select it
                     if (result.last_used_port) {
-                        current_ports.forEach(function(port) {
+                        current_ports.forEach(function (port) {
                             if (port == result.last_used_port) {
                                 console.log('Selecting last used port: ' + result.last_used_port);
 
@@ -154,17 +157,17 @@ PortHandler.check_usb_devices = function (callback) {
         const dfuElement = portPickerElement.children("[value='DFU']");
         if (result.length) {
             if (!dfuElement.length) {
-                portPickerElement.append($('<option/>', {value: "DFU", text: "DFU", data: {isDFU: true}}));
+                portPickerElement.append($('<option/>', { value: "DFU", text: "DFU", data: { isDFU: true } }));
                 portPickerElement.val('DFU').change();
             }
             self.dfu_available = true;
         } else {
             if (dfuElement.length) {
-               dfuElement.remove();
+                dfuElement.remove();
             }
             self.dfu_available = false;
         }
-        if(callback) callback(self.dfu_available);
+        if (callback) callback(self.dfu_available);
 
         if (!$('option:selected', portPickerElement).data().isDFU) {
             portPickerElement.trigger('change');
@@ -177,19 +180,19 @@ PortHandler.update_port_select = function (ports) {
     portPickerElement.empty();
 
     for (var i = 0; i < ports.length; i++) {
-        portPickerElement.append($("<option/>", {value: ports[i], text: ports[i], data: {isManual: false}}));
+        portPickerElement.append($("<option/>", { value: ports[i], text: ports[i], data: { isManual: false } }));
     }
 
-    portPickerElement.append($("<option/>", {value: 'manual', i18n: 'portsSelectManual', data: {isManual: true}}));
+    portPickerElement.append($("<option/>", { value: 'manual', i18n: 'portsSelectManual', data: { isManual: true } }));
     i18n.localizePage();
 };
 
-PortHandler.port_detected = function(name, code, timeout, ignore_timeout) {
+PortHandler.port_detected = function (name, code, timeout, ignore_timeout) {
     var self = this;
-    var obj = {'name': name, 'code': code, 'timeout': (timeout) ? timeout : 10000};
+    var obj = { 'name': name, 'code': code, 'timeout': (timeout) ? timeout : 10000 };
 
     if (!ignore_timeout) {
-        obj.timer = setTimeout(function() {
+        obj.timer = setTimeout(function () {
             console.log('PortHandler - timeout - ' + obj.name);
 
             // trigger callback
@@ -211,7 +214,7 @@ PortHandler.port_detected = function(name, code, timeout, ignore_timeout) {
 
 PortHandler.port_removed = function (name, code, timeout, ignore_timeout) {
     var self = this;
-    var obj = {'name': name, 'code': code, 'timeout': (timeout) ? timeout : 10000};
+    var obj = { 'name': name, 'code': code, 'timeout': (timeout) ? timeout : 10000 };
 
     if (!ignore_timeout) {
         obj.timer = setTimeout(function () {
