@@ -2895,9 +2895,6 @@
     "powerVoltageValue": {
         "message": "$ 1 V"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Baterai"
     },
@@ -2978,6 +2975,9 @@
     },
     "powerAmperageHead": {
         "message": "Ampere Meter"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Baterai"
