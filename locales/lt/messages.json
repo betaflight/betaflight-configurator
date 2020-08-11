@@ -1680,9 +1680,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibruota įtampos skalė:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Baterija"
     },
@@ -1712,6 +1709,9 @@
     },
     "powerAmperageHead": {
         "message": "Srovės jutiklis"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Baterija"
