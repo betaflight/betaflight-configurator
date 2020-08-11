@@ -3847,9 +3847,6 @@
     "powerVoltageCalibratedScale": {
         "message": "電圧スケール調整:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "バッテリー"
     },
@@ -3930,6 +3927,9 @@
     },
     "powerAmperageHead": {
         "message": "電流メーター"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "バッテリー"
