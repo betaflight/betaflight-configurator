@@ -3790,9 +3790,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Откалиброванная шкала напряжения:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Батарея"
     },
@@ -3873,6 +3870,9 @@
     },
     "powerAmperageHead": {
         "message": "Датчик тока"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Батарея"
