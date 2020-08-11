@@ -3255,9 +3255,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibrētā sprieguma skala:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Akumulators"
     },
@@ -3338,6 +3335,9 @@
     },
     "powerAmperageHead": {
         "message": "Ampērmetrs"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Akumulators"
