@@ -3854,9 +3854,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibratutako Tentsio Eskala:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Bateria"
     },
@@ -3937,6 +3934,9 @@
     },
     "powerAmperageHead": {
         "message": "Intentsitate neurgailua"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Bateria"
