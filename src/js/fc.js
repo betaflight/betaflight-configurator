@@ -41,6 +41,7 @@ const FC = {
     MOTOR_3D_CONFIG: null,
     MOTOR_CONFIG: null,
     MOTOR_DATA: null,
+    MOTOR_OUTPUT_ORDER: null,
     MOTOR_TELEMETRY_DATA: null,
     MULTIPLE_MSP: null,
     PID: null,
@@ -604,6 +605,8 @@ const FC = {
             vtxtable_powerlevel_value:      0,
             vtxtable_powerlevel_label:      0,
         };
+
+        this.MOTOR_OUTPUT_ORDER =           [];
 
         this.MULTIPLE_MSP = {
             msp_commands:                   [],

@@ -1,0 +1,72 @@
+.motorOutputReorderComponent {
+    display:flex;
+    height:100%;
+    flex-flow:column;
+}
+
+.motorOutputReorderComponentHeader {
+    border-bottom: 1px solid var(--accent);
+    margin-bottom: 10px;
+    padding-bottom: 12px;
+}
+
+#dialogMotorOutputReorderMainContent {
+    display:flex;
+    height:100%;
+    flex-flow:column;
+}
+
+#dialogMotorOutputReorderWarning {
+    display:flex;
+    height:100%;
+    flex-flow:column;
+}
+
+#motorOutputReorderCanvas {
+    width:100%;
+    flex-grow: 1;
+}
+
+#motorOutputReorderActionPanel {
+    height: 46px;
+}
+
+#dialogMotorOutputReorderSave {
+    margin-right: 0px;
+}
+
+.motorsRemapToggleParentContainer {
+    display: flex;
+    margin-bottom: 1.5em;
+    margin-top: 1.5em;
+}
+
+#motorOutputReorderActionHint {
+    margin-top: 1.0em;
+    display: inline-block;
+}
+
+.motorsRemapToggleNarrow {
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.motorsRemapToggleWide {
+    flex: 1;
+}
+
+.motorsRemapDialogRiskNoticeText {
+    font-size: 1.2em;
+}
+
+.motorsRemapDialogRExplanationText {
+    font-size: 1.0em;
+    margin-bottom: 1.5em;
+    margin-top: 1.5em;
+}
+
+#motorOutputReorderSaveStartOverButtonsPanel {
+    position: absolute;
+    bottom: 4px;
+}
