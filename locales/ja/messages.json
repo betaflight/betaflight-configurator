@@ -2405,6 +2405,39 @@
     "motorsEnableControl": {
         "message": "<strong>リスクを認識し</strong>、プロペラは全て外しました - モーター制御とアーミングを可能にし、暴走離陸防止機能を無効にします。"
     },
+    "motorOutputReorderDialogClose": {
+        "message": "キャンセル"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "スタート"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "モーター並び替え"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "モーター並び替え"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "回転するモーターをクリックしてください..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "準備ができました！画像をクリックして回転するモーターを確認してください。"
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>リスクを正しく理解</strong>し、<br />プロペラを外してください。"
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>注意事項</strong><br /><strong class=\"message-negative\">怪我を防止するために、すべてのプロペラを取り外してください！</strong><br />モーターが<strong>回転します！</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
+    },
+    "motorsRemapDialogSave": {
+        "message": "保存"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "やり直し"
+    },
     "sensorsInfo": {
         "message": "更新周期を速く設定し、複数のグラフを同時にレンダリングすると、リソースが重くなりノートPC等を使用するとバッテリーを早く消費してしまう場合があるので注意してください。<br/>必要とするセンサーのグラフを、適正な更新周期でレンダリングすることをお勧めします。"
     },
@@ -3838,6 +3871,9 @@
     "powerVoltageHead": {
         "message": "電圧メーター"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">警告:</span> 値は25.5Vに制限されています。"
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3927,6 +3963,9 @@
     },
     "powerAmperageHead": {
         "message": "電流メーター"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">警告:</span> 値は63.5Vに制限されています。"
     },
     "powerAmperageValue": {
         "message": "$1 A"
