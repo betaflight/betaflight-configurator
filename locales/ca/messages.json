@@ -2413,6 +2413,39 @@
     "motorsEnableControl": {
         "message": "<strong>Entenc els riscos</strong>, les pales estan tretes - habilita el control dels motors i armat i deshabilita el Runaway Takeoff Prevention."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Canceŀlar"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Inici"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Reordenar els motors"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Reordenar els motors"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Clica sobre el motor girant..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "A punt! Comproveu l’ordre de gir dels motors fent clic a la imatge."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Entenc els riscos</strong>, <br />les hèlix estan tretes."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Avis de seguretat</strong><br /><strong class=\"message-negative\">Retireu totes les hélices per evitar lesions!</strong><br />Els motors <strong>giraran!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Avís d'informació</strong><br />Els motors giraran un per un i podreu seleccionar el motor que gira. S'ha de connectar la bateria, s'ha de seleccionar el protocol ESC correcte. Aquesta utilitat només pot reorganitzar motors actualment actius. El re-mapeig més complex requereix la comanda de recursos CLI. Consulteu aquest <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Pàgina Wiki</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Desa"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Comença de nou"
+    },
     "sensorsInfo": {
         "message": "Tingues en compte que fent servir períodes d'actualització ràpids i renderitzant múltiples gràfics alhora pot gastar ràpidament la bateria del teu portàtil.<br />Et recomanem que només rederitzis gràfics dels sensors del teu interès en períodes raonables."
     },
