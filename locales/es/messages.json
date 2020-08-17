@@ -2405,6 +2405,39 @@
     "motorsEnableControl": {
         "message": "<strong>Entiendo los riesgos</strong>, las hélices están quitadas - activar control de motor y armado y desactivar la Protección de Despegue Incontrolado."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Cancelar"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Empezar"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Reordenar motores"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Reordenar motores"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Pulsa en el motor que esté girando..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "¡Listo! Comprueba el orden de giro de los motores pulsando en la imagen."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Entiendo los riesgos</strong>,<br />las hélices están quitadas."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Aviso de seguridad</strong><br /><strong class=\"message-negative\">¡Quita todas las hélices para evitar lesiones!</strong><br />¡Los motores <strong>van a girar!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Información</strong><br />Los motores van a girar uno a uno y podrás seleccionar que motor está girando. La batería debe estar conectada, y el protocolo ESC correcto debe estar seleccionado. Esta utilidad sólo puede reordenar los motores actualmente activos. Un mapeo más complejo necesita el comando Resource en CLI. Consulta esta <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">pagina de la Wiki</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Guardar"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Volver a empezar"
+    },
     "sensorsInfo": {
         "message": "Ten en mente que usar períodos rápidos de actualización y dibujar múltiples gráficas al mismo tiempo consume muchos recursos y agotará tu batería más rápido si usas un portátil.<br />Te recomendamos dibujar sólo las gráficas de los sensores en los que estés interesado y usar tiempos de actualización razonables."
     },
