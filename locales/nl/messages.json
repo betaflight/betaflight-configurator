@@ -2421,6 +2421,27 @@
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Annuleren"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Motoren herschikken"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Motoren herschikken"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Klik op de draaiende motor..."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Ik begrijp de risico's</strong>, <br /> de propellers zijn verwijderd."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Opslaan"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Begin opnieuw"
+    },
     "sensorsInfo": {
         "message": "Houd er rekening mee dat het gebruik van snelle updateperioden en het tegelijkertijd weergeven van meerdere grafieken veel resources vergt.<br />We raden aan om alleen de grafieken weer te geven voor sensoren waarin je geïnteresseerd bent. En daarbij redelijke update periodes te gebruiken."
     },
