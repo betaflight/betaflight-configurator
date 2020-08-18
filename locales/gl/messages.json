@@ -161,6 +161,10 @@
         "message": "Latviešu",
         "description": "Don't translate!!!"
     },
+    "language_nl": {
+        "message": "Holandés",
+        "description": "Don't translate!!!"
+    },
     "language_pt": {
         "message": "Português",
         "description": "Don't translate!!!"
@@ -2496,6 +2500,39 @@
     "motorsEnableControl": {
         "message": "<strong> Comprendo os riscos </strong>, as hélices están retiradas: permítese o control e armado do motor, e desactívase a prevención do despegue de Runaway."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Cancelar"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Comezar"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Reordenar os motores"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Reordenar os motores"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Pulse sobre o motor que está xirando..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Listo! Asegúrese da orde de xiro dos motores pulsando na imaxe."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong> Comprendo os riscos</strong>,<br />as hélices están retiradas."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Aviso de seguridade</strong><br /><strong class=\"message-negative\"> Retire tódalas hélices para evitar lesións!</strong><br />Os motores<strong> xirarán</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Aviso de información</strong><br />Os motores xirarán un por un e poderá seleccionar que motor está xirando. Débese conectar a batería, seleccionar o protocolo ESC correcto. Esta utilidade só pode reorganizar motores activos actualmente. O re-mapeamento máis complexo require o comando Resource no CLI. Consulte esta<a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Gardar"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Comezar de novo"
+    },
     "sensorsInfo": {
         "message": "Teña presente que usar períodos de actualización rápida e renderizar varios gráficos ao mesmo tempo é un recurso pesado e agotará a batería máis rápido se usa un portátil. <br /> Recomendamos facer representacións gráficas só para sensores que estean interesados ​​mentres usa períodos razonables de actualización."
     },
@@ -3929,6 +3966,9 @@
     "powerVoltageHead": {
         "message": "Medidor de Voltaxe"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Aviso:</span> Valores limitados a 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -4018,6 +4058,9 @@
     },
     "powerAmperageHead": {
         "message": "Medidor de Amperaxe"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Aviso:</span> Valores limitados a 63.5A."
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -5761,5 +5804,11 @@
     },
     "cordovaWebviewUsed": {
         "message": "en uso"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Confirmación"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Realmente quere pechar o configurador?"
     }
 }
