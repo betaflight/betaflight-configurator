@@ -57,6 +57,7 @@
     "lru_map": "^0.3.3",
     "marked": "^0.8.0",
     "object-hash": "^2.0.3",
+    "select2": "^4.0.13",
     "semver-min": "^0.6.5",
     "short-unique-id": "^1.1.1",
     "three": "~0.97.0",
