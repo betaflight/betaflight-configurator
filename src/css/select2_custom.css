@@ -15,6 +15,7 @@
     height: 20px !important;
     border-radius: 3px !important;
     border: 1px solid #bfbfbf !important;
+    cursor: default !important;
 }
 
 .select2-selection__arrow {
