@@ -1,0 +1,32 @@
+/* Select 2 replacement styles */
+.select2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 13.3333px;    
+}
+
+.select2-selection__rendered {
+    line-height: 19px !important;
+    padding-left: 4px !important;
+    color: var(--defaultText) !important;
+}
+
+.select2-container .select2-selection--single {
+    height: 20px !important;
+    border-radius: 3px !important;
+    border: 1px solid #bfbfbf !important;
+}
+
+.select2-selection__arrow {
+    height: 19px !important;
+}
+ .select2-selection__arrow b {
+    height: 5px !important;
+    width: 5px !important;
+    margin-left: -1px !important;
+    margin-top: -5px !important;
+    border: none !important;
+    border-bottom: 1px solid black !important;
+    border-right: 1px solid black !important;
+    transform: rotateZ(45deg);
+ }

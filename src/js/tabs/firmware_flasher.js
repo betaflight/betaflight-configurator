@@ -528,6 +528,8 @@ TABS.firmware_flasher.initialize = function (callback) {
             self.localFirmwareLoaded = false;
         }
 
+        $('select[name="board"]').select2();
+
         $('select[name="board"]').change(function() {
             $("a.load_remote_file").addClass('disabled');
             var target = $(this).val();
