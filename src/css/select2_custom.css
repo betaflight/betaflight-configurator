@@ -27,7 +27,7 @@
     margin-left: -1px !important;
     margin-top: -5px !important;
     border: none !important;
-    border-bottom: 1px solid black !important;
-    border-right: 1px solid black !important;
+    border-bottom: 1.5px solid black !important;
+    border-right: 1.5px solid black !important;
     transform: rotateZ(45deg);
  }
