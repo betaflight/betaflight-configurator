@@ -339,6 +339,7 @@ OSD.generateTemperaturePreview = function (osd_data, temperature) {
             preview += Math.floor(temperature) + FONT.symbol(SYM.TEMP_F);
             break;
         case 1:
+        case 2:
             preview += temperature + FONT.symbol(SYM.TEMP_C);
             break;
     }
@@ -650,7 +651,8 @@ OSD.loadDisplayFields = function() {
             draw_order: 160,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.ALTITUDE) + '399.7' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                const unit = FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.ALTITUDE)}399.7${unit}`;
             }
         },
         ONTIME: {
@@ -686,7 +688,8 @@ OSD.loadDisplayFields = function() {
             draw_order: 810,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.SPEED) + ' 40' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.MPH) : FONT.symbol(SYM.KPH));
+                const unit = FONT.symbol(osd_data.unit_mode === 0 || osd_data.unit_mode === 1 ? SYM.MPH : SYM.KPH);
+                return `${FONT.symbol(SYM.SPEED)}40${unit}`;
             }
         },
         GPS_SATS: {
@@ -841,7 +844,8 @@ OSD.loadDisplayFields = function() {
             draw_order: 840,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.HOMEFLAG) + '432' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                const unit = FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.HOMEFLAG)}432${unit}`;
             }
         },
         NUMERICAL_HEADING: {
@@ -861,7 +865,8 @@ OSD.loadDisplayFields = function() {
             draw_order: 300,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.ARROW_SMALL_UP) + '8.7' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.FTPS) : FONT.symbol(SYM.MPS));
+                const unit = FONT.symbol(osd_data.unit_mode === 0 ? SYM.FTPS : SYM.MPS);
+                return `${FONT.symbol(SYM.ARROW_SMALL_UP)}8.7${unit}`;
             }
         },
         COMPASS_BAR: {
@@ -1031,7 +1036,8 @@ OSD.loadDisplayFields = function() {
             draw_order: 860,
             positionable: true,
             preview: function (osd_data) {
-                return FONT.symbol(SYM.TOTAL_DIST) + '653' + FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                const unit = FONT.symbol(osd_data.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+                return `${FONT.symbol(SYM.TOTAL_DIST)}653${unit}`;
             }
         },
         STICK_OVERLAY_LEFT: {
@@ -1134,7 +1140,8 @@ OSD.loadDisplayFields = function() {
             draw_order: 455,
             positionable: true,
             preview: function (osdData) {
-                return `1234${FONT.symbol(SYM.MAH)}/${FONT.symbol(osdData.unit_mode === 0 ? SYM.MILES : SYM.KM)}`;
+                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.MILES : SYM.KM);
+                return `1234${FONT.symbol(SYM.MAH)}/${unit}`;
             },
         },
 
@@ -1158,7 +1165,8 @@ OSD.constants = {
     },
     UNIT_TYPES: [
         'IMPERIAL',
-        'METRIC'
+        'METRIC',
+        'BRITISH',
     ],
     TIMER_PRECISION: [
         'SECOND',

@@ -4291,6 +4291,10 @@
         "message": "Metric",
         "description": "Option for the units system used in the OSD"
     },
+    "osdSetupUnitsOptionBritish": {
+        "message": "British",
+        "description": "Option for the units system used in the OSD"
+    },
     "osdSetupTimersTitle": {
         "message": "Timers"
     },
