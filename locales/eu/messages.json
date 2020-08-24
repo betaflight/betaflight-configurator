@@ -30,7 +30,7 @@
         "message": "Errore"
     },
     "warningTitle": {
-        "message": "Kontuz"
+        "message": "Abisua"
     },
     "noticeTitle": {
         "message": "Oharra"
@@ -2412,6 +2412,39 @@
     "motorsEnableControl": {
         "message": "<strong>Arriskuak ulertzen ditut</strong>, helizeak kendu-motore eta armatzearen kontrolak gaitu eta ihes egitea saihesteko prebentzioa desgaitu."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Utzi"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Hasi"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Berrantolatu motoreak"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Berrantolatu motoreak"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Egin klik biraka ari den motorean..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Prest! Konprobatu motorren ordena irudian klik eginez."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Arriskuak ulertzen ditut</strong>,<br />helizeak kendu egin dira."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Segurtasun oharra</strong><br /><strong class=\"message-negative\">Helize guztiak kendu lesioak ekiditeko!</strong><br />Motorrak <strong>biraka egingo dute!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Informazio oharra</strong><br />Motoreak banan-banan bira egingo dute eta biraka hari den motorra hautatzen ahalko duzu. Bateria entxufatu behar da, ESC protokolo egokia aukeratu beharko litzateke. Erabilera honek uneko motor aktiboak ere antolatu ditzake. Birplanteatze konplexuagoak CLI baliabideen komandoa behar du. Kontsultatu <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki orria</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Gorde"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Berriz hasi"
+    },
     "sensorsInfo": {
         "message": "Gogoan izan bizkor eguneratzeko aldiak eta grafiko anitzak aldi berean erabiltzeak baliabide ugari kontsumitzen dituela eta bateria azkarrago xahutuko duzula ordenagailu eramangarria erabiltzen baduzu.<br/> Interesatzen zaizuen sentsoreen grafikoak soilik marraztea gomendatzen dugu eta zentzuzko eguneratze denborak erabili."
     },
@@ -3845,6 +3878,9 @@
     "powerVoltageHead": {
         "message": "Tentsio neurgailua"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Abisua:</span> 25.5V mugatuta balioak."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3934,6 +3970,9 @@
     },
     "powerAmperageHead": {
         "message": "Intentsitate neurgailua"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Abisua:</span> 63.5A mugatuta balioak."
     },
     "powerAmperageValue": {
         "message": "$1 A"
