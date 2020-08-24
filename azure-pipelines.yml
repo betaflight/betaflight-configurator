@@ -66,6 +66,13 @@ stages:
       inputs:
         targetPath: '$(System.DefaultWorkingDirectory)/release'
         artifact: 'betaflight-configurator-windows'
+    - script: yarn gulp release --android
+      displayName: 'Run yarn release for android'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Android release'
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/release'
+        artifact: 'betaflight-configurator-android'
 
   - job: 'MacOS'
     pool:
@@ -144,6 +151,7 @@ stages:
         githubReleasePrerelease: false
         githubIgnoreAssets: false
         githubReleaseAsset: |
+          $(Pipeline.Workspace)/betaflight-configurator-android/**
           $(Pipeline.Workspace)/betaflight-configurator-windows/**
           $(Pipeline.Workspace)/betaflight-configurator-macos/**
           $(Pipeline.Workspace)/betaflight-configurator-linux/**
