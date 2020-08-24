@@ -4234,6 +4234,10 @@
         "message": "crwdns9350:0crwdne9350:0",
         "description": "Option for the units system used in the OSD"
     },
+    "osdSetupUnitsOptionBritish": {
+        "message": "crwdns10266:0crwdne10266:0",
+        "description": "Option for the units system used in the OSD"
+    },
     "osdSetupTimersTitle": {
         "message": "crwdns6213:0crwdne6213:0"
     },
