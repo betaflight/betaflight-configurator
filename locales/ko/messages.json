@@ -4204,6 +4204,10 @@
         "message": "미터단위",
         "description": "Option for the units system used in the OSD"
     },
+    "osdSetupUnitsOptionBritish": {
+        "message": "영국단위",
+        "description": "Option for the units system used in the OSD"
+    },
     "osdSetupTimersTitle": {
         "message": "타이머"
     },
