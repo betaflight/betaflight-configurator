@@ -280,9 +280,12 @@ var serial = {
     },
     getDevices: function (callback) {
         chrome.serial.getDevices(function (devices_array) {
-            var devices = [];
+            const devices = [];
             devices_array.forEach(function (device) {
-                devices.push(device.path);
+                devices.push({
+                              path:device.path,
+                              displayName: device.displayName,
+                             });
             });
 
             callback(devices);

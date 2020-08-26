@@ -46,7 +46,7 @@ PortHandler.check_serial_devices = function () {
             const removed_ports = self.array_difference(self.initial_ports, current_ports);
 
             if (self.initial_ports !== false && removed_ports.length > 0) {
-                console.log(`PortHandler - Removed: ${removed_ports}`);
+                console.log(`PortHandler - Removed: ${JSON.stringify(removed_ports)}`);
             }
 
             // disconnect "UI" if necessary
@@ -113,14 +113,14 @@ PortHandler.check_serial_devices = function () {
 
         if (new_ports.length) {
             if (new_ports.length > 0) {
-                console.log(`PortHandler - Found: ${new_ports}`);
+                console.log(`PortHandler - Found: ${JSON.stringify(new_ports)}`);
             }
 
             self.update_port_select(current_ports);
 
             // select / highlight new port, if connected -> select connected port
             if (!GUI.connected_to) {
-                self.portPickerElement.val(new_ports[0]);
+                self.portPickerElement.val(new_ports[0].path);
             } else {
                 self.portPickerElement.val(GUI.connected_to);
             }
@@ -163,7 +163,18 @@ PortHandler.check_usb_devices = function (callback) {
         const dfuElement = self.portPickerElement.children("[value='DFU']");
         if (result.length) {
             if (!dfuElement.length) {
-                self.portPickerElement.append($('<option/>', {value: "DFU", text: "DFU", data: {isDFU: true}}));
+                let usbText;
+                if (result[0].productName) {
+                    usbText = (`DFU - ${result[0].productName}`);
+                } else {
+                    usbText = "DFU";
+                }
+
+                self.portPickerElement.append($('<option/>', {
+                    value: "DFU",
+                    text: usbText,
+                    data: {isDFU: true},
+                }));
                 self.portPickerElement.val('DFU').change();
             }
             self.dfu_available = true;
@@ -188,10 +199,25 @@ PortHandler.update_port_select = function (ports) {
     this.portPickerElement.empty();
 
     for (let i = 0; i < ports.length; i++) {
-        this.portPickerElement.append($("<option/>", {value: ports[i], text: ports[i], data: {isManual: false}}));
+        let portText;
+        if (ports[i].displayName) {
+            portText = (`${ports[i].path} - ${ports[i].displayName}`);
+        } else {
+            portText = ports[i].path;
+        }
+
+        this.portPickerElement.append($("<option/>", {
+            value: ports[i].path,
+            text: portText,
+            data: {isManual: false},
+        }));
     }
 
-    this.portPickerElement.append($("<option/>", {value: 'manual', i18n: 'portsSelectManual', data: {isManual: true}}));
+    this.portPickerElement.append($("<option/>", {
+        value: 'manual',
+        i18n: 'portsSelectManual',
+        data: {isManual: true},
+    }));
     i18n.localizePage();
 };
 
@@ -265,8 +291,9 @@ PortHandler.array_difference = function (firstArray, secondArray) {
     }
 
     for (let i = 0; i < secondArray.length; i++) {
-        if (cloneArray.indexOf(secondArray[i]) !== -1) {
-            cloneArray.splice(cloneArray.indexOf(secondArray[i]), 1);
+        const elementExists = cloneArray.findIndex(element => element.path === secondArray[i].path);
+        if (elementExists !== -1) {
+            cloneArray.splice(elementExists, 1);
         }
     }
 
