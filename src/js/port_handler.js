@@ -43,17 +43,17 @@ PortHandler.check_serial_devices = function () {
     serial.getDevices(function(current_ports) {
         // port got removed or initial_ports wasn't initialized yet
         if (self.array_difference(self.initial_ports, current_ports).length > 0 || !self.initial_ports) {
-            const removed_ports = self.array_difference(self.initial_ports, current_ports);
+            const removedPorts = self.array_difference(self.initial_ports, current_ports);
 
-            if (self.initial_ports !== false && removed_ports.length > 0) {
-                console.log(`PortHandler - Removed: ${JSON.stringify(removed_ports)}`);
+            if (self.initial_ports !== false && removedPorts.length > 0) {
+                console.log(`PortHandler - Removed: ${JSON.stringify(removedPorts)}`);
             }
 
             // disconnect "UI" if necessary
             // Keep in mind that this routine can not fire during atmega32u4 reboot procedure !!!
             if (GUI.connected_to) {
-                for (let i = 0; i < removed_ports.length; i++) {
-                    if (removed_ports[i] === GUI.connected_to) {
+                for (let i = 0; i < removedPorts.length; i++) {
+                    if (removedPorts[i] === GUI.connected_to) {
                         $('div#header_btns a.connect').click();
                     }
                 }
@@ -70,7 +70,7 @@ PortHandler.check_serial_devices = function () {
                     clearTimeout(obj.timer);
 
                     // trigger callback
-                    obj.code(removed_ports);
+                    obj.code(removedPorts);
 
                     // remove object from array
                     const index = self.port_removed_callbacks.indexOf(obj);
@@ -102,25 +102,25 @@ PortHandler.check_serial_devices = function () {
                 // initialize
                 self.initial_ports = current_ports;
             } else {
-                for (let i = 0; i < removed_ports.length; i++) {
-                    self.initial_ports.splice(self.initial_ports.indexOf(removed_ports[i]), 1);
+                for (let i = 0; i < removedPorts.length; i++) {
+                    self.initial_ports.splice(self.initial_ports.indexOf(removedPorts[i]), 1);
                 }
             }
         }
 
         // new port detected
-        const new_ports = self.array_difference(current_ports, self.initial_ports);
+        const newPorts = self.array_difference(current_ports, self.initial_ports);
 
-        if (new_ports.length) {
-            if (new_ports.length > 0) {
-                console.log(`PortHandler - Found: ${JSON.stringify(new_ports)}`);
+        if (newPorts.length) {
+            if (newPorts.length > 0) {
+                console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
             }
 
             self.update_port_select(current_ports);
 
             // select / highlight new port, if connected -> select connected port
             if (!GUI.connected_to) {
-                self.portPickerElement.val(new_ports[0].path);
+                self.portPickerElement.val(newPorts[0].path);
             } else {
                 self.portPickerElement.val(GUI.connected_to);
             }
@@ -141,7 +141,7 @@ PortHandler.check_serial_devices = function () {
                 clearTimeout(obj.timer);
 
                 // trigger callback
-                obj.code(new_ports);
+                obj.code(newPorts);
 
                 // remove object from array
                 const index = self.port_detected_callbacks.indexOf(obj);

@@ -283,7 +283,7 @@ var serial = {
             const devices = [];
             devices_array.forEach(function (device) {
                 devices.push({
-                              path:device.path,
+                              path: device.path,
                               displayName: device.displayName,
                              });
             });
