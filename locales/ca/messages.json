@@ -4144,6 +4144,10 @@
         "message": "Mètric",
         "description": "Option for the units system used in the OSD"
     },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Anglès",
+        "description": "Option for the units system used in the OSD"
+    },
     "osdSetupTimersTitle": {
         "message": "Temporitzadors"
     },
