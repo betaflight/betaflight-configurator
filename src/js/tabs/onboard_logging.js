@@ -342,6 +342,11 @@ TABS.onboard_logging.initialize = function (callback) {
                 {text: "DYN_IDLE"},
                 {text: "FF_LIMIT"},
                 {text: "FF_INTERPOLATED"},
+                {text: "BLACKBOX_OUTPUT"},
+                {text: "GYRO_SAMPLE"},
+                {text: "RX_TIMING"},
+                {text: "D_LPF"},
+                {text: "VTX_TRAMP"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
