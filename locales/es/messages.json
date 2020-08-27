@@ -4554,14 +4554,14 @@
         "message": "Rango y valor del elemento y ajuste activo actualmente"
     },
     "osdTextElementTimer1": {
-        "message": "Temporizador 1",
+        "message": "Temporizador: 1",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer1": {
         "message": "Muestra el valor del temporizador 1"
     },
     "osdTextElementTimer2": {
-        "message": "Temporizador 2",
+        "message": "Temporizador: 2",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer2": {
@@ -4792,14 +4792,14 @@
         "message": "Número de archivo para este registro en la caja negra"
     },
     "osdTextStatTimer1": {
-        "message": "Temporizador 1",
+        "message": "Temporizador: 1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer1": {
         "message": "Valor del temporizador 1 en el momento del desarme"
     },
     "osdTextStatTimer2": {
-        "message": "Temporizador 2",
+        "message": "Temporizador: 2",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer2": {
