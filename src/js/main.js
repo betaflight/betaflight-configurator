@@ -514,9 +514,22 @@ function startProcess() {
             setDarkTheme(result.darkTheme);
         }
     });
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
-        DarkTheme.autoSet();
-    });
+    if (GUI.isCordova()) {
+        let darkMode = false;
+        const checkDarkMode = function() {
+            cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
+                if (success.value !== darkMode) {
+                    darkMode = success.value;
+                    DarkTheme.autoSet();
+                }
+            });
+        };
+        setInterval(checkDarkMode, 500);
+    } else {
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
+            DarkTheme.autoSet();
+        });
+    }
 }
 
 function setDarkTheme(enabled) {
