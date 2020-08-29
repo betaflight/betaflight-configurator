@@ -4129,11 +4129,15 @@
         "message": "単位"
     },
     "osdSetupUnitsOptionImperial": {
-        "message": "ヤードポンド法",
+        "message": "帝国単位",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupUnitsOptionMetric": {
         "message": "メートル法",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "イギリス単位",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
