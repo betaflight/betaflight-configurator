@@ -133,6 +133,7 @@
 .dropdown-dark .dropdown-select {
   color: #a6a6a6;
   text-shadow: 0 1px black;
+  width: calc(100% - 10px);
   /* Fallback for IE 8 */
   background: #444;
 }
