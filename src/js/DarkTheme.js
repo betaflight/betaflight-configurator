@@ -8,20 +8,39 @@ var DarkTheme = {
     configEnabled: undefined,
 };
 
-DarkTheme.isDarkThemeEnabled = function (val) {
-    return val === 0 || val === 2 && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+DarkTheme.isDarkThemeEnabled = function (callback) {
+    if (this.configEnabled === 0) {
+        callback(true);
+    } else if (this.configEnabled === 2) {
+        if (GUI.isCordova()) {
+            cordova.plugins.ThemeDetection.isDarkModeEnabled(function(success) {
+                callback(success.value);
+            }, function(error) {
+                console.log(`cordova-plugin-theme-detection: ${error}`);
+                callback(false);
+            });
+        } else {
+            const isEnabled = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            callback(isEnabled);
+        }
+    } else {
+        callback(false);
+    }
 };
 
 DarkTheme.apply = function() {
-    if (this.isDarkThemeEnabled(this.configEnabled)) {
-        this.applyDark();
-    } else {
-        this.applyNormal();
-    }
+    const self = this;
+    this.isDarkThemeEnabled(function(isEnabled) {
+        if (isEnabled) {
+            self.applyDark();
+        } else {
+            self.applyNormal();
+        }
 
-    if (chrome.app.window !== undefined) {
-        windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), 'darkTheme', this.isDarkThemeEnabled(this.configEnabled));
-    }
+        if (chrome.app.window !== undefined) {
+            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), 'darkTheme', isEnabled);
+        }
+    });
 };
 
 DarkTheme.autoSet = function() {
@@ -31,7 +50,7 @@ DarkTheme.autoSet = function() {
 };
 
 DarkTheme.setConfig = function (result) {
-    if (this.configEnabled != result) {
+    if (this.configEnabled !== result) {
         this.configEnabled = result;
         this.apply();
     }

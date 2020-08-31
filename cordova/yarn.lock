@@ -675,6 +675,11 @@ cordova-plugin-splashscreen@^5.0.3:
   resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-5.0.3.tgz#02820472771c3e10b43ceedd54b0a1e4674efa6d"
   integrity sha512-rnoDXMDfzoeHDBvsnu6JmzDE/pV5YJCAfc5hYX/Mb2BIXGgSjFJheByt0tU6kp3Wl40tSyFX4pYfBwFblBGyRg==
 
+cordova-plugin-theme-detection@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-theme-detection/-/cordova-plugin-theme-detection-1.2.1.tgz#8ff887a27fd25d497e82660c971b26086a3c54f6"
+  integrity sha512-UsvXFKbbBqLuFkk6cQ1s+uIvLvXxNN3y4zwgBmTr5JwzCf8HlrHH4f6IWTsLLfRIsbfM6KdO7xvQ5EwDgS1LhQ==
+
 cordova-plugin-usb-event@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/cordova-plugin-usb-event/-/cordova-plugin-usb-event-1.0.2.tgz#68182ae8d56d42236524753a1dbb711ce285e03a"
