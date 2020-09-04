@@ -405,7 +405,9 @@
     "serialUnrecoverable" : {
         "message": "Unrecoverable <span class=\"message-negative\">failure</span> of serial connection, disconnecting..."
     },
-
+    "serialPortLoading" : {
+        "message": "Loading ..."
+    },
     "usbDeviceOpened": {
         "message": "USB device <span class=\"message-positive\">successfully</span> opened with ID: $1"
     },
