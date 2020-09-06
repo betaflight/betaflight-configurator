@@ -14,7 +14,7 @@
 .select2-container .select2-selection--single {
     height: 20px !important;
     border-radius: 3px !important;
-    border: 1px solid #bfbfbf !important;
+    border: 0.5px solid var(--subtleAccent) !important;
     cursor: default !important;
 }
 
@@ -24,7 +24,7 @@
  .select2-selection__arrow b {
     height: 5px !important;
     width: 5px !important;
-    margin-left: -1px !important;
+    margin-left: -2px !important;
     margin-top: -5px !important;
     border: none !important;
     border-bottom: 1.5px solid black !important;
