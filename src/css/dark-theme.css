@@ -837,7 +837,7 @@ progress[value]::-webkit-progress-bar {
 }
  
 .select2-search--dropdown .select2-search__field {
-    border: 1px solid #ffffff !important;
+    border: 1px solid var(--subtleAccent) !important;
     background-color: #3a3a3a !important;
     color: white;
 }
