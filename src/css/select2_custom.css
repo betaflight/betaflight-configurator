@@ -9,6 +9,7 @@
     line-height: 19px !important;
     padding-left: 4px !important;
     color: var(--defaultText) !important;
+    border-radius: 2px !important;
 }
 
 .select2-container .select2-selection--single {
@@ -21,7 +22,7 @@
 .select2-selection__arrow {
     height: 19px !important;
 }
- .select2-selection__arrow b {
+.select2-selection__arrow b {
     height: 5px !important;
     width: 5px !important;
     margin-left: -2px !important;
@@ -30,4 +31,9 @@
     border-bottom: 1.5px solid black !important;
     border-right: 1.5px solid black !important;
     transform: rotateZ(45deg);
- }
+}
+.select2-dropdown {
+    border: 0.5px solid var(--subtleAccent) !important;
+    border-top: none !important;
+    border-radius: 2px !important;
+}
