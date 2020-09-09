@@ -2037,6 +2037,12 @@
     "receiverRefreshRateTitle": {
         "message": "Graph refresh rate"
     },
+    "receiverResetRefreshRate": {
+        "message": "Reset"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Reset refresh rate"
+    },
     "receiverButtonSave": {
         "message": "Save"
     },

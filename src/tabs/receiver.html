@@ -289,27 +289,75 @@
         </div>
         <div class="gui_box grey">
             <div class="spacer">
-                <select name="rx_refresh_rate" i18n_title="receiverRefreshRateTitle">
-                    <option value="10">10 ms</option>
-                    <option value="20">20 ms</option>
-                    <option value="30">30 ms</option>
-                    <option value="40">40 ms</option>
-                    <option value="50" selected="selected">50 ms</option>
-                    <option value="100">100 ms</option>
-                    <option value="250">250 ms</option>
-                    <option value="500">500 ms</option>
-                    <option value="1000">1000 ms</option>
-                </select>
-                <div class="clear-both"></div>
-                <svg id="RX_plot">
-                    <g class="grid x" transform="translate(40, 180)"></g>
-                    <g class="grid y" transform="translate(40, 10)"></g>
-                    <g class="data" transform="translate(41, 1)"></g>
-                    <g class="axis x" transform="translate(40, 180)"></g>
-                    <g class="axis y" transform="translate(40, 10)"></g>
-                </svg>
+                <div class="wrapper graphAndLabel">
+                     <svg id="RX_plot">
+                        <g class="grid x" transform="translate(40, 180)"></g>
+                        <g class="grid y" transform="translate(40, 10)"></g>
+                        <g class="data" transform="translate(41, 1)"></g>
+                        <g class="axis x" transform="translate(40, 180)"></g>
+                        <g class="axis y" transform="translate(40, 10)"></g>
+                    </svg>
+     
+                    <div class="plot_control">
+                        <div class="table">
+                            <div class="sensor row">
+                                <div class="left-cell receiver-button">
+                                    <a class="reset_rate" href="#" i18n="receiverResetRefreshRate" i18n_title="receiverResetRefreshRateTitle"></a>
+                                </div>
+                                <div class="right-cell">
+                                    <select name="rx_refresh_rate" i18n_title="receiverRefreshRateTitle">
+                                        <option value="10">10 ms</option>
+                                        <option value="20">20 ms</option>
+                                        <option value="30">30 ms</option>
+                                        <option value="40">40 ms</option>
+                                        <option value="50" selected="selected">50 ms</option>
+                                        <option value="100">100 ms</option>
+                                        <option value="250">250 ms</option>
+                                        <option value="500">500 ms</option>
+                                        <option value="1000">1000 ms</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row-container">
+                                <div class="row">
+                                    <div class="left-cell">
+                                        Roll [A]:
+                                    </div>
+                                    <div class="ch1 value right-cell">
+                                        0
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="left-cell">
+                                        Pitch [E]:
+                                    </div>
+                                    <div class="ch2 value right-cell">
+                                        0
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="left-cell">
+                                        Yaw [R]:
+                                    </div>
+                                    <div class="ch3 value right-cell">
+                                        0
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="left-cell">
+                                        Throttle [T]:
+                                    </div>
+                                    <div class="ch4 value right-cell">
+                                        0
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="clear-both"></div>
     </div>
     <div class="content_toolbar">
         <div class="btn sticks_btn">
