@@ -441,11 +441,39 @@ TABS.receiver.initialize = function (callback) {
         // Only show the MSP control sticks if the MSP Rx feature is enabled
         $(".sticks_btn").toggle(FC.FEATURE_CONFIG.features.isEnabled('RX_MSP'));
 
-        $('select[name="rx_refresh_rate"]').change(function () {
-            var plot_update_rate = parseInt($(this).val(), 10);
+        const labelsChannelData = {
+            ch1: [],
+            ch2: [],
+            ch3: [],
+            ch4: [],
+        };
+
+        $(`.plot_control .ch1, .plot_control .ch2, .plot_control .ch3, .plot_control .ch4`).each(function (){
+            const element = $(this);
+            if (element.hasClass('ch1')){
+                labelsChannelData.ch1.push(element);
+            } else if (element.hasClass('ch2')){
+                labelsChannelData.ch2.push(element);
+            } else if (element.hasClass('ch3')){
+                labelsChannelData.ch3.push(element);
+            } else if (element.hasClass('ch4')){
+                labelsChannelData.ch4.push(element);
+            }
+        });
+        
+        let plotUpdateRate;
+        const rxRefreshRate = $('select[name="rx_refresh_rate"]');
+
+        $('a.reset_rate').click(function () {
+            plotUpdateRate = 50;
+            rxRefreshRate.val(plotUpdateRate).change();
+        });
+
+        rxRefreshRate.change(function () {
+            plotUpdateRate = parseInt($(this).val(), 10);
 
             // save update rate
-            ConfigStorage.set({'rx_refresh_rate': plot_update_rate});
+            ConfigStorage.set({'rx_refresh_rate': plotUpdateRate});
 
             function get_rc_data() {
                 MSP.send_message(MSPCodes.MSP_RC, false, false, update_ui);
@@ -480,12 +508,17 @@ TABS.receiver.initialize = function (callback) {
                         meter_fill_array[i].css('width', ((FC.RC.channels[i] - meter_scale.min) / (meter_scale.max - meter_scale.min) * 100).clamp(0, 100) + '%');
                         meter_label_array[i].text(FC.RC.channels[i]);
                     }
+
+                    labelsChannelData.ch1[0].text(FC.RC.channels[0]);
+                    labelsChannelData.ch2[0].text(FC.RC.channels[1]);
+                    labelsChannelData.ch3[0].text(FC.RC.channels[2]);
+                    labelsChannelData.ch4[0].text(FC.RC.channels[3]);
     
                     // push latest data to the main array
                     for (var i = 0; i < FC.RC.active_channels; i++) {
                         RX_plot_data[i].push([samples, FC.RC.channels[i]]);
                     }
-    
+
                     // Remove old data from array
                     while (RX_plot_data[0].length > 300) {
                         for (var i = 0; i < RX_plot_data.length; i++) {
@@ -547,14 +580,14 @@ TABS.receiver.initialize = function (callback) {
             GUI.interval_remove('receiver_pull');
 
             // enable RC data pulling
-            GUI.interval_add('receiver_pull', get_rc_data, plot_update_rate, true);
+            GUI.interval_add('receiver_pull', get_rc_data, plotUpdateRate, true);
         });
 
         ConfigStorage.get('rx_refresh_rate', function (result) {
-            if (result.rx_refresh_rate) {
-                $('select[name="rx_refresh_rate"]').val(result.rx_refresh_rate).change();
+            if (result.rxRefreshRate) {
+                rxRefreshRate.val(result.rxRefreshRate).change();
             } else {
-                $('select[name="rx_refresh_rate"]').change(); // start with default value
+                rxRefreshRate.change(); // start with default value
             }
         });
 

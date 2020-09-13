@@ -2,6 +2,12 @@
     font-weight: normal;
 }
 
+.tab-receiver .graphAndLabel {
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+}
+
 .tab-receiver .spacer {
     padding-left: 10px;
     padding-right: 9px;
@@ -337,13 +343,92 @@
     -webkit-appearance: slider-horizontal;
 }
 
-.tab-receiver select[name="rx_refresh_rate"] {
+/*Plot Control*/
+
+.tab-receiver .plot_control {
     float: right;
-    border: 1px solid var(--subtleAccent);
+    width: 188px;
+    margin: 0;
+    background-color: #ECECEC;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
-.tab-receiver #RX_plot {
+.tab-receiver .plot_control .table {
+    display:table;
     width: 100%;
+    table-layout:fixed;
+    border-collapse:separate;
+    border-spacing:5px;
+    box-sizing: border-box;
+}
+
+.tab-receiver .plot_control .row-container {
+    display: table-row-group;
+}
+
+.tab-receiver .plot_control .receiver-button a {
+    background-color: var(--accent);
+    border-radius: 3px;
+    border: 1px solid #e8b423;
+    color: #000;
+    font-size: 10px;
+    line-height: 17px;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    display: block;
+    text-align: center;
+  }
+  
+  .tab-receiver .plot_control .row {
+    display: table-row;
+  }
+  
+  .tab-receiver .plot_control .left-cell {
+    display: table-cell;
+    vertical-align: middle;
+    font-weight: bold;
+  }
+
+  .tab-receiver .plot_control .right-cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    width: 95px;
+    font-size: smaller;
+  }
+  
+  .tab-receiver .plot_control select {
+    width: 100%;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
+  }
+  
+  .tab-receiver .plot_control .value {
+    padding: 3px;
+    color: #fff;
+    border-radius: 3px;
+  }
+  
+  .tab-receiver .plot_control .ch1 {
+      background-color: #F1453D;
+  }
+  
+  .tab-receiver .plot_control .ch2 {
+      background-color: #673FB4;
+  }
+  
+  .tab-receiver .plot_control .ch3 {
+      background-color: #2B98F0;
+  }
+  
+  .tab-receiver .plot_control .ch4 {
+      background-color: #1FBCD2;
+  }
+
+.tab-receiver #RX_plot {
+    width: calc(100% - 188px);
     height: 200px;
 }
 
