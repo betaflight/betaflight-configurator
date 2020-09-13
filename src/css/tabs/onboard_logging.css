@@ -272,7 +272,9 @@
 .tab-onboard_logging .blackboxDevice span {
     line-height: 20px;
 }
-
+.tab-onboard_logging .blackboxDebugModeText {
+    margin-left: 7px !important;
+}
 .tab-onboard_logging .sdcard {
 	padding:10px;
 	float:left;
