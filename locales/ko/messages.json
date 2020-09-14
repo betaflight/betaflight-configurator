@@ -1982,6 +1982,12 @@
     "receiverRefreshRateTitle": {
         "message": "레이트 그래프 새로고침"
     },
+    "receiverResetRefreshRate": {
+        "message": "초기화"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "리프레쉬 레이트 초기화"
+    },
     "receiverButtonSave": {
         "message": "저장"
     },
