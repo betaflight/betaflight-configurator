@@ -2518,6 +2518,9 @@ TABS.osd.initialize = function (callback) {
 
                     if (!OSD.data.state.isMax7456FontDeviceDetected || !OSD.data.state.haveMax7456FontDeviceConfigured) {
                         $('.requires-max7456-font-device-detected').addClass('disabled');
+                    }
+
+                    if (!OSD.data.state.isMax7456FontDeviceDetected) {
                         $('.noOsdChipDetect').show();
                     }
 
