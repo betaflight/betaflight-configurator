@@ -2012,6 +2012,12 @@
     "receiverRefreshRateTitle": {
         "message": "crwdns5754:0crwdne5754:0"
     },
+    "receiverResetRefreshRate": {
+        "message": "crwdns10268:0crwdne10268:0"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "crwdns10270:0crwdne10270:0"
+    },
     "receiverButtonSave": {
         "message": "crwdns5755:0crwdne5755:0"
     },
