@@ -1914,6 +1914,9 @@
     "receiverRefreshRateTitle": {
         "message": "Tasa de refresco del gráfico"
     },
+    "receiverResetRefreshRateTitle": {
+        "message": "Reiniciar tasa de refresco"
+    },
     "receiverButtonSave": {
         "message": "Guardar"
     },
