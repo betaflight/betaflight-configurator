@@ -1922,6 +1922,12 @@
     "receiverRefreshRateTitle": {
         "message": "Velocitat de refresc del gràfic"
     },
+    "receiverResetRefreshRate": {
+        "message": "Resetejar"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Velocitat de refresc del reset"
+    },
     "receiverButtonSave": {
         "message": "Desa"
     },
