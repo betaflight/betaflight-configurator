@@ -1930,6 +1930,12 @@
     "receiverRefreshRateTitle": {
         "message": "Grafiek vernieuwingssnelheid"
     },
+    "receiverResetRefreshRate": {
+        "message": "Resetten"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Vernieuwingsfrequentie opnieuw instellen"
+    },
     "receiverButtonSave": {
         "message": "Opslaan"
     },
