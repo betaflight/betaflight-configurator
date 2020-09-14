@@ -2279,10 +2279,6 @@ TABS.osd.initialize = function (callback) {
 
                     OSD.msp.decode(info);
 
-                    if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected) {
-                        $('.noOsdChipDetect').show();
-                    }
-
                     if (OSD.data.state.haveSomeOsd == 0) {
                         $('.unsupported').fadeIn();
                         return;
@@ -2522,6 +2518,7 @@ TABS.osd.initialize = function (callback) {
 
                     if (!OSD.data.state.isMax7456FontDeviceDetected || !OSD.data.state.haveMax7456FontDeviceConfigured) {
                         $('.requires-max7456-font-device-detected').addClass('disabled');
+                        $('.noOsdChipDetect').show();
                     }
 
                     if (!OSD.data.state.haveOsdFeature) {
