@@ -148,14 +148,23 @@ function closeSerial() {
     }
 }
 
-function closeHandler() {
+async function closeHandler() {
     if (!GUI.isCordova()) {
         this.hide();
     }
 
     analytics.sendEvent(analytics.EVENT_CATEGORIES.APPLICATION, 'AppClose', { sessionControl: 'end' });
 
-    closeSerial();
+    const delay = millis => new Promise((settle) => {
+        setTimeout(_ => settle, millis);
+    });
+
+    function onFinishCallback() {
+        closeSerial();
+    }
+
+    mspHelper.setArmingEnabled(false, false, onFinishCallback);
+    await delay(3000);
 
     if (!GUI.isCordova()) {
         this.close(true);
