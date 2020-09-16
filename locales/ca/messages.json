@@ -1920,13 +1920,13 @@
         "message": "Deshabilitat"
     },
     "receiverRefreshRateTitle": {
-        "message": "Velocitat de refresc del gràfic"
+        "message": "Tasa d’actualització del gràfic"
     },
     "receiverResetRefreshRate": {
         "message": "Resetejar"
     },
     "receiverResetRefreshRateTitle": {
-        "message": "Velocitat de refresc del reset"
+        "message": "Resetejar la tasa d'actualització"
     },
     "receiverButtonSave": {
         "message": "Desa"
