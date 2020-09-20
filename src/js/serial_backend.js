@@ -223,19 +223,6 @@ function onOpen(openInfo) {
 
         GUI.log(i18n.getMessage('serialPortOpened', [openInfo.connectionId]));
 
-        // save selected port with chrome.storage if the port differs
-        ConfigStorage.get('last_used_port', function (result) {
-            if (result.last_used_port) {
-                if (result.last_used_port != GUI.connected_to) {
-                    // last used port doesn't match the one found in local db, we will store the new one
-                    ConfigStorage.set({'last_used_port': GUI.connected_to});
-                }
-            } else {
-                // variable isn't stored yet, saving
-                ConfigStorage.set({'last_used_port': GUI.connected_to});
-            }
-        });
-
         serial.onReceive.addListener(read_serial);
 
         setConnectionTimeout();
