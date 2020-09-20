@@ -393,6 +393,9 @@
     "serialUnrecoverable": {
         "message": "crwdns5383:0crwdne5383:0"
     },
+    "serialPortLoading": {
+        "message": "crwdns10272:0crwdne10272:0"
+    },
     "usbDeviceOpened": {
         "message": "crwdns5384:0$1crwdne5384:0"
     },
