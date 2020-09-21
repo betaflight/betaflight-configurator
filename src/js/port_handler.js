@@ -1,6 +1,6 @@
 'use strict';
 
-const TIMEOUT_CHECK = 250 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
+const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
 const usbDevices = { filters: [
     {'vendorId': 1155, 'productId': 57105},
@@ -15,7 +15,6 @@ const PortHandler = new function () {
 };
 
 PortHandler.initialize = function () {
-
     this.portPickerElement = $('div#port-picker #port');
 
     // start listening, check after TIMEOUT_CHECK ms
@@ -23,111 +22,31 @@ PortHandler.initialize = function () {
 };
 
 PortHandler.check = function () {
-
     const self = this;
-    if (!GUI.connect_lock) {
-        self.check_serial_devices();
-    } else {
-        self.check_usb_devices();
-    }
+
+    self.check_usb_devices();
+    self.check_serial_devices();
+
     GUI.updateManualPortVisibility();
 
     setTimeout(function () {
         self.check();
     }, TIMEOUT_CHECK);
-
 };
 
 PortHandler.check_serial_devices = function () {
     const self = this;
 
-    // disable Exit DFU Mode button
-    if (self.dfu_available){
-        if (!$('option:selected', self.portPickerElement).data().isDFU) {
-            self.portPickerElement.trigger('change');
-            self.dfu_available = false;
-        }
-    }
-
     serial.getDevices(function(currentPorts) {
-         // auto-select last used port (only during initialization)
+
+        // auto-select port (only during initialization)
         if (!self.initialPorts) {
             currentPorts = self.updatePortSelect(currentPorts);
-            self.detectPort(currentPorts);
+            self.selectPort(currentPorts);
             self.initialPorts = currentPorts;
-        } else if (self.array_difference(self.initialPorts, currentPorts).length > 0) {
-            // port got removed
-            const removedPorts = self.array_difference(self.initialPorts, currentPorts);
-            if (removedPorts.length > 0) {
-                console.log(`PortHandler - Removed: ${JSON.stringify(removedPorts)}`);
-                // disconnect "UI" - routine can't fire during atmega32u4 reboot procedure !!!
-                if (GUI.connected_to) {
-                    for (let i = 0; i < removedPorts.length; i++) {
-                        if (removedPorts[i] === GUI.connected_to) {
-                            $('div#header_btns a.connect').click();
-                        }
-                    }
-                }
-                // trigger callbacks (only after initialization)
-                for (let i = (self.port_removed_callbacks.length - 1); i >= 0; i--) {
-                    const obj = self.port_removed_callbacks[i];
-
-                    // remove timeout
-                    clearTimeout(obj.timer);
-
-                    // trigger callback
-                    obj.code(removedPorts);
-
-                    // remove object from array
-                    const index = self.port_removed_callbacks.indexOf(obj);
-                    if (index > -1) {
-                        self.port_removed_callbacks.splice(index, 1);
-                    }
-                }
-                for (let i = 0; i < removedPorts.length; i++) {
-                    self.initialPorts.splice(self.initialPorts.indexOf(removedPorts[i]), 1);
-                }
-                self.initialPorts = false;
-            }
         } else {
-            // new port detected
-            const newPorts = self.array_difference(currentPorts, self.initialPorts);
-            if (typeof newPorts.length !== 'undefined') {
-                if (newPorts.length > 0) {
-                    currentPorts = self.updatePortSelect(currentPorts);
-                    console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
-                    // select / highlight new port, if connected -> select connected port
-                    if (GUI.connected_to) {
-                        self.portPickerElement.val(GUI.connected_to);
-                    } else if (newPorts.length === 1) {
-                        self.portPickerElement.val(newPorts[0].path);
-                    } else if (newPorts.length > 1) {
-                        self.detectPort(currentPorts);
-                    } else if (GUI.active_tab !== 'firmware_flasher' && GUI.auto_connect && !GUI.connecting_to) {
-                        // start connect procedure. We need firmware flasher protection over here
-                        GUI.timeout_add('auto-connect_timeout', function () {
-                            $('div#header_btns a.connect').click();
-                        }, 100); // timeout so bus have time to initialize after being detected by the system
-                    }
-                    // trigger callbacks
-                    for (let i = (self.port_detected_callbacks.length - 1); i >= 0; i--) {
-                        const obj = self.port_detected_callbacks[i];
-
-                        // remove timeout
-                        clearTimeout(obj.timer);
-
-                        // trigger callback
-                        obj.code(newPorts);
-
-                        // remove object from array
-                        const index = self.port_detected_callbacks.indexOf(obj);
-                        if (index > -1) {
-                            self.port_detected_callbacks.splice(index, 1);
-                        }
-                    }
-                    self.initialPorts = currentPorts;
-                }
-            }
+            self.removePort(currentPorts);
+            self.detectPort(currentPorts);
         }
     });
 };
@@ -152,6 +71,12 @@ PortHandler.check_usb_devices = function (callback) {
                     text: usbText,
                     data: {isDFU: true},
                 }));
+
+                self.portPickerElement.append($('<option/>', {
+                    value: 'manual',
+                    text: i18n.getMessage('portsSelectManual'),
+                    data: {isManual: true},
+                }));
                 self.portPickerElement.val('DFU').change();
             }
             self.dfu_available = true;
@@ -164,7 +89,91 @@ PortHandler.check_usb_devices = function (callback) {
         if(callback) {
             callback(self.dfu_available);
         }
+        if (!$('option:selected', self.portPickerElement).data().isDFU) {
+            self.portPickerElement.trigger('change');
+        }
     });
+};
+
+PortHandler.removePort = function(currentPorts) {
+    const self = this;
+    const removePorts = self.array_difference(self.initialPorts, currentPorts);
+
+    if (removePorts.length) {
+        console.log(`PortHandler - Removed: ${JSON.stringify(removePorts)}`);
+        // disconnect "UI" - routine can't fire during atmega32u4 reboot procedure !!!
+        if (GUI.connected_to) {
+            for (let i = 0; i < removePorts.length; i++) {
+                if (removePorts[i] === GUI.connected_to) {
+                    $('div#header_btns a.connect').click();
+                }
+            }
+        }
+        // trigger callbacks (only after initialization)
+        for (let i = (self.port_removed_callbacks.length - 1); i >= 0; i--) {
+            const obj = self.port_removed_callbacks[i];
+
+            // remove timeout
+            clearTimeout(obj.timer);
+
+            // trigger callback
+            obj.code(removePorts);
+
+            // remove object from array
+            const index = self.port_removed_callbacks.indexOf(obj);
+            if (index > -1) {
+                self.port_removed_callbacks.splice(index, 1);
+            }
+        }
+        for (let i = 0; i < removePorts.length; i++) {
+            self.initialPorts.splice(self.initialPorts.indexOf(removePorts[i]), 1);
+        }
+        self.updatePortSelect(self.initialPorts);
+    }
+};
+
+PortHandler.detectPort = function(currentPorts) {
+    const self = this;
+    const newPorts = self.array_difference(currentPorts, self.initialPorts);
+
+    if (newPorts.length) {
+        currentPorts = self.updatePortSelect(currentPorts);
+        console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
+        // select / highlight new port, if connected -> select connected port
+        if (GUI.connected_to) {
+            self.portPickerElement.val(GUI.connected_to);
+        } else if (newPorts.length === 1) {
+            self.portPickerElement.val(newPorts[0].path);
+        } else if (newPorts.length > 1) {
+            self.selectPort(currentPorts);
+        }
+        // auto-connect if enabled
+        if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {
+            // start connect procedure. We need firmware flasher protection over here
+            if (GUI.active_tab !== 'firmware_flasher') {
+                GUI.timeout_add('auto-connect_timeout', function () {
+                    $('div#header_btns a.connect').click();
+                }, 100); // timeout so bus have time to initialize after being detected by the system
+            }
+        }
+        // trigger callbacks
+        for (let i = (self.port_detected_callbacks.length - 1); i >= 0; i--) {
+            const obj = self.port_detected_callbacks[i];
+
+            // remove timeout
+            clearTimeout(obj.timer);
+
+            // trigger callback
+            obj.code(newPorts);
+
+            // remove object from array
+            const index = self.port_detected_callbacks.indexOf(obj);
+            if (index > -1) {
+                self.port_detected_callbacks.splice(index, 1);
+            }
+        }
+        self.initialPorts = currentPorts;
+    }
 };
 
 PortHandler.sortPorts = function(ports) {
@@ -197,14 +206,14 @@ PortHandler.updatePortSelect = function (ports) {
 
     this.portPickerElement.append($("<option/>", {
         value: 'manual',
-        i18n: 'portsSelectManual',
+        text: i18n.getMessage('portsSelectManual'),
         data: {isManual: true},
     }));
-    i18n.localizePage();
+
     return ports;
 };
 
-PortHandler.detectPort = function(ports) {
+PortHandler.selectPort = function(ports) {
     const OS = GUI.operating_system;
     for (let i = 0; i < ports.length; i++) {
         const portName = ports[i].displayName;
