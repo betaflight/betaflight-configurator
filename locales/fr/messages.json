@@ -362,6 +362,9 @@
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Erreur</span>irrécupérable de connexion série, déconnexion..."
     },
+    "serialPortLoading": {
+        "message": "Chargement en cours ..."
+    },
     "usbDeviceOpened": {
         "message": "Périphérique USB <span class=\"message-positive\">ouvert avec succès</span> ID: $1"
     },
@@ -1974,6 +1977,12 @@
     },
     "receiverRefreshRateTitle": {
         "message": "Taux de rafraîchissement du graphique"
+    },
+    "receiverResetRefreshRate": {
+        "message": "Réinitialiser"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Réinitialiser la vitesse de rafraîchissement"
     },
     "receiverButtonSave": {
         "message": "Enregistrer"
@@ -4195,6 +4204,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Metrique",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Britannique",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
