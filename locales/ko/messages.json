@@ -366,6 +366,9 @@
     "serialUnrecoverable": {
         "message": "시리얼 연결의 복구할 수 없는 <span class=\"message-negative\">오류 발생</span>, 연결해제 중..."
     },
+    "serialPortLoading": {
+        "message": "로딩중 ..."
+    },
     "usbDeviceOpened": {
         "message": "USB 장치가 ID: $1로 <span class=\"message-positive\">성공적으로</span> 열림"
     },
