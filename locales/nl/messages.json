@@ -314,6 +314,9 @@
     "serialUnrecoverable": {
         "message": "Onherstelbare <span class=\"message-negative\">fout</span> opgetreden in de seriële verbinding, verbinding wordt verbroken..."
     },
+    "serialPortLoading": {
+        "message": "Bezig met laden..."
+    },
     "usbDeviceOpened": {
         "message": "USB-apparaat <span class=\"message-positive\">succesvol</span> geopend met ID: $1"
     },
