@@ -41,7 +41,7 @@ TABS.pid_tuning.initialize = function (callback) {
             return MSP.promise(MSPCodes.MSP_PID_CONTROLLER);
         }
     }).then(function() {
-        return MSP.promise(MSPCodes.MSP_PIDNAMES)
+        return MSP.promise(MSPCodes.MSP_PIDNAMES);
     }).then(function() {
         return MSP.promise(MSPCodes.MSP_PID);
     }).then(function() {
