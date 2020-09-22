@@ -306,6 +306,9 @@
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Fallada</span> irrecuperable de la connexió sèrie, desconnectant..."
     },
+    "serialPortLoading": {
+        "message": "Carregant ..."
+    },
     "usbDeviceOpened": {
         "message": "Dispositiu USB <span class=\"message-positive\">correctament</span> obert amb ID: $1"
     },
