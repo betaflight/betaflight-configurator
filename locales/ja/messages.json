@@ -298,6 +298,9 @@
     "serialUnrecoverable": {
         "message": "シリアル接続の回復不能な <span class=\"message-negative\">障害</span> にて切断中..."
     },
+    "serialPortLoading": {
+        "message": "ロード中..."
+    },
     "usbDeviceOpened": {
         "message": "ID: $1のUSBデバイスへ<span class=\"message-positive\">正常</span>に接続しました"
     },
@@ -1913,6 +1916,12 @@
     },
     "receiverRefreshRateTitle": {
         "message": "グラフ更新頻度"
+    },
+    "receiverResetRefreshRate": {
+        "message": "リセット"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "リフレッシュレートをリセット"
     },
     "receiverButtonSave": {
         "message": "保存"
