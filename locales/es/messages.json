@@ -298,6 +298,9 @@
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Error</span> no recuperable de la conexión serie, desconectando..."
     },
+    "serialPortLoading": {
+        "message": "Cargando ..."
+    },
     "usbDeviceOpened": {
         "message": "Dispositivo USB abierto <span class=\"message-positive\">correctamente</span> con ID: $1"
     },
@@ -1913,6 +1916,9 @@
     },
     "receiverRefreshRateTitle": {
         "message": "Tasa de refresco del gráfico"
+    },
+    "receiverResetRefreshRate": {
+        "message": "Reiniciar"
     },
     "receiverResetRefreshRateTitle": {
         "message": "Reiniciar tasa de refresco"
