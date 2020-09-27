@@ -558,8 +558,12 @@ TABS.motors.initialize = function (callback) {
 
             $('div.values li').eq(index).text($(this).val());
 
-            for (var i = 0; i < 8; i++) {
-                var val = parseInt($('div.sliders input').eq(i).val());
+            for (let i = 0; i < FC.MOTOR_CONFIG.motor_count; i++) {
+                let val = parseInt($('div.sliders input').eq(i).val());
+                // adjust val to retain the same label while switching tabs
+                if (val !== 1000) {
+                    val++;
+                }
                 buffer.push16(val);
             }
 
