@@ -13,7 +13,9 @@
     "release": "run-script-os",
     "release:default": "NODE_ENV=production gulp release",
     "release:windows": "set NODE_ENV=production&& gulp release",
-    "test": "karma start test/karma.conf.js"
+    "test": "karma start test/karma.conf.js",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "eslint --fix src"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
@@ -82,6 +84,8 @@
     "command-exists": "^1.2.8",
     "cordova-lib": "^9.0.1",
     "del": "^5.0.0",
+    "eslint": "^7.16.0",
+    "eslint-plugin-vue": "^7.3.0",
     "follow-redirects": "^1.10.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
@@ -95,6 +99,7 @@
     "gulp-xml-transformer": "^3.0.0",
     "gulp-yarn": "^2.0.0",
     "gulp-zip": "^5.0.0",
+    "husky": "^4.3.0",
     "karma": "^4.0.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.0.0",
@@ -122,5 +127,10 @@
   },
   "optionalDependencies": {
     "gulp-appdmg": "^1.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
   }
 }

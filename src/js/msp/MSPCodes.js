@@ -92,7 +92,7 @@ const MSPCodes = {
     MSP_ANALOG:                     110,
     MSP_RC_TUNING:                  111,
     MSP_PID:                        112,
-    //MSP_BOX:                        113, // DEPRECATED 
+    //MSP_BOX:                        113, // DEPRECATED
     MSP_MISC:                       114, // DEPRECATED
     MSP_BOXNAMES:                   116,
     MSP_PIDNAMES:                   117,

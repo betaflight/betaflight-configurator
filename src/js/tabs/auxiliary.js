@@ -8,7 +8,7 @@ TABS.auxiliary.initialize = function (callback) {
     let prevChannelsValues = null;
 
     function get_mode_ranges() {
-        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, 
+        MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false,
             semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41) ? get_mode_ranges_extra : get_box_ids);
     }
 
@@ -41,17 +41,17 @@ TABS.auxiliary.initialize = function (callback) {
     function createMode(modeIndex, modeId) {
         const modeTemplate = $('#tab-auxiliary-templates .mode');
         const newMode = modeTemplate.clone();
-        
-        let modeName = FC.AUX_CONFIG[modeIndex];        
+
+        let modeName = FC.AUX_CONFIG[modeIndex];
         // Adjust the name of the box if a peripheral is selected
         modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
         $(newMode).attr('id', 'mode-' + modeIndex);
         $(newMode).find('.name').text(modeName);
-        
+
         $(newMode).data('index', modeIndex);
         $(newMode).data('id', modeId);
-        
+
         $(newMode).find('.name').data('modeElement', newMode);
         $(newMode).find('a.addRange').data('modeElement', newMode);
         $(newMode).find('a.addLink').data('modeElement', newMode);
@@ -61,7 +61,7 @@ TABS.auxiliary.initialize = function (callback) {
             $(newMode).find('.addLink').hide();
         }
 
-        return newMode; 
+        return newMode;
     }
 
     function configureLogicList(template) {
@@ -74,7 +74,7 @@ TABS.auxiliary.initialize = function (callback) {
         logicOption.text(i18n.getMessage('auxiliaryModeLogicOR'));
         logicOption.val(0);
         logicList.append(logicOption);
-        
+
         if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)){
             logicOption = logicOptionTemplate.clone();
             logicOption.text(i18n.getMessage('auxiliaryModeLogicAND'));
@@ -83,10 +83,10 @@ TABS.auxiliary.initialize = function (callback) {
         }
         logicOptionTemplate.val(0);
     }
-    
+
     function configureRangeTemplate(auxChannelCount) {
         const rangeTemplate = $('#tab-auxiliary-templates .range');
-        
+
         const channelList = $(rangeTemplate).find('.channel');
         const channelOptionTemplate = $(channelList).find('option');
         channelOptionTemplate.remove();
@@ -105,17 +105,17 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         channelOptionTemplate.val(-1);
-        
+
         configureLogicList(rangeTemplate);
     }
-    
+
     function configureLinkTemplate() {
         const linkTemplate = $('#tab-auxiliary-templates .link');
-        
+
         const linkList = $(linkTemplate).find('.linkedTo');
         const linkOptionTemplate = $(linkList).find('option');
         linkOptionTemplate.remove();
-        
+
         // set up a blank option in place of ARM
         let linkOption = linkOptionTemplate.clone();
         linkOption.text("");
@@ -130,10 +130,10 @@ TABS.auxiliary.initialize = function (callback) {
         }
 
         linkOptionTemplate.val(0);
-        
+
         configureLogicList(linkTemplate);
     }
-    
+
     function addRangeToMode(modeElement, auxChannelIndex, modeLogic, range) {
         const modeIndex = $(modeElement).data('index');
         const modeRanges = $(modeElement).find('.ranges');
@@ -142,14 +142,14 @@ TABS.auxiliary.initialize = function (callback) {
                 'min': [  900 ],
                 'max': [ 2100 ]
             };
-        
+
         let rangeValues = [1300, 1700]; // matches MultiWii default values for the old checkbox MID range.
         if (range !== undefined) {
             rangeValues = [range.start, range.end];
         }
 
         const rangeIndex = modeRanges.children().length;
-        
+
         let rangeElement = $('#tab-auxiliary-templates .range').clone();
         rangeElement.attr('id', 'mode-' + modeIndex + '-range-' + rangeIndex);
         modeRanges.append(rangeElement);
@@ -159,7 +159,7 @@ TABS.auxiliary.initialize = function (callback) {
         } else if (rangeIndex == 1) {
             modeRanges.children().eq(0).find('.logic').show();
         }
-        
+
         $(rangeElement).find('.channel-slider').noUiSlider({
             start: rangeValues,
             behaviour: 'snap-drag',
@@ -186,7 +186,7 @@ TABS.auxiliary.initialize = function (callback) {
             density: 4,
             stepped: true
         });
-        
+
         $(rangeElement).find('.deleteRange').data('rangeElement', rangeElement);
         $(rangeElement).find('.deleteRange').data('modeElement', modeElement);
 
@@ -195,9 +195,9 @@ TABS.auxiliary.initialize = function (callback) {
             rangeElement = $(this).data('rangeElement');
 
             rangeElement.remove();
-    
+
             const siblings = $(modeElement).find('.ranges').children();
-    
+
             if (siblings.length == 1) {
                 siblings.eq(0).find('.logic').hide();
             }
@@ -236,9 +236,9 @@ TABS.auxiliary.initialize = function (callback) {
             linkElement = $(this).data('linkElement');
 
             linkElement.remove();
-    
+
             const siblings = $(modeElement).find('.ranges').children();
-    
+
             if (siblings.length == 1) {
                 siblings.eq(0).find('.logic').hide();
             }
@@ -256,11 +256,11 @@ TABS.auxiliary.initialize = function (callback) {
 
         const modeTableBodyElement = $('.tab-auxiliary .modes');
         for (let modeIndex = 0; modeIndex < FC.AUX_CONFIG.length; modeIndex++) {
-            
+
             const modeId = FC.AUX_CONFIG_IDS[modeIndex];
             const newMode = createMode(modeIndex, modeId);
             modeTableBodyElement.append(newMode);
-            
+
             // generate ranges from the supplied AUX names and MODE_RANGES[_EXTRA] data
             // skip linked modes for now
             for (let modeRangeIndex = 0; modeRangeIndex < FC.MODE_RANGES.length; modeRangeIndex++) {
@@ -274,7 +274,7 @@ TABS.auxiliary.initialize = function (callback) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                     modeRangeExtra = FC.MODE_RANGES_EXTRA[modeRangeIndex];
                 }
-                
+
                 if (modeRange.id != modeId || modeRangeExtra.id != modeId) {
                     continue;
                 }
@@ -292,19 +292,19 @@ TABS.auxiliary.initialize = function (callback) {
                 }
             }
         }
-        
+
         $('a.addRange').click(function () {
             const modeElement = $(this).data('modeElement');
             // auto select AUTO option; default to 'OR' logic
             addRangeToMode(modeElement, -1, 0);
         });
-        
+
         $('a.addLink').click(function () {
             const modeElement = $(this).data('modeElement');
             // default to 'OR' logic and no link selected
             addLinkedToMode(modeElement, 0, 0);
         });
-                
+
         // translate to user-selected language
         i18n.localizePage();
 
@@ -312,17 +312,17 @@ TABS.auxiliary.initialize = function (callback) {
         $('a.save').click(function () {
 
             // update internal data structures based on current UI elements
-            
+
             // we must send this many back to the FC - overwrite all of the old ones to be sure.
             const requiredModesRangeCount = FC.MODE_RANGES.length;
-            
+
             FC.MODE_RANGES = [];
             FC.MODE_RANGES_EXTRA = [];
-            
+
             $('.tab-auxiliary .modes .mode').each(function () {
                 const modeElement = $(this);
                 const modeId = modeElement.data('id');
-                
+
                 $(modeElement).find('.range').each(function() {
                     const rangeValues = $(this).find('.channel-slider').val();
                     const modeRange = {
@@ -368,7 +368,7 @@ TABS.auxiliary.initialize = function (callback) {
                     }
                 });
             });
-            
+
             for (let modeRangeIndex = FC.MODE_RANGES.length; modeRangeIndex < requiredModesRangeCount; modeRangeIndex++) {
                 const defaultModeRange = {
                     id: 0,
@@ -400,7 +400,7 @@ TABS.auxiliary.initialize = function (callback) {
             }
         });
 
-       
+
         function limit_channel(channelPosition) {
             if (channelPosition < 900) {
                 channelPosition = 900;
@@ -409,16 +409,16 @@ TABS.auxiliary.initialize = function (callback) {
             }
             return channelPosition;
         }
-        
+
         function update_marker(auxChannelIndex, channelPosition) {
             const percentage = (channelPosition - 900) / (2100-900) * 100;
-            
+
             $('.modes .ranges .range').each( function () {
                 const auxChannelCandidateIndex = $(this).find('.channel').val();
                 if (auxChannelCandidateIndex !== auxChannelIndex) {
                     return;
                 }
-                
+
                 $(this).find('.marker').css('left', percentage + '%');
             });
         }
@@ -437,7 +437,7 @@ TABS.auxiliary.initialize = function (callback) {
                     modeElement.removeClass('off').removeClass('on').removeClass('disabled');
                     continue;
                 }
-                
+
                 if (bit_check(FC.CONFIG.mode, i)) {
                     $('.mode .name').eq(i).data('modeElement').addClass('on').removeClass('off').removeClass('disabled');
 
@@ -450,7 +450,7 @@ TABS.auxiliary.initialize = function (callback) {
                     //ARM mode is a special case
                     if (i == 0) {
                         let armSwitchActive = false;
-                        
+
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                             if (FC.CONFIG.armingDisableCount > 0) {
                                 // check the highest bit of the armingDisableFlags. This will be the ARMING_DISABLED_ARMSWITCH flag.
@@ -484,7 +484,7 @@ TABS.auxiliary.initialize = function (callback) {
                 if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     modeElement.toggle(!hideUnused);
                 }
-            }    
+            }
 
             auto_select_channel(FC.RC.channels, FC.RSSI_CONFIG.channel);
 
@@ -544,8 +544,8 @@ TABS.auxiliary.initialize = function (callback) {
                 })
                 .prop("checked", !!result.hideUnusedModes)
                 .change();
-        });    
-    
+        });
+
         // update ui instantly on first load
         update_ui();
 

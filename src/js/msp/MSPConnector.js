@@ -22,31 +22,31 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
             const disconnectAndCleanup = function() {
                 serial.disconnect(function(result) {
                     console.log('Disconnected');
-                    
+
                     MSP.clearListeners();
-                    
+
                     self.onTimeoutCallback();
                 });
-                
+
                 MSP.disconnect_cleanup();
             };
-            
+
             FC.resetState();
-            
+
             // disconnect after 10 seconds with error if we don't get IDENT data
             GUI.timeout_add('msp_connector', function () {
                 if (!CONFIGURATOR.connectionValid) {
                     GUI.log(i18n.getMessage('noConfigurationReceived'));
-                    
+
                     disconnectAndCleanup();
                 }
             }, 10000);
 
             serial.onReceive.addListener(read_serial);
-            
+
             const mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
-            
+
             MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
                 CONFIGURATOR.connectionValid = true;
 
@@ -64,13 +64,13 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
 
 MSPConnectorImpl.prototype.disconnect = function(onDisconnectCallback) {
     self.onDisconnectCallback = onDisconnectCallback;
-    
+
     serial.disconnect(function (result) {
         MSP.clearListeners();
         console.log('Disconnected');
-        
+
         self.onDisconnectCallback(result);
     });
-    
+
     MSP.disconnect_cleanup();
 };

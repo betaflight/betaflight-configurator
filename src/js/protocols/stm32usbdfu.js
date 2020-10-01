@@ -829,7 +829,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
 
                                         if (data[4] == self.state.dfuDNBUSY) {
 
-                                            // 
+                                            //
                                             // H743 Rev.V (probably other H7 Rev.Vs also) remains in dfuDNBUSY state after the specified delay time.
                                             // STM32CubeProgrammer deals with behavior with an undocumented procedure as follows.
                                             //     1. Issue DFU_CLRSTATUS, which ends up with (14,10) = (errUNKNOWN, dfuERROR)

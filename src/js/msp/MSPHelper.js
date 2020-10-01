@@ -1008,7 +1008,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.RX_CONFIG.airModeActivateThreshold = 0;
                 }
 
-                
+
                 break;
 
             case MSPCodes.MSP_FAILSAFE_CONFIG:
@@ -1048,7 +1048,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         let gyroUse32kHz = data.readU8();
                         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                             FC.PID_ADVANCED_CONFIG.gyroUse32kHz = gyroUse32kHz;
-                        } 
+                        }
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                             FC.PID_ADVANCED_CONFIG.motorPwmInversion = data.readU8();
                             FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8(); // We don't want to double up on storing this state
@@ -1162,7 +1162,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                         FC.ADVANCED_TUNING.feedforwardPitch = data.readU16();
                                         FC.ADVANCED_TUNING.feedforwardYaw   = data.readU16();
                                         FC.ADVANCED_TUNING.antiGravityMode  = data.readU8();
-                                    
+
                                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                                             FC.ADVANCED_TUNING.dMinRoll = data.readU8();
                                             FC.ADVANCED_TUNING.dMinPitch = data.readU8();
@@ -1588,7 +1588,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             dataView     : new DataView(data.buffer, data.offset, payloadSize),
                             callbacks    : [],
                         };
-    
+
                         self.process_data(currentDataHandler);
 
                         data.offset += payloadSize;
@@ -1598,12 +1598,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 if (hasReturnedSomeCommand) {
                     // Send again MSP messages missing, the buffer in the FC was too small
                     if (self.mspMultipleCache.length > 0) {
-    
+
                         const partialBuffer = [];
                         for (let i = 0; i < self.mspMultipleCache.length; i++) {
                             partialBuffer.push8(self.mspMultipleCache[i]);
                         }
-    
+
                         MSP.send_message(MSPCodes.MSP_MULTIPLE_MSP, partialBuffer, false, dataHandler.callbacks);
                         dataHandler.callbacks = [];
                     }
@@ -2110,7 +2110,7 @@ MspHelper.prototype.crunch = function(code) {
                                               .push8(FC.ADVANCED_TUNING.dMinAdvance)
                                               .push8(FC.ADVANCED_TUNING.useIntegratedYaw)
                                               .push8(FC.ADVANCED_TUNING.integratedYawRelax);
-                                          
+
                                         if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                                             buffer.push8(FC.ADVANCED_TUNING.itermRelaxCutoff);
 
@@ -2512,7 +2512,7 @@ MspHelper.prototype.sendVoltageConfig = function(onCompleteCallback) {
     let nextFunction = send_next_voltage_config;
 
     let configIndex = 0;
-    
+
     if (FC.VOLTAGE_METER_CONFIGS.length == 0) {
         onCompleteCallback();
     } else {
@@ -2543,7 +2543,7 @@ MspHelper.prototype.sendCurrentConfig = function(onCompleteCallback) {
     let nextFunction = send_next_current_config;
 
     let configIndex = 0;
-    
+
     if (FC.CURRENT_METER_CONFIGS.length == 0) {
         onCompleteCallback();
     } else {

@@ -48,7 +48,7 @@ function initializeMap() {
     }));
 
     iconStyle = new ol.style.Style({
-        image: icon 
+        image: icon
     });
 
     iconStyleNoFix = new ol.style.Style({
@@ -72,7 +72,7 @@ function initializeMap() {
 
     map.addLayer(currentPositionLayer);
 
-    window.addEventListener('message', processMapEvents); 
+    window.addEventListener('message', processMapEvents);
 }
 
 function processMapEvents(e) {
@@ -80,7 +80,7 @@ function processMapEvents(e) {
     try {
         switch(e.data.action) {
 
-        case 'zoom_in':            
+        case 'zoom_in':
             mapView.setZoom(mapView.getZoom() + 1);
             break;
 

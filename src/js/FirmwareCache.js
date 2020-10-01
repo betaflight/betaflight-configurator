@@ -2,7 +2,7 @@
 
 /**
  * Caching of previously downloaded firmwares and release descriptions
- * 
+ *
  * Depends on LRUMap for which the docs can be found here:
  * https://github.com/rsms/js-lru
  */
@@ -48,7 +48,7 @@ let FirmwareCache = (function () {
         }
 
         /**
-         * @param {Function} callback 
+         * @param {Function} callback
          */
         function load(callback) {
             chrome.storage.local.get(CACHEKEY, obj => {
@@ -92,7 +92,7 @@ let FirmwareCache = (function () {
     };
 
     /**
-     * @param {Descriptor} release 
+     * @param {Descriptor} release
      * @returns {string} A key used to store a release in the journal
      */
     function keyOf(release) {
@@ -100,7 +100,7 @@ let FirmwareCache = (function () {
     }
 
     /**
-     * @param {string} key 
+     * @param {string} key
      * @returns {string} A key for storing cached data for a release
      */
     function withCachePrefix(key) {
@@ -198,11 +198,11 @@ let FirmwareCache = (function () {
             chrome.storage.local.remove(cacheKeys);
         });
         journal.clear();
-        JournalStorage.persist(journal.toJSON());    
+        JournalStorage.persist(journal.toJSON());
     }
 
     /**
-     * @param {Descriptor} release 
+     * @param {Descriptor} release
      */
     function onPutToCache(release) {
         if (typeof onPutToCacheCallback === "function") {
@@ -212,7 +212,7 @@ let FirmwareCache = (function () {
     }
 
     /**
-     * @param {Descriptor} release 
+     * @param {Descriptor} release
      */
     function onRemoveFromCache(release) {
         if (typeof onRemoveFromCacheCallback === "function") {
@@ -222,7 +222,7 @@ let FirmwareCache = (function () {
     }
 
     /**
-     * @param {Array} entries 
+     * @param {Array} entries
      */
     function onEntriesLoaded(entries) {
         let pairs = [];

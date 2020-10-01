@@ -458,7 +458,7 @@ TABS.receiver.initialize = function (callback) {
                 labelsChannelData.ch4.push(element);
             }
         });
-        
+
         let plotUpdateRate;
         const rxRefreshRate = $('select[name="rx_refresh_rate"]');
 
@@ -511,7 +511,7 @@ TABS.receiver.initialize = function (callback) {
                     labelsChannelData.ch2[0].text(FC.RC.channels[1]);
                     labelsChannelData.ch3[0].text(FC.RC.channels[2]);
                     labelsChannelData.ch4[0].text(FC.RC.channels[3]);
-    
+
                     // push latest data to the main array
                     for (let i = 0; i < FC.RC.active_channels; i++) {
                         rxPlotData[i].push([samples, FC.RC.channels[i]]);

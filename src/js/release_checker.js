@@ -2,7 +2,7 @@
 
 var ReleaseChecker = function (releaseName, releaseUrl) {
     var self = this;
-    
+
     self._releaseName = releaseName;
     self._releaseDataTag = `${self._releaseName}ReleaseData`;
     self._releaseLastUpdateTag = `${self._releaseName}ReleaseLastUpdate`
@@ -23,7 +23,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
                 data[self._releaseDataTag] = releaseData
                 data[self._releaseLastUpdateTag] = releaseDataTimestamp
                 chrome.storage.local.set(data, function () {});
-                    
+
                 self._processReleaseData(releaseData, processFunction);
             }).fail(function (data) {
                 var message = '';
@@ -31,7 +31,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
                     message = data['responseJSON'].message;
                 }
                 GUI.log(i18n.getMessage('releaseCheckFailed',[self._releaseName,message]));
-            
+
                 self._processReleaseData(cacheReleaseData, processFunction);
             });
         } else {
@@ -43,7 +43,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
         }
     });
 }
-    
+
 
 ReleaseChecker.prototype._processReleaseData = function (releaseData, processFunction) {
     if (releaseData) {

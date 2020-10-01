@@ -9,12 +9,12 @@ TABS.motors = {
         sensorAccelRate: 20,
         sensorAccelScale: 2,
         sensorSelectValues: {
-            "gyroScale": {"10" : 10, 
-                          "25" : 25, 
-                          "50" : 50, 
-                          "100" : 100, 
-                          "200" : 200, 
-                          "300" : 300, 
+            "gyroScale": {"10" : 10,
+                          "25" : 25,
+                          "50" : 50,
+                          "100" : 100,
+                          "200" : 200,
+                          "300" : 300,
                           "400" : 400,
                           "500" : 500,
                           "1000" : 1000,
@@ -283,7 +283,6 @@ TABS.motors.initialize = function (callback) {
         const motorVoltage = $('.motors-bat-voltage'),
             motor_mah_drawing_e = $('.motors-bat-mah-drawing'),
             motor_mah_drawn_e = $('.motors-bat-mah-drawn');
-            
 
         const rawDataTextElements = {
                 x: [],
@@ -455,7 +454,6 @@ TABS.motors.initialize = function (callback) {
             motorVoltage.text(i18n.getMessage('motorsVoltageValue', [FC.ANALOG.voltage]));
             motor_mah_drawing_e.text(i18n.getMessage('motorsADrawingValue', [FC.ANALOG.amperage.toFixed(2)]));
             motor_mah_drawn_e.text(i18n.getMessage('motorsmAhDrawnValue', [FC.ANALOG.mAhdrawn]));
-            
         }
         GUI.interval_add('motors_power_data_pull_slow', power_data_pull, 250, true); // 4 fps
 
@@ -684,13 +682,13 @@ TABS.motors.initialize = function (callback) {
 
                     // Reduce the size of the value if too big
                     if (rpmMotorValue > 999999) {
-                        rpmMotorValue = (rpmMotorValue / 1000000).toFixed(5 - (rpmMotorValue / 1000000).toFixed(0).toString().length) + "M";  
+                        rpmMotorValue = (rpmMotorValue / 1000000).toFixed(5 - (rpmMotorValue / 1000000).toFixed(0).toString().length) + "M";
                     }
 
                     rpmMotorValue = rpmMotorValue.toString().padStart(MAX_VALUE_SIZE);
                     let telemetryText = i18n.getMessage('motorsRPM', {motorsRpmValue: rpmMotorValue});
 
-                    
+
                     if (FC.MOTOR_CONFIG.use_dshot_telemetry) {
 
                         let invalidPercent = FC.MOTOR_TELEMETRY_DATA.invalidPercent[i];
@@ -714,8 +712,6 @@ TABS.motors.initialize = function (callback) {
 
                     $('.motor_testing .telemetry .motor-' + i).html(telemetryText);
                 }
-                
-
             }
 
             // servo indicators are still using old (not flexible block scale), it will be changed in the future accordingly

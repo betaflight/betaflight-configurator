@@ -2,7 +2,7 @@
 
 TABS.help = {};
 TABS.help.initialize = function (callback) {
-    
+
     if (GUI.active_tab != 'help') {
         GUI.active_tab = 'help';
     }
