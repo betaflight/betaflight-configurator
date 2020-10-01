@@ -693,12 +693,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_BEEPER_CONFIG:
-                FC.BEEPER_CONFIG.beepers.setMask(data.readU32());
+                FC.BEEPER_CONFIG.beepers.setDisabledMask(data.readU32());
                 if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
                     FC.BEEPER_CONFIG.dshotBeaconTone = data.readU8();
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
-                    FC.BEEPER_CONFIG.dshotBeaconConditions.setMask(data.readU32());
+                    FC.BEEPER_CONFIG.dshotBeaconConditions.setDisabledMask(data.readU32());
                 }
                 break;
 
@@ -1650,13 +1650,13 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push32(featureMask);
             break;
         case MSPCodes.MSP_SET_BEEPER_CONFIG:
-            var beeperMask = FC.BEEPER_CONFIG.beepers.getMask();
-            buffer.push32(beeperMask);
+            var beeperDisabledMask = FC.BEEPER_CONFIG.beepers.getDisabledMask();
+            buffer.push32(beeperDisabledMask);
             if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
                 buffer.push8(FC.BEEPER_CONFIG.dshotBeaconTone);
             }
             if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
-                buffer.push32(FC.BEEPER_CONFIG.dshotBeaconConditions.getMask());
+                buffer.push32(FC.BEEPER_CONFIG.dshotBeaconConditions.getDisabledMask());
             }
             break;
         case MSPCodes.MSP_SET_MIXER_CONFIG:
