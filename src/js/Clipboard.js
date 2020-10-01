@@ -114,20 +114,12 @@ Clipboard._configureClipboardAsOther = function() {
     };
 };
 
-
-switch (GUI.Mode) {
-case GUI_Modes.NWJS:
+if (GUI.isNWJS()){
     Clipboard._configureClipboardAsNwJs(GUI.nwGui);
-    break;
-
-case GUI_Modes.ChromeApp:
+} else if (GUI.isChromeApp()) {
     Clipboard._configureClipboardAsChrome();
-    break;
-
-case GUI_Modes.Cordova:
+} else if (GUI.isCordova()) {
     Clipboard._configureClipboardAsCordova();
-    break;
-
-default:
+} else {
     Clipboard._configureClipboardAsOther();
 }
