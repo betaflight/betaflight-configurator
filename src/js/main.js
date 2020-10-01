@@ -14,17 +14,6 @@ function appReady() {
         CONFIGURATOR.version = data.version;
         CONFIGURATOR.gitChangesetId = data.gitChangesetId;
 
-        // Version in the ChromeApp's manifest takes precedence.
-        if(chrome.runtime && chrome.runtime.getManifest && !GUI.isCordova()) {
-            const manifest = chrome.runtime.getManifest();
-            CONFIGURATOR.version = manifest.version;
-            // manifest.json for ChromeApp can't have a version
-            // with a prerelease tag eg 10.0.0-RC4
-            // Work around is to specify the prerelease version in version_name
-            if (manifest.version_name) {
-                CONFIGURATOR.version = manifest.version_name;
-            }
-        }
         i18n.init(function() {
             startProcess();
 
@@ -181,10 +170,6 @@ function startProcess() {
             GUI.nwGui.Shell.openExternal(url);
         });
         nwWindow.on('close', closeHandler);
-    } else if (GUI.isChromeApp()) {
-        chrome.app.window.onClosed.addListener(closeHandler);
-        // This event does not actually get fired:
-        chrome.runtime.onSuspend.addListener(closeHandler);
     } else if (GUI.isCordova()) {
         window.addEventListener('beforeunload', closeHandler);
         document.addEventListener('backbutton', function(e) {

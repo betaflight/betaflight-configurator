@@ -43,7 +43,6 @@ before_install:
 script:
   - yarn test
   - yarn gulp release
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then yarn gulp release --chromeos; fi
 
 cache:
   directories:

@@ -6,9 +6,7 @@
 
 Betaflight Configurator is a crossplatform configuration tool for the Betaflight flight control system.
 
-It runs as an app within Google Chrome and allows you to configure the Betaflight software running on any [supported Betaflight target](https://github.com/betaflight/betaflight/tree/master/src/main/target).
-
-There is also now a standalone version available, since Google Chrome Apps are getting deprecated on platforms that aren't Chrome OS. [Downloads are available in Releases.](https://github.com/betaflight/betaflight-configurator/releases)
+It runs as an application under different operating systems and allows you to configure the Betaflight software running on any supported Betaflight target. [Downloads are available in Releases.](https://github.com/betaflight/betaflight-configurator/releases)
 
 Various types of aircraft are supported by the tool and by Betaflight, e.g. quadcopters, hexacopters, octocopters and fixed-wing aircraft.
 
@@ -17,6 +15,7 @@ Various types of aircraft are supported by the tool and by Betaflight, e.g. quad
 Betaflight Configurator is a [fork](#credits) of the Cleanflight Configurator with support for Betaflight instead of Cleanflight.
 
 This configurator is the only configurator with support for Betaflight specific features. It will likely require that you run the latest firmware on the flight controller.
+
 If you are experiencing any problems please make sure you are running the [latest firmware version](https://github.com/betaflight/betaflight/releases/).
 
 ## Installation
@@ -30,17 +29,6 @@ Download the installer from [Releases.](https://github.com/betaflight/betaflight
 #### Note for MacOS X users
 
 Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Betaflight Configurator.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal after installing: `sudo xattr -rd com.apple.quarantine /Applications/Betaflight\ Configurator.app`.
-
-
-### Via Chrome Web Store (for ChromeOS)
-
-[![available in the Chrome web store for Chromeos](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/dlgclabibdhkfnbkajgkplmkpndajfom)
-
-1. Visit the [Betaflight Configurator product page in the Chrome web store](https://chrome.google.com/webstore/detail/dlgclabibdhkfnbkajgkplmkpndajfom)
-2. Click **+ Add to Chrome**
-
-Please note - the application will automatically update itself when new versions are released.  Please ensure you maintain configuration backups as described in the Betaflight documentation.
-
 
 ### Unstable Testing Versions
 
@@ -84,12 +72,12 @@ To build or release only for one specific platform you can append the plaform af
 If no platform is provided, all the platforms will be done in sequence.
 
 * **MacOS X** use `yarn gulp <task-name> --osx64`
-* **Linux** use `yarn gulp <task-name> --linux64`
-* **Windows** use `yarn gulp <task-name> --win32`
-* **ChromeOS** use `yarn gulp <task-name> --chromeos`
+* **Linux** use `yarn gulp <task-name> --linux64` 
+* **Windows** use `yarn gulp <task-name> --win32` 
 * **Android** use `yarn gulp <task-name> --android`
 
-You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`.
+
+You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win64`, `--linux32` and `--armv7` can be used too, but they are not officially supported, so use them at your own risk.
 
 ## Languages
 
@@ -101,7 +89,7 @@ If you prefer to have the application in English or any other language, you can 
 
 ### Graphics Issues
 
-If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the betaflight-configurator executable file with the --disable-gpu command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
+If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
 
 ### Linux users
 
@@ -110,10 +98,6 @@ In most Linux distributions your user won't have access to serial interfaces by 
 ```
 sudo usermod -aG dialout ${USER}
 ```
-
-### Linux / MacOS X users
-
-If you have 3D model animation problems, enable "Override software rendering list" in Chrome flags chrome://flags/#ignore-gpu-blacklist
 
 ## Support
 
@@ -142,4 +126,3 @@ We accept clean and reasonable patches, submit them!
 ctn - primary author and maintainer of Baseflight Configurator from which Cleanflight Configurator project was forked.
 
 Hydra -  author and maintainer of Cleanflight Configurator from which this project was forked.
-
