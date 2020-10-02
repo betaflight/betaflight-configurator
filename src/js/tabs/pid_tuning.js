@@ -463,7 +463,7 @@ TABS.pid_tuning.initialize = function (callback) {
             const ffInterpolateCheck = $('input[id="ffInterpolateSp"]');
 
             ffInterpolateCheck.prop('checked', FC.ADVANCED_TUNING.ff_interpolate_sp !== 0);
-            $('select[id="ffInterpolate"]').val(FC.ADVANCED_TUNING.ff_interpolate_sp > 0 ? FC.ADVANCED_TUNING.ff_interpolate_sp : 2);
+            $('select[id="ffInterpolate"]').val(FC.ADVANCED_TUNING.ff_interpolate_sp > 0 ? FC.ADVANCED_TUNING.ff_interpolate_sp : 1);
             $('input[name="ffSmoothFactor"]').val(FC.ADVANCED_TUNING.ff_smooth_factor);
             $('input[name="ffBoost"]').val(FC.ADVANCED_TUNING.ff_boost);
 
