@@ -9,9 +9,9 @@
 }
 
 .tab-receiver .spacer {
-    padding-left: 18px;
+    padding-left: 10px;
     padding-right: 9px;
-    width: calc(100% - 18px);
+    width: calc(100% - 10px);
 }
 
 .tab-receiver input[type="number"]::-webkit-inner-spin-button {
@@ -353,7 +353,6 @@
     background-color: #ECECEC;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    height; 203px;
 }
 
 .tab-receiver .plot_control .table {
@@ -431,7 +430,7 @@
   }
 
 .tab-receiver #RX_plot {
-    width: calc(100% - 188px);
+    width: calc(100% - 181px);
     height: 200px;
 }
 
