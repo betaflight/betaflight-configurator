@@ -660,6 +660,9 @@ progress[value]::-webkit-progress-bar {
     background: #542415;
 }
 
+.tab-pid_tuning .cf .rates_logo_bg {
+    background-color: #ffffff33;
+}
 
 /* PORTS TAB */
 
