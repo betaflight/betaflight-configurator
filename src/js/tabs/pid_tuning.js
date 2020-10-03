@@ -461,9 +461,10 @@ TABS.pid_tuning.initialize = function (callback) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             // FF Interpolate
             const ffInterpolateCheck = $('input[id="ffInterpolateSp"]');
+            const NO_AVERAGE = 1;
 
             ffInterpolateCheck.prop('checked', FC.ADVANCED_TUNING.ff_interpolate_sp !== 0);
-            $('select[id="ffInterpolate"]').val(FC.ADVANCED_TUNING.ff_interpolate_sp > 0 ? FC.ADVANCED_TUNING.ff_interpolate_sp : 1);
+            $('select[id="ffInterpolate"]').val(FC.ADVANCED_TUNING.ff_interpolate_sp > 0 ? FC.ADVANCED_TUNING.ff_interpolate_sp : NO_AVERAGE);
             $('input[name="ffSmoothFactor"]').val(FC.ADVANCED_TUNING.ff_smooth_factor);
             $('input[name="ffBoost"]').val(FC.ADVANCED_TUNING.ff_boost);
 
