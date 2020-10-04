@@ -11,7 +11,7 @@
 .tab-receiver .spacer {
     padding-left: 10px;
     padding-right: 9px;
-    width: calc(100% - 18px);
+    width: calc(100% - 10px);
 }
 
 .tab-receiver input[type="number"]::-webkit-inner-spin-button {
@@ -347,7 +347,8 @@
 
 .tab-receiver .plot_control {
     float: right;
-    width: 188px;
+    width: 181px;
+    height: 203px;
     margin: 0;
     background-color: #ECECEC;
     border-top-right-radius: 3px;
@@ -361,6 +362,7 @@
     border-collapse:separate;
     border-spacing:5px;
     box-sizing: border-box;
+    padding: 5px 5px 5px 3px;
 }
 
 .tab-receiver .plot_control .row-container {
@@ -395,7 +397,7 @@
     display: table-cell;
     vertical-align: middle;
     text-align: right;
-    width: 95px;
+    width: 87px;
     font-size: smaller;
   }
   
@@ -406,7 +408,7 @@
   }
   
   .tab-receiver .plot_control .value {
-    padding: 3px;
+    padding: 4px;
     color: #fff;
     border-radius: 3px;
   }
@@ -428,7 +430,7 @@
   }
 
 .tab-receiver #RX_plot {
-    width: calc(100% - 188px);
+    width: calc(100% - 181px);
     height: 200px;
 }
 

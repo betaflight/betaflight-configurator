@@ -51,6 +51,7 @@
 .tab-motors .plot_control {
     float: right;
     width: 160px;
+    height: 197px;
     margin: 0;
     background-color: #ECECEC;
     border-top-right-radius: 3px;
