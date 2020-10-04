@@ -858,10 +858,10 @@ function configuration_restore(callback) {
                     FC.PID_ADVANCED_CONFIG = configuration.PID_ADVANCED_CONFIG;
 
                     FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
-                    FC.BEEPER_CONFIG.beepers.setMask(configuration.BEEPER_CONFIG.beepers._beeperMask);
+                    FC.BEEPER_CONFIG.beepers.setDisabledMask(configuration.BEEPER_CONFIG.beepers._beeperDisabledMask);
                     FC.BEEPER_CONFIG.dshotBeaconTone = configuration.BEEPER_CONFIG.dshotBeaconTone;
                     FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, [ "RX_LOST", "RX_SET" ]);
-                    FC.BEEPER_CONFIG.dshotBeaconConditions.setMask(configuration.BEEPER_CONFIG.dshotBeaconConditions._beeperMask);
+                    FC.BEEPER_CONFIG.dshotBeaconConditions.setDisabledMask(configuration.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask);
                 }
 
                 function send_unique_data_item() {
