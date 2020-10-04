@@ -393,6 +393,9 @@
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Erro</span> irrecuperable da conexión serie, desconectando..."
     },
+    "serialPortLoading": {
+        "message": "Cargando ..."
+    },
     "usbDeviceOpened": {
         "message": "Dispositivo USB aberto <span class=\"message-positive\">satisfactoriamente</span> coa ID: $1"
     },
@@ -2008,6 +2011,12 @@
     },
     "receiverRefreshRateTitle": {
         "message": "Tasa de refresco do gráfico"
+    },
+    "receiverResetRefreshRate": {
+        "message": "Reset"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Restablecer a frecuencia de actualización"
     },
     "receiverButtonSave": {
         "message": "Gardar"
@@ -4229,6 +4238,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Métrica",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "British",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
