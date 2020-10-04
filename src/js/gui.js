@@ -1,9 +1,16 @@
 
 'use strict';
 
-var TABS = {}; // filled by individual tab js file
+window.TABS = {}; // filled by individual tab js file
 
-var GUI_control = function () {
+const GUI_MODES = {
+    NWJS: "NW.js",
+    ChromeApp: "Chrome",
+    Cordova: "Cordova",
+    Other: "Other",
+};
+
+const GuiControl = function () {
     this.auto_connect = false;
     this.connecting_to = false;
     this.connected_to = false;
@@ -20,7 +27,7 @@ var GUI_control = function () {
         'firmware_flasher',
         'privacy_policy',
         'options',
-        'help'
+        'help',
     ];
     this.defaultAllowedFCTabsWhenConnected = [
         'setup',
@@ -55,25 +62,18 @@ var GUI_control = function () {
     this.nwGui = null;
     try {
         this.nwGui = require('nw.gui');
-        this.Mode = GUI_Modes.NWJS;
+        this.Mode = GUI_MODES.NWJS;
     } catch (ex) {
         if (typeof cordovaApp !== 'undefined') {
-            this.Mode = GUI_Modes.Cordova;
+            this.Mode = GUI_MODES.Cordova;
         } else {
             if (window.chrome && chrome.storage && chrome.storage.local) {
-                this.Mode = GUI_Modes.ChromeApp;
+                this.Mode = GUI_MODES.ChromeApp;
             } else {
-                this.Mode = GUI_Modes.Other;
+                this.Mode = GUI_MODES.Other;
             }
         }
     }
-};
-
-const GUI_Modes = {
-  NWJS: "NW.js",
-  ChromeApp: "Chrome",
-  Cordova: "Cordova",
-  Other: "Other"
 };
 
 function GUI_checkOperatingSystem() {
@@ -100,10 +100,10 @@ function GUI_checkOperatingSystem() {
 // code = function reference (code to be executed)
 // interval = time interval in miliseconds
 // first = true/false if code should be ran initially before next timer interval hits
-GUI_control.prototype.interval_add = function (name, code, interval, first) {
-    var data = {'name': name, 'timer': null, 'code': code, 'interval': interval, 'fired': 0, 'paused': false};
+GuiControl.prototype.interval_add = function (name, code, interval, first) {
+    const data = {'name': name, 'timer': null, 'code': code, 'interval': interval, 'fired': 0, 'paused': false};
 
-    if (first == true) {
+    if (first === true) {
         code(); // execute code
 
         data.fired++; // increment counter
@@ -121,9 +121,9 @@ GUI_control.prototype.interval_add = function (name, code, interval, first) {
 };
 
 // name = string
-GUI_control.prototype.interval_remove = function (name) {
-    for (var i = 0; i < this.interval_array.length; i++) {
-        if (this.interval_array[i].name == name) {
+GuiControl.prototype.interval_remove = function (name) {
+    for (let i = 0; i < this.interval_array.length; i++) {
+        if (this.interval_array[i].name === name) {
             clearInterval(this.interval_array[i].timer); // stop timer
 
             this.interval_array.splice(i, 1); // remove element/object from array
@@ -136,9 +136,9 @@ GUI_control.prototype.interval_remove = function (name) {
 };
 
 // name = string
-GUI_control.prototype.interval_pause = function (name) {
-    for (var i = 0; i < this.interval_array.length; i++) {
-        if (this.interval_array[i].name == name) {
+GuiControl.prototype.interval_pause = function (name) {
+    for (let i = 0; i < this.interval_array.length; i++) {
+        if (this.interval_array[i].name === name) {
             clearInterval(this.interval_array[i].timer);
             this.interval_array[i].paused = true;
 
@@ -150,16 +150,18 @@ GUI_control.prototype.interval_pause = function (name) {
 };
 
 // name = string
-GUI_control.prototype.interval_resume = function (name) {
-    for (var i = 0; i < this.interval_array.length; i++) {
-        if (this.interval_array[i].name == name && this.interval_array[i].paused) {
-            var obj = this.interval_array[i];
+GuiControl.prototype.interval_resume = function (name) {
 
-            obj.timer = setInterval(function() {
-                obj.code(); // execute code
+    function executeCode(obj) {
+        obj.code(); // execute code
+        obj.fired++; // increment counter
+    }
 
-                obj.fired++; // increment counter
-            }, obj.interval);
+    for (let i = 0; i < this.interval_array.length; i++) {
+        if (this.interval_array[i].name === name && this.interval_array[i].paused) {
+            const obj = this.interval_array[i];
+
+            obj.timer = setInterval(executeCode, obj.interval, obj);
 
             obj.paused = false;
 
@@ -172,15 +174,15 @@ GUI_control.prototype.interval_resume = function (name) {
 
 // input = array of timers thats meant to be kept, or nothing
 // return = returns timers killed in last call
-GUI_control.prototype.interval_kill_all = function (keep_array) {
-    var self = this;
-    var timers_killed = 0;
+GuiControl.prototype.interval_kill_all = function (keepArray) {
+    const self = this;
+    let timersKilled = 0;
 
-    for (var i = (this.interval_array.length - 1); i >= 0; i--) { // reverse iteration
-        var keep = false;
-        if (keep_array) { // only run through the array if it exists
-            keep_array.forEach(function (name) {
-                if (self.interval_array[i].name == name) {
+    for (let i = (this.interval_array.length - 1); i >= 0; i--) { // reverse iteration
+        let keep = false;
+        if (keepArray) { // only run through the array if it exists
+            keepArray.forEach(function (name) {
+                if (self.interval_array[i].name === name) {
                     keep = true;
                 }
             });
@@ -191,27 +193,32 @@ GUI_control.prototype.interval_kill_all = function (keep_array) {
 
             this.interval_array.splice(i, 1); // remove element/object from array
 
-            timers_killed++;
+            timersKilled++;
         }
     }
 
-    return timers_killed;
+    return timersKilled;
 };
 
 // name = string
 // code = function reference (code to be executed)
 // timeout = timeout in miliseconds
-GUI_control.prototype.timeout_add = function (name, code, timeout) {
-    var self = this;
-    var data = {'name': name, 'timer': null, 'timeout': timeout};
+GuiControl.prototype.timeout_add = function (name, code, timeout) {
+    const self = this;
+    const data = {'name': name,
+                  'timer': null,
+                  'timeout': timeout,
+                 };
 
     // start timer with "cleaning" callback
     data.timer = setTimeout(function() {
         code(); // execute code
 
         // remove object from array
-        var index = self.timeout_array.indexOf(data);
-        if (index > -1) self.timeout_array.splice(index, 1);
+        const index = self.timeout_array.indexOf(data);
+        if (index > -1) {
+            self.timeout_array.splice(index, 1);
+        }
     }, timeout);
 
     this.timeout_array.push(data); // push to primary timeout array
@@ -220,9 +227,9 @@ GUI_control.prototype.timeout_add = function (name, code, timeout) {
 };
 
 // name = string
-GUI_control.prototype.timeout_remove = function (name) {
-    for (var i = 0; i < this.timeout_array.length; i++) {
-        if (this.timeout_array[i].name == name) {
+GuiControl.prototype.timeout_remove = function (name) {
+    for (let i = 0; i < this.timeout_array.length; i++) {
+        if (this.timeout_array[i].name === name) {
             clearTimeout(this.timeout_array[i].timer); // stop timer
 
             this.timeout_array.splice(i, 1); // remove element/object from array
@@ -236,47 +243,48 @@ GUI_control.prototype.timeout_remove = function (name) {
 
 // no input parameters
 // return = returns timers killed in last call
-GUI_control.prototype.timeout_kill_all = function () {
-    var timers_killed = 0;
+GuiControl.prototype.timeout_kill_all = function () {
+    let timersKilled = 0;
 
-    for (var i = 0; i < this.timeout_array.length; i++) {
+    for (let i = 0; i < this.timeout_array.length; i++) {
         clearTimeout(this.timeout_array[i].timer); // stop timer
 
-        timers_killed++;
+        timersKilled++;
     }
 
     this.timeout_array = []; // drop objects
 
-    return timers_killed;
+    return timersKilled;
 };
 
 // message = string
-GUI_control.prototype.log = function (message) {
-    var command_log = $('div#log');
-    var d = new Date();
-    var year = d.getFullYear();
-    var month = ((d.getMonth() < 9) ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1));
-    var date =  ((d.getDate() < 10) ? '0' + d.getDate() : d.getDate());
-    var time = ((d.getHours() < 10) ? '0' + d.getHours(): d.getHours())
-         + ':' + ((d.getMinutes() < 10) ? '0' + d.getMinutes(): d.getMinutes())
-         + ':' + ((d.getSeconds() < 10) ? '0' + d.getSeconds(): d.getSeconds());
+GuiControl.prototype.log = function (message) {
+    const commandLog = $('div#log');
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = (d.getMonth() < 9) ? `0${d.getMonth() + 1}` : (d.getMonth() + 1);
+    const date =  (d.getDate() < 10) ? `0${d.getDate()}` : d.getDate();
+    const hours = (d.getHours() < 10) ? `0${d.getHours()}` : d.getHours();
+    const minutes = (d.getMinutes() < 10) ? `0${d.getMinutes()}` : d.getMinutes();
+    const seconds = (d.getSeconds() < 10) ? `0${d.getSeconds()}` : d.getSeconds();
+    const time = `${hours}:${minutes}:${seconds}`;
 
-    var formattedDate = "{0}-{1}-{2} {3}".format(
+    const formattedDate = "{0}-{1}-{2} {3}".format(
                                 year,
                                 month,
                                 date,
-                                ' @ ' + time
+                                `@ ${time}`
                             );
-    $('div.wrapper', command_log).append('<p>' + formattedDate + ' -- ' + message + '</p>');
-    command_log.scrollTop($('div.wrapper', command_log).height());
+    $('div.wrapper', commandLog).append(`<p>${formattedDate} -- ${message}</p>`);
+    commandLog.scrollTop($('div.wrapper', commandLog).height());
 };
 
 // Method is called every time a valid tab change event is received
 // callback = code to run when cleanup is finished
 // default switch doesn't require callback to be set
-GUI_control.prototype.tab_switch_cleanup = function (callback) {
+GuiControl.prototype.tab_switch_cleanup = function (callback) {
     MSP.callbacks_cleanup(); // we don't care about any old data that might or might not arrive
-    GUI.interval_kill_all(); // all intervals (mostly data pulling) needs to be removed on tab switch
+    this.interval_kill_all(); // all intervals (mostly data pulling) needs to be removed on tab switch
 
     if (this.active_tab && TABS[this.active_tab]) {
         TABS[this.active_tab].cleanup(callback);
@@ -285,12 +293,16 @@ GUI_control.prototype.tab_switch_cleanup = function (callback) {
     }
 };
 
-GUI_control.prototype.switchery = function() {
+GuiControl.prototype.switchery = function() {
+
+    const COLOR_ACCENT = 'var(--accent)';
+    const COLOR_SWITCHERY_SECOND = 'var(--switcherysecond)';
+
     $('.togglesmall').each(function(index, elem) {
-            var switchery = new Switchery(elem, {
+            const switchery = new Switchery(elem, {
               size: 'small',
-              color: 'var(--accent)',
-              secondaryColor: 'var(--switcherysecond)'
+              color: COLOR_ACCENT,
+              secondaryColor: COLOR_SWITCHERY_SECOND,
             });
         $(elem).on("change", function () {
             switchery.setPosition();
@@ -299,9 +311,9 @@ GUI_control.prototype.switchery = function() {
     });
 
     $('.toggle').each(function(index, elem) {
-            var switchery = new Switchery(elem, {
-                color: 'var(--accent)',
-                secondaryColor: 'var(--switcherysecond)'
+            const switchery = new Switchery(elem, {
+                color: COLOR_ACCENT,
+                secondaryColor: COLOR_SWITCHERY_SECOND,
             });
         $(elem).on("change", function () {
             switchery.setPosition();
@@ -310,10 +322,10 @@ GUI_control.prototype.switchery = function() {
     });
 
     $('.togglemedium').each(function(index, elem) {
-            var switchery = new Switchery(elem, {
+            const switchery = new Switchery(elem, {
                 className: 'switcherymid',
-                color: 'var(--accent)',
-                secondaryColor: 'var(--switcherysecond)'
+                color: COLOR_ACCENT,
+                secondaryColor: COLOR_SWITCHERY_SECOND,
              });
          $(elem).on("change", function () {
              switchery.setPosition();
@@ -322,19 +334,19 @@ GUI_control.prototype.switchery = function() {
     });
 };
 
-GUI_control.prototype.content_ready = function (callback) {
+GuiControl.prototype.content_ready = function (callback) {
 
     this.switchery();
 
     if (CONFIGURATOR.connectionValid) {
         // Build link to in-use CF version documentation
-        var documentationButton = $('div#content #button-documentation');
+        const documentationButton = $('div#content #button-documentation');
         documentationButton.html("Wiki");
         documentationButton.attr("href","https://github.com/betaflight/betaflight/wiki");
     }
 
     // loading tooltip
-    jQuery(document).ready(function() {
+    jQuery(function() {
 
         new jBox('Tooltip', {
             attach: '.cf_tip',
@@ -345,9 +357,9 @@ GUI_control.prototype.content_ready = function (callback) {
             delayClose: 100,
             position: {
                 x: 'right',
-                y: 'center'
+                y: 'center',
             },
-            outside: 'x'
+            outside: 'x',
         });
 
         new jBox('Tooltip', {
@@ -360,40 +372,41 @@ GUI_control.prototype.content_ready = function (callback) {
             delayClose: 100,
             position: {
                 x: 'right',
-                y: 'center'
+                y: 'center',
             },
-            outside: 'x'
+            outside: 'x',
         });
     });
 
-    if (callback) callback();
+    if (callback) {
+        callback();
+    }
 };
 
-GUI_control.prototype.selectDefaultTabWhenConnected = function() {
+GuiControl.prototype.selectDefaultTabWhenConnected = function() {
     ConfigStorage.get(['rememberLastTab', 'lastTab'], function (result) {
         if (!(result.rememberLastTab
                 && !!result.lastTab
-                && result.lastTab.substring(4) != "cli")) {
+                && result.lastTab.substring(4) !== "cli")) {
             $('#tabs ul.mode-connected .tab_setup a').click();
             return;
         }
-        $("#tabs ul.mode-connected ." + result.lastTab + " a").click();
+        $(`#tabs ul.mode-connected .${result.lastTab} a`).click();
     });
 };
 
-GUI_control.prototype.isChromeApp = function () {
-  return this.Mode === GUI_Modes.ChromeApp;
+GuiControl.prototype.isChromeApp = function () {
+  return this.Mode === GUI_MODES.ChromeApp;
 };
-GUI_control.prototype.isNWJS = function () {
-  return this.Mode === GUI_Modes.NWJS;
+GuiControl.prototype.isNWJS = function () {
+  return this.Mode === GUI_MODES.NWJS;
 };
-GUI_control.prototype.isCordova = function () {
-    return this.Mode === GUI_Modes.Cordova;
+GuiControl.prototype.isCordova = function () {
+    return this.Mode === GUI_MODES.Cordova;
   };
-GUI_control.prototype.isOther = function () {
-  return this.Mode === GUI_Modes.Other;
+GuiControl.prototype.isOther = function () {
+  return this.Mode === GUI_MODES.Other;
 };
-
 
 // initialize object into GUI variable
-var GUI = new GUI_control();
+window.GUI = new GuiControl();
