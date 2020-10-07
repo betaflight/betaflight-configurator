@@ -298,6 +298,9 @@
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Problema</span> non recuperabile della connessione seriale, disconnessione in corso..."
     },
+    "serialPortLoading": {
+        "message": "Caricamento ..."
+    },
     "usbDeviceOpened": {
         "message": "Dispositivo USB <span class=\"message-positive\">connesso</span> con ID: $1"
     },
@@ -1914,6 +1917,12 @@
     "receiverRefreshRateTitle": {
         "message": "Frequenza di aggiornamento grafico"
     },
+    "receiverResetRefreshRate": {
+        "message": "Ripristina"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Ripristina frequenza"
+    },
     "receiverButtonSave": {
         "message": "Salva"
     },
@@ -2404,6 +2413,39 @@
     },
     "motorsEnableControl": {
         "message": "<strong>Ho compreso i rischi</strong>, le eliche sono state rimosse - abilita il controllo motori e armamento motori e disabilita la prevenzione del decollo fuori controllo."
+    },
+    "motorOutputReorderDialogClose": {
+        "message": "Annulla"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Avvia"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Riordina motori"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Riordina motori"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Clicca sul motore che gira..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Pronto! Controlla l'ordine di rotazione dei motori facendo clic sull'immagine."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Sono al corrente dei rischi</strong>,<br />le eliche sono rimosse."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Avviso di sicurezza</strong><br /><strong class=\"message-negative\">Rimuovi tutte le eliche per evitare danni!</strong><br />I motori <strong>gireranno!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Avviso</strong><br />I motori gireranno uno ad uno e sarai in grado di selezionare il motore che gira. La batteria deve essere collegata e deve essere selezionato il protocollo ESC corretto. Questa utility può solo riorganizzare i motori attualmente attivi. La rimappatura più complessa richiede il comando CLI Resource. Fare riferimento a questa <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Salva"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Ricomincia"
     },
     "sensorsInfo": {
         "message": "Tieni in considerazione che usando una frequenza di aggiornamento veloce e renderizzando molti grafici allo stesso momento userai molte risorse e consumerai più velocemente la batteria se stai usando un computer portatile.<br />Raccomandiamo di renderizzare solo i grafici dei sensori che ti interessano e di usare una frequenza di aggiornamento appropriata."
@@ -3838,6 +3880,9 @@
     "powerVoltageHead": {
         "message": "Misuratore di tensione"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Attenzione:</span> Valori limitati a 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3927,6 +3972,9 @@
     },
     "powerAmperageHead": {
         "message": "Amperometro"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Attenzione:</span> Valori limitati a 63.5A."
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -4095,6 +4143,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Metrico",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Britanniche",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
