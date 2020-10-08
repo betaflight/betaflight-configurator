@@ -2161,9 +2161,6 @@
     "sensorsGyroTitle": {
         "message": "Žiroskop - stupnjeva/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Akcelerometar -g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetometar - Ga"
     },
