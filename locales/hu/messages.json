@@ -2387,9 +2387,6 @@
     "sensorsGyroTitle": {
         "message": "Giroszkóp - fok/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Gyorsulásmérő - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetométer - Ga"
     },
