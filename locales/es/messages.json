@@ -2478,7 +2478,7 @@
         "message": "Giroscopio - grad/s"
     },
     "sensorsAccelTitle": {
-        "message": "Acelerómetro - g"
+        "message": "Acelerómetro - g (grad)"
     },
     "sensorsMagTitle": {
         "message": "Magnetómetro - Ga"
