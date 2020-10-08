@@ -2429,9 +2429,6 @@
     "sensorsGyroTitle": {
         "message": "Żyroskop - stopnie/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Akcelerometr - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetometr - Ga"
     },
