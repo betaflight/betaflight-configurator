@@ -2572,9 +2572,6 @@
     "sensorsGyroTitle": {
         "message": "Xiroscopio - deg/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Acelerómetro - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetómetro - Ga"
     },
