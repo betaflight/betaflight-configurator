@@ -1,1 +1,154 @@
-{}
+{
+    "yes": {
+        "message": "Áno",
+        "description": "General Yes message to be used across the application"
+    },
+    "no": {
+        "message": "Nie",
+        "description": "General No message to be used across the application"
+    },
+    "on": {
+        "message": "Zapnúť"
+    },
+    "off": {
+        "message": "Vypnúť"
+    },
+    "auto": {
+        "message": "Automaticky"
+    },
+    "error": {
+        "message": "Chyba: {{errorMessage}}"
+    },
+    "errorTitle": {
+        "message": "Chyba"
+    },
+    "warningTitle": {
+        "message": "Upozornenie"
+    },
+    "noticeTitle": {
+        "message": "Oznámenie"
+    },
+    "operationNotSupported": {
+        "message": "Táto operácia nieje podporovaná vašim hardvérom."
+    },
+    "storageDeviceNotReady": {
+        "message": "Úložné zariadenie nie je pripravené. V prípade micro SD karty sa ubezpečte, že bola správne rozoznaná riadiacou jednotkou."
+    },
+    "connect": {
+        "message": "Pripojiť"
+    },
+    "connecting": {
+        "message": "Pripája sa"
+    },
+    "disconnect": {
+        "message": "Odpojiť"
+    },
+    "portsSelectManual": {
+        "message": "Manuálny výber"
+    },
+    "portOverrideText": {
+        "message": "Port:"
+    },
+    "autoConnect": {
+        "message": "Automatické pripojenie"
+    },
+    "close": {
+        "message": "Zatvoriť"
+    },
+    "cancel": {
+        "message": "Zrušiť"
+    },
+    "expertMode": {
+        "message": "Povoliť expertný režim"
+    },
+    "expertModeDescription": {
+        "message": "Zobraziť nevydané a potenciálne nestabilné verzie"
+    },
+    "permanentExpertMode": {
+        "message": "Trvalo povoliť expertný režim"
+    },
+    "rememberLastTab": {
+        "message": "Po pripojení otvoriť poslednú záložku"
+    },
+    "analyticsOptOut": {
+        "message": "Odhlásiť sa z odosielania anonymných štatistikých dát"
+    },
+    "cordovaForceComputerUI": {
+        "message": "Použiť rozhranie počítača namiesto mobilného telefónu"
+    },
+    "language_changed": {
+        "message": "Zmena jazyka uložená"
+    },
+    "language_choice_message": {
+        "message": "Zmeniť jazyk:",
+        "description": "Try and be brief"
+    },
+    "language_default": {
+        "message": "Prednastavené systémom"
+    },
+    "language_default_pretty": {
+        "message": "Prednastavené systémom ($t(detectedLanguage))"
+    },
+    "sensorDataFlashNotFound": {
+        "message": "Nenašiel sa <br>pamäťový čip",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "Dátová pamäť: voľné miesto",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorStatusGyro": {
+        "message": "Gyroskop"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Gyro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusAccel": {
+        "message": "Akcelerometer"
+    },
+    "sensorStatusAccelShort": {
+        "message": "Akcel",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusMag": {
+        "message": "Magnetometer"
+    },
+    "sensorStatusMagShort": {
+        "message": "Mag",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusBaro": {
+        "message": "Barometer"
+    },
+    "sensorStatusBaroShort": {
+        "message": "Baro",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusSonar": {
+        "message": "Sonar / Merač vzdialenosti"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Sonar",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Zobraziť oznámenia o aktualizáciách pre nestabilné verzie konfigurátora"
+    },
+    "configuratorUpdateNotice": {
+        "message": "Používate zastaranú verziu <b>Betaflight Konfigurátora</b>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "configuratorUpdateHelp": {
+        "message": "Používanie novšej verzie firmvéru so zastaralou verziou konfigurátora Vám pri zmene niektorých nastavení <strong>poškodí konfiguráciu firmvéru a znefunkční stroj</strong>. Taktiež, niektoré funkcie firmvéru budú dostupné len pomocou príkazového riadka.<br><strong>Betaflight konfigurátor vo verzii <b>$1</b> je dostupný na stiahnutie</strong>, prosíme navštívte <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">túto stránku</a>, odkiaľ si môžete stiahnuť a nainštalovať najnovšiu verziu s opravenými chybami a vylepšeniami.<br>Prosíme zatvorte okno konfigurátora pred aktualizáciou."
+    },
+    "configuratorUpdateWebsite": {
+        "message": "Prejsť na webovú stránku aktualizácií"
+    }
+}
