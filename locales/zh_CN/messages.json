@@ -2499,9 +2499,6 @@
     "sensorsGyroTitle": {
         "message": "陀螺仪 - 度/秒"
     },
-    "sensorsAccelTitle": {
-        "message": "加速度计 - G"
-    },
     "sensorsMagTitle": {
         "message": "磁力计 - Ga"
     },
