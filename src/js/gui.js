@@ -5,7 +5,6 @@ window.TABS = {}; // filled by individual tab js file
 
 const GUI_MODES = {
     NWJS: "NW.js",
-    ChromeApp: "Chrome",
     Cordova: "Cordova",
     Other: "Other",
 };
@@ -67,11 +66,7 @@ const GuiControl = function () {
         if (typeof cordovaApp !== 'undefined') {
             this.Mode = GUI_MODES.Cordova;
         } else {
-            if (window.chrome && chrome.storage && chrome.storage.local) {
-                this.Mode = GUI_MODES.ChromeApp;
-            } else {
-                this.Mode = GUI_MODES.Other;
-            }
+            this.Mode = GUI_MODES.Other;
         }
     }
 };
@@ -81,8 +76,6 @@ function GUI_checkOperatingSystem() {
         return "Windows";
     } else if (navigator.appVersion.indexOf("Mac") !== -1) {
         return "MacOS";
-    } else if (navigator.appVersion.indexOf("CrOS") !== -1) {
-        return "ChromeOS";
     } else if (navigator.appVersion.indexOf("Android") !== -1) {
         return "Android";
     } else if (navigator.appVersion.indexOf("Linux") !== -1) {
@@ -395,12 +388,10 @@ GuiControl.prototype.selectDefaultTabWhenConnected = function() {
     });
 };
 
-GuiControl.prototype.isChromeApp = function () {
-  return this.Mode === GUI_MODES.ChromeApp;
-};
 GuiControl.prototype.isNWJS = function () {
   return this.Mode === GUI_MODES.NWJS;
 };
+
 GuiControl.prototype.isCordova = function () {
     return this.Mode === GUI_MODES.Cordova;
   };

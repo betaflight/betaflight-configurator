@@ -112,10 +112,10 @@ gulp.task('default', debugBuild);
 
 // Get platform from commandline args
 // #
-// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --armv7, --osx64, --win32, --win64, --chromeos or --android)
+// # gulp <task> [<platform>]+        Run only for platform(s) (with <platform> one of --linux64, --linux32, --armv7, --osx64, --win32, --win64, or --android)
 // #
 function getInputPlatforms() {
-    const supportedPlatforms = ['linux64', 'linux32', 'armv7', 'osx64', 'win32','win64', 'chromeos', 'android'];
+    const supportedPlatforms = ['linux64', 'linux32', 'armv7', 'osx64', 'win32', 'win64', 'android'];
     var platforms = [];
     var regEx = /--(\w+)/;
     console.log(process.argv);
@@ -193,30 +193,36 @@ function removeItem(platforms, item) {
 }
 
 function getRunDebugAppCommand(arch) {
+
+    let command;
+
     switch (arch) {
     case 'osx64':
-        return 'open ' + path.join(DEBUG_DIR, pkg.name, arch, pkg.name + '.app');
+        const pkgName = `${pkg.name}.app`;
+        command = `open ${path.join(DEBUG_DIR, pkg.name, arch, pkgName)}`;
 
         break;
 
     case 'linux64':
     case 'linux32':
     case 'armv7':
-        return path.join(DEBUG_DIR, pkg.name, arch, pkg.name);
+        command = path.join(DEBUG_DIR, pkg.name, arch, pkg.name);
 
         break;
 
     case 'win32':
     case 'win64':
-        return path.join(DEBUG_DIR, pkg.name, arch, pkg.name + '.exe');
+        command = path.join(DEBUG_DIR, pkg.name, arch, `${pkg.name}.exe`);
 
         break;
 
     default:
-        return '';
+        command =  '';
 
         break;
     }
+
+    return command;
 }
 
 function getReleaseFilename(platform, ext) {
@@ -258,7 +264,6 @@ function dist_src() {
     return packageJson
         .pipe(source('package.json'))
         .pipe(gulp.src(distSources, { base: 'src' }))
-        .pipe(gulp.src('manifest.json', { passthrougth: true }))
         .pipe(gulp.src('yarn.lock', { passthrougth: true }))
         .pipe(gulp.dest(DIST_DIR));
 }
@@ -295,7 +300,6 @@ function dist_resources() {
 // Create runable app directories in ./apps
 function apps(done) {
     var platforms = getPlatforms();
-    removeItem(platforms, 'chromeos');
     removeItem(platforms, 'android');
 
     buildNWAppsWrapper(platforms, 'normal', APPS_DIR, done);
@@ -355,7 +359,6 @@ function post_build(arch, folder, done) {
 // Create debug app directories in ./debug
 function debug(done) {
     var platforms = getPlatforms();
-    removeItem(platforms, 'chromeos');
     removeItem(platforms, 'android');
 
     buildNWAppsWrapper(platforms, 'sdk', DEBUG_DIR, done);
@@ -567,15 +570,6 @@ function release_zip(arch, appDirectory) {
     return compressFiles(src, base, output, 'Betaflight Configurator');
 }
 
-// Create distribution package for chromeos platform
-function release_chromeos() {
-    var src = path.join(DIST_DIR, '**');
-    var output = getReleaseFilename('chromeos', 'zip');
-    var base = DIST_DIR;
-
-    return compressFiles(src, base, output, '.');
-}
-
 // Compress files from srcPath, using basePath, to outputFile in the RELEASE_DIR
 function compressFiles(srcPath, basePath, outputFile, zipFolder) {
     return gulp.src(srcPath, { base: basePath })
@@ -728,10 +722,6 @@ function listReleaseTasks(appDirectory) {
     var platforms = getPlatforms();
 
     var releaseTasks = [];
-
-    if (platforms.indexOf('chromeos') !== -1) {
-        releaseTasks.push(release_chromeos);
-    }
 
     if (platforms.indexOf('linux64') !== -1) {
         releaseTasks.push(function release_linux64_zip() {
