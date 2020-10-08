@@ -1583,9 +1583,6 @@
     "sensorsGyroTitle": {
         "message": "Gyroskooppi - astetta/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Kiihtyvyysanturi - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetometri - Gaussia"
     },
