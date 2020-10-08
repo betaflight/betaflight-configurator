@@ -1106,9 +1106,6 @@
     "sensorsGyroTitle": {
         "message": "Jiroskop - derece/saniye"
     },
-    "sensorsAccelTitle": {
-        "message": "İvme Ölçer - g"
-    },
     "sensorsMagTitle": {
         "message": "Manyetometre - Ga"
     },
