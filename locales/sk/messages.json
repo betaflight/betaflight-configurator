@@ -34,6 +34,9 @@
     "storageDeviceNotReady": {
         "message": "Úložné zariadenie nie je pripravené. V prípade micro SD karty sa ubezpečte, že bola správne rozoznaná riadiacou jednotkou."
     },
+    "options_title": {
+        "message": "Možnosti aplikácie"
+    },
     "connect": {
         "message": "Pripojiť"
     },
@@ -57,6 +60,12 @@
     },
     "cancel": {
         "message": "Zrušiť"
+    },
+    "autoConnectEnabled": {
+        "message": "Automaticke pripojenie: Povolené - Konfigurátor sa v prípade detekcie nového portu pokúsi pripojiť automaticky"
+    },
+    "autoConnectDisabled": {
+        "message": "Automaticke pripojenie: Zakázané - Užívateľ musí vybrať správny sériový port a potvrdiť výber tlačítkom \"Pripojiť\""
     },
     "expertMode": {
         "message": "Povoliť expertný režim"
