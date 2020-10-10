@@ -305,6 +305,9 @@
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Huts</span> berreskuraezina serieko loturarekin, deskonektatzen..."
     },
+    "serialPortLoading": {
+        "message": "Lanean ..."
+    },
     "usbDeviceOpened": {
         "message": "USB gailua <span class=\"message-positive\">arrakaztaz</span> irekia ID: $1 -rekin"
     },
@@ -1921,6 +1924,12 @@
     "receiverRefreshRateTitle": {
         "message": "Grafikoa berritzeko tasa"
     },
+    "receiverResetRefreshRate": {
+        "message": "Leheneratu"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Leheneratu berritzeko tasa"
+    },
     "receiverButtonSave": {
         "message": "Gorde"
     },
@@ -2474,6 +2483,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroskopoa - grad/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Azelerometroa - g (deg)"
     },
     "sensorsMagTitle": {
         "message": "Magnetometroa - Ga"
