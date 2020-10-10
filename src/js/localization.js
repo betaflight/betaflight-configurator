@@ -39,7 +39,6 @@ i18n.init = function(cb) {
                         i18n.addResources({"detectedLanguage": detectedLanguage });
                         i18next.on('languageChanged', function () {
                             i18n.localizePage(true);
-                            updateStatusBarVersion();
                         });
                     }
                     if (cb !== undefined) {

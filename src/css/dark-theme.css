@@ -40,8 +40,8 @@ body {
     background-color: #414443;
 }
 
-#status-bar div {
-    border-right: 1px solid #9c9c9c;
+#status-bar > * ~ * {
+    border-left: 1px solid #9c9c9c;
 }
 
 dialog {

@@ -1,5 +1,61 @@
 'use strict';
 
+const INITIAL_CONFIG = {
+    apiVersion:                       "0.0.0",
+    flightControllerIdentifier:       '',
+    flightControllerVersion:          '',
+    version:                          0,
+    buildInfo:                        '',
+    multiType:                        0,
+    msp_version:                      0, // not specified using semantic versioning
+    capability:                       0,
+    cycleTime:                        0,
+    i2cError:                         0,
+    activeSensors:                    0,
+    mode:                             0,
+    profile:                          0,
+    uid:                              [0, 0, 0],
+    accelerometerTrims:               [0, 0],
+    name:                             '',
+    displayName:                      'JOE PILOT',
+    numProfiles:                      3,
+    rateProfile:                      0,
+    boardType:                        0,
+    armingDisableCount:               0,
+    armingDisableFlags:               0,
+    armingDisabled:                   false,
+    runawayTakeoffPreventionDisabled: false,
+    boardIdentifier:                  "",
+    boardVersion:                     0,
+    targetCapabilities:               0,
+    targetName:                       "",
+    boardName:                        "",
+    manufacturerId:                   "",
+    signature:                        [],
+    mcuTypeId:                        255,
+    configurationState:               0,
+    sampleRateHz:                     0,
+    configurationProblems:            0,
+    hardwareName:                     '',
+};
+
+const INITIAL_ANALOG = {
+    voltage:                    0,
+    mAhdrawn:                   0,
+    rssi:                       0,
+    amperage:                   0,
+    last_received_timestamp:    Date.now(), // FIXME this code lies, it's never been received at this point
+};
+
+const INITIAL_BATTERY_CONFIG = {
+    vbatmincellvoltage:         0,
+    vbatmaxcellvoltage:         0,
+    vbatwarningcellvoltage:     0,
+    capacity:                   0,
+    voltageMeterSource:         0,
+    currentMeterSource:         0,
+};
+
 const FC = {
 
     // define all the global variables that are uses to hold FC state
@@ -7,17 +63,43 @@ const FC = {
     ADJUSTMENT_RANGES: null,
     ADVANCED_TUNING: null,
     ADVANCED_TUNING_ACTIVE: null,
-    ANALOG: null,
+    ANALOG: {...INITIAL_CONFIG},
     ARMING_CONFIG: null,
     AUX_CONFIG: null,
     AUX_CONFIG_IDS: null,
-    BATTERY_CONFIG: null,
+    BATTERY_CONFIG: {...INITIAL_BATTERY_CONFIG},
     BATTERY_STATE: null,
     BEEPER_CONFIG: null,
     BF_CONFIG: null,          // Remove when we officialy retire BF 3.1
     BLACKBOX: null,
     BOARD_ALIGNMENT_CONFIG: null,
-    CONFIG: null,
+    // Shallow copy of original config and added getter
+    // getter allows this to be used with simple dot notation
+    // and bridges the vue and rest of the code
+    CONFIG: {
+        ...INITIAL_CONFIG,
+        get hardwareName() {
+            let name;
+            if (this.targetName) {
+                name = this.targetName;
+            } else {
+                name = this.boardIdentifier;
+            }
+
+            if (this.boardName && this.boardName !== name) {
+                name = `${this.boardName}(${name})`;
+            }
+
+            if (this.manufacturerId) {
+                name = `${this.manufacturerId}/${name}`;
+            }
+
+            return name;
+        },
+        set hardwareName(name) {
+            // NOOP, can't really be set. Maybe implement some logic?
+        },
+    },
     COPY_PROFILE: null,
     CURRENT_METERS: null,
     CURRENT_METER_CONFIGS: null,
@@ -72,43 +154,11 @@ const FC = {
     VTX_CONFIG: null,
 
     resetState () {
-        this.CONFIG = {
-            apiVersion:                       "0.0.0",
-            flightControllerIdentifier:       '',
-            flightControllerVersion:          '',
-            version:                          0,
-            buildInfo:                        '',
-            multiType:                        0,
-            msp_version:                      0, // not specified using semantic versioning
-            capability:                       0,
-            cycleTime:                        0,
-            i2cError:                         0,
-            activeSensors:                    0,
-            mode:                             0,
-            profile:                          0,
-            uid:                              [0, 0, 0],
-            accelerometerTrims:               [0, 0],
-            name:                             '',
-            displayName:                      'JOE PILOT',
-            numProfiles:                      3,
-            rateProfile:                      0,
-            boardType:                        0,
-            armingDisableCount:               0,
-            armingDisableFlags:               0,
-            armingDisabled:                   false,
-            runawayTakeoffPreventionDisabled: false,
-            boardIdentifier:                  "",
-            boardVersion:                     0,
-            targetCapabilities:               0,
-            targetName:                       "",
-            boardName:                        "",
-            manufacturerId:                   "",
-            signature:                        [],
-            mcuTypeId:                        255,
-            configurationState:               0,
-            sampleRateHz:                     0,
-            configurationProblems:            0,
-        };
+        // Using `Object.assign` instead of reassigning to
+        // trigger the updates on the Vue side
+        Object.assign(this.CONFIG, INITIAL_CONFIG);
+        Object.assign(this.ANALOG, INITIAL_CONFIG);
+        Object.assign(this.BATTERY_CONFIG, INITIAL_BATTERY_CONFIG);
 
         this.BF_CONFIG = {
             currentscale:               0,
@@ -249,13 +299,6 @@ const FC = {
             cno:                        [],
         };
 
-        this.ANALOG = {
-            voltage:                    0,
-            mAhdrawn:                   0,
-            rssi:                       0,
-            amperage:                   0,
-            last_received_timestamp:    Date.now(), // FIXME this code lies, it's never been received at this point
-        };
 
         this.VOLTAGE_METERS =           [];
         this.VOLTAGE_METER_CONFIGS =    [];
@@ -665,6 +708,7 @@ const FC = {
 
         return name;
     },
+
 
     MCU_TYPES: {
         0: "SIMULATOR",

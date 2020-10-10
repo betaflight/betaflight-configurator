@@ -38,12 +38,13 @@
     <link type="text/css" rel="stylesheet" href="./css/dropdown-lists/css/style_lists.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./js/libraries/switchery/switchery.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.css" media="all"/>
-    <link type="text/css" rel="stylesheet" href="./Components/MotorOutputReordering/Styles.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./components/MotorOutputReordering/Styles.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/select2_custom.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./node_modules/select2/dist/css/select2.min.css" media="all"/>
 
     <link type="text/css" rel="stylesheet" href="./css/dark-theme.css" media="all" disabled/>
 
+    <script type="module" src="./components/init.js"></script>
     <!-- CORDOVA_INCLUDE js/cordova_chromeapi.js -->
     <!-- CORDOVA_INCLUDE js/cordova_startup.js -->
     <script type="text/javascript" src="./node_modules/lru_map/lru.js"></script>
@@ -138,11 +139,12 @@
     <script type="text/javascript" src="./js/TuningSliders.js"></script>
     <script type="text/javascript" src="./js/phones_ui.js"></script>
     <script type="text/javascript" src="./node_modules/jquery-touchswipe/jquery.touchSwipe.min.js"></script>
-    <script type="text/javascript" src="./Components/MotorOutputReordering/MotorOutputReorderingComponent.js"></script>
-    <script type="text/javascript" src="./Components/MotorOutputReordering/MotorOutputReorderingCanvas.js"></script>
-    <script type="text/javascript" src="./Components/MotorOutputReordering/MotorOutputReorderingConfig.js"></script>
+    <script type="text/javascript" src="./components/MotorOutputReordering/MotorOutputReorderingComponent.js"></script>
+    <script type="text/javascript" src="./components/MotorOutputReordering/MotorOutputReorderingCanvas.js"></script>
+    <script type="text/javascript" src="./components/MotorOutputReordering/MotorOutputReorderingConfig.js"></script>
     <script type="text/javascript" src="./node_modules/select2/dist/js/select2.min.js"></script>
     
+
     <title i18n="windowTitle"></title>
 </head>
 <body>
@@ -153,12 +155,12 @@
         <div id="menu_btn">
             <em class="fas fa-bars"></em>
         </div>
-        <div id="logo">
-            <div class="logo_text">
-                CONFIGURATOR
-                <div class="version"></div>
-            </div>
-        </div>
+        <betaflight-logo
+            :configurator-version="CONFIGURATOR.version" 
+            :firmware-version="FC.CONFIG.flightControllerVersion" 
+            :firmware-id="FC.CONFIG.flightControllerIdentifier" 
+            :hardware-id="FC.CONFIG.hardwareName" 
+        ></betaflight-logo>
         <div id="port-picker">
             <div id="port-override-option">
                 <label for="port-override">
@@ -203,7 +205,10 @@
                         <div class="battery-status"></div>
                     </div>
                 </div>
-                <div class="battery-legend">Battery voltage</div>
+                <battery-legend 
+                    :voltage="FC.ANALOG.voltage"
+                    :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
+                ></battery-legend>
                 <div class="bottomStatusIcons">
                     <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>
                     <div class="failsafeicon cf_tip" i18n_title="mainHelpFailsafe"></div>
@@ -274,11 +279,12 @@
     </div>
     <div id="tab-content-container">
         <div class="tab_container">
-            <div id="tab_logoversion">
-                <div class="logo_text">
-                    <div class="version"></div>
-                </div>
-            </div>
+            <betaflight-logo
+                :configurator-version="CONFIGURATOR.version" 
+                :firmware-version="FC.CONFIG.flightControllerVersion" 
+                :firmware-id="FC.CONFIG.flightControllerIdentifier" 
+                :hardware-id="FC.CONFIG.hardwareName" 
+            ></betaflight-logo>
             <div id="tabs">
                 <ul class="mode-disconnected">
                     <li class="tab_landing" id="tab_landing"><a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a>
@@ -342,27 +348,20 @@
         </div>
         <div id="content"></div>
     </div>
-    <div id="status-bar">
-        <div>
-            <span i18n="statusbar_port_utilization"></span> <span class="port_usage_down">D: 0%</span> <span
-                class="port_usage_up">U: 0%</span>
-        </div>
-        <div>
-            <span i18n="statusbar_packet_error"></span> <span class="packet-error">0</span>
-        </div>
-        <div>
-            <span i18n="statusbar_i2c_error"></span> <span class="i2c-error">0</span>
-        </div>
-        <div>
-            <span i18n="statusbar_cycle_time"></span> <span class="cycle-time">0</span>
-        </div>
-        <div>
-            <span class="cpu-load"> </span>
-        </div>
-        <div class="version">
-            <!-- configuration version generated here -->
-        </div>
-    </div>
+    <status-bar
+            :port-usage-down="PortUsage.port_usage_down"
+            :port-usage-up="PortUsage.port_usage_up"
+            :packet-error="MSP.packet_error"
+            :i2c-error="FC.CONFIG.i2cError"
+            :cycle-time="FC.CONFIG.cycleTime"
+            :cpu-load="FC.CONFIG.cpuload"
+
+            :configurator-version="CONFIGURATOR.version" 
+            :firmware-version="FC.CONFIG.flightControllerVersion" 
+            :firmware-id="FC.CONFIG.flightControllerIdentifier" 
+            :hardware-id="FC.CONFIG.hardwareName" 
+            :git-changeset-id="CONFIGURATOR.gitChangesetId" 
+    ></status-bar>
     <div id="cache">
         <div class="data-loading">
             <p>Waiting for data ...</p>

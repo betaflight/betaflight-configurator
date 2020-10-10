@@ -7,9 +7,9 @@
   "chromium-args": "--disable-features=nw2",
   "default_locale": "en",
   "scripts": {
-    "start": "gulp debug",
+    "start": "NODE_ENV=development gulp debug",
     "gulp": "gulp",
-    "release": "gulp release",
+    "release": "NODE_ENV=production gulp release",
     "test": "karma start test/karma.conf.js"
   },
   "window": {
@@ -61,16 +61,23 @@
     "semver-min": "^0.6.5",
     "short-unique-id": "^1.1.1",
     "three": "~0.97.0",
-    "universal-ga": "^1.2.0"
+    "universal-ga": "^1.2.0",
+    "vue": "2.6.12",
+    "vue-i18n": "8.21.1"
   },
   "devDependencies": {
     "@quanle94/innosetup": "^6.0.2",
+    "@rollup/plugin-alias": "^3.1.1",
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "@rollup/plugin-replace": "^2.3.3",
     "chai": "^4.2.0",
     "command-exists": "^1.2.8",
     "cordova-lib": "^9.0.1",
     "del": "^5.0.0",
     "follow-redirects": "^1.10.0",
     "fs-extra": "^8.1.0",
+    "postcss": "^8.1.1",
     "gulp": "^4.0.2",
     "gulp-concat": "~2.6.1",
     "gulp-debian": "~0.1.8",
@@ -91,12 +98,15 @@
     "mocha": "^7.0.1",
     "nw-builder": "^3.5.7",
     "os": "^0.1.1",
+    "rollup": "^2.28.2",
+    "rollup-plugin-vue": "^5.*.*",
     "rpm-builder": "^1.2.1",
     "sinon": "^9.0.0",
     "sinon-chai": "^3.5.0",
     "targz": "^1.0.1",
     "temp": "^0.9.1",
     "vinyl-source-stream": "^2.0.0",
+    "vue-template-compiler": "^2.6.12",
     "yarn": "^1.22.0"
   },
   "optionalDependencies": {
