@@ -2493,6 +2493,9 @@
     "sensorsGyroTitle": {
         "message": "Gyroscope - deg/s"
     },
+    "sensorsAccelTitle": {
+        "message": "Versnellingsmeter - g (graden)"
+    },
     "sensorsMagTitle": {
         "message": "Magnetometer - Ga"
     },
