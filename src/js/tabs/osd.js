@@ -125,6 +125,16 @@ FONT.constants = {
     },
 };
 
+FONT.pushChar = function(fontCharacterBytes, fontCharacterBits) {
+    // Only push full characters onto the stack.
+    if (fontCharacterBytes.length !== FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE) {
+        return;
+    }
+    FONT.data.characters_bytes.push(fontCharacterBytes.slice(0));
+    FONT.data.characters.push(fontCharacterBits.slice(0));
+    FONT.draw(FONT.data.characters.length - 1);
+};
+
 /**
 * Each line is composed of 8 asci 1 or 0, representing 1 bit each for a total of 1 byte per line
 */
@@ -142,37 +152,29 @@ FONT.parseMCMFontFile = function(dataFontFile) {
         console.debug(msg);
         Promise.reject(msg);
     }
-    const character_bits = [];
-    const character_bytes = [];
+    const characterBits = [];
+    const characterBytes = [];
     // hexstring is for debugging
     FONT.data.hexstring = [];
-    const pushChar = function() {
-        // Only push full characters onto the stack.
-        if (character_bytes.length !== FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE) {
-            return;
-        }
-        FONT.data.characters_bytes.push(character_bytes);
-        FONT.data.characters.push(character_bits);
-        FONT.draw(FONT.data.characters.length - 1);
-        character_bits.length = 0;
-        character_bytes.length = 0;
-    };
     for (let i = 0; i < data.length; i++) {
         const line = data[i];
         // hexstring is for debugging
         FONT.data.hexstring.push(`0x${parseInt(line, 2).toString(16)}`);
         // every 64 bytes (line) is a char, we're counting chars though, which are 2 bits
-        if (character_bits.length === FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE * (8 / 2)) {
-            pushChar();
+        if (characterBits.length === FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE * (8 / 2)) {
+            FONT.pushChar(characterBytes, characterBits);
+            characterBits.length = 0;
+            characterBytes.length = 0;
         }
         for (let y = 0; y < 8; y = y + 2) {
             const v = parseInt(line.slice(y, y + 2), 2);
-            character_bits.push(v);
+            characterBits.push(v);
         }
-        character_bytes.push(parseInt(line, 2));
+        characterBytes.push(parseInt(line, 2));
     }
     // push the last char
-    pushChar();
+    FONT.pushChar(characterBytes, characterBits);
+
     return FONT.data.characters;
 };
 
