@@ -434,6 +434,19 @@ OSD.drawCameraFramePreview = function() {
     return cameraFrame;
 };
 
+OSD.formatPidsPreview = function(axis) {
+    const pidDefaults = FC.getPidDefaults();
+    const p = pidDefaults[axis * 5].toString().padStart(3);
+    const i = pidDefaults[axis * 5 + 1].toString().padStart(3);
+    const d = pidDefaults[axis * 5 + 2].toString().padStart(3);
+    const f = pidDefaults[axis * 5 + 4].toString().padStart(3);
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        return `${p} ${i} ${d}`;
+    } else {
+        return `${p} ${i} ${d} ${f}`;
+    }
+};
+
 OSD.loadDisplayFields = function() {
 
  // All display fields, from every version, do not remove elements, only add!
@@ -745,7 +758,7 @@ OSD.loadDisplayFields = function() {
             defaultPosition: 0x800 | (10 << 5) | 2, // 0x0800 | (y << 5) | x
             draw_order: 170,
             positionable: true,
-            preview: 'ROL  43  40  20',
+            preview: `ROL ${OSD.formatPidsPreview(0)}`,
         },
         PID_PITCH: {
             name: 'PID_PITCH',
@@ -754,7 +767,7 @@ OSD.loadDisplayFields = function() {
             defaultPosition: 0x800 | (11 << 5) | 2, // 0x0800 | (y << 5) | x
             draw_order: 180,
             positionable: true,
-            preview: 'PIT  58  50  22',
+            preview: `PIT ${OSD.formatPidsPreview(1)}`,
         },
         PID_YAW: {
             name: 'PID_YAW',
@@ -763,7 +776,7 @@ OSD.loadDisplayFields = function() {
             defaultPosition: 0x800 | (12 << 5) | 2, // 0x0800 | (y << 5) | x
             draw_order: 190,
             positionable: true,
-            preview: 'YAW  70  45  20',
+            preview: `YAW ${OSD.formatPidsPreview(2)}`,
         },
         POWER: {
             name: 'POWER',
