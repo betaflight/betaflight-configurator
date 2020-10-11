@@ -453,6 +453,10 @@ progress[value]::-webkit-progress-bar {
     background-color: #4e4e4e;
 }
 
+.tab-motors text {
+    fill: white;
+}
+
 
 /* ONBOARD LOGGING TAB */
 
@@ -750,6 +754,14 @@ progress[value]::-webkit-progress-bar {
 .tab-receiver .hybrid_element input {
     background-color: #3a3a3a;
     color: white;
+}
+
+.tab-receiver .plot_control {
+    background-color: #2f2f2f;
+}
+
+.tab-receiver text {
+    fill: white;
 }
 
 
