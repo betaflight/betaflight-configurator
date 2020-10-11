@@ -483,9 +483,21 @@ TABS.pid_tuning.initialize = function (callback) {
                 const checked = $(this).is(':checked');
                 $('.vbatSagCompensation .suboption').toggle(checked);
             }).change();
+
+            // Thrust Linearization
+            const thrustLinearizationCheck = $('input[id="thrustLinearization"]');
+
+            thrustLinearizationCheck.prop('checked', FC.ADVANCED_TUNING.thrustLinearization !== 0);
+            $('input[name="thrustLinearValue"]').val(FC.ADVANCED_TUNING.thrustLinearization > 0 ? FC.ADVANCED_TUNING.thrustLinearization : 20);
+
+            thrustLinearizationCheck.change(function() {
+                const checked = $(this).is(':checked');
+                $('.thrustLinearization .suboption').toggle(checked);
+            }).change();
         } else {
             $('.ffInterpolateSp').hide();
             $('.vbatSagCompensation').hide();
+            $('.thrustLinearization').hide();
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
@@ -955,6 +967,7 @@ TABS.pid_tuning.initialize = function (callback) {
             FC.ADVANCED_TUNING.ff_boost = parseInt($('input[name="ffBoost"]').val());
             FC.FILTER_CONFIG.dyn_lpf_curve_expo = parseInt($('.pid_filter input[name="dtermLowpassDynExpo"]').val());
             FC.ADVANCED_TUNING.vbat_sag_compensation = $('input[id="vbatSagCompensation"]').is(':checked') ? parseInt($('input[name="vbatSagValue"]').val()) : 0;
+            FC.ADVANCED_TUNING.thrustLinearization = $('input[id="thrustLinearization"]').is(':checked') ? parseInt($('input[name="thrustLinearValue"]').val()) : 0;
         }
     }
 

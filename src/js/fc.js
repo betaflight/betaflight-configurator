@@ -466,6 +466,7 @@ const FC = {
             ff_smooth_factor:           0,
             ff_boost:                   0,
             vbat_sag_compensation:      0,
+            thrustLinearization:        0,
         };
         this.ADVANCED_TUNING_ACTIVE = { ...this.ADVANCED_TUNING };
 
