@@ -2477,6 +2477,9 @@
     "sensorsGyroTitle": {
         "message": "ジャイロセンサー - deg/s"
     },
+    "sensorsAccelTitle": {
+        "message": "加速度センサー -g (度)"
+    },
     "sensorsMagTitle": {
         "message": "コンパス - Ga"
     },
