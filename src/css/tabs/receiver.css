@@ -4,7 +4,7 @@
 
 .tab-receiver .spacer {
     padding-left: 10px;
-    padding-right: 9px;
+    padding-right: 10px;
     width: calc(100% - 18px);
 }
 
@@ -470,5 +470,23 @@
 @media all and (max-width: 575px) {
     .tab-receiver .bars {
         margin-bottom: 10px;
+    }
+
+    .tab-receiver .spacer {
+        padding-left: 0px;
+        padding-right: 0px;
+        width: 100%;
+    }
+
+    .tab-receiver #RX_plot {
+        width: calc(100% - 120px);
+    }
+
+    .tab-receiver .plot_control {
+        width: 112px;
+    }
+
+    .tab-receiver .plot_control .row {
+        display: inherit;
     }
 }
