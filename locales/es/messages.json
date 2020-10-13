@@ -3562,6 +3562,15 @@
     "pidTuningVbatSagValue": {
         "message": "%"
     },
+    "pidTuningThrustLinearization": {
+        "message": "Linearización de Empuje"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compensa la relación no lineal entre el acelerador y el empuje aplicando una curva inversa del motor a la salida del motor. El importe de la compensación puede variar entre 0 y 150%."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "Rotación Término I"
     },
