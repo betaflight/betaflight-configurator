@@ -3707,6 +3707,15 @@
     "pidTuningVbatSagValue": {
         "message": "%"
     },
+    "pidTuningThrustLinearization": {
+        "message": "Thrust Linearization"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compensates for the non-linear relationship between throttle and thrust by applying an inverse motor curve to the motor output. The amount of compensation can be varied between 0 and 150%."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I Term Rotation"
     },
