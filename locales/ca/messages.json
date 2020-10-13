@@ -3570,6 +3570,15 @@
     "pidTuningVbatSagValue": {
         "message": "%"
     },
+    "pidTuningThrustLinearization": {
+        "message": "Linealització de l'empenta"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compensa la relació no lineal entre l’accelerador i l’empenta aplicant una corba de motor inversa a la sortida del motor. El valor de la compensació es pot variar entre el 0 i el 150%."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "Rotació I Term"
     },
