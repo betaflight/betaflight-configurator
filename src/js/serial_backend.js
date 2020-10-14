@@ -169,17 +169,13 @@ function finishClose(finishedCallback) {
 
     MSP.disconnect_cleanup();
     PortUsage.reset();
+    // To trigger the UI updates by Vue reset the state.
+    FC.resetState();
 
     GUI.connected_to = false;
     GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
     // close problems dialog
     $('#dialogReportProblems-closebtn').click();
-
-    // Reset various UI elements
-    $('span.i2c-error').text(0);
-    $('span.cycle-time').text(0);
-    if (semver.gte(FC.CONFIG.apiVersion, "1.20.0"))
-        $('span.cpu-load').text('');
 
     // unlock port select & baud
     $('div#port-picker #port').prop('disabled', false);
@@ -228,7 +224,6 @@ function onOpen(openInfo) {
         setConnectionTimeout();
 
         FC.resetState();
-        MSP.listen(update_packet_error);
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
 
@@ -247,8 +242,6 @@ function onOpen(openInfo) {
                             analytics.setFlightControllerData(analytics.DATA.FIRMWARE_VERSION, FC.CONFIG.flightControllerVersion);
 
                             GUI.log(i18n.getMessage('fcInfoReceived', [FC.CONFIG.flightControllerIdentifier, FC.CONFIG.flightControllerVersion]));
-                            updateStatusBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier);
-                            updateTopBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier);
 
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
 
@@ -318,8 +311,6 @@ function processBoardInfo() {
     analytics.setFlightControllerData(analytics.DATA.MCU_TYPE, FC.getMcuType());
 
     GUI.log(i18n.getMessage('boardInfoReceived', [FC.getHardwareName(), FC.CONFIG.boardVersion]));
-    updateStatusBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier, FC.getHardwareName());
-    updateTopBarVersion(FC.CONFIG.flightControllerVersion, FC.CONFIG.flightControllerIdentifier, FC.getHardwareName());
 
     if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.SUPPORTS_CUSTOM_DEFAULTS) && bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) && FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE) {
         var dialog = $('#dialogResetToCustomDefaults')[0];
@@ -538,9 +529,6 @@ function onClosed(result) {
     $('#tabs ul.mode-connected-cli').hide();
     $('#tabs ul.mode-disconnected').show();
 
-    updateStatusBarVersion();
-    updateTopBarVersion();
-
     var sensor_state = $('#sensor-status');
     sensor_state.hide();
 
@@ -725,9 +713,6 @@ function update_live_status() {
                $(".battery-status").addClass('state-ok').removeClass('state-warning').removeClass('state-empty');
            }
        }
-       
-       let cellsText = (FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM)? nbCells + 'S' : 'USB';
-       $(".battery-legend").text(FC.ANALOG.voltage.toFixed(2) + "V (" + cellsText + ")");
 
     }
 

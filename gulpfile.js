@@ -20,6 +20,7 @@ const commandExistsSync = require('command-exists').sync;
 const targz = require('targz');
 
 const gulp = require('gulp');
+const rollup = require('rollup');
 const concat = require('gulp-concat');
 const yarn = require("gulp-yarn");
 const rename = require('gulp-rename');
@@ -41,6 +42,8 @@ const CORDOVA_DIR = './cordova/';
 const CORDOVA_DIST_DIR = './dist_cordova/';
 
 const LINUX_INSTALL_DIR = '/opt/betaflight';
+
+const NODE_ENV = process.env.NODE_ENV || 'production';
 
 // Global variable to hold the change hash from when we get it, to when we use it.
 var gitChangeSetId;
@@ -86,7 +89,7 @@ const getChangesetId = gulp.series(getHash, writeChangesetId);
 gulp.task('get-changeset-id', getChangesetId);
 
 // dist_yarn MUST be done after dist_src
-const distBuild = gulp.series(dist_src, dist_changelog, dist_yarn, dist_locale, dist_libraries, dist_resources, getChangesetId, gulp.series(cordova_dist()));
+const distBuild = gulp.series(dist_src, dist_changelog, dist_yarn, dist_locale, dist_libraries, dist_resources, dist_rollup, getChangesetId, gulp.series(cordova_dist()));
 const distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
 
@@ -295,6 +298,38 @@ function dist_libraries() {
 function dist_resources() {
     return gulp.src(['./resources/**/*', '!./resources/osd/**/*.png'], { base: '.'})
         .pipe(gulp.dest(DIST_DIR));
+}
+
+function dist_rollup() {
+    const commonjs = require('@rollup/plugin-commonjs');
+    const resolve = require('@rollup/plugin-node-resolve').default;
+    const alias = require('@rollup/plugin-alias');
+    const vue = require('rollup-plugin-vue');
+    const rollupReplace = require('@rollup/plugin-replace');
+
+    return rollup
+        .rollup({
+            input: 'src/components/init.js',
+            plugins: [
+                alias({
+                    entries: {
+                        vue: require.resolve('vue/dist/vue.esm.js'),
+                    },
+                }),
+                rollupReplace({
+                    'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+                }),
+                resolve(),
+                commonjs(),
+                vue(),
+            ],
+        })
+        .then(bundle =>
+            bundle.write({
+                format: 'esm',
+                file: 'dist/components/init.js',
+            }),
+        );
 }
 
 // Create runable app directories in ./apps

@@ -83,8 +83,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 TABS.pid_tuning.checkUpdateProfile(false);
 
                 sensor_status(FC.CONFIG.activeSensors);
-                $('span.i2c-error').text(FC.CONFIG.i2cError);
-                $('span.cycle-time').text(FC.CONFIG.cycleTime);
                 break;
             case MSPCodes.MSP_STATUS_EX:
                 FC.CONFIG.cycleTime = data.readU16();
@@ -113,9 +111,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 }
 
                 sensor_status(FC.CONFIG.activeSensors);
-                $('span.i2c-error').text(FC.CONFIG.i2cError);
-                $('span.cycle-time').text(FC.CONFIG.cycleTime);
-                $('span.cpu-load').text(i18n.getMessage('statusbar_cpu_load', [FC.CONFIG.cpuload]));
                 break;
 
             case MSPCodes.MSP_RAW_IMU:

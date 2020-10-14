@@ -44,7 +44,6 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
 
             serial.onReceive.addListener(read_serial);
             
-            MSP.listen(update_packet_error);
             mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
             

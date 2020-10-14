@@ -68,9 +68,6 @@
     "cancel": {
         "message": "Cancel"
     },
-    "cancel": {
-        "message": "Cancel"
-    },
     "autoConnectEnabled": {
         "message": "Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
     },

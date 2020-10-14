@@ -16,7 +16,7 @@ class MotorOutputReorderComponent
 
         this._currentSpinningMotor = -1;
 
-        this._contentDiv.load("./Components/MotorOutputReordering/Body.html", () =>
+        this._contentDiv.load("./components/MotorOutputReordering/Body.html", () =>
         {
             this._setupdialog();
         });
