@@ -3562,6 +3562,15 @@
     "pidTuningVbatSagValue": {
         "message": "%"
     },
+    "pidTuningThrustLinearization": {
+        "message": "推力線形化"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "モーター出力に対して逆モーター曲線を適用することで、スロットルと推力の非線形関係を補正します。補正量は0～150%の間で可変できます。"
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I値 ローテーション"
     },
