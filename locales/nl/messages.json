@@ -3578,6 +3578,15 @@
     "pidTuningVbatSagValue": {
         "message": "%"
     },
+    "pidTuningThrustLinearization": {
+        "message": "Stuwkracht Linearisatie"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compenseert de niet-lineaire relatie tussen gas en kracht door een omgekeerde motorcurve toe te passen op de motor output. De hoogte van de compensatie kan tussen de 0 en 150 procent liggen."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I Term Rotatie"
     },
