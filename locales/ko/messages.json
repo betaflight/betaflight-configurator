@@ -3630,6 +3630,15 @@
     "pidTuningVbatSagValue": {
         "message": "%"
     },
+    "pidTuningThrustLinearization": {
+        "message": "추력 선형화"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "모터 출력에 역 모터 곡선을 적용하여 스로틀과 추력 사이의 비선형 관계를 보상합니다. 보상금액은 0~150% 사이에서 변동할 수 있습니다."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I 텀 회전"
     },
