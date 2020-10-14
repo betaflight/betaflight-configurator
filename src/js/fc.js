@@ -545,6 +545,10 @@ const FC = {
                     result.push('SPEKTRUM SRXL2');
                 }
 
+                if (semver.gte(apiVersion, API_VERSION_1_44)) {
+                    result.push('IRC GHOST');
+                }
+
                 return result;
             },
         };
