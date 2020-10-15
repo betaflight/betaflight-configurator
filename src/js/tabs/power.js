@@ -53,7 +53,7 @@ TABS.power.initialize = function (callback) {
         $('#content').load("./tabs/power.html", process_html);
     }
 
-    this.supported = semver.gte(FC.CONFIG.apiVersion, "1.33.0");
+    this.supported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33);
 
     if (!this.supported) {
         load_html();
@@ -226,7 +226,7 @@ TABS.power.initialize = function (callback) {
         var element = template.clone();
         destination.append(element);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             $('input[name="mincellvoltage"]').prop('step','0.01');
             $('input[name="maxcellvoltage"]').prop('step','0.01');
             $('input[name="warningcellvoltage"]').prop('step','0.01');
@@ -237,7 +237,7 @@ TABS.power.initialize = function (callback) {
         $('input[name="warningcellvoltage"]').val(FC.BATTERY_CONFIG.vbatwarningcellvoltage);
         $('input[name="capacity"]').val(FC.BATTERY_CONFIG.capacity);
 
-        var haveFc = (semver.lt(FC.CONFIG.apiVersion, "1.35.0") || (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2));
+        var haveFc = (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_35) || (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2));
 
         var batteryMeterTypes = [
             i18n.getMessage('powerBatteryVoltageMeterTypeNone'),
@@ -264,7 +264,7 @@ TABS.power.initialize = function (callback) {
             currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeVirtual'));
             currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeEsc'));
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                 currentMeterTypes.push(i18n.getMessage('powerBatteryCurrentMeterTypeMsp'));
             }
         }
@@ -491,7 +491,7 @@ TABS.power.initialize = function (callback) {
         }
 
         function save_voltage_config() {
-            if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                 mspHelper.sendVoltageConfig(save_amperage_config);
             } else {
                 MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG), false, save_amperage_config);
@@ -499,7 +499,7 @@ TABS.power.initialize = function (callback) {
         }
 
         function save_amperage_config() {
-            if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                 mspHelper.sendCurrentConfig(save_to_eeprom);
             } else {
                 MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_CURRENT_METER_CONFIG), false, save_to_eeprom);

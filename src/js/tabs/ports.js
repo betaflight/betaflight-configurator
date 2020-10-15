@@ -32,7 +32,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push(mavlinkFunctionRule);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
         functionRules.push({ name: 'ESC_SENSOR', groups: ['sensors'], maxPorts: 1 });
         functionRules.push({ name: 'TBS_SMARTAUDIO', groups: ['peripherals'], maxPorts: 1 });
     }
@@ -41,15 +41,15 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         functionRules.push({ name: 'IRC_TRAMP', groups: ['peripherals'], maxPorts: 1 });
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.32.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
         functionRules.push({ name: 'TELEMETRY_IBUS', groups: ['telemetry'], maxPorts: 1 });
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
         functionRules.push({ name: 'RUNCAM_DEVICE_CONTROL', groups: ['peripherals'], maxPorts: 1 });
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
         functionRules.push({ name: 'LIDAR_TF', groups: ['peripherals'], maxPorts: 1 });
     }
 
@@ -71,7 +71,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         '250000'
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
         mspBaudRates = mspBaudRates.concat(['500000', '1000000']);
     }
 
@@ -116,7 +116,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
     function load_configuration_from_fc() {
         let promise;
-        if(semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             promise = MSP.promise(MSPCodes.MSP_VTX_CONFIG);
         } else {
             promise = Promise.resolve();
@@ -296,7 +296,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
         }
 
         let vtxTableNotConfigured = true;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             vtxTableNotConfigured = FC.VTX_CONFIG.vtx_table_available &&
                                         (FC.VTX_CONFIG.vtx_table_bands == 0 ||
                                         FC.VTX_CONFIG.vtx_table_channels == 0 ||
@@ -321,7 +321,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
                 lastVtxControlSelected = vtxControlSelected;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 if (vtxControlSelected && vtxTableNotConfigured) {
                     $('.vtxTableNotSet').show();
                 } else {

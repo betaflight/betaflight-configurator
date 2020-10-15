@@ -26,7 +26,7 @@ class Beepers {
             { bit: 18, name: 'BLACKBOX_ERASE', visible: true },
         ];
 
-        if (semver.gte(config.apiVersion, "1.37.0")) {
+        if (semver.gte(config.apiVersion, API_VERSION_1_37)) {
             beepers.push(
                 { bit: 19, name: 'CRASH_FLIP', visible: true },
                 { bit: 20, name: 'CAM_CONNECTION_OPEN', visible: true },
@@ -34,7 +34,7 @@ class Beepers {
             );
         }
 
-        if (semver.gte(config.apiVersion, "1.39.0")) {
+        if (semver.gte(config.apiVersion, API_VERSION_1_39)) {
             beepers.push(
                 { bit: 22, name: 'RC_SMOOTHING_INIT_FAIL', visible: true }
             );

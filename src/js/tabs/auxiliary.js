@@ -9,7 +9,7 @@ TABS.auxiliary.initialize = function (callback) {
 
     function get_mode_ranges() {
         MSP.send_message(MSPCodes.MSP_MODE_RANGES, false, false, 
-            semver.gte(FC.CONFIG.apiVersion, "1.41.0") ? get_mode_ranges_extra : get_box_ids);
+            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41) ? get_mode_ranges_extra : get_box_ids);
     }
 
     function get_mode_ranges_extra() {
@@ -57,7 +57,7 @@ TABS.auxiliary.initialize = function (callback) {
         $(newMode).find('a.addLink').data('modeElement', newMode);
 
         // hide link button for ARM
-        if (modeId == 0 || semver.lt(FC.CONFIG.apiVersion, "1.41.0")) {
+        if (modeId == 0 || semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             $(newMode).find('.addLink').hide();
         }
 
@@ -75,7 +75,7 @@ TABS.auxiliary.initialize = function (callback) {
         logicOption.val(0);
         logicList.append(logicOption);
         
-        if(semver.gte(FC.CONFIG.apiVersion, "1.41.0")){
+        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)){
             var logicOption = logicOptionTemplate.clone();
             logicOption.text(i18n.getMessage('auxiliaryModeLogicAND'));
             logicOption.val(1);
@@ -271,7 +271,7 @@ TABS.auxiliary.initialize = function (callback) {
                     modeLogic: 0,
                     linkedTo: 0
                 };
-                if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                     modeRangeExtra = FC.MODE_RANGES_EXTRA[modeRangeIndex];
                 }
                 
@@ -451,7 +451,7 @@ TABS.auxiliary.initialize = function (callback) {
                     if (i == 0) {
                         var armSwitchActive = false;
                         
-                        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                             if (FC.CONFIG.armingDisableCount > 0) {
                                 // check the highest bit of the armingDisableFlags. This will be the ARMING_DISABLED_ARMSWITCH flag.
                                 var armSwitchMask = 1 << (FC.CONFIG.armingDisableCount - 1);

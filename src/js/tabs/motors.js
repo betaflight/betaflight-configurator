@@ -85,7 +85,7 @@ TABS.motors.initialize = function (callback) {
     }
 
     // Get information from Betaflight
-    if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
         // BF 3.2.0+
         MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, get_arm_status);
     } else {
@@ -221,7 +221,7 @@ TABS.motors.initialize = function (callback) {
     function update_model(mixer) {
         var reverse = "";
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
         }
 
@@ -251,7 +251,7 @@ TABS.motors.initialize = function (callback) {
 
         $('#motorsEnableTestMode').prop('checked', false);
 
-        if (semver.lt(FC.CONFIG.apiVersion, "1.42.0") || !(FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42) || !(FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
             $(".motor_testing .telemetry").hide();
         } else {
             // Hide telemetry from unused motors (to hide the tooltip in an empty blank space)
