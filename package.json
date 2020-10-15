@@ -7,9 +7,13 @@
   "chromium-args": "--disable-features=nw2",
   "default_locale": "en",
   "scripts": {
-    "start": "NODE_ENV=development gulp debug",
+    "start": "run-script-os",
+    "start:default": "NODE_ENV=development gulp debug",
+    "start:windows": "set NODE_ENV=development&& gulp debug",
     "gulp": "gulp",
-    "release": "NODE_ENV=production gulp release",
+    "release": "run-script-os",
+    "release:default": "NODE_ENV=production gulp release",
+    "release:windows": "set NODE_ENV=production&& gulp release",
     "test": "karma start test/karma.conf.js"
   },
   "window": {
@@ -101,6 +105,7 @@
     "rollup": "^2.28.2",
     "rollup-plugin-vue": "^5.*.*",
     "rpm-builder": "^1.2.1",
+    "run-script-os": "^1.1.1",
     "sinon": "^9.0.0",
     "sinon-chai": "^3.5.0",
     "targz": "^1.0.1",
