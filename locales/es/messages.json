@@ -528,7 +528,7 @@
         "message": "I2C error:"
     },
     "statusbar_cycle_time": {
-        "message": "Tiempo de Ciclo:"
+        "message": "Tiempo de ciclo:"
     },
     "statusbar_cpu_load": {
         "message": "Carga de CPU: $1%"
