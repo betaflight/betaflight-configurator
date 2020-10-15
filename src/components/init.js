@@ -23,6 +23,11 @@ const betaflightModel = {
     PortUsage,
 };
 
+if (process.env.NODE_ENV === 'development') {
+    console.log("Development mode enabled, installing Vue tools");
+    Vue.config.devtools = true;
+}
+
 const app = new Vue({
     i18n: vueI18n,
     data: betaflightModel,
