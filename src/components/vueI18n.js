@@ -1,18 +1,10 @@
 import Vue from "vue";
-import VueI18n from "vue-i18n";
+import VueI18Next from "@panter/vue-i18next";
 
-Vue.use(VueI18n);
+Vue.use(VueI18Next);
 
-const vueI18n = new VueI18n(i18next);
-
-i18next.on("initialized", () => {
-    vueI18n.setLocaleMessage("en", i18next.getDataByLanguage("en").messages);
-});
-
-i18next.on("languageChanged", (lang) => {
-    vueI18n.setLocaleMessage(lang, i18next.getDataByLanguage(lang).messages);
-    vueI18n.locale = lang;
-    document.querySelector("html").setAttribute("lang", lang);
-});
+// NOTE: this relies on global `i18next` eventually
+// it should be consumed through modules.
+const vueI18n = new VueI18Next(i18next);
 
 export default vueI18n;
