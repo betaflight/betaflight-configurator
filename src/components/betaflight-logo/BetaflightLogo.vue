@@ -72,15 +72,15 @@
   <div class="logo">
     <div class="logo_text">
       <span>
-        {{ $t("versionLabelConfigurator.message") }}: {{ configuratorVersion }}
+        {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }}
         <br />
         <span v-if="firmwareVersion && firmwareId">
-          {{ $t("versionLabelFirmware.message") }}: {{ firmwareVersion }}
+          {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
           {{ firmwareId }}
         </span>
         <br />
         <span v-if="hardwareId">
-          {{ $t("versionLabelTarget.message") }}: {{ hardwareId }}
+          {{ $t("versionLabelTarget") }}: {{ hardwareId }}
         </span>
       </span>
     </div>

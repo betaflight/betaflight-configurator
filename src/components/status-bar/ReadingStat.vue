@@ -1,6 +1,6 @@
 <template>
   <span>
-    <span>{{ $t(message + ".message") | stripEnd }}</span>
+    <span>{{ $t(message) }}</span>
     <span>{{ value }}</span>
     <span v-if="unit">{{ unit }}</span>
   </span>
