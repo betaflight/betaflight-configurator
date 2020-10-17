@@ -50,7 +50,7 @@ TABS.gps.initialize = function (callback) {
             var lon = FC.GPS_DATA.lon / 10000000;
             var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
             var alt = FC.GPS_DATA.alt;
-            if (semver.lt(FC.CONFIG.apiVersion, "1.39.0")) {
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                 alt = alt / 10;
             }
 

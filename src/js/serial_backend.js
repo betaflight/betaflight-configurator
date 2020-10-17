@@ -425,7 +425,7 @@ function processName() {
 }
 
 function setRtc() {
-    if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
         MSP.send_message(MSPCodes.MSP_SET_RTC, mspHelper.crunch(MSPCodes.MSP_SET_RTC), false, finishOpen);
     } else {
         finishOpen();
@@ -497,7 +497,7 @@ function onConnect() {
         $('#tabs ul.mode-connected').show();
 
         MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
-        if (semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
             MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
         }
         MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
@@ -635,7 +635,7 @@ function have_sensor(sensors_detected, sensor_code) {
         case 'sonar':
             return bit_check(sensors_detected, 4);
         case 'gyro':
-            if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                 return bit_check(sensors_detected, 5);
             } else {
                 return true;
@@ -659,7 +659,7 @@ function update_live_status() {
 
     if (GUI.active_tab != 'cli') {
         MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
-        if (semver.gte(FC.CONFIG.apiVersion, "1.32.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         } else {
             MSP.send_message(MSPCodes.MSP_STATUS, false, false);

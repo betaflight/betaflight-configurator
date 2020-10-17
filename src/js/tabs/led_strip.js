@@ -18,7 +18,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
     } else {
         TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'n'];
         TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'l', 's', 'g', 'r'];
-        if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             TABS.led_strip.overlays =  ['t', 'o', 'b', 'n', 'i', 'w'];
         } else {
             TABS.led_strip.overlays =  ['t', 'o', 'b', 'v', 'i', 'w'];
@@ -75,7 +75,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         for (var i = 0; i < 256; i++) {
             if (semver.lte(FC.CONFIG.apiVersion, "1.19.0")) {
                 theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-s"> </span><span class="overlay-w"> </span><span class="overlay-i"> </span><span class="overlay-color"> </span></div>');
-            } else if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
+            } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                 theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-b"> </span><span class="overlay-n"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
             } else {
                 theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-o"> </span><span class="overlay-b"> </span><span class="overlay-v"> </span><span class="overlay-i"> </span><span class="overlay-w"> </span><span class="overlay-color"> </span></div>');
@@ -105,7 +105,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             });
         }
 
-        if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             $('.vtxOverlay').hide();
             $('.landingBlinkOverlay').show();
         }
@@ -806,7 +806,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
     }
 
     function isVtxActive(activeFunction) {
-        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             switch (activeFunction) {
                 case "function-v":
                 case "function-c":

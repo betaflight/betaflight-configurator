@@ -19,7 +19,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     
     function load_rxfail_config() {
         MSP.send_message(MSPCodes.MSP_RXFAIL_CONFIG, false, false, 
-                semver.gte(FC.CONFIG.apiVersion, "1.41.0") ? load_gps_rescue : get_box_names);
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41) ? load_gps_rescue : get_box_names);
     }
 
     function load_gps_rescue() {
@@ -135,7 +135,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
         for (i = 0; i < FC.RXFAIL_CONFIG.length; i++) {
             if (i < channelNames.length) {
-                if (semver.lt(FC.CONFIG.apiVersion, "1.41.0")) {
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                     fullChannels_e.append('\
                         <div class="number">\
                             <div class="channelprimary">\
@@ -236,7 +236,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
         FC.FEATURE_CONFIG.features.generateElements($('.tab-failsafe .featuresNew'));
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
           $('tbody.rxFailsafe').hide();
           toggleStage2(true);
         } else {
@@ -283,7 +283,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 break;
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
             // `failsafe_kill_switch` has been renamed to `failsafe_switch_mode`.
             // It is backwards compatible with `failsafe_kill_switch`
             $('select[name="failsafe_switch_mode"]').val(FC.FAILSAFE_CONFIG.failsafe_switch_mode);
@@ -295,9 +295,9 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
         }
 
         // The GPS Rescue tab is only available for 1.40 or later, and the parameters for 1.41
-        if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 // Load GPS Rescue parameters
                 $('input[name="gps_rescue_angle"]').val(FC.GPS_RESCUE.angle);
                 $('input[name="gps_rescue_initial_altitude"]').val(FC.GPS_RESCUE.initialAltitudeM);
@@ -355,14 +355,14 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 FC.FAILSAFE_CONFIG.failsafe_procedure = 2;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                 FC.FAILSAFE_CONFIG.failsafe_switch_mode = $('select[name="failsafe_switch_mode"]').val();
             }
             else {
                 FC.FAILSAFE_CONFIG.failsafe_switch_mode = $('input[name="failsafe_kill_switch"]').is(':checked') ? 1 : 0;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 // Load GPS Rescue parameters
                 FC.GPS_RESCUE.angle             = $('input[name="gps_rescue_angle"]').val();
                 FC.GPS_RESCUE.initialAltitudeM  = $('input[name="gps_rescue_initial_altitude"]').val();
@@ -392,7 +392,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
             function save_feature_config() {
                 MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, 
-                        semver.gte(FC.CONFIG.apiVersion, "1.41.0") ? save_gps_rescue : save_to_eeprom);
+                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41) ? save_gps_rescue : save_to_eeprom);
             }
 
             function save_gps_rescue() {

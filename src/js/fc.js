@@ -564,11 +564,11 @@ const FC = {
                 }
 
                 if ((flightControllerIdentifier === 'BTFL' && semver.gte(flightControllerVersion, "2.6.0")) ||
-                    (flightControllerIdentifier === 'CLFL' && semver.gte(apiVersion, "1.31.0"))) {
+                    (flightControllerIdentifier === 'CLFL' && semver.gte(apiVersion, API_VERSION_1_31))) {
                     result.push('JETIEXBUS');
                 }
 
-                if (semver.gte(apiVersion, "1.31.0")) {
+                if (semver.gte(apiVersion, API_VERSION_1_31)) {
                     result.push('CRSF');
                 }
 
@@ -576,15 +576,15 @@ const FC = {
                     result.push('SPEKTRUM2048/SRXL');
                 }
 
-                if (semver.gte(apiVersion, "1.35.0")) {
+                if (semver.gte(apiVersion, API_VERSION_1_35)) {
                     result.push('TARGET_CUSTOM');
                 }
 
-                if (semver.gte(apiVersion, "1.37.0")) {
+                if (semver.gte(apiVersion, API_VERSION_1_37)) {
                     result.push('FrSky FPort');
                 }
 
-                if (semver.gte(apiVersion, "1.42.0")) {
+                if (semver.gte(apiVersion, API_VERSION_1_42)) {
                     result.push('SPEKTRUM SRXL2');
                 }
 
@@ -756,7 +756,7 @@ const FC = {
 
     boardHasVcp() {
         let hasVcp = false;
-        if (semver.gte(this.CONFIG.apiVersion, "1.37.0")) {
+        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_37)) {
             hasVcp = bit_check(this.CONFIG.targetCapabilities, this.TARGET_CAPABILITIES_FLAGS.HAS_VCP);
         } else {
             hasVcp = BOARD.find_board_definition(this.CONFIG.boardIdentifier).vcp;
@@ -773,9 +773,9 @@ const FC = {
     getFilterDefaults() {
         const versionFilterDefaults = this.DEFAULT;
 
-        if (semver.eq(this.CONFIG.apiVersion, "1.40.0")) {
+        if (semver.eq(this.CONFIG.apiVersion, API_VERSION_1_40)) {
             versionFilterDefaults.dterm_lowpass2_hz = 200;
-        } else if (semver.gte(this.CONFIG.apiVersion, "1.41.0")) {
+        } else if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_41)) {
             versionFilterDefaults.gyro_lowpass_hz = 150;
             versionFilterDefaults.gyro_lowpass_type = this.FILTER_TYPE_FLAGS.BIQUAD;
             versionFilterDefaults.gyro_lowpass2_hz = 0;
@@ -784,7 +784,7 @@ const FC = {
             versionFilterDefaults.dterm_lowpass_type = this.FILTER_TYPE_FLAGS.BIQUAD;
             versionFilterDefaults.dterm_lowpass2_hz = 150;
             versionFilterDefaults.dterm_lowpass2_type = this.FILTER_TYPE_FLAGS.BIQUAD;
-            if (semver.gte(this.CONFIG.apiVersion, "1.42.0")) {
+            if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_42)) {
                 versionFilterDefaults.gyro_lowpass_hz = 200;
                 versionFilterDefaults.gyro_lowpass_dyn_min_hz = 200;
                 versionFilterDefaults.gyro_lowpass_dyn_max_hz = 500;

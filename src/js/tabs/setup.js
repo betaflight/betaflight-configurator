@@ -61,7 +61,7 @@ TABS.setup.initialize = function (callback) {
 
         $('#arming-disable-flag').attr('title', i18n.getMessage('initialSetupArmingDisableFlagsTooltip'));
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
             if (isExpertModeEnabled()) {
                 $('.initialSetupRebootBootloader').show();
             } else {
@@ -194,7 +194,7 @@ TABS.setup.initialize = function (callback) {
             pitch_e = $('dd.pitch'),
             heading_e = $('dd.heading');
 
-        if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             arming_disable_flags_e.hide();
         }
 
@@ -220,21 +220,21 @@ TABS.setup.initialize = function (callback) {
                                       'MSP',
                                      ];
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.38.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_38)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                 disarmFlagElements = disarmFlagElements.concat(['PARALYZE',
                                                                 'GPS']);
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('OSD_MENU'), 1);
                 disarmFlagElements = disarmFlagElements.concat(['RESC']);
                 disarmFlagElements = disarmFlagElements.concat(['RPMFILTER']);
             }
-            if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'CRASH');
                 disarmFlagElements = disarmFlagElements.concat(['REBOOT_REQD',
                                                                 'DSHOT_BBANG']);

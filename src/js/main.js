@@ -655,13 +655,13 @@ function updateTabList(features) {
         $('#tabs ul.mode-connected li.tab_osd').hide();
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
         $('#tabs ul.mode-connected li.tab_power').show();
     } else {
         $('#tabs ul.mode-connected li.tab_power').hide();
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
         $('#tabs ul.mode-connected li.tab_vtx').show();
     } else {
         $('#tabs ul.mode-connected li.tab_vtx').hide();

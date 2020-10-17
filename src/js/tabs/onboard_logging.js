@@ -69,7 +69,7 @@ TABS.onboard_logging.initialize = function (callback) {
              *
              * The best we can do on those targets is check the BLACKBOX feature bit to identify support for Blackbox instead.
              */
-            if ((FC.BLACKBOX.supported || FC.DATAFLASH.supported) && (semver.gte(FC.CONFIG.apiVersion, "1.33.0") || FC.FEATURE_CONFIG.features.isEnabled('BLACKBOX'))) {
+            if ((FC.BLACKBOX.supported || FC.DATAFLASH.supported) && (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33) || FC.FEATURE_CONFIG.features.isEnabled('BLACKBOX'))) {
                 blackboxSupport = 'yes';
             } else {
                 blackboxSupport = 'no';
@@ -106,7 +106,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                         FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
-                    } else if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+                    } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                         FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     } else {
                         var rate = loggingRatesSelect.val().split('/');
@@ -114,7 +114,7 @@ TABS.onboard_logging.initialize = function (callback) {
                         FC.BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
                     }
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
-                    if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                         FC.PID_ADVANCED_CONFIG.debugMode = parseInt(debugModeSelect.val());
                         MSP.send_message(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG), false, save_to_eeprom);
                     }
@@ -134,7 +134,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 }
             }).change();
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
                 if ((FC.SDCARD.supported && deviceSelect.val() == 2) || (FC.DATAFLASH.supported && deviceSelect.val() == 1)) {
 
                     $(".tab-onboard_logging")
@@ -144,7 +144,7 @@ TABS.onboard_logging.initialize = function (callback) {
                          analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
 
                         var buffer = [];
-                        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                             if (GUI.operating_system === "Linux") {
                                 // Reboot into MSC using UTC time offset instead of user timezone
                                 // Linux seems to expect that the FAT file system timestamps are UTC based
@@ -169,7 +169,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function populateDevices(deviceSelect) {
         deviceSelect.empty();
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
             deviceSelect.append('<option value="0">' + i18n.getMessage('blackboxLoggingNone') + '</option>');
             if (FC.DATAFLASH.supported) {
                 deviceSelect.append('<option value="1">' + i18n.getMessage('blackboxLoggingFlash') + '</option>');
@@ -204,7 +204,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
             let pidRateBase = 8000;
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0") && FC.PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41) && FC.PID_ADVANCED_CONFIG.gyroUse32kHz !== 0) {
                 pidRateBase = 32000;
             }
             pidRate = pidRateBase / FC.PID_ADVANCED_CONFIG.gyro_sync_denom / FC.PID_ADVANCED_CONFIG.pid_process_denom;
@@ -222,7 +222,7 @@ TABS.onboard_logging.initialize = function (callback) {
                 loggingRatesSelect.append(`<option value="${i}">1/${2**i} (${loggingFrequency}${loggingFrequencyUnit})</option>`);
             }
             loggingRatesSelect.val(FC.BLACKBOX.blackboxSampleRate);
-        } else if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+        } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             loggingRates = [
                 {text: "Disabled", hz: 0,     p_denom: 0},
                 {text: "500 Hz",   hz: 500,   p_denom: 16},
@@ -278,7 +278,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function populateDebugModes(debugModeSelect) {
         var debugModes = [];
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             $('.blackboxDebugMode').show();
 
             debugModes = [
@@ -435,7 +435,7 @@ TABS.onboard_logging.initialize = function (callback) {
             .toggleClass("sdcard-initializing", FC.SDCARD.state === MSP.SDCARD_STATE_CARD_INIT || FC.SDCARD.state === MSP.SDCARD_STATE_FS_INIT)
             .toggleClass("sdcard-ready", FC.SDCARD.state === MSP.SDCARD_STATE_READY);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.40.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
             var mscIsReady = dataflashPresent || (FC.SDCARD.state === MSP.SDCARD_STATE_READY);
             $(".tab-onboard_logging")
                 .toggleClass("msc-not-ready", !mscIsReady);
@@ -535,7 +535,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function flash_save_begin() {
         if (GUI.connected_to) {
             if (FC.boardHasVcp()) {
-                if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
                     self.blockSize = self.VCP_BLOCK_SIZE;
                 } else {
                     self.blockSize = self.VCP_BLOCK_SIZE_3_0;

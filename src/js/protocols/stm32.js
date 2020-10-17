@@ -141,7 +141,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
 
             GUI.log(i18n.getMessage('apiVersionReceived', [FC.CONFIG.apiVersion]));
 
-            if (semver.lt(FC.CONFIG.apiVersion, "1.42.0")) {
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
 
                 self.msp_connector.disconnect(function (disconnectionResult) {
 

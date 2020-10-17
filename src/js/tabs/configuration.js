@@ -19,7 +19,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         GUI.configuration_loaded = true;
     }
 
-    if (semver.lt(FC.CONFIG.apiVersion, "1.36.0")) {
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
         //Show old battery configuration for pre-BF-3.2
         self.SHOW_OLD_BATTERY_CONFIG = true;
     } else {
@@ -32,7 +32,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_beeper_config() {
         var next_callback = load_serial_config;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -61,7 +61,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_motor_config() {
         var next_callback = load_gps_config;
-        if(semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
+        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
             MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -70,7 +70,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_gps_config() {
         var next_callback = load_acc_trim;
-        if(semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
+        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
             MSP.send_message(MSPCodes.MSP_GPS_CONFIG, false, false, load_acc_trim);
         } else {
             next_callback();
@@ -83,7 +83,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_misc() {
         var next_callback = load_arming_config;
-        if (semver.lt(FC.CONFIG.apiVersion, "1.33.0")) {
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
             MSP.send_message(MSPCodes.MSP_MISC, false, false, next_callback);
         } else {
             next_callback();
@@ -178,7 +178,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_rx_config() {
         const next_callback = load_filter_config;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -187,7 +187,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
     function load_filter_config() {
         const next_callback = load_html;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             MSP.send_message(MSPCodes.MSP_FILTER_CONFIG, false, false, next_callback);
         } else {
             next_callback();
@@ -216,7 +216,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             var mixer = FC.MIXER_CONFIG.mixer
             var reverse = "";
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                 reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
             }
 
@@ -260,7 +260,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var dshotBeaconCondition_e = $('tbody.dshotBeaconConditions');
         var dshotBeaconSwitch_e = $('tr.dshotBeaconSwitch');
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
             for (var i = 1; i <= 5; i++) {
                 dshotBeeperBeaconTone.append('<option value="' + (i) + '">'+ (i) + '</option>');
             }
@@ -276,7 +276,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         dshotBeeperBeaconTone.val(FC.BEEPER_CONFIG.dshotBeaconTone);
 
         var template = $('.beepers .beeper-template');
-        if (semver.gte(FC.CONFIG.apiVersion, "1.39.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
             dshotBeaconSwitch_e.hide();
             FC.BEEPER_CONFIG.dshotBeaconConditions.generateElements(template, dshotBeaconCondition_e);
 
@@ -306,7 +306,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         var destination = $('.beepers .beeper-configuration');
         var beeper_e = $('.tab-configuration .beepers');
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             FC.BEEPER_CONFIG.beepers.generateElements(template, destination);
         } else {
             beeper_e.hide();
@@ -327,7 +327,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'CW 270° flip'
         ];
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             alignments.push('Custom');
         }
 
@@ -395,7 +395,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             });
 
             // Multi gyro config
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
 
                 gyro_align_content_e.show();
                 legacy_gyro_alignment_e.hide();
@@ -473,17 +473,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             escProtocols.push('BRUSHED');
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             escProtocols.push('DSHOT150');
             escProtocols.push('DSHOT300');
             escProtocols.push('DSHOT600');
 
-            if (semver.lt(FC.CONFIG.apiVersion, "1.42.0")) {
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 escProtocols.push('DSHOT1200');
             }
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             escProtocols.push('PROSHOT1000');
         }
 
@@ -508,7 +508,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         $('input[id="unsyncedPWMSwitch"]').prop('checked', FC.PID_ADVANCED_CONFIG.use_unsyncedPwm !== 0).change();
         $('input[name="unsyncedpwmfreq"]').val(FC.PID_ADVANCED_CONFIG.motor_pwm_rate);
         $('input[name="digitalIdlePercent"]').val(FC.PID_ADVANCED_CONFIG.digitalIdlePercent);
-        if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             let dshotBidirectional_e = $('input[id="dshotBidir"]');
             dshotBidirectional_e.prop('checked', FC.MOTOR_CONFIG.use_dshot_telemetry).change();
 
@@ -548,8 +548,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('input[name="motorPoles"]').val(FC.MOTOR_CONFIG.motor_poles);
         }
 
-        $('#escProtocolTooltip').toggle(semver.lt(FC.CONFIG.apiVersion, "1.42.0"));
-        $('#escProtocolTooltipNoDSHOT1200').toggle(semver.gte(FC.CONFIG.apiVersion, "1.42.0"));
+        $('#escProtocolTooltip').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42));
+        $('#escProtocolTooltipNoDSHOT1200').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42));
 
         function updateVisibility() {
             // Hide unused settings
@@ -581,8 +581,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('div.digitalIdlePercent').toggle(protocolConfigured && digitalProtocol);
             $('.escSensor').toggle(protocolConfigured && digitalProtocol);
 
-            $('div.checkboxDshotBidir').toggle(protocolConfigured && semver.gte(FC.CONFIG.apiVersion, "1.42.0") && digitalProtocol);
-            $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible && semver.gte(FC.CONFIG.apiVersion, "1.42.0"));
+            $('div.checkboxDshotBidir').toggle(protocolConfigured && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && digitalProtocol);
+            $('div.motorPoles').toggle(protocolConfigured && rpmFeaturesVisible && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42));
 
             $('.escMotorStop').toggle(protocolConfigured);
 
@@ -655,7 +655,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
              gyroTextElement.val(gyroContent);
          };
 
-         if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0")) {
+         if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
              gyroUse32kHzElement.prop('checked', FC.PID_ADVANCED_CONFIG.gyroUse32kHz !== 0);
 
              gyroUse32kHzElement.change(function () {
@@ -687,7 +687,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
             } else {
                 pidBaseFreq = 8;
-                if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0") && gyroUse32kHzElement.is(':checked')) {
+                if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41) && gyroUse32kHzElement.is(':checked')) {
                     pidBaseFreq = 32;
                 }
                 pidBaseFreq = pidBaseFreq / parseInt($(this).val());
@@ -723,9 +723,9 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         $('input[name="craftName"]').val(FC.CONFIG.name);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             $('input[name="fpvCamAngleDegrees"]').val(FC.RX_CONFIG.fpvCamAngleDegrees);
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 $('input[name="fpvCamAngleDegrees"]').attr("max", 90);
             }
         } else {
@@ -741,7 +741,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             'NMEA',
             'UBLOX'
         ];
-        if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             gpsProtocols.push('MSP');
         }
 
@@ -804,7 +804,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         }).prop('checked', FC.GPS_CONFIG.auto_config === 1).change();
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.34.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_34)) {
             gpsAutoBaudGroup.show();
             gpsAutoConfigGroup.show();
         } else {
@@ -863,7 +863,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // select current serial RX type
         serialRXSelectEl.val(FC.RX_CONFIG.serialrx_provider);
 
-        if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             var spiRxTypes = [
                 'NRF24_V202_250K',
                 'NRF24_V202_1M',
@@ -876,7 +876,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 'FRSKY_D'
             ];
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
                 spiRxTypes.push(
                     'FRSKY_X',
                     'A7105_FLYSKY',
@@ -885,7 +885,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 );
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 spiRxTypes.push(
                     'SFHSS',
                     'SPEKTRUM',
@@ -950,13 +950,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             $('div.cycles').show();
         }
 
-        if(semver.gte(FC.CONFIG.apiVersion, "1.37.0") || !isExpertModeEnabled()) {
+        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37) || !isExpertModeEnabled()) {
             $('input[id="disarmkillswitch"]').prop('checked', true);
             $('div.disarm').hide();
         }
 
-        $('._smallAngle').toggle(semver.gte(FC.CONFIG.apiVersion, "1.37.0"));
-        if(semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
+        $('._smallAngle').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37));
+        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
             $('input[id="configurationSmallAngle"]').val(FC.ARMING_CONFIG.small_angle);
         }
 
@@ -987,7 +987,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 $('div.batterymetertype').hide();
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 $('input[name="mincellvoltage"]').prop('step','0.01');
                 $('input[name="maxcellvoltage"]').prop('step','0.01');
                 $('input[name="warningcellvoltage"]').prop('step','0.01');
@@ -1153,7 +1153,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         });
 
         $('input[id="accHardwareSwitch"]').change(function() {
-            if(semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
+            if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
               var checked = $(this).is(':checked');
               $('.accelNeeded').toggle(checked);
             }
@@ -1206,14 +1206,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[name="autodisarmdelay"]').val());
                 FC.ARMING_CONFIG.disarm_kill_switch = $('input[id="disarmkillswitch"]').is(':checked') ? 1 : 0;
             }
-            if(semver.gte(FC.CONFIG.apiVersion, "1.37.0")) {
+            if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
                 FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
             }
 
             FC.MOTOR_CONFIG.minthrottle = parseInt($('input[name="minthrottle"]').val());
             FC.MOTOR_CONFIG.maxthrottle = parseInt($('input[name="maxthrottle"]').val());
             FC.MOTOR_CONFIG.mincommand = parseInt($('input[name="mincommand"]').val());
-            if(semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+            if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 FC.MOTOR_CONFIG.motor_poles = parseInt($('input[name="motorPoles"]').val());
             }
 
@@ -1234,7 +1234,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 FC.MOTOR_3D_CONFIG.neutral = parseInt($('input[name="3dneutral"]').val());
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 FC.SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());
             }
 
@@ -1255,11 +1255,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             FC.PID_ADVANCED_CONFIG.pid_process_denom = value;
 
             FC.PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
-            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, "1.41.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                 FC.PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.31.0")) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
                 FC.RX_CONFIG.fpvCamAngleDegrees = parseInt($('input[name="fpvCamAngleDegrees"]').val());
             }
 
@@ -1278,7 +1278,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_beeper_config() {
                 var next_callback = save_misc;
-                if (semver.gte(FC.CONFIG.apiVersion, "1.36.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                     MSP.send_message(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG), false, next_callback);
                 } else {
                     next_callback();
@@ -1287,7 +1287,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_misc() {
                 var next_callback = save_mixer_config;
-                if(semver.lt(FC.CONFIG.apiVersion, "1.33.0")) {
+                if(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
                     MSP.send_message(MSPCodes.MSP_SET_MISC, mspHelper.crunch(MSPCodes.MSP_SET_MISC), false, next_callback);
                 } else {
                     next_callback();
@@ -1306,7 +1306,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_motor_config() {
                 var next_callback = save_gps_config;
-                if(semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
+                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
                     MSP.send_message(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG), false, next_callback);
                 } else {
                     next_callback();
@@ -1314,13 +1314,13 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
 
             function save_gps_config() {
-                if (semver.gte(FC.CONFIG.apiVersion, "1.34.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_34)) {
                     FC.GPS_CONFIG.auto_baud = $('input[name="gps_auto_baud"]').is(':checked') ? 1 : 0;
                     FC.GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
                 }
 
                 var next_callback = save_motor_3d_config;
-                if(semver.gte(FC.CONFIG.apiVersion, "1.33.0")) {
+                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
                     MSP.send_message(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG), false, next_callback);
                 } else {
                     next_callback();
@@ -1404,7 +1404,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             function save_filter_config() {
                 const next_callback = save_to_eeprom;
-                if (semver.gte(FC.CONFIG.apiVersion, "1.42.0")) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                     MSP.send_message(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG), false, next_callback);
                 } else {
                     next_callback();
