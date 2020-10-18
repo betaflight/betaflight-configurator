@@ -11,6 +11,7 @@ const INITIAL_CONFIG = {
     capability:                       0,
     cycleTime:                        0,
     i2cError:                         0,
+    cpuload:                          0,
     activeSensors:                    0,
     mode:                             0,
     profile:                          0,
