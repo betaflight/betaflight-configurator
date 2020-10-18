@@ -70,10 +70,11 @@ class MotorOutputReorderCanvas
     {
         this._ctx.clearRect(-this._width / 2,  -this._height / 2, this._width, this._height);
 
+        this._drawBottomMotors();
         this._drawFrame();
         this._drawDirectionArrow();
         this._markMotors();
-        this._drawMotors();
+        this._drawTopMotors();
 
         if (this._keepDrawing) {
             window.requestAnimationFrame(() =>
@@ -183,6 +184,7 @@ class MotorOutputReorderCanvas
 
         let result = -1;
         let currentDist = Number.MAX_SAFE_INTEGER;
+        let resultTopMotors = -1;
         const motors = this._config[this._droneConfiguration].Motors;
 
         for (let i = 0; i < motors.length; i++) {
@@ -191,24 +193,83 @@ class MotorOutputReorderCanvas
             if (dist < this._config[this._droneConfiguration].PropRadius && dist < currentDist) {
                 currentDist = dist;
                 result = i;
+
+                if ('top' in motors[i]) {
+                    resultTopMotors = i;
+                }
             }
+        }
+
+        if (resultTopMotors > -1) { // priority for top motors
+            result = resultTopMotors;
         }
 
         return result;
     }
 
-    _drawMotors()
+    _drawTopMotors()
     {
+        this._drawMotors(false);
+    }
 
-        this._ctx.lineWidth = this._config.PropEdgeLineWidth;
-        this._ctx.strokeStyle = this._config.PropEdgeColor;
+    _drawBottomMotors()
+    {
+        this._drawMotors(true);
+        this._clipTopMotors();
+    }
+
+    _clipTopMotors()
+    {
         const motors = this._config[this._droneConfiguration].Motors;
 
         for (let i = 0; i < motors.length; i++) {
-            this._ctx.beginPath();
-            this._ctx.arc(motors[i].x, motors[i].y, this._config[this._droneConfiguration].PropRadius, 0, 2 * Math.PI);
-            this._ctx.stroke();
+            if ('top' in motors[i]) {
+                this._clipSingleMotor(i);
+            }
         }
+    }
+
+    _drawMotors(drawBottom)
+    {
+        this._ctx.lineWidth = this._config.PropEdgeLineWidth;
+        this._ctx.strokeStyle = this._config.PropEdgeColor;
+        const motors = this._config[this._droneConfiguration].Motors;
+        this._ctx.fillStyle = this._config.PropColor;
+
+        for (let i = 0; i < motors.length; i++) {
+            const drawCurrentMotor = 'bottom' in motors[i] === drawBottom;
+
+            if (drawCurrentMotor) {
+                this._drawSingleMotor(i);
+            }
+        }
+    }
+
+    _clipSingleMotor(motorIndex)
+    {
+        this._ctx.save();
+        const motor = this._config[this._droneConfiguration].Motors[motorIndex];
+        this._ctx.beginPath();
+        const propRadius = this._config[this._droneConfiguration].PropRadius;
+        this._arcSingleMotor(motorIndex);
+        this._ctx.clip();
+        this._ctx.clearRect(motor.x - propRadius, motor.y - propRadius, propRadius * 2, propRadius * 2);
+        this._ctx.closePath();
+        this._ctx.restore();
+    }
+
+    _drawSingleMotor(motorIndex)
+    {
+        this._ctx.beginPath();
+        this._arcSingleMotor(motorIndex);
+        this._ctx.stroke();
+        this._ctx.closePath();
+    }
+
+    _arcSingleMotor(motorIndex)
+    {
+        const motor = this._config[this._droneConfiguration].Motors[motorIndex];
+        this._ctx.arc(motor.x, motor.y, this._config[this._droneConfiguration].PropRadius, 0, 2 * Math.PI);
     }
 
     _drawDirectionArrow()
@@ -236,6 +297,7 @@ class MotorOutputReorderCanvas
         switch(this._droneConfiguration) {
             case "Quad X":
             case "Quad +":
+            case "Octo X8":
                 this._ctx.moveTo(motors[0].x, motors[0].y);
                 this._ctx.lineTo(motors[3].x, motors[3].y);
                 this._ctx.moveTo(motors[1].x, motors[1].y);
@@ -262,7 +324,52 @@ class MotorOutputReorderCanvas
                 this._ctx.moveTo(motors[4].x, motors[4].y);
                 this._ctx.lineTo(motors[5].x, motors[5].y);
                 break;
-        }
+            case "Octo Flat +":
+            case "Octo Flat X":
+                this._ctx.moveTo(motors[0].x, motors[0].y);
+                this._ctx.lineTo(motors[2].x, motors[2].y);
+                this._ctx.moveTo(motors[1].x, motors[1].y);
+                this._ctx.lineTo(motors[3].x, motors[3].y);
+                this._ctx.moveTo(motors[4].x, motors[4].y);
+                this._ctx.lineTo(motors[6].x, motors[6].y);
+                this._ctx.moveTo(motors[5].x, motors[5].y);
+                this._ctx.lineTo(motors[7].x, motors[7].y);
+                break;
+            case "Bicopter":
+                this._ctx.moveTo(motors[0].x, motors[0].y);
+                this._ctx.lineTo(motors[1].x, motors[1].y);
+                break;
+            case "V-tail Quad":
+                this._ctx.moveTo(motors[0].x, motors[0].y);
+                this._ctx.lineTo(0, motors[0].y * 1.3);
+                this._ctx.lineTo(motors[2].x, motors[2].y);
+                this._ctx.moveTo(0, motors[0].y * 1.3);
+                this._ctx.lineTo(0, motors[1].y);
+                this._ctx.moveTo(motors[1].x, motors[1].y);
+                this._ctx.lineTo(motors[3].x, motors[3].y);
+                break;
+            case "A-tail Quad":
+                this._ctx.moveTo(motors[0].x, motors[0].y);
+                this._ctx.lineTo(0, motors[0].y * 0.7);
+                this._ctx.lineTo(motors[2].x, motors[2].y);
+                this._ctx.moveTo(0, motors[0].y * 0.7);
+                this._ctx.lineTo(0, motors[1].y);
+                this._ctx.moveTo(motors[1].x, motors[1].y);
+                this._ctx.lineTo(motors[3].x, motors[3].y);
+                break;
+            case "Y4":
+                this._ctx.moveTo(motors[1].x, motors[1].y);
+                this._ctx.lineTo(motors[3].x, motors[3].y);
+                this._ctx.moveTo(motors[0].x, motors[0].y);
+                this._ctx.lineTo(motors[0].x, motors[3].y);
+                break;
+            case "Y6":
+                this._ctx.moveTo(motors[1].x, motors[1].y);
+                this._ctx.lineTo(motors[2].x, motors[2].y);
+                this._ctx.moveTo(motors[0].x, motors[0].y);
+                this._ctx.lineTo(motors[0].x, motors[1].y);
+                break;
+            }
 
         this._ctx.stroke();
     }
