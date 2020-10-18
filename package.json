@@ -51,7 +51,7 @@
     "bluebird": "^3.7.2",
     "djv": "^2.1.3-alpha.0",
     "i18next": "^19.0.0",
-    "i18next-xhr-backend": "^3.2.2",
+    "i18next-http-backend": "^1.0.21",
     "inflection": "^1.12.0",
     "jbox": "^1.0.8",
     "jquery": "^3.5.1",
