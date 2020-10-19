@@ -20,7 +20,8 @@
     "icon": "images/bf_icon_128.png",
     "id": "main-window",
     "min_width": 1024,
-    "min_height": 550
+    "min_height": 550,
+    "title": "Betaflight Configurator"
   },
   "repository": {
     "type": "git",

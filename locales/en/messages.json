@@ -2,10 +2,6 @@
     "translation_version": {
         "message": "0"
     },
-    "windowTitle": {
-        "message": "Betaflight Configurator",
-        "description": "Title of the application window, usually not translated"
-    },
     "yes": {
         "message": "Yes",
         "description": "General Yes message to be used across the application"
