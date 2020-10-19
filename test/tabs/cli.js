@@ -1,17 +1,21 @@
 class MockAnalytics {
     EVENT_CATEGORIES = {};
 
-    sendEvent() {}
+    sendEvent() {
+        // Empty
+    }
 }
 
-var analytics;
+let analytics;
+
 
 describe('TABS.cli', () => {
-    function toArrayBuffer(string) {
-        var bufferOut = new ArrayBuffer(string.length);
-        var bufView = new Uint8Array(bufferOut);
 
-        for (var i = 0; i < string.length; i++) {
+    function toArrayBuffer(string) {
+        const bufferOut = new ArrayBuffer(string.length);
+        const bufView = new Uint8Array(bufferOut);
+
+        for (let i = 0; i < string.length; i++) {
             bufView[i] = string.charCodeAt(i);
         }
 
@@ -20,7 +24,7 @@ describe('TABS.cli', () => {
 
     describe('output', () => {
         const cliTab = $('<div>').addClass('tab-cli');
-        const cliOutput = $('<div>').addClass('wrapper')
+        const cliOutput = $('<div>').addClass('wrapper');
         const cliPrompt = $('<textarea name="commands">');
 
         cliTab.append($('<div>').addClass('window').append(cliOutput));
@@ -31,10 +35,10 @@ describe('TABS.cli', () => {
         before(() => {
             analytics = new MockAnalytics();
 
-            $('body')
-                .append(cliTab);
+            $('body').append(cliTab);
 
             CONFIGURATOR.cliValid = true;
+            TABS.cli.GUI.windowWrapper = cliOutput;
         });
 
         after(() => cliTab.remove());
@@ -49,7 +53,7 @@ describe('TABS.cli', () => {
             TABS.cli.cliBuffer = 'se';
 
             TABS.cli.read({
-                data: toArrayBuffer('\r\033[Kserialpassthrough\tservo\r\n# ser')
+                data: toArrayBuffer('\r\033[Kserialpassthrough\tservo\r\n# ser'),
             });
 
             // Ambigous auto-complete from firmware is preceded with an \r carriage return
@@ -63,7 +67,7 @@ describe('TABS.cli', () => {
 
         it('unambiguous auto-complete result', () => {
             TABS.cli.read({
-                data: toArrayBuffer('serialpassthrough')
+                data: toArrayBuffer('serialpassthrough'),
             });
 
             expect(cliOutput.html()).to.equal('');
@@ -74,7 +78,7 @@ describe('TABS.cli', () => {
             TABS.cli.cliBuffer = 'serial';
 
             TABS.cli.read({
-                data: toArrayBuffer('passthrough')
+                data: toArrayBuffer('passthrough'),
             });
 
             expect(cliOutput.html()).to.equal('');
@@ -83,7 +87,7 @@ describe('TABS.cli', () => {
 
         it("escape characters are skipped", () => {
             TABS.cli.read({
-                data: toArrayBuffer('\033[K')
+                data: toArrayBuffer('\033[K'),
             });
 
             expect(cliOutput.html()).to.equal('');
@@ -123,7 +127,7 @@ describe('TABS.cli', () => {
                 callback();
             });
             sinon.stub(TABS.cli, 'send');
-            sinon.stub(Promise, 'reduce').callsFake((items, cb, initialValue) => {
+            sinon.stub(Promise, 'reduce').callsFake((items, cb) => {
                 items.forEach((line, idx) => cb(0, line, idx));
             });
             sinon.stub(window, 'Promise').callsFake(resolve => resolve(0));
@@ -157,7 +161,7 @@ describe('TABS.cli', () => {
 
                 expect(TABS.cli.send).to.have.been.calledOnce;
                 expect(TABS.cli.send).to.have.been.calledWith('serial\t');
-                done()
+                done();
             });
         });
 

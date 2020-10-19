@@ -6,17 +6,17 @@
  * Uses: https://github.com/yuku/jquery-textcomplete
  * Check out the docs at https://github.com/yuku/jquery-textcomplete/tree/v1/doc
  */
-var CliAutoComplete = {
+const CliAutoComplete = {
     configEnabled: false,
     builder: { state: 'reset', numFails: 0 },
 };
 
 CliAutoComplete.isEnabled = function() {
-    return this.isBuilding() || (this.configEnabled && FC.CONFIG.flightControllerIdentifier == "BTFL" && this.builder.state != 'fail');
+    return this.isBuilding() || (this.configEnabled && FC.CONFIG.flightControllerIdentifier === "BTFL" && this.builder.state !== 'fail');
 };
 
 CliAutoComplete.isBuilding = function() {
-    return this.builder.state != 'reset' && this.builder.state != 'done' && this.builder.state != 'fail';
+    return this.builder.state !== 'reset' && this.builder.state !== 'done' && this.builder.state !== 'fail';
 };
 
 CliAutoComplete.isOpen = function() {
@@ -27,7 +27,7 @@ CliAutoComplete.isOpen = function() {
  * @param {boolean} force - Forces AutoComplete to be shown even if the matching strategy has less that minChars input
  */
 CliAutoComplete.openLater = function(force) {
-    var self = this;
+    const self = this;
     setTimeout(function() {
         self.forceOpen = !!force;
         self.$textarea.textcomplete('trigger');
@@ -36,7 +36,7 @@ CliAutoComplete.openLater = function(force) {
 };
 
 CliAutoComplete.setEnabled = function(enable) {
-    if (this.configEnabled != enable) {
+    if (this.configEnabled !== enable) {
         this.configEnabled = enable;
 
         if (CONFIGURATOR.cliActive && CONFIGURATOR.cliValid) {
@@ -67,12 +67,13 @@ CliAutoComplete.cleanup = function() {
 };
 
 CliAutoComplete._builderWatchdogTouch = function() {
-    var self = this;
+    const self = this;
 
     this._builderWatchdogStop();
 
     GUI.timeout_add('autocomplete_builder_watchdog', function() {
-        if (self.builder.numFails++) {
+        if (self.builder.numFails) {
+            self.builder.numFails++;
             self.builder.state = 'fail';
             self.writeToOutput('Failed!<br># ');
             $(self).trigger('build:stop');
@@ -89,7 +90,7 @@ CliAutoComplete._builderWatchdogStop = function() {
 };
 
 CliAutoComplete.builderStart = function() {
-    if (this.builder.state == 'reset') {
+    if (this.builder.state === 'reset') {
         this.cache = {
             commands: [],
             resources: [],
@@ -98,7 +99,7 @@ CliAutoComplete.builderStart = function() {
             settingsAcceptedValues: {},
             feature: [],
             beeper: ['ALL'],
-            mixers: []
+            mixers: [],
         };
         this.builder.commandSequence = ['help', 'dump', 'get', 'mixer list'];
         this.builder.currentSetting = null;
@@ -111,15 +112,14 @@ CliAutoComplete.builderStart = function() {
 };
 
 CliAutoComplete.builderParseLine = function(line) {
-    var cache = this.cache;
-    var builder = this.builder;
-    var m;
+    const cache = this.cache;
+    const builder = this.builder;
 
     this._builderWatchdogTouch();
 
     if (line.indexOf(builder.sentinel) !== -1) {
         // got sentinel
-        var command = builder.commandSequence.shift();
+        const command = builder.commandSequence.shift();
 
         if (command && this.configEnabled) {
             // next state
@@ -150,39 +150,49 @@ CliAutoComplete.builderParseLine = function(line) {
     } else {
         switch (builder.state) {
             case 'parse-help':
-                if (m = line.match(/^(\w+)/)) {
-                    cache.commands.push(m[1]);
+                const matchHelp = line.match(/^(\w+)/);
+                if (matchHelp) {
+                    cache.commands.push(matchHelp[1]);
                 }
                 break;
 
             case 'parse-dump':
-                if (m = line.match(/^resource\s+(\w+)/i)) {
-                    var r = m[1].toUpperCase(); // should alread be upper, but to be sure, since we depend on that later
+                const matchDump = line.match(/^resource\s+(\w+)/i);
+                if (matchDump) {
+                    const r = matchDump[1].toUpperCase(); // should alread be upper, but to be sure, since we depend on that later
                     cache.resourcesCount[r] = (cache.resourcesCount[r] || 0) + 1;
-                } else if (m = line.match(/^(feature|beeper)\s+-?(\w+)/i)) {
-                    cache[m[1].toLowerCase()].push(m[2]);
+                } else {
+                    const matchFeatBeep = line.match(/^(feature|beeper)\s+-?(\w+)/i);
+                    if (matchFeatBeep) {
+                        cache[matchFeatBeep[1].toLowerCase()].push(matchFeatBeep[2]);
+                    }
                 }
                 break;
 
             case 'parse-get':
-                if (m = line.match(/^(\w+)\s*=/)) {
+                const matchGet = line.match(/^(\w+)\s*=/);
+                if (matchGet) {
                     // setting name
-                    cache.settings.push(m[1]);
-                    builder.currentSetting = m[1].toLowerCase();
-                } else if (builder.currentSetting && (m = line.match(/^(.*): (.*)/))) {
-                    if (m[1].match(/values/i)) {
-                        // Allowed Values
-                        cache.settingsAcceptedValues[builder.currentSetting] = m[2].split(/\s*,\s*/).sort();
-                    } else if (m[1].match(/range|length/i)){
-                        // "Allowed range" or "Array length", store as string hint
-                        cache.settingsAcceptedValues[builder.currentSetting] = m[0];
+                    cache.settings.push(matchGet[1]);
+                    builder.currentSetting = matchGet[1].toLowerCase();
+                } else {
+                    const matchGetSettings = line.match(/^(.*): (.*)/);
+                    if (matchGetSettings !== null && builder.currentSetting) {
+                        if (matchGetSettings[1].match(/values/i)) {
+                            // Allowed Values
+                            cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[2].split(/\s*,\s*/).sort();
+                        } else if (matchGetSettings[1].match(/range|length/i)){
+                            // "Allowed range" or "Array length", store as string hint
+                            cache.settingsAcceptedValues[builder.currentSetting] = matchGetSettings[0];
+                        }
                     }
                 }
                 break;
 
             case 'parse-mixer list':
-                if (m = line.match(/:(.+)/)) {
-                    cache.mixers = ['list'].concat(m[1].trim().split(/\s+/));
+                const matchMixer = line.match(/:(.+)/);
+                if (matchMixer) {
+                    cache.mixers = ['list'].concat(matchMixer[1].trim().split(/\s+/));
                 }
                 break;
         }
@@ -193,29 +203,31 @@ CliAutoComplete.builderParseLine = function(line) {
  * Initializes textcomplete with all the autocomplete strategies
  */
 CliAutoComplete._initTextcomplete = function() {
-    var sendOnEnter = false;
-    var self = this;
-    var $textarea = this.$textarea;
-    var cache = self.cache;
+    let sendOnEnter = false;
+    const self = this;
+    const $textarea = this.$textarea;
+    const cache = self.cache;
 
-    var savedMouseoverItemHandler = null;
+    let savedMouseoverItemHandler = null;
 
     // helper functions
-    var highlighter = function(anywhere) {
+    const highlighter = function(anywhere) {
         return function(value, term) {
-            return term ? value.replace(new RegExp((anywhere?'':'^') + '('+term+')', 'gi'), '<b>$1</b>') : value;
+            const anywherePrefix = anywhere ? '': '^';
+            const termValue = value.replace(new RegExp(`${anywherePrefix}(${term})`, 'gi'), '<b>$1</b>');
+            return term ? termValue : value;
         };
     };
-    var highlighterAnywhere = highlighter(true);
-    var highlighterPrefix = highlighter(false);
+    const highlighterAnywhere = highlighter(true);
+    const highlighterPrefix = highlighter(false);
 
-    var searcher = function(term, callback, array, minChars, matchPrefix) {
-        var res = [];
+    const searcher = function(term, callback, array, minChars, matchPrefix) {
+        const res = [];
 
         if ((minChars !== false && term.length >= minChars) || self.forceOpen || self.isOpen()) {
             term = term.toLowerCase();
-            for (var i = 0; i < array.length; i++) {
-                var v = array[i].toLowerCase();
+            for (let i = 0; i < array.length; i++) {
+                const v = array[i].toLowerCase();
                 if (matchPrefix && v.startsWith(term) || !matchPrefix && v.indexOf(term) !== -1) {
                     res.push(array[i]);
                 }
@@ -224,24 +236,24 @@ CliAutoComplete._initTextcomplete = function() {
 
         callback(res);
 
-        if (self.forceOpen && res.length == 1) {
+        if (self.forceOpen && res.length === 1) {
             // hacky: if we came here because of Tab and there's only one match
             // trigger Tab again, so that textcomplete should immediately select the only result
             // instead of showing the menu
-            $textarea.trigger($.Event('keydown', {keyCode:9}))
+            $textarea.trigger($.Event('keydown', {keyCode:9}));
         }
     };
 
-    var contexter = function(text) {
-        var val = $textarea.val();
-        if (val.length == text.length || val[text.length].match(/\s/)) {
+    const contexter = function(text) {
+        const val = $textarea.val();
+        if (val.length === text.length || val[text.length].match(/\s/)) {
             return true;
         }
         return false; // do not show autocomplete if in the middle of a word
     };
 
-    var basicReplacer = function(value) {
-        return '$1' + value + ' ';
+    const basicReplacer = function(value) {
+        return `$1${value} `;
     };
     // end helper functions
 
@@ -255,18 +267,18 @@ CliAutoComplete._initTextcomplete = function() {
             onKeydown: function(e) {
                 // some strategies may set sendOnEnter only at the replace stage, thus we call with timeout
                 // since this handler [onKeydown] is triggered before replace()
-                if (e.which == 13) {
+                if (e.which === 13) {
                     setTimeout(function() {
                         if (sendOnEnter) {
                             // fake "enter" to run the textarea's handler
-                            $textarea.trigger($.Event('keypress', {which:13}))
+                            $textarea.trigger($.Event('keypress', {which:13}));
                         }
                     }, 0);
                 }
-            }
+            },
         }
     )
-    .on('textComplete:show', function(e) {
+    .on('textComplete:show', function() {
         /**
          * The purpose of this code is to disable initially the `mouseover` menu item handler.
          * Normally, when the menu pops up, if the mouse cursor is in the same area,
@@ -299,12 +311,12 @@ CliAutoComplete._initTextcomplete = function() {
     // textcomplete autocomplete strategies
 
     // strategy builder helper
-    var strategy = function(s) {
+    const strategy = function(s) {
         return $.extend({
             template: highlighterAnywhere,
             replace: basicReplacer,
             context: contexter,
-            index: 2
+            index: 2,
         }, s);
     };
 
@@ -329,7 +341,7 @@ CliAutoComplete._initTextcomplete = function() {
                     }
                     callback(arr);
                 }, cache.settings, 3);
-            }
+            },
         }),
 
         strategy({ // "set"
@@ -337,7 +349,7 @@ CliAutoComplete._initTextcomplete = function() {
             search:  function(term, callback) {
                 sendOnEnter = false;
                 searcher(term, callback, cache.settings, 3);
-            }
+            },
         }),
 
         strategy({ // "set ="
@@ -349,24 +361,24 @@ CliAutoComplete._initTextcomplete = function() {
             replace: function(value) {
                 self.openLater();
                 return basicReplacer(value);
-            }
+            },
         }),
 
         strategy({ // "set with value"
             match: /^(\s*set\s+(\w+))\s*=\s*(.*)$/i,
             search: function(term, callback, match) {
-                var arr = [];
-                var settingName = match[2].toLowerCase();
+                const arr = [];
+                const settingName = match[2].toLowerCase();
                 this.isSettingValueArray = false;
                 this.value = match[3];
                 sendOnEnter = !!term;
 
                 if (settingName in cache.settingsAcceptedValues) {
-                    var val = cache.settingsAcceptedValues[settingName];
+                    const val = cache.settingsAcceptedValues[settingName];
 
                     if (Array.isArray(val)) {
                         // setting uses lookup strings
-                        this.isSettingValueArray = true
+                        this.isSettingValueArray = true;
                         sendOnEnter = true;
                         searcher(term, callback, val, 0);
                         return;
@@ -389,14 +401,14 @@ CliAutoComplete._initTextcomplete = function() {
                 return '$1 = ' + value; // cosmetic - make sure we have spaces around the `=`
             },
             index: 3,
-            isSettingValueArray: false
+            isSettingValueArray: false,
         }),
 
         strategy({ // "resource"
             match: /^(\s*resource\s+)(\w*)$/i,
-            search:  function(term, callback, match) {
+            search:  function(term, callback) {
                 sendOnEnter = false;
-                var arr = cache.resources;
+                let arr = cache.resources;
                 if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
                     arr = ['show'].concat(arr);
                 } else {
@@ -407,11 +419,11 @@ CliAutoComplete._initTextcomplete = function() {
             replace: function(value) {
                 if (value in cache.resourcesCount) {
                     self.openLater();
-                } else if (value == 'list' || value == 'show') {
+                } else if (value === 'list' || value === 'show') {
                     sendOnEnter = true;
                 }
                 return basicReplacer(value);
-            }
+            },
         }),
 
         strategy({ // "resource index"
@@ -419,29 +431,30 @@ CliAutoComplete._initTextcomplete = function() {
             search:  function(term, callback, match) {
                 sendOnEnter = false;
                 this.savedTerm = term;
-                callback(['&lt;1-' + cache.resourcesCount[match[2].toUpperCase()] + '&gt;']);
+                callback([`&lt;1-${cache.resourcesCount[match[2].toUpperCase()]}&gt;`]);
             },
-            replace: function(value) {
+            replace: function() {
                 if (this.savedTerm) {
                     self.openLater();
                     return '$1$3 ';
                 }
+                return null;
             },
             context: function(text) {
-                var m;
+                const matchResource = text.match(/^\s*resource\s+(\w+)\s/i);
                 // use this strategy only for resources with more than one index
-                if ((m = text.match(/^\s*resource\s+(\w+)\s/i)) && (cache.resourcesCount[m[1].toUpperCase()] || 0) > 1 ) {
+                if (matchResource && (cache.resourcesCount[matchResource[1].toUpperCase()] || 0) > 1 ) {
                     return contexter(text);
                 }
                 return false;
             },
             index: 3,
-            savedTerm: null
+            savedTerm: null,
         }),
 
         strategy({ // "resource pin"
             match: /^(\s*resource\s+\w+\s+(\d*\s+)?)(\w*)$/i,
-            search:  function(term, callback, match) {
+            search:  function(term, callback) {
                 sendOnEnter = !!term;
                 if (term) {
                     if ('none'.startsWith(term)) {
@@ -454,78 +467,79 @@ CliAutoComplete._initTextcomplete = function() {
                 }
             },
             template: function(value, term) {
-                if (value == 'none') {
+                if (value === 'none') {
                     return highlighterPrefix(value, term);
                 }
                 return value;
             },
             replace: function(value) {
-                if (value == 'none') {
+                if (value === 'none') {
                     sendOnEnter = true;
                     return '$1none ';
                 }
+                return null;
             },
             context: function(text) {
-                var m = text.match(/^\s*resource\s+(\w+)\s+(\d+\s)?/i);
+                const m = text.match(/^\s*resource\s+(\w+)\s+(\d+\s)?/i);
                 if (m) {
                     // show pin/none for resources having only one index (it's not needed at the commend line)
                     // OR having more than one index and the index is supplied at the command line
-                    var count = cache.resourcesCount[m[1].toUpperCase()] || 0;
+                    const count = cache.resourcesCount[m[1].toUpperCase()] || 0;
                     if (count && (m[2] || count === 1)) {
                         return contexter(text);
                     }
                 }
                 return false;
             },
-            index: 3
+            index: 3,
         }),
 
         strategy({ // "feature" and "beeper"
             match: /^(\s*(feature|beeper)\s+(-?))(\w*)$/i,
             search:  function(term, callback, match) {
                 sendOnEnter = !!term;
-                var arr = cache[match[2].toLowerCase()];
+                let arr = cache[match[2].toLowerCase()];
                 if (!match[3]) {
                     arr = ['-', 'list'].concat(arr);
                 }
                 searcher(term, callback, arr, 1);
             },
             replace: function(value) {
-                if (value == '-') {
+                if (value === '-') {
                     self.openLater(true);
                     return '$1-';
                 }
                 return basicReplacer(value);
             },
-            index: 4
+            index: 4,
         }),
 
         strategy({ // "mixer"
             match: /^(\s*mixer\s+)(\w*)$/i,
-            search:  function(term, callback, match) {
+            search:  function(term, callback) {
                 sendOnEnter = true;
                 searcher(term, callback, cache.mixers, 1);
-            }
-        })
+            },
+        }),
     ]);
 
     if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
         $textarea.textcomplete('register', [
             strategy({ // "resource show all", from BF 4.0.0 onwards
                 match: /^(\s*resource\s+show\s+)(\w*)$/i,
-                search:  function(term, callback, matches) {
+                search:  function(term, callback) {
                     sendOnEnter = true;
                     searcher(term, callback, ['all'], 1, true);
                 },
-                template: highlighterPrefix
+                template: highlighterPrefix,
             }),
         ]);
     }
 
 
     // diff command
-    var diffArgs1 = ["master", "profile", "rates", "all"];
-    var diffArgs2 = [];
+    const diffArgs1 = ["master", "profile", "rates", "all"];
+    const diffArgs2 = [];
 
     if (semver.lt(FC.CONFIG.flightControllerVersion, "3.4.0")) {
         diffArgs2.push("showdefaults");
@@ -544,20 +558,20 @@ CliAutoComplete._initTextcomplete = function() {
     $textarea.textcomplete('register', [
         strategy({ // "diff arg1"
             match: /^(\s*diff\s+)(\w*)$/i,
-            search:  function(term, callback, match) {
+            search:  function(term, callback) {
                 sendOnEnter = true;
                 searcher(term, callback, diffArgs1, 1, true);
             },
-            template: highlighterPrefix
+            template: highlighterPrefix,
         }),
 
         strategy({ // "diff arg1 arg2"
             match: /^(\s*diff\s+\w+\s+)(\w*)$/i,
-            search:  function(term, callback, match) {
+            search:  function(term, callback) {
                 sendOnEnter = true;
                 searcher(term, callback, diffArgs2, 1, true);
             },
-            template: highlighterPrefix
-        })
+            template: highlighterPrefix,
+        }),
     ]);
 };

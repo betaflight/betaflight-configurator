@@ -1,6 +1,6 @@
 module.exports = function(config) {
     config.set({
-        reporters: ['tfs'],
+        reporters: ['tfs', 'spec'],
         basePath: '../',
         frameworks: ['mocha', 'chai', 'sinon-chai'],
         files: [
@@ -15,14 +15,14 @@ module.exports = function(config) {
             './src/js/CliAutoComplete.js',
             './src/js/tabs/cli.js',
             './src/js/phones_ui.js',
-            './test/**/*.js'
+            './test/**/*.js',
         ],
         browsers: ['ChromeHeadlessNoSandbox'],
         customLaunchers: {
             ChromeHeadlessNoSandbox: {
                 base: 'ChromeHeadless',
-                flags: ['--no-sandbox']
-            }
+                flags: ['--no-sandbox'],
+            },
         },
         tfsReporter: {
             outputDir: 'testresults',

@@ -7,6 +7,8 @@ TABS.cli = {
     cliBuffer: "",
     GUI: {
         snippetPreviewWindow: null,
+        copyButton: null,
+        windowWrapper: null,
     },
 };
 
@@ -15,8 +17,8 @@ function removePromptHash(promptText) {
 }
 
 function cliBufferCharsToDelete(command, buffer) {
-    var commonChars = 0;
-    for (var i = 0;i < buffer.length;i++) {
+    let commonChars = 0;
+    for (let i = 0; i < buffer.length; i++) {
         if (command[i] === buffer[i]) {
             commonChars++;
         } else {
@@ -46,8 +48,9 @@ function getCliCommand(command, cliBuffer) {
 
 function copyToClipboard(text) {
     function onCopySuccessful() {
+
         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliCopyToClipboard', text.length);
-        const button = $('.tab-cli .copy');
+        const button = self.GUI.copyButton;
         const origText = button.text();
         const origWidth = button.css("width");
         button.text(i18n.getMessage("cliCopySuccessful"));
@@ -72,25 +75,25 @@ function copyToClipboard(text) {
 }
 
 TABS.cli.initialize = function (callback) {
-    var self = this;
+    const self = this;
 
-    if (GUI.active_tab != 'cli') {
+    if (GUI.active_tab !== 'cli') {
         GUI.active_tab = 'cli';
     }
-    
+
     self.outputHistory = "";
     self.cliBuffer = "";
 
     const enterKeyCode = 13;
 
-    function executeCommands(out_string) {
-        self.history.add(out_string.trim());
+    function executeCommands(outString) {
+        self.history.add(outString.trim());
 
-        var outputArray = out_string.split("\n");
+        const outputArray = outString.split("\n");
         Promise.reduce(outputArray, function(delay, line, index) {
             return new Promise(function (resolve) {
                 GUI.timeout_add('CLI_send_slowly', function () {
-                    var processingDelay = self.lineDelayMs;
+                    let processingDelay = self.lineDelayMs;
                     line = line.trim();
                     if (line.toLowerCase().startsWith('profile')) {
                         processingDelay = self.profileSwitchDelayMs;
@@ -102,8 +105,8 @@ TABS.cli.initialize = function (callback) {
                     self.sendLine(line, function () {
                         resolve(processingDelay);
                     });
-                }, delay)
-            })
+                }, delay);
+            });
         }, 0);
 }
 
@@ -115,7 +118,10 @@ TABS.cli.initialize = function (callback) {
 
         CONFIGURATOR.cliActive = true;
 
-        var textarea = $('.tab-cli textarea[name="commands"]');
+        self.GUI.copyButton = $('.tab-cli .copy');
+        self.GUI.windowWrapper = $('.tab-cli .window .wrapper');
+
+        const textarea = $('.tab-cli textarea[name="commands"]');
 
         CliAutoComplete.initialize(textarea, self.sendLine.bind(self), writeToOutput);
         $(CliAutoComplete).on('build:start', function() {
@@ -132,12 +138,12 @@ TABS.cli.initialize = function (callback) {
         });
 
         $('.tab-cli .save').click(function() {
-            var prefix = 'cli';
-            var suffix = 'txt';
+            const prefix = 'cli';
+            const suffix = 'txt';
 
-            var filename = generateFilename(prefix, suffix);
+            const filename = generateFilename(prefix, suffix);
 
-            var accepts = [{
+            const accepts = [{
                 description: suffix.toUpperCase() + ' files', extensions: [suffix],
             }];
 
@@ -176,19 +182,19 @@ TABS.cli.initialize = function (callback) {
 
         $('.tab-cli .clear').click(function() {
             self.outputHistory = "";
-            $('.tab-cli .window .wrapper').empty();
+            self.GUI.windowWrapper.empty();
         });
 
         if (Clipboard.available) {
-            $('.tab-cli .copy').click(function() {
+            self.GUI.copyButton.click(function() {
                 copyToClipboard(self.outputHistory);
             });
         } else {
-            $('.tab-cli .copy').hide();
+            self.GUI.copyButton.hide();
         }
 
         $('.tab-cli .load').click(function() {
-            var accepts = [
+            const accepts = [
                 {
                     description: 'Config files', extensions: ["txt", "config"],
                 },
@@ -207,8 +213,8 @@ TABS.cli.initialize = function (callback) {
                     console.log('No file selected');
                     return;
                 }
-                
-                let previewArea = $("#snippetpreviewcontent textarea#preview");
+
+                const previewArea = $("#snippetpreviewcontent textarea#preview");
 
                 function executeSnippet(fileName) {
                     const commands = previewArea.val();
@@ -230,7 +236,7 @@ TABS.cli.initialize = function (callback) {
                             isolateScroll: false,
                             title: i18n.getMessage("cliConfirmSnippetDialogTitle", { fileName: fileName }),
                             content: $('#snippetpreviewcontent'),
-                            onCreated: () =>  
+                            onCreated: () =>
                                 $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName))
                             ,
                         });
@@ -240,8 +246,8 @@ TABS.cli.initialize = function (callback) {
                 }
 
                 entry.file((file) => {
-                    let reader = new FileReader();
-                    reader.onload = 
+                    const reader = new FileReader();
+                    reader.onload =
                         () => previewCommands(reader.result, file.name);
                     reader.onerror = () => console.error(reader.error);
                     reader.readAsText(file);
@@ -253,7 +259,7 @@ TABS.cli.initialize = function (callback) {
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
         textarea.keydown(function (event) {
             const tabKeyCode = 9;
-            if (event.which == tabKeyCode) {
+            if (event.which === tabKeyCode) {
                 // prevent default tabbing behaviour
                 event.preventDefault();
 
@@ -275,22 +281,22 @@ TABS.cli.initialize = function (callback) {
         });
 
         textarea.keypress(function (event) {
-            if (event.which == enterKeyCode) {
+            if (event.which === enterKeyCode) {
                 event.preventDefault(); // prevent the adding of new line
 
                 if (CliAutoComplete.isBuilding()) {
                     return; // silently ignore commands if autocomplete is still building
                 }
 
-                var out_string = textarea.val();
-                executeCommands(out_string);
+                const outString = textarea.val();
+                executeCommands(outString);
                 textarea.val('');
             }
         });
 
         textarea.keyup(function (event) {
-            var keyUp = {38: true},
-                keyDown = {40: true};
+            const keyUp = {38: true};
+            const keyDown = {40: true};
 
             if (CliAutoComplete.isOpen()) {
                 return; // disable history keys if autocomplete is open
@@ -310,8 +316,8 @@ TABS.cli.initialize = function (callback) {
 
         GUI.timeout_add('enter_cli', function enter_cli() {
             // Enter CLI mode
-            var bufferOut = new ArrayBuffer(1);
-            var bufView = new Uint8Array(bufferOut);
+            const bufferOut = new ArrayBuffer(1);
+            const bufView = new Uint8Array(bufferOut);
 
             bufView[0] = 0x23; // #
 
@@ -335,7 +341,7 @@ TABS.cli.adaptPhones = function() {
 
 TABS.cli.history = {
     history: [],
-    index:  0
+    index:  0,
 };
 
 TABS.cli.history.add = function (str) {
@@ -344,12 +350,16 @@ TABS.cli.history.add = function (str) {
 };
 
 TABS.cli.history.prev = function () {
-    if (this.index > 0) this.index -= 1;
+    if (this.index > 0) {
+        this.index -= 1;
+    }
     return this.history[this.index];
 };
 
 TABS.cli.history.next = function () {
-    if (this.index < this.history.length) this.index += 1;
+    if (this.index < this.history.length) {
+        this.index += 1;
+    }
     return this.history[this.index - 1];
 };
 
@@ -358,8 +368,9 @@ const lineFeedCode = 10;
 const carriageReturnCode = 13;
 
 function writeToOutput(text) {
-    $('.tab-cli .window .wrapper').append(text);
-    $('.tab-cli .window').scrollTop($('.tab-cli .window .wrapper').height());
+    const windowWrapper = TABS.cli.GUI.windowWrapper;
+    windowWrapper.append(text);
+    $('.tab-cli .window').scrollTop(windowWrapper.height());
 }
 
 function writeLineToOutput(text) {
@@ -369,7 +380,7 @@ function writeLineToOutput(text) {
     }
 
     if (text.startsWith("###ERROR")) {
-        writeToOutput('<span class="error_message">' + text + '</span><br>');
+        writeToOutput(`<span class="error_message">${text}</span><br>`);
     } else {
         writeToOutput(text + "<br>");
     }
@@ -390,11 +401,11 @@ TABS.cli.read = function (readInfo) {
         Windows understands (both) CRLF
         Chrome OS currently unknown
     */
-    var data = new Uint8Array(readInfo.data),
-        validateText = "",
-        sequenceCharsToSkip = 0;
+    const data = new Uint8Array(readInfo.data);
+    let validateText = "";
+    let sequenceCharsToSkip = 0;
 
-    for (var i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         const currentChar = String.fromCharCode(data[i]);
 
         if (!CONFIGURATOR.cliValid) {
@@ -406,7 +417,7 @@ TABS.cli.read = function (readInfo) {
 
         const escapeSequenceCode = 27;
         const escapeSequenceCharLength = 3;
-        if (data[i] == escapeSequenceCode && !sequenceCharsToSkip) { // ESC + other
+        if (data[i] === escapeSequenceCode && !sequenceCharsToSkip) { // ESC + other
             sequenceCharsToSkip = escapeSequenceCharLength;
         }
 
@@ -448,7 +459,7 @@ TABS.cli.read = function (readInfo) {
             this.outputHistory += currentChar;
         }
 
-        if (this.cliBuffer == 'Rebooting') {
+        if (this.cliBuffer === 'Rebooting') {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
             GUI.log(i18n.getMessage('cliReboot'));
@@ -464,7 +475,6 @@ TABS.cli.read = function (readInfo) {
         // this is to match the content of the history with what the user sees on this tab
         const lastLine = validateText.split("\n").pop();
         this.outputHistory = lastLine;
-        validateText = "";
 
         if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
             // start building autoComplete
@@ -472,9 +482,10 @@ TABS.cli.read = function (readInfo) {
         }
     }
 
-    if (!CliAutoComplete.isEnabled())
-        // fallback to native autocomplete
+    // fallback to native autocomplete
+    if (!CliAutoComplete.isEnabled()) {
         setPrompt(removePromptHash(this.cliBuffer));
+    }
 };
 
 TABS.cli.sendLine = function (line, callback) {
@@ -486,11 +497,11 @@ TABS.cli.sendNativeAutoComplete = function (line, callback) {
 };
 
 TABS.cli.send = function (line, callback) {
-    var bufferOut = new ArrayBuffer(line.length);
-    var bufView = new Uint8Array(bufferOut);
+    const bufferOut = new ArrayBuffer(line.length);
+    const bufView = new Uint8Array(bufferOut);
 
-    for (var c_key = 0; c_key < line.length; c_key++) {
-        bufView[c_key] = line.charCodeAt(c_key);
+    for (let cKey = 0; cKey < line.length; cKey++) {
+        bufView[cKey] = line.charCodeAt(cKey);
     }
 
     serial.send(bufferOut, callback);
@@ -508,7 +519,7 @@ TABS.cli.cleanup = function (callback) {
 
         return;
     }
-    this.send(getCliCommand('exit\r', this.cliBuffer), function (writeInfo) {
+    this.send(getCliCommand('exit\r', this.cliBuffer), function () {
         // we could handle this "nicely", but this will do for now
         // (another approach is however much more complicated):
         // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
