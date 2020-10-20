@@ -292,11 +292,11 @@ GuiControl.prototype.switchery = function() {
     const COLOR_SWITCHERY_SECOND = 'var(--switcherysecond)';
 
     $('.togglesmall').each(function(index, elem) {
-            const switchery = new Switchery(elem, {
-              size: 'small',
-              color: COLOR_ACCENT,
-              secondaryColor: COLOR_SWITCHERY_SECOND,
-            });
+        const switchery = new Switchery(elem, {
+            size: 'small',
+            color: COLOR_ACCENT,
+            secondaryColor: COLOR_SWITCHERY_SECOND,
+        });
         $(elem).on("change", function () {
             switchery.setPosition();
         });
@@ -304,10 +304,10 @@ GuiControl.prototype.switchery = function() {
     });
 
     $('.toggle').each(function(index, elem) {
-            const switchery = new Switchery(elem, {
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
-            });
+        const switchery = new Switchery(elem, {
+            color: COLOR_ACCENT,
+            secondaryColor: COLOR_SWITCHERY_SECOND,
+        });
         $(elem).on("change", function () {
             switchery.setPosition();
         });
@@ -315,11 +315,11 @@ GuiControl.prototype.switchery = function() {
     });
 
     $('.togglemedium').each(function(index, elem) {
-            const switchery = new Switchery(elem, {
-                className: 'switcherymid',
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
-             });
+        const switchery = new Switchery(elem, {
+            className: 'switcherymid',
+            color: COLOR_ACCENT,
+            secondaryColor: COLOR_SWITCHERY_SECOND,
+        });
          $(elem).on("change", function () {
              switchery.setPosition();
          });
