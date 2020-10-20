@@ -2,10 +2,6 @@
     "translation_version": {
         "message": "crwdns5312:0crwdne5312:0"
     },
-    "windowTitle": {
-        "message": "crwdns5313:0crwdne5313:0",
-        "description": "Title of the application window, usually not translated"
-    },
     "yes": {
         "message": "crwdns9554:0crwdne9554:0",
         "description": "General Yes message to be used across the application"
