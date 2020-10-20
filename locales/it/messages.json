@@ -2477,6 +2477,9 @@
     "sensorsGyroTitle": {
         "message": "Giroscopio - gradi/s"
     },
+    "sensorsAccelTitle": {
+        "message": "Accelerometro - g (gradi)"
+    },
     "sensorsMagTitle": {
         "message": "Magnetometro - Ga"
     },
@@ -3557,6 +3560,15 @@
         "message": "Dà prestazioni costanti di gas e PID su tutto il range di tensione utilizzabile della batteria compensando per il calo della tensione. Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br><br>Visita <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki</a> per ulteriori informazioni."
     },
     "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Linearizzazione Spinta"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compensa la relazione non lineare tra gas e spinta applicando una curva inversa all'uscita del motore. L'importo della compensazione può variare tra lo 0 e il 150%."
+    },
+    "pidTuningThrustLinearValue": {
         "message": "%"
     },
     "pidTuningItermRotation": {
