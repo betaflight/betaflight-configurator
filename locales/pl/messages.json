@@ -1645,6 +1645,9 @@
     "pidTuningFfInterpolateSp": {
         "message": "Interpolacja FF"
     },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "Poniższe opcje dostrajają typ lotu od wyścigowego/agresywnego do płynnego/HD.<br><br> Tryb: ustaw Średnią wartość dla wyścigowego zachowania, Średnią 2 dla wyścigowego/szybkiego swobodnego(freestyle), Średnia 3 dla nagrań HD, Średnia 4 dla płynnych nagrań \"kinowych\" HD.<br><br> Wygładzenie: ogranicza ilość zmian, jakie może zrobić każdy przychodzący rozkaz z aparatury, zwiększ w przypadku płynniejszego sygnału FF(feed forward), zmniejsz w przypadku bardziej agresywnych odpowiedzi FF.<br><br> Podbicie(wzmocnienie): pomaga pokonać lag silnika dzięki szybkim nakładom drążków, może zwiększyć oscylacje. Wypróbuj 10 dla HD, 20 dla wyścigów. Okolice 30 może być przydatne dla maszyn o dużej bezwładności, ale może spowodować mikro przestrzelenia nastaw docelowych lub oscylacje."
+    },
     "pidTuningFfInterpolate": {
         "message": "Tryb"
     },
@@ -2428,6 +2431,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Żyroskop - stopnie/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Akcelerometr - g (deg)"
     },
     "sensorsMagTitle": {
         "message": "Magnetometr - Ga"
@@ -3339,6 +3345,10 @@
         "message": "Niskie wzmocnienie członów P i D może powodować większe oscylacje typu \"propwash\" w silnikach. Zbyt niska wartość wzmocnień tych parametrów może powodować niestabilność maszyny. <br><br> Parametry P i D działają w parze w w celu minimalizacji oscylacji \"propwash\".<br><br> Wysokie wartości tych parametrów mogą powodować grzanie się silników poprzez duże oscylacje wysterowania silnika które mogą wystąpić podczas płynnego lotu na wprost. Co jest powodowane wysokim parametrem D.",
         "description": "P and D gain tuning slider helpicon message"
     },
+    "pidTuningResponseSliderHelp": {
+        "message": "Niższe wartości FF pogorszą reakcję drążków i mogą powodować powolne odbicia na koniec obrotów i przewrotów (podbicie składowej I).<br><br>Wyższe wartości FF dadzą szybsze odpowiedzi w ostrych ruchach. Nadmiernie wysokie wartości FF mogą powodować przekroczenia i szybkie odbicie na końcu obrotów lub przewrotów.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Żyroskopowe filtry dolnoprzepustowe"
     },
@@ -3501,6 +3511,15 @@
     "pidTuningVbatSagCompensationHelp": {
         "message": "Daje jednostajną wydajność przepustnicy i PID-ów w zakresie użytecznego napięcia akumulatora poprzez kompensację spadku napięcia baterii (Vbat sag). Zakres kompensacji może wynosić od 0 do 100 %. Zalecana jest pełna kompensacja (100%).<br><br>Odwiedź <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">wpis na wiki</a>, aby uzyskać więcej informacji."
     },
+    "pidTuningThrustLinearization": {
+        "message": "Linearyzacja ciągu silników"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Kompensuje nieliniową zależność między gazem(throttle) a ciągiem poprzez zastosowanie odwrotnej krzywej siły napędowej na wyjściu silnika. kompensacja może wynosić od 0 do 150 %."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I Term Rotation"
     },
@@ -3566,6 +3585,9 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamiczne dostrajanie biegu jałowego poprawia kontrolę przy niskiej prędkości obrotowej i zmniejszają ryzyko desynchronizacji silników. Usuwa problemy spowodowane przyspieszaniem lub spowolnieniem przepływu powietrza, poprawą działania PID, stabilnością, hamowaniem silnikami i dynamiką. Dynamiczna wartość biegu jałowego powinna być ustawiona na około 20% poniżej wartości rpm twojej nastawy biegu jałowego (zobacz zakładkę $t(tabMotorTesting.message)). Zazwyczaj nie ma potrzeby zmiany wartości twojego DShot idle z wartości domyślnych. W przypadku dłuższego czasu lotu odwróconego należy jednocześnie obniżyć wartość DShot idle i minimalną wartość rpm.<br><br>Zobacz<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki</a>, aby uzyskać więcej informacji."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limit kąta trybu treningowego akrobatycznego"
@@ -3816,6 +3838,9 @@
     "powerVoltageHead": {
         "message": "Woltomierz"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Ostrzeżenie:</span> Wartości ograniczone do 25,5 V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3905,6 +3930,9 @@
     },
     "powerAmperageHead": {
         "message": "Amperomierz"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Ostrzeżenie:</span> Wartości ograniczone do 63.5 A."
     },
     "powerAmperageValue": {
         "message": "$1 A"
