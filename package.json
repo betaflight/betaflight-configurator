@@ -66,6 +66,7 @@
     "select2": "^4.0.13",
     "semver-min": "^0.6.5",
     "short-unique-id": "^1.1.1",
+    "switchery-latest": "^0.8.2",
     "three": "~0.97.0",
     "universal-ga": "^1.2.0",
     "vue": "2.6.12",
