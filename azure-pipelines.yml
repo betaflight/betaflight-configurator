@@ -1,4 +1,4 @@
-# Builds Betaflight Configurator on Windows, Linux and OSX platforms.
+# Builds Betaflight Configurator on Windows, Android, Linux and OSX platforms.
 #
 # After building, artifacts are released to a seperate repository.
 #
@@ -66,6 +66,18 @@ stages:
       inputs:
         targetPath: '$(System.DefaultWorkingDirectory)/release'
         artifact: 'betaflight-configurator-windows'
+
+  - job: 'Android'
+    pool:
+      vmImage: 'vs2017-win2016'
+
+    steps:
+    - task: UseNode@1
+      inputs:
+        version: '10.16.3'
+      displayName: 'Install Node.js 10.16.3'
+    - script: yarn install
+      displayName: 'Run yarn install'
     - script: yarn gulp release --android
       displayName: 'Run yarn release for android'
     - task: PublishPipelineArtifact@1
