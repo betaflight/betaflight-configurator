@@ -159,5 +159,122 @@
     },
     "configuratorUpdateWebsite": {
         "message": "Prejsť na webovú stránku aktualizácií"
+    },
+    "deviceRebooting": {
+        "message": "Zariadenie - <span class=\"message-negative\">sa reštartuje</span>"
+    },
+    "deviceRebooting_flashBootloader": {
+        "message": "Zariadenie - <span class=\"message-negative\">sa reštartuje do FLASH zavádzača</span>"
+    },
+    "deviceRebooting_romBootloader": {
+        "message": "Zariadenie - <span class=\"message-negative\">sa reštartuje do ROM zavádzača</span>"
+    },
+    "deviceReady": {
+        "message": "Zariadenie - <span class=\"message-positive\">je pripravené</span>"
+    },
+    "backupFileIncompatible": {
+        "message": "Prepáčte, zvolená záloha bola vygenerovaná pre predošlú verziu konfigurátora a nieje kompatibilná s momentálne používanou verziou konfigurátora"
+    },
+    "backupFileUnmigratable": {
+        "message": "Prepáčte, zvolená záloha bola vygenerovaná predošlou verziu konfigurátora a nieje možné ju premigrovať."
+    },
+    "configMigrationFrom": {
+        "message": "Migrácia konfiguračného súboru generovaného konfigurátorom: $1"
+    },
+    "configMigratedTo": {
+        "message": "Premigrovaná konfigurácia do konfigurátora: $1"
+    },
+    "configMigrationSuccessful": {
+        "message": "Migrácia konfigurácie ukončená, počet presunov: $1"
+    },
+    "tabFirmwareFlasher": {
+        "message": "Programátor firmvéru"
+    },
+    "tabLanding": {
+        "message": "Vitajte"
+    },
+    "tabChangelog": {
+        "message": "Zoznam zmien"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Zásady ochrany osobných údajov"
+    },
+    "tabHelp": {
+        "message": "Dokumentácia a podpora"
+    },
+    "tabOptions": {
+        "message": "Možnosti"
+    },
+    "tabSetup": {
+        "message": "Nastavenie"
+    },
+    "tabSetupOSD": {
+        "message": "Nastavenie OSD"
+    },
+    "tabConfiguration": {
+        "message": "Konfigurácia"
+    },
+    "tabPorts": {
+        "message": "Porty"
+    },
+    "tabPidTuning": {
+        "message": "PID Ladenie"
+    },
+    "tabReceiver": {
+        "message": "Prijímač"
+    },
+    "tabModeSelection": {
+        "message": "Výber módu"
+    },
+    "tabServos": {
+        "message": "Servá"
+    },
+    "tabFailsafe": {
+        "message": "Ochrana pred stratou signálu (Failsafe)"
+    },
+    "tabTransponder": {
+        "message": "Pretekársky transpondér"
+    },
+    "tabOsd": {
+        "message": "OSD"
+    },
+    "tabVtx": {
+        "message": "Video vysielač"
+    },
+    "tabPower": {
+        "message": "Napájanie a batéria"
+    },
+    "tabGPS": {
+        "message": "GPS"
+    },
+    "tabMotorTesting": {
+        "message": "Motory"
+    },
+    "tabLedStrip": {
+        "message": "LED pásik"
+    },
+    "tabRawSensorData": {
+        "message": "Senzory"
+    },
+    "tabCLI": {
+        "message": "Príkazový riadok (CLI)"
+    },
+    "tabOnboardLogging": {
+        "message": "Čierna skrinka"
+    },
+    "tabAuxiliary": {
+        "message": "Režimy"
+    },
+    "logActionHide": {
+        "message": "Skryť záznam"
+    },
+    "logActionShow": {
+        "message": "Zobraziť záznam"
+    },
+    "serialErrorFrameError": {
+        "message": "Chyba sériového pripojenia: chyba stránkovania"
+    },
+    "serialErrorParityError": {
+        "message": "Chyba sériového pripojenia: chyba parity"
     }
 }
