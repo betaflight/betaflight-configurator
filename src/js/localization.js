@@ -29,24 +29,51 @@ i18n.init = function(cb) {
                 ns: ['messages'],
                 defaultNS:['messages'],
                 fallbackLng: languageFallback,
-                backend: { loadPath: '/_locales/{{lng}}/{{ns}}.json' },
-                }, function(err) {
-                    if (err !== undefined) {
-                        console.error(`Error loading i18n: ${err}`);
-                    } else {
-                        console.log('i18n system loaded');
-                        const detectedLanguage = i18n.getMessage(`language_${getValidLocale("DEFAULT")}`);
-                        i18n.addResources({"detectedLanguage": detectedLanguage });
-                        i18next.on('languageChanged', function () {
-                            i18n.localizePage(true);
-                        });
-                    }
-                    if (cb !== undefined) {
-                        cb();
-                    }
+                backend: {
+                    loadPath: '/_locales/{{lng}}/{{ns}}.json',
+                    parse: i18n.parseInputFile,
+                },
+            },
+            function(err) {
+                if (err !== undefined) {
+                    console.error(`Error loading i18n: ${err}`);
+                } else {
+                    console.log('i18n system loaded');
+                    const detectedLanguage = i18n.getMessage(`language_${getValidLocale("DEFAULT")}`);
+                    i18n.addResources({"detectedLanguage": detectedLanguage });
+                    i18next.on('languageChanged', function () {
+                        i18n.localizePage(true);
+                    });
+                }
+                if (cb !== undefined) {
+                    cb();
+                }
             });
     });
 
+};
+
+/**
+ * We have different interpolate methods in the input messages file,
+ * we unify all of them here to the i18next style and simplify it
+ */
+i18n.parseInputFile = function(data) {
+
+    // Remove the $n interpolate of Chrome $1, $2, ... -> {{1}}, {{2}}, ...
+    const REGEXP_CHROME = /\$([1-9])/g;
+    const dataChrome = data.replace(REGEXP_CHROME, '{{$1}}');
+
+    // Remove the .message of the nesting $t(xxxxx.message) -> $t(xxxxx)
+    const REGEXP_NESTING = /\$t\(([^\)]*).message\)/g;
+    const dataNesting = dataChrome.replace(REGEXP_NESTING, '$t($1)');
+
+    // Move the .message of the json object to root xxxxx.message -> xxxxx
+    const jsonData = JSON.parse(dataNesting);
+    Object.entries(jsonData).forEach(([key, value]) => {
+        jsonData[key] = value.message;
+    });
+
+    return jsonData;
 };
 
 i18n.changeLanguage = function(languageSelected) {
@@ -60,28 +87,29 @@ i18n.changeLanguage = function(languageSelected) {
 
 i18n.getMessage = function(messageID, parameters) {
 
-    let translatedString;
+    let parametersObject;
 
     // Option 1, no parameters or Object as parameters (i18Next type parameters)
     if ((parameters === undefined) || ((parameters.constructor !== Array) && (parameters instanceof Object))) {
-        translatedString =  i18next.t(`${messageID}.message`, parameters);
+        parametersObject = parameters;
 
     // Option 2: parameters as $1, $2, etc.
     // (deprecated, from the old Chrome i18n
     } else {
 
-        translatedString =  i18next.t(`${messageID}.message`);
-
+        // Convert the input to an array
         let parametersArray = parameters;
         if (parametersArray.constructor !== Array) {
             parametersArray = [parameters];
         }
-        parametersArray.forEach(function(element, index) {
-            translatedString = translatedString.replace(`$${(index + 1)}`, element);
+
+        parametersObject = {};
+        parametersArray.forEach(function(parameter, index) {
+            parametersObject[index + 1] = parameter;
         });
     }
 
-    return translatedString;
+    return i18next.t(messageID, parametersObject);
 };
 
 i18n.getLanguagesAvailables = function() {

@@ -1,12 +1,12 @@
 <template>
   <div class="version">
-    {{ $t("versionLabelConfigurator.message") }}: {{ configuratorVersion }}
+    {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }}
     <span v-if="firmwareVersion && firmwareId">
-      , {{ $t("versionLabelFirmware.message") }}: {{ firmwareVersion }}
+      , {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
       {{ firmwareId }}
     </span>
     <span v-if="hardwareId">
-      , {{ $t("versionLabelTarget.message") }}: {{ hardwareId }}
+      , {{ $t("versionLabelTarget") }}: {{ hardwareId }}
     </span>
     ({{ gitChangesetId }})
   </div>

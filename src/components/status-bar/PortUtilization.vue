@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>{{ $t("statusbar_port_utilization.message") }}</span>
+    <span>{{ $t("statusbar_port_utilization") }}</span>
     <ReadingStat
       message="statusbar_usage_download"
       :value="usageDown"
