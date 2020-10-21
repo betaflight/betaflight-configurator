@@ -176,12 +176,12 @@ TABS.pid_tuning.initialize = function (callback) {
             }
 
             var antiGravitySwitch = $('#antiGravitySwitch');
-            const ACCELERATOR_MIN_GAIN = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0 : 1000;
-            antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.itermAcceleratorGain !== ACCELERATOR_MIN_GAIN);
+            const ITERM_ACCELERATOR_GAIN_OFF = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0 : 1000;
+            antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.itermAcceleratorGain !== ITERM_ACCELERATOR_GAIN_OFF);
             antiGravitySwitch.change(function() {
                 var checked = $(this).is(':checked');
                 if (checked) {
-                    if (FC.ADVANCED_TUNING.itermAcceleratorGain === ACCELERATOR_MIN_GAIN) {
+                    if (FC.ADVANCED_TUNING.itermAcceleratorGain === ITERM_ACCELERATOR_GAIN_OFF) {
                         const DEFAULT_ACCELERATOR_GAIN = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? 3.5 : 1.1;
                         $('.antigravity input[name="itermAcceleratorGain"]').val(DEFAULT_ACCELERATOR_GAIN);
                     } else {
@@ -199,7 +199,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     }
                 } else {
                     $('.antigravity select[id="antiGravityMode"]').val(0);
-                    $('.antigravity input[name="itermAcceleratorGain"]').val(ACCELERATOR_MIN_GAIN / 1000);
+                    $('.antigravity input[name="itermAcceleratorGain"]').val(ITERM_ACCELERATOR_GAIN_OFF / 1000);
                     $('.antigravity .suboption').hide();
                 }
             });
