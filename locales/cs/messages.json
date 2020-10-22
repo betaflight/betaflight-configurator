@@ -399,25 +399,20 @@
         "message": "Klikněte zde pro start aplikace"
     },
     "statusbar_port_utilization": {
-        "message": "Využití portu:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Využití portu:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Chybné pakety:"
+        "message": "Chybné pakety:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C chyb:"
+        "message": "I2C chyb:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Čas cyklu:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Zatížení CPU: $1%"
+        "message": "Čas cyklu:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Prosím, použijte utilitu pro flashování firmwaru pro přístup k DFU zařízením"
