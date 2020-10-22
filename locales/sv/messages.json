@@ -526,25 +526,20 @@
         "message": "Klicka här för att starta applikationen"
     },
     "statusbar_port_utilization": {
-        "message": "Portanvändning:"
-    },
-    "statusbar_usage_download": {
-        "message": "N: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Portanvändning:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Paket-fel:"
+        "message": "Paket-fel:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C-fel:"
+        "message": "I2C-fel:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Cykel-tid:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU Belastning: $1%"
+        "message": "Cykel-tid:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Använd Firmware-Flasharen för åtkomst till DFU-enheter"
