@@ -577,25 +577,20 @@
         "message": "Cliquez ici pour lancer l'application"
     },
     "statusbar_port_utilization": {
-        "message": "Utilisation du port:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Utilisation du port:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Erreur paquet:"
+        "message": "Erreur paquet:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Erreur I2C:"
+        "message": "Erreur I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Durée de cycle:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Charge CPU: $1%"
+        "message": "Durée de cycle:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Veuillez utiliser le 'Firmware Flasheur' pour accéder aux dispositifs en DFU"
