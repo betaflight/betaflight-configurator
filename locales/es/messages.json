@@ -513,25 +513,32 @@
         "message": "Pulsa aquí para iniciar la aplicación"
     },
     "statusbar_port_utilization": {
-        "message": "Utilización del puerto:"
+        "message": "Utilización del puerto:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_usage_download": {
-        "message": "D: $1%"
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_usage_upload": {
-        "message": "C: $1%"
+        "message": "C:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_packet_error": {
-        "message": "Paquetes con error:"
+        "message": "Paquetes con error:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C error:"
+        "message": "I2C error:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Tiempo de ciclo:"
+        "message": "Tiempo de ciclo:",
+        "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "Carga de CPU: $1%"
+        "message": "Carga de CPU:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Use el Instalador de Firmware para acceder a dispositivos DFU"
