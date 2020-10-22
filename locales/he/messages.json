@@ -327,13 +327,12 @@
         "message": "הקש כאן כדי לפתוח את היישום"
     },
     "statusbar_i2c_error": {
-        "message": "שגיאת תקשורת I2C"
+        "message": "שגיאת תקשורת I2C",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "זמן מחזור:"
-    },
-    "statusbar_cpu_load": {
-        "message": "עומס מעבד: $1%."
+        "message": "זמן מחזור:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_erased_kilobytes": {
         "message": "Erased $1 kB of flash <span class=\"message-positive\">successfully</span>"
