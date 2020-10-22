@@ -414,25 +414,20 @@
         "message": "Klik di sini untuk memulai aplikasi"
     },
     "statusbar_port_utilization": {
-        "message": "Pemakaian Port:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Pemakaian Port:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Kesalahan paket:"
+        "message": "Kesalahan paket:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Kesalahan I2C:"
+        "message": "Kesalahan I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Waktu Siklus:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Beban CPU: $1%"
+        "message": "Waktu Siklus:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Harap gunakan Flasher Firmware untuk mengakses perangkat DFU"
