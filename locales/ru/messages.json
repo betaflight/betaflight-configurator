@@ -501,25 +501,20 @@
         "message": "Кликните сюда, чтобы запустить приложение"
     },
     "statusbar_port_utilization": {
-        "message": "Загруженность порта:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Загруженность порта:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Ошибки пакетов:"
+        "message": "Ошибки пакетов:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C ошибки:"
+        "message": "I2C ошибки:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Время цикла:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Загрузка CPU: $1%"
+        "message": "Время цикла:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Пожалуйста, используйте \"Программатор\" для доступа к DFU устройств"
