@@ -168,7 +168,8 @@
         "message": "Натисніть тут, щоб запустити програму"
     },
     "statusbar_i2c_error": {
-        "message": "Помилка I2C:"
+        "message": "Помилка I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "defaultDonate": {
         "message": "Підтримати проект"
