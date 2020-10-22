@@ -604,25 +604,32 @@
         "message": "crwdns5438:0crwdne5438:0"
     },
     "statusbar_port_utilization": {
-        "message": "crwdns5439:0crwdne5439:0"
+        "message": "crwdns5439:0crwdne5439:0",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_usage_download": {
-        "message": "crwdns5440:0$1crwdne5440:0"
+        "message": "crwdns10282:0crwdne10282:0",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_usage_upload": {
-        "message": "crwdns5441:0$1crwdne5441:0"
+        "message": "crwdns10284:0crwdne10284:0",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_packet_error": {
-        "message": "crwdns5442:0crwdne5442:0"
+        "message": "crwdns5442:0crwdne5442:0",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "crwdns5443:0crwdne5443:0"
+        "message": "crwdns5443:0crwdne5443:0",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "crwdns5444:0crwdne5444:0"
+        "message": "crwdns5444:0crwdne5444:0",
+        "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "crwdns5445:0$1crwdne5445:0"
+        "message": "crwdns10286:0crwdne10286:0",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "crwdns5446:0crwdne5446:0"
