@@ -604,25 +604,20 @@
         "message": "Pulsa aquí para abrila aplicación"
     },
     "statusbar_port_utilization": {
-        "message": "Utilización do porto:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "C: $1%"
+        "message": "Utilización do porto:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Paquetes con error:"
+        "message": "Paquetes con error:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "error I2C:"
+        "message": "error I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Tempo de Ciclo:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Carga de CPU: $1%"
+        "message": "Tempo de Ciclo:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Por favor emprega o Flasheador de Firmware para acceder os dispositivos DFU"
