@@ -339,25 +339,20 @@
         "message": "Paina tästä käynnistääksesi ohjelman"
     },
     "statusbar_port_utilization": {
-        "message": "Portin käyttöaste:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Portin käyttöaste:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Paketti virhe:"
+        "message": "Paketti virhe:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C virhe:"
+        "message": "I2C virhe:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Sykliaika:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU kuorma: $1%"
+        "message": "Sykliaika:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "DFU-laitteiden käyttämiseksi avaa Laiteohjelmiston Päivittäjä"
