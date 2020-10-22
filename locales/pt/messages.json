@@ -480,25 +480,20 @@
         "message": "Pressione aqui para iniciar a aplicação"
     },
     "statusbar_port_utilization": {
-        "message": "Utilização da porta:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Utilização da porta:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Erros de pacote:"
+        "message": "Erros de pacote:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Erros I2C:"
+        "message": "Erros I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Tempo de ciclo:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Carga da CPU: $1%"
+        "message": "Tempo de ciclo:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Por favor use a opção de atualização de firmware para acessar dispositivos DFU"
