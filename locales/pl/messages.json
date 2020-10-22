@@ -504,25 +504,20 @@
         "message": "Kliknij tutaj aby uruchomić aplikację."
     },
     "statusbar_port_utilization": {
-        "message": "Obciążenie portu:"
-    },
-    "statusbar_usage_download": {
-        "message": "P: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "W: $1%"
+        "message": "Obciążenie portu:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Błąd pakietu danych:"
+        "message": "Błąd pakietu danych:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Błąd I2C:"
+        "message": "Błąd I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Czas pętli:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Obciążenie procesora: $1%"
+        "message": "Czas pętli:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Użyć zakładki \"Wgraj oprogramowanie\" aby połączyć się z urządzeniem w trybie DFU"
