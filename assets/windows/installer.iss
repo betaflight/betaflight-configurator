@@ -92,44 +92,76 @@ WizardSmallImageFile=bf_installer_small.bmp
 WizardStyle=modern
 
 [Code]
+function GetOldNsisUninstallerPath(): String;
+var
+    RegKey: String;
+begin
+    Result := '';
+    // Look into the different registry entries: win32, win64 and without user rights
+    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Configurator', 'UninstallString', Result) then
+    begin
+        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Configurator', 'UninstallString', Result) then
+        begin
+            RegQueryStringValue(HKCU, 'SOFTWARE\Betaflight\Betaflight Configurator', 'UninstallString', Result)
+        end;
+    end;
+end;
+
+function GetQuietUninstallerPath(): String;
+var
+    RegKey: String;
+begin
+    Result := '';
+    RegKey := Format('%s\%s_is1', ['Software\Microsoft\Windows\CurrentVersion\Uninstall', '{#emit SetupSetting("AppId")}']);
+    if not RegQueryStringValue(HKEY_LOCAL_MACHINE, RegKey, 'QuietUninstallString', Result) then
+    begin
+        RegQueryStringValue(HKEY_CURRENT_USER, RegKey, 'QuietUninstallString', Result);
+    end;
+end;
+
 function InitializeSetup(): Boolean;
 var
     ResultCode: Integer;
-    ResultStr: String;
     ParameterStr : String;
+    UninstPath : String;
 begin
     
     Result := True;
 
     // Check if the application is already installed by the old NSIS installer, and uninstall it
-    // Look into the different registry entries: win32, win64 and without user rights
-    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Configurator', 'UninstallString', ResultStr) then     
-    begin
-        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Configurator', 'UninstallString', ResultStr) then     
-        begin
-            RegQueryStringValue(HKCU, 'SOFTWARE\Betaflight\Betaflight Configurator', 'UninstallString', ResultStr) 
-        end;
-    end;
+    UninstPath := GetOldNsisUninstallerPath();
 
     // Found, start uninstall
-    if ResultStr <> '' then 
+    if UninstPath <> '' then 
     begin
         
-        ResultStr:=RemoveQuotes(ResultStr);
+        UninstPath := RemoveQuotes(UninstPath);
 
         // Add this parameter to not return until uninstall finished. The drawback is that the uninstaller file is not deleted
-        ParameterStr := '_?=' + ExtractFilePath(ResultStr);
+        ParameterStr := '_?=' + ExtractFilePath(UninstPath);
 
-        if Exec(ResultStr, ParameterStr, '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+        if Exec(UninstPath, ParameterStr, '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
         begin
           // Delete the unistaller file and empty folders. Not deleting the files.
-          DeleteFile(ResultStr);
-          DelTree(ExtractFilePath(ResultStr), True, False, True);
+          DeleteFile(UninstPath);
+          DelTree(ExtractFilePath(UninstPath), True, False, True);
         end
         else begin
             Result := False;
             MsgBox('Error uninstalling old Configurator ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
         end;        
-    end;    
+    end
+    else begin
 
+        // Search for new Inno Setup installations
+        UninstPath := GetQuietUninstallerPath();
+        if UninstPath <> '' then
+        begin
+            if not Exec('>', UninstPath, '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+            begin
+                Result := False;
+                MsgBox('Error uninstalling Configurator ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
+            end;
+        end;
+    end;
 end;
