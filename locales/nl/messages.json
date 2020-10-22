@@ -529,25 +529,32 @@
         "message": "Klik hier om de applicatie te starten"
     },
     "statusbar_port_utilization": {
-        "message": "Port utilisatie:"
+        "message": "Port utilisatie:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_usage_download": {
-        "message": "D: $1%"
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_packet_error": {
-        "message": "Packet error:"
+        "message": "Packet error:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C error:"
+        "message": "I2C error:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Cycle Tijd:"
+        "message": "Cycle Tijd:",
+        "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "CPU Gebruik: $1%"
+        "message": "CPU belasting:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Gebruik alstublieft de Besturingssysteem flasher om toegang te krijgen tot DFU apparaten"
