@@ -521,25 +521,32 @@
         "message": "Prem aquí per a iniciar l'aplicació"
     },
     "statusbar_port_utilization": {
-        "message": "Utilització del port:"
+        "message": "Utilització del port:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_usage_download": {
-        "message": "D: $1%"
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_packet_error": {
-        "message": "Error de paquet:"
+        "message": "Error de paquet:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Error I2C:"
+        "message": "Error I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Temps de cicle:"
+        "message": "Temps de cicle:",
+        "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "Càrrega de CPU: $1%"
+        "message": "Càrrega de CPU:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Si us plau, utilitza el Flashejador de Firmware per accedir als dispositius DFU"
