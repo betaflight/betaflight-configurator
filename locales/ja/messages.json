@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "匿名の統計データ収集を無効"
     },
+    "cordovaForceComputerUI": {
+        "message": "電話インターフェイスの代わりにコンピュータインターフェイスを使用"
+    },
     "language_changed": {
         "message": "言語の変更を保存しました"
     },
@@ -96,11 +99,11 @@
         "message": "システム初期値 ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
-        "message": "データフラッシュの<br>チップが見つかりません",
+        "message": "ログデータ保存用の<br>メモリが見つかりません",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "データフラッシュ: 空き領域",
+        "message": "ログデータ: 空き領域",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
@@ -199,6 +202,9 @@
     "tabHelp": {
         "message": "マニュアル & サポート"
     },
+    "tabOptions": {
+        "message": "オプション"
+    },
     "tabSetup": {
         "message": "セットアップ"
     },
@@ -291,6 +297,9 @@
     },
     "serialUnrecoverable": {
         "message": "シリアル接続の回復不能な <span class=\"message-negative\">障害</span> にて切断中..."
+    },
+    "serialPortLoading": {
+        "message": "ロード中..."
     },
     "usbDeviceOpened": {
         "message": "ID: $1のUSBデバイスへ<span class=\"message-positive\">正常</span>に接続しました"
@@ -395,7 +404,7 @@
         "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません</span>。<strong>$1</strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ / リストア手順はドキュメントに記載されています。<br/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
     },
     "firmwareTypeNotSupported": {
-        "message": "CLIモードを除き、Cleanflight / Betaflight 以外のファームウェアは<span class=\"message-negative\">サポートされていません</span>。"
+        "message": "CLIモードを除き、Betaflight以外のファームウェアは<span class=\"message-negative\">サポートされていません</span>。"
     },
     "firmwareUpgradeRequired": {
         "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書き換えする前にCLIを使用してバックアップしてください。 CLIのバックアップ / リストア手順はドキュメントに記載されています。<br/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
@@ -504,25 +513,20 @@
         "message": "アプリケーションを起動するにはここをクリック"
     },
     "statusbar_port_utilization": {
-        "message": "ポート使用率:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "ポート使用率:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "パケットエラー:"
+        "message": "パケットエラー:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C エラー:"
+        "message": "I2C エラー:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "サイクル時間:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU使用率: $1%"
+        "message": "サイクル時間:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "DFUデバイスへのアクセスはファームフラッシャーを使用してください"
@@ -1345,6 +1349,15 @@
     "configurationButtonSave": {
         "message": "保存して再起動"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "動的ノッチ値の変更"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>警告: RPMフィルタリングが有効化/無効化されたため、一部の動的ノッチ値がデフォルト値に変更されました。</b></span><br>飛行前に確認してください。"
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
+    },
     "portsIdentifier": {
         "message": "識別子"
     },
@@ -1642,6 +1655,33 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 0より大きく0.1より小さいD値セットポイントの設定はしないでください。スティックが中心を横切るときに不安定となり、スティック応答性が低下する可能性があります。</span>"
     },
+    "pidTuningFfInterpolateSp": {
+        "message": "FF 補間"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "次のオプションは、レース/アグレッシブからスムーズ/HD空撮まで、フィードフォワード値を微調整することができます。<br><br> モード: レースの場合は平均値 無効、レース/高速フリースタイルの場合は平均値 2、HD空撮の場合は平均 3、HD動画の滑らかさを求める場合は平均値 4に設定します。<br><br> 滑らかさ: 1回で受信する送信機通信ステップが行う際の変更量を制限し、滑らかなFFを求めるには増加させ、より積極的なFFの応答性を求める場合には減少させます。<br><br> ブースト: クイックなスティック入力によるモーター出力ラグを克服させることができますが、揺らぎは増加します。HD空撮の場合は10、レースの場合は20をお試しください。制御があまりできないような機体には最大30まで有効となりますが、細かなオーバーシュートや揺らぎを引き起こしてしまう場合があります。"
+    },
+    "pidTuningFfInterpolate": {
+        "message": "モード"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "平均値 無効"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "平均値 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "平均値 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "平均値 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "滑らかさ"
+    },
+    "pidTuningFfBoost": {
+        "message": "ブースト"
+    },
     "pidTuningProportional": {
         "message": "Proportional"
     },
@@ -1871,6 +1911,12 @@
     },
     "receiverRefreshRateTitle": {
         "message": "グラフ更新頻度"
+    },
+    "receiverResetRefreshRate": {
+        "message": "リセット"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "リフレッシュレートをリセット"
     },
     "receiverButtonSave": {
         "message": "保存"
@@ -2363,6 +2409,39 @@
     "motorsEnableControl": {
         "message": "<strong>リスクを認識し</strong>、プロペラは全て外しました - モーター制御とアーミングを可能にし、暴走離陸防止機能を無効にします。"
     },
+    "motorOutputReorderDialogClose": {
+        "message": "キャンセル"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "スタート"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "モーター並び替え"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "モーター並び替え"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "回転するモーターをクリックしてください..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "準備ができました！画像をクリックして回転するモーターを確認してください。"
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>リスクを正しく理解</strong>し、<br />プロペラを外してください。"
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>注意事項</strong><br /><strong class=\"message-negative\">怪我を防止するために、すべてのプロペラを取り外してください！</strong><br />モーターが<strong>回転します！</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
+    },
+    "motorsRemapDialogSave": {
+        "message": "保存"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "やり直し"
+    },
     "sensorsInfo": {
         "message": "更新周期を速く設定し、複数のグラフを同時にレンダリングすると、リソースが重くなりノートPC等を使用するとバッテリーを早く消費してしまう場合があるので注意してください。<br/>必要とするセンサーのグラフを、適正な更新周期でレンダリングすることをお勧めします。"
     },
@@ -2394,7 +2473,7 @@
         "message": "ジャイロセンサー - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "加速度センサー - g"
+        "message": "加速度センサー -g (度)"
     },
     "sensorsMagTitle": {
         "message": "コンパス - Ga"
@@ -3445,6 +3524,9 @@
     "pidTuningDTermLowpassDynType": {
         "message": "D値 ローパス1 動的フィルタータイプ"
     },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "D値 ローパス1 動的カーブExpo"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D値 ノッチフィルター"
     },
@@ -3465,6 +3547,24 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "Vbatが低下したとき、それを補正するためPID値を増加させます。 これにより、飛行中にさらに一定の飛行特性を与えられます。 適用される補正量は、 $t(tabPower.message) ページで設定された $t(powerBatteryMaximum.message) から計算されるため、適切な値に設定されていることを確認してください。"
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbat サグ値補正"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "バッテリーサグ値を補正することにより、使用可能なバッテリー電圧範囲にて一貫したスロットルとPIDパフォーマンスを提供します。補正量は0～100%の間で変更でき、完全な補正 (100%) を推奨します。<br><br>詳細は<a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">このWiki</a>にアクセスしてください。"
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "推力線形化"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "モーター出力に対して逆モーター曲線を適用することで、スロットルと推力の非線形関係を補正します。補正量は0～150%の間で可変できます。"
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I値 ローテーション"
@@ -3784,6 +3884,9 @@
     "powerVoltageHead": {
         "message": "電圧メーター"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">警告:</span> 値は25.5Vに制限されています。"
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3792,9 +3895,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "電圧スケール調整:"
-    },
-    "powerAmperageValue": {
-        "message": "$1 A"
     },
     "powerVoltageId10": {
         "message": "バッテリー"
@@ -3876,6 +3976,12 @@
     },
     "powerAmperageHead": {
         "message": "電流メーター"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">警告:</span> 値は63.5Vに制限されています。"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "バッテリー"
@@ -4036,11 +4142,15 @@
         "message": "単位"
     },
     "osdSetupUnitsOptionImperial": {
-        "message": "ヤードポンド法",
+        "message": "帝国単位",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupUnitsOptionMetric": {
         "message": "メートル法",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "イギリス単位",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
@@ -5447,7 +5557,7 @@
         "message": "外付 シリアルログデバイス"
     },
     "onboardLoggingFlashLogger": {
-        "message": "オンボード データチップ"
+        "message": "オンボード データメモリ"
     },
     "onboardLoggingEraseInProgress": {
         "message": "消去中、しばらくお待ちください..."
@@ -5553,5 +5663,74 @@
     "gpsSbasNone": {
         "message": "なし",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "ファイル名"
+    },
+    "dialogFileNameDescription": {
+        "message": "ファイルは内部ストレージの『{{folder}}』フォルダに保存されます。"
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "このファイルは既に存在します！"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "上書きしますか？"
+    },
+    "cordovaCheckingWebview": {
+        "message": "WebViewアプリケーションを確認しています..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "互換性のないWebView"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Betaflight Configuratorを使用するにはデバイスのWebViewを更新する必要があります。"
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "以下のツールは新しいWebViewをインストールしたり、既にインストール済のWebViewを更新したりするのに役立ちます。"
+    },
+    "cordovaAvailableWebviews": {
+        "message": "お使いのデバイスでWebViewアプリケーションは利用可能"
+    },
+    "cordovaWebviewInstall": {
+        "message": "<b>{{app}}</b> アプリをインストールすると、互換性問題が解消されます。"
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Google Playストアからインストール"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "<b>{{app}}</b>アプリをアンインストールすると、この互換性問題が解消されます。アンインストールできない場合はアプリ設定から無効にしてください。"
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Google Playストアからアンインストール"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "設定からアンインストール / 無効化"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "<b>{{app}}</b> アプリを更新すると、互換性問題が解消されます。"
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Google Playストアから更新"
+    },
+    "cordovaWebviewEnable": {
+        "message": "設定でデバイス情報タブに移動し、ビルドバージョン番号を10回タップし『開発者向けオプション』を有効にしてください。その後、開発者向けオプションを検索し、WebView Providerとして<b>{{app}}</b>を選択します。"
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "設定を開く"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "お使いのデバイスは互換性がないようです。他の方法でWebViewを更新してください。"
+    },
+    "cordovaNoWebview": {
+        "message": "WebViewアプリケーションが未インストール状態です"
+    },
+    "cordovaWebviewUsed": {
+        "message": "使用中"
+    },
+    "cordovaExitAppTitle": {
+        "message": "確認中"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Betaflight Configuratorを終了しても良いですか？"
     }
 }

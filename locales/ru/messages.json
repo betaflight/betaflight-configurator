@@ -394,9 +394,6 @@
     "firmwareVersionNotSupported": {
         "message": "Версия этой прошивки <span class=\"message-negative\">не поддерживается</span> данным конфигуратором. Пожалуйста, обновите прошивку, которая поддерживает версию конфигуратора <strong>$1</strong> или выше. Используйте командную строку, чтобы сделать резервную копию прошивки перед тем, как обновлять прошивку. Процедура создания/восстановления резервной копии описана в документации.<br />Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Прошивки, кроме Cleanflight/Betaflight <span class=\"message-negative\">не поддерживаются</span>, но для них доступен режим командной строки."
-    },
     "firmwareUpgradeRequired": {
         "message": "Прошивка в этом устройстве нуждается в обновлении до новой версии. Используйте командную строку, чтобы сделать резервную копию перед обновлением прошивки. Процедура создания/восстановления резервной копии описана в документации.<br />Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
     },
@@ -504,25 +501,20 @@
         "message": "Кликните сюда, чтобы запустить приложение"
     },
     "statusbar_port_utilization": {
-        "message": "Загруженность порта:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Загруженность порта:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Ошибки пакетов:"
+        "message": "Ошибки пакетов:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C ошибки:"
+        "message": "I2C ошибки:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Время цикла:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Загрузка CPU: $1%"
+        "message": "Время цикла:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Пожалуйста, используйте \"Программатор\" для доступа к DFU устройств"
@@ -2393,9 +2385,6 @@
     "sensorsGyroTitle": {
         "message": "Гироскоп - град/с"
     },
-    "sensorsAccelTitle": {
-        "message": "Акселерометр - g"
-    },
     "sensorsMagTitle": {
         "message": "Магнитометр - Ga"
     },
@@ -3793,9 +3782,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Откалиброванная шкала напряжения:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Батарея"
     },
@@ -3876,6 +3862,9 @@
     },
     "powerAmperageHead": {
         "message": "Датчик тока"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Батарея"

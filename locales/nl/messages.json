@@ -314,6 +314,9 @@
     "serialUnrecoverable": {
         "message": "Onherstelbare <span class=\"message-negative\">fout</span> opgetreden in de seriële verbinding, verbinding wordt verbroken..."
     },
+    "serialPortLoading": {
+        "message": "Bezig met laden..."
+    },
     "usbDeviceOpened": {
         "message": "USB-apparaat <span class=\"message-positive\">succesvol</span> geopend met ID: $1"
     },
@@ -526,25 +529,32 @@
         "message": "Klik hier om de applicatie te starten"
     },
     "statusbar_port_utilization": {
-        "message": "Port utilisatie:"
+        "message": "Port utilisatie:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_usage_download": {
-        "message": "D: $1%"
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_packet_error": {
-        "message": "Packet error:"
+        "message": "Packet error:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C error:"
+        "message": "I2C error:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Cycle Tijd:"
+        "message": "Cycle Tijd:",
+        "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "CPU Gebruik: $1%"
+        "message": "CPU belasting:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Gebruik alstublieft de Besturingssysteem flasher om toegang te krijgen tot DFU apparaten"
@@ -1930,6 +1940,12 @@
     "receiverRefreshRateTitle": {
         "message": "Grafiek vernieuwingssnelheid"
     },
+    "receiverResetRefreshRate": {
+        "message": "Resetten"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Vernieuwingsfrequentie opnieuw instellen"
+    },
     "receiverButtonSave": {
         "message": "Opslaan"
     },
@@ -2421,6 +2437,39 @@
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Annuleren"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Akkoord"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Motoren herschikken"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Motoren herschikken"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Klik op de draaiende motor..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Klaar! Controleer de volgorde waarin de motoren gaan draaien door op de afbeelding te klikken."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Ik begrijp de risico's</strong>, <br /> de propellers zijn verwijderd."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Veiligheidswaarschuwing</strong><br /><strong class=\"message-negative\">Verwijder alle propellers om letsel te voorkomen!</strong><br />De motoren zullen gaan <strong>draaien!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Informatiemelding</strong><br />De motoren zullen een voor een gaan draaien. U dient de motor die draait te selecteren. De batterij dient hiervoor aangesloten te zijn en u dient het juiste ESC-protocol geselecteerd te hebben. Dit hulpprogramma kan alleen actieve motoren opnieuw rangschikken. Voor complexere toewijzingen dient u de CLI te gebruiken. Raadpleeg hiervoor de volgende <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflightessel-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-pagina</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Opslaan"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Begin opnieuw"
+    },
     "sensorsInfo": {
         "message": "Houd er rekening mee dat het gebruik van snelle updateperioden en het tegelijkertijd weergeven van meerdere grafieken veel resources vergt.<br />We raden aan om alleen de grafieken weer te geven voor sensoren waarin je geïnteresseerd bent. En daarbij redelijke update periodes te gebruiken."
     },
@@ -2452,7 +2501,7 @@
         "message": "Gyroscope - deg/s"
     },
     "sensorsAccelTitle": {
-        "message": "Versnellingsmeter - g"
+        "message": "Versnellingsmeter - g (graden)"
     },
     "sensorsMagTitle": {
         "message": "Magnetometer - Ga"
@@ -3536,6 +3585,15 @@
     "pidTuningVbatSagValue": {
         "message": "%"
     },
+    "pidTuningThrustLinearization": {
+        "message": "Stuwkracht Linearisatie"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compenseert de niet-lineaire relatie tussen gas en kracht door een omgekeerde motorcurve toe te passen op de motor output. De hoogte van de compensatie kan tussen de 0 en 150 procent liggen."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
+    },
     "pidTuningItermRotation": {
         "message": "I Term Rotatie"
     },
@@ -3854,6 +3912,9 @@
     "powerVoltageHead": {
         "message": "Voltage Meter"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Waarschuwing:</span> Waarden beperkt tot 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3862,9 +3923,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "Gekalibreerde Voltage Schaal:"
-    },
-    "powerAmperageValue": {
-        "message": "$1 A"
     },
     "powerVoltageId10": {
         "message": "Batterij"
@@ -3946,6 +4004,12 @@
     },
     "powerAmperageHead": {
         "message": "Amperage Meter"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Waarschuwing:</span> Waarden beperkt tot 63.5A."
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Batterij"
@@ -4111,6 +4175,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Metriek stelsel",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Brits",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {

@@ -328,9 +328,6 @@
     "firmwareVersionNotSupported": {
         "message": "Firmware ini adalah versi<span class=\"message-negative\">tidak didukung</span>. Silahkan perbarui ke firmware yang mendukung versi api<strong>$1</strong>atau lebih tinggi. Gunakan CLI untuk backup sebelum flashing. Prosedur backup/restore CLI ada di dokumentasi.<br />Atau unduh dan gunakan Betaflight versi lama jika anda belum siap untuk upgrade."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Firmware selain Cleanflight/Betaflight <span class=\"message-negative\">tidak didukung</span>, kecuali untuk mode CLI."
-    },
     "firmwareUpgradeRequired": {
         "message": "Firmware pada perangkat ini perlu ditingkatkan ke versi yang lebih baru. Gunakan CLI untuk backup sebelum flashing. Prosedur backup/restore CLI ada di dokumentasi.<br />Atau unduh dan gunakan Betaflight versi lama jika anda belum siap untuk upgrade."
     },
@@ -417,25 +414,20 @@
         "message": "Klik di sini untuk memulai aplikasi"
     },
     "statusbar_port_utilization": {
-        "message": "Pemakaian Port:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Pemakaian Port:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Kesalahan paket:"
+        "message": "Kesalahan paket:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Kesalahan I2C:"
+        "message": "Kesalahan I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Waktu Siklus:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Beban CPU: $1%"
+        "message": "Waktu Siklus:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Harap gunakan Flasher Firmware untuk mengakses perangkat DFU"
@@ -1885,9 +1877,6 @@
     "sensorsGyroTitle": {
         "message": "Gyroscope - deg/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Accelerometer - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetometer - Ga"
     },
@@ -2898,9 +2887,6 @@
     "powerVoltageValue": {
         "message": "$ 1 V"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Baterai"
     },
@@ -2981,6 +2967,9 @@
     },
     "powerAmperageHead": {
         "message": "Ampere Meter"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Baterai"

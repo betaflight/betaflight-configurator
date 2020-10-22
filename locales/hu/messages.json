@@ -2,10 +2,6 @@
     "translation_version": {
         "message": "0"
     },
-    "windowTitle": {
-        "message": "Betaflight Konfigurátor",
-        "description": "Title of the application window, usually not translated"
-    },
     "yes": {
         "message": "Igen",
         "description": "General Yes message to be used across the application"
@@ -401,9 +397,6 @@
     "firmwareVersionNotSupported": {
         "message": "A firmware verzió nem <span class=\"message-negative\">támogatott</span>. Frissítse olyanra, ami támogatja legalább a <strong>$1</strong> API verziót. Használja a CLI-t biztonsági mentés készítésére égetés előtt. A CLI biztonsági mentés/visszatöltés leírását a dokumentációban találja.<br />Ha nem akar frissíteni, használja a konfigurátor egy régebbi verzióját."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Nincs - CLI mód kivételével a Cleanflight/Betaflight firmware <span class=\"message-negative\">nem támogatott</span>."
-    },
     "firmwareUpgradeRequired": {
         "message": "Az eszközön található firmware-t frissíteni kell. Használja a CLI-t biztonsági mentés készítésére égetés előtt. A CLI biztonsági mentés/visszatöltés leírását a dokumentációban találja.<br />Ha nem akar frissíteni, használja a konfigurátor egy régebbi verzióját."
     },
@@ -511,25 +504,20 @@
         "message": "Az alkalmazás indításához kattintson ide"
     },
     "statusbar_port_utilization": {
-        "message": "Port hasznosítás:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Port hasznosítás:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Csomag hiba:"
+        "message": "Csomag hiba:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C hiba:"
+        "message": "I2C hiba:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Ciklus Időtartam:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU Terhelés: $1%"
+        "message": "Ciklus Időtartam:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Kérjük használja a Firmware Frissítőt, hogy hozzáférjen a DFU eszközökhöz"
@@ -1005,6 +993,12 @@
     },
     "featureVTX": {
         "message": "Videó Adó"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "Állandó légi mód (Airmode)"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Ha ez ki van kapcsolva az 'ANTI GRAVITÁCIÓ'-módot be lehet kapcsolni egy kapcsolóval."
     },
     "featureDYNAMIC_FILTER": {
         "message": "Dinamikus giroszkóp-szűrés"
@@ -2389,9 +2383,6 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroszkóp - fok/s"
-    },
-    "sensorsAccelTitle": {
-        "message": "Gyorsulásmérő - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetométer - Ga"
@@ -3790,9 +3781,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibrált feszültség skála:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Akkumulátor"
     },
@@ -3873,6 +3861,9 @@
     },
     "powerAmperageHead": {
         "message": "Árammérő"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Akkumulátor"
@@ -4523,6 +4514,10 @@
     "osdDescElementFlightDist": {
         "message": "A repülés során megtett távolság."
     },
+    "osdTextElementStickOverlayLeft": {
+        "message": "Ball joystick feltüntetése",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementDisplayName": {
         "message": "Megjelenítendő név",
         "description": "One of the elements of the OSD"
@@ -4719,20 +4714,131 @@
     "osdDescStatEscTemperature": {
         "message": "Max ESC hőmérséklet"
     },
+    "osdTextStatEscRpm": {
+        "message": "ESC RPM maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatEscRpm": {
+        "message": "Maximum ESC RPM"
+    },
+    "osdTextStatMinLinkQuality": {
+        "message": "Minimum jel minőség",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatFlightDistance": {
+        "message": "Repülési távolság",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFlightDistance": {
+        "message": "A repülés során megtett teljes távolság"
+    },
+    "osdTextStatTotalFlights": {
+        "message": "Összes repülések száma",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTotalFlights": {
+        "message": "Összes repülések száma"
+    },
+    "osdTextStatTotalFlightTime": {
+        "message": "Összes repülési idő",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTotalFlightTime": {
+        "message": "Összes repüléssel töltött idő"
+    },
+    "osdTextStatTotalFlightDistance": {
+        "message": "Összes repülési távolság",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTotalFlightDistance": {
+        "message": "Összes utazott távolság"
+    },
+    "osdTextStatMinRssiDbm": {
+        "message": "RSSI minimum dBm (decibel-milliwatt)",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRssiDbm": {
+        "message": "Minimum RSSI dBm (decibel-milliwatt) értéke"
+    },
+    "osdTextStatUnknown": {
+        "message": "Ismeretlen $1",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescribeFontVersion1": {
+        "message": "Betűtípus: 1(Betaflight 4.0 vagy régebbi)"
+    },
+    "osdDescribeFontVersion2": {
+        "message": "Betűtípus: 2(Betaflight 4.1 vagy újabb)"
+    },
+    "osdDescribeFontVersionCUSTOM": {
+        "message": "Betűtípus: felhasználó által biztosított"
+    },
     "osdTimerSource": {
         "message": "Forrás:"
+    },
+    "osdTimerSourceTooltip": {
+        "message": "Válassza ki az időmérő forrását, ez vezérli az időtartamokat és az időtől függő eseményeket"
+    },
+    "osdTimerSourceOptionOnTime": {
+        "message": "Bekapcsolt idő",
+        "description": "One of the options for the source timer. This options shows the amount of time has passed since the battery was plugged"
+    },
+    "osdTimerSourceOptionTotalArmedTime": {
+        "message": "Összes élesített idő",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
     },
     "osdTimerPrecision": {
         "message": "Pontosság:"
     },
+    "osdTimerPrecisionOptionSecond": {
+        "message": "Másodperc",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
     "osdTimerAlarm": {
         "message": "Riasztó:"
+    },
+    "osdTimerAlarmOptionRssi": {
+        "message": "RSSI (jel erőssége)",
+        "description": "Text of the RSSI alarm"
+    },
+    "osdTimerAlarmOptionCapacity": {
+        "message": "Kapacitás",
+        "description": "Text of the capacity alarm"
+    },
+    "osdTimerAlarmOptionAltitude": {
+        "message": "Magasság",
+        "description": "Text of the altitude alarm"
+    },
+    "osdWarningArmingDisabled": {
+        "message": "Jelenti a legerősebb okokat az élesítés ellen"
+    },
+    "osdWarningTextBatteryNotFull": {
+        "message": "Az akkumulátor nincs teljesen feltöltve",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningBatteryNotFull": {
+        "message": "Figyelmeztetések mikor az akkumulátor nincs teljesen feltöltve"
+    },
+    "osdWarningTextBatteryCritical": {
+        "message": "Akkumulátor kritikus állapotban",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningBatteryCritical": {
         "message": "Riasszon, ha az akkumulátorfeszültség a minimális átlagos cellafeszültség alá esik"
     },
     "osdWarningVisualBeeper": {
         "message": "Vizuális csipogó (4 villogó csillag)."
+    },
+    "osdWarningTextCrashFlipMode": {
+        "message": "Lezuhanás utáni felfordulás(teknős mód)",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningCrashFlipMode": {
+        "message": "Figyelmezteti, ha a Lezuhanás utáni felfordulás(teknős mód) be van kapcsolva"
+    },
+    "osdWarningTextEscFail": {
+        "message": "ESC(elektronikus sebesség vezérlő) hiba",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningEscFail": {
         "message": "Felsorolja a hibás ESC-k / motorok listáját (az RPM vagy a hőmérséklet túllép a beállított küszöbértéken)"
@@ -5063,9 +5169,17 @@
         "message": "A VTX konfigurációs fájl<span class=\"message-positive\"> betöltve </span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadClipboardOk": {
+        "message": "VTX(videó adó) konfigurációs információ <span class=\"message-positive\"> betölve </span> a vágólapról",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
     "vtxButtonSaveFile": {
         "message": "Lementés fájlként",
         "description": "Save to file button in the VTX tab"
+    },
+    "vtxButtonSaveLua": {
+        "message": "Lua script mentése",
+        "description": "Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
         "message": "Betöltés fájlból",
@@ -5144,6 +5258,9 @@
     "configurationBatteryCurrent": {
         "message": "Akkumulátor Áramerősség"
     },
+    "configurationBatteryMeterType": {
+        "message": "Akkumulátor-mérő típusa"
+    },
     "configurationBatteryMinimum": {
         "message": "Minimális Cellafeszültség"
     },
@@ -5156,8 +5273,17 @@
     "configurationBatteryScale": {
         "message": "Feszültségskála"
     },
+    "configurationCurrentMeterType": {
+        "message": "Áramerősség mérő típusa"
+    },
     "configurationCurrent": {
         "message": "Áramerősség Szenzor"
+    },
+    "configurationCurrentScale": {
+        "message": "Átméterezi a kimeneti feszültséget milliamperre [1/10th mV/A]"
+    },
+    "configurationCurrentOffset": {
+        "message": "Eltolás millivoltos lépésekben\n "
     },
     "pidTuningProfile": {
         "message": "Profil"
@@ -5266,6 +5392,24 @@
     },
     "pidTuningRatesTypeTip": {
         "message": "A Rate típus módosítása megváltoztatja az aránygörbét és a beállítási módot"
+    },
+    "pidTuningRateRaceflight": {
+        "message": "Acro-mód +"
+    },
+    "dialogRatesTypeConfirm": {
+        "message": "Módosítás"
+    },
+    "gpsSbasEuropeanEGNOS": {
+        "message": "Európai EGNOS",
+        "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "gpsSbasNorthAmericanWAAS": {
+        "message": "Észak-amerikai WAAS",
+        "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "gpsSbasJapaneseMSAS": {
+        "message": "Japán MSAS",
+        "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasIndianGAGAN": {
         "message": "Indiai GAGAN",
