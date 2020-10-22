@@ -574,25 +574,20 @@
         "message": "单击这里运行程序"
     },
     "statusbar_port_utilization": {
-        "message": "端口利用率："
-    },
-    "statusbar_usage_download": {
-        "message": "下行: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "上行: $1%"
+        "message": "端口利用率：",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "数据包错误:"
+        "message": "数据包错误:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C 错误:"
+        "message": "I2C 错误:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "循环时间:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU 负载: $1%"
+        "message": "循环时间:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "请使用固件烧写器来访问 DFU 设备"
