@@ -513,25 +513,20 @@
         "message": "アプリケーションを起動するにはここをクリック"
     },
     "statusbar_port_utilization": {
-        "message": "ポート使用率:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "ポート使用率:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "パケットエラー:"
+        "message": "パケットエラー:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C エラー:"
+        "message": "I2C エラー:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "サイクル時間:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU使用率: $1%"
+        "message": "サイクル時間:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "DFUデバイスへのアクセスはファームフラッシャーを使用してください"
