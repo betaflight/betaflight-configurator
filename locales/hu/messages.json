@@ -504,25 +504,20 @@
         "message": "Az alkalmazás indításához kattintson ide"
     },
     "statusbar_port_utilization": {
-        "message": "Port hasznosítás:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Port hasznosítás:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Csomag hiba:"
+        "message": "Csomag hiba:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C hiba:"
+        "message": "I2C hiba:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Ciklus Időtartam:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU Terhelés: $1%"
+        "message": "Ciklus Időtartam:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Kérjük használja a Firmware Frissítőt, hogy hozzáférjen a DFU eszközökhöz"
