@@ -510,25 +510,20 @@
         "message": "單擊這裡運行程式"
     },
     "statusbar_port_utilization": {
-        "message": "埠口利用率："
-    },
-    "statusbar_usage_download": {
-        "message": "下行: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "上行: $1%"
+        "message": "埠口利用率：",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "數據包錯誤:"
+        "message": "數據包錯誤:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C 錯誤:"
+        "message": "I2C 錯誤:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "循環時間:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU 負載: $1%"
+        "message": "循環時間:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "請使用固件燒寫器來訪問 DFU 設備"
