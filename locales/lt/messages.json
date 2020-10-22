@@ -330,25 +330,20 @@
         "message": "Konfigūratorius"
     },
     "statusbar_port_utilization": {
-        "message": "Prievado apkrova:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Prievado apkrova:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Paketų klaidos:"
+        "message": "Paketų klaidos:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C klaidos:"
+        "message": "I2C klaidos:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Ciklo laikas:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU Apkrova: $1%"
+        "message": "Ciklo laikas:",
+        "description": "Cycle time text shown in the status bar"
     },
     "defaultWelcomeIntro": {
         "message": "Sveiki atvykę į <strong>Betaflight - Configurator</strong>, programa skirta supaprastinti Jūsų skrydžio valdiklio naujinimus, konfigūravimą ir derinimą."
