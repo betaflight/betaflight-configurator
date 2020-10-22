@@ -2759,10 +2759,13 @@
         "message": "Save flash to file..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Save flash to file... (deprecated)"
+        "message": "Save flash to file... (unsupported)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Directly saving flash to file is slow and inherently prone to error / file corruption.<br>In some cases it will work for small files, but this is not supported and support requests for it will be closed without comment - use Mass Storage mode instead."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Saving blackbox logs through the configurator is slow and relatively prone to errors. It is recommended that you instead use '<b>$t(onboardLoggingRebootMscText.message)</b>' (below) to activate the Mass Storage Mode, and access your flight controller as a storage device to download the log files."
+        "message": "This method is slow and inherently prone to error / file corruption, because the MSP connection itself has intrinsic, fundamental limitations that make it unsuitable for file transfers. It may work for small log files only. Do not create support requests if file transfers fail when saved using this method. The recommended method is to use '<b>$t(onboardLoggingRebootMscText.message)</b>' (below) to activate the Mass Storage Mode, and access your flight controller as a storage device to download the log files."
     },
     "dataflashButtonErase": {
         "message": "Erase flash"
@@ -3057,9 +3060,6 @@
     },
     "unstableFirmwareAcknoledgementFlash": {
         "message": "Flash"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Detected: <strong>$1</strong> - previous device still flashing, please replug to try again"
     },
     "firmwareFlasherPreviousDevice": {
         "message": "Detected: <strong>$1</strong> - previous device still flashing, please replug to try again"
