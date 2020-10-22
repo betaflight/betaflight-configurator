@@ -516,25 +516,20 @@
         "message": "Klikatu hemen aplikazioa hasteko"
     },
     "statusbar_port_utilization": {
-        "message": "Atakaren erabilera:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Atakaren erabilera:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Pakete errorea:"
+        "message": "Pakete errorea:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C errorea:"
+        "message": "I2C errorea:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Zikloaren denbora:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU karga: $1%"
+        "message": "Zikloaren denbora:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Mesedez, Firmware Flasher erabili DFU gailuak sartzeko"
