@@ -453,25 +453,20 @@
         "message": "Nospied šeit, lai palaistu lietotni"
     },
     "statusbar_port_utilization": {
-        "message": "Porta noslodze:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1 %"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Porta noslodze:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Pakešu kļūda:"
+        "message": "Pakešu kļūda:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C kļūda:"
+        "message": "I2C kļūda:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Cikla laiks:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU noslodze: $1%"
+        "message": "Cikla laiks:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Lūdzu, izmantojiet programmatoru. lai piekļūtu DFU ierīcei"
