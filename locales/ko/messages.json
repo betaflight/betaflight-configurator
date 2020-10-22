@@ -581,25 +581,32 @@
         "message": "어플리케이션을 시작하려면 여기를 클릭하세요."
     },
     "statusbar_port_utilization": {
-        "message": "포트 사용률:"
+        "message": "포트 사용률:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_usage_download": {
-        "message": "D: $1%"
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_packet_error": {
-        "message": "패킷 오류:"
+        "message": "패킷 오류:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C 오류:"
+        "message": "I2C 오류:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "사이클 시간:"
+        "message": "사이클 시간:",
+        "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "CPU 로드: $1%"
+        "message": "CPU 로드:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "DFU 기기에 접속하려면 펌웨어 플래시 도구를 이용하세요."
