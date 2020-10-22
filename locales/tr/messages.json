@@ -122,15 +122,6 @@
     "versionLabelConfigurator": {
         "message": "Yapılandırıcı"
     },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU Yükü: $1%"
-    },
     "dfu_erased_kilobytes": {
         "message": "$1 kB flaş <span class=\"message-positive\">başarıyla</span> silindi"
     },
