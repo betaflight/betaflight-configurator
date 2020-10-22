@@ -20,8 +20,10 @@ const languageFallback = {
 i18n.init = function(cb) {
     getStoredUserLocale(function(userLanguage) {
 
+        const I18NextFsBackend = require('i18next-fs-backend');
+
         i18next
-            .use(i18nextHttpBackend)
+            .use(I18NextFsBackend)
             .init({
                 lng: userLanguage,
                 getAsync: false,
@@ -30,9 +32,10 @@ i18n.init = function(cb) {
                 defaultNS:['messages'],
                 fallbackLng: languageFallback,
                 backend: {
-                    loadPath: '/_locales/{{lng}}/{{ns}}.json',
+                    loadPath: './_locales/{{lng}}/{{ns}}.json',
                     parse: i18n.parseInputFile,
                 },
+                initImmediate: false,
             },
             function(err) {
                 if (err !== undefined) {
