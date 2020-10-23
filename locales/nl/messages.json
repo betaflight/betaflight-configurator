@@ -2645,10 +2645,7 @@
         "message": "Sla flash op in bestand..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Flash opslaan in bestand... (verouderd)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Het opslaan van blackbox-logs via de configurator is traag en relatief gevoelig voor fouten. Het is aanbevolen om in plaats daarvan '<b>$t(onboardLoggingRebootMscText.message)</b>' te gebruiken. Met behulp hiervan is het mogelijk om Mass Storage Mode te activeren en toegang te krijgen tot uw vlucht controller als opslagapparaat. De logbestanden zijn dan eenvoudig te downloaden."
+        "message": "Flash opslaan in bestand... (niet ondersteund)"
     },
     "dataflashButtonErase": {
         "message": "Flash wissen"
