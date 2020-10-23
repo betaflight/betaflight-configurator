@@ -516,6 +516,14 @@
         "message": "ポート使用率:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "パケットエラー:",
         "description": "Packet error text shown in the status bar"
@@ -527,6 +535,10 @@
     "statusbar_cycle_time": {
         "message": "サイクル時間:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "CPU使用率:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "DFUデバイスへのアクセスはファームフラッシャーを使用してください"
@@ -2617,10 +2629,13 @@
         "message": "ファイルに保存します..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "フラッシュメモリを保存... (廃止予定)"
+        "message": "フラッシュデータをファイルへ保存... (未サポート)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "フラッシュされているデータを直接ファイルへ保存するのは時間がかかり、本質的にエラーやファイル破損の原因になります。<br>場合によっては小さなファイルなら動作することはありますが、これらはサポートされておらず、サポートにおける問い合わせはコメントなくクローズされます - 代わりに大容量ストレージモードをご利用ください。"
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Betaflight Configuratorを使ってブラックボックスログを保存するのは、時間がかかり比較的エラーが発生しやすくなります。代わりに '<b>$t(onboardLoggingRebootMscText.message)</b>' (上記) を使用して大容量ストレージモードを有効にし、FCにアクセスしてログをダウンロードする記憶媒体とすることをお勧めします。"
+        "message": "この方法は時間がかかり、エラーやファイル破損を起こしやすくなります。それはMSP接続自体、本質的にファイル転送に不向きな基本的制約がございます。この方法は小さなログファイルに対してだけ機能するかもしれませんが、保存時にファイル転送が失敗した場合でも、サポートへの問い合わせは行わないでください。推奨方法は '<b>$t(onboardLoggingRebootMscText.message)</b>' (下記)を使用して大容量ストレージモードを有効にし、ログファイルをダウンロードするためのストレージデバイスとしてフライトコントローラにアクセスします。"
     },
     "dataflashButtonErase": {
         "message": "データを消去"
@@ -3633,7 +3648,7 @@
         "message": "動的アイドル値 [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "動的アイドル値は、低回転数での制御を改善しモーターの非同期リスクを軽減します。プロペラのスピードアップまたはスローダウンによって引き起こされる問題を修正し、PID制御権限、安定性、モーター減速性および応答性を改善します。動的アイドル回転数は、Dshotアイドル値の回転数の約20%に設定する必要があります。($t(tabMotorTesting.message)タブを参照) 通常DShotアイドル値をデフォルトから変更する必要はありません。より長い制御不能時間を戻したい場合は、DShotアイドル値と最小回転数を一緒に下げる必要があります。<br><br>詳細は<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
+        "message": "動的アイドル値は、低回転数での制御を改善しモーターの非同期リスクを軽減します。プロペラのスピードアップまたはスローダウンによって引き起こされる問題を修正し、PID制御権限、安定性、モーター減速性および応答性を改善します。動的アイドル回転数は、Dshotアイドル値の回転数の約80%に設定する必要があります。($t(tabMotorTesting.message)タブを参照) 通常DShotアイドル値をデフォルトから変更する必要はありません。より長い制御不能時間を戻したい場合は、DShotアイドル値と最小回転数を一緒に下げる必要があります。<br><br>詳細は<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "アクロトレーナー 角度制限"
