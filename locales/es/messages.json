@@ -2629,10 +2629,13 @@
         "message": "Guardar flash a archivo..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Guardar flash a archivo... (obsoleto)"
+        "message": "Guardar flash en archivo... (sin soporte)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Guardar directamente la flash en archivo es lento e inherentemente propenso a error / corrupción de archivo.<br>En algunos casos funcionará para archivos pequeños, pero esto no está soportado y las peticiones de soporte se cerrarán sin comentarios - utiliza el modo de Almacenamiento Masivo en su lugar."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Guardar registros de blackbox a través del configurador es lento y relativamente propenso a errores. Se recomienda que en su lugar uses '<b>$t(onboardLoggingRebootMscText.message)</b>' (debajo) para activar el Modo de Almacenamiento Masivo, y accedas a tu controlador de vuelo como un un dispositivo de almacenamiento para descargar los archivos de registro."
+        "message": "Este método es lento e inherentemente propenso a error / corrupción del archivo, porque la conexión MSP en sí misma tiene intrínsecas, limitaciones fundamentales que no la hacen adecuada para la transferencia de archivos. Puede que funcione para pequeños archivos de registro. No crees peticiones de soporte si las transferencias de archivos fallan al guardarse usando este método. El método recomendado es utilizar '<b>$t(onboardLoggingRebootMscText.message)</b>' (debajo) para activar el Modo de Almacenamiento Masivo y acceder a tu controlador de vuelo como un dispositivo de almacenamiento para descargar los archivos de registro."
     },
     "dataflashButtonErase": {
         "message": "Borrar flash"
