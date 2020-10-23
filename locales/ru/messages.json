@@ -2526,12 +2526,6 @@
     "dataflashButtonSaveFile": {
         "message": "Сохранено в файл..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Сохранить в файл... (устарело)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Сохранение журналов черного ящика из конфигуратора происходит медленно и с возможными ошибками. Рекомендуется вместо этого использовать '<b>$t(onboardLoggingRebootMscText.message)</b> для включения режима передачи данных и доступа к вашему полетному контроллеру как к устройству хранения для загрузки файлов журнала."
-    },
     "dataflashButtonErase": {
         "message": "Стереть флэш"
     },
