@@ -2613,12 +2613,6 @@
     "dataflashButtonSaveFile": {
         "message": "Salvar memória em um arquivo..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Salvar memória em um arquivo... (Depreciado)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Salvar logs do Blackbox através do configurador é lento de pode causar erros. É recomendado que você utilize a função '<b>$t(onboardLoggingRebootMscText.message)</b>' abaixo para ativar o modo de Armazenamento e então acesse seu controlador de voo e descarregue seus arquivos de log."
-    },
     "dataflashButtonErase": {
         "message": "Apagar flash"
     },
