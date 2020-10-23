@@ -2704,12 +2704,6 @@
     "dataflashButtonSaveFile": {
         "message": "Gardar flash a arquivo..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Guardar flash a arquivo... (obsoleto)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Gardar os rexistros da caixa negra a través do configurador é lento e propenso a erros. Recoméndase que en cambio use<b>$t(onboardLoggingRebootMscText.message)</b> '(abaixo) para activar o modo de almacenamento masivo, e acceda ao controlador de voo como dispositivo de almacenamento para descargar os ficheiros de rexistro."
-    },
     "dataflashButtonErase": {
         "message": "Borrar flash"
     },
