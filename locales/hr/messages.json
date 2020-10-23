@@ -2285,12 +2285,6 @@
     "dataflashButtonSaveFile": {
         "message": "Spremanje memorije čipa u datoteku..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Spremi memoriju u datoteku... (''deprecated'')"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Spremanje zapisa crne kutije kroz konfigurator je sporo i podložno greškama. Preporučuje se da koristite '<b>$t(onboardLoggingRebootMscText.message)</b>' (ispod) kako biste aktivirali način rada s masovnom pohranom da pristupite memorijskom čipu ili karitici na kontroleru leta da preuzmete zapise direktno."
-    },
     "dataflashButtonErase": {
         "message": "Obriši flash memoriju"
     },
