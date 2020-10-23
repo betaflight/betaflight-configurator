@@ -2635,12 +2635,6 @@
     "dataflashButtonSaveFile": {
         "message": "保存闪存数据到文件"
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "将闪存保存到文件...(不推荐使用)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "通过配置程序保存黑盒日志的速度很慢且相对容易出错。建议您改用 '<b>$t(onboardLoggingRebootMscText.message)</b>' (下图) 来激活大容量存储模式, 并将您的飞控作为存储设备访问以下载日志文件。"
-    },
     "dataflashButtonErase": {
         "message": "擦除闪存"
     },
