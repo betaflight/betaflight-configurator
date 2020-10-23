@@ -2637,10 +2637,13 @@
         "message": "Desa la flash a un arxiu..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Desa el flash al fitxer... (obsolet)"
+        "message": "Desa el flash al fitxer... (no soportat)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Desar directament el flaix al fitxer és lent i és inherent a la corrupció d’errors o fitxers. <br>En alguns casos funcionarà per a fitxers petits, però no està soportat i les sol·licituds d’assistència es tancaran sense comentaris - Utilitzeu el mode d’emmagatzematge massiu en el seu lloc."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Desar els registres de blackbox a través del configurador és lent i relativament propens a errors. Es recomana que utilitzeu '<b>$t(onboardLoggingRebootMscText.message)</b>' (a continuació) per activar el mode emmagatzematge massiu i accedir al controlador de vol com a dispositiu d'emmagatzematge per descarregar els fitxers de registre."
+        "message": "Aquest mètode és lent i inherent a la corrupció d'errors / fitxers corruptes, ja que la connexió MSP té limitacions fonamentals intrínseces que la fan inadequada per a les transferències de fitxers. Pot funcionar només per a fitxers de registre petits. No creeu sol·licituds d'assistència si les transferències de fitxers fallen quan es desen amb aquest mètode. El mètode recomanat és utilitzar '<b> $t(onboardLoggingRebootMscText.message)</b>' (a sota) per activar el mode d'emmagatzematge massiu i accedir al controlador de vol com a dispositiu d'emmagatzematge per descarregar els fitxers de registre."
     },
     "dataflashButtonErase": {
         "message": "Esborra la memòria"
