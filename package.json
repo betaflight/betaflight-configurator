@@ -5,7 +5,6 @@
   "version": "10.8.0",
   "main": "main.html",
   "chromium-args": "--disable-features=nw2",
-  "default_locale": "en",
   "scripts": {
     "start": "run-script-os",
     "start:default": "NODE_ENV=development NW_PRE_ARGS=--load-extension='./node_modules/nw-vue-devtools-prebuilt/extension' gulp debug",
