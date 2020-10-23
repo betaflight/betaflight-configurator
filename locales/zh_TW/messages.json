@@ -2571,12 +2571,6 @@
     "dataflashButtonSaveFile": {
         "message": "保存快閃記憶體數據到文件"
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "將快閃記憶體保存到文件…（不讚成使用）"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "通過配置程式保存黑盒日誌的速度很慢且相對容易出錯。建議您該用 ‘<b>$t(onboardLoggingRebootMscText.message)</b>’ (下圖) 來激活大容量存儲模式，並將您的飛控作為存儲設備訪問以下載日誌文件。"
-    },
     "dataflashButtonErase": {
         "message": "擦除快閃記憶體"
     },
