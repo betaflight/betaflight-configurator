@@ -2513,12 +2513,6 @@
     "dataflashButtonSaveFile": {
         "message": "Inhalt in Datei speichern"
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Flashspeicher-Inhalt in Datei speichern... (veraltet)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Das Speichern von Blackbox-Logs über den Konfigurator ist langsam und relativ anfällig für Fehler. Es wird empfohlen, stattdessen '<b>$t(onboardLoggingRebootMscText.message)</b>' (unten) zu verwenden, um den Massenspeichermodus zu aktivieren und auf den Flugcontroller als Speichergerät zuzugreifen, um die Logdateien herunterzuladen."
-    },
     "dataflashButtonErase": {
         "message": "Speicher löschen"
     },
