@@ -2240,12 +2240,6 @@
     "dataflashButtonSaveFile": {
         "message": "Saglabāt atmiņu failā..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Saglabāt atmiņu failā... (novecojis)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Saglabāt melnās kastes ierakstus caur konfiguratoru ir lēni un ar lielu varbūtību radīs kļūdu. Ir ieteicams vietā lietot '<b>$t(onboardLoggingRebootMscText.message)</b>' lai aktivizētu Lielapjoma atmiņas režīmu, un piekļūt jūsu lidojuma kontrolierim kā atmiņas ierīci, lai lejuplādētu ierakstus."
-    },
     "dataflashButtonErase": {
         "message": "Dzēst atmiņu"
     },
