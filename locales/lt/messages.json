@@ -1357,12 +1357,6 @@
     "dataflashButtonSaveFile": {
         "message": "Išsaugoti atminties turinį į failą..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Išsaugoti atminties turinį į failą... (nenaudojamas)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Blackbox duomenų saugojimas per konfigūratoriu yra lėtas ir gali turėti klaidų. Vietoj jo rekomenduojama naudoti '<b>$t(onboardLoggingRebootMscText.message)</b>' (žemiau) kuris aktyvuoja 'Mass Storage Mode', ir taip turėti galimybę pasiekti savo skrydžio valdiklio atmintį, kaip įprastą USB duomenų ksbpiklį tam, kad parsisiusti įrašytų ataskaitų failus."
-    },
     "dataflashButtonErase": {
         "message": "Ištrinti atmintį"
     },
