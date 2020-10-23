@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "退出匿名的统计数据收集"
     },
+    "cordovaForceComputerUI": {
+        "message": "停用手机界面并切换至计算机界面"
+    },
     "language_changed": {
         "message": "语言已经更改"
     },
@@ -262,6 +265,9 @@
     },
     "tabHelp": {
         "message": "设置文档 & 支持"
+    },
+    "tabOptions": {
+        "message": "选项"
     },
     "tabSetup": {
         "message": "设置"
@@ -459,7 +465,7 @@
         "message": "Betaflight 配置程序<span class=\"message-negative\">不支持</span>该固件版本。请更新固件以确保其API版本为 <strong>$1</strong> 或者更高。更新固件之前，使用 CLI 来备份设置。使用 CLI 进行备份/恢复的具体操作流程请参考Betaflight文档。<br />如果不想将固件更新到最新版本，可以下载使用支持该固件的旧版配置程序。"
     },
     "firmwareTypeNotSupported": {
-        "message": "<span class=\"message-negative\">不支持</span>该版本的 Cleanflight/Betaflight 固件，只能使用CLI模式。"
+        "message": "<span class=\"message-negative\">不支持</span>非 Betaflight 固件，只能使用 CLI 模式"
     },
     "firmwareUpgradeRequired": {
         "message": "需要将此设备上的固件更新到新版本，更新固件之前，使用 CLI 来备份设置。用 CLI 进行备份/恢复的具体操作流程请参考 Betaflight 文档。<br />如果不想将固件更新到最新版本，可以下载使用支持该固件的旧版配置程序。"
@@ -568,25 +574,20 @@
         "message": "单击这里运行程序"
     },
     "statusbar_port_utilization": {
-        "message": "端口利用率："
-    },
-    "statusbar_usage_download": {
-        "message": "下行: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "上行: $1%"
+        "message": "端口利用率：",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "数据包错误:"
+        "message": "数据包错误:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C 错误:"
+        "message": "I2C 错误:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "循环时间:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU 负载: $1%"
+        "message": "循环时间:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "请使用固件烧写器来访问 DFU 设备"
@@ -1063,6 +1064,12 @@
     "featureVTX": {
         "message": "图传"
     },
+    "featureANTI_GRAVITY": {
+        "message": "永久启用反重力"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "如果禁用，那么“反重力”模式可以由开关来启用。"
+    },
     "featureDYNAMIC_FILTER": {
         "message": "动态陷波滤波"
     },
@@ -1403,6 +1410,15 @@
     "configurationButtonSave": {
         "message": "保存并重启"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "动态陷波器数值更改"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>警告: 部分动态陷波器的数值已被更改为默认值</b></span>因为RPM滤波器已被激活/停用。<br>请在飞行前进行检查。"
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "确认"
+    },
     "portsIdentifier": {
         "message": "标识符"
     },
@@ -1699,6 +1715,33 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 强烈不建议将D设定点转换设置为0到0.1之间的值。这样做可能会导致不稳定，以及降低摇杆在穿过中点时的响应速度。</span>"
+    },
+    "pidTuningFfInterpolateSp": {
+        "message": "前馈插值"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "下列选项将会为从竞速/激进到平滑/高清的各种飞行风格提供良好的前馈参数。<br><br>模式：竞速设置应设置为无平均，竞速/快速花飞应设置为2点平均，高清录像应设置为3点平均，高清电影风平滑飞行应设置为4点平均。<br><br>平滑度：限制传入的遥控信号的帧间更改量，若要获得更平滑的FF信号请增加，若要获得更激进的FF响应请减少。<br><br>增压：当摇杆快速运动时帮助克服电机响应延迟，可能会导致抖动。HD请尝试将其设置为10，竞速设置为20。更高的值可能更适用于低推重比飞机，最高至30，但有可能会造成轻微超调或抖动。"
+    },
+    "pidTuningFfInterpolate": {
+        "message": "模式"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "无平均"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "2点平均"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "3点平均"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "4点平均"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "平滑度"
+    },
+    "pidTuningFfBoost": {
+        "message": "增压"
     },
     "pidTuningProportional": {
         "message": "Proportional"
@@ -2450,9 +2493,6 @@
     },
     "sensorsGyroTitle": {
         "message": "陀螺仪 - 度/秒"
-    },
-    "sensorsAccelTitle": {
-        "message": "加速度计 - G"
     },
     "sensorsMagTitle": {
         "message": "磁力计 - Ga"
@@ -3503,6 +3543,9 @@
     "pidTuningDTermLowpassDynType": {
         "message": "D Term 低通滤波器1动态滤波器类型"
     },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "D Term 低通滤波器1动态曲线指数"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term 陷波滤波器"
     },
@@ -3523,6 +3566,15 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "当电池电压变低时， 飞控自动增加PID数值来补偿动力的损失。这会在整个飞行过程中提供一个更一致的飞行特性。该补偿数值通过在 ‘$t(tabPower.message)‘的 ‘$t(powerBatteryMaximum.message)’ 计算而得，所以请确保正确设置了该数值。"
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "电池压降补偿"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "通过补偿电池电压，在可用的电池电压范围内，提供一致的油门和PID性能。补偿量可以是0至100%之间任意数值。推荐使用全额补偿（100%）。<br><br>访问<a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">这个wiki词条</a>以获取更多信息。"
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I 值旋转"
@@ -3842,6 +3894,9 @@
     "powerVoltageHead": {
         "message": "电压计"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">警告:</span> 此值已被限制为 25.5A"
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3850,9 +3905,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "校准电压缩放:"
-    },
-    "powerAmperageValue": {
-        "message": "$1 A"
     },
     "powerVoltageId10": {
         "message": "电池"
@@ -3934,6 +3986,12 @@
     },
     "powerAmperageHead": {
         "message": "电流计"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">警告:</span> 此值已被限制为 63.5A"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "电池"
@@ -5611,5 +5669,74 @@
     "gpsSbasNone": {
         "message": "无",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "文件名"
+    },
+    "dialogFileNameDescription": {
+        "message": "该文件将保存在您内部存储的 '{{folder}} 文件夹中。"
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "该文件已经存在。"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "是否覆盖？"
+    },
+    "cordovaCheckingWebview": {
+        "message": "正在检查 webview 应用程序..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "不兼容的 webview"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "您必须更新您设备的 webview 才能使用配置程序。"
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "下面的工具旨在帮助您安装一个新的 webview 或更新已安装的 webview。"
+    },
+    "cordovaAvailableWebviews": {
+        "message": "您设备上可用的 webview 应用程序"
+    },
+    "cordovaWebviewInstall": {
+        "message": "安装 <b>{{app}}</b> 应用程序可以解决此兼容性问题。"
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "从 Google Play 安装"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "卸载 <b>{{app}}</b> 应用程序可以解决此兼容性问题。如果您无法卸载它，请尝试从应用程序设置中禁用它。"
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "从 Google Play 卸载"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "从设置中卸载 / 禁用"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "更新 <b>{{app}}</b> 应用程序可以解决此兼容性问题。"
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "从 Google Play 更新"
+    },
+    "cordovaWebviewEnable": {
+        "message": "在设置中进入您的设备信息页面，点击构建版本数字10次以启用“开发者选项”。 在此之后，搜索并进入开发者选项，并选择 <b>{{app}}</b> 作为 webview 提供者。"
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "打开设置"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "您的设备似乎不兼容。请尝试搜索其他方式来更新您的 webview"
+    },
+    "cordovaNoWebview": {
+        "message": "没有安装/启用 webview"
+    },
+    "cordovaWebviewUsed": {
+        "message": "已使用"
+    },
+    "cordovaExitAppTitle": {
+        "message": "确认"
+    },
+    "cordovaExitAppMessage": {
+        "message": "你确定要关闭配置程序吗？"
     }
 }

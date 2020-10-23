@@ -373,9 +373,6 @@
     "firmwareVersionNotSupported": {
         "message": "Ova verzija firmwarea <span class=\"message-negative\">nije podržana</span>. Molimo ažurirajte firmware na onaj koji podržava API verziju <strong>$1</strong> ili kasniju. Koristite CLI za stvaranje sigurnosne kopije prije ažuriranja. CLI procedura za sigurnosnu kopiju je u dokumentaciji. <br />U suprotnom, preuzmite i koristite stariju verziju konfiguratora ako niste spremni na ažuriranje firmwarea."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Firmware koji nisu dio Betaflighta/Cleanflighta <span class=\"message-negative\">nisu podržani</span>, osim u CLI sučelju."
-    },
     "firmwareUpgradeRequired": {
         "message": "Firmware na ovom uređaju potrebno je ažurirati na noviju verziju. Koristite CLI za stvaranje sigurnosne kopije prije ažuriranja. CLI procedura za sigurnosnu kopiju je u dokumentaciji. <br />U suprotnom, preuzmite i koristite stariju verziju konfiguratora ako niste spremni za ažuriranje firmwarea."
     },
@@ -465,25 +462,20 @@
         "message": "Kliknite ovdje da biste pokrenuli aplikaciju"
     },
     "statusbar_port_utilization": {
-        "message": "Iskorištenost porta:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Iskorištenost porta:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Pogreške paketa:"
+        "message": "Pogreške paketa:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C greška:"
+        "message": "I2C greška:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Vrijeme ciklusa:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU opterećenje: $1%"
+        "message": "Vrijeme ciklusa:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Molimo koristite alat za ažuriranje firmware kako biste pristupili uređajima u DFU načinu rada"
@@ -2164,9 +2156,6 @@
     "sensorsGyroTitle": {
         "message": "Žiroskop - stupnjeva/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Akcelerometar -g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetometar - Ga"
     },
@@ -3362,9 +3351,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibririrana skala napona:"
     },
-    "powerAmperageValue": {
-        "message": "$1 V"
-    },
     "powerVoltageId10": {
         "message": "Baterija"
     },
@@ -3445,6 +3431,9 @@
     },
     "powerAmperageHead": {
         "message": "Mjerač struje"
+    },
+    "powerAmperageValue": {
+        "message": "$1 V"
     },
     "powerAmperageId10": {
         "message": "Baterija"

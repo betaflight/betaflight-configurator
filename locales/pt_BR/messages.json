@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "Não participar da coleta anônima de dados estatísticos"
     },
+    "cordovaForceComputerUI": {
+        "message": "Utilizar interface para computadores em vez da interface para celulares"
+    },
     "language_changed": {
         "message": "Idioma foi alterado"
     },
@@ -199,6 +202,9 @@
     "tabHelp": {
         "message": "Documentação & Suporte"
     },
+    "tabOptions": {
+        "message": "Opções"
+    },
     "tabSetup": {
         "message": "Opções"
     },
@@ -291,6 +297,9 @@
     },
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Falha</span> irrecuperável da conexão serial, desconectando..."
+    },
+    "serialPortLoading": {
+        "message": "Carregando ..."
     },
     "usbDeviceOpened": {
         "message": "Dispositivo USB aberto com <span class=\"message-positive\">sucesso</span> com ID: $1"
@@ -395,7 +404,7 @@
         "message": "Esta versão do firmware <span class=\"message-negative\">não é suportada</span>. Por favor atualize para um firmware que suporte a versão <strong>$1</strong> ou superior da API. Use a Linha de comandos (CLI) para fazer um backup antes de atualizar. O procedimento para fazer uma cópia de segurança/restaurar encontra-se na documentação.<br />Como alternativa baixe e use uma versão antiga do configurador caso não esteja preparado para efetuar a atualização."
     },
     "firmwareTypeNotSupported": {
-        "message": "Firmware que não seja Cleanflight ou Betaflight <span class=\"message-negative\">não é suportado</span>, exceto por Linha de comandos (CLI)."
+        "message": "Firmware Não-Betaflight <span class=\"message-negative\">não é suportado</span>, exceto no modo Linha de Comandos (CLI)."
     },
     "firmwareUpgradeRequired": {
         "message": "O firmware deste dispositivo precisa ser atualizado para uma versão mais recente. Use a Linha de comandos (CLI) para realizar uma cópia de segurança antes da atualização. O procedimento para fazer uma cópia de segurança/restaurar encontra-se na documentação.<br />Como alternativa baixe e use uma versão antiga do configurador, caso não esteja preparado para efetuar a atualização."
@@ -504,25 +513,20 @@
         "message": "Pressione aqui para iniciar a aplicação"
     },
     "statusbar_port_utilization": {
-        "message": "Utilização da porta:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Utilização da porta:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Erros de pacote:"
+        "message": "Erros de pacote:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Erros I2C:"
+        "message": "Erros I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Tempo de ciclo:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Carga da CPU: $1%"
+        "message": "Tempo de ciclo:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Por favor use a opção de atualização de firmware para acessar dispositivos DFU"
@@ -1345,6 +1349,15 @@
     "configurationButtonSave": {
         "message": "Salvar e reiniciar"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Valores do Filtro Notch Dinâmico alterados"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>ATENÇÃO: Alguns valores do filtro notch dinâmico foram revertidos para os valores padrão</b></span> porque o Filtro RPM foi ativado/desativado.<br> Por favor, confira antes de voar."
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
+    },
     "portsIdentifier": {
         "message": "Identificador"
     },
@@ -1642,6 +1655,33 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Usar a Transição do ponto D com um valor maior que 0 e menor do que 0.1 não é recomendado. Fazer isso pode causar instabilidade e resposta reduzida do stick conforme o stick atravessa a posição central.</span>"
     },
+    "pidTuningFfInterpolateSp": {
+        "message": "Interpolação FF"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "As seguintes opções ajustam o Feed Forward entre modos de corrida/agressivo a modos suave/cinemática.<br><br> Selecione o modo Sem Média para corridas, Média 2 para corrida ou freestyle rápido, Média 3 para gravações ou Média 4 para gravação cinemática suave.<br><br> Suavidade: limita a quantidade de mudança entre passos do rádio, aumente para um sinal FF mais suave, reduza para respostas do FF mais agressivas.<br><br> Ganho: Compensa o atraso do motor em movimentos rápidos; valores altos podem causar micro tremulações. Experimente o valor 10 para gravações e 20 para corridas. O valor 30 pode ser útil para aeronaves com pouca autoridade, mas pode causar micro tremulação ou fazer com que ultrapasse o ponto desejado."
+    },
+    "pidTuningFfInterpolate": {
+        "message": "Modo"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "Sem Média"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "Média 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "Média 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "Média 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Suavidade"
+    },
+    "pidTuningFfBoost": {
+        "message": "Ganho"
+    },
     "pidTuningProportional": {
         "message": "Proporcional"
     },
@@ -1871,6 +1911,12 @@
     },
     "receiverRefreshRateTitle": {
         "message": "Taxa de atualização do gráfico"
+    },
+    "receiverResetRefreshRate": {
+        "message": "Redefinir"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Redefinir taxa de atualização"
     },
     "receiverButtonSave": {
         "message": "Salvar"
@@ -2363,6 +2409,39 @@
     "motorsEnableControl": {
         "message": "<strong>Eu entendo os riscos</strong>, as hélices foram removidas - habilitar o controle do motor, armar e desativar a Prevenção contra decolagem acidental."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Cancelar"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Iniciar"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Reordenar motores"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Reordenar motores"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Clique no motor que está girando..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Pronto! Clique na imagem para verificar a ordem dos motores."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Eu entendo os riscos</strong>,<br />as hélices foram removidas."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Aviso de segurança</strong><br /><strong class=\"message-negative\">Remova todas as hélices para evitar ferimentos!</strong><br />Os motores irão <strong>girar!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Aviso</strong><br />Os motores irão girar um a um e você poderá selecionar qual o motor que está girando. A bateria deve estar conectada, o protocolo ESC correto deve estar selecionado. Este utilitário só pode reordenar os motores atualmente ativos. Um mapeamento mais complexo requer configurações pela Linha de Comandos (CLI). Consulte esta <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Salvar"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Começar novamente"
+    },
     "sensorsInfo": {
         "message": "Tenha em mente que ao usar um período de atualização rápido e visualizar vários gráficos simultaneamente utiliza muitos recursos do computador e pode usar sua bateria rapidamente se estiver em um notebook. Recomendamos que somente exiba os gráficos dos sensores em que estiver interessado e que utilize períodos de atualização razoáveis."
     },
@@ -2392,9 +2471,6 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroscópio - deg/s"
-    },
-    "sensorsAccelTitle": {
-        "message": "Acelerômetro - g"
     },
     "sensorsMagTitle": {
         "message": "Magnetômetro - Ga"
@@ -3445,6 +3521,9 @@
     "pidTuningDTermLowpassDynType": {
         "message": "Termo D - Lowpass 1 Dinâmico - Tipo do filtro"
     },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "Termo D - Lowpass 1 - Expo da Curva Dinâmico"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtros Notch (Rejeita Faixa) do TERMO D"
     },
@@ -3465,6 +3544,15 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "Aumenta os valores do PID para compensar quando a voltagem da bateria (Vbat) diminui. Isso resulta em características mais constantes durante o voo. A quantidade de compensação aplicada é calculada a partir da $t(powerBatteryMaximum.message) indicada na aba $t(tabPower.message), então tenha certeza de que a configurou corretamente."
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "Compensar Bateria Fraca"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Faz com que o acelerador e o PID tenham um desempenho consistente durante o intervalo de tensão utilizável da bateria, compensando a bateria fraca. A quantidade compensada pode variar entre 0% e 100%. É Recomendado uma compensação completa (100%).<br><br>Visite <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">esta página do wiki</a> para mais informações."
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "Rotação do termo I"
@@ -3784,6 +3872,9 @@
     "powerVoltageHead": {
         "message": "Medidor de voltagem"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Atenção:</span> Valores limitados a 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3792,9 +3883,6 @@
     },
     "powerVoltageCalibratedScale": {
         "message": "Escala de Voltagem Calibrada:"
-    },
-    "powerAmperageValue": {
-        "message": "$1 A"
     },
     "powerVoltageId10": {
         "message": "Bateria"
@@ -3876,6 +3964,12 @@
     },
     "powerAmperageHead": {
         "message": "Medidor de Amperes"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Atenção:</span> Valores limitados a 63.5A."
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Bateria"
@@ -4041,6 +4135,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Métrico",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Britânico",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
@@ -5553,5 +5651,74 @@
     "gpsSbasNone": {
         "message": "Nenhum",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "Nome do arquivo"
+    },
+    "dialogFileNameDescription": {
+        "message": "O arquivo será salvo na pasta '{{folder}}' no seu armazenamento interno."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "Este arquivo já existe!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Substituir?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "Verificando aplicativos webview..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Webview incompatível"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Você precisa atualizar a webview do seu dispositivo para poder usar o configurador."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "A ferramenta abaixo ajuda você a instalar um novo webview ou a atualizar um webview já instalado."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Aplicativos web disponíveis no seu dispositivo"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Instalar o aplicativo <b>{{app}}</b> pode resolver esse problema de compatibilidade."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Instalar a partir do Google Play Store"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "A desinstalação do aplicativo <b>{{app}}</b> pode resolver esse problema de compatibilidade. Se você não conseguir desinstalá-lo, tente desativá-lo no aplicativo de configurações."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Desinstalar a partir do Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Desinstalar / desativar nas configurações"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "A atualização do aplicativo <b>{{app}}</b> pode resolver esse problema de compatibilidade."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Atualizar a partir do Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Vá até as configurações do seu dispositivo e navegue até a seção 'sobre o dispositivo', toque 10 vezes no 'número da versão' para habilitar as opções de desenvolvedor. Após habilitar, vá até as opções de desenvolvedor e seleciones o <b>{{app}}</b> como a Implementação de webview."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Abrir Configurações"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Seu dispositivo parece não ser compatível. Procure outras formas de atualizar seu webview"
+    },
+    "cordovaNoWebview": {
+        "message": "Nenhum aplicativo webview foi instalado / habilitado"
+    },
+    "cordovaWebviewUsed": {
+        "message": "utilizado"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Confirmar"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Você realmente deseja sair do configurador?"
     }
 }

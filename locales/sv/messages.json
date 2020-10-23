@@ -440,9 +440,6 @@
     "firmwareVersionNotSupported": {
         "message": "Denna firmwareversion<span class=\"message-negative\">stöds inte</span>. Uppgradera till en firmware som stöder api-version <strong>$1</strong> eller högre. Säkerhetskopiera i CLI innan du flashar. CLI-säkerhetskopierings/återställningsförfarandet finns i dokumentationen.<br />Alternativt kan du ladda ner och använda en gammal version av konfiguratorn om du inte vill uppgradera."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Firmware för icke Cleanflight/Betaflight <span class=\"message-negative\">stöds inte</span>, förutom i CLI."
-    },
     "firmwareUpgradeRequired": {
         "message": "Firmwaren på den här enheten behöver uppgraderas till en nyare version. Använd CLI för säkerhetskopiering innan du flashar. CLI-säkerhetskopierings/återställningsförfarandet finns i dokumentationen.<br />Alternativt kan du ladda ner och använda en gammal version av konfiguratorn om du inte vill uppgradera."
     },
@@ -529,25 +526,20 @@
         "message": "Klicka här för att starta applikationen"
     },
     "statusbar_port_utilization": {
-        "message": "Portanvändning:"
-    },
-    "statusbar_usage_download": {
-        "message": "N: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Portanvändning:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Paket-fel:"
+        "message": "Paket-fel:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C-fel:"
+        "message": "I2C-fel:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Cykel-tid:"
-    },
-    "statusbar_cpu_load": {
-        "message": "CPU Belastning: $1%"
+        "message": "Cykel-tid:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Använd Firmware-Flasharen för åtkomst till DFU-enheter"
@@ -2236,9 +2228,6 @@
     "sensorsGyroTitle": {
         "message": "Gyroskop - grader/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Accelerometer - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetometer - Ga"
     },
@@ -3452,9 +3441,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Kalibrerad spänningsskala:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Batteri"
     },
@@ -3535,6 +3521,9 @@
     },
     "powerAmperageHead": {
         "message": "Strömmätare"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Batteri"

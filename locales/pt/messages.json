@@ -388,9 +388,6 @@
     "firmwareVersionNotSupported": {
         "message": "Esta versão do firmware <span class=\"message-negative\">não é suportada</span>. Por favor atualize para um firmware que suporte a versão <strong>$1</strong> ou superior da API. Use a Linha de comandos (CLI) para fazer um backup antes de atualizar. O procedimento para fazer uma cópia de segurança/restaurar encontra-se na documentação.<br />Como alternativa faça o download e use uma versão antiga do configurador caso não esteja preparado para efetuar a atualização."
     },
-    "firmwareTypeNotSupported": {
-        "message": "Firmware que não seja Cleanflight ou Betaflight <span class=\"message-negative\">não é suportado</span>, exceto por Linha de comandos (CLI)."
-    },
     "firmwareUpgradeRequired": {
         "message": "O firmware deste dispositivo precisa ser atualizado para uma versão mais recente. Use a Linha de comandos (CLI) para realizar uma cópia de segurança antes da atualização. O procedimento para fazer uma cópia de segurança/restaurar encontra-se na documentação.<br />Como alternativa faça o download e use uma versão antiga do configurador, caso não esteja preparado para efetuar a atualização."
     },
@@ -483,25 +480,20 @@
         "message": "Pressione aqui para iniciar a aplicação"
     },
     "statusbar_port_utilization": {
-        "message": "Utilização da porta:"
-    },
-    "statusbar_usage_download": {
-        "message": "D: $1%"
-    },
-    "statusbar_usage_upload": {
-        "message": "U: $1%"
+        "message": "Utilização da porta:",
+        "description": "Port utilization text shown in the status bar"
     },
     "statusbar_packet_error": {
-        "message": "Erros de pacote:"
+        "message": "Erros de pacote:",
+        "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Erros I2C:"
+        "message": "Erros I2C:",
+        "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "Tempo de ciclo:"
-    },
-    "statusbar_cpu_load": {
-        "message": "Carga da CPU: $1%"
+        "message": "Tempo de ciclo:",
+        "description": "Cycle time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Por favor use a opção de atualização de firmware para acessar dispositivos DFU"
@@ -2253,9 +2245,6 @@
     "sensorsGyroTitle": {
         "message": "Giroscópio - deg/s"
     },
-    "sensorsAccelTitle": {
-        "message": "Acelerômetro - g"
-    },
     "sensorsMagTitle": {
         "message": "Magnetômetro - Ga"
     },
@@ -3582,9 +3571,6 @@
     "powerVoltageCalibratedScale": {
         "message": "Escala de Voltagem Calibrada:"
     },
-    "powerAmperageValue": {
-        "message": "$1 A"
-    },
     "powerVoltageId10": {
         "message": "Bateria"
     },
@@ -3665,6 +3651,9 @@
     },
     "powerAmperageHead": {
         "message": "Medidor de Amperes"
+    },
+    "powerAmperageValue": {
+        "message": "$1 A"
     },
     "powerAmperageId10": {
         "message": "Bateria"
