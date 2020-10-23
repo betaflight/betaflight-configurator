@@ -516,6 +516,14 @@
         "message": "Utilizzo della porta:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Errori pacchetto:",
         "description": "Packet error text shown in the status bar"
@@ -527,6 +535,10 @@
     "statusbar_cycle_time": {
         "message": "Tempo di ciclo:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Carico CPU:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Si prega di utilizzare il Firmware Flasher per accedere ai dispositivi DFU"
@@ -2617,10 +2629,13 @@
         "message": "Salva flash su file ..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Salva flash su file... (obsoleto)"
+        "message": "Salva flash su file... (non supportato)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Il salvataggio diretto della flash su file è lento e intrinsecamente incline a errori / corruzione del file.<br>In alcuni casi funzionerà per piccoli file, ma questo non è supportato e le richieste di supporto per esso saranno chiuse senza commenti - utilizza la modalità di archiviazione di massa."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Salvare i log blackbox tramite il configuratore è un processo lento e soggetto a errori. È consigliato utilizzare invece il '<b>$t(onboardLoggingRebootMscText.message)</b>' (sotto) per attivare la modalità Archiviazione di Massa e accedere al tuo controllore di volo come un dispositivo di archiviazione per scaricare i tuoi file di log."
+        "message": "Questo metodo è lento e intrinsecamente incline a errori / corruzione del file perché la stessa connessione MSP ha limitazioni fondamentali che la rendono inadatta per trasferimenti di file. Potrebbe funzionare solo per i piccoli file di log. Non creare richieste di supporto se i trasferimenti di file non vengono salvati utilizzando questo metodo. Il metodo raccomandato è quello di usare '<b>$t(onboardLoggingRebootMscText.message)</b>' (sotto) per attivare la modalità di archiviazione di massa, e accedere al tuo controllore di volo come dispositivo di archiviazione per scaricare i file di log."
     },
     "dataflashButtonErase": {
         "message": "Cancella flash"
