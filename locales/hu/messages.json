@@ -2525,12 +2525,6 @@
     "dataflashButtonSaveFile": {
         "message": "Flash adatainak mentése fájlba..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Flash adatainak mentése fájlba... (Öreg)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "A blackbox naplók mentése a konfigurátoron lassú és viszonylag hajlamos a hibákra. Javasoljuk, hogy ehelyett használja a '<b>$t(onboardLoggingRebootMscText.message)</b>'(lent) a Mass Storage Mode aktiválásához, és tárolási eszközként használja a repülésvezérlőt a naplófájlok letöltéséhez."
-    },
     "dataflashButtonErase": {
         "message": "Flash törlése"
     },
