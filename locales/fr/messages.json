@@ -2674,12 +2674,6 @@
     "dataflashButtonSaveFile": {
         "message": "Enregistrer sous..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Enregistrer le fichier sous ... (obsolète)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Sauvegarder les logs de la blackbox via le configurateur est lent et relativement sujet aux erreurs. Il est recommandé d'utiliser au contraire '<b>$t(onboardLoggingRebootMscText.message)</b>' (ci-dessous) pour activer le mode de stockage de masse, et accéder à votre contrôleur de vol en mode périphérique de stockage afin de télécharger les fichiers de log."
-    },
     "dataflashButtonErase": {
         "message": "Effacer la mémoire interne"
     },
