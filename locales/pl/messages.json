@@ -2571,12 +2571,6 @@
     "dataflashButtonSaveFile": {
         "message": "Zapisz flash do pliku..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Zapisz flash do pliku... (przestarzałe)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Zapisywanie dzienników czarnej skrzynki w konfiguratorze jest powolne i stosunkowo podatne na błędy. Zalecana się, aby użyć '<b> $t(onboardLoggingRebootMscText.message) </b>' (poniżej) Trybu pamięci masowej i uzyskać dostęp do kontrolera lotu jako do urządzenia pamięci masowej, aby pobrać pliki dziennika."
-    },
     "dataflashButtonErase": {
         "message": "Kasuj pamieć"
     },
