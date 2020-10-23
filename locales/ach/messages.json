@@ -2723,10 +2723,13 @@
         "message": "crwdns5937:0crwdne5937:0"
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "crwdns9006:0crwdne9006:0"
+        "message": "crwdns10288:0crwdne10288:0"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "crwdns10290:0crwdne10290:0"
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "crwdns9008:0$t(onboardLoggingRebootMscText.message)crwdne9008:0"
+        "message": "crwdns10292:0$t(onboardLoggingRebootMscText.message)crwdne10292:0"
     },
     "dataflashButtonErase": {
         "message": "crwdns5938:0crwdne5938:0"
