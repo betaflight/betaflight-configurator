@@ -2619,12 +2619,6 @@
     "dataflashButtonSaveFile": {
         "message": "Flash memoria fitxategira gorde..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Flash memoria fitzategira gorde...(zaharkituta)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Konfiguratzailearen bidez KutxaBeltza erregistroak gordeketa motela da eta erroreak jasotzeko joera du. Gomendagarria da <b>$t(onboardLoggingRebootMscText.message)</b> '(behean) Biltegiratzeko Modua aktibatzeko, eta zure hegaldi kontroladorera sar zaitez biltegiratze gailu gisa erregistro fitxategiak deskargatzeko."
-    },
     "dataflashButtonErase": {
         "message": "Flash garbitu"
     },
