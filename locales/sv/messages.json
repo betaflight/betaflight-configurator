@@ -2357,12 +2357,6 @@
     "dataflashButtonSaveFile": {
         "message": "Spara flashminne till fil..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Spara flashminne till fil (utfasad)"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Att spara blackbox-loggar via konfiguratorn är en långsam och relativt felkänslig process. Rekommendationen är att istället använda '<b>$t(onboardLoggingRebootMscText.message)</b>' (nedan) för att aktivera masslagringsläge, och koppla dig mot flygkontrollern som en lagringsenhet för att ladda ner loggfilerna."
-    },
     "dataflashButtonErase": {
         "message": "Radera flashminne"
     },
