@@ -1172,7 +1172,15 @@ OSD.loadDisplayFields = function() {
                 return `1234${FONT.symbol(SYM.MAH)}/${unit}`;
             },
         },
-
+        TOTAL_FLIGHTS: {
+            name: 'OSD_TOTAL_FLIGHTS',
+            text: 'osdTextTotalFlights',
+            desc: 'osdDescTotalFlights',
+            defaultPosition: -1,
+            draw_order: 460,
+            positionable: true,
+            preview: "#9876",
+        },
     };
 };
 
@@ -1323,18 +1331,18 @@ OSD.constants = {
             text: 'osdTextStatMaxFFT',
             desc: 'osdDescStatMaxFFT',
         },
-        TOTAL_FLIGHTS: {
-            name: 'TOTAL_FLIGHTS',
+        STAT_TOTAL_FLIGHTS: {
+            name: 'STAT_TOTAL_FLIGHTS',
             text: 'osdTextStatTotalFlights',
             desc: 'osdDescStatTotalFlights',
         },
-        TOTAL_FLIGHT_TIME: {
-            name: 'TOTAL_FLIGHT_TIME',
+        STAT_TOTAL_FLIGHT_TIME: {
+            name: 'STAT_TOTAL_FLIGHT_TIME',
             text: 'osdTextStatTotalFlightTime',
             desc: 'osdDescStatTotalFlightTime',
         },
-        TOTAL_FLIGHT_DIST: {
-            name: 'TOTAL_FLIGHT_DIST',
+        STAT_TOTAL_FLIGHT_DIST: {
+            name: 'STAT_TOTAL_FLIGHT_DIST',
             text: 'osdTextStatTotalFlightDistance',
             desc: 'osdDescStatTotalFlightDistance',
         },
@@ -1591,6 +1599,11 @@ OSD.chooseFields = function() {
                                                         F.OSD_EFFICIENCY,
                                                     ]);
                                                 }
+                                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                                                    OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+                                                        F.TOTAL_FLIGHTS,
+                                                    ]);
+                                                }
                                             }
                                         }
                                     }
@@ -1683,9 +1696,9 @@ OSD.chooseFields = function() {
         }
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
-                F.TOTAL_FLIGHTS,
-                F.TOTAL_FLIGHT_TIME,
-                F.TOTAL_FLIGHT_DIST,
+                F.STAT_TOTAL_FLIGHTS,
+                F.STAT_TOTAL_FLIGHT_TIME,
+                F.STAT_TOTAL_FLIGHT_DIST,
                 F.MIN_RSSI_DBM,
             ]);
         }
