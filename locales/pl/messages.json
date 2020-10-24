@@ -507,6 +507,14 @@
         "message": "Obciążenie portu:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Błąd pakietu danych:",
         "description": "Packet error text shown in the status bar"
@@ -518,6 +526,10 @@
     "statusbar_cycle_time": {
         "message": "Czas pętli:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Obciążenie CPU:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Użyć zakładki \"Wgraj oprogramowanie\" aby połączyć się z urządzeniem w trybie DFU"
@@ -2570,6 +2582,15 @@
     },
     "dataflashButtonSaveFile": {
         "message": "Zapisz flash do pliku..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Zrzut pamięci flash do pliku... (nie wspierany)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Bezpośrednie zapisywanie zawartości flash do pliku jest powolne i z natury podatne na błąd / uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać dla małych plików, ale to nie jest obsługiwane i żądania dodania wsparcia zostaną zamknięte natychmiastowo bez komentarza - zamiast tego użyj trybu masowej pamięci."
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Ta metoda jest powolna i z natury podatna na błąd / uszkodzenie plików, ponieważ połączenie MSP jest zmienne, co jest podstawowym ograniczeniem, które sprawia, że jest nieodpowiednie do przesyłania plików. Może zadziałać tylko dla małych plików. Nie twórz żądań dodania wsparcia tej funkcji gdy transfer plików nie powiedzie się po zapisaniu, przy użyciu tej metody. Zalecaną metodą jest użycie '<b>$t(onboardLoggingRebootMscText.message)</b>' (poniżej) aby aktywować tryb pamięci masowej i uzyskać dostęp do kontrolera lotu jako urządzenia pamięci."
     },
     "dataflashButtonErase": {
         "message": "Kasuj pamieć"
