@@ -287,7 +287,7 @@ function dist_yarn() {
 
 function dist_locale() {
     return gulp.src('./locales/**/*', { base: 'locales'})
-        .pipe(gulp.dest(`${DIST_DIR}_locales`));
+        .pipe(gulp.dest(`${DIST_DIR}locales`));
 }
 
 function dist_libraries() {
@@ -826,7 +826,6 @@ function cordova_dist() {
     if (platforms.indexOf('android') !== -1) {
         distTasks.push(clean_cordova);
         distTasks.push(cordova_copy_www);
-        distTasks.push(cordova_locales_www);
         distTasks.push(cordova_resources);
         distTasks.push(cordova_include_www);
         distTasks.push(cordova_copy_src);
@@ -872,13 +871,6 @@ function clean_cordova() {
 function cordova_copy_www() {
     return gulp.src(`${DIST_DIR}**`, { base: DIST_DIR })
         .pipe(gulp.dest(`${CORDOVA_DIST_DIR}www/`));
-}
-function cordova_locales_www(cb) {
-    fs.renameSync(`${CORDOVA_DIST_DIR}www/_locales`, `${CORDOVA_DIST_DIR}www/i18n`);
-    gulp.src(`${CORDOVA_DIST_DIR}www/js/localization.js`)
-        .pipe(replace('/_locales', './i18n'))
-        .pipe(gulp.dest(`${CORDOVA_DIST_DIR}www/js`));
-    cb();
 }
 function cordova_resources() {
     return gulp.src('assets/android/**')
