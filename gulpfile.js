@@ -311,7 +311,15 @@ function dist_rollup() {
 
     return rollup
         .rollup({
-            input: 'src/components/init.js',
+            input: {
+                // For any new file migrated to modules add the output path
+                // in dist on the left, on the right it's input file path.
+                // If all the things used by other files are importing
+                // it with `import/export` file doesn't have to be here.
+                // I will be picked up by rollup and bundled accrodingly.
+                'components/init': 'src/components/init.js',
+                'js/main_cordova': 'src/js/main_cordova.js',
+            },
             plugins: [
                 alias({
                     entries: {
@@ -329,8 +337,13 @@ function dist_rollup() {
         .then(bundle =>
             bundle.write({
                 format: 'esm',
-                file: 'dist/components/init.js',
-            }),
+                // rollup is smart about how `name` is treated.
+                // so `input` you create file like `components/init`
+                // `[name]` will be replaced with it creating directories
+                // accordingly inside of `dist`
+                entryFileNames: '[name].js',
+                dir: DIST_DIR,
+            })
         );
 }
 

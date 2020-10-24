@@ -1,10 +1,12 @@
-'use strict';
+import i18next from 'i18next';
+import i18nextXHRBackend from 'i18next-xhr-backend';
 
+const i18n = {};
 /*
  * Wrapper around the i18n system
  */
+window.i18n = i18n;
 
-window.i18n = {};
 
 const languagesAvailables = ['ca', 'de', 'en', 'es', 'eu', 'fr', 'gl', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lv', 'nl', 'pt', 'pt_BR', 'pl', 'ru', 'sv', 'zh_CN', 'zh_TW'];
 
@@ -242,3 +244,5 @@ i18n.addResources = function(bundle) {
     const ns = takeFirst(i18next.options.defaultNS);
     i18next.addResourceBundle(lang, ns, bundle, true, true);
 };
+
+export { i18n };
