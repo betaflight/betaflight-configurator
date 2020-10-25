@@ -85,6 +85,9 @@
     "analyticsOptOut": {
         "message": "Kiszálni az anonim módon gyűjtött statisztikai adatok gyűjtéséből"
     },
+    "cordovaForceComputerUI": {
+        "message": "Számítógép interfész használata a telefon interfész helyett"
+    },
     "language_changed": {
         "message": "Nyelv megváltoztatva"
     },
@@ -202,6 +205,9 @@
     "tabHelp": {
         "message": "Dokumentáció és Támogatás"
     },
+    "tabOptions": {
+        "message": "Beállítások"
+    },
     "tabSetup": {
         "message": "Beállítások"
     },
@@ -294,6 +300,9 @@
     },
     "serialUnrecoverable": {
         "message": "Helyrehozhatatlan <span class=\"message-negative\">hiba</span> történt a soros konnektoron, szetkapcsolódunk...."
+    },
+    "serialPortLoading": {
+        "message": "Betöltés ..."
     },
     "usbDeviceOpened": {
         "message": "USB eszköz <span class=\"message-positive\">sikeresen</span> megnyitva, ID: $1"
@@ -396,6 +405,9 @@
     },
     "firmwareVersionNotSupported": {
         "message": "A firmware verzió nem <span class=\"message-negative\">támogatott</span>. Frissítse olyanra, ami támogatja legalább a <strong>$1</strong> API verziót. Használja a CLI-t biztonsági mentés készítésére égetés előtt. A CLI biztonsági mentés/visszatöltés leírását a dokumentációban találja.<br />Ha nem akar frissíteni, használja a konfigurátor egy régebbi verzióját."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Nem - Betaflight firmware <span class=\"message-negative\">nincsen támogatva</span>, kivéve CLI módban."
     },
     "firmwareUpgradeRequired": {
         "message": "Az eszközön található firmware-t frissíteni kell. Használja a CLI-t biztonsági mentés készítésére égetés előtt. A CLI biztonsági mentés/visszatöltés leírását a dokumentációban találja.<br />Ha nem akar frissíteni, használja a konfigurátor egy régebbi verzióját."
@@ -507,6 +519,14 @@
         "message": "Port hasznosítás:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Csomag hiba:",
         "description": "Packet error text shown in the status bar"
@@ -518,6 +538,10 @@
     "statusbar_cycle_time": {
         "message": "Ciklus Időtartam:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "CPU Terhelés:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Kérjük használja a Firmware Frissítőt, hogy hozzáférjen a DFU eszközökhöz"
@@ -1340,6 +1364,9 @@
     "configurationButtonSave": {
         "message": "Mentés és Újraindítás"
     },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
+    },
     "portsIdentifier": {
         "message": "Identifikátor"
     },
@@ -1633,6 +1660,24 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message)</strong> A 0-nál nagyobb és 0,1-nél kisebb D alapjel-átmenetet erősen visszaszorítja. Ellenkező esetben instabilitást és csökkent karkészlet-reakciót okozhat, mivel a karok áthaladnak a középponton.</span>"
     },
+    "pidTuningFfInterpolate": {
+        "message": "Mód"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "Átlag 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "Átlag 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "Átlag 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Simaság"
+    },
+    "pidTuningFfBoost": {
+        "message": "Boost"
+    },
     "pidTuningProportional": {
         "message": "P érték"
     },
@@ -1862,6 +1907,12 @@
     },
     "receiverRefreshRateTitle": {
         "message": "Grafikon frissítési gyakoriság"
+    },
+    "receiverResetRefreshRate": {
+        "message": "Visszaállítás"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Frissítési sebesség visszaállítása"
     },
     "receiverButtonSave": {
         "message": "Mentés"
@@ -2354,6 +2405,36 @@
     "motorsEnableControl": {
         "message": "<strong>Megértem a kockázatokat </strong>, a légcsavarokat eltávolítottam - lehetővé teszik a motor vezérlését és élesítését, és letiltják a Runaway Felszállás megakadályozását."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Mégse"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Start"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Motorok átrendezése"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Motorok átrendezése"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Kattints a forgó motorra..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Kész! Ellenőrizd, hogy a motorok jó irányba forognak-e, a képre kattintással."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Megértettem a veszélyeket</strong>,<br />a propellereket eltávolítottam."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Biztonsági megjegyzés</strong><br /><strong class=\"message-negative\">Távolítsd el az összes propelleredet a balesetek megelőzése érdekében</strong><br />A motorok <strong>fel fognak pörögni!</strong>"
+    },
+    "motorsRemapDialogSave": {
+        "message": "Mentés"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Újrakezdés"
+    },
     "sensorsInfo": {
         "message": "Ne feledje, hogy a gyors frissítési periódusok használata és a grafikonok egyszerre rendezése sok erőforrást igényel, és laptop használata esetén gyorsabban meríti le az akkumulátort. <br /> Javasoljuk, hogy grafikonokat csak az érdeklődésre számot tartó érzékelők számára készítsen, ésszerű használat mellett frissítési periódusokkal."
     },
@@ -2383,6 +2464,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Giroszkóp - fok/s"
+    },
+    "sensorsAccelTitle": {
+        "message": "Gyorsulásmérő - g (fok)"
     },
     "sensorsMagTitle": {
         "message": "Magnetométer - Ga"
@@ -2524,6 +2608,12 @@
     },
     "dataflashButtonSaveFile": {
         "message": "Flash adatainak mentése fájlba..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Flash adatainak mentése fájlba... (nem támogatott)"
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Ez a metódus lassú és eredendően hajlamos hibákat előidézni / fájlokat megsérteni, mert az MSP csatlakozásnak magának vannak belső alapvető limitációi melyek használhatatlanná teszik fájlok átvitelére. Lehet, hogy működni fog csak kisebb fájl átvitelekre. Légy szíves ne hozz létre hiba jegyet, ha nem sikerül a fájl átvitel ezen metódus használatával. Az ajánlott metódus a(z) '<b>$t(onboardLoggingRebootMscText.message)</b>', hogy aktiváld a háttértároló módot és elérd a repülés vezérlődet, mint egy meghajtót, hogy letöltsed a log fájlokat."
     },
     "dataflashButtonErase": {
         "message": "Flash törlése"
@@ -3427,6 +3517,9 @@
     "pidTuningDTermLowpassDynType": {
         "message": "D term aluláteresztő 1 dinamikus szűrő típusa"
     },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "D-érték aluláteresztő 1 dinamikus görbe típusa"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D term Notch szűrő"
     },
@@ -3447,6 +3540,15 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "Növeli a PID-értékeket annak kompenzálására, ha a Vbat alacsonyabb lesz. Ez állandóbb repülési jellemzőket biztosít a repülés során. Az alkalmazott kompenzáció összegét a $t(tabPower.message) oldalon beállított $t(powerBatteryMaximum.message) alapján számítják ki, ezért győződjön meg arról, hogy minden megfelelően van-e beállítva."
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "Vbat Sag kompenzáció"
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I Term rotáció"
@@ -3766,6 +3868,9 @@
     "powerVoltageHead": {
         "message": "Feszültségmérő"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Figyelem:</span> Az érték limitálva van 25.5V-ra."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3855,6 +3960,9 @@
     },
     "powerAmperageHead": {
         "message": "Árammérő"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Figyelem:</span> Az érték limitálva van 63.5A-ra."
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -4023,6 +4131,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Metrikus",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Brit",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
@@ -4512,6 +4624,16 @@
         "message": "Ball joystick feltüntetése",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementStickOverlayLeft": {
+        "message": "Távirányó ball joystick pozíciójának feltüntetése."
+    },
+    "osdTextElementStickOverlayRight": {
+        "message": "Jobb joystick feltüntetése",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementStickOverlayRight": {
+        "message": "Távirányító jobb joystick pozíciójának feltüntetése."
+    },
     "osdTextElementDisplayName": {
         "message": "Megjelenítendő név",
         "description": "One of the elements of the OSD"
@@ -4574,6 +4696,13 @@
     },
     "osdDescElementEfficiency": {
         "message": "Az akkumulátor pillanatnyi fogyasztása mAh / távolságban. (Érvényes GPS-javítást igényel)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Összes repülés",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Repülések száma megközelitőleg"
     },
     "osdTextElementUnknown": {
         "message": "Ismeretlen $1",
@@ -4719,12 +4848,22 @@
         "message": "Minimum jel minőség",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatMinLinkQuality": {
+        "message": "Minimum jel minőség (elveszett adatcsomagok számán alapúló)"
+    },
     "osdTextStatFlightDistance": {
         "message": "Repülési távolság",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatFlightDistance": {
         "message": "A repülés során megtett teljes távolság"
+    },
+    "osdTextStatMaxFFT": {
+        "message": "FFT (gyors fourier transztormáció) maximum",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMaxFFT": {
+        "message": "Csúcs FFT (gyors fourier transztormáció) frekvencia"
     },
     "osdTextStatTotalFlights": {
         "message": "Összes repülések száma",
@@ -4758,6 +4897,9 @@
         "message": "Ismeretlen $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatUnknown": {
+        "message": "Ismeretlen statisztika (részleteket hozzá kell adni egy jövőbeli kiadáshoz)"
+    },
     "osdDescribeFontVersion1": {
         "message": "Betűtípus: 1(Betaflight 4.0 vagy régebbi)"
     },
@@ -4781,15 +4923,37 @@
         "message": "Összes élesített idő",
         "description": "One of the options for the source timer. This options shows the amount of time the craft was armed since the battery was plugged"
     },
+    "osdTimerSourceOptionLastArmedTime": {
+        "message": "Utolsó élesítés ideje",
+        "description": "One of the options for the source timer. This options shows the amount of time the craft was armed the latest time"
+    },
+    "osdTimerSourceOptionOnArmTime": {
+        "message": "Bekapcsolt / Élesített idő",
+        "description": "One of the options for the source timer. This option shows On time when craft is disarmed, and Armed time when armed"
+    },
     "osdTimerPrecision": {
         "message": "Pontosság:"
+    },
+    "osdTimerPrecisionTooltip": {
+        "message": "Időmérő pontosságának választása az OSD-ben"
     },
     "osdTimerPrecisionOptionSecond": {
         "message": "Másodperc",
         "description": "Selectable option for the precision of the timer in the OSD"
     },
+    "osdTimerPrecisionOptionHundredth": {
+        "message": "Század",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
+    "osdTimerPrecisionOptionTenth": {
+        "message": "Tized",
+        "description": "Selectable option for the precision of the timer in the OSD"
+    },
     "osdTimerAlarm": {
         "message": "Riasztó:"
+    },
+    "osdTimerAlarmTooltip": {
+        "message": "Válassza ki az időzítő riasztási küszöbértékét percben, amikor az idő meghaladja ezt az értéket, az OSD elem villogni fog, ezt 0-ra állítva letiltja a riasztást\n "
     },
     "osdTimerAlarmOptionRssi": {
         "message": "RSSI (jel erőssége)",
@@ -4803,6 +4967,10 @@
         "message": "Magasság",
         "description": "Text of the altitude alarm"
     },
+    "osdWarningTextArmingDisabled": {
+        "message": "Élesítés kikapcsolva",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdWarningArmingDisabled": {
         "message": "Jelenti a legerősebb okokat az élesítés ellen"
     },
@@ -4813,12 +4981,23 @@
     "osdWarningBatteryNotFull": {
         "message": "Figyelmeztetések mikor az akkumulátor nincs teljesen feltöltve"
     },
+    "osdWarningTextBatteryWarning": {
+        "message": "Akkumulátor figyelmeztetés",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningBatteryWarning": {
+        "message": "Figyelmeztető szöveg, amely akkor jelenik meg, amikor az akkumulátor feszültsége a figyelmeztetési küszöb alá esik"
+    },
     "osdWarningTextBatteryCritical": {
         "message": "Akkumulátor kritikus állapotban",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningBatteryCritical": {
         "message": "Riasszon, ha az akkumulátorfeszültség a minimális átlagos cellafeszültség alá esik"
+    },
+    "osdWarningTextVisualBeeper": {
+        "message": "Vizuális csipogó",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningVisualBeeper": {
         "message": "Vizuális csipogó (4 villogó csillag)."
@@ -5163,8 +5342,16 @@
         "message": "A VTX konfigurációs fájl<span class=\"message-positive\"> betöltve </span>",
         "description": "Message in the GUI log when the VTX Config file is loaded"
     },
+    "vtxLoadFileKo": {
+        "message": "<span class=\"message-negative\">Hiba</span>a VTX(videó adó) konfigurációs fájl betöltése közben",
+        "description": "Message in the GUI log when the VTX Config file is loaded"
+    },
     "vtxLoadClipboardOk": {
         "message": "VTX(videó adó) konfigurációs információ <span class=\"message-positive\"> betölve </span> a vágólapról",
+        "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
+    },
+    "vtxLoadClipboardKo": {
+        "message": "<span class=\"message-negative\"> hiba </span> VTX(videó adó) konfigurációs információk vágólapról történő betöltése közben. Lehet hogy a tartalma nem megfelelő",
         "description": "Message in the GUI log when the VTX Config file is pasted from clipboard"
     },
     "vtxButtonSaveFile": {
@@ -5174,6 +5361,10 @@
     "vtxButtonSaveLua": {
         "message": "Lua script mentése",
         "description": "Save Lua script button in the VTX tab"
+    },
+    "vtxLuaFileHelp": {
+        "message": "A $t(vtxButtonSaveLua.message) gomb segítségével elmentheti a <i> légi_jármű_neve </i>.lua fájlt, mely tartalmazza a Vtx(videó adó) konfigurációs táblát amit használni lehet a betaflight lua scriptekkel (továbiakat lásd <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">itt</a>)",
+        "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
         "message": "Betöltés fájlból",
@@ -5219,6 +5410,10 @@
         "message": "Bidirectional DShot (Támogatott ESC firmware szükséges)",
         "description": "Feature for the ESC/Motor"
     },
+    "configurationDshotBidirHelp": {
+        "message": "ESC(elektronikus sebesség vezérlő)-adatokat küld az FC(repülésvezérlő)-nek DShot telemetriával. Ezt az RPM szűrés és a dinamikus alapjárat megköveteli.<br><br>Megjegyzés: Kompatibilis ESC szükséges megfelelő firmware-rel, például JESC, Jazzmac, BLHeli-32.",
+        "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
+    },
     "configurationGyroSyncDenom": {
         "message": "Giro frissítési frekvencia"
     },
@@ -5245,6 +5440,9 @@
     },
     "configurationSmallAngle": {
         "message": "Maximális élesítési szög [fokokban]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "A légi jármű nem fog élesíteni, ha a megadott foknál nagyobb mértékben dől. Csak akkor érvényes, ha a gyorsulásmérő engedélyezve van. A 180-as érték beállítása tulajdonképpen a funkció kikapcsolásaával eggyenértelmű"
     },
     "configurationBatteryVoltage": {
         "message": "Akkumulátor Feszültség"
@@ -5279,11 +5477,20 @@
     "configurationCurrentOffset": {
         "message": "Eltolás millivoltos lépésekben\n "
     },
+    "configurationBatteryMultiwiiCurrent": {
+        "message": "A régi Multiwii MSP áramkimenet támogatásának engedélyezése"
+    },
     "pidTuningProfile": {
         "message": "Profil"
     },
+    "pidTuningProfileTip": {
+        "message": "Legfeljebb 3 (egyes távirányitóknál 2) különböző pid profilok tárolhatók a repülés vezérlőn. A pid profilok ezen a lapon tartalmaznak pid, d alapérték és dőlésszög / horizont mód, beállításokat. A terepen, egyszerű távirányítós utasításokkal (lásd az online utasításokat) lehet váltani a profilok között."
+    },
     "pidTuningRateProfile": {
         "message": "Rate profil"
+    },
+    "pidTuningRateProfileTip": {
+        "message": "Profilonként legfeljebb 3 különböző értékprofil tárolható a repülés vezérlőn. Az értékprofilok tartalmazzák az 'RC Rate', 'Rate', 'RC Expo', 'Throttle' és 'TPA' beállításait. Az értékprofilok közötti váltás a repülés közben is lehetséges, ha a „Beállítások” fülön 3 pozíciós kapcsolót állít be a „Profil kiválasztása” pontra.\n \n"
     },
     "pidTuningRateSetup": {
         "message": "Alap/Acro Rate"
@@ -5387,11 +5594,36 @@
     "pidTuningRatesTypeTip": {
         "message": "A Rate típus módosítása megváltoztatja az aránygörbét és a beállítási módot"
     },
+    "pidTuningRcRateRaceflight": {
+        "message": "Érték"
+    },
+    "pidTuningRcExpoRaceflight": {
+        "message": "Exponenciális"
+    },
     "pidTuningRateRaceflight": {
         "message": "Acro-mód +"
     },
+    "pidTuningRcExpoKISS": {
+        "message": "RC görbe"
+    },
+    "pidTuningRateQuickRates": {
+        "message": "Maximum értékek"
+    },
+    "pidTuningRcRateActual": {
+        "message": "Közép érzékenysége"
+    },
+    "dialogRatesTypeTitle": {
+        "message": "Értékek típusának módosítása"
+    },
+    "dialogRatesTypeNote": {
+        "message": "<span class=\"message-negative\"><b>FIGYELEM: megváltoztatod az értékek típusát.</b></span>ha megváltoztatod az értékek típusát az értékek az alap görbe értékeire lesznek állítva."
+    },
     "dialogRatesTypeConfirm": {
         "message": "Módosítás"
+    },
+    "gpsSbasAutoDetect": {
+        "message": "Automatikus-észlelés",
+        "description": "One of the options selectable for the GPS SBAS system"
     },
     "gpsSbasEuropeanEGNOS": {
         "message": "Európai EGNOS",
@@ -5412,5 +5644,74 @@
     "gpsSbasNone": {
         "message": "Semmi",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "Fájlnév"
+    },
+    "dialogFileNameDescription": {
+        "message": "A fájl a '{{folder}}' mappába lesz mentve a belső tárhelyeden."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "A fájl már létezik!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Felülír?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "Webview applikációk ellenőrzése..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Nem kompatibilis webview"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Frissítened kell az eszközöd webview-ját mielőtt használhatod a konfigurátort."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "Az alábbi eszköz segíthet telepíteni egy új webview-t vagy frissíteni már egy meglévőt."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Elérhető webview alkalmazások az eszközödön"
+    },
+    "cordovaWebviewInstall": {
+        "message": "<b>{{app}}</b> telepítése megoldhatja a kompatibilitási problémákat."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Telepítés a Google Play Áruházból"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "<b>{{app}}</b> eltávolítása megoldhatja a kompatibilitási problémákat. Ha nem tudod eltávolítani, akkor próbáld meg letiltani a beállításokban."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Eltávolítás a Google Play Áruházból"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Eltávolítás / letiltás a beállításokból"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "<b>{{app}}</b> frissítése megoldhatja a kompatibilitási problémákat."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Frissítés a Google Play Áruházból"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Menj be a beállításokon belül az eszköz információkba, majd kattints 10szer a build number-re hogy engedélyezd a \"Fejlesztői beállításokat\" Utána a fejlesztői beállításokban jelöld ki <b>{{app}}</b> -t webview szolgáltatónak."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Beállítások megnyitása"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Úgy tűnik, hogy az eszközöd nem kompatibilis. Próbálj más utat keresni a webview frissítéséhez"
+    },
+    "cordovaNoWebview": {
+        "message": "Nincsen webview applikáció telepítve/engedélyezve"
+    },
+    "cordovaWebviewUsed": {
+        "message": "használatban"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Megerősítés"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Biztosan ki akarsz lépni a konfigurátorból?"
     }
 }
