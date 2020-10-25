@@ -3268,15 +3268,15 @@
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
-        "message": "Mniej filtrowania",
+        "message": "Lekkie filtrowanie",
         "description": "Filter tuning slider low header"
     },
     "pidTuningSliderDefaultFiltering": {
-        "message": "Domyślny filtr",
+        "message": "Domyślny poziom filtrowania",
         "description": "Filter tuning slider default header"
     },
     "pidTuningSliderHighFiltering": {
-        "message": "Więcej filtrów",
+        "message": "Mocniejsze Filtrowanie",
         "description": "Filter tuning slider high header"
     },
     "pidTuningGyroFilterSlider": {
@@ -3360,28 +3360,28 @@
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
-        "message": "Żyroskopowe filtry dolnoprzepustowe"
+        "message": "Filtry dolnoprzepustowe Żyroskopu"
     },
     "pidTuningGyroLowpassFrequency": {
-        "message": "Częstotliwość odcięcia żyroskopu dolnoprzepustowego 1 [Hz]"
+        "message": "Częstotliwość odcięcia [Hz] dolnoprzepustowego filtru 1 żyroskopu"
     },
     "pidTuningGyroLowpassType": {
-        "message": "Pierwszy rodzaj filtra dolnoprzepustowego"
+        "message": "Typ dolnoprzepustowego fitru 1 dla żyroskopu"
     },
     "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Dynamiczna Min częstotliwość odcięcia [Hz] 1 dolnoprzepustowego żyroskopu"
+        "message": "Min częstotliwość odcięcia [Hz] Dynamicznego dolnoprzepustowego filtu 1 żyroskopu"
     },
     "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Dynamiczna maksymalna częstotliwość odcięcia [Hz] 1 żyroskopu dolnoprzepustowego"
+        "message": "Max częstotliwość odcięcia [Hz] Dynamicznego dolnoprzepustowego filtru 1 żyroskopu"
     },
     "pidTuningGyroLowpassDynType": {
-        "message": "Dynamiczny dolnoprzepustowy 1 typ filtra żyroskopu"
+        "message": "Typ Dynamicznego dolnoprzepustowego filtru 1 dla żyroskopu"
     },
     "pidTuningGyroLowpass2Frequency": {
-        "message": "Częstotliwość odcięcia 2 żyroskopu dolnoprzepustowego [Hz]"
+        "message": "Częstotliwość odcięcia [Hz] dolnoprzepustowego filtru 2 żyroskopu"
     },
     "pidTuningGyroLowpass2Type": {
-        "message": "Żyroskopowy dolnoprzepustowy 2 Rodzaj filtra"
+        "message": "Typ dolnoprzepustowego filtru 2 dla żyroskopu"
     },
     "pidTuningLowpassFilterHelp": {
         "message": "Filtry dolnoprzepustowe mogą mieć dwa warianty: statyczny i dynamiczny. Dla określonego numeru filtra dolnoprzepustowego można jednocześnie włączyć tylko jeden (statyczny lub dynamiczny). Statyczny ma tylko wartość odcięcia, która jest wartością, która w jakiś sposób określa początek filtra. Dynamika określa wartości minimalne i maksymalne, czyli zakres, w którym umieszczana jest wartość odcięcia. Ta wartość graniczna przesuwa się od min. Do max. W tym samym czasie, gdy poruszasz drążkiem przepustnicy."
@@ -3493,6 +3493,9 @@
     },
     "pidTuningDTermLowpassDynType": {
         "message": "Typ Filtra dolnoprzepustowego D Term"
+    },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "Krzywa Expo filtru Dolnoprzepustowego 1 członu D"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtr Notch D Term"
@@ -4676,6 +4679,13 @@
     },
     "osdDescElementEfficiency": {
         "message": "Chwilowe zużycie baterii w mAh / odległość. (Wymaga dobrego sygnału GPS)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Suma Lotów",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Szacowana suma Lotów"
     },
     "osdTextElementUnknown": {
         "message": "Nieznane $1",
