@@ -4736,6 +4736,13 @@
     "osdDescElementEfficiency": {
         "message": "Consum instantani de la bateria en mAh/distància. (Requereix correcció GPS vàlida)"
     },
+    "osdTextTotalFlights": {
+        "message": "Vols totals",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Vols totals aproximats"
+    },
     "osdTextElementUnknown": {
         "message": "Desconegut $1",
         "description": "One of the elements of the OSD"
