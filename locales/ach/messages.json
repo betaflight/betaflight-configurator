@@ -4822,6 +4822,13 @@
     "osdDescElementEfficiency": {
         "message": "crwdns10026:0crwdne10026:0"
     },
+    "osdTextTotalFlights": {
+        "message": "crwdns10294:0crwdne10294:0",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "crwdns10296:0crwdne10296:0"
+    },
     "osdTextElementUnknown": {
         "message": "crwdns9334:0$1crwdne9334:0",
         "description": "One of the elements of the OSD"
