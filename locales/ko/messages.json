@@ -4796,6 +4796,13 @@
     "osdDescElementEfficiency": {
         "message": "순간 배터리 소비량을 mAh/거리 단위로 표시. (유효한 GPS 고정 필요)"
     },
+    "osdTextTotalFlights": {
+        "message": "총 비행 횟수",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "대략적인 총 비행 횟수"
+    },
     "osdTextElementUnknown": {
         "message": "알 수 없음 $1",
         "description": "One of the elements of the OSD"
@@ -4958,7 +4965,7 @@
         "message": "피크 FFT 주파수"
     },
     "osdTextStatTotalFlights": {
-        "message": "전체 비행 회수",
+        "message": "전체 비행 횟수",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTotalFlights": {
