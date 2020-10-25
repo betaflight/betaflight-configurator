@@ -4875,7 +4875,14 @@
     "osdDescElementEfficiency": {
         "message": "Instantaneous battery consumption in mAh/distance.  (Requires valid GPS fix)"
     },
-    
+    "osdTextTotalFlights": {
+        "message": "Total flights",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Approximate total number of flights"
+    },
+
     "osdTextElementUnknown": {
         "message": "Unknown $1",
         "description": "One of the elements of the OSD"
