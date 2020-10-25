@@ -4738,6 +4738,13 @@
     "osdDescElementEfficiency": {
         "message": "Direct batterijverbruik in mAh/afstand. (vereist een geldige GPS-fix)"
     },
+    "osdTextTotalFlights": {
+        "message": "Totaal aantal vluchten",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Geschat totaal aantal vluchten"
+    },
     "osdTextElementUnknown": {
         "message": "Onbekend $1",
         "description": "One of the elements of the OSD"
