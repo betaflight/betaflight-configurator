@@ -2647,6 +2647,12 @@
     "dataflashButtonSaveFileDeprecated": {
         "message": "Flash opslaan in bestand... (niet ondersteund)"
     },
+    "dataflashSavetoFileNote": {
+        "message": "Het direct opslaan van Flash naar een bestand is traag en inherent vatbaar voor fouten. Het kan lijden tot bestandscorruptie.<br>In sommige gevallen werkt het wel voor kleine bestanden. Maar dit wordt niet ondersteund. Ondersteuningsverzoeken hiervoor worden zonder commentaar gesloten. Gebruik in plaats daarvan de modus voor massaopslag."
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Deze methode is traag en inherent vatbaar voor fouten. Het kan lijden tot bestandscorruptie. Dit omdat de MSP-verbinding zelf intrinsieke, fundamentele beperkingen heeft die deze ongeschikt maken voor bestandsoverdracht. Het werkt mogelijk alleen voor kleine logbestanden. Maak geen ondersteuningsverzoeken aan als bestandsoverdrachten mislukken gebruik makend van deze methode. De aanbevolen methode is om '<b>$t(onboardLoggingRebootMscText.message)</b>' (hieronder) te gebruiken om de massa opslagmodus te activeren. En zodoende toegang te krijgen tot uw vluchtcontroller als opslagapparaat om op deze manier de logbestanden te kunnen downloaden."
+    },
     "dataflashButtonErase": {
         "message": "Flash wissen"
     },
