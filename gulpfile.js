@@ -929,7 +929,7 @@ function cordova_browserify(callback) {
             if (!file.includes("node_modules")) {
                 fs.readFile(file, 'utf8', async function (err,data) {
                     if (data.match('require\\(.*\\)')) {
-                        const execbrowserify = await cordova_execbrowserify(file);
+                        await cordova_execbrowserify(file);
                     }
                     resolve();
                 });
@@ -937,19 +937,19 @@ function cordova_browserify(callback) {
                 resolve();
             }
         });
-    }
+    };
     glob(`${CORDOVA_DIST_DIR}www/**/*.js`, {}, function (err, files) {
-        const readLoop = function(files) {
+        const readLoop = function() {
             if (files.length === 0) {
                 callback();
             } else {
                 const file = files.pop();
                 readFile(file).then(function() {
-                    readLoop(files);
+                    readLoop();
                 });
             }
         };
-        readLoop(files);
+        readLoop();
     });
 }
 function cordova_execbrowserify(file) {
