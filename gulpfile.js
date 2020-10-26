@@ -33,6 +33,8 @@ const source = require('vinyl-source-stream');
 const stream = require('stream');
 
 const cordova = require("cordova-lib").cordova;
+const browserify = require('browserify');
+const glob = require('glob');
 
 const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
@@ -833,6 +835,7 @@ function cordova_dist() {
         distTasks.push(cordova_rename_src_package);
         distTasks.push(cordova_packagejson);
         distTasks.push(cordova_configxml);
+        distTasks.push(cordova_browserify);
         distTasks.push(cordova_depedencies);
         if (cordovaDependencies) {
             distTasks.push(cordova_platforms);
@@ -920,6 +923,45 @@ function cordova_configxml() {
         ]))
         .pipe(gulp.dest(CORDOVA_DIST_DIR));
 }
+function cordova_browserify(callback) {
+    const readFile = function(file) {
+        return new Promise(function(resolve) {
+            if (!file.includes("node_modules")) {
+                fs.readFile(file, 'utf8', async function (err,data) {
+                    if (data.match('require\\(.*\\)')) {
+                        const execbrowserify = await cordova_execbrowserify(file);
+                    }
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        });
+    }
+    glob(`${CORDOVA_DIST_DIR}www/**/*.js`, {}, function (err, files) {
+        const readLoop = function(files) {
+            if (files.length === 0) {
+                callback();
+            } else {
+                const file = files.pop();
+                readFile(file).then(function() {
+                    readLoop(files);
+                });
+            }
+        };
+        readLoop(files);
+    });
+}
+function cordova_execbrowserify(file) {
+    const filename = file.split('/').pop();
+    const destpath = file.replace(filename, '');
+    console.log(`Include required modules in ${file}`);
+    return browserify(file, { ignoreMissing: true })
+        .bundle()
+        .pipe(source(filename))
+        .pipe(gulp.dest(destpath));
+}
+gulp.task('test', cordova_browserify);
 function cordova_depedencies() {
     process.chdir('dist_cordova');
     return gulp.src(['./package.json', './yarn.lock'])
