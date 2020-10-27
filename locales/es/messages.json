@@ -4728,6 +4728,13 @@
     "osdDescElementEfficiency": {
         "message": "Consumo instantáneo de batería en mAh/distancia (requiere GPS fijado)"
     },
+    "osdTextTotalFlights": {
+        "message": "Vuelo: número total",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Número total aproximado de vuelos"
+    },
     "osdTextElementUnknown": {
         "message": "Desconocido $1",
         "description": "One of the elements of the OSD"
