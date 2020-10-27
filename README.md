@@ -22,13 +22,31 @@ If you are experiencing any problems please make sure you are running the [lates
 
 ### Standalone
 
-**This is the default installation method, and at some point in the future this will become the only way available for most platforms. Please use this method whenever possible.**
+We provide a standalone program for Windows, Linux, Mac and Android.
 
 Download the installer from [Releases.](https://github.com/betaflight/betaflight-configurator/releases)
 
-#### Note for MacOS X users
+### Notes
+
+#### Windows users
+
+The minimum required version of windows is Windows 8.
+
+#### MacOS X users
 
 Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Betaflight Configurator.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal after installing: `sudo xattr -rd com.apple.quarantine /Applications/Betaflight\ Configurator.app`.
+
+#### Linux users
+
+In most Linux distributions your user won't have access to serial interfaces by default. To add this access right type the following command in a terminal, log out your user and log in again:
+
+```
+sudo usermod -aG dialout ${USER}
+```
+
+#### Graphics Issues
+
+If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
 
 ### Unstable Testing Versions
 
@@ -36,7 +54,13 @@ Unstable testing versions of the lates builds of the configurator for most platf
 
 **Be aware that these versions are intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using these versions.**
 
-## Native app build via NW.js (windows/linux/macos) or Cordova (android)
+## Languages
+
+Betaflight Configurator has been translated into several languages. The application will try to detect and use your system language if a translation into this language is available. You can help [translating the application into your language](https://github.com/betaflight/betaflight/tree/master/README.md#Translators);
+
+If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
+
+## App build via NW.js (windows/linux/macos) or Cordova (android)
 
 ### Development
 
@@ -78,26 +102,6 @@ If no platform is provided, all the platforms will be done in sequence.
 
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win64`, `--linux32` and `--armv7` can be used too, but they are not officially supported, so use them at your own risk.
-
-## Languages
-
-Betaflight Configurator has been translated into several languages. The application will try to detect and use your system language if a translation into this language is available. You can help [translating the application into your language](https://github.com/betaflight/betaflight/tree/master/README.md#Translators);
-
-If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
-
-## Notes
-
-### Graphics Issues
-
-If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
-
-### Linux users
-
-In most Linux distributions your user won't have access to serial interfaces by default. To add this access right type the following command in a terminal, log out your user and log in again:
-
-```
-sudo usermod -aG dialout ${USER}
-```
 
 ## Support
 

@@ -79,6 +79,7 @@ Compression=lzma2
 DefaultDirName={autopf}\{#GroupName}\{#TargetFolderName}
 DefaultGroupName={#GroupName}\{#ApplicationName}
 LicenseFile=..\..\LICENSE
+MinVersion=6.2
 OutputBaseFilename={#InstallerFileName}
 OutputDir=..\..\{#targetFolder}\
 PrivilegesRequiredOverridesAllowed=commandline dialog
