@@ -112,7 +112,8 @@ function closeSerial() {
         bufView[3] = 0x74; // t
         bufView[4] = 0x0D; // enter
 
-        chrome.serial.send(connectionId, bufferOut, function () {
+        const sendFn = (serial.connectionType === 'serial' ? chrome.serial.send : chrome.sockets.tcp.send);
+        sendFn(connectionId, bufferOut, function () {
             console.log('Send exit');
         });
 
@@ -139,16 +140,12 @@ function closeSerial() {
 
             bufView[5 + 16] = checksum;
 
-            chrome.serial.send(connectionId, bufferOut, function () {
-                chrome.serial.disconnect(connectionId, function (result) {
-                    console.log(`SERIAL: Connection closed - ${result}`);
-                });
+            sendFn(connectionId, bufferOut, function () {
+                serial.disconnect();
             });
         }, 100);
     } else if (connectionId) {
-        chrome.serial.disconnect(connectionId, function (result) {
-            console.log(`SERIAL: Connection closed - ${result}`);
-        });
+        serial.disconnect();
     }
 }
 

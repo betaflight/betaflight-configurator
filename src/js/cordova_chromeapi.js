@@ -211,18 +211,6 @@ const chromeapiSerial = {
             chromeCallbackWithError(`SERIAL (adapted from Cordova): ${error}`, callback(info));
         });
     },
-    getControlSignals: function(connectionId, callback) {
-        // Not supported yet
-        console.warn('chrome.serial.getControlSignals not supported yet');
-        chromeCallbackWithSuccess({}, callback);
-    },
-    setControlSignals: function(connectionId, signals, callback) {
-        // Not supported yet
-        console.warn('chrome.serial.setControlSignals not supported yet');
-        chromeCallbackWithSuccess({
-            result: false,
-        }, callback);
-    },
     // update: function() { },
     // getConnections: function() { },
     // flush: function() { },
