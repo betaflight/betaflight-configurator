@@ -4728,6 +4728,13 @@
     "osdDescElementEfficiency": {
         "message": "mAh/distanceでの瞬間バッテリー消費量。(有効化にはGPS修正が必要)"
     },
+    "osdTextTotalFlights": {
+        "message": "総フライト数",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "総フライト数の目安"
+    },
     "osdTextElementUnknown": {
         "message": "不明 $1",
         "description": "One of the elements of the OSD"
