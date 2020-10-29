@@ -4,10 +4,25 @@ window.googleAnalytics = analytics;
 window.analytics = null;
 
 $(document).ready(function () {
+
+    useGlobalNodeFunctions();
+
     if (typeof cordovaApp === 'undefined') {
         appReady();
     }
 });
+
+function useGlobalNodeFunctions() {
+    // The global functions of Node continue working on background. This is good to continue flashing,
+    // for example, when the window is minimized
+    if (GUI.isNWJS()) {
+        console.log("Replacing timeout/interval functions with Node versions");
+        window.setTimeout = global.setTimeout;
+        window.clearTimeout = global.clearTimeout;
+        window.setInterval = global.setInterval;
+        window.clearInterval = global.clearInterval;
+    }
+}
 
 function appReady() {
     $.getJSON('version.json', function(data) {
