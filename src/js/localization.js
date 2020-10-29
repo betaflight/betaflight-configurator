@@ -21,7 +21,7 @@ i18n.init = function(cb) {
     getStoredUserLocale(function(userLanguage) {
 
         i18next
-            .use(i18nextHttpBackend)
+            .use(i18nextXHRBackend)
             .init({
                 lng: userLanguage,
                 getAsync: false,
