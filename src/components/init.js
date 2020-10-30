@@ -15,21 +15,28 @@ const betaflightModel = {
     PortUsage,
 };
 
-if (process.env.NODE_ENV === 'development') {
-    console.log("Development mode enabled, installing Vue tools");
-    Vue.config.devtools = true;
-}
+i18next.on('initialized', function() {
 
-const app = new Vue({
-    i18n: vueI18n,
-    data: betaflightModel,
-    components: {
-        BatteryLegend,
-        BetaflightLogo,
-        StatusBar,
-    },
-    el: '#main-wrapper',
+    console.log("i18n initialized, starting Vue framework");
+
+    if (process.env.NODE_ENV === 'development') {
+        console.log("Development mode enabled, installing Vue tools");
+        Vue.config.devtools = true;
+    }
+
+    const app = new Vue({
+        i18n: vueI18n,
+        data: betaflightModel,
+        components: {
+            BatteryLegend,
+            BetaflightLogo,
+            StatusBar,
+        },
+        el: '#main-wrapper',
+    });
+
 });
+
 
 // Not strictly necessary here, but if needed
 // it's always possible to modify this model in
