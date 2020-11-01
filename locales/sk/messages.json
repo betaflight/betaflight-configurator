@@ -32,7 +32,7 @@
         "message": "Táto operácia nieje podporovaná vašim hardvérom."
     },
     "storageDeviceNotReady": {
-        "message": "Úložné zariadenie nie je pripravené. V prípade micro SD karty sa ubezpečte, že bola správne rozoznaná riadiacou jednotkou."
+        "message": "Úložné zariadenie nie je pripravené. V prípade microSD karty sa ubezpečte, že ju váš letový ovládač správne rozpoznal."
     },
     "options_title": {
         "message": "Možnosti aplikácie"
@@ -155,7 +155,7 @@
         "message": "Používate zastaranú verziu <b>Betaflight Konfigurátora</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
-        "message": "Používanie novšej verzie firmvéru so zastaralou verziou konfigurátora Vám pri zmene niektorých nastavení <strong>poškodí konfiguráciu firmvéru a znefunkční stroj</strong>. Taktiež, niektoré funkcie firmvéru budú dostupné len pomocou príkazového riadka.<br><strong>Betaflight konfigurátor vo verzii <b>$1</b> je dostupný na stiahnutie</strong>, prosíme navštívte <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">túto stránku</a>, odkiaľ si môžete stiahnuť a nainštalovať najnovšiu verziu s opravenými chybami a vylepšeniami.<br>Prosíme zatvorte okno konfigurátora pred aktualizáciou."
+        "message": "Používanie novšej verzie firmvéru so zastaralou verziou konfigurátora Vám pri zmene niektorých nastavení <strong>poškodí konfiguráciu firmvéru a znefunkční stroj</strong>. Taktiež, niektoré funkcie firmvéru budú dostupné len pomocou príkazového riadku.<br><strong>Betaflight konfigurátor vo verzii <b>$1</b> je dostupný na stiahnutie</strong>, prosíme navštívte <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">túto stránku</a>, odkiaľ si môžete stiahnuť a nainštalovať najnovšiu verziu s opravenými chybami a vylepšeniami.<br>Prosíme zatvorte okno konfigurátora pred aktualizáciou."
     },
     "configuratorUpdateWebsite": {
         "message": "Prejsť na webovú stránku aktualizácií"
@@ -173,7 +173,7 @@
         "message": "Zariadenie - <span class=\"message-positive\">je pripravené</span>"
     },
     "backupFileIncompatible": {
-        "message": "Prepáčte, zvolená záloha bola vygenerovaná pre predošlú verziu konfigurátora a nieje kompatibilná s momentálne používanou verziou konfigurátora"
+        "message": "Prepáčte, zvolená záloha bola vygenerovaná pre predošlú verziu konfigurátora a nieje kompatibilná s momentálne používanou verziou"
     },
     "backupFileUnmigratable": {
         "message": "Prepáčte, zvolená záloha bola vygenerovaná predošlou verziu konfigurátora a nieje možné ju premigrovať."
@@ -259,8 +259,14 @@
     "tabCLI": {
         "message": "Príkazový riadok (CLI)"
     },
+    "tabLogging": {
+        "message": "Reťazené logovanie"
+    },
     "tabOnboardLogging": {
         "message": "Čierna skrinka"
+    },
+    "tabAdjustments": {
+        "message": "Prispôsobenia"
     },
     "tabAuxiliary": {
         "message": "Režimy"
@@ -276,5 +282,156 @@
     },
     "serialErrorParityError": {
         "message": "Chyba sériového pripojenia: chyba parity"
+    },
+    "serialPortOpened": {
+        "message": "Sériový port <span class=\"message-positive\">úspešne</span> otvorený s identifikátorom: $1"
+    },
+    "serialPortOpenFail": {
+        "message": "<span class=\"message-negative\">Nepodarilo sa</span> otvoriť sériový port"
+    },
+    "serialPortClosedOk": {
+        "message": "Sériový port <span class=\"message-positive\">úspešne</span> zatvorený"
+    },
+    "serialPortClosedFail": {
+        "message": "<span class=\"message-negative\">Nepodarilo sa</span> zatvoriť sériový port"
+    },
+    "serialUnrecoverable": {
+        "message": "Neodstrániteľná <span class=\"message-negative\">chyba</span> v sériovom pripojení, odpájam..."
+    },
+    "serialPortLoading": {
+        "message": "Načítava sa ..."
+    },
+    "usbDeviceOpened": {
+        "message": "USB zariadenie <span class=\"message-positive\">úspešne</span> pripojené s identifikátorom: $1"
+    },
+    "usbDeviceOpenFail": {
+        "message": "<span class=\"message-negative\">Nepodarilo sa</span> pripojiť USB zariadenie!"
+    },
+    "usbDeviceClosed": {
+        "message": "USB zariadenie <span class=\"message-positive\">úspešne</span> odpojené"
+    },
+    "usbDeviceCloseFail": {
+        "message": "<span class=\"message-negative\">Nepodarilo sa </span> odpojiť USB zariadenie"
+    },
+    "usbDeviceUdevNotice": {
+        "message": "Skontrolujte si nastavenie pravidiel<strong> súborového systému.</strong> Viac informácii v dokumentácii"
+    },
+    "stm32RebootingToBootloader": {
+        "message": "Príprava reštartu do zavádzača ..."
+    },
+    "stm32RebootingToBootloaderFailed": {
+        "message": "Reštartovanie zariadenia do zavádzača: NEÚSPEŠNÉ"
+    },
+    "stm32TimedOut": {
+        "message": "STM32 - nereaguje, programovanie: NEÚSPEŠNÉ"
+    },
+    "stm32WrongResponse": {
+        "message": "Komunikácia s STM32 neúspešná, nesprávna odozva, očakávaná: $1 (0x$2) prijatá: $3 (0x$4)"
+    },
+    "stm32ContactingBootloader": {
+        "message": "Kontaktujem zavádzač ..."
+    },
+    "stm32ContactingBootloaderFailed": {
+        "message": "Nepodarilo sa nadviazať spojenie so zavádzačom"
+    },
+    "stm32ResponseBootloaderFailed": {
+        "message": "Zavádzač neodpovedá, programovanie: NEÚSPEŠNÉ"
+    },
+    "stm32GlobalEraseExtended": {
+        "message": "Prebieha úplné vymazanie procesora (pomocou rozšíreného vymazania) ..."
+    },
+    "stm32LocalEraseExtended": {
+        "message": "Prebieha lokálne vymazanie procesora (pomocou rozšíreného vymazania) ..."
+    },
+    "stm32GlobalErase": {
+        "message": "Prebieha úplné vymazanie procesora ..."
+    },
+    "stm32LocalErase": {
+        "message": "Prebieha lokálne vymazanie ..."
+    },
+    "stm32InvalidHex": {
+        "message": "Neplatný hex"
+    },
+    "stm32Erase": {
+        "message": "Vymazávam ..."
+    },
+    "stm32Flashing": {
+        "message": "Zapisujem ..."
+    },
+    "stm32Verifying": {
+        "message": "Kontrolujem ..."
+    },
+    "stm32ProgrammingSuccessful": {
+        "message": "Programovanie: ÚSPEŠNÉ"
+    },
+    "stm32ProgrammingFailed": {
+        "message": "Programovanie: NEÚSPEŠNÉ"
+    },
+    "stm32AddressLoadFailed": {
+        "message": "Nepodarilo sa prečítať adresu sektora s nastaveniami. Pravdepodobne kôli ochrane proti čítaniu."
+    },
+    "stm32AddressLoadSuccess": {
+        "message": "Načítanie adresy sektora s nastaveniami prebehlo úspešne."
+    },
+    "stm32AddressLoadUnknown": {
+        "message": "Načítanie adresy sektora s nastaveniami zlyhalo kôli neznámej chybe. Prerušujem."
+    },
+    "stm32NotReadProtected": {
+        "message": "Ochrana proti čítaniu neaktívna"
+    },
+    "stm32ReadProtected": {
+        "message": "Doska vypadá chránená proti čítaniu. Vypínam ochranu. Neodpájajte!"
+    },
+    "stm32UnprotectSuccessful": {
+        "message": "Ochrana úspešne vypnutá."
+    },
+    "stm32UnprotectUnplug": {
+        "message": "POTREBNÁ AKCIA: Odpojte a znovu pripojte letový ovládač v DFU móde a skúste programovať znovu!"
+    },
+    "stm32UnprotectFailed": {
+        "message": "Nepodarilo sa vypnúť ochranu dosky"
+    },
+    "stm32UnprotectInitFailed": {
+        "message": "Nepodarilo sa spustit rutinu zrušenia ochrany"
+    },
+    "firmwareVersionNotSupported": {
+        "message": "Táto verzia firmvéru <span class=\"message-negative\">nieje podporovaná</span>. Prosím aktualizujte na firmvér ktorý podporuje API vo verzii <strong>$1</strong> alebo vyššej. Na zálohu pred aktualizáciou použite príkazový riadok. Vykonanie zálohy a obnovy pomocou príkazového riadka nájdete v dokumentácii.<br />Prípadne, ak nemôžete aktualizovať, stiahnite a použite staršiu verziu konfigurátora."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Iný firmvér ako Betaflight <span class=\"message-negative\">nieje podporovaný</span>, okrem príkazového riadku."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "Verzia firmvéru na tomto zariadení vyžaduje aktualizáciu na novšiu verziu. Na zálohu pred aktualizáciou použite príkazový riadok. Vykonanie zálohy a obnovy pomocou príkazového riadku nájdete v dokumentácii.<br />Prípadne, ak nemôžete aktualizovať, stiahnite a použite staršiu verziu konfigurátora."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "Pro túto dosku sú k dispozícii prispôsobené predvolené nastavenia. Doska bežne nebude fungovať správne pokial tieto nastavenia nebudú použité.<br />Prajete si použiť prispôsobené nastavenia pre túto dosku?"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Použiť prispôsobené nastavenia"
+    },
+    "reportProblemsDialogHeader": {
+        "message": "Boli detekované nasledovné <strong>problémy s vašou konfiguráciou</strong>:"
+    },
+    "reportProblemsDialogFooter": {
+        "message": "Prosím <strong>opravte tieto problémy pred pokusom o let s vaším strojom</strong>."
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<strong>Verzia konfigurátora ktorú používate ($3) je staršia ako firmvér ktorý používate ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Nieje zvolený protokol ovládania motorov</strong>.<br>Prosím vyberte správny protokol ovládania motorov pre vaše ESC-čka vo '$t(configurationEscFeatures.message)' na '$t(tabConfiguration.message)' záložke.<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>Akcelerometer je povolený ale nieje nakalibrovaný</strong>.<br>Ak plánujete používať akcelerometer, prosím postupujte podľa inštrukcií na '$t(initialSetupButtonCalibrateAccel.message)' na '$t(tabSetup.message)' záložke. Ak je niektorá z funkcií ktoré vyžadujú akcelerometer povolená (automatické vyrovnávanie letu, GPS záchrana, ...), odistenie stroja bude zakázané dokiaľ akcelerometer nebude správne nakalibrovaný.<br>Ak akcelerometer používať neplánujete, je odporučené ho zakázať v '$t(configurationSystem.message)' na '$t(tabConfiguration.message)' záložke."
+    },
+    "infoVersions": {
+        "message": "Spustené - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurátor: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
+    },
+    "buildServerLoaded": {
+        "message": "Načítané informácie o kompilácii pre $1 zo servera."
+    },
+    "fcInfoReceived": {
+        "message": "Informácie o letovom ovládači, identifikátor: <strong>$1</strong>, verzia: <strong>$2</strong>"
     }
 }
