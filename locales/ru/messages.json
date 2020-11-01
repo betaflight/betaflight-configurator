@@ -82,6 +82,9 @@
     "analyticsOptOut": {
         "message": "Отказ от анонимной коллекции статистических данных"
     },
+    "cordovaForceComputerUI": {
+        "message": "Использовать интерфейс компьютера вместо интерфейса телефона"
+    },
     "language_changed": {
         "message": "Изменение языка сохранено"
     },
@@ -199,6 +202,9 @@
     "tabHelp": {
         "message": "Документация и поддержка"
     },
+    "tabOptions": {
+        "message": "Настройки"
+    },
     "tabSetup": {
         "message": "Система"
     },
@@ -291,6 +297,9 @@
     },
     "serialUnrecoverable": {
         "message": "Невосстановимый <span class=\"message-negative\">сбой</span> последовательного подключения, разъединяюсь..."
+    },
+    "serialPortLoading": {
+        "message": "Загрузка..."
     },
     "usbDeviceOpened": {
         "message": "USB устройство <span class=\"message-positive\">успешно</span> подключено. ID подключения: $1"
@@ -393,6 +402,9 @@
     },
     "firmwareVersionNotSupported": {
         "message": "Версия этой прошивки <span class=\"message-negative\">не поддерживается</span> данным конфигуратором. Пожалуйста, обновите прошивку, которая поддерживает версию конфигуратора <strong>$1</strong> или выше. Используйте командную строку, чтобы сделать резервную копию прошивки перед тем, как обновлять прошивку. Процедура создания/восстановления резервной копии описана в документации.<br />Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Прошивка не Betaflight <span class=\"message-negative\">не поддерживается</span>, за исключением режима CLI."
     },
     "firmwareUpgradeRequired": {
         "message": "Прошивка в этом устройстве нуждается в обновлении до новой версии. Используйте командную строку, чтобы сделать резервную копию перед обновлением прошивки. Процедура создания/восстановления резервной копии описана в документации.<br />Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
@@ -504,6 +516,14 @@
         "message": "Загруженность порта:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Ошибки пакетов:",
         "description": "Packet error text shown in the status bar"
@@ -515,6 +535,10 @@
     "statusbar_cycle_time": {
         "message": "Время цикла:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Загрузка ЦПУ:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Пожалуйста, используйте \"Программатор\" для доступа к DFU устройств"
@@ -1337,6 +1361,15 @@
     "configurationButtonSave": {
         "message": "Сохранить и Перезагрузить"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Изменение динамических значений Notch"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>ПРЕДУПРЕЖДЕНИЕ: Некоторые значения dynamic notch были изменены на значения по умолчанию</b></span> потому что была активирована/деактивирована фильтрация RPM.<br> Пожалуйста, проверьте перед полетом."
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
+    },
     "portsIdentifier": {
         "message": "Идентификатор"
     },
@@ -1634,6 +1667,33 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> использование D Setpoint больше 0 и меньше, чем 0.1 не рекомендуется. Это может привести к нестабильности и снижению чувствительности стиков когда стик пересекает центральную точку.</span>"
     },
+    "pidTuningFfInterpolateSp": {
+        "message": "Интерполяция FF"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "Следующие опции настраивают FF (feed forward) от агрессивного до плавного.<br><br> Режим: установите 'Не усреднять' для гоночного, 'Усреднять 2' для гоночного/быстрого фристайл режима, 'Усреднять 3' для HD видеосъемки, 'Усреднять 4' для кинематографической плавности.<br><br> Плавность: ограничивает количество изменений, которое может произвести любой один входящий шаг с пульта, увеличьте для более плавного сигнала FF, уменьшите для более агрессивных реакций FF.<br><br> Ускорение: помогает преодолевать заторможенность моторов при быстрых движениях стиков, может увеличить склонность к тряске. Попробуйте 10 для плавного, 20 для гонончного режима. До 30 может быть приемлемым для квадрокоптеров со слабой управляемостью, но может вызвать небольшие \"перебарщивания\" или склонность к тряске."
+    },
+    "pidTuningFfInterpolate": {
+        "message": "Режим"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "Не усреднять"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "Усреднять 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "Усреднять 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "Усреднять 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Плавность"
+    },
+    "pidTuningFfBoost": {
+        "message": "Ускорение"
+    },
     "pidTuningProportional": {
         "message": "Proportional"
     },
@@ -1863,6 +1923,12 @@
     },
     "receiverRefreshRateTitle": {
         "message": "Частота обновления граф"
+    },
+    "receiverResetRefreshRate": {
+        "message": "Сбросить"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Сброс частоты обновления"
     },
     "receiverButtonSave": {
         "message": "Сохранить"
@@ -2355,6 +2421,39 @@
     "motorsEnableControl": {
         "message": "<strong>Я понимаю всю опасность</strong>, пропеллеры сняты - включить управление моторами и арминг, и отключить \"Режим Защиты От Неконтролируемого Полёта\"."
     },
+    "motorOutputReorderDialogClose": {
+        "message": "Отмена"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Старт"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Переназначение моторов"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Переназначить моторы"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Нажмите на вращающийся мотор..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Готово! Проверьте порядок вращения двигателей, нажав на изображение."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Я понимаю риски</strong>,<br />пропеллеры сняты."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Уведомление о безопасности</strong><br /><strong class=\"message-negative\">Для предотвращения травм, снимите все пропеллеры!</strong><br />Моторы будут <strong>вращаться!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Уведомление</strong><br />Моторы будут вращаться по очереди, и вы сможете выбрать, какой двигатель вращается. Необходимо подключить аккумулятор и правильно выбрать протокол ESC. Эта утилита может изменять только действующие в настоящий момент двигатели. Более сложное переназначение требует команды CLI Resource. Обратитесь к этой <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki странице</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Сохранить"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Начать заново"
+    },
     "sensorsInfo": {
         "message": "Имейте в виду, что используя быстрое обновление периодов и рендеринга множества графов достаточно тяжело для ресурсов и будет сжигать вашу батарею быстрее, если вы используете ноутбук.<br />мы рекомендуем только отображения графики датчиков интересующих разумное обновление периодов."
     },
@@ -2384,6 +2483,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Гироскоп - град/с"
+    },
+    "sensorsAccelTitle": {
+        "message": "Акселерометр - g"
     },
     "sensorsMagTitle": {
         "message": "Магнитометр - Ga"
@@ -2525,6 +2627,15 @@
     },
     "dataflashButtonSaveFile": {
         "message": "Сохранено в файл..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Сохранить флеш в файл... (не поддерживается)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Непосредственное сохранение флэш в файл медленно и неизбежно подвержено ошибке / повреждению файла.<br>В некоторых случаях он будет работать для небольших файлов, но это не поддерживается и запросы на поддержку будут закрыты без комментариев - вместо этого используйте режим массового хранения."
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Этот метод медленный и неизбежно подвержен ошибке / повреждению файла, потому что соединение с MSP само по себе имеет intrinsic, фундаментальные ограничения, которые делают его непригодным для передачи файлов. Он может работать только для небольших лог файлов. Не создавайте запросы поддержки, если передача файлов не будет произведена при использовании этого метода. Рекомендуется использовать '<b>$t(onboardLoggingRebootMscText.message)</b>' (ниже) для активации режима массового хранения и доступа к контроллеру полета в качестве устройства хранения для загрузки лог файлов."
     },
     "dataflashButtonErase": {
         "message": "Стереть флэш"
@@ -3428,6 +3539,9 @@
     "pidTuningDTermLowpassDynType": {
         "message": "D Term Lowpass 1 Dynamic, тип фильтра"
     },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "Экспонента 1 кривой нижнего фильтра параметра D"
+    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term режекторный фильтр"
     },
@@ -3448,6 +3562,24 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "Увеличивает значения PID-ов, в целях компенсации, при низком заряде батареи. Это даёт более стабильные лётные характеристики на протяжении всего полёта. Значение компенсации вычисляется исходя $t(powerBatteryMaximum.message), установленного во вкладке $t(tabPower.message)."
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "Компенсация просадки напряжения батареи"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Обеспечивает равномерную отзывчивость дросселя и PID-ов в пределах используемого напряжения аккумулятора за счет компенсации просадки напряжения аккумулятора. Размер компенсации может быть изменен в пределах от 0 до 100%. Рекомендуется использовать полную компенсацию (100%).<br><br>Посетите <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">эту запись wiki</a> для получения дополнительной информации."
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Линейная тяга"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Компенсация нелинейного соотношения между дросселем и тяговй путем применения обратной кривой тяги двигателя к выходу мотора. Размер компенсации может быть изменен в пределах от 0 до 150%."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I Term поворот"
@@ -3767,6 +3899,9 @@
     "powerVoltageHead": {
         "message": "Датчик напряжения"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Предупреждение:</span> Значения ограничены 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3856,6 +3991,9 @@
     },
     "powerAmperageHead": {
         "message": "Датчик тока"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Предупреждение:</span> Значения ограничены 63.5A."
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -4024,6 +4162,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Метрические",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "British",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
@@ -4585,6 +4727,13 @@
     },
     "osdDescElementEfficiency": {
         "message": "Мгновенное потребление аккумулятора в mAh/растояние. (Требуется корректный GPS fix)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Всего полётов",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Приблизительно общее количество полетов"
     },
     "osdTextElementUnknown": {
         "message": "Неизвестно ($1)",
@@ -5536,5 +5685,74 @@
     "gpsSbasNone": {
         "message": "Никакой",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "Имя файла"
+    },
+    "dialogFileNameDescription": {
+        "message": "Файл будет сохранен в папке '{{folder}}' на вашем внутреннем хранилище."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "Этот файл уже существует!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Перезаписать ?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "Проверка веб-приложений ..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Несовместимая версия webview"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Вы должны обновить webview вашего устройства, чтобы использовать конфигуратор."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "Приведенный ниже инструмент предназначен для того, чтобы помочь вам установить новый webview или обновить уже установленный."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Доступные веб-приложения на вашем устройстве"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Установка приложения <b>{{app}}</b> может решить эту проблему совместимости."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Установить из Google Play Store"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "Удаление приложения <b>{{app}}</b> может решить эту проблему совместимости. Если вы не можете удалить его, попробуйте отключить его из настроек."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Удалить из Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Удалить / отключить из настроек"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "Обновление приложения <b>{{app}}</b> может решить эту проблему совместимости."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Обновить из Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Перейдите на вкладку информации о вашем устройстве в настройках и нажмите 10 раз на номер версии сборки, чтобы включить 'Параметры разработчика'. После этого найдите и перейдите в настройки разработчика и выберите <b>{{app}}</b> в качестве поставщика веб-просмотра."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Открыть настройки"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Кажется, ваше устройство не совместимо. Попробуйте найти другие способы обновить ваш webview"
+    },
+    "cordovaNoWebview": {
+        "message": "Приложение webview не установлено / не включено"
+    },
+    "cordovaWebviewUsed": {
+        "message": "используется"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Подтверждение"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Вы действительно хотите закрыть конфигуратор?"
     }
 }
