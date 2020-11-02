@@ -316,6 +316,9 @@
     "usbDeviceUdevNotice": {
         "message": "Skontrolujte si nastavenie pravidiel<strong> súborového systému.</strong> Viac informácii v dokumentácii"
     },
+    "stm32UsbDfuNotFound": {
+        "message": "USB DFU sa nenašlo"
+    },
     "stm32RebootingToBootloader": {
         "message": "Príprava reštartu do zavádzača ..."
     },
@@ -394,6 +397,9 @@
     "stm32UnprotectInitFailed": {
         "message": "Nepodarilo sa spustit rutinu zrušenia ochrany"
     },
+    "noConfigurationReceived": {
+        "message": "V priebehu <span class=\"message-negative\">10 sekúnd</span> nebola prijatá žiadna konfigurácia, komunikácia <span class=\"message-negative\">zlyhala</span>"
+    },
     "firmwareVersionNotSupported": {
         "message": "Táto verzia firmvéru <span class=\"message-negative\">nieje podporovaná</span>. Prosím aktualizujte na firmvér ktorý podporuje API vo verzii <strong>$1</strong> alebo vyššej. Na zálohu pred aktualizáciou použite príkazový riadok. Vykonanie zálohy a obnovy pomocou príkazového riadka nájdete v dokumentácii.<br />Prípadne, ak nemôžete aktualizovať, stiahnite a použite staršiu verziu konfigurátora."
     },
@@ -429,9 +435,314 @@
         "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "buildServerLoaded": {
-        "message": "Načítané informácie o kompilácii pre $1 zo servera."
+        "message": "Načítané informácie o verzii $1 zo servera."
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>Požiadavka na server o verzii $1 bez odpovedi, používajú sa informácie zo zásobníku. Dôvod: <code>$2</code></b>"
+    },
+    "buildServerUsingCached": {
+        "message": "Pre verziu $1 sa používajú informácie zo zásobníku."
+    },
+    "releaseCheckLoaded": {
+        "message": "Načítané informácie o verzii $1 z GitHubu."
+    },
+    "releaseCheckFailed": {
+        "message": "<b>Požiadavka na GitHub o verzii $1 zlyhala, používajú sa informácie zo zásobníku. Dôvod: <code>$2</code></b>"
+    },
+    "releaseCheckCached": {
+        "message": "Pre verziu $1 sa používajú informácie zo zásobníku."
+    },
+    "releaseCheckNoInfo": {
+        "message": "Pre verziu $1 niesú dostupné žiadne informácie."
+    },
+    "tabSwitchWaitForOperation": {
+        "message": "Toto momentálne <span class=\"message-negative\">nemôžete</span> urobiť, prosím počkajte kým sa ukončí prebiehajúca operácia..."
+    },
+    "tabSwitchUpgradeRequired": {
+        "message": "Pred použitím záložky $1 musíte <strong>aktualizovať</strong> firmvér na najnovšiu verziu."
+    },
+    "firmwareVersion": {
+        "message": "Verzia firmvéru: <strong>$1</strong>"
+    },
+    "apiVersionReceived": {
+        "message": "Verzia API MultiWii: <strong>$1</strong>"
+    },
+    "uniqueDeviceIdReceived": {
+        "message": "Unikátne ID zariadenia: <strong>0x$1</strong>"
+    },
+    "armingDisabled": {
+        "message": "<strong>Odistenie zakázané</strong>"
+    },
+    "armingEnabled": {
+        "message": "<strong>Odistenie povolené</strong>"
+    },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong>Ochrana proti nekontrolovanému odletu dočasne Zakázana</strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong>Ochrana proti nekontrolovanému odletu Povolená</strong>"
+    },
+    "boardInfoReceived": {
+        "message": "Doska: <strong>$1</strong>, verzia: <strong>$2</strong>"
+    },
+    "buildInfoReceived": {
+        "message": "Aktuálne používaný firmvér bol vydaný: <strong>$1</strong>"
     },
     "fcInfoReceived": {
         "message": "Informácie o letovom ovládači, identifikátor: <strong>$1</strong>, verzia: <strong>$2</strong>"
+    },
+    "versionLabelTarget": {
+        "message": "Cieľové zariadenie"
+    },
+    "versionLabelFirmware": {
+        "message": "Firmvér"
+    },
+    "versionLabelConfigurator": {
+        "message": "Konfigurátor"
+    },
+    "notifications_app_just_updated_to_version": {
+        "message": "Aplikácia sa aktualizovala na verziu: $1"
+    },
+    "notifications_click_here_to_start_app": {
+        "message": "Kliknite sem pre spustenie aplikácie"
+    },
+    "statusbar_port_utilization": {
+        "message": "Využitie portu:",
+        "description": "Port utilization text shown in the status bar"
+    },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_packet_error": {
+        "message": "Chyba paketu:",
+        "description": "Packet error text shown in the status bar"
+    },
+    "statusbar_i2c_error": {
+        "message": "Chyba I2C:",
+        "description": "CPU load text shown in the status bar"
+    },
+    "statusbar_cycle_time": {
+        "message": "Čas cyklu:",
+        "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Vyťaženie CPU:",
+        "description": "CPU load text shown in the status bar"
+    },
+    "dfu_connect_message": {
+        "message": "Prosím, použite programátor firmvéru pre prístup k DFU zariadeniam"
+    },
+    "dfu_erased_kilobytes": {
+        "message": "<span class=\"message-positive\">Úspešne</span> vymazané $1 kB pamäti"
+    },
+    "dfu_device_flash_info": {
+        "message": "Detekované zariadenie s celkovou veľkosťou pamäte $1 KiB"
+    },
+    "dfu_error_image_size": {
+        "message": "<span class=\"message-negative\">Chyba</span>: Veľkosť načítaného súboru je väčšia ako veľkosť pamäti procesora: Súbor: $1 KiB, limit = $2 KiB"
+    },
+    "eeprom_saved_ok": {
+        "message": "EEPROM <span class=\"message-positive\">uložená</span>"
+    },
+    "defaultWelcomeIntro": {
+        "message": "Vitajte v <strong>Betaflight - Konfigurátore</strong>, nástroji pre jednoduché aktualizovanie, nastavovanie a ladenie vášho letového ovládača."
+    },
+    "defaultWelcomeHead": {
+        "message": "Hardvér"
+    },
+    "defaultWelcomeText": {
+        "message": "Táto aplikácia podporuje každý hardvér ktorý dokáže spustiť Betaflight. Pre kompletný zoznam harvéru pozrite záložku programovania.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Stiahnuť Betaflight utilitu pre prezeranie dát z čiernej skrinky</a><br /><br />Zdrojový kód firmvéru možete stiahnuť <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br /><br />Najnovšie <b>STM USB VCP ovládače</b> možete stiahnuť <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br />Pre starší hardvér používajúci CP210x USB prevodník:<br />Najnovšie <b>CP210x ovládače</b> možete stiahnuť <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br />Najnovšiu utilitu <b>Zadig</b> pre výber USB ovládačov vo Windowse, možete stiahnuť <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br />"
+    },
+    "defaultContributingHead": {
+        "message": "Spolupráca"
+    },
+    "defaultContributingText": {
+        "message": "Ak by ste chceli pomôcť urobiť Betaflight ešte lepším, môžete tak urobiť rôznymi spôsobmi, napríklad:<br /><ul><li>využiť vaše vedomosti o Betaflighte a vytvoriť, alebo aktualizovať <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">našu Wiki</a>, alebo odpovedať na otázky iných užívateľov na našich online fórach;</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">prispievať vývojom kódu</a> firmvéru a Konfigurátora - novými vlastnosťami, opravami, vylepšeniami;</li><li>testovaním <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nových vlastností a opráv</a> a poskytovaním spätnej väzby;</li><li>pomôcť ostatným užívaťeľom vyriešiť problémy, ktoré reportovali na <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">našom sledovači problémov</a>, a prispievať do diskusie ohľadne požiadavok na nové vlastnosti;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">prekladom</a> Betaflight Konfigurátora do nového jazyka, alebo pomôcť udržiavať existujúce preklady.</li></ul>"
+    },
+    "defaultFacebookText": {
+        "message": "Taktiež máme <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebookovú Skupinu</a>.<br />Pridajte sa k nám a objavte miesto na debatu okolo Betaflightu, pýtajte sa otázky ohľadne konfigurácie, alebo len strávte čas s ostatnými pilotmi."
+    },
+    "defaultChangelogHead": {
+        "message": "Konfigurátor - história zmien"
+    },
+    "defaultButtonFirmwareFlasher": {
+        "message": "Programátor firmvéru"
+    },
+    "defaultDonateHead": {
+        "message": "Poznámka k Open Source / Sponzorským darom"
+    },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight</strong> je softvér letového ovládača s otvoreným <strong>(open source)</strong> zdrojovým kódom, ktorý je poskytovaný zadarmo a <strong>bez záruk</strong> všetkým používateľom.</p><p>Ak nachádzate Betaflight alebo Betaflight Konfigurátor užitočnými, prosíme zvážte <strong>podporu</strong> ich vývoja príspevkom.</p>"
+    },
+    "defaultDonateBottom": {
+        "message": "<p>Ak chcete pravidelne prispievať finančne, mali by ste zvážiť možnosť stať sa naším patrónom na $t(patreonLink.message).</p>"
+    },
+    "patreonLink": {
+        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
+        "description": "Patreon is name, and should not require translation"
+    },
+    "defaultDonate": {
+        "message": "Prispieť"
+    },
+    "defaultSponsorsHead": {
+        "message": "Sponzori"
+    },
+    "defaultDocumentationHead": {
+        "message": "Dokumentácia / Návod"
+    },
+    "defaultDocumentation": {
+        "message": "Dokumentácia k Betaflightu je dostupná v poznámkach k verziám a na wiki.<br /><br />"
+    },
+    "defaultDocumentation1": {
+        "message": "Betaflight wiki je skvelý zdroj informácií, môžete ho nájsť <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a>."
+    },
+    "defaultDocumentation2": {
+        "message": "Poznámky k aktualizáciám firmvéru si môžete prečítať na stránke GitHubu, <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a>."
+    },
+    "defaultSupportHead": {
+        "message": "Podpora"
+    },
+    "defaultSupportSubline1": {
+        "message": "Zdroje podpory"
+    },
+    "defaultSupportSubline2": {
+        "message": "Vývojár"
+    },
+    "defaultSupport1": {
+        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">vlákno na fóre RC Groups</a>"
+    },
+    "defaultSupport2": {
+        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki</a>"
+    },
+    "defaultSupport3": {
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight videá od Joshuu Bardwella</a>"
+    },
+    "defaultSupport4": {
+        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Vývojári Betaflight na slack-u</a>"
+    },
+    "initialSetupBackupAndRestoreApiVersion": {
+        "message": "<span class=\"message-negative\">Funkcie zálohy a obnovy sú zakázané.</span> Používate firmvér s API verzie <span class=\"message-negative\">$1</span>, zálohovanie a obnova vyžadujú <span class=\"message-positive\">$2</span>.  Prosím zálohujte vaše nastavenia pomocou príkazového riadku, postup nájdete v dokumentácii Betaflightu."
+    },
+    "initialSetupButtonCalibrateAccel": {
+        "message": "Kalibrácia Akcelerometra"
+    },
+    "initialSetupCalibrateAccelText": {
+        "message": "Položte ovládač alebo stroj na <strong>vodorovný</strong> povrch, spusťte kalibráciu, uistite sa, aby sa počas kalibrácie ovládač, alebo stroj nepohli"
+    },
+    "initialSetupButtonCalibrateMag": {
+        "message": "Kalibrácia Magnetometra"
+    },
+    "initialSetupCalibrateMagText": {
+        "message": "Pootáčajte multi-rotorom najmenej o <strong>360</strong> stupňov vo všetkých osách, máte na to 30 sekúnd"
+    },
+    "initialSetupButtonCalibratingText": {
+        "message": "Kalibrujem..."
+    },
+    "initialSetupButtonReset": {
+        "message": "Resetovať nastavenia"
+    },
+    "initialSetupResetText": {
+        "message": "Obnoviť do <strong>predvolených</strong> nastavení"
+    },
+    "initialSetupButtonBackup": {
+        "message": "Záloha"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Obnoviť"
+    },
+    "initialSetupButtonRebootBootloader": {
+        "message": "Aktivovať zavádzač / DFU"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "Pre prípad nehody <strong>zálohujte</strong> vašu konfiguráciu, Nastavenia <strong>príkazovéhu riadka </strong>niesú<span class=\"message-negative\"></span> zahrnuté - na toto použite príkaz 'diff all' v príkazovom riadku."
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Reštart do <strong>zavádzača / DFU</strong> mód."
+    },
+    "initialSetupBackupSuccess": {
+        "message": "Záloha <span class=\"message-positive\">úspešne</span> uložená"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "Konfigurácia <span class=\"message-positive\">úspešne</span> obnovená"
+    },
+    "initialSetupButtonResetZaxis": {
+        "message": "Reset osi Z, odchýlka: 0 stupňov"
+    },
+    "initialSetupButtonResetZaxisValue": {
+        "message": "Reset osi Z, odchýlka: $1 stupňov"
+    },
+    "initialSetupMixerHead": {
+        "message": "Typ mixu"
+    },
+    "initialSetupThrottleHead": {
+        "message": "Nastavenie plynu"
+    },
+    "initialSetupMinimum": {
+        "message": "Minimum:"
+    },
+    "initialSetupMaximum": {
+        "message": "Maximum:"
+    },
+    "initialSetupFailsafe": {
+        "message": "Ochrana pred stratou signálu:"
+    },
+    "initialSetupBatteryHead": {
+        "message": "Batéria"
+    },
+    "initialSetupMinCellV": {
+        "message": "Min. napätie článku:"
+    },
+    "initialSetupMaxCellV": {
+        "message": "Max. napätie článku:"
+    },
+    "initialSetupAccelTrimsHead": {
+        "message": "Doladenie akcelerometra"
+    },
+    "initialSetupPitch": {
+        "message": "Pozdĺžny náklon (Pitch):"
+    },
+    "initialSetupRoll": {
+        "message": "Priečny náklon (Roll):"
+    },
+    "initialSetupMagHead": {
+        "message": "Magnetometer"
+    },
+    "initialSetupInfoHead": {
+        "message": "Info"
+    },
+    "initialSetupBattery": {
+        "message": "Napätie batérie:"
+    },
+    "initialSetupBatteryValue": {
+        "message": "$1 V"
+    },
+    "initialSetupDrawn": {
+        "message": "Spotrebovaná kapacita:"
+    },
+    "initialSetupDrawing": {
+        "message": "Odber prúdu:"
+    },
+    "initialSetupBatteryMahValue": {
+        "message": "$1 mAh"
+    },
+    "initialSetupBatteryAValue": {
+        "message": "$1 A"
+    },
+    "initialSetupRSSI": {
+        "message": "RSSI:"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 %"
+    },
+    "initialSetupArmingAllowed": {
+        "message": "Odistenie povolené"
     }
 }
