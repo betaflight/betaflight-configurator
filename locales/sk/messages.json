@@ -74,7 +74,7 @@
         "message": "Zobraziť nevydané a potenciálne nestabilné verzie"
     },
     "permanentExpertMode": {
-        "message": "Trvalo povoliť expertný režim"
+        "message": "Permanentne povoliť expertný režim"
     },
     "rememberLastTab": {
         "message": "Po pripojení otvoriť poslednú záložku"
@@ -694,6 +694,9 @@
     "initialSetupFailsafe": {
         "message": "Ochrana pred stratou signálu:"
     },
+    "initialSetupMinCommand": {
+        "message": "Min. Príkaz:"
+    },
     "initialSetupBatteryHead": {
         "message": "Batéria"
     },
@@ -742,7 +745,189 @@
     "initialSetupRSSIValue": {
         "message": "$1 %"
     },
+    "initialSetupArmingDisableFlags": {
+        "message": "Indikátory zákazu odistenia:"
+    },
     "initialSetupArmingAllowed": {
         "message": "Odistenie povolené"
+    },
+    "initialSetupArmingDisableFlagsTooltip": {
+        "message": "Zoznam indikátorov zobrazuje dôvody prečo odistenie momentálne nieje možné. Presuňte kurzor nad indikátor, alebo si prečítajte Wiki (stránka 'Sekvencia odistenia a Bezpečnosť') pre viac informácií."
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
+        "message": "Nenašiel sa gyroskop",
+        "description": "Message that pops up to describe the NO_GYRO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+        "message": "Váš prijímač obnovil komunikáciu po strate signálu, ale je odistené",
+        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
+        "message": "Aktivovaný prepínač ochrany pred stratou signálu 'FAILSAFE'",
+        "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
+        "message": "Bola spustená ochrana proti nekontrolovanému odletu",
+        "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCRASH": {
+        "message": "Zaistené kôli detekovanému nárazu",
+        "description": "Message that pops up to describe the CRASH arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "Stroj je príliš vychýlený",
+        "description": "Message that pops up to describe the ANGLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
+        "message": "Odistené príliš skoro po zapnutí",
+        "description": "Message that pops up to describe the BOOT_GRACE_TIME arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
+        "message": "Prepínač poistky pred odistením nieje aktivovaý, alebo nebol prepnutý po zaistení",
+        "description": "Message that pops up to describe the NOPREARM arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOAD": {
+        "message": "Vyťaženie systému je príliš vysoké pre bezpečný let",
+        "description": "Message that pops up to describe the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Stále prebieha kalibrácia senzoru",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCLI": {
+        "message": "Príkazový riadok je aktívny",
+        "description": "Message that pops up to describe the CLI arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
+        "message": "CMS (konfiguračné menu) je aktívne - cez OSD alebo iný displej -",
+        "description": "Message that pops up to describe the CMS_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
+        "message": "OSD menu je aktívne",
+        "description": "Message that pops up to describe the OSD_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBST": {
+        "message": "Zariadenie telemetrie Black Sheep (napríklad TBS Core pro) zabraňuje odisteniu",
+        "description": "Message that pops up to describe the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "Pripojenie MSP je aktívne, pravdepodobne kvôli tomuto Betaflight Konfigurátoru",
+        "description": "Message that pops up to describe the MSP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
+        "message": "Mód paralýzy je aktívny",
+        "description": "Message that pops up to describe the PARALYZE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipGPS": {
+        "message": "Nebol zachytený potrebný počet satelitov, ktorý vyžaduje konfigurácia GPS záchrany",
+        "description": "Message that pops up to describe the GPS arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
+        "message": "Filtrovanie založené na otáčkach motorov je povolené, ale jedno, alebo viac ESC neposkytuje platnú telemetriu. Skontrolujte či sú ESC schopné a majú nainštalovaný firmvér, ktorý podporuje obojsmernú DSHOT telemetriu.",
+        "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+        "message": "Zmena konfigurácie vyžaduje reštart",
+        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+        "message": "\"Bit-bangový\" DSHOT nefunguje správne a nieje možné ovládať motory. Pravdepodobne spôsobené konfliktom medzi časovačom a inými funkciami povolenými na letovom ovládači.",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
+        "message": "Akcelerometer nebol nakalibrovaný ale funkcie na ňom závislé sú povolené. Nakalibrujte akcelerometer.",
+        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Nieje vybraný protokol ovládania motorov",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
+        "message": "Niektorý z dalších indikátorov zaistenia je aktívny",
+        "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
+    },
+    "initialSetupGPSHead": {
+        "message": "GPS"
+    },
+    "initialSetupButtonSave": {
+        "message": "Uložiť"
+    },
+    "initialSetupModel": {
+        "message": "Model: $1"
+    },
+    "initialSetupAttitude": {
+        "message": "$1°"
+    },
+    "initialSetupAccelCalibStarted": {
+        "message": "Zahájená kalibrácia akcelerometra"
+    },
+    "initialSetupAccelCalibEnded": {
+        "message": "Kalibrácia akcelerometra <span class=\"message-positive\">dokončená</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "Zahájená kalibrácia magnetometra"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Kalibrácia magnetometra <span class=\"message-positive\">dokončená</span>"
+    },
+    "initialSetupEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">uložená</span>"
+    },
+    "featureVBAT": {
+        "message": "Monitorovanie napätia batérie"
+    },
+    "featureINFLIGHT_ACC_CAL": {
+        "message": "Kalibrácia akcelerometra počas letu"
+    },
+    "featureRX_SERIAL": {
+        "message": "Prijímač založený na sériovej komunikácii (SPEKSAT, SBUS, SUMD)"
+    },
+    "featureSERVO_TILTTip": {
+        "message": "Táto funkcia povolí CAMSTAB mód, pomocou ktorého akcelerometer dokáže stabilizovať až dve osi"
+    },
+    "featureGPS": {
+        "message": "GPS pre navigáciu a telemetriu"
+    },
+    "featureSONAR": {
+        "message": "Sonar"
+    },
+    "featureTELEMETRY": {
+        "message": "Výstup telemetrie"
+    },
+    "featureCURRENT_METER": {
+        "message": "Monitorovanie prúdu batérie"
+    },
+    "featureRX_PARALLEL_PWM": {
+        "message": "Vstup PWM RX (jeden káblik na kanál)"
+    },
+    "featureRX_MSP": {
+        "message": "Vstup MSP RX (ovládanie cez port MSP)"
+    },
+    "featureRSSI_ADC": {
+        "message": "Analógový vstup RSSI"
+    },
+    "featureLED_STRIP": {
+        "message": "Podpora viac-farebných RGB LED pásikov"
+    },
+    "featureONESHOT125Tip": {
+        "message": "Pred povolením odpojte batériu a demontujte vrtule."
+    },
+    "featureBLACKBOX": {
+        "message": "Čierna skrinka, záznamník letových dát"
+    },
+    "featureBLACKBOXTip": {
+        "message": "Po zapnutí nastavte cez záložku Čiernej skrinky."
+    },
+    "featureRX_SPI": {
+        "message": "Podpora SPI RX"
+    },
+    "featureTRANSPONDER": {
+        "message": "Pretekársky transpondér"
+    },
+    "featureSDCARD": {
+        "message": "Podpora SD karty (pre záznamy)"
+    },
+    "featureVTX": {
+        "message": "Video vysielač"
     }
 }
