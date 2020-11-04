@@ -316,7 +316,7 @@ function dist_rollup() {
                 // in dist on the left, on the right it's input file path.
                 // If all the things used by other files are importing
                 // it with `import/export` file doesn't have to be here.
-                // I will be picked up by rollup and bundled accrodingly.
+                // I will be picked up by rollup and bundled accordingly.
                 'components/init': 'src/components/init.js',
                 'js/main_cordova': 'src/js/main_cordova.js',
             },
