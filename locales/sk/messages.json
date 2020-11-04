@@ -929,5 +929,8 @@
     },
     "featureVTX": {
         "message": "Video vysielač"
+    },
+    "configurationReceiver": {
+        "message": "Prijímač"
     }
 }
