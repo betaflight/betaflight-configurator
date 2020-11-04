@@ -1,4 +1,4 @@
-'use strict';
+import { i18n } from "./localization.js";
 
 const REQUIRED_WEBVIEW_VERSION = 72;
 const WEBVIEW = {
