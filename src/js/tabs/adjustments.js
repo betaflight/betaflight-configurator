@@ -291,7 +291,9 @@ TABS.adjustments.adjust_template = function () {
     var selectFunction = $('#functionSelectionSelect');
     var elementsNumber;
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        elementsNumber = 32; // add PID Profile Select
+    } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
         elementsNumber = 31; // OSD Profile Select & LED Profile Select
     } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
         elementsNumber = 29; // PID Audio
