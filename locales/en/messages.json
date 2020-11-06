@@ -2264,6 +2264,9 @@
     "adjustmentsFunction30": {
         "message": "LED Profile Selection"
     },
+    "adjustmentsFunction31": {
+        "message": "PID Profile Selection"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },
