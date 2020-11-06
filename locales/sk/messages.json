@@ -882,11 +882,23 @@
     "featureRX_SERIAL": {
         "message": "Prijímač založený na sériovej komunikácii (SPEKSAT, SBUS, SUMD)"
     },
+    "featureMOTOR_STOP": {
+        "message": "Netočiť motory po odistení"
+    },
+    "featureSERVO_TILT": {
+        "message": "Gimbal serva"
+    },
     "featureSERVO_TILTTip": {
         "message": "Táto funkcia povolí CAMSTAB mód, pomocou ktorého akcelerometer dokáže stabilizovať až dve osi"
     },
+    "featureSOFTSERIAL": {
+        "message": "Povoliť softvérové sériové porty"
+    },
     "featureGPS": {
         "message": "GPS pre navigáciu a telemetriu"
+    },
+    "featureGPSTip": {
+        "message": "Najskôr nakonfigurujte porty"
     },
     "featureSONAR": {
         "message": "Sonar"
