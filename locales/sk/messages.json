@@ -709,12 +709,6 @@
     "initialSetupAccelTrimsHead": {
         "message": "Doladenie akcelerometra"
     },
-    "initialSetupPitch": {
-        "message": "Pozdĺžny náklon (Pitch):"
-    },
-    "initialSetupRoll": {
-        "message": "Priečny náklon (Roll):"
-    },
     "initialSetupMagHead": {
         "message": "Magnetometer"
     },
@@ -757,6 +751,10 @@
     "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
         "message": "Nenašiel sa gyroskop",
         "description": "Message that pops up to describe the NO_GYRO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
+        "message": "Ochrana pred stratou signálu (Failsafe) je aktívna",
+        "description": "Message that pops up to describe the FAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
         "message": "Váš prijímač obnovil komunikáciu po strate signálu, ale je odistené",
@@ -909,6 +907,9 @@
     "featureCURRENT_METER": {
         "message": "Monitorovanie prúdu batérie"
     },
+    "feature3D": {
+        "message": "3D mód (pre použitie s ESC so spiatočkou)"
+    },
     "featureRX_PARALLEL_PWM": {
         "message": "Vstup PWM RX (jeden káblik na kanál)"
     },
@@ -920,6 +921,12 @@
     },
     "featureLED_STRIP": {
         "message": "Podpora viac-farebných RGB LED pásikov"
+    },
+    "featureDISPLAY": {
+        "message": "OLED displej"
+    },
+    "featureDISPLAYTip": {
+        "message": "Ak je táto funkcia povolená a nieje pripojené žiadne zobrazovacie zariadenie (alebo je zobrazovacie zariadenie vypnuté), každý reštart letového ovládača bude spomalený o približne 10 sekúnd."
     },
     "featureONESHOT125Tip": {
         "message": "Pred povolením odpojte batériu a demontujte vrtule."
@@ -933,8 +940,23 @@
     "featureRX_SPI": {
         "message": "Podpora SPI RX"
     },
+    "featureESC_SENSOR": {
+        "message": "Použiť telemetriu KISS/BLHeli_32 <b>cez samostatný káblik</b>"
+    },
+    "featureCHANNEL_FORWARDING": {
+        "message": "Preposlať kanály AUX na výstupy serv"
+    },
     "featureTRANSPONDER": {
         "message": "Pretekársky transpondér"
+    },
+    "featureTRANSPONDERTip": {
+        "message": "Po zapnutí, nastavte cez záložku Pretekársky transpondér."
+    },
+    "featureAIRMODE": {
+        "message": "Permanentne zapnúť Airmód"
+    },
+    "featureSUPEREXPO_RATES": {
+        "message": "Super Expo výchylky"
     },
     "featureSDCARD": {
         "message": "Podpora SD karty (pre záznamy)"
@@ -942,7 +964,19 @@
     "featureVTX": {
         "message": "Video vysielač"
     },
+    "featureANTI_GRAVITY": {
+        "message": "Permanentne zapnúť režim antigravitácie"
+    },
+    "featureFAILSAFETip": {
+        "message": "<strong>Poznámka:</strong> Ak je druhý stupeň ZAKÁZANÝ, záložné nastavenie <strong>Auto</strong> je použité namiesto užívateľských nastavení pre všetky letové kanály (Náklon (Roll), Sklon (Pitch), Otáčanie (Yaw) a Plyn (Throttle))."
+    },
     "configurationReceiver": {
         "message": "Prijímač"
+    },
+    "configurationReceiverMode": {
+        "message": "Mód prijímača"
+    },
+    "configurationEscFeatures": {
+        "message": "Funkcie ESC/Motora"
     }
 }
