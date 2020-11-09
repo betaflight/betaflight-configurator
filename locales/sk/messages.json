@@ -978,5 +978,17 @@
     },
     "configurationEscFeatures": {
         "message": "Funkcie ESC/Motora"
+    },
+    "configurationSensorGyroToUseFirst": {
+        "message": "Prvý"
+    },
+    "configurationSensorGyroToUseSecond": {
+        "message": "Druhý"
+    },
+    "configurationSensorGyroToUseBoth": {
+        "message": "Oba"
+    },
+    "configurationSensorAlignmentDefaultOption": {
+        "message": "Predvolené"
     }
 }
