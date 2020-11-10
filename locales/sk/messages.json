@@ -990,5 +990,8 @@
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predvolené"
+    },
+    "configurationArming": {
+        "message": "Odistenie"
     }
 }
