@@ -2,22 +2,6 @@ Number.prototype.clamp = function(min, max) {
     return Math.min(Math.max(this, min), max);
 };
 
-/**
- * String formatting now supports currying (partial application).
- * For a format string with N replacement indices, you can call .format
- * with M <= N arguments. The result is going to be a format string
- * with N-M replacement indices, properly counting from 0 .. N-M.
- * The following Example should explain the usage of partial applied format:
- *  "{0}:{1}:{2}".format("a","b","c") === "{0}:{1}:{2}".format("a","b").format("c")
- *  "{0}:{1}:{2}".format("a").format("b").format("c") === "{0}:{1}:{2}".format("a").format("b", "c")
- **/
-String.prototype.format = function () {
-    var args = arguments;
-    return this.replace(/\{(\d+)\}/g, function (t, i) {
-        return args[i] !== void 0 ? args[i] : "{"+(i-args.length)+"}";
-    });
-};
-
 Array.prototype.push8 = function(val) {
   this.push(0xFF & val);
   return this;

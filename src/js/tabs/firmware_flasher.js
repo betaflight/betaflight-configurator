@@ -150,10 +150,9 @@ TABS.firmware_flasher.initialize = function (callback) {
                     descriptors.forEach(function(descriptor){
                         if($.inArray(target, selectTargets) == -1) {
                             selectTargets.push(target);
-                            var select_e =
-                                $("<option value='{0}'>{0}</option>".format(
-                                        descriptor.target
-                                ));
+                            var select_e = $(
+                                `<option value='${descriptor.target}'>${descriptor.target}</option>`,
+                            );
                             boards_e.append(select_e);
                         }
                     });
@@ -352,8 +351,14 @@ TABS.firmware_flasher.initialize = function (callback) {
         var buildType_e = $('select[name="build_type"]');
         function buildBuildTypeOptionsList() {
             buildType_e.empty();
-            buildTypesToShow.forEach((build, index) => {
-                buildType_e.append($("<option value='{0}'>{1}</option>".format(index, build.tag ? i18n.getMessage(build.tag) : build.title)))
+            buildTypesToShow.forEach(({ tag, title }, index) => {
+                buildType_e.append(
+                    $(
+                        `<option value='${index}'>${
+                            tag ? i18n.getMessage(tag) : title
+                        }</option>`
+                    )
+                );
             });
             buildType_e.val($('select[name="build_type"] option:first').val());
         }
@@ -455,7 +460,13 @@ TABS.firmware_flasher.initialize = function (callback) {
             versions_element.empty();
             const targetVersions = Object.keys(builds);
             if (targetVersions.length > 0) {
-                versions_element.append($("<option value='0'>{0} {1}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersionFor'), target)));
+                versions_element.append(
+                    $(
+                        `<option value='0'>${i18n.getMessage(
+                            "firmwareFlasherOptionLabelSelectFirmwareVersionFor"
+                        )} ${target}</option>`
+                    )
+                );
                 targetVersions
                     .sort(sortVersions)
                     .forEach(function(versionName) {
@@ -478,12 +489,9 @@ TABS.firmware_flasher.initialize = function (callback) {
                         }
 
 
-                        var select_e =
-                            $("<option value='{0}'>{2} - {1}</option>".format(
-                                    versionName,
-                                    version.descriptor.date,
-                                    versionLabel
-                            ));
+                        var select_e = $(
+                            `<option value='${versionName}'>${version.descriptor.date} - ${versionLabel}</option>`
+                        );
                         if (FirmwareCache.has(version.descriptor)) {
                             select_e.addClass("cached");
                         }
@@ -564,11 +572,23 @@ TABS.firmware_flasher.initialize = function (callback) {
                     clearBufferedFirmware();
 
                     versions_e.empty();
-                    versions_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLabelSelectFirmwareVersion'))));
+                    versions_e.append(
+                        $(
+                            `<option value='0'>${i18n.getMessage(
+                                "firmwareFlasherOptionLabelSelectFirmwareVersion"
+                            )}</option>`
+                        )
+                    );
                 } else {
                     // Show a loading message as there is a delay in loading a configuration
                     versions_e.empty();
-                    versions_e.append($("<option value='0'>{0}</option>".format(i18n.getMessage('firmwareFlasherOptionLoading'))));
+                    versions_e.append(
+                        $(
+                            `<option value='0'>${i18n.getMessage(
+                                "firmwareFlasherOptionLoading"
+                            )}</option>`
+                        )
+                    );
 
                     let selecteBuild = buildTypesToShow[$('select[name="build_type"]').val()];
                     const builds = [];

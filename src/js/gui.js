@@ -262,12 +262,7 @@ GuiControl.prototype.log = function (message) {
     const seconds = (d.getSeconds() < 10) ? `0${d.getSeconds()}` : d.getSeconds();
     const time = `${hours}:${minutes}:${seconds}`;
 
-    const formattedDate = "{0}-{1}-{2} {3}".format(
-                                year,
-                                month,
-                                date,
-                                `@ ${time}`
-                            );
+    const formattedDate = `${year}-${month}-${date} @${time}`;
     $('div.wrapper', commandLog).append(`<p>${formattedDate} -- ${message}</p>`);
     commandLog.scrollTop($('div.wrapper', commandLog).height());
 };
