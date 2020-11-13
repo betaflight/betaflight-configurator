@@ -613,6 +613,9 @@
     "defaultSupportSubline2": {
         "message": "Vývojár"
     },
+    "defaultSupport": {
+        "message": "Pre podporu prosíme najskôr prehľadajte fóra a wiki, alebo kontaktujte svojho dodávateľa.<br /><br />"
+    },
     "defaultSupport1": {
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">vlákno na fóre RC Groups</a>"
     },
@@ -891,6 +894,9 @@
     },
     "featureSOFTSERIAL": {
         "message": "Povoliť softvérové sériové porty"
+    },
+    "featureSOFTSERIALTip": {
+        "message": "Po zapnutí, nastavte porty na záložke Porty."
     },
     "featureGPS": {
         "message": "GPS pre navigáciu a telemetriu"
