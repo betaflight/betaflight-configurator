@@ -209,7 +209,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     voltageMeter.id = data.readU8();
                     voltageMeter.voltage = data.readU8() / 10.0;
 
-                    FC.VOLTAGE_METERS.push(voltageMeter)
+                    FC.VOLTAGE_METERS.push(voltageMeter);
                 }
                 break;
             case MSPCodes.MSP_CURRENT_METERS:
@@ -854,7 +854,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             gps_baudrate: self.BAUD_RATES[data.readU8()],
                             telemetry_baudrate: self.BAUD_RATES[data.readU8()],
                             blackbox_baudrate: self.BAUD_RATES[data.readU8()]
-                        }
+                        };
 
                         FC.SERIAL_CONFIG.ports.push(serialPort);
                     }
@@ -1573,7 +1573,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                 code         : command,
                                 dataView     : new DataView(data.buffer, data.offset, payloadSize),
                                 callbacks    : [],
-                        }
+                        };
     
                         self.process_data(currentDataHandler);
 
@@ -1656,7 +1656,7 @@ MspHelper.prototype.crunch = function(code) {
             }
             break;
         case MSPCodes.MSP_SET_MIXER_CONFIG:
-            buffer.push8(FC.MIXER_CONFIG.mixer)
+            buffer.push8(FC.MIXER_CONFIG.mixer);
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                 buffer.push8(FC.MIXER_CONFIG.reverseMotorDir);
             }
@@ -1824,7 +1824,7 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push16(FC.BF_CONFIG.currentscale)
                     .push16(FC.BF_CONFIG.currentoffset)
                     .push8(FC.BF_CONFIG.currentmetertype)
-                    .push16(FC.BF_CONFIG.batterycapacity)
+                    .push16(FC.BF_CONFIG.batterycapacity);
             }
             break;
 
@@ -2001,7 +2001,7 @@ MspHelper.prototype.crunch = function(code) {
                     .push16(FC.FILTER_CONFIG.dterm_notch_cutoff);
                 if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
                     buffer.push16(FC.FILTER_CONFIG.gyro_notch2_hz)
-                        .push16(FC.FILTER_CONFIG.gyro_notch2_cutoff)
+                        .push16(FC.FILTER_CONFIG.gyro_notch2_cutoff);
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                     buffer.push8(FC.FILTER_CONFIG.dterm_lowpass_type);
@@ -2231,7 +2231,7 @@ MspHelper.prototype.crunch = function(code) {
             }
 
             if (FC.VTXTABLE_BAND.vtxtable_band_letter != '') {
-                buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_letter.charCodeAt(0))
+                buffer.push8(FC.VTXTABLE_BAND.vtxtable_band_letter.charCodeAt(0));
             } else {
                 buffer.push8(' '.charCodeAt(0));
             }
