@@ -137,16 +137,22 @@ PortHandler.detectPort = function(currentPorts) {
     const newPorts = self.array_difference(currentPorts, self.initialPorts);
 
     if (newPorts.length) {
+        // pick last_used_port for manual tcp auto-connect or detect and select new port for serial
         currentPorts = self.updatePortSelect(currentPorts);
         console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
-        // select / highlight new port, if connected -> select connected port
-        if (GUI.connected_to) {
-            self.portPickerElement.val(GUI.connected_to);
-        } else if (newPorts.length === 1) {
-            self.portPickerElement.val(newPorts[0].path);
-        } else if (newPorts.length > 1) {
-            self.selectPort(currentPorts);
-        }
+
+        ConfigStorage.get('last_used_port', function (result) {
+            if (result.last_used_port) {
+                if (result.last_used_port.includes('tcp')) {
+                    self.portPickerElement.val('manual');
+                } else if (newPorts.length === 1) {
+                    self.portPickerElement.val(newPorts[0].path);
+                } else if (newPorts.length > 1) {
+                    self.selectPort(currentPorts);
+                }
+            }
+        });
+
         // auto-connect if enabled
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {
             // start connect procedure. We need firmware flasher protection over here

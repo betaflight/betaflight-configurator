@@ -63,7 +63,7 @@ function initializeSerialBackend() {
                 $('select#baud').hide();
             } else if (portName !== '0') {
                 if (!clicks) {
-                    console.log(`Connecting to: ${portName}`);
+                    console.log(`${serial.connectionType}: connecting to: ${portName}`);
                     GUI.connecting_to = portName;
 
                     // lock port select & baud while we are connecting / connected
@@ -216,8 +216,20 @@ function onOpen(openInfo) {
 
         // reset connecting_to
         GUI.connecting_to = false;
+        GUI.log(i18n.getMessage('serialPortOpened', serial.connectionType === 'serial' ? [serial.connectionId] : [openInfo.socketId]));
 
-        GUI.log(i18n.getMessage('serialPortOpened', [openInfo.connectionId]));
+        // save selected port with chrome.storage if the port differs
+        ConfigStorage.get('last_used_port', function (result) {
+            if (result.last_used_port) {
+                if (result.last_used_port !== GUI.connected_to) {
+                    // last used port doesn't match the one found in local db, we will store the new one
+                    ConfigStorage.set({'last_used_port': GUI.connected_to});
+                }
+            } else {
+                // variable isn't stored yet, saving
+                ConfigStorage.set({'last_used_port': GUI.connected_to});
+            }
+        });
 
         serial.onReceive.addListener(read_serial);
 
@@ -226,7 +238,7 @@ function onOpen(openInfo) {
         FC.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
-
+        console.log(`Requesting configuration data`);
         // request configuration data
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             analytics.setFlightControllerData(analytics.DATA.API_VERSION, FC.CONFIG.apiVersion);
@@ -799,14 +811,15 @@ function reinitialiseConnection(originatorTab, callback) {
         // caveat: Timeouts set with `GUI.timeout_add()` are removed on disconnect.
     } else {
         GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-            if (callback) {
-                callback();
-            }
-
             MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
                 GUI.log(i18n.getMessage('deviceReady'));
                 originatorTab.initialize(false, $('#content').scrollTop());
             });
+
+            if (callback) {
+                callback();
+            }
+
         }, 1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
     }
 }
