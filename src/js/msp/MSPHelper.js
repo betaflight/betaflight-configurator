@@ -313,6 +313,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.BATTERY_CONFIG.vbatwarningcellvoltage = data.readU16() / 100;
                 }
                 break;
+            case MSPCodes.MSP_SET_BATTERY_CONFIG:
+                console.log('Battery configuration saved');
+                break;
             case MSPCodes.MSP_RC_TUNING:
                 FC.RC_TUNING.RC_RATE = parseFloat((data.readU8() / 100).toFixed(2));
                 FC.RC_TUNING.RC_EXPO = parseFloat((data.readU8() / 100).toFixed(2));
@@ -604,6 +607,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             case MSPCodes.MSP_SET_GPS_CONFIG:
                 console.log('GPS Configuration saved');
+                break;
+            case MSPCodes.MSP_SET_GPS_RESCUE:
+                console.log('GPS Rescue Configuration saved');
                 break;
             case MSPCodes.MSP_SET_RSSI_CONFIG:
                 console.log('RSSI Configuration saved');
