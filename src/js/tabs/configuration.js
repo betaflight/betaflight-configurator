@@ -844,7 +844,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         const serialRXSelectEl = $('select.serialRX');
-        FC.RX_CONFIG.getSerialRxTypes().forEach((serialRxType, index) => {
+        FC.getSerialRxTypes().forEach((serialRxType, index) => {
             serialRXSelectEl.append(`<option value="${index}">${serialRxType}</option>`);
         });
 
