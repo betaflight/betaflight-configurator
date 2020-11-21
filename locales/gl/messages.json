@@ -607,6 +607,14 @@
         "message": "Utilización do porto:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Paquetes con error:",
         "description": "Packet error text shown in the status bar"
@@ -618,6 +626,10 @@
     "statusbar_cycle_time": {
         "message": "Tempo de Ciclo:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Carga da CPU:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Por favor emprega o Flasheador de Firmware para acceder os dispositivos DFU"
@@ -2563,6 +2575,9 @@
     "sensorsGyroTitle": {
         "message": "Xiroscopio - deg/s"
     },
+    "sensorsAccelTitle": {
+        "message": "Acelerómetro - g (grados)"
+    },
     "sensorsMagTitle": {
         "message": "Magnetómetro - Ga"
     },
@@ -2703,6 +2718,15 @@
     },
     "dataflashButtonSaveFile": {
         "message": "Gardar flash a arquivo..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Gardar flash no arquivo... (obsoleto)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Gardar directamente na flash un ficheiro é lento e propenso a corromperse / fallar.<br>Nalgúns casos funcionará para ficheiros pequenos, pero se non se acmite, as solicitudes de asistencia pecharanse sen comentarios. Use o modo de almacenamento masivo no seu lugar."
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Este método é lento e propenso a corrupción de ficheiros / fallos, porque a propia conexión MSP ten limitacións fundamentais e intrínsecas que o fan inadecuado para as transferencias de ficheiros. Pode funcionar só para pequenos ficheiros de rexistro. Non cree solicitudes de asistencia se as transferencias de ficheiros fallan cando se gardan con este método. O método recomendado é usar \"<b>$t(onboardLoggingRebootMscText.message)</b>\" (abaixo) para activar o modo de almacenamento masivo e acceder ao controlador de voo como dispositivo de almacenamento para descargar os ficheiros de rexistro."
     },
     "dataflashButtonErase": {
         "message": "Borrar flash"
@@ -3637,6 +3661,15 @@
         "message": "Ofrece un desempeño constante do acelerador e do PID sobre o rango de tensión da batería utilizable, compensando a caída da batería. O importe da compensación pode variarse entre o 0 e o 100%. Recoméndase unha compensación completa (100%). <br><br>Visite <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_ blank\" rel=\"noopener noreferrer\"> entre na wiki </a> para máis información."
     },
     "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Linealización do empuxe"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Compensa a relación non lineal entre acelerador e empuxe aplicando unha curva inversa do motor á saída do motor. O importe da compensación pode variar entre o 0 e o 150%."
+    },
+    "pidTuningThrustLinearValue": {
         "message": "%"
     },
     "pidTuningItermRotation": {
@@ -4785,6 +4818,13 @@
     },
     "osdDescElementEfficiency": {
         "message": "Consumo instantáneo de batería en mAh/distancia. (Require corrección GPS válida)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Total de voos",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Número total aproximado de voos"
     },
     "osdTextElementUnknown": {
         "message": "Descoñecido $1",
