@@ -1,9 +1,35 @@
 {
+    "yes": {
+        "message": "Evet",
+        "description": "General Yes message to be used across the application"
+    },
+    "no": {
+        "message": "Hayır",
+        "description": "General No message to be used across the application"
+    },
+    "on": {
+        "message": "Açık"
+    },
+    "off": {
+        "message": "Kapalı"
+    },
+    "auto": {
+        "message": "Otomatik"
+    },
+    "error": {
+        "message": "Hata: {{errorMessage}}"
+    },
+    "errorTitle": {
+        "message": "Hata"
+    },
     "warningTitle": {
         "message": "Uyarı"
     },
     "noticeTitle": {
         "message": "Dikkat"
+    },
+    "operationNotSupported": {
+        "message": "Bu işlem donanımınız tarafından desteklenmiyor."
     },
     "options_title": {
         "message": "Uygulama Seçenekleri"
@@ -29,6 +55,9 @@
     "close": {
         "message": "Kapat"
     },
+    "cancel": {
+        "message": "İptal"
+    },
     "permanentExpertMode": {
         "message": "Uzman Modunu kalıcı olarak etkinleştir"
     },
@@ -37,6 +66,16 @@
     },
     "analyticsOptOut": {
         "message": "İstatistiksel bilgilerin anonim olarak toplanması programından kaydını sil"
+    },
+    "language_changed": {
+        "message": "Dil değişikliği kaydedildi"
+    },
+    "language_choice_message": {
+        "message": "Dili değiştir:",
+        "description": "Try and be brief"
+    },
+    "language_default": {
+        "message": "Sistem Varsayılanı"
     },
     "sensorDataFlashNotFound": {
         "message": "Veri akışı yok <br>Çip bulunamadı",
@@ -54,17 +93,29 @@
         "message": "Hızlanma",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
+    "sensorStatusMag": {
+        "message": "Manyetometre"
+    },
     "sensorStatusMagShort": {
         "message": "Büyüklük",
         "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusBaro": {
+        "message": "Barometre"
     },
     "sensorStatusBaroShort": {
         "message": "Static zaman ayırma ünitesi",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
     "sensorStatusGPSShort": {
         "message": "Evrensel konumlama sistemi",
         "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusSonar": {
+        "message": "Sonar / Uzaklık ölçer"
     },
     "sensorStatusSonarShort": {
         "message": "Deniz radarı",
@@ -90,6 +141,18 @@
     },
     "tabFirmwareFlasher": {
         "message": "Yazılım Yükleyici"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Gizlilik Politikası"
+    },
+    "tabOptions": {
+        "message": "Ayarlar"
+    },
+    "tabReceiver": {
+        "message": "Alıcı"
+    },
+    "tabGPS": {
+        "message": "GPS"
     },
     "serialPortOpenFail": {
         "message": "Seri bağlantı noktası <span class=\"message-negative\">açılamadı</span>"
