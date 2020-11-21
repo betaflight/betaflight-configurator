@@ -4,9 +4,6 @@ var mspHelper;
 var connectionTimestamp;
 
 function initializeSerialBackend() {
-    mspHelper = new MspHelper();
-    mspHelper.process_data.bind(mspHelper);
-
     GUI.updateManualPortVisibility = function(){
         var selected_port = $('div#port-picker #port option:selected');
         if (selected_port.data().isManual) {
