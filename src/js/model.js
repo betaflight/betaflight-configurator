@@ -90,8 +90,8 @@ Model.prototype.loadJSON = function (model_file, callback) {
     const loader = new THREE.JSONLoader();
 
     loader.load(`./resources/models/${model_file}.json`, function (geometry, materials) {
-        const modelMaterial = new THREE.MeshFaceMaterial(materials);
-        const model = new THREE.Mesh(geometry, modelMaterial);
+
+        const model = new THREE.Mesh(geometry, materials);
 
         model.scale.set(15, 15, 15);
 
