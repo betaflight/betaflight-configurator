@@ -60,7 +60,7 @@ function initializeSerialBackend() {
                 $('select#baud').hide();
             } else if (portName !== '0') {
                 if (!clicks) {
-                    console.log(`${serial.connectionType}: connecting to: ${portName}`);
+                    console.log(`Connecting to: ${portName}`);
                     GUI.connecting_to = portName;
 
                     // lock port select & baud while we are connecting / connected
@@ -803,7 +803,7 @@ function reinitialiseConnection(originatorTab, callback) {
             if (callback) {
                 callback();
             }
-        }, 100);
+        }, 200);
         //TODO: Need to work out how to do a proper reconnect here.
         // caveat: Timeouts set with `GUI.timeout_add()` are removed on disconnect.
     } else {
