@@ -208,7 +208,6 @@ var MSP = {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
         } else {
-            console.log(`code: ${this.code} - crc failed`);
             this.packet_error++;
             this.crcError = true;
             this.dataView = new DataView(new ArrayBuffer(0));

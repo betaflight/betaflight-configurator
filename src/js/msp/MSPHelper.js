@@ -275,7 +275,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     BF_CONFIG.currentmetertype = data.readU8();
                     BF_CONFIG.batterycapacity = data.readU16();
                 } else {
-                    var offset = 0;
                     CURRENT_METER_CONFIGS = [];
                     var current_meter_count = data.readU8();
                     for (let i = 0; i < current_meter_count; i++) {
@@ -1598,13 +1597,16 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
             }
         }
+    } else {
+        console.log(`code: ${code} - crc failed`);
     }
+
     // trigger callbacks, cleanup/remove callback after trigger
-    for (let i = dataHandler.callbacks.length - 1; i >= 0; i--) { // itterating in reverse because we use .splice which modifies array length
-        if (dataHandler.callbacks[i].code == code) {
+    for (let i = dataHandler.callbacks.length - 1; i >= 0; i--) { // iterating in reverse because we use .splice which modifies array length
+        if (dataHandler.callbacks[i]?.code === code) {
             // save callback reference
-            var callback = dataHandler.callbacks[i].callback;
-            var callbackOnError = dataHandler.callbacks[i].callbackOnError;
+            const callback = dataHandler.callbacks[i].callback;
+            const callbackOnError = dataHandler.callbacks[i].callbackOnError;
 
             // remove timeout
             clearInterval(dataHandler.callbacks[i].timer);
@@ -1614,6 +1616,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
             if (!crcError || callbackOnError) {
                 // fire callback
                 if (callback) callback({'command': code, 'data': data, 'length': data.byteLength, 'crcError': crcError});
+            } else {
+                console.log(`code: ${code} - crc failed. No callback`);
             }
         }
     }

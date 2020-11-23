@@ -822,7 +822,7 @@ function reinitialiseConnection(originatorTab, callback) {
             if (callback) {
                 callback();
             }
-        }, 100);
+        }, 200);
         //TODO: Need to work out how to do a proper reconnect here.
         // caveat: Timeouts set with `GUI.timeout_add()` are removed on disconnect.
     } else {
