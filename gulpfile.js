@@ -123,7 +123,7 @@ function getInputPlatforms() {
     const supportedPlatforms = ['linux64', 'linux32', 'armv7', 'osx64', 'win32', 'win64', 'android'];
     const platforms = [];
     const regEx = /--(\w+)/;
-    console.log(process.argv);
+
     for (let i = 3; i < process.argv.length; i++) {
         const arg = process.argv[i].match(regEx)[1];
         if (supportedPlatforms.indexOf(arg) > -1) {
