@@ -50,7 +50,7 @@ function copyToClipboard(text) {
     function onCopySuccessful() {
 
         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'CliCopyToClipboard', text.length);
-        const button = self.GUI.copyButton;
+        const button = TABS.cli.GUI.copyButton;
         const origText = button.text();
         const origWidth = button.css("width");
         button.text(i18n.getMessage("cliCopySuccessful"));
