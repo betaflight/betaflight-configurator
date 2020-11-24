@@ -1,6 +1,6 @@
 'use strict';
 
-var defaultHuffmanTree = [
+const defaultHuffmanTree = [
     { value: 0x00, codeLen: 2, code: 0x0003 },  //  11
     { value: 0x01, codeLen: 3, code: 0x0005 },  //  101
     { value: 0x02, codeLen: 4, code: 0x0009 },  //  1001
@@ -260,13 +260,12 @@ var defaultHuffmanTree = [
     { value: HUFFMAN_EOF, codeLen: 12, code: 0x0000 },  //  000000000000
 ];
 
-var defaultHuffmanLenIndex = function()
-{
-    var result = Array(defaultHuffmanTree.length).fill(-1);
+const defaultHuffmanLenIndex = function() {
+    const result = Array(defaultHuffmanTree.length).fill(-1);
 
-    for (var i = 0; i < defaultHuffmanTree.length; ++i) {
-        if (result[defaultHuffmanTree[i].codeLen] == -1) {
-            result[defaultHuffmanTree[i].codeLen] = i;
+    for (const index in defaultHuffmanTree) {
+        if (result[defaultHuffmanTree[index].codeLen] === -1) {
+            result[defaultHuffmanTree[index].codeLen] = index;
         }
     }
 

@@ -5,7 +5,7 @@
   One window could watch passed values from another window and react to them.
 */
 
-var windowWatcherUtil = {};
+const windowWatcherUtil = {};
 
 windowWatcherUtil.invokeWatcher = function(bindingKey, bindingVal, watchersObject) {
     if (watchersObject[bindingKey]) {
@@ -37,23 +37,25 @@ windowWatcherUtil.bindWatchers = function(windowObject, watchersObject) {
 
 // 'Windows' here could be array or single window reference
 windowWatcherUtil.passValue = function(windows, key, val) {
-    let applyBinding = function(win, key, val) {
+    this.applyBinding(windows, key, val);
+}
+
+windowWatcherUtil.applyBinding = function(win, key, val) {
     if (!win) {
       return;
     }
 
-        if (win.contentWindow.bindings) {
-            win.contentWindow.bindings[key] = val;
-        } else {
-            win.contentWindow.bindings = {
-                [key]: val
-            };
-        }
+    if (win.contentWindow.bindings) {
+        win.contentWindow.bindings[key] = val;
+    } else {
+        win.contentWindow.bindings = {
+            [key]: val
+        };
     }
 
     if (Array.isArray(windows)) {
-        windows.forEach((el) => applyBinding(el, key, val));
+        windows.forEach((el) => this.applyBinding(el, key, val));
     } else {
-        applyBinding(windows, key, val)
+        windowsWatcherUtil.applyBinding(windows, key, val);
     }
 }

@@ -1,9 +1,9 @@
 'use strict';
 
-var Features = function (config) {
-    var self = this;
+const Features = function (config) {
+    const self = this;
 
-    var features = [
+    const features = [
         {bit: 0, group: 'rxMode', mode: 'select', name: 'RX_PPM'},
         {bit: 2, group: 'other', name: 'INFLIGHT_ACC_CAL'},
         {bit: 3, group: 'rxMode', mode: 'select', name: 'RX_SERIAL'},
@@ -69,9 +69,9 @@ var Features = function (config) {
                 {bit: 18, group: 'other', name: 'OSD'}
             );
             if (!semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_35)) {
-              features.push(
-                {bit: 24, group: 'other', name: 'VTX'}
-              )
+                features.push(
+                    {bit: 24, group: 'other', name: 'VTX'}
+                );
             }
         }
 
@@ -104,7 +104,7 @@ var Features = function (config) {
 };
 
 Features.prototype.getMask = function () {
-    var self = this;
+    const self = this;
 
     analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self._analyticsChanges);
     self._analyticsChanges = {};
@@ -113,16 +113,16 @@ Features.prototype.getMask = function () {
 };
 
 Features.prototype.setMask = function (featureMask) {
-    var self = this;
+    const self = this;
 
     self._featureMask = featureMask;
 };
 
 Features.prototype.isEnabled = function (featureName) {
-    var self = this;
+    const self = this;
 
-    for (var i = 0; i < self._features.length; i++) {
-        if (self._features[i].name === featureName && bit_check(self._featureMask, self._features[i].bit)) {
+    for (const index in self._features) {
+        if (self._features[index].name === featureName && bit_check(self._featureMask, self._features[index].bit)) {
             return true;
         }
     }
@@ -130,19 +130,19 @@ Features.prototype.isEnabled = function (featureName) {
 };
 
 Features.prototype.generateElements = function (featuresElements) {
-    var self = this;
+    const self = this;
 
     self._featureChanges = {};
 
-    var listElements = [];
+    const listElements = [];
 
-    for (var i = 0; i < self._features.length; i++) {
-        var feature_tip_html = '';
+    for (const i in self._features) {
+        let feature_tip_html = '';
         if (self._features[i].haveTip) {
             feature_tip_html = '<div class="helpicon cf_tip" i18n_title="feature' + self._features[i].name + 'Tip"></div>';
         }
 
-        var newElements = [];
+        const newElements = [];
         if (self._features[i].mode === 'select') {
             if (listElements.length === 0) {
                 newElements.push($('<option class="feature" '
@@ -150,7 +150,7 @@ Features.prototype.generateElements = function (featuresElements) {
                     + 'i18n="featureNone" />'));
             }
 
-            var newElement = $('<option class="feature" id="feature-'
+            const newElement = $(' <option class="feature" id="feature-'
                 + i
                 + '" name="'
                 + self._features[i].name
@@ -165,23 +165,17 @@ Features.prototype.generateElements = function (featuresElements) {
             if (!self._features[i].hideName) {
                 featureName = `<td><div>${self._features[i].name}</div></td>`;
             }
+            const newElement = $(`<tr><td><input class="feature toggle" id="feature-${i}" \
+                " name="${self._features[i].name}" title="${self._features[i].name}" type= \
+                "checkbox"/></td><td><div>${featureName} \
+                </div><span class="xs" i18n="feature${self._features[i].name}"></span></td> \
+                <td><span class="sm-min" i18n="feature${self._features[i].name}"></span>' \
+                ${feature_tip_html}</td></tr>`);
 
-            var newElement = $('<tr><td><input class="feature toggle" id="feature-'
-                    + i
-                    + '" name="'
-                    + self._features[i].name
-                    + '" title="'
-                    + self._features[i].name
-                    + '" type="checkbox"/></td><td><div>'
-                    + featureName
-                    + '</div><span class="xs" i18n="feature' + self._features[i].name + '"></span></td>'
-                    + '<td><span class="sm-min" i18n="feature' + self._features[i].name + '"></span>'
-                    + feature_tip_html + '</td></tr>');
+            const featureElem = newElement.find('input.feature');
 
-            var feature_e = newElement.find('input.feature');
-
-            feature_e.prop('checked', bit_check(self._featureMask, self._features[i].bit));
-            feature_e.data('bit', self._features[i].bit);
+            featureElem.prop('checked', bit_check(self._featureMask, self._features[i].bit));
+            featureElem.data('bit', self._features[i].bit);
 
             newElements.push(newElement);
         }
@@ -193,32 +187,31 @@ Features.prototype.generateElements = function (featuresElements) {
         });
     }
 
-    for (var i = 0; i < listElements.length; i++) {
-        var element = listElements[i];
-        var bit = parseInt(element.attr('value'));
-        var state = bit_check(self._featureMask, bit);
+    for (const element of listElements) {
+        const bit = parseInt(element.attr('value'));
+        const state = bit_check(self._featureMask, bit);
 
         element.prop('selected', state);
     }
 };
 
 Features.prototype.findFeatureByBit = function (bit) {
-    var self = this;
+    const self = this;
 
-    for (var i = 0; i < self._features.length; i++) {
-        if (self._features[i].bit == bit) {
+    for (const i in self._features) {
+        if (self._features[i].bit === bit) {
             return self._features[i];
         }
     }
 }
 
 Features.prototype.updateData = function (featureElement) {
-    var self = this;
+    const self = this;
 
     if (featureElement.attr('type') === 'checkbox') {
-        var bit = featureElement.data('bit');
+        const bit = featureElement.data('bit');
+        let featureValue;
 
-        var featureValue;
         if (featureElement.is(':checked')) {
             self._featureMask = bit_set(self._featureMask, bit);
             featureValue = 'On';
@@ -226,14 +219,14 @@ Features.prototype.updateData = function (featureElement) {
             self._featureMask = bit_clear(self._featureMask, bit);
             featureValue = 'Off';
         }
-        self._analyticsChanges['Feature' + self.findFeatureByBit(bit).name] = featureValue;
+        self._analyticsChanges[`Feature${self.findFeatureByBit(bit).name}`] = featureValue;
     } else if (featureElement.prop('localName') === 'select') {
-        var controlElements = featureElement.children();
-        var selectedBit = featureElement.val();
+        const controlElements = featureElement.children();
+        const selectedBit = featureElement.val();
         if (selectedBit !== -1) {
-            var selectedFeature;
-            for (var i = 0; i < controlElements.length; i++) {
-                var bit = controlElements[i].value;
+            let selectedFeature;
+            for (let i = 0; i < controlElements.lenght; i++) {
+                const bit = controlElements[i].value;
                 if (selectedBit === bit) {
                     self._featureMask = bit_set(self._featureMask, bit);
                     selectedFeature = self.findFeatureByBit(bit);
