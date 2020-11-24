@@ -2,11 +2,11 @@
 
 // idea here is to abstract around the use of chrome.storage.local as it functions differently from "localStorage" and IndexedDB
 // localStorage deals with strings, not objects, so the objects have been serialized.
-var ConfigStorage = {
+const ConfigStorage = {
     // key can be one string, or array of strings
     get: function(key, callback) {
         if (Array.isArray(key)) {
-            var obj = {};
+            let obj = {};
             key.forEach(function (element) {
                 try {
                     obj = {...obj, ...JSON.parse(window.localStorage.getItem(element))};
@@ -16,9 +16,9 @@ var ConfigStorage = {
             });
             callback(obj);
         } else {
-            var keyValue = window.localStorage.getItem(key);
+            const keyValue = window.localStorage.getItem(key);
             if (keyValue) {
-                var obj = {};
+                let obj = {};
                 try {
                     obj = JSON.parse(keyValue);
                 } catch (e) {
@@ -33,7 +33,7 @@ var ConfigStorage = {
     // set takes an object like {'userLanguageSelect':'DEFAULT'}
     set: function(input) {
         Object.keys(input).forEach(function (element) {
-            var tmpObj = {};
+            const tmpObj = {};
             tmpObj[element] = input[element];
             window.localStorage.setItem(element, JSON.stringify(tmpObj));
         });

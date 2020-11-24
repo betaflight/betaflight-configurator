@@ -4,7 +4,7 @@
  * Encapsulates the Clipboard logic, depending on web or nw
  *
  */
-var Clipboard = {
+const Clipboard = {
     _nwClipboard: null,
     available : null,
     readAvailable : null,

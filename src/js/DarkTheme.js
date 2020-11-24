@@ -1,10 +1,10 @@
 'use strict';
 
-var css_dark = [
+const css_dark = [
     './css/dark-theme.css',
 ];
 
-var DarkTheme = {
+const DarkTheme = {
     configEnabled: undefined,
 };
 

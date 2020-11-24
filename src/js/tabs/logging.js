@@ -2,27 +2,26 @@
 
 TABS.logging = {};
 TABS.logging.initialize = function (callback) {
-    var self = this;
 
     if (GUI.active_tab != 'logging') {
         GUI.active_tab = 'logging';
     }
 
-    var requested_properties = [],
-        samples = 0,
-        requests = 0,
-        log_buffer = [];
+    let requestedProperties = [];
+    let samples = 0;
+    let requests = 0;
+    let logBuffer = [];
 
     if (CONFIGURATOR.connectionValid) {
-        var get_motor_data = function () {
-            MSP.send_message(MSPCodes.MSP_MOTOR, false, false, load_html);
+        const getMotorData = function () {
+            MSP.send_message(MSPCodes.MSP_MOTOR, false, false, loadHtml);
         }
 
-        var load_html = function () {
+        const loadHtml = function () {
             $('#content').load("./tabs/logging.html", process_html);
         }
 
-        MSP.send_message(MSPCodes.MSP_RC, false, false, get_motor_data);
+        MSP.send_message(MSPCodes.MSP_RC, false, false, getMotorData);
     }
 
     function process_html() {
@@ -35,44 +34,44 @@ TABS.logging.initialize = function (callback) {
         $('a.logging').click(function () {
             if (GUI.connected_to) {
                 if (fileEntry != null) {
-                    var clicks = $(this).data('clicks');
+                    const clicks = $(this).data('clicks');
 
                     if (!clicks) {
                         // reset some variables before start
                         samples = 0;
                         requests = 0;
-                        log_buffer = [];
-                        requested_properties = [];
+                        logBuffer = [];
+                        requestedProperties = [];
 
                         $('.properties input:checked').each(function () {
-                            requested_properties.push($(this).prop('name'));
+                            requestedProperties.push($(this).prop('name'));
                         });
 
-                        if (requested_properties.length) {
+                        if (requestedProperties.length) {
                             // print header for the csv file
                             print_head();
 
-                            var log_data_poll = function () {
+                            const logDataPoll = function () {
                                 if (requests) {
                                     // save current data (only after everything is initialized)
                                     crunch_data();
                                 }
 
                                 // request new
-                                for (var i = 0; i < requested_properties.length; i++, requests++) {
-                                    MSP.send_message(MSPCodes[requested_properties[i]]);
+                                for (let i = 0; i < requestedProperties.length; i++, requests++) {
+                                    MSP.send_message(MSPCodes[requestedProperties[i]]);
                                 }
                             }
 
-                            GUI.interval_add('log_data_poll', log_data_poll, parseInt($('select.speed').val()), true); // refresh rate goes here
+                            GUI.interval_add('log_data_poll', logDataPoll, parseInt($('select.speed').val()), true); // refresh rate goes here
                             GUI.interval_add('write_data', function write_data() {
-                                if (log_buffer.length) { // only execute when there is actual data to write
+                                if (logBuffer.length) { // only execute when there is actual data to write
                                     if (fileWriter.readyState == 0 || fileWriter.readyState == 2) {
-                                        append_to_file(log_buffer.join('\n'));
+                                        append_to_file(logBuffer.join('\n'));
 
-                                        $('.samples').text(samples += log_buffer.length);
+                                        $('.samples').text(samples += logBuffer.length);
 
-                                        log_buffer = [];
+                                        logBuffer = [];
                                     } else {
                                         console.log('IO having trouble keeping up with the data flow');
                                     }
@@ -81,7 +80,7 @@ TABS.logging.initialize = function (callback) {
 
                             $('.speed').prop('disabled', true);
                             $(this).text(i18n.getMessage('loggingStop'));
-                            $(this).data("clicks", !clicks);
+                            $(this).data("clicks", clicks !== true);
                         } else {
                             GUI.log(i18n.getMessage('loggingErrorOneProperty'));
                         }
@@ -113,10 +112,10 @@ TABS.logging.initialize = function (callback) {
     }
 
     function print_head() {
-        var head = "timestamp";
+        let head = "timestamp";
 
-        for (var i = 0; i < requested_properties.length; i++) {
-            switch (requested_properties[i]) {
+        for (let i = 0; i < requestedProperties.length; i++) {
+            switch (requestedProperties[i]) {
                 case 'MSP_RAW_IMU':
                     head += ',' + 'gyroscopeX';
                     head += ',' + 'gyroscopeY';
@@ -154,17 +153,17 @@ TABS.logging.initialize = function (callback) {
                     head += ',' + 'rssi';
                     break;
                 case 'MSP_RC':
-                    for (var chan = 0; chan < FC.RC.active_channels; chan++) {
+                    for (let chan = 0; chan < FC.RC.active_channels; chan++) {
                         head += ',' + 'RC' + chan;
                     }
                     break;
                 case 'MSP_MOTOR':
-                    for (var motor = 0; motor < FC.MOTOR_DATA.length; motor++) {
+                    for (let motor = 0; motor < FC.MOTOR_DATA.length; motor++) {
                         head += ',' + 'Motor' + motor;
                     }
                     break;
                 case 'MSP_DEBUG':
-                    for (var debug = 0; debug < FC.SENSOR_DATA.debug.length; debug++) {
+                    for (let debug = 0; debug < FC.SENSOR_DATA.debug.length; debug++) {
                         head += ',' + 'Debug' + debug;
                     }
                     break;
@@ -175,10 +174,10 @@ TABS.logging.initialize = function (callback) {
     }
 
     function crunch_data() {
-        var sample = millitime();
+        let sample = millitime();
 
-        for (var i = 0; i < requested_properties.length; i++) {
-            switch (requested_properties[i]) {
+        for (let i = 0; i < requestedProperties.length; i++) {
+            switch (requestedProperties[i]) {
                 case 'MSP_RAW_IMU':
                     sample += ',' + FC.SENSOR_DATA.gyroscope;
                     sample += ',' + FC.SENSOR_DATA.accelerometer;
@@ -208,7 +207,7 @@ TABS.logging.initialize = function (callback) {
                     sample += ',' + FC.ANALOG.rssi;
                     break;
                 case 'MSP_RC':
-                    for (var chan = 0; chan < FC.RC.active_channels; chan++) {
+                    for (let chan = 0; chan < FC.RC.active_channels; chan++) {
                         sample += ',' + FC.RC.channels[chan];
                     }
                     break;
@@ -221,21 +220,21 @@ TABS.logging.initialize = function (callback) {
             }
         }
 
-        log_buffer.push(sample);
+        logBuffer.push(sample);
     }
 
+
     // IO related methods
-    var fileEntry = null,
-        fileWriter = null;
+    let fileEntry = null;
+    let fileWriter = null;
 
     function prepare_file() {
-        
-        var prefix = 'log';
-        var suffix = 'csv';
+        const prefix = 'log';
+        const suffix = 'csv';
 
-        var filename = generateFilename(prefix, suffix);
+        const filename = generateFilename(prefix, suffix);
 
-        var accepts = [{
+        const accepts = [{
             description: suffix.toUpperCase() + ' files', extensions: [suffix],
         }];
 

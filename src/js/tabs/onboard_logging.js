@@ -1,7 +1,6 @@
 'use strict';
 
-var
-    sdcardTimer;
+let sdcardTimer;
 
 TABS.onboard_logging = {
     blockSize: 128,
@@ -12,9 +11,8 @@ TABS.onboard_logging = {
     VCP_BLOCK_SIZE: 4096
 };
 TABS.onboard_logging.initialize = function (callback) {
-    var
-        self = this,
-        saveCancelled, eraseCancelled;
+    const self = this;
+    let saveCancelled, eraseCancelled;
 
     if (GUI.active_tab !== 'onboard_logging') {
         GUI.active_tab = 'onboard_logging';
@@ -60,9 +58,8 @@ TABS.onboard_logging.initialize = function (callback) {
             // translate to user-selected language
             i18n.localizePage();
 
-            var
-                dataflashPresent = FC.DATAFLASH.totalSize > 0,
-                blackboxSupport;
+            const dataflashPresent = FC.DATAFLASH.totalSize > 0;
+            let blackboxSupport;
 
             /*
              * Pre-1.11.0 firmware supported DATAFLASH API (on targets with SPI flash) but not the BLACKBOX config API.
@@ -98,9 +95,9 @@ TABS.onboard_logging.initialize = function (callback) {
                 $('.tab-onboard_logging a.save-flash-dismiss').click(dismiss_saving_dialog);
             }
 
-            var deviceSelect = $(".blackboxDevice select");
-            var loggingRatesSelect = $(".blackboxRate select");
-            var debugModeSelect = $(".blackboxDebugMode select");
+            const deviceSelect = $(".blackboxDevice select");
+            const loggingRatesSelect = $(".blackboxRate select");
+            const debugModeSelect = $(".blackboxDebugMode select");
 
             if (FC.BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").click(function() {
@@ -109,7 +106,7 @@ TABS.onboard_logging.initialize = function (callback) {
                     } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
                         FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     } else {
-                        var rate = loggingRatesSelect.val().split('/');
+                        const rate = loggingRatesSelect.val().split('/');
                         FC.BLACKBOX.blackboxRateNum = parseInt(rate[0], 10);
                         FC.BLACKBOX.blackboxRateDenom = parseInt(rate[1], 10);
                     }
@@ -143,7 +140,7 @@ TABS.onboard_logging.initialize = function (callback) {
                     $('a.onboardLoggingRebootMsc').click(function () {
                          analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'RebootMsc');
 
-                        var buffer = [];
+                        const buffer = [];
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                             if (GUI.operating_system === "Linux") {
                                 // Reboot into MSC using UTC time offset instead of user timezone
@@ -259,8 +256,8 @@ TABS.onboard_logging.initialize = function (callback) {
 
 
             for (let i = 0; i < loggingRates.length; i++) {
-                var loggingRate = Math.round(pidRate / loggingRates[i].denom);
-                var loggingRateUnit = " Hz";
+                let loggingRate = Math.round(pidRate / loggingRates[i].denom);
+                let loggingRateUnit = " Hz";
                 if (loggingRate !== Infinity) {
                     if (gcd(loggingRate, 1000) === 1000) {
                         loggingRate /= 1000;
@@ -276,7 +273,7 @@ TABS.onboard_logging.initialize = function (callback) {
     }
 
     function populateDebugModes(debugModeSelect) {
-        var debugModes = [];
+        let debugModes = [];
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             $('.blackboxDebugMode').show();
@@ -384,9 +381,8 @@ TABS.onboard_logging.initialize = function (callback) {
             return Math.round(kilobytes) + "kB";
         }
 
-        var
-            megabytes = kilobytes / 1024,
-            gigabytes;
+        const megabytes = kilobytes / 1024;
+        let gigabytes;
 
         if (megabytes < 900) {
             return megabytes.toFixed(1) + "MB";
@@ -420,7 +416,7 @@ TABS.onboard_logging.initialize = function (callback) {
     }
 
     function update_html() {
-        var dataflashPresent = FC.DATAFLASH.totalSize > 0;
+        const dataflashPresent = FC.DATAFLASH.totalSize > 0;
 
         update_bar_width($(".tab-onboard_logging .dataflash-used"), FC.DATAFLASH.usedSize, FC.DATAFLASH.totalSize, i18n.getMessage('dataflashUsedSpace'), false);
         update_bar_width($(".tab-onboard_logging .dataflash-free"), FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize, FC.DATAFLASH.totalSize, i18n.getMessage('dataflashFreeSpace'), false);
@@ -436,7 +432,7 @@ TABS.onboard_logging.initialize = function (callback) {
             .toggleClass("sdcard-ready", FC.SDCARD.state === MSP.SDCARD_STATE_READY);
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
-            var mscIsReady = dataflashPresent || (FC.SDCARD.state === MSP.SDCARD_STATE_READY);
+            const mscIsReady = dataflashPresent || (FC.SDCARD.state === MSP.SDCARD_STATE_READY);
             $(".tab-onboard_logging")
                 .toggleClass("msc-not-ready", !mscIsReady);
 
@@ -447,7 +443,7 @@ TABS.onboard_logging.initialize = function (callback) {
             }
         }
 
-        var loggingStatus
+        let loggingStatus;
         switch (FC.SDCARD.state) {
             case MSP.SDCARD_STATE_NOT_PRESENT:
                 $(".sdcard-status").text(i18n.getMessage('sdcardStatusNoCard'));
@@ -512,7 +508,7 @@ TABS.onboard_logging.initialize = function (callback) {
     function mark_saving_dialog_done(startTime, totalBytes, totalBytesCompressed) {
         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SaveDataflash');
 
-        var totalTime = (new Date().getTime() - startTime) / 1000;
+        const totalTime = (new Date().getTime() - startTime) / 1000;
         console.log('Received ' + totalBytes + ' bytes in ' + totalTime.toFixed(2) + 's ('
             + (totalBytes / totalTime / 1024).toFixed(2) + 'kB / s) with block size ' + self.blockSize + '.');
         if (!isNaN(totalBytesCompressed)) {
@@ -546,11 +542,11 @@ TABS.onboard_logging.initialize = function (callback) {
 
             // Begin by refreshing the occupied size in case it changed while the tab was open
             flash_update_summary(function() {
-                var maxBytes = FC.DATAFLASH.usedSize;
+                const maxBytes = FC.DATAFLASH.usedSize;
 
                 prepare_file(function(fileWriter) {
-                    var nextAddress = 0;
-                    var totalBytesCompressed = 0;
+                    let nextAddress = 0;
+                    let totalBytesCompressed = 0;
 
                     show_saving_dialog();
 
@@ -567,7 +563,7 @@ TABS.onboard_logging.initialize = function (callback) {
 
                                 $(".dataflash-saving progress").attr("value", nextAddress / maxBytes * 100);
 
-                                var blob = new Blob([chunkDataView]);
+                                const blob = new Blob([chunkDataView]);
 
                                 fileWriter.onwriteend = function(e) {
                                     if (saveCancelled || nextAddress >= maxBytes) {
@@ -596,7 +592,7 @@ TABS.onboard_logging.initialize = function (callback) {
                         }
                     }
 
-                    var startTime = new Date().getTime();
+                    const startTime = new Date().getTime();
                     // Fetch the initial block
                     mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                 });
@@ -606,14 +602,14 @@ TABS.onboard_logging.initialize = function (callback) {
 
     function prepare_file(onComplete) {
 
-        var prefix = 'BLACKBOX_LOG';
-        var suffix = 'BBL';
+        const prefix = 'BLACKBOX_LOG';
+        const suffix = 'BBL';
 
-        var filename = generateFilename(prefix, suffix);
+        const filename = generateFilename(prefix, suffix);
 
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename,
                 accepts: [{description: suffix.toUpperCase() + ' files', extensions: [suffix]}]}, function(fileEntry) {
-            var error = chrome.runtime.lastError;
+            const error = chrome.runtime.lastError;
 
             if (error) {
                 console.error(error.message);

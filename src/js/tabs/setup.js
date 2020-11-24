@@ -5,7 +5,7 @@ TABS.setup = {
 };
 
 TABS.setup.initialize = function (callback) {
-    var self = this;
+    const self = this;
 
     if (GUI.active_tab != 'setup') {
         GUI.active_tab = 'setup';
@@ -69,7 +69,7 @@ TABS.setup.initialize = function (callback) {
             }
 
             $('a.rebootBootloader').click(function () {
-                var buffer = [];
+                const buffer = [];
                 buffer.push(mspHelper.REBOOT_TYPES.BOOTLOADER);
                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
             });
@@ -79,7 +79,6 @@ TABS.setup.initialize = function (callback) {
 
         // UI Hooks
         $('a.calibrateAccel').click(function () {
-            var self = $(this);
 
             if (!self.hasClass('calibrating')) {
                 self.addClass('calibrating');
@@ -105,7 +104,6 @@ TABS.setup.initialize = function (callback) {
         });
 
         $('a.calibrateMag').click(function () {
-            var self = $(this);
 
             if (!self.hasClass('calibrating') && !self.hasClass('disabled')) {
                 self.addClass('calibrating');
@@ -125,7 +123,7 @@ TABS.setup.initialize = function (callback) {
             }
         });
 
-        var dialogConfirmReset = $('.dialogConfirmReset')[0];
+        const dialogConfirmReset = $('.dialogConfirmReset')[0];
 
         $('a.resetSettings').click(function () {
             dialogConfirmReset.showModal();
@@ -181,7 +179,7 @@ TABS.setup.initialize = function (callback) {
         });
 
         // cached elements
-        var bat_voltage_e = $('.bat-voltage'),
+        const batVoltageE = $('.bat-voltage'),
             bat_mah_drawn_e = $('.bat-mah-drawn'),
             bat_mah_drawing_e = $('.bat-mah-drawing'),
             rssi_e = $('.rssi'),
@@ -200,33 +198,36 @@ TABS.setup.initialize = function (callback) {
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
-        var prepareDisarmFlags = function() {
+        const prepareDisarmFlags = function() {
 
-            var disarmFlagElements = ['NO_GYRO',
-                                      'FAILSAFE',
-                                      'RX_FAILSAFE',
-                                      'BAD_RX_RECOVERY',
-                                      'BOXFAILSAFE',
-                                      'THROTTLE',
-                                      'ANGLE',
-                                      'BOOT_GRACE_TIME',
-                                      'NOPREARM',
-                                      'LOAD',
-                                      'CALIBRATING',
-                                      'CLI',
-                                      'CMS_MENU',
-                                      'OSD_MENU',
-                                      'BST',
-                                      'MSP',
-                                     ];
+            let disarmFlagElements = ['NO_GYRO',
+                'FAILSAFE',
+                'RX_FAILSAFE',
+                'BAD_RX_RECOVERY',
+                'BOXFAILSAFE',
+                'THROTTLE',
+                'ANGLE',
+                'BOOT_GRACE_TIME',
+                'NOPREARM',
+                'LOAD',
+                'CALIBRATING',
+                'CLI',
+                'CMS_MENU',
+                'OSD_MENU',
+                'BST',
+                'MSP',
+            ];
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_38)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
-                disarmFlagElements = disarmFlagElements.concat(['PARALYZE',
-                                                                'GPS']);
+                disarmFlagElements = disarmFlagElements.concat(
+                    [
+                        'PARALYZE',
+                        'GPS',
+                    ]);
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
@@ -250,7 +251,7 @@ TABS.setup.initialize = function (callback) {
             arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"></span>');
 
             // Arming disabled flags
-            for (var i = 0; i < FC.CONFIG.armingDisableCount; i++) {
+            for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
 
                 // All the known elements but the ARM_SWITCH (it must be always the last element)
                 if (i < disarmFlagElements.length - 1) {
@@ -275,14 +276,14 @@ TABS.setup.initialize = function (callback) {
 
                 $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags == 0);
 
-                for (var i = 0; i < FC.CONFIG.armingDisableCount; i++) {
+                for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
                     $('#initialSetupArmingDisableFlags'+i).css('display',(FC.CONFIG.armingDisableFlags & (1 << i)) == 0 ? 'none':'inline-block');
                 }
 
             });
 
             MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
-                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
+                batVoltageE.text(i18n.getMessage('initialSetupBatteryValue', [FC.ANALOG.voltage]));
                 bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [FC.ANALOG.mAhdrawn]));
                 bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [FC.ANALOG.amperage.toFixed(2)]));
                 rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
@@ -317,9 +318,9 @@ TABS.setup.initialize = function (callback) {
 };
 
 TABS.setup.initializeInstruments = function() {
-    var options = {size:90, showBox : false, img_directory: 'images/flightindicators/'};
-    var attitude = $.flightIndicator('#attitude', 'attitude', options);
-    var heading = $.flightIndicator('#heading', 'heading', options);
+    const options = {size:90, showBox : false, img_directory: 'images/flightindicators/'};
+    const attitude = $.flightIndicator('#attitude', 'attitude', options);
+    const heading = $.flightIndicator('#heading', 'heading', options);
 
     this.updateInstruments = function() {
         attitude.setRoll(FC.SENSOR_DATA.kinematics[0]);
@@ -335,7 +336,7 @@ TABS.setup.initModel = function () {
 };
 
 TABS.setup.renderModel = function () {
-    var x = (FC.SENSOR_DATA.kinematics[1] * -1.0) * 0.017453292519943295,
+    const x = (FC.SENSOR_DATA.kinematics[1] * -1.0) * 0.017453292519943295,
         y = ((FC.SENSOR_DATA.kinematics[2] * -1.0) - this.yaw_fix) * 0.017453292519943295,
         z = (FC.SENSOR_DATA.kinematics[0] * -1.0) * 0.017453292519943295;
 
