@@ -921,6 +921,7 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 200px;
     border-right: 4px solid var(--accent);
     background-color: #2e2e2e;
+    overflow: auto;
 }
 
 #tabs {
