@@ -671,7 +671,7 @@
         "message": "ブートローダー / DFU を有効化"
     },
     "initialSetupBackupRestoreText": {
-        "message": "不測の事態に備え必ず設定の<strong>バックアップ</strong>を行ってください。<strong>CLI</strong>設定は<span class=\"message-negative\">自動バックアップされません</span>。- CLIコマンドの [diff all] をご利用ください。"
+        "message": "不測の事態に備え必ず設定の<strong>バックアップ</strong>を行ってください。また<strong>CLIのみで行った設定</strong>は<span class=\"message-negative\">このバックアップには含まれません</span>。- そのため、CLIコマンド [diff all] をご利用ください。"
     },
     "initialSetupRebootBootloaderText": {
         "message": "<strong>ブートローダー / DFU</strong> モードで再起動します。"
@@ -2220,7 +2220,7 @@
         "message": "EEPROM <span class=\"message-positive\">保存しました</span>"
     },
     "servosFirmwareUpgradeRequired": {
-        "message": "サーボはファームウェア &gt;= 1.10.0. が必要でありサポート対象です。"
+        "message": "サーボの利用はBetaflight Configurator 1.10.0か、それ以上が必要であり、サポートするファームウェアが必要です。"
     },
     "servosChangeDirection": {
         "message": "一致する送信機のサーボ有効範囲の変更"
