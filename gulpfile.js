@@ -52,7 +52,7 @@ let gitChangeSetId;
 
 const nwBuilderOptions = {
     version: '0.47.0',
-    files: './dist/**/*',
+    files: `${DIST_DIR}**/*`,
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
     winIco: './src/images/bf_icon.ico',
@@ -269,7 +269,7 @@ function dist_src() {
     return packageJson
         .pipe(source('package.json'))
         .pipe(gulp.src(distSources, { base: 'src' }))
-        .pipe(gulp.src('yarn.lock', { passthrougth: true }))
+        .pipe(gulp.src('yarn.lock'))
         .pipe(gulp.dest(DIST_DIR));
 }
 
@@ -280,8 +280,8 @@ function dist_changelog() {
 
 // This function relies on files from the dist_src function
 function dist_yarn() {
-    return gulp.src(['./dist/package.json', './dist/yarn.lock'])
-        .pipe(gulp.dest('./dist'))
+    return gulp.src([`${DIST_DIR}package.json`, `${DIST_DIR}yarn.lock`])
+        .pipe(gulp.dest(DIST_DIR))
         .pipe(yarn({
             production: true,
         }));
