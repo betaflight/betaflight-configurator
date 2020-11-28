@@ -566,14 +566,13 @@ function start_debug(done) {
 
     const platforms = getPlatforms();
 
-    const exec = require('child_process').exec;
     if (platforms.length === 1) {
         if (platforms[0] === 'android') {
             cordova_debug();
         } else {
             const run = getRunDebugAppCommand(platforms[0]);
             console.log(`Starting debug app (${run})...`);
-            exec(run);
+            child_process.exec(run);
         }
     } else {
         console.log('More than one platform specified, not starting debug app');
