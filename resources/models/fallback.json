@@ -17,7 +17,6 @@
     "materials": [{
         "depthTest": true,
         "colorDiffuse": [0.6400000190734865,0.6400000190734865,0.6400000190734865],
-        "colorAmbient": [0.6400000190734865,0.6400000190734865,0.6400000190734865],
         "DbgColor": 15658734,
         "mapDiffuseAnisotropy": 1.0,
         "visible": true,
