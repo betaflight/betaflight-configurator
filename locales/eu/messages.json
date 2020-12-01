@@ -20,10 +20,10 @@
         "message": "Automatikoa"
     },
     "error": {
-        "message": "Errore: {{errorMessage}}"
+        "message": "Errorea: {{errorMessage}}"
     },
     "errorTitle": {
-        "message": "Errore"
+        "message": "Errorea"
     },
     "warningTitle": {
         "message": "Abisua"
@@ -519,6 +519,14 @@
         "message": "Atakaren erabilera:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Pakete errorea:",
         "description": "Packet error text shown in the status bar"
@@ -530,6 +538,10 @@
     "statusbar_cycle_time": {
         "message": "Zikloaren denbora:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "CPU Karga:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Mesedez, Firmware Flasher erabili DFU gailuak sartzeko"
@@ -2619,6 +2631,15 @@
     "dataflashButtonSaveFile": {
         "message": "Flash memoria fitxategira gorde..."
     },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Flash memoria fitzategira gorde...(ez da onartzen)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Flash memoria fitxategian gordetzea motela da eta berez akatsak / fitxategiak hondatzeko joera du.<br>Zenbait kasutan fitxategi txikientzat funtzionatuko du, baina hori ez da onartzen eta laguntza eskaerak itxi egingo dira iruzkinik egin gabe - erabili Biltegiratze Masiboa modua ordez."
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Metodo hau motela da eta berez akatsak / fitxategiak hondatzeko joera du, MSP konexioak berak intrintseko eta oinarrizko mugak dituelako, fitxategi transferentzietarako desegokia bihurtzen dutelako. Erregistro fitxategi txikietan bakarrik funtziona dezake. Ez sortu laguntza eskaerarik metodo hau erabiliz gordetako fitxategien transferentziek huts egiten badira. Gomendatutako metodoa '<b>$t(onboardLoggingRebootMscText.message)</b>' (behean) erabiltzea da, biltegiratze masiboa modua aktibatzeko eta zure hegaldiaren kontroladorera sartzeko biltegiratze gailu gisa erregistro fitxategiak gordetzeko."
+    },
     "dataflashButtonErase": {
         "message": "Flash garbitu"
     },
@@ -3552,6 +3573,15 @@
         "message": "Throttle eta PID errendimendu koherentea eskaintzen du bateriaren tentsio-barruti osoan bateriaren tentsioa konpentsatuz. Kalte-ordainaren zenbatekoa 0% eta 100% artean alda daiteke. Kalte-ordain osoa (100%) gomendatzen da.<br><br><a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">Wiki sare hau</a> bisitatu informazio gehiagorako."
     },
     "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Bultzada Linealizazioa"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Azelerazioaren eta bultzadaren arteko erlazio ez-lineala konpentsatzen du motorreko irteerari alderantzizko kurba aplikatuz. Kalte-ordaina 0% eta 150% artean alda daiteke."
+    },
+    "pidTuningThrustLinearValue": {
         "message": "%"
     },
     "pidTuningItermRotation": {
@@ -4700,6 +4730,13 @@
     },
     "osdDescElementEfficiency": {
         "message": "Berehalako bateriaren kontsumoa mAh/distantzian. (Baliozko GPS konponbidea eskatzen du)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Hegaldi kopurua",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Gutxi gorabeherako hegaldi kopurua"
     },
     "osdTextElementUnknown": {
         "message": "Ezezaguna $1",
