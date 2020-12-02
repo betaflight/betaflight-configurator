@@ -410,7 +410,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
 
             GUI.tab_switch_cleanup(function() {
                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
-                reinitialiseConnection(portConfig);
+                reinitialiseConnection(self);
             });
         }
     }

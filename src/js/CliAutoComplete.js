@@ -291,7 +291,7 @@ CliAutoComplete._initTextcomplete = function() {
          */
         if (!savedMouseoverItemHandler) {
             // save the original 'mouseover' handeler
-            savedMouseoverItemHandler = $._data($('.textcomplete-dropdown')[0], 'events').mouseover[0].handler;
+            savedMouseoverItemHandler = $._data($('.textcomplete-dropdown')[0], 'events').mouseover[0]?.handler;
         }
 
         $('.textcomplete-dropdown')

@@ -85,12 +85,12 @@ const Analytics = function (trackingId, userId, appName, appVersion, changesetId
 };
 
 Analytics.prototype.setDimension = function (dimension, value) {
-    const dimensionName = `dimension ${dimension}`;
+    const dimensionName = `dimension${dimension}`;
     this._googleAnalytics.custom(dimensionName, value);
 }
 
 Analytics.prototype.setMetric = function (metric, value) {
-    const metricName = `metric ${metric}`;
+    const metricName = `metric${metric}`;
     this._googleAnalytics.custom(metricName, value);
 }
 

@@ -1,42 +1,42 @@
 "use strict";
 
 const css_dark = [
-    '/css/dark-theme.css'
+    '/css/dark-theme.css',
 ];
 
-const CHANNEL_MIN_VALUE = 1000,
-    CHANNEL_MID_VALUE = 1500,
-    CHANNEL_MAX_VALUE = 2000,
+const CHANNEL_MIN_VALUE = 1000;
+const CHANNEL_MID_VALUE = 1500;
+const CHANNEL_MAX_VALUE = 2000;
 
     // What's the index of each channel in the MSP channel list?
-    channelMSPIndexes = {
-        Roll: 0,
-        Pitch: 1,
-        Throttle: 2,
-        Yaw: 3,
-        Aux1: 4,
-        Aux2: 5,
-        Aux3: 6,
-        Aux4: 7,
-    },
+const channelMSPIndexes = {
+    Roll: 0,
+    Pitch: 1,
+    Throttle: 2,
+    Yaw: 3,
+    Aux1: 4,
+    Aux2: 5,
+    Aux3: 6,
+    Aux4: 7,
+};
 
     // Set reasonable initial stick positions (Mode 2)
-    stickValues = {
-        Throttle: CHANNEL_MIN_VALUE,
-        Pitch: CHANNEL_MID_VALUE,
-        Roll: CHANNEL_MID_VALUE,
-        Yaw: CHANNEL_MID_VALUE,
-        Aux1: CHANNEL_MIN_VALUE,
-        Aux2: CHANNEL_MIN_VALUE,
-        Aux3: CHANNEL_MIN_VALUE,
-        Aux4: CHANNEL_MIN_VALUE
-    },
+const stickValues = {
+    Throttle: CHANNEL_MIN_VALUE,
+    Pitch: CHANNEL_MID_VALUE,
+    Roll: CHANNEL_MID_VALUE,
+    Yaw: CHANNEL_MID_VALUE,
+    Aux1: CHANNEL_MIN_VALUE,
+    Aux2: CHANNEL_MIN_VALUE,
+    Aux3: CHANNEL_MIN_VALUE,
+    Aux4: CHANNEL_MIN_VALUE,
+};
 
     // First the vertical axis, then the horizontal:
-    gimbals = new Set([
-        ["Throttle", "Yaw"],
-        ["Pitch", "Roll"],
-    ]);
+const gimbals = [
+    ["Throttle", "Yaw"],
+    ["Pitch", "Roll"],
+];
 
 let gimbalElems;
 let sliderElems;

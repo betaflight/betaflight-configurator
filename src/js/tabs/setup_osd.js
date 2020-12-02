@@ -25,11 +25,11 @@ TABS.setup_osd.initialize = function (callback) {
 
         $('.tab-setup-osd .info').hide(); // requires an MSP update
 /*      Only used by get_slow_data() which is commented out.
-        const osdVideoModes = new Set([
+        const osdVideoModes = [
             'AUTO',
             'NTSC',
             'PAL'
-        ]);
+        ];
 */
         // translate to user-selected language
         i18n.localizePage();

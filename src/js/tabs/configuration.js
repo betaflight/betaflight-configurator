@@ -968,10 +968,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         // fill battery
         if (self.SHOW_OLD_BATTERY_CONFIG) {
             if (semver.gte(FC.CONFIG.flightControllerVersion, "3.1.0")) {
-                const batteryMeterTypes = new Set([
+                const batteryMeterTypes = [
                     'Onboard ADC',
                     'ESC Sensor'
-                ]);
+                ];
 
                 const batteryMeterType_e = $('select.batterymetertype');
                 for (const [index, value] of batteryMeterTypes.entries()) {
