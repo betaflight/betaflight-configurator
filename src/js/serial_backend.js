@@ -421,12 +421,16 @@ function checkReportProblems() {
             needsProblemReportingDialog = checkReportProblem('ACC_NEEDS_CALIBRATION', problemDialogList) || needsProblemReportingDialog;
         }
 
+        if (isExpertModeEnabled()) {
+            needsProblemReportingDialog = false
+        }
+        
         if (needsProblemReportingDialog) {
             const problemDialog = $('#dialogReportProblems')[0];
             $('#dialogReportProblems-closebtn').click(function() {
                 problemDialog.close();
             });
-
+            
             problemDialog.showModal();
             $('#dialogReportProblems').scrollTop(0);
         }
