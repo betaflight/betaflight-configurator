@@ -1076,6 +1076,7 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         function startFlashing() {
             exitDfuElement.addClass('disabled');
+			FC.resetState();
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
                 if (self.parsed_hex) {
                     try {
