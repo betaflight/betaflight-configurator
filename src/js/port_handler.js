@@ -167,6 +167,9 @@ PortHandler.check_usb_devices = function (callback) {
         if(callback) callback(self.dfu_available);
 
         if (!$('option:selected', portPickerElement).data().isDFU) {
+            if (!GUI.connected_to) {
+                FC.resetState();
+            }
             portPickerElement.trigger('change');
         }
     });
