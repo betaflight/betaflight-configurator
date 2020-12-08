@@ -1021,7 +1021,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         });
 
         portPickerElement.change(function () {
-            if ($('option:selected', this).data().isDFU) {
+            if ($('option:selected', this).data().isDFU && !GUI.connect_lock) {
                 exitDfuElement.removeClass('disabled');
             } else {
                 exitDfuElement.addClass('disabled');
