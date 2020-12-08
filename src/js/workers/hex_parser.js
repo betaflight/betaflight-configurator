@@ -11,29 +11,29 @@ function read_hex_file(data) {
         data.pop();
     }
 
-    var hexfile_valid = true; // if any of the crc checks failed, this variable flips to false
+    let hexfile_valid = true; // if any of the crc checks failed, this variable flips to false
 
-    var result = {
+    const result = {
         data:                   [],
         end_of_file:            false,
         bytes_total:            0,
-        start_linear_address:   0
+        start_linear_address:   0,
     };
 
-    var extended_linear_address = 0;
-    var next_address = 0;
+    let extended_linear_address = 0;
+    let next_address = 0;
 
-    for (var i = 0; i < data.length && hexfile_valid; i++) {
+    for (let i = 0; i < data.length && hexfile_valid; i++) {
         // each byte is represnted by two chars
-        var byte_count = parseInt(data[i].substr(1, 2), 16);
-        var address = parseInt(data[i].substr(3, 4), 16);
-        var record_type = parseInt(data[i].substr(7, 2), 16);
-        var content = data[i].substr(9, byte_count * 2); // still in string format
-        var checksum = parseInt(data[i].substr(9 + byte_count * 2, 2), 16); // (this is a 2's complement value)
+        const byte_count = parseInt(data[i].substr(1, 2), 16);
+        const address = parseInt(data[i].substr(3, 4), 16);
+        const record_type = parseInt(data[i].substr(7, 2), 16);
+        const content = data[i].substr(9, byte_count * 2); // still in string format
+        const checksum = parseInt(data[i].substr(9 + byte_count * 2, 2), 16); // (this is a 2's complement value)
 
         switch (record_type) {
             case 0x00: // data record
-                if (address != next_address || next_address == 0) {
+                if (address !== next_address || next_address === 0) {
                     result.data.push({'address': extended_linear_address + address, 'bytes': 0, 'data': []});
                 }
 
@@ -41,10 +41,10 @@ function read_hex_file(data) {
                 next_address = address + byte_count;
 
                 // process data
-                var crc = byte_count + parseInt(data[i].substr(3, 2), 16) + parseInt(data[i].substr(5, 2), 16) + record_type;
-                for (var needle = 0; needle < byte_count * 2; needle += 2) { // * 2 because of 2 hex chars per 1 byte
-                    var num = parseInt(content.substr(needle, 2), 16); // get one byte in hex and convert it to decimal
-                    var data_block = result.data.length - 1;
+                let crc = byte_count + parseInt(data[i].substr(3, 2), 16) + parseInt(data[i].substr(5, 2), 16) + record_type;
+                for (let needle = 0; needle < byte_count * 2; needle += 2) { // * 2 because of 2 hex chars per 1 byte
+                    const num = parseInt(content.substr(needle, 2), 16); // get one byte in hex and convert it to decimal
+                    const data_block = result.data.length - 1;
 
                     result.data[data_block].data.push(num);
                     result.data[data_block].bytes++;
@@ -94,17 +94,15 @@ function read_hex_file(data) {
 }
 
 function microtime() {
-    var now = new Date().getTime() / 1000;
-
-    return now;
+    return new Date().getTime() / 1000;
 }
 
 onmessage = function(event) {
-    var time_parsing_start = microtime(); // track time
+    const timeParsingStart = microtime(); // track time
 
     read_hex_file(event.data);
 
-    console.log('HEX_PARSER - File parsed in: ' + (microtime() - time_parsing_start).toFixed(4) + ' seconds');
+    console.log(`HEX_PARSER - File parsed in: ${(microtime() - timeParsingStart).toFixed(4)} seconds`);
 
     // terminate worker
     close();
