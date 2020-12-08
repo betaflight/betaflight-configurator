@@ -5,7 +5,7 @@ TABS.setup = {
 };
 
 TABS.setup.initialize = function (callback) {
-    var self = this;
+    const self = this;
 
     if (GUI.active_tab != 'setup') {
         GUI.active_tab = 'setup';
@@ -69,7 +69,7 @@ TABS.setup.initialize = function (callback) {
             }
 
             $('a.rebootBootloader').click(function () {
-                var buffer = [];
+                const buffer = [];
                 buffer.push(mspHelper.REBOOT_TYPES.BOOTLOADER);
                 MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
             });
@@ -79,10 +79,10 @@ TABS.setup.initialize = function (callback) {
 
         // UI Hooks
         $('a.calibrateAccel').click(function () {
-            var self = $(this);
+            const _self = $(this);
 
-            if (!self.hasClass('calibrating')) {
-                self.addClass('calibrating');
+            if (!_self.hasClass('calibrating')) {
+                _self.addClass('calibrating');
 
                 // During this period MCU won't be able to process any serial commands because its locked in a for/while loop
                 // until this operation finishes, sending more commands through data_poll() will result in serial buffer overflow
@@ -97,7 +97,7 @@ TABS.setup.initialize = function (callback) {
                     GUI.interval_resume('setup_data_pull');
 
                     GUI.log(i18n.getMessage('initialSetupAccelCalibEnded'));
-                    self.removeClass('calibrating');
+                    _self.removeClass('calibrating');
                     $('#accel_calib_running').hide();
                     $('#accel_calib_rest').show();
                 }, 2000);
@@ -105,10 +105,10 @@ TABS.setup.initialize = function (callback) {
         });
 
         $('a.calibrateMag').click(function () {
-            var self = $(this);
+            const _self = $(this);
 
-            if (!self.hasClass('calibrating') && !self.hasClass('disabled')) {
-                self.addClass('calibrating');
+            if (!_self.hasClass('calibrating') && !_self.hasClass('disabled')) {
+                _self.addClass('calibrating');
 
                 MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
                     GUI.log(i18n.getMessage('initialSetupMagCalibStarted'));
@@ -118,14 +118,14 @@ TABS.setup.initialize = function (callback) {
 
                 GUI.timeout_add('button_reset', function () {
                     GUI.log(i18n.getMessage('initialSetupMagCalibEnded'));
-                    self.removeClass('calibrating');
+                    _self.removeClass('calibrating');
                     $('#mag_calib_running').hide();
                     $('#mag_calib_rest').show();
                 }, 30000);
             }
         });
 
-        var dialogConfirmReset = $('.dialogConfirmReset')[0];
+        const dialogConfirmReset = $('.dialogConfirmReset')[0];
 
         $('a.resetSettings').click(function () {
             dialogConfirmReset.showModal();
@@ -154,7 +154,7 @@ TABS.setup.initialize = function (callback) {
             self.yaw_fix = FC.SENSOR_DATA.kinematics[2] * - 1.0;
             $(this).text(i18n.getMessage('initialSetupButtonResetZaxisValue', [self.yaw_fix]));
 
-            console.log('YAW reset to 0 deg, fix: ' + self.yaw_fix + ' deg');
+            console.log(`YAW reset to 0 deg, fix: ${self.yaw_fix} deg`);
         });
 
         $('#content .backup').click(function () {
@@ -181,7 +181,7 @@ TABS.setup.initialize = function (callback) {
         });
 
         // cached elements
-        var bat_voltage_e = $('.bat-voltage'),
+        const bat_voltage_e = $('.bat-voltage'),
             bat_mah_drawn_e = $('.bat-mah-drawn'),
             bat_mah_drawing_e = $('.bat-mah-drawing'),
             rssi_e = $('.rssi'),
@@ -200,25 +200,26 @@ TABS.setup.initialize = function (callback) {
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
-        var prepareDisarmFlags = function() {
+        const prepareDisarmFlags = function() {
 
-            var disarmFlagElements = ['NO_GYRO',
-                                      'FAILSAFE',
-                                      'RX_FAILSAFE',
-                                      'BAD_RX_RECOVERY',
-                                      'BOXFAILSAFE',
-                                      'THROTTLE',
-                                      'ANGLE',
-                                      'BOOT_GRACE_TIME',
-                                      'NOPREARM',
-                                      'LOAD',
-                                      'CALIBRATING',
-                                      'CLI',
-                                      'CMS_MENU',
-                                      'OSD_MENU',
-                                      'BST',
-                                      'MSP',
-                                     ];
+            let disarmFlagElements = [
+                'NO_GYRO',
+                'FAILSAFE',
+                'RX_FAILSAFE',
+                'BAD_RX_RECOVERY',
+                'BOXFAILSAFE',
+                'THROTTLE',
+                'ANGLE',
+                'BOOT_GRACE_TIME',
+                'NOPREARM',
+                'LOAD',
+                'CALIBRATING',
+                'CLI',
+                'CMS_MENU',
+                'OSD_MENU',
+                'BST',
+                'MSP',
+            ];
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_38)) {
                 disarmFlagElements.splice(disarmFlagElements.indexOf('THROTTLE'), 0, 'RUNAWAY_TAKEOFF');
@@ -250,7 +251,7 @@ TABS.setup.initialize = function (callback) {
             arming_disable_flags_e.append('<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"></span>');
 
             // Arming disabled flags
-            for (var i = 0; i < FC.CONFIG.armingDisableCount; i++) {
+            for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
 
                 // All the known elements but the ARM_SWITCH (it must be always the last element)
                 if (i < disarmFlagElements.length - 1) {
@@ -275,7 +276,7 @@ TABS.setup.initialize = function (callback) {
 
                 $('#initialSetupArmingAllowed').toggle(FC.CONFIG.armingDisableFlags == 0);
 
-                for (var i = 0; i < FC.CONFIG.armingDisableCount; i++) {
+                for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
                     $('#initialSetupArmingDisableFlags'+i).css('display',(FC.CONFIG.armingDisableFlags & (1 << i)) == 0 ? 'none':'inline-block');
                 }
 
@@ -317,9 +318,9 @@ TABS.setup.initialize = function (callback) {
 };
 
 TABS.setup.initializeInstruments = function() {
-    var options = {size:90, showBox : false, img_directory: 'images/flightindicators/'};
-    var attitude = $.flightIndicator('#attitude', 'attitude', options);
-    var heading = $.flightIndicator('#heading', 'heading', options);
+    const options = {size:90, showBox : false, img_directory: 'images/flightindicators/'};
+    const attitude = $.flightIndicator('#attitude', 'attitude', options);
+    const heading = $.flightIndicator('#heading', 'heading', options);
 
     this.updateInstruments = function() {
         attitude.setRoll(FC.SENSOR_DATA.kinematics[0]);
@@ -335,7 +336,7 @@ TABS.setup.initModel = function () {
 };
 
 TABS.setup.renderModel = function () {
-    var x = (FC.SENSOR_DATA.kinematics[1] * -1.0) * 0.017453292519943295,
+    const x = (FC.SENSOR_DATA.kinematics[1] * -1.0) * 0.017453292519943295,
         y = ((FC.SENSOR_DATA.kinematics[2] * -1.0) - this.yaw_fix) * 0.017453292519943295,
         z = (FC.SENSOR_DATA.kinematics[0] * -1.0) * 0.017453292519943295;
 
