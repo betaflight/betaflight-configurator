@@ -1021,7 +1021,7 @@ TABS.firmware_flasher.initialize = function (callback) {
         });
 
         portPickerElement.change(function () {
-            if ($('option:selected', this).data().isDFU) {
+            if ($('option:selected', this).data().isDFU && !GUI.connect_lock) {
                 exitDfuElement.removeClass('disabled');
             } else {
                 exitDfuElement.addClass('disabled');
@@ -1096,6 +1096,8 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         function startFlashing() {
             exitDfuElement.addClass('disabled');
+            $("a.load_remote_file").addClass('disabled');
+            $("a.load_file").addClass('disabled');
             if (!GUI.connect_lock) { // button disabled while flashing is in progress
                 if (self.parsed_hex) {
                     try {
