@@ -46,15 +46,15 @@ const serial = {
                         case 'system_error': // we might be able to recover from this one
                             if (!self.failed++) {
                                 chrome.serial.setPaused(self.connectionId, false, function () {
-                                    self.getInfo(function (info) {
-                                        if (info) {
-                                            if (!info.paused) {
+                                    self.getInfo(function (getInfo) {
+                                        if (getInfo) {
+                                            if (!getInfo.paused) {
                                                 console.log(`${self.connectionType}: connection recovered from last onReceiveError`);
                                                 self.failed = 0;
                                             } else {
                                                 console.log(`${self.connectionType}: connection did not recover from last onReceiveError, disconnecting`);
                                                 GUI.log(i18n.getMessage('serialUnrecoverable'));
-                                                self.errorHandler(info.error, 'receive');
+                                                self.errorHandler(getInfo.error, 'receive');
                                             }
                                         } else {
                                             self.checkChromeRunTimeError();
@@ -69,13 +69,13 @@ const serial = {
                             self.error = info.error;
                             setTimeout(function() {
                                 chrome.serial.setPaused(info.connectionId, false, function() {
-                                    self.getInfo(function (info) {
-                                        if (info) {
-                                            if (info.paused) {
+                                    self.getInfo(function (_info) {
+                                        if (_info) {
+                                            if (_info.paused) {
                                                 // assume unrecoverable, disconnect
                                                 console.log(`${self.connectionType}: connection did not recover from ${self.error} condition, disconnecting`);
                                                 GUI.log(i18n.getMessage('serialUnrecoverable'));
-                                                self.errorHandler(info.error, 'receive');
+                                                self.errorHandler(_info.error, 'receive');
                                             }
                                             else {
                                                 console.log(`${self.connectionType}: connection recovered from ${self.error} condition`);
@@ -94,6 +94,8 @@ const serial = {
                         case 'frame_error':
                         case 'parity_error':
                             GUI.log(i18n.getMessage('serialError' + inflection.camelize(info.error)));
+                            self.errorHandler(info.error, 'receive');
+                            break;
                         case 'break': // This seems to be the error that is thrown under NW.js in Windows when the device reboots after typing 'exit' in CLI
                         case 'disconnected':
                         case 'device_lost':
@@ -299,7 +301,7 @@ const serial = {
                 if (self.outputBuffer.length) {
                     // keep the buffer withing reasonable limits
                     if (self.outputBuffer.length > 100) {
-                        var counter = 0;
+                        let counter = 0;
 
                         while (self.outputBuffer.length > 100) {
                             self.outputBuffer.pop();
