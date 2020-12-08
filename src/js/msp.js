@@ -1,6 +1,6 @@
 'use strict';
 
-var MSP = {
+const MSP = {
     symbols: {
         BEGIN: '$'.charCodeAt(0),
         PROTO_V1: 'M'.charCodeAt(0),
@@ -56,17 +56,17 @@ var MSP = {
     JUMBO_FRAME_SIZE_LIMIT:     255,
     
     read: function (readInfo) {
-        var data = new Uint8Array(readInfo.data);
+        const data = new Uint8Array(readInfo.data);
 
-        for (var i = 0; i < data.length; i++) {
+        for (const chunk of data) {
             switch (this.state) {
             case this.decoder_states.IDLE: // sync char 1
-                if (data[i] === this.symbols.BEGIN) {
+                if (chunk === this.symbols.BEGIN) {
                     this.state = this.decoder_states.PROTO_IDENTIFIER;
                 }
                 break;
             case this.decoder_states.PROTO_IDENTIFIER: // sync char 2
-                switch (data[i]) {
+                switch (chunk) {
                     case this.symbols.PROTO_V1:
                         this.state = this.decoder_states.DIRECTION_V1;
                         break;
@@ -74,14 +74,14 @@ var MSP = {
                         this.state = this.decoder_states.DIRECTION_V2;
                         break;
                     default:
-                        console.log(`Unknown protocol char ${String.fromCharCode(data[i])}`);
+                        console.log(`Unknown protocol char ${String.fromCharCode(chunk)}`);
                         this.state = this.decoder_states.IDLE;
                 }
                 break;
             case this.decoder_states.DIRECTION_V1: // direction (should be >)
             case this.decoder_states.DIRECTION_V2:
                 this.unsupported = 0;
-                switch (data[i]) {
+                switch (chunk) {
                     case this.symbols.FROM_MWC:
                         this.message_direction = 1;
                         break;
@@ -101,7 +101,7 @@ var MSP = {
                 this.state = this.decoder_states.CODE_V2_LOW;
                 break;
             case this.decoder_states.PAYLOAD_LENGTH_V1:
-                this.message_length_expected = data[i];
+                this.message_length_expected = chunk;
 
                 if (this.message_length_expected === this.constants.JUMBO_FRAME_MIN_SIZE) {
                     this.state = this.decoder_states.CODE_JUMBO_V1;
@@ -112,11 +112,11 @@ var MSP = {
 
                 break;
             case this.decoder_states.PAYLOAD_LENGTH_V2_LOW:
-                this.message_length_expected = data[i];
+                this.message_length_expected = chunk;
                 this.state = this.decoder_states.PAYLOAD_LENGTH_V2_HIGH;
                 break;
             case this.decoder_states.PAYLOAD_LENGTH_V2_HIGH:
-                this.message_length_expected |= data[i] << 8;
+                this.message_length_expected |= chunk << 8;
                 this._initialize_read_buffer();
                 this.state = this.message_length_expected > 0 ?
                     this.decoder_states.PAYLOAD_V2 :
@@ -124,7 +124,7 @@ var MSP = {
                 break;
             case this.decoder_states.CODE_V1:
             case this.decoder_states.CODE_JUMBO_V1:
-                this.code = data[i];
+                this.code = chunk;
                 if (this.message_length_expected > 0) {
                     // process payload
                     if (this.state === this.decoder_states.CODE_JUMBO_V1) {
@@ -138,25 +138,25 @@ var MSP = {
                 }
                 break;
             case this.decoder_states.CODE_V2_LOW:
-                this.code = data[i];
+                this.code = chunk;
                 this.state = this.decoder_states.CODE_V2_HIGH;
                 break;
             case this.decoder_states.CODE_V2_HIGH:
-                this.code |= data[i] << 8;
+                this.code |= chunk << 8;
                 this.state = this.decoder_states.PAYLOAD_LENGTH_V2_LOW;
                 break;
             case this.decoder_states.PAYLOAD_LENGTH_JUMBO_LOW:
-                this.message_length_expected = data[i];
+                this.message_length_expected = chunk;
                 this.state = this.decoder_states.PAYLOAD_LENGTH_JUMBO_HIGH;
                 break;
             case this.decoder_states.PAYLOAD_LENGTH_JUMBO_HIGH:
-                this.message_length_expected |= data[i] << 8;
+                this.message_length_expected |= chunk << 8;
                 this._initialize_read_buffer();
                 this.state = this.decoder_states.PAYLOAD_V1;
                 break;
             case this.decoder_states.PAYLOAD_V1:
             case this.decoder_states.PAYLOAD_V2:
-                this.message_buffer_uint8_view[this.message_length_received] = data[i];
+                this.message_buffer_uint8_view[this.message_length_received] = chunk;
                 this.message_length_received++;
 
                 if (this.message_length_received >= this.message_length_expected) {
@@ -179,7 +179,7 @@ var MSP = {
                 for (let ii = 0; ii < this.message_length_received; ii++) {
                     this.message_checksum ^= this.message_buffer_uint8_view[ii];
                 }
-                this._dispatch_message(data[i]);
+                this._dispatch_message(chunk);
                 break;
             case this.decoder_states.CHECKSUM_V2:
                 this.message_checksum = 0;
@@ -191,7 +191,7 @@ var MSP = {
                 for (let ii = 0; ii < this.message_length_received; ii++) {
                     this.message_checksum = this.crc8_dvb_s2(this.message_checksum, this.message_buffer_uint8_view[ii]);
                 }
-                this._dispatch_message(data[i]);
+                this._dispatch_message(chunk);
                 break;
             default:
                 console.log(`Unknown state detected: ${this.state}`);
@@ -212,16 +212,16 @@ var MSP = {
             this.crcError = true;
             this.dataView = new DataView(new ArrayBuffer(0));
         }
+        this.notify();
         // Reset variables
         this.message_length_received = 0;
         this.state = 0;
         this.messageIsJumboFrame = false;
-        this.notify();
         this.crcError = false;
     },
     notify: function() {
-        var self = this;
-        this.listeners.forEach(function(listener) {
+        const self = this;
+        self.listeners.forEach(function(listener) {
             listener(self);
         });
     },
@@ -255,8 +255,8 @@ var MSP = {
         let bufferOut;
         // always reserve 6 bytes for protocol overhead !
         if (data) {
-            var size = data.length + 6,
-                checksum = 0;
+            const size = data.length + 6;
+            let checksum = 0;
 
             bufferOut = new ArrayBuffer(size);
             let bufView = new Uint8Array(bufferOut);
@@ -269,7 +269,7 @@ var MSP = {
 
             checksum = bufView[3] ^ bufView[4];
 
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 bufView[i + 5] = data[i];
 
                 checksum ^= bufView[i + 5];
@@ -320,11 +320,11 @@ var MSP = {
             bufferOut = this.encode_message_v2(code, data);
         }
 
-        var obj = {'code': code, 'requestBuffer': bufferOut, 'callback': callback_msp ? callback_msp : false, 'timer': false, 'callbackOnError': doCallbackOnError};
+        const obj = {'code': code, 'requestBuffer': bufferOut, 'callback': callback_msp ? callback_msp : false, 'timer': false, 'callbackOnError': doCallbackOnError};
 
-        var requestExists = false;
-        for (var i = 0; i < MSP.callbacks.length; i++) {
-            if (MSP.callbacks[i].code == code) {
+        let requestExists = false;
+        for (const value of MSP.callbacks) {
+            if (value.code === code) {
                 // request already exist, we will just attach
                 requestExists = true;
                 break;
@@ -333,7 +333,7 @@ var MSP = {
 
         if (!requestExists) {
             obj.timer = setInterval(function () {
-                console.log(`MSP data request timed-out: ${code}`);
+                console.log(`MSP data request timed-out: ${code} direction: ${MSP.message_direction} tab: ${GUI.active_tab}`);
 
                 serial.send(bufferOut, false);
             }, 1000); // we should be able to define timeout in the future
@@ -359,16 +359,16 @@ var MSP = {
      * resolves: {command: code, data: data, length: message_length}
      */
     promise: function(code, data) {
-      var self = this;
+      const self = this;
       return new Promise(function(resolve) {
-        self.send_message(code, data, false, function(data) {
-          resolve(data);
+        self.send_message(code, data, false, function(_data) {
+          resolve(_data);
         });
       });
     },
     callbacks_cleanup: function () {
-        for (var i = 0; i < this.callbacks.length; i++) {
-            clearInterval(this.callbacks[i].timer);
+        for (let index = 0; index < this.callbacks.length; index++) {
+            clearInterval(this.callbacks[index].timer);
         }
 
         this.callbacks = [];

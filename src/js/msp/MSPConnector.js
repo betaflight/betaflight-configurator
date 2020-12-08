@@ -1,6 +1,6 @@
 'use strict';
 
-var MSPConnectorImpl = function () {
+const MSPConnectorImpl = function () {
     this.baud = undefined;
     this.port = undefined;
     this.onConnectCallback = undefined;
@@ -10,7 +10,7 @@ var MSPConnectorImpl = function () {
 
 MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, onTimeoutCallback, onFailureCallback) {
 
-    var self = this;
+    const self = this;
     self.port = port;
     self.baud = baud;
     self.onConnectCallback = onConnectCallback;
@@ -19,7 +19,7 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
 
     serial.connect(self.port, {bitrate: self.baud}, function (openInfo) {
         if (openInfo) {
-            var disconnectAndCleanup = function() {
+            const disconnectAndCleanup = function() {
                 serial.disconnect(function(result) {
                     console.log('Disconnected');
                     
@@ -44,7 +44,7 @@ MSPConnectorImpl.prototype.connect = function (port, baud, onConnectCallback, on
 
             serial.onReceive.addListener(read_serial);
             
-            mspHelper = new MspHelper();
+            const mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
             
             MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
@@ -74,4 +74,3 @@ MSPConnectorImpl.prototype.disconnect = function(onDisconnectCallback) {
     
     MSP.disconnect_cleanup();
 };
-
