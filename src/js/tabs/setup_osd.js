@@ -4,7 +4,6 @@ TABS.setup_osd = {
 };
 
 TABS.setup_osd.initialize = function (callback) {
-    var self = this;
 
     if (GUI.active_tab != 'setup_osd') {
         GUI.active_tab = 'setup_osd';
@@ -25,13 +24,13 @@ TABS.setup_osd.initialize = function (callback) {
     function process_html() {
 
         $('.tab-setup-osd .info').hide(); // requires an MSP update
-        
-        var osdVideoModes = [
+/*      Only used by get_slow_data() which is commented out.
+        const osdVideoModes = new Set([
             'AUTO',
             'NTSC',
             'PAL'
-        ];
-
+        ]);
+*/
         // translate to user-selected language
         i18n.localizePage();
 
@@ -48,10 +47,8 @@ TABS.setup_osd.initialize = function (callback) {
         function get_slow_data() {
             /* FIXME requires MSP update
             MSP.send_message(MSPCodes.MSP_OSD_VIDEO_STATUS, false, false, function () {
-                var element;
-                
-                element = $('.video-mode');
-                var osdVideoMode = osdVideoModes[OSD_VIDEO_STATE.video_mode];
+                let element element = $('.video-mode');
+                const osdVideoMode = osdVideoModes[OSD_VIDEO_STATE.video_mode];
                 element.text(osdVideoMode);
                 
                 element = $('.camera-connected');
