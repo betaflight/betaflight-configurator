@@ -1,6 +1,6 @@
 'use strict';
 
-var TuningSliders = {
+const TuningSliders = {
     MasterSliderValue: 1,
     PDRatioSliderValue: 1,
     PDGainSliderValue: 1,
