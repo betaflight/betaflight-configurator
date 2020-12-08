@@ -15,7 +15,7 @@ const API_VERSION_1_42 = '1.42.0';
 const API_VERSION_1_43 = '1.43.0';
 const API_VERSION_1_44 = '1.44.0';
 
-var CONFIGURATOR = {
+const CONFIGURATOR = {
     // all versions are specified and compared using semantic versioning http://semver.org/
     API_VERSION_ACCEPTED: '1.2.1',
     API_VERSION_MIN_SUPPORTED_BACKUP_RESTORE: '1.5.0',

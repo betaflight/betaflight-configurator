@@ -1,14 +1,13 @@
 'use strict';
 
-var HUFFMAN_EOF = -1;
+const HUFFMAN_EOF = -1;
 
-function huffmanDecodeBuf(inBuf, inBufCharacterCount, huffmanTree, huffmanLenIndex)
-{
-    var code = 0;
-    var codeLen = 0;
-    var testBit = 0x80;
-    var eof = false;
-    var outBuf = [];
+function huffmanDecodeBuf(inBuf, inBufCharacterCount, huffmanTree, huffmanLenIndex) {
+    let code = 0;
+    let codeLen = 0;
+    let testBit = 0x80;
+    let eof = false;
+    const outBuf = [];
 
     while (!eof && inBuf.byteLength != 0) {
         if (outBuf.length == inBufCharacterCount) {
@@ -35,10 +34,10 @@ function huffmanDecodeBuf(inBuf, inBufCharacterCount, huffmanTree, huffmanLenInd
         // check if the code is a leaf node or an interior node
         if (huffmanLenIndex[codeLen] != -1) {
             // look for the code in the tree, only leaf nodes are stored in the tree
-            for (var i = huffmanLenIndex[codeLen]; (i < huffmanTree.length) && (huffmanTree[i].codeLen == codeLen); ++i) {
-                if (huffmanTree[i].code == code) {
+            for (let i = huffmanLenIndex[codeLen]; (i < huffmanTree.length) && (huffmanTree[i].codeLen === codeLen); ++i) {
+                if (huffmanTree[i].code === code) {
                     // we've found the code, so it is a leaf node
-                    var value = huffmanTree[i].value;
+                    const value = huffmanTree[i].value;
 
                     if (value == HUFFMAN_EOF) {
                         eof = true;
