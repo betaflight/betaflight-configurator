@@ -163,9 +163,6 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                         console.log('no flash bootloader detected');
                         rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
                     }
-                    if (!GUI.connected_to) {
-                        FC.resetState();
-                    }
 
                     var buffer = [];
                     buffer.push8(rebootMode);
