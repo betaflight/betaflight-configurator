@@ -8,7 +8,7 @@ TABS.receiver = {
 };
 
 TABS.receiver.initialize = function (callback) {
-    var tab = this;
+    const tab = this;
 
     if (GUI.active_tab != 'receiver') {
         GUI.active_tab = 'receiver';
@@ -31,20 +31,20 @@ TABS.receiver.initialize = function (callback) {
     }
 
     function load_rc_configs() {
-        var next_callback = load_rx_config;
+        const nextCallback = load_rx_config;
         if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
-            MSP.send_message(MSPCodes.MSP_RC_DEADBAND, false, false, next_callback);
+            MSP.send_message(MSPCodes.MSP_RC_DEADBAND, false, false, nextCallback);
         } else {
-            next_callback();
+            nextCallback();
         }
     }
 
     function load_rx_config() {
-        var next_callback = load_mixer_config;
+        const nextCallback = load_mixer_config;
         if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, next_callback);
+            MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, nextCallback);
         } else {
-            next_callback();
+            nextCallback();
         }
     }
 
@@ -97,26 +97,27 @@ TABS.receiver.initialize = function (callback) {
         }
 
         // generate bars
-        var bar_names = [
-                i18n.getMessage('controlAxisRoll'),
-                i18n.getMessage('controlAxisPitch'),
-                i18n.getMessage('controlAxisYaw'),
-                i18n.getMessage('controlAxisThrottle')
-            ],
-            bar_container = $('.tab-receiver .bars'),
-            aux_index = 1;
+        const bar_names = [
+            i18n.getMessage('controlAxisRoll'),
+            i18n.getMessage('controlAxisPitch'),
+            i18n.getMessage('controlAxisYaw'),
+            i18n.getMessage('controlAxisThrottle')
+        ];
 
-        var num_bars = (FC.RC.active_channels > 0) ? FC.RC.active_channels : 8;
+        const barContainer = $('.tab-receiver .bars');
+        let auxIndex = 1;
 
-        for (var i = 0; i < num_bars; i++) {
-            var name;
+        const numBars = (FC.RC.active_channels > 0) ? FC.RC.active_channels : 8;
+
+        for (let i = 0; i < numBars; i++) {
+            let name;
             if (i < bar_names.length) {
                 name = bar_names[i];
             } else {
-                name = i18n.getMessage("controlAxisAux" + (aux_index++));
+                name = i18n.getMessage("controlAxisAux" + (auxIndex++));
             }
 
-            bar_container.append('\
+            barContainer.append('\
                 <ul>\
                     <li class="name">' + name + '</li>\
                     <li class="meter">\
@@ -132,53 +133,53 @@ TABS.receiver.initialize = function (callback) {
         }
 
         // we could probably use min and max throttle for the range, will see
-        var meter_scale = {
+        const meterScale = {
             'min': 800,
             'max': 2200
         };
 
-        var meter_fill_array = [];
-        $('.meter .fill', bar_container).each(function () {
-            meter_fill_array.push($(this));
+        const meterFillArray = [];
+        $('.meter .fill', barContainer).each(function () {
+            meterFillArray.push($(this));
         });
 
-        var meter_label_array = [];
-        $('.meter', bar_container).each(function () {
-            meter_label_array.push($('.label' , this));
+        const meterLabelArray = [];
+        $('.meter', barContainer).each(function () {
+            meterLabelArray.push($('.label' , this));
         });
 
         // correct inner label margin on window resize (i don't know how we could do this in css)
         tab.resize = function () {
-            var containerWidth = $('.meter:first', bar_container).width(),
-                labelWidth = $('.meter .label:first', bar_container).width(),
+            const containerWidth = $('.meter:first', barContainer).width(),
+                labelWidth = $('.meter .label:first', barContainer).width(),
                 margin = (containerWidth / 2) - (labelWidth / 2);
 
-            for (var i = 0; i < meter_label_array.length; i++) {
-                meter_label_array[i].css('margin-left', margin);
+            for (let i = 0; i < meterLabelArray.length; i++) {
+                meterLabelArray[i].css('margin-left', margin);
             }
         };
 
         $(window).on('resize', tab.resize).resize(); // trigger so labels get correctly aligned on creation
 
         // handle rcmap & rssi aux channel
-        var RC_MAP_Letters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
+        let rcMapLetters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
 
-        var strBuffer = [];
-        for (var i = 0; i < FC.RC_MAP.length; i++) {
-            strBuffer[FC.RC_MAP[i]] = RC_MAP_Letters[i];
+        let strBuffer = [];
+        for (let i = 0; i < FC.RC_MAP.length; i++) {
+            strBuffer[FC.RC_MAP[i]] = rcMapLetters[i];
         }
 
         // reconstruct
-        var str = strBuffer.join('');
+        const str = strBuffer.join('');
 
         // set current value
         $('input[name="rcmap"]').val(str);
 
         // validation / filter
-        var last_valid = str;
+        const lastValid = str;
 
         $('input[name="rcmap"]').on('input', function () {
-            var val = $(this).val();
+            let val = $(this).val();
 
             // limit length to max 8
             if (val.length > 8) {
@@ -188,26 +189,26 @@ TABS.receiver.initialize = function (callback) {
         });
 
         $('input[name="rcmap"]').focusout(function () {
-            var val = $(this).val(),
-                strBuffer = val.split(''),
-                duplicityBuffer = [];
+            const val = $(this).val();
+            strBuffer = val.split('');
+            const duplicityBuffer = [];
 
             if (val.length != 8) {
-                $(this).val(last_valid);
+                $(this).val(lastValid);
                 return false;
             }
 
             // check if characters inside are all valid, also check for duplicity
-            for (var i = 0; i < val.length; i++) {
-                if (RC_MAP_Letters.indexOf(strBuffer[i]) < 0) {
-                    $(this).val(last_valid);
+            for (let i = 0; i < val.length; i++) {
+                if (rcMapLetters.indexOf(strBuffer[i]) < 0) {
+                    $(this).val(lastValid);
                     return false;
                 }
 
                 if (duplicityBuffer.indexOf(strBuffer[i]) < 0) {
                     duplicityBuffer.push(strBuffer[i]);
                 } else {
-                    $(this).val(last_valid);
+                    $(this).val(lastValid);
                     return false;
                 }
             }
@@ -220,16 +221,14 @@ TABS.receiver.initialize = function (callback) {
         });
 
         // rssi
-        var rssi_channel_e = $('select[name="rssi_channel"]');
-        rssi_channel_e.append('<option value="0">' + i18n.getMessage("receiverRssiChannelDisabledOption") + '</option>');
+        const rssi_channel_e = $('select[name="rssi_channel"]');
+        rssi_channel_e.append(`<option value="0">${i18n.getMessage("receiverRssiChannelDisabledOption")}</option>`);
         //1-4 reserved for Roll Pitch Yaw & Throttle, starting at 5
-        for (var i = 5; i < FC.RC.active_channels + 1; i++) {
-            rssi_channel_e.append('<option value="' + i + '">' + i18n.getMessage("controlAxisAux" + (i-4)) + '</option>');
+        for (let i = 5; i < FC.RC.active_channels + 1; i++) {
+            rssi_channel_e.append(`<option value="${i}">${i18n.getMessage("controlAxisAux" + (i-4))}</option>`);
         }
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);
-
-        var rateHeight = TABS.receiver.rateChartHeight;
 
         // UI Hooks
         $('a.refresh').click(function () {
@@ -249,11 +248,11 @@ TABS.receiver.initialize = function (callback) {
             }
 
             // catch rc map
-            var RC_MAP_Letters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
-            var strBuffer = $('input[name="rcmap"]').val().split('');
+            rcMapLetters = ['A', 'E', 'R', 'T', '1', '2', '3', '4'];
+            strBuffer = $('input[name="rcmap"]').val().split('');
 
-            for (var i = 0; i < FC.RC_MAP.length; i++) {
-                FC.RC_MAP[i] = strBuffer.indexOf(RC_MAP_Letters[i]);
+            for (let i = 0; i < FC.RC_MAP.length; i++) {
+                FC.RC_MAP[i] = strBuffer.indexOf(rcMapLetters[i]);
             }
 
             // catch rssi aux
@@ -282,20 +281,20 @@ TABS.receiver.initialize = function (callback) {
             }
 
             function save_rc_configs() {
-                var next_callback = save_rx_config;
+                const nextCallback = save_rx_config;
                 if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND), false, next_callback);
+                    MSP.send_message(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND), false, nextCallback);
                 } else {
-                    next_callback();
+                    nextCallback();
                 }
             }
 
             function save_rx_config() {
-                var next_callback = save_to_eeprom;
+                const nextCallback = save_to_eeprom;
                 if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, next_callback);
+                    MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, nextCallback);
                 } else {
-                    next_callback();
+                    nextCallback();
                 }
             }
 
@@ -309,9 +308,8 @@ TABS.receiver.initialize = function (callback) {
         });
 
         $("a.sticks").click(function() {
-            var
-                windowWidth = 370,
-                windowHeight = 510;
+            const windowWidth = 370;
+            const windowHeight = 510;
 
             chrome.app.window.create("/tabs/receiver_msp.html", {
                 id: "receiver_msp",
@@ -353,7 +351,7 @@ TABS.receiver.initialize = function (callback) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
             $('.tab-receiver .rcSmoothing').show();
 
-            var rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
+            const rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
             rc_smoothing_protocol_e.change(function () {
                 FC.RX_CONFIG.rcSmoothingType = $(this).val();
                 updateInterpolationView();
@@ -398,16 +396,16 @@ TABS.receiver.initialize = function (callback) {
                 }
             }).change();
 
-            var rc_smoothing_derivative_type = $('select[name="rcSmoothingDerivativeType-select"]');
+            const rcSmoothingDerivativeType = $('select[name="rcSmoothingDerivativeType-select"]');
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                rc_smoothing_derivative_type.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingDerivativeTypeAuto")}</option>`));
+                rcSmoothingDerivativeType.append($(`<option value="3">${i18n.getMessage("receiverRcSmoothingDerivativeTypeAuto")}</option>`));
             }
 
-            rc_smoothing_derivative_type.val(FC.RX_CONFIG.rcSmoothingDerivativeType);
-            var rc_smoothing_channels = $('select[name="rcSmoothingChannels-select"]');
-            rc_smoothing_channels.val(FC.RX_CONFIG.rcInterpolationChannels);
-            var rc_smoothing_input_type = $('select[name="rcSmoothingInputType-select"]');
-            rc_smoothing_input_type.val(FC.RX_CONFIG.rcSmoothingInputType);
+            rcSmoothingDerivativeType.val(FC.RX_CONFIG.rcSmoothingDerivativeType);
+            const rcSmoothingChannels = $('select[name="rcSmoothingChannels-select"]');
+            rcSmoothingChannels.val(FC.RX_CONFIG.rcInterpolationChannels);
+            const rcSmoothingInputType = $('select[name="rcSmoothingInputType-select"]');
+            rcSmoothingInputType.val(FC.RX_CONFIG.rcSmoothingInputType);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 $('select[name="rcSmoothing-input-manual-select"], select[name="rcSmoothing-input-derivative-select"]').change(function() {
@@ -419,8 +417,8 @@ TABS.receiver.initialize = function (callback) {
                 });
                 $('select[name="rcSmoothing-input-manual-select"]').change();
 
-                var rc_smoothing_auto_smoothness = $('input[name="rcSmoothingAutoSmoothness-number"]');
-                rc_smoothing_auto_smoothness.val(FC.RX_CONFIG.rcSmoothingAutoSmoothness);
+                const rcSmoothingAutoSmoothness = $('input[name="rcSmoothingAutoSmoothness-number"]');
+                rcSmoothingAutoSmoothness.val(FC.RX_CONFIG.rcSmoothingAutoSmoothness);
             } else {
                 $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
             }
@@ -475,21 +473,21 @@ TABS.receiver.initialize = function (callback) {
             // save update rate
             ConfigStorage.set({'rx_refresh_rate': plotUpdateRate});
 
-            function get_rc_data() {
+            function get_rc_refresh_data() {
                 MSP.send_message(MSPCodes.MSP_RC, false, false, update_ui);
             }
 
             // setup plot
-            var RX_plot_data = new Array(FC.RC.active_channels);
-            for (var i = 0; i < RX_plot_data.length; i++) {
-                RX_plot_data[i] = [];
+            const rxPlotData = new Array(FC.RC.active_channels);
+            for (let i = 0; i < rxPlotData.length; i++) {
+                rxPlotData[i] = [];
             }
 
-            var samples = 0,
-                svg = d3.select("svg"),
-                RX_plot_e = $('#RX_plot'),
-                margin = {top: 20, right: 0, bottom: 10, left: 40},
-                width, height, widthScale, heightScale;
+            let samples = 0;
+            const svg = d3.select("svg");
+            const RX_plot_e = $('#RX_plot');
+            const margin = {top: 20, right: 0, bottom: 10, left: 40};
+            let width, height, widthScale, heightScale;
 
             function update_receiver_plot_size() {
                 width = RX_plot_e.width() - margin.left - margin.right;
@@ -504,9 +502,9 @@ TABS.receiver.initialize = function (callback) {
                 if (FC.RC.active_channels > 0) {
 
                     // update bars with latest data
-                    for (var i = 0; i < FC.RC.active_channels; i++) {
-                        meter_fill_array[i].css('width', ((FC.RC.channels[i] - meter_scale.min) / (meter_scale.max - meter_scale.min) * 100).clamp(0, 100) + '%');
-                        meter_label_array[i].text(FC.RC.channels[i]);
+                    for (let i = 0; i < FC.RC.active_channels; i++) {
+                        meterFillArray[i].css('width', ((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min) * 100).clamp(0, 100) + '%');
+                        meterLabelArray[i].text(FC.RC.channels[i]);
                     }
 
                     labelsChannelData.ch1[0].text(FC.RC.channels[0]);
@@ -515,14 +513,14 @@ TABS.receiver.initialize = function (callback) {
                     labelsChannelData.ch4[0].text(FC.RC.channels[3]);
     
                     // push latest data to the main array
-                    for (var i = 0; i < FC.RC.active_channels; i++) {
-                        RX_plot_data[i].push([samples, FC.RC.channels[i]]);
+                    for (let i = 0; i < FC.RC.active_channels; i++) {
+                        rxPlotData[i].push([samples, FC.RC.channels[i]]);
                     }
 
                     // Remove old data from array
-                    while (RX_plot_data[0].length > 300) {
-                        for (var i = 0; i < RX_plot_data.length; i++) {
-                            RX_plot_data[i].shift();
+                    while (rxPlotData[0].length > 300) {
+                        for (let i = 0; i < rxPlotData.length; i++) {
+                            rxPlotData[i].shift();
                         }
                     }
 
@@ -537,29 +535,29 @@ TABS.receiver.initialize = function (callback) {
 
                 update_receiver_plot_size();
 
-                var xGrid = d3.svg.axis().
+                const xGrid = d3.svg.axis().
                     scale(widthScale).
                     orient("bottom").
                     tickSize(-height, 0, 0).
                     tickFormat("");
 
-                var yGrid = d3.svg.axis().
+                const yGrid = d3.svg.axis().
                     scale(heightScale).
                     orient("left").
                     tickSize(-width, 0, 0).
                     tickFormat("");
 
-                var xAxis = d3.svg.axis().
+                const xAxis = d3.svg.axis().
                     scale(widthScale).
                     orient("bottom").
                     tickFormat(function (d) {return d;});
 
-                var yAxis = d3.svg.axis().
+                const yAxis = d3.svg.axis().
                     scale(heightScale).
                     orient("left").
                     tickFormat(function (d) {return d;});
 
-                var line = d3.svg.line().
+                const line = d3.svg.line().
                     x(function (d) {return widthScale(d[0]);}).
                     y(function (d) {return heightScale(d[1]);});
 
@@ -568,9 +566,9 @@ TABS.receiver.initialize = function (callback) {
                 svg.select(".x.axis").call(xAxis);
                 svg.select(".y.axis").call(yAxis);
 
-                var data = svg.select("g.data"),
-                    lines = data.selectAll("path").data(RX_plot_data, function (d, i) {return i;}),
-                    newLines = lines.enter().append("path").attr("class", "line");
+                const data = svg.select("g.data");
+                const lines = data.selectAll("path").data(rxPlotData, function (d, i) {return i;});
+                lines.enter().append("path").attr("class", "line");
                 lines.attr('d', line);
 
                 samples++;
@@ -580,7 +578,7 @@ TABS.receiver.initialize = function (callback) {
             GUI.interval_remove('receiver_pull');
 
             // enable RC data pulling
-            GUI.interval_add('receiver_pull', get_rc_data, plotUpdateRate, true);
+            GUI.interval_add('receiver_pull', get_rc_refresh_data, plotUpdateRate, true);
         });
 
         ConfigStorage.get('rx_refresh_rate', function (result) {
@@ -620,7 +618,7 @@ TABS.receiver.initModelPreview = function () {
         this.useSuperExpo = true;
     }
 
-    var useOldRateCurve = false;
+    let useOldRateCurve = false;
     if (FC.CONFIG.flightControllerIdentifier == 'CLFL' && semver.lt(FC.CONFIG.apiVersion, '2.0.0')) {
         useOldRateCurve = true;
     }
@@ -639,9 +637,9 @@ TABS.receiver.renderModel = function () {
     if (!this.clock) { this.clock = new THREE.Clock(); }
 
     if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
-        var delta = this.clock.getDelta();
+        const delta = this.clock.getDelta();
 
-        var roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[0], FC.RC_TUNING.roll_rate, FC.RC_TUNING.RC_RATE, FC.RC_TUNING.RC_EXPO, this.useSuperExpo, this.deadband, FC.RC_TUNING.roll_rate_limit),
+        const roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[0], FC.RC_TUNING.roll_rate, FC.RC_TUNING.RC_RATE, FC.RC_TUNING.RC_EXPO, this.useSuperExpo, this.deadband, FC.RC_TUNING.roll_rate_limit),
             pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[1], FC.RC_TUNING.pitch_rate, FC.RC_TUNING.rcPitchRate, FC.RC_TUNING.RC_PITCH_EXPO, this.useSuperExpo, this.deadband, FC.RC_TUNING.pitch_rate_limit),
             yaw   = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[2], FC.RC_TUNING.yaw_rate, FC.RC_TUNING.rcYawRate, FC.RC_TUNING.RC_YAW_EXPO, this.useSuperExpo, this.yawDeadband, FC.RC_TUNING.yaw_rate_limit);
 
@@ -663,7 +661,7 @@ TABS.receiver.cleanup = function (callback) {
 };
 
 TABS.receiver.refresh = function (callback) {
-    var self = this;
+    const self = this;
 
     GUI.tab_switch_cleanup(function () {
         self.initialize();

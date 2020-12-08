@@ -3,7 +3,7 @@
 TABS.failsafe = {};
 
 TABS.failsafe.initialize = function (callback, scrollPosition) {
-    var self = this;
+    const self = this;
 
     if (GUI.active_tab != 'failsafe') {
         GUI.active_tab = 'failsafe';
@@ -80,16 +80,16 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
         }
         
         // FIXME cleanup oldpane html and css
-        var oldPane = $('div.oldpane');
+        const oldPane = $('div.oldpane');
         oldPane.prop("disabled", true);
         oldPane.hide();
 
         // generate labels for assigned aux modes
-        var auxAssignment = [],
-            i,
-            element;
+        const auxAssignment = [];
 
-        for (var channelIndex = 0; channelIndex < FC.RC.active_channels - 4; channelIndex++) {
+        let element;
+
+        for (let channelIndex = 0; channelIndex < FC.RC.active_channels - 4; channelIndex++) {
             auxAssignment.push("");
         }
 
@@ -97,25 +97,25 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             auxAssignment[FC.RSSI_CONFIG.channel - 5] += "<span class=\"modename\">" + "RSSI" + "</span>";         // Aux channels start at 5 in backend so we have to substract 5
         }  
 
-        for (var modeIndex = 0; modeIndex < FC.AUX_CONFIG.length; modeIndex++) {
+        for (let modeIndex = 0; modeIndex < FC.AUX_CONFIG.length; modeIndex++) {
 
-            var modeId = FC.AUX_CONFIG_IDS[modeIndex];
+            const modeId = FC.AUX_CONFIG_IDS[modeIndex];
 
             // scan mode ranges to find assignments
-            for (var modeRangeIndex = 0; modeRangeIndex < FC.MODE_RANGES.length; modeRangeIndex++) {
-                var modeRange = FC.MODE_RANGES[modeRangeIndex];
+            for (let modeRangeIndex = 0; modeRangeIndex < FC.MODE_RANGES.length; modeRangeIndex++) {
+                const modeRange = FC.MODE_RANGES[modeRangeIndex];
 
                 if (modeRange.id != modeId) {
                     continue;
                 }
 
-                var range = modeRange.range;
-                if (!(range.start < range.end)) {
+                const range = modeRange.range;
+                if (range.start >= range.end) {
                     continue; // invalid!
                 }
                 
                 // Search for the real name if it belongs to a peripheral
-                var modeName = FC.AUX_CONFIG[modeIndex];                
+                let modeName = FC.AUX_CONFIG[modeIndex];                
                 modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
                 auxAssignment[modeRange.auxChannelIndex] += "<span class=\"modename\">" + modeName + "</span>";                
@@ -123,17 +123,17 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
         }
 
         // generate full channel list
-        var channelNames = [
+        const channelNames = [
                 i18n.getMessage('controlAxisRoll'),
                 i18n.getMessage('controlAxisPitch'),
                 i18n.getMessage('controlAxisYaw'),
                 i18n.getMessage('controlAxisThrottle')
             ],
-            fullChannels_e = $('div.activechannellist'),
-            aux_index = 1,
+            fullChannels_e = $('div.activechannellist');
+        let aux_index = 1,
             aux_assignment_index = 0;
 
-        for (i = 0; i < FC.RXFAIL_CONFIG.length; i++) {
+        for (let i = 0; i < FC.RXFAIL_CONFIG.length; i++) {
             if (i < channelNames.length) {
                 if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                     fullChannels_e.append('\
@@ -185,23 +185,23 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             }
         }
 
-        var channel_mode_array = [];
+        const channel_mode_array = [];
         $('.number', fullChannels_e).each(function () {
             channel_mode_array.push($('select.aux_set' , this));
         });
 
-        var channel_value_array = [];
+        const channel_value_array = [];
         $('.number', fullChannels_e).each(function () {
             channel_value_array.push($('input[name="aux_value"]' , this));
         });
 
-        var channelMode = $('select.aux_set');
-        var channelValue = $('input[name="aux_value"]');
+        const channelMode = $('select.aux_set');
+        const channelValue = $('input[name="aux_value"]');
 
         // UI hooks
         channelMode.change(function () {
-            var currentMode = parseInt($(this).val());
-            var i = parseInt($(this).prop("id"));
+            const currentMode = parseInt($(this).val());
+            const i = parseInt($(this).prop("id"));
             FC.RXFAIL_CONFIG[i].mode = currentMode;
             if (currentMode == 2) {
                 channel_value_array[i].prop("disabled", false);
@@ -214,7 +214,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
         // UI hooks
         channelValue.change(function () {
-            var i = parseInt($(this).prop("id"));
+            const i = parseInt($(this).prop("id"));
             FC.RXFAIL_CONFIG[i].value = parseInt($(this).val());
         });
 
@@ -228,7 +228,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
         $('input[name="rx_max_usec"]').val(FC.RX_CONFIG.rx_max_usec);
 
         // fill fallback settings (mode and value) for all channels
-        for (i = 0; i < FC.RXFAIL_CONFIG.length; i++) {
+        for (let i = 0; i < FC.RXFAIL_CONFIG.length; i++) {
             channel_value_array[i].val(FC.RXFAIL_CONFIG[i].value);
             channel_mode_array[i].val(FC.RXFAIL_CONFIG[i].mode);
             channel_mode_array[i].change();
@@ -240,7 +240,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
           $('tbody.rxFailsafe').hide();
           toggleStage2(true);
         } else {
-          var failsafeFeature = $('input[name="FAILSAFE"]');
+          const failsafeFeature = $('input[name="FAILSAFE"]');
           failsafeFeature.change(function () {
               toggleStage2($(this).is(':checked'));
           });
@@ -254,18 +254,13 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
         // set stage 2 failsafe procedure
         $('input[type="radio"].procedure').change(function () {
-            var element = $(this),
-                checked = element.is(':checked'),
-                id = element.attr('id');
-
             // Disable all the settings
             $('.proceduresettings :input').attr('disabled',true);
             // Enable only selected
-            element.parent().parent().find(':input').attr('disabled',false);
+            $(this).parent().parent().find(':input').attr('disabled',false);
         });
 
         switch(FC.FAILSAFE_CONFIG.failsafe_procedure) {
-            default:
             case 0:
                 element = $('input[id="land"]') ;
                 element.prop('checked', true);
