@@ -1,16 +1,16 @@
 'use strict';
 
-var ConfigInserter = function () {
+const ConfigInserter = function () {
 }
 
 const CUSTOM_DEFAULTS_POINTER_ADDRESS = 0x08002800;
 const BLOCK_SIZE = 16384;
 
 function seek(firmware, address) {
-    var index = 0;
+    let index = 0;
     for (; index < firmware.data.length && address >= firmware.data[index].address + firmware.data[index].bytes; index++);
 
-    var result = {
+    const result = {
         lineIndex: index
     };
 
@@ -22,8 +22,8 @@ function seek(firmware, address) {
 }
 
 function readUint32(firmware, index) {
-    var result = 0;
-    for (var position = 0; position < 4; position++) {
+    let result = 0;
+    for (let position = 0; position < 4; position++) {
         result += firmware.data[index.lineIndex].data[index.byteIndex++] << (8 * position);
         if (index.byteIndex >= firmware.data[index.lineIndex].bytes) {
             index.lineIndex++;
@@ -35,9 +35,9 @@ function readUint32(firmware, index) {
 }
 
 function getCustomDefaultsArea(firmware) {
-    var result = {};
+    const result = {};
 
-    var index = seek(firmware, CUSTOM_DEFAULTS_POINTER_ADDRESS);
+    const index = seek(firmware, CUSTOM_DEFAULTS_POINTER_ADDRESS);
 
     if (index.byteIndex === undefined) {
         return;
@@ -50,9 +50,9 @@ function getCustomDefaultsArea(firmware) {
 }
 
 function generateData(firmware, input, startAddress) {
-    var address = startAddress;
+    let address = startAddress;
 
-    var index = seek(firmware, address);
+    const index = seek(firmware, address);
 
     if (index.byteIndex !== undefined) {
         throw new Error('Configuration area in firmware not free.');
@@ -61,10 +61,10 @@ function generateData(firmware, input, startAddress) {
     // Add 0 terminator
     input = input + '\0';
 
-    var inputIndex = 0;
+    let inputIndex = 0;
     while (inputIndex < input.length) {
-        var remaining = input.length - inputIndex;
-        var line = {
+        const remaining = input.length - inputIndex;
+        const line = {
             address: address,
             bytes: BLOCK_SIZE > remaining ? remaining : BLOCK_SIZE,
             data: []
@@ -74,7 +74,7 @@ function generateData(firmware, input, startAddress) {
             throw new Error("Aborting data generation, free area too small.");
         }
 
-        for (var i = 0; i < line.bytes; i++) {
+        for (let i = 0; i < line.bytes; i++) {
             line.data.push(input.charCodeAt(inputIndex++));
         }
 
@@ -87,15 +87,13 @@ function generateData(firmware, input, startAddress) {
 }
 
 function microtime() {
-    var now = new Date().getTime() / 1000;
-
-    return now;
+    return new Date().getTime() / 1000;
 }
 
 ConfigInserter.prototype.insertConfig = function (firmware, input) {
-    var time_parsing_start = microtime(); // track time
+    const timeParsingStart = microtime(); // track time
 
-    var customDefaultsArea = getCustomDefaultsArea(firmware);
+    const customDefaultsArea = getCustomDefaultsArea(firmware);
 
     if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress === 0) {
         return false;
@@ -105,7 +103,7 @@ ConfigInserter.prototype.insertConfig = function (firmware, input) {
 
     generateData(firmware, input, customDefaultsArea.startAddress);
 
-    console.log('Custom defaults inserted in: ' + (microtime() - time_parsing_start).toFixed(4) + ' seconds.');
+    console.log(`Custom defaults inserted in: ${microtime() - timeParsingStart.toFixed(4)} seconds.`);
 
     return true;
 }
