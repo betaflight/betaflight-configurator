@@ -1023,7 +1023,9 @@ TABS.firmware_flasher.initialize = function (callback) {
         portPickerElement.change(function () {
             if ($('option:selected', this).data().isDFU && !GUI.connect_lock) {
                 exitDfuElement.removeClass('disabled');
-            } else {
+            } else if (!GUI.connect_lock) {
+                $("a.load_remote_file").removeClass('disabled');
+                $("a.load_file").removeClass('disabled');
                 exitDfuElement.addClass('disabled');
             }
         }).change();
