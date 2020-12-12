@@ -81,12 +81,6 @@ SYM.loadSymbols = function() {
     }
 };
 
-const STICK_OVERLAY_SPRITE = [
-    SYM.STICK_OVERLAY_SPRITE_HIGH,
-    SYM.STICK_OVERLAY_SPRITE_MID,
-    SYM.STICK_OVERLAY_SPRITE_LOW,
-];
-
 FONT.initData = function() {
     if (FONT.data) {
         return;
@@ -370,6 +364,12 @@ OSD.drawStickOverlayPreview = function() {
     function randomInt(count) {
         return Math.floor(Math.random() * Math.floor(count));
     }
+
+    const STICK_OVERLAY_SPRITE = [
+        SYM.STICK_OVERLAY_SPRITE_HIGH,
+        SYM.STICK_OVERLAY_SPRITE_MID,
+        SYM.STICK_OVERLAY_SPRITE_LOW,
+    ];
 
     const OVERLAY_WIDTH = 7;
     const OVERLAY_HEIGHT = 5;
