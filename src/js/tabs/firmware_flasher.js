@@ -1022,13 +1022,13 @@ TABS.firmware_flasher.initialize = function (callback) {
 
         portPickerElement.change(function () {
             if (!GUI.connect_lock) {
-				if ($('option:selected', this).data().isDFU) {
+                if ($('option:selected', this).data().isDFU) {
                     exitDfuElement.removeClass('disabled');
                 } else {
                     $("a.load_remote_file").removeClass('disabled');
                     $("a.load_file").removeClass('disabled');
                     exitDfuElement.addClass('disabled');
-                }                   
+                }
             }
         }).change();
 
