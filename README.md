@@ -58,7 +58,7 @@ Unstable testing versions of the lates builds of the configurator for most platf
 
 **Please do not submit pull requests for translation changes, but read and follow the instructions below!**
 
-Betaflight Configurator has been translated into several languages. The application will try to detect and use your system language if a translation into this language is available. You can help [translating the application into your language](https://github.com/betaflight/betaflight/tree/master/README.md#Translators);
+Betaflight Configurator has been translated into several languages. The application will try to detect and use your system language if a translation into this language is available. You can help [translating the application into your language](https://github.com/betaflight/betaflight/tree/master/README.md#translators);
 
 If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
 
