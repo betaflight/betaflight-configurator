@@ -18,6 +18,8 @@
   opacity: 0.5;
   font-size: 10px;
   min-width: 210px;
+  display: flex;
+  flex-direction: column;
 }
 
 .tab_container .logo {
@@ -73,15 +75,13 @@
     <div class="logo_text">
       <span>
         {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }}
-        <br />
-        <span v-if="firmwareVersion && firmwareId">
-          {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
-          {{ firmwareId }}
-        </span>
-        <br />
-        <span v-if="hardwareId">
-          {{ $t("versionLabelTarget") }}: {{ hardwareId }}
-        </span>
+      </span>
+      <span v-if="firmwareVersion && firmwareId">
+        {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
+        {{ firmwareId }}
+      </span>
+      <span class="hardwareId" v-if="hardwareId">
+        {{ $t("versionLabelTarget") }}: {{ hardwareId }}
       </span>
     </div>
   </div>
