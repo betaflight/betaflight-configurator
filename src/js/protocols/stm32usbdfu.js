@@ -775,7 +775,6 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     for (var j = 0; j < self.flash_layout.sectors[i].num_pages; j++) {
                         if (self.options.erase_chip) {
                             // full chip erase
-                            FC.resetState();
                             erase_pages.push({'sector': i, 'page': j});
                         } else {
                             // local erase
@@ -1074,8 +1073,6 @@ STM32DFU_protocol.prototype.leave = function () {
 
 STM32DFU_protocol.prototype.cleanup = function () {
     const self = this;
-
-    FC.resetState();
 
     self.releaseInterface(0);
 

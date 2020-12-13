@@ -80,7 +80,7 @@
         {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
         {{ firmwareId }}
       </span>
-      <span class="hardwareId" v-if="hardwareId">
+      <span v-if="hardwareId">
         {{ $t("versionLabelTarget") }}: {{ hardwareId }}
       </span>
     </div>
