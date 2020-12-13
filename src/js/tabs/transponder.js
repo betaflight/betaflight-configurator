@@ -131,7 +131,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
     //HELPERS
     // Convert a hex string to a byte array
     function hexToBytes(hex) {
-        var bytes = [];
+        const bytes = [];
         for ( let c = 0; c < hex.length; c += 2 ) {
             bytes.push(~parseInt(hex.substr(c, 2), 16));
         }
@@ -146,7 +146,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
     // Convert a byte array to a hex string
     function bytesToHex(bytes) {
-        var hex = [];
+        const hex = [];
         for ( let i = 0; i < bytes.length; i++ ) {
             hex.push(pad(((~bytes[i]) & 0xFF).toString(16), 2));
         }
@@ -155,10 +155,10 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
     /////////////
 
-    function fillByTransponderProviders(transponderProviders, transponderProviderID, toggleTransponderType) {
+    function fillByTransponderProviders(transponderProviders, transponderProviderID, toggleTransponderTypeFn) {
         let transponderTypeSelect = $('#transponder_type_select');
         transponderTypeSelect.attr('data-defaultValue', transponderProviderID);
-        transponderTypeSelect.off('change').change(toggleTransponderType);
+        transponderTypeSelect.off('change').change(toggleTransponderTypeFn);
         transponderTypeSelect.html('');
 
         //build radio buttons
@@ -182,7 +182,6 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
     }
 
     function buildDataBlockForTransponderProviders(transponderProvider, data, clearValue) {
-        var clearValue = clearValue || false;
         $('#transponderConfiguration').html('');
         $('#transponderConfiguration').hide();
         $('#transponderHelpBox').hide();
