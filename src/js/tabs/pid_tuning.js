@@ -25,7 +25,7 @@ TABS.pid_tuning = {
 
 TABS.pid_tuning.initialize = function (callback) {
 
-    var self = this;
+    const self = this;
 
     if (GUI.active_tab !== 'pid_tuning') {
         GUI.active_tab = 'pid_tuning';
@@ -33,7 +33,7 @@ TABS.pid_tuning.initialize = function (callback) {
     }
 
     // Update filtering defaults based on API version
-    var FILTER_DEFAULT = FC.getFilterDefaults();
+    const FILTER_DEFAULT = FC.getFilterDefaults();
 
     // requesting MSP_STATUS manually because it contains FC.CONFIG.profile
     MSP.promise(MSPCodes.MSP_STATUS).then(function() {
@@ -78,7 +78,7 @@ TABS.pid_tuning.initialize = function (callback) {
         FC.PID_NAMES.forEach(function(elementPid, indexPid) {
 
             // Look into the PID table to a row with the name of the pid
-            var searchRow = $('.pid_tuning .' + elementPid + ' input');
+            const searchRow = $('.pid_tuning .' + elementPid + ' input');
 
             // Assign each value
             searchRow.each(function (indexInput) {
@@ -139,7 +139,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter input[name="dTermNotchFrequency"]').val(FC.FILTER_CONFIG.dterm_notch_hz);
             $('.pid_filter input[name="dTermNotchCutoff"]').val(FC.FILTER_CONFIG.dterm_notch_cutoff);
 
-            var dtermSetpointTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
+            const dtermSetpointTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_38)) {
                 dtermSetpointTransitionNumberElement.attr('min', 0.00);
             } else {
@@ -175,11 +175,11 @@ TABS.pid_tuning.initialize = function (callback) {
                 $('.antigravity input[name="itermAcceleratorGain"]').attr("min","0.1");
             }
 
-            var antiGravitySwitch = $('#antiGravitySwitch');
+            const antiGravitySwitch = $('#antiGravitySwitch');
             const ITERM_ACCELERATOR_GAIN_OFF = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0 : 1000;
             antiGravitySwitch.prop('checked', FC.ADVANCED_TUNING.itermAcceleratorGain !== ITERM_ACCELERATOR_GAIN_OFF);
             antiGravitySwitch.change(function() {
-                var checked = $(this).is(':checked');
+                const checked = $(this).is(':checked');
                 if (checked) {
                     if (FC.ADVANCED_TUNING.itermAcceleratorGain === ITERM_ACCELERATOR_GAIN_OFF) {
                         const DEFAULT_ACCELERATOR_GAIN = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? 3.5 : 1.1;
@@ -242,7 +242,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('input[id="smartfeedforward"]').prop('checked', FC.ADVANCED_TUNING.smartFeedforward !== 0);
 
             // I Term Relax
-            var itermRelaxCheck = $('input[id="itermrelax"]');
+            const itermRelaxCheck = $('input[id="itermrelax"]');
 
             itermRelaxCheck.prop('checked', FC.ADVANCED_TUNING.itermRelax !== 0);
             $('select[id="itermrelaxAxes"]').val(FC.ADVANCED_TUNING.itermRelax > 0 ? FC.ADVANCED_TUNING.itermRelax : 1);
@@ -254,7 +254,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }
 
             itermRelaxCheck.change(function() {
-                var checked = $(this).is(':checked');
+                const checked = $(this).is(':checked');
 
                 if (checked) {
                     $('.itermrelax .suboption').show();
@@ -270,15 +270,15 @@ TABS.pid_tuning.initialize = function (callback) {
             itermRelaxCheck.change();
 
             // Absolute Control
-            var absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
+            const absoluteControlGainNumberElement = $('input[name="absoluteControlGain-number"]');
             absoluteControlGainNumberElement.val(FC.ADVANCED_TUNING.absoluteControlGain).trigger('input');
 
             // Throttle Boost
-            var throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
+            const throttleBoostNumberElement = $('input[name="throttleBoost-number"]');
             throttleBoostNumberElement.val(FC.ADVANCED_TUNING.throttleBoost).trigger('input');
 
             // Acro Trainer
-            var acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
+            const acroTrainerAngleLimitNumberElement = $('input[name="acroTrainerAngleLimit-number"]');
             acroTrainerAngleLimitNumberElement.val(FC.ADVANCED_TUNING.acroTrainerAngleLimit).trigger('input');
 
             // Yaw D
@@ -290,13 +290,13 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
             $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
 
-            var feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
+            const feedforwardTransitionNumberElement = $('input[name="feedforwardTransition-number"]');
             feedforwardTransitionNumberElement.val(FC.ADVANCED_TUNING.feedforwardTransition / 100);
 
             // AntiGravity Mode
-            var antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
+            const antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
             antiGravityModeSelect.change(function () {
-                var antiGravityModeValue = $('.antigravity select[id="antiGravityMode"]').val();
+                const antiGravityModeValue = $('.antigravity select[id="antiGravityMode"]').val();
 
                 // Smooth removes threshold
                 if (antiGravityModeValue == 0) {
@@ -505,15 +505,15 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         $('input[id="useIntegratedYaw"]').change(function() {
-            var checked = $(this).is(':checked');
+            const checked = $(this).is(':checked');
             $('#pidTuningIntegratedYawCaution').toggle(checked);
         }).change();
 
         function adjustDMin(dElement, dMinElement) {
-            var dValue = parseInt(dElement.val());
-            var dMinValue = parseInt(dMinElement.val());
+            const dValue = parseInt(dElement.val());
+            const dMinValue = parseInt(dMinElement.val());
 
-            var dMinLimit = Math.min(Math.max(dValue - 1, 0), 100);
+            const dMinLimit = Math.min(Math.max(dValue - 1, 0), 100);
             if (dMinValue > dMinLimit) {
                 dMinElement.val(dMinLimit);
             }
@@ -522,25 +522,25 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         $('.pid_tuning .ROLL input[name="d"]').change(function() {
-            var dMinElement= $('.pid_tuning input[name="dMinRoll"]');
+            const dMinElement= $('.pid_tuning input[name="dMinRoll"]');
             adjustDMin($(this), dMinElement);
         }).change();
 
         $('.pid_tuning .PITCH input[name="d"]').change(function() {
-            var dMinElement= $('.pid_tuning input[name="dMinPitch"]');
+            const dMinElement= $('.pid_tuning input[name="dMinPitch"]');
             adjustDMin($(this), dMinElement);
         }).change();
 
         $('.pid_tuning .YAW input[name="d"]').change(function() {
-            var dMinElement= $('.pid_tuning input[name="dMinYaw"]');
+            const dMinElement= $('.pid_tuning input[name="dMinYaw"]');
             adjustDMin($(this), dMinElement);
         }).change();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-            var dMinSwitch = $('#dMinSwitch');
+            const dMinSwitch = $('#dMinSwitch');
             dMinSwitch.prop('checked', FC.ADVANCED_TUNING.dMinRoll > 0 || FC.ADVANCED_TUNING.dMinPitch > 0 || FC.ADVANCED_TUNING.dMinYaw > 0);
             dMinSwitch.change(function() {
-                var checked = $(this).is(':checked');
+                const checked = $(this).is(':checked');
                 if (checked) {
                     if ($('.pid_tuning input[name="dMinRoll"]').val() == 0 && $('.pid_tuning input[name="dMinPitch"]').val() == 0 && $('.pid_tuning input[name="dMinYaw"]').val() == 0) {
                         // when enabling dmin set its value based on 0.57x of actual dmax, dmin is limited to 100
@@ -577,8 +577,8 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var hz = FC.FILTER_CONFIG.gyro_notch_hz > 0 ? FC.FILTER_CONFIG.gyro_notch_hz : FILTER_DEFAULT.gyro_notch_hz;
+            const checked = $(this).is(':checked');
+            const hz = FC.FILTER_CONFIG.gyro_notch_hz > 0 ? FC.FILTER_CONFIG.gyro_notch_hz : FILTER_DEFAULT.gyro_notch_hz;
 
             $('.pid_filter input[name="gyroNotch1Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
@@ -586,8 +586,8 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         $('input[id="gyroNotch2Enabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var hz = FC.FILTER_CONFIG.gyro_notch2_hz > 0 ? FC.FILTER_CONFIG.gyro_notch2_hz : FILTER_DEFAULT.gyro_notch2_hz;
+            const checked = $(this).is(':checked');
+            const hz = FC.FILTER_CONFIG.gyro_notch2_hz > 0 ? FC.FILTER_CONFIG.gyro_notch2_hz : FILTER_DEFAULT.gyro_notch2_hz;
 
             $('.pid_filter input[name="gyroNotch2Frequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
@@ -595,8 +595,8 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         $('input[id="dtermNotchEnabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var hz = FC.FILTER_CONFIG.dterm_notch_hz > 0 ? FC.FILTER_CONFIG.dterm_notch_hz : FILTER_DEFAULT.dterm_notch_hz;
+            const checked = $(this).is(':checked');
+            const hz = FC.FILTER_CONFIG.dterm_notch_hz > 0 ? FC.FILTER_CONFIG.dterm_notch_hz : FILTER_DEFAULT.dterm_notch_hz;
 
             $('.pid_filter input[name="dTermNotchFrequency"]').val(checked ? hz : 0).attr('disabled', !checked)
                     .attr("min", checked ? 1 : 0).change();
@@ -604,11 +604,11 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         $('input[id="gyroLowpassEnabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var disabledByDynamicLowpass = $('input[id="gyroLowpassDynEnabled"]').is(':checked');
+            const checked = $(this).is(':checked');
+            const disabledByDynamicLowpass = $('input[id="gyroLowpassDynEnabled"]').is(':checked');
 
-            var cutoff = FC.FILTER_CONFIG.gyro_lowpass_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass_hz : FILTER_DEFAULT.gyro_lowpass_hz;
-            var type = FC.FILTER_CONFIG.gyro_lowpass_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass_type : FILTER_DEFAULT.gyro_lowpass_type;
+            const cutoff = FC.FILTER_CONFIG.gyro_lowpass_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass_hz : FILTER_DEFAULT.gyro_lowpass_hz;
+            const type = FC.FILTER_CONFIG.gyro_lowpass_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass_type : FILTER_DEFAULT.gyro_lowpass_type;
 
             $('.pid_filter input[name="gyroLowpassFrequency"]').val((checked || disabledByDynamicLowpass) ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="gyroLowpassType"]').val(type).attr('disabled', !checked);
@@ -620,9 +620,9 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         $('input[id="gyroLowpassDynEnabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var cutoff_min = FILTER_DEFAULT.gyro_lowpass_dyn_min_hz;
-            var type = FILTER_DEFAULT.gyro_lowpass_type;
+            const checked = $(this).is(':checked');
+            let cutoff_min = FILTER_DEFAULT.gyro_lowpass_dyn_min_hz;
+            let type = FILTER_DEFAULT.gyro_lowpass_type;
             if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0 && FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz < FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz) {
                 cutoff_min = FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz;
                 type = FC.FILTER_CONFIG.gyro_lowpass_type;
@@ -641,20 +641,20 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         $('input[id="gyroLowpass2Enabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var cutoff = FC.FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass2_hz : FILTER_DEFAULT.gyro_lowpass2_hz;
-            var type = FC.FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass2_type : FILTER_DEFAULT.gyro_lowpass2_type;
+            const checked = $(this).is(':checked');
+            const cutoff = FC.FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass2_hz : FILTER_DEFAULT.gyro_lowpass2_hz;
+            const type = FC.FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass2_type : FILTER_DEFAULT.gyro_lowpass2_type;
 
             $('.pid_filter input[name="gyroLowpass2Frequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="gyroLowpass2Type"]').val(type).attr('disabled', !checked);
         });
 
         $('input[id="dtermLowpassEnabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var disabledByDynamicLowpass = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
+            const checked = $(this).is(':checked');
+            const disabledByDynamicLowpass = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
 
-            var cutoff = FC.FILTER_CONFIG.dterm_lowpass_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass_hz : FILTER_DEFAULT.dterm_lowpass_hz;
-            var type = FC.FILTER_CONFIG.dterm_lowpass_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass_type : FILTER_DEFAULT.dterm_lowpass_type;
+            const cutoff = FC.FILTER_CONFIG.dterm_lowpass_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass_hz : FILTER_DEFAULT.dterm_lowpass_hz;
+            const type = FC.FILTER_CONFIG.dterm_lowpass_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass_type : FILTER_DEFAULT.dterm_lowpass_type;
 
             $('.pid_filter input[name="dtermLowpassFrequency"]').val((checked || disabledByDynamicLowpass) ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="dtermLowpassType"]').val(type).attr('disabled', !checked);
@@ -667,9 +667,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('.dynLpfCurveExpo').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44));
         $('input[id="dtermLowpassDynEnabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var cutoff_min = FILTER_DEFAULT.dterm_lowpass_dyn_min_hz;
-            var type = FILTER_DEFAULT.dterm_lowpass_type;
+            const checked = $(this).is(':checked');
+            let cutoff_min = FILTER_DEFAULT.dterm_lowpass_dyn_min_hz;
+            let type = FILTER_DEFAULT.dterm_lowpass_type;
             if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0 && FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz < FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz) {
                 cutoff_min = FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz;
                 type = FC.FILTER_CONFIG.dterm_lowpass_type;
@@ -689,35 +689,35 @@ TABS.pid_tuning.initialize = function (callback) {
         });
 
         $('input[id="dtermLowpassDynExpoEnabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var curveExpo = FC.FILTER_CONFIG.dyn_lpf_curve_expo > 0 ? FC.FILTER_CONFIG.dyn_lpf_curve_expo : FILTER_DEFAULT.dyn_lpf_curve_expo;
+            const checked = $(this).is(':checked');
+            const curveExpo = FC.FILTER_CONFIG.dyn_lpf_curve_expo > 0 ? FC.FILTER_CONFIG.dyn_lpf_curve_expo : FILTER_DEFAULT.dyn_lpf_curve_expo;
 
             $('.pid_filter input[name="dtermLowpassDynExpo"]').val(checked ? curveExpo : 0).attr('disabled', !checked);
         });
 
         $('input[id="dtermLowpass2Enabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var cutoff = FC.FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass2_hz : FILTER_DEFAULT.dterm_lowpass2_hz;
-            var type = FC.FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass2_type : FILTER_DEFAULT.dterm_lowpass2_type;
+            const checked = $(this).is(':checked');
+            const cutoff = FC.FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass2_hz : FILTER_DEFAULT.dterm_lowpass2_hz;
+            const type = FC.FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass2_type : FILTER_DEFAULT.dterm_lowpass2_type;
 
             $('.pid_filter input[name="dtermLowpass2Frequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
             $('.pid_filter select[name="dtermLowpass2Type"]').val(type).attr('disabled', !checked);
         });
 
         $('input[id="yawLowpassEnabled"]').change(function() {
-            var checked = $(this).is(':checked');
-            var cutoff = FC.FILTER_CONFIG.yaw_lowpass_hz > 0 ? FC.FILTER_CONFIG.yaw_lowpass_hz : FILTER_DEFAULT.yaw_lowpass_hz;
+            const checked = $(this).is(':checked');
+            const cutoff = FC.FILTER_CONFIG.yaw_lowpass_hz > 0 ? FC.FILTER_CONFIG.yaw_lowpass_hz : FILTER_DEFAULT.yaw_lowpass_hz;
 
             $('.pid_filter input[name="yawLowpassFrequency"]').val(checked ? cutoff : 0).attr('disabled', !checked);
         });
 
         // The notch cutoff must be smaller than the notch frecuency
         function adjustNotchCutoff(frequencyName, cutoffName) {
-            var frecuency = parseInt($(".pid_filter input[name='" + frequencyName + "']").val());
-            var cutoff = parseInt($(".pid_filter input[name='" + cutoffName + "']").val());
+            const frecuency = parseInt($(".pid_filter input[name='" + frequencyName + "']").val());
+            const cutoff = parseInt($(".pid_filter input[name='" + cutoffName + "']").val());
 
             // Change the max and refresh the value if needed
-            var maxCutoff = frecuency == 0 ? 0 : frecuency - 1;
+            const maxCutoff = frecuency == 0 ? 0 : frecuency - 1;
             $(".pid_filter input[name='" + cutoffName + "']").attr("max", maxCutoff);
             if (cutoff >= frecuency) {
                 $(".pid_filter input[name='" + cutoffName + "']").val(maxCutoff);
@@ -760,7 +760,7 @@ TABS.pid_tuning.initialize = function (callback) {
         FC.PID_NAMES.forEach(function(elementPid, indexPid) {
 
             // Look into the PID table to a row with the name of the pid
-            var searchRow = $('.pid_tuning .' + elementPid + ' input');
+            const searchRow = $('.pid_tuning .' + elementPid + ' input');
 
             // Assign each value
             searchRow.each(function (indexInput) {
@@ -1004,8 +1004,8 @@ TABS.pid_tuning.initialize = function (callback) {
             $('#pid_accel').hide();
         }
 
-        var hideSensorPid = function(element, sensorReady) {
-            var isVisible = element.is(":visible");
+        const hideSensorPid = function(element, sensorReady) {
+            let isVisible = element.is(":visible");
             if (!isVisible || !sensorReady) {
                 element.hide();
                 isVisible = false;
@@ -1014,7 +1014,7 @@ TABS.pid_tuning.initialize = function (callback) {
             return isVisible;
         }
 
-        var isVisibleBaroMagGps = false;
+        let isVisibleBaroMagGps = false;
 
         isVisibleBaroMagGps |= hideSensorPid($('#pid_baro'), have_sensor(FC.CONFIG.activeSensors, 'baro') || have_sensor(FC.CONFIG.activeSensors, 'sonar'));
 
@@ -1047,7 +1047,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
 
     function checkInput(element) {
-        var value = parseFloat(element.val());
+        let value = parseFloat(element.val());
         if (value < parseFloat(element.prop('min'))
             || value > parseFloat(element.prop('max'))) {
             value = undefined;
@@ -1056,7 +1056,7 @@ TABS.pid_tuning.initialize = function (callback) {
         return value;
     }
 
-    var useLegacyCurve = false;
+    let useLegacyCurve = false;
     if (!semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
         useLegacyCurve = true;
     }
@@ -1064,7 +1064,7 @@ TABS.pid_tuning.initialize = function (callback) {
     self.rateCurve = new RateCurve(useLegacyCurve);
 
     function printMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit, maxAngularVelElement) {
-        var maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit).toFixed(0);
+        const maxAngularVel = self.rateCurve.getMaxAngularVel(rate, rcRate, rcExpo, useSuperExpo, deadband, limit).toFixed(0);
         maxAngularVelElement.text(maxAngularVel);
 
         return maxAngularVel;
@@ -1180,55 +1180,55 @@ TABS.pid_tuning.initialize = function (callback) {
         $('.tab-pid_tuning .tab-container .filter').on('click', () => activateSubtab('filter'));
 
         function loadProfilesList() {
-            var numberOfProfiles = 3;
+            let numberOfProfiles = 3;
             if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")
                  && FC.CONFIG.numProfiles === 2) {
                     numberOfProfiles = 2;
             }
 
-            var profileElements = [];
-            for (var i=0; i<numberOfProfiles; i++) {
+            const profileElements = [];
+            for (let i=0; i<numberOfProfiles; i++) {
                 profileElements.push(i18n.getMessage("pidTuningProfileOption",[(i + 1)]));
             }
             return profileElements;
         }
 
         function loadRateProfilesList() {
-            var numberOfRateProfiles = 6;
+            let numberOfRateProfiles = 6;
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
                 numberOfRateProfiles = 3;
             }
 
-            var rateProfileElements = [];
-            for (var i=0; i<numberOfRateProfiles; i++) {
+            const rateProfileElements = [];
+            for (let i=0; i<numberOfRateProfiles; i++) {
                 rateProfileElements.push(i18n.getMessage("pidTuningRateProfileOption",[(i + 1)]));
             }
             return rateProfileElements;
         }
 
         // This vars are used here for populate the profile (and rate profile) selector AND in the copy profile (and rate profile) window
-        var selectRateProfileValues = loadRateProfilesList();
-        var selectProfileValues = loadProfilesList();
+        const selectRateProfileValues = loadRateProfilesList();
+        const selectProfileValues = loadProfilesList();
 
-        function populateProfilesSelector(selectProfileValues) {
-            var profileSelect = $('select[name="profile"]');
-            selectProfileValues.forEach(function(value, key) {
+        function populateProfilesSelector(_selectProfileValues) {
+            const profileSelect = $('select[name="profile"]');
+            _selectProfileValues.forEach(function(value, key) {
                 profileSelect.append('<option value="' + key + '">' + value + '</option>');
             });
         }
 
         populateProfilesSelector(selectProfileValues);
 
-        function populateRateProfilesSelector(selectRateProfileValues) {
-            var rateProfileSelect = $('select[name="rate_profile"]');
-            selectRateProfileValues.forEach(function(value, key) {
+        function populateRateProfilesSelector(_selectRateProfileValues) {
+            const rateProfileSelect = $('select[name="rate_profile"]');
+            _selectRateProfileValues.forEach(function(value, key) {
                 rateProfileSelect.append('<option value="' + key + '">' + value + '</option>');
             });
         }
 
         populateRateProfilesSelector(selectRateProfileValues);
 
-        var showAllButton = $('#showAllPids');
+        const showAllButton = $('#showAllPids');
 
         function updatePidDisplay() {
             if (!self.showAllPids) {
@@ -1295,8 +1295,8 @@ TABS.pid_tuning.initialize = function (callback) {
                 });
             });
 
-            var dtermTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
-            var dtermTransitionWarningElement = $('#pid-tuning .dtermSetpointTransitionWarning');
+            const dtermTransitionNumberElement = $('input[name="dtermSetpointTransition-number"]');
+            const dtermTransitionWarningElement = $('#pid-tuning .dtermSetpointTransitionWarning');
 
             function checkUpdateDtermTransitionWarning(value) {
                 if (value > 0 && value < 0.1) {
@@ -1326,9 +1326,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // Add a name to each row of PIDs if empty
         $('.pid_tuning tr').each(function(){
-            for(i = 0; i < FC.PID_NAMES.length; i++) {
-                if($(this).hasClass(FC.PID_NAMES[i])) {
-                    var firstColumn = $(this).find('td:first');
+            for (let i = 0; i <= FC.PID_NAMES.length; i++) {
+                if ($(this).hasClass(FC.PID_NAMES[i])) {
+                    const firstColumn = $(this).find('td:first');
                     if (!firstColumn.text()) {
                         firstColumn.text(FC.PID_NAMES[i]);
                     }
@@ -1339,7 +1339,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // DTerm filter options
         function loadFilterTypeValues() {
-            var filterTypeValues = [];
+            const filterTypeValues = [];
             filterTypeValues.push("PT1");
             filterTypeValues.push("BIQUAD");
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
@@ -1349,20 +1349,20 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         function populateFilterTypeSelector(name, selectDtermValues) {
-            var dtermFilterSelect = $('select[name="' + name + '"]');
+            const dtermFilterSelect = $('select[name="' + name + '"]');
             selectDtermValues.forEach(function(value, key) {
                 dtermFilterSelect.append('<option value="' + key + '">' + value + '</option>');
             });
         }
         // Added in API 1.42.0
         function loadDynamicNotchRangeValues() {
-            var dynamicNotchRangeValues = [
+            const dynamicNotchRangeValues = [
                 "HIGH", "MEDIUM", "LOW", "AUTO",
             ];
             return dynamicNotchRangeValues;
         }
         function populateDynamicNotchRangeSelect(selectDynamicNotchRangeValues) {
-            var dynamicNotchRangeSelect = $('select[name="dynamicNotchRange"]');
+            const dynamicNotchRangeSelect = $('select[name="dynamicNotchRange"]');
             selectDynamicNotchRangeValues.forEach(function(value, key) {
                 dynamicNotchRangeSelect.append('<option value="' + key + '">' + value + '</option>');
             });
@@ -1402,10 +1402,10 @@ TABS.pid_tuning.initialize = function (callback) {
 
         activateSubtab(self.activeSubtab);
 
-        var pidController_e = $('select[name="controller"]');
+        const pidController_e = $('select[name="controller"]');
 
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-            var pidControllerList;
+            let pidControllerList;
 
 
             if (semver.lt(FC.CONFIG.apiVersion, "1.14.0")) {
@@ -1430,7 +1430,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 ]
             }
 
-            for (var i = 0; i < pidControllerList.length; i++) {
+            for (let i = 0; i < pidControllerList.length; i++) {
                 pidController_e.append('<option value="' + (i) + '">' + pidControllerList[i].name + '</option>');
             }
 
@@ -1477,10 +1477,10 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         // Getting the DOM elements for curve display
-        var rcCurveElement              = $('.rate_curve canvas#rate_curve_layer0').get(0),
-            curveContext                = rcCurveElement.getContext("2d"),
-            updateNeeded                = true,
-            maxAngularVel;
+        const rcCurveElement = $('.rate_curve canvas#rate_curve_layer0').get(0);
+        const curveContext = rcCurveElement.getContext("2d");
+        let updateNeeded = true;
+        let maxAngularVel;
 
         // make these variables global scope so that they can be accessed by the updateRates function.
         self.maxAngularVelRollElement    = $('.pid_tuning .maxAngularVelRoll');
@@ -1492,9 +1492,9 @@ TABS.pid_tuning.initialize = function (callback) {
 
         function updateRates (event) {
             setTimeout(function () { // let global validation trigger and adjust the values first
-                if(event) { // if an event is passed, then use it
-                    var targetElement = $(event.target),
-                        targetValue = checkInput(targetElement);
+                if (event) { // if an event is passed, then use it
+                    const targetElement = $(event.target);
+                    let targetValue = checkInput(targetElement);
 
                     if (self.currentRates.hasOwnProperty(targetElement.attr('name')) && targetValue !== undefined) {
                         const stepValue = parseFloat(targetElement.prop('step')); // adjust value to match step (change only the result, not the the actual value)
@@ -1541,9 +1541,9 @@ TABS.pid_tuning.initialize = function (callback) {
                     updateNeeded = true;
                 }
                 if (updateNeeded) {
-                    var curveHeight = rcCurveElement.height;
-                    var curveWidth = rcCurveElement.width;
-                    var lineScale = curveContext.canvas.width / curveContext.canvas.clientWidth;
+                    const curveHeight = rcCurveElement.height;
+                    const curveWidth = rcCurveElement.width;
+                    const lineScale = curveContext.canvas.width / curveContext.canvas.clientWidth;
 
                     curveContext.clearRect(0, 0, curveWidth, curveHeight);
 
@@ -1597,7 +1597,7 @@ TABS.pid_tuning.initialize = function (callback) {
             */
 
             function getQBezierValue(t, p1, p2, p3) {
-                var iT = 1 - t;
+                const iT = 1 - t;
                 return iT * iT * p1 + 2 * iT * t * p2 + t * t * p3;
             }
 
@@ -1611,12 +1611,12 @@ TABS.pid_tuning.initialize = function (callback) {
             /* --- */
 
             // let global validation trigger and adjust the values first
-            var throttleMidE = $('.throttle input[name="mid"]'),
-                throttleExpoE = $('.throttle input[name="expo"]'),
-                mid = parseFloat(throttleMidE.val()),
-                expo = parseFloat(throttleExpoE.val()),
-                throttleCurve = $('.throttle .throttle_curve canvas').get(0),
-                context = throttleCurve.getContext("2d");
+            const throttleMidE = $('.throttle input[name="mid"]');
+            const throttleExpoE = $('.throttle input[name="expo"]');
+            const mid = parseFloat(throttleMidE.val());
+            const expo = parseFloat(throttleExpoE.val());
+            const throttleCurve = $('.throttle .throttle_curve canvas').get(0);
+            const context = throttleCurve.getContext("2d");
 
             // local validation to deal with input event
             if (mid >= parseFloat(throttleMidE.prop('min')) &&
@@ -1631,16 +1631,16 @@ TABS.pid_tuning.initialize = function (callback) {
             throttleCurve.width = throttleCurve.height *
                 (throttleCurve.clientWidth / throttleCurve.clientHeight);
 
-            var canvasHeight = throttleCurve.height;
-            var canvasWidth = throttleCurve.width;
+            const canvasHeight = throttleCurve.height;
+            const canvasWidth = throttleCurve.width;
 
             // math magic by englishman
-            var midx = canvasWidth * mid,
-                midxl = midx * 0.5,
-                midxr = (((canvasWidth - midx) * 0.5) + midx),
-                midy = canvasHeight - (midx * (canvasHeight / canvasWidth)),
-                midyl = canvasHeight - ((canvasHeight - midy) * 0.5 *(expo + 1)),
-                midyr = (midy / 2) * (expo + 1);
+            const midx = canvasWidth * mid;
+            const midxl = midx * 0.5;
+            const midxr = (((canvasWidth - midx) * 0.5) + midx);
+            const midy = canvasHeight - (midx * (canvasHeight / canvasWidth));
+            const midyl = canvasHeight - ((canvasHeight - midy) * 0.5 *(expo + 1));
+            const midyr = (midy / 2) * (expo + 1);
 
             let thrPercent = (FC.RC.channels[3] - 1000) / 1000,
                 thrpos = thrPercent <= mid
@@ -1695,15 +1695,15 @@ TABS.pid_tuning.initialize = function (callback) {
             }
         });
 
-        var dialogCopyProfile = $('.dialogCopyProfile')[0];
-        var DIALOG_MODE_PROFILE = 0;
-        var DIALOG_MODE_RATEPROFILE = 1;
-        var dialogCopyProfileMode;
+        const dialogCopyProfile = $('.dialogCopyProfile')[0];
+        const DIALOG_MODE_PROFILE = 0;
+        const DIALOG_MODE_RATEPROFILE = 1;
+        let dialogCopyProfileMode;
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
 
-            var selectProfile = $('.selectProfile');
-            var selectRateProfile = $('.selectRateProfile');
+            const selectProfile = $('.selectProfile');
+            const selectRateProfile = $('.selectRateProfile');
 
             $.each(selectProfileValues, function(key, value) {
                 if (key != FC.CONFIG.profile)
@@ -1978,10 +1978,12 @@ TABS.pid_tuning.initialize = function (callback) {
             self.updating = true;
             Promise.resolve(true)
             .then(function () {
-                var promise;
+                let promise;
                 if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
                     FC.PID.controller = pidController_e.val();
                     promise = MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
+                } else {
+                    console.log(`Unsupported API version: ${FC.CONFIG.apiVersion}`);
                 }
                 return promise;
             }).then(function () {
@@ -2051,11 +2053,35 @@ TABS.pid_tuning.renderModel = function () {
     if (!this.clock) { this.clock = new THREE.Clock(); }
 
     if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
-        var delta = this.clock.getDelta();
+        const delta = this.clock.getDelta();
 
-        var roll  = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[0], this.currentRates.roll_rate,  this.currentRates.rc_rate,       this.currentRates.rc_expo,       this.currentRates.superexpo, this.currentRates.deadband,    this.currentRates.roll_rate_limit),
-            pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[1], this.currentRates.pitch_rate, this.currentRates.rc_rate_pitch, this.currentRates.rc_pitch_expo, this.currentRates.superexpo, this.currentRates.deadband,    this.currentRates.pitch_rate_limit),
-            yaw   = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(FC.RC.channels[2], this.currentRates.yaw_rate,   this.currentRates.rc_rate_yaw,   this.currentRates.rc_yaw_expo,   this.currentRates.superexpo, this.currentRates.yawDeadband, this.currentRates.yaw_rate_limit);
+        const roll = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
+            FC.RC.channels[0],
+            this.currentRates.roll_rate,
+            this.currentRates.rc_rate,
+            this.currentRates.rc_expo,
+            this.currentRates.superexpo,
+            this.currentRates.deadband,
+            this.currentRates.roll_rate_limit
+        );
+        const pitch = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
+            FC.RC.channels[1],
+            this.currentRates.pitch_rate,
+            this.currentRates.rc_rate_pitch,
+            this.currentRates.rc_pitch_expo,
+            this.currentRates.superexpo,
+            this.currentRates.deadband,
+            this.currentRates.pitch_rate_limit
+        );
+        const yaw = delta * this.rateCurve.rcCommandRawToDegreesPerSecond(
+            FC.RC.channels[2],
+            this.currentRates.yaw_rate,
+            this.currentRates.rc_rate_yaw,
+            this.currentRates.rc_yaw_expo,
+            this.currentRates.superexpo,
+            this.currentRates.yawDeadband,
+            this.currentRates.yaw_rate_limit
+        );
 
         this.model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
 
@@ -2065,7 +2091,7 @@ TABS.pid_tuning.renderModel = function () {
 };
 
 TABS.pid_tuning.cleanup = function (callback) {
-    var self = this;
+    const self = this;
 
     if (self.model) {
         $(window).off('resize', $.proxy(self.model.resize, self.model));
@@ -2082,7 +2108,7 @@ TABS.pid_tuning.cleanup = function (callback) {
 };
 
 TABS.pid_tuning.refresh = function (callback) {
-    var self = this;
+    const self = this;
 
     GUI.tab_switch_cleanup(function () {
         self.initialize();
@@ -2096,21 +2122,21 @@ TABS.pid_tuning.refresh = function (callback) {
 };
 
 TABS.pid_tuning.setProfile = function () {
-    var self = this;
+    const self = this;
 
     self.currentProfile = FC.CONFIG.profile;
     $('.tab-pid_tuning select[name="profile"]').val(self.currentProfile);
 };
 
 TABS.pid_tuning.setRateProfile = function () {
-    var self = this;
+    const self = this;
 
     self.currentRateProfile = FC.CONFIG.rateProfile;
     $('.tab-pid_tuning select[name="rate_profile"]').val(self.currentRateProfile);
 };
 
 TABS.pid_tuning.setDirty = function (isDirty) {
-    var self = this;
+    const self = this;
 
     self.dirty = isDirty;
     $('.tab-pid_tuning select[name="profile"]').prop('disabled', isDirty);
@@ -2120,19 +2146,19 @@ TABS.pid_tuning.setDirty = function (isDirty) {
 };
 
 TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
-    var self = this;
+    const self = this;
 
     if (GUI.active_tab === 'pid_tuning') {
 
         if (!self.updating && !self.dirty) {
-            var changedProfile = false;
+            let changedProfile = false;
             if (self.currentProfile !== FC.CONFIG.profile) {
                 self.setProfile();
 
                 changedProfile = true;
             }
 
-            var changedRateProfile = false;
+            let changedRateProfile = false;
             if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")
                 && updateRateProfile
                 && self.currentRateProfile !== FC.CONFIG.rateProfile) {
@@ -2164,9 +2190,9 @@ TABS.pid_tuning.checkRC = function() {
     if (!this.oldRC) { this.oldRC = [FC.RC.channels[0], FC.RC.channels[1], FC.RC.channels[2]]; }
 
     // Monitor FC.RC.channels and detect change of value;
-    var rateCurveUpdateRequired = false;
-    for(var i=0; i<this.oldRC.length; i++) { // has the value changed ?
-        if(this.oldRC[i] != FC.RC.channels[i]) {
+    let rateCurveUpdateRequired = false;
+    for (let i = 0; i < this.oldRC.length; i++) { // has the value changed ?
+        if (this.oldRC[i] !== FC.RC.channels[i]) {
             this.oldRC[i] = FC.RC.channels[i];
             rateCurveUpdateRequired = true;     // yes, then an update of the values displayed on the rate curve graph is required
         }
@@ -2180,7 +2206,7 @@ TABS.pid_tuning.checkThrottle = function() {
         this.oldThrottle = FC.RC.channels[3];
         return true;
     }
-    var updateRequired = this.oldThrottle != FC.RC.channels[3];
+    const updateRequired = this.oldThrottle !== FC.RC.channels[3];
     this.oldThrottle = FC.RC.channels[3];
     return updateRequired;
 };
@@ -2209,17 +2235,17 @@ TABS.pid_tuning.updatePidControllerParameters = function () {
 };
 
 TABS.pid_tuning.updateRatesLabels = function() {
-    var self = this;
+    const self = this;
     if (!self.rateCurve.useLegacyCurve && self.rateCurve.maxAngularVel) {
 
-        var drawAxisLabel = function(context, axisLabel, x, y, align, color) {
+        const drawAxisLabel = function(context, axisLabel, x, y, align, color) {
 
             context.fillStyle = color || '#000000' ;
             context.textAlign = align || 'center';
             context.fillText(axisLabel, x, y);
         };
 
-        var drawBalloonLabel = function(context, axisLabel, x, y, align, colors, dirty) {
+        const drawBalloonLabel = function(context, axisLabel, x, y, align, colors, dirty) {
 
             /**
              * curveContext is the canvas to draw on
@@ -2249,15 +2275,15 @@ TABS.pid_tuning.updateRatesLabels = function() {
             x *= context.canvas.clientWidth/context.canvas.clientHeight;
 
             // adjust the coordinates for determine where the balloon background should be drawn
-            x += ((align=='right')?-(width + DEFAULT_OFFSET):0) + ((align=='left')?DEFAULT_OFFSET:0);
-            y -= (height/2); if(y<0) y=0; else if(y>context.height) y=context.height; // prevent balloon from going out of canvas
+            x += ((align=='right') ? -(width + DEFAULT_OFFSET) : 0) + ((align=='left') ? DEFAULT_OFFSET : 0);
+            y -= (height / 2); if (y < 0) y = 0; else if (y > context.height) y = context.height; // prevent balloon from going out of canvas
 
             // check that the balloon does not already overlap
-            for(var i=0; i<dirty.length; i++) {
-                if((x>=dirty[i].left && x<=dirty[i].right) || (x+width>=dirty[i].left && x+width<=dirty[i].right)) { // does it overlap horizontally
-                    if((y>=dirty[i].top && y<=dirty[i].bottom) || (y+height>=dirty[i].top && y+height<=dirty[i].bottom )) { // this overlaps another balloon
+            for (let i = 0; i < dirty.length; i++) {
+                if ((x >= dirty[i].left && x <= dirty[i].right) || (x + width >= dirty[i].left && x + width <= dirty[i].right)) { // does it overlap horizontally
+                    if ((y >= dirty[i].top && y<= dirty[i].bottom) || (y + height >= dirty[i].top && y + height <= dirty[i].bottom )) { // this overlaps another balloon
                         // snap above or snap below
-                        if(y<=(dirty[i].bottom - dirty[i].top) / 2 && (dirty[i].top - height) > 0) {
+                        if (y <= (dirty[i].bottom - dirty[i].top) / 2 && (dirty[i].top - height) > 0) {
                             y = dirty[i].top - height;
                         } else { // snap down
                             y = dirty[i].bottom;
@@ -2270,14 +2296,14 @@ TABS.pid_tuning.updateRatesLabels = function() {
             dirty.push({left:x, right:x+width, top:y-DEFAULT_MARGIN, bottom:y+height+DEFAULT_MARGIN});
 
 
-            var pointerLength =  (height - 2 * DEFAULT_RADIUS ) / 6;
+            const pointerLength =  (height - 2 * DEFAULT_RADIUS ) / 6;
 
             context.beginPath();
             context.moveTo(x + DEFAULT_RADIUS, y);
             context.lineTo(x + width - DEFAULT_RADIUS, y);
             context.quadraticCurveTo(x + width, y, x + width, y + DEFAULT_RADIUS);
 
-            if(align=='right') { // point is to the right
+            if (align === 'right') { // point is to the right
                 context.lineTo(x + width, y + DEFAULT_RADIUS + pointerLength);
                 context.lineTo(x + width + DEFAULT_OFFSET, pointerY);  // point
                 context.lineTo(x + width, y + height - DEFAULT_RADIUS - pointerLength);
@@ -2288,7 +2314,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
             context.lineTo(x + DEFAULT_RADIUS, y + height);
             context.quadraticCurveTo(x, y + height, x, y + height - DEFAULT_RADIUS);
 
-            if(align=='left') { // point is to the left
+            if (align === 'left') { // point is to the left
                 context.lineTo(x, y + height - DEFAULT_RADIUS - pointerLength);
                 context.lineTo(x - DEFAULT_OFFSET, pointerY); // point
                 context.lineTo(x, y + DEFAULT_RADIUS - pointerLength);
@@ -2313,40 +2339,38 @@ TABS.pid_tuning.updateRatesLabels = function() {
             yaw     : {color: 'rgba(128,128,255,0.4)', border: 'rgba(128,128,255,0.6)', text: '#000000'}
         };
 
-        var rcStickElement = $('.rate_curve canvas#rate_curve_layer1').get(0);
-        if(rcStickElement) {
+        const rcStickElement = $('.rate_curve canvas#rate_curve_layer1').get(0);
+        if (rcStickElement) {
             rcStickElement.width = 1000;
             rcStickElement.height = 1000;
 
-            var stickContext = rcStickElement.getContext("2d");
+            const stickContext = rcStickElement.getContext("2d");
 
             stickContext.save();
 
-            var
-                maxAngularVelRoll   = self.maxAngularVelRollElement.text()  + ' deg/s',
-                maxAngularVelPitch  = self.maxAngularVelPitchElement.text() + ' deg/s',
-                maxAngularVelYaw    = self.maxAngularVelYawElement.text()   + ' deg/s',
-                currentValues       = [],
-                balloonsDirty       = [],
-                curveHeight         = rcStickElement.height,
-                curveWidth          = rcStickElement.width,
-                maxAngularVel       = self.rateCurve.maxAngularVel,
-                windowScale         = (400 / stickContext.canvas.clientHeight),
-                rateScale           = (curveHeight / 2) / maxAngularVel,
-                lineScale           = stickContext.canvas.width / stickContext.canvas.clientWidth,
-                textScale           = stickContext.canvas.clientHeight / stickContext.canvas.clientWidth;
-
+            const maxAngularVelRoll   = self.maxAngularVelRollElement.text()  + ' deg/s';
+            const maxAngularVelPitch  = self.maxAngularVelPitchElement.text() + ' deg/s';
+            const maxAngularVelYaw    = self.maxAngularVelYawElement.text()   + ' deg/s';
+            let currentValues         = [];
+            let balloonsDirty         = [];
+            const curveHeight         = rcStickElement.height;
+            const curveWidth          = rcStickElement.width;
+            const maxAngularVel       = self.rateCurve.maxAngularVel;
+            const windowScale         = (400 / stickContext.canvas.clientHeight);
+            const rateScale           = (curveHeight / 2) / maxAngularVel;
+            const lineScale           = stickContext.canvas.width / stickContext.canvas.clientWidth;
+            const textScale           = stickContext.canvas.clientHeight / stickContext.canvas.clientWidth;
 
             stickContext.clearRect(0, 0, curveWidth, curveHeight);
 
             // calculate the fontSize based upon window scaling
-            if(windowScale <= 1) {
+            if (windowScale <= 1) {
                 stickContext.font = "24pt Verdana, Arial, sans-serif";
             } else {
                 stickContext.font = (24 * windowScale) + "pt Verdana, Arial, sans-serif";
             }
 
-            if(FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
+            if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
                 currentValues.push(self.rateCurve.drawStickPosition(FC.RC.channels[0], self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.roll_rate_limit, maxAngularVel, stickContext, '#FF8080') + ' deg/s');
                 currentValues.push(self.rateCurve.drawStickPosition(FC.RC.channels[1], self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.pitch_rate_limit, maxAngularVel, stickContext, '#80FF80') + ' deg/s');
                 currentValues.push(self.rateCurve.drawStickPosition(FC.RC.channels[2], self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, self.currentRates.yaw_rate_limit, maxAngularVel, stickContext, '#8080FF') + ' deg/s');
@@ -2365,7 +2389,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
             // and then the balloon labels.
             balloonsDirty = []; // reset the dirty balloon draw area (for overlap detection)
             // create an array of balloons to draw
-            var balloons = [
+            const balloons = [
                 {value: parseInt(maxAngularVelRoll), balloon: function() {drawBalloonLabel(stickContext, maxAngularVelRoll,  curveWidth, rateScale * (maxAngularVel - parseInt(maxAngularVelRoll)),  'right', BALLOON_COLORS.roll, balloonsDirty);}},
                 {value: parseInt(maxAngularVelPitch), balloon: function() {drawBalloonLabel(stickContext, maxAngularVelPitch, curveWidth, rateScale * (maxAngularVel - parseInt(maxAngularVelPitch)), 'right', BALLOON_COLORS.pitch, balloonsDirty);}},
                 {value: parseInt(maxAngularVelYaw), balloon: function() {drawBalloonLabel(stickContext, maxAngularVelYaw,   curveWidth, rateScale * (maxAngularVel - parseInt(maxAngularVelYaw)),   'right', BALLOON_COLORS.yaw, balloonsDirty);}}
@@ -2380,7 +2404,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
             balloons.sort(function(a,b) {return (b.value - a.value)});
 
             // add the current rc values
-            if(currentValues[0] && currentValues[1] && currentValues[2]) {
+            if (currentValues[0] && currentValues[1] && currentValues[2]) {
                 balloons.push(
                     {value: parseInt(currentValues[0]), balloon: function() {drawBalloonLabel(stickContext, currentValues[0], 10, 150, 'none', BALLOON_COLORS.roll, balloonsDirty);}},
                     {value: parseInt(currentValues[1]), balloon: function() {drawBalloonLabel(stickContext, currentValues[1], 10, 250, 'none', BALLOON_COLORS.pitch, balloonsDirty);}},
@@ -2388,7 +2412,9 @@ TABS.pid_tuning.updateRatesLabels = function() {
                 );
             }
             // then display them on the chart
-            for(var i=0; i<balloons.length; i++) balloons[i].balloon();
+            for (let i = 0; i <= balloons.length; i++) {
+                balloons[i].balloon();
+            }
 
             stickContext.restore();
         }
@@ -2396,25 +2422,25 @@ TABS.pid_tuning.updateRatesLabels = function() {
 };
 
 TABS.pid_tuning.updateFilterWarning = function() {
-    var gyroDynamicLowpassEnabled = $('input[id="gyroLowpassDynEnabled"]').is(':checked');
-    var gyroLowpass1Enabled = $('input[id="gyroLowpassEnabled"]').is(':checked');
-    var dtermDynamicLowpassEnabled = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
-    var dtermLowpass1Enabled = $('input[id="dtermLowpassEnabled"]').is(':checked');
-    var warning_e = $('#pid-tuning .filterWarning');
-    var warningDynamicNotch_e = $('#pid-tuning .dynamicNotchWarning');
+    const gyroDynamicLowpassEnabled = $('input[id="gyroLowpassDynEnabled"]').is(':checked');
+    const gyroLowpass1Enabled = $('input[id="gyroLowpassEnabled"]').is(':checked');
+    const dtermDynamicLowpassEnabled = $('input[id="dtermLowpassDynEnabled"]').is(':checked');
+    const dtermLowpass1Enabled = $('input[id="dtermLowpassEnabled"]').is(':checked');
+    const warningE = $('#pid-tuning .filterWarning');
+    const warningDynamicNotchE = $('#pid-tuning .dynamicNotchWarning');
     if (!(gyroDynamicLowpassEnabled || gyroLowpass1Enabled) || !(dtermDynamicLowpassEnabled || dtermLowpass1Enabled)) {
-        warning_e.show();
+        warningE.show();
     } else {
-        warning_e.hide();
+        warningE.hide();
     }
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
         if (FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
-            warningDynamicNotch_e.hide();
+            warningDynamicNotchE.hide();
         } else {
-            warningDynamicNotch_e.show();
+            warningDynamicNotchE.show();
         }
     } else {
-        warningDynamicNotch_e.hide();
+        warningDynamicNotchE.hide();
     }
 };
 
