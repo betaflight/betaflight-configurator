@@ -35,7 +35,7 @@ TABS.motors = {
 };
 
 TABS.motors.initialize = function (callback) {
-    var self = this;
+    const self = this;
 
     self.armed = false;
     self.escProtocolIsDshot = false;
@@ -98,15 +98,15 @@ TABS.motors.initialize = function (callback) {
     }
 
     function initSensorData() {
-        for (var i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             FC.SENSOR_DATA.accelerometer[i] = 0;
             FC.SENSOR_DATA.gyroscope[i] = 0;
         }
     }
 
     function initDataArray(length) {
-        var data = new Array(length);
-        for (var i = 0; i < length; i++) {
+        const data = new Array(length);
+        for (let i = 0; i < length; i++) {
             data[i] = [];
             data[i].min = -1;
             data[i].max = 1;
@@ -115,8 +115,8 @@ TABS.motors.initialize = function (callback) {
     }
 
     function addSampleToData(data, sampleNumber, sensorData) {
-        for (var i = 0; i < data.length; i++) {
-            var dataPoint = sensorData[i];
+        for (let i = 0; i < data.length; i++) {
+            const dataPoint = sensorData[i];
             data[i].push([sampleNumber, dataPoint]);
             if (dataPoint < data[i].min) {
                 data[i].min = dataPoint;
@@ -126,14 +126,14 @@ TABS.motors.initialize = function (callback) {
             }
         }
         while (data[0].length > 300) {
-            for (i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 data[i].shift();
             }
         }
         return sampleNumber + 1;
     }
 
-    var margin = {top: 20, right: 30, bottom: 10, left: 20};
+    const margin = {top: 20, right: 30, bottom: 10, left: 20};
     function updateGraphHelperSize(helpers) {
         helpers.width = helpers.targetElement.width() - margin.left - margin.right;
         helpers.height = helpers.targetElement.height() - margin.top - margin.bottom;
@@ -146,15 +146,15 @@ TABS.motors.initialize = function (callback) {
     }
 
     function initGraphHelpers(selector, sampleNumber, heightDomain) {
-        var helpers = {selector: selector, targetElement: $(selector), dynamicHeightDomain: !heightDomain};
+        const helpers = {selector: selector, targetElement: $(selector), dynamicHeightDomain: !heightDomain};
 
         helpers.widthScale = d3.scale.linear()
-        .clamp(true)
-        .domain([(sampleNumber - 299), sampleNumber]);
+            .clamp(true)
+            .domain([(sampleNumber - 299), sampleNumber]);
 
         helpers.heightScale = d3.scale.linear()
-        .clamp(true)
-        .domain(heightDomain || [1, -1]);
+            .clamp(true)
+            .domain(heightDomain || [1, -1]);
 
         helpers.xGrid = d3.svg.axis();
         helpers.yGrid = d3.svg.axis();
@@ -162,42 +162,41 @@ TABS.motors.initialize = function (callback) {
         updateGraphHelperSize(helpers);
 
         helpers.xGrid
-        .scale(helpers.widthScale)
-        .orient("bottom")
-        .ticks(5)
-        .tickFormat("");
+            .scale(helpers.widthScale)
+            .orient("bottom")
+            .ticks(5)
+            .tickFormat("");
 
         helpers.yGrid
-        .scale(helpers.heightScale)
-        .orient("left")
-        .ticks(5)
-        .tickFormat("");
-
+            .scale(helpers.heightScale)
+            .orient("left")
+            .ticks(5)
+            .tickFormat("");
         helpers.xAxis = d3.svg.axis()
-        .scale(helpers.widthScale)
-        .ticks(5)
-        .orient("bottom")
-        .tickFormat(function (d) {return d;});
+            .scale(helpers.widthScale)
+            .ticks(5)
+            .orient("bottom")
+            .tickFormat(function (d) {return d;});
 
         helpers.yAxis = d3.svg.axis()
-        .scale(helpers.heightScale)
-        .ticks(5)
-        .orient("left")
-        .tickFormat(function (d) {return d;});
+            .scale(helpers.heightScale)
+            .ticks(5)
+            .orient("left")
+            .tickFormat(function (d) {return d;});
 
         helpers.line = d3.svg.line()
-        .x(function (d) { return helpers.widthScale(d[0]); })
-        .y(function (d) { return helpers.heightScale(d[1]); });
+            .x(function (d) { return helpers.widthScale(d[0]); })
+            .y(function (d) { return helpers.heightScale(d[1]); });
 
         return helpers;
     }
 
     function drawGraph(graphHelpers, data, sampleNumber) {
 
-        var svg = d3.select(graphHelpers.selector);
+        const svg = d3.select(graphHelpers.selector);
 
         if (graphHelpers.dynamicHeightDomain) {
-            var limits = [];
+            const limits = [];
             $.each(data, function (idx, datum) {
                 limits.push(datum.min);
                 limits.push(datum.max);
@@ -211,15 +210,17 @@ TABS.motors.initialize = function (callback) {
         svg.select(".x.axis").call(graphHelpers.xAxis);
         svg.select(".y.axis").call(graphHelpers.yAxis);
 
-        var group = svg.select("g.data");
-        var lines = group.selectAll("path").data(data, function (d, i) {return i;});
+        const group = svg.select("g.data");
+        const lines = group.selectAll("path").data(data, function (d, i) {
+            return i;
+        });
 
         lines.enter().append("path").attr("class", "line");
         lines.attr('d', graphHelpers.line);
     }
 
     function update_model(mixer) {
-        var reverse = "";
+        let reverse = "";
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
@@ -266,25 +267,25 @@ TABS.motors.initialize = function (callback) {
         initSensorData();
 
         // Setup variables
-        var samples_gyro_i = 0,
-        gyro_data = initDataArray(3),
-        gyro_helpers = initGraphHelpers('#graph', samples_gyro_i, [-2, 2]),
-        gyro_max_read = [0, 0, 0];
+        let samplesGyro = 0;
+        const gyroData = initDataArray(3);
+        let gyroHelpers = initGraphHelpers('#graph', samplesGyro, [-2, 2]);
+        let gyroMaxRead = [0, 0, 0];
 
-        var samples_accel_i = 0,
-        accel_data = initDataArray(3),
-        accel_helpers = initGraphHelpers('#graph', samples_accel_i, [-2, 2]),
-        accel_max_read = [0, 0, 0],
-        accel_offset = [0, 0, 0],
-        accel_offset_established = false;
+        let samplesAccel = 0;
+        const accelData = initDataArray(3);
+        let accelHelpers = initGraphHelpers('#graph', samplesAccel, [-2, 2]);
+        let accelMaxRead = [0, 0, 0];
+        const accelOffset = [0, 0, 0];
+        let accelOffsetEstablished = false;
 
         // cached elements
-        var motor_voltage_e = $('.motors-bat-voltage'),
+        const motorVoltage = $('.motors-bat-voltage'),
             motor_mah_drawing_e = $('.motors-bat-mah-drawing'),
             motor_mah_drawn_e = $('.motors-bat-mah-drawn');
             
 
-        var raw_data_text_ements = {
+        const rawDataTextElements = {
                 x: [],
                 y: [],
                 z: [],
@@ -292,15 +293,15 @@ TABS.motors.initialize = function (callback) {
         };
 
         $('.plot_control .x, .plot_control .y, .plot_control .z, .plot_control .rms').each(function () {
-            var el = $(this);
+            const el = $(this);
             if (el.hasClass('x')) {
-                raw_data_text_ements.x.push(el);
+                rawDataTextElements.x.push(el);
             } else if (el.hasClass('y')) {
-                raw_data_text_ements.y.push(el);
+                rawDataTextElements.y.push(el);
             } else if (el.hasClass('z')) {
-                raw_data_text_ements.z.push(el);
+                rawDataTextElements.z.push(el);
             } else if (el.hasClass('rms')) {
-                raw_data_text_ements.rms.push(el);
+                rawDataTextElements.rms.push(el);
             }
         });
 
@@ -339,8 +340,8 @@ TABS.motors.initialize = function (callback) {
         });
 
         $('.tab-motors .rate select, .tab-motors .scale select').change(function () {
-            var rate = parseInt($('.tab-motors select[name="rate"]').val(), 10);
-            var scale = parseFloat($('.tab-motors select[name="scale"]').val());
+            const rate = parseInt($('.tab-motors select[name="rate"]').val(), 10);
+            const scale = parseFloat($('.tab-motors select[name="scale"]').val());
 
             GUI.interval_kill_all(['motor_and_status_pull','motors_power_data_pull_slow']);
 
@@ -350,7 +351,7 @@ TABS.motors.initialize = function (callback) {
                 TABS.motors.sensorGyroRate = rate;
                 TABS.motors.sensorGyroScale = scale;
 
-                gyro_helpers = initGraphHelpers('#graph', samples_gyro_i, [-scale, scale]);
+                gyroHelpers = initGraphHelpers('#graph', samplesGyro, [-scale, scale]);
 
                 GUI.interval_add('IMU_pull', function imu_data_pull() {
                     MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_gyro_graph);
@@ -360,7 +361,7 @@ TABS.motors.initialize = function (callback) {
                 ConfigStorage.set({'motors_tab_accel_settings': {'rate': rate, 'scale': scale}});
                 TABS.motors.sensorAccelRate = rate;
                 TABS.motors.sensorAccelScale = scale;
-                accel_helpers = initGraphHelpers('#graph', samples_accel_i, [-scale, scale]);
+                accelHelpers = initGraphHelpers('#graph', samplesAccel, [-scale, scale]);
 
                 GUI.interval_add('IMU_pull', function imu_data_pull() {
                     MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_accel_graph);
@@ -369,59 +370,63 @@ TABS.motors.initialize = function (callback) {
             }
 
             function update_accel_graph() {
-                if (!accel_offset_established) {
-                    for (var i = 0; i < 3; i++) {
-                        accel_offset[i] = FC.SENSOR_DATA.accelerometer[i] * -1;
+                if (!accelOffsetEstablished) {
+                    for (let i = 0; i < 3; i++) {
+                        accelOffset[i] = FC.SENSOR_DATA.accelerometer[i] * -1;
                     }
 
-                    accel_offset_established = true;
+                    accelOffsetEstablished = true;
                 }
 
-                var accel_with_offset = [
-                    accel_offset[0] + FC.SENSOR_DATA.accelerometer[0],
-                    accel_offset[1] + FC.SENSOR_DATA.accelerometer[1],
-                    accel_offset[2] + FC.SENSOR_DATA.accelerometer[2]
+                const accelWithOffset = [
+                    accelOffset[0] + FC.SENSOR_DATA.accelerometer[0],
+                    accelOffset[1] + FC.SENSOR_DATA.accelerometer[1],
+                    accelOffset[2] + FC.SENSOR_DATA.accelerometer[2],
                     ];
 
-                updateGraphHelperSize(accel_helpers);
-                samples_accel_i = addSampleToData(accel_data, samples_accel_i, accel_with_offset);
-                drawGraph(accel_helpers, accel_data, samples_accel_i);
-                for (var i = 0; i < 3; i++) {
-                    if (Math.abs(accel_with_offset[i]) > Math.abs(accel_max_read[i])) accel_max_read[i] = accel_with_offset[i];
+                updateGraphHelperSize(accelHelpers);
+                samplesAccel = addSampleToData(accelData, samplesAccel, accelWithOffset);
+                drawGraph(accelHelpers, accelData, samplesAccel);
+                for (let i = 0; i < 3; i++) {
+                    if (Math.abs(accelWithOffset[i]) > Math.abs(accelMaxRead[i])) {
+                        accelMaxRead[i] = accelWithOffset[i];
+                    }
                 }
-                computeAndUpdate(accel_with_offset, accel_data, accel_max_read);
+                computeAndUpdate(accelWithOffset, accelData, accelMaxRead);
 
             }
 
             function update_gyro_graph() {
-                var gyro = [
+                const gyro = [
                     FC.SENSOR_DATA.gyroscope[0],
                     FC.SENSOR_DATA.gyroscope[1],
                     FC.SENSOR_DATA.gyroscope[2]
-                    ];
+                ];
 
-                updateGraphHelperSize(gyro_helpers);
-                samples_gyro_i = addSampleToData(gyro_data, samples_gyro_i, gyro);
-                drawGraph(gyro_helpers, gyro_data, samples_gyro_i);
-                for (var i = 0; i < 3; i++) {
-                    if (Math.abs(gyro[i]) > Math.abs(gyro_max_read[i])) gyro_max_read[i] = gyro[i];
+                updateGraphHelperSize(gyroHelpers);
+                samplesGyro = addSampleToData(gyroData, samplesGyro, gyro);
+                drawGraph(gyroHelpers, gyroData, samplesGyro);
+                for (let i = 0; i < 3; i++) {
+                    if (Math.abs(gyro[i]) > Math.abs(gyroMaxRead[i])) {
+                        gyroMaxRead[i] = gyro[i];
+                    }
                 }
-                computeAndUpdate(gyro, gyro_data, gyro_max_read);
+                computeAndUpdate(gyro, gyroData, gyroMaxRead);
             }
 
             function computeAndUpdate(sensor_data, data, max_read) {
-                var sum = 0.0;
-                for (var j = 0, jlength = data.length; j < jlength; j++) {
-                    for (var k = 0, klength = data[j].length; k < klength; k++){
+                let sum = 0.0;
+                for (let j = 0, jlength = data.length; j < jlength; j++) {
+                    for (let k = 0, klength = data[j].length; k < klength; k++){
                         sum += data[j][k][1]*data[j][k][1];
                     }
                 }
-                var rms = Math.sqrt(sum/(data[0].length+data[1].length+data[2].length));
+                const rms = Math.sqrt(sum/(data[0].length+data[1].length+data[2].length));
 
-                raw_data_text_ements.x[0].text(sensor_data[0].toFixed(2) + ' (' + max_read[0].toFixed(2) + ')');
-                raw_data_text_ements.y[0].text(sensor_data[1].toFixed(2) + ' (' + max_read[1].toFixed(2) + ')');
-                raw_data_text_ements.z[0].text(sensor_data[2].toFixed(2) + ' (' + max_read[2].toFixed(2) + ')');
-                raw_data_text_ements.rms[0].text(rms.toFixed(4));
+                rawDataTextElements.x[0].text(`${sensor_data[0].toFixed(2)} ( ${max_read[0].toFixed(2)} )`);
+                rawDataTextElements.y[0].text(`${sensor_data[1].toFixed(2)} ( ${max_read[1].toFixed(2)} )`);
+                rawDataTextElements.z[0].text(`${sensor_data[2].toFixed(2)} ( ${max_read[2].toFixed(2)} )`);
+                rawDataTextElements.rms[0].text(rms.toFixed(4));
             }
         });
 
@@ -429,7 +434,6 @@ TABS.motors.initialize = function (callback) {
         // set refresh speeds according to configuration saved in storage
         ConfigStorage.get(['motors_tab_sensor_settings', 'motors_tab_gyro_settings', 'motors_tab_accel_settings'], function (result) {
             if (result.motors_tab_sensor_settings) {
-                var sensor = result.motors_tab_sensor_settings.sensor;
                 $('.tab-motors select[name="sensor_choice"]').val(result.motors_tab_sensor_settings.sensor);
             }
 
@@ -448,7 +452,7 @@ TABS.motors.initialize = function (callback) {
 
         // Amperage
         function power_data_pull() {
-            motor_voltage_e.text(i18n.getMessage('motorsVoltageValue', [FC.ANALOG.voltage]));
+            motorVoltage.text(i18n.getMessage('motorsVoltageValue', [FC.ANALOG.voltage]));
             motor_mah_drawing_e.text(i18n.getMessage('motorsADrawingValue', [FC.ANALOG.amperage.toFixed(2)]));
             motor_mah_drawn_e.text(i18n.getMessage('motorsmAhDrawnValue', [FC.ANALOG.mAhdrawn]));
             
@@ -456,15 +460,15 @@ TABS.motors.initialize = function (callback) {
         GUI.interval_add('motors_power_data_pull_slow', power_data_pull, 250, true); // 4 fps
 
         $('a.reset_max').click(function () {
-            gyro_max_read = [0, 0, 0];
-            accel_max_read = [0, 0, 0];
-            accel_offset_established = false;
+            gyroMaxRead = [0, 0, 0];
+            accelMaxRead = [0, 0, 0];
+            accelOffsetEstablished = false;
         });
 
-        var number_of_valid_outputs = (FC.MOTOR_DATA.indexOf(0) > -1) ? FC.MOTOR_DATA.indexOf(0) : 8;
-        var rangeMin;
-        var rangeMax;
-        var neutral3d;
+        const numberOfValidOutputs = (FC.MOTOR_DATA.indexOf(0) > -1) ? FC.MOTOR_DATA.indexOf(0) : 8;
+        let rangeMin;
+        let rangeMax;
+        let neutral3d;
         if (self.escProtocolIsDshot) {
             rangeMin = self.DSHOT_DISARMED_VALUE;
             rangeMax = self.DSHOT_MAX_VALUE;
@@ -477,12 +481,12 @@ TABS.motors.initialize = function (callback) {
             neutral3d = (FC.MOTOR_3D_CONFIG.neutral > 1575 || FC.MOTOR_3D_CONFIG.neutral < 1425) ? 1500 : FC.MOTOR_3D_CONFIG.neutral;
         }
 
-        var motors_wrapper = $('.motors .bar-wrapper'),
+        const motorsWrapper = $('.motors .bar-wrapper'),
             servos_wrapper = $('.servos .bar-wrapper');
 
-        for (var i = 0; i < 8; i++) {
-            motors_wrapper.append('\
-                    <div class="m-block motor-' + i + '">\
+        for (let i = 0; i < 8; i++) {
+            motorsWrapper.append(`\
+                    <div class="m-block motor-${i}">\
                     <div class="meter-bar">\
                     <div class="label"></div>\
                     <div class="indicator">\
@@ -492,7 +496,7 @@ TABS.motors.initialize = function (callback) {
                     </div>\
                     </div>\
                     </div>\
-            ');
+            `);
 
             servos_wrapper.append('\
                     <div class="m-block servo-' + (7 - i) + '">\
@@ -524,7 +528,7 @@ TABS.motors.initialize = function (callback) {
 
         function setSlidersEnabled(isEnabled) {
             if (isEnabled && !self.armed) {
-                $('div.sliders input').slice(0, number_of_valid_outputs).prop('disabled', false);
+                $('div.sliders input').slice(0, numberOfValidOutputs).prop('disabled', false);
 
                 // unlock master slider
                 $('div.sliders input:last').prop('disabled', false);
@@ -541,7 +545,7 @@ TABS.motors.initialize = function (callback) {
         setSlidersDefault();
 
         $('#motorsEnableTestMode').change(function () {
-            var enabled = $(this).is(':checked');
+            const enabled = $(this).is(':checked');
 
             setSlidersEnabled(enabled);
 
@@ -550,70 +554,70 @@ TABS.motors.initialize = function (callback) {
             mspHelper.setArmingEnabled(enabled, enabled);
         }).change();
 
-        var buffering_set_motor = [],
+        let bufferingSetMotor = [],
         buffer_delay = false;
         $('div.sliders input:not(.master)').on('input', function () {
-            var index = $(this).index(),
-            buffer = [];
+            const index = $(this).index();
+            let buffer = [];
 
             $('div.values li').eq(index).text($(this).val());
 
-            for (var i = 0; i < 8; i++) {
-                var val = parseInt($('div.sliders input').eq(i).val());
+            for (let i = 0; i < 8; i++) {
+                const val = parseInt($('div.sliders input').eq(i).val());
                 buffer.push16(val);
             }
 
-            buffering_set_motor.push(buffer);
+            bufferingSetMotor.push(buffer);
 
             if (!buffer_delay) {
                 buffer_delay = setTimeout(function () {
-                    buffer = buffering_set_motor.pop();
+                    buffer = bufferingSetMotor.pop();
 
                     MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
 
-                    buffering_set_motor = [];
+                    bufferingSetMotor = [];
                     buffer_delay = false;
                 }, 10);
             }
         });
 
         $('div.sliders input.master').on('input', function () {
-            var val = $(this).val();
+            const val = $(this).val();
 
             $('div.sliders input:not(:disabled, :last)').val(val);
-            $('div.values li:not(:last)').slice(0, number_of_valid_outputs).text(val);
+            $('div.values li:not(:last)').slice(0, numberOfValidOutputs).text(val);
             $('div.sliders input:not(:last):first').trigger('input');
         });
 
         // check if motors are already spinning
-        var motors_running = false;
+        let motorsRunning = false;
 
-        for (var i = 0; i < number_of_valid_outputs; i++) {
+        for (let i = 0; i < numberOfValidOutputs; i++) {
             if (!self.feature3DEnabled) {
                 if (FC.MOTOR_DATA[i] > rangeMin) {
-                    motors_running = true;
+                    motorsRunning = true;
                 }
             } else {
                 if ((FC.MOTOR_DATA[i] < FC.MOTOR_3D_CONFIG.deadband3d_low) || (FC.MOTOR_DATA[i] > FC.MOTOR_3D_CONFIG.deadband3d_high)) {
-                    motors_running = true;
+                    motorsRunning = true;
                 }
             }
         }
 
-        if (motors_running) {
+        if (motorsRunning) {
             $('#motorsEnableTestMode').prop('checked', true).change();
 
             // motors are running adjust sliders to current values
 
-            var sliders = $('div.sliders input:not(.master)');
+            const sliders = $('div.sliders input:not(.master)');
 
-            var master_value = FC.MOTOR_DATA[0];
-            for (var i = 0; i < FC.MOTOR_DATA.length; i++) {
+            let masterValue = FC.MOTOR_DATA[0];
+            for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
                 if (FC.MOTOR_DATA[i] > 0) {
                     sliders.eq(i).val(FC.MOTOR_DATA[i]);
 
-                    if (master_value != FC.MOTOR_DATA[i]) {
-                        master_value = false;
+                    if (masterValue !== FC.MOTOR_DATA[i]) {
+                        masterValue = false;
                     }
                 }
             }
@@ -622,8 +626,8 @@ TABS.motors.initialize = function (callback) {
             sliders.trigger('input');
 
             // slide master slider if condition is valid
-            if (master_value) {
-                $('div.sliders input.master').val(master_value)
+            if (masterValue) {
+                $('div.sliders input.master').val(masterValue)
                 .trigger('input');
             }
         }
@@ -651,24 +655,24 @@ TABS.motors.initialize = function (callback) {
             MSP.send_message(MSPCodes.MSP_SERVO, false, false, update_ui);
         }
 
-        var full_block_scale = rangeMax - rangeMin;
+        const fullBlockScale = rangeMax - rangeMin;
 
         function update_ui() {
-            var previousArmState = self.armed;
-            var block_height = $('div.m-block:first').height();
+            const previousArmState = self.armed;
+            const blockHeight = $('div.m-block:first').height();
 
-            for (var i = 0; i < FC.MOTOR_DATA.length; i++) {
-                var motorValue = FC.MOTOR_DATA[i];
-                var barHeight = motorValue - rangeMin,
-                margin_top = block_height - (barHeight * (block_height / full_block_scale)).clamp(0, block_height),
-                height = (barHeight * (block_height / full_block_scale)).clamp(0, block_height),
+            for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
+                const motorValue = FC.MOTOR_DATA[i];
+                const barHeight = motorValue - rangeMin,
+                marginTop = blockHeight - (barHeight * (blockHeight / fullBlockScale)).clamp(0, blockHeight),
+                height = (barHeight * (blockHeight / fullBlockScale)).clamp(0, blockHeight),
                 color = parseInt(barHeight * 0.009);
 
-                $('.motor-' + i + ' .label', motors_wrapper).text(motorValue);
-                $('.motor-' + i + ' .indicator', motors_wrapper).css({
-                    'margin-top' : margin_top + 'px',
-                    'height' : height + 'px',
-                    'background-color' : 'rgba(255,187,0,1.'+ color +')'
+                $(`.motor-${i} .label`, motorsWrapper).text(motorValue);
+                $(`.motor-${i} .indicator`, motorsWrapper).css({
+                    'margin-top' : `${marginTop}px`,
+                    'height' : `${height}px`,
+                    'background-color' : `rgba(255,187,0,1.${color})`,
                 });
 
                 if (i < FC.MOTOR_CONFIG.motor_count && (FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor)) {
@@ -715,14 +719,18 @@ TABS.motors.initialize = function (callback) {
             }
 
             // servo indicators are still using old (not flexible block scale), it will be changed in the future accordingly
-            for (var i = 0; i < FC.SERVO_DATA.length; i++) {
-                var data = FC.SERVO_DATA[i] - 1000,
-                margin_top = block_height - (data * (block_height / 1000)).clamp(0, block_height),
-                height = (data * (block_height / 1000)).clamp(0, block_height),
+            for (let i = 0; i < FC.SERVO_DATA.length; i++) {
+                const data = FC.SERVO_DATA[i] - 1000,
+                marginTop = blockHeight - (data * (blockHeight / 1000)).clamp(0, blockHeight),
+                height = (data * (blockHeight / 1000)).clamp(0, blockHeight),
                 color = parseInt(data * 0.009);
 
-                $('.servo-' + i + ' .label', servos_wrapper).text(FC.SERVO_DATA[i]);
-                $('.servo-' + i + ' .indicator', servos_wrapper).css({'margin-top' : margin_top + 'px', 'height' : height + 'px', 'background-color' : 'rgba(255,187,0,1'+ color +')'});
+                $(`.servo-${i} .label`, servos_wrapper).text(FC.SERVO_DATA[i]);
+                $(`.servo-${i} .indicator`, servos_wrapper).css({
+                    'margin-top' : `${marginTop}px`,
+                    'height' : `${height}px`,
+                    'background-color' : `rgba(255,187,0,1${color})`,
+                });
             }
             //keep the following here so at least we get a visual cue of our motor setup
             update_arm_status();

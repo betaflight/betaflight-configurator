@@ -2,14 +2,13 @@
 
 TABS.sensors = {};
 TABS.sensors.initialize = function (callback) {
-    var self = this;
 
     if (GUI.active_tab != 'sensors') {
         GUI.active_tab = 'sensors';
     }
 
     function initSensorData(){
-        for (var i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             FC.SENSOR_DATA.accelerometer[i] = 0;
             FC.SENSOR_DATA.gyroscope[i] = 0;
             FC.SENSOR_DATA.magnetometer[i] = 0;
@@ -20,8 +19,8 @@ TABS.sensors.initialize = function (callback) {
     }
 
     function initDataArray(length) {
-        var data = new Array(length);
-        for (var i = 0; i < length; i++) {
+        const data = new Array(length);
+        for (let i = 0; i < length; i++) {
             data[i] = new Array();
             data[i].min = -1;
             data[i].max = 1;
@@ -30,8 +29,8 @@ TABS.sensors.initialize = function (callback) {
     }
 
     function addSampleToData(data, sampleNumber, sensorData) {
-        for (var i = 0; i < data.length; i++) {
-            var dataPoint = sensorData[i];
+        for (let i = 0; i < data.length; i++) {
+            const dataPoint = sensorData[i];
             data[i].push([sampleNumber, dataPoint]);
             if (dataPoint < data[i].min) {
                 data[i].min = dataPoint;
@@ -41,14 +40,14 @@ TABS.sensors.initialize = function (callback) {
             }
         }
         while (data[0].length > 300) {
-            for (i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 data[i].shift();
             }
         }
         return sampleNumber + 1;
     }
 
-    var margin = {top: 20, right: 10, bottom: 10, left: 40};
+    const margin = {top: 20, right: 10, bottom: 10, left: 40};
     function updateGraphHelperSize(helpers) {
         helpers.width = helpers.targetElement.width() - margin.left - margin.right;
         helpers.height = helpers.targetElement.height() - margin.top - margin.bottom;
@@ -61,7 +60,7 @@ TABS.sensors.initialize = function (callback) {
     }
 
     function initGraphHelpers(selector, sampleNumber, heightDomain) {
-        var helpers = {selector: selector, targetElement: $(selector), dynamicHeightDomain: !heightDomain};
+        const helpers = {selector: selector, targetElement: $(selector), dynamicHeightDomain: !heightDomain};
 
         helpers.widthScale = d3.scale.linear()
             .clamp(true)
@@ -108,10 +107,10 @@ TABS.sensors.initialize = function (callback) {
     }
 
     function drawGraph(graphHelpers, data, sampleNumber) {
-        var svg = d3.select(graphHelpers.selector);
+        const svg = d3.select(graphHelpers.selector);
 
         if (graphHelpers.dynamicHeightDomain) {
-            var limits = [];
+            const limits = [];
             $.each(data, function (idx, datum) {
                 limits.push(datum.min);
                 limits.push(datum.max);
@@ -125,9 +124,9 @@ TABS.sensors.initialize = function (callback) {
         svg.select(".x.axis").call(graphHelpers.xAxis);
         svg.select(".y.axis").call(graphHelpers.yAxis);
 
-        var group = svg.select("g.data");
-        var lines = group.selectAll("path").data(data, function (d, i) {return i;});
-        var newLines = lines.enter().append("path").attr("class", "line");
+        const group = svg.select("g.data");
+        const lines = group.selectAll("path").data(data, function (d, i) {return i;});
+        lines.enter().append("path").attr("class", "line");
         lines.attr('d', graphHelpers.line);
     }
 
@@ -184,7 +183,7 @@ TABS.sensors.initialize = function (callback) {
         i18n.localizePage();
 
         // disable graphs for sensors that are missing
-        var checkboxes = $('.tab-sensors .info .checkboxes input');
+        let checkboxes = $('.tab-sensors .info .checkboxes input');
         checkboxes.parent().show();
         
         if (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) { 
@@ -201,15 +200,15 @@ TABS.sensors.initialize = function (callback) {
                 checkboxes.eq(4).prop('disabled', true);
             }
         } else {
-            for (var i = 0; i <= 4; i++) {
+            for (let i = 0; i <= 4; i++) {
                 checkboxes.eq(i).prop('disabled', true);
                 checkboxes.eq(i).parent().hide();
             }
         }
 
         $('.tab-sensors .info .checkboxes input').change(function () {
-            var enable = $(this).prop('checked');
-            var index = $(this).parent().index();
+            const enable = $(this).prop('checked');
+            const index = $(this).parent().index();
 
             switch (index) {
                 case 0:
@@ -232,14 +231,14 @@ TABS.sensors.initialize = function (callback) {
                     break;
             }
 
-            var checkboxes = [];
+            const _checkboxes = [];
             $('.tab-sensors .info .checkboxes input').each(function () {
-                checkboxes.push($(this).prop('checked'));
+                _checkboxes.push($(this).prop('checked'));
             });
 
             $('.tab-sensors .rate select:first').change();
 
-            ConfigStorage.set({'graphs_enabled': checkboxes});
+            ConfigStorage.set({'graphs_enabled': _checkboxes});
         });
 
         let altitudeHint_e = $('.tab-sensors #sensorsAltitudeHint');
@@ -251,13 +250,13 @@ TABS.sensors.initialize = function (callback) {
         initSensorData();
 
         // Setup variables
-        var samples_gyro_i = 0,
+        let samples_gyro_i = 0,
             samples_accel_i = 0,
             samples_mag_i = 0,
             samples_altitude_i = 0,
             samples_sonar_i = 0,
-            samples_debug_i = 0,
-            gyro_data = initDataArray(3),
+            samples_debug_i = 0;
+        const gyro_data = initDataArray(3),
             accel_data = initDataArray(3),
             mag_data = initDataArray(3),
             altitude_data = initDataArray(1),
@@ -269,25 +268,25 @@ TABS.sensors.initialize = function (callback) {
             initDataArray(1)
         ];
 
-        var gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
-        var accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]);
-        var magHelpers = initGraphHelpers('#mag', samples_mag_i, [-1, 1]);
-        var altitudeHelpers = initGraphHelpers('#altitude', samples_altitude_i);
-        var sonarHelpers = initGraphHelpers('#sonar', samples_sonar_i);
-        var debugHelpers = [
+        let gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
+        let accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]);
+        let magHelpers = initGraphHelpers('#mag', samples_mag_i, [-1, 1]);
+        const altitudeHelpers = initGraphHelpers('#altitude', samples_altitude_i);
+        const sonarHelpers = initGraphHelpers('#sonar', samples_sonar_i);
+        const debugHelpers = [
             initGraphHelpers('#debug1', samples_debug_i),
             initGraphHelpers('#debug2', samples_debug_i),
             initGraphHelpers('#debug3', samples_debug_i),
             initGraphHelpers('#debug4', samples_debug_i)
         ];
 
-        var raw_data_text_ements = {
+        const raw_data_text_ements = {
             x: [],
             y: [],
             z: []
         };
         $('.plot_control .x, .plot_control .y, .plot_control .z').each(function () {
-            var el = $(this);
+            const el = $(this);
             if (el.hasClass('x')) {
                 raw_data_text_ements.x.push(el);
             } else if (el.hasClass('y')) {
@@ -300,7 +299,7 @@ TABS.sensors.initialize = function (callback) {
         $('.tab-sensors .rate select, .tab-sensors .scale select').change(function () {
             // if any of the select fields change value, all of the select values are grabbed
             // and timers are re-initialized with the new settings
-            var rates = {
+            const rates = {
                 'gyro':   parseInt($('.tab-sensors select[name="gyro_refresh_rate"]').val(), 10),
                 'accel':  parseInt($('.tab-sensors select[name="accel_refresh_rate"]').val(), 10),
                 'mag':    parseInt($('.tab-sensors select[name="mag_refresh_rate"]').val(), 10),
@@ -309,7 +308,7 @@ TABS.sensors.initialize = function (callback) {
                 'debug':  parseInt($('.tab-sensors select[name="debug_refresh_rate"]').val(), 10)
             };
 
-            var scales = {
+            const scales = {
                 'gyro':  parseFloat($('.tab-sensors select[name="gyro_scale"]').val()),
                 'accel': parseFloat($('.tab-sensors select[name="accel_scale"]').val()),
                 'mag':   parseFloat($('.tab-sensors select[name="mag_scale"]').val())
@@ -319,7 +318,7 @@ TABS.sensors.initialize = function (callback) {
             // this means that setting a slower refresh rate on any of the attributes would have no effect
             // what we will do instead is = determinate the fastest refresh rate for those 3 attributes, use that as a "polling rate"
             // and use the "slower" refresh rates only for re-drawing the graphs (to save resources/computing power)
-            var fastest = d3.min([rates.gyro, rates.accel, rates.mag]);
+            const fastest = d3.min([rates.gyro, rates.accel, rates.mag]);
 
             // store current/latest refresh rates in the storage
             ConfigStorage.set({'sensor_settings': {'rates': rates, 'scales': scales}});
@@ -330,7 +329,7 @@ TABS.sensors.initialize = function (callback) {
             magHelpers = initGraphHelpers('#mag', samples_mag_i, [-scales.mag, scales.mag]);
 
             // fetch currently enabled plots
-            var checkboxes = [];
+            checkboxes = [];
             $('.tab-sensors .info .checkboxes input').each(function () {
                 checkboxes.push($(this).prop('checked'));
             });
@@ -418,7 +417,7 @@ TABS.sensors.initialize = function (callback) {
             }
 
             function update_debug_graphs() {
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     updateGraphHelperSize(debugHelpers[i]);
 
                     addSampleToData(debug_data[i], samples_debug_i, [FC.SENSOR_DATA.debug[i]]);
@@ -454,9 +453,9 @@ TABS.sensors.initialize = function (callback) {
             }
             ConfigStorage.get('graphs_enabled', function (resultGraphs) {
                 if (resultGraphs.graphs_enabled) {
-                    var checkboxes = $('.tab-sensors .info .checkboxes input');
-                    for (var i = 0; i < resultGraphs.graphs_enabled.length; i++) {
-                        checkboxes.eq(i).not(':disabled').prop('checked', resultGraphs.graphs_enabled[i]).change();
+                    const _checkboxes = $('.tab-sensors .info .checkboxes input');
+                    for (let i = 0; i < resultGraphs.graphs_enabled.length; i++) {
+                        _checkboxes.eq(i).not(':disabled').prop('checked', resultGraphs.graphs_enabled[i]).change();
                     }
                 } else {
                     $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
