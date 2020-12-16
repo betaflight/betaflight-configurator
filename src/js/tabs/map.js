@@ -4,7 +4,7 @@ const DEFAULT_ZOOM = 16,
       ICON_IMAGE = '/images/icons/cf_icon_position.png',
       ICON_IMAGE_NOFIX = '/images/icons/cf_icon_position_nofix.png';
 
-var iconGeometry,
+let iconGeometry,
     map,
     mapView,
     iconStyle,
@@ -15,7 +15,7 @@ window.onload = initializeMap;
 
 function initializeMap() {
 
-    var lonLat = ol.proj.fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
+    const lonLat = ol.proj.fromLonLat([DEFAULT_LON, DEFAULT_LAT]);
 
     mapView = new ol.View({
                         center: lonLat,
@@ -33,14 +33,14 @@ function initializeMap() {
         controls: []
       });
 
-    var icon = new ol.style.Icon(({
+    const icon = new ol.style.Icon(({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
         src: ICON_IMAGE
     }));
 
-    var iconNoFix = new ol.style.Icon(({
+    const iconNoFix = new ol.style.Icon(({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
@@ -62,11 +62,11 @@ function initializeMap() {
 
     iconFeature.setStyle(iconStyle);
 
-    var vectorSource = new ol.source.Vector({
+    const vectorSource = new ol.source.Vector({
         features: [iconFeature]
     });
 
-    var currentPositionLayer = new ol.layer.Vector({
+    const currentPositionLayer = new ol.layer.Vector({
         source: vectorSource
     });
 
@@ -90,7 +90,7 @@ function processMapEvents(e) {
 
         case 'center':
             iconFeature.setStyle(iconStyle);
-            var center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
+            const center = ol.proj.fromLonLat([e.data.lon, e.data.lat]);
             mapView.setCenter(center);
             iconGeometry.setCoordinates(center);
             break;
@@ -100,7 +100,7 @@ function processMapEvents(e) {
             break;
         }
 
-  } catch (e) {
-      console.log('Map error ' + e);
+  } catch (err) {
+      console.log(`Map error ${err}`);
   }
 }

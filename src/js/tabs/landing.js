@@ -2,7 +2,6 @@
 
 TABS.landing = {};
 TABS.landing.initialize = function (callback) {
-  var self = this;
 
   if (GUI.active_tab != 'landing') {
     GUI.active_tab = 'landing';
@@ -10,10 +9,10 @@ TABS.landing.initialize = function (callback) {
 
   $('#content').load("./tabs/landing.html", function () {
     function showLang(newLang) {
-      var bottomSection = $('.languageSwitcher');
+      bottomSection = $('.languageSwitcher');
       bottomSection.find('a').each(function(index) {
-        var element = $(this);
-        var languageSelected = element.attr('lang');
+        const element = $(this);
+        const languageSelected = element.attr('lang');
         if (newLang == languageSelected) {
           element.removeClass('selected_language');
           element.addClass('selected_language');
@@ -22,18 +21,18 @@ TABS.landing.initialize = function (callback) {
         }
       });
     }
-    var bottomSection = $('.languageSwitcher');
+    let bottomSection = $('.languageSwitcher');
     bottomSection.html(' <span i18n="language_choice_message"></span>');
     bottomSection.append(' <a href="#" i18n="language_default_pretty" lang="DEFAULT"></a>');
-    var languagesAvailables = i18n.getLanguagesAvailables();
+    const languagesAvailables = i18n.getLanguagesAvailables();
     languagesAvailables.forEach(function(element) {
       bottomSection.append(' <a href="#" lang="' + element + '" i18n="language_' + element + '"></a>');
     });
     bottomSection.find('a').each(function(index) {
-      var element = $(this);
+      let element = $(this);
       element.click(function(){
-        var element = $(this);
-        var languageSelected = element.attr('lang');
+        element = $(this);
+        const languageSelected = element.attr('lang');
         if (!languageSelected) { return; }
         if (i18n.selectedLanguage != languageSelected) {
           i18n.changeLanguage(languageSelected);
