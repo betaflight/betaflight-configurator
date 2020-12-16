@@ -2,7 +2,6 @@
 
 TABS.gps = {};
 TABS.gps.initialize = function (callback) {
-    var self = this;
 
     if (GUI.active_tab !== 'gps') {
         GUI.active_tab = 'gps';
@@ -43,13 +42,13 @@ TABS.gps.initialize = function (callback) {
         }
 
         // To not flicker the divs while the fix is unstable
-        var gpsWasFixed = false;
+        let gpsWasFixed = false;
 
         function update_ui() {
-            var lat = FC.GPS_DATA.lat / 10000000;
-            var lon = FC.GPS_DATA.lon / 10000000;
-            var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
-            var alt = FC.GPS_DATA.alt;
+            const lat = FC.GPS_DATA.lat / 10000000;
+            const lon = FC.GPS_DATA.lon / 10000000;
+            const url = `https://maps.google.com/?q=${lat},${lon}`;
+            let alt = FC.GPS_DATA.alt;
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                 alt = alt / 10;
             }
@@ -63,10 +62,10 @@ TABS.gps.initialize = function (callback) {
             $('.GPS_info td.distToHome').text(FC.GPS_DATA.distanceToHome + ' m');
 
             // Update GPS Signal Strengths
-            var e_ss_table = $('div.GPS_signal_strength table tr:not(.titles)');
+            const eSsTable = $('div.GPS_signal_strength table tr:not(.titles)');
 
-            for (var i = 0; i < FC.GPS_DATA.chn.length; i++) {
-                var row = e_ss_table.eq(i);
+            for (let i = 0; i < FC.GPS_DATA.chn.length; i++) {
+                const row = eSsTable.eq(i);
 
                 $('td', row).eq(0).text(FC.GPS_DATA.svid[i]);
                 $('td', row).eq(1).text(FC.GPS_DATA.quality[i]);
@@ -74,13 +73,13 @@ TABS.gps.initialize = function (callback) {
             }
             
 
-            var message = {
+            const message = {
                 action: 'center',
                 lat: lat,
                 lon: lon
             };
 
-            var frame = document.getElementById('map');
+            frame = document.getElementById('map');
             if (navigator.onLine) {
                 $('#connect').hide();
 
@@ -139,11 +138,11 @@ TABS.gps.initialize = function (callback) {
             }
         });
 
-        var frame = document.getElementById('map');
+        let frame = document.getElementById('map');
 
         $('#zoom_in').click(function() {
             console.log('zoom in');
-            var message = {
+            const message = {
                 action: 'zoom_in'
             };
             frame.contentWindow.postMessage(message, '*');
@@ -151,7 +150,7 @@ TABS.gps.initialize = function (callback) {
         
         $('#zoom_out').click(function() {
             console.log('zoom out');
-            var message = {
+            const message = {
                 action: 'zoom_out'
             };
             frame.contentWindow.postMessage(message, '*');
