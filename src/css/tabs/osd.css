@@ -454,7 +454,7 @@ button {
   float: left; 
   position: sticky;
   top: 0;
-  margin-left: calc((100% - 362px) / 2);
+  margin-left: calc((100% - 360px) / 3);
 
 
 /* please don't copy the generic background image from another project
@@ -464,6 +464,11 @@ button {
   background-size: cover;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+}
+
+.tab-osd .preview:active {
+  background: url(../../images/osd-bg-1-grid.png), url(../../images/osd-bg-1.jpg);
+  background-size: cover;
 }
 
 .tab-osd .alarms label {

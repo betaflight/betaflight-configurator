@@ -501,6 +501,11 @@ progress[value]::-webkit-progress-bar {
     background-size: cover;
 }
 
+.tab-osd .preview:active {
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../../images/osd-bg-1-grid.png), url(../../images/osd-bg-1.jpg);
+    background-size: cover;
+}
+
 /* these two items replace the look of the checkboxes in only CSS */
 .tab-osd input[type='checkbox']:after {
     line-height: 1.5em;
