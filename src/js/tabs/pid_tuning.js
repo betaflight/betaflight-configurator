@@ -1325,12 +1325,12 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         // Add a name to each row of PIDs if empty
-        $('.pid_tuning tr').each(function(){
-            for (let i = 0; i <= FC.PID_NAMES.length; i++) {
-                if ($(this).hasClass(FC.PID_NAMES[i])) {
+        $('.pid_tuning tr').each(function() {
+            for (const pidName of FC.PID_NAMES) {
+                if ($(this).hasClass(pidName)) {
                     const firstColumn = $(this).find('td:first');
                     if (!firstColumn.text()) {
-                        firstColumn.text(FC.PID_NAMES[i]);
+                        firstColumn.text(pidName);
                     }
                 }
             }
@@ -2412,8 +2412,8 @@ TABS.pid_tuning.updateRatesLabels = function() {
                 );
             }
             // then display them on the chart
-            for (let i = 0; i <= balloons.length; i++) {
-                balloons[i].balloon();
+            for (const balloon of balloons) {
+                balloon.balloon();
             }
 
             stickContext.restore();
