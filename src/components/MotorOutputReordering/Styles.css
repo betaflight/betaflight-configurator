@@ -5,8 +5,6 @@
 }
 
 .motorOutputReorderComponentHeader {
-    border-bottom: 1px solid var(--accent);
-    margin-bottom: 10px;
     padding-bottom: 12px;
 }
 

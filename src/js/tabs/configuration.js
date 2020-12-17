@@ -213,14 +213,8 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         function refreshMixerPreview() {
-            const mixer = FC.MIXER_CONFIG.mixer
-            let reverse = "";
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
-            }
-
-            $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
+            const imgSrc = CommonUtils.GetMixerImageSrc(FC.MIXER_CONFIG.mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
+            $('.mixerPreview img').attr('src', imgSrc);
         }
 
         const reverseMotorSwitch_e = $('#reverseMotorSwitch');
@@ -462,34 +456,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         // ESC protocols
-        const escProtocols = [
-            'PWM',
-            'ONESHOT125',
-            'ONESHOT42',
-            'MULTISHOT',
-        ];
-
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            escProtocols.push('BRUSHED');
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-            escProtocols.push('DSHOT150');
-            escProtocols.push('DSHOT300');
-            escProtocols.push('DSHOT600');
-
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                escProtocols.push('DSHOT1200');
-            }
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            escProtocols.push('PROSHOT1000');
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            escProtocols.push('DISABLED');
-        }
+        const escProtocols = EscProtocols.GetAvailableProtocols(FC.CONFIG.apiVersion);
 
         const esc_protocol_e = $('select.escprotocol');
 

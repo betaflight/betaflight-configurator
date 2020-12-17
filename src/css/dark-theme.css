@@ -14,6 +14,10 @@
     --gimbalBackground: var(--subtleAccent);
     --gimbalCrosshair: var(--mutedText);
     --switcherysecond: #858585;
+    --pushedButton-background:  #616161;
+    --pushedButton-fontColor:  #ffffff;
+    --hoverButton-background: #ffcc3e;
+    --superSubtleAccent: #595959;
 }
 
 .background_paper {
@@ -22,6 +26,11 @@
 
 body {
     color: white;
+}
+
+::backdrop {
+    background-image: none;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 #options-window {
@@ -219,7 +228,7 @@ button {
 }
 
 .tab-auxiliary .buttons a:hover {
-    background-color: #393b3a;
+    background-color: var(--hoverButton-background);
 }
 
 
@@ -357,7 +366,7 @@ button {
 }
 
 .tab-gps #loadmap .controls a:hover {
-    background-color: #393b3a;
+    background-color: var(--hoverButton-background);
 }
 
 .tab-gps #loadmap .controls a:active {

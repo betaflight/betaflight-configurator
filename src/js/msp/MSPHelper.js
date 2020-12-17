@@ -57,26 +57,6 @@ function MspHelper() {
     self.mspMultipleCache = [];
 }
 
-MspHelper.prototype.reorderPwmProtocols = function (protocol) {
-    let result = protocol;
-    if (semver.lt(FC.CONFIG.apiVersion, "1.26.0")) {
-        switch (protocol) {
-            case 5:
-                result = 7;
-
-                break;
-            case 7:
-                result = 5;
-
-                break;
-            default:
-                break;
-        }
-    }
-
-    return result;
-}
-
 MspHelper.prototype.process_data = function(dataHandler) {
     const self = this;
     const data = dataHandler.dataView; // DataView (allowing us to view arrayBuffer as struct/union)
@@ -1039,7 +1019,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.PID_ADVANCED_CONFIG.gyro_sync_denom = data.readU8();
                 FC.PID_ADVANCED_CONFIG.pid_process_denom = data.readU8();
                 FC.PID_ADVANCED_CONFIG.use_unsyncedPwm = data.readU8();
-                FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = self.reorderPwmProtocols(data.readU8());
+                FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = EscProtocols.ReorderPwmProtocols(FC.CONFIG.apiVersion, data.readU8());
                 FC.PID_ADVANCED_CONFIG.motor_pwm_rate = data.readU16();
                 if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
                     FC.PID_ADVANCED_CONFIG.digitalIdlePercent = data.readU16() / 100;
@@ -1569,6 +1549,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING:
                 console.log('Motor output reordering set');
                 break;
+            case MSPCodes.MSP2_SEND_DSHOT_COMMAND:
+                console.log('DSHOT command sent');
+                break;
 
             case MSPCodes.MSP_MULTIPLE_MSP:
 
@@ -1981,7 +1964,7 @@ MspHelper.prototype.crunch = function(code) {
             buffer.push8(FC.PID_ADVANCED_CONFIG.gyro_sync_denom)
                 .push8(FC.PID_ADVANCED_CONFIG.pid_process_denom)
                 .push8(FC.PID_ADVANCED_CONFIG.use_unsyncedPwm)
-                .push8(self.reorderPwmProtocols(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol))
+                .push8(EscProtocols.ReorderPwmProtocols(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol))
                 .push16(FC.PID_ADVANCED_CONFIG.motor_pwm_rate);
             if (semver.gte(FC.CONFIG.apiVersion, "1.24.0")) {
                 buffer.push16(FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 100);
@@ -2276,6 +2259,10 @@ MspHelper.prototype.crunch = function(code) {
                 buffer.push8(FC.MOTOR_OUTPUT_ORDER[i]);
             }
 
+            break;
+
+        case MSPCodes.MSP2_SEND_DSHOT_COMMAND:
+            buffer.push8(1);
             break;
 
         default:
