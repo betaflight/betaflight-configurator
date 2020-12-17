@@ -51,7 +51,7 @@ const NODE_ENV = process.env.NODE_ENV || 'production';
 let gitChangeSetId;
 
 const nwBuilderOptions = {
-    version: '0.47.0',
+    version: '0.50.2',
     files: `${DIST_DIR}**/*`,
     macIcns: './src/images/bf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Betaflight Configurator'},
