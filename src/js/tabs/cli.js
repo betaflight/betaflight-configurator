@@ -148,8 +148,7 @@ TABS.cli.initialize = function (callback) {
             }];
 
             chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
-                if (chrome.runtime.lastError) {
-                    console.error(chrome.runtime.lastError.message);
+                if (checkChromeRuntimeError()) {
                     return;
                 }
 
@@ -204,13 +203,7 @@ TABS.cli.initialize = function (callback) {
             ];
 
             chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(entry) {
-                if (chrome.runtime.lastError) {
-                    console.error(chrome.runtime.lastError.message);
-                    return;
-                }
-
-                if (!entry) {
-                    console.log('No file selected');
+                if (checkChromeRuntimeError()) {
                     return;
                 }
 

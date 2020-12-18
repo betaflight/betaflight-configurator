@@ -29,7 +29,7 @@ const serial = {
         self.connectionType = 'serial';
 
         chrome.serial.connect(path, options, function (connectionInfo) {
-            if (connectionInfo && !self.openCanceled && !self.checkChromeRunTimeError()) {
+            if (connectionInfo && !self.openCanceled && !checkChromeRuntimeError()) {
                 self.connected = true;
                 self.connectionId = connectionInfo.connectionId;
                 self.bitrate = connectionInfo.bitrate;
@@ -57,7 +57,7 @@ const serial = {
                                                 self.errorHandler(getInfo.error, 'receive');
                                             }
                                         } else {
-                                            self.checkChromeRunTimeError();
+                                            checkChromeRuntimeError();
                                         }
                                     });
                                 });
@@ -151,7 +151,7 @@ const serial = {
             name: 'Betaflight',
             bufferSize: 65535,
         }, function(createInfo) {
-            if (createInfo && !self.openCanceled || !self.checkChromeRunTimeError()) {
+            if (createInfo && !self.openCanceled || !checkChromeRuntimeError()) {
                 self.connectionId = createInfo.socketId;
                 self.bitrate = 115200; // fake
                 self.bytesReceived = 0;
@@ -159,9 +159,9 @@ const serial = {
                 self.failed = 0;
 
                 chrome.sockets.tcp.connect(createInfo.socketId, self.connectionIP, self.connectionPort, function (result) {
-                    if (result === 0 || !self.checkChromeRunTimeError()) {
+                    if (result === 0 || !checkChromeRuntimeError()) {
                         chrome.sockets.tcp.setNoDelay(createInfo.socketId, true, function (noDelayResult) {
-                            if (noDelayResult === 0 || !self.checkChromeRunTimeError()) {
+                            if (noDelayResult === 0 || !checkChromeRuntimeError()) {
                                 self.onReceive.addListener(function log_bytesReceived(info) {
                                     self.bytesReceived += info.data.byteLength;
                                 });
@@ -206,14 +206,14 @@ const serial = {
 
             if (self.connectionType === 'tcp') {
                 chrome.sockets.tcp.disconnect(self.connectionId, function () {
-                    self.checkChromeRunTimeError();
+                    checkChromeRuntimeError();
                     console.log(`${self.connectionType}: disconnecting socket.`);
                 });
             }
 
             const disconnectFn = (self.connectionType === 'serial') ? chrome.serial.disconnect : chrome.sockets.tcp.close;
             disconnectFn(self.connectionId, function (result) {
-                self.checkChromeRunTimeError();
+                checkChromeRuntimeError();
 
                 result = result || self.connectionType === 'tcp';
                 console.log(`${self.connectionType}: ${result ? 'closed' : 'failed to close'} connection with ID: ${self.connectionId}, Sent: ${self.bytesSent} bytes, Received: ${self.bytesReceived} bytes`);
@@ -268,7 +268,7 @@ const serial = {
 
             const sendFn = (self.connectionType === 'serial') ? chrome.serial.send : chrome.sockets.tcp.send;
             sendFn(self.connectionId, _data, function (sendInfo) {
-                self.checkChromeRunTimeError();
+                checkChromeRuntimeError();
 
                 if (sendInfo === undefined) {
                     console.log('undefined send error');
@@ -410,13 +410,5 @@ const serial = {
         } else {
             self.disconnect();
         }
-    },
-    checkChromeRunTimeError: function () {
-        // must be called after each chrome API call
-        if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError.message);
-            return true;
-        }
-        return false;
     },
 };

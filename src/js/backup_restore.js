@@ -216,8 +216,7 @@ function configuration_backup(callback) {
 
         // create or load the file
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function (fileEntry) {
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
+            if (checkChromeRuntimeError()) {
                 return;
             }
 
@@ -288,8 +287,7 @@ function configuration_restore(callback) {
 
     // load up the file
     chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function (fileEntry) {
-        if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError.message);
+        if (checkChromeRuntimeError()) {
             return;
         }
 
