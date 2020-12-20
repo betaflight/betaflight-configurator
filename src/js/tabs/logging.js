@@ -102,6 +102,10 @@ TABS.logging.initialize = function (callback) {
         ConfigStorage.get('logging_file_entry', function (result) {
             if (result.logging_file_entry) {
                 chrome.fileSystem.restoreEntry(result.logging_file_entry, function (entry) {
+                    if (checkChromeRuntimeError()) {
+                        return;
+                    }
+
                     fileEntry = entry;
                     prepare_writer(true);
                 });
@@ -240,8 +244,7 @@ TABS.logging.initialize = function (callback) {
 
         // create or load the file
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
-            if (!entry) {
-                console.log('No file selected');
+            if (checkChromeRuntimeError()) {
                 return;
             }
 

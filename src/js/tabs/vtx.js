@@ -579,14 +579,7 @@ TABS.vtx.initialize = function (callback) {
         }];
 
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts}, function(entry) {
-
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                return;
-            }
-
-            if (!entry) {
-                console.log('No file selected');
+            if (checkChromeRuntimeError()) {
                 return;
             }
 
@@ -632,9 +625,7 @@ TABS.vtx.initialize = function (callback) {
         }];
 
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts}, function(entry) {
-
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
+            if (checkChromeRuntimeError()) {
                 return;
             }
 
@@ -685,14 +676,7 @@ TABS.vtx.initialize = function (callback) {
         }];
 
         chrome.fileSystem.chooseEntry({type: 'openFile', accepts}, function(entry) {
-
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                return;
-            }
-
-            if (!entry) {
-                console.log('No file selected');
+            if (checkChromeRuntimeError()) {
                 return;
             }
 

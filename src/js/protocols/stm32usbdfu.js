@@ -102,24 +102,11 @@ STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) 
     });
 };
 
-STM32DFU_protocol.prototype.checkChromeError = function() {
-    if (chrome.runtime.lastError) {
-        if(chrome.runtime.lastError.message)
-            console.log('reporting chrome error: ' + chrome.runtime.lastError.message);
-        else
-            console.log('reporting chrome error: ' + chrome.runtime.lastError);
-
-        return true;
-    }
-
-    return false;
-}
-
 STM32DFU_protocol.prototype.openDevice = function (device) {
     var self = this;
 
     chrome.usb.openDevice(device, function (handle) {
-        if(self.checkChromeError()) {
+        if (checkChromeRuntimeError()) {
             console.log('Failed to open USB device!');
             GUI.log(i18n.getMessage('usbDeviceOpenFail'));
             if(GUI.operating_system === 'Linux') {
@@ -140,7 +127,7 @@ STM32DFU_protocol.prototype.closeDevice = function () {
     var self = this;
 
     chrome.usb.closeDevice(this.handle, function closed() {
-        if(self.checkChromeError()) {
+        if (checkChromeRuntimeError()) {
             console.log('Failed to close USB device!');
             GUI.log(i18n.getMessage('usbDeviceCloseFail'));
         }
@@ -159,7 +146,7 @@ STM32DFU_protocol.prototype.claimInterface = function (interfaceNumber) {
         // Don't perform the error check on MacOS at this time as there seems to be a bug
         // where it always reports the Chrome error "Error claiming interface." even though
         // the interface is in fact successfully claimed.
-        if (self.checkChromeError() && (GUI.operating_system !== "MacOS")) {
+        if (checkChromeRuntimeError() && (GUI.operating_system !== "MacOS")) {
             console.log('Failed to claim USB device!');
             self.cleanup();
         }
@@ -204,7 +191,7 @@ STM32DFU_protocol.prototype.getString = function (index, callback) {
         'index':        0,  // specifies language
         'length':       255 // max length to retreive
     }, function (result) {
-        if(self.checkChromeError()) {
+        if (checkChromeRuntimeError()) {
             console.log('USB getString failed! ' + result.resultCode);
             callback("", result.resultCode);
             return;
@@ -224,7 +211,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptors = function (interfaceNum, ca
     var self = this;
 
     chrome.usb.getConfiguration( this.handle, function (config) {
-        if(self.checkChromeError()) {
+        if (checkChromeRuntimeError()) {
             console.log('USB getConfiguration failed!');
             callback([], -200);
             return;
@@ -273,7 +260,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callb
         'index':        0,
         'length':       18 + _interface * 9
     }, function (result) {
-        if(self.checkChromeError()) {
+        if (checkChromeRuntimeError()) {
             console.log('USB getInterfaceDescriptor failed! ' + result.resultCode);
             callback({}, result.resultCode);
             return;
@@ -307,7 +294,7 @@ STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, call
         'index':        0,
         'length':       255
     }, function (result) {
-        if(self.checkChromeError()) {
+        if (checkChromeRuntimeError()) {
             console.log('USB getFunctionalDescriptor failed! ' + result.resultCode);
             callback({}, result.resultCode);
             return;
@@ -455,7 +442,7 @@ STM32DFU_protocol.prototype.controlTransfer = function (direction, request, valu
             'length':       length,
             'timeout':      timeout
         }, function (result) {
-            if(self.checkChromeError()) {
+            if (checkChromeRuntimeError()) {
                 console.log('USB controlTransfer IN failed for request ' + request + '!');
             }
             if (result.resultCode) console.log('USB transfer result code: ' + result.resultCode);
@@ -483,7 +470,7 @@ STM32DFU_protocol.prototype.controlTransfer = function (direction, request, valu
             'data':         arrayBuf,
             'timeout':      timeout
         }, function (result) {
-            if(self.checkChromeError()) {
+            if (checkChromeRuntimeError()) {
                 console.log('USB controlTransfer OUT failed for request ' + request + '!');
             }
             if (result.resultCode) console.log('USB transfer result code: ' + result.resultCode);

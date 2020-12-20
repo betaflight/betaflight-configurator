@@ -609,12 +609,8 @@ TABS.onboard_logging.initialize = function (callback) {
 
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename,
                 accepts: [{description: suffix.toUpperCase() + ' files', extensions: [suffix]}]}, function(fileEntry) {
-            const error = chrome.runtime.lastError;
-
-            if (error) {
-                console.error(error.message);
-
-                if (error.message !== "User cancelled") {
+            if (checkChromeRuntimeError()) {
+                if (chrome.runtime.lastError.message !== "User cancelled") {
                     GUI.log(i18n.getMessage('dataflashFileWriteFailed'));
                 }
                 return;
