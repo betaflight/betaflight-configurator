@@ -1,11 +1,14 @@
 'use strict';
 
+// NOTICE: This feature has become obsolete but is still in place to support firmware added before v3.3.0
+// There is no reason to update the list as changes in firmware allows self-reporting of VCP usage.
+
 // This list has been extracted from the firmware source with:
 // grep TARGET_BOARD_IDENTIFIER src/main/target/*/target.h | sed -n "s/^src\/main\/target\/\([^\/]*\).*#define TARGET_BOARD_IDENTIFIER \"\([^\"]*\).*$/    {name: '\1', identifier: '\2', vcp: true},/p" | sort
 // and then manually setting vcp to true for boards that use VCP
 // Also, please note that the targets in this list are ordered in the order they are returned by the above command. Please do not reorder to avoid churn.
 
-var BOARD_DEFINITIONS = [
+const BOARD_DEFINITIONS = [
     {name: 'AIR32', identifier: 'AR32', vcp: true},
     {name: 'AIRHEROF3', identifier: 'AIR3', vcp: false},
     {name: 'ALIENFLIGHTF1', identifier: 'AFF1', vcp: false},
@@ -71,20 +74,18 @@ var BOARD_DEFINITIONS = [
     {name: 'VRRACE', identifier: 'VRRA', vcp: true},
     {name: 'X_RACERSPI', identifier: 'XRC3', vcp: false},
     {name: 'YUPIF4', identifier: 'YPF4', vcp: true},
-    {name: 'ZCOREF3', identifier: 'ZCF3', vcp: false}
+    {name: 'ZCOREF3', identifier: 'ZCF3', vcp: false},
 ];
 
-var DEFAULT_BOARD_DEFINITION = {
+const DEFAULT_BOARD_DEFINITION = {
     name: "Unknown", identifier: "????", vcp: false
 };
 
-var BOARD = {};
+const BOARD = {};
 
 BOARD.find_board_definition = function (identifier) {
-    for (var i = 0; i < BOARD_DEFINITIONS.length; i++) {
-        var candidate = BOARD_DEFINITIONS[i];
-
-        if (candidate.identifier == identifier) {
+    for (const candidate of BOARD_DEFINITIONS) {
+        if (candidate.identifier === identifier) {
             return candidate;
         }
     }
