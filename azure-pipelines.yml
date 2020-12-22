@@ -30,13 +30,14 @@ trigger:
   branches:
     include:
     - master
+    - "*-maintenance"
 
 pr:
   drafts: false
   branches:
     include:
-      - master
-      - "*-maintenance"
+    - master
+    - "*-maintenance"
 
 stages:
 - stage: Build
