@@ -202,6 +202,9 @@
     "tabHelp": {
         "message": "Dokumentacja i Pomoc"
     },
+    "tabOptions": {
+        "message": "Ustawienia"
+    },
     "tabSetup": {
         "message": "Ustawienia"
     },
@@ -294,6 +297,9 @@
     },
     "serialUnrecoverable": {
         "message": "<span class=\"message-negative\">Błąd</span> połączenia szeregowego, rozłączanie..."
+    },
+    "serialPortLoading": {
+        "message": "Wczytywanie ..."
     },
     "usbDeviceOpened": {
         "message": "Połączenie z urządzeniem USB <span class=\"message-positive\">zostało otwarte</span> z ID: $1"
@@ -396,6 +402,9 @@
     },
     "firmwareVersionNotSupported": {
         "message": "Ta wersja oprogramowania kontrolera <span class=\"message-negative\">nie jest wspierana</span>. Proszę uaktualnij oprogramowaniedo wersji, która wspiera API <strong>$1</strong>, lub wyższej. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Oprogramowanie inne niż Betaflight <span class=\"message-negative\">nie jest wspierane</span>, z wyjątkiem trybu CLI."
     },
     "firmwareUpgradeRequired": {
         "message": "Oprogramowanie tego kontrolera lotu wymaga aktualizacji do nowszej wersji. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania/przywrócenia konfiguracji opisany jest w dokumentacji.<br />Możesz nieże pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
@@ -1352,6 +1361,9 @@
     "configurationButtonSave": {
         "message": "Zapisz i zrestartuj"
     },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
+    },
     "portsIdentifier": {
         "message": "Identyfikator"
     },
@@ -1658,6 +1670,12 @@
     "pidTuningFfInterpolate": {
         "message": "Tryb"
     },
+    "pidTuningFfSmoothFactor": {
+        "message": "Wygładzenie"
+    },
+    "pidTuningFfBoost": {
+        "message": "Wzmocnienie"
+    },
     "pidTuningProportional": {
         "message": "Proporcjonalny"
     },
@@ -1890,6 +1908,9 @@
     },
     "receiverResetRefreshRate": {
         "message": "Reset"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Resetuj szybkość odświeżania"
     },
     "receiverButtonSave": {
         "message": "Zapisz"
@@ -2387,6 +2408,12 @@
     },
     "motorOutputReorderDialogAgree": {
         "message": "Start"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Zmień kolejność silników"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Zmień kolejność silników"
     },
     "motorOutputReorderDialogSelectSpinningMotor": {
         "message": "Kliknij na wirujący silnik..."
@@ -3523,6 +3550,9 @@
     },
     "pidTuningVbatSagCompensationHelp": {
         "message": "Daje jednostajną wydajność przepustnicy i PID-ów w zakresie użytecznego napięcia akumulatora poprzez kompensację spadku napięcia baterii (Vbat sag). Zakres kompensacji może wynosić od 0 do 100 %. Zalecana jest pełna kompensacja (100%).<br><br>Odwiedź <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">wpis na wiki</a>, aby uzyskać więcej informacji."
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
     },
     "pidTuningThrustLinearization": {
         "message": "Linearyzacja ciągu silników"
@@ -5638,11 +5668,32 @@
         "message": "Brak",
         "description": "One of the options selectable for the GPS SBAS system"
     },
+    "dialogFileNameTitle": {
+        "message": "Nazwa pliku"
+    },
+    "dialogFileNameDescription": {
+        "message": "Plik zostanie zapisany w folderze '{{folder}}' w pamięci wewnętrznej."
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "Taki plik już istnieje!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Zastąpić?"
+    },
     "cordovaWebviewTroubleshootingMsg": {
         "message": "Aby korzystać z konfiguratora, musisz zaktualizować aplikację webview."
     },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "Poniższe narzędzie ma pomóc Ci zainstalować lub uaktualnić aplikację webview."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Dostępne aplikacje webview na twoje urządzenie"
+    },
     "cordovaWebviewInstall": {
         "message": "Instalacja aplikacji <b>{{app}}</b> może rozwiązać ten problem z kompatybilnością."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Zainstaluj ze sklepu Google Play"
     },
     "cordovaWebviewUninstall": {
         "message": "Odinstalowanie aplikacji <b>{{app}}</b> może rozwiązać ten problem z kompatybilnością. Jeśli nie możesz go odinstalować, spróbuj go wyłączyć z poziomu ustawień aplikacji."
@@ -5661,5 +5712,20 @@
     },
     "cordovaWebviewEnable": {
         "message": "Przejdź do zakładki z informacjami o twoim urządzeniu mobilnym i naciśnij 10 razy numer wersji kompilacji - aby włączyć 'Opcje programisty'. Następnie odszukaj i przejdź do opcji programisty i wybierz <b>{{app}}</b> jako dostawcę widoku internetowego."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Otwórz ustawienia"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Twoje urządzenie wydaje się być niekompatybilne. Spróbuj wyszukać inne sposoby aktualizacji widoku strony internetowej"
+    },
+    "cordovaWebviewUsed": {
+        "message": "użyte"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Potwierdzenie"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Czy na pewno chcesz zamknąć konfigurator?"
     }
 }
