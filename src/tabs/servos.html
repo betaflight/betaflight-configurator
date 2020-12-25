@@ -4,33 +4,64 @@
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="" target="_blank"></a>
         </div>
-        <div class="require-support">
-            <div class="title" i18n="servosChangeDirection"></div>
-            <div class="table_overflow">
-                <table class="fields">
-                    <tr class="main">
-                        <th width="110px" i18n="servosName"></th>
-                        <th i18n="servosMid"></th>
-                        <th i18n="servosMin"></th>
-                        <th i18n="servosMax"></th>
-                        <th class="short">CH1</th>
-                        <th class="short">CH2</th>
-                        <th class="short">CH3</th>
-                        <th class="short">CH4</th>
-                    </tr>
-                </table>
+        <div class="grid-row">
+            <div class="require-support">
+                <div class="title" i18n="servosChangeDirection"></div>
+                <div class="table_overflow">
+                    <table class="fields">
+                        <tr class="main">
+                            <th width="110px" i18n="servosName"></th>
+                            <th i18n="servosMid"></th>
+                            <th i18n="servosMin"></th>
+                            <th i18n="servosMax"></th>
+                            <th class="short">CH1</th>
+                            <th class="short">CH2</th>
+                            <th class="short">CH3</th>
+                            <th class="short">CH4</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="spacer"></div>
+                <div class="live">
+                    <input type="checkbox" class="togglemedium" /> <span i18n="servosLiveMode"></span>
+                </div>
             </div>
-            <div class="live">
-                <input type="checkbox" class="togglemedium" /> <span i18n="servosLiveMode"></span>
+            <div class="note require-upgrade">
+                <p i18n="servosFirmwareUpgradeRequired"></p>
             </div>
         </div>
-        <div class="note require-upgrade">
-            <p i18n="servosFirmwareUpgradeRequired"></p>
+
+        <div class="spacer"></div>
+
+        <div class="grid-row">
+            <div class="grid-col col6">
+                <div class="gui_box servoblock">
+                    <div class="spacer">
+                        <div class="right servos">
+                            <div class="title2" i18n="servosText"></div>
+                            <ul class="titles">
+                                <li i18n_title="servoNumber8">8</li>
+                                <li i18n_title="servoNumber7">7</li>
+                                <li i18n_title="servoNumber6">6</li>
+                                <li i18n_title="servoNumber5">5</li>
+                                <li i18n_title="servoNumber4">4</li>
+                                <li i18n_title="servoNumber3">3</li>
+                                <li i18n_title="servoNumber2">2</li>
+                                <li i18n_title="servoNumber1">1</li>
+                            </ul>
+                            <div class="bar-wrapper"></div>
+                        </div>
+                        <div class="clear-both"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
     <div class="content_toolbar">
         <div class="btn save_btn">
             <a class="update" href="#" i18n="servosButtonSave"></a>
         </div>
     </div>
+
 </div>

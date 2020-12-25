@@ -1,3 +1,239 @@
+.tab-motors .ui-grid-col {
+    margin-bottom: 0;
+}
+/*
+.tab-motors input,
+*/
+.tab-motors select {
+    border: 1px solid var(--subtleAccent);
+    width: 230px;
+    height: 20px;
+    float: left;
+    margin-right: 15px;
+    border-radius: 3px;
+}
+
+.tab-motors table {
+    margin-bottom: 0;
+    width: 100%;
+    float: left;
+}
+
+.tab-motors table, .tab-motors table th, .tab-motors table td {
+    padding: 0;
+    text-align: left;
+}
+
+.tab-motors table th {
+    padding: 3px;
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+.tab-motors table td {
+    padding: 5px 3px;
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+.tab-motors table tr td:first-child {
+    text-align: left;
+    width: 55px;
+}
+
+.tab-motors table thead tr:first-child {
+    background-color: #ececec;
+}
+
+.tab-motors {
+    position: relative;
+}
+
+.tab-motors .groupTitle {
+    padding: 0 0 5px 0;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+.tab-motors .mixerList {
+    float: left   ;
+    width: 29%;
+}
+
+.tab-motors .featuresMultiple {
+    border-collapse: collapse;
+    margin-bottom: 5px;
+    margin-top: -5px;
+    padding: 0;
+}
+
+.tab-motors dl.features dt {
+    float: left;
+    width: 10px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.tab-motors dl.features dt input {
+    margin-top: 2px;
+}
+
+.tab-motors dl.features dd {
+    margin: 0 0 0 20px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.tab-motors .number input {
+    width: 55px;
+    padding-left: 3px;
+    height: 20px;
+    line-height: 20px;
+    text-align: left;
+    border-radius: 3px;
+    margin-right: 11px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.tab-motors .number .disabled {
+    width: 48px;
+    padding: 0 5px;
+    background-color: #ececec;
+}
+
+.tab-motors .number span {
+    margin-left: 0;
+}
+
+.tab-motors .disarm .checkboxPwm {
+    margin-top: 2px;
+    margin-right: 5px;
+}
+
+.tab-motors .disarm .checkbox div {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.tab-motors .disarm .checkbox div input {
+    margin: 0;
+    float: left;
+}
+
+.tab-motors .disarm .checkbox span {
+    margin-left: 0;
+}
+
+.tab-motors .freelabel {
+    margin-left: 10px;
+    position: relative;
+}
+
+.tab-motors span {
+    margin: 0;
+}
+
+.tab-motors .disarm .checkbox {
+    float: left;
+    padding-left: 0;
+    margin-top: -5px;
+    margin-right: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--subtleAccent);
+    width: 100%;
+}
+
+.tab-motors .spacer_box {
+    padding-bottom: 10px;
+    float: left;
+    width: calc(100% - 20px);
+}
+
+.tab-motors .disarm {
+    margin-bottom: 5px;
+    float: left;
+    border-bottom: 1px solid var(--subtleAccent);
+    width: 100%;
+}
+
+.tab-motors .disarmdelay {
+    margin-top: 5px;
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+.tab-motors .number,
+.tab-motors .select
+{
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--subtleAccent);
+    width: 100%;
+    float: left;
+}
+
+.tab-motors .selectProtocol {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--subtleAccent);
+    width: 100%;
+    float: left;
+}
+
+.tab-motors .number:last-child,
+.tab-motors .select:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.tab-motors .gui_box_titlebar {
+    margin-bottom: 0;
+}
+
+.tab-motors .numberspacer {
+    float: left;
+    width: 65px;
+    height: 21px;
+}
+
+.tab-motors thead {
+    display: none;
+}
+
+.tab-motors .gui_box {
+    margin-bottom: 10px;
+    float: left;
+}
+
+.tab-motors .gui_box span {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    color: #4f4f4f;
+    font-size: 11px;
+}
+
+.tab-motors .alignicon {
+    width: 15px;
+    height: 15px;
+    float: left;
+    margin: 3px;
+}
+
+.tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
+    float: left;
+}
+
+.tab-motors ._3dSettings {
+    margin-top: 10px;
+    float: left;
+    width: 100%;
+}
+
 .tab-motors .modelAndGraph {
     float: left;
     width: 100%;
@@ -11,7 +247,7 @@
 
 .tab-motors #graph {
     float: left;
-    width: calc(100% - 292px);
+    width: calc(100% - 160px);
 }
 
 .tab-motors .mixerPreview {
@@ -59,11 +295,41 @@
     flex-grow: 1;
 }
 
+.tab-motors #dialog-settings-changed {
+    width: 400px;
+    height: 100px;
+}
+
+.tab-motors #dialog-settings-changed-confirmbtn {
+    margin-right: 0px;
+    margin-bottom: 0px;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.tab-motors #dialog-settings-changed-content-wrapper {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.tab-motors #dialog-settings-changed-content {
+    flex-grow: 1;
+}
+
 .tab-motors .mixerPreview img {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     margin-top: 18px;
-    margin-left: 10px;
+    margin-left: 32px;
+}
+
+.tab-motors .tool-buttons {
+    float: right;
+    margin-bottom: -3%;
 }
 
 /*Plot Control*/
@@ -71,7 +337,7 @@
 .tab-motors .plot_control {
     float: right;
     width: 160px;
-    height: 197px;
+    height: 178px;
     margin: 0;
     background-color: #ECECEC;
     border-top-right-radius: 3px;
@@ -158,19 +424,21 @@
 }
 
 .tab-motors .power_info .power_value {
-    margin-right: 10px;
-    width: 50px;
+    margin-right: 2em;
+    margin-left: 1em;
     display: inline-block;
-    text-align: right;
+    text-align: left;
+    width: 50px;
 }
 
 /*Motors*/
 
 .tab-motors svg {
     float: left;
-    width: calc(100% - 168px); /* - (plot control, margin)*/
+    width: calc(100% - 168px); /* (plot control, margin)*/
     height: 140px;
     margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 .tab-motors .grid .tick {
@@ -216,17 +484,11 @@
 .tab-motors .motorblock {
     margin-bottom: 0;
     background-color: #ECECEC;
-    /*background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));*/
 }
 
 .tab-motors .left.motors {
     float: left;
-    width: calc(60% - 20px);
-}
-
-.tab-motors .right.servos {
-    float: right;
-    width: 40%;
+    width: 100%;
 }
 
 .tab-motors .title {
@@ -251,12 +513,6 @@
     width: calc((100% / 9) - 10px);
     margin-right: 10px;
     text-align: center;
-}
-
-.tab-motors .servos .titles li {
-    float: right;
-    width: calc((100% / 8) - 10px);
-    margin: 0 0 0 10px;
 }
 
 .tab-motors .titles .active {
@@ -302,13 +558,6 @@
     color: white;
 }
 
-.tab-motors .servos .m-block {
-    float: right;
-    width: calc((100% / 8) - 10px);
-    margin: 0 0 0 10px;
-    border-radius: 3px;
-}
-
 .tab-motors .indicator {
     position: absolute;
     overflow: hidden;
@@ -319,10 +568,15 @@
 
 .tab-motors .motor_testing {
     margin-top: 5px;
+    margin-bottom: 0;
+    padding: 0;
+    border: 0;
+    list-style: none;
+    outline: none;
 }
 
 .tab-motors .motor_testing .left {
-    width: calc(60% - 20px);
+    width: 100%;
 }
 
 .tab-motors .motor_testing .sliders input {
@@ -369,12 +623,12 @@
 
 .tab-motors .motor_testing .notice {
     float: right;
-    width: calc(40% - 24px);
     padding: 5px;
     border: 2px solid var(--subtleAccent);
     border-radius: 3px;
     background-color: #FFFFFF;
     font-size: 11px;
+    margin-top: 10px;
 }
 
 .tab-motors .motor_testing .notice p {
@@ -385,27 +639,31 @@
     margin-left: 10px;
 }
 
+.tab-motors .motorDialogButtons {
+    float: right;
+}
+
 @media all and (max-width: 575px) {
     .tab-motors .modelAndGraph {
         display: flex;
         flex-wrap: wrap;
     }
-    .tab-motors .mixerPreview {
-        order: 1;
-        width: calc(100% - 160px);
+    .tab-motors select.escprotocol {
+        width: 100%;
+        margin-right: 0;
     }
-    .tab-motors .mixerPreview img {
-        width: calc(100% - 20px);
+    .tab-motors .mixer .gui_box, .tab-motors .motorstop .gui_box {
+        min-height: auto;
     }
     .tab-motors #graph {
         width: 100%;
-        order: 3;
-    }
-    .tab-motors .plot_control {
         order: 2;
     }
+    .tab-motors .plot_control {
+        order: 1;
+    }
     .tab-motors .power_info {
-        order: 4;
+        order: 3;
         width: 100%;
         margin-top: 10px;
     }
@@ -419,11 +677,6 @@
     .tab-motors .left.motors {
         width: 100%;
         order: 1;
-    }
-    .tab-motors .right.servos {
-        width: 100%;
-        order: 3;
-        margin-top: 15px;
     }
     .tab-motors .motor_testing {
         width: 100%;
@@ -444,12 +697,6 @@
     .tab-motors .motor_testing .left {
         width: 100%;
     }
-    .tab-motors .servos .m-block, .tab-motors .servos .titles li {
-        width: calc((100% - 70px) / 8);
-    }
-    .tab-motors .servos .m-block:last-child, .tab-motors .servos .titles li:last-child {
-        margin-left: 0;
-    }
     .tab-motors .motor_testing .sliders {
         margin-left: 2px;
         margin-right: -2px;
@@ -465,5 +712,14 @@
     }
     .tab-motors .motor_testing .telemetry li {
         font-size: 6px;
+    }
+}
+
+@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+    .tab-motors .gui_box span {
+        line-height: 17px;
+    }
+    .tab-motors .mixer .gui_box, .tab-motors .motorstop .gui_box {
+        float: left;
     }
 }

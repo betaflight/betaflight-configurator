@@ -1,24 +1,7 @@
 .tab-configuration .ui-grid-col {
     margin-bottom: 0;
 }
-.tab-configuration .mixerPreview {
-    max-width: 230px;
-    background-color: #eeeeee;
-    text-align: center;
-    float: left;
-    border-radius: 5px;
-    margin-top: 5px;
-}
-.tab-configuration .mixerPreview img {
-    width: 90%;
-    height: 90%;
-    padding: 5%;
-}
-.tab-configuration select.batterymetertype {
-    margin-right: 5px;
-    float: left;
-    width: 150px;
-}
+
 .tab-configuration input,
 .tab-configuration select {
     border: 1px solid var(--subtleAccent);
@@ -68,13 +51,6 @@
     margin: 0 0 10px 0;
     font-size: 16px;
     border-bottom: 1px solid var(--subtleAccent);
-}
-
-.tab-configuration .mixerList {
-    width: 100%;
-    height: 20px;
-    margin-top: 5px;
-    font-weight: bold;
 }
 
 .tab-configuration .featuresMultiple {
@@ -146,45 +122,6 @@
     line-height: 20px;
 }
 
-.tab-configuration .current .checkbox {
-    margin-top: 0;
-    float: left;
-}
-
-.tab-configuration .current .checkbox div {
-    float: left;
-    width: 66px;
-}
-
-.tab-configuration .current .checkbox div input {
-    margin: 0;
-    float: left;
-}
-
-.tab-configuration .disarm .checkbox {
-    margin-top: 2px;
-    margin-right: 5px;
-}
-
-.tab-configuration .disarm .checkboxPwm {
-    margin-top: 2px;
-    margin-right: 5px;
-}
-
-.tab-configuration .disarm .checkbox div {
-    margin-bottom: 0;
-    margin-top: 0;
-}
-
-.tab-configuration .disarm .checkbox div input {
-    margin: 0;
-    float: left;
-}
-
-.tab-configuration .disarm .checkbox span {
-    margin-left: 0;
-}
-
 .tab-configuration .freelabel {
     margin-left: 10px;
     position: relative;
@@ -198,33 +135,10 @@
     margin: 0;
 }
 
-.tab-configuration .disarm .checkbox {
-    float: left;
-    padding-left: 0;
-    margin-top: -5px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--subtleAccent);
-    width: 100%;
-}
-
 .tab-configuration .spacer_box {
     padding-bottom: 10px;
     float: left;
     width: calc(100% - 20px);
-}
-
-.tab-configuration .disarm {
-    margin-bottom: 5px;
-    float: left;
-    border-bottom: 1px solid var(--subtleAccent);
-    width: 100%;
-}
-
-.tab-configuration .disarmdelay {
-    margin-top: 5px;
-    float: left;
-    width: 100%;
-    border-bottom: 1px solid var(--subtleAccent);
 }
 
 .tab-configuration .number,
@@ -259,15 +173,6 @@
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.tab-configuration .selectProtocol {
-    margin-bottom: 5px;
-    clear: left;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--subtleAccent);
-    width: 100%;
-    float: left;
 }
 
 .tab-configuration .number:last-child,
@@ -306,10 +211,6 @@
     float: left;
 }
 
-.tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
-    float: left;
-}
-
 .tab-configuration .board .gui_box, .tab-configuration .acc .gui_box {
     float: left;
 }
@@ -325,23 +226,6 @@
 
 .tab-configuration .current td:nth-child(2) {
     width: 30px;
-}
-
-.tab-configuration .voltage td:nth-child(2) {
-    width: 30px;
-}
-
-.tab-configuration .currentmetertype {
-    float: left;
-    width: 150px;
-}
-
-.tab-configuration .vbatmonitoring {
-    margin-top: 5px;
-}
-
-.tab-configuration .currentMonitoring {
-    margin-top: 5px;
 }
 
 .tab-configuration .rssi td:nth-child(2) {
@@ -438,12 +322,6 @@
     font-weight: bold;
 }
 
-.tab-configuration ._3dSettings {
-    margin-top: 10px;
-    float: left;
-    width: 100%;
-}
-
 .tab-configuration ._smallAngle {
     margin-top: 10px;
     float: left;
@@ -461,9 +339,6 @@
     .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
         float: left;
     }
-    .tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
-        float: left;
-    }
     .tab-configuration .board .gui_box, .tab-configuration .acc .gui_box {
         float: left;
     }
@@ -475,13 +350,6 @@
     }
 }
 @media all and (max-width: 575px) {
-    .tab-configuration .mixerPreview {
-        max-width: none;
-    }
-    .tab-configuration select.escprotocol {
-        width: 100%;
-        margin-right: 0;
-    }
     .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
         min-height: auto;
     }
@@ -502,8 +370,5 @@
     }
     select.features.rxMode, select.serialRX, .dshotbeacon > td > div.select > div, .dshotbeacon select.dshotBeeperBeaconTone {
         width: 100%;
-    }
-    .tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
-        min-height: auto;
     }
 }

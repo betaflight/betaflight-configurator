@@ -188,3 +188,184 @@
         min-width: 60px;
     }
 }
+
+/* servos testing bars */
+
+.tab-servos table tr td:first-child {
+    text-align: left;
+    width: 55px;
+}
+
+.tab-servos {
+    position: relative;
+}
+.tab-servos .spacer_box {
+    padding-bottom: 10px;
+    float: left;
+    width: calc(100% - 20px);
+}
+
+.tab-servos .gui_box_titlebar {
+    margin-bottom: 0;
+}
+
+.tab-servos .gui_box {
+    margin-bottom: 10px;
+    float: left;
+    font-weight: bold;
+}
+
+.tab-servos .gui_box span {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    color: #4f4f4f;
+    font-size: 11px;
+}
+
+.tab-servos .spacer {
+    width: calc(100% - 34px);
+    margin: 10px;
+}
+
+.tab-servos .servoblock {
+    margin-bottom: 0;
+    background-color: #ECECEC;
+}
+
+.tab-servos .right.servos {
+    float: left;
+    width: 80%;
+}
+
+.tab-servos .title2 {
+    padding-bottom: 2px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.tab-servos .titles {
+    height: 20px;
+}
+
+.tab-servos .titles li {
+    float: left;
+    width: calc((100% / 9) - 10px);
+    margin-right: 10px;
+    text-align: center;
+}
+
+.tab-servos .servos .titles li {
+    float: right;
+    width: calc((100% / 8) - 10px);
+    margin: 0 0 0 10px;
+}
+
+.tab-servos .titles .active {
+    color: green;
+}
+
+.tab-servos .m-block {
+    float: left;
+    width: calc((100% / 9) - 10px);
+    height: 100px;
+    margin-right: 10px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.tab-servos .m-block .meter-bar {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: #E0E0E0;
+    border-radius: 3px;
+    border: 1px solid #F5F5F5;
+}
+
+.tab-servos .m-block .label {
+    position: absolute;
+    width: 100%;
+    bottom: 45px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10px;
+    color: #474747;
+}
+
+.tab-servos .m-block .label.rpm_info {
+    bottom: 28px;
+}
+
+.tab-servos .m-block .indicator .label {
+    color: white;
+}
+
+.tab-servos .servos .m-block {
+    float: right;
+    width: calc((100% / 8) - 10px);
+    margin: 0 0 0 10px;
+    border-radius: 3px;
+}
+
+.tab-servos .indicator {
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+    border-radius: 2px;
+}
+
+@media all and (max-width: 575px) {
+
+    .tab-servos .gui_box {
+        min-height: auto;
+    }
+
+    .tab-servos .servoblock {
+        margin-bottom: 15px;
+    }
+    .tab-servos .servoblock > .spacer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .tab-servos .left.motors {
+        width: 100%;
+        order: 1;
+    }
+    .tab-servos .right.servos {
+        width: 100%;
+        order: 3;
+        margin-top: 15px;
+    }
+    .tab-servos .titles li, .tab-servos .m-block {
+        width: calc((100% - 80px) / 9);
+    }
+    .tab-servos .titles li:last-child, .tab-servos .m-block:last-child {
+        margin-right: 0;
+    }
+    .tab-servos .servos .m-block, .tab-servos .servos .titles li {
+        width: calc((100% - 70px) / 8);
+    }
+    .tab-servos .servos .m-block:last-child, .tab-servos .servos .titles li:last-child {
+        margin-left: 0;
+    }
+
+    .tab-servos .servo_testing .values li:last-child {
+        margin-left: 4px;
+    }
+
+}
+
+@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+    .tab-servos .gui_box span {
+        line-height: 17px;
+    }
+    .tab-servos .gui_box {
+        float: left;
+    }
+}
