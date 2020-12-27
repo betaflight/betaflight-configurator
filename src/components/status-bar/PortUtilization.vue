@@ -6,7 +6,11 @@
       :value="usageDown"
       unit="%"
     />
-    <ReadingStat message="statusbar_usage_upload" :value="usageUp" unit="%" />
+    <ReadingStat
+      message="statusbar_usage_upload"
+      :value="usageUp"
+      unit="%"
+    />
   </div>
 </template>
 
@@ -14,6 +18,9 @@
 import ReadingStat from "./ReadingStat.vue";
 
 export default {
+  components: {
+    ReadingStat,
+  },
   props: {
     usageDown: {
       type: Number,
@@ -21,9 +28,6 @@ export default {
     usageUp: {
       type: Number,
     },
-  },
-  components: {
-    ReadingStat,
   },
 };
 </script>

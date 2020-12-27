@@ -402,7 +402,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                 legacy_accel_alignment_e.hide();
 
                 const GYRO_DETECTION_FLAGS = {
-                        DETECTED_GYRO_1:      (1 << 0), 
+                        DETECTED_GYRO_1:      (1 << 0),
                         DETECTED_GYRO_2:      (1 << 1),
                         DETECTED_DUAL_GYROS:  (1 << 7),
                 };

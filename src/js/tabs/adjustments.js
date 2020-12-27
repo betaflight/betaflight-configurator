@@ -6,7 +6,7 @@ TABS.adjustments.initialize = function (callback) {
     const self = this;
     GUI.active_tab_ref = this;
     GUI.active_tab = 'adjustments';
-    
+
     function get_adjustment_ranges() {
         MSP.send_message(MSPCodes.MSP_ADJUSTMENT_RANGES, false, false, get_box_ids);
     }
@@ -29,14 +29,14 @@ TABS.adjustments.initialize = function (callback) {
 
         const template = $('#tab-adjustments-templates .adjustments .adjustment');
         const newAdjustment = template.clone();
-        
+
         $(newAdjustment).attr('id', 'adjustment-' + adjustmentIndex);
         $(newAdjustment).data('index', adjustmentIndex);
 
         //
         // update selected slot
         //
-        
+
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             const adjustmentList = $(newAdjustment).find('.adjustmentSlot .slot');
             adjustmentList.val(adjustmentRange.slotIndex);
@@ -45,7 +45,7 @@ TABS.adjustments.initialize = function (callback) {
         //
         // populate source channel select box
         //
-        
+
         const channelList = $(newAdjustment).find('.channelInfo .channel');
         const channelOptionTemplate = $(channelList).find('option');
         channelOptionTemplate.remove();
@@ -85,7 +85,7 @@ TABS.adjustments.initialize = function (callback) {
         //
         // configure range
         //
-        
+
         const channel_range = {
                 'min': [  900 ],
                 'max': [ 2100 ]
@@ -119,16 +119,16 @@ TABS.adjustments.initialize = function (callback) {
             density: 4,
             stepped: true
         });
-        
+
         //
         // add the enable/disable behavior
         //
-        
+
         const enableElement = $(newAdjustment).find('.enable');
         $(enableElement).data('adjustmentElement', newAdjustment);
         $(enableElement).change(function() {
             const adjustmentElement = $(this).data('adjustmentElement');
-            if ($(this).prop("checked")) { 
+            if ($(this).prop("checked")) {
                 $(adjustmentElement).find(':input').prop("disabled", false);
                 $(adjustmentElement).find('.channel-slider').removeAttr("disabled");
                 rangeElement = $(adjustmentElement).find('.range .channel-slider');
@@ -145,10 +145,10 @@ TABS.adjustments.initialize = function (callback) {
             // keep this element enabled
             $(this).prop("disabled", false);
         });
-        
-        const isEnabled = (adjustmentRange?.range?.start !== adjustmentRange?.range?.end); 
+
+        const isEnabled = (adjustmentRange?.range?.start !== adjustmentRange?.range?.end);
         $(enableElement).prop("checked", isEnabled).change();
-        
+
         return newAdjustment;
     }
 
@@ -163,7 +163,7 @@ TABS.adjustments.initialize = function (callback) {
             const newAdjustment = addAdjustment(adjustmentIndex, FC.ADJUSTMENT_RANGES[adjustmentIndex], auxChannelCount);
             modeTableBodyElement.append(newAdjustment);
         }
-        
+
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
             $('.tab-adjustments .adjustmentSlotsHelp').hide();
@@ -179,9 +179,9 @@ TABS.adjustments.initialize = function (callback) {
 
             // update internal data structures based on current UI elements
             const requiredAdjustmentRangeCount = FC.ADJUSTMENT_RANGES.length;
-            
+
             FC.ADJUSTMENT_RANGES = [];
-            
+
             const defaultAdjustmentRange = {
                 slotIndex: 0,
                 auxChannelIndex: 0,
@@ -195,7 +195,7 @@ TABS.adjustments.initialize = function (callback) {
 
             $('.tab-adjustments .adjustments .adjustment').each(function () {
                 const adjustmentElement = $(this);
-                
+
                 if ($(adjustmentElement).find('.enable').prop("checked")) {
                     const rangeValues = $(this).find('.range .channel-slider').val();
                     let slotIndex = 0;
@@ -218,16 +218,16 @@ TABS.adjustments.initialize = function (callback) {
                     FC.ADJUSTMENT_RANGES.push(defaultAdjustmentRange);
                 }
             });
-            
+
             for (let adjustmentRangeIndex = FC.ADJUSTMENT_RANGES.length; adjustmentRangeIndex < requiredAdjustmentRangeCount; adjustmentRangeIndex++) {
                 FC.ADJUSTMENT_RANGES.push(defaultAdjustmentRange);
             }
-            
+
             //
             // send data to FC
             //
             mspHelper.sendAdjustmentRanges(save_to_eeprom);
-            
+
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
                     GUI.log(i18n.getMessage('adjustmentsEepromSaved'));
@@ -243,13 +243,13 @@ TABS.adjustments.initialize = function (callback) {
                 channelPosition = 2100;
             }
             const percentage = (channelPosition - 900) / (2100-900) * 100;
-            
+
             $('.adjustments .adjustment').each( function () {
                 const auxChannelCandidateIndex = $(this).find('.channel').val();
                 if (auxChannelCandidateIndex != auxChannelIndex) {
                     return;
                 }
-                
+
                 $(this).find('.range .marker').css('left', percentage + '%');
             });
         }
@@ -264,7 +264,7 @@ TABS.adjustments.initialize = function (callback) {
 
             for (let auxChannelIndex = 0; auxChannelIndex < auxChannelCount; auxChannelIndex++) {
                 update_marker(auxChannelIndex, FC.RC.channels[auxChannelIndex + 4]);
-            }           
+            }
         }
 
         // update ui instantly on first load
@@ -306,7 +306,7 @@ TABS.adjustments.adjust_template = function () {
     for (let i = 0; i < elementsNumber; i++) {
         selectFunction.append(new Option(i18n.getMessage('adjustmentsFunction' + i), i));
     }
-    
+
     // For 1.40, the D Setpoint has been replaced, so we replace it with the correct values
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
 

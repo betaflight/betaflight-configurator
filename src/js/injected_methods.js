@@ -60,7 +60,7 @@ DataView.prototype.read8 = function() {
 DataView.prototype.read16 = function() {
     this.offset += 2;
     if (this.byteLength >= this.offset) {
-        return this.getInt16(this.offset-2, 1); 
+        return this.getInt16(this.offset-2, 1);
     } else {
         return null;
     }
@@ -69,7 +69,7 @@ DataView.prototype.read16 = function() {
 DataView.prototype.read32 = function() {
     this.offset += 4;
     if (this.byteLength >= this.offset) {
-        return this.getInt32(this.offset-4, 1); 
+        return this.getInt32(this.offset-4, 1);
     } else {
         return null;
     }

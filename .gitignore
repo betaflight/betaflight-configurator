@@ -13,6 +13,7 @@ dist_cordova/
 debug/
 release/
 testresults/
+.eslintcache
 
 # OSX
 .DS_store

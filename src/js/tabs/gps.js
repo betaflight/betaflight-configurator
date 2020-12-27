@@ -12,19 +12,19 @@ TABS.gps.initialize = function (callback) {
     }
 
     MSP.send_message(MSPCodes.MSP_STATUS, false, false, load_html);
-    
+
     function set_online(){
         $('#connect').hide();
         $('#waiting').show();
         $('#loadmap').hide();
     }
-    
+
     function set_offline(){
         $('#connect').show();
         $('#waiting').hide();
         $('#loadmap').hide();
     }
-    
+
     function process_html() {
         // translate to user-selected languageconsole.log('Online');
         i18n.localizePage();
@@ -71,7 +71,6 @@ TABS.gps.initialize = function (callback) {
                 $('td', row).eq(1).text(FC.GPS_DATA.quality[i]);
                 $('td', row).eq(2).find('progress').val(FC.GPS_DATA.cno[i]);
             }
-            
 
             const message = {
                 action: 'center',
@@ -98,7 +97,7 @@ TABS.gps.initialize = function (callback) {
             }else{
                 gpsWasFixed = false;
                 $('#connect').show();
-                $('#waiting').hide(); 
+                $('#waiting').hide();
                 $('#loadmap').hide();
             }
         }
@@ -109,7 +108,7 @@ TABS.gps.initialize = function (callback) {
             if (!have_sensor(FC.CONFIG.activeSensors, 'gps')) {
                 //return;
             }
-            
+
             get_raw_gps_data();
         }, 75, true);
 
@@ -147,7 +146,7 @@ TABS.gps.initialize = function (callback) {
             };
             frame.contentWindow.postMessage(message, '*');
         });
-        
+
         $('#zoom_out').click(function() {
             console.log('zoom out');
             const message = {
@@ -155,14 +154,12 @@ TABS.gps.initialize = function (callback) {
             };
             frame.contentWindow.postMessage(message, '*');
         });
- 
+
         GUI.content_ready(callback);
     }
 
 };
 
-
- 
 TABS.gps.cleanup = function (callback) {
     if (callback) callback();
 };

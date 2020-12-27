@@ -16,9 +16,9 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     function load_failssafe_config() {
         MSP.send_message(MSPCodes.MSP_FAILSAFE_CONFIG, false, false, load_rxfail_config);
     }
-    
+
     function load_rxfail_config() {
-        MSP.send_message(MSPCodes.MSP_RXFAIL_CONFIG, false, false, 
+        MSP.send_message(MSPCodes.MSP_RXFAIL_CONFIG, false, false,
                 semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41) ? load_gps_rescue : get_box_names);
     }
 
@@ -57,7 +57,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
     function load_motor_config() {
         MSP.send_message(MSPCodes.MSP_MOTOR_CONFIG, false, false, load_gps_config);
     }
-    
+
     function load_gps_config() {
         MSP.send_message(MSPCodes.MSP_GPS_CONFIG, false, false, load_html);
     }
@@ -78,7 +78,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 $('div.stage2').hide();
             }
         }
-        
+
         // FIXME cleanup oldpane html and css
         const oldPane = $('div.oldpane');
         oldPane.prop("disabled", true);
@@ -95,7 +95,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
 
         if (typeof FC.RSSI_CONFIG.channel !== 'undefined')  {
             auxAssignment[FC.RSSI_CONFIG.channel - 5] += "<span class=\"modename\">" + "RSSI" + "</span>";         // Aux channels start at 5 in backend so we have to substract 5
-        }  
+        }
 
         for (let modeIndex = 0; modeIndex < FC.AUX_CONFIG.length; modeIndex++) {
 
@@ -113,12 +113,12 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 if (range.start >= range.end) {
                     continue; // invalid!
                 }
-                
+
                 // Search for the real name if it belongs to a peripheral
-                let modeName = FC.AUX_CONFIG[modeIndex];                
+                let modeName = FC.AUX_CONFIG[modeIndex];
                 modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
-                auxAssignment[modeRange.auxChannelIndex] += "<span class=\"modename\">" + modeName + "</span>";                
+                auxAssignment[modeRange.auxChannelIndex] += "<span class=\"modename\">" + modeName + "</span>";
             }
         }
 
@@ -386,14 +386,14 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
             }
 
             function save_feature_config() {
-                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, 
+                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false,
                         semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41) ? save_gps_rescue : save_to_eeprom);
             }
 
             function save_gps_rescue() {
                 MSP.send_message(MSPCodes.MSP_SET_GPS_RESCUE, mspHelper.crunch(MSPCodes.MSP_SET_GPS_RESCUE), false, save_to_eeprom);
             }
-            
+
             function save_to_eeprom() {
                 MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
             }

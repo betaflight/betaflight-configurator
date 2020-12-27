@@ -1,10 +1,26 @@
 <template>
   <div id="status-bar">
-    <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
-    <ReadingStat message="statusbar_packet_error" :value="packetError" />
-    <ReadingStat message="statusbar_i2c_error" :value="i2cError" />
-    <ReadingStat message="statusbar_cycle_time" :value="cycleTime" />
-    <ReadingStat message="statusbar_cpu_load" :value="cpuLoad" unit="%" />
+    <PortUtilization
+      :usage-down="portUsageDown"
+      :usage-up="portUsageUp"
+    />
+    <ReadingStat
+      message="statusbar_packet_error"
+      :value="packetError"
+    />
+    <ReadingStat
+      message="statusbar_i2c_error"
+      :value="i2cError"
+    />
+    <ReadingStat
+      message="statusbar_cycle_time"
+      :value="cycleTime"
+    />
+    <ReadingStat
+      message="statusbar_cpu_load"
+      :value="cpuLoad"
+      unit="%"
+    />
     <StatusBarVersion
       :configurator-version="configuratorVersion"
       :firmware-version="firmwareVersion"
@@ -20,6 +36,11 @@ import ReadingStat from "./ReadingStat.vue";
 import PortUtilization from "./PortUtilization.vue";
 
 export default {
+  components: {
+    PortUtilization,
+    ReadingStat,
+    StatusBarVersion,
+  },
   props: {
     portUsageDown: {
       type: Number,
@@ -55,11 +76,6 @@ export default {
     gitChangesetId: {
       type: String,
     },
-  },
-  components: {
-    PortUtilization,
-    ReadingStat,
-    StatusBarVersion,
   },
 };
 </script>

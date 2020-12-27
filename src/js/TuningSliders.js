@@ -106,14 +106,14 @@ TuningSliders.initPidSlidersPosition = function() {
 };
 
 TuningSliders.initGyroFilterSliderPosition = function() {
-    this.gyroFilterSliderValue = Math.round((FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz + FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz + FC.FILTER_CONFIG.gyro_lowpass2_hz) / 
+    this.gyroFilterSliderValue = Math.round((FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz + FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz + FC.FILTER_CONFIG.gyro_lowpass2_hz) /
                                 (this.FILTER_DEFAULT.gyro_lowpass_dyn_min_hz + this.FILTER_DEFAULT.gyro_lowpass_dyn_max_hz + this.FILTER_DEFAULT.gyro_lowpass2_hz) * 100) / 100;
     $('output[name="tuningGyroFilterSlider-number"]').val(this.gyroFilterSliderValue);
     $('#tuningGyroFilterSlider').val(this.downscaleSliderValue(this.gyroFilterSliderValue));
 };
 
 TuningSliders.initDTermFilterSliderPosition = function() {
-    this.dtermFilterSliderValue = Math.round((FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz + FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz + FC.FILTER_CONFIG.dterm_lowpass2_hz) / 
+    this.dtermFilterSliderValue = Math.round((FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz + FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz + FC.FILTER_CONFIG.dterm_lowpass2_hz) /
                                 (this.FILTER_DEFAULT.dterm_lowpass_dyn_min_hz + this.FILTER_DEFAULT.dterm_lowpass_dyn_max_hz + this.FILTER_DEFAULT.dterm_lowpass2_hz) * 100) / 100;
     $('output[name="tuningDTermFilterSlider-number"]').val(this.dtermFilterSliderValue);
     $('#tuningDTermFilterSlider').val(this.downscaleSliderValue(this.dtermFilterSliderValue));

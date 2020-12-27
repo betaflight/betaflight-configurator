@@ -43,14 +43,14 @@ TABS.setup_osd.initialize = function (callback) {
                 });
             });
         });
-        
+
         function get_slow_data() {
             /* FIXME requires MSP update
             MSP.send_message(MSPCodes.MSP_OSD_VIDEO_STATUS, false, false, function () {
                 let element element = $('.video-mode');
                 const osdVideoMode = osdVideoModes[OSD_VIDEO_STATE.video_mode];
                 element.text(osdVideoMode);
-                
+
                 element = $('.camera-connected');
                 element.text(OSD_VIDEO_STATE.camera_connected ? i18n.getMessage('yes') : i18n.getMessage('No'));
             });

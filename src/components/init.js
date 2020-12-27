@@ -32,13 +32,13 @@ i18next.on('initialized', function() {
 
     const app = new Vue({
         i18n: vueI18n,
-        data: betaflightModel,
+        el: '#main-wrapper',
         components: {
             BatteryLegend,
             BetaflightLogo,
             StatusBar,
         },
-        el: '#main-wrapper',
+        data: betaflightModel,
     });
 
 });
