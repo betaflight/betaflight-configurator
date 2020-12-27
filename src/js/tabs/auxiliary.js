@@ -414,7 +414,7 @@ TABS.auxiliary.initialize = function (callback) {
             const percentage = (channelPosition - 900) / (2100-900) * 100;
 
             $('.modes .ranges .range').each( function () {
-                const auxChannelCandidateIndex = $(this).find('.channel').val();
+                const auxChannelCandidateIndex = parseInt($(this).find('.channel').val());
                 if (auxChannelCandidateIndex !== auxChannelIndex) {
                     return;
                 }

@@ -7,9 +7,8 @@ TABS.led_strip = {
 
 
 TABS.led_strip.initialize = function (callback, scrollPosition) {
-    var self = this;
-    var selectedColorIndex = null;
-    var selectedModeColor = null;
+    let selectedColorIndex = null;
+    let selectedModeColor = null;
 
     if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
         TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b'];
@@ -54,9 +53,9 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
     load_led_config();
 
     function buildUsedWireNumbers() {
-        var usedWireNumbers = [];
+        const usedWireNumbers = [];
         $('.mainGrid .gPoint .wire').each(function () {
-            var wireNumber = parseInt($(this).html());
+            const wireNumber = parseInt($(this).html());
             if (wireNumber >= 0) {
                 usedWireNumbers.push(wireNumber);
             }
@@ -69,10 +68,12 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         i18n.localizePage();
 
+        const functionTag = '.function-';
+
         // Build Grid
-        var theHTML = [];
-        var theHTMLlength = 0;
-        for (var i = 0; i < 256; i++) {
+        const theHTML = [];
+        let theHTMLlength = 0;
+        for (let i = 0; i < 256; i++) {
             if (semver.lte(FC.CONFIG.apiVersion, "1.19.0")) {
                 theHTML[theHTMLlength++] = ('<div class="gPoint"><div class="indicators"><span class="north"></span><span class="south"></span><span class="west"></span><span class="east"></span><span class="up">U</span><span class="down">D</span></div><span class="wire"></span><span class="overlay-t"> </span><span class="overlay-s"> </span><span class="overlay-w"> </span><span class="overlay-i"> </span><span class="overlay-color"> </span></div>');
             } else if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
@@ -95,8 +96,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             $('.auxSelect').show();
             $('.labelSelect').hide();
 
-            var AuxMode = 7;
-            var AuxDir = 0;
+            const AuxMode = 7;
+            const AuxDir = 0;
 
             $('.auxSelect').val(getModeColor(AuxMode, AuxDir));
 
@@ -140,7 +141,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         });
 
         function removeFunctionsAndDirections(element) {
-            var classesToRemove = [];
+            const classesToRemove = [];
 
             TABS.led_strip.baseFuncs.forEach(function(letter) {
                 classesToRemove.push('function-' + letter);
@@ -156,7 +157,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         // Directional Buttons
         $('.directions').on('click', 'button', function() {
-            var that = this;
+            const that = this;
             if ($('.ui-selected').length > 0) {
                 TABS.led_strip.directions.forEach(function(letter) {
                     if ($(that).is('.dir-' + letter)) {
@@ -177,7 +178,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         // Mode Color Buttons
         $('.mode_colors').on('click', 'button', function() {
-            var that = this;
+            const that = this;
             FC.LED_MODE_COLORS.forEach(function(mc) {
                 if ($(that).is('.mode_color-' + mc.mode + '-' + mc.direction)) {
                     if ($(that).is('.btnOn')) {
@@ -189,8 +190,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                         selectedModeColor = { mode: mc.mode, direction: mc.direction };
 
                         // select the color button
-                        for (var colorIndex = 0; colorIndex < 16; colorIndex++) {
-                            var className = '.color-' + colorIndex;
+                        for (let colorIndex = 0; colorIndex < 16; colorIndex++) {
+                            const className = '.color-' + colorIndex;
                             if (colorIndex == getModeColor(mc.mode, mc.direction)) {
                                 $(className).addClass('btnOn');
                                 selectedColorIndex = colorIndex;
@@ -219,11 +220,11 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         });
 
         // Color sliders
-        var ip = $('div.colorDefineSliders input');
+        const ip = $('div.colorDefineSliders input');
         ip.eq(0).on("input change", function() { updateColors($(this).val(), 0); });
         ip.eq(1).on("input change", function() { updateColors($(this).val(), 1); });
         ip.eq(2).on("input change", function() { updateColors($(this).val(), 2); });
-        for (var i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             updateColors(ip.eq(i).val(), i);
         }
 
@@ -231,10 +232,10 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         // Color Buttons
         $('.colors').on('click', 'button', function(e) {
-            var that = this;
-            var colorButtons = $(this).parent().find('button');
+            const that = this;
+            const colorButtons = $(this).parent().find('button');
 
-            for (var colorIndex = 0; colorIndex < 16; colorIndex++) {
+            for (let colorIndex = 0; colorIndex < 16; colorIndex++) {
                 colorButtons.removeClass('btnOn');
                 if (selectedModeColor == undefined)
                     $('.ui-selected').removeClass('color-' + colorIndex);
@@ -299,8 +300,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
         $('.funcWireClearSelect').click(function() {
             $('.ui-selected').each(function() {
-                var thisWire = $(this).find('.wire');
-                if (thisWire.html() != '') {
+                const thisWire = $(this).find('.wire');
+                if (thisWire.html() !== '') {
                     thisWire.html('');
                 }
                 updateBulkCmd();
@@ -315,18 +316,17 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         $('.mainGrid').selectable({
             filter: ' > div',
             stop: function() {
-                var functionsInSelection = [];
-                var directionsInSelection = [];
+                const directionsInSelection = [];
 
                 clearModeColorSelection();
 
-                var that;
+                let that;
                 $('.ui-selected').each(function() {
 
-                    var usedWireNumbers = buildUsedWireNumbers();
+                    const usedWireNumbers = buildUsedWireNumbers();
 
-                    var nextWireNumber = 0;
-                    for (var nextWireNumber = 0; nextWireNumber < usedWireNumbers.length; nextWireNumber++) {
+                    let nextWireNumber = 0;
+                    for (; nextWireNumber < usedWireNumbers.length; nextWireNumber++) {
                         if (usedWireNumbers[nextWireNumber] != nextWireNumber) {
                             break;
                         }
@@ -344,21 +344,21 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
                         // Get function & overlays or current cell
                         TABS.led_strip.directions.forEach(function(letter) {
-                            var className = '.dir-' + letter;
+                            const className = '.dir-' + letter;
                             if ($(that).is(className)) {
                                 directionsInSelection.push(className);
                             }
                         });
 
                         TABS.led_strip.baseFuncs.forEach(function(letter) {
-                            var className = '.function-' + letter;
+                            const className = '.function-' + letter;
                             if ($(that).is(className)) {
                                 functionsInSelection.push(className);
                             }
                         });
 
                         TABS.led_strip.overlays.forEach(function(letter) {
-                            var className = '.function-' + letter;
+                            const className = '.function-' + letter;
                             if ($(that).is(className)) {
                                 functionsInSelection.push(className);
                             }
@@ -366,11 +366,11 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                     }
                 });
 
-                var uiSelectedLast = that;
+                const uiSelectedLast = that;
                 $('select.functionSelect').val("");
 
                 TABS.led_strip.baseFuncs.forEach(function(letter) {
-                    var className = 'function-' + letter;
+                    const className = 'function-' + letter;
                     if ($('select.functionSelect').is("." + className)) {
                         $('select.functionSelect').removeClass(className);
                     }
@@ -381,8 +381,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 if (uiSelectedLast) {
 
                     // set active color
-                    for (var colorIndex = 0; colorIndex < 16; colorIndex++) {
-                        var className = '.color-' + colorIndex;
+                    for (let colorIndex = 0; colorIndex < 16; colorIndex++) {
+                        const className = '.color-' + colorIndex;
                         if ($(uiSelectedLast).is(className)) {
                             $(className).addClass('btnOn');
                             selectedColorIndex = colorIndex;
@@ -394,11 +394,11 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
                     // set checkbox values
                     TABS.led_strip.overlays.forEach(function(letter) {
-                        var feature_o = $('.checkbox').find('input.function-' + letter);
+                        const feature_o = $('.checkbox').find(`input.function-${letter}`);
 
-                        var newVal = ($(uiSelectedLast).is('.function-' + letter));
+                        const newVal = ($(uiSelectedLast).is(functionTag + letter));
 
-                        if (feature_o.is(':checked') != newVal) {
+                        if (feature_o.is(':checked') !== newVal) {
                             feature_o.prop('checked', newVal);
                             feature_o.change();
                         }
@@ -406,7 +406,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
                     // Update active function in combobox
                     TABS.led_strip.baseFuncs.forEach(function(letter) {
-                        if ($(uiSelectedLast).is('.function-' + letter)) {
+                        if ($(uiSelectedLast).is(functionTag + letter)) {
                             $('select.functionSelect').val("function-" + letter);
                             $('select.functionSelect').addClass("function-" + letter);
                         }
@@ -437,16 +437,18 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         // UI: select mode from drop-down
         $('.modeSelect').on('change', function() {
 
-            var that = this;
+            const that = this;
 
-            var mode = Number($(that).val());
+            const mode = Number($(that).val());
             $('.mode_colors').find('button').each(function() {
-                for (var i = 0; i < 6; i++)
-                    for (var j = 0; j < 6; j++)
+                for (let i = 0; i < 6; i++) {
+                    for (let j = 0; j < 6; j++) {
                         if ($(this).hasClass('mode_color-' + i + '-' + j)) {
                             $(this).removeClass('mode_color-' + i + '-' + j);
                             $(this).addClass('mode_color-' + mode + '-' + j);
                         }
+                    }
+                }
             });
 
             $('.mode_colors').each(function() { setModeBackgroundColor($(this)); });
@@ -458,10 +460,10 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 $('.ui-selected').find('.wire').each(function() {
                     if ($(this).text() != "") {
 
-                        var p = $(this).parent();
+                        const p = $(this).parent();
 
                         TABS.led_strip.functions.forEach(function(f) {
-                            if (p.is('.function-' + f)) {
+                            if (p.is(functionTag + f)) {
 
                                 switch (letter) {
                                 case 't':
@@ -504,15 +506,15 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         $('.checkbox').change(function(e) {
             if (e.originalEvent) {
                 // user-triggered event
-                var that = $(this).find('input');
+                const that = $(this).find('input');
                 if ($('.ui-selected').length > 0) {
 
                     TABS.led_strip.overlays.forEach(function(letter) {
-                        if ($(that).is('.function-' + letter)) {
-                            var ret = toggleSwitch(that, letter);
+                        if ($(that).is(functionTag + letter)) {
+                            const ret = toggleSwitch(that, letter);
 
-                            var cbn = $('.checkbox .function-n'); // blink on landing
-                            var cbb = $('.checkbox .function-b'); // blink
+                            const cbn = $('.checkbox .function-n'); // blink on landing
+                            const cbb = $('.checkbox .function-b'); // blink
 
                             if (ret) {
                                 if (letter == 'b' && cbn.is(':checked')) {
@@ -542,20 +544,20 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         $('.mainGrid').disableSelection();
 
         $('.gPoint').each(function(){
-            var gridNumber = ($(this).index() + 1);
-            var row = Math.ceil(gridNumber / 16) - 1;
-            var col = gridNumber / 16 % 1 * 16 - 1;
+            const gridNumber = ($(this).index() + 1);
+            const row = Math.ceil(gridNumber / 16) - 1;
+            let col = gridNumber / 16 % 1 * 16 - 1;
             if (col < 0) {
                 col = 15;
             }
 
-            var ledResult = findLed(col, row);
+            const ledResult = findLed(col, row);
             if (!ledResult) {
                 return;
             }
 
-            var ledIndex = ledResult.index;
-            var led = ledResult.led;
+            const ledIndex = ledResult.index;
+            const led = ledResult.led;
 
             if (led.functions[0] == 'c' && led.functions.length == 1 && led.directions.length == 0 && led.color == 0 && led.x == 0 && led.y == 0) {
                 return;
@@ -563,15 +565,15 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
             $(this).find('.wire').html(ledIndex);
 
-            for (var modeIndex = 0; modeIndex < led.functions.length; modeIndex++) {
-                $(this).addClass('function-' + led.functions[modeIndex]);
+            for (let modeIndex = 0; modeIndex < led.functions.length; modeIndex++) {
+                $(this).addClass(`function-'${led.functions[modeIndex]}`);
             }
 
-            for (var directionIndex = 0; directionIndex < led.directions.length; directionIndex++) {
-                $(this).addClass('dir-' + led.directions[directionIndex]);
+            for (let directionIndex = 0; directionIndex < led.directions.length; directionIndex++) {
+                $(this).addClass(`dir-${led.directions[directionIndex]}`);
             }
 
-            $(this).addClass('color-' + led.color);
+            $(this).addClass(`color-${led.color}`);
 
         });
 
@@ -621,8 +623,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
 
     function findLed(x, y) {
-        for (var ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
-            var led = FC.LED_STRIP[ledIndex];
+        for (let ledIndex = 0; ledIndex < FC.LED_STRIP.length; ledIndex++) {
+            const led = FC.LED_STRIP[ledIndex];
             if (led.x == x && led.y == y) {
                 return { index: ledIndex, led: led };
             }
@@ -632,35 +634,35 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
 
     function updateBulkCmd() {
-        var ledStripLength = FC.LED_STRIP.length;
+        const ledStripLength = FC.LED_STRIP.length;
 
         FC.LED_STRIP = [];
 
         $('.gPoint').each(function(){
             if ($(this).is('[class*="function"]')) {
-                var gridNumber = ($(this).index() + 1);
-                var row = Math.ceil(gridNumber / 16) - 1;
-                var col = gridNumber/16 % 1 * 16 - 1;
+                const gridNumber = ($(this).index() + 1);
+                const row = Math.ceil(gridNumber / 16) - 1;
+                let col = gridNumber/16 % 1 * 16 - 1;
                 if (col < 0) {col = 15;}
 
-                var wireNumber = $(this).find('.wire').html();
-                var functions = '';
-                var directions = '';
-                var colorIndex = 0;
-                var that = this;
+                const wireNumber = $(this).find('.wire').html();
+                let functions = '';
+                let directions = '';
+                let colorIndex = 0;
+                const that = this;
 
-                var match = $(this).attr("class").match(/(^|\s)color-([0-9]+)(\s|$)/);
+                const match = $(this).attr("class").match(/(^|\s)color-([0-9]+)(\s|$)/);
                 if (match) {
                     colorIndex = match[2];
                 }
 
                 TABS.led_strip.baseFuncs.forEach(function(letter){
-                    if ($(that).is('.function-' + letter)) {
+                    if ($(that).is(functionTag + letter)) {
                         functions += letter;
                     }
                 });
                 TABS.led_strip.overlays.forEach(function(letter){
-                    if ($(that).is('.function-' + letter)) {
+                    if ($(that).is(functionTag + letter)) {
                         functions += letter;
                     }
                 });
@@ -672,36 +674,36 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 });
 
                 if (wireNumber != '') {
-                    var led = {
+                    const led = {
                         x: col,
                         y: row,
                         directions: directions,
                         functions: functions,
-                        color: colorIndex
-                    }
+                        color: colorIndex,
+                    };
 
                     FC.LED_STRIP[wireNumber] = led;
                 }
             }
         });
 
-        var defaultLed = {
+        const defaultLed = {
             x: 0,
             y: 0,
             directions: '',
             functions: ''
         };
 
-        for (var i = 0; i < ledStripLength; i++) {
+        for (let i = 0; i < ledStripLength; i++) {
             if (FC.LED_STRIP[i]) {
                 continue;
             }
             FC.LED_STRIP[i] = defaultLed;
         }
 
-        var usedWireNumbers = buildUsedWireNumbers();
+        const usedWireNumbers = buildUsedWireNumbers();
 
-        var remaining = FC.LED_STRIP.length - usedWireNumbers.length;
+        const remaining = FC.LED_STRIP.length - usedWireNumbers.length;
 
         $('.wires-remaining div').html(remaining);
     }
@@ -710,10 +712,10 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
     function setModeBackgroundColor(element) {
         if (semver.gte(FC.CONFIG.apiVersion, "1.19.0")) {
             element.find('[class*="mode_color"]').each(function() {
-                var m = 0;
-                var d = 0;
+                let m = 0;
+                let d = 0;
 
-                var match = $(this).attr("class").match(/(^|\s)mode_color-([0-9]+)-([0-9]+)(\s|$)/);
+                const match = $(this).attr("class").match(/(^|\s)mode_color-([0-9]+)-([0-9]+)(\s|$)/);
                 if (match) {
                     m = Number(match[2]);
                     d = Number(match[3]);
@@ -725,9 +727,9 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
     function setBackgroundColor(element) {
         if (element.is('[class*="color"]')) {
-            var colorIndex = 0;
+            let colorIndex = 0;
 
-            var match = element.attr("class").match(/(^|\s)color-([0-9]+)(\s|$)/);
+            const match = element.attr("class").match(/(^|\s)color-([0-9]+)(\s|$)/);
             if (match) {
                 colorIndex = match[2];
                 element.css('background-color', HsvToColor(FC.LED_COLORS[colorIndex]));
@@ -741,6 +743,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             case "function-a":
             case "function-f":
                 return true;
+            default:
+                break;
         }
         return false;
     }
@@ -753,6 +757,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 case "function-f":
                 case "function-g":
                     return true;
+                default:
+                    break;
             }
         } else {
             switch (activeFunction) {
@@ -766,6 +772,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 case "function-o":
                 case "function-g":
                     return true;
+                default:
+                    break;
             }
         }
         return false;
@@ -778,6 +786,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 case "function-a":
                 case "function-f":
                     return true;
+                default:
+                    break;
             }
         }
         return false;
@@ -791,9 +801,10 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 return false;
             case "function-r":
             case "function-b":
-                if (semver.lt(FC.CONFIG.apiVersion, "1.20.0"))
+                if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
                     return false;
-            break;
+                }
+                break;
             default:
                 return true;
         }
@@ -815,7 +826,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
     function setOptionalGroupsVisibility() {
 
-        var activeFunction = $('select.functionSelect').val();
+        const activeFunction = $('select.functionSelect').val();
         $('select.functionSelect').addClass(activeFunction);
 
 
@@ -858,19 +869,17 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         if (isVtxActive(activeFunction))
             $('.vtxOverlay').show();
 
-
-
         // set directions visibility
         if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
             switch (activeFunction) {
                 case "function-r":
                     $('.indicatorOverlay').hide();
                     $('.directions').hide();
-                break;
+                    break;
                 default:
                     $('.indicatorOverlay').show();
                     $('.directions').show();
-                break;
+                    break;
             }
         }
 
@@ -878,9 +887,11 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         if (semver.gte(FC.CONFIG.apiVersion, "1.19.0")) {
             // set mode colors visibility
 
-            if (semver.gte(FC.CONFIG.apiVersion, "1.20.0"))
-                if (activeFunction == "function-f")
+            if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
+                if (activeFunction === "function-f") {
                     $('.mode_colors').show();
+                }
+            }
 
             // set special colors visibility
             $('.special_colors').show();
@@ -923,7 +934,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
     }
 
     function applyFunctionToSelectedLeds() {
-        var activeFunction = $('select.functionSelect').val();
+        const activeFunction = $('select.functionSelect').val();
         TABS.led_strip.baseFuncs.forEach(function(letter) {
 
             if (activeFunction == 'function-' + letter) {
@@ -982,18 +993,18 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         $('input.function-' + overlay).prop('checked', false);
         $('input.function-' + overlay).change();
         $('.ui-selected').each(function() {
-            if (func == '' || $(this).is('.function-' + func)) {
+            if (func === '' || $(this).is(functionTag + func)) {
                 $(this).removeClass('function-' + overlay);
             }
         });
     }
 
     function updateColors(value, hsvIndex) {
-        var change = false;
+        let change = false;
 
         value = Number(value);
 
-        var className = '.color-' + selectedColorIndex;
+        const className = '.color-' + selectedColorIndex;
         if ($(className).hasClass('btnOn')) {
             switch (hsvIndex) {
                 case 0:
@@ -1037,8 +1048,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             if ($(this).is('.function-c') || $(this).is('.function-r') || $(this).is('.function-b')) {
                 $(this).find('.overlay-color').show();
 
-                for (var colorIndex = 0; colorIndex < 16; colorIndex++) {
-                    var className = 'color-' + colorIndex;
+                for (let colorIndex = 0; colorIndex < 16; colorIndex++) {
+                    const className = 'color-' + colorIndex;
                     if ($(this).is('.' + className)) {
                         $(this).find('.overlay-color').addClass(className);
                         $(this).find('.overlay-color').css('background-color', HsvToColor(FC.LED_COLORS[colorIndex]))
@@ -1055,8 +1066,8 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
 
     function setColorSliders(colorIndex) {
 
-        var sliders = $('div.colorDefineSliders input');
-        var change = false;
+        const sliders = $('div.colorDefineSliders input');
+        let change = false;
 
         if (!FC.LED_COLORS[colorIndex])
             return;
@@ -1089,35 +1100,33 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         if (input == undefined)
             return "";
 
-        var HSV = { h:Number(input.h), s:Number(input.s), v:Number(input.v) };
+        let HSV = { h:Number(input.h), s:Number(input.s), v:Number(input.v) };
 
         if (HSV.s == 0 && HSV.v == 0)
             return "";
 
         HSV = { h:HSV.h, s:1 - HSV.s / 255, v:HSV.v / 255 };
 
-        var HSL = { h:0, s:0, v:0};
+        const HSL = { h:0, s:0, v:0};
         HSL.h = HSV.h;
         HSL.l = (2 - HSV.s) * HSV.v / 2;
         HSL.s = HSL.l && HSL.l < 1 ? HSV.s * HSV.v / (HSL.l < 0.5 ? HSL.l * 2 : 2 - HSL.l * 2) : HSL.s;
 
-        var ret = 'hsl(' + HSL.h + ', ' + HSL.s * 100 + '%, ' + HSL.l * 100 + '%)';
-        return ret;
+        return `hsl(${HSL.h},${HSL.s * 100}%,${HSL.l * 100}%)`;
     }
 
     function getModeColor(mode, dir) {
-        for (var i = 0; i < FC.LED_MODE_COLORS.length; i++) {
-            var mc = FC.LED_MODE_COLORS[i];
-            if (mc.mode == mode && mc.direction == dir)
+        for (const mc of FC.LED_MODE_COLORS) {
+            if (mc.mode === mode && mc.direction === dir) {
                 return mc.color;
+            }
         }
         return "";
     }
 
     function setModeColor(mode, dir, color) {
-        for (var i = 0; i < FC.LED_MODE_COLORS.length; i++) {
-            var mc = FC.LED_MODE_COLORS[i];
-            if (mc.mode == mode && mc.direction == dir) {
+        for (const mc of FC.LED_MODE_COLORS) {
+            if (mc.mode === mode && mc.direction === dir) {
                 mc.color = color;
                 return 1;
             }

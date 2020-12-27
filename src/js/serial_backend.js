@@ -682,12 +682,12 @@ function update_live_status() {
                 $(".armedicon").removeClass('active');
             }
         }
-    }
-    if (FC.AUX_CONFIG[index] === 'FAILSAFE') {
-        if (bit_check(FC.CONFIG.mode, i)) {
-            $(".failsafeicon").addClass('active');
-        } else {
-            $(".failsafeicon").removeClass('active');
+        if (FC.AUX_CONFIG[i] === 'FAILSAFE') {
+            if (bit_check(FC.CONFIG.mode, i)) {
+                $(".failsafeicon").addClass('active');
+            } else {
+                $(".failsafeicon").removeClass('active');
+            }
         }
     }
 
