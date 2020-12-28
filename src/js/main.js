@@ -98,7 +98,7 @@ function closeSerial() {
     // automatically close the port when application closes
     const connectionId = serial.connectionId;
 
-    if (connectionId && CONFIGURATOR.connectionValid) {
+    if (connectionId && CONFIGURATOR.connectionValid && !CONFIGURATOR.virtualMode) {
         // code below is handmade MSP message (without pretty JS wrapper), it behaves exactly like MSP.send_message
         // sending exit command just in case the cli tab was open.
         // reset motors to default (mincommand)

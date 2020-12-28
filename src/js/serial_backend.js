@@ -12,6 +12,12 @@ function initializeSerialBackend() {
         else {
             $('#port-override-option').hide();
         }
+        if (selected_port.data().isVirtual) {
+            $('#firmware-virtual-option').show();
+        }
+        else {
+            $('#firmware-virtual-option').hide();
+        }
         if (selected_port.data().isDFU) {
             $('select#baud').hide();
         }
@@ -67,7 +73,14 @@ function initializeSerialBackend() {
                     $('div#port-picker #port, div#port-picker #baud, div#port-picker #delay').prop('disabled', true);
                     $('div.connect_controls div.connect_state').text(i18n.getMessage('connecting'));
 
-                    serial.connect(portName, {bitrate: selected_baud}, onOpen);
+                    if (selectedPort.data().isVirtual) {
+                        CONFIGURATOR.virtualMode = true;
+                        CONFIGURATOR.virtualApiVersion = $('#firmware-version-dropdown :selected').val();
+
+                        serial.connect('virtual', {}, onOpenVirtual);
+                    } else {
+                        serial.connect(portName, {bitrate: selected_baud}, onOpen);
+                    }
 
                     toggleStatus();
                 } else {
@@ -206,6 +219,8 @@ function setConnectionTimeout() {
 
 function onOpen(openInfo) {
     if (openInfo) {
+        CONFIGURATOR.virtualMode = false;
+
         // update connected_to
         GUI.connected_to = GUI.connecting_to;
 
@@ -295,6 +310,23 @@ function onOpen(openInfo) {
 
         abortConnect();
     }
+}
+
+function onOpenVirtual() {
+    GUI.connected_to = GUI.connecting_to;
+    GUI.connecting_to = false;
+
+    CONFIGURATOR.connectionValid = true;
+
+    mspHelper = new MspHelper();
+
+    VirtualFC.setVirtualConfig();
+
+    processBoardInfo();
+
+    update_dataflash_global();
+    sensor_status(FC.CONFIG.activeSensors);
+    updateTabList(FC.FEATURE_CONFIG.features);
 }
 
 function abortConnect() {

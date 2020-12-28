@@ -25,6 +25,8 @@ var CONFIGURATOR = {
 
     connectionValid: false,
     connectionValidCliOnly: false,
+    virtualMode: false,
+    virtualApiVersion: '0.0.1',
     cliActive: false,
     cliValid: false,
     gitChangesetId: 'unknown',

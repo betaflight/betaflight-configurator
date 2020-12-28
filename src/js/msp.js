@@ -56,6 +56,10 @@ const MSP = {
     JUMBO_FRAME_SIZE_LIMIT:     255,
 
     read: function (readInfo) {
+        if (CONFIGURATOR.virtualMode) {
+            return;
+        }
+
         const data = new Uint8Array(readInfo.data);
 
         for (const chunk of data) {
@@ -310,6 +314,13 @@ const MSP = {
         return bufferOut;
     },
     send_message: function (code, data, callback_sent, callback_msp, doCallbackOnError) {
+        if (CONFIGURATOR.virtualMode) {
+            if (callback_msp) {
+                callback_msp();
+            }
+            return;
+        }
+
         if (code === undefined) {
             return;
         }

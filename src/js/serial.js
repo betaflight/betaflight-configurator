@@ -8,7 +8,7 @@ const serial = {
     bytesReceived:  0,
     bytesSent:      0,
     failed:         0,
-    connectionType: 'serial', // 'serial' or 'tcp'
+    connectionType: 'serial', // 'serial' or 'tcp' or 'virtual'
     connectionIP:   '127.0.0.1',
     connectionPort: 5761,
 
@@ -20,6 +20,8 @@ const serial = {
         const testUrl = path.match(/^tcp:\/\/([A-Za-z0-9\.-]+)(?:\:(\d+))?$/);
         if (testUrl) {
             self.connectTcp(testUrl[1], testUrl[2], options, callback);
+        } else if (path === 'virtual') {
+            self.connectVirtual(callback);
         } else {
             self.connectSerial(path, options, callback);
         }
@@ -189,6 +191,21 @@ const serial = {
             }
         });
     },
+    connectVirtual: function (callback) {
+        const self = this;
+        self.connectionType = 'virtual';
+
+        if (!self.openCanceled) {
+            self.connected = true;
+            self.connectionId = 'virtual';
+            self.bitrate = 115200;
+            self.bytesReceived = 0;
+            self.bytesSent = 0;
+            self.failed = 0;
+
+            callback();
+        }
+    },
     disconnect: function (callback) {
         const self = this;
         self.connected = false;
@@ -203,26 +220,32 @@ const serial = {
             for (let i = (self.onReceiveError.listeners.length - 1); i >= 0; i--) {
                 self.onReceiveError.removeListener(self.onReceiveError.listeners[i]);
             }
+            if (self.connectionType !== 'virtual') {
+                if (self.connectionType === 'tcp') {
+                    chrome.sockets.tcp.disconnect(self.connectionId, function () {
+                        checkChromeRuntimeError();
+                        console.log(`${self.connectionType}: disconnecting socket.`);
+                    });
+                }
 
-            if (self.connectionType === 'tcp') {
-                chrome.sockets.tcp.disconnect(self.connectionId, function () {
+                const disconnectFn = (self.connectionType === 'serial') ? chrome.serial.disconnect : chrome.sockets.tcp.close;
+                disconnectFn(self.connectionId, function (result) {
                     checkChromeRuntimeError();
-                    console.log(`${self.connectionType}: disconnecting socket.`);
+
+                    result = result || self.connectionType === 'tcp';
+                    console.log(`${self.connectionType}: ${result ? 'closed' : 'failed to close'} connection with ID: ${self.connectionId}, Sent: ${self.bytesSent} bytes, Received: ${self.bytesReceived} bytes`);
+
+                    self.connectionId = false;
+                    self.bitrate = 0;
+
+                    if (callback) callback(result);
                 });
-            }
-
-            const disconnectFn = (self.connectionType === 'serial') ? chrome.serial.disconnect : chrome.sockets.tcp.close;
-            disconnectFn(self.connectionId, function (result) {
-                checkChromeRuntimeError();
-
-                result = result || self.connectionType === 'tcp';
-                console.log(`${self.connectionType}: ${result ? 'closed' : 'failed to close'} connection with ID: ${self.connectionId}, Sent: ${self.bytesSent} bytes, Received: ${self.bytesReceived} bytes`);
-
+            } else {
                 self.connectionId = false;
-                self.bitrate = 0;
-
-                if (callback) callback(result);
-            });
+                if (callback) {
+                    callback();
+                }
+            }
         } else {
             // connection wasn't opened, so we won't try to close anything
             // instead we will rise canceled flag which will prevent connect from continueing further after being canceled

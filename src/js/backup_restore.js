@@ -928,6 +928,14 @@ function configuration_restore(callback) {
             }
         }
 
+        if (CONFIGURATOR.virtualMode) {
+            FC.resetState();
+            FC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
+
+            sensor_status(FC.CONFIG.activeSensors);
+            update_dataflash_global();
+        }
+
         upload();
     }
 }

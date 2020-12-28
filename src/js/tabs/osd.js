@@ -1867,6 +1867,11 @@ OSD.msp = {
                         warningFlags |= (1 << i);
                     }
                 }
+
+                if (CONFIGURATOR.virtualMode) {
+                    OSD.virtualMode.warningFlags = warningFlags;
+                }
+
                 console.log(warningFlags);
                 result.push16(warningFlags);
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
@@ -1882,17 +1887,24 @@ OSD.msp = {
                     result.push8(OSD.data.parameters.cameraFrameHeight);
                 }
             }
-
         }
         return result;
     },
     encodeLayout(displayItem) {
+        if (CONFIGURATOR.virtualMode) {
+            OSD.virtualMode.itemPositions[displayItem.index] = this.helpers.pack.position(displayItem);
+        }
+
         const buffer = [];
         buffer.push8(displayItem.index);
         buffer.push16(this.helpers.pack.position(displayItem));
         return buffer;
     },
     encodeStatistics(statItem) {
+        if (CONFIGURATOR.virtualMode) {
+            OSD.virtualMode.statisticsState[statItem.index] = statItem.enabled;
+        }
+
         const buffer = [];
         buffer.push8(statItem.index);
         buffer.push16(statItem.enabled);
@@ -1900,9 +1912,48 @@ OSD.msp = {
         return buffer;
     },
     encodeTimer(timer) {
+        if (CONFIGURATOR.virtualMode) {
+            OSD.virtualMode.timerData[timer.index] = {};
+            OSD.virtualMode.timerData[timer.index].src = timer.src;
+            OSD.virtualMode.timerData[timer.index].precision = timer.precision;
+            OSD.virtualMode.timerData[timer.index].alarm = timer.alarm;
+        }
+
         const buffer = [-2, timer.index];
         buffer.push16(this.helpers.pack.timer(timer));
         return buffer;
+    },
+    processOsdElements(data, itemPositions){
+        // Now we have the number of profiles, process the OSD elements
+        for (const item of itemPositions) {
+            const j = data.displayItems.length;
+            let c;
+            let suffix;
+            let ignoreSize = false;
+            if (data.displayItems.length < OSD.constants.DISPLAY_FIELDS.length) {
+                c = OSD.constants.DISPLAY_FIELDS[j];
+            } else {
+                c = OSD.constants.UNKNOWN_DISPLAY_FIELD;
+                suffix = (1 + data.displayItems.length - OSD.constants.DISPLAY_FIELDS.length).toString();
+                ignoreSize = true;
+            }
+            data.displayItems.push($.extend({
+                name: c.name,
+                text: suffix ? [c.text, suffix] : c.text,
+                desc: c.desc,
+                index: j,
+                draw_order: c.draw_order,
+                preview: suffix ? c.preview + suffix : c.preview,
+                ignoreSize,
+            }, this.helpers.unpack.position(item, c)));
+        }
+
+        // Generate OSD element previews and positionable that are defined by a function
+        for (const item of data.displayItems) {
+            if (typeof (item.preview) === 'function') {
+                item.preview = item.preview(data);
+            }
+        }
     },
     // Currently only parses MSP_MAX_OSD responses, add a switch on payload.code if more codes are handled
     decode(payload) {
@@ -2068,36 +2119,82 @@ OSD.msp = {
             d.parameters.cameraFrameHeight = view.readU8();
         }
 
-        // Now we have the number of profiles, process the OSD elements
-        for (const item of itemsPositionsRead) {
-            const j = d.displayItems.length;
-            let c;
-            let suffix;
-            let ignoreSize = false;
-            if (d.displayItems.length < OSD.constants.DISPLAY_FIELDS.length) {
-                c = OSD.constants.DISPLAY_FIELDS[j];
-            } else {
-                c = OSD.constants.UNKNOWN_DISPLAY_FIELD;
-                suffix = (1 + d.displayItems.length - OSD.constants.DISPLAY_FIELDS.length).toString();
-                ignoreSize = true;
+        this.processOsdElements(d, itemsPositionsRead);
+
+        OSD.updateDisplaySize();
+    },
+    decodeVirtual() {
+        const d = OSD.data;
+
+        d.displayItems = [];
+        d.statItems = [];
+        d.warnings = [];
+        d.timers = [];
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+            // Parse statistics display enable
+            const expectedStatsCount = OSD.constants.STATISTIC_FIELDS.length;
+
+            for (let i = 0; i < expectedStatsCount; i++) {
+                const v = OSD.virtualMode.statisticsState[i] ? 1 : 0;
+
+                // Known statistics field
+                if (i < expectedStatsCount) {
+                    const c = OSD.constants.STATISTIC_FIELDS[i];
+                    d.statItems.push({
+                        name: c.name,
+                        text: c.text,
+                        desc: c.desc,
+                        index: i,
+                        enabled: v === 1,
+                    });
+
+                // Read all the data for any statistics we don't know about
+                } else {
+                    const statisticNumber = i - expectedStatsCount + 1;
+                    d.statItems.push({
+                        name: 'UNKNOWN',
+                        text: ['osdTextStatUnknown', statisticNumber],
+                        desc: 'osdDescStatUnknown',
+                        index: i,
+                        enabled: v === 1,
+                    });
+                }
             }
-            d.displayItems.push($.extend({
-                name: c.name,
-                text: suffix ? [c.text, suffix] : c.text,
-                desc: c.desc,
-                index: j,
-                draw_order: c.draw_order,
-                preview: suffix ? c.preview + suffix : c.preview,
-                ignoreSize,
-            }, this.helpers.unpack.position(item, c)));
+
+            // Parse configurable timers
+            const expectedTimersCount = 3;
+            for (let i = 0; i < expectedTimersCount; i++) {
+                d.timers.push($.extend({
+                    index: i,
+                }, OSD.virtualMode.timerData[i]));
+            }
+
+            // Parse enabled warnings
+            const warningCount = OSD.constants.WARNINGS.length;
+            const warningFlags = OSD.virtualMode.warningFlags;
+
+            for (let i = 0; i < warningCount; i++) {
+                const enabled = (warningFlags & (1 << i)) !== 0;
+
+                // Known warning field
+                if (i < warningCount) {
+                    d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+
+                // Push Unknown Warning field
+                } else {
+                    const  warningNumber = i - warningCount + 1;
+                    d.warnings.push({
+                        name: 'UNKNOWN',
+                        text: ['osdWarningTextUnknown', warningNumber],
+                        desc: 'osdWarningUnknown',
+                        enabled,
+                    });
+                }
+            }
         }
 
-        // Generate OSD element previews and positionable that are defined by a function
-        for (const item of d.displayItems) {
-            if (typeof (item.preview) === 'function') {
-                item.preview = item.preview(d);
-            }
-        }
+        this.processOsdElements(OSD.data, OSD.virtualMode.itemPositions);
 
         OSD.updateDisplaySize();
     },
@@ -2235,6 +2332,10 @@ TABS.osd.initialize = function(callback) {
         GUI.active_tab = 'osd';
     }
 
+    if (CONFIGURATOR.virtualMode) {
+        VirtualFC.setupVirtualOSD();
+    }
+
     $('#content').load("./tabs/osd.html", function() {
         // Prepare symbols depending on the version
         SYM.loadSymbols();
@@ -2325,7 +2426,11 @@ TABS.osd.initialize = function(callback) {
 
                     OSD.chooseFields();
 
-                    OSD.msp.decode(info);
+                    if (CONFIGURATOR.virtualMode) {
+                        OSD.msp.decodeVirtual();
+                    } else {
+                        OSD.msp.decode(info);
+                    }
 
                     if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected) {
                         $('.noOsdChipDetect').show();
