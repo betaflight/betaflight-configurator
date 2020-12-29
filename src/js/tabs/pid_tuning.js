@@ -681,6 +681,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
             if (checked) {
                 $('input[id="dtermLowpassEnabled"]').prop('checked', false).change();
+                $('.pid_filter input[id="dtermLowpassDynExpoEnabled"]').prop('checked', true).change();
             } else if (FC.FILTER_CONFIG.dterm_lowpass_hz > 0 && !$('input[id="dtermLowpassEnabled"]').is(':checked')) {
                 $('input[id="dtermLowpassEnabled"]').prop('checked', true).change();
                 $('.pid_filter input[id="dtermLowpassDynExpoEnabled"]').prop('checked', false).change();
