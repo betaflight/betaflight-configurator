@@ -929,7 +929,7 @@ function cordova_configxml() {
             { path: '//xmlns:name', text: pkg.productName },
             { path: '//xmlns:description', text: pkg.description },
             { path: '//xmlns:author', text: pkg.author },
-        ], 'http://www.w3.org/ns/widgets'))
+        ], 'https://www.w3.org/ns/widgets'))
         .pipe(xmlTransformer([
             { path: '.', attr: { 'version': pkg.version } },
         ]))
