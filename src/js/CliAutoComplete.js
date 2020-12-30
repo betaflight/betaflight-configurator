@@ -438,7 +438,7 @@ CliAutoComplete._initTextcomplete = function() {
                     self.openLater();
                     return '$1$3 ';
                 }
-                return null;
+                return '$1';
             },
             context: function(text) {
                 const matchResource = text.match(/^\s*resource\s+(\w+)\s/i);
@@ -477,7 +477,7 @@ CliAutoComplete._initTextcomplete = function() {
                     sendOnEnter = true;
                     return '$1none ';
                 }
-                return null;
+                return '$1';
             },
             context: function(text) {
                 const m = text.match(/^\s*resource\s+(\w+)\s+(\d+\s)?/i);
