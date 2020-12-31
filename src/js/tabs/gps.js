@@ -102,6 +102,8 @@ TABS.gps.initialize = function (callback) {
             }
         }
 
+        let frame = document.getElementById('map');
+
         // enable data pulling
         GUI.interval_add('gps_pull', function gps_update() {
             // avoid usage of the GPS commands until a GPS sensor is detected for targets that are compiled without GPS support.
@@ -136,8 +138,6 @@ TABS.gps.initialize = function (callback) {
                 set_offline();
             }
         });
-
-        let frame = document.getElementById('map');
 
         $('#zoom_in').click(function() {
             console.log('zoom in');

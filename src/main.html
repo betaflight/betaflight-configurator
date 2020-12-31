@@ -76,6 +76,7 @@
     <script type="text/javascript" src="./js/ConfigStorage.js"></script>
     <script type="text/javascript" src="./js/data_storage.js"></script>
     <script type="text/javascript" src="./js/fc.js"></script>
+    <script type="text/javascript" src="./js/VirtualFC.js"></script>
     <script type="text/javascript" src="./js/port_handler.js"></script>
     <script type="text/javascript" src="./js/port_usage.js"></script>
     <script type="text/javascript" src="./js/serial.js"></script>
@@ -164,6 +165,11 @@
                     <span i18n="portOverrideText">Port:</span>
                     <input id="port-override" type="text" value="/dev/rfcomm0"/>
                 </label>
+            </div>
+            <div id="firmware-virtual-option">
+                <div class="dropdown dropdown-dark">
+                    <select id="firmware-version-dropdown" class="dropdown-select" i18n_title="virtualMSPVersion"></select>
+                </div>
             </div>
             <div id="portsinput">
                 <div class="dropdown dropdown-dark">

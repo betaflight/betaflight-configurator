@@ -52,6 +52,13 @@
     "portsSelectManual": {
         "message": "Manual Selection"
     },
+    "portsSelectVirtual": {
+        "message": "Virtual Mode (Experimental)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Virtual Firmware Version"
+    },
     "portOverrideText": {
         "message": "Port:"
     },    

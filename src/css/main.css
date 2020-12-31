@@ -224,6 +224,13 @@ input[type="number"]::-webkit-inner-spin-button {
     color: var(--subtleAccent);
 }
 
+#firmware-virtual-option {
+    height: 76px;
+    width: 180px;
+    margin-right: 15px;
+    display: none;
+}
+
 #port-override-option {
     height: 76px;
     margin-top: 7px;

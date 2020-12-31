@@ -42,3 +42,34 @@ function bytesToSize(bytes) {
     }
     return false;
 }
+
+const majorFirmwareVersions = {
+    '1.43': '4.2.*',
+    '1.42': '4.1.*',
+    '1.41': '4.0.*',
+    '1.40': '3.5.*',
+    '1.39': '3.4.*',
+    '1.37': '3.3.0',
+    '1.36': '3.2.*',
+    '1.31': '3.1.0',
+};
+
+function generateVirtualApiVersions() {
+    const firmwareVersionDropdown = document.getElementById('firmware-version-dropdown');
+    const max = semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
+
+    for (let i = max; i > 0; i--) {
+        const option = document.createElement("option");
+        const verNum = `1.${i}`;
+        option.value = `${verNum}.0`;
+        option.text = `MSP: ${verNum} `;
+
+        if (majorFirmwareVersions.hasOwnProperty(verNum)) {
+            option.text += ` | Firmware: ${majorFirmwareVersions[verNum]}`;
+        } else if (i === max) {
+            option.text += ` | Latest Firmware`;
+        }
+
+        firmwareVersionDropdown.appendChild(option);
+    }
+}

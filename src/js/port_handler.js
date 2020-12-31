@@ -17,6 +17,9 @@ const PortHandler = new function () {
 PortHandler.initialize = function () {
     this.portPickerElement = $('div#port-picker #port');
 
+    // fill dropdown with version numbers
+    generateVirtualApiVersions();
+
     // start listening, check after TIMEOUT_CHECK ms
     this.check();
 };
@@ -70,6 +73,12 @@ PortHandler.check_usb_devices = function (callback) {
                     value: "DFU",
                     text: usbText,
                     data: {isDFU: true},
+                }));
+
+                self.portPickerElement.append($('<option/>', {
+                    value: 'virtual',
+                    text: i18n.getMessage('portsSelectVirtual'),
+                    data: {isVirtual: true},
                 }));
 
                 self.portPickerElement.append($('<option/>', {
@@ -212,6 +221,12 @@ PortHandler.updatePortSelect = function (ports) {
             data: {isManual: false},
         }));
     }
+
+    this.portPickerElement.append($("<option/>", {
+        value: 'virtual',
+        text: i18n.getMessage('portsSelectVirtual'),
+        data: {isVirtual: true},
+    }));
 
     this.portPickerElement.append($("<option/>", {
         value: 'manual',
