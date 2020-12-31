@@ -1,6 +1,6 @@
 'use strict';
 
-var Analytics = function (trackingId, userId, appName, appVersion, changesetId, os, checkForDebugVersions, optOut, debugMode, buildType) {
+const Analytics = function (trackingId, userId, appName, appVersion, changesetId, os, checkForDebugVersions, optOut, debugMode, buildType) {
     this._trackingId = trackingId;
 
     this.setOptOut(optOut);
@@ -85,12 +85,12 @@ var Analytics = function (trackingId, userId, appName, appVersion, changesetId, 
 };
 
 Analytics.prototype.setDimension = function (dimension, value) {
-    var dimensionName = 'dimension' + dimension;
+    const dimensionName = `dimension${dimension}`;
     this._googleAnalytics.custom(dimensionName, value);
 }
 
 Analytics.prototype.setMetric = function (metric, value) {
-    var metricName = 'metric' + metric;
+    const metricName = `metric${metric}`;
     this._googleAnalytics.custom(metricName, value);
 }
 
@@ -99,9 +99,9 @@ Analytics.prototype.sendEvent = function (category, action, options) {
 }
 
 Analytics.prototype.sendChangeEvents = function (category, changeList) {
-    for (var actionName in changeList) {
+    for (const actionName in changeList) {
         if (changeList.hasOwnProperty(actionName)) {
-            var actionValue = changeList[actionName];
+            const actionValue = changeList[actionName];
             if (actionValue !== undefined) {
                 this.sendEvent(category, actionName, { eventLabel: actionValue });
             }

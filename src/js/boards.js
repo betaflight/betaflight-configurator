@@ -5,7 +5,7 @@
 // and then manually setting vcp to true for boards that use VCP
 // Also, please note that the targets in this list are ordered in the order they are returned by the above command. Please do not reorder to avoid churn.
 
-var BOARD_DEFINITIONS = [
+const BOARD_DEFINITIONS = [
     {name: 'AIR32', identifier: 'AR32', vcp: true},
     {name: 'AIRHEROF3', identifier: 'AIR3', vcp: false},
     {name: 'ALIENFLIGHTF1', identifier: 'AFF1', vcp: false},
@@ -74,17 +74,15 @@ var BOARD_DEFINITIONS = [
     {name: 'ZCOREF3', identifier: 'ZCF3', vcp: false}
 ];
 
-var DEFAULT_BOARD_DEFINITION = {
+const DEFAULT_BOARD_DEFINITION = {
     name: "Unknown", identifier: "????", vcp: false
 };
 
-var BOARD = {};
+const BOARD = {};
 
 BOARD.find_board_definition = function (identifier) {
-    for (var i = 0; i < BOARD_DEFINITIONS.length; i++) {
-        var candidate = BOARD_DEFINITIONS[i];
-
-        if (candidate.identifier == identifier) {
+    for (const candidate of BOARD_DEFINITIONS) {
+        if (candidate.identifier === identifier) {
             return candidate;
         }
     }

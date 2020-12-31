@@ -10,23 +10,23 @@ var ReleaseChecker = function (releaseName, releaseUrl) {
 }
 
 ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
-    var self = this;
+    const self = this;
     chrome.storage.local.get([self._releaseLastUpdateTag, self._releaseDataTag], function (result) {
-        var releaseDataTimestamp = $.now();
-        var cacheReleaseData = result[self._releaseDataTag];
-        var cachedReleaseLastUpdate = result[self._releaseLastUpdateTag];
+        const releaseDataTimestamp = $.now();
+        const cacheReleaseData = result[self._releaseDataTag];
+        const cachedReleaseLastUpdate = result[self._releaseLastUpdateTag];
         if (!cacheReleaseData || !cachedReleaseLastUpdate || releaseDataTimestamp - cachedReleaseLastUpdate > 3600 * 1000) {
             $.get(self._releaseUrl, function (releaseData) {
                 GUI.log(i18n.getMessage('releaseCheckLoaded',[self._releaseName]));
 
-                var data = {};
-                data[self._releaseDataTag] = releaseData
-                data[self._releaseLastUpdateTag] = releaseDataTimestamp
+                const data = {};
+                data[self._releaseDataTag] = releaseData;
+                data[self._releaseLastUpdateTag] = releaseDataTimestamp;
                 chrome.storage.local.set(data, function () {});
 
                 self._processReleaseData(releaseData, processFunction);
             }).fail(function (data) {
-                var message = '';
+                let message = '';
                 if (data['responseJSON']) {
                     message = data['responseJSON'].message;
                 }

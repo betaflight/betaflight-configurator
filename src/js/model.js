@@ -1,7 +1,7 @@
 'use strict';
 
 // generate mixer
-var mixerList = [
+const mixerList = [
     {name: 'Tricopter',        pos: 3,  model: 'tricopter',  image: 'tri'},
     {name: 'Quad +',           pos: 2,  model: 'quad_x',     image: 'quad_p'},
     {name: 'Quad X',           pos: 0,  model: 'quad_x',     image: 'quad_x'},
@@ -31,8 +31,8 @@ var mixerList = [
 ];
 
 // 3D model
-var Model = function (wrapper, canvas) {
-    var useWebGLRenderer = this.canUseWebGLRenderer();
+const Model = function (wrapper, canvas) {
+    const useWebGLRenderer = this.canUseWebGLRenderer();
 
     this.wrapper = wrapper;
     this.canvas = canvas;
@@ -47,7 +47,7 @@ var Model = function (wrapper, canvas) {
     this.renderer.setSize(this.wrapper.width() * 2, this.wrapper.height() * 2);
 
     // load the model including materials
-    var model_file = useWebGLRenderer ? mixerList[FC.MIXER_CONFIG.mixer - 1].model : 'fallback';
+    let model_file = useWebGLRenderer ? mixerList[FC.MIXER_CONFIG.mixer - 1].model : 'fallback';
 
     // Temporary workaround for 'custom' model until akfreak's custom model is merged.
     if (model_file == 'custom') { model_file = 'fallback'; }
@@ -65,8 +65,8 @@ var Model = function (wrapper, canvas) {
     this.camera.position.z = 125;
 
     // some light
-    var light = new THREE.AmbientLight(0x404040);
-    var light2 = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 1.5);
+    const light = new THREE.AmbientLight(0x404040);
+    const light2 = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 1.5);
     light2.position.set(0, 1, 0);
 
     // add camera, model, light to the foreground scene
@@ -103,7 +103,7 @@ Model.prototype.canUseWebGLRenderer = function () {
     // webgl capability detector
     // it would seem the webgl "enabling" through advanced settings will be ignored in the future
     // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
-    var detector_canvas = document.createElement('canvas');
+    const detector_canvas = document.createElement('canvas');
 
     return window.WebGLRenderingContext && (detector_canvas.getContext('webgl') || detector_canvas.getContext('experimental-webgl'));
 };
