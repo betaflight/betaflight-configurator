@@ -3,21 +3,21 @@
 // code below is highly experimental, although it runs fine on latest firmware
 // the data inside nested objects needs to be verified if deep copy works properly
 function configuration_backup(callback) {
-    var activeProfile = null;
+    let activeProfile = null;
 
-    var version = CONFIGURATOR.version;
+    let version = CONFIGURATOR.version;
 
     if (version.indexOf(".") === -1) {
         version = version + ".0.0";
     }
 
-    var configuration = {
+    const configuration = {
         'generatedBy': version,
         'apiVersion': FC.CONFIG.apiVersion,
         'profiles': [],
     };
 
-    var profileSpecificData = [
+    const profileSpecificData = [
         MSPCodes.MSP_PID_CONTROLLER,
         MSPCodes.MSP_PID,
         MSPCodes.MSP_RC_TUNING,
@@ -52,8 +52,8 @@ function configuration_backup(callback) {
     }
 
     function fetch_specific_data() {
-        var fetchingProfile = 0,
-            codeKey = 0;
+        let fetchingProfile = 0;
+        let codeKey = 0;
 
         function fetch_specific_data_item() {
             if (fetchingProfile < FC.CONFIG.numProfiles) {
@@ -92,7 +92,7 @@ function configuration_backup(callback) {
         fetch_specific_data_item();
     }
 
-    var uniqueData = [
+    const uniqueData = [
         MSPCodes.MSP_RX_MAP,
         MSPCodes.MSP_CF_SERIAL_CONFIG,
         MSPCodes.MSP_LED_STRIP_CONFIG,
@@ -130,7 +130,7 @@ function configuration_backup(callback) {
     update_unique_data_list();
 
     function fetch_unique_data() {
-        var codeKey = 0;
+        let codeKey = 0;
 
         function fetch_unique_data_item() {
             if (codeKey < uniqueData.length) {
@@ -203,14 +203,14 @@ function configuration_backup(callback) {
     }
 
     function save() {
-        var chosenFileEntry = null;
+        let chosenFileEntry = null;
 
-        var prefix = 'backup';
-        var suffix = 'json';
+        const prefix = 'backup';
+        const suffix = 'json';
 
-        var filename = generateFilename(prefix, suffix);
+        const filename = generateFilename(prefix, suffix);
 
-        var accepts = [{
+        const accepts = [{
             description: suffix.toUpperCase() + ' files', extensions: [suffix]
         }];
 
@@ -240,15 +240,15 @@ function configuration_backup(callback) {
                         chosenFileEntry = fileEntryWritable;
 
                         // crunch the config object
-                        var serialized_config_object = JSON.stringify(configuration, null, '\t');
-                        var blob = new Blob([serialized_config_object], {type: 'text/plain'}); // first parameter for Blob needs to be an array
+                        const serializedConfigObject = JSON.stringify(configuration, null, '\t');
+                        const blob = new Blob([serializedConfigObject], {type: 'text/plain'}); // first parameter for Blob needs to be an array
 
                         chosenFileEntry.createWriter(function (writer) {
                             writer.onerror = function (e) {
                                 console.error(e);
                             };
 
-                            var truncated = false;
+                            let truncated = false;
                             writer.onwriteend = function () {
                                 if (!truncated) {
                                     // onwriteend will be fired again when truncation is finished
@@ -279,9 +279,9 @@ function configuration_backup(callback) {
 }
 
 function configuration_restore(callback) {
-    var chosenFileEntry = null;
+    let chosenFileEntry = null;
 
-    var accepts = [{
+    const accepts = [{
         description: 'JSON files', extensions: ['json']
     }];
 
@@ -305,7 +305,7 @@ function configuration_restore(callback) {
 
         // read contents into variable
         chosenFileEntry.file(function (file) {
-            var reader = new FileReader();
+            const reader = new FileReader();
 
             reader.onprogress = function (e) {
                 if (e.total > 1048576) { // 1 MB
@@ -319,16 +319,15 @@ function configuration_restore(callback) {
                 if ((e.total != 0 && e.total == e.loaded) || GUI.isCordova()) {
                     // Cordova: Ignore verification : seem to have a bug with progressEvent returned
                     console.log('Read SUCCESSFUL');
-
+                    let configuration;
                     try { // check if string provided is a valid JSON
-                        var configuration = JSON.parse(e.target.result);
-                    } catch (e) {
+                        configuration = JSON.parse(e.target.result);
+                    } catch (err) {
                         // data provided != valid json object
-                        console.log('Data provided != valid JSON string, restore aborted.');
+                        console.log(`Data provided != valid JSON string, restore aborted: ${err}`);
 
                         return;
                     }
-
 
                     // validate
                     if (typeof configuration.generatedBy !== 'undefined' && compareVersions(configuration.generatedBy, CONFIGURATOR.BACKUP_FILE_VERSION_MIN_SUPPORTED)) {
@@ -337,7 +336,7 @@ function configuration_restore(callback) {
                             return;
                         }
                         if (configuration.FEATURE_CONFIG.features._featureMask) {
-                            var features = new Features(FC.CONFIG);
+                            const features = new Features(FC.CONFIG);
                             features.setMask(configuration.FEATURE_CONFIG.features._featureMask);
                             configuration.FEATURE_CONFIG.features = features;
                         }
@@ -364,8 +363,8 @@ function configuration_restore(callback) {
 
 
     function migrate(configuration) {
-        var appliedMigrationsCount = 0;
-        var migratedVersion = configuration.generatedBy;
+        let appliedMigrationsCount = 0;
+        let migratedVersion = configuration.generatedBy;
         GUI.log(i18n.getMessage('configMigrationFrom', [migratedVersion]));
 
         if (!compareVersions(migratedVersion, '0.59.1')) {
@@ -410,13 +409,13 @@ function configuration_restore(callback) {
 
             // LED Strip was saved as object instead of array.
             if (typeof(configuration.LED_STRIP) == 'object') {
-                var fixed_led_strip = [];
+                const fixedLedStrip = [];
 
-                var index = 0;
+                let index = 0;
                 while (configuration.LED_STRIP[index]) {
-                    fixed_led_strip.push(configuration.LED_STRIP[index++]);
+                    fixedLedStrip.push(configuration.LED_STRIP[index++]);
                 }
-                configuration.LED_STRIP = fixed_led_strip;
+                configuration.LED_STRIP = fixedLedStrip;
             }
 
             for (let profileIndex = 0; profileIndex < 3; profileIndex++) {
@@ -448,11 +447,11 @@ function configuration_restore(callback) {
         }
         if (compareVersions(migratedVersion, '0.63.0') && !compareVersions(configuration.apiVersion, '1.7.0')) {
             // Serial configuation redesigned, 0.63.0 saves old and new configurations.
-            var ports = [];
-            for (var portIndex = 0; portIndex < configuration.SERIAL_CONFIG.ports.length; portIndex++) {
-                var oldPort = configuration.SERIAL_CONFIG.ports[portIndex];
+            const ports = [];
+            for (const port of configuration.SERIAL_CONFIG.ports) {
+                const oldPort = port;
 
-                var newPort = {
+                const newPort = {
                     identifier: oldPort.identifier,
                     functions: [],
                     msp_baudrate: String(configuration.SERIAL_CONFIG.mspBaudRate),
@@ -466,20 +465,20 @@ function configuration_restore(callback) {
                     case 5: // MSP, CLI, GPS-PASSTHROUGH
                     case 8: // MSP ONLY
                         newPort.functions.push('MSP');
-                    break;
+                        break;
                     case 2: // GPS
                         newPort.functions.push('GPS');
-                    break;
+                        break;
                     case 3: // RX_SERIAL
                         newPort.functions.push('RX_SERIAL');
-                    break;
+                        break;
                     case 10: // BLACKBOX ONLY
                         newPort.functions.push('BLACKBOX');
-                    break;
+                        break;
                     case 11: // MSP, CLI, BLACKBOX, GPS-PASSTHROUGH
                         newPort.functions.push('MSP');
                         newPort.functions.push('BLACKBOX');
-                    break;
+                        break;
                 }
 
                 ports.push(newPort);
@@ -522,8 +521,7 @@ function configuration_restore(callback) {
 
         if (semver.lt(migratedVersion, '0.66.0')) {
             // api 1.12 updated servo configuration protocol and added servo mixer rules
-            for (var profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
-
+            for (let profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
                 if (semver.eq(configuration.apiVersion, '1.10.0')) {
                     // drop two unused servo configurations
                     while (configuration.profiles[profileIndex].ServoConfig.length > 8) {
@@ -531,8 +529,8 @@ function configuration_restore(callback) {
                     }
                 }
 
-                for (var i = 0; i < configuration.profiles[profileIndex].ServoConfig.length; i++) {
-                    var servoConfig = profiles[profileIndex].ServoConfig;
+                for (let i = 0; i < configuration.profiles[profileIndex].ServoConfig.length; i++) {
+                    const servoConfig = profiles[profileIndex].ServoConfig;
 
                     servoConfig[i].angleAtMin = 45;
                     servoConfig[i].angleAtMax = 45;
@@ -555,8 +553,8 @@ function configuration_restore(callback) {
 
         if (semver.lt(configuration.apiVersion, '1.14.0') && semver.gte(FC.CONFIG.apiVersion, "1.14.0")) {
             // api 1.14 removed old pid controllers
-            for (var profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
-                var newPidControllerIndex = configuration.profiles[profileIndex].PID.controller;
+            for (let profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
+                let newPidControllerIndex = configuration.profiles[profileIndex].PID.controller;
                 switch (newPidControllerIndex) {
                     case 3:
                     case 4:
@@ -592,7 +590,7 @@ function configuration_restore(callback) {
         if (compareVersions(migratedVersion, '0.66.0') && !compareVersions(configuration.apiVersion, '1.15.0')) {
             // api 1.15 exposes RCdeadband and sensor alignment
 
-            for (var profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
+            for (let profileIndex = 0; profileIndex < configuration.profiles.length; profileIndex++) {
                  if (configuration.profiles[profileIndex].RCdeadband == undefined) {
                     configuration.profiles[profileIndex].RCdeadband = {
                     deadband:                0,
@@ -642,8 +640,8 @@ function configuration_restore(callback) {
                     {mode: 0, value: 875}
                 ];
 
-                for (var i = 0; i < 14; i++) {
-                    var rxfailChannel = {
+                for (let i = 0; i < 14; i++) {
+                    const rxfailChannel = {
                         mode:  1,
                         value: 1500
                     };
@@ -688,15 +686,15 @@ function configuration_restore(callback) {
         return true;
     }
 
-    function configuration_upload(configuration, callback) {
+    function configuration_upload(configuration, _callback) {
         function upload() {
-            var activeProfile = null;
-            var numProfiles = FC.CONFIG.numProfiles;
+            let activeProfile = null;
+            let numProfiles = FC.CONFIG.numProfiles;
             if (configuration.profiles.length < numProfiles) {
                 numProfiles = configuration.profiles.length;
             }
 
-            var profileSpecificData = [
+            const profileSpecificData = [
                 MSPCodes.MSP_SET_PID_CONTROLLER,
                 MSPCodes.MSP_SET_PID,
                 MSPCodes.MSP_SET_RC_TUNING,
@@ -721,8 +719,8 @@ function configuration_restore(callback) {
             }
 
             function upload_specific_data() {
-                var savingProfile = 0,
-                    codeKey = 0;
+                let savingProfile = 0;
+                let codeKey = 0;
 
                 function load_objects(profile) {
                     FC.PID = configuration.profiles[profile].PID;
@@ -770,8 +768,8 @@ function configuration_restore(callback) {
                         if (configuration.MODE_RANGES_EXTRA == undefined) {
                             FC.MODE_RANGES_EXTRA = [];
 
-                            for (var modeIndex = 0; modeIndex < FC.MODE_RANGES.length; modeIndex++) {
-                                var defaultModeRangeExtra = {
+                            for (let modeIndex = 0; modeIndex < FC.MODE_RANGES.length; modeIndex++) {
+                                const defaultModeRangeExtra = {
                                     modeId:     FC.MODE_RANGES[modeIndex].modeId,
                                     modeLogic:  0,
                                     linkedTo:   0
@@ -795,9 +793,9 @@ function configuration_restore(callback) {
             }
 
             function upload_unique_data() {
-                var codeKey = 0;
+                let codeKey = 0;
 
-                var uniqueData = [
+                const uniqueData = [
                     MSPCodes.MSP_SET_RX_MAP,
                     MSPCodes.MSP_SET_CF_SERIAL_CONFIG
                 ];
@@ -890,10 +888,11 @@ function configuration_restore(callback) {
             }
 
             function send_led_strip_mode_colors() {
-                if (semver.gte(FC.CONFIG.apiVersion, "1.19.0"))
+                if (semver.gte(FC.CONFIG.apiVersion, "1.19.0")) {
                     mspHelper.sendLedStripModeColors(send_rxfail_config);
-                else
+                } else {
                     send_rxfail_config();
+                }
             }
 
             function send_rxfail_config() {
@@ -912,19 +911,8 @@ function configuration_restore(callback) {
                 GUI.log(i18n.getMessage('eeprom_saved_ok'));
 
                 GUI.tab_switch_cleanup(function() {
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialize);
+                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitialiseConnection('setup', _callback));
                 });
-            }
-
-            function reinitialize() {
-                GUI.log(i18n.getMessage('deviceRebooting'));
-
-                GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-                    MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                        GUI.log(i18n.getMessage('deviceReady'));
-                        if (callback) callback();
-                    });
-                }, 1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
             }
         }
 
