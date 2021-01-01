@@ -52,6 +52,13 @@
     "portsSelectManual": {
         "message": "crwdns5320:0crwdne5320:0"
     },
+    "portsSelectVirtual": {
+        "message": "crwdns10298:0crwdne10298:0",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "crwdns10300:0crwdne10300:0"
+    },
     "portOverrideText": {
         "message": "crwdns5321:0crwdne5321:0"
     },
