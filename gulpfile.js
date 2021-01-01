@@ -319,6 +319,7 @@ function dist_rollup() {
                 // I will be picked up by rollup and bundled accordingly.
                 'components/init': 'src/components/init.js',
                 'js/main_cordova': 'src/js/main_cordova.js',
+                'js/utils/common': 'src/js/utils/common.js'
             },
             plugins: [
                 alias({

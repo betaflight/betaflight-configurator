@@ -93,10 +93,6 @@ function read_hex_file(data) {
     }
 }
 
-function microtime() {
-    return new Date().getTime() / 1000;
-}
-
 onmessage = function(event) {
     const timeParsingStart = microtime(); // track time
 

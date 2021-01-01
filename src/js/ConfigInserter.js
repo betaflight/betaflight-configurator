@@ -86,10 +86,6 @@ function generateData(firmware, input, startAddress) {
     firmware.bytes_total += input.length;
 }
 
-function microtime() {
-    return new Date().getTime() / 1000;
-}
-
 ConfigInserter.prototype.insertConfig = function (firmware, input) {
     const timeParsingStart = microtime(); // track time
 
