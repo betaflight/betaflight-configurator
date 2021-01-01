@@ -52,6 +52,13 @@
     "portsSelectManual": {
         "message": "Manuális Választás"
     },
+    "portsSelectVirtual": {
+        "message": "Virtuális Mód (kísérleti)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Virtuális Firmware Verzió"
+    },
     "portOverrideText": {
         "message": "Port:"
     },
