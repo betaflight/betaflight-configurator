@@ -49,6 +49,13 @@
     "portsSelectManual": {
         "message": "수동 선택"
     },
+    "portsSelectVirtual": {
+        "message": "가상 모드 (실험적인)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "가상 펌웨어 버전"
+    },
     "portOverrideText": {
         "message": "포트:"
     },
