@@ -2577,13 +2577,89 @@
         "message": "<strong>Safety notice</strong><br /><strong class=\"message-negative\">Remove all propellers to prevent injury!</strong><br />The motors will <strong>spin up!</strong>"
     },
     "motorsRemapDialogExplanations": {
-        "message": "<strong>Information notice</strong><br />Motors will spin up one by one and you will be able to select which motor is spinning. The battery should be plugged in, correct ESC protocol should be selected. This utility can only re-arrange currently active motors. More complex re-mapping requires the CLI Resource command.  Refer to this <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
+        "message": "<strong>Information notice</strong><br />Motors will spin up one by one and you will be able to select which motor is spinning. The battery should be plugged in, correct ESC protocol should be selected. This utility can only re-arrange currently active motors. More complex re-mapping requires the CLI Resource command. Refer to this <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
     },
     "motorsRemapDialogSave": {
         "message": "Save"
     },
     "motorsRemapDialogStartOver": {
         "message": "Start over"
+    },
+
+    "escDshotDirectionDialog-Title": {
+        "message": "Motor Direction - <strong class=\"message-negative-italic\">Warning: Ensure props are removed!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Select one or all motors"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Motors will spin when selected!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Safety notice</strong><br /><strong class=\"message-negative-italic\">Remove all propellers to prevent injury!</strong><br />The motors will <strong>spin up</strong> immediately when selected!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>I understand the risks</strong>,<br />all propellers are removed."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Information notice</strong><br />To change the motor directions, the battery must be plugged in and the correct ESC protocol must be set up in the $t(tabConfiguration.message) tab. Note that not all Dshot ESCs will work with this dialog. Check your ESC firmware."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Set motor spin direction by selecting and spinning each motor individually."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Resets all motor spin directions, then allows the user to choose which to reverse."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Motor direction"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normal"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Reverse"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Test motor"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Release button to stop"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Release to stop"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Individually"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Wizard"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Change direction of selected motor(s)"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Motors will spin when setting the direction!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Feature works with DSHOT ESCs only.<br />Verify that your ESC (electric speed controller) supports DSHOT protocol and change it on $t(tabConfiguration.message) tab."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Number of motors is 0.<br />Verify the current Mixer on $t(tabConfiguration.message) tab or setup a custom one through CLI. Refer to this <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Update the firmware.<br /> Make sure you are using the latest firmware: Betaflight 4.3 or newer."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Click on motor numbers individually to change spin direction"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Verify all motors are spinning correctly"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Start / spin motors"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Stop motors"
     },
 
     "sensorsInfo": {

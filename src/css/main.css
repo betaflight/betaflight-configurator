@@ -16,6 +16,10 @@
     --gimbalBackground: #eee;
     --gimbalCrosshair: var(--subtleAccent);
     --switcherysecond: #c4c4c4;
+    --pushedButton-background:  #c4c4c4;
+    --pushedButton-fontColor:  #000000;
+    --hoverButton-background: #ffcc3e;
+    --superSubtleAccent: #CCCCCC;
 }
 
 * {
@@ -38,6 +42,11 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+}
+
+::backdrop {
+    background-image: none;
+    background-color: rgba(1, 1, 1, 0.5);
 }
 
 a {
@@ -140,7 +149,11 @@ input[type="number"]::-webkit-inner-spin-button {
     font-weight: bold !important;
 }
 
-
+.message-negative-italic {
+    color: var(--error) !important;
+    font-weight: bold !important;
+    font-style: italic;
+}
 
 /** Main wrapper **/
 #main-wrapper {
@@ -1478,7 +1491,7 @@ dialog .dialog_toolbar .btn a {
 }
 
 dialog .dialog_toolbar .btn a:hover {
-    background-color: #ffcc3e;
+    background-color: var(--hoverButton-background);
     transition: all ease 0.2s;
 }
 
@@ -1574,7 +1587,7 @@ dialog .dialog_toolbar .btn a.disabled {
 }
 
 .content_toolbar .btn a:hover {
-    background-color: #ffcc3e;
+    background-color: var(--hoverButton-background);
     transition: all ease 0.2s;
 }
 
@@ -1862,7 +1875,7 @@ dialog .dialog_toolbar .btn a.disabled {
 }
 
 .fixed_band .save_btn a:hover {
-    background-color: #ffcc3f;
+    background-color: var(--hoverButton-background);
     transition: all ease 0.2s;
 }
 
@@ -1898,7 +1911,7 @@ dialog .dialog_toolbar .btn a.disabled {
 }
 
 .default_btn a:hover {
-    background-color: #ffcc3f;
+    background-color: var(--hoverButton-background);
     color: #000;
     text-shadow: 0 1px rgba(255, 255, 255, 0.25);
     transition: all ease 0.2s;
@@ -1907,7 +1920,7 @@ dialog .dialog_toolbar .btn a.disabled {
 }
 
 .default_btn a:active {
-    background-color: #ffcc3f;
+    background-color: var(--hoverButton-background);
     transition: all ease 0.0s;
     box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
 }
@@ -1917,6 +1930,7 @@ dialog .dialog_toolbar .btn a.disabled {
 }
 
 .regular-button {
+    -webkit-user-drag: none;
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 10px;
@@ -1932,6 +1946,16 @@ dialog .dialog_toolbar .btn a.disabled {
     transition: all ease 0.2s;
     padding: 0 9px;
     line-height: 28px;
+}
+
+.regular-button:hover {
+    background-color: var(--hoverButton-background);
+}
+
+.regular-button.pushed {
+    background-color: var(--pushedButton-background);
+    color: var(--pushedButton-fontColor);
+    border-radius: 3px;
 }
 
 .small {

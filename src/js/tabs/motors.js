@@ -31,7 +31,8 @@ TABS.motors = {
         // These are translated into proper Dshot values on the flight controller
         DSHOT_DISARMED_VALUE: 1000,
         DSHOT_MAX_VALUE: 2000,
-        DSHOT_3D_NEUTRAL: 1500
+        DSHOT_3D_NEUTRAL: 1500,
+        numberOfValidOutputs: -1,
 };
 
 TABS.motors.initialize = function (callback) {
@@ -105,7 +106,7 @@ TABS.motors.initialize = function (callback) {
     }
 
     function initDataArray(length) {
-        const data = new Array(length);
+        const data = Array.from({length: length});
         for (let i = 0; i < length; i++) {
             data[i] = [];
             data[i].min = -1;
@@ -126,8 +127,8 @@ TABS.motors.initialize = function (callback) {
             }
         }
         while (data[0].length > 300) {
-            for (let i = 0; i < data.length; i++) {
-                data[i].shift();
+            for (const item of data) {
+                item.shift();
             }
         }
         return sampleNumber + 1;
@@ -220,13 +221,8 @@ TABS.motors.initialize = function (callback) {
     }
 
     function update_model(mixer) {
-        let reverse = "";
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
-        }
-
-        $('.mixerPreview img').attr('src', './resources/motor_order/' + mixerList[mixer - 1].image + reverse + '.svg');
+        const imgSrc = CommonUtils.GetMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
+        $('.mixerPreview img').attr('src', imgSrc);
 
         const motorOutputReorderConfig = new MotorOutputReorderConfig(100);
         const domMotorOutputReorderDialogOpen = $('#motorOutputReorderDialogOpen');
@@ -234,6 +230,8 @@ TABS.motors.initialize = function (callback) {
         const isMotorReorderingAvailable = (mixerList[mixer - 1].name in motorOutputReorderConfig)
             && (FC.MOTOR_OUTPUT_ORDER) && (FC.MOTOR_OUTPUT_ORDER.length > 0);
         domMotorOutputReorderDialogOpen.toggle(isMotorReorderingAvailable);
+
+        self.escProtocolIsDshot = EscProtocols.IsProtocolDshot(FC.CONFIG.apiVersion, FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
     }
 
     function process_html() {
@@ -243,12 +241,6 @@ TABS.motors.initialize = function (callback) {
         update_arm_status();
 
         self.feature3DEnabled = FC.FEATURE_CONFIG.features.isEnabled('3D');
-
-        if (FC.PID_ADVANCED_CONFIG.fast_pwm_protocol >= TABS.configuration.DSHOT_PROTOCOL_MIN_VALUE) {
-            self.escProtocolIsDshot = true;
-        } else {
-            self.escProtocolIsDshot = false;
-        }
 
         $('#motorsEnableTestMode').prop('checked', false);
 
@@ -416,7 +408,7 @@ TABS.motors.initialize = function (callback) {
             function computeAndUpdate(sensor_data, data, max_read) {
                 let sum = 0.0;
                 for (let j = 0, jlength = data.length; j < jlength; j++) {
-                    for (let k = 0, klength = data[j].length; k < klength; k++){
+                    for (let k = 0, klength = data[j].length; k < klength; k++) {
                         sum += data[j][k][1]*data[j][k][1];
                     }
                 }
@@ -455,6 +447,7 @@ TABS.motors.initialize = function (callback) {
             motor_mah_drawing_e.text(i18n.getMessage('motorsADrawingValue', [FC.ANALOG.amperage.toFixed(2)]));
             motor_mah_drawn_e.text(i18n.getMessage('motorsmAhDrawnValue', [FC.ANALOG.mAhdrawn]));
         }
+
         GUI.interval_add('motors_power_data_pull_slow', power_data_pull, 250, true); // 4 fps
 
         $('a.reset_max').click(function () {
@@ -463,7 +456,7 @@ TABS.motors.initialize = function (callback) {
             accelOffsetEstablished = false;
         });
 
-        const numberOfValidOutputs = (FC.MOTOR_DATA.indexOf(0) > -1) ? FC.MOTOR_DATA.indexOf(0) : 8;
+        self.numberOfValidOutputs = (FC.MOTOR_DATA.indexOf(0) > -1) ? FC.MOTOR_DATA.indexOf(0) : 8;
         let rangeMin;
         let rangeMax;
         let neutral3d;
@@ -526,7 +519,7 @@ TABS.motors.initialize = function (callback) {
 
         function setSlidersEnabled(isEnabled) {
             if (isEnabled && !self.armed) {
-                $('div.sliders input').slice(0, numberOfValidOutputs).prop('disabled', false);
+                $('div.sliders input').slice(0, self.numberOfValidOutputs).prop('disabled', false);
 
                 // unlock master slider
                 $('div.sliders input:last').prop('disabled', false);
@@ -583,14 +576,14 @@ TABS.motors.initialize = function (callback) {
             const val = $(this).val();
 
             $('div.sliders input:not(:disabled, :last)').val(val);
-            $('div.values li:not(:last)').slice(0, numberOfValidOutputs).text(val);
+            $('div.values li:not(:last)').slice(0, self.numberOfValidOutputs).text(val);
             $('div.sliders input:not(:last):first').trigger('input');
         });
 
         // check if motors are already spinning
         let motorsRunning = false;
 
-        for (let i = 0; i < numberOfValidOutputs; i++) {
+        for (let i = 0; i < self.numberOfValidOutputs; i++) {
             if (!self.feature3DEnabled) {
                 if (FC.MOTOR_DATA[i] > rangeMin) {
                     motorsRunning = true;
@@ -747,7 +740,11 @@ TABS.motors.initialize = function (callback) {
             zeroThrottleValue = neutral3d;
         }
 
-        setup_motor_output_reordering_dialog(content_ready, zeroThrottleValue);
+        setup_motor_output_reordering_dialog(SetupEscDshotDirectionDialogCallback, zeroThrottleValue);
+
+        function SetupEscDshotDirectionDialogCallback() {
+            SetupdescDshotDirectionDialog(content_ready, zeroThrottleValue);
+        }
 
         function content_ready() {
             GUI.content_ready(callback);
@@ -764,9 +761,9 @@ TABS.motors.initialize = function (callback) {
             callbackFunction, mixerList[FC.MIXER_CONFIG.mixer - 1].name,
             zeroThrottleValue, zeroThrottleValue + 200);
 
-        $('#dialogMotorOutputReorder-closebtn').click(closeDialog);
+        $('#dialogMotorOutputReorder-closebtn').click(closeDialogMotorOutputReorder);
 
-        function closeDialog()
+        function closeDialogMotorOutputReorder()
         {
             domDialogMotorOutputReorder[0].close();
             motorOutputReorderComponent.close();
@@ -776,7 +773,7 @@ TABS.motors.initialize = function (callback) {
         function onDocumentKeyPress(event)
         {
             if (27 === event.which) {
-                closeDialog();
+                closeDialogMotorOutputReorder();
             }
         }
 
@@ -785,6 +782,47 @@ TABS.motors.initialize = function (callback) {
             $(document).on("keydown", onDocumentKeyPress);
             domDialogMotorOutputReorder[0].showModal();
         });
+    }
+
+    function SetupdescDshotDirectionDialog(callbackFunction, zeroThrottleValue)
+    {
+        const domEscDshotDirectionDialog = $('#escDshotDirectionDialog');
+
+        const idleThrottleValue = zeroThrottleValue + FC.PID_ADVANCED_CONFIG.digitalIdlePercent * 1000 / 100;
+
+        const motorConfig = {
+            numberOfMotors: self.numberOfValidOutputs,
+            motorStopValue: zeroThrottleValue,
+            motorSpinValue: idleThrottleValue,
+            escProtocolIsDshot: self.escProtocolIsDshot,
+        };
+
+        const escDshotDirectionComponent = new EscDshotDirectionComponent(
+            $('#escDshotDirectionDialog-Content'), callbackFunction, motorConfig);
+
+        $('#escDshotDirectionDialog-closebtn').on("click", closeEscDshotDirectionDialog);
+
+        function closeEscDshotDirectionDialog()
+        {
+            domEscDshotDirectionDialog[0].close();
+            escDshotDirectionComponent.close();
+            $(document).off("keydown", onDocumentKeyPress);
+        }
+
+        function onDocumentKeyPress(event)
+        {
+            if (27 === event.which) {
+                closeEscDshotDirectionDialog();
+            }
+        }
+
+        $('#escDshotDirectionDialog-Open').click(function()
+        {
+            $(document).on("keydown", onDocumentKeyPress);
+            domEscDshotDirectionDialog[0].showModal();
+        });
+
+        callbackFunction();
     }
 };
 

@@ -1,0 +1,66 @@
+<div class="escDshotDirection-Component">
+    <h3 i18n="escDshotDirectionDialog-Title" class="escDshotDirection-ComponentHeader"></h3>
+    <div class="componentContent" id="escDshotDirectionDialog-ConfigErrors">
+        <div class="escDshotDirectionErrorTextBlock" id="escDshotDirectionDialog-WrongProtocol" i18n="escDshotDirectionDialog-WrongProtocolText"></div>
+        <div class="escDshotDirectionErrorTextBlock" id="escDshotDirectionDialog-WrongMixer" i18n="escDshotDirectionDialog-WrongMixerText"></div>
+        <div class="escDshotDirectionErrorTextBlock" id="escDshotDirectionDialog-WrongFirmware" i18n="escDshotDirectionDialog-WrongFirmwareText"></div>
+    </div>
+    <div class="componentContent" id="escDshotDirectionDialog-MainContent">
+		<div id="escDshotDirectionDialog-MixerPreview" class="grey">
+			<img id="escDshotDirectionDialog-MixerPreviewImg" alt="" src="./resources/motor_order/custom.svg" />
+        </div>
+        <div id="escDshotDirectionDialog-NormalDialog" class="display-contents">
+            <h4 id="escDshotDirectionDialog-ActionHint" i18n="escDshotDirectionDialog-SelectMotor"></h4>
+            <h4 id="escDshotDirectionDialog-ActionHintSafety" i18n="escDshotDirectionDialog-SelectMotorSafety"></h4>
+            <div id="escDshotDirectionDialog-SelectMotorButtonsWrapper">
+            </div>
+            <div id = "escDshotDirectionDialog-SecondActionBlock" class="display-contents">
+                <h4 id="escDshotDirectionDialog-SecondHint" i18n="escDshotDirectionDialog-SetDirectionHint"></h4>
+                <h4 id="escDshotDirectionDialog-SecondHintSafety" i18n="escDshotDirectionDialog-SetDirectionHintSafety"></h4>
+                <div id="escDshotDirectionDialog-CommandsWrapper">
+                    <a href="#" id="escDshotDirectionDialog-RotationNormal" class="regular-button" i18n="escDshotDirectionDialog-CommandNormal"></a>
+                    <a href="#" id="escDshotDirectionDialog-RotationReverse" class="regular-button" i18n="escDshotDirectionDialog-CommandReverse"></a>
+                </div>
+            </div>
+        </div>
+        <div id="escDshotDirectionDialog-WizardDialog" class="display-contents">
+            <a href="#" id="escDshotDirectionDialog-SpinWizard" class="regular-button" i18n="escDshotDirectionDialog-SpinWizard"></a>
+            <div id="escDshotDirectionDialog-SpinningWizard" class="display-contents">
+                <h4 id="escDshotDirectionDialog-WizardActionHint" i18n="escDshotDirectionDialog-WizardActionHint"></h4>
+                <h4 id="escDshotDirectionDialog-WizardActionHintSecondLine" i18n="escDshotDirectionDialog-WizardActionHintSecondLine"></h4>
+                <div id="escDshotDirectionDialog-WizardMotorButtons">
+                </div>
+                <a href="#" id="escDshotDirectionDialog-StopWizard" class="regular-button" i18n="escDshotDirectionDialog-StopWizard"></a>
+            </div>
+        </div>
+    </div>
+    <div class="componentContent" id="escDshotDirectionDialog-Warning">
+        <div>
+            <p class="escDshotDirectionDialog-RiskNoticeText" i18n="escDshotDirectionDialog-RiskNotice"></p>
+            <div class="escDshotDirectionToggleParentContainer">
+                <div class="escDshotDirectionToggleNarrow">
+                    <input id="escDshotDirectionDialog-safetyCheckbox" type="checkbox" class="toggle"/>
+                </div>
+                <div class="escDshotDirectionDialog-ToggleWide">
+                    <span class="motorsEnableTestMode escDshotDirectionDialog-RiskNoticeText" i18n="escDshotDirectionDialog-UnderstandRisks"></span>
+                </div>
+            </div>
+            <div class="escDshotDirectionDialog-InformationNotice" i18n="escDshotDirectionDialog-InformationNotice"></div>
+
+            <div id="escDshotDirectionDialog-StartWizardBlock" class="escDshotDirectionDialog-StartBlock">
+                <div class="escDshotDirectionDialog-Buttons">
+                    <a href="#" id="escDshotDirectionDialog-StartWizard" class="regular-button escDshotDirectionDialog-StartButton" i18n="escDshotDirectionDialog-StartWizard"></a>
+                </div>
+                <div class="escDshotDirectionDialog-Description" i18n="escDshotDirectionDialog-WizardInformationNotice"></div>
+            </div>
+
+            <div id="escDshotDirectionDialog-StartNormalBlock" class="escDshotDirectionDialog-StartBlock">
+                <div class="escDshotDirectionDialog-Buttons">
+                    <a href="#" id="escDshotDirectionDialog-Start" class="regular-button escDshotDirectionDialog-StartButton" i18n="escDshotDirectionDialog-Start"></a>
+                </div>
+                <div class="escDshotDirectionDialog-Description" i18n="escDshotDirectionDialog-NormalInformationNotice"></div>
+            </div>
+
+        </div>
+    </div>
+</div>

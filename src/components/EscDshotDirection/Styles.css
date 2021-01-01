@@ -1,0 +1,177 @@
+.escDshotDirection-Component {
+    display: flex;
+    height: 100%;
+    flex-flow: column;
+}
+
+.escDshotDirection-ComponentHeader {
+    padding-bottom: 12px;
+}
+
+#escDshotDirectionDialog-MainContent {
+    display: flex;
+    height: 100%;
+    flex-flow: column;
+}
+
+#escDshotDirectionDialog-Warning {
+    display: flex;
+    height: 100%;
+    flex-flow: column;
+    border-top: 1px solid var(--superSubtleAccent);
+    padding-top: 16px;
+}
+
+.escDshotDirectionToggleParentContainer {
+    display: flex;
+    margin-bottom: 1.5em;
+    margin-top: 1.5em;
+}
+
+.escDshotDirectionToggleNarrow {
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.escDshotDirectionDialog-ToggleWide {
+    flex: 1;
+}
+
+.escDshotDirectionDialog-RiskNoticeText {
+    font-size: 1.2em;
+}
+
+.escDshotDirectionDialogInformationNotice {
+    font-size: 1.0em;
+    margin-bottom: 1.5em;
+    margin-top: 1.5em;
+}
+
+#escDshotDirectionDialog-MixerPreview {
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 9px;
+    margin-bottom: 8px;
+}
+
+#escDshotDirectionDialog-MixerPreviewImg {
+    display: block;
+    width: 160px;
+    height: 160px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#escDshotDirectionDialog-MainContent h4 {
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 500;
+}
+
+#escDshotDirectionDialog-MainContent .red-text {
+    color: #EE0000;
+}
+
+#escDshotDirectionDialog-ActionHint, #escDshotDirectionDialog-SecondHint, #escDshotDirectionDialog-WizardActionHint {
+    margin-top: 10px;
+}
+
+#escDshotDirectionDialog-ActionHintSafety, #escDshotDirectionDialog-SecondHintSafety {
+    margin-top: 0px;
+}
+
+#escDshotDirectionDialog-SelectMotorButtonsWrapper, #escDshotDirectionDialog-WizardMotorButtons {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#escDshotDirectionDialog-SelectMotorButtonsWrapper .regular-button, #escDshotDirectionDialog-WizardMotorButtons .regular-button {
+    font-size: 15px;
+    line-height: 34px;
+    padding: 0px;
+    margin-left: 4px;
+    margin-right: 4px;
+    border-radius: 17px;
+    width: 34px;
+    height: 34px;
+    text-align: center;
+}
+
+#escDshotDirectionDialog-NormalDialog .regular-button.pushed:hover {
+    background-color: #993333;
+}
+
+#escDshotDirectionDialog-NormalDialog .regular-button:hover {
+    background-color: #993333;
+}
+
+#escDshotDirectionDialog-MainContent .regular-button.highlighted {
+    background-color: #EE2222;
+}
+
+#escDshotDirectionDialog-CommandsWrapper {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#escDshotDirectionDialog-CommandSpin {
+    margin-left: auto;
+    margin-right: auto;
+    width: 224px;
+    display: block;
+    text-align: center;
+}
+
+#escDshotDirectionDialog-CommandsWrapper .regular-button {
+    width: 130px;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+
+.escDshotDirectionErrorTextBlock {
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.display-contents {
+    display: contents;
+}
+
+#escDshotDirectionDialog-SpinWizard, #escDshotDirectionDialog-StopWizard {
+    margin-left: auto;
+    margin-right: auto;
+    width: 160px;
+    text-align: center;
+}
+
+.escDshotDirectionDialog-InformationNotice {
+    margin-top: 18px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-top: 1px solid var(--superSubtleAccent);
+    border-bottom: 1px solid var(--superSubtleAccent);
+}
+
+.escDshotDirectionDialog-StartButton {
+    width: 80px;
+    text-align: center;
+    margin-left: 0px;
+    margin-right: 16px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.escDshotDirectionDialog-Buttons {
+    float: left;
+    margin: 0px;
+}
+
+.escDshotDirectionDialog-StartBlock {
+    display: flex;
+    margin-top: 16px;
+}

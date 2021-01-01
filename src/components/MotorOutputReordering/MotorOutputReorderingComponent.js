@@ -25,7 +25,7 @@ class MotorOutputReorderComponent
     _readDom()
     {
         this._domAgreeSafetyCheckBox = $('#motorsEnableTestMode-dialogMotorOutputReorder');
-        this._domAgreeButton = $('#dialogMotorOutputReorderAgreeButton');
+        this._domStartButton = $('#dialogMotorOutputReorderAgreeButton');
         this._domStartOverButton = $('#motorsRemapDialogStartOver');
         this._domSaveButton = $('#motorsRemapDialogSave');
         this._domMainContentBlock = $('#dialogMotorOutputReorderMainContent');
@@ -44,12 +44,12 @@ class MotorOutputReorderComponent
         this._domAgreeSafetyCheckBox.change(() =>
         {
             const enabled = this._domAgreeSafetyCheckBox.is(':checked');
-            this._domAgreeButton.toggle(enabled);
+            this._domStartButton.toggle(enabled);
         });
 
-        this._domAgreeButton.click(() =>
+        this._domStartButton.click(() =>
         {
-            this._onAgreeButtonClicked();
+            this._onStartButtonClicked();
         });
         this._domStartOverButton.click(() =>
         {
@@ -75,7 +75,7 @@ class MotorOutputReorderComponent
     {
         this._domMainContentBlock.hide();
         this._domWarningContentBlock.show();
-        this._domAgreeButton.hide();
+        this._domStartButton.hide();
 
         this._domAgreeSafetyCheckBox.prop('checked', false);
         this._domAgreeSafetyCheckBox.change();
@@ -138,7 +138,7 @@ class MotorOutputReorderComponent
         }
     }
 
-    _onAgreeButtonClicked()
+    _onStartButtonClicked()
     {
         this._domActionHintBlock.text(i18n.getMessage("motorOutputReorderDialogSelectSpinningMotor"));
         this._domWarningContentBlock.hide();
