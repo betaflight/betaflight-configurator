@@ -486,7 +486,7 @@ TABS.auxiliary.initialize = function (callback) {
                 }
             }
 
-            auto_select_channel(FC.RC.channels, FC.RSSI_CONFIG.channel);
+            auto_select_channel(FC.RC.channels, FC.RC.active_channels, FC.RSSI_CONFIG.channel);
 
             auxChannelCount = FC.RC.active_channels - 4;
 
@@ -502,7 +502,7 @@ TABS.auxiliary.initialize = function (callback) {
          * @param RC_channels
          * @param RC_channels
          */
-        function auto_select_channel(RC_channels, RSSI_channel) {
+        function auto_select_channel(RC_channels, activeChannels, RSSI_channel) {
             const auto_option = $('.tab-auxiliary select.channel option[value="-1"]:selected');
             if (auto_option.length === 0) {
                 prevChannelsValues = null;
@@ -515,9 +515,11 @@ TABS.auxiliary.initialize = function (callback) {
 
             if (!prevChannelsValues || RC_channels.length === 0) return fillPrevChannelsValues();
 
-            const diff_array = RC_channels.map(function(currentValue, index) {
+            let diff_array = RC_channels.map(function(currentValue, index) {
                 return Math.abs(prevChannelsValues[index] - currentValue);
             });
+
+            diff_array = diff_array.slice(0, activeChannels);
 
             const largest = diff_array.reduce(function(x,y){
                 return (x > y) ? x : y;
