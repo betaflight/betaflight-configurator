@@ -2469,6 +2469,81 @@
     "motorsRemapDialogStartOver": {
         "message": "Comença de nou"
     },
+    "escDshotDirectionDialog-Title": {
+        "message": "Direcció del motor - <strong class=\"message-negative-italic\">Advertiment: assegureu-vos que les hèlix están fora. </strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Selecciona un o tots els motors"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Els motors giraran quan se seleccionin!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Avis de seguretat</strong><br /><strong class=\"message-negative-italic\">Retireu totes les hélices per evitar lesions!</strong><br />Els motors <strong>giraran!</strong>inmediatament quan es seleccionin!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Entenc els riscos</strong>, <br />totes les hèlix estan tretes."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Avís d'informació</strong><br /> Per canviar el sentit de gir del motor, cal connectar la bateria i configurar el protocol ESC correcte a la pestanya $t(tabConfiguration.message). Tingueu en compte que no tots els ESC de Dshot funcionaran amb aquest diàleg. Comproveu el firmware del vostre ESC."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Establiu el sentit de gir del motor seleccionant i girant cada motor individualment."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Restableix totes els sentits de gir del motors i, a continuació, permet a l'usuari escollir quina invertirá."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Sentit de gir de motor"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normal"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Inversa"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Probar motor"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Deixeu anar el botó per parar"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Deixeu anar per parar"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Individualment"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Assistent"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Canvia la direcció dels motor(s) seleccionats"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Els motors giraran quan s’estableixi el sentit!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "La funció només funciona amb DSHOT ESC.<br/>Verifiqueu que el vostre ESC (controlador de velocitat elèctric) admeti el protocol DSHOT i canvieu-lo a la pestanya $t(tabConfiguration.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "El nombre de motors és 0.<br />Verifiqueu el mesclador actual a la pestanya $t(tabConfiguration.message) o configureu-ne un de personalitzat mitjançant CLI. Consulteu aquesta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">pàgina Wiki</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Actualitzeu el microprogramari.<br /> Assegureu-vos que utilitzeu el microprogramari més recent: Betaflight 4.3 o posterior."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Feu clic als números del motor individualment per canviar la direcció de gir"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Comproveu que tots els motors giren correctament"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Arrencar / parar motors"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Parar motors"
+    },
     "sensorsInfo": {
         "message": "Tingues en compte que fent servir períodes d'actualització ràpids i renderitzant múltiples gràfics alhora pot gastar ràpidament la bateria del teu portàtil.<br />Et recomanem que només rederitzis gràfics dels sensors del teu interès en períodes raonables."
     },
