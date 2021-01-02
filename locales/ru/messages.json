@@ -2445,9 +2445,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Уведомление о безопасности</strong><br /><strong class=\"message-negative\">Для предотвращения травм, снимите все пропеллеры!</strong><br />Моторы будут <strong>вращаться!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Уведомление</strong><br />Моторы будут вращаться по очереди, и вы сможете выбрать, какой двигатель вращается. Необходимо подключить аккумулятор и правильно выбрать протокол ESC. Эта утилита может изменять только действующие в настоящий момент двигатели. Более сложное переназначение требует команды CLI Resource. Обратитесь к этой <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki странице</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Сохранить"
     },
