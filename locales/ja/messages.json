@@ -2445,9 +2445,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>注意事項</strong><br /><strong class=\"message-negative\">怪我を防止するために、すべてのプロペラを取り外してください！</strong><br />モーターが<strong>回転します！</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>お知らせ</strong><br />モーターは1つずつ回転し、どのモーターが回転しているかを選択できます。バッテリーを接続し、正しいESCプロトコルを選択してください。このユーティリティは、現在有効となるモーターのみを再配置できます。より複雑な再マッピングは、CLI Resourceコマンドをご利用ください。詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
-    },
     "motorsRemapDialogSave": {
         "message": "保存"
     },
