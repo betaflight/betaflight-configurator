@@ -2448,9 +2448,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Segurtasun oharra</strong><br /><strong class=\"message-negative\">Helize guztiak kendu lesioak ekiditeko!</strong><br />Motorrak <strong>biraka egingo dute!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Informazio oharra</strong><br />Motoreak banan-banan bira egingo dute eta biraka hari den motorra hautatzen ahalko duzu. Bateria entxufatu behar da, ESC protokolo egokia aukeratu beharko litzateke. Erabilera honek uneko motor aktiboak ere antolatu ditzake. Birplanteatze konplexuagoak CLI baliabideen komandoa behar du. Kontsultatu <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki orria</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Gorde"
     },
