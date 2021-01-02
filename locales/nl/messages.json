@@ -2468,9 +2468,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Veiligheidswaarschuwing</strong><br /><strong class=\"message-negative\">Verwijder alle propellers om letsel te voorkomen!</strong><br />De motoren zullen gaan <strong>draaien!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Informatiemelding</strong><br />De motoren zullen een voor een gaan draaien. U dient de motor die draait te selecteren. De batterij dient hiervoor aangesloten te zijn en u dient het juiste ESC-protocol geselecteerd te hebben. Dit hulpprogramma kan alleen actieve motoren opnieuw rangschikken. Voor complexere toewijzingen dient u de CLI te gebruiken. Raadpleeg hiervoor de volgende <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflightessel-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-pagina</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Opslaan"
     },
