@@ -2547,13 +2547,88 @@
         "message": "crwdns10258:0crwdne10258:0"
     },
     "motorsRemapDialogExplanations": {
-        "message": "crwdns10260:0crwdne10260:0"
+        "message": "crwdns10302:0crwdne10302:0"
     },
     "motorsRemapDialogSave": {
         "message": "crwdns10262:0crwdne10262:0"
     },
     "motorsRemapDialogStartOver": {
         "message": "crwdns10264:0crwdne10264:0"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "crwdns10304:0crwdne10304:0"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "crwdns10306:0crwdne10306:0"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "crwdns10308:0crwdne10308:0"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "crwdns10310:0crwdne10310:0"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "crwdns10312:0crwdne10312:0"
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "crwdns10314:0$t(tabConfiguration.message)crwdne10314:0"
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "crwdns10316:0crwdne10316:0"
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "crwdns10318:0crwdne10318:0"
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "crwdns10320:0crwdne10320:0"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "crwdns10322:0crwdne10322:0"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "crwdns10324:0crwdne10324:0"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "crwdns10326:0crwdne10326:0"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "crwdns10328:0crwdne10328:0"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "crwdns10330:0crwdne10330:0"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "crwdns10332:0crwdne10332:0"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "crwdns10334:0crwdne10334:0"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "crwdns10336:0crwdne10336:0"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "crwdns10338:0crwdne10338:0"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "crwdns10340:0$t(tabConfiguration.message)crwdne10340:0"
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "crwdns10342:0$t(tabConfiguration.message)crwdne10342:0"
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "crwdns10344:0crwdne10344:0"
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "crwdns10346:0crwdne10346:0"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "crwdns10348:0crwdne10348:0"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "crwdns10350:0crwdne10350:0"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "crwdns10352:0crwdne10352:0"
     },
     "sensorsInfo": {
         "message": "crwdns5889:0crwdne5889:0"
