@@ -2494,9 +2494,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Avis de sécurité</strong><br /><strong class=\"message-negative\">Retirez toutes les hélices pour éviter les blessures !</strong><br />Les moteurs vont <strong>tourner !</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Avis d'information</strong><br />Les moteurs tourneront un par un et vous pourrez sélectionner quel moteur tourne. La batterie doit être branchée, le protocole ESC correct doit être sélectionné. Cet utilitaire ne peut réorganiser que les moteurs actuellement actifs. Un remapping plus complexe nécessite la commande CLI Resource. Référez-vous à cette <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">page Wiki</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Enregistrer"
     },
