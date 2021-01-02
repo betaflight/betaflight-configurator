@@ -2427,9 +2427,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Informacja bezpieczeństwa</strong><br /><strong class=\"message-negative\">zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br />Silniki <strong>będą włączone!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Notatka informacyjna</strong><br />Silniki będą włączane po jednym i będziesz wybierać, który silnik pracuje. Bateria powinna być podłączona, należy wybrać poprawny protokół ESC. To narzędzie może zmienić tylko aktualnie aktywne silniki. Bardziej skomplikowane remapowanie wymaga komendy CLI Resource. Przejdź do tej <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">strony Wiki</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Zapisz"
     },
