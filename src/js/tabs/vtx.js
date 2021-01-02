@@ -12,6 +12,39 @@ TABS.vtx = {
     analyticsChanges: {},
     updating: true,
     env: new djv(),
+    get _DEVICE_STATUS_UPDATE_INTERVAL_NAME() {
+        return "vtx_device_status_request";
+    }
+};
+
+TABS.vtx.isVtxDeviceStatusNotReady = function()
+{
+    const isReady = (null !== FC.VTX_DEVICE_STATUS) && (FC.VTX_DEVICE_STATUS.deviceIsReady);
+    return !isReady;
+};
+
+TABS.vtx.updateVtxDeviceStatus = function()
+{
+    MSP.send_message(MSPCodes.MSP2_GET_VTX_DEVICE_STATUS, false, false, vtxDeviceStatusReceived);
+
+    function vtxDeviceStatusReceived()
+    {
+        $("#vtx_type_description").text(TABS.vtx.getVtxTypeString());
+    }
+};
+
+TABS.vtx.getVtxTypeString = function()
+{
+    let result = i18n.getMessage(`vtxType_${FC.VTX_CONFIG.vtx_type}`);
+
+    const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === FC.VTX_CONFIG.vtx_type;
+    const isVtxDeviceStatusReceived = null !== FC.VTX_DEVICE_STATUS;
+
+    if (isSmartAudio && isVtxDeviceStatusReceived) {
+        result += ` ${FC.VTX_DEVICE_STATUS.smartAudioVersion}`;
+    }
+
+    return result;
 };
 
 TABS.vtx.initialize = function (callback) {
@@ -55,7 +88,19 @@ TABS.vtx.initialize = function (callback) {
         vtx_config();
 
         function vtx_config() {
-            MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxtable_bands);
+            MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, vtxConfigReceived);
+        }
+
+        function vtxConfigReceived() {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                GUI.interval_add_condition(self._DEVICE_STATUS_UPDATE_INTERVAL_NAME,
+                    TABS.vtx.updateVtxDeviceStatus,
+                    1000, false,
+                    TABS.vtx.isVtxDeviceStatusNotReady
+                );
+            }
+
+            vtxtable_bands();
         }
 
         function vtxtable_bands() {
@@ -196,11 +241,11 @@ TABS.vtx.initialize = function (callback) {
         });
 
         // Supported?
-        const vtxSupported = FC.VTX_CONFIG.vtx_type !== 0 && FC.VTX_CONFIG.vtx_type !== 255;
+        const vtxSupported = FC.VTX_CONFIG.vtx_type !== VtxDeviceTypes.VTXDEV_UNSUPPORTED && FC.VTX_CONFIG.vtx_type !== VtxDeviceTypes.VTXDEV_UNKNOWN;
         const vtxTableNotConfigured = vtxSupported && FC.VTX_CONFIG.vtx_table_available &&
             (FC.VTX_CONFIG.vtx_table_bands === 0 || FC.VTX_CONFIG.vtx_table_channels === 0 || FC.VTX_CONFIG.vtx_table_powerlevels === 0);
 
-        TABS.vtx.vtxTableFactoryBandsSupported = FC.VTX_CONFIG.vtx_type === 3;
+        TABS.vtx.vtxTableFactoryBandsSupported = FC.VTX_CONFIG.vtx_type === VtxDeviceTypes.VTXDEV_SMARTAUDIO;
 
         $(".vtx_supported").toggle(vtxSupported);
         $(".vtx_not_supported").toggle(!vtxSupported);
@@ -234,7 +279,7 @@ TABS.vtx.initialize = function (callback) {
         const noMessage =  i18n.getMessage("no");
 
         $("#vtx_device_ready_description").text(FC.VTX_CONFIG.vtx_device_ready ? yesMessage : noMessage);
-        $("#vtx_type_description").text(i18n.getMessage(`vtxType_${FC.VTX_CONFIG.vtx_type}`));
+        $("#vtx_type_description").text(self.getVtxTypeString());
         $("#vtx_channel_description").text(FC.VTX_CONFIG.vtx_channel);
         $("#vtx_frequency_description").text(FC.VTX_CONFIG.vtx_frequency);
         $("#vtx_pit_mode_description").text(FC.VTX_CONFIG.vtx_pit_mode ? yesMessage : noMessage);
@@ -513,23 +558,23 @@ TABS.vtx.initialize = function (callback) {
 
                 switch (vtxType) {
 
-                case 0: // Unsupported
+                case VtxDeviceTypes.VTXDEV_UNSUPPORTED:
                     powerMinMax = {};
                     break;
 
-                case 1: // RTC6705
+                case VtxDeviceTypes.VTXDEV_RTC6705:
                     powerMinMax = {min: 1, max: 3};
                     break;
 
-                case 3: // SmartAudio
+                case VtxDeviceTypes.VTXDEV_SMARTAUDIO:
                     powerMinMax = {min: 1, max: 4};
                     break;
 
-                case 4: // Tramp
+                case VtxDeviceTypes.VTXDEV_TRAMP:
                     powerMinMax = {min: 1, max: 5};
                     break;
 
-                case 255: // Unknown
+                case VtxDeviceTypes.VTXDEV_UNKNOWN:
                 default:
                     powerMinMax = {min: 0, max: 7};
                 }
@@ -968,6 +1013,8 @@ TABS.vtx.cleanup = function (callback) {
     this.vtxTableSavePending = false;
     this.VTXTABLE_BAND_LIST = [];
     this.VTXTABLE_POWERLEVEL_LIST = [];
+
+    GUI.interval_remove(this._DEVICE_STATUS_UPDATE_INTERVAL_NAME);
 
     if (callback) {
         callback();
