@@ -2452,9 +2452,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Avviso di sicurezza</strong><br /><strong class=\"message-negative\">Rimuovi tutte le eliche per evitare danni!</strong><br />I motori <strong>gireranno!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Avviso</strong><br />I motori gireranno uno ad uno e sarai in grado di selezionare il motore che gira. La batteria deve essere collegata e deve essere selezionato il protocollo ESC corretto. Questa utility può solo riorganizzare i motori attualmente attivi. La rimappatura più complessa richiede il comando CLI Resource. Fare riferimento a questa <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Salva"
     },
