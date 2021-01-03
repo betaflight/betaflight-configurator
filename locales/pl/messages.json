@@ -2433,6 +2433,12 @@
     "motorsRemapDialogStartOver": {
         "message": "Zacznij od początku"
     },
+    "escDshotDirectionDialog-Title": {
+        "message": "Kierunek silnika - <strong class=\"message-negative-italic\">Ostrzeżenie: Upewnij się, że śmigła są zdjęte!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Wybierz jeden lub wszystkie silniki"
+    },
     "sensorsInfo": {
         "message": "Pamiętaj, że używanie częstej aktualizacji i rysowanie wielu wykresów w tym samym czasie wymaga mocy obliczeniowej - co może zwiększyć użycie baterii laptopa.<br />Zalecamy włączenie rysowania wykresów tylko dla czujników, których potrzebujesz najwięcej i wybrania możliwie niskich częstotliwości aktualizacji danych."
     },
