@@ -747,7 +747,7 @@
         "message": "$1 V"
     },
     "initialSetupDrawn": {
-        "message": "電流容量:"
+        "message": "電力消費量:"
     },
     "initialSetupDrawing": {
         "message": "消費電流:"
