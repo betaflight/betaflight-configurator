@@ -5,12 +5,7 @@
 const ledDirectionLetters    = ['n', 'e', 's', 'w', 'u', 'd'];      // in LSB bit order
 const ledFunctionLetters     = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l']; // in LSB bit order
 const ledBaseFunctionLetters = ['c', 'f', 'a', 'l', 's', 'g', 'r']; // in LSB bit
-let ledOverlayLetters;
-if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-    ledOverlayLetters = ['t', 'o', 'b', 'n', 'i', 'w']; // in LSB bit
-} else {
-    ledOverlayLetters = ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
-}
+let ledOverlayLetters        = ['t', 'o', 'b', 'v', 'i', 'w']; // in LSB bit
 
 function MspHelper() {
     const self = this;
@@ -1190,6 +1185,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 let ledCount = data.byteLength / 7; // v1.4.0 and below incorrectly reported 4 bytes per led.
                 if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
                     ledCount = data.byteLength / 4;
+                }
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+                    ledOverlayLetters = ['t', 'o', 'b', 'n', 'i', 'w']; // in LSB bit
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                     // According to betaflight/src/main/msp/msp.c
@@ -2574,9 +2572,13 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
 
         buffer.push(ledIndex);
 
+        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
+            ledOverlayLetters = ['t', 'o', 'b', 'n', 'i', 'w']; // in LSB bit
+        }
+
         if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
             let directionMask = 0;
-            for (const directionLetterIndex of led.directions) {
+            for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
                 const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
                 if (bitIndex >= 0) {
                     directionMask = bit_set(directionMask, bitIndex);
@@ -2585,7 +2587,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
             buffer.push16(directionMask);
 
             let functionMask = 0;
-            for (const functionLetterIndex of led.functions) {
+            for (let functionLetterIndex = 0; functionLetterIndex < led.functions.length; functionLetterIndex++) {
                 const bitIndex = ledFunctionLetters.indexOf(led.functions[functionLetterIndex]);
                 if (bitIndex >= 0) {
                     functionMask = bit_set(functionMask, bitIndex);
@@ -2602,7 +2604,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
             mask |= (led.y << 0);
             mask |= (led.x << 4);
 
-            for (const functionLetterIndex of led.functions) {
+            for (let functionLetterIndex = 0; functionLetterIndex < led.functions.length; functionLetterIndex++) {
                 const fnIndex = ledBaseFunctionLetters.indexOf(led.functions[functionLetterIndex]);
                 if (fnIndex >= 0) {
                     mask |= (fnIndex << 8);
@@ -2610,7 +2612,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
                 }
             }
 
-            for (const overlayLetterIndex of led.functions) {
+            for (let overlayLetterIndex = 0; overlayLetterIndex < led.functions.length; overlayLetterIndex++) {
                 const bitIndex = ledOverlayLetters.indexOf(led.functions[overlayLetterIndex]);
                 if (bitIndex >= 0) {
                     mask |= bit_set(mask, bitIndex + 12);
@@ -2619,7 +2621,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
 
             mask |= (led.color << 18);
 
-            for (const directionLetterIndex of led.directions) {
+            for (let directionLetterIndex = 0; directionLetterIndex < led.directions.length; directionLetterIndex++) {
                 const bitIndex = ledDirectionLetters.indexOf(led.directions[directionLetterIndex]);
                 if (bitIndex >= 0) {
                     mask |= bit_set(mask, bitIndex + 22);
