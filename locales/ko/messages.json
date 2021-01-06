@@ -2520,11 +2520,89 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>안전 공지</strong><br /><strong class=\"message-negative\">부상을 피하기 위해 모든 프로펠러를 제거하세요!</strong><br />모터가 <strong>회전합니다!</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>정보 공지</strong><br />모터는 한번에 하나씩 회전하며 어떤 모터가 회전하는지 선택할 수 있습니다. 배터리를 연결해야 하며, 올바른 ESC 프로토콜을 선택해야 합니다. 이 유틸리티는 현재 활성화된 모터만 재조정할 수 있습니다. 더 복잡한 재매핑에는 CLI 리소스 명령이 필요합니다. 이 <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 페이지</a>를 참고하세요."
+    },
     "motorsRemapDialogSave": {
         "message": "저장"
     },
     "motorsRemapDialogStartOver": {
         "message": "재시작"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "모터 방향 - <strong class=\"message-negative-italic\">경고: 프롭이 제거되었는지 확인하십시오!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "하나 또는 모든 모터를 선택하세요"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "선택하면 모터가 회전합니다!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>안전 공지</strong><br /><strong class=\"message-negative-italic\">부상을 피하기 위해 모든 프로펠러를 제거하세요!</strong><br />모터를 선택하면 즉시 <strong>회전합니다!</strong>!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>나는 위험을 인지하고 있으며</strong>,<br />모든 프로펠러가 제거되었습니다."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>정보 공지</strong><br />모터 방향을 변경하려면 배터리를 연결해야 하며 $t(tabConfiguration.message) 탭에서 올바른 ESC 프로토콜을 설정해야 합니다. 일부 Dshot ESC는 이 대화상자에서 작동하지 않습니다. ESC 펌웨어를 확인하세요."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "각 모터를 개별적으로 선택하고 회전하여 모터 회전방향을 설정합니다."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "모든 모터 회전방향을 재설정한 다음, 사용자가 어떤 방향을 반전시킬지 선택할 수 있습니다."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "모터 방향"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "정방향"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "역방향"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "모터 테스트"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "정지하려면 버튼을 해제하세요"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "정지하려면 해제하세요"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "개별적으로"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "마법사"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "선택한 모터의 방향 변경"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "방향을 설정할 때 모터가 회전합니다!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "기능은 DSHOT ESC에서만 작동합니다.<br /> ESC(전기 속도 제어기)가 DSHOT 프로토콜을 지원하는지 확인하고 $t(tabConfiguration.message) 탭에서 변경하세요."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "모터의 수가 0입니다.<br />$t(tabConfiguration.message) 탭에서 현재의 믹서를 확인하거나 CLI를 통해 사용자 지정 믹서를 설정하세요. 이 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "펌웨어를 업데이트하세요.<br />최신 펌웨어를 사용하고 있는지 확인합니다: 베타플라이트 4.3 이상."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "회전 방향을 변경하려면 모터 번호를 개별적으로 클릭하십시오"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "모든 모터가 올바르게 회전하는지 확인하십시오"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "시작 / 모터 회전"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "모터 정지"
     },
     "sensorsInfo": {
         "message": "빠른 업데이트 주기를 사용하고 여러 개의 그래프를 동시에 렌더링하는 것은 리소스가 많이 소모되므로 노트북을 사용하는 경우 배터리가 빨리 소모된다는 점을 기억하십시오. <br /> 적절한 업데이트 주기를 사용하면서 관심있는 센서의 그래프만 렌더링하는 것이 좋습니다."
