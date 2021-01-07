@@ -23,10 +23,10 @@
     margin-bottom: 0px;
 }
 
-.tab-motors #dialogMotorOutputReorder {
+.tab-motors .motorDialog {
     width: 400px;
-    height: 440px
-;}
+    height: 440px;
+}
 
 .tab-motors #dialogMotorOutputReorderContentWrapper {
     display: flex;
@@ -45,11 +45,6 @@
     position: absolute;
     right: 0px;
     bottom: 0px;
-}
-
-.tab-motors #escDshotDirectionDialog {
-    width: 400px;
-    height: 440px;
 }
 
 .tab-motors #escDshotDirectionDialog-ContentWrapper {
@@ -470,28 +465,5 @@
     }
     .tab-motors .motor_testing .telemetry li {
         font-size: 6px;
-    }
-    .tab-motors #dialogMotorOutputReorder {
-        position: fixed;
-        width: calc(100% - 2em);
-        bottom: 0;
-        top: 56px;
-        border-radius: unset;
-        border: none;
-        overflow: auto;
-        margin: 0;
-        height: auto;
-    }
-
-    .tab-motors #escDshotDirectionDialog- {
-        position: fixed;
-        width: calc(100% - 2em);
-        bottom: 0;
-        top: 56px;
-        border-radius: unset;
-        border: none;
-        overflow: auto;
-        margin: 0;
-        height: auto;
     }
 }
