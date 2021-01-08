@@ -31,6 +31,24 @@ class EscDshotDirectionComponent
     static get HIGHLIGHTED_BUTTON_CLASS() { return "highlighted"; }
     static get RED_TEXT_CLASS() { return "red-text"; }
 
+    static get _BUTTON_PUSH_DOWN_EVENT_TYPE()
+    {
+        if (GUI.isCordova()) {
+            return "touchstart";
+        } else {
+            return "mousedown";
+        }
+    }
+
+    static get _BUTTON_RELEASE_EVENT_TYPE()
+    {
+        if (GUI.isCordova()) {
+            return "touchend";
+        } else {
+            return "mouseup mouseout";
+        }
+    }
+
     _readDom()
     {
         this._domAgreeSafetyCheckBox = $("#escDshotDirectionDialog-safetyCheckbox");
@@ -117,8 +135,7 @@ class EscDshotDirectionComponent
 
     _deactivateNormalReverseButtons()
     {
-        if (null !== this._activationButtonTimeoutId)
-        {
+        if (null !== this._activationButtonTimeoutId) {
             clearTimeout(this._activationButtonTimeoutId);
         }
 
@@ -128,7 +145,7 @@ class EscDshotDirectionComponent
 
     _subscribeDirectionSpinButton(button, direction, buttonText)
     {
-        button.on("mousedown touchstart", () => {
+        button.on(EscDshotDirectionComponent._BUTTON_PUSH_DOWN_EVENT_TYPE, () => {
             this._sendCurrentEscSpinDirection(direction);
             this._motorIsSpinning = true;
             button.text(this._releaseToStopText);
@@ -138,7 +155,7 @@ class EscDshotDirectionComponent
             this._domSecondHint.addClass(EscDshotDirectionComponent.RED_TEXT_CLASS);
         });
 
-        button.on("mouseup mouseout touchend", () => {
+        button.on(EscDshotDirectionComponent._BUTTON_RELEASE_EVENT_TYPE, () => {
             if (this._motorIsSpinning) {
                 button.text(buttonText);
                 this._motorIsSpinning = false;
@@ -175,7 +192,7 @@ class EscDshotDirectionComponent
         this._domMotorButtonsBlock.append(button);
         this._motorButtons[motorIndex] = button;
 
-        button.on("mousedown touchstart", () => {
+        button.on(EscDshotDirectionComponent._BUTTON_PUSH_DOWN_EVENT_TYPE, () => {
             this._domSecondActionDiv.toggle(true);
             this._motorIsSpinning = true;
             this._domActionHint.html(this._releaseButtonToStopText);
@@ -185,7 +202,7 @@ class EscDshotDirectionComponent
             this._motorDriver.spinMotor(this._selectedMotor);
         });
 
-        button.on("mouseup mouseout touchend", () => {
+        button.on(EscDshotDirectionComponent._BUTTON_RELEASE_EVENT_TYPE, () => {
             if (this._motorIsSpinning) {
                 this._domActionHint.html(this._topHintText);
                 this._domActionHint.removeClass(EscDshotDirectionComponent.RED_TEXT_CLASS);
