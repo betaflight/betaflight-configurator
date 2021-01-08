@@ -2452,11 +2452,89 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Aviso de seguridad</strong><br /><strong class=\"message-negative\">¡Quita todas las hélices para evitar lesiones!</strong><br />¡Los motores <strong>van a girar!</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Aviso informativo</strong><br />Los motores van a girar uno a uno y podrás seleccionar que motor está girando. La batería debe estar conectada, y el protocolo ESC correcto debe estar seleccionado. Esta utilidad sólo puede reordenar los motores actualmente activos. Un mapeo más complejo necesita el comando Resource en CLI. Consulta esta <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">página de la Wiki</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Guardar"
     },
     "motorsRemapDialogStartOver": {
         "message": "Volver a empezar"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Dirección del Motor - <strong class=\"message-negative-italic\">Atención: ¡Asegúrate de que las hélices no están puestas!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Selecciona uno o todos los motores"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "¡Los motores girarán cuando se seleccionen!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Aviso de seguridad</strong><br /><strong class=\"message-negative-italic\">¡Quita todas las hélices para evitar lesiones!</strong><br />¡Los motores <strong>van a girar!</strong> inmediatamente al seleccionarlos!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Entiendo los riesgos</strong>,<br />todas las hélices están quitadas."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Aviso informativo</strong><br />Para cambiar la dirección de los motores, la batería debe estar conectada y el protocolo ESC correcto debe estar configurado en la pestaña $t(tabConfiguration.message). Ten en cuenta que no todos los ESCs Dshot funcionarán con este diálogo. Compruebe el firmware de tu ESC."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Configura la dirección de giro del motor seleccionando y girando cada motor individualmente."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Restablece todas las direcciones de giro de todos los motores, después permite al usuario elegir cuales invertir."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Dirección del motor"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normal"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Inverso"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Probar motor"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Suelte el botón para detener"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Suelta para detener"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Individualmente"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Asistente"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Cambiar la dirección de los motores seleccionados"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "¡Los motores girarán al configurar la dirección!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Esta funcionalidad sólo trabaja con ESCs DSHOT.<br />Verifica que tu ESC (controlador de velocidad electrónico) soporta el protocolo DSHOT y selecciónalo en la pestaña $t(tabConfiguration.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "El número de motores es 0.<br />Verifica el Mezclador actual en $t(tabConfiguration.message) o configura uno personalizado a través de CLI. Consulta esta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Actualiza el firmware.<br />Asegúrate de que estás usando el último firmware: Betaflight 4.3 o posterior."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Pulsa en los números de motor individualmente para cambiar la dirección de giro"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Verifica que todos los motores están girando correctamente"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Iniciar / girar motores"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Detener motores"
     },
     "sensorsInfo": {
         "message": "Ten en mente que usar períodos rápidos de actualización y dibujar múltiples gráficas al mismo tiempo consume muchos recursos y agotará tu batería más rápido si usas un portátil.<br />Te recomendamos dibujar sólo las gráficas de los sensores en los que estés interesado y usar tiempos de actualización razonables."
