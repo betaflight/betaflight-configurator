@@ -1514,7 +1514,8 @@ dialog .dialog_toolbar .btn a.disabled {
 @media all and (max-width: 575px) {
     dialog {
         position: fixed;
-        width: calc(100% - 2em);
+        width: calc(100% - 2em) !important;
+        height: auto !important;
         bottom: 0;
         top: 56px;
         border-radius: unset;
