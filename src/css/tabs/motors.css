@@ -23,7 +23,7 @@
     margin-bottom: 0px;
 }
 
-.tab-motors .motorDialog {
+.tab-motors dialog {
     width: 400px;
     height: 440px;
 }
