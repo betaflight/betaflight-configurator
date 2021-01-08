@@ -2468,11 +2468,89 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Veiligheidswaarschuwing</strong><br /><strong class=\"message-negative\">Verwijder alle propellers om letsel te voorkomen!</strong><br />De motoren zullen gaan <strong>draaien!</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Informatiemelding</strong><br />Motoren zullen een voor een gaan draaien en u kunt selecteren welke motor er draait. De batterij moet aangesloten zijn, het juiste ESC-protocol moet geselecteerd zijn. Dit hulpprogramma kan momenteel alleen actieve motoren opnieuw rangschikken. Voor complexere toewijzingen dien je gebruik te maken van het commando Resource in de CLI. Raadpleeg hiervoor deze <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-pagina</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Opslaan"
     },
     "motorsRemapDialogStartOver": {
         "message": "Begin opnieuw"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Motor richting - <strong class=\"message-negative-italic\">Waarschuwing: Zorg ervoor dat de propellers verwijderd zijn!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Selecteer een of alle motoren"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Motoren zullen draaien wanneer je deze selecteert!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Waarschuwing</strong><br /><strong class=\"message-negative-italic\">Verwijder alle propellers om letsel te voorkomen!</strong><br />De motoren zullen <strong>draaien</strong> onmiddellijk na selectie!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Ik begrijp de risico's</strong>, <br />alle propellers zijn verwijderd."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Informatiebericht</strong><br />Om de motorrichting te wijzigen, moet de batterij aangesloten zijn en moet het juiste ESC-protocol zijn ingesteld op het tabblad $t(tabConfiguration.message). Merk op dat niet alle Dshot ESC's met dit dialoogvenster zullen werken. Controleer uw ESC-firmware."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Stel de draairichting van de motor in door elke motor afzonderlijk te selecteren en te laten draaien."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Reset de draairichtingen van alle motoren, waarna de gebruiker zelf kan kiezen welke hij wilt omkeren."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Motor richting"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normaal"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Omgekeerd"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Test motor"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Laat de knop los om te stoppen"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Laat los om te stoppen"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Individueel"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Wizard"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Verander richting van geselecteerde motor(en)"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Motoren zullen draaien bij het bepalen van de richting!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Deze functie werkt alleen met DSHOT ESC's.<br /> Controleer of uw ESC (elektronische snelheidsregelaar) het DSHOT-protocol ondersteunt. En wijzig dit zo nodig op het tabblad $t(tabConfiguration.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Het aantal motoren is 0.<br />Controleer de huidige mixer op het tabblad $t(tabConfiguration.message) of stel een aangepaste mixer in via de CLI. Raadpleeg hiervoor deze <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-pagina</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Update de firmware.<br />Zorg ervoor dat u de nieuwste firmware gebruikt: Betaflight 4.3 of nieuwer."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Klik afzonderlijk op motornummers om de draairichting te veranderen"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Controleer of alle motoren een correcte draairichting hebben"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Start / draai motoren"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Stop motoren"
     },
     "sensorsInfo": {
         "message": "Houd er rekening mee dat het gebruik van snelle updateperioden en het tegelijkertijd weergeven van meerdere grafieken veel resources vergt.<br />We raden aan om alleen de grafieken weer te geven voor sensoren waarin je geïnteresseerd bent. En daarbij redelijke update periodes te gebruiken."
