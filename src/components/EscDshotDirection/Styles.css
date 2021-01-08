@@ -4,6 +4,12 @@
     flex-flow: column;
 }
 
+.escDshotDirection-Component .regular-button{
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline-style: none;
+}
+
 .escDshotDirection-ComponentHeader {
     padding-bottom: 12px;
 }
@@ -100,12 +106,14 @@
     text-align: center;
 }
 
-#escDshotDirectionDialog-NormalDialog .regular-button.pushed:hover {
-    background-color: #993333;
-}
+@media (hover: hover) {
+    #escDshotDirectionDialog-NormalDialog .regular-button.pushed:hover {
+        background-color: #993333;
+    }
 
-#escDshotDirectionDialog-NormalDialog .regular-button:hover {
-    background-color: #993333;
+    #escDshotDirectionDialog-NormalDialog .regular-button:hover {
+        background-color: #993333;
+    }
 }
 
 #escDshotDirectionDialog-MainContent .regular-button.highlighted {
