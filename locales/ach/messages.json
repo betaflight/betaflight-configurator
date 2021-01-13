@@ -5589,6 +5589,10 @@
         "message": "crwdns9662:0crwdne9662:0",
         "description": "Saved action button in the VTX tab"
     },
+    "vtxSmartAudioUnlocked": {
+        "message": "crwdns10354:0{{version}}crwdne10354:0",
+        "description": "Indicates if SA device is unlocked"
+    },
     "mainHelpArmed": {
         "message": "crwdns6314:0crwdne6314:0"
     },
