@@ -5495,6 +5495,10 @@
         "message": "Guardado",
         "description": "Saved action button in the VTX tab"
     },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} desbloqueado",
+        "description": "Indicates if SA device is unlocked"
+    },
     "mainHelpArmed": {
         "message": "Motor Armado"
     },
