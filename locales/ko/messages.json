@@ -5563,6 +5563,10 @@
         "message": "저장됨",
         "description": "Saved action button in the VTX tab"
     },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} 잠금 해제됨",
+        "description": "Indicates if SA device is unlocked"
+    },
     "mainHelpArmed": {
         "message": "모터 아밍"
     },
