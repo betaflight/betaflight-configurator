@@ -139,6 +139,17 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.MOTOR_OUTPUT_ORDER[i] = data.readU8();
                 }
                 break;
+            case MSPCodes.MSP2_GET_VTX_DEVICE_STATUS:
+                FC.VTX_DEVICE_STATUS = null;
+                const dataLength = data.byteLength;
+                if (dataLength > 0) {
+                    const vtxDeviceStatusData = new Uint8Array(dataLength);
+                    for (let i = 0; i < dataLength; i++) {
+                        vtxDeviceStatusData[i] = data.readU8();
+                    }
+                    FC.VTX_DEVICE_STATUS = vtxDeviceStatusFactory.createVtxDeviceStatus(vtxDeviceStatusData);
+                }
+                break;
             case MSPCodes.MSP_MOTOR_TELEMETRY:
                 const telemMotorCount = data.readU8();
                 for (let i = 0; i < telemMotorCount; i++) {

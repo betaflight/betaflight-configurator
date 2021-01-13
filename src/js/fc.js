@@ -153,6 +153,7 @@ const FC = {
     VTXTABLE_BAND: null,
     VTXTABLE_POWERLEVEL: null,
     VTX_CONFIG: null,
+    VTX_DEVICE_STATUS: null,
 
     resetState () {
         // Using `Object.assign` instead of reassigning to
@@ -645,6 +646,8 @@ const FC = {
             46, 90, 38, 22, 95,
             30, 90,  0,  0, 90,
         ];
+
+        this.VTX_DEVICE_STATUS = null;
     },
 
     getSerialRxTypes: () => {

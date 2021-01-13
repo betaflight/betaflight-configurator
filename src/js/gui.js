@@ -114,6 +114,21 @@ GuiControl.prototype.interval_add = function (name, code, interval, first) {
 };
 
 // name = string
+// code = function reference (code to be executed)
+// interval = time interval in miliseconds
+// first = true/false if code should be ran initially before next timer interval hits
+// condition = function reference with true/false result, a condition to be checked before every interval code execution
+GuiControl.prototype.interval_add_condition = function (name, code, interval, first, condition) {
+    this.interval_add(name, () => {
+        if (condition()) {
+            code();
+        } else {
+            this.interval_remove(name);
+        }
+    }, interval, first);
+}
+
+// name = string
 GuiControl.prototype.interval_remove = function (name) {
     for (let i = 0; i < this.interval_array.length; i++) {
         if (this.interval_array[i].name === name) {
