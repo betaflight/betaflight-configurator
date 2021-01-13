@@ -2427,6 +2427,9 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Informacja bezpieczeństwa</strong><br /><strong class=\"message-negative\">zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br />Silniki <strong>będą włączone!</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Notatka informacyjna</strong><br />Silniki będą włączane pojedyńczo i będziesz mógł wybrać, który silnik ma być włączony. Bateria powinna być podłączona, należy wybrać poprawny protokół ESC. To narzędzie może zmienić tylko aktualnie aktywne silniki. Bardziej skomplikowane przemapowanie wymaga komendy CLI Resource. Więcej info: <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">strony Wiki</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Zapisz"
     },
@@ -2438,6 +2441,12 @@
     },
     "escDshotDirectionDialog-SelectMotor": {
         "message": "Wybierz jeden lub wszystkie silniki"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Silniki będą kręciły się po wybraniu!"
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Notatka informacyjna</strong><br />Aby zmienić kierunek obrotu silnika podłącz baterie oraz wybierz prawidłowy protokół ESC. Możesz to zrobić w $t(tabConfiguration.message). Pamiętaj, że nie wszystkie ESC z protokołem Dshot będą wspierały tę funkcje. Sprawdź czy twoje ESC obsługuje funkcje zmiany kierunku obrotów."
     },
     "sensorsInfo": {
         "message": "Pamiętaj, że używanie częstej aktualizacji i rysowanie wielu wykresów w tym samym czasie wymaga mocy obliczeniowej - co może zwiększyć użycie baterii laptopa.<br />Zalecamy włączenie rysowania wykresów tylko dla czujników, których potrzebujesz najwięcej i wybrania możliwie niskich częstotliwości aktualizacji danych."
@@ -5397,6 +5406,10 @@
     "vtxButtonSaved": {
         "message": "Zapisano",
         "description": "Saved action button in the VTX tab"
+    },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} odblokowany",
+        "description": "Indicates if SA device is unlocked"
     },
     "mainHelpArmed": {
         "message": "Uzbrojenie silników"
