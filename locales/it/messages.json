@@ -717,13 +717,13 @@
         "message": "Batteria"
     },
     "initialSetupMinCellV": {
-        "message": "Voltaggio Minimo Cella:"
+        "message": "Tensione Minima Cella:"
     },
     "initialSetupMaxCellV": {
-        "message": "Voltaggio Massimo Cella:"
+        "message": "Tensione Massima Cella:"
     },
     "initialSetupVoltageScale": {
-        "message": "Scala Voltaggio:"
+        "message": "Scala Tensione:"
     },
     "initialSetupAccelTrimsHead": {
         "message": "Trim Accelerometro"
@@ -741,7 +741,7 @@
         "message": "Info"
     },
     "initialSetupBattery": {
-        "message": "Voltaggio Batteria:"
+        "message": "Tensione Batteria:"
     },
     "initialSetupBatteryValue": {
         "message": "$1 V"
@@ -921,7 +921,7 @@
         "message": "Input RX PPM"
     },
     "featureVBAT": {
-        "message": "Monitoraggio voltaggio batteria"
+        "message": "Monitoraggio tensione batteria"
     },
     "featureINFLIGHT_ACC_CAL": {
         "message": "Calibrazione livello in volo"
@@ -2320,10 +2320,10 @@
         "message": "Val"
     },
     "motorsVoltage": {
-        "message": "Voltaggio:"
+        "message": "Tensione:"
     },
     "motorsADrawing": {
-        "message": "Amperaggio:"
+        "message": "Corrente:"
     },
     "motorsmAhDrawn": {
         "message": "Ampere assorbiti:"
@@ -3379,7 +3379,7 @@
         "message": "Fattore scala [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Fattore di scala lineare dell'output dei motori (percentuale). Riduce la corrente degli ESC e il calore dei motori quando si utilizzano batterie con più celle, es. quando si utilizza una batteria 6S su un modello che ha motori, pale e tuning progettati per 4S, prova a impostare il valore al 66%; quando si utilizza una batteria 4S su un modello costruito per 3S, prova il 75%.<br>Assicurati sempre che tutti i componenti supportino il voltaggio della batteria in uso."
+        "message": "Fattore di scala lineare dell'output dei motori (percentuale). Riduce la corrente degli ESC e il calore dei motori quando si utilizzano batterie con più celle, es. quando si utilizza una batteria 6S su un modello che ha motori, pale e tuning progettati per 4S, prova a impostare il valore al 66%; quando si utilizza una batteria 4S su un modello costruito per 3S, prova il 75%.<br>Assicurati sempre che tutti i componenti supportino la tensione della batteria in uso."
     },
     "pidTuningCellCount": {
         "message": "Numero di celle"
@@ -3643,7 +3643,7 @@
         "message": "Compensazione PID Vbat"
     },
     "pidTuningVbatPidCompensationHelp": {
-        "message": "Aumenta i valori del PID per compensare la diminuzione del voltaggio della batteria. Darà caratteristiche di volo più costanti per la durata di tutto il volo. La quantità di compensazione applicata è calcolata in base al $t(powerBatteryMaximum.message) impostato nella pagina $t(tabPower.message), quindi assicurati che sia impostato su un valore appropriato."
+        "message": "Aumenta i valori del PID per compensare il calo di tensione della batteria. Darà caratteristiche di volo più costanti per la durata di tutto il volo. La quantità di compensazione applicata è calcolata in base al $t(powerBatteryMaximum.message) impostato nella pagina $t(tabPower.message), quindi assicurati che sia impostato su un valore appropriato."
     },
     "pidTuningVbatSagCompensation": {
         "message": "Compensazione calo Vbat"
@@ -3904,10 +3904,10 @@
         "message": "Salva"
     },
     "powerFirmwareUpgradeRequired": {
-        "message": "Aggiornamento firmware <span class=\"message-negative\">richiesto</span>. La configurazione di batteria/amperaggio/voltaggio non è supportato usando API &lt; 1.33.0 (release Betaflight &lt;= 3.17)."
+        "message": "Aggiornamento firmware <span class=\"message-negative\">richiesto</span>. La configurazione di Batteria/Corrente/Tensione non è supportata usando API &lt; 1.33.0 (release Betaflight &lt;= 3.17)."
     },
     "powerBatteryVoltageMeterSource": {
-        "message": "Sorgente del Monitor Voltaggio"
+        "message": "Sorgente del Monitor Tensione"
     },
     "powerBatteryVoltageMeterTypeNone": {
         "message": "Nessuna"
@@ -3937,13 +3937,13 @@
         "message": "Sensore MSP/slave OSD"
     },
     "powerBatteryMinimum": {
-        "message": "Voltaggio minimo cella"
+        "message": "Tensione minima cella"
     },
     "powerBatteryMaximum": {
-        "message": "Voltaggio massimo cella"
+        "message": "Tensione massima cella"
     },
     "powerBatteryWarning": {
-        "message": "Voltaggio cella avviso"
+        "message": "Tensione cella avviso"
     },
     "powerCalibrationManagerButton": {
         "message": "Calibrazione"
@@ -3955,13 +3955,13 @@
         "message": "Per calibrare usa un multimetro per misurare l'effettiva tensione/assorbimento corrente sul tuo modello (con una batteria connessa) e inserisci i valori qui sotto. Quindi, con la stessa batteria ancora collegata, fare clic su [Calibrate]."
     },
     "powerCalibrationManagerNote": {
-        "message": "<strong>Nota:</strong> Prima di calibrare la scala assicurati che il divisore e il moltiplicatore per la tensione e l'offset per l'amperaggio siano impostati correttamente.<br>Lasciando i valori a 0 non verrà applicata la calibrazione.</br><strong>Ricordati di rimuovere le pale prima di collegare una batteria!</strong>"
+        "message": "<strong>Nota:</strong> Prima di calibrare la scala assicurati che il divisore e il moltiplicatore per la tensione e l'offset per la corrente siano impostati correttamente.<br>Lasciando i valori a 0 non verrà applicata la calibrazione.</br><strong>Ricordati di rimuovere le pale prima di collegare una batteria!</strong>"
     },
     "powerCalibrationManagerWarning": {
-        "message": "<span class=\"message-negative\">Attenzione:</span> La batteria <span class=\"message-negative\">non è collegata</span> oppure i sensori di tensione o amperaggio <span class=\"message-negative\">non sono stati configurati correttamente.</span> Assicurati che i sensori di tensione e/o amperaggio stiano leggendo un valore al di sopra dello 0, altrimenti non sarai in grado di calibrare usando questo strumento."
+        "message": "<span class=\"message-negative\">Attenzione:</span> La batteria <span class=\"message-negative\">non è collegata</span> oppure i sensori di tensione o corrente <span class=\"message-negative\">non sono stati configurati correttamente.</span> Assicurati che i sensori di tensione e/o corrente stiano leggendo un valore al di sopra dello 0, altrimenti non sarai in grado di calibrare usando questo strumento."
     },
     "powerCalibrationManagerSourceNote": {
-        "message": "<span class=\"message-negative\">Attenzione:</span> I sensori di tensione e/o amperaggio <strong>sono stati modificati ma non salvati.</strong> Per favore, imposta correttamente i sensori e salva prima di procedere alla calibrazione."
+        "message": "<span class=\"message-negative\">Attenzione:</span> I sensori di tensione e/o corrente <strong>sono stati modificati ma non salvati.</strong> Per favore, imposta correttamente i sensori e salva prima di procedere alla calibrazione."
     },
     "powerCalibrationManagerConfirmationTitle": {
         "message": "Conferma gestore calibrazione"
@@ -4138,10 +4138,10 @@
         "message": "Offset [mA]"
     },
     "powerAmperageCalibration": {
-        "message": "Amperaggio misurato"
+        "message": "Corrente misurata"
     },
     "powerAmperageCalibratedScale": {
-        "message": "Scala amperaggio calibrata:"
+        "message": "Scala Corrente Calibrata:"
     },
     "powerBatteryHead": {
         "message": "Batteria"
@@ -4159,13 +4159,13 @@
         "message": "No"
     },
     "powerBatteryVoltage": {
-        "message": "Voltaggio"
+        "message": "Tensione"
     },
     "powerBatteryCurrentDrawn": {
         "message": "mAh usati"
     },
     "powerBatteryAmperage": {
-        "message": "Amperaggio"
+        "message": "Corrente"
     },
     "powerBatteryCapacity": {
         "message": "Capacità (mAh)"
@@ -4342,11 +4342,11 @@
         "message": "Ripristina Impostazioni"
     },
     "osdTextElementMainBattVoltage": {
-        "message": "Voltaggio Batteria",
+        "message": "Tensione Batteria",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattVoltage": {
-        "message": "Voltaggio istantaneo della batteria principale (lampeggia se al di sotto della soglia di allarme)"
+        "message": "Tensione istantanea della batteria principale (lampeggia se al di sotto della soglia di allarme)"
     },
     "osdTextElementRssiValue": {
         "message": "Valore RSSI",
@@ -4878,7 +4878,7 @@
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatEndBattery": {
-        "message": "Voltaggio della batteria al momento del disarmo"
+        "message": "Tensione della batteria al momento del disarmo"
     },
     "osdTextStatFlyTime": {
         "message": "Tempo totale di volo",
@@ -4930,11 +4930,11 @@
         "message": "Data e ora dall'orologio in tempo reale"
     },
     "osdTextStatBattery": {
-        "message": "Voltaggio Batteria",
+        "message": "Tensione Batteria",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatBattery": {
-        "message": "Voltaggio batteria in tempo reale"
+        "message": "Tensione batteria in tempo reale"
     },
     "osdTextStatGForce": {
         "message": "Forza G massima",
@@ -5495,6 +5495,10 @@
         "message": "Salvato",
         "description": "Saved action button in the VTX tab"
     },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} sbloccato",
+        "description": "Indicates if SA device is unlocked"
+    },
     "mainHelpArmed": {
         "message": "Armamento Motori"
     },
@@ -5576,7 +5580,7 @@
         "message": "Avviso Tensione Cella"
     },
     "configurationBatteryScale": {
-        "message": "Scala Voltaggio"
+        "message": "Scala Tensione"
     },
     "configurationCurrentMeterType": {
         "message": "Tipo di Misuratore di Corrente"
