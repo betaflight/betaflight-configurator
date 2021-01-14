@@ -5503,6 +5503,10 @@
         "message": "Desat",
         "description": "Saved action button in the VTX tab"
     },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} Desbloquejat",
+        "description": "Indicates if SA device is unlocked"
+    },
     "mainHelpArmed": {
         "message": "Armat de motors"
     },
