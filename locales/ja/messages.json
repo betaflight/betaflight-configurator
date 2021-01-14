@@ -5495,6 +5495,10 @@
         "message": "保存しました",
         "description": "Saved action button in the VTX tab"
     },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} ロック解除",
+        "description": "Indicates if SA device is unlocked"
+    },
     "mainHelpArmed": {
         "message": "モーターアーミング"
     },
