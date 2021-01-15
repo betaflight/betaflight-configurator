@@ -242,8 +242,10 @@ const serial = {
                 });
             } else {
                 self.connectionId = false;
+                CONFIGURATOR.virtualMode = false;
+                self.connectionType = false;
                 if (callback) {
-                    callback();
+                    callback(true);
                 }
             }
         } else {

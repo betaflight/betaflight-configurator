@@ -153,6 +153,7 @@ const FC = {
     VTXTABLE_BAND: null,
     VTXTABLE_POWERLEVEL: null,
     VTX_CONFIG: null,
+    VTX_DEVICE_STATUS: null,
 
     resetState () {
         // Using `Object.assign` instead of reassigning to
@@ -621,6 +622,7 @@ const FC = {
             gyro_notch2_cutoff:             100,
             gyro_notch2_hz:                 200,
             gyro_rpm_notch_harmonics:         3,
+            gyro_rpm_notch_min_hz:          100,
             dterm_lowpass_hz:               100,
             dterm_lowpass_dyn_min_hz:       150,
             dterm_lowpass_dyn_max_hz:       250,
@@ -635,6 +637,8 @@ const FC = {
             dyn_notch_width_percent:          8,
             dyn_notch_q_rpm:                250, // default with rpm filtering
             dyn_notch_width_percent_rpm:      0,
+            dyn_notch_min_hz:               150,
+            dyn_notch_max_hz:               600,
         };
 
         this.DEFAULT_PIDS = [
@@ -642,6 +646,8 @@ const FC = {
             46, 90, 38, 22, 95,
             30, 90,  0,  0, 90,
         ];
+
+        this.VTX_DEVICE_STATUS = null;
     },
 
     getSerialRxTypes: () => {

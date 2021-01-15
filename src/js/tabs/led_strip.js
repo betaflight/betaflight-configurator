@@ -9,6 +9,7 @@ TABS.led_strip = {
 TABS.led_strip.initialize = function (callback, scrollPosition) {
     let selectedColorIndex = null;
     let selectedModeColor = null;
+    const functionTag = '.function-';
 
     if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
         TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b'];
@@ -67,8 +68,6 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
     function process_html() {
 
         i18n.localizePage();
-
-        const functionTag = '.function-';
 
         // Build Grid
         const theHTML = [];
@@ -316,6 +315,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
         $('.mainGrid').selectable({
             filter: ' > div',
             stop: function() {
+                const functionsInSelection = [];
                 const directionsInSelection = [];
 
                 clearModeColorSelection();
@@ -566,7 +566,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             $(this).find('.wire').html(ledIndex);
 
             for (let modeIndex = 0; modeIndex < led.functions.length; modeIndex++) {
-                $(this).addClass(`function-'${led.functions[modeIndex]}`);
+                $(this).addClass(`function-${led.functions[modeIndex]}`);
             }
 
             for (let directionIndex = 0; directionIndex < led.directions.length; directionIndex++) {
@@ -1052,7 +1052,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                     const className = 'color-' + colorIndex;
                     if ($(this).is('.' + className)) {
                         $(this).find('.overlay-color').addClass(className);
-                        $(this).find('.overlay-color').css('background-color', HsvToColor(FC.LED_COLORS[colorIndex]))
+                        $(this).find('.overlay-color').css('background-color', HsvToColor(FC.LED_COLORS[colorIndex]));
                     } else {
                         if ($(this).find('.overlay-color').is('.' + className))
                             $(this).find('.overlay-color').removeClass(className);
