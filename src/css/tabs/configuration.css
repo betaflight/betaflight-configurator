@@ -201,13 +201,7 @@
     float: left;
 }
 
-.tab-configuration .rssi td {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
-
-.tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
+.tab-configuration .tab-configuration .system .gui_box {
     float: left;
 }
 
@@ -219,27 +213,6 @@
     float: left;
     margin-bottom: 10px;
 }
-
-.tab-configuration .current .gui_box {
-    float: left;
-}
-
-.tab-configuration .current td:nth-child(2) {
-    width: 30px;
-}
-
-.tab-configuration .rssi td:nth-child(2) {
-    width: 30px;
-}
-
-.tab-configuration .rxFailsafe td:nth-child(2) {
-    width: 30px;
-}
-
-.tab-configuration .serialRXBox, .spiRxBox {
-    padding-top: 0;
-}
-
 
 .tab-configuration .gps td:nth-child(2) {
     width: 38px;
@@ -336,7 +309,7 @@
     .tab-configuration .gui_box span {
         line-height: 17px;
     }
-    .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
+    .tab-configuration .system .gui_box {
         float: left;
     }
     .tab-configuration .board .gui_box, .tab-configuration .acc .gui_box {
@@ -345,30 +318,15 @@
     .tab-configuration .gps .gui_box, .tab-configuration .other .gui_box {
         float: left;
     }
-    .tab-configuration .current .gui_box {
-        float: left;
-    }
 }
 @media all and (max-width: 575px) {
-    .tab-configuration .rssi .gui_box, .tab-configuration .system .gui_box {
+    .tab-configuration .system .gui_box {
         min-height: auto;
-    }
-    .tab-configuration .current td:nth-child(2) {
-        width: auto;
-    }
-    .tab-configuration .voltage td:nth-child(2) {
-        width: auto;
-    }
-    .tab-configuration .rssi td:nth-child(2) {
-        width: auto;
-    }
-    .tab-configuration .rxFailsafe td:nth-child(2) {
-        width: auto;
     }
     .tab-configuration .gps td:nth-child(2) {
         width: auto;
     }
-    select.features.rxMode, select.serialRX, .dshotbeacon > td > div.select > div, .dshotbeacon select.dshotBeeperBeaconTone {
+    .dshotbeacon > td > div.select > div, .dshotbeacon select.dshotBeeperBeaconTone {
         width: 100%;
     }
 }

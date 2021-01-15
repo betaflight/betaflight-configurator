@@ -577,3 +577,149 @@
         display: inherit;
     }
 }
+
+
+/* rx configuration */
+
+.tab-receiver .rssi input,
+.tab-receiver .receiver select {
+    border: 1px solid var(--subtleAccent);
+    width: 230px;
+    height: 20px;
+    float: left;
+    margin-right: 15px;
+    border-radius: 3px;
+}
+
+.tab-receiver table {
+    margin-bottom: 0;
+    width: 100%;
+    float: left;
+}
+
+.tab-receiver table, .tab-receiver table th, .tab-receiver table td {
+    padding: 0;
+    text-align: left;
+}
+
+.tab-receiver table th {
+    padding: 3px;
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+.tab-receiver table td {
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
+.tab-receiver table tr td:first-child {
+    text-align: left;
+    width: 55px;
+}
+
+.tab-receiver table thead tr:first-child {
+    background-color: #ececec;
+}
+
+.tab-receiver dl.features dt {
+    float: left;
+    width: 10px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.tab-receiver dl.features dt input {
+    margin-top: 2px;
+}
+
+.tab-receiver dl.features dd {
+    margin: 0 0 0 20px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.tab-receiver span {
+    margin: 0;
+}
+
+.tab-receiver .spacer_box {
+    padding-bottom: 10px;
+    float: left;
+    width: calc(100% - 20px);
+}
+
+.tab-receiver .select
+{
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--subtleAccent);
+    width: 100%;
+    float: left;
+}
+
+.tab-receiver .select:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.tab-receiver .gui_box_titlebar {
+    margin-bottom: 0;
+}
+
+.tab-receiver .rssi thead {
+    display: none;
+}
+
+.tab-receiver .gui_box {
+    margin-bottom: 10px;
+    float: left;
+    font-weight: bold;
+}
+
+.tab-receiver .rssi td {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.tab-receiver .rssi .gui_box {
+    float: left;
+}
+
+.tab-receiver .rssi td:nth-child(2) {
+    width: 20px;
+}
+
+.tab-receiver .serialRXBox, .spiRxBox {
+    padding-top: 0;
+}
+
+.tab-receiver .gui_box span {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    color: #4f4f4f;
+    font-size: 11px;
+}
+
+@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+    .tab-receiver .gui_box span {
+        line-height: 17px;
+    }
+    .tab-receiver .rssi .gui_box {
+        float: left;
+    }
+}
+
+@media all and (max-width: 575px) {
+    .tab-receiver .rssi .gui_box {
+        min-height: auto;
+    }
+    .tab-receiver .rssi td:nth-child(2) {
+        width: auto;
+    }
+    .tab-receiver .features.rxMode, .tab-receiver .serialRX {
+        width: 100%;
+    }
+}

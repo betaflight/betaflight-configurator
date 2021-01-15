@@ -718,6 +718,11 @@ progress[value]::-webkit-progress-bar {
 
 /* RECEIVER TAB */
 
+.tab-receiver .gui_box span {
+    color: white;
+}
+
+.tab-receiver input,
 .tab-receiver select {
     background-color: #3a3a3a;
     color: white;
