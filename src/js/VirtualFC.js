@@ -19,7 +19,11 @@ const VirtualFC = {
         virtualFC.MIXER_CONFIG.mixer = 3;
 
         virtualFC.MOTOR_DATA = Array.from({length: 8});
-        virtualFC.MOTOR_3D_CONFIG = true;
+        virtualFC.MOTOR_3D_CONFIG = {
+            deadband3d_low: 1406,
+            deadband3d_high: 1514,
+            neutral: 1460,
+        };
         virtualFC.MOTOR_CONFIG = {
             minthrottle: 1070,
             maxthrottle: 2000,
