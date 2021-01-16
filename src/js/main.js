@@ -219,9 +219,15 @@ function startProcess() {
     // Tabs
     $("#tabs ul.mode-connected li").click(function() {
         // store the first class of the current tab (omit things like ".active")
-        ConfigStorage.set(
-            {lastTab: $(this).attr("class").split(' ')[0]}
-        );
+        const tabName = $(this).attr("class").split(' ')[0];
+
+        const tabNameWithoutPrefix = tabName.substring(4);
+        if (tabNameWithoutPrefix !== "cli") {
+            // Don't store 'cli' otherwise you can never connect to another tab.
+            ConfigStorage.set(
+                {lastTab: tabName},
+            );
+        }
     });
 
     if (GUI.isCordova()) {

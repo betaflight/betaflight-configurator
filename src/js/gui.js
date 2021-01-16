@@ -388,13 +388,11 @@ GuiControl.prototype.content_ready = function (callback) {
 
 GuiControl.prototype.selectDefaultTabWhenConnected = function() {
     ConfigStorage.get(['rememberLastTab', 'lastTab'], function (result) {
-        if (!(result.rememberLastTab
-                && !!result.lastTab
-                && result.lastTab.substring(4) !== "cli")) {
+        if (result.rememberLastTab && result.lastTab) {
+            $(`#tabs ul.mode-connected .${result.lastTab} a`).click();
+        } else {
             $('#tabs ul.mode-connected .tab_setup a').click();
-            return;
         }
-        $(`#tabs ul.mode-connected .${result.lastTab} a`).click();
     });
 };
 
