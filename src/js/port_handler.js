@@ -242,12 +242,14 @@ PortHandler.selectPort = function(ports) {
     for (let i = 0; i < ports.length; i++) {
         const portName = ports[i].displayName;
         if (portName) {
-            if (portName.includes('STM') || portName.includes('CP210')) {
-                const pathSelect = ports[i].path;
-                if (OS === 'Windows' || (OS !== 'Windows' && pathSelect.includes('tty'))) {
-                    this.portPickerElement.val(pathSelect);
-                    console.log(`Porthandler detected device ${portName} on port: ${pathSelect}`);
-                }
+            const pathSelect = ports[i].path;
+            const isWindows = (OS === 'Windows');
+            const isTty = pathSelect.includes('tty');
+            const deviceRecognized = portName.includes('STM') || portName.includes('CP210');
+            const legacyDeviceRecognized = portName.includes('usb');
+            if (isWindows && deviceRecognized || isTty && (deviceRecognized || legacyDeviceRecognized)) {
+                this.portPickerElement.val(pathSelect);
+                console.log(`Porthandler detected device ${portName} on port: ${pathSelect}`);
             }
         }
     }
