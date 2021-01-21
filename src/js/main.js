@@ -502,6 +502,8 @@ function startProcess() {
             if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
                 updateTabList(FC.FEATURE_CONFIG.features);
             }
+
+            TuningSliders.setExpertMode(checked);
         }).change();
     });
 

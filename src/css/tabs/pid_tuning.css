@@ -734,7 +734,7 @@
     height: 15px;
 }
 
-.tab-pid_tuning .nonExpertModeSliders.tuningSlider::-webkit-slider-runnable-track {
+.tab-pid_tuning .nonExpertModeSliders .tuningSlider::-webkit-slider-runnable-track {
     background: linear-gradient(90deg, rgb(197, 197, 197) -50%, rgb(241, 241, 241) 50%, rgb(255, 84, 14) 150%);
     background-size: 55%;
     background-position: 44%;

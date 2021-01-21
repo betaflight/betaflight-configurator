@@ -117,6 +117,9 @@ const MSPCodes = {
 
     MSP_MOTOR_TELEMETRY:            139,
 
+    MSP_TUNING_SLIDERS:             140,
+    MSP_SET_TUNING_SLIDERS:         141,
+
     MSP_STATUS_EX:                  150,
 
     MSP_UID:                        160,
