@@ -3552,6 +3552,22 @@
         "message": "crwdns9792:0crwdne9792:0",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "crwdns10356:0crwdne10356:0",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "crwdns10358:0crwdne10358:0",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "crwdns10360:0crwdne10360:0",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "crwdns10362:0crwdne10362:0",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "crwdns9794:0crwdne9794:0",
         "description": "PD balance tuning slider label"
@@ -3559,6 +3575,14 @@
     "pidTuningPDGainSlider": {
         "message": "crwdns9796:0crwdne9796:0",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "crwdns10364:0crwdne10364:0",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "crwdns10366:0crwdne10366:0",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "crwdns9798:0crwdne9798:0",
