@@ -2448,6 +2448,27 @@
     "escDshotDirectionDialog-InformationNotice": {
         "message": "<strong>Notatka informacyjna</strong><br />Aby zmienić kierunek obrotu silnika podłącz baterie oraz wybierz prawidłowy protokół ESC. Możesz to zrobić w $t(tabConfiguration.message). Pamiętaj, że nie wszystkie ESC z protokołem Dshot będą wspierały tę funkcje. Sprawdź czy twoje ESC obsługuje funkcje zmiany kierunku obrotów."
     },
+    "escDshotDirectionDialog-Open": {
+        "message": "Kierunek obrotów silnika"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normalny"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Odwrócony"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Test silnika"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Aby zatrzymać zwolnij przycisk"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Zmień kierunek wybranych silników"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Silniki będą obracać się podczas ustawiania kierunku!"
+    },
     "sensorsInfo": {
         "message": "Pamiętaj, że używanie częstej aktualizacji i rysowanie wielu wykresów w tym samym czasie wymaga mocy obliczeniowej - co może zwiększyć użycie baterii laptopa.<br />Zalecamy włączenie rysowania wykresów tylko dla czujników, których potrzebujesz najwięcej i wybrania możliwie niskich częstotliwości aktualizacji danych."
     },
@@ -3369,6 +3390,14 @@
     "pidTuningMasterSlider": {
         "message": "Główny mnożnik:",
         "description": "Master tuning slider label"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Wzmocnienie I:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Wzmocnienie I",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningPDRatioSlider": {
         "message": "Balans PD:",
