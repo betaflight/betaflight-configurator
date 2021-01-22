@@ -3526,6 +3526,22 @@
         "message": "마스터 승수:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "롤 피치 비율:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "롤 피치 비율",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "I 게인:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "I 게인",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "PD 밸런스:",
         "description": "PD balance tuning slider label"
@@ -3533,6 +3549,14 @@
     "pidTuningPDGainSlider": {
         "message": "P & D 게인:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "D 최소값 비율:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "D 최소값 비율",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "스틱 반응 게인:",
