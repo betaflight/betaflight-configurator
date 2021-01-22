@@ -543,12 +543,18 @@ TABS.pid_tuning.initialize = function (callback) {
             adjustDMin($(this), dMinElement);
         }).change();
 
+        //dMinSwitch toggle
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
             const dMinSwitch = $('#dMinSwitch');
             dMinSwitch.prop('checked', FC.ADVANCED_TUNING.dMinRoll > 0 || FC.ADVANCED_TUNING.dMinPitch > 0 || FC.ADVANCED_TUNING.dMinYaw > 0);
             dMinSwitch.change(function() {
                 const checked = $(this).is(':checked');
                 if (checked) {
+                    if (FC.TUNING_SLIDERS.slider_pids_mode !== 0 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                        TuningSliders.sliderDMinRatio = 1;
+                        $('output[name="sliderDMinRatio-number"]').val(1);
+                        $('#sliderDMinRatio').val(1);
+                    }
                     if ($('.pid_tuning input[name="dMinRoll"]').val() == 0 && $('.pid_tuning input[name="dMinPitch"]').val() == 0 && $('.pid_tuning input[name="dMinYaw"]').val() == 0) {
                         // when enabling dmin set its value based on 0.57x of actual dmax, dmin is limited to 100
                         $('.pid_tuning input[name="dMinRoll"]').val(Math.min(Math.round($('.pid_tuning .ROLL input[name="d"]').val() * 0.57), 100));
@@ -570,6 +576,9 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('#pid_main .pid_titlebar2 th').attr('colspan', 6);
                     $('.derivativeText').text(i18n.getMessage("pidTuningDMax"));
                 } else {
+                    if (FC.TUNING_SLIDERS.slider_pids_mode !== 0 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                        TuningSliders.sliderDMinRatio = 2;
+                    }
                     $('.pid_tuning input[name="dMinRoll"]').val(0);
                     $('.pid_tuning input[name="dMinPitch"]').val(0);
                     $('.pid_tuning input[name="dMinYaw"]').val(0);
@@ -578,6 +587,9 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('#pid_main tr :nth-child(5)').hide();
                     $('#pid_main .pid_titlebar2 th').attr('colspan', 5);
                     $('.derivativeText').text(i18n.getMessage("pidTuningDerivative"));
+                }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    TuningSliders.updatePidSlidersDisplay();
                 }
             });
             dMinSwitch.change();
@@ -1798,8 +1810,8 @@ TABS.pid_tuning.initialize = function (callback) {
             const NON_EXPERT_SLIDER_MAX = 1.25;
             const NON_EXPERT_SLIDER_MIN = 0.7;
 
-            const SLIDER_STEP_LOWER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.005 : 0.05;
-            const SLIDER_STEP_UPPER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.01 : 0.1;
+            const SLIDER_STEP_LOWER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.025 : 0.05;
+            const SLIDER_STEP_UPPER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.05 : 0.1;
 
             $('#sliderPidsModeSelect').val(FC.TUNING_SLIDERS.slider_pids_mode);
 
@@ -1822,16 +1834,26 @@ TABS.pid_tuning.initialize = function (callback) {
                 });
             }
 
-            // integrated yaw doesn't work with sliders therefore sliders are disabled
+            // disable slides if Integrated Yaw is enabled or Slider PID mode is set to OFF
             $('input[id="useIntegratedYaw"]').change(() => TuningSliders.updatePidSlidersDisplay());
+
+            // trigger Slider Display update when PID mode is changed
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                $('select[id="sliderPidsModeSelect"]').change(function () {
+                    TuningSliders.sliderPidsMode = parseInt($(this).val());
+                    TuningSliders.updatePidSlidersDisplay();
+                }).change();
+            }
 
             let allPidTuningSliders;
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                 allPidTuningSliders = $('#sliderMasterMultiplier, #sliderPDRatio, #sliderPDGain, #sliderFFGain');
-                $('.tab-pid_tuning .firmwareSlider').hide();
+                $('.tab-pid_tuning .advancedSlider').hide();
+                $('.tab-pid_tuning .sliderMode').hide();
             } else {
                 allPidTuningSliders = $('#sliderMasterMultiplier, #sliderRollPitchRatio, #sliderIGain, #sliderPDRatio, #sliderPDGain, #sliderDMinRatio, #sliderFFGain');
-                $('.tab-pid-tuning .firmwareSlider').show();
+                $('.tab-pid-tuning .baseSlider').show();
+                $('.tab-pid-tuning .MasterSlider').show();
             }
 
             allPidTuningSliders.on('input', function() {
@@ -1842,7 +1864,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 } else {
                     slider.attr('step', SLIDER_STEP_UPPER);
                 }
-                if (!TuningSliders.expertMode) {
+                if (!TuningSliders.expertMode && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     if (slider.val() > NON_EXPERT_SLIDER_MAX) {
                         slider.val(NON_EXPERT_SLIDER_MAX);
                     } else if (slider.val() < NON_EXPERT_SLIDER_MIN) {
@@ -1899,6 +1921,11 @@ TABS.pid_tuning.initialize = function (callback) {
             });
             // enable PID sliders button
             $('a.buttonPidTuningSliders').click(function() {
+                //set Slider PID mode to RPY when re-enabling Sliders
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    FC.TUNING_SLIDERS.slider_pids_mode = 2;
+                    $('#sliderPidsModeSelect').val(FC.TUNING_SLIDERS.slider_pids_mode);
+                }
                 // if values were previously changed manually and then sliders are reactivated, reset pids to previous valid values if available, else default
                 TuningSliders.resetPidSliders();
                 // disable integrated yaw when enabling sliders
@@ -1952,7 +1979,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 }
                 TuningSliders.updateFilterSlidersDisplay();
             });
-            // enable PID sliders button
+            // enable Filter sliders button
             $('a.buttonFilterTuningSliders').click(function() {
                 if (TuningSliders.sliderGyroFilter) {
                     // update switchery dynamically based on defaults

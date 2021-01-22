@@ -1,7 +1,7 @@
 'use strict';
 
 const TuningSliders = {
-    sliderPidsMode: 0,
+    sliderPidsMode: 2,
     sliderMasterMultiplier: 1,
     sliderRollPitchRatio: 1,
     sliderIGain: 1,
@@ -62,12 +62,17 @@ TuningSliders.initialize = function() {
     this.updateFilterSlidersDisplay();
 };
 
-TuningSliders.setExpertMode = function(expertMode) {
-    this.expertMode = expertMode;
-    if (this.expertMode) {
-        $('#slidersPidsBox, #slidersFilterBox').removeClass('nonExpertModeSliders');
+TuningSliders.setExpertMode = function() {
+    this.expertMode = isExpertModeEnabled();
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        const dMinShow = parseInt($('.pid_tuning input[name="dMinRoll"]').val()) !== 0;
+        $('.tab-pid_tuning .MasterSlider').toggle(this.expertMode);
+        $('.tab-pid_tuning .DMinRatioSlider').toggle(this.expertMode && dMinShow);
+        $('.tab-pid_tuning .advancedSlider').toggle(this.expertMode);
     } else {
-        $('#slidersPidsBox, #slidersFilterBox').addClass('nonExpertModeSliders');
+        $('#slidersPidsBox, #slidersFilterBox').toggleClass('nonExpertModeSliders', !this.expertMode);
+        $('.tab-pid_tuning .advancedSlider').hide();
+        $('.tab-pid_tuning .DMinRatioSlider').hide();
     }
 };
 
@@ -213,42 +218,51 @@ TuningSliders.updatePidSlidersDisplay = function() {
     const WARNING_DMAX_GAIN = 60;
     const WARNING_DMIN_GAIN = 40;
 
+    this.pidSlidersUnavailable = false;
+    let currentPIDs = [];
+    FC.PID_NAMES.forEach(function(elementPid, indexPid) {
+        const pidElements = $(`.pid_tuning .${elementPid} input`);
+        pidElements.each(function (indexInput) {
+            if (indexPid < 3 && indexInput < 5) {
+                currentPIDs.push($(this).val());
+            }
+        });
+    });
+
     if (semver.lte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-        this.pidSlidersUnavailable = false;
-        let currentPIDs = [];
-        FC.PID_NAMES.forEach(function(elementPid, indexPid) {
-            const pidElements = $(`.pid_tuning .${elementPid} input`);
-            pidElements.each(function (indexInput) {
-                if (indexPid < 3 && indexInput < 5) {
-                    currentPIDs.push($(this).val());
-                }
-            });
-        });
         this.calculateNewPids();
-        FC.PID_NAMES.forEach(function(elementPid, indexPid) {
-            const pidElements = $(`.pid_tuning .${elementPid} input`);
-            pidElements.each(function (indexInput) {
-                if (indexPid < 3 && indexInput < 5) {
-                    if (currentPIDs[indexPid * 5 + indexInput] != $(this).val()) {
-                        TuningSliders.pidSlidersUnavailable = true;
-                    }
-                    $(this).val(currentPIDs[indexPid * 5 + indexInput]);
+    }
+
+    FC.PID_NAMES.forEach(function(elementPid, indexPid) {
+        const pidElements = $(`.pid_tuning .${elementPid} input`);
+        pidElements.each(function (indexInput) {
+            if (indexPid < 3 && indexInput < 5) {
+                if (currentPIDs[indexPid * 5 + indexInput] != $(this).val()) {
+                    TuningSliders.pidSlidersUnavailable = true;
                 }
-            });
+                $(this).val(currentPIDs[indexPid * 5 + indexInput]);
+            }
         });
+    });
 
-        if ($('input[id="useIntegratedYaw"]').is(':checked')) {
-            this.pidSlidersUnavailable = true;
-        }
+    if ($('input[id="useIntegratedYaw"]').is(':checked')) {
+        this.pidSlidersUnavailable = true;
+    }
 
-        if (!this.pidSlidersUnavailable) {
-            this.cachedPidSliderValues = true;
+    if (!this.pidSlidersUnavailable && !semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        this.cachedPidSliderValues = true;
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        if (this.sliderPidsMode === 0) {
+           this.pidSlidersUnavailable = true;
         }
+        this.setExpertMode();
     }
 
     $('.tuningPIDSliders').toggle(!this.pidSlidersUnavailable);
     $('.subtab-pid .slidersDisabled').toggle(this.pidSlidersUnavailable);
-    $('.subtab-pid .nonExpertModeSlidersNote').toggle(!this.pidSlidersUnavailable && !this.expertMode);
+    $('.subtab-pid .nonExpertModeSlidersNote').toggle(!this.pidSlidersUnavailable && !this.expertMode && !semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44));
     $('.subtab-pid .slidersWarning').toggle((FC.PIDS[1][0] > WARNING_P_GAIN || FC.PIDS[1][1] > WARNING_I_GAIN || FC.PIDS[1][2] > WARNING_DMAX_GAIN ||
                                                 FC.ADVANCED_TUNING.dMinPitch > WARNING_DMIN_GAIN) && !this.pidSlidersUnavailable);
 };
@@ -412,15 +426,19 @@ TuningSliders.calculateNewPids = function() {
         .then(() => { return MSP.send_message(MSPCodes.MSP_PID_ADVANCED); });
     }
 
-    $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
-    $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
-    $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
-    $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
-    $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
-    $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
+    const delayInMilliseconds = 250; //0.25 seconds
+    setTimeout(function() {
+        $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
+        $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
+        $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
+        $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
+        $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
+        $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
 
-    this.updateFormPids();
-    TABS.pid_tuning.updatePIDColors();
+        TuningSliders.updateFormPids();
+        TABS.pid_tuning.updatePIDColors();
+
+    }, delayInMilliseconds);
 };
 
 TuningSliders.calculateNewGyroFilters = function() {
