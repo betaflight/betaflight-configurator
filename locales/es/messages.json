@@ -3458,6 +3458,22 @@
         "message": "Multiplicador Maestro:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Ratio Roll Pitch:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Ratio Roll Pitch",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Ganancia de I:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Ganancia de I",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Balance PD:",
         "description": "PD balance tuning slider label"
@@ -3465,6 +3481,14 @@
     "pidTuningPDGainSlider": {
         "message": "Ganancia P y D:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "Ratio D Min:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "Ratio D Min",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Sensibilidad del Mando:",
