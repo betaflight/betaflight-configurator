@@ -1516,7 +1516,7 @@
         "description": "One of the modes of anti gravity"
     },
     "pidTuningAntiGravityGain": {
-        "message": "強さ[ゲイン]",
+        "message": "強度[ゲイン]",
         "description": "Anti Gravity Gain Parameter"
     },
     "pidTuningAntiGravityThres": {
@@ -1524,7 +1524,7 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "アンチグラビティは、スロットルの素早い変化が検出されるとI値をブーストします。 強さを大きくすると、スロットルを操作したときに安定性と姿勢保持が向上します。"
+        "message": "アンチグラビティは、スロットルの素早い変化が検出されるとI値をブーストします。 強度を大きくすると、スロットルを操作したときに安定性と姿勢保持が向上します。"
     },
     "pidTuningDMin": {
         "message": "D値最小",
@@ -1534,7 +1534,7 @@
         "message": "<strong>注:</strong> D Min機能は無効になり、そのパラメーターは非表示になります。D Min機能を使用するには $t(pidTuningPidSettings.message) で有効にしてください。"
     },
     "pidTuningDMinGain": {
-        "message": "強さ[ゲイン]",
+        "message": "強度[ゲイン]",
         "description": "Gain of the D Min feature"
     },
     "pidTuningDMinAdvance": {
@@ -1542,11 +1542,11 @@
         "description": "Advance of the D Min feature"
     },
     "pidTuningDMinFeatureHelp": {
-        "message": "D値最小[D_Min] は、通常の飛行ではD値のレベルを低くし、フリップやロールなどオーバーシュートを引き起こすような素早い操縦が必要な場合には、D値のレベルを高くする機能を提供します。またD値を上げ過ぎるとプロップウォッシュとなります。強さ[ゲイン] は、D値が最大値に到達する速度を調整し、それによりジャイロに基づき、鋭い動きとプロップウォッシュ状態が決まります。詳細設定は、ジャイロの代わりにセットポイントを使用して鋭い動きが決まり、D値を素早く上昇させます。",
+        "message": "D値最小[D_Min] は、通常の飛行ではD値のレベルを低くし、フリップやロールなどオーバーシュートを引き起こすような素早い操縦が必要な場合には、D値のレベルを高くする機能を提供します。またD値を上げ過ぎるとプロップウォッシュとなります。強度[ゲイン] は、D値が最大値に到達する速度を調整し、それによりジャイロに基づき、鋭い動きとプロップウォッシュ状態が決まります。詳細設定は、ジャイロの代わりにセットポイントを使用して鋭い動きが決まり、D値を素早く上昇させます。",
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "通常の直進飛行での減衰の強さ (D値) を制御します。<br>D_Minを有効にすると、飛行中に有効なD値の強さを可変させます。通常の直進飛行では、以下の強さのD_Min値となります。機敏な挙動またはプロップウォッシュが発生した際、有効なD_Max値の強さは左に指定されたD値ゲインまで上昇します。<br><br>機敏なスティック入力の場合は完全なD_Max値ゲインが得られますが、プロップウォッシュ時は一部のD値ゲインしか有効になりません。<br>D_Minの強さ[ゲイン] と詳細設定を調整して、ブーストの感度とタイミングを制御しましょう。",
+        "message": "通常の直進飛行での減衰の強度 (D値) を制御します。<br>D_Minを有効にすると、飛行中に有効なD値の強度を可変させます。通常の直進飛行ではD_Min値を下回る強度となります。機敏な挙動またはプロップウォッシュが発生した際、有効なD_Max値の強度は左に指定されたD値ゲインまで上昇します。<br><br>機敏なスティック入力の場合は完全なD_Max値ゲインが得られますが、プロップウォッシュ時は一部のD値ゲインしか有効になりません。<br>D_Minの強度[ゲイン] と詳細設定を調整して、ブーストの感度とタイミングを制御しましょう。",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1705,7 +1705,7 @@
         "message": "Proportional"
     },
     "pidTuningProportionalHelp": {
-        "message": "機体がスティックに対してどのくらい厳密に追従するか (セットポイント) の強さを制御します。<br><br>値[ゲイン] を大きくするとスティックに対する追従が厳密になりますが、微分制御 (D値) に比例し値が高過ぎるとオーバーシュートを引き起こすことがあります。P値に関しては自動車でいうサスペンションのスプリングとお考えください。",
+        "message": "機体がスティックに対してどのくらい厳密に追従するか (セットポイント) の強度を制御します。<br><br>値[ゲイン] を大きくするとスティックに対する追従が厳密になりますが、微分制御 (D値) に比例し値が高過ぎるとオーバーシュートを引き起こすことがあります。P値に関しては自動車でいうサスペンションのスプリングとお考えください。",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
@@ -1722,7 +1722,7 @@
         "message": "D値最大"
     },
     "pidTuningDerivativeHelp": {
-        "message": "機体のあらゆる動きに対する減衰の強さを制御します。スティックの動きに対し、命令によりD値を減衰させます。外部からの影響 (プロップウォッシュまたは突風) の場合、D値にてその影響を減少させることができます。<br><br>ゲインを高くすると減衰が大きくなり、P値およびFF値によるオーバーシュートが減少します。<br>ただし、D値はジャイロにおける高周波振動に非常に敏感です。(ノイズ | \n10倍から100倍へ拡大)<br><br>D値ゲインが高すぎる場合、またはジャイロノイズが適切にフィルター処理されていない場合、高周波ノイズによりモーターが発熱し、モーターが焼損する可能性があります。(フィルタータブ参照) <br><br>D値は自動車のサスペンションのショックアブソーバーとお考えください。ただし高周波ジャイロノイズを増幅させてしまうという、固有のマイナス特性があります。",
+        "message": "機体のあらゆる動きに対する減衰の強度を制御します。スティックの動きに対し、命令によりD値を減衰させます。外部からの影響 (プロップウォッシュまたは突風) の場合、D値にてその影響を減少させることができます。<br><br>強度を高くすると減衰が大きくなり、P値およびFF値によるオーバーシュートが減少します。<br>ただし、D値はジャイロにおける高周波振動に非常に敏感です。(ノイズ | \n10倍から100倍へ拡大)<br><br>D値ゲインが高すぎる場合、またはジャイロノイズが適切にフィルター処理されていない場合、高周波ノイズによりモーターが発熱し、モーターが焼損する可能性があります。(フィルタータブ参照) <br><br>D値は自動車のサスペンションのショックアブソーバーとお考えください。ただし高周波ジャイロノイズを増幅させてしまうという、固有のマイナス特性があります。",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
@@ -2068,19 +2068,19 @@
         "message": "スロットルExpo調整"
     },
     "adjustmentsFunction4": {
-        "message": "ピッチ・ロールレート調整"
+        "message": "ピッチ・ロール レート調整"
     },
     "adjustmentsFunction5": {
         "message": "ヨーレート調整"
     },
     "adjustmentsFunction6": {
-        "message": "ピッチ・ロール P 調整"
+        "message": "ピッチ・ロール P値 調整"
     },
     "adjustmentsFunction7": {
-        "message": "ピッチ・ロール I 調整"
+        "message": "ピッチ・ロール I値 調整"
     },
     "adjustmentsFunction8": {
-        "message": "ピッチ・ロール D 調整"
+        "message": "ピッチ・ロール D値 調整"
     },
     "adjustmentsFunction9": {
         "message": "ヨー P値 調整"
@@ -2098,7 +2098,7 @@
         "message": "ピッチレート"
     },
     "adjustmentsFunction14": {
-        "message": "ロールレート"
+        "message": "ロール レート"
     },
     "adjustmentsFunction15": {
         "message": "ピッチ P値 調整"
@@ -2125,7 +2125,7 @@
         "message": "D値 セットポイント"
     },
     "adjustmentsFunction22_2": {
-        "message": "ピッチ・ロール F 調整"
+        "message": "ピッチ・ロール F値 調整"
     },
     "adjustmentsFunction23": {
         "message": "D値 セットポイント 遷移"
@@ -3423,7 +3423,7 @@
         "description": "D Term filtering tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "機体の飛行特性 (PID値) を調整するスライダー<br><br>基準乗算値: PID値の間における比例差を保持しながら、全ての (上記) PID値[ゲイン] を増減します。<br><br>PD値バランス: P値とD値 (スプリング [p-term] およびショックアブソーバー [d-term]) 間のバランス (比率\\比例差) を調整します。<br><br>PD値: PID制御の強さを増やす (または減らす) ために、P&D値ゲインを一緒に増減します。(2つの間の比率 (バランス) を保持します) <br><brスティック応答: フィードフォワード値を増減して、機体のスティック応答感覚を制御します。",
+        "message": "機体の飛行特性 (PID値) を調整するスライダー<br><br>基準乗算値: PID値の間における比例差を保持しながら、全ての (上記) PID強度[ゲイン] を増減します。<br><br>PD値バランス: P値とD値 (スプリング [p-term] およびショックアブソーバー [d-term]) 間のバランス (比率\\比例差) を調整します。<br><br>PD値: PID制御の強度を増やす (または減らす) ために、P&D値ゲインを一緒に増減します。(2つの間の比率 (バランス) を保持します) <br><brスティック応答: フィードフォワード値を増減して、機体のスティック応答感覚を制御します。",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -3458,16 +3458,40 @@
         "message": "基準乗算値:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "ロール・ピッチ比:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "ロール・ピッチ比",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "I値 強度:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "I値 強度",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "PD値 バランス:",
         "description": "PD balance tuning slider label"
     },
     "pidTuningPDGainSlider": {
-        "message": "P値 D値 強さ:",
+        "message": "P&D値 強度:",
         "description": "P and D gain tuning slider label"
     },
+    "pidTuningDMinRatioSlider": {
+        "message": "D値 最小比:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "D値 最小比",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningResponseSlider": {
-        "message": "スティック応答 強さ:",
+        "message": "スティック応答速度:",
         "description": "Response tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
@@ -3479,7 +3503,7 @@
         "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningPDGainSliderHelp": {
-        "message": "P値とD値の値[ゲイン] が低いと、モーターは冷却されますが、プロップウォッシュ振動が大きくなります。値が低すぎると機体が不安定になる場合があります。<br><br>P値とD値は連動してプロップウォッシュを減らします。<br><br>値を大きくするとモーターの熱が増加し、D値ゲインが高くなるため、スムーズな直進飛行中に振動が増加する場合があります。",
+        "message": "P値とD値の強度[ゲイン] が低いと、モーターは冷却されますが、プロップウォッシュ振動が大きくなります。値が低すぎると機体が不安定になる場合があります。<br><br>P値とD値は連動してプロップウォッシュを減らします。<br><br>値を大きくするとモーターの熱が増加し、D値ゲインが高くなるため、スムーズな直進飛行中に振動が増加する場合があります。",
         "description": "P and D gain tuning slider helpicon message"
     },
     "pidTuningResponseSliderHelp": {
@@ -4514,21 +4538,21 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRoll": {
-        "message": "Roll軸 PID値の強さ"
+        "message": "Roll軸 PID強度"
     },
     "osdTextElementPIDPitch": {
         "message": "PID ピッチ",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDPitch": {
-        "message": "Pitch軸 PID値の強さ"
+        "message": "Pitch軸 PID強度"
     },
     "osdTextElementPIDYaw": {
         "message": "PID ヨー",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDYaw": {
-        "message": "Yaw軸 PIDの強さ"
+        "message": "Yaw軸 PID強度"
     },
     "osdTextElementPower": {
         "message": "電源",
