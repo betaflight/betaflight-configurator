@@ -58,7 +58,7 @@ TABS.pid_tuning.initialize = function (callback) {
         return MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
     }).then(function() {
         let promise;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             promise = MSP.promise(MSPCodes.MSP_TUNING_SLIDERS);
         }
 
@@ -981,7 +981,7 @@ TABS.pid_tuning.initialize = function (callback) {
             FC.ADVANCED_TUNING.thrustLinearization = $('input[id="thrustLinearization"]').is(':checked') ? parseInt($('input[name="thrustLinearValue"]').val()) : 0;
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
             FC.TUNING_SLIDERS.slider_pids_mode = parseInt($('#sliderPidsModeSelect').val());
             FC.TUNING_SLIDERS.slider_master_multiplier = TuningSliders.sliderMasterMultiplier * 100;
             FC.TUNING_SLIDERS.slider_roll_pitch_ratio = TuningSliders.sliderRollPitchRatio * 100;
@@ -1798,8 +1798,8 @@ TABS.pid_tuning.initialize = function (callback) {
             const NON_EXPERT_SLIDER_MAX = 1.25;
             const NON_EXPERT_SLIDER_MIN = 0.7;
 
-            const SLIDER_STEP_LOWER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? 0.005 : 0.05;
-            const SLIDER_STEP_UPPER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? 0.01 : 0.1;
+            const SLIDER_STEP_LOWER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.005 : 0.05;
+            const SLIDER_STEP_UPPER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.01 : 0.1;
 
             $('#sliderPidsModeSelect').val(FC.TUNING_SLIDERS.slider_pids_mode);
 
@@ -2015,7 +2015,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 return MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             }).then(function () {
                 let promise;
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     promise = MSP.promise(MSPCodes.MSP_SET_TUNING_SLIDERS, mspHelper.crunch(MSPCodes.MSP_SET_TUNING_SLIDERS));
                 }
 
