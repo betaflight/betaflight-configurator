@@ -1,1 +1,640 @@
-{}
+{
+    "yes": {
+        "message": "Да",
+        "description": "General Yes message to be used across the application"
+    },
+    "no": {
+        "message": "Не",
+        "description": "General No message to be used across the application"
+    },
+    "on": {
+        "message": "Включено"
+    },
+    "off": {
+        "message": "Изключено"
+    },
+    "auto": {
+        "message": "Автоматично"
+    },
+    "error": {
+        "message": "Грешка: {{errorMessage}}"
+    },
+    "errorTitle": {
+        "message": "Грешка"
+    },
+    "warningTitle": {
+        "message": "Внимание"
+    },
+    "noticeTitle": {
+        "message": "Бележка"
+    },
+    "operationNotSupported": {
+        "message": "Тази функция не се поддържа от устройството ви."
+    },
+    "storageDeviceNotReady": {
+        "message": "Устройството за съхранение не е готово. В случай на microSD карта, уверете се, че тя е правилно разпозната от вашия полетен контролер."
+    },
+    "options_title": {
+        "message": "Настройки на приложението"
+    },
+    "connect": {
+        "message": "Свързан"
+    },
+    "connecting": {
+        "message": "Свързване"
+    },
+    "disconnect": {
+        "message": "Прекъсване"
+    },
+    "portsSelectManual": {
+        "message": "Ръчен избор"
+    },
+    "portsSelectVirtual": {
+        "message": "Виртуален режим (експериментален)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Виртуална версия на софтуера"
+    },
+    "portOverrideText": {
+        "message": "Порт:"
+    },
+    "autoConnect": {
+        "message": "Автоматично свързване"
+    },
+    "close": {
+        "message": "Затваряне"
+    },
+    "cancel": {
+        "message": "Отмени"
+    },
+    "autoConnectEnabled": {
+        "message": "Автоматично свързване: Активирано - Конфигураторът се опитва да се свърже автоматично, когато бъде открит нов порт"
+    },
+    "autoConnectDisabled": {
+        "message": "Автоматично свързване: Изключено - Потребителят трябва да избере правилния сериен порт и да натисне бутона „Свързване“"
+    },
+    "expertMode": {
+        "message": "Включване на Режим Експерт"
+    },
+    "expertModeDescription": {
+        "message": "Показване на неиздадени и потенциално нестабилни компилации"
+    },
+    "permanentExpertMode": {
+        "message": "Постоянно активиран Експертен Режим"
+    },
+    "rememberLastTab": {
+        "message": "Отворете отново последния раздел при свързване"
+    },
+    "analyticsOptOut": {
+        "message": "Не участвайте в анонимното събиране на статистически данни"
+    },
+    "cordovaForceComputerUI": {
+        "message": "Използвайте компютърния интерфейс вместо телефонния"
+    },
+    "language_changed": {
+        "message": "Езикът е сменен"
+    },
+    "language_choice_message": {
+        "message": "Промяна на езика:",
+        "description": "Try and be brief"
+    },
+    "language_default": {
+        "message": "По подразбиране за системата"
+    },
+    "language_default_pretty": {
+        "message": "По подразбиране за системата ($t(detectedLanguage))"
+    },
+    "sensorDataFlashNotFound": {
+        "message": "Флаш памет<br>не налична",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorDataFlashFreeSpace": {
+        "message": "Флаш памет: свободно пространство",
+        "description": "Text of the dataflash image in the header of the page."
+    },
+    "sensorStatusGyro": {
+        "message": "Жироскоп"
+    },
+    "sensorStatusGyroShort": {
+        "message": "Жироскоп",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusAccel": {
+        "message": "Акселерометър"
+    },
+    "sensorStatusAccelShort": {
+        "message": "Аксел",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusMag": {
+        "message": "Магнитометър"
+    },
+    "sensorStatusMagShort": {
+        "message": "Магн",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusBaro": {
+        "message": "Барометър"
+    },
+    "sensorStatusBaroShort": {
+        "message": "Баро",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusGPS": {
+        "message": "GPS"
+    },
+    "sensorStatusGPSShort": {
+        "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusSonar": {
+        "message": "Сонар / Далекомер"
+    },
+    "sensorStatusSonarShort": {
+        "message": "Сонар",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Показване на известие за актуализация за нестабилни версии на конфигуратора"
+    },
+    "configuratorUpdateNotice": {
+        "message": "Използвате остаряла версия на <b>Betaflight Конфигуратор</b>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "configuratorUpdateHelp": {
+        "message": "Използването на по-нова версия на Firmware с остаряла версия на конфигуратора означава, че промяната на някои настройки може да доведе до <strong>повредена конфигурация на Firmware и нефункционален летателен апарат</strong>. Също така, някои функции на Firmware ще могат да се конфигурират само чрез CLI.<br><strong>Версия на Betaflight Конфигуратора <b>$1</b> е достъпна за изтегляне онлайн</strong>, моля посетете <a href=\"$2\" target=\"_blank\" rel=\"noopener noreferrer\">тази страница</a> за да изтеглите и инсталирате най-новата версия с корекции и подобрения.<br>Моля, затворете прозореца на конфигуратора преди актуализиране."
+    },
+    "configuratorUpdateWebsite": {
+        "message": "Отидете на уебсайта на версиите"
+    },
+    "deviceRebooting": {
+        "message": "Устройство - <span class=\"message-negative\">Рестартиране</span>"
+    },
+    "deviceRebooting_flashBootloader": {
+        "message": "Устройство - <span class=\"message-negative\">Рестартиране към FLASH BOOTLOADER</span>"
+    },
+    "deviceRebooting_romBootloader": {
+        "message": "Устройство - <span class=\"message-negative\">Рестартиране към ROM BOOTLOADER</span>"
+    },
+    "deviceReady": {
+        "message": "Устройство - <span class=\"message-positive\">Готово</span>"
+    },
+    "backupFileIncompatible": {
+        "message": "Този архивен файл е създаден за предишна версия на конфигуратора и не е съвместим с тази версия. Съжаляваме"
+    },
+    "backupFileUnmigratable": {
+        "message": "Този архивен файл е създаден с предишна версия на конфигуратора и не може да бъде преместен. Съжаляваме."
+    },
+    "configMigrationFrom": {
+        "message": "Преместване на конфигурационен файл, създаден от: $1"
+    },
+    "configMigratedTo": {
+        "message": "Преместване на конфигурацията към конфигуратора: $1"
+    },
+    "configMigrationSuccessful": {
+        "message": "Преместването на конфигурацията завърши, всички премествания бяха приложени: $1"
+    },
+    "tabFirmwareFlasher": {
+        "message": "Инсталатор на Firmware"
+    },
+    "tabLanding": {
+        "message": "Добре дошли"
+    },
+    "tabChangelog": {
+        "message": "Списък на промените"
+    },
+    "tabPrivacyPolicy": {
+        "message": "Декларация за поверителност"
+    },
+    "tabHelp": {
+        "message": "Документи & Подръжка"
+    },
+    "tabOptions": {
+        "message": "Настройки"
+    },
+    "tabSetup": {
+        "message": "Настройки"
+    },
+    "tabSetupOSD": {
+        "message": "OSD Настройки"
+    },
+    "tabConfiguration": {
+        "message": "Конфигурация"
+    },
+    "tabPorts": {
+        "message": "Портове"
+    },
+    "tabPidTuning": {
+        "message": "PID Настройки"
+    },
+    "tabReceiver": {
+        "message": "Получател"
+    },
+    "tabModeSelection": {
+        "message": "Избор на режим"
+    },
+    "tabServos": {
+        "message": "Серво машинки"
+    },
+    "tabFailsafe": {
+        "message": "Режим на сигурност"
+    },
+    "tabTransponder": {
+        "message": "Състезателен транспондер"
+    },
+    "tabOsd": {
+        "message": "Показване върху дисплея OSD"
+    },
+    "tabVtx": {
+        "message": "Видео предавател"
+    },
+    "tabPower": {
+        "message": "Захранване и батерия"
+    },
+    "tabGPS": {
+        "message": "GPS"
+    },
+    "tabMotorTesting": {
+        "message": "Мотори"
+    },
+    "tabLedStrip": {
+        "message": "LED лента"
+    },
+    "tabRawSensorData": {
+        "message": "Сензори"
+    },
+    "tabCLI": {
+        "message": "Интерфейс с команден ред"
+    },
+    "tabLogging": {
+        "message": "Привързано регистриране"
+    },
+    "tabOnboardLogging": {
+        "message": "Черна кутия"
+    },
+    "tabAdjustments": {
+        "message": "Корекции"
+    },
+    "tabAuxiliary": {
+        "message": "Режими"
+    },
+    "logActionHide": {
+        "message": "Скриване на регистъра"
+    },
+    "logActionShow": {
+        "message": "Покажи Log"
+    },
+    "serialErrorFrameError": {
+        "message": "Грешка в серийната връзка: лошо кадриране"
+    },
+    "serialErrorParityError": {
+        "message": "Грешка в серийната връзка: лош паритет"
+    },
+    "serialPortOpened": {
+        "message": "Сериен порт <span class=\"message-positive\">успешно</span> отворен с ID: $1"
+    },
+    "serialPortOpenFail": {
+        "message": "<span class=\"message-negative\">Провала</span> при отваряне на сериен порт"
+    },
+    "serialPortClosedOk": {
+        "message": "Сериен порт <span class=\"message-positive\">успешно</span> затворен"
+    },
+    "serialPortClosedFail": {
+        "message": "<span class=\"message-negative\">Провала</span> при затваряне на сериен порт"
+    },
+    "serialUnrecoverable": {
+        "message": "Невъзстановима <span class=\"message-negative\">грешка</span> на серийната връзка, прекъсване..."
+    },
+    "serialPortLoading": {
+        "message": "Зареждане ..."
+    },
+    "usbDeviceOpened": {
+        "message": "USB устройство <span class=\"message-positive\">успешно</span> отворено с ID: $1"
+    },
+    "usbDeviceOpenFail": {
+        "message": "<span class=\"message-negative\">Грешка</span> при отварянето на USB устройство!"
+    },
+    "usbDeviceClosed": {
+        "message": "USB устройство <span class=\"message-positive\">успешно</span> затворено"
+    },
+    "usbDeviceCloseFail": {
+        "message": "<span class=\"message-negative\">Грешка</span> при затварянето на USB устройство"
+    },
+    "usbDeviceUdevNotice": {
+        "message": "Правилно ли са инсталирани <strong> правилата на udev </strong>? Вижте документите за инструкции"
+    },
+    "stm32UsbDfuNotFound": {
+        "message": "USB DFU не е намерен"
+    },
+    "stm32RebootingToBootloader": {
+        "message": "Pестартиране в bootloader ..."
+    },
+    "stm32RebootingToBootloaderFailed": {
+        "message": "Рестартиране на устройството в bootloader: ПРОВАЛЕНО"
+    },
+    "stm32TimedOut": {
+        "message": "STM32 - изтече времето за изчакване, програмиране: ПРОВАЛЕНО"
+    },
+    "stm32WrongResponse": {
+        "message": "STM32 неуспешна комуникация, грешен отговор, очакван: $1 (0x$2) получен: $3 (0x$4)"
+    },
+    "stm32ContactingBootloader": {
+        "message": "Свързване с буутлоудъра ..."
+    },
+    "stm32ContactingBootloaderFailed": {
+        "message": "Неуспешно свързване с буутлоудъра"
+    },
+    "stm32ResponseBootloaderFailed": {
+        "message": "Буутлоудърът не отговаря, програмиране: НЕУСПЕШНО"
+    },
+    "stm32GlobalEraseExtended": {
+        "message": "В ход е глобално изтриване на чипа (чрез удължено изтриване) ..."
+    },
+    "stm32LocalEraseExtended": {
+        "message": "В ход е локално изтриване (чрез удължено изтриване) ..."
+    },
+    "stm32GlobalErase": {
+        "message": "В ход е глобално изтриване на чипа ..."
+    },
+    "stm32LocalErase": {
+        "message": "В ход е локално изтриване ..."
+    },
+    "stm32InvalidHex": {
+        "message": "Невалиден hex"
+    },
+    "stm32Erase": {
+        "message": "Изтриване ..."
+    },
+    "stm32Flashing": {
+        "message": "Инсталиране ..."
+    },
+    "stm32Verifying": {
+        "message": "Проверяване..."
+    },
+    "stm32ProgrammingSuccessful": {
+        "message": "Програмиране: УСПЕШНО"
+    },
+    "stm32ProgrammingFailed": {
+        "message": "Програмиране: НЕ УСПЕШНО"
+    },
+    "stm32AddressLoadFailed": {
+        "message": "Неуспешно четене на адрес за байтове с опции. Най-вероятно е инсталирана защита за четене."
+    },
+    "stm32AddressLoadSuccess": {
+        "message": "Адресът за четене за option bytes е успешен."
+    },
+    "stm32AddressLoadUnknown": {
+        "message": "Адресът за четене за option bytes е не успешен, неизвестна грешка. Прекратяване."
+    },
+    "stm32NotReadProtected": {
+        "message": "Защитата за четене не е активна"
+    },
+    "stm32ReadProtected": {
+        "message": "Очевидно борда е защитен от четене. Премахвам защитата от четене. Не изключвайте устройството!"
+    },
+    "stm32UnprotectSuccessful": {
+        "message": "Премахвам защитата Успешно."
+    },
+    "stm32UnprotectUnplug": {
+        "message": "ИЗИСКВА СЕ ДЕЙСТВИЕ: Откачи и свържи флайт контролера в DFU режим и опитай инсталиране наново!"
+    },
+    "stm32UnprotectFailed": {
+        "message": "Неуспешно премахване на защитата за четене от платката"
+    },
+    "stm32UnprotectInitFailed": {
+        "message": "Стартирането на процеса на премахване на защитата за четене не бе успешно"
+    },
+    "noConfigurationReceived": {
+        "message": "Не е получена конфигурация в в рамките на<span class=\"message-negative\">10 секунди</span>комуникацията<span class=\"message-negative\">неуспешна</span>"
+    },
+    "firmwareVersionNotSupported": {
+        "message": "Версията на този фърмуер<span class=\"message-negative\">не се подържа</span>. Моля, актуализирайте фърмуера, който поддържа версията на конфигуратора<strong>$1</strong>или по горен. Използвайте командния ред, за да направите резервно копие на фърмуера, преди да актуализирате фърмуера. Процедурата за създаване / възстановяване на резервно копие е описана в документацията.<br />Ако не искате да актуализирате фърмуера, използвайте по-стара версия на конфигуратора."
+    },
+    "firmwareTypeNotSupported": {
+        "message": "Фърмуерът, който не е Betaflight<span class=\"message-negative\"> не се поддържа </span>, освен в режим CLI."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "Фърмуерът в това устройство трябва да бъде актуализиран до по-нова версия. Използвайте командния ред, за да направите резервно копие, преди да актуализирате фърмуера. Процедурата за създаване / възстановяване на резервно копие е описана в документацията. <br /> Ако не искате да актуализирате фърмуера, използвайте по-стара версия на конфигуратора."
+    },
+    "resetToCustomDefaultsDialog": {
+        "message": "Има налични стандартни настройки за този флайт контролер. Флайт контролера няма да работи правилно ако стандартните настройки не са приложени.<br />Искате ли да се приложат стандартните настройки за този флайт контролер?"
+    },
+    "resetToCustomDefaultsAccept": {
+        "message": "Приложи Стандартните Настройки"
+    },
+    "reportProblemsDialogHeader": {
+        "message": "Открит е следният<strong>проблем със вашата конфигурация</strong>:"
+    },
+    "reportProblemsDialogFooter": {
+        "message": "Моля<strong>отстранете проблема преди да правите опит да летите с вашият дрон</strong>."
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<strong>версията на конфигуратора който използвате($3) е по стар от фърмуера който използвате($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
+    },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>не е избран протокол за управление на двигателя</strong>.<br>Моля, изберете протокола за управление на двигателя, който съответства на вашия ESC в $t(configurationEscFeatures.message)в раздела$t(tabConfiguration.message).<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>акселерометъра е активиран но не е калибриран</strong>.<br>Ако планирате да използвате акселерометъра, моля следвайте инструкциите за '$t(initialSetupButtonCalibrateAccel.message)' в '$t(tabSetup.message)' прозорец.Ако някоя функция която изисква акселерометър (режим авто стабилизиране, ......)е активирана, активирането на дрона ще е деактивирано докато не се направи калибриране на акселерометара.<br>Ако няма да използвате акселерометара е препоръчително да се деактивира в '$t(configurationSystem.message)' в '$t(tabConfiguration.message)' прозорец."
+    },
+    "infoVersions": {
+        "message": "Стартиране - ОС:<strong>{{operatingSystem}}</strong>, Chrome:<strong>{{chromeVersion}}</strong>. Конфигуратор:<strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
+    },
+    "buildServerLoaded": {
+        "message": "Заредена информация за компилация за $1 от сървър за компилация."
+    },
+    "buildServerLoadFailed": {
+        "message": "<b>Неуспешно искане на информация за освобождаване за $1от GitHub, използвайки информация от кеша. Причина:<code>$2</code></b>"
+    },
+    "buildServerUsingCached": {
+        "message": "Използване на кеширана информация за сглобяване за $1."
+    },
+    "releaseCheckLoaded": {
+        "message": "Изтеглени бележки за изданието от GitHub за $1."
+    },
+    "releaseCheckFailed": {
+        "message": "<b>Неуспешно искане на информация за освобождаване за $1 от GitHub, използвайки информация от кеша. Причина:<code>$2</code></b>"
+    },
+    "releaseCheckCached": {
+        "message": "Използвана информация от кеша за освобождаване $1."
+    },
+    "releaseCheckNoInfo": {
+        "message": "Няма достъпна информация за версията за $1."
+    },
+    "tabSwitchConnectionRequired": {
+        "message": "Нужно е да се <strong>свържете</strong>преди да може да видите някой от разделите."
+    },
+    "tabSwitchWaitForOperation": {
+        "message": "Вие<span class=\"message-negative\">не можете</span>сега да направите това, моля изчакайте настоящата операция да свърши ..."
+    },
+    "tabSwitchUpgradeRequired": {
+        "message": "Необходимо е да<strong>обновите</strong>вашият фърмуер до последна версия на Betaflight преди да използвате $1 раздела."
+    },
+    "firmwareVersion": {
+        "message": "Версия на Фърмуера:<strong>$1</strong>"
+    },
+    "apiVersionReceived": {
+        "message": "MultiWii API версия: <strong>$1</strong>"
+    },
+    "uniqueDeviceIdReceived": {
+        "message": "Уникален идентификационен номер на устройството:<strong>0x$1</strong>"
+    },
+    "craftNameReceived": {
+        "message": "Позивна на пилота:<strong>$1</strong>"
+    },
+    "armingDisabled": {
+        "message": "<strong>Arming изключен</strong>"
+    },
+    "armingEnabled": {
+        "message": "<strong>Arming включено</strong>"
+    },
+    "runawayTakeoffPreventionDisabled": {
+        "message": "<strong>Финкцията Runaway Takeoff Prevention временно е Изключена</strong>"
+    },
+    "runawayTakeoffPreventionEnabled": {
+        "message": "<strong>Функцията Runaway Takeoff Prevention е Включена</strong>"
+    },
+    "boardInfoReceived": {
+        "message": "Борд:<strong>$1</strong>, версия:<strong>$2</strong>"
+    },
+    "buildInfoReceived": {
+        "message": "Настоящият фърмуер е излязал на:<strong>$1</strong>"
+    },
+    "fcInfoReceived": {
+        "message": "Информация за полетния контролер, идентификатор:<strong>$1</strong>, версия:<strong>$2</strong>"
+    },
+    "versionLabelTarget": {
+        "message": "Цел"
+    },
+    "versionLabelFirmware": {
+        "message": "Фърмуер"
+    },
+    "versionLabelConfigurator": {
+        "message": "Конфигуратор"
+    },
+    "notifications_app_just_updated_to_version": {
+        "message": "Приложението е обновено до версия: $1"
+    },
+    "notifications_click_here_to_start_app": {
+        "message": "Натисни тук за да стартираш приложението"
+    },
+    "statusbar_port_utilization": {
+        "message": "Зареждане на порта:",
+        "description": "Port utilization text shown in the status bar"
+    },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_packet_error": {
+        "message": "Грешки в пакета:",
+        "description": "Packet error text shown in the status bar"
+    },
+    "statusbar_i2c_error": {
+        "message": "I2C грешка:",
+        "description": "CPU load text shown in the status bar"
+    },
+    "statusbar_cycle_time": {
+        "message": "Време на цикъла:",
+        "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Натоварване на процесора:",
+        "description": "CPU load text shown in the status bar"
+    },
+    "dfu_connect_message": {
+        "message": "Моля, използвайте \"Инсталиране на фърмуера\" за достъп до DFU устройства"
+    },
+    "dfu_erased_kilobytes": {
+        "message": "Изтрити $1 кб от памета<span class=\"message-positive\">успешно</span>"
+    },
+    "dfu_device_flash_info": {
+        "message": "Установено е устройство с общ размер на флаш паметта $1 кб"
+    },
+    "dfu_error_image_size": {
+        "message": "<span class=\"message-negative\">грешка</span>: Избрания образ е по голяма от наличната памет в чипа! Образ:$1 кб = $2 кб"
+    },
+    "eeprom_saved_ok": {
+        "message": "EEPROM<span class=\"message-positive\">записан</span>"
+    },
+    "defaultWelcomeIntro": {
+        "message": "Добре дошли в <strong>Бетафлайт - Конфигуратора</strong>, приложение проектирано да улесни обновяването, конфигурирането и настройването на вашият полетен контролер."
+    },
+    "defaultWelcomeHead": {
+        "message": "Хардуер"
+    },
+    "defaultWelcomeText": {
+        "message": "Програмата поддържа целия хардуер, който Betaflight може да изпълнява. Проверете раздела на фърмуера за пълен списък с хардуер.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Изтегли Betaflight Blackbox Log Viewer </a><br /><br />Изходният код на фърмуера може да бъде изтеглен<a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br /><br />Най новите<b>STM USB VCP драйвъри</b>могат да бъдат свалени от<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br />За старо оборудване, използващо CP210x USB към сериен чип:<br />Най новите<b>CP210x драйвъри</b>могат да бъдат свалени от<a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br />Най новият <b>Zadig</b>за да инсталирате Windows USB драйвер, можете да изтеглите<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br />"
+    },
+    "defaultContributingHead": {
+        "message": "Принос"
+    },
+    "defaultContributingText": {
+        "message": "Ако искате да направите Betaflight още по-добър, можете да помогнете по няколко начина:<br /><ul><li>използване на вашите познания за Betaflight за създаване и актуализиране на документация<a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">нашата Wiki</a>, илиотговаряйки на въпроси на други потребители</li><li><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">допринасяйки за кода</a>на фърмуера и Конфигуратора - нова функционалност, корекции, подобрения</li><li>тестване<a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">нови финкции и поправки</a>и осигуряване на отзиви;<li></li>помощ на други потребители да решат проблеми, за които докладват<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">нашият issue tracker</a>,и участие в дискусии на заявената функционалност;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">превеждане</a>на Бетафлайт Конфигуратора на други езици, както и помощ в подкрепа на съществуващи преводи.</li></ul>"
+    },
+    "defaultFacebookText": {
+        "message": "Ние имаме също и <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Фейсбук група</a>.<br />Присъединете се към нас ако искате да говорите за Бетафлайт, да задавате въпроси свързани с настройване или просто да си пишете с други пилоти."
+    },
+    "defaultChangelogHead": {
+        "message": "Списък на промените в конфигуратора"
+    },
+    "defaultButtonFirmwareFlasher": {
+        "message": "Инсталатор на Firmware"
+    },
+    "defaultDonateHead": {
+        "message": "Отворен код / Дарение"
+    },
+    "receiverThrottleMid": {
+        "message": "Throttle Средно положение"
+    },
+    "receiverThrottleExpo": {
+        "message": "Throttle Експоненциално"
+    },
+    "receiverStickMin": {
+        "message": "Минимален праг"
+    },
+    "receiverHelpStickMin": {
+        "message": "Максималната стойност в (us) за стика след която командата ще бъде разпозната като неправилна / невалидна."
+    },
+    "receiverStickCenter": {
+        "message": "Среда на стика"
+    },
+    "receiverHelpStickCenter": {
+        "message": "Стойността (в us) с която ще разберем дали стика е центриран."
+    },
+    "receiverStickMax": {
+        "message": "Максимален праг за стика"
+    },
+    "receiverHelpStickMax": {
+        "message": "Минималната стойност (в us) на стика за да бъде разпознат като максимален(MAX_STICK_INPUT)."
+    },
+    "adjustmentsFunction4": {
+        "message": "Pitch & Roll Rate Конфигурация"
+    },
+    "adjustmentsFunction5": {
+        "message": "Yaw Rate Конфигурация"
+    },
+    "adjustmentsFunction6": {
+        "message": "Pitch & Roll P Конфигурация"
+    },
+    "adjustmentsFunction7": {
+        "message": "Pitch & Roll I Конфигурация"
+    },
+    "adjustmentsFunction8": {
+        "message": "Pitch & Roll D Конфигурация"
+    },
+    "adjustmentsFunction9": {
+        "message": "Yaw P Кофигурация"
+    },
+    "adjustmentsFunction10": {
+        "message": "Yaw I Конфигурация"
+    },
+    "adjustmentsFunction11": {
+        "message": "Yaw D Конфигурация"
+    }
+}
