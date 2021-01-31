@@ -589,6 +589,1285 @@
     "defaultDonateHead": {
         "message": "Отворен код / Дарение"
     },
+    "defaultDonateText": {
+        "message": "<p><strong>Бетафлайт</strong> е софтуер за полетни контролери, който е с <strong>отворен код</strong> и е наличен безплатно<strong>без гаранция</strong>за всички потребители.</p><p>Ако намерите Бетафлайт или Бетафлайт Конфигуратора полезни, моля обмислете<strong>да подкрепите</strong>разработчиците чрез дарение.</p>"
+    },
+    "defaultDonateBottom": {
+        "message": "<p>Ако искате да окажете финансова помощ, можете да станете наш покровител в$t(patreonLink.message).</p>"
+    },
+    "patreonLink": {
+        "message": "<a href=\"https://www.patreon.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon</a>",
+        "description": "Patreon is name, and should not require translation"
+    },
+    "defaultDonate": {
+        "message": "Дарение"
+    },
+    "defaultSponsorsHead": {
+        "message": "Спонсори"
+    },
+    "defaultDocumentationHead": {
+        "message": "Документация / Упътване"
+    },
+    "defaultDocumentation": {
+        "message": "Документацията за Betaflight е налична в бележките за изданието и в wiki.<br /><br />"
+    },
+    "defaultDocumentation1": {
+        "message": "Бетафлайт уикипедия е страхотно място за информация, може да бъде намерена<a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a>."
+    },
+    "defaultDocumentation2": {
+        "message": "Информация за новия фърмуер може да бъде намерена на Github в Releases<a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a>."
+    },
+    "defaultSupportHead": {
+        "message": "Поддръжка"
+    },
+    "defaultSupportSubline1": {
+        "message": "Източници на помощ"
+    },
+    "defaultSupportSubline2": {
+        "message": "Разработчик"
+    },
+    "defaultSupport": {
+        "message": "За подкрепа моля потърсете първо във форумите и wiki или се свържете с вашият доставчик.<br /><br />"
+    },
+    "defaultSupport1": {
+        "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups дискусии</a>"
+    },
+    "defaultSupport2": {
+        "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">Бетафлайт Wiki</a>"
+    },
+    "defaultSupport3": {
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Джошуа Бардуел видеа</a>"
+    },
+    "defaultSupport4": {
+        "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https://slack.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Разработчици на Betaflight в slack</a>"
+    },
+    "initialSetupBackupAndRestoreApiVersion": {
+        "message": "<span class=\"message-negative\">Функционалността на създаване и възстановяване от резервно копие не е налична.</span>Вашият фърмуер има API версия на конфигуратора<span class=\"message-negative\">$1</span> записване и възстановяване от резервно копие, изисква API версията на конфигуратора<span class=\"message-positive\">$2</span>. Моля запишете вашите настройки чрез Командния прозорец, виж Бетафлайт документациятаза процедуата."
+    },
+    "initialSetupButtonCalibrateAccel": {
+        "message": "Калибриране Акселерометър"
+    },
+    "initialSetupCalibrateAccelText": {
+        "message": "Поставете полетния контролер или рамката на<strong>нивелирана</strong>повърхност, продължете с калибрирането, уверете се че няма движение по време на калибрирането"
+    },
+    "initialSetupButtonCalibrateMag": {
+        "message": "Калибриране Магнитометър"
+    },
+    "initialSetupCalibrateMagText": {
+        "message": "Завъртете дрона поне на <strong>360</strong>градуса по всички оси на въртене, имате 30 секунди да извършите тази задача"
+    },
+    "initialSetupButtonCalibratingText": {
+        "message": "Калибриране..."
+    },
+    "initialSetupButtonReset": {
+        "message": "Възстановяване на настройките"
+    },
+    "initialSetupResetText": {
+        "message": "Възстанови настройките на <strong>стандартни</strong>"
+    },
+    "initialSetupButtonBackup": {
+        "message": "Резервно копие"
+    },
+    "initialSetupButtonRestore": {
+        "message": "Възстанови"
+    },
+    "initialSetupButtonRebootBootloader": {
+        "message": "Активирайте буутлоудъра / DFU"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "<strong>Запишете</strong>вашата конфигурация в случай на инцидент,<strong>CLI</strong>настройките <span class=\"message-negative\">не са</span>включени - използвайте командата 'diff all' в командният прозорец."
+    },
+    "initialSetupRebootBootloaderText": {
+        "message": "Презаредете в режим<strong>буутлоудър / DFU</strong>режим."
+    },
+    "initialSetupBackupSuccess": {
+        "message": "Резервното копие е запазено<span class=\"message-positive\">успешно</span>"
+    },
+    "initialSetupRestoreSuccess": {
+        "message": "Конфигурацията е възстановена <span class=\"message-positive\">успешно</span>"
+    },
+    "initialSetupButtonResetZaxis": {
+        "message": "Нулиране на оста Z ос на въртене, отместване: 0 градуса"
+    },
+    "initialSetupButtonResetZaxisValue": {
+        "message": "Нулиране на оста Z ос на въртене отместване:$1 градус"
+    },
+    "initialSetupMixerHead": {
+        "message": "Вид Миксер"
+    },
+    "initialSetupThrottleHead": {
+        "message": "Настройки на газта"
+    },
+    "initialSetupMinimum": {
+        "message": "Минимално:"
+    },
+    "initialSetupMaximum": {
+        "message": "Максимално:"
+    },
+    "initialSetupFailsafe": {
+        "message": "Failsafe:"
+    },
+    "initialSetupMinCommand": {
+        "message": "Минимална команда:"
+    },
+    "initialSetupBatteryHead": {
+        "message": "Батерия"
+    },
+    "initialSetupMinCellV": {
+        "message": "Минимален волтаж на клетка:"
+    },
+    "initialSetupMaxCellV": {
+        "message": "Максимален волтаж на клетка:"
+    },
+    "initialSetupVoltageScale": {
+        "message": "Скала за волтаж:"
+    },
+    "initialSetupAccelTrimsHead": {
+        "message": "Акселерометър трим"
+    },
+    "initialSetupPitch": {
+        "message": "Pitch:"
+    },
+    "initialSetupRoll": {
+        "message": "Roll:"
+    },
+    "initialSetupMagHead": {
+        "message": "Магнетометър"
+    },
+    "initialSetupInfoHead": {
+        "message": "Информация"
+    },
+    "initialSetupBattery": {
+        "message": "Волтаж на батерията:"
+    },
+    "initialSetupBatteryValue": {
+        "message": "$1 V"
+    },
+    "initialSetupDrawn": {
+        "message": "Изразходван капацитет:"
+    },
+    "initialSetupDrawing": {
+        "message": "Използван ток:"
+    },
+    "initialSetupBatteryMahValue": {
+        "message": "$1 мАч"
+    },
+    "initialSetupBatteryAValue": {
+        "message": "$1 А"
+    },
+    "initialSetupRSSI": {
+        "message": "RSSI:"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 %"
+    },
+    "initialSetupArmingDisableFlags": {
+        "message": "Знамена, забраняващи Arming:"
+    },
+    "initialSetupArmingAllowed": {
+        "message": "Arming разрешен"
+    },
+    "initialSetupArmingDisableFlagsTooltip": {
+        "message": "Списък с флагове, посочващи защо понастоящем не е разрешено армването. Задръжте курсора на мишката върху знамето или вижте wiki (Страница - Последователност на активиране и сигурност) за повече информация."
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
+        "message": "Жироскопа не е открит",
+        "description": "Message that pops up to describe the NO_GYRO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
+        "message": "Failsafe е активиран",
+        "description": "Message that pops up to describe the FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRX_FAILSAFE": {
+        "message": "Не е открит валиден сигнал от приемника",
+        "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBAD_RX_RECOVERY": {
+        "message": "Вашият приемник току-що е възстановил комуникацията, но arm ключът е включен",
+        "description": "Message that pops up to describe the BAD_RX_RECOVERY arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
+        "message": "FAILSAFE ключа е активиран",
+        "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
+        "message": "Функцията Runway Takeoff Prevention беше активирана",
+        "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCRASH": {
+        "message": "Деактивирано поради откриване на катастрофа",
+        "description": "Message that pops up to describe the CRASH arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
+        "message": "Канала на газта е прекалено висок",
+        "description": "Message that pops up to describe the THROTTLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "Дронът не е на равна повърхност (достатъчно)",
+        "description": "Message that pops up to describe the ANGLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
+        "message": "Прекалено ранно активиране след включване на дрона",
+        "description": "Message that pops up to describe the BOOT_GRACE_TIME arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNOPREARM": {
+        "message": "Prearm ключа не е активен или не е бил превключен след disarm",
+        "description": "Message that pops up to describe the NOPREARM arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOAD": {
+        "message": "Натоварването на системата е прекалено високо за безопасен полет",
+        "description": "Message that pops up to describe the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "Калибриране на сензора все още продължава",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCLI": {
+        "message": "Командният прозорец е активен",
+        "description": "Message that pops up to describe the CLI arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCMS_MENU": {
+        "message": "CMS (конфигурационно меню) е активно - над OSD или друг дисплей -",
+        "description": "Message that pops up to describe the CMS_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipOSD_MENU": {
+        "message": "OSD меню е активно",
+        "description": "Message that pops up to describe the OSD_MENU arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipBST": {
+        "message": "Black Sheep устройство за телеметрия (TBS Core Pro например) е деактивирано и не позволява армване",
+        "description": "Message that pops up to describe the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "MSP връзката е активна, вероятно с този Betaflight конфигуратор",
+        "description": "Message that pops up to describe the MSP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPARALYZE": {
+        "message": "Парализиращ режим е активиран",
+        "description": "Message that pops up to describe the PARALYZE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipGPS": {
+        "message": "GPS rescue режим е цонфигуриран но няма фиксирани необходимият брой сателити",
+        "description": "Message that pops up to describe the GPS arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRESC": {
+        "message": "'GPS Rescue' ключа е активиран",
+        "description": "Message that pops up to describe the RESC arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
+        "message": "RPM-базираните филтри са активирани но едно или повече ESC не предоставят валидна DSHOT телеметрия. Проверете дали ESC поддържат и имат необходимият фърмуер инсталиран за да поддържат двупосочна DSHOT телеметрия.",
+        "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
+        "message": "За промяна на настройките се изисква рестартиране",
+        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BBANG": {
+        "message": "Bitbanged DSHOT не работи правилно и моторите не могат да бъдат контролирани. Най вероятно заради конфликт с друга активирана функция на полетния контролер.",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CAL": {
+        "message": "Акселерометъра не е калибриран и е активирана функция която разчита на него. Калибрирайте акселерометъра.",
+        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTO": {
+        "message": "Няма избран протокол за изхода на моторите",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
+        "message": "Един от другите флагове за деактивиране е активен при arming",
+        "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
+    },
+    "initialSetupGPSHead": {
+        "message": "GPS"
+    },
+    "initialSetupInstrumentsHead": {
+        "message": "Инструменти"
+    },
+    "initialSetupButtonSave": {
+        "message": "Запази"
+    },
+    "initialSetupModel": {
+        "message": "Модел:$1"
+    },
+    "initialSetupAttitude": {
+        "message": "$1 градус"
+    },
+    "initialSetupAccelCalibStarted": {
+        "message": "Калибриране на Акселерометъра стартирано"
+    },
+    "initialSetupAccelCalibEnded": {
+        "message": "Калибриране на Акселерометъра <span class=\"message-positive\">завършено</span>"
+    },
+    "initialSetupMagCalibStarted": {
+        "message": "Калибриране на Магнетометъра стартирано"
+    },
+    "initialSetupMagCalibEnded": {
+        "message": "Калибриране на Магнетометъра <span class=\"message-positive\">завършено</span>"
+    },
+    "initialSetupSettingsRestored": {
+        "message": "Настриките са възстановени до <strong>стандартни</strong>"
+    },
+    "initialSetupEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\">записан</span>"
+    },
+    "featureNone": {
+        "message": "&lt;Select One&gt;"
+    },
+    "featureRX_PPM": {
+        "message": "PPM RX вход"
+    },
+    "featureVBAT": {
+        "message": "Мониторинг на напрежението на батерията"
+    },
+    "featureINFLIGHT_ACC_CAL": {
+        "message": "Калибриране в полет"
+    },
+    "featureRX_SERIAL": {
+        "message": "Приемник със серийно предаване на данни (SPEKSAT, SBUS, SUMD)"
+    },
+    "featureMOTOR_STOP": {
+        "message": "Моторите не се въртят при arm"
+    },
+    "featureSERVO_TILT": {
+        "message": "Серво гимбал"
+    },
+    "featureSERVO_TILTTip": {
+        "message": "Тази функция активира режим CAMSTAB, който може да бъде използван да задържи две оси стабилни използвайки акселерометъра"
+    },
+    "featureSOFTSERIAL": {
+        "message": "Активиране серийния порт на CPU"
+    },
+    "featureSOFTSERIALTip": {
+        "message": "Веднъж активирани, конфигурирайте портовете в раздела Портове."
+    },
+    "featureGPS": {
+        "message": "GPS за навигация и телеметрия"
+    },
+    "featureGPSTip": {
+        "message": "Първо конфигурирайте порта"
+    },
+    "featureSONAR": {
+        "message": "Сонар"
+    },
+    "featureTELEMETRY": {
+        "message": "Изход телеметрия"
+    },
+    "featureCURRENT_METER": {
+        "message": "Мониторинг на тока на батерията"
+    },
+    "feature3D": {
+        "message": "3D режим (използва се с обратими ESC)"
+    },
+    "featureRX_PARALLEL_PWM": {
+        "message": "PWM RX вход (един кабел на канал)"
+    },
+    "featureRX_MSP": {
+        "message": "MSP RX вход (управление чрез MSP порт)"
+    },
+    "featureRSSI_ADC": {
+        "message": "Аналогов RSSI вход"
+    },
+    "featureLED_STRIP": {
+        "message": "Поддръжка за многоцветна LED лента"
+    },
+    "featureDISPLAY": {
+        "message": "OLED екран"
+    },
+    "featureDISPLAYTip": {
+        "message": "Ако тази настройка е активирана и не се открие връзка с дисплея (или захранването на дисплея е изключено), ще има закъснение от приблизително 10 секунди всеки път, когато полетният контролер се рестартира."
+    },
+    "featureONESHOT125": {
+        "message": "ONESHOT ESC поддръжка"
+    },
+    "featureONESHOT125Tip": {
+        "message": "Изключи полетната батерия и махни перките преди да активираш."
+    },
+    "featureBLACKBOX": {
+        "message": "Черна кутия, запис на полетни данни"
+    },
+    "featureBLACKBOXTip": {
+        "message": "След като активирате, конфигурирайте в раздела Черна Кутия."
+    },
+    "featureRX_SPI": {
+        "message": "SPI RX поддръжка"
+    },
+    "featureESC_SENSOR": {
+        "message": "Използвай KISS/BLHeli_32 ESC телеметрия<b>по отделен кабел</b>"
+    },
+    "featureCHANNEL_FORWARDING": {
+        "message": "Прехвърляне на aux канали към серво изходи"
+    },
+    "featureTRANSPONDER": {
+        "message": "Транспондер за състезание"
+    },
+    "featureTRANSPONDERTip": {
+        "message": "След като бъде активирано, конфигурирайте в раздела Транспондер за състезание."
+    },
+    "featureAIRMODE": {
+        "message": "Активирайте за постоянно Airmode"
+    },
+    "featureSUPEREXPO_RATES": {
+        "message": "Super Expo Rates"
+    },
+    "featureSDCARD": {
+        "message": "Поддържа SD карта (за запис)"
+    },
+    "featureOSD": {
+        "message": "OSD (показване на данни върху изображението на камерата)"
+    },
+    "featureVTX": {
+        "message": "Видеопредавател"
+    },
+    "featureANTI_GRAVITY": {
+        "message": "Активирай за постоянно Anti Gravity"
+    },
+    "featureANTI_GRAVITYTip": {
+        "message": "Ако това е деактивирано, режимът „ANTI GRAVITY“ може да се използва за активиране на Anti Gravity от ключ."
+    },
+    "featureDYNAMIC_FILTER": {
+        "message": "Динамично жироскопно филтриране"
+    },
+    "featureFAILSAFE": {
+        "message": "Активирай Failsafe етап 2"
+    },
+    "featureFAILSAFEOld": {
+        "message": "Активирай Failsafe"
+    },
+    "featureFAILSAFETip": {
+        "message": "<strong>бележка</strong>Когато етап 2 е ДЕЗАКТИВИРАН, резервните настройки<strong>автоматично</strong>се използват вместо настройките на потребителя за всички полетни канали (Roll, Pitch, Yaw and Throttle)."
+    },
+    "featureFAILSAFEOldTip": {
+        "message": "Активирай Failsafe настройките когато се изуби сигнала от приемника"
+    },
+    "configurationFeatureEnabled": {
+        "message": "Активирай"
+    },
+    "configurationFeatureName": {
+        "message": "Функции"
+    },
+    "configurationFeatureDescription": {
+        "message": "Описание"
+    },
+    "configurationMixer": {
+        "message": "Миксер"
+    },
+    "configurationFeatures": {
+        "message": "Други функции"
+    },
+    "configurationReceiver": {
+        "message": "Приемник"
+    },
+    "configurationReceiverMode": {
+        "message": "Режим Приемник"
+    },
+    "configurationRSSI": {
+        "message": "RSSI (сила на сигнала)"
+    },
+    "configurationRSSIHelp": {
+        "message": "RSSI измерва силата на сигнала и е много удобен за следене дали дрона излиза извън обхват или има радио интерференции."
+    },
+    "configurationEscFeatures": {
+        "message": "Финкции на ESC/Мотори"
+    },
+    "configurationFeaturesHelp": {
+        "message": "<strong>Забележка: </strong>Не всички комбинации от функции са валидни. Когато фърмуера на полетният контролер засече несъвместима комбинация от функции, функцията ще бъде деактивирана.<br /><strong>Бележка:</strong>Конфигурирай серийният порт<span class=\"message-negative\">преди</span>да активираш финкция която ще използва порта."
+    },
+    "configurationSerialRXHelp": {
+        "message": "<strong>Забележка: </strong>Не забравяй да конфигурираш Серийният порт (от Порт раздела) и избери вида Сериен Приемник когато използваш опцията RX_SERIAL."
+    },
+    "configurationSpiRxHelp": {
+        "message": "<strong> Забележка: </strong> Входът SPI RX ще работи само ако необходимият хардуер е на платката или е свързан към SPI шината."
+    },
+    "configurationOtherFeaturesHelp": {
+        "message": "<strong> Забележка: </strong> Не всички полетни контролери поддържат всички тези настройки. Ако активирате конкретни настройки и те са деактивирани след щракване върху „Запазване и презареждане“, това означава, че полетният контролер не ги поддържа."
+    },
+    "configurationBoardAlignment": {
+        "message": "Разположение на платката и сензорите"
+    },
+    "configurationBoardAlignmentRoll": {
+        "message": "Roll градуси"
+    },
+    "configurationBoardAlignmentPitch": {
+        "message": "Pitch градуси"
+    },
+    "configurationBoardAlignmentYaw": {
+        "message": "Yaw градуси"
+    },
+    "configurationSensorAlignmentGyro": {
+        "message": "Положение жироскоп"
+    },
+    "configurationSensorGyroToUse": {
+        "message": "Жироскоп/Акселерометър"
+    },
+    "configurationSensorGyroToUseNotFound": {
+        "message": "Предупреждение: не е открит Жироскоп/Акселерометър"
+    },
+    "configurationSensorGyroToUseFirst": {
+        "message": "Първи"
+    },
+    "configurationSensorGyroToUseSecond": {
+        "message": "Втори"
+    },
+    "configurationSensorGyroToUseBoth": {
+        "message": "Всички"
+    },
+    "configurationSensorAlignmentGyro1": {
+        "message": "Първи Жироскоп"
+    },
+    "configurationSensorAlignmentGyro2": {
+        "message": "Втори Жироскоп"
+    },
+    "configurationSensorAlignmentAcc": {
+        "message": "Положение Акселерометър"
+    },
+    "configurationSensorAlignmentMag": {
+        "message": "Положение Магнитометър"
+    },
+    "configurationSensorAlignmentDefaultOption": {
+        "message": "По подразбиране"
+    },
+    "configurationAccelTrims": {
+        "message": "Акселерометър Трим"
+    },
+    "configurationAccelTrimRoll": {
+        "message": "Акселерометър Roll Трим"
+    },
+    "configurationAccelTrimPitch": {
+        "message": "Акселерометър Pitch Трим"
+    },
+    "configurationArming": {
+        "message": "Arming"
+    },
+    "configurationArmingHelp": {
+        "message": "Някои Arming опции може да изискват Акселерометъра да бъде активиран"
+    },
+    "configurationReverseMotorSwitch": {
+        "message": "Посоката на моторите е обърната"
+    },
+    "configurationReverseMotorSwitchHelp": {
+        "message": "Този опция регулира миксера, очаквайки посоката на въртене на двигателя да бъде обърната и витлата да бъдат съответно настроени. <strong> Внимание: </strong> Това не обръща посоката на двигателя. Използвайте инструментите за настройка за вашия ESC или разменете кабелите на моторите за да постигнете това. Също така, не забравяйте да проверите с премахнати витла дали вашите двигатели се въртят в посоките, показани на диаграмата по-горе, преди да опитате да ARM-нете."
+    },
+    "configurationAutoDisarmDelay": {
+        "message": "Деактивирай двигателите след определено закъснение [seconds] (Изисква активиране на функцията MOTOR_STOP)"
+    },
+    "configurationDisarmKillSwitch": {
+        "message": "Позволете да се изключат двигателите при всякаква стойност на газта. (Когато режим ARM е настроен в раздела „Режими“ през AUX канала)"
+    },
+    "configurationDisarmKillSwitchHelp": {
+        "message": "Arming винаги е деактивирано, ако стойността на газта не е най-ниска. Бъдете внимателни с активирането на тази опция, тъй като можете да изключите двигателите с превключвателя по време на полет."
+    },
+    "configurationDigitalIdlePercent": {
+        "message": "На празен ход [percent]"
+    },
+    "configurationDigitalIdlePercentHelp": {
+        "message": "Стойността „DShot idle“ е процентът от максималната стойност на газта, която се изпраща към ESC, когато положението на газта е в минималното положение и дрона е включен. Увеличете го, за да увеличите оборотите на празен ход и да избегнете несинхронизиране на двигателя. Ако стойността е твърде висока, дрона ще бъде \"плаващ\"."
+    },
+    "configurationMotorPoles": {
+        "message": "Полюс на мотора",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesLong": {
+        "message": "$t(configurationMotorPoles.message) ( брой магнити на камбаната на мотора)",
+        "description": "One of the fields of the ESC/Motor configuration"
+    },
+    "configurationMotorPolesHelp": {
+        "message": "Тази настройка се използва за някои функции като RPM филтъра. Не бройте статора където се намират намотките а магнитите които се намират на камбаната(ротора) на мотора. 5 инчовите мотори обикновенно имат 14 магнита, 3 инчовите често са с 12 магнита.",
+        "description": "Help text for the Motor poles field of the ESC/Motor configuration"
+    },
+    "configurationThrottleMinimum": {
+        "message": "Минимално положение на газта ( най ниската стойност изпратена до ESC когато е Arm-нат дрона)"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Това е минималната стойност, изпратена до ESC когато дрона се ARM-не и положението на газта е нула. Колкото по-висока е стойността, толкова по-висока е минималната скорост на двигателите. Можете да увеличите тази стойност в случай на десинхронизаця!"
+    },
+    "configurationThrottleMaximum": {
+        "message": "Максимално положение на газта ( най-високата стойност изпратена до ESC когато е Arm-нат дрона)"
+    },
+    "configurationThrottleMinimumCommand": {
+        "message": "Минимална команда (Стойност, изпратена до ESC по време на disarmed)"
+    },
+    "configurationThrottleMinimumCommandHelp": {
+        "message": "Това е стойността, която се изпраща на ESC по време на disarmed. Задайте го на стойност, при която двигателите спират да се въртят (за повечето ESC стойността е 1000)."
+    },
+    "configurationEscProtocolDisabled": {
+        "message": "Моля, изберете подходящия протокол за управление на двигателя за вашия ESC.$t(escProtocolDisabledMessage.message)"
+    },
+    "escProtocolDisabledMessage": {
+        "message": "<strong> Внимание: </strong> Изборът на двигателен протокол, който не се поддържа от ESC, може да доведе до <strong> това че ESC да започнат да се въртят веднага щом батерията е свързана </strong>. Поради тази причина <strong> винаги отстранявайте витлата, преди да свържете батерията за първи път след смяна на протокола на двигателя </strong>."
+    },
+    "configurationDshotBeeper": {
+        "message": "Нстройка на Dshot бъзер"
+    },
+    "configurationUseDshotBeeper": {
+        "message": "Използвай Dshot звук (използва моторите да издават звук когато дрона е disarmed)"
+    },
+    "configurationDshotBeaconTone": {
+        "message": "Звук от мотори"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "Dshot beacon се използва, за да накара ESC и двигателите да издават звук. Това означава, че Dshot beacon не може да се използва, докато двигателите работят. В Betaflight 3.4 и по-нови, когато се прави опит за активиране, докато Dshot beacon е активен, тогава устройството ще се активира 2 секунди след последния Dshot звук. Това трябва да попречи на функционалността на Dshot beacon да пречи на командите Dshot, изпратени по време на активиране. <br/> <strong> Внимание: </strong> Тъй като Dshot beacon пропуска ток през вашите двигатели, когато е активен, това може да причини прекомерно прегряване и повреда на двигатели и / или ESC, ако мощността на звука е твърде висока. Използвайте BLHeli Configurator или BLHeli Suite, за да регулирате и проверите силата на звука."
+    },
+    "configurationBeeper": {
+        "message": "Настройка на бъзера"
+    },
+    "beeperGYRO_CALIBRATED": {
+        "message": "Звуков сигнал когато жироскопа е калибриран"
+    },
+    "beeperRX_LOST": {
+        "message": "Звуков сигнал когато Трансмитера е изключен или при загуба на сигнал (повтаря се докато Трансмитера не се свърже отново)"
+    },
+    "beeperRX_LOST_LANDING": {
+        "message": "Звуков сигнал SOS когато дрона е активиран и Трансмитера е изключен или няма сигнал (autolanding/autodisarm)"
+    },
+    "beeperDISARMING": {
+        "message": "Звуков сигнал когато се disarm-не полетният контролер"
+    },
+    "beeperARMING": {
+        "message": "Звуков сигнал когато се Arm-не полетния контролер"
+    },
+    "beeperARMING_GPS_FIX": {
+        "message": "Звуков сигнал със специфичен тон когато се arm-не полетния контролер и GPS е намерил спътници"
+    },
+    "beeperBAT_CRIT_LOW": {
+        "message": "Предупредително дълаг звуков сигнал когато батерията е критично разредена (повтарящо)"
+    },
+    "beeperBAT_LOW": {
+        "message": "Предупредителен звуков сигнал когато батерията наближава критично ниско ниво (повтарящо)"
+    },
+    "beeperGPS_STATUS": {
+        "message": "Използване на определен брой звукови сигнали за да покаже колко GPS сателита са намерени"
+    },
+    "beeperRX_SET": {
+        "message": "Звуков сигнал когато aux канал е наместен за бъзер"
+    },
+    "beeperACC_CALIBRATION": {
+        "message": "Потвърждение за завършено калибриране на акселерометъра по време на полет"
+    },
+    "beeperACC_CALIBRATION_FAIL": {
+        "message": "Неуспешно калибриране на акселерометъра по време на полет"
+    },
+    "beeperREADY_BEEP": {
+        "message": "Издай звук когато GPS е намерил достатъчно сателити и е готов за работа"
+    },
+    "beeperDISARM_REPEAT": {
+        "message": "Звуков сигнал, ако стиковете са в положение за disarm (ако стоковете се използват за arm)"
+    },
+    "beeperARMED": {
+        "message": "Предупредителни сигнали, когато полетният контролер е активиран с изключен двигател на празен ход(повтаря се, докато полетният контролер не се дезактивира или газта не се увеличи)"
+    },
+    "beeperSYSTEM_INIT": {
+        "message": "Звуков сигнал при включване (инициализация на системата)"
+    },
+    "beeperUSB": {
+        "message": "Звуков сигнал при свързване на контролера през USB. Можете да изключите този звуков сигнал, ако искате да настроите контролера на тишина"
+    },
+    "beeperBLACKBOX_ERASE": {
+        "message": "Бипкане когато приключи изтриването на Черната кутия"
+    },
+    "beeperCRASH_FLIP": {
+        "message": "Бипкане когато режимът crash flip е активен"
+    },
+    "beeperCAM_CONNECTION_OPEN": {
+        "message": "Бипкане когато се включи 5 позиционната платка за управление на камерата"
+    },
+    "beeperCAM_CONNECTION_CLOSE": {
+        "message": "Бипкане когато се изключи 5 позиционната платка за управление на камерата"
+    },
+    "beeperRC_SMOOTHING_INIT_FAIL": {
+        "message": "Звуков сигнал, ако активирането не е инициализирано от филтри"
+    },
+    "configuration3d": {
+        "message": "3D ESC/Мотор функция"
+    },
+    "configuration3dDeadbandLow": {
+        "message": "Долна граница на нечувствителната зона на 3D режим"
+    },
+    "configuration3dDeadbandHigh": {
+        "message": "Горна граница на нечувствителната зона на 3D режим"
+    },
+    "configuration3dNeutral": {
+        "message": "Неутрална точка на 3D режим"
+    },
+    "configuration3dDeadbandThrottle": {
+        "message": "Нечуствителна зона на газта в 3D режим"
+    },
+    "configurationSystem": {
+        "message": "Системни настройки"
+    },
+    "configurationLoopTime": {
+        "message": "Време на цикъла на полетния контролер"
+    },
+    "configurationCalculatedCyclesSec": {
+        "message": "Цикъл/секунди [Hz]"
+    },
+    "configurationSpeedGyroNoGyro": {
+        "message": "Няма Жироскоп",
+        "description": "When no gyro is configured this appears in place of the speed of the gyro in kHz"
+    },
+    "configurationSpeedPidNoGyro": {
+        "message": "Жироскоп / {{value}}",
+        "description": "When no gyro is configured this appears in place of the speed of the PID in kHz. Try to keep it short."
+    },
+    "configurationKHzUnitLabel": {
+        "message": "{{value}} кХц",
+        "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
+    },
+    "configurationLoopTimeHelp": {
+        "message": "<strong> Забележка: </strong> Уверете се, че вашият Полетен контролер може да работи с тези скорости! Проверете стабилността на процесора и времето на цикъла. Тези промени може да изискват настройка на PID. Съвет: Деактивирайте акселерометъра и други сензори, за да подобрите производителността."
+    },
+    "configurationGPS": {
+        "message": "GPS"
+    },
+    "configurationGPSProtocol": {
+        "message": "Протокол"
+    },
+    "configurationGPSBaudrate": {
+        "message": "Скорост на предаване на данни"
+    },
+    "configurationGPSubxSbas": {
+        "message": "Тип корекция на сателитни координати"
+    },
+    "configurationGPSAutoBaud": {
+        "message": "Автоматична скорост"
+    },
+    "configurationGPSAutoConfig": {
+        "message": "Автоматична конфигурация"
+    },
+    "configurationGPSGalileo": {
+        "message": "Използвай Galileo",
+        "description": "Option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSGalileoHelp": {
+        "message": "Когато се активира, това заменя QZSS системата (Япония) с Galileo ситемата (Европа).",
+        "description": "Help text for the option to use Galileo in the GPS configuration"
+    },
+    "configurationGPSHomeOnce": {
+        "message": "Задай точка \"Дом\" веднъж",
+        "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSHomeOnceHelp": {
+        "message": "Когато е включен, само първият arm след свързване на батерията ще се използва като начална точка. Ако е деактивирана, началната точка ще се актуализира с всяко arm-ване.",
+        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
+    "configurationGPSHelp": {
+        "message": "<strong> Забележка: </strong> Не забравяйте да конфигурирате GPS порта (в раздела Портове), преди да използвате настройките на GPS."
+    },
+    "configurationSerialRX": {
+        "message": "Приемник със сериен изход"
+    },
+    "configurationSpiRX": {
+        "message": "Приемник с изход SPI шина"
+    },
+    "configurationEepromSaved": {
+        "message": "EEPROM<span class=\"message-positive\">запазен</span>"
+    },
+    "configurationButtonSave": {
+        "message": "Запазване и Презареждане"
+    },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Промяна стойноста на Dynamic Notch"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class = \"message-negative\"> <b> ПРЕДУПРЕЖДЕНИЕ: Някои стойности на dynamic notch са променени по подразбиране </b> </span>, защото RPM филтрирането е активирано / деактивирано. <br> Моля, проверете преди полет."
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
+    },
+    "portsIdentifier": {
+        "message": "Идентификатор"
+    },
+    "portsConfiguration": {
+        "message": "Конфигурация/MSP"
+    },
+    "portsSerialRx": {
+        "message": "Сериен Rx"
+    },
+    "portsSensorIn": {
+        "message": "Вход сензор"
+    },
+    "portsTelemetryOut": {
+        "message": "Изход Телеметрия"
+    },
+    "portsPeripherals": {
+        "message": "Периферия"
+    },
+    "portsHelp": {
+        "message": "<strong> Забележка: </strong> не всички комбинации от тези настройки са правилни. Когато  фърмуерът на полетния контролер открие това ще нулира конфигурацията на серийния порт."
+    },
+    "portsVtxTableNotSet": {
+        "message": "<span class=\"message-negative\"> ПРЕДУПРЕЖДЕНИЕ: </span> VTX Таблицата не е конфигурирана правилно и без нея VTX контролът няма да бъде възможен. Моля, конфигурирайте VTX таблицата в раздела $t(tabVtx.message)."
+    },
+    "portsMSPHelp": {
+        "message": "<strong> Забележка: </strong> НЕ<span class=\"message-negative\">ИЗКЛЮЧВАЙТЕ </span> MSP на първия сериен порт, освен ако не знаете какво правите. Правейки това, може да се наложи да препрограмирате и изтриете вашата конфигурация."
+    },
+    "portsFirmwareUpgradeRequired": {
+        "message": "<span class=\"message-negative\"> Необходима е актуализация на фърмуера </span>. Конфигуриране на сериен порт във фърмуера &lt; 1.8.0 вече не се поддържа."
+    },
+    "portsButtonSave": {
+        "message": "Запази и рестартирай"
+    },
+    "portsTelemetryDisabled": {
+        "message": "Изключено"
+    },
+    "portsFunction_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_GPS": {
+        "message": "GPS"
+    },
+    "portsFunction_TELEMETRY_FRSKY": {
+        "message": "FrSky"
+    },
+    "portsFunction_TELEMETRY_HOTT": {
+        "message": "HoTT"
+    },
+    "portsFunction_TELEMETRY_LTM": {
+        "message": "LTM"
+    },
+    "portsFunction_TELEMETRY_MAVLINK": {
+        "message": "MAVLink"
+    },
+    "portsFunction_TELEMETRY_MSP": {
+        "message": "MSP"
+    },
+    "portsFunction_TELEMETRY_SMARTPORT": {
+        "message": "SmartPort"
+    },
+    "portsFunction_TELEMETRY_IBUS": {
+        "message": "iBUS"
+    },
+    "portsFunction_TELEMETRY_JETIXBUS": {
+        "message": "JETIXBUS"
+    },
+    "portsFunction_TELEMETRY_CRSF": {
+        "message": "CRSF"
+    },
+    "portsFunction_TELEMETRY_SRXL": {
+        "message": "SRXL"
+    },
+    "portsFunction_ESC_SENSOR": {
+        "message": "ESC"
+    },
+    "portsFunction_RX_SERIAL": {
+        "message": "Serial RX"
+    },
+    "portsFunction_BLACKBOX": {
+        "message": "Blackbox запис"
+    },
+    "portsFunction_TBS_SMARTAUDIO": {
+        "message": "VTX (ТБС Смарт аудио)"
+    },
+    "portsFunction_IRC_TRAMP": {
+        "message": "VTX (IRC Трамп)"
+    },
+    "portsFunction_RUNCAM_DEVICE_CONTROL": {
+        "message": "Камера (RunCam Протокол)"
+    },
+    "portsFunction_FRSKY_OSD": {
+        "message": "OSD (FrSky Протокол)"
+    },
+    "pidTuningProfileOption": {
+        "message": "Профил $1"
+    },
+    "pidTuningRateProfileOption": {
+        "message": "Rate- профил $1"
+    },
+    "portsFunction_LIDAR_TF": {
+        "message": "Benewake LIDAR"
+    },
+    "pidTuningUpgradeFirmwareToChangePidController": {
+        "message": "<span class=\"message-negative\"> Промяната на PID контролера е забранена, но можете да го промените в командния ред. </span> Вашият фърмуер поддържа версията на конфигуратора <span class=\"message-negative\">$1</span> но тази функционалност изисква <span class=\"message-positive\">$2 </span> версия на фърмуера."
+    },
+    "pidTuningSubTabPid": {
+        "message": "PID Профил Настройки"
+    },
+    "pidTuningSubTabRates": {
+        "message": "Rate-профил Настройки"
+    },
+    "pidTuningSubTabFilter": {
+        "message": "Настройки на филтрите"
+    },
+    "pidTuningShowAllPids": {
+        "message": "Покажи всички PIDs"
+    },
+    "pidTuningHideUnusedPids": {
+        "message": "Скрий неизползваните PIDs"
+    },
+    "pidTuningNonProfilePidSettings": {
+        "message": "Настройки на PID контролера, независимо от настройката на профила"
+    },
+    "pidTuningAntiGravity": {
+        "message": "Антигравитация"
+    },
+    "pidTuningAntiGravityMode": {
+        "message": "Режим",
+        "description": "Anti Gravity mode selection parameter"
+    },
+    "pidTuningAntiGravityModeOptionSmooth": {
+        "message": "Гладко",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityModeOptionStep": {
+        "message": "Стъпка",
+        "description": "One of the modes of anti gravity"
+    },
+    "pidTuningAntiGravityGain": {
+        "message": "Коефициент на усилване",
+        "description": "Anti Gravity Gain Parameter"
+    },
+    "pidTuningAntiGravityThres": {
+        "message": "Праг",
+        "description": "Anti Gravity Threshold Parameter"
+    },
+    "pidTuningAntiGravityHelp": {
+        "message": "Anti Gravity усилва I term, когато се открият бързи промени в газта. По-високите стойности на усилване осигуряват стабилност и по-добро задържане на позицията при подаване на газ."
+    },
+    "pidTuningDMin": {
+        "message": "D минимално",
+        "description": "Table header of the D Min feature in the PIDs tab"
+    },
+    "pidTuningDMinDisabledNote": {
+        "message": "<strong>Забележка:</strong>Функцията D мин e деактивирана и нейните параметри са скрити. За да използвате D мин моля активирайте го в $t(pidTuningPidSettings.message)."
+    },
+    "pidTuningDMinGain": {
+        "message": "Коефициент на усилване",
+        "description": "Gain of the D Min feature"
+    },
+    "pidTuningDMinAdvance": {
+        "message": "Предварение",
+        "description": "Advance of the D Min feature"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min осигурява способността за понижаване на нивото на D по време на нормален полет и увеличаване на нивото по време на бързи маневри, които могат да доведат до превишаване на стойностите. Той също вдига D, когато има пропуош. Регулира колко бързо D ще достигне максималната си стойност и се основава на жиросигнала за откриване на внезапни движения и пропуош. Advance кара D да се покачва по-рано, използвайки зададена точка, а не жироскопа за откриване на резки движения.",
+        "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Контролиране на амортизационната сила (D-term) по време на нормален прав полет. <br> С активиран D_min, Active D-gain се променя по време на полет. По време на нормален полет w права линия, той е равен на D_min. По време на резки движения, текущият D-gain се увеличава до стойността D_max, определена вляво. <br> <br> Максималнiq D-max се постигат по време на резки движения със стиковете, но само частично при пропуош.<br>Настройте D_Min Gain и Advance за да контролирате степента на усилване на чувствителността и времето.",
+        "description": "D Min helpicon message on PID table titlebar"
+    },
+    "pidTuningPidSettings": {
+        "message": "Настройки на PID контролера"
+    },
+    "receiverRcSmoothing": {
+        "message": "RC изглаждане"
+    },
+    "receiverRcSmoothingAuto": {
+        "message": "Автоматично"
+    },
+    "receiverRcSmoothingManual": {
+        "message": "Ръчно"
+    },
+    "receiverRcSmoothingAutoSmoothness": {
+        "message": "Автоматично изглаждане",
+        "description": "Auto Smoothness parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoSmoothnessHelp": {
+        "message": "Регулира изчисляването на Автоматичното изглаждане, 10 е по подразбиране (съотношението за изглаждане и забавяне). Увеличаването ще изглади RC входа повече но ще добави и забавяне. Това може да бъде полезно за ненадеждни RC връзки или за филмови полети. <br> Внимавайте с числа, приближаващи се до 50, латентността на командите ще стане забележима. <br> Използвайте командата rc_smoothing_info CLI, докато TX и RX работят, за да видите автоматично изчислените рамки за сглаждане. ",
+        "description": "Auto Smoothness parameter help message"
+    },
+    "receiverRcDerivativeTypeSelect": {
+        "message": "Derivative Cutoff Type"
+    },
+    "receiverRcInputTypeSelect": {
+        "message": "Input Cutoff Type"
+    },
+    "receiverRcSmoothingInterpolation": {
+        "message": "Интерполация"
+    },
+    "receiverRcSmoothingFilter": {
+        "message": "Филтър"
+    },
+    "receiverRcSmoothingTypeHelp": {
+        "message": "Тип на използваното RC заглаждане"
+    },
+    "rcSmoothingInputCutoffHelp": {
+        "message": "Cutoff frequency в Hz, използвана от входния филтър. Използването на по-ниски стойности ще доведе до по-плавни входове и е по-приемливо за протоколи с бавен приемник. Повечето потребители трябва да оставят това на 0, което съответства на \"Auto\"."
+    },
+    "rcSmoothingDerivativeCutoffHelp": {
+        "message": "Cutoff frequency в Hz, използвана от входния филтър. Използването на по-ниски стойности ще доведе до по-плавни входове и е по-приемливо за по бавни протоколи. Повечето потребители трябва да оставят това на 0, което съответства на \"Auto\"."
+    },
+    "rcSmoothingChannelsSmoothedHelp": {
+        "message": "Прилага се изглаждане на канала"
+    },
+    "rcSmoothingDerivativeTypeHelp": {
+        "message": "Типът на метода за филтриране, използван за setpoint derivative. Започвайки с 4.2, препоръчва се стойността по подразбиране да е на „Auto“. За 4.1 и по-стари версии повечето потребители трябва да използват стойността по подразбиране \"BIQUAD\", тъй като тя осигурява добър баланс между плавност и забавяне. \"PT1\" намалява забавянето леко, но осигурява по-малко изглаждане."
+    },
+    "rcSmoothingInputTypeHelp": {
+        "message": "Видът на метода за филтриране, използван за въвеждане. Повечето потребители трябва да използват стойността по подразбиране \"BIQUAD\", тъй като тя осигурява добър баланс между плавност и забавяне. \"PT1\" намалява забавянето леко, но осигурява по-малко изглаждане."
+    },
+    "receiverRcSmoothingInputManual": {
+        "message": "Избира дали честотата на прекъсване на входния филтър се изчислява автоматично (препоръчва се) или ръчно се избира от потребителя. Използването на „Ръчно“ не се препоръчва за протоколи като Crossfire, които могат да се променят по време на полет."
+    },
+    "receiverRcSmoothingDerivativeManual": {
+        "message": "Избира дали честотата на прекъсване на производния филтър на зададената стойност се изчислява автоматично (препоръчително) или ръчно се избира от потребителя. Използването на „Ръчно“ не се препоръчва за протоколи като Crossfire, които могат да се променят по време на полет."
+    },
+    "receiverRcSmoothingInputHz": {
+        "message": "Input Cutoff Frequency"
+    },
+    "receiverRcSmoothingDerivativeCutoff": {
+        "message": "Derivative Cutoff Frequency"
+    },
+    "receiverRcInputType": {
+        "message": "Тип на входния филтър"
+    },
+    "receiverRcDerivativeType": {
+        "message": "Тип производен филтър"
+    },
+    "receiverRcSmoothingDerivativeTypeOff": {
+        "message": "Изключено"
+    },
+    "receiverRcSmoothingDerivativeTypeAuto": {
+        "message": "Автоматично"
+    },
+    "receiverRcSmoothingChannel": {
+        "message": "Канали изгладени"
+    },
+    "receiverRcInterpolation": {
+        "message": "RC интерполация"
+    },
+    "receiverRcInterpolationHelp": {
+        "message": "RC TX / RX системите не са толкова бързи, колкото PID циклите. Това означава, че PID цикълът има пропуски в информационния поток от RC системите. Тази опция позволява интерполация на RC входа по време, когато не се получават RC команди. Опцията предлага и по-чисто P и D поведение, тъй като в управляващия вход няма рампи."
+    },
+    "receiverRcInterpolationIntervalHelp": {
+        "message": "Интервал на интерполация за ръчен режим на RC интерполация в милисекунди"
+    },
+    "receiverRcInterpolationOff": {
+        "message": "Изключено"
+    },
+    "receiverRcSmoothingType": {
+        "message": "Изглаждащ тип"
+    },
+    "receiverRcInterpolationDefault": {
+        "message": "Предварително зададени"
+    },
+    "receiverRcInterpolationAuto": {
+        "message": "Автоматично"
+    },
+    "receiverRcInterpolationManual": {
+        "message": "Ръчно"
+    },
+    "receiverRcInterpolationInterval": {
+        "message": "Интервал на RC интерполация [ms]"
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Feedforward преход"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "С този параметър, терминът Feedforward може да бъде намален близо до центъра на стиковете, което води до по-гладък край при flips и rolls. <br> Стойността представлява точка на отклонение на стика: 0 - центриран стик, 1 - пълна деформация. Когато стикът е над тази точка, Feedforward се поддържа постоянен при конфигурираната стойност. Когато пръчката е позиционирана под тази точка, Feedforward се намалява пропорционално, достигайки 0 в централната позиция на стика. <br> Стойността 1 дава максимален изглаждащ ефект, докато стойността 0 поддържа Feedforward фиксиран на конфигурираната стойност за целия диапазон на стика."
+    },
+    "pidTuningDtermSetpointTransition": {
+        "message": "D Setpoint преход"
+    },
+    "pidTuningDtermSetpoint": {
+        "message": "D Setpoint Weight"
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "С този параметър D Setpoint Weight може да се намали близо до центъра на стиковете, което води до по-гладък край на flips и rolls. <br> Стойността представлява точка на отклонение на стика: 0 - центриран стик, 1 - пълна деформация. Когато стикът е над тази точка, зададеното тегло се поддържа постоянно на конфигурираната стойност. Когато стикът е позициониран под тази точка, зададеното тегло се намалява пропорционално, достигайки 0 в централната позиция на стика. <br> Стойността на 1 дава максимален изглаждащ ефект, докато стойността на 0 поддържа Setpoint Weight на неговата конфигурирана стойност за целия обхват на стика."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Този параметър определя ускоряващия ефект на стика в производен компонент. <br> Стойност 0 е равна на стария метод на измерване, където D само проследява жироскопа, докато стойност 1 е равна на стария метод на грешка с еднакво съотношение на проследяване на жироскопа и стика.<br>По ниска стойност се равнява на по-бавен / плавен отговор на стика, докато по-високата стойност осигурява повече реакция на ускорение на стика. <br> Имайте предвид, че RC интерполацията се препоръчва да се активира с по-високи стойности, за да се предотврати шум от контролни резки движения."
+    },
+    "pidTuningDtermSetpointTransitionWarning": {
+        "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Силно се препоръчва използването на D Setpoint transition по-голям от 0 и по-малък от 0,1. Това може да доведе до нестабилност и намалена реакция на стика, докато стиковете пресичат централната точка</span>"
+    },
+    "pidTuningFfInterpolateSp": {
+        "message": "FF Интерполация"
+    },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "Следните опции донастройват feed forward от състезание / агресивно към плавно / HD. <br> <br> Режим: зададен на NoAverage за състезание, средно 2 за състезание / бърз фристайл, средно 3 за HD запис, средно 4 за HD кинематографично плавност. <br> <br> Гладкост: ограничава количеството промяна, която може да направи всяка входяща радио стъпка, увеличава се за по-плавен сигнал на FF, намалява за по-агресивни реакции на FF. <br> <br> Boost: помага за преодоляване на моторното изоставане с бързи команди от стиковете, могат да увеличат трептенето. Опитайте 10 за HD, 20 за състезатели. До 30 може да са полезни за low authority дронове, но могат да причинят микро overshoot или трептене."
+    },
+    "pidTuningFfInterpolate": {
+        "message": "Режим"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "НеСредно"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "Средно 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "Средно 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "Средно 4"
+    },
+    "pidTuningFfSmoothFactor": {
+        "message": "Гладкост"
+    },
+    "pidTuningFfBoost": {
+        "message": "Увеличете"
+    },
+    "pidTuningProportional": {
+        "message": "Пропорционално"
+    },
+    "pidTuningProportionalHelp": {
+        "message": "Контролира силата на това колко плътно дрона следва стиковете(зададената точка). <br> <br> По-високата стойност (gains) осигурява добро следване, но може да доведе до overshoot, ако е твърде висока, пропорционално на Derivative (D-term). Мислете за P-term като за пружината на автомобил.",
+        "description": "Proportional Term helpicon message on PID table titlebar"
+    },
+    "pidTuningIntegral": {
+        "message": "Integral"
+    },
+    "pidTuningIntegralHelp": {
+        "message": "Контролира силата на това колко плътно дрона задържа общото положение в дадена точка. <br> Подобно на Proportional, но за по-дълги периоди от време, като например изместен център на тежестта (CoG) или постоянно външно влияние (постоянен вятър). <br> <br> По-висок gains осигурява по-стегнато следене (напр. при мащабни завои), но могат да накарат дрона да се почувства стегнат за командите от стика. <br> Ако стойноста е прекалено висока, може да причини бавни трептения.",
+        "description": "Integral Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivative": {
+        "message": "Derivative"
+    },
+    "pidTuningDMax": {
+        "message": "D Max"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "Контролира силата на затихване при всяко движение на дрона. За движения на стика, D-term забавя самата команда. За външни влияния (пропуош или вятър), D-term намалява този ефект. <br> <br> По-високите стойности дават повече забавяне и намаляват превишенията в P-term и FF. <br> D-term обаче е МНОГО чувствителен към високочестотни вибрация на жироскопа (шумът се усилва 10-100 пъти). <br> <br> Ако коефициентът на D-gains е твърде висок или шумът на жироскопа не е филтриран (вижте раздела Настройки на филтъра), високочестотният шум може да доведе до загряване и изгаряне на двигателите. <br> <br> Мислете за D-term като за амортисьор на вашата кола, но с отрицателното свойство да увеличава жиро шума.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
+    "pidTuningFeedforward": {
+        "message": "Feedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "Допълнителен параметър за натискане (пружина) въз основа на команди на стика. FF помага на P-term за движението дрона въз основа на движението на стика. <br> <br> P-term задава движение на базата на разликата между желаната зададена точка (градус / сек) и отчитане на жироскопа (текуща скорост на въртене) (градус / сек). FF променя само въз основа на промени в командата на стика. <br> <br> По-високите стойности (gains) ще доведат до по-рязък отговор на дрона към командата на стика. <br> Прекалено високите стойности могат да доведат до някои overshoot, повишени температури на двигателя и пренасищане на двигателите (когато двигателите не могат да поддържат желаната скорост на промяна.) <br> Ниските или нулевите стойности (0) водят до забавяне и по-плавен отговор на командите.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
+    },
+    "pidTuningMaxRateWarning": {
+        "message": "<span class=\"message-negative\"> <b> Предупреждение: </b> </span> много високи рейтове могат да доведат до десинхронизация на двигателите по време на бързо забавяне."
+    },
+    "pidTuningRcRate": {
+        "message": "RC Rate"
+    },
+    "pidTuningMaxVel": {
+        "message": "Макс скорост [градуси/секунда]"
+    },
+    "pidTuningRate": {
+        "message": "Rate"
+    },
+    "pidTuningSuperRate": {
+        "message": "Super Rate"
+    },
+    "pidTuningRatesPreview": {
+        "message": "Преглед на Rates в действие"
+    },
+    "pidTuningRatesTuningHelp": {
+        "message": "<b> Rates и Expo </b>: Тези параметри определят как се усещат стиковете. Използвайте графичния дисплей и интерактивния 3D модел, за да намерите предпочитания процент."
+    },
+    "pidTuningRcExpo": {
+        "message": "RC Expo"
+    },
+    "pidTuningTPA": {
+        "message": "TPA"
+    },
+    "pidTuningTPABreakPoint": {
+        "message": "TPA праг"
+    },
+    "pidTuningThrottleCurvePreview": {
+        "message": "Предварителен преглед на кривата на газта"
+    },
+    "pidTuningThrottleLimitType": {
+        "message": "Лимит на газта"
+    },
+    "pidTuningThrottleLimitPercent": {
+        "message": "Лимит на газта в %"
+    },
+    "pidTuningThrottleLimitTypeOff": {
+        "message": "Изключено"
+    },
+    "pidTuningThrottleLimitTypeScale": {
+        "message": "Мащаб"
+    },
+    "pidTuningThrottleLimitTypeClip": {
+        "message": "CLIP"
+    },
+    "pidTuningThrottleLimitTypeTip": {
+        "message": "Изберете типа за ограничаване на газта. <b> OFF </b> деактивира функцията, <b> SCALE </b> ще трансформира обхвата на газта от 0 до избрания процент, използвайки пълния ход на стика, <b> CLIP </b> ще зададе максимален газ процент и придвижването на стика над това няма да има допълнителен ефект"
+    },
+    "pidTuningThrottleLimitPercentTip": {
+        "message": "Задайте желания процент за ограничение на газта. Задаването на 100% деактивира функцията."
+    },
+    "pidTuningFilter": {
+        "message": "Филтър"
+    },
+    "pidTuningFilterFrequency": {
+        "message": "Честота"
+    },
+    "pidTuningRatesCurve": {
+        "message": "Преглед на Rates"
+    },
+    "throttle": {
+        "message": "Газ"
+    },
+    "pidTuningButtonSave": {
+        "message": "Запазете"
+    },
+    "pidTuningButtonRefresh": {
+        "message": "Обнови"
+    },
+    "pidTuningProfileHead": {
+        "message": "Профил"
+    },
+    "pidTuningControllerHead": {
+        "message": "PID контрол"
+    },
+    "pidTuningCopyProfile": {
+        "message": "Копирайте стойностите на профила"
+    },
+    "pidTuningCopyRateProfile": {
+        "message": "Копирайте стойностите на Rate профила"
+    },
+    "dialogCopyProfileText": {
+        "message": "Копиране на стойности от текущия профил"
+    },
+    "dialogCopyRateProfileText": {
+        "message": "Копиране на стойности от текущия Rate профил"
+    },
+    "dialogCopyProfileTitle": {
+        "message": "Копирайте стойностите на профила"
+    },
+    "dialogCopyProfileNote": {
+        "message": "Всички стойности в профила на дестинацията ще бъдат изтрити и презаписани"
+    },
+    "dialogCopyProfileConfirm": {
+        "message": "Копирай"
+    },
+    "dialogCopyProfileClose": {
+        "message": "Отмени"
+    },
+    "pidTuningResetProfile": {
+        "message": "Нулирайте всички стойности на профила"
+    },
+    "pidTuningProfileReset": {
+        "message": "Зареждане на фабричните профилни стойности."
+    },
+    "pidTuningReceivedProfile": {
+        "message": "Полетен контролер Профил: <strong class=\"message-positive\">$1</strong>"
+    },
+    "pidTuningReceivedRateProfile": {
+        "message": "Полетен контролер Rate профил: <strong class=\"message-positive\">$1</strong>"
+    },
+    "pidTuningLoadedProfile": {
+        "message": "Зареден Профил: <strong class=\"message-positive\">$1</strong>"
+    },
+    "pidTuningLoadedRateProfile": {
+        "message": "Зареден Rate профил: <strong class=\"message-positive\">$1</strong>"
+    },
+    "pidTuningDataRefreshed": {
+        "message": "PID данни <strong> обновени </strong>"
+    },
+    "pidTuningEepromSaved": {
+        "message": "EEPROM <span class=\"message-positive\"> запазен </span>"
+    },
+    "receiverHelp": {
+        "message": "Моля, прочетете указанията за приемника в документацията. Конфигуриране на сериен порт (ако е необходим), режим на приемник (сериен / ppm / pwm), доставчик (за серийни приемници), свързване на приемник, задаване на карта на канала, конфигуриране на крайни точки / обхват на канала на TX, така че всички канали да преминават от ~ 1000 до ~ 2000. Задайте средна точка (по подразбиране 1500), центрирайте каналите на 1500, конфигурирайте мъртва зона на стика, проверете поведението когато TX е изключен или извън обхвата. <br /> <span class=\"message-negative\"> ВАЖНО: </span> Преди полет прочетете указанията за failsafe и неговото конфигуриране."
+    },
+    "tuningHelp": {
+        "message": "<b>Препоръка</b><br /><span class=\"message-negative\">ВАЖНО:</span> Важно е да проверявате температурата на моторите повреме на първите полети. Колкото по висока е стойността на филтъра, толкова по-добре би трябвало да летите, но също така ще имате повече шум от моторите. <br>Стойността по подразбиране от 100Hz е оптимална, но за по шумни конфигурации може да опитате да намалите Dterm филтъра на 50Hz и най-вероятно gyro филтъра."
+    },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">Важно:</span> Препоръчваме  ви да използвате плъзгача за да промените настойките на филтъра. Движете двата плъзгача заедно.<br> Най-добре е да правите малки промени и да правите тестов полет след всяка промяна. Проверявайте температурата на моторите обстойно преди да правите бъдещи промени.<br>По-малка филтрация (плъзгачите надясно, по-високи гранични стойности) ще подобрят  вибрациите (propwash), моторите ще станат по-шумни, което ще ги накара да загряват, ще ги загрява до толкова, че е възможно да ги изгорите.  По-малката филтрация е възможна на най-свежите конфигурации и ако rpm филтъра е включен.<br>Необичайните високи или ниски настройки на филтъра могат да причинят странно поведение след армване на дрона. Настойките по подразбиране са безопасни за обичайните 5” дрони.<br><strong>Забележка:</strong> Промяна на профилите ще промени само стойносттана на D-term филтъра. Gyro filter стойностита са еднакви за всички профили.",
+        "description": "Filter tuning subtab note"
+    },
     "receiverThrottleMid": {
         "message": "Throttle Средно положение"
     },
@@ -613,6 +1892,151 @@
     "receiverHelpStickMax": {
         "message": "Минималната стойност (в us) на стика за да бъде разпознат като максимален(MAX_STICK_INPUT)."
     },
+    "receiverChannelMap": {
+        "message": "Разпределяне на канали"
+    },
+    "receiverChannelDefaultOption": {
+        "message": "По подразбиране"
+    },
+    "receiverChannelMapTitle": {
+        "message": "Вие може да дефинирате свое собствено разпределение като кликнете вътре в кутията"
+    },
+    "receiverRssiChannel": {
+        "message": "RSSI Канал"
+    },
+    "receiverRssiChannelDisabledOption": {
+        "message": "Изключен"
+    },
+    "receiverRefreshRateTitle": {
+        "message": "Честота на опресняване на графа"
+    },
+    "receiverResetRefreshRate": {
+        "message": "Нулиране"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Честота на нулиране"
+    },
+    "receiverButtonSave": {
+        "message": "Запази"
+    },
+    "receiverButtonRefresh": {
+        "message": "Обнови"
+    },
+    "receiverButtonBind": {
+        "message": "Свържи ресийвър"
+    },
+    "receiverButtonBindMessage": {
+        "message": "Свързващата заявка изпратена към полетния контролер."
+    },
+    "receiverButtonSticks": {
+        "message": "Управление на стиковете"
+    },
+    "receiverDataRefreshed": {
+        "message": "PID данни <strong> обновени </strong>"
+    },
+    "receiverEepromSaved": {
+        "message": "EEPROM<span class=\"message-positive\">записан</span>"
+    },
+    "receiverModelPreview": {
+        "message": "Преглед"
+    },
+    "receiverMspWarningText": {
+        "message": "Тези стикове позволяват на Betaflight да бъде армната и тествана без да бъде поставен предавател или приемник. Въпреки всичко <strong>тази функция не е предназначена за полет и витлата не трябва да бъдат поставени.</strong><br><br>Тази функция не гарантира надежден контол върху вашия дрон. <strong>Може да получите сериозни наранявани в резултат на това, че витлата не са премахнати.</strong>"
+    },
+    "receiverMspEnableButton": {
+        "message": "Активиране на контролите"
+    },
+    "auxiliaryToggleUnused": {
+        "message": "Скрий неизползваните режими"
+    },
+    "auxiliaryMin": {
+        "message": "Минимално"
+    },
+    "auxiliaryMax": {
+        "message": "Максимално"
+    },
+    "auxiliaryDisabled": {
+        "message": "(Изключен)",
+        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+    },
+    "auxiliaryAddRange": {
+        "message": "Добави обхват"
+    },
+    "auxiliaryAddLink": {
+        "message": "Добави връзка"
+    },
+    "auxiliaryButtonSave": {
+        "message": "Запази"
+    },
+    "auxiliaryEepromSaved": {
+        "message": "EEPROM<span class=\"message-positive\">записан</span>"
+    },
+    "auxiliaryAutoChannelSelect": {
+        "message": "АВТОМАТИЧНО"
+    },
+    "auxiliaryModeLogicOR": {
+        "message": "ИЛИ"
+    },
+    "auxiliaryModeLogicAND": {
+        "message": "И"
+    },
+    "adjustmentsExamples": {
+        "message": "Примери:"
+    },
+    "adjustmentsExample1": {
+        "message": "Използвай трипозиционния ключ на AUX1 за да избереш между P, I или D на Pitch/Roll и друг трипозиционен ключ на AUX2, за да увеличаваш или намаляш стойностите когато го задържиш нагоре или надолу."
+    },
+    "adjustmentsExample2": {
+        "message": "Използвай трипозиционен ключ на AUX4 за да активираш Rate Profile Selection чрез същия ключ на същия канал."
+    },
+    "adjustmentsColumnEnable": {
+        "message": "Ако е активирано"
+    },
+    "adjustmentsColumnUsingSlot": {
+        "message": "изполван слот"
+    },
+    "adjustmentsColumnWhenChannel": {
+        "message": "когато канала"
+    },
+    "adjustmentsColumnIsInRange": {
+        "message": "е в диапазон"
+    },
+    "adjustmentsColumnThenApplyFunction": {
+        "message": "тогава потвърди"
+    },
+    "adjustmentsColumnViaChannel": {
+        "message": "чрез канал"
+    },
+    "adjustmentsSlot0": {
+        "message": "Slot 1"
+    },
+    "adjustmentsSlot1": {
+        "message": "Slot 2"
+    },
+    "adjustmentsSlot2": {
+        "message": "Slot 3"
+    },
+    "adjustmentsSlot3": {
+        "message": "Slot 4"
+    },
+    "adjustmentsMin": {
+        "message": "Минимално"
+    },
+    "adjustmentsMax": {
+        "message": "Максимално"
+    },
+    "adjustmentsFunction0": {
+        "message": "Няма промяна"
+    },
+    "adjustmentsFunction1": {
+        "message": "RC Rate конфигурация"
+    },
+    "adjustmentsFunction2": {
+        "message": "RC Expo Конфигурация"
+    },
+    "adjustmentsFunction3": {
+        "message": "Throttle Expo Конфигурация"
+    },
     "adjustmentsFunction4": {
         "message": "Pitch & Roll Rate Конфигурация"
     },
@@ -636,5 +2060,1063 @@
     },
     "adjustmentsFunction11": {
         "message": "Yaw D Конфигурация"
+    },
+    "transponderType0": {
+        "message": "Няма"
+    },
+    "transponderData1": {
+        "message": "Данни"
+    },
+    "transponderButtonSaveReboot": {
+        "message": "Запази и Рестартирай"
+    },
+    "transponderDataInvalid": {
+        "message": "Transponder данните са <span class=\"message-negative\">невалидни</span>"
+    },
+    "transponderEepromSaved": {
+        "message": "EEPROM<span class=\"message-positive\">записан</span>"
+    },
+    "servosFirmwareUpgradeRequired": {
+        "message": "Servos изискват firmware &gt;= 1.10.0."
+    },
+    "servosChangeDirection": {
+        "message": "Промени Direction in TX To Match"
+    },
+    "servosName": {
+        "message": "Име"
+    },
+    "servosMid": {
+        "message": "СРЕДА"
+    },
+    "servosMin": {
+        "message": "МИНИМУМ"
+    },
+    "servosMax": {
+        "message": "МАКСИМУМ"
+    },
+    "servosAngleAtMin": {
+        "message": "Ъгъл на минимума"
+    },
+    "servosAngleAtMax": {
+        "message": "Ъгъл на максимум"
+    },
+    "servosDirectionAndRate": {
+        "message": "Посока и скорост"
+    },
+    "servosLiveMode": {
+        "message": "Включи Live Mode"
+    },
+    "servosButtonSave": {
+        "message": "Запази"
+    },
+    "servosNormal": {
+        "message": "Нормален"
+    },
+    "servosReverse": {
+        "message": "На обратно"
+    },
+    "servosEepromSave": {
+        "message": "EEPROM<span class=\"message-positive\">записан</span>"
+    },
+    "gpsHead": {
+        "message": "ГПС"
+    },
+    "gpsMapHead": {
+        "message": "Текуща GPS локация"
+    },
+    "gpsMapMessage1": {
+        "message": "Моля проверете интетернет връзката"
+    },
+    "gpsMapMessage2": {
+        "message": "Изчакване за GPS 3D fix…"
+    },
+    "gps3dFix": {
+        "message": "3Д фикс"
+    },
+    "gpsFixTrue": {
+        "message": "<span class=\"fixtrue\">Вярно</span>"
+    },
+    "gpsFixFalse": {
+        "message": "<span class=\"fixfalse\">Грешно</span>"
+    },
+    "gpsAltitude": {
+        "message": "Височина:"
+    },
+    "gpsLat": {
+        "message": "Геогр. ширина:"
+    },
+    "gpsLon": {
+        "message": "Геогр. дължина:"
+    },
+    "gpsSpeed": {
+        "message": "Скорост"
+    },
+    "gpsSats": {
+        "message": "Сателити:"
+    },
+    "gpsDistToHome": {
+        "message": "Разстояние от вкъщи:"
+    },
+    "gpsSignalStrHead": {
+        "message": "ГПС сила на сигнала"
+    },
+    "gpsSignalStr": {
+        "message": "Сила на сигнала"
+    },
+    "gpsSignalSatId": {
+        "message": "ID на сателити"
+    },
+    "gpsSignalQty": {
+        "message": "Количество"
+    },
+    "motorsVoltage": {
+        "message": "Волтаж:"
+    },
+    "motorsADrawing": {
+        "message": "Ампераж:"
+    },
+    "motorsmAhDrawn": {
+        "message": "Amp. drawn:"
+    },
+    "motorsVoltageValue": {
+        "message": "$1 V"
+    },
+    "motorsADrawingValue": {
+        "message": "$1 A"
+    },
+    "motorsmAhDrawnValue": {
+        "message": "$1 mAh"
+    },
+    "motorsText": {
+        "message": "Мотори"
+    },
+    "motorNumber1": {
+        "message": "Мотор - 1"
+    },
+    "motorNumber2": {
+        "message": "Мотор - 2"
+    },
+    "motorNumber3": {
+        "message": "Мотор - 3"
+    },
+    "motorNumber4": {
+        "message": "Мотор - 4"
+    },
+    "motorNumber5": {
+        "message": "Мотор - 5"
+    },
+    "motorNumber6": {
+        "message": "Мотор - 6"
+    },
+    "motorNumber7": {
+        "message": "Мотор - 7"
+    },
+    "motorNumber8": {
+        "message": "Мотор - 8"
+    },
+    "servosText": {
+        "message": "Серво машинки"
+    },
+    "servoNumber1": {
+        "message": "Серво машинка -1 "
+    },
+    "servoNumber2": {
+        "message": "Серво машинка -2 "
+    },
+    "servoNumber3": {
+        "message": "Серво машинка -3 "
+    },
+    "servoNumber4": {
+        "message": "Серво машинка -4 "
+    },
+    "servoNumber5": {
+        "message": "Серво машинка -5 "
+    },
+    "servoNumber6": {
+        "message": "Серво машинка -6 "
+    },
+    "servoNumber7": {
+        "message": "Серво машинка -7 "
+    },
+    "servoNumber8": {
+        "message": "Серво машинка -8 "
+    },
+    "motorsResetMaximumButton": {
+        "message": "Нулиране"
+    },
+    "motorsResetMaximum": {
+        "message": "Reset overtime maximum"
+    },
+    "motorsSensorGyroSelect": {
+        "message": "жиро"
+    },
+    "motorsSensorAccelSelect": {
+        "message": "аксел"
+    },
+    "motorsTelemetryHelp": {
+        "message": "Тези цифри показват телеметричните данни получени от ESC-тата, ако са налични. Може да показват и актуалните обороти на моторите(RPM), честотата на грешките от връзката с телетрията и температурата на ESC-тата.",
+        "description": "Help text for the telemetry values in the motors tab."
+    },
+    "motorsRPM": {
+        "message": "R: {{motorsRpmValue}}",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
+    },
+    "motorsRPMError": {
+        "message": "E: {{motorsErrorValue}}%",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the error of motor telemetry if available."
+    },
+    "motorsESCTemperature": {
+        "message": "T: {{motorsESCTempValue}}&deg;C",
+        "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Shows the ESC temperature if available."
+    },
+    "motorsMaster": {
+        "message": "Master"
+    },
+    "motorsNotice": {
+        "message": "<strong>Тестване на моторите / армване Забележка:</strong><br />Движенето на слайдовете или армването на вашия дрон чрез трансмитер ще накара моторите да се <strong>завъртят</strong>.<br />С цел избягване на нараняване <strong class=\"message-negative\">премахнете ВСИЧКИ витла</strong> преди да използвате тази функция.<br />Включването на тестовия режим на моторите, врменно ще изключи Runaway Takeoff Prevention, за да предотвратите дизармване на дрона когато тестване без витла.<br />"
+    },
+    "motorsEnableControl": {
+        "message": "<strong>Поемам рисковете</strong>, витлата са премахнати - включи управлението на моторите и армването, и изключи Runaway Takeoff Prevention."
+    },
+    "motorOutputReorderDialogClose": {
+        "message": "Отмени"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Старт"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Пренареждане на моторите"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Пренареждане на моторите"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Кликнете на съртящия се мотор"
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Готово! Провери посоката на въртене на моторите натискайки на изображението."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Поемам рисковете</strong>,<br /> витлата са премахнати."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Запази"
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Посока на въртене на мотора"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Нормален"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "На обратно"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Тествай мотор"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Индивидуален"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Помощник"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Спиране на мотори"
+    },
+    "sensorsRefresh": {
+        "message": "Обнови:"
+    },
+    "sensorsScale": {
+        "message": "Мащаб:"
+    },
+    "sensorsGyroSelect": {
+        "message": "Жироскоп"
+    },
+    "sensorsAccelSelect": {
+        "message": "Акселерометър"
+    },
+    "sensorsMagSelect": {
+        "message": "Магнитометър (компас)"
+    },
+    "sensorsAltitudeSelect": {
+        "message": "Височина"
+    },
+    "sensorsSonarSelect": {
+        "message": "Сонар"
+    },
+    "sensorsDebugSelect": {
+        "message": "Дебъг"
+    },
+    "sensorsGyroTitle": {
+        "message": "Жироскоп ( градуси в секунда)"
+    },
+    "sensorsAccelTitle": {
+        "message": "Акселерометър - градуси"
+    },
+    "sensorsMagTitle": {
+        "message": "Магнитометър (компас)"
+    },
+    "sensorsAltitudeTitle": {
+        "message": "Височина в метри"
+    },
+    "sensorsSonarTitle": {
+        "message": "Сонар в сантиметри"
+    },
+    "sensorsDebugTitle": {
+        "message": "Дебъг"
+    },
+    "cliSaveToFileBtn": {
+        "message": "Запазете във файл"
+    },
+    "cliCopyToClipboardBtn": {
+        "message": "Копиране в клипборда"
+    },
+    "cliCopySuccessful": {
+        "message": "Копирано!"
+    },
+    "loggingLogSize": {
+        "message": "Размер на логовете:"
+    },
+    "loggingButtonLogFile": {
+        "message": "Избери лог файл"
+    },
+    "loggingStart": {
+        "message": "Започни логване"
+    },
+    "loggingStop": {
+        "message": "Спри логването"
+    },
+    "loggingErrorLogFile": {
+        "message": "Моля изберете файл"
+    },
+    "blackboxConfiguration": {
+        "message": "Конфигурация на черната кутия"
+    },
+    "dataflashUsedSpace": {
+        "message": "Използвано място:"
+    },
+    "dataflashFreeSpace": {
+        "message": "Свободно пространство:"
+    },
+    "dataflashLogsSpace": {
+        "message": "Свободно пространство за логове"
+    },
+    "dataflashButtonSaveCancel": {
+        "message": "Отмени"
+    },
+    "dataflashButtonSaveDismiss": {
+        "message": "Ок"
+    },
+    "firmwareFlasherReleaseManufacturer": {
+        "message": "ID на производителя:"
+    },
+    "firmwareFlasherReleaseVersion": {
+        "message": "Вервия:"
+    },
+    "firmwareFlasherReleaseDate": {
+        "message": "Дата:"
+    },
+    "firmwareFlasherUnifiedTargetDate": {
+        "message": "Дата:"
+    },
+    "firmwareFlasherReleaseFileUrl": {
+        "message": "Изтеглете ръчно"
+    },
+    "firmwareFlasherPath": {
+        "message": "Път:"
+    },
+    "firmwareFlasherSize": {
+        "message": "Размер:"
+    },
+    "firmwareFlasherStatus": {
+        "message": "Статус:"
+    },
+    "firmwareFlasherProgress": {
+        "message": "Напредък: "
+    },
+    "firmwareFlasherLoadFirmwareFile": {
+        "message": "Моля заредете файл с инсталационен софтуер"
+    },
+    "firmwareFlasherFullChipErase": {
+        "message": "Пълно изтриване на чипа"
+    },
+    "ledStripFunctionBatteryOption": {
+        "message": "Батерия",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionRSSIOption": {
+        "message": "Сила на радиосигнала (RSSI)",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionGPSOption": {
+        "message": "ГПС",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripModeColorsModeOrientation": {
+        "message": "Ориентация",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHorizon": {
+        "message": "Хоризонт",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAngle": {
+        "message": "Ъгъл",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeMag": {
+        "message": "Магнитомер (компас)",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeBaro": {
+        "message": "Барометър",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripDirN": {
+        "message": "Север",
+        "description": "North direction in Color Mode in Led Strip"
+    },
+    "ledStripDirE": {
+        "message": "Изток",
+        "description": "East direction in Color Mode in Led Strip"
+    },
+    "ledStripDirS": {
+        "message": "Юг",
+        "description": "South direction in Color Mode in Led Strip"
+    },
+    "ledStripDirW": {
+        "message": "Запад",
+        "description": "West direction in Color Mode in Led Strip"
+    },
+    "ledStripDirU": {
+        "message": "Горе",
+        "description": "Up direction in Color Mode in Led Strip"
+    },
+    "ledStripDirD": {
+        "message": "Долу",
+        "description": "Down direction in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeDisarmed": {
+        "message": "Мотори деактивирани",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeArmed": {
+        "message": "Мотори включени",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeAnimation": {
+        "message": "Анимация",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSNoSats": {
+        "message": "ГПС - няма сателити",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeGPSLocked": {
+        "message": "ГПС - има заключена позиция",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripWiring": {
+        "message": "Свързване на светодиодна лента",
+        "description": "One of the modes in Led Strip"
+    },
+    "ledStripBlinkTitle": {
+        "message": "Мигане"
+    },
+    "ledStripBlinkAlwaysOverlay": {
+        "message": "Непрекъснато мигане"
+    },
+    "ledStripBlinkLandingOverlay": {
+        "message": "Мигане при кацане"
+    },
+    "ledStripOverlayTitle": {
+        "message": "Наслагване"
+    },
+    "ledStripWarningsOverlay": {
+        "message": "Предупреждения"
+    },
+    "colorBlack": {
+        "message": "черно"
+    },
+    "colorWhite": {
+        "message": "бяло"
+    },
+    "colorRed": {
+        "message": "червено"
+    },
+    "colorOrange": {
+        "message": "оранжево"
+    },
+    "colorYellow": {
+        "message": "жълто"
+    },
+    "colorGreen": {
+        "message": "зелено"
+    },
+    "colorMintGreen": {
+        "message": "ментово зелено"
+    },
+    "colorCyan": {
+        "message": "синьозелено"
+    },
+    "colorLightBlue": {
+        "message": "светлосиньо"
+    },
+    "colorBlue": {
+        "message": "синьо"
+    },
+    "colorDarkViolet": {
+        "message": "тъмно виолетово"
+    },
+    "colorMagenta": {
+        "message": "магента"
+    },
+    "colorDeepPink": {
+        "message": "наситено розово"
+    },
+    "controlAxisThrottle": {
+        "message": "Тротъл[T]"
+    },
+    "controlAxisAux1": {
+        "message": "Допълнителен 1"
+    },
+    "controlAxisAux2": {
+        "message": "Допълнителен 2"
+    },
+    "controlAxisAux3": {
+        "message": "Допълнителен 3"
+    },
+    "controlAxisAux4": {
+        "message": "Допълнителен 4"
+    },
+    "controlAxisAux5": {
+        "message": "Допълнителен 5"
+    },
+    "controlAxisAux6": {
+        "message": "Допълнителен 6"
+    },
+    "controlAxisAux7": {
+        "message": "Допълнителен 7"
+    },
+    "controlAxisAux8": {
+        "message": "Допълнителен 8"
+    },
+    "controlAxisAux9": {
+        "message": "Допълнителен 9"
+    },
+    "controlAxisAux10": {
+        "message": "Допълнителен 10"
+    },
+    "controlAxisAux11": {
+        "message": "Допълнителен 11"
+    },
+    "controlAxisAux12": {
+        "message": "Допълнителен 12"
+    },
+    "controlAxisAux13": {
+        "message": "Допълнителен 13"
+    },
+    "controlAxisAux14": {
+        "message": "Допълнителен 14"
+    },
+    "controlAxisAux15": {
+        "message": "Допълнителен 15"
+    },
+    "controlAxisAux16": {
+        "message": "Допълнителен 16"
+    },
+    "pidTuningSliderDefaultFiltering": {
+        "message": "Филтриране по подразбиране",
+        "description": "Filter tuning slider default header"
+    },
+    "pidTuningSliderHighFiltering": {
+        "message": "Още Филтри",
+        "description": "Filter tuning slider high header"
+    },
+    "pidTuningSliderLow": {
+        "message": "Ниско",
+        "description": "Tuning Slider Low header"
+    },
+    "pidTuningSliderDefault": {
+        "message": "По подразбиране",
+        "description": "Tuning Slider Default header"
+    },
+    "pidTuningSliderHigh": {
+        "message": "Високо",
+        "description": "Tuning Slider High header"
+    },
+    "pidTuningRpmFilterGroup": {
+        "message": "Жироскопен филтър на оборотите",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningItermRelaxAxes": {
+        "message": "Оси",
+        "description": "Iterm Relax Axes selection"
+    },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "Жиро"
+    },
+    "pidTuningItermRelaxTypeOptionSetpoint": {
+        "message": "Работните точки"
+    },
+    "pidTuningThrottleBoost": {
+        "message": "Усилване на газта"
+    },
+    "failsafeProcedureItemSelect1": {
+        "message": "Приземяване"
+    },
+    "failsafeProcedureItemSelect2": {
+        "message": "Падане"
+    },
+    "failsafeProcedureItemSelect4": {
+        "message": "ГПС спасяване"
+    },
+    "failsafeGpsRescueItemAngle": {
+        "message": "Ъгъл"
+    },
+    "failsafeGpsRescueItemInitialAltitude": {
+        "message": "Първоначална височина (метри)"
+    },
+    "failsafeGpsRescueItemDescentDistance": {
+        "message": "Близко разстояние (метри)"
+    },
+    "failsafeGpsRescueItemGroundSpeed": {
+        "message": "Скорост спрямо земята (метри в секунда)"
+    },
+    "failsafeGpsRescueItemThrottleMin": {
+        "message": "Минимум газ"
+    },
+    "failsafeGpsRescueItemThrottleMax": {
+        "message": "Максимум газ"
+    },
+    "failsafeGpsRescueItemThrottleHover": {
+        "message": "Газ, необходима за поддържане на една височина"
+    },
+    "failsafeGpsRescueItemAscendRate": {
+        "message": "Скорост на вдигане (метри в секунда)"
+    },
+    "failsafeGpsRescueItemDescendRate": {
+        "message": "Скорост на снижаване (метри в секунда)"
+    },
+    "failsafeGpsRescueItemMinSats": {
+        "message": "Минимален брой сателити"
+    },
+    "failsafeGpsRescueItemAltitudeModeMaxAlt": {
+        "message": "Максимална височина"
+    },
+    "failsafeGpsRescueItemSanityChecksOff": {
+        "message": "Изкл."
+    },
+    "powerBatteryCurrentMeterTypeNone": {
+        "message": "Няма"
+    },
+    "powerBatteryCurrentMeterTypeVirtual": {
+        "message": "Виртуален"
+    },
+    "powerBatteryCurrentMeterTypeEsc": {
+        "message": "Сензор на спийд контролера"
+    },
+    "powerBatteryMinimum": {
+        "message": "Максимален волтаж в клетка"
+    },
+    "powerBatteryMaximum": {
+        "message": "Максимален волтаж в клетка"
+    },
+    "powerBatteryWarning": {
+        "message": "Предупреждение за волтаж в клетка"
+    },
+    "powerCalibrationManagerButton": {
+        "message": "Калибрация"
+    },
+    "powerCalibrationManagerTitle": {
+        "message": "Мениджър за калибриране"
+    },
+    "powerCalibrationManagerHelp": {
+        "message": "За да калибрирате, използвайте мултицет да измерите истинския волтаж и разход на електричество на вашия летателен апарат ( с инсталирана батерия) и въведете стойностите отдолу. След това със същата батерия, все още включена натиснете [Calibrate]"
+    },
+    "powerCalibrationSave": {
+        "message": "Калибрирай"
+    },
+    "powerVoltageHead": {
+        "message": "Измерване на волтажа"
+    },
+    "powerVoltageId10": {
+        "message": "Батерия"
+    },
+    "powerVoltageId20": {
+        "message": "5 волта"
+    },
+    "powerVoltageId30": {
+        "message": "9 волта"
+    },
+    "powerVoltageId40": {
+        "message": "12 волта"
+    },
+    "powerVoltageId60": {
+        "message": "Спийд контролер на мотор 1"
+    },
+    "powerVoltageId61": {
+        "message": "Спийд контролер на мотор 2"
+    },
+    "powerVoltageId62": {
+        "message": "Спийд контролер на мотор 3"
+    },
+    "powerVoltageId63": {
+        "message": "Спийд контролер на мотор 4"
+    },
+    "powerVoltageId64": {
+        "message": "Спийд контролер на мотор 5"
+    },
+    "powerVoltageId65": {
+        "message": "Спийд контролер на мотор 6"
+    },
+    "powerVoltageId66": {
+        "message": "Спийд контролер на мотор 7"
+    },
+    "powerVoltageId67": {
+        "message": "Спийд контролер на мотор 8"
+    },
+    "powerVoltageId68": {
+        "message": "Спийд контролер на мотор 9"
+    },
+    "powerVoltageId69": {
+        "message": "Спийд контролер на мотор 10"
+    },
+    "powerVoltageId70": {
+        "message": "Спийд контролер на мотор 11"
+    },
+    "powerVoltageId71": {
+        "message": "Спийд контролер на мотор 12"
+    },
+    "powerVoltageScale": {
+        "message": "Мащаб"
+    },
+    "powerVoltageMultiplier": {
+        "message": "Стойност за умножаване"
+    },
+    "powerAmperageId60": {
+        "message": "Спийд контролер на мотор 1"
+    },
+    "powerAmperageId61": {
+        "message": "Спийд контролер на мотор 2"
+    },
+    "powerAmperageId62": {
+        "message": "Спийд контролер на мотор 3"
+    },
+    "powerAmperageId63": {
+        "message": "Спийд контролер на мотор 4"
+    },
+    "powerAmperageId64": {
+        "message": "Спийд контролер на мотор 5"
+    },
+    "powerAmperageId65": {
+        "message": "Спийд контролер на мотор 6"
+    },
+    "powerAmperageId66": {
+        "message": "Спийд контролер на мотор 7"
+    },
+    "powerAmperageId67": {
+        "message": "Спийд контролер на мотор 8"
+    },
+    "powerAmperageId68": {
+        "message": "Спийд контролер на мотор 9"
+    },
+    "powerAmperageId69": {
+        "message": "Спийд контролер на мотор 10"
+    },
+    "powerAmperageId70": {
+        "message": "Спийд контролер на мотор 11"
+    },
+    "powerAmperageId71": {
+        "message": "Спийд контролер на мотор 12"
+    },
+    "powerAmperageId80": {
+        "message": "Виртуален"
+    },
+    "powerAmperageId90": {
+        "message": "Сериен протокол MSP"
+    },
+    "powerBatteryHead": {
+        "message": "Батерия"
+    },
+    "powerStateHead": {
+        "message": "Състояние на захранването"
+    },
+    "powerBatteryConnected": {
+        "message": "Свързан"
+    },
+    "powerBatteryConnectedValueYes": {
+        "message": "Да"
+    },
+    "powerBatteryConnectedValueNo": {
+        "message": "Не"
+    },
+    "powerBatteryVoltage": {
+        "message": "Волтаж"
+    },
+    "powerBatteryCurrentDrawn": {
+        "message": "използвани милиампери"
+    },
+    "powerBatteryAmperage": {
+        "message": "Ампераж"
+    },
+    "powerBatteryCapacity": {
+        "message": "Капацитет (в милиампери)"
+    },
+    "osdSetupTitle": {
+        "message": "Показване върху дисплея (OSD)"
+    },
+    "osdSetupProfilesTitle": {
+        "message": "Номер на OSD профил",
+        "description": "Description of the header of the OSD elements column associated to each profile"
+    },
+    "osdSetupElementsTitle": {
+        "message": "Елементи"
+    },
+    "osdSetupPreviewSelectProfileTitle": {
+        "message": "Преглед на",
+        "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
+    },
+    "osdSetupSelectedProfileTitle": {
+        "message": "Активен OSD профил",
+        "description": "Title of the box to select the current active OSD profile"
+    },
+    "osdSetupSelectedProfileLabel": {
+        "message": "Текущ:",
+        "description": "Label for the selection of the curren active OSD profile"
+    },
+    "osdSetupPreviewSelectProfileElement": {
+        "message": "OSD профил",
+        "description": "Content of the selector for the OSD Profile in the preview"
+    },
+    "osdSetupPreviewSelectFontElement": {
+        "message": "Шрифт",
+        "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupVideoFormatTitle": {
+        "message": "Видео формат"
+    },
+    "osdSetupVideoFormatOptionAuto": {
+        "message": "Автоматично",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionPal": {
+        "message": "ПАЛ (PAL) аналогов тв стандарт",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupVideoFormatOptionNtsc": {
+        "message": "NTSC аналогов тв стандарт",
+        "description": "Option for the video format in the OSD"
+    },
+    "osdSetupUnitsTitle": {
+        "message": "Мерни единици"
+    },
+    "osdSetupUnitsOptionImperial": {
+        "message": "Имперска",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionMetric": {
+        "message": "Метрична",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "Английска мерна система",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupAlarmsTitle": {
+        "message": "Аларми"
+    },
+    "osdSetupVtxTitle": {
+        "message": "Настройки на видеопредавателя"
+    },
+    "osdSetupCraftNameTitle": {
+        "message": "Име на апарата"
+    },
+    "osdSetupWarningsTitle": {
+        "message": "Предупреждения"
+    },
+    "osdSetupFontPresets": {
+        "message": "Настройки на шрифта"
+    },
+    "osdSetupFontPresetsSelectorOr": {
+        "message": "или"
+    },
+    "osdSetupOpenFont": {
+        "message": "Отвори файл с шрифт"
+    },
+    "osdSetupCustomLogoTitle": {
+        "message": "Лого при включване"
+    },
+    "osdSetupCustomLogoInfoTitle": {
+        "message": "По избор изображение"
+    },
+    "osdSetupUploadFont": {
+        "message": "Качване на шрифтове"
+    },
+    "osdSetupUploadingFont": {
+        "message": "Качване…"
+    },
+    "osdTextElementArtificialHorizon": {
+        "message": "Линия показваща хоризонта",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementArtificialHorizon": {
+        "message": "Индикатор за линията показваща хоризонта"
+    },
+    "osdTextElementHorizonSidebars": {
+        "message": "Странична скала за линията показваща хоризонта",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCurrentDraw": {
+        "message": "Моментен разход на батерия",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementMahDrawn": {
+        "message": "Изразходена батерия в милиампери",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCraftName": {
+        "message": "Име на апарата",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementAltitude": {
+        "message": "Височина",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementFlyTime": {
+        "message": "Полетно време",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementFlyTime": {
+        "message": "Общо време през което апарата е бил арм-нат "
+    },
+    "osdTextElementFlyMode": {
+        "message": "Режим на полет",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementFlyMode": {
+        "message": "Текущ режим на полет"
+    },
+    "osdTextElementGPSSpeed": {
+        "message": "Скорост измерена с ГПС",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementGPSSats": {
+        "message": "Брой сателити",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementGPSSats": {
+        "message": "Брой сателити, неободим за ГПС фикс"
+    },
+    "osdTextElementGPSLon": {
+        "message": "ГПС географска дължина",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementGPSLon": {
+        "message": "ГПС географска дължина координата"
+    },
+    "osdTextElementGPSLat": {
+        "message": "ГПС географска ширина",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementGPSLat": {
+        "message": "ГПС географска ширина координата"
+    },
+    "osdTextElementDebug": {
+        "message": "Дебъг",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementDebug": {
+        "message": "Променливи за дебъгване"
+    },
+    "osdTextElementTimer2": {
+        "message": "Таймер 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCoreTemperature": {
+        "message": "Температура в ядрото",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextAntiGravity": {
+        "message": "Антигравитация",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementMotorDiag": {
+        "message": "Диагностика на мотори",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementLogStatus": {
+        "message": "Статус на черната кутия",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextStatMaxSpeed": {
+        "message": "Максимална скорост",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatMinRssi": {
+        "message": "Минимална сила на сигнала (RSSI)",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatMinRssi": {
+        "message": "Минимална записана сила на сигнала(RSSI)"
+    },
+    "osdTextStatFlyTime": {
+        "message": "Общо време полет",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatBlackboxLogNumber": {
+        "message": "Номер на черна кутия",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatTimer1": {
+        "message": "Таймер 1",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatTimer2": {
+        "message": "Таймер 2",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatTotalFlightTime": {
+        "message": "Общо време на полет",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdTextStatTotalFlightDistance": {
+        "message": "Обща дължина на полета",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatTotalFlightDistance": {
+        "message": "Общо изминато разстояние "
+    },
+    "osdWarningTextBatteryWarning": {
+        "message": "Предупреждение за батерията",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningTextEscFail": {
+        "message": "Грешка в Спиид контролера",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningTextFailsafe": {
+        "message": "Режим на сигурност",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningTextRSSI": {
+        "message": "Сила на радиосигнала (RSSI)",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "osdWarningTextLinkQuality": {
+        "message": "Kaчество на сигнала",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
+    "craftName": {
+        "message": "Име на апарата"
+    },
+    "onboardLoggingDebugModeUnknown": {
+        "message": "НЕЗНАЕН"
+    },
+    "dialogFileNameTitle": {
+        "message": "Име на файла"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Презапиши ?"
     }
 }
