@@ -1868,6 +1868,9 @@
         "message": "<span class=\"message-negative\">Важно:</span> Препоръчваме  ви да използвате плъзгача за да промените настойките на филтъра. Движете двата плъзгача заедно.<br> Най-добре е да правите малки промени и да правите тестов полет след всяка промяна. Проверявайте температурата на моторите обстойно преди да правите бъдещи промени.<br>По-малка филтрация (плъзгачите надясно, по-високи гранични стойности) ще подобрят  вибрациите (propwash), моторите ще станат по-шумни, което ще ги накара да загряват, ще ги загрява до толкова, че е възможно да ги изгорите.  По-малката филтрация е възможна на най-свежите конфигурации и ако rpm филтъра е включен.<br>Необичайните високи или ниски настройки на филтъра могат да причинят странно поведение след армване на дрона. Настойките по подразбиране са безопасни за обичайните 5” дрони.<br><strong>Забележка:</strong> Промяна на профилите ще промени само стойносттана на D-term филтъра. Gyro filter стойностита са еднакви за всички профили.",
         "description": "Filter tuning subtab note"
     },
+    "filterWarning": {
+        "message": "<span class = \"message-negative\"> <b> Предупреждение: </b> </span> Количеството филтриране, което използвате, е опасно ниско. Това вероятно ще затрудни плавателния съд и може да доведе до проблеми. Силно се препоръчва да <b> активирате поне един от динамичните нискочестотни или жиро-нискочестотни 1 и поне един от динамичните нискочестотни или D-терминални нискочестотни 1 </b>."
+    },
     "receiverThrottleMid": {
         "message": "Throttle Средно положение"
     },
@@ -1891,6 +1894,24 @@
     },
     "receiverHelpStickMax": {
         "message": "Минималната стойност (в us) на стика за да бъде разпознат като максимален(MAX_STICK_INPUT)."
+    },
+    "receiverDeadband": {
+        "message": "RC Мъртва зона"
+    },
+    "receiverHelpDeadband": {
+        "message": "Това са стойностите по това колко RC входът може да бъде различен, преди да се счита за валиден. За предаватели с трептене на изходите тази стойност може да се увеличи, ако RC входовете се потрепват в неактивен режим."
+    },
+    "receiverYawDeadband": {
+        "message": "Yaw Мъртва зона"
+    },
+    "receiverHelpYawDeadband": {
+        "message": "Това са стойностите по това колко RC входът може да бъде различен, преди да се счита за валиден. За предаватели с трептене на изходите тази стойност може да бъде увеличена, ако RC входовете се потрепват в неактивен режим. <strong> Тази настройка е само за Yaw. </strong>"
+    },
+    "recevier3dDeadbandThrottle": {
+        "message": "3D газ Мъртва зона"
+    },
+    "receiverHelp3dDeadbandThrottle": {
+        "message": "Това са стойностите. За да се разшири неутралната зона трябва да се увеличи стойността. <strong> Тази настройка е само за 3D газ. </strong>"
     },
     "receiverChannelMap": {
         "message": "Разпределяне на канали"
@@ -1946,6 +1967,9 @@
     "receiverMspEnableButton": {
         "message": "Активиране на контролите"
     },
+    "auxiliaryHelp": {
+        "message": "Конфигурирайте режимите тук, като използвате комбинация от диапазони и / или връзки към други режими (връзки, поддържани от BF 4.0 и по-нови версии). Използвайте <strong> диапазони </strong>, за да дефинирате превключвателите на вашия предавател и съответните задания за режим. Каналът на приемника, който дава отчитане между диапазон min / max, ще активира режима. Използвайте <strong> връзка </strong>, за да активирате режим, когато е активиран друг режим. <strong> Изключения: </strong> ARM не може да бъде свързан към или от друг режим, режимите не могат да бъдат свързани с други режими, които са конфигурирани с връзка (верижни връзки). Множество обхвати / връзки могат да се използват за активиране на всеки режим. Ако има дефинирани повече от един обхват / връзка за даден режим, всеки от тях може да бъде настроен на <strong> И </strong> или <strong> ИЛИ </strong>. Режим ще се активира, когато: <br /> - ВСИЧКИ <strong> И </strong> обхвати / връзки са активни; ИЛИ <br /> - активен е поне един <strong> ИЛИ </strong> диапазон / връзка. <br /> <br /> Не забравяйте да запазите настройките си, като използвате бутона Запазване."
+    },
     "auxiliaryToggleUnused": {
         "message": "Скрий неизползваните режими"
     },
@@ -1979,6 +2003,12 @@
     },
     "auxiliaryModeLogicAND": {
         "message": "И"
+    },
+    "adjustmentsHelp": {
+        "message": "Конфигурирайте превключвателите за настройка. За подробности вижте раздела „Настройки по време на полет“ в ръководството. Промените, които извършват функциите за настройка, не се записват автоматично."
+    },
+    "adjustmentSlotsHelp": {
+        "message": "Има 4 слота. Всеки превключвател, използван за едновременно извършване на корекции, изисква изключително използване на слот."
     },
     "adjustmentsExamples": {
         "message": "Примери:"
@@ -2061,11 +2091,131 @@
     "adjustmentsFunction11": {
         "message": "Yaw D Конфигурация"
     },
+    "adjustmentsFunction12": {
+        "message": "Избор на профил за Rate"
+    },
+    "adjustmentsFunction13": {
+        "message": "Pitch Rate"
+    },
+    "adjustmentsFunction14": {
+        "message": "Roll Rate"
+    },
+    "adjustmentsFunction15": {
+        "message": "Pitch P Кофигурация"
+    },
+    "adjustmentsFunction16": {
+        "message": "Pitch I Кофигурация"
+    },
+    "adjustmentsFunction17": {
+        "message": "Pitch D Кофигурация"
+    },
+    "adjustmentsFunction18": {
+        "message": "Roll P Кофигурация"
+    },
+    "adjustmentsFunction19": {
+        "message": "Roll I Кофигурация"
+    },
+    "adjustmentsFunction20": {
+        "message": "Roll D Кофигурация"
+    },
+    "adjustmentsFunction21": {
+        "message": "RC Rate Yaw"
+    },
+    "adjustmentsFunction22": {
+        "message": "D Зададена точка"
+    },
+    "adjustmentsFunction22_2": {
+        "message": "Pitch & Roll F Конфигурация"
+    },
+    "adjustmentsFunction23": {
+        "message": "D Setpoint преход"
+    },
+    "adjustmentsFunction23_2": {
+        "message": "Feedforward преход"
+    },
+    "adjustmentsFunction24": {
+        "message": "Регулиране на опция Horizon"
+    },
+    "adjustmentsFunction25": {
+        "message": "PID-Избор на аудио"
+    },
+    "adjustmentsFunction26": {
+        "message": "Pitch F Кофигурация"
+    },
+    "adjustmentsFunction27": {
+        "message": "Roll F Кофигурация"
+    },
+    "adjustmentsFunction28": {
+        "message": "Yaw F Кофигурация"
+    },
+    "adjustmentsFunction29": {
+        "message": "OSD Избор на профил"
+    },
+    "adjustmentsFunction30": {
+        "message": "LED Избор на профил"
+    },
+    "adjustmentsSave": {
+        "message": "Запази"
+    },
+    "adjustmentsEepromSaved": {
+        "message": "EEPROM<span class=\"message-positive\">записан</span>"
+    },
+    "transponderNotSupported": {
+        "message": "Фърмуерът на вашия полетен контролер не поддържа функционалност на транспондера."
+    },
+    "transponderInformation": {
+        "message": "Системите за транспондери позволяват на организаторите на състезания да определят времето ви. Транспондерът е монтиран на вашето въздухоплавателно средство и когато вашето въздухоплавателно средство минава през синхронизиращата врата, приемникът от страната на коловоза регистрира вашия код и записва времето ви на престой. Когато монтирате IR базиран транспондер, трябва да се уверите, че той сочи навън от вашия дрон към приемниците от страната на коловоза и че светлинният лъч не е възпрепятстван от вашия планер, ленти за батерии, кабели, витла и др."
+    },
+    "transponderConfigurationType": {
+        "message": "Тип транспондер"
+    },
     "transponderType0": {
         "message": "Няма"
     },
+    "transponderType1": {
+        "message": "iLap"
+    },
+    "transponderType2": {
+        "message": "aRCiTimer"
+    },
+    "transponderType3": {
+        "message": "ERLT"
+    },
+    "transponderConfiguration1": {
+        "message": "Конфигурация iLAP"
+    },
+    "transponderConfiguration2": {
+        "message": "Конфигурация aRCiTimer"
+    },
+    "transponderConfiguration3": {
+        "message": "Конфигурация ERLT"
+    },
     "transponderData1": {
         "message": "Данни"
+    },
+    "transponderData2": {
+        "message": "Транспондер ID"
+    },
+    "transponderData3": {
+        "message": "Транспондер ID"
+    },
+    "transponderDataHelp1": {
+        "message": "Само шестнадесетични цифри, 0-9, A-F"
+    },
+    "transponderHelp1": {
+        "message": "Конфигурирайте вашия код на транспондер тук. Бележка: Системите за синхронизиране на състезанията ще разпознават само валидни кодове. Валидни кодове на транспондери могат да бъдат получени от <a href=\"http://seriouslypro.com/transponder-codes\" target=\"_blank\" rel=\"noopener noreferrer\"> Seriously Pro </a>."
+    },
+    "transponderHelp2": {
+        "message": "За повече информация, моля, посетете <a href=\"http://www.arcitimer.com/\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\"> aRCiTimer сайт </a>"
+    },
+    "transponderDataHelp3": {
+        "message": "Избирам ERLT ID 0-63"
+    },
+    "transponderHelp3": {
+        "message": "За повече информация, моля, посетете <a href=\"https://github.com/polyvision/EasyRaceLapTimer\" title=\"aRCiTimer\" target=\"_blank\" rel=\"noopener noreferrer\"> EasyRaceLapTimer сайт </a>"
+    },
+    "transponderButtonSave": {
+        "message": "Запази"
     },
     "transponderButtonSaveReboot": {
         "message": "Запази и Рестартирай"
@@ -2299,8 +2449,29 @@
     "motorsRemapDialogUnderstandRisks": {
         "message": "<strong>Поемам рисковете</strong>,<br /> витлата са премахнати."
     },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong> Бележка за безопасност </strong> <br /> <strong class = \"message-negative\"> Премахнете всички витла, за да предотвратите нараняване! </strong> <br /> Двигателите <strong> ще се завъртят!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong> Информационно известие </strong> <br /> Двигателите ще се въртят един по един и вие ще можете да изберете кой двигател да се върти. Батерията трябва да бъде включена, трябва да бъде избран правилен ESC протокол. Тази програма може да пренареди само активни в момента двигатели. По-сложното повторно картографиране изисква командата CLI Resource. Обърнете се към тази <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\"> Wiki страница </a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Запази"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Стартиране отначало"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Посока на двигателя - <strong class=\"message-negative-italic\">Предупреждение: Уверете се, че витлата са премахнати! </strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Изберете един или всички двигатели"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Двигателите ще се завъртят, когато бъдат избрани!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Бележка за безопасност</strong><br /><strong class=\"message-negative-italic\">Отстранете всички витла, за да предотвратите нараняване!</strong><br />Двигателите<strong>ще се въртят</strong> веднага при избор!"
     },
     "escDshotDirectionDialog-Open": {
         "message": "Посока на въртене на мотора"
