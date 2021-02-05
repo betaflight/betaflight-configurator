@@ -49,6 +49,13 @@
     "portsSelectManual": {
         "message": "Wybór ręczny"
     },
+    "portsSelectVirtual": {
+        "message": "Tryb wirtualny (Eksperymentalny)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Wersja wirtualnego oprogramowania"
+    },
     "portOverrideText": {
         "message": "Port:"
     },
@@ -1361,6 +1368,12 @@
     "configurationButtonSave": {
         "message": "Zapisz i zrestartuj"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Zakres dynamicznego filtra wycinającego"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE: Niektóre wartości dynamicznego filtru wycinającego zostały zmienione na wartości domyślne</b></span> ponieważ filtrowanie RPM zostało aktywowane/dezaktywowane.<br> Proszę sprawdzić ustawienia przed lotem."
+    },
     "dialogDynFiltersConfirm": {
         "message": "OK"
     },
@@ -1669,6 +1682,18 @@
     },
     "pidTuningFfInterpolate": {
         "message": "Tryb"
+    },
+    "pidTuningFfInterpolateSpOptionNoAverage": {
+        "message": "Nieprzeciętna"
+    },
+    "pidTuningFfInterpolateSpOptionAverage2": {
+        "message": "Przeciętna 2"
+    },
+    "pidTuningFfInterpolateSpOptionAverage3": {
+        "message": "Przeciętna 3"
+    },
+    "pidTuningFfInterpolateSpOptionAverage4": {
+        "message": "Przeciętna 4"
     },
     "pidTuningFfSmoothFactor": {
         "message": "Wygładzenie"
@@ -2445,8 +2470,20 @@
     "escDshotDirectionDialog-SelectMotorSafety": {
         "message": "Silniki będą kręciły się po wybraniu!"
     },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Informacja bezpieczeństwa</strong><br /><strong class=\"message-negative-italic\">zdejmij wszystkie śmigła, aby zapobiec urazom!</strong><br />Silniki <strong>będą włączone!</strong>!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Rozumiem ryzyko</strong>,<br />śmigła są zdjęte."
+    },
     "escDshotDirectionDialog-InformationNotice": {
         "message": "<strong>Notatka informacyjna</strong><br />Aby zmienić kierunek obrotu silnika podłącz baterie oraz wybierz prawidłowy protokół ESC. Możesz to zrobić w $t(tabConfiguration.message). Pamiętaj, że nie wszystkie ESC z protokołem Dshot będą wspierały tę funkcje. Sprawdź czy twoje ESC obsługuje funkcje zmiany kierunku obrotów."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Ustaw kierunek obrotu silnika poprzez wybranie każdego silnika osobno."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Resetuje kierunek obrotów we wszystkich silnikach, a następnie pozwala użytkownikowi wybrać, które z nich odwrócić."
     },
     "escDshotDirectionDialog-Open": {
         "message": "Kierunek obrotów silnika"
@@ -2463,11 +2500,41 @@
     "escDshotDirectionDialog-ReleaseButtonToStop": {
         "message": "Aby zatrzymać zwolnij przycisk"
     },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Puść, aby zatrzymać"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Indywidualny"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Kreator"
+    },
     "escDshotDirectionDialog-SetDirectionHint": {
         "message": "Zmień kierunek wybranych silników"
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Silniki będą obracać się podczas ustawiania kierunku!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Funkcja działa tylko z ESC z protokołem DSHOT.<br />Sprawdź, czy ESC (elektryczny kontroler prędkości) którego używasz obsługuje protokół DSHOT i zmień go w ustawieniach $t(tabConfiguration.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Liczba silników wynosi 0.<br />Zweryfikuj aktualny Mixer w $t(tabConfiguration.message) lub zmień ustawienia przez CLI. Więcej info<a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">strona Wiki</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Zaktualizuj oprogramowanie.<br /> Upewnij się, że używasz najnowszego firmware: Betaflight 4.3 lub nowszego."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Kliknij na numer silnika, aby zmienić kierunek obrotów"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Sprawdź, czy wszystkie silniki obracają się poprawnie"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Start / obrót silnika"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Silniki zatrzymane"
     },
     "sensorsInfo": {
         "message": "Pamiętaj, że używanie częstej aktualizacji i rysowanie wielu wykresów w tym samym czasie wymaga mocy obliczeniowej - co może zwiększyć użycie baterii laptopa.<br />Zalecamy włączenie rysowania wykresów tylko dla czujników, których potrzebujesz najwięcej i wybrania możliwie niskich częstotliwości aktualizacji danych."
@@ -3391,6 +3458,14 @@
         "message": "Główny mnożnik:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Ratio Roll Pitch:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Ratio Roll Pitch",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningIGainSlider": {
         "message": "Wzmocnienie I:",
         "description": "I gain slider label"
@@ -3406,6 +3481,14 @@
     "pidTuningPDGainSlider": {
         "message": "Wzmocnienie P i D:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "Ratio D Min:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "Ratio D Min",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Wzmocnienie reakcji na drążek:",
@@ -5725,6 +5808,12 @@
     "dialogFileAlreadyExistsDescription": {
         "message": "Zastąpić?"
     },
+    "cordovaCheckingWebview": {
+        "message": "Poszukiwanie nowych aplikacji..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Serwer niekompatybilny"
+    },
     "cordovaWebviewTroubleshootingMsg": {
         "message": "Aby korzystać z konfiguratora, musisz zaktualizować aplikację webview."
     },
@@ -5763,6 +5852,9 @@
     },
     "cordovaWebviewIncompatible": {
         "message": "Twoje urządzenie wydaje się być niekompatybilne. Spróbuj wyszukać inne sposoby aktualizacji widoku strony internetowej"
+    },
+    "cordovaNoWebview": {
+        "message": "Nie włączono żadnej aplikacji do przeglądania stron internetowych"
     },
     "cordovaWebviewUsed": {
         "message": "użyte"
