@@ -2473,6 +2473,18 @@
     "escDshotDirectionDialog-RiskNotice": {
         "message": "<strong>Бележка за безопасност</strong><br /><strong class=\"message-negative-italic\">Отстранете всички витла, за да предотвратите нараняване!</strong><br />Двигателите<strong>ще се въртят</strong> веднага при избор!"
     },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong> Разбирам рисковете </strong>, <br /> всички витла са премахнати."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong> Информационно известие </strong> <br /> За да промените посоките на двигателя, батерията трябва да бъде включена и в раздела $t(tabConfiguration.message) трябва да се настрои правилният ESC протокол. Имайте предвид, че не всички Dshot ESC ще работят с този диалогов прозорец. Проверете вашата ESC firmware."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Задайте посоката на въртене на двигателя, като изберете и завъртите всеки двигател поотделно."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Нулира всички посоки на въртене на двигателя, след което позволява на потребителя да избере кое да обърне."
+    },
     "escDshotDirectionDialog-Open": {
         "message": "Посока на въртене на мотора"
     },
@@ -2485,14 +2497,47 @@
     "escDshotDirectionDialog-CommandSpin": {
         "message": "Тествай мотор"
     },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Натиснете бутона за да спре"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Натиснете за да спре"
+    },
     "escDshotDirectionDialog-Start": {
         "message": "Индивидуален"
     },
     "escDshotDirectionDialog-StartWizard": {
         "message": "Помощник"
     },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Промяна на посоката на избрания двигател"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Двигателите ще се завъртят когато се зададе посоката!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Функцията работи само с DSHOT ESC. <br /> Проверете дали вашият ESC (електрически регулатор на скоростта) поддържа протокол DSHOT и го променете в раздела $t(tabConfiguration.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Броят на двигателите е 0. <br /> Проверете текущия миксер в раздела $t(tabConfiguration.message) или настройте персонализиран чрез CLI. Обърнете се към тази <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\"> Wiki страница </a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Актуализирайте фърмуера. <br /> Уверете се, че използвате най-новия фърмуер: Betaflight 4.3 или по-нов."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Щракнете индивидуално върху номерата на двигателя, за да промените посоката на въртене"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Проверете дали всички двигатели се въртят правилно"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Старт / въртящи двигатели"
+    },
     "escDshotDirectionDialog-StopWizard": {
         "message": "Спиране на мотори"
+    },
+    "sensorsInfo": {
+        "message": "Имайте предвид, че използването на периоди за бърза актуализация и рендиране на няколко графики едновременно е много ресурсно и ще изразходи батерията на лаптопа ви по-бързо. <br /> Препоръчваме да правите графики само за сензори които ви интересуват, като същевременно използвате разумни периоди за актуализация."
     },
     "sensorsRefresh": {
         "message": "Обнови:"
@@ -2530,20 +2575,59 @@
     "sensorsAltitudeTitle": {
         "message": "Височина в метри"
     },
+    "sensorsAltitudeHint": {
+        "message": "Надморската височина се изчислява чрез комбиниране на стойноста на барометъра (ако е наличен) със стойноста на височината от GPS (ако е наличен). Ако GPS е свързан и GPS има поправка, абсолютната надморска височина над морското равнище ще бъде показана при дезактивиране. Когато заредите ще бъде показана надморската височина спрямо позицията при включване."
+    },
     "sensorsSonarTitle": {
         "message": "Сонар в сантиметри"
     },
     "sensorsDebugTitle": {
         "message": "Дебъг"
     },
+    "cliInfo": {
+        "message": "<strong> Забележка: </strong> Ако излезете от раздела CLI или натиснете Прекъсване, <strong> автоматично </strong> ще изпратите \"<strong> изход </strong>“ на контролера. С най-новия фърмуер това ще направи <strong> рестартиране </strong> на контролера и незапазените промени ще бъдат <strong> изгубени </strong>.<p> <strong> <span class=\"message-negative\"> Предупреждение: </span></strong> Някои команди в CLI могат да доведат до изпращане на произволни сигнали на изходните щифтове на двигателя. Това може да доведе до въртене на двигателите, ако е свързана батерия. Ето защо е препоръчително да се уверите, че <strong> не е свързана батерия, преди да въведете команди в CLI </strong>."
+    },
+    "cliInputPlaceholder": {
+        "message": "Напишете командата си тук. Натиснете Tab за автоматично довършване."
+    },
+    "cliInputPlaceholderBuilding": {
+        "message": "Моля изчакайте докато изграждате кеш за автоматично довършване ..."
+    },
+    "cliEnter": {
+        "message": "CLI режим е открит"
+    },
+    "cliReboot": {
+        "message": "Открито е рестартиране на CLI"
+    },
     "cliSaveToFileBtn": {
         "message": "Запазете във файл"
+    },
+    "cliClearOutputHistoryBtn": {
+        "message": "Изчистване на историята на изхода"
     },
     "cliCopyToClipboardBtn": {
         "message": "Копиране в клипборда"
     },
     "cliCopySuccessful": {
         "message": "Копирано!"
+    },
+    "cliLoadFromFileBtn": {
+        "message": "Зареждане от файл"
+    },
+    "cliConfirmSnippetDialogTitle": {
+        "message": "Зареден файл <strong> {{fileName}} </strong>. Прегледайте заредените команди"
+    },
+    "cliConfirmSnippetNote": {
+        "message": "<strong> Забележка </strong>: Можете да преглеждате и редактирате команди преди изпълнение."
+    },
+    "cliConfirmSnippetBtn": {
+        "message": "Изпълни"
+    },
+    "loggingNote": {
+        "message": "Данните ще се регистрират в този раздел <span class=\"message-negative\">единствено</span>, като оставите раздела този <span class=\"message-negative\"> ще анулира </span> регистрирането и приложението ще се върне към нормалното си състояние <strong> състояние на „конфигуратора“ </strong>. <br /> Можете свободно да избирате периода на глобална актуализация, данните ще се записват в регистрационния файл на всеки <strong> 1 </strong> секунда поради съображения за ефективност."
+    },
+    "loggingSamplesSaved": {
+        "message": "Запазени примери:"
     },
     "loggingLogSize": {
         "message": "Размер на логовете:"
