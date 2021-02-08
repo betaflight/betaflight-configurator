@@ -1,7 +1,7 @@
-'use strict';
+import { millitime } from '../utils/common.js';
 
-TABS.logging = {};
-TABS.logging.initialize = function (callback) {
+const logging = {};
+logging.initialize = function (callback) {
 
     if (GUI.active_tab != 'logging') {
         GUI.active_tab = 'logging';
@@ -319,6 +319,9 @@ TABS.logging.initialize = function (callback) {
     }
 };
 
-TABS.logging.cleanup = function (callback) {
+logging.cleanup = function (callback) {
     if (callback) callback();
 };
+
+// TODO: only for transition to modules, drop this eventually
+window.TABS.logging = logging;
