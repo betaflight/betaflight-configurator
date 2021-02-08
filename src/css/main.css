@@ -1619,6 +1619,7 @@ dialog .dialog_toolbar .btn a.disabled {
     transition: all ease 0.2s;
     padding: 0 9px;
     line-height: 28px;
+    user-select: none;
 }
 
 .content_toolbar .btn a:hover {
@@ -1980,6 +1981,7 @@ dialog .dialog_toolbar .btn a.disabled {
     transition: all ease 0.2s;
     padding: 0 9px;
     line-height: 28px;
+    user-select: none;
 }
 
 .small {
