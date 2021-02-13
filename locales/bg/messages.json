@@ -2641,11 +2641,50 @@
     "loggingStop": {
         "message": "Спри логването"
     },
+    "loggingBack": {
+        "message": "Оставете Входа / Прекъсване"
+    },
+    "loggingErrorNotConnected": {
+        "message": "Първо трябва да се <strong> свържете </strong>"
+    },
     "loggingErrorLogFile": {
         "message": "Моля изберете файл"
     },
+    "loggingErrorOneProperty": {
+        "message": "Моля, изберете поне едно свойство, за да регистрирате"
+    },
+    "loggingAutomaticallyRetained": {
+        "message": "Автоматично зареден предишен регистрационен файл: <strong>$1</strong>"
+    },
+    "blackboxNotSupported": {
+        "message": "Фърмуерът на вашия полетен контролер не поддържа функционалност на транспондера."
+    },
+    "blackboxMaybeSupported": {
+        "message": "Фърмуерът на вашия полетен контролер е твърде стар, за да поддържа този раздел, или функцията Blackbox е деактивирана в раздела Конфигурация."
+    },
     "blackboxConfiguration": {
         "message": "Конфигурация на черната кутия"
+    },
+    "blackboxButtonSave": {
+        "message": "Запазване и Презареждане"
+    },
+    "blackboxLoggingNone": {
+        "message": "Спри логването"
+    },
+    "blackboxLoggingFlash": {
+        "message": "Onboard Flash"
+    },
+    "blackboxLoggingSdCard": {
+        "message": "SD карта"
+    },
+    "blackboxLoggingSerial": {
+        "message": "Сериен порт"
+    },
+    "serialLoggingSupportedNote": {
+        "message": "Можете да влезете във външно регистриращо устройство (като OpenLager), като използвате сериен порт. Конфигурирайте порта в раздела Портове."
+    },
+    "sdcardNote": {
+        "message": "Полетните логове могат да бъдат записани на вградения слот за SD карта на вашия полетен контролер."
     },
     "dataflashUsedSpace": {
         "message": "Използвано място:"
@@ -2653,8 +2692,50 @@
     "dataflashFreeSpace": {
         "message": "Свободно пространство:"
     },
+    "dataflashUnavSpace": {
+        "message": "Недостъпно място"
+    },
     "dataflashLogsSpace": {
         "message": "Свободно пространство за логове"
+    },
+    "dataflashNote": {
+        "message": "Полетните логове могат да бъдат записани на бордовия чип на вашия полет за контрол на полета."
+    },
+    "dataflashNotPresentNote": {
+        "message": "Вашият полетен контролер няма наличен съвместим чип за флаш данни."
+    },
+    "dataflashFirmwareUpgradeRequired": {
+        "message": "Dataflash изисква фърмуер &gt;= 1.8.0."
+    },
+    "dataflashButtonSaveFile": {
+        "message": "Запазване във файл..."
+    },
+    "dataflashButtonSaveFileDeprecated": {
+        "message": "Запазване във файл... (неподдържано)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Директното запазване на флаш във файл е бавно и по своята същност е податливо на грешки / повреда на файлове.<br>В някои случаи ще работи за малки файлове, но това не се поддържа и заявките за поддръжка за него ще бъдат затворени без коментар - вместо това използвайте режим Mass Storage."
+    },
+    "dataflashSaveFileDepreciationHint": {
+        "message": "Този метод е бавен и по своята същност податлив на грешки / повреда на файлове, тъй като самата MSP връзка има вътрешни, основни ограничения, които я правят неподходяща за прехвърляне на файлове. Може да работи само за малки регистрационни файлове. Не създавайте заявки за поддръжка, ако прехвърлянето на файлове не успее, когато бъде записано с помощта на този метод. Препоръчителният метод е да използвате '<b>$t(onboardLoggingRebootMscText.message)</b>' (отдолу) за да активирате режима за масово съхранение и да получите достъп до вашия полетен контролер като устройство за съхранение, за да изтеглите регистрационните файлове."
+    },
+    "dataflashButtonErase": {
+        "message": "Изтриване"
+    },
+    "dataflashConfirmEraseTitle": {
+        "message": "Потвърдете изтриването на флаш данни"
+    },
+    "dataflashConfirmEraseNote": {
+        "message": "Това ще изтрие всички регистрационни файлове на Blackbox или други данни съдържащи се във флаш за данни. Трябва да отнеме около 20 секунди, сигурен ли си?"
+    },
+    "dataflashSavingTitle": {
+        "message": "Запазване във файл"
+    },
+    "dataflashSavingNote": {
+        "message": "Това може да отнеме няколко минути. Моля, изчакайте."
+    },
+    "dataflashSavingNoteAfter": {
+        "message": "Запазването завърши! Натиснете \"Ok\", за да продължите."
     },
     "dataflashButtonSaveCancel": {
         "message": "Отмени"
@@ -2662,20 +2743,71 @@
     "dataflashButtonSaveDismiss": {
         "message": "Ок"
     },
+    "dataflashButtonEraseConfirm": {
+        "message": "Да, изтрийте"
+    },
+    "dataflashButtonEraseCancel": {
+        "message": "Отмени"
+    },
+    "dataflashFileWriteFailed": {
+        "message": "Неуспешно записване във файла който сте избрали. Имате ли разрешение за запис в тази папка?"
+    },
+    "sdcardStatusNoCard": {
+        "message": "Не е поставена карта"
+    },
+    "sdcardStatusReboot": {
+        "message": "Фатална грешка<br>Рестартирайте, за да опитате отново"
+    },
+    "sdcardStatusReady": {
+        "message": "Картата е готова"
+    },
+    "sdcardStatusStarting": {
+        "message": "Стартиране на картата..."
+    },
+    "sdcardStatusFileSystem": {
+        "message": "Стартиране на файловата система..."
+    },
+    "sdcardStatusUnknown": {
+        "message": "Неизвестно състояние $1"
+    },
+    "firmwareFlasherReleaseSummaryHead": {
+        "message": "Информация за изданието"
+    },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID на производителя:"
     },
     "firmwareFlasherReleaseVersion": {
         "message": "Вервия:"
     },
+    "firmwareFlasherReleaseVersionUrl": {
+        "message": "Посетете страницата на изданието."
+    },
+    "firmwareFlasherReleaseNotes": {
+        "message": "Бележки по изданието:"
+    },
     "firmwareFlasherReleaseDate": {
         "message": "Дата:"
+    },
+    "firmwareFlasherReleaseTarget": {
+        "message": "Цел:"
+    },
+    "firmwareFlasherReleaseFile": {
+        "message": "Двоичен код:"
+    },
+    "firmwareFlasherUnifiedTargetName": {
+        "message": "Единна цел:"
+    },
+    "firmwareFlasherUnifiedTargetFileUrl": {
+        "message": "Показване на конфигурацията."
     },
     "firmwareFlasherUnifiedTargetDate": {
         "message": "Дата:"
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "Изтеглете ръчно"
+    },
+    "firmwareFlasherTargetWarning": {
+        "message": "<span class=\"message-negative\"> ВАЖНО</span>: Уверете се, че флашвате файл подходящ за вашата цел. Инсталирането на двоичен файл за грешна цел може да доведе до <span class=\"message-negative\">лоши</span> неща."
     },
     "firmwareFlasherPath": {
         "message": "Път:"
@@ -2691,6 +2823,15 @@
     },
     "firmwareFlasherLoadFirmwareFile": {
         "message": "Моля заредете файл с инсталационен софтуер"
+    },
+    "firmwareFlasherLoadedConfig": {
+        "message": "Заредена цел, моля заредете файла на фърмуера"
+    },
+    "firmwareFlasherNoReboot": {
+        "message": "Няма рестартираща последователност"
+    },
+    "firmwareFlasherOnlineSelectBuildType": {
+        "message": "Изберете тип изграждане, за да видите наличните контролери."
     },
     "firmwareFlasherFullChipErase": {
         "message": "Пълно изтриване на чипа"
