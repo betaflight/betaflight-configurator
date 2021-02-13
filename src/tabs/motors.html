@@ -1,119 +1,293 @@
-<div class="tab-motors">
+<div class="tab-motors toolbar_fixed_bottom">
     <div class="content_wrapper">
         <div class="tab_title" i18n="tabMotorTesting">Motors</div>
         <div class="cf_doc_version_bt">
             <a id="button-documentation" href="https://github.com/betaflight/betaflight/releases" target="_blank" rel="noopener noreferrer"></a>
         </div>
-        <div class="gui_box grey" style="margin-bottom: 15px;">
-            <div class="wrapper modelAndGraph">
-                <div class="mixerPreview">
-                    <img src="./resources/motor_order/custom.svg" />
+
+        <div class="grid-row">
+            <div class="grid-col col6">
+
+                <div class="configuration">
+
+                    <!-- MIXER -->
+                    <div class="mixer">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="configurationMixer"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <select class="mixerList">
+                                    <!-- list generated here -->
+                                </select>
+                            </div>
+                            <div class="spacer_box mixerPreview">
+                                <img src="./resources/motor_order/custom.svg" />
+                            </div>
+                            <div class="spacer_box reverseMotor">
+                                <div class="topBorderLine">
+                                    <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px;">
+                                        <input type="checkbox" id="reverseMotorSwitch" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationReverseMotorSwitch"></span>
+                                    <div class="helpicon cf_tip" i18n_title="configurationReverseMotorSwitchHelp"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END MIXER-->
+
+                    <!-- MOTOR STOP -->
+                    <div class="motorstop">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="configurationEscFeatures"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div id="escProtocolDisabled" class="note">
+                                    <p i18n="configurationEscProtocolDisabled"></p>
+                                </div>
+                                <div class="selectProtocol">
+                                    <label>
+                                        <select class="escprotocol">
+                                            <!-- list generated here -->
+                                        </select>
+                                        <span i18n="configurationEscProtocol"></span>
+                                        <div id="escProtocolTooltip" class="helpicon cf_tip" i18n_title="configurationEscProtocolHelp"></div>
+                                        <div id="escProtocolTooltipNoDSHOT1200" class="helpicon cf_tip" i18n_title="configurationEscProtocolHelpNoDSHOT1200"></div>
+                                    </label>
+                                </div>
+                                <div class="number checkboxPwm">
+                                    <div style="float: left; height: 20px; margin-right: 14px; margin-left: 3px;">
+                                        <input type="checkbox" id="unsyncedPWMSwitch" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationunsyndePwm"></span>
+                                </div>
+                                <div class="number unsyncedpwmfreq" style="margin-top: 5px; padding-bottom: 10px;">
+                                    <label>
+                                        <div class="numberspacer">
+                                            <input type="number" name="unsyncedpwmfreq" min="200" max="32000" step="100" />
+                                        </div>
+                                        <span i18n="configurationUnsyncedPWMFreq"></span>
+                                    </label>
+                                </div>
+
+                                <table class="featuresMultiple">
+                                    <tbody class="features escMotorStop">
+                                        <!-- table generated here -->
+                                    </tbody>
+                                    <tbody class="features escSensor">
+                                        <!-- table generated here -->
+                                    </tbody>
+                                </table>
+                                <div class="number checkboxDshotBidir">
+                                    <div style="float: left; height: 20px; margin-right: 14px; margin-left: 3px;">
+                                        <input type="checkbox" id="dshotBidir" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="configurationDshotBidir"></span>
+                                    <div class="helpicon cf_tip" i18n_title="configurationDshotBidirHelp"></div>
+                                </div>
+                                <div class="number motorPoles">
+                                    <label>
+                                        <div class="numberspacer">
+                                            <input type="number" name="motorPoles" min="4" max="255" step="1"/>
+                                        </div>
+                                        <span i18n="configurationMotorPolesLong"></span>
+                                    </label>
+                                    <div class="helpicon cf_tip" i18n_title="configurationMotorPolesHelp"></div>
+                                </div>
+                                <div class="number digitalIdlePercent">
+                                    <label>
+                                        <div class="numberspacer">
+                                            <input type="number" name="digitalIdlePercent" min="0.00" max="20.00" step="0.01"/>
+                                        </div>
+                                        <span i18n="configurationDigitalIdlePercent"></span>
+                                    </label>
+                                    <div class="helpicon cf_tip" i18n_title="configurationDigitalIdlePercentHelp"></div>
+                                </div>
+                                <div class="number minthrottle">
+                                    <label>
+                                        <div class="numberspacer">
+                                            <input type="number" name="minthrottle" min="0" max="2000" />
+                                        </div>
+                                        <span i18n="configurationThrottleMinimum"></span>
+                                        <div class="helpicon cf_tip" i18n_title="configurationThrottleMinimumHelp"></div>
+                                    </label>
+                                </div>
+                                <div class="number maxthrottle">
+                                    <label>
+                                        <div class="numberspacer">
+                                            <input type="number" name="maxthrottle" min="0" max="2000" />
+                                        </div>
+                                        <span i18n="configurationThrottleMaximum"></span>
+                                    </label>
+                                </div>
+                                <div class="number mincommand">
+                                    <label>
+                                        <div class="numberspacer">
+                                            <input type="number" name="mincommand" min="0" max="2000" />
+                                        </div>
+                                        <span i18n="configurationThrottleMinimumCommand"></span>
+                                        <div class="helpicon cf_tip" i18n_title="configurationThrottleMinimumCommandHelp"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END MOTOR_STOP -->
+
+                    <!-- 3D -->
+                    <div class="_3d">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="configuration3d"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th i18n="configurationFeatureEnabled"></th>
+                                            <th i18n="configurationFeatureDescription"></th>
+                                            <th i18n="configurationFeatureName"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="features 3D" style="margin-bottom:10px;">
+                                        <!-- table generated here -->
+                                    </tbody>
+                                </table>
+                                <div class="_3dSettings">
+                                    <div class="number">
+                                        <label> <input type="number" name="3ddeadbandlow" step="1" min="1250" max="1600" />
+                                            <span i18n="configuration3dDeadbandLow"></span>
+                                        </label>
+                                    </div>
+                                    <div class="number">
+                                        <label> <input type="number" name="3ddeadbandhigh" step="1" min="1400" max="1750" />
+                                            <span i18n="configuration3dDeadbandHigh"></span>
+                                        </label>
+                                    </div>
+                                    <div class="number">
+                                        <label> <input type="number" name="3dneutral" step="1" min="1400" max="1600" />
+                                            <span i18n="configuration3dNeutral"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END 3D -->
                 </div>
-                <svg id="graph">
-                 <g class="grid x" transform="translate(40, 120)"></g>
-                 <g class="grid y" transform="translate(40, 10)"></g>
-                 <g class="data" transform="translate(41, 10)"></g>
-                 <g class="axis x" transform="translate(40, 120)"></g>
-                 <g class="axis y" transform="translate(40, 10)"></g>
-               </svg>
+                <!-- END CONFIGURATION -->
 
+            </div>
+            <div class="grid-col col6">
 
+                <!-- MOTOR TEST SECTION -->
+                <div class="gui_box motorblock">
+                    <div class="spacer">
 
-                <div class="plot_control">
-                  <div class="table">
-                  <div class="sensor row">
-                    <div class="left-cell motor-button">
-                      <a class="reset_max" href="#" i18n="motorsResetMaximumButton" i18n_title="motorsResetMaximum"></a>
-                    </div>
-                    <div class="right-cell">
-                      <select name="sensor_choice">
-                          <option value="gyro" selected="selected" i18n="motorsSensorGyroSelect"></option>
-                          <option value="accel" i18n="motorsSensorAccelSelect"></option>
-                      </select>
-                    </div>
-                  </div>
+                    <!-- SENSOR GRAPH SECTION -->
+                    <div class="gui_box grey">
+                        <div class="wrapper modelAndGraph">
+                            <svg id="graph">
+                            <g class="grid x" transform="translate(40, 120)"></g>
+                            <g class="grid y" transform="translate(40, 10)"></g>
+                            <g class="data" transform="translate(41, 10)"></g>
+                            <g class="axis x" transform="translate(40, 120)"></g>
+                            <g class="axis y" transform="translate(40, 10)"></g>
+                        </svg>
 
-                  <div class="row-container">
+                        <div class="plot_control">
+                            <div class="table">
+                                <div class="sensor row">
+                                    <div class="left-cell motor-button">
+                                        <a class="reset_max" href="#" i18n="motorsResetMaximumButton" i18n_title="motorsResetMaximum"></a>
+                                    </div>
+                                    <div class="right-cell">
+                                        <select name="sensor_choice">
+                                            <option value="gyro" selected="selected" i18n="motorsSensorGyroSelect"></option>
+                                            <option value="accel" i18n="motorsSensorAccelSelect"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row-container">
+                                    <div class="row">
+                                        <div class="left-cell">
+                                            <div i18n="sensorsRefresh"></div>
+                                        </div>
+                                        <div class="rate right-cell">
+                                            <select name="rate">
+                                                <option value="10">10 ms</option>
+                                                <option value="20">20 ms</option>
+                                                <option value="30">30 ms</option>
+                                                <option value="40">40 ms</option>
+                                                <option value="50">50 ms</option>
+                                                <option value="100">100 ms</option>
+                                                <option value="250">250 ms</option>
+                                                <option value="500">500 ms</option>
+                                                <option value="1000">1000 ms</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                
+                                    <div class="row">
+                                        <div class="left-cell">
+                                            <div i18n="sensorsScale"></div>
+                                        </div>
+                                        <div class="scale right-cell">
+                                            <select name="scale">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="left-cell">
+                                            X:
+                                        </div>
+                                        <div class="x value right-cell">
+                                            0
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="left-cell">
+                                            Y:
+                                        </div>
+                                        <div class="y value right-cell">
+                                            0
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="left-cell">
+                                            Z:
+                                        </div>
+                                        <div class="z value right-cell">
+                                            0
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="left-cell">
+                                            RMS:
+                                        </div>
+                                        <div class="rms value right-cell">
+                                            0
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="row">
-                      <div class="left-cell">
-                        <div i18n="sensorsRefresh"></div>
-                      </div>
-                      <div class="rate right-cell">
-                        <select name="rate">
-                            <option value="10">10 ms</option>
-                            <option value="20">20 ms</option>
-                            <option value="30">30 ms</option>
-                            <option value="40">40 ms</option>
-                            <option value="50">50 ms</option>
-                            <option value="100">100 ms</option>
-                            <option value="250">250 ms</option>
-                            <option value="500">500 ms</option>
-                            <option value="1000">1000 ms</option>
-                        </select>
-                      </div>
-                    </div>
+                        <div class="power_info">
+                            <span i18n="motorsVoltage" class="power_text"></span><span class="motors-bat-voltage power_value"></span>
+                            <span i18n="motorsADrawing" class="power_text"></span><span class="motors-bat-mah-drawing power_value"></span>
+                            <span i18n="motorsmAhDrawn" class="power_text"></span><span class="motors-bat-mah-drawn power_value"></span>
+                        </div>
 
-                    <div class="row">
-                      <div class="left-cell">
-                        <div i18n="sensorsScale"></div>
-                      </div>
-                      <div class="scale right-cell">
-                        <select name="scale">
-                        </select>
-                      </div>
                     </div>
-
-                    <div class="row">
-                      <div class="left-cell">
-                        X:
-                      </div>
-                      <div class="x value right-cell">
-                        0
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="left-cell">
-                        Y:
-                      </div>
-                      <div class="y value right-cell">
-                        0
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="left-cell">
-                        Z:
-                      </div>
-                      <div class="z value right-cell">
-                        0
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="left-cell">
-                        RMS:
-                      </div>
-                      <div class="rms value right-cell">
-                        0
-                      </div>
-                    </div>
-                  </div>
                 </div>
-            </div>
-            <div class="power_info">
-                <a href="#" id="motorOutputReorderDialogOpen" class="regular-button" i18n="motorOutputReorderDialogOpen"></a>
-                <a href="#" id="escDshotDirectionDialog-Open" class="regular-button" i18n="escDshotDirectionDialog-Open"></a>
-                <span i18n="motorsVoltage" class="power_text"></span><span class="motors-bat-voltage power_value"></span>
-                <span i18n="motorsADrawing" class="power_text"></span><span class="motors-bat-mah-drawing power_value"></span>
-                <span i18n="motorsmAhDrawn" class="power_text"></span><span class="motors-bat-mah-drawn power_value"></span>
-            </div>
-
-          </div>
-        </div>
-        <div class="gui_box motorblock">
-            <div class="spacer">
+                <!-- END SENSOR GRAPH -->
+                <!-- MOTOR TESTING -->
                 <div class="left motors">
                     <div class="title2" i18n="motorsText"></div>
-                    <ul class="titles">
+                        <ul class="titles">
                         <li i18n_title="motorNumber1">1</li>
                         <li i18n_title="motorNumber2">2</li>
                         <li i18n_title="motorNumber3">3</li>
@@ -125,21 +299,8 @@
                     </ul>
                     <div class="bar-wrapper"></div>
                 </div>
-                <div class="right servos">
-                    <div class="title2" i18n="servosText"></div>
-                    <ul class="titles">
-                        <li i18n_title="servoNumber8">8</li>
-                        <li i18n_title="servoNumber7">7</li>
-                        <li i18n_title="servoNumber6">6</li>
-                        <li i18n_title="servoNumber5">5</li>
-                        <li i18n_title="servoNumber4">4</li>
-                        <li i18n_title="servoNumber3">3</li>
-                        <li i18n_title="servoNumber2">2</li>
-                        <li i18n_title="servoNumber1">1</li>
-                    </ul>
-                    <div class="bar-wrapper"></div>
-                </div>
                 <div class="clear-both"></div>
+                <!-- MOTOR TESTING -->
                 <div class="motor_testing">
                     <div class="left">
                         <div class="telemetry">
@@ -185,29 +346,54 @@
                         <input id="motorsEnableTestMode" type="checkbox" class="togglesmall"/>
                         <span class="motorsEnableTestMode" i18n="motorsEnableControl"></span>
                     </div>
-                    <div class="clear-both"></div>
                 </div>
+                <div class="clear-both"></div>
+            </div>
+            <!-- END MOTOR TEST SECTION -->
+
             </div>
         </div>
+
         <div class="clear-both"></div>
-    </div>
+
+        <div class="content_toolbar">
+            <div class="btn tool-buttons">
+                <a href="#" id="motorOutputReorderDialogOpen" class="regular-button" i18n="motorOutputReorderDialogOpen"></a>
+                <a href="#" id="escDshotDirectionDialog-Open" class="regular-button" i18n="escDshotDirectionDialog-Open"></a>
+            </div>
+
+            <div class="btn save_btn">
+                <a class="save" href="#" i18n="configurationButtonSave"></a>
+            </div>
+        </div>
+
+    </div> <!-- END CONTENT_WRAPPER -->
+
+    <dialog id="dialog-settings-changed">
+        <div id="dialog-settings-changed-content-wrapper">
+            <div id="dialog-settings-changed-content"></div>
+            <div>
+                <a href="#" id="dialog-settings-changed-confirmbtn" class="regular-button right" i18n="motorsDialogSettingsChangedOk"></a>
+            </div>
+        </div>
+    </dialog>
 
     <dialog id="dialogMotorOutputReorder">
-      <div id="dialogMotorOutputReorderContentWrapper">
-        <div id="dialogMotorOutputReorderContent">
+        <div id="dialogMotorOutputReorderContentWrapper">
+            <div id="dialogMotorOutputReorderContent">
+            </div>
+            <div>
+                <a href="#" id="dialogMotorOutputReorder-closebtn" class="regular-button right" i18n="motorOutputReorderDialogClose"></a>
+            </div>
         </div>
-        <div>
-          <a href="#" id="dialogMotorOutputReorder-closebtn"  class="regular-button right" i18n="motorOutputReorderDialogClose"></a>
-        </div>
-      </div>
     </dialog>
 
     <dialog id="escDshotDirectionDialog">
-      <div id="escDshotDirectionDialog-ContentWrapper">
-        <div id="escDshotDirectionDialog-Content">
+        <div id="escDshotDirectionDialog-ContentWrapper">
+            <div id="escDshotDirectionDialog-Content">
+            </div>
+            <a href="#" id="escDshotDirectionDialog-closebtn" class="regular-button right" i18n="close"></a>
         </div>
-        <a href="#" id="escDshotDirectionDialog-closebtn"  class="regular-button right" i18n="close"></a>
-      </div>
     </dialog>
-
-  </div>
+  
+</div>

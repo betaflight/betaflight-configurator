@@ -2551,6 +2551,12 @@
     "motorsEnableControl": {
         "message": "<strong>I understand the risks</strong>, the propellers are removed - enable motor control and arming, and disable Runaway Takeoff Prevention."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Configuration changes have been detected.<br /><br /><strong class=\"message-negative-italic\">Motor Test Mode is disabled until the settings have seen saved.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
+    },
 
     "motorOutputReorderDialogClose": {
         "message": "Cancel"
