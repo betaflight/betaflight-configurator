@@ -16,6 +16,8 @@ const TuningSliders = {
     sliderDTermFilter: 0,
     sliderDTermFilterMultiplier: 1,
 
+    dMinFeatureEnabled: true,
+    defaultPDRatio: 0,
     PID_DEFAULT: [],
     FILTER_DEFAULT: {},
 
@@ -28,9 +30,22 @@ const TuningSliders = {
 
 const D_MIN_RATIO = 0.85;
 
+TuningSliders.setDMinFeatureEnabled = function(dMinFeatureEnabled) {
+    this.dMinFeatureEnabled = dMinFeatureEnabled;
+    if (this.dMinFeatureEnabled) {
+        this.defaultPDRatio = this.PID_DEFAULT[2] / this.PID_DEFAULT[0];
+    } else {
+        this.defaultPDRatio = this.PID_DEFAULT[2] / (this.PID_DEFAULT[0] * (1 / D_MIN_RATIO));
+    }
+};
+
 TuningSliders.initialize = function() {
     this.PID_DEFAULT = FC.getPidDefaults();
     this.FILTER_DEFAULT = FC.getFilterDefaults();
+
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        this.setDMinFeatureEnabled($('#dMinSwitch').is(':checked'));
+    }
 
     this.setExpertMode($('input[name="expertModeCheckbox"]').is(':checked'));
 
@@ -76,10 +91,14 @@ TuningSliders.initPidSlidersPosition = function() {
     if (semver.lte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
         // used to estimate PID slider positions based on PIDF values, and set respective slider position
         // provides only an estimation due to limitation of feature without firmware support, to be improved in later versions
-        this.sliderMasterMultiplier = Math.floor(FC.PIDS[2][1] / this.PID_DEFAULT[11] * 10) / 10;
-        this.sliderPDRatio = Math.floor(FC.PIDS[0][0] / FC.PIDS[0][2] / (this.PID_DEFAULT[0] / this.PID_DEFAULT[2]) * 10) / 10;
-        this.sliderPDGain = Math.floor(FC.ADVANCED_TUNING.dMinRoll / this.sliderMasterMultiplier / this.PID_DEFAULT[3] * 10) / 10;
-        this.sliderFFGain = Math.floor(FC.ADVANCED_TUNING.feedforwardRoll / this.sliderMasterMultiplier / this.PID_DEFAULT[4] * 10) / 10;
+        this.sliderMasterMultiplier = Math.round(FC.PIDS[2][1] / this.PID_DEFAULT[11] * 10) / 10;
+        this.sliderPDRatio = Math.round(FC.PIDS[0][2] / FC.PIDS[0][0] / this.defaultPDRatio * 10) / 10;
+        if (this.dMinFeatureEnabled) {
+            this.sliderPDGain = Math.round(FC.ADVANCED_TUNING.dMinRoll / this.sliderPDRatio / this.sliderMasterMultiplier / this.PID_DEFAULT[3] * 10) / 10;
+        } else {
+            this.sliderPDGain = Math.round(FC.PIDS[0][0] / this.sliderMasterMultiplier / (this.PID_DEFAULT[2] * (1 / D_MIN_RATIO)) * 10) / 10;
+        }
+        this.sliderFFGain = Math.round(FC.ADVANCED_TUNING.feedforwardRoll / this.sliderMasterMultiplier / this.PID_DEFAULT[4] * 10) / 10;
     } else {
         this.sliderPidsMode = FC.TUNING_SLIDERS.slider_pids_mode;
         this.sliderMasterMultiplier = FC.TUNING_SLIDERS.slider_master_multiplier / 100;
@@ -302,22 +321,25 @@ TuningSliders.legacyCalculateNewPids = function() {
     // only used for 4.1 where calculation is not done in firmware
     if (this.dMinFeatureEnabled) {
         //dmin
-        FC.ADVANCED_TUNING.dMinRoll = Math.floor(this.PID_DEFAULT[3] * this.sliderPDGain);
-        FC.ADVANCED_TUNING.dMinPitch = Math.floor(this.PID_DEFAULT[8] * this.sliderPDGain);
+        FC.ADVANCED_TUNING.dMinRoll = Math.floor(this.PID_DEFAULT[3] * this.sliderPDGain * this.sliderPDRatio);
+        FC.ADVANCED_TUNING.dMinPitch = Math.floor(this.PID_DEFAULT[8] * this.sliderPDGain * this.sliderPDRatio);
         // dmax
-        FC.PIDS[0][2] = Math.floor(this.PID_DEFAULT[2] * this.sliderPDGain);
-        FC.PIDS[1][2] = Math.floor(this.PID_DEFAULT[7] * this.sliderPDGain);
+        FC.PIDS[0][2] = Math.floor(this.PID_DEFAULT[2] * this.sliderPDGain * this.sliderPDRatio);
+        FC.PIDS[1][2] = Math.floor(this.PID_DEFAULT[7] * this.sliderPDGain * this.sliderPDRatio);
     } else {
         FC.ADVANCED_TUNING.dMinRoll = 0;
         FC.ADVANCED_TUNING.dMinPitch = 0;
-        FC.PIDS[0][2] = Math.floor(this.PID_DEFAULT[3] * this.sliderPDGain);
-        FC.PIDS[1][2] = Math.floor(this.PID_DEFAULT[8] * this.sliderPDGain);
+        FC.PIDS[0][2] = Math.floor((this.PID_DEFAULT[2] * D_MIN_RATIO) * this.sliderPDGain * this.sliderPDRatio);
+        FC.PIDS[1][2] = Math.floor((this.PID_DEFAULT[7] * D_MIN_RATIO) * this.sliderPDGain * this.sliderPDRatio);
     }
 
-    FC.PIDS[0][0] = Math.floor(FC.PIDS[0][2] * this.PID_DEFAULT[0] / this.PID_DEFAULT[2] * this.sliderPDRatio);
-    FC.PIDS[1][0] = Math.floor(FC.PIDS[1][2] * this.PID_DEFAULT[5] / this.PID_DEFAULT[7] * this.sliderPDRatio);
+    FC.PIDS[0][0] = Math.floor(this.PID_DEFAULT[0] * this.sliderPDGain);
+    FC.PIDS[1][0] = Math.floor(this.PID_DEFAULT[5] * this.sliderPDGain);
     FC.PIDS[2][0] = Math.floor(this.PID_DEFAULT[10] * this.sliderPDGain);
-
+    // ff
+    FC.ADVANCED_TUNING.feedforwardRoll = Math.round(this.PID_DEFAULT[4] * this.sliderFFGain);
+    FC.ADVANCED_TUNING.feedforwardPitch = Math.round(this.PID_DEFAULT[9] * this.sliderFFGain);
+    FC.ADVANCED_TUNING.feedforwardYaw = Math.round(this.PID_DEFAULT[14] * this.sliderFFGain);
     // master slider part
     // these are not calculated anywhere other than master slider multiplier therefore set at default before every calculation
     FC.PIDS[0][1] = this.PID_DEFAULT[1];
@@ -330,13 +352,14 @@ TuningSliders.legacyCalculateNewPids = function() {
     //master slider multiplication, max value 200 for main PID values
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            FC.PIDS[j][i] = Math.min(Math.floor(FC.PIDS[j][i] * this.sliderMasterMultiplier), MAX_PID_GAIN);
+            FC.PIDS[j][i] = Math.min(Math.round(FC.PIDS[j][i] * this.sliderMasterMultiplier), MAX_PID_GAIN);
         }
     }
-    // ff
-    FC.ADVANCED_TUNING.feedforwardRoll = Math.min(Math.floor(this.PID_DEFAULT[4] * this.sliderFFGain * this.sliderMasterMultiplier), MAX_FF_GAIN);
-    FC.ADVANCED_TUNING.feedforwardPitch = Math.min(Math.floor(this.PID_DEFAULT[9] * this.sliderFFGain * this.sliderMasterMultiplier), MAX_FF_GAIN);
-    FC.ADVANCED_TUNING.feedforwardYaw = Math.min(Math.floor(this.PID_DEFAULT[14] * this.sliderFFGain * this.sliderMasterMultiplier), MAX_FF_GAIN);
+
+    FC.ADVANCED_TUNING.feedforwardRoll = Math.min(Math.round(FC.ADVANCED_TUNING.feedforwardRoll * this.sliderMasterMultiplier), MAX_FF_GAIN);
+    FC.ADVANCED_TUNING.feedforwardPitch = Math.min(Math.round(FC.ADVANCED_TUNING.feedforwardPitch * this.sliderMasterMultiplier), MAX_FF_GAIN);
+    FC.ADVANCED_TUNING.feedforwardYaw = Math.min(Math.round(FC.ADVANCED_TUNING.feedforwardYaw * this.sliderMasterMultiplier), MAX_FF_GAIN);
+
     if (this.dMinFeatureEnabled) {
         FC.ADVANCED_TUNING.dMinRoll = Math.min(Math.floor(FC.ADVANCED_TUNING.dMinRoll * this.sliderMasterMultiplier), MAX_DMIN_GAIN);
         FC.ADVANCED_TUNING.dMinPitch = Math.min(Math.floor(FC.ADVANCED_TUNING.dMinPitch * this.sliderMasterMultiplier), MAX_DMIN_GAIN);
@@ -368,24 +391,27 @@ TuningSliders.calculateNewPids = function() {
     $('output[name="sliderDMinRatio-number"]').val(this.sliderDMinRatio);
     $('output[name="sliderFFGain-number"]').val(this.sliderFFGain);
 
-    FC.TUNING_SLIDERS.slider_pids_mode = parseInt($('#sliderPidsModeSelect').val());
-    FC.TUNING_SLIDERS.slider_master_multiplier = TuningSliders.sliderMasterMultiplier * 100;
-    FC.TUNING_SLIDERS.slider_roll_pitch_ratio = TuningSliders.sliderRollPitchRatio * 100;
-    FC.TUNING_SLIDERS.slider_i_gain = TuningSliders.sliderIGain * 100;
-    FC.TUNING_SLIDERS.slider_pd_ratio = TuningSliders.sliderPDRatio * 100;
-    FC.TUNING_SLIDERS.slider_pd_gain = TuningSliders.sliderPDGain * 100;
-    FC.TUNING_SLIDERS.slider_dmin_ratio = TuningSliders.sliderDMinRatio * 100;
-    FC.TUNING_SLIDERS.slider_ff_gain = TuningSliders.sliderFFGain * 100;
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        FC.TUNING_SLIDERS.slider_pids_mode = parseInt($('#sliderPidsModeSelect').val());
+        FC.TUNING_SLIDERS.slider_master_multiplier = TuningSliders.sliderMasterMultiplier * 100;
+        FC.TUNING_SLIDERS.slider_roll_pitch_ratio = TuningSliders.sliderRollPitchRatio * 100;
+        FC.TUNING_SLIDERS.slider_i_gain = TuningSliders.sliderIGain * 100;
+        FC.TUNING_SLIDERS.slider_pd_ratio = TuningSliders.sliderPDRatio * 100;
+        FC.TUNING_SLIDERS.slider_pd_gain = TuningSliders.sliderPDGain * 100;
+        FC.TUNING_SLIDERS.slider_dmin_ratio = TuningSliders.sliderDMinRatio * 100;
+        FC.TUNING_SLIDERS.slider_ff_gain = TuningSliders.sliderFFGain * 100;
 
-    FC.TUNING_SLIDERS.slider_dterm_filter = TuningSliders.sliderDTermFilter ? 1 : 0;
-    FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = TuningSliders.sliderDTermFilterMultiplier * 100;
+        FC.TUNING_SLIDERS.slider_dterm_filter = TuningSliders.sliderDTermFilter ? 1 : 0;
+        FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = TuningSliders.sliderDTermFilterMultiplier * 100;
 
-    FC.TUNING_SLIDERS.slider_gyro_filter = TuningSliders.sliderGyroFilter ? 1 : 0;
-    FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = TuningSliders.sliderGyroFilterMultiplier * 100;
+        FC.TUNING_SLIDERS.slider_gyro_filter = TuningSliders.sliderGyroFilter ? 1 : 0;
+        FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = TuningSliders.sliderGyroFilterMultiplier * 100;
 
-    MSP.promise(MSPCodes.MSP_SET_TUNING_SLIDERS, mspHelper.crunch(MSPCodes.MSP_SET_TUNING_SLIDERS));
-    MSP.send_message(MSPCodes.MSP_PID);
-    MSP.send_message(MSPCodes.MSP_PID_ADVANCED);
+        Promise.resolve(true)
+        .then(() => { return MSP.promise(MSPCodes.MSP_SET_TUNING_SLIDERS, mspHelper.crunch(MSPCodes.MSP_SET_TUNING_SLIDERS)); })
+        .then(() => { return MSP.send_message(MSPCodes.MSP_SET_PID); })
+        .then(() => { return MSP.send_message(MSPCodes.MSP_SET_PID_ADVANCED); });
+    }
 
     this.updateFormPids();
 
