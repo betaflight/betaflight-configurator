@@ -52,6 +52,13 @@
     "portsSelectManual": {
         "message": "Selección Manual"
     },
+    "portsSelectVirtual": {
+        "message": "Modo Virtual (experimental)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Versión virtual do firmware"
+    },
     "portOverrideText": {
         "message": "Porto:"
     },
@@ -2536,11 +2543,89 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Aviso de seguridade</strong><br /><strong class=\"message-negative\"> Retire tódalas hélices para evitar lesións!</strong><br />Os motores<strong> xirarán</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Aviso informativo</strong><br />Os motores van a xirar un a un e podrerás seleccionar que motor está xirando. A batería debe estar conectada, e un protocolo ESC correcto debe estar seleccionado. Esta utilidade só pode reordenalos motores actualmente activos. Un mapeo máis complexo require o comando Resource no CLI. Consulta esta <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Gardar"
     },
     "motorsRemapDialogStartOver": {
         "message": "Comezar de novo"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Dirección do Motor - <strong class=\"message-negative-italic\">Atención: ¡Asegúrese de que as hélices non están postas!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Seleccione un ou tódolos motores"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "¡Os motores xirarán cando se seleccione!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Aviso de seguridade</strong><br /><strong class=\"message-negative-italic\">¡Quite tódalas hélices para evitar lesións!</strong><br />¡Os motores <strong>xirarán</strong> inmediatamente ó seleccionalos!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Entendo os riscos</strong>,<br />tódalas hélices están retiradas."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Aviso informativo</strong><br />Para cambiala dirección dos motores, a batería debe estar conectada e o protocolo ESC correcto debe estar configurado na pestana $t(tabConfiguration.message). Teña en conta que non tódolos Dshot ESCs funcionarán con este diálogo. Comprobe o firmware do seu ESC."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Configure a dirección de xiro do motor seleccionando e xirando cada motor individualmente."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Restablece tódalas direccións de xiro dos motores, despois permite ó usuario elixir cales invertir."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Dirección do motor"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Normal"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Invertido"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Proba motor"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Solte o botón para parar"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Solte para parar"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "De xeito individual"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Asistente"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Cambiar a dirección dos motores seleccionados"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Os motores xirarán ao definir a dirección."
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "A función só funciona con DSHOT ESC.<br />Verifique que o seu ESC (controlador de velocidade eléctrico) admita o protocolo DSHOT e pode cambialo na pestana $t(tabConfiguration.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "O número de motores é 0.<br />Verifique o Mixer actual na pestana $t(tabConfiguration.message) ou configure un personalizado mediante CLI. Consulte esta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Actualice o firmware.<br /> Asegúrese de que está a usar o firmware máis recente: Betaflight 4.3 ou máis recente."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Faga clic nos números do motor individualmente para cambiar a dirección de xiro"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Comprobe que todos os motores xiran correctamente"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Iniciar / xirar motores"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Deter motores"
     },
     "sensorsInfo": {
         "message": "Teña presente que usar períodos de actualización rápida e renderizar varios gráficos ao mesmo tempo é un recurso pesado e agotará a batería máis rápido se usa un portátil. <br /> Recomendamos facer representacións gráficas só para sensores que estean interesados ​​mentres usa períodos razonables de actualización."
@@ -3464,6 +3549,22 @@
         "message": "Mestre multiplicador:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Ratio Roll Pitch:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Ratio Roll Pitch",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Ganancia de I:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Ganancia de I",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Balance de PD:",
         "description": "PD balance tuning slider label"
@@ -3471,6 +3572,14 @@
     "pidTuningPDGainSlider": {
         "message": "Ganancia P e D:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "Ratio D Min:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "Ratio D Min",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Ganancia de resposta de stick:",
@@ -5500,6 +5609,10 @@
     "vtxButtonSaved": {
         "message": "Gardado",
         "description": "Saved action button in the VTX tab"
+    },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} desbloqueado",
+        "description": "Indicates if SA device is unlocked"
     },
     "mainHelpArmed": {
         "message": "Armado de Motores"
