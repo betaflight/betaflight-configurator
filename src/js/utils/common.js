@@ -1,9 +1,5 @@
 import semver from "semver";
 
-export function microtime() {
-    return new Date().getTime() / 1000;
-}
-
 export function millitime() {
     return new Date().getTime();
 }
@@ -85,3 +81,4 @@ window.degToRad = degToRad;
 window.bytesToSize = bytesToSize;
 window.checkChromeRuntimeError = checkChromeRuntimeError;
 window.generateVirtualApiVersions = generateVirtualApiVersions;
+window.millitime = millitime;
