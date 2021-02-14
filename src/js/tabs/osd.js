@@ -1181,8 +1181,8 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: "#9876",
         },
-        UP_DOWN_REFERENCE: {
-            name: 'UP_DOWN_REFERENCE',
+        OSD_UP_DOWN_REFERENCE: {
+            name: 'OSD_UP_DOWN_REFERENCE',
             text: 'osdTextElementUpDownReference',
             desc: 'osdDescUpDownReference',
             defaultPosition() {
@@ -1194,7 +1194,7 @@ OSD.loadDisplayFields = function() {
             },
             draw_order: 465,
             positionable: true,
-            preview: 'U',
+            preview: 'U'
         },
     };
 };
@@ -1617,7 +1617,7 @@ OSD.chooseFields = function() {
                                                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                         F.TOTAL_FLIGHTS,
-                                                        F.UP_DOWN_REFERENCE,
+                                                        F.OSD_UP_DOWN_REFERENCE,
                                                     ]);
                                                 }
                                             }
