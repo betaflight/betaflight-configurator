@@ -2496,6 +2496,12 @@
     "motorsEnableControl": {
         "message": "<strong>나는 위험을 인지하고 있으며</strong>, 프로펠러가 제거되었음을 확인합니다 - 모터 제어, 아밍 및 폭주 이륙 방지 비활성."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "환경설정 변경사항이 감지되었습니다.<br /><br /><strong class=\"message-negative-italic\">모터 테스트 모드는 설정이 저장될 때까지 비활성화됩니다.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "확인"
+    },
     "motorOutputReorderDialogClose": {
         "message": "취소"
     },
