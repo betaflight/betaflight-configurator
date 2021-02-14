@@ -203,7 +203,7 @@ TABS.motors.initialize = function (callback) {
     }
 
     function update_model(mixer) {
-        const imgSrc = CommonUtils.GetMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
+        const imgSrc = getMixerImageSrc(mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
         $('.mixerPreview img').attr('src', imgSrc);
 
         const motorOutputReorderConfig = new MotorOutputReorderConfig(100);
