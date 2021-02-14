@@ -1,7 +1,5 @@
-'use strict';
-
-TABS.help = {};
-TABS.help.initialize = function (callback) {
+const help = {};
+help.initialize = function (callback) {
 
     if (GUI.active_tab != 'help') {
         GUI.active_tab = 'help';
@@ -14,6 +12,9 @@ TABS.help.initialize = function (callback) {
     });
 };
 
-TABS.help.cleanup = function (callback) {
+help.cleanup = function (callback) {
     if (callback) callback();
 };
+
+// TODO: move to modules when possible
+window.TABS.help = help;
