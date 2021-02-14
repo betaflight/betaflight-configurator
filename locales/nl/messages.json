@@ -2444,6 +2444,12 @@
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Configuratiewijzigingen zijn gedetecteerd.<br /><br /><strong class=\"message-negative-italic\">Motortestmodus is uitgeschakeld totdat de instellingen zijn opgeslagen.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "Ok"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Annuleren"
     },
@@ -3474,6 +3480,22 @@
         "message": "Hoofd Vermenigvuldiger:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Roll Pitch Verhouding:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Roll Pitch Verhouding",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "I Gain:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "I Gain",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "PD Balans:",
         "description": "PD balance tuning slider label"
@@ -3481,6 +3503,14 @@
     "pidTuningPDGainSlider": {
         "message": "P and D Gain:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "D Min Verhouding:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "D Min Verhouding",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Stick Response Gain:",
