@@ -273,7 +273,7 @@ TuningSliders.updateFilterSlidersDisplay = function() {
         $('.tuningFilterSliders .sliderLabels tr:nth-child(2)').hide();
         this.sliderGyroFilter = true;
     } else {
-        $('.tuningFilterSliders .sliderLabels tr:nth-child(2)').show()
+        $('.tuningFilterSliders .sliderLabels tr:nth-child(2)').show();
         this.cachedGyroSliderValues = true;
     }
 

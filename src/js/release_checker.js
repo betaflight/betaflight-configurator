@@ -5,9 +5,9 @@ var ReleaseChecker = function (releaseName, releaseUrl) {
 
     self._releaseName = releaseName;
     self._releaseDataTag = `${self._releaseName}ReleaseData`;
-    self._releaseLastUpdateTag = `${self._releaseName}ReleaseLastUpdate`
+    self._releaseLastUpdateTag = `${self._releaseName}ReleaseLastUpdate`;
     self._releaseUrl = releaseUrl;
-}
+};
 
 ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
     const self = this;
@@ -42,7 +42,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
             self._processReleaseData(cacheReleaseData, processFunction);
         }
     });
-}
+};
 
 
 ReleaseChecker.prototype._processReleaseData = function (releaseData, processFunction) {
@@ -53,4 +53,4 @@ ReleaseChecker.prototype._processReleaseData = function (releaseData, processFun
 
         processFunction();
     }
-}
+};

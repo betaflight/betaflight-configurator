@@ -7,7 +7,7 @@ const JenkinsLoader = function (url) {
 
     this._jobsRequest = '/api/json?tree=jobs[name]';
     this._buildsRequest = '/api/json?tree=builds[number,result,timestamp,artifacts[relativePath],changeSet[items[commitId,msg]]]';
-}
+};
 
 JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
     const self = this;
@@ -43,10 +43,10 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
                 // remove Betaflight prefix, rename Betaflight job to Development
                 const jobs = jobsInfo.jobs.map(job => {
                     return { title: job.name.replace('Betaflight ', '').replace('Betaflight', 'Development'), name: job.name };
-                })
+                });
 
                 // cache loaded info
-                const object = {}
+                const object = {};
                 object[jobsDataTag] = jobs;
                 object[cacheLastUpdateTag] = $.now();
                 chrome.storage.local.set(object);
@@ -60,14 +60,14 @@ JenkinsLoader.prototype.loadJobs = function (viewName, callback) {
             cachedCallback();
         }
     });
-}
+};
 
 JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
     const self = this;
 
     const jobUrl = `${self._url}/job/${jobName}`;
     const buildsDataTag = `${jobUrl}BuildsData`;
-    const cacheLastUpdateTag = `${jobUrl}BuildsLastUpdate`
+    const cacheLastUpdateTag = `${jobUrl}BuildsLastUpdate`;
 
     chrome.storage.local.get([cacheLastUpdateTag, buildsDataTag], function (result) {
         const buildsDataTimestamp = $.now();
@@ -98,7 +98,7 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
                     }));
 
                 // cache loaded info
-                const object = {}
+                const object = {};
                 object[buildsDataTag] = builds;
                 object[cacheLastUpdateTag] = $.now();
                 chrome.storage.local.set(object);
@@ -112,7 +112,7 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
             cachedCallback();
         }
     });
-}
+};
 
 JenkinsLoader.prototype._parseBuilds = function (jobUrl, jobName, builds, callback) {
     // convert from `build -> targets` to `target -> builds` mapping
@@ -160,4 +160,4 @@ JenkinsLoader.prototype._parseBuilds = function (jobUrl, jobName, builds, callba
     });
 
     callback(targetBuilds);
-}
+};

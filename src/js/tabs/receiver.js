@@ -328,7 +328,7 @@ TABS.receiver.initialize = function (callback) {
                     } else {
                         return false;
                     }
-                }
+                };
 
                 windowWatcherUtil.passValue(createdWindow, 'darkTheme', DarkTheme.isDarkThemeEnabled(DarkTheme.configEnabled));
 

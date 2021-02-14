@@ -345,7 +345,7 @@ TABS.firmware_flasher.initialize = function (callback) {
                 title: job.title,
                 loader: () => self.jenkinsLoader.loadBuilds(job.name, loadUnifiedBuilds)
             };
-        })
+        });
         var buildTypesToShow;
 
         var buildType_e = $('select[name="build_type"]');
@@ -741,7 +741,7 @@ TABS.firmware_flasher.initialize = function (callback) {
             if ($('input.erase_chip').is(':checked')) {
                 options.erase_chip = true;
 
-                eraseAll = true
+                eraseAll = true;
             }
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_ERASE_ALL, eraseAll.toString());
 
@@ -1249,7 +1249,7 @@ TABS.firmware_flasher.enableFlashing = function (enabled) {
     } else {
         $('a.flash_firmware').addClass('disabled');
     }
-}
+};
 
 TABS.firmware_flasher.FLASH_MESSAGE_TYPES = {NEUTRAL : 'NEUTRAL',
                                              VALID   : 'VALID',

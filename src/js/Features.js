@@ -201,7 +201,7 @@ Features.prototype.findFeatureByBit = function (bit) {
             return feature;
         }
     }
-}
+};
 
 Features.prototype.updateData = function (featureElement) {
     const self = this;

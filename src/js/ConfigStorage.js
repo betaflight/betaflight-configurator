@@ -38,4 +38,4 @@ const ConfigStorage = {
             window.localStorage.setItem(element, JSON.stringify(tmpObj));
         });
     }
-}
+};

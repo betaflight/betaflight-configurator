@@ -845,7 +845,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                         const serialPort = {
                             identifier: data.readU8(),
                             scenario: data.readU8(),
-                        }
+                        };
                         FC.SERIAL_CONFIG.ports.push(serialPort);
                     }
                     FC.SERIAL_CONFIG.mspBaudRate = data.readU32();
@@ -1658,7 +1658,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
             }
         }
     }
-}
+};
 
 /**
  * Encode the request body for the MSP request with the given code and return it as an array of bytes.
@@ -2330,7 +2330,7 @@ MspHelper.prototype.setRawRx = function(channels) {
     }
 
     MSP.send_message(MSPCodes.MSP_SET_RAW_RC, buffer, false);
-}
+};
 
 /**
  * Send a request to read a block of data from the dataflash at the given address and pass that address and a dataview
@@ -2568,7 +2568,7 @@ MspHelper.prototype.sendVoltageConfig = function(onCompleteCallback) {
         MSP.send_message(MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, buffer, false, nextFunction);
     }
 
-}
+};
 
 MspHelper.prototype.sendCurrentConfig = function(onCompleteCallback) {
 
@@ -2598,7 +2598,7 @@ MspHelper.prototype.sendCurrentConfig = function(onCompleteCallback) {
         MSP.send_message(MSPCodes.MSP_SET_CURRENT_METER_CONFIG, buffer, false, nextFunction);
     }
 
-}
+};
 
 MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
 
@@ -2688,7 +2688,7 @@ MspHelper.prototype.sendLedStripConfig = function(onCompleteCallback) {
 
         MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_CONFIG, buffer, false, nextFunction);
     }
-}
+};
 
 MspHelper.prototype.sendLedStripColors = function(onCompleteCallback) {
     if (FC.LED_COLORS.length == 0) {
@@ -2703,7 +2703,7 @@ MspHelper.prototype.sendLedStripColors = function(onCompleteCallback) {
         }
         MSP.send_message(MSPCodes.MSP_SET_LED_COLORS, buffer, false, onCompleteCallback);
     }
-}
+};
 
 MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
 
@@ -2733,7 +2733,7 @@ MspHelper.prototype.sendLedStripModeColors = function(onCompleteCallback) {
 
         MSP.send_message(MSPCodes.MSP_SET_LED_STRIP_MODECOLOR, buffer, false, nextFunction);
     }
-}
+};
 
 MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {
     const self = this;
@@ -2747,7 +2747,7 @@ MspHelper.prototype.serialPortFunctionMaskToFunctions = function(functionMask) {
         }
     }
     return functions;
-}
+};
 
 MspHelper.prototype.serialPortFunctionsToMask = function(functions) {
     const self = this;
@@ -2761,7 +2761,7 @@ MspHelper.prototype.serialPortFunctionsToMask = function(functions) {
         }
     }
     return mask;
-}
+};
 
 MspHelper.prototype.sendRxFailConfig = function(onCompleteCallback) {
     let nextFunction = send_next_rxfail_config;
@@ -2792,7 +2792,7 @@ MspHelper.prototype.sendRxFailConfig = function(onCompleteCallback) {
         }
         MSP.send_message(MSPCodes.MSP_SET_RXFAIL_CONFIG, buffer, false, nextFunction);
     }
-}
+};
 
 MspHelper.prototype.setArmingEnabled = function(doEnable, disableRunawayTakeoffPrevention, onCompleteCallback) {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)
@@ -2822,7 +2822,7 @@ MspHelper.prototype.setArmingEnabled = function(doEnable, disableRunawayTakeoffP
             onCompleteCallback();
         }
     }
-}
+};
 
 MspHelper.prototype.loadSerialConfig = function(callback) {
     const mspCode = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) ? MSPCodes.MSP2_COMMON_SERIAL_CONFIG : MSPCodes.MSP_CF_SERIAL_CONFIG;

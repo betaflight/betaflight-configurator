@@ -89,7 +89,7 @@ TABS.power.initialize = function (callback) {
             $(elementVoltageMeter).attr('id', `voltage-meter-${index}`);
 
             const message = i18n.getMessage('powerVoltageId' + FC.VOLTAGE_METERS[index].id);
-            $(elementVoltageMeter).find('.label').text(message)
+            $(elementVoltageMeter).find('.label').text(message);
             destinationVoltageMeter.append(elementVoltageMeter);
 
             elementVoltageMeter.hide();
@@ -147,7 +147,7 @@ TABS.power.initialize = function (callback) {
             $(elementAmperageMeter).attr('id', `amperage-meter-${index}`);
 
             const message = i18n.getMessage('powerAmperageId' + FC.CURRENT_METERS[index].id);
-            $(elementAmperageMeter).find('.label').text(message)
+            $(elementAmperageMeter).find('.label').text(message);
             destinationAmperageMeter.append(elementAmperageMeter);
 
             elementAmperageMeter.hide();

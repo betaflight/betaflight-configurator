@@ -13,6 +13,7 @@ module.exports = {
     },
     rules: {
         "no-trailing-spaces": "error",
-        "eol-last": "error"
+        "eol-last": "error",
+        semi: "error"
     }
-};
+}

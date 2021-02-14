@@ -205,7 +205,7 @@ STM32DFU_protocol.prototype.getString = function (index, callback) {
         }
         callback(descriptor, result.resultCode);
     });
-}
+};
 
 STM32DFU_protocol.prototype.getInterfaceDescriptors = function (interfaceNum, callback) {
     var self = this;
@@ -243,10 +243,10 @@ STM32DFU_protocol.prototype.getInterfaceDescriptors = function (interfaceNum, ca
             callback(descriptorStringArray, 0);
             return;
         }
-    }
+    };
     getDescriptorString();
     });
-}
+};
 
 
 STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callback) {
@@ -281,7 +281,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callb
 
         callback(descriptor, result.resultCode);
     });
-}
+};
 
 STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, callback) {
     var self = this;
@@ -313,7 +313,7 @@ STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, call
 
         callback(descriptor, result.resultCode);
     });
-}
+};
 
 STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
     var self = this;
@@ -338,7 +338,7 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
 
             // H750 Partitions: Flash, Config, Firmware, 1x BB Management block + x BB Replacement blocks)
             if (str == "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka") {
-                str = "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka"
+                str = "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka";
             }
 
             // split main into [location, start_addr, sectors]
@@ -408,16 +408,16 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
                 'start_address': start_address,
                 'sectors'      : sectors,
                 'total_size'   : total_size
-            }
+            };
         return memory;
-    }
+    };
     var chipInfo = descriptors.map(parseDescriptor).reduce(function(o, v, i) {
         o[v.type.toLowerCase().replace(' ', '_')] = v;
         return o;
     }, {});
         callback(chipInfo, resultCode);
     });
-}
+};
 
 STM32DFU_protocol.prototype.controlTransfer = function (direction, request, value, _interface, length, data, callback, _timeout) {
     var self = this;
@@ -626,7 +626,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                 console.log('Initiate read unprotect');
                 let messageReadProtected = i18n.getMessage('stm32ReadProtected');
                 GUI.log(messageReadProtected);
-                TABS.firmware_flasher.flashingMessage(messageReadProtected, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION)
+                TABS.firmware_flasher.flashingMessage(messageReadProtected, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION);
 
                 self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x92], function () { // 0x92 initiates read unprotect
                     self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
@@ -667,14 +667,14 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                             }, incr);
                         } else {
                                 console.log('Failed to initiate unprotect memory command');
-                                let messageUnprotectInitFailed = i18n.getMessage('stm32UnprotectInitFailed')
+                                let messageUnprotectInitFailed = i18n.getMessage('stm32UnprotectInitFailed');
                                 GUI.log(messageUnprotectInitFailed);
-                                TABS.firmware_flasher.flashingMessage(messageUnprotectInitFailed, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID)
+                                TABS.firmware_flasher.flashingMessage(messageUnprotectInitFailed, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
                                 self.cleanup();
                         }
                     });
                 });
-            }
+            };
 
             var tryReadOB = function() {
                 // the following should fail if read protection is active
@@ -730,7 +730,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     }
                     });
                     });
-            }
+            };
 
             var initReadOB = function (loadAddressResponse) {
                 // contrary to what is in the docs. Address load should in theory work even if read protection is active
@@ -747,7 +747,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     GUI.log(i18n.getMessage('stm32AddressLoadUnknown'));
                     self.cleanup();
                 }
-            }
+            };
 
             self.clearStatus(function () {
             // load address fails if read protection is active unlike as stated in the docs
@@ -809,7 +809,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     } else {
                         erase_page();
                     }
-                }
+                };
 
                 var erase_page = function() {
                     var page_addr = erase_pages[page].page * self.flash_layout.sectors[erase_pages[page].sector].page_size +
@@ -848,7 +848,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                                                         console.log('Failed to erase page 0x' + page_addr.toString(16) + ' (did not reach dfuIDLE after clearing');
                                                         self.cleanup();
                                                     }
-                                                })
+                                                });
                                             });
                                         } else if (data[4] == self.state.dfuDNLOAD_IDLE) {
                                             erase_page_next();
@@ -918,7 +918,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                                 self.cleanup();
                             }
                         });
-                    })
+                    });
                 } else {
                     if (flashing_block < blocks) {
                         // move to another block
@@ -937,7 +937,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         self.upload_procedure(5);
                     }
                 }
-            }
+            };
 
             // start
             self.loadAddress(address, write);
@@ -1028,7 +1028,7 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                         }
                     }
                 }
-            }
+            };
             break;
     }
 };

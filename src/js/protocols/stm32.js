@@ -185,14 +185,14 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                     });
                 });
             }
-        }
+        };
 
         var onTimeoutHandler = function() {
             GUI.connect_lock = false;
             console.log('Looking for capabilities via MSP failed');
 
             TABS.firmware_flasher.flashingMessage(i18n.getMessage('stm32RebootingToBootloaderFailed'), TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID);
-        }
+        };
 
         var onFailureHandler = function() {
             GUI.connect_lock = false;
@@ -688,7 +688,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                         self.upload_procedure(6);
                     }
                 }
-            }
+            };
 
             // start writing
             write();
@@ -783,7 +783,7 @@ STM32_protocol.prototype.upload_procedure = function (step) {
                         }
                     }
                 }
-            }
+            };
 
             // start reading
             reading();
@@ -840,7 +840,7 @@ STM32_protocol.prototype.cleanup = function () {
     if (self.callback) {
         self.callback();
     }
-}
+};
 
 // initialize object
 var STM32 = new STM32_protocol();

@@ -15,11 +15,11 @@ logging.initialize = function (callback) {
     if (CONFIGURATOR.connectionValid) {
         const getMotorData = function () {
             MSP.send_message(MSPCodes.MSP_MOTOR, false, false, loadHtml);
-        }
+        };
 
         const loadHtml = function () {
             $('#content').load("./tabs/logging.html", process_html);
-        }
+        };
 
         MSP.send_message(MSPCodes.MSP_RC, false, false, getMotorData);
     }
@@ -61,7 +61,7 @@ logging.initialize = function (callback) {
                                 for (let i = 0; i < requestedProperties.length; i++, requests++) {
                                     MSP.send_message(MSPCodes[requestedProperties[i]]);
                                 }
-                            }
+                            };
 
                             GUI.interval_add('log_data_poll', logDataPoll, parseInt($('select.speed').val()), true); // refresh rate goes here
                             GUI.interval_add('write_data', function write_data() {
