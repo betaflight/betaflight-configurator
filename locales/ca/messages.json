@@ -2436,6 +2436,12 @@
     "motorsEnableControl": {
         "message": "<strong>Entenc els riscos</strong>, les pales estan tretes - habilita el control dels motors i armat i deshabilita el Runaway Takeoff Prevention."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "S'han detectat canvis en la configuració.<br /><br /><strong class = \"message-negative-italic\">El mode de prova del motor està desactivat fins que la configuració s'hagi desat.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "Acceptar"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Canceŀlar"
     },
@@ -3466,6 +3472,22 @@
         "message": "Multiplicador mestre:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Roll Pitch Ratio:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Roll Pitch Ratio",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Guany I:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Guany I",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Balanç PD:",
         "description": "PD balance tuning slider label"
@@ -3473,6 +3495,14 @@
     "pidTuningPDGainSlider": {
         "message": "Guany P i D:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "D Min Ratio:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "D Min Ratio",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Guany de resposta del stick:",
