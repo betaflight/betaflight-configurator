@@ -2522,6 +2522,12 @@
     "motorsEnableControl": {
         "message": "crwdns6381:0crwdne6381:0"
     },
+    "motorsDialogSettingsChanged": {
+        "message": "crwdns10368:0crwdne10368:0"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "crwdns10370:0crwdne10370:0"
+    },
     "motorOutputReorderDialogClose": {
         "message": "crwdns10244:0crwdne10244:0"
     },
