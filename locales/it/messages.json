@@ -2428,6 +2428,12 @@
     "motorsEnableControl": {
         "message": "<strong>Ho compreso i rischi</strong>, le eliche sono state rimosse - abilita il controllo motori e armamento motori e disabilita la prevenzione del decollo fuori controllo."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Sono state rilevate modifiche alla configurazione.<br /><br /><strong class=\"message-negative-italic\">La Modalità Test Motori è disabilitata fino a quando le impostazioni non verranno salvate.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Annulla"
     },
@@ -3458,6 +3464,22 @@
         "message": "Moltiplicatore Master:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Rapporto Roll-Pitch:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Rapporto Roll-Pitch",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Guadagno I:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Guadagno I",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Bilanciamento PD:",
         "description": "PD balance tuning slider label"
@@ -3465,6 +3487,14 @@
     "pidTuningPDGainSlider": {
         "message": "Guadagno P e D:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "Rapporto D Min:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "Rapporto D Min",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Guadagno risposta stick:",
