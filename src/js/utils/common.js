@@ -76,7 +76,6 @@ export function generateVirtualApiVersions() {
 }
 
 // TODO: these are temp binding while transition to module happens
-window.microtime = microtime;
 window.degToRad = degToRad;
 window.bytesToSize = bytesToSize;
 window.checkChromeRuntimeError = checkChromeRuntimeError;
