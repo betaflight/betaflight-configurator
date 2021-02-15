@@ -76,6 +76,9 @@
     "analyticsOptOut": {
         "message": "Atsisakyti anoniminio statistinių duomenų rinkimo"
     },
+    "language_changed": {
+        "message": "Kalba pakeista"
+    },
     "language_choice_message": {
         "message": "Pakeisti kalbą:",
         "description": "Try and be brief"
@@ -138,6 +141,9 @@
     },
     "checkForConfiguratorUnstableVersions": {
         "message": "Rodyti atnaujinimo pranešimus apie nestabilias versijas"
+    },
+    "configuratorUpdateNotice": {
+        "message": "Jūs naudojate seną programos <b>Betaflight Configurator</b> versiją.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateWebsite": {
         "message": "Aplankyti išleidimų tinklapį"
@@ -249,6 +255,9 @@
     },
     "usbDeviceOpened": {
         "message": "USB įrenginys <span class=\"message-positive\">sėkmingai</span> atidarytas su ID: $1"
+    },
+    "stm32UsbDfuNotFound": {
+        "message": "USB DFU nerastas"
     },
     "stm32LocalErase": {
         "message": "Vyksta lokalus trynimas ..."
