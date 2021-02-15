@@ -49,6 +49,13 @@
     "portsSelectManual": {
         "message": "Выбрать вручную"
     },
+    "portsSelectVirtual": {
+        "message": "Виртуальный режим (экспериментальный)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Версия виртуальной прошивки"
+    },
     "portOverrideText": {
         "message": "Порт:"
     },
@@ -2421,6 +2428,12 @@
     "motorsEnableControl": {
         "message": "<strong>Я понимаю всю опасность</strong>, пропеллеры сняты - включить управление моторами и арминг, и отключить \"Режим Защиты От Неконтролируемого Полёта\"."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Обнаружены изменения конфигурации.<br /><br /><strong class=\"message-negative-italic\">Тестовый режим моторов отключен до тех пор, пока настройки не будут сохранены</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Отмена"
     },
@@ -2445,11 +2458,89 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Уведомление о безопасности</strong><br /><strong class=\"message-negative\">Для предотвращения травм, снимите все пропеллеры!</strong><br />Моторы будут <strong>вращаться!</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Информационное уведомление</strong><br />Моторы будут вращаться по очереди, и вы сможете выбрать, какой из них будет вращаться. Необходимо, чтобы был подключен аккумулятор и правильно выбран протокол ESC. Эта утилита может изменять только активные в настоящий момент моторы. Для более сложных переназначений требуется введение команд CLI. Для справки обратитесь на <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki страницу</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Сохранить"
     },
     "motorsRemapDialogStartOver": {
         "message": "Начать заново"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Направление вращения мотора- <strong class=\"message-negative-italic\">Предупреждение: Убедитесь, что пропеллеры сняты!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Выберите один или все моторы"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Моторы будут вращаться при выборе!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Уведомление безопасности</strong><br /><strong class=\"message-negative-italic\">Для предотвращения травм, снимите все пропеллеры!</strong><br />Моторы начнут<strong>вращаться</strong>сразу после выбора!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Я понимаю риски</strong>,<br />все пропеллеры сняты."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Информационное уведомление</strong><br />Чтобы изменить направление вращения мотора, необходимо, чтобы был подключен аккумулятор и во вкладке $t(tabConfiguration.message) выбран правильный протокол ESC. Обратите внимание, что не все протоколы Dshot ESC могут работать с этой настройкой. Проверьте вашу прошивку ESC."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Установите направление вращения двигателя выбором и вращением каждого двигателя по отдельности."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Сбрасывает все направления вращения двигателя, а затем позволяет пользователю выбрать, какие из них отменить."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Направление мотора"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Обычный"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Обратный"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Испытать двигатель"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Отпустить кнопку, чтобы остановить"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Отпустите, чтобы остановить"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Индивидуально"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Мастер настройки"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Изменить направление движения выбранного мотора(-ов)"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Моторы будут вращаться при настройке направления!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Функция работает только с DSHOT ESC.<br />Убедитесь, что ваш ESC (контроллер скорости) поддерживает протокол DSHOT и измените его на вкладке $t(tabConfiguration.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Количество моторов равно 0.<br />Проверьте текущий Mixer на вкладке $t(tabConfiguration.message) или настройте через CLI. Обратитесь к этой <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">странице</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Обновите прошивку.<br /> Убедитесь, что вы используете последнюю прошивку: Betaflight 4.3 или новее."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Нажмите на номера двигателей индивидуально, чтобы изменить направление вращения"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Проверить направление вращения всех двигателей"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Пуск / вращение двигателей"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Остановить моторы"
     },
     "sensorsInfo": {
         "message": "Имейте в виду, что используя быстрое обновление периодов и рендеринга множества графов достаточно тяжело для ресурсов и будет сжигать вашу батарею быстрее, если вы используете ноутбук.<br />мы рекомендуем только отображения графики датчиков интересующих разумное обновление периодов."
@@ -3373,6 +3464,22 @@
         "message": "Главный множитель:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Соотношение Roll Pitch:",
+        "description": "Roll pitch ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Соотношение Roll Pitch",
+        "description": "This needs a meaningful help text"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Усиление I:",
+        "description": "I gain slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Усиление I",
+        "description": "This needs a meaningful help text"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Баланс PD:",
         "description": "PD balance tuning slider label"
@@ -3380,6 +3487,14 @@
     "pidTuningPDGainSlider": {
         "message": "Коэфф. усиления P и D:",
         "description": "P and D gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "Мин соотношение D:",
+        "description": "D Min ratio slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "Мин соотношение D",
+        "description": "This needs a meaningful help text"
     },
     "pidTuningResponseSlider": {
         "message": "Коэфф. реакции на движения стиков:",
@@ -5409,6 +5524,10 @@
     "vtxButtonSaved": {
         "message": "Сохранено",
         "description": "Saved action button in the VTX tab"
+    },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} разблокировано",
+        "description": "Indicates if SA device is unlocked"
     },
     "mainHelpArmed": {
         "message": "Моторы Арминг"
