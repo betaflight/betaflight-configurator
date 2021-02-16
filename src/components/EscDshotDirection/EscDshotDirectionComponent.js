@@ -117,7 +117,7 @@ class EscDshotDirectionComponent
             this._onStopWizardButtonClicked();
         });
 
-        const imgSrc = CommonUtils.GetMixerImageSrc(FC.MIXER_CONFIG.mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
+        const imgSrc = getMixerImageSrc(FC.MIXER_CONFIG.mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
         this._domMixerImg.attr('src', imgSrc);
 
         this._onLoadedCallback();

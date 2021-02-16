@@ -74,10 +74,20 @@ export function generateVirtualApiVersions() {
         firmwareVersionDropdown.appendChild(option);
     }
 }
+export function getMixerImageSrc(mixerIndex, reverseMotorDir, apiVersion)
+{
+    let reverse = "";
+
+    if (semver.gte(apiVersion, API_VERSION_1_36)) {
+        reverse = reverseMotorDir ? "_reversed" : "";
+    }
+
+    return `./resources/motor_order/${mixerList[mixerIndex - 1].image}${reverse}.svg`;
+}
 
 // TODO: these are temp binding while transition to module happens
 window.degToRad = degToRad;
 window.bytesToSize = bytesToSize;
 window.checkChromeRuntimeError = checkChromeRuntimeError;
 window.generateVirtualApiVersions = generateVirtualApiVersions;
-window.millitime = millitime;
+window.getMixerImageSrc = getMixerImageSrc;

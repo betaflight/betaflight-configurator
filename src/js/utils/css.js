@@ -47,3 +47,5 @@ CSSUtil.prototype.getColorForPercentage = function(percentage, colorTable = null
 };
 
 const cssUtil = new CSSUtil();
+window.cssUtil = cssUtil;
+export default cssUtil;
