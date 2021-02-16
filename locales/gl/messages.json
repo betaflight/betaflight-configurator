@@ -2519,6 +2519,12 @@
     "motorsEnableControl": {
         "message": "<strong> Comprendo os riscos </strong>, as hélices están retiradas: permítese o control e armado do motor, e desactívase a prevención do despegue de Runaway."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Detectáronse cambios na configuración.<br /><br /><strong class=\"message-negative-italic\">O modo proba de motor estará desactivado ata que se garden os cambios.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "De acordo"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Cancelar"
     },
