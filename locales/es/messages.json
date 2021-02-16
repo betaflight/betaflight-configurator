@@ -2423,10 +2423,16 @@
         "message": "Maestro"
     },
     "motorsNotice": {
-        "message": "<strong>Aviso Modo Test de Motor / Armado:</strong><br />Mover los controles deslizantes o armar la aeronave con el transmisor provocará que los motores <strong>giren</strong>.<br />Para evitar lesiones <strong class=\"message-negative\">quita TODAS las hélices</strong> antes de utilizar esta funcionalidad.<br />Activar el modo test de motor también desactivará temporalmente la Protección de Despegue Incontrolado, para evitar que desarme la aeronave mientras está en el banco de pruebas sin hélices.<br />"
+        "message": "<strong>Aviso Modo Prueba de Motor / Armado:</strong><br />Mover los controles deslizantes o armar la aeronave con el transmisor provocará que los motores <strong>giren</strong>.<br />Para evitar lesiones <strong class=\"message-negative\">quita TODAS las hélices</strong> antes de utilizar esta funcionalidad.<br />Activar el modo test de motor también desactivará temporalmente la Protección de Despegue Incontrolado, para evitar que desarme la aeronave mientras está en el banco de pruebas sin hélices.<br />"
     },
     "motorsEnableControl": {
         "message": "<strong>Entiendo los riesgos</strong>, las hélices están quitadas - activar control de motor y armado y desactivar la Protección de Despegue Incontrolado."
+    },
+    "motorsDialogSettingsChanged": {
+        "message": "Se han detectado cambios en la configuración.<br /><br /><strong class=\"message-negative-italic\">El modo Prueba de Motor está desactivado hasta que se hayan guardado los ajustes.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "Aceptar"
     },
     "motorOutputReorderDialogClose": {
         "message": "Cancelar"
