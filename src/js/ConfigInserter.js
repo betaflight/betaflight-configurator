@@ -1,7 +1,7 @@
 'use strict';
 
 const ConfigInserter = function () {
-}
+};
 
 const CUSTOM_DEFAULTS_POINTER_ADDRESS = 0x08002800;
 const BLOCK_SIZE = 16384;
@@ -104,4 +104,4 @@ ConfigInserter.prototype.insertConfig = function (firmware, input) {
     console.timeEnd(CONFIG_LABEL);
 
     return true;
-}
+};

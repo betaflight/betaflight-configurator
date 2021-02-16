@@ -126,7 +126,7 @@ GuiControl.prototype.interval_add_condition = function (name, code, interval, fi
             this.interval_remove(name);
         }
     }, interval, first);
-}
+};
 
 // name = string
 GuiControl.prototype.interval_remove = function (name) {

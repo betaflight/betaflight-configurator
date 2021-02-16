@@ -369,7 +369,7 @@ TABS.motors.initialize = function (callback) {
         }
 
         $('.tab-motors .sensor select').change(function(){
-            TABS.motors.sensor = $('.tab-motors select[name="sensor_choice"]').val()
+            TABS.motors.sensor = $('.tab-motors select[name="sensor_choice"]').val();
             ConfigStorage.set({'motors_tab_sensor_settings': {'sensor': TABS.motors.sensor}});
 
             switch(TABS.motors.sensor){

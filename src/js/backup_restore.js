@@ -436,7 +436,7 @@ function configuration_restore(callback) {
         }
 
         if (configuration.apiVersion == undefined) {
-            configuration.apiVersion = "1.0.0" // a guess that will satisfy the rest of the code
+            configuration.apiVersion = "1.0.0"; // a guess that will satisfy the rest of the code
         }
         // apiVersion previously stored without patchlevel
         if (!semver.parse(configuration.apiVersion)) {

@@ -273,7 +273,7 @@ TABS.setup.initialize = function (callback) {
                     arming_disable_flags_e.append('<span id="initialSetupArmingDisableFlags' + i + '" class="disarm-flag" style="display: none;">' + (i + 1) + '</span>');
                 }
             }
-        }
+        };
 
         prepareDisarmFlags();
 

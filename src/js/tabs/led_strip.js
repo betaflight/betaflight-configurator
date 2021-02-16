@@ -61,7 +61,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 usedWireNumbers.push(wireNumber);
             }
         });
-        usedWireNumbers.sort(function(a,b){return a - b});
+        usedWireNumbers.sort(function(a,b){return a - b;});
         return usedWireNumbers;
     }
 
@@ -1011,21 +1011,21 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                     if (FC.LED_COLORS[selectedColorIndex].h != value) {
                         FC.LED_COLORS[selectedColorIndex].h = value;
                         $('.colorDefineSliderValue.Hvalue').text(FC.LED_COLORS[selectedColorIndex].h);
-                        change = true
+                        change = true;
                     }
                     break;
                 case 1:
                     if (FC.LED_COLORS[selectedColorIndex].s != value) {
                         FC.LED_COLORS[selectedColorIndex].s = value;
                         $('.colorDefineSliderValue.Svalue').text(FC.LED_COLORS[selectedColorIndex].s);
-                        change = true
+                        change = true;
                     }
                     break;
                 case 2:
                     if (FC.LED_COLORS[selectedColorIndex].v != value) {
                         FC.LED_COLORS[selectedColorIndex].v = value;
                         $('.colorDefineSliderValue.Vvalue').text(FC.LED_COLORS[selectedColorIndex].v);
-                        change = true
+                        change = true;
                     }
                     break;
             }

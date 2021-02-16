@@ -690,4 +690,4 @@ TABS.onboard_logging.mscRebootFailedCallback = function () {
         .toggleClass("msc-supported", false);
 
     showErrorDialog(i18n.getMessage('operationNotSupported'));
-}
+};

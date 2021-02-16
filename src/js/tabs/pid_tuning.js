@@ -1036,7 +1036,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }
 
             return isVisible;
-        }
+        };
 
         let isVisibleBaroMagGps = false;
 
@@ -1440,18 +1440,18 @@ TABS.pid_tuning.initialize = function (callback) {
                     {name: "MultiWii (2.3 - latest)"},
                     {name: "MultiWii (2.3 - hybrid)"},
                     {name: "Harakiri"}
-                ]
+                ];
             } else if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
                 pidControllerList = [
                     {name: ""},
                     {name: "Integer"},
                     {name: "Float"}
-                ]
+                ];
             } else {
                 pidControllerList = [
                     {name: "Legacy"},
                     {name: "Betaflight"}
-                ]
+                ];
             }
 
             for (let i = 0; i < pidControllerList.length; i++) {
@@ -2225,7 +2225,7 @@ TABS.pid_tuning.checkUpdateProfile = function (updateRateProfile) {
 
                     if (changedRateProfile) {
                         GUI.log(i18n.getMessage('pidTuningReceivedRateProfile', [FC.CONFIG.rateProfile + 1]));
-                        FC.CONFIG.rateProfile = self.currentRateProfile
+                        FC.CONFIG.rateProfile = self.currentRateProfile;
                     }
                 });
             }
@@ -2450,7 +2450,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
             $('.maxRateWarning').toggle(warningRates);
 
             // and sort them in descending order so the largest value is at the top always
-            balloons.sort(function(a,b) {return (b.value - a.value)});
+            balloons.sort(function(a,b) {return (b.value - a.value);});
 
             // add the current rc values
             if (currentValues[0] && currentValues[1] && currentValues[2]) {
