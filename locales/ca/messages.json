@@ -4855,6 +4855,13 @@
     "osdDescTotalFlights": {
         "message": "Vols totals aproximats"
     },
+    "osdTextElementUpDownReference": {
+        "message": "Referència cap amunt (Pitch a 90 graus)/Abaix (Pitch a 90 graus)",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "Símbol OSD es mostra quan el stick s'apropa a la vertical (90 graus, U) i D es baixa avall (-90 graus, D)"
+    },
     "osdTextElementUnknown": {
         "message": "Desconegut $1",
         "description": "One of the elements of the OSD"
