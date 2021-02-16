@@ -1185,16 +1185,10 @@ OSD.loadDisplayFields = function() {
             name: 'OSD_UP_DOWN_REFERENCE',
             text: 'osdTextElementUpDownReference',
             desc: 'osdDescUpDownReference',
-            defaultPosition() {
-                let position = 238;
-                if (OSD.constants.VIDEO_TYPES[OSD.data.video_system] !== 'NTSC') {
-                    position += FONT.constants.SIZES.LINE;
-                }
-                return position;
-            },
+            defaultPosition: 238,
             draw_order: 465,
             positionable: true,
-            preview: 'U'
+            preview: 'U',
         },
     };
 };
