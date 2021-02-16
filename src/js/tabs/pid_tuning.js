@@ -1803,10 +1803,36 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('#sliderPidsModeSelect').val(FC.TUNING_SLIDERS.slider_pids_mode);
 
+            $('#dMinSwitch').change(function() {
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    TuningSliders.setDMinFeatureEnabled($(this).is(':checked'));
+                    // switch dmin and dmax values on dmin on/off if sliders available
+                    if (!TuningSliders.pidSlidersUnavailable) {
+                        if (TuningSliders.dMinFeatureEnabled) {
+                            ADVANCED_TUNING.dMinRoll = FC.PIDs[0][2];
+                            ADVANCED_TUNING.dMinPitch = FC.PIDs[1][2];
+                            ADVANCED_TUNING.dMinYaw = FC.PIDs[2][2];
+                        } else {
+                            FC.PIDs[0][2] = ADVANCED_TUNING.dMinRoll;
+                            FC.PIDs[1][2] = ADVANCED_TUNING.dMinPitch;
+                            FC.PIDs[2][2] = ADVANCED_TUNING.dMinYaw;
+                        }
+                        TuningSliders.calculateNewPids();
+                    }
+                }
+            });
+
             // integrated yaw doesn't work with sliders therefore sliders are disabled
             $('input[id="useIntegratedYaw"]').change(() => TuningSliders.updatePidSlidersDisplay());
 
-            const allPidTuningSliders = $('#sliderMasterMultiplier, #sliderRollPitchRatio, #sliderIGain, #sliderPDRatio, #sliderPDGain, #sliderDMinRatio, #sliderFFGain');
+            let allPidTuningSliders;
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                allPidTuningSliders = $('#sliderMasterMultiplier, #sliderPDRatio, #sliderPDGain, #sliderFFGain');
+                $('.tab-pid_tuning .firmwareSlider').hide();
+            } else {
+                allPidTuningSliders = $('#sliderMasterMultiplier, #sliderRollPitchRatio, #sliderIGain, #sliderPDRatio, #sliderPDGain, #sliderDMinRatio, #sliderFFGain');
+                $('.tab-pid-tuning .firmwareSlider').show();
+            }
 
             allPidTuningSliders.on('input', function() {
                 const slider = $(this);
