@@ -4941,6 +4941,13 @@
     "osdDescTotalFlights": {
         "message": "crwdns10296:0crwdne10296:0"
     },
+    "osdTextElementUpDownReference": {
+        "message": "crwdns10372:0crwdne10372:0",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "crwdns10374:0crwdne10374:0"
+    },
     "osdTextElementUnknown": {
         "message": "crwdns9334:0$1crwdne9334:0",
         "description": "One of the elements of the OSD"
