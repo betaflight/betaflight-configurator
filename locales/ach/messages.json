@@ -1636,11 +1636,11 @@
         "description": "Advance of the D Min feature"
     },
     "pidTuningDMinFeatureHelp": {
-        "message": "crwdns9750:0crwdne9750:0",
+        "message": "crwdns10376:0crwdne10376:0",
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "crwdns10140:0crwdne10140:0",
+        "message": "crwdns10378:0crwdne10378:0",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1772,7 +1772,7 @@
         "message": "crwdns10156:0crwdne10156:0"
     },
     "pidTuningFfInterpolateSpHelp": {
-        "message": "crwdns10158:0crwdne10158:0"
+        "message": "crwdns10380:0crwdne10380:0"
     },
     "pidTuningFfInterpolate": {
         "message": "crwdns10160:0crwdne10160:0"
@@ -1799,14 +1799,14 @@
         "message": "crwdns5700:0crwdne5700:0"
     },
     "pidTuningProportionalHelp": {
-        "message": "crwdns9754:0crwdne9754:0",
+        "message": "crwdns10382:0crwdne10382:0",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "crwdns5701:0crwdne5701:0"
     },
     "pidTuningIntegralHelp": {
-        "message": "crwdns9756:0crwdne9756:0",
+        "message": "crwdns10384:0crwdne10384:0",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
@@ -1816,14 +1816,14 @@
         "message": "crwdns10062:0crwdne10062:0"
     },
     "pidTuningDerivativeHelp": {
-        "message": "crwdns9758:0crwdne9758:0",
+        "message": "crwdns10386:0crwdne10386:0",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "crwdns8809:0crwdne8809:0"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "crwdns9760:0crwdne9760:0",
+        "message": "crwdns10388:0crwdne10388:0",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -1959,11 +1959,11 @@
         "message": "crwdns6388:0crwdne6388:0"
     },
     "tuningHelpSliders": {
-        "message": "crwdns9836:0crwdne9836:0",
+        "message": "crwdns10390:0crwdne10390:0",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "crwdns9092:0crwdne9092:0"
+        "message": "crwdns10392:0crwdne10392:0"
     },
     "receiverThrottleMid": {
         "message": "crwdns5735:0crwdne5735:0"
@@ -2056,7 +2056,7 @@
         "message": "crwdns5760:0crwdne5760:0"
     },
     "receiverMspWarningText": {
-        "message": "crwdns6402:0crwdne6402:0"
+        "message": "crwdns10394:0crwdne10394:0"
     },
     "receiverMspEnableButton": {
         "message": "crwdns6403:0crwdne6403:0"
@@ -2937,7 +2937,7 @@
         "message": "crwdns5972:0crwdne5972:0"
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "crwdns9880:0crwdne9880:0"
+        "message": "crwdns10396:0crwdne10396:0"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "crwdns5973:0crwdne5973:0"
@@ -3491,7 +3491,7 @@
         "message": "crwdns6080:0crwdne6080:0"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "crwdns9762:0crwdne9762:0",
+        "message": "crwdns10398:0crwdne10398:0",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -3511,7 +3511,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "crwdns9772:0crwdne9772:0",
+        "message": "crwdns10400:0crwdne10400:0",
         "description": "Gyro filtering tuning slider helpicon message"
     },
     "pidTuningDTermFilterSlider": {
@@ -3519,11 +3519,11 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "crwdns9776:0crwdne9776:0",
+        "message": "crwdns10402:0crwdne10402:0",
         "description": "D Term filtering tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "crwdns9778:0[p-term]crwdnd9778:0[d-term]crwdne9778:0",
+        "message": "crwdns10404:0[p-term]crwdnd10404:0[d-term]crwdne10404:0",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -3559,20 +3559,20 @@
         "description": "Master tuning slider label"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "crwdns10356:0crwdne10356:0",
-        "description": "Roll pitch ratio slider label"
+        "message": "crwdns10406:0crwdne10406:0",
+        "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
-        "message": "crwdns10358:0crwdne10358:0",
-        "description": "This needs a meaningful help text"
+        "message": "crwdns10408:0crwdne10408:0",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
-        "message": "crwdns10360:0crwdne10360:0",
-        "description": "I gain slider label"
+        "message": "crwdns10410:0crwdne10410:0",
+        "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "crwdns10362:0crwdne10362:0",
-        "description": "This needs a meaningful help text"
+        "message": "crwdns10412:0crwdne10412:0",
+        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSlider": {
         "message": "crwdns9794:0crwdne9794:0",
@@ -3580,34 +3580,34 @@
     },
     "pidTuningPDGainSlider": {
         "message": "crwdns9796:0crwdne9796:0",
-        "description": "P and D gain tuning slider label"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningDMinRatioSlider": {
-        "message": "crwdns10364:0crwdne10364:0",
-        "description": "D Min ratio slider label"
+        "message": "crwdns10414:0crwdne10414:0",
+        "description": "D Min slider label"
     },
     "pidTuningDMinRatioSliderHelp": {
-        "message": "crwdns10366:0crwdne10366:0",
-        "description": "This needs a meaningful help text"
+        "message": "crwdns10416:0crwdne10416:0",
+        "description": "D_min slider helpicon message"
     },
     "pidTuningResponseSlider": {
         "message": "crwdns9798:0crwdne9798:0",
         "description": "Response tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
-        "message": "crwdns9800:0crwdne9800:0",
-        "description": "Master gain tuning slider helpicon message"
+        "message": "crwdns10418:0crwdne10418:0",
+        "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSliderHelp": {
-        "message": "crwdns10124:0crwdne10124:0",
+        "message": "crwdns10420:0crwdne10420:0",
         "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningPDGainSliderHelp": {
-        "message": "crwdns9804:0crwdne9804:0",
+        "message": "crwdns10422:0crwdne10422:0",
         "description": "P and D gain tuning slider helpicon message"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "crwdns10126:0crwdne10126:0",
+        "message": "crwdns10424:0crwdne10424:0",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
@@ -3699,7 +3699,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "crwdns9816:0$t(configurationMotorPoles.message)crwdnd9816:0$t(tabConfiguration.message)crwdne9816:0",
+        "message": "crwdns10426:0$t(configurationMotorPoles.message)crwdnd10426:0$t(tabConfiguration.message)crwdne10426:0",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3773,7 +3773,7 @@
         "message": "crwdns10220:0crwdne10220:0"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "crwdns10222:0crwdne10222:0"
+        "message": "crwdns10428:0crwdne10428:0"
     },
     "pidTuningVbatSagValue": {
         "message": "crwdns10224:0crwdne10224:0"
@@ -3854,7 +3854,7 @@
         "message": "crwdns10136:0crwdne10136:0"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "crwdns10130:0$t(tabMotorTesting.message)crwdne10130:0"
+        "message": "crwdns10430:0$t(tabMotorTesting.message)crwdne10430:0"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "crwdns8805:0crwdne8805:0"
@@ -4925,7 +4925,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
-        "message": "crwdns9955:0crwdne9955:0"
+        "message": "crwdns10432:0crwdne10432:0"
     },
     "osdTextElementEfficiency": {
         "message": "crwdns10024:0crwdne10024:0",
@@ -5491,7 +5491,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "crwdns9884:0crwdne9884:0",
+        "message": "crwdns10434:0crwdne10434:0",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -5535,7 +5535,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "crwdns9714:0$t(vtxTablePowerLevelsValue.message)crwdnd9714:0$t(vtxTablePowerLevelsLabel.message)crwdne9714:0",
+        "message": "crwdns10436:0$t(vtxTablePowerLevelsValue.message)crwdnd10436:0$t(vtxTablePowerLevelsLabel.message)crwdne10436:0",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -5571,7 +5571,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "crwdns9658:0$t(vtxTableBandTitleName.message)crwdnd9658:0$t(vtxTableBandTitleLetter.message)crwdnd9658:0$t(vtxTableBandTitleFactory.message)crwdne9658:0",
+        "message": "crwdns10438:0$t(vtxTableBandTitleName.message)crwdnd10438:0$t(vtxTableBandTitleLetter.message)crwdnd10438:0$t(vtxTableBandTitleFactory.message)crwdne10438:0",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -5757,7 +5757,7 @@
         "message": "crwdns6349:0crwdne6349:0"
     },
     "pidTuningDeltaTip": {
-        "message": "crwdns6350:0crwdne6350:0"
+        "message": "crwdns10440:0crwdne10440:0"
     },
     "pidTuningPidControllerTip": {
         "message": "crwdns6351:0crwdne6351:0"
