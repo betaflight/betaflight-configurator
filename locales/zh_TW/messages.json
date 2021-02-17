@@ -1519,14 +1519,6 @@
         "message": "超前",
         "description": "Advance of the D Min feature"
     },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min 提供了一種方法，使飛機在正常飛行中可以維持一個較低的 D 值，又可以在如翻轉等快速動作時提高到一個較高的值來抑制過衝。它也會在發生洗槳時提高 D 值。調整增益可以調整 D 到達最高值的速度，同時它基於陀螺儀數據來確定快速移動與洗槳時間。超前通過使用設定點而不是陀螺儀來判定快速移動的方法來更早地提高 D 值。",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "控制正常前進飛行中的阻尼(D-term)。 <br>當 D Min 開啟後，D 增益的有效值將在飛行中實時變化。在正常前進飛行中，有效值將是下方所設置的 D_min 增益。當發生快速移動或洗槳時，D 增益的有效值將會提高至左側指定的 D_max 值。 <br><br>當出現非常迅速的搖桿輸入時，D 增益將升高至 D_max，但在洗槳時僅會升高至一部分。 <br>調整 D Min 增益和超前以控制增益增大的敏感性和時機。",
-        "description": "D Min helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "PID 控制器設置"
     },
@@ -1655,9 +1647,6 @@
     "pidTuningFfInterpolateSp": {
         "message": "前饋插值"
     },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "下列選項將會為從競速/激進到平滑/高清的各種飛行風格提供良好的前饋參數。 <br><br>模式：競速設置應設置為無平均，競速/快速花飛應設置為2點平均，高清錄像應設置為3點平均，高清電影風平滑飛行應設置為4點平均。 <br><br>平滑度：限制傳入的遙控信號的幀間更改量，若要獲得更平滑的FF信號請增加，若要獲得更激進的FF響應請減少。 <br><br>增壓：當搖桿快速運動時幫助克服電機響應延遲，可能會導致抖動。 HD請嘗試將其設置為10，競速設置為20。更高的值可能更適用於低推重比飛機，最高至30，但有可能會造成輕微超調或抖動。"
-    },
     "pidTuningFfInterpolate": {
         "message": "模式"
     },
@@ -1682,16 +1671,8 @@
     "pidTuningProportional": {
         "message": "Proportional"
     },
-    "pidTuningProportionalHelp": {
-        "message": "控制飛行器如何緊湊跟蹤搖桿(設定點)。<br><br>更高的值(增益) 將提供更緊湊的跟蹤效果，但如果與D的比例過高則有可能導致過衝。將 P-term 視為汽車上的彈簧。",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
     "pidTuningIntegral": {
         "message": "Integral"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "控制飛機保持設定點整體位置的力度的強弱。<br>類似於 P ，但跟針對長期的偏差例如飛機的重心偏移或者外界擾動(持續的風)。<br><br>更高的增益提供更緊湊的軌跡(如連續過彎時) ，但也會讓飛機對搖桿響應顯得有些僵硬。<br>如果相對於 D-term 太高則可能會導致低頻抖動。",
-        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivative"
@@ -1699,16 +1680,8 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "控制緩衝任何移動的阻尼的強弱，對打桿動作，D-term 會緩衝命令。對外界擾動(洗槳或微風) D-term 會緩衝擾動。<br><br>更高的增益將提供更多的阻尼，以減少 P 和 FF 造成的過衝。<br>然而 D-term 對陀螺儀的高頻震動非常敏感(噪音會被按頻率放大)。<br><br>如果 D 增益太高或陀螺儀噪聲沒有被妥善濾波處理(見濾波頁) ，高頻噪聲則會導致電機過熱甚至燒毀。<br><br>把 D-term 想象成車輛上的避震器，但是具有放大陀螺儀高頻噪音的負面效果。",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "前餽是一個基於搖桿輸入的額外提升參數。FF 幫助 P 值來推動飛機更快的響應搖桿的移動。<br><br>P-term 基於搖桿的設定點(度/秒) 和陀螺儀讀數的當前角速度(度/秒) 之間的誤差來推動飛機。FF 只基於搖桿的移動量來推動飛機。<br><br>更高的增益值可以使飛機感覺更加貼手。<br>太高的值會導致過衝、電機發熱量增加和電機飽和（電機無法更上期望的速率）。<br>較低或零值可使飛機手感更為平滑。",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> 非常高的 rate 可能會導致突然減速時發生電機失步。"
@@ -1842,13 +1815,6 @@
     "tuningHelp": {
         "message": "<b>調校技巧</b><br /><span class=\"message-negative\">重要：</span>調校後的初次飛行需注意電機溫度。濾波值越高，飛行效果可能越好，但也會導致更多的訊號“噪音”進入電機。<br>100Hz 是默認較佳的數值，但對震動較嚴重的情況，您可以嘗試把 Dterm 和 Gyro 濾波器降低到50Hz。"
     },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">重要訊息：</span> 我們建議使用滑塊來更改濾波器設置。請同時移動兩個滑塊。<br>最好做出相對較小的變更，並在每次做出變更後進行測試飛行。在做出進一步改動之前請仔細檢查電機溫度。<br>較少的濾波(滑塊向右滑，以得到更高的截止頻率) 將改善“洗槳”現象，但會讓更多的電機噪聲通過，從而使電機更燙，溫度過高則有可能燒毀電機。對於大多數的較新飛行器以及在啟用 RPM 濾波的情況下，可以採用較少的濾波。<br>異常高或異常低的濾波器設置可能會導致飛行器在解鎖時發生“起飛失控” 現象。默認設置對於常見的5' 飛機是安全的。<br><strong>注意：</strong> 更改配置文件只會更改 D Term 濾波器設置。陀螺儀濾波器設置對於所有的配置文件來說都是相同的。",
-        "description": "Filter tuning subtab note"
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>警告：</b></span>您使用的濾波器數量非常少。這可能會導致飛機難以控制，並可能導致起飛失控。強烈建議您<b>至少啟用一個陀螺儀動態低通濾波器或者陀螺儀低通濾波器1和一個 D Term 動態低通濾波器或 D Term 低通濾波器1</b>。 "
-    },
     "receiverThrottleMid": {
         "message": "油門中點"
     },
@@ -1932,9 +1898,6 @@
     },
     "receiverModelPreview": {
         "message": "預覽"
-    },
-    "receiverMspWarningText": {
-        "message": "這些搖桿使 Betaflight 可以無需遙控器和接收機就可以解鎖飛控進行測試。然而，<strong> 這項功能並非是為實際飛行而設，且螺旋槳必須被拆除。</strong><br><br>此功能並不保證可以可靠地控制你的飛機。<strong>如果不拆除螺旋槳可能會造成嚴重的傷害。</strong>"
     },
     "receiverMspEnableButton": {
         "message": "啟用控制"
@@ -2688,9 +2651,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "選擇你的飛控型號"
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "從 Betaflight 4.1 开始，Betaflight 引入了對<strong>統一目標</strong>的支援。統一目標的概念意味著使用相同MCU (F4、F7) 的飛控板可以使用相同的 .hex 固件文件。為了使不同的飛控板使用相同的固件，在刷寫統一目標時，將在固件旁邊部署一個特定的配置文件。<br>此版本的 Betaflight 配置程式支援一步刷寫帶有各自飛控板特定配置的統一目標。下拉列表中顯示了每個飛控板可用的不同固件類型，如下所示: <br><br><strong>&lt;board name&gt;</strong>或<br><strong>&lt;board name&gt;(旧格式)</strong>:<br>非統一目標，或4.1版本之前的統一目標。<br><br><strong>&lt;board name&gt;(&lt;manufacturer id&gt;)</strong>:<br>(4字母製造商ID)<br>統一目標。<br><br><strong>若統一目標可用請使用統一目標。</strong>如果您在使用統一目標時遇到問題，請打開一個<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>然後使用非統一目標，直至問題解決。"
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "選擇對應你飛控型號的固件版本"
     },
@@ -3242,10 +3202,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "獨立於 PID 配置文件的濾波器設置"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "調整飛機陀螺儀和 D Term 濾波的滑塊。 <br><br>更多的濾波提供更平滑的飛行，但同時也增加陀螺儀訊號到達 PID 循環的延遲（相位延遲），降低洗槳處理能力和搖桿的響應手感，甚至導致飛機抖動。 <br><br>更少的濾波降低陀螺儀訊號延遲，但會因為 D 值響應更高頻的電機震動（噪聲）而增加電機溫度。 <br>另外，如果濾波太少，會損害飛行性能表現（更差的訊噪比）。",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "更少濾波",
         "description": "Filter tuning slider low header"
@@ -3262,21 +3218,9 @@
         "message": "陀螺儀濾波器乘數:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "按比例互相調整默認的陀螺儀低通濾波器。陀螺儀濾波發生在 PID 循環之前。 <br>常見的不同級別飛機的電機噪音範圍：<br><br>6寸及以上飛機通常在100hz 到330hz 之間<br>5寸機通常在220hz 到500hz<br>3寸及以下飛機通常在300hz 到850hz<br><br>通常建議，移動滑塊使得陀螺儀動態低通濾波器1的最小/最大截止頻率的範圍能夠囊括上述範圍。 <br>如果追求更平滑的飛行風格，可以加強濾波。而要使用更激進的鋁箔策略，則可以使用滑塊減少濾波。 <br><br>減少濾波時，務必注意不要太過激進，否則可能導致飛機失控或燒毀電機。 <br>注意：機架共振、軸承損壞和螺旋槳受損都會導致你需要更多的濾波。",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "D Term 濾波器乘數:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "按比例互相調整默認的 D Term 低通濾波器。 <br>因為 D Term 對噪音最為敏感，且可以以指數級放大高頻噪聲， 故 D Term 濾波僅作用於 D 值，且發生在 PID 循環之後。 <br><br>通常來說，你需要一起移動陀螺儀濾波器滑塊和 D Term 濾波器滑塊。您需要將 D Term 濾波器截止頻率設置得遠低於電機噪音帶，以獲得高強度 D Term 濾波，然後對整個陀螺儀訊號應用陀螺儀濾波器。 <br>這也是默認的滑塊比例。",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "來調整飛行器飛行特性（PID增益）的滑塊<br><br>主乘數: 保持各參數增益比例差別的同時升高或降低（以上）所有 PID 增益。 <br><br>PD 平衡: 調整 P 和 D（\"彈簧\" [p-term] 和 \"緩衝\" [d-term]） 之間的平衡（比率\\比例差別）。 <br><br>PD增益: 同時增加或降低 P&D 的增益——保持兩者間的比率（平衡）——以適配高（或低）PID 權重。 <br><br>搖桿響應增益: 提高或降低前饋增益，以控制對飛行器的搖桿響應感。",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">小心</span>: 當前的滑塊位置可能導致起飛失控、電機損壞或飛行器出現其他不安全的行為。請謹慎行事。",
@@ -3316,27 +3260,11 @@
     },
     "pidTuningPDGainSlider": {
         "message": "P 和 D 增益:",
-        "description": "P and D gain tuning slider label"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningResponseSlider": {
         "message": "搖桿響應增益:",
         "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "通常來講因為推重比較低，較大的飛機會需要較高的 PID 值。 <br><br>而較小的飛機（微型機）因為推重比較高，通常需要較低的 PID 值。 <br><br>動力比越低的飛機需要的值越高，動力比越高的飛機需要的值越低。",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "相對較高的 D 值將削弱搖桿響應力，並且可能會使電機變熱，但有助於抑制由 P 造成的晃動，並且會改善洗槳。 <br><br>相對較低的 D 值將會提供較快的搖桿響應力，但可能會削弱抑制洗槳的能力。",
-        "description": "PD balance tuning slider helpicon message"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "較低的 P 和 D 值有助於電機保持涼爽，但會遭遇更多的洗槳震動。太低值可能導致飛機不穩定。 <br><br>P 和 D 值配合減少洗槳。 <br><br>更高的值會增加電機溫度，並較高的 D 值可能會增加平飛時的抖動。",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "較低的 FF 值會惡化搖桿響應，且可能在翻轉的尾聲產生慢速回彈（I-term 飽和）。 <br><br>較高的 FF 值在快速移動時會有更好的搖桿響應。然而，過高的 FF 值會導致過沖和在翻轉尾聲產生快速回彈。",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "陀螺儀低通濾波器"
@@ -3426,10 +3354,6 @@
         "message": "陀螺儀 RPM 濾波器",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmFilterHelp": {
-        "message": "RPM 濾波器是運行在陀螺儀上的一組陷波濾波器，它使用 RPM 回傳數據以手術級精度來移除電機噪聲。 <br><br><b><span class=\"message-positive\">重要</span>:電調必須支援雙向Dshot 協議，$t(tabConfiguration.message)頁面內$t(configurationMotorPoles.message)的值必須正確，這樣濾波器才可以工作。 </b>",
-        "description": "Header text for the RPM Filter group"
-    },
     "pidTuningRpmHarmonics": {
         "message": "陀螺儀 RPM 濾波器諧波數量",
         "description": "Text for one of the parameters of the RPM Filter"
@@ -3500,9 +3424,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "電池壓降補償"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "通過補償電池電壓，在可用的電池電壓範圍內，提供一致的油門和PID性能。補償量可以是0至100%之間任意數值。推薦使用全額補償（100%）。 <br><br>訪問<a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer \">這個wiki詞條</a>以獲取更多信息。"
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -3571,9 +3492,6 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "動態怠速值 [* 100 RPM]"
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "動態怠速可以提升低轉速下的控制力，並減少電機失步的風險。它糾正了由於氣流使得螺旋槳加速或減速而引起的問題，提高了PID的權重、穩定性、電機制動和響應能力。動態怠速的 RPM 值應設置得比您的 Dshot 怠速值（請查看 $t(tabMotorTesting.message) 選項卡）對應的 RPM 值低20%。通常不需要修改默認的 Dshot 怠速值。為了延長倒掛動作的滯空時間，應該同時降低 Dshot 怠速值和動態怠速值。 <br><br>訪問<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">這個wiki</a>以獲取更多訊息。"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "訓練模式角度限制"
@@ -4639,9 +4557,6 @@
         "message": "相機取景框",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCameraFrame": {
-        "message": "添加一個可調整的虛擬取景框，用於表示飛行員的高清攝像機的視野範圍。 <br><br>你可以在CLI中通過 'osd_camera_frame_width' 和 'osd_camera_frame_height' 來調整其寬度和高度"
-    },
     "osdTextElementEfficiency": {
         "message": "電池效率",
         "description": "One of the elements of the OSD"
@@ -5191,10 +5106,6 @@
         "message": "維修站模式(Pit Mode)",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "啟用時，圖傳將進入功率極低的模式，可以在不影響其他飛行員的情況下對飛行器進行維護。通常來說，此模式的有效範圍小於5米。 <br><br>注意: 一些協議，如SmartAudio，在圖傳上電之後無法通過軟件方式開啟Pit模式。",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "維修站模式頻率",
         "description": "Text of one of the fields of the VTX tab"
@@ -5235,10 +5146,6 @@
         "message": "它定義了您的图传所支援的功率的數量",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "該表展示了可用於圖傳的不同功率。它分為兩部分: <br><b>- $t(vtxTablePowerLevelsValue.message):</b>每個功率級別都需要有一個由硬體製造商定義的值。請您聯繫製造商以獲取正確的值，或使用Betaflight的wiki說明 VTX Table 的內容來取得一些使用樣例。 <br><b>-$t(vtxTablePowerLevelsLabel.message):</b>您可以在此為您的圖傳的每個功率級別都設置標籤。可以是數字(25, 200, 600, 1.2), 字母(OFF, MIN, MAX) 或者是數字與字母混用。 <br><br>你必須<b>僅</b>配置符合當地法律法規的功率級別。",
-        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
-    },
     "vtxTablePowerLevelsValue": {
         "message": "值",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5270,10 +5177,6 @@
     "vtxTableBandTitleFactory": {
         "message": "工廠模式",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "該表表示可用於圖傳的所有頻率。您可以擁有多個頻段並且您必須配置每個頻段的：<br><b>- $t(vtxTableBandTitleName.message)：</b> 您需要為此頻段分配名稱，例如BOSCAM_A、FATHARK 或 RACEDAND。 <br><b>- $t(vtxTableBandTitleLetter.message):</b> 該頻段的縮寫。 <br><b>- $t(vtxTableBandTitleFactory.message):</b> 這指示它是否是工廠模式頻段。如果啟用，Betaflight會將頻段及頻道號碼發送到圖傳。圖傳將使用內置頻率表，在此配置的頻率值僅在OSD 內和其他地方顯示。如果不啟用，Betaflight將向圖傳發送在此配置的真正的頻率值。 <br><b>- 頻率：</b> 此波段頻率。 <br><br>記住，並非所有頻率在您的國家都是合法的。您必須將不使用的頻率上的值設置為 <b>0</b>。",
-        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
         "message": "圖傳配置文件<span class=\"message-positive\">已保存</span>",
@@ -5452,9 +5355,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "測量模式"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>誤差導數模式</b>提供更加直接的搖桿反應，適合競速比賽。 <br><br><b>測量導數模式</b> 提供更平滑搖桿的反應，適合花式飛行。"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>傳統 vs Betaflight (浮點數):</b> PID 比例和 PID 邏輯是完全一樣的。理論上，在兩者之間進行切換不需要重新調參。傳統的也是betaflight參與的重寫算法，使用整數進行計算。 Betaflight PID 控制器使用浮點數進行計算，並專門為多軸飛行器設計了許多新功能<br> <b>浮點vs 整數:</b> PID 比例和PID邏輯完全一樣的. 理論上，在兩者之間進行切換不需要重新調參。 F1晶片缺乏FPU，使用浮點運算將會增加CPU負荷，使用整數運算會得到更加好的運行效果。但是浮點運算會獲得稍高的精準度。"
