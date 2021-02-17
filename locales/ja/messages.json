@@ -1541,14 +1541,6 @@
         "message": "詳細設定",
         "description": "Advance of the D Min feature"
     },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D値最小[D_Min] は、通常の飛行ではD値のレベルを低くし、フリップやロールなどオーバーシュートを引き起こすような素早い操縦が必要な場合には、D値のレベルを高くする機能を提供します。またD値を上げ過ぎるとプロップウォッシュとなります。強度[ゲイン] は、D値が最大値に到達する速度を調整し、それによりジャイロに基づき、鋭い動きとプロップウォッシュ状態が決まります。詳細設定は、ジャイロの代わりにセットポイントを使用して鋭い動きが決まり、D値を素早く上昇させます。",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "通常の直進飛行での減衰の強度 (D値) を制御します。<br>D_Minを有効にすると、飛行中に有効なD値の強度を可変させます。通常の直進飛行ではD_Min値を下回る強度となります。機敏な挙動またはプロップウォッシュが発生した際、有効なD_Max値の強度は左に指定されたD値ゲインまで上昇します。<br><br>機敏なスティック入力の場合は完全なD_Max値ゲインが得られますが、プロップウォッシュ時は一部のD値ゲインしか有効になりません。<br>D_Minの強度[ゲイン] と詳細設定を調整して、ブーストの感度とタイミングを制御しましょう。",
-        "description": "D Min helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "PIDコントローラ設定"
     },
@@ -1677,9 +1669,6 @@
     "pidTuningFfInterpolateSp": {
         "message": "FF 補間"
     },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "次のオプションは、レース/アグレッシブからスムーズ/HD空撮まで、フィードフォワード値を微調整することができます。<br><br> モード: レースの場合は平均値 無効、レース/高速フリースタイルの場合は平均値 2、HD空撮の場合は平均 3、HD動画の滑らかさを求める場合は平均値 4に設定します。<br><br> 滑らかさ: 1回で受信する送信機通信ステップが行う際の変更量を制限し、滑らかなFFを求めるには増加させ、より積極的なFFの応答性を求める場合には減少させます。<br><br> ブースト: クイックなスティック入力によるモーター出力ラグを克服させることができますが、揺らぎは増加します。HD空撮の場合は10、レースの場合は20をお試しください。制御があまりできないような機体には最大30まで有効となりますが、細かなオーバーシュートや揺らぎを引き起こしてしまう場合があります。"
-    },
     "pidTuningFfInterpolate": {
         "message": "モード"
     },
@@ -1704,16 +1693,8 @@
     "pidTuningProportional": {
         "message": "Proportional"
     },
-    "pidTuningProportionalHelp": {
-        "message": "機体がスティックに対してどのくらい厳密に追従するか (セットポイント) の強度を制御します。<br><br>値[ゲイン] を大きくするとスティックに対する追従が厳密になりますが、微分制御 (D値) に比例し値が高過ぎるとオーバーシュートを引き起こすことがあります。P値に関しては自動車でいうサスペンションのスプリングとお考えください。",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
     "pidTuningIntegral": {
         "message": "Integral"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "機体がセットポイントの全体位置をどれだけしっかり保持するかの強度を制御します。<br>これは比例に似ていますが、重心のオフセット (CoG) または持続的な外部の影響 (定常風) など、機体に対するより長いバイアスのためとなります。< br><br>ゲインを高くすると、より厳密な追従が可能となりますが (例:スイープターン)、指示したスティック入力に対して機体挙動は硬く感じることとなるでしょう。<br>D値に比例して極端に値が高いと、遅い振動を引き起こす場合があります。",
-        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivative"
@@ -1721,16 +1702,8 @@
     "pidTuningDMax": {
         "message": "D値最大"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "機体のあらゆる動きに対する減衰の強度を制御します。スティックの動きに対し、命令によりD値を減衰させます。外部からの影響 (プロップウォッシュまたは突風) の場合、D値にてその影響を減少させることができます。<br><br>強度を高くすると減衰が大きくなり、P値およびFF値によるオーバーシュートが減少します。<br>ただし、D値はジャイロにおける高周波振動に非常に敏感です。(ノイズ | \n10倍から100倍へ拡大)<br><br>D値ゲインが高すぎる場合、またはジャイロノイズが適切にフィルター処理されていない場合、高周波ノイズによりモーターが発熱し、モーターが焼損する可能性があります。(フィルタータブ参照) <br><br>D値は自動車のサスペンションのショックアブソーバーとお考えください。ただし高周波ジャイロノイズを増幅させてしまうという、固有のマイナス特性があります。",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "スティック入力に基づく (スプリングのような) 追加設定項目です。FFは機体へのスティック操作の命令によりP値をよりプッシュする効果があります。<br><br>P値は命令されたセットポイント (角度/秒) と現在の角速度のジャイロ読取値 (角度/秒) の差異を基としてプッシュします。FFは、スティック可変のみに基づいてプッシュします。<br><br>値 (ゲイン) が高いほど、スティック入力に対する機体の応答がより機敏になります。<br>値が高すぎると、オーバーシュート、モーター熱の増加、モーターの飽和が発生する可能性があります。(モーターが指定した変化率に追従できない場合) <br>値を低くまたはゼロ (0) にすると、スティック入力に対する応答が遅くなりスムーズな反応となります。",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> レートを非常に高くすると、急激な減速から（各モーターの）非同期が発生する可能性があります。"
@@ -1864,13 +1837,6 @@
     "tuningHelp": {
         "message": "<b>チューニングTips</b><br /><span class=\"message-negative\">重要:</span> 最初のフライト中はモーターの温度を確認することが重要です。フィルター値が高くなるほど飛行が軽快となりますが、モーターにはより多くのノイズが発生します。<br>デフォルト値である100Hzが最適値となりますが、ノイズ低減設定ではD値フィルターを50Hzに、またはジャイロフィルターの値を下げてみてください。"
     },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">重要:</span> スライダーを使用してフィルター設定を変更することを推奨します。<br>比較的少ない変更を行い、それぞれ変更後にテストを実行するのが最善です。さらに変更する前に、モーター温度をよく確認してください。<br>フィルター減少 (右側スライダー、カットオフ高値) はプロップウォッシュを改善しますが、モーターにより多くのノイズを発生させ、モーターをより高温に、おそらく燃え尽きてしまうほど高温になってしまいます。また、ほとんどの初期出荷時およびRPMフィルタリングが有効になっている場合、フィルタリングを減らすことができます。<br>異常に高いまたは低いフィルター設定は、アーム時のふらつきを引き起こす場合があります。初期値は一般的な5インチ機に対して安全な値となっています。<br><strong>注:</strong> プロファイルを変更しても、D-Termフィルター設定のみが変更されます。ジャイロフィルターの設定は、全てのプロファイルで同じ設定となります。",
-        "description": "Filter tuning subtab note"
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ないです。これは機体制御が困難となる可能性があり、飛行中に大きく影響する可能性があります。<b>『動的ジャイロローパス』または『ジャイロローパス 1』の少なくとも1つと『D値動的ローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
-    },
     "receiverThrottleMid": {
         "message": "スロットルMID"
     },
@@ -1960,9 +1926,6 @@
     },
     "receiverModelPreview": {
         "message": "プレビュー"
-    },
-    "receiverMspWarningText": {
-        "message": "これらのスティックは、送信機または受信機が存在しない状態でBetaflightにてアームし、テストすることができます。ただし、<strong>この機能を利用する際は飛行目的ではないため、プロペラを取り付けないでください。</strong><br><br>この機能は、機体への信頼性の高い制御機能を保証致しません。<strong>プロペラをそのまま外さず放置すると重傷を負う危険性があります。</strong>"
     },
     "receiverMspEnableButton": {
         "message": "コントロール有効"
@@ -2836,9 +2799,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "FCボードチップセットを選択すると、オンラインでファームウェアの確認ができます - 適切なファームウェアを選択してください。"
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight 4.1以降、Betaflightは <strong>Unified Targets</strong> のサポートを導入しています。Unified Targetsという概念は、同じファームウェア[.hexファイル]が同じMCU (F4, F7) を搭載する全てのFCボードに適用できることを意味します。異なるFCボードを同じファームウェアで動作させるために、Unified Targetsがファームフラッシュされると、ファームウェアとともに特定の設定ファイルが展開されます。<br>このバージョンのBetaflight Configuratorは、1回のステップでそれぞれのFCボード固有の設定に合わせたUnified Targets書き込みをサポートします。各FCボードで使用可能な様々なファームウェアタイプが、次のようにドロップダウンにて表示されます:<br><br><strong>&lt;board name&gt;</strong> or <br><strong>&lt;board name&gt; (レガシー) </strong>:<br>non-unified target, or pre-4.1 versions of the firmware for Unified Targets.<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (4文字の製造元ID) <br>Unified Target.<br><br><strong>利用可能であればUnified Targetsを使用してください。</strong>もしUnified Targetsを使用して問題が発生した場合には、<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>を開いてから問題が解決するまでnon-unified targetを使用してください。"
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "FCボードのファームウェアバージョンを選択してください。"
     },
@@ -3390,10 +3350,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile毎のPID制御設定"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "機体におけるジャイロとD値フィルターを調整するスライダーです。<br><br>より多くのフィルターを使用すると、スムーズな飛行が可能になりますが、PIDループへのジャイロ信号の遅延 (位相遅延) も増加します。ハンドリング、スティック応答、に影響し、過度な値の場合は振動を引き起こす可能性があります。<br><br>フィルタリング減少させると、ジャイロ信号の遅延も減少しますが、D値が高周波モーターの振動 (ノイズ) に反応するため、モーターの温度が上昇する可能性があります。<br>さらにフィルタリングが過度に低い場合は、飛行性能が低下します。 (信号における雑音が高くなる)",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "フィルター減少",
         "description": "Filter tuning slider low header"
@@ -3410,21 +3366,9 @@
         "message": "ジャイロフィルター乗算値:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "デフォルトのジャイロローパスフィルターを互いに比例して増減します。ジャイロフィルタリングは、PIDループの前に適用されます。<br>クワッドコプタークラス毎の一般的なモーターノイズ範囲:<br><br>6インチ以上 - 通常100hz〜330hz以内<br>5インチ - 通常220hz～500hz以内<br>3インチ以下&Whoop - 通常300hz～850hz以内<br><br>通常、動的ジャイロローパスフィルター1の最小/最大カットオフ範囲が上記をカバーするようにスライダーを設定します。<br>ただし、よりスムーズな飛行を実現するには、スライダーで [詳細フィルタリング] を使用します。 より積極的なフィルター調整を行うには、スライダーの [フィルター減少] を使用します。<br><br>フィルタリング減少により、モーターの飛び散りや焼損の原因となるような過激な設定にならないよう注意してください。<br>フレームの共振の問題、ベアリングの不良、プロペラによる掻き乱しなど、更にフィルタリングが必要になる場合もありますのでご注意ください。",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "D値フィルター乗算値:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "デフォルトのD値ローパスフィルターを互いに比例し増減します。<br>D値フィルタリングは、PIDループの後にD値にのみ適用されます。これは、D値がノイズに最も敏感なものあり、高周波ノイズを10倍から100倍以上増幅できてしまうためです。<br><br>一般に、ジャイロフィルターのスライダーでD値フィルタースライダーを上へ移動します。より厳密なD値フィルタリングを行うため、D値フィルターのカットオフをモーターノイズ範囲よりも十分に低くしたい場合、ジャイロフィルター乗算値を使用してジャイロ信号全体に適用します。<br>推奨される差分は、デフォルト値およびスライダーのスケーリングに組み込まれています。",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "機体の飛行特性 (PID値) を調整するスライダー<br><br>基準乗算値: PID値の間における比例差を保持しながら、全ての (上記) PID強度[ゲイン] を増減します。<br><br>PD値バランス: P値とD値 (スプリング [p-term] およびショックアブソーバー [d-term]) 間のバランス (比率\\比例差) を調整します。<br><br>PD値: PID制御の強度を増やす (または減らす) ために、P&D値ゲインを一緒に増減します。(2つの間の比率 (バランス) を保持します) <br><brスティック応答: フィードフォワード値を増減して、機体のスティック応答感覚を制御します。",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">警告:</span> 現在のスライダー位置は、ふらついた飛行やモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
@@ -3458,57 +3402,17 @@
         "message": "基準乗算値:",
         "description": "Master tuning slider label"
     },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "ロール・ピッチ比:",
-        "description": "Roll pitch ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "ロール・ピッチ比",
-        "description": "This needs a meaningful help text"
-    },
-    "pidTuningIGainSlider": {
-        "message": "I値 強度:",
-        "description": "I gain slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "I値 強度",
-        "description": "This needs a meaningful help text"
-    },
     "pidTuningPDRatioSlider": {
         "message": "PD値 バランス:",
         "description": "PD balance tuning slider label"
     },
     "pidTuningPDGainSlider": {
         "message": "P&D値 強度:",
-        "description": "P and D gain tuning slider label"
-    },
-    "pidTuningDMinRatioSlider": {
-        "message": "D値 最小比:",
-        "description": "D Min ratio slider label"
-    },
-    "pidTuningDMinRatioSliderHelp": {
-        "message": "D値 最小比",
-        "description": "This needs a meaningful help text"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningResponseSlider": {
         "message": "スティック応答速度:",
         "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "一般に機体が大きくなればなるほど、電力対重量の比率が低くなるため、PID値を高くする必要があります。<br><br>小さい機体 (マイクロ機等) は、一般に電力対重量比が高いため、PID値を低くする必要があります。<br><br>PID値の高い値は電力対重量比の低い機体、低い値は、比率の高い機体用となります。",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "比較的高いD値はスティック応答性を弱め、モーターを高温にしてしまう可能性がありますが、P値における振動制御に役立ち、プロップウォッシュの揺れを改善する場合があります。<br><br>D値が比較的低いとスティック反応は速くなりますが、プロップウォッシュの処理が弱くなる場合があります。",
-        "description": "PD balance tuning slider helpicon message"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "P値とD値の強度[ゲイン] が低いと、モーターは冷却されますが、プロップウォッシュ振動が大きくなります。値が低すぎると機体が不安定になる場合があります。<br><br>P値とD値は連動してプロップウォッシュを減らします。<br><br>値を大きくするとモーターの熱が増加し、D値ゲインが高くなるため、スムーズな直進飛行中に振動が増加する場合があります。",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "値を低くするとスティック応答が悪くなり、フリップまたはロールの終わりでゆっくりとバウンスバックする場合があります。(I値ワインドアップ) <br><br>値を大きくすると、機敏な挙動となりスティック応答が良くなります。ただし値が高すぎると、オーバーシュートが発生し、フリップまたはロール後に高速で跳ね返る場合があります。",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "ジャイロ ローパスフィルター"
@@ -3598,10 +3502,6 @@
         "message": "ジャイロRPMフィルター",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmFilterHelp": {
-        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br><br><b><span class=\"message-positive\">重要:</span> ESCは双方向DShotプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabConfiguration.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
-        "description": "Header text for the RPM Filter group"
-    },
     "pidTuningRpmHarmonics": {
         "message": "ジャイロRPMフィルター 高調波数",
         "description": "Text for one of the parameters of the RPM Filter"
@@ -3671,9 +3571,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Vbat サグ値補正"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "バッテリーサグ値を補正することにより、使用可能なバッテリー電圧範囲にて一貫したスロットルとPIDパフォーマンスを提供します。補正量は0～100%の間で変更でき、完全な補正 (100%) を推奨します。<br><br>詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3752,9 +3649,6 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "動的アイドル値 [* 100 RPM]"
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "動的アイドル値は、低回転数での制御を改善しモーターの非同期リスクを軽減します。プロペラのスピードアップまたはスローダウンによって引き起こされる問題を修正し、PID制御権限、安定性、モーター減速性および応答性を改善します。動的アイドル回転数は、Dshotアイドル値の回転数の約80%に設定する必要があります。($t(tabMotorTesting.message)タブを参照) 通常DShotアイドル値をデフォルトから変更する必要はありません。より長い制御不能時間を戻したい場合は、DShotアイドル値と最小回転数を一緒に下げる必要があります。<br><br>詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "アクロトレーナー 角度制限"
@@ -4824,9 +4718,6 @@
         "message": "カメラフレーム",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCameraFrame": {
-        "message": "視覚的フレーミングのためパイロットのHDカメラの視野を表すように設計された、調整可能なアウトラインを追加します。<br> <br>『osd_camera_frame_width』および『osd_camera_frame_height』を使用してCLIで幅と高さを調整できます。"
-    },
     "osdTextElementEfficiency": {
         "message": "バッテリー効率",
         "description": "One of the elements of the OSD"
@@ -5383,10 +5274,6 @@
         "message": "ピットモード",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "有効にすると、VTXは非常に低い送信出力モードになり、他パイロットを邪魔することなく機体をピットで電源を入れることができます。通常このモードでの有効範囲は5m未満です。<br><br>注: SmartAudio等の一部のプロトコルは、電源投入後ソフト的にピットモードを有効にすることができません。",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "ピットモード周波数",
         "description": "Text of one of the fields of the VTX tab"
@@ -5427,10 +5314,6 @@
         "message": "VTXでサポートされる送信出力レベルの数値を定義します",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "このテーブルはVTXに使用できる送信出力のさまざまな値を表しており、大きく2つに分かれています:<br><b>- $t(vtxTablePowerLevelsValue.message):</b> \n各送信出力レベルには、ハードウェアの製造元にて定義された値が必要です。\n製造元に正しい値を問い合わせるか、Betaflight wikiのVTXテーブルを参照してサンプルを入手してください。<br><b>- $t(vtxTablePowerLevelsLabel.message):</b>各送信出力レベル毎に、ここに必要なラベルを設定することができます。 数値 (25, 200, 600, 1.2) 、文字 (OFF, MIN, MAX)、またはそれらの組み合わせを指定します。<br><br>あなたの国で合法となる送信出力レベル<b>のみ/ b>を設定しなければなりません。",
-        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
-    },
     "vtxTablePowerLevelsValue": {
         "message": "値",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5462,10 +5345,6 @@
     "vtxTableBandTitleFactory": {
         "message": "工場出荷時",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "次の表は、VTXで使用できる全ての周波数を表しています。複数バンドを保持、各バンドに対して設定する必要があります:<br><b>- $t(vtxTableBandTitleName.message):</b> BOSCAM_A、FATSHARK、RACEBAND等、これらバンドに割り当てる名称です。<br><b>- $t(vtxTableBandTitleLetter.message):</b> バンドを表す略称です。<br><b>- $t(vtxTableBandTitleFactory.message):</b> これは工場出荷時バンドかどうかを示します。有効にすると、BetaflightはVTXにバンドとチャンネル番号を送信します。次にVTXは組み込みの周波数テーブルを使用し、ここで設定された周波数はOSDおよび他の場所で値を表示するためだけのものとなります。有効になっていない場合、Betaflightはここで設定した実際の周波数をVTXに送信します。<br><b>- 周波数:</b> このバンドの周波数です。<br><br>全ての周波数があなたの国で合法であるとは限らないことに注意してください。無効とするためには、使用できない各周波数インデックスに<b>ゼロ</b>の値を設定する必要があります。",
-        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
         "message": "VTX設定ファイルを<span class=\"message-positive\">保存しました</span>",
@@ -5648,9 +5527,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "測定"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>エラー D値メソッド</b>は、より直接的なスティック応答を提供し、ほぼレース向けとなります。 <br><br><b>測定 D値メソッド</b>は、よりスムーズなスティック応答を提供し、フリースタイル時により有用なものとなります。"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PIDスケーリングとPIDロジックはまったく同じ仕様です。必ずしも再調整は必要ありません。Legacyは、整数演算に基づく基本的なPIDコントローラである旧ベータ版の進化型演算方式です。 Betaflight PIDコントローラは浮動小数点演算を使用し、マルチローター用に特別に設計された多くの新機能を備えています。<br><b>Float vs Integer:</b> PIDスケーリングとPIDロジックはまったく同じ仕様です。再調整は必要ありません。F1ボードにはオンボードFPUがないため、浮動小数点演算によってCPU負荷が増加するため、整数演算にて性能が向上しますが、浮動小数点演算の方がわずかに精度が向上します。"
