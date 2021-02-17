@@ -806,9 +806,6 @@
     "receiverModelPreview": {
         "message": "Ön izleme"
     },
-    "receiverMspWarningText": {
-        "message": "Bu çubuklar Betaflight'ın bir verici veya alıcı mevcut olmadan silahlandırılmasını ve test edilmesini sağlar. Buna rağmen, <strong>bu özellik uçuş için değildir ve pervaneler takılmamalıdır. </strong><br><br> Bu özellik, aracınızın güvenilir kontrolünü garanti etmez. <strong>Pervaneler üstünde bırakıldığında ciddi yaralanmalara neden olabilir.</strong>"
-    },
     "receiverMspEnableButton": {
         "message": "Denetimler etkin"
     },
@@ -1929,9 +1926,6 @@
     },
     "pidTuningProfileTip": {
         "message": "Uçuş denetleyicisinde 3'e kadar (bazı kontrolörler için 2) farklı Pid profilleri saklanabilir. Pid profilleri, bu sekmede pid, d ayar noktası ve açı/ufuk ayarlarını içerir. Sahaya girdikten sonra, profiller arasında geçiş yapmak için basit uçak kumanda çubuğu komutları (çevrim içi talimatlara bakın) kullanılabilir."
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Hatadan Türev</b> daha doğrudan çubuk tepkisi verir ve çoğunlukla Yarış için tercih edilir.<br><br><b>Ölçümden Türev</b> serbest uçuş için daha kullanışlı olan daha yumuşak çubuk tepkisi sağlar"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (reel sayı):</b> PID ölçekleme ve PID mantığı tamamen aynıdır. Tekrar ayarlamak gerekli değildir. Legacy tamsayı matematik tabanlı temel PID denetleyicisi olan, eski evrim geçirmiş yeniden yazılmış betaflighttır. Betaflight PID denetleyicisi kayan nokta matematiği kullanıyor ve multirotor uygulamaları için özel olarak tasarlanmış pek çok yeni özelliği var <br><b> Reel sayı vs Tam sayı:</b> PID ölçekleme ve PID mantığı tamamen aynıdır. Tekrar ayarlamak gerekli değildir. F1 panolarında yerleşik FPU yoktur ve kayan nokta matematiği CPU yükünü arttırır ve tam sayı matematiği performansı geliştirir ancak kayan nokta matematiği biraz daha fazla hassasiyet kazanabilir."
