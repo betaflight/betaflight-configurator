@@ -1541,14 +1541,6 @@
         "message": "Wyprzedzenie",
         "description": "Advance of the D Min feature"
     },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min umożliwia osiągnięcie niższego poziomu D w normalnym locie i wyższego poziomu w przypadku szybkich manewrów, które mogą powodować przewrócenie modelu nieie jak flipy i beczki, podnosi on również D podczas naporu powietrza na ster kierunku podczas lotu. Maximum dostosowuje D do maksymalnej wartości i opiera się na wskazaniach żyroskopu aby określić agresywność manewrów. Wyprzedzenie sprawia, że ​​D używa wartości określonej wcześniej przez użytkownika, zamiast żyroskopu do określania ostrych manewrów.",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Kontroluje siłę tłumienia (D-term) w normalnym locie do przodu. <br> Przy włączonym D_min, podczas lotu zmienia się aktywność D. W normalnym locie do przodu następuje przyrost wartości D_min. Podczas agresywnych manewrów lub podczas podmuchów powietrza na ster kierunku, aktywny zysk D zwiększa się do wartości określonych po lewej stronie. <br><br> Pełne zyski są osiągane przy ostrym wychyleniu drążka, ale tylko częściowe są osiągane podczas podmuchów powietrza na ster kierunku. <br> Dostosuj wzmocnienie i przyspieszenie D_Min, aby kontrolować czułość i czas wzmocnienia.",
-        "description": "D Min helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "Ustawienia regulatora PID"
     },
@@ -1677,9 +1669,6 @@
     "pidTuningFfInterpolateSp": {
         "message": "Interpolacja FF"
     },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "Poniższe opcje dostrajają typ lotu od wyścigowego/agresywnego do płynnego/HD.<br><br> Tryb: ustaw Średnią wartość dla wyścigowego zachowania, Średnią 2 dla wyścigowego/szybkiego swobodnego(freestyle), Średnia 3 dla nagrań HD, Średnia 4 dla płynnych nagrań \"kinowych\" HD.<br><br> Wygładzenie: ogranicza ilość zmian, jakie może zrobić każdy przychodzący rozkaz z aparatury, zwiększ w przypadku płynniejszego sygnału FF(feed forward), zmniejsz w przypadku bardziej agresywnych odpowiedzi FF.<br><br> Podbicie(wzmocnienie): pomaga pokonać lag silnika dzięki szybkim nakładom drążków, może zwiększyć oscylacje. Wypróbuj 10 dla HD, 20 dla wyścigów. Okolice 30 może być przydatne dla maszyn o dużej bezwładności, ale może spowodować mikro przestrzelenia nastaw docelowych lub oscylacje."
-    },
     "pidTuningFfInterpolate": {
         "message": "Tryb"
     },
@@ -1704,16 +1693,8 @@
     "pidTuningProportional": {
         "message": "Proporcjonalny"
     },
-    "pidTuningProportionalHelp": {
-        "message": "Kontroluje siłę tego, jak ściśle maszyna śledzi drążki (wartość zadana). <br> <br> Wyższa wartość (zyski) zapewnia dokładniejsze śledzenie, ale może powodować przeregulowanie, jeśli jest zbyt wysokie w stosunku do pochodnej (D-term). Pomyśl o P-termie jak o sprężynie w samochodzie.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
     "pidTuningIntegral": {
         "message": "Zintegruj"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "Kontroluje siłę tego, jak mocno maszyna utrzymuje ogólną pozycję. <br> Podobne do ustawień Proporcjonalnych, ale w przypadku błędów w konstrukcji modelu, nieich jak przesunięty środek ciężkości (CoG) lub stały wpływ zewnętrzny (wiatr). <br><br> Wyższe wartości zapewniają lepszą kontrolę (np. podczas pokonywania zakrętów), ale mogą sprawić, że model będzie sztywny i będzie reagował na polecenia drążka w sposób ociężały. <br> Jeśli jest bardzo wysoka proporcjonalnie do D-term, może powodować powolne oscylacje.",
-        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Pochodna"
@@ -1721,16 +1702,8 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Kontroluje z jaką siłą odbywać ma się korekta ruch drona przy KAŻDEJ zmianie kierunku. Kiedy drążki są poruszane, D-term tłumi polecenie. W przypadku wpływu zewnętrznego ( dryfowanie  lub porywy wiatru) D-term tłumi wpływ. <br> <br> Wyższe wzmocnienie zapewnia większe tłumienie i zmniejsza nadmiar P-term i FF. <br> D-term jest BARDZO wrażliwy na wibracje wysokiej częstotliwości które zakłócają  pracę żyroskopu  (zakłócenia zwiększają się od 10 do 100x). <br> <br> Wibracje o wysokiej częstotliwości mogą powodować grzanie się silników co może doprowadzić do ich zniszczenia, jeśli wzmocnienie D jest zbyt wysokie lub wibracje żyroskopowe  nie są dobrze filtrowane (patrz w zakładce Filtr). <br> <br> D-term jest podobny do amortyzatora, ale ma negatywną właściwość wzmacniania szumu żyroskopowego wysokiej częstotliwości.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "To dodatkowy termin pchający (sprężynowy) oparty na użyciu drążka. FF pomaga P-termowi popychać model do stosowanych ruchów drążka. <br> <br> P-term pcha w oparciu o różnicę między zadaną wartością zadaną (stopni / sek) a odczytem żyroskopu bieżącej prędkości obrotowej (stopnie/sek.). FF popycha w oparciu o nakazaną zmianę samych drążków. <br> <br> Wyższe wartości (zyski) spowodują ostrzejszą reakcję maszyny na użycie drążka. <br> Zbyt wysokie wartości mogą spowodować pewne problemy, zwiększone wydzielanie ciepła przez (gdy silniki nie są w stanie nadążyć za szybkością zmian). <br> Niższe lub zerowe (0) wartości spowodują wolniejszą i płynniejszą reakcję na użycie drążka.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Uwaga:</b></span> bardzo wysokie parametry mogą skutkować desynchronizacją przy szybkim zwalnianiu maszyny."
@@ -1864,13 +1837,6 @@
     "tuningHelp": {
         "message": "<b>Wskazówki</b><br /><span class=\"message-negative\">WAŻNE:</span> Ważne jest sprawdzanie temperatury silnika podczas pierwszych lotów. Im wyższa wartość filtra, tym lepiej(płynniej) może się latać, ale jednocześnie sygnał serujący silnikami będzie bardziej agresywny aby wynikowo maszyna była bardziej stabilizowana (silnik będzie się grzał ponieważ wirnik z śmigłem ma swoją masę i pęd - szybkie zmiany obrotów potrzebują dostarczenia dużej ilości energii aby zmienić pęd). <br>Domyślna wartość 100 Hz jest optymalna, ale dla platformy z drganiami (z śmigła/ z silnika) można spróbować obniżyć ustawienie filtru Dterm do 50Hz, a być może również ustawienie filtru żyroskopowego."
     },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">WAŻNE:</span> Zalecamy używanie suwaków do zmiany ustawień filtra. Poruszaj oba suwaki razem.<br>Najlepiej dokonywać stosunkowo małych zmian i testować wyniki latając po każdej zmianie. Przed wprowadzeniem dalszych zmian należy dokładnie sprawdzić temperaturę silnika (czy nie jest cieplejszy niż zazwyczaj podczas takiego samego typu lotu).<br>Mniej filtrowania (suwaki w prawo, wyższe wartości odcięcia) poprawi płynnośc, ale potrzebuje bardziej agresywnego wysterowania silnika, co sprawi, że są one gorące, być może wystarczająco gorące, aby się spalić. Mniejsze filtrowanie jest możliwe w większości wyważonych platform (bez większych wibracji) i jeśli filtrowanie rpm jest włączone.<br>Nietypowo wysokie lub niskie ustawienia filtra mogą powodować nieoczekiwane zachowanie po uzbrojeniu (nawet wysterowania silników na max - testuj uważnie i z dala od ludzi/zwierząt). Domyślne ustawienia są bezpieczne dla typowych maszyn 5\".<br><strong>Uwaga:</strong> Zmiana profili zmieni tylko ustawienia filtra D-term. Ustawienia filtra żyroskopowego są takie same dla wszystkich profili.",
-        "description": "Filter tuning subtab note"
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Uwaga:</b></span> Aktualne ustawienia filtrowania są niebezpiecznie niskie. Latenie maszyną będzie ciężkie, zachowanie maszyny może być nieprzewidywalnie niebezpieczne (flayaways). Jest wysoko zalecane aby <b>Włączyć przynajmniej jeden filter: Dynamiczny lub pierwszy (1) filter dolnoprzepustowy żyroskopu i przynajmniej jeden \"D-term\" Dynamiczny lub pierwszy (1) filtr dolnoprzepustowy</b>."
-    },
     "receiverThrottleMid": {
         "message": "Przepustnica MID"
     },
@@ -1960,9 +1926,6 @@
     },
     "receiverModelPreview": {
         "message": "Podgląd"
-    },
-    "receiverMspWarningText": {
-        "message": "Te drążki umożliwiają uzbrojenie i testowanie Betaflight bez obecności nadajnika lub odbiornika. Jednak <strong> ta funkcja nie jest przeznaczona do lotów i śmigła powinny być zdemontowane. </strong> <br> <br> Ta funkcja nie gwarantuje niezawodnej kontroli nad modelem. <strong> Jeśli nie zdemontujesz śmigieł mogą one spowodować tobie lub osobą w pobliżu poważne obrażenia</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Włacz kontrolę"
@@ -2836,9 +2799,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Wybierz swój kontroler lotu, aby zobaczyć dostępne wersje oprogramowania online. Wybierz odpowiednie oprogramowaniedla twojego kontrolera lotu."
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Od wersji Betaflight 4.1, wprowadzono wsparcie dla <strong>Ujednoliconego definiowania sprzętu\"Unified Targets\"</strong>. Koncepcja ta polega na tym, że jest wykorzystywane to samo oprogramowanie układowe (.hex) dla rodziny mikrokontrolerów M4, M7. Aby umożliwić pracę na różnym sprzęcie, wprowadzony został dodatkowy plik konfiguracyjny(dla każdej platformy inny) który sąsiaduje z oprogramowaniem w pamięci flash i jest ładowany podczas wgrywania oprogramowania(w tle).\n<br> Ta wersja konfiguratora Betaflight wspiera to nowe podejście definiowania sprzętu, a programowanie odbywa się w jednym cyklu(firmware + konfiguracja). Różne typy oprogramowania dostępnego na platformy sprzętowo przedstawiono poniżej:<br><br><strong>&lt;board name&gt;</strong> lub <br><strong>&lt;board name&gt; (Stare)</strong>:<br> Nie ujednolicone platformy, lub wersje oprogramowania przed 4.1 dla sprzętu wspierającego \"ujednolicenie\".<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 znaki ID producenta)<br>Ujednolicone platformy.<br><br><strong>Proszę stosować nowe podejście jeśli tylko to możliwe.</strong> Jeśli będziesz mieć problemy używając oprogramowania z ujednoliconą konfiguracją, proszę wypełnij zgłoszenie: <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> i używaj wersji starszej, zanim problem nie zostanie rozwiązany."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wybierz wersję oprogramowania dla swojej płytki."
     },
@@ -3390,10 +3350,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Ustawienia filtra niezależne od profilu"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Suwaki do regulacji żyroskopu i filtrowania D-term. <br><br> Większe Filtrowanie zapewnia płynniejszy lot, ale zwiększa opóźnienie sygnału żyroskopowego (opóźnienie fazowe) do pętli PID, co powoduje pogorszenie agresywnej wydajności lotu, znoszenie modelu, zmianę reakcji drążka, a jeśli filtrowania jest zbyt duże może powodować oscylacje. <br><br> Mniej filtrowania zmniejsza opóźnienie sygnału żyroskopu, ale może zwiększyć temperaturę silnika z powodu reakcji D-term na wibracje silnika (szum) o wysokiej częstotliwości. <br> Dodatkowo jeśli filtrowanie jest zbyt niskie, spowoduje spadek wydajności lotu (wyższy stosunek szumu do sygnału).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Lekkie filtrowanie",
         "description": "Filter tuning slider low header"
@@ -3410,21 +3366,9 @@
         "message": "Mnożnik filtru żyroskopowego:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "Proporcjonalne zwiększanie lub zmniejszanie wszystkich domyślnych ustawień filtru dolnoprzepustowego. Filtrowanie żyroskopu następuje przed pętlą PID.<br>Główny zakres szumu silnikowego dla wielowirnikowców klasy:<br><br>6\"+ w zakresie 100 Hz do 330 Hz <br> 5\" w zakresie 220 Hz do 500 Hz <br> Do 3\" w zakresie 300 Hz do 850 Hz<br><br>Generalnie chcesz ustawić suwak regulacji filtru Dolnoprzepustowego 1 dla dynamicznej częstotliwości odcięcia Max/Min nie aby pokryć zakres powyżej.<br> Więc, dla płynniejszego lotu użyj mocniejszego filtrowania na tym suwaku. Aby uzyskać bardziej agresywne dostrojenie, użyj mniejszych wartości na suwaku.<br><br> W przypadku słabej filtracji należy być ostrożnym ponieważ dynamiczne wysterowanie może powodować grzanie się lub palenie silników. <br> Zauważ, że czynniki nieie jak rezonans ramy, wyeksploatowane łożyska czy bicie śmigieł będą argumentem do użycia większych współczynników filtrowania.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "Mnożnik członu D filtra:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Proporcjonalne zwiększanie lub zmniejszanie wszystkich domyślnych ustawień filtru dolnoprzepustowego D-term.<br> Filtrowanie następuje za pętlą PID, tylko dla D-term. Ponieważ jest to parametr najbardziej wrażliwy na szumy, może zwiększać wysokie składowe szumu od 10 do 100 krotnie.<br><br>Generalnie chcesz ustawić suwak regulacji filtru dolnoprzepustowego D-term w górę używając jednocześnie też suwaka mnożnika filtru żyroskopowego. Potrzebujesz uzyskać częstotliwość odcięcia poniżej pasma szumowego silników. Dla mocniejszego filtrowania ustawienie to dotyczy całego sygnału żyroskopu uwzględniając mnożnik suwaka filtru żyroskopu. <br>Ta zalecana różnica jest wbudowana w algorytm skalowania mnożników.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Suwaki do dostosowania charakterystyki lotu quada (wzmocnienia PID) <br> <br> Mnożnik główny: Podnosi lub obniża wszystkie wzmocnienia PID (powyżej), zachowując proporcjonalną różnicę między wzmocnieniami. <br> <br> Równowaga PD: Reguluje równowagę (stosunek \\ różnica proporcjonalna) między warunkami P i D („sprężyna” [p-term] i „amortyzator” [d-term]). <br> <br> Zysk PD: Zwiększa lub obniża zyski P&D - utrzymywanie stosunku (równowagi) między nimi - dla więcej (lub mniej) autorytetu kontroli PID. <br> <br> Wzmocnienie odpowiedzi ramienia: Podnosi lub obniża wzmocnienie FeedForward w celu kontrolowania odczucia reakcji ramienia modelu.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">UWAGA</span>: Aktualne ustawienia suwaków może powodować zniszczenie silnika lub niebezpieczne zachowanie platformy. Proszę postępować ostrożnie.",
@@ -3458,57 +3402,17 @@
         "message": "Główny mnożnik:",
         "description": "Master tuning slider label"
     },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "Ratio Roll Pitch:",
-        "description": "Roll pitch ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Ratio Roll Pitch",
-        "description": "This needs a meaningful help text"
-    },
-    "pidTuningIGainSlider": {
-        "message": "Wzmocnienie I:",
-        "description": "I gain slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "Wzmocnienie I",
-        "description": "This needs a meaningful help text"
-    },
     "pidTuningPDRatioSlider": {
         "message": "Balans PD:",
         "description": "PD balance tuning slider label"
     },
     "pidTuningPDGainSlider": {
         "message": "Wzmocnienie P i D:",
-        "description": "P and D gain tuning slider label"
-    },
-    "pidTuningDMinRatioSlider": {
-        "message": "Ratio D Min:",
-        "description": "D Min ratio slider label"
-    },
-    "pidTuningDMinRatioSliderHelp": {
-        "message": "Ratio D Min",
-        "description": "This needs a meaningful help text"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningResponseSlider": {
         "message": "Wzmocnienie reakcji na drążek:",
         "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "Zasadniczo większe modele wymagają wyższych wartości PID ze względu na niższy stosunek mocy do masy. <br> <br> Mniejsze modele (mikro) wymagają mniejszych wartości PID ze względu na wyższy stosunek mocy do masy. <br> <br> Wyższe wartości są dla większych modeli. Niższe wartości dotyczą mniejszych modeli.",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Względnie wysokie D tłumi reakcje drążka i może powodować nagrzewanie się silników, ale powinno pomóc kontrolować oscylacje P oraz poprawić stabilizacje. <br> <br> Relatywnie niske D zapewnia szybszą reakcję drążka, ale może powodować znoszenie jednostki latającej.",
-        "description": "PD balance tuning slider helpicon message"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Niskie wzmocnienie członów P i D może powodować większe oscylacje typu \"propwash\" w silnikach. Zbyt niska wartość wzmocnień tych parametrów może powodować niestabilność maszyny. <br><br> Parametry P i D działają w parze w w celu minimalizacji oscylacji \"propwash\".<br><br> Wysokie wartości tych parametrów mogą powodować grzanie się silników poprzez duże oscylacje wysterowania silnika które mogą wystąpić podczas płynnego lotu na wprost. Co jest powodowane wysokim parametrem D.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "Niższe wartości FF pogorszą reakcję drążków i mogą powodować powolne odbicia na koniec obrotów i przewrotów (podbicie składowej I).<br><br>Wyższe wartości FF dadzą szybsze odpowiedzi w ostrych ruchach. Nadmiernie wysokie wartości FF mogą powodować przekroczenia i szybkie odbicie na końcu obrotów lub przewrotów.",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtry dolnoprzepustowe Żyroskopu"
@@ -3598,10 +3502,6 @@
         "message": "Żyroskopowy filtr RPM",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmFilterHelp": {
-        "message": "Filtrowanie RPM to zestaw filtrów wykorzystujący żyroskop, który wykorzystują dane telemetryczne RPM do usuwania szumów silnika z chirurgiczną precyzją. <br> <br> <b> <span class = \"message-Positive\"> WAŻNE </span>: ESC musi obsługiwać dwukierunkowy protokół DShot, a wartość $t(configurationMotorPoles.message) na karcie $t(tabConfiguration.message) musi być poprawna, aby ten filtr działał. </b>",
-        "description": "Header text for the RPM Filter group"
-    },
     "pidTuningRpmHarmonics": {
         "message": "Liczba harmoniczna żyroskopowego filtra RPM",
         "description": "Text for one of the parameters of the RPM Filter"
@@ -3671,9 +3571,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Kompensacja opadania napięcia baterii"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Daje jednostajną wydajność przepustnicy i PID-ów w zakresie użytecznego napięcia akumulatora poprzez kompensację spadku napięcia baterii (Vbat sag). Zakres kompensacji może wynosić od 0 do 100 %. Zalecana jest pełna kompensacja (100%).<br><br>Odwiedź <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">wpis na wiki</a>, aby uzyskać więcej informacji."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3752,9 +3649,6 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamiczna wartość biegu jałowego [* 100 rpm]"
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamiczne dostrajanie biegu jałowego poprawia kontrolę przy niskiej prędkości obrotowej i zmniejszają ryzyko desynchronizacji silników. Usuwa problemy spowodowane przyspieszaniem lub spowolnieniem przepływu powietrza, poprawą działania PID, stabilnością, hamowaniem silnikami i dynamiką. Dynamiczna wartość biegu jałowego powinna być ustawiona na około 20% poniżej wartości rpm twojej nastawy biegu jałowego (zobacz zakładkę $t(tabMotorTesting.message)). Zazwyczaj nie ma potrzeby zmiany wartości twojego DShot idle z wartości domyślnych. W przypadku dłuższego czasu lotu odwróconego należy jednocześnie obniżyć wartość DShot idle i minimalną wartość rpm.<br><br>Zobacz<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki</a>, aby uzyskać więcej informacji."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Limit kąta trybu treningowego akrobatycznego"
@@ -4824,9 +4718,6 @@
         "message": "Ramka aparatu",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCameraFrame": {
-        "message": "Dodaje regulowany element obrysowy przeznaczony do reprezentowania pola widzenia kamery HD pilota dla ramy wizualnej.<br><br>Możesz dostosować szerokość i wysokość w wierszu poleceń za pomocą 'osd_camera_frame_width' i 'osd_camera_frame_height'"
-    },
     "osdTextElementEfficiency": {
         "message": "Sprawność baterii",
         "description": "One of the elements of the OSD"
@@ -5383,10 +5274,6 @@
         "message": "Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Gdy włączone, VTX wchodzi w tryb bardzo niskiej mocy, aby pozwolić na włączenie modelu na stole bez zakłócania innych pilotów. Zwykle zakres tego trybu jest mniejszy niż 5 m.<br><br>UWAGA: Niektóre protokoły, takie jak SmartAudio, nie mogą włączyć trybu Pit za pomocą oprogramowania zaraz po uruchomieniu.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Częstotliwość Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
@@ -5427,10 +5314,6 @@
         "message": "To definiuje liczbę poziomów mocy obsługiwanych przez Twój VTX",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "Tabela ta przedstawia różne wartości mocy, które mogą być wykorzystane dla VTX. Zostały podzielone na dwa: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> każdy poziom mocy wymaga wartości zdefiniowanej przez producenta sprzętu. Poproś producenta o poprawną wartość lub sprawdź tabelę VTX na Betaflight wiki. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> możesz tutaj umieścić etykietę dla każdej wartości poziomu energii. Mogą to być liczby (25, 200, 600, 1.), litery (OFF, MIN, MAX) lub ich mieszanki. <br><br>Musisz skonfigurować <b>tylko</b> poziomy mocy zgodne z prawem w Twoim kraju.",
-        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
-    },
     "vtxTablePowerLevelsValue": {
         "message": "Wartość",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5462,10 +5345,6 @@
     "vtxTableBandTitleFactory": {
         "message": "Ust. fabr",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "Ta tabela przedstawia wszystkie częstotliwości, które mogą być użyte dla Twojego VTX. Możesz mieć kilka pasm i dla każdego pasma musisz skonfigurować:<br><b>- $t(vtxTableBandTitleName.message):</b> Nazwę, którą chcesz przypisać do tego zakresu, jak BOSCAM_A, FATSHARK lub RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Skrócona litera, która odnosi się do zakresu.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Wskazuje, czy jest to pasmo fabryczne. Jeśli włączono, Betaflight wysyła do VTX pasmo i numer kanału. VTX użyje następnie wbudowanej tabeli częstotliwości, a częstotliwości skonfigurowane tutaj pokazują tylko wartość w OSD i innych miejscach. Jeśli nie jest włączone, Betaflight wyśle do VTX prawdziwą częstotliwość skonfigurowaną tutaj.<br><b>- Częstotliwości:</b> Częstości dla tego pasma.<br><br>Pamiętaj, że nie wszystkie częstotliwości są legalne w Twoim kraju. Musisz wpisać wartość <b>zero</b> dla każdego indeksu częstotliwości, którego nie możesz użyć, aby go wyłączyć.",
-        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
         "message": "Plik konfiguracyjny VTX <span class=\"message-positive\">zapisany</span>",
@@ -5648,9 +5527,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Pomiar"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Pochodna liczona na podstawie Błędu</b> zapewnia bardziej bezpośrednią odpowiedź na drążki i jest przeważnie preferowana do stylu wyścigowego (agresywnego).<br><br><b>Pochodna na podstawie Pomiaru</b> zapewnia bardziej płynną odpowiedź na drążki, co jest bardziej przydatne dla osób ceniących styl mniej agresywny \"freestyle\""
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Stara \"Legacy(integer)\" kontra nowa wersja Betaflight (float):</b> Ustawienia i silnik PID są dokładnie takie same. Nie jest konieczne ponowne strojenie kontrolera PID. \"Legacy\" to stary silnik PID który jest podstawowym kontrolerem PID, został zmodernizowany i jest oparty na arytmetyce całkowitoliczbowej(integer). Natomiast kontroler PID Betaflight wykorzystuje matematykę zmiennoprzecinkową i posiada wiele nowych funkcji zaprojektowanych specjalnie dla aplikacji wielofunkcyjnych <br> <b>zmiennoprzecinkowy \"Float\" vs całkowitoliczbowy\"Integer\":</b> skalowanie PID i logika PID są dokładnie takie same. mikrokontrolery serii F1 (czyli też płytki mające w nazwie F1) nie mają sprzętowego FPU. Arytmetyka zmiennoprzecinkowa zwiększa obciążenie procesora dlatego zastosowano całkowitoliczbowe obliczenia aby odciążyć CPU i przyspieszyć proces liczenia PID.\nJednakże obliczenia przeprowadzane w arytmetyce zmiennoprzecinkowej (w czym pomaga koprocesor FPU(floating point unit)) oferują dużo lepszą dokładność uzyskanego wyniku."
