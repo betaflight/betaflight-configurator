@@ -1353,9 +1353,6 @@
     "receiverHelp": {
         "message": "Læs Modtagerkapitlet i dokumentationen. Opsæt serielport (om nødvendigt), modtagertilstand (seriel/ppm/pwm), leverandør (til serielmodtagere), bind modtager, opsæt kanallayout, opsæt kanalendepunkter/område på TX, så alle kanaler går fra ~ 1.000 til ~ 2.000. Opsæt midterpunkt (standard 1.500), trim-kanaler til 1.500, opsæt stick deadband, bekræft adfærd, når TX er slukket eller uden for rækkevidde.<br /><span class=\"message-negative\">VIGTIGT:</span> Før du flyver, læs Failsafe-kapitlet i dokumentation og opsæt fejlsikring."
     },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Advarsel:</b></span> Mængden af anvendt filtrering er farligt lav. Dette vil sandsynligvis gøre fartøjet svært at håndtere, og det kan resultere i flyaways. Det anbefales kraftigt at <b>aktivere mindst ét Gyro Dynamic Lowpass eller Gyro Lowpass 1 filter og mindst ét D Term Dynamic Lowpass eller D Term Lowpass 1 filter</b>."
-    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -1433,9 +1430,6 @@
     },
     "receiverModelPreview": {
         "message": "Forh.visning"
-    },
-    "receiverMspWarningText": {
-        "message": "Disse pinde tillader indkobling og test af Betaflight, uden en sender/modtager er til stede. Bemærk, <strong>at denne funktion ikke er beregnet til flyvning, og propeller må ikke monteres.</strong><br><br>Denne funktion garanterer ikke pålidelig kontrol med dit fartøj. <strong>Alvorlig skade vil sandsynligvis opstå, hvis propellerne er påsat.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Aktivér kontroller"
