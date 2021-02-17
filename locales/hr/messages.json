@@ -1597,9 +1597,6 @@
     "tuningHelp": {
         "message": "<b>Tuning savjeti</b><br /><span class=\"message-negative\">VAŽNO:</span> Bitno je provjeravati temperature motora tijekom prvih letova. Veće vrijednosti filtera će poboljšava karakteristike leta, ali može povećati temperature motora.<br>Zadana vrijednost od 100Hz je optimalna, ali za sustave koji imaju veće vibracije pokušajte smanjiti Dterm filter na 50Hz i po želji gyro filter."
     },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Upozorenje:</b></span> Količina filtriranje koju koristite je opasno niska. Ovo će vjerojatno učiniti letjelicu nestabilnom i može doći do nekontroliranog odljetanja. Preporučuje se da <b>omogućite barem jedan Gryo Dinamički Lowpass ili Gyro Lowpass 1 i barem jedan D Term Dinamčki Lowpass ili D Term Lowpass 1</b>."
-    },
     "receiverThrottleMid": {
         "message": "Gas/Throttle MID"
     },
@@ -1677,9 +1674,6 @@
     },
     "receiverModelPreview": {
         "message": "Pregled"
-    },
-    "receiverMspWarningText": {
-        "message": "Ove kontrole omogućuju da Betaflight bude arman i testiran bez stanice i prijemnika. Ali, <strong>ova mogućnosti nije namijenjena za let i propeleri bi trebali biti skinuti. </strong><br><br>Ova mogućnost ne garantira sigurnu kontrolu letjelice.<strong> Ozljede su moguće ako su propeleri na letjelici.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Omogući kontrole"
@@ -2940,7 +2934,7 @@
     },
     "pidTuningPDGainSlider": {
         "message": "P i D gain:",
-        "description": "P and D gain tuning slider label"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filteri"
@@ -4781,9 +4775,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Mjerenje"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivacijski iz greške</b> daje direktniju kontrolu i odziv i koristan je za utrkivanje.<br><br><b>Derivacijski iz mjerenja</b>nudi uglađeniji odziv na kontrole i koristan je za freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight(float):</b> PID skaliranje i PID logika su potpuno isti. Nije potrebno ponovno tunirati. Legacy koristi jednostavni PID kontroler baziran na cjelobrojnom izračunu. Betaflight PID kontroler koristi kompleksnije decimalne izračune i ima mnog drugih značajki posebno dizajniranih za letjelice s više propelera. <br><b>Float vs Integer:</b> PID skaliranje i PID logika su potpuno isti. Nije potrebno ponovno tunirati. F1 procesori nemaju FPU i operacije s pomičnim zarezom povećavaju korištenje prcesora, a cjelobrojne(Integer) operacije će poboljšati performanse, ali će biti manje precizne."
