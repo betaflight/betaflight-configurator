@@ -533,7 +533,7 @@
         "message": "<strong>the version of configurator that you are using ($3) is older than the firmware you are using ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>there is no motor output protocol selected</strong>.<br>Please select a motor output protocol appropriate for your ESCs in '$t(configurationEscFeatures.message)' on the '$t(tabConfiguration.message)' tab.<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>there is no motor output protocol selected</strong>.<br>Please select a motor output protocol appropriate for your ESCs in '$t(configurationEscFeatures.message)' on the '$t(tabMotorTesting.message)' tab.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>.<br>If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the craft will be disabled until the accelerometer has been calibrated.<br>If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
@@ -2608,7 +2608,7 @@
         "message": "<strong>I understand the risks</strong>,<br />all propellers are removed."
     },
     "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>Information notice</strong><br />To change the motor directions, the battery must be plugged in and the correct ESC protocol must be set up in the $t(tabConfiguration.message) tab. Note that not all Dshot ESCs will work with this dialog. Check your ESC firmware."
+        "message": "<strong>Information notice</strong><br />To change the motor directions, the battery must be plugged in and the correct ESC protocol must be set up in the $t(tabMotorTesting.message) tab. Note that not all Dshot ESCs will work with this dialog. Check your ESC firmware."
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Set motor spin direction by selecting and spinning each motor individually."
@@ -2647,10 +2647,10 @@
         "message": "Motors will spin when setting the direction!"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "Feature works with DSHOT ESCs only.<br />Verify that your ESC (electric speed controller) supports DSHOT protocol and change it on $t(tabConfiguration.message) tab."
+        "message": "Feature works with DSHOT ESCs only.<br />Verify that your ESC (electric speed controller) supports DSHOT protocol and change it on $t(tabMotorTesting.message) tab."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Number of motors is 0.<br />Verify the current Mixer on $t(tabConfiguration.message) tab or setup a custom one through CLI. Refer to this <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
+        "message": "Number of motors is 0.<br />Verify the current Mixer on $t(tabMotorTesting.message) tab or setup a custom one through CLI. Refer to this <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki page</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Update the firmware.<br /> Make sure you are using the latest firmware: Betaflight 4.3 or newer."
@@ -3741,7 +3741,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM filtering is a bank of notch filters on gyro which use the RPM telemetry data to remove motor noise with surgical precision.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span>: The ESC must support the Bidirectional DShot protocol and the value of the $t(configurationMotorPoles.message) in the $t(tabConfiguration.message) tab must be correct for this filter to work.</b>",
+        "message": "RPM filtering is a bank of notch filters on gyro which use the RPM telemetry data to remove motor noise with surgical precision.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span>: The ESC must support the Bidirectional DShot protocol and the value of the $t(configurationMotorPoles.message) in the $t(tabMotorTesting.message) tab must be correct for this filter to work.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {

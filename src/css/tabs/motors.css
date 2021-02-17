@@ -22,6 +22,7 @@
 .tab-motors table, .tab-motors table th, .tab-motors table td {
     padding: 0;
     text-align: left;
+    border-collapse: collapse;
 }
 
 .tab-motors table th {
@@ -55,8 +56,13 @@
 }
 
 .tab-motors .mixerList {
-    float: left   ;
-    width: 29%;
+    width: 44%;
+}
+
+.tab-motors .mixerPreview img {
+    width: 150px;
+    height: 150px;
+    margin-left: 48px;
 }
 
 .tab-motors .featuresMultiple {
@@ -250,10 +256,6 @@
     width: calc(100% - 160px);
 }
 
-.tab-motors .mixerPreview {
-    float: left;
-}
-
 .tab-motors #dialogMotorOutputReorder-closebtn {
     margin-right: 0px;
     margin-bottom: 0px;
@@ -318,13 +320,6 @@
 
 .tab-motors #dialog-settings-changed-content {
     flex-grow: 1;
-}
-
-.tab-motors .mixerPreview img {
-    width: 150px;
-    height: 150px;
-    margin-top: 18px;
-    margin-left: 32px;
 }
 
 .tab-motors .tool-buttons {

@@ -257,10 +257,6 @@ button {
 
 /* CONFIGURATION TAB */
 
-.tab-configuration .mixerPreview {
-    background-color: #393b3a;
-}
-
 .tab-configuration .gui_box span {
     color: white;
 }
@@ -432,6 +428,16 @@ progress[value]::-webkit-progress-bar {
 
 
 /* MOTORS TAB */
+
+.tab-motors .gui_box span {
+    color: white;
+}
+
+.tab-motors input,
+.tab-motors select {
+    background-color: #3a3a3a;
+    color: white;
+}
 
 .tab-motors .plot_control {
     background-color: #393b3a;
@@ -817,6 +823,19 @@ progress[value]::-webkit-progress-bar {
 .tab-servos .direction .rate {
     background-color: #3a3a3a;
     color: white;
+}
+
+.tab-servos .servoblock {
+    background-color: #393b3a;
+    color: white;
+}
+
+.tab-servos .m-block .label {
+    color: white;
+}
+
+.tab-servos .m-block .meter-bar {
+    background-color: #393b3a;
 }
 
 
