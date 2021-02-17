@@ -1445,9 +1445,6 @@
     "receiverModelPreview": {
         "message": "Tinjauan"
     },
-    "receiverMspWarningText": {
-        "message": "Stik ini memungkinkan Betaflight untuk di arm dan diuji tanpa tx/rx. Namun,<strong>fitur ini tidak ditujukan untuk penerbangan dan baling-baling tidak boleh terpasang.</strong><br><br>Fitur ini tidak menjamin kontrol yang dapat diandalkan. <strong>Cedera serius kemungkinan terjadi jika baling-baling terpasang.</strong>"
-    },
     "receiverMspEnableButton": {
         "message": "Aktifkan kontrol"
     },
@@ -3543,9 +3540,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Pengukuran"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivatif dari Kesalahan</b> memberikan respons stik langsung dan lebih sering digunakan untuk Racing.<br><br><b>Derivatif dari Pengukuran</b> memberikan respon stik yang lebih halus dan lebih berguna terbang freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID scaling dan logika PID sama persis. Belum tentu butuh retune. Legacy adalah versi lama betaflight yg telah ditulis ulang, yg merupakan kontroler PID sederhana menggunakan perhitungan dalam bilangan bulat. Kontroler PID Betaflight menggunakan perhitungan desimal yg lebih presisi dan memiliki banyak fitur baru yg dirancang khusus untuk aplikasi multirotor <br><b>Koma vs Tanpa Koma:</b> scaling PID dan logika PID sama persis. Tidak butuh retune. FC F1 tidak memiliki FPU onboard dan perhitungan dengan tingkat presisi dalam koma meningkatkan beban CPU, bilangan tanpa koma akan memperbaiki kinerjanya, tapi perhitungan dalam koma mungkin akan sedikit lebih presisi."
