@@ -1666,9 +1666,6 @@
     "tuningHelp": {
         "message": "<b>Inställningstips</b><br /><span class=\"message-negative\">VIKTIGT:</span> Det är viktigt att kontrollera motorernas temperatur under de första flygningarna. Ett högre filtervärde kan ge en bättre flygning, men det kommer också att ge mer brus i motorerna.<br>Standardvärdet 100 Hz är optimalt, men om du drabbas av brus kan du försöka sänka Dterm-filtret till 50 Hz och eventuellt också gyrofiltret."
     },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Varning:</b></span> Filtervärdet är farligt lågt. Farkosten blir troligen svår att styra, och risken ökar för att den flyger iväg okontrollerat. Det är starkt rekommenderat att du <b>aktiverar åtminstone ett av Gyro dynamiskt lågpass eller Gyro lågpass 1, och åtminstone ett av D Term dynamiskt lågpass eller D Term lågpass 1</b>."
-    },
     "receiverThrottleMid": {
         "message": "Trottel MITT"
     },
@@ -1746,9 +1743,6 @@
     },
     "receiverModelPreview": {
         "message": "Förhandsvisa"
-    },
-    "receiverMspWarningText": {
-        "message": "Dessa spakar låter Betaflight aktiveras och testas utan tillgång till sändare eller mottagare. <strong>Denna funktion är dock inte avsedd för flygning, och propellrar får inte vara monterade.</strong><br><br>Denna funktion kan inte garantera tillförlitlig kontroll över farkosten. <strong>Risk för allvarlig skada om propellrarna lämnas på.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Aktivera kontroller"
@@ -3015,7 +3009,7 @@
     },
     "pidTuningPDGainSlider": {
         "message": "P- och D-ökning:",
-        "description": "P and D gain tuning slider label"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningResponseSlider": {
         "message": "Spakresponsökning:",
@@ -4931,9 +4925,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Mätning"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivativ från Fel</b> ger en mer direkt spakrespons och föredras oftast för racing.<br><br><b>Derivativ från Mätning</b> ger en mjukare spakrespons och är mer lämplig för freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID-skalning och PID-logik är exakt samma. Omjustering behövs inte nödvändigtvis. Legacy är en äldre version som är en grundläggande PID-kontroller baserad på heltalsmatematik. Betaflight PID-kontroller använder flyttalsmatematik och har många nya funktioner som designats specifikt för multirotorapplikationer<br><b>Float vs Integer:</b>PID-skalning och PID-logik är exakt samma. Ingen omjustering behövs. F1-kort har ingen inbyggd FPU och flyttalsmatematik ökar belastningen på CPU:n. Heltalsmatematik ger bättre prestanda, men flyttalsmatematik kan ge något bättre precision."
