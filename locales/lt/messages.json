@@ -1875,10 +1875,6 @@
         "message": "Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Įjungus, VTX pereis į labai mažos galios režimą leidžiant jūsų skraidykei būti įjungtai 'on bench', netrukdant kitų pilotų. Įprastai šio režimo nuotolis yra ne didesnis nei 5 metrai.<br><br>Pastaba: Kai kurie protokolai, tokie kaip SmartAudio, neleidžia įjungti Pit Mode programiškai, po skraidyklės įjungimo.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Pit Mode dažnis",
         "description": "Text of one of the fields of the VTX tab"
@@ -1919,10 +1915,6 @@
         "message": "Nustato galių lygių skaičių, palaikomu jūsų VTX",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "Ši lentelė atvaizduoja skirtingas galių lygių reikšmes, kurie gali būti naudojami VTX. Jie yra padalinti į: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> kiekvienam galios lygiui yra reikalinga atitinkama reikšmė, nustatyta VTX gamintojo. Tinkamų reikšmių teiraukites savo VTX gamintojo arba ieškokite pavyzdžių Betaflight wiki, VTX Tables skyriuje. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> jus galite įrašyti norimas žymes kiekvienam galios lygiui. Jie gali būti skaičiais (25, 200, 600, 1.2), raidėmis (OFF, MIN, MAX) arba jų junginiais. <br><br>Jus galite nustatyti <b>tik</b> jūsų šalyje leidžiamas galių lygius.",
-        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
-    },
     "vtxTablePowerLevelsValue": {
         "message": "Reikšmė",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -1954,10 +1946,6 @@
     "vtxTableBandTitleFactory": {
         "message": "Gamyklinis",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "Šioje lentelėje atvaizduojami visi dažniai, kurie gali būti naudojami su jūsų VTX. Jus galite turėti kelis diapazonus ir kiekvienam diapazonui jus turite nustatyti:<br><b>- $t(vtxTableBandTitleName.message):</b> Pavadinimas, kuri norite priskirti diapazonui, pvz BOSCAM_A, FATSHARK arba RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Raidė, trumpai apibūdinanti diapazoną.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Tai nustato ar tai yra gamyklinis diapazonas. Įjungus, Betaflight sius į VTX diapazoną ir kanalo numerius. Tuomet VTX naudos savo vidinę dažnių lentelę, o nustatyti dažniai bus naudojami tik informacijos atvaizdavimui OSD, bei kitose vietose. Jeigu išjungta - Betaflight sius į VTX tikrą dažnį, nustatyta čia.<br><b>- Dažniai:</b> Šio diapazono dažniai.<br><br>Atsiminkite, kad nevisi dažniai yra legalūs jūsų šalyje. Jus privalote įrašyti <b>nulį</b> į kiekvieną dažnio langelį, kuris nėra leistinas, tam kad jį išjungti.",
-        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxButtonSaveFile": {
         "message": "Įrašyti į failą",
