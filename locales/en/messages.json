@@ -1656,11 +1656,11 @@
        "description": "Advance of the D Min feature"
     },
     "pidTuningDMinFeatureHelp": {
-        "message": "D Min provides a way to have a lower level of D in normal flight and a higher level for quick maneuvers that might cause overshoot, like flips and rolls. It also brings D up during prop wash. Gain adjusts how fast D gets up to its maximum value and is based on gyro to determine sharp moves and propwash events. Advance makes D go up earlier by using setpoint instead of gyro to determine sharp moves.",
+        "message": "D Min provides a way to have a lower level of D in normal flight and a higher level for quick maneuvers that might cause overshoot, like flips and rolls. It also brings D up during prop-wash. Gain adjusts how fast D gets up to its maximum value and is based on gyro to determine sharp moves and prop-wash events. Advance makes D go up earlier by using setpoint instead of gyro to determine sharp moves.",
         "description": "D Min feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controls the strength of dampening (D-term) in normal forward flight.<br>With D_min enabled, the Active D-gain changes during flight. In normal forward flight it is at the D_min gains below. During a sharp move or during prop wash, the Active D-gain raises to the D_max gains specified to the left.<br><br>Full D_max gains are reached on sharp stick inputs, but only partial are achieved during prop wash.<br>Adjust the D_Min Gain and Advance to control the gain boost sensitivity and timing.",
+        "message": "Controls the strength of dampening (D-term) in normal forward flight.<br>With D_min enabled, the Active D-gain changes during flight. In normal forward flight it is at the D_min gains below. During a sharp move or during prop-wash, the Active D-gain raises to the D_max gains specified to the left.<br /><br />Full D_max gains are reached on sharp stick inputs, but only partial are achieved during prop-wash.<br>Adjust the D_Min Gain and Advance to control the gain boost sensitivity and timing.",
         "description": "D Min helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
@@ -1792,7 +1792,7 @@
         "message": "FF Interpolate"
     },
     "pidTuningFfInterpolateSpHelp": {
-        "message": "The following options fine-tune feed forward from race/aggressive to smooth/HD.<br><br> Mode: set to NoAverage for race, Average 2 for race/fast freestyle, Average 3 for HD recording, Average 4 for HD cinematic smoothness.<br><br> Smoothness: limits the amount of change that any one incoming radio step can make, increase for smoother FF signal, decrease for more aggressive FF responses.<br><br> Boost: helps overcome motor lag with quick stick inputs, can increase jitter. Try 10 for HD, 20 for racers. Up to 30 may be useful for low authority quads but can cause micro overshoot or jitter."
+        "message": "The following options fine-tune feed forward from race/aggressive to smooth/HD.<br /><br /> Mode: set to NoAverage for race, Average 2 for race/fast freestyle, Average 3 for HD recording, Average 4 for HD cinematic smoothness.<br /><br /> Smoothness: limits the amount of change that any one incoming radio step can make, increase for smoother FF signal, decrease for more aggressive FF responses.<br /><br /> Boost: helps overcome motor lag with quick stick inputs, can increase jitter. Try 10 for HD, 20 for racers. Up to 30 may be useful for low authority quads but can cause micro overshoot or jitter."
     },
     "pidTuningFfInterpolate": {
         "message": "Mode"
@@ -1819,14 +1819,14 @@
         "message": "Proportional"
     },
     "pidTuningProportionalHelp": {
-        "message": "Controls the strength of how tightly the machine tracks the sticks (the Setpoint).<br><br>Higher value (gains) provide tighter tracking, but can cause overshoot if too high in proportion to the Derivative (D-term).  Think of the P-term as the spring on a car.",
+        "message": "Controls the strength of how tightly the machine tracks the sticks (the Setpoint).<br /><br />Higher value (gains) provide tighter tracking, but can cause overshoot if too high in proportion to the Derivative (D-term).  Think of the P-term as the spring on a car.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "Integral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Controls the strength of how tightly the machine holds the overall position of the Setpoint.<br>Similar to Proportional, but for longer biases on the craft such as an offset center of gravity (CoG) or persistent outside influence (steady wind).<br><br>Higher gains provide tighter tracking (e.g.: in sweeping turns), but can make the craft feel stiff for commanded stick inputs.<br>If extremely high in proportion to the D-term, can cause slow oscillations.",
+        "message": "Controls the strength of how tightly the machine holds the overall position of the Setpoint.<br>Similar to Proportional, but for longer biases on the craft such as an offset center of gravity (CoG) or persistent outside influence (steady wind).<br /><br />Higher gains provide tighter tracking (e.g.: in sweeping turns), but can make the craft feel stiff for commanded stick inputs.<br>If extremely high in proportion to the D-term, can cause slow oscillations.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
@@ -1836,14 +1836,14 @@
         "message": "D Max"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Controls the strength of dampening to ANY motion on the craft.  For stick moves, the D-term dampens the command. For an outside influence (prop wash OR wind gust) the D-term dampens the influence.<br><br>Higher gains provide more dampening and reduce overshoot by P-term and FF.<br>However, the D-term is VERY sensitive to gyro high frequency vibrations (noise | magnifies by 10x to 100x).<br><br>High frequency noise can cause motor heat and burn out motors if D-gains are too high or the gyro noise is not filtered well (see Filters tab).<br><br>Think of the D-term as the shock absorber on your car, but with the negative inherent property of magnifying high frequency gyro noise.",
+        "message": "Controls the strength of dampening to ANY motion on the craft.  For stick moves, the D-term dampens the command. For an outside influence (prop-wash OR wind gust) the D-term dampens the influence.<br /><br />Higher gains provide more dampening and reduce overshoot by P-term and FF.<br>However, the D-term is VERY sensitive to gyro high frequency vibrations (noise | magnifies by 10x to 100x).<br /><br />High frequency noise can cause motor heat and burn out motors if D-gains are too high or the gyro noise is not filtered well (see Filters tab).<br /><br />Think of the D-term as the shock absorber on your car, but with the negative inherent property of magnifying high frequency gyro noise.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "Feedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "Is an additional pushing term (spring) based on stick input. FF helps the P-term push the craft for commanded stick moves.<br><br>The P-term pushes based on the difference between the commanded Setpoint (deg/sec) and the gyro reading of current rotational rate (deg/sec). FF pushes based on the commanded change of the sticks alone.<br><br>Higher values (gains) will result in a more sharp machine response to stick input.<br>Too high of values may result in some overshoot, increased motor heat, and motor saturation (where motors can not keep up with the desired rate of change).<br>Lower or zero (0) values will result in a slower and smoother response to stick inputs.",
+        "message": "Is an additional pushing term (spring) based on stick input. FF helps the P-term push the craft for commanded stick moves.<br /><br />The P-term pushes based on the difference between the commanded Setpoint (deg/sec) and the gyro reading of current rotational rate (deg/sec). FF pushes based on the commanded change of the sticks alone.<br /><br />Higher values (gains) will result in a more sharp machine response to stick input.<br>Too high of values may result in some overshoot, increased motor heat, and motor saturation (where motors can not keep up with the desired rate of change).<br>Lower or zero (0) values will result in a slower and smoother response to stick inputs.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -1980,11 +1980,11 @@
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
     "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">IMPORTANT:</span> We recommend using the sliders to change filter settings. Move both sliders together.<br>It is best to make relatively small changes and test fly after each change. Check the motor temperatures closely before making further changes.<br>Less filtering (sliders to the right, higher cutoff values) will improve propwash, but will let more noise through to the motors, making them hotter, possibly hot enough to burn out.  Less filtering is possible on most clean builds and if rpm filtering is enabled.<br>Unusually high or low filter settings may cause flyaways on arming. The defaults are safe for typical 5\" quads.<br><strong>Note:</strong> Changing profiles will only change the D-term filter settings. Gyro filter settings are the same for all profiles.",
+        "message": "<span class=\"message-negative\">IMPORTANT:</span> We recommend using the sliders to change filter settings. Move both sliders together.<br>It is best to make relatively small changes and test fly after each change. Check the motor temperatures closely before making further changes.<br>Less filtering (sliders to the right, higher cutoff values) will improve prop-wash, but will let more noise through to the motors, making them hotter, possibly hot enough to burn out.  Less filtering is possible on most clean builds and if rpm filtering is enabled.<br>Unusually high or low filter settings may cause flyaways on arming. The defaults are safe for typical 5\" quads.<br><strong>Note:</strong> Changing profiles will only change the D-term filter settings. Gyro filter settings are the same for all profiles.",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the craft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D Term Dynamic Lowpass or D Term Lowpass 1</b>."
+        "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the craft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D-Term Dynamic Lowpass or D Term Lowpass 1</b>."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -2078,7 +2078,7 @@
     },
 
     "receiverMspWarningText": {
-        "message": "These sticks allow Betaflight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br><br>This feature does not guarantee reliable control of your craft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
+        "message": "These sticks allow Betaflight to be armed and tested without a transmitter or receiver being present. However, <strong>this feature is not intended for flight and propellers must not be attached.</strong><br /><br />This feature does not guarantee reliable control of your craft. <strong>Serious injury is likely to result if propellers are left on.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Enable controls"
@@ -2977,7 +2977,7 @@
         "message": "Select your board to see available online firmware releases - Select the correct firmware appropriate for your board."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Starting with Betaflight 4.1, Betaflight is introducing support for <strong>Unified Targets</strong>. The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU (F4, F7). To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br>This version of Betaflight configurator supports flashing of Unified Targets with the respective board specific configurations in one step. The different firmware types that are available for each board are shown in the drop-down as follows:<br><br><strong>&lt;board name&gt;</strong> or<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>non-unified target, or pre-4.1 versions of the firmware for Unified Targets.<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 character manufacturer id)<br>Unified Target.<br><br><strong>Please use Unified Targets where available.</strong> If you encounter problems using a Unified Target, please open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> and then use the non-unified target until the issue has been resolved."
+        "message": "Starting with Betaflight 4.1, Betaflight is introducing support for <strong>Unified Targets</strong>. The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU (F4, F7). To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br>This version of Betaflight configurator supports flashing of Unified Targets with the respective board specific configurations in one step. The different firmware types that are available for each board are shown in the drop-down as follows:<br /><br /><strong>&lt;board name&gt;</strong> or<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>non-unified target, or pre-4.1 versions of the firmware for Unified Targets.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 character manufacturer id)<br>Unified Target.<br /><br /><strong>Please use Unified Targets where available.</strong> If you encounter problems using a Unified Target, please open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> and then use the non-unified target until the issue has been resolved."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Select firmware version for your board."
@@ -3533,7 +3533,7 @@
         "message": "Profile independent Filter Settings"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "Sliders to adjust the quad gyro and D-term filtering.<br><br>More Filtering gives you smoother flight, but also increases gyro signal delay (Phase Delay) to the PID loop which will result in worse aggressive flight performance, prop wash handling, stick response and if excessive can cause oscillations.<br><br>Less Filtering reduces the gyro signal delay, but can increase motor temperatures due to the D-term reacting to the high frequency motor vibrations (noise).<br>Additionally, if filtering is excessively low, it will cause a decrease in flight performance (higher noise to signal ratio).",
+        "message": "Sliders to adjust the quad gyro and D-term filtering.<br /><br />More Filtering gives you smoother flight, but also increases gyro signal delay (Phase Delay) to the PID loop which will result in worse aggressive flight performance, prop-wash handling, stick response and if excessive can cause oscillations.<br /><br />Less Filtering reduces the gyro signal delay, but can increase motor temperatures due to the D-term reacting to the high frequency motor vibrations (noise).<br>Additionally, if filtering is excessively low, it will cause a decrease in flight performance (higher noise to signal ratio).",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -3553,7 +3553,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Raises or Lowers the default Gyro Lowpass Filters in proportion to each-other. The gyro filtering is applied before the PID loop.<br>General motor noise ranges per quad class:<br><br>6\"+ quads - generally within 100hz to 330hz<br>5\" quads - generally within 220hz to 500hz<br>Whoop to 3\" quads - generally within 300hz to 850hz<br><br>Generally, you want to set the slider to have the Gyro Lowpass 1 Dynamic Min/Max Cutoff range cover the above.<br>However, for smoother flights use More Filtering on the slider. To get a more aggressive filter tune, use Less Filtering on the slider.<br><br>With Less Filtering BE CAREFUL to not get radical as to cause a fly-away or burn out motors.<br>Note frame resonance issues, bad bearings, and beat up props may cause you to need more filtering.",
+        "message": "Raises or Lowers the default Gyro Lowpass Filters in proportion to each-other. The gyro filtering is applied before the PID loop.<br>General motor noise ranges per quad class:<br /><br />6\"+ quads - generally within 100hz to 330hz<br>5\" quads - generally within 220hz to 500hz<br>Whoop to 3\" quads - generally within 300hz to 850hz<br /><br />Generally, you want to set the slider to have the Gyro Lowpass 1 Dynamic Min/Max Cutoff range cover the above.<br>However, for smoother flights use More Filtering on the slider. To get a more aggressive filter tune, use Less Filtering on the slider.<br /><br />With Less Filtering BE CAREFUL to not get radical as to cause a fly-away or burn out motors.<br>Note frame resonance issues, bad bearings, and beat up props may cause you to need more filtering.",
         "description": "Gyro filtering tuning slider helpicon message"
     },
     "pidTuningDTermFilterSlider": {
@@ -3561,11 +3561,11 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Raises or Lower the default D-term Lowpass Filters in proportion to each-other.<br>The D-term filtering is applied after the PID loop, ONLY on the D-term, since it is the term most sensitive to noise and can amplify any high frequency noise by 10x to 100x plus.<br><br>Generally you want to move the D-term Filter slider up with the Gyro Filter slider. You want to have the D-term filter cutoffs well below the motor noise range for harder D-term filtering then what is applied on the entire gyro signal with the Gyro Filter Multiplier.<br>That recommended differential is built into the default and slider scaling.",
+        "message": "Raises or Lower the default D-term Lowpass Filters in proportion to each-other.<br>The D-term filtering is applied after the PID loop, ONLY on the D-term, since it is the term most sensitive to noise and can amplify any high frequency noise by 10x to 100x plus.<br /><br />Generally you want to move the D-term Filter slider up with the Gyro Filter slider. You want to have the D-term filter cutoffs well below the motor noise range for harder D-term filtering then what is applied on the entire gyro signal with the Gyro Filter Multiplier.<br>That recommended differential is built into the default and slider scaling.",
         "description": "D Term filtering tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Sliders to adjust the quad flight characteristics (PID gains)<br><br>Master Multiplier: Raises or Lowers all the PID gains (above) holding the proportional difference between the gains.<br><br>PD Balance: Adjusts the balance (ratio \\ proportional difference) between the P and D terms ('the spring' [p-term] and 'shock absorber' [d-term]).<br><br>PD Gain: Raises or Lowers the P&D gains together - holding the ratio (balance) between the two - for more (or less) PID control authority.<br><br>Stick Response Gain: Raises or Lowers the FeedForward gains to control the stick response feel of the quad.",
+        "message": "Sliders to adjust the quad flight characteristics (PID gains)<br /><br />Master Multiplier: Raises or Lowers all the PID gains (above) holding the proportional difference between the gains.<br /><br />PD Balance: Adjusts the balance (ratio \\ proportional difference) between the P and D terms ('the spring' [p-term] and 'shock absorber' [d-term]).<br /><br />PD Gain: Raises or Lowers the P&D gains together - holding the ratio (balance) between the two - for more (or less) PID control authority.<br /><br />Stick Response Gain: Raises or Lowers the FeedForward gains to control the stick response feel of the quad.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -3601,20 +3601,20 @@
         "description": "Master tuning slider label"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Roll Pitch Ratio:",
-        "description": "Roll pitch ratio slider label"
+        "message": "Pitch-Roll Ratio:",
+        "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Roll Pitch Ratio",
-        "description": "This needs a meaningful help text"
+        "message": "The Pitch-Roll Ratio is the balance of Moment of Inertia (MoI) between the Pitch and Roll axis.<br /><br />Generally, the Pitch axis has a higher MoI and therefore it may be appropriate to have PID gains higher on the Pitch axis vs the Roll axis.  However, on 'Stretched X', or other configurations, this may not be the case.<br /><br />Generally for tuning, you are moving up the 'P and D Gain' slider until one axis begins to show D-term oscillation (a 'trilling' noise) and then back it down some.  Blackbox is the easies method to determine which axis is 'trilling'.  Once you find which axis is at the D-term limit, you can use the Pitch-Roll Gain slider to bring the other axis to just short of the same limit to balance out the quad for peak flight performance.",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
-        "message": "I Gain:",
-        "description": "I gain slider label"
+        "message": "I-term Gain:",
+        "description": "I-term slider label"
     },
     "pidTuningIGainSliderHelp": {
-        "message": "I Gain",
-        "description": "This needs a meaningful help text"
+        "message": "I-term needs to be in balance with the P-term; similar to how the P-term needs to be in balance with the D-term (Tuning sequence: Filters -> D-term -> P-term -> I-term).<br /><br />The I-term Gain sliders adjust I-term gains while holding P-term gains constant to adjust the ratio between the two terms.<br /><br />If you are getting slow wobbles when you drop to 0% throttle, that is an idication the I-term gains is too high and you should lower the I-term Gain slider <b>OR</b> raise the P and D Gain slider if you have not tuned D-term and PD Balance yet (which you should first before loweing I-Term).<br /><br />This said, genereally you want the I-term gains as strong as they can be (but within balance) to keep the quad tracking on the sticks in spirrel turns, orbits, ect...",
+        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSlider": {
         "message": "PD Balance:",
@@ -3622,34 +3622,34 @@
     },
     "pidTuningPDGainSlider": {
         "message": "P and D Gain:",
-        "description": "P and D gain tuning slider label"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningDMinRatioSlider": {
-        "message": "D Min Ratio:",
-        "description": "D Min ratio slider label"
+        "message": "D_min Gain drop:",
+        "description": "D Min slider label"
     },
     "pidTuningDMinRatioSliderHelp": {
-        "message": "D Min Ratio",
-        "description": "This needs a meaningful help text"
+        "message": "Controls how much D-gains are suppressed in normal forward flight.  Lower the slider to drop the D-gains MORE in normal forward flight.  Raise the slider to drop D-gains LESS in normal forward flight.<br /><br />With D_min enabled, the Active D-gain changes during flight. In normal forward flight (with D_min enabled) the Active D-gain hovers just above the D_min Gain values. During sharp stick moves or prop-wash, the Active D-gain raises to the D_max gains.  See the D_min / D_max tips above for more detials.<br /><br />Lower D-gains can help smooth out forward flight, negating the need to increase filtering on the Gyro and/or D-term in the Filters Setting tab; while it boost the Active D-gains to the D_max values when more D-term is needed to control overshooting and/or to stabiliize the quad in prop-wash conditions or to resist outside forces (wind).",
+        "description": "D_min slider helpicon message"
     },
     "pidTuningResponseSlider": {
         "message": "Stick Response Gain:",
         "description": "Response tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
-        "message": "Generally larger quads need higher PID gains due to having a lower power to weight ratio.<br><br>Smaller quads (micros) generally need lower PID gains due to a higher power to weight ratio.<br><br>Higher values are for lower authority quads. Lower values are for higher authority quads.",
-        "description": "Master gain tuning slider helpicon message"
+        "message": "Generally larger quads need higher PID gains due to having a lower power to Moment of Inertia (MoI) ratio.<br /><br />Smaller quads (micros) generally need lower PID gains due to a higher power to MoI ratio.<br /><br />Higher values are for lower authority quads. Lower values are for higher authority quads.",
+        "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSliderHelp":{
-        "message": "Relatively high D will dampen stick responsiveness and may make motors hot, but should help control P oscillations and may improve propwash wobble.<br><br>Relatively low D gives quicker stick responsiveness but may weaken propwash handling.",
+        "message": "Relatively high D-term will dampen stick responsiveness and may make motors hot, but should help control P-term oscillations and will improve prop-wash oscillation.<br /><br />Relatively low D-term gives quicker stick responsiveness, but will weaken prop-wash performance and reacting to external forces (wind).",
         "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningPDGainSliderHelp":{
-        "message": "Lower P and D gain will result in cooler motors but will result in more propwash oscillation. Too low value may cause the quad to be unstable.<br><br>P and D terms work together to reduce propwash.<br><br>Higher values will increase motor heat and could increase oscillations during smooth forward flight due to higher D term gains.",
+        "message": "Lower P and D Gain will result in cooler motors but also in more prop-wash oscillation. Too low value may cause the quad to be unstable.<br /><br />P and D terms work together to reduce prop-wash.<br /><br />Higher values will increase motor heat and could increase oscillations during smooth forward flight due to higher D term gains.",
         "description": "P and D gain tuning slider helpicon message"
     },
     "pidTuningResponseSliderHelp":{
-        "message": "Lower FF values will worsen the stick response and may result in slow bounceback at the end of a flip or roll (I-term windup).<br><br>Higher FF values will give snappier stick responses in sharp moves. Excessively high FF values can cause overshoots and fast bounceback at the end of a flip or roll.",
+        "message": "Lower FF values will worsen the stick response and may result in slow bounceback at the end of a flip or roll due to the quad lagging the sticks too much and I-term winding up and cousing 'I-term Bounceback'.<br /><br />Higher FF values will give snappier stick responses in sharp moves. Excessively high FF values can cause overshoots and fast bounceback at the end of a flip or roll.<br /><br />Note:<br />The feature I-term Relax can stop the I-term from winding up on stick move for a low authority quads or if low Stick Response Gains are used.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
@@ -3741,7 +3741,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "RPM filtering is a bank of notch filters on gyro which use the RPM telemetry data to remove motor noise with surgical precision.<br><br><b><span class=\"message-positive\">IMPORTANT</span>: The ESC must support the Bidirectional DShot protocol and the value of the $t(configurationMotorPoles.message) in the $t(tabConfiguration.message) tab must be correct for this filter to work.</b>",
+        "message": "RPM filtering is a bank of notch filters on gyro which use the RPM telemetry data to remove motor noise with surgical precision.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span>: The ESC must support the Bidirectional DShot protocol and the value of the $t(configurationMotorPoles.message) in the $t(tabConfiguration.message) tab must be correct for this filter to work.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3815,7 +3815,7 @@
         "message": "Vbat Sag Compensation"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by compensating for battery sag. The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br><br>Visit <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by compensating for battery sag. The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3896,7 +3896,7 @@
         "message": "Dynamic Idle Value [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. It corrects problems caused by airflow speeding up or slowing down the props, improving PID authority, stability, motor braking and responsiveness. The Dynamic Idle rpm should be set to be about 20% below the rpm of your Dshot Idle value (see the $t(tabMotorTesting.message) tab). Usually there is no need to change your DShot idle value from defaults. For longer inverted hang time, DShot idle value and Minimum rpm should be lowered together.<br><br>Visit <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. It corrects problems caused by airflow speeding up or slowing down the props, improving PID authority, stability, motor braking and responsiveness. The Dynamic Idle rpm should be set to be about 20% below the rpm of your Dshot Idle value (see the $t(tabMotorTesting.message) tab). Usually there is no need to change your DShot idle value from defaults. For longer inverted hang time, DShot idle value and Minimum rpm should be lowered together.<br /><br />Visit <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"
@@ -4979,7 +4979,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
-        "message": "Adds an adjustable outline element designed to represent the field of view of the pilot's HD camera for visual framing.<br><br>You can adjust the width and height in CLI with 'osd_camera_frame_width' and 'osd_camera_frame_height'"
+        "message": "Adds an adjustable outline element designed to represent the field of view of the pilot's HD camera for visual framing.<br /><br />You can adjust the width and height in CLI with 'osd_camera_frame_width' and 'osd_camera_frame_height'"
     },    
     "osdTextElementEfficiency": {
         "message": "Battery efficiency",
@@ -5551,7 +5551,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeHelp": {
-        "message": "When enabled, the VTX enters in a very low power mode to let the quad be on at the bench without disturbing other pilots. Usually the range of this mode is less than 5m.<br><br>NOTE: Some protocols, like SmartAudio, can't enable Pit Mode via software after power-up.",
+        "message": "When enabled, the VTX enters in a very low power mode to let the quad be on at the bench without disturbing other pilots. Usually the range of this mode is less than 5m.<br /><br />NOTE: Some protocols, like SmartAudio, can't enable Pit Mode via software after power-up.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
@@ -5595,7 +5595,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "This table represents the different values of power that can be used for the VTX. They are divided into two: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> each power level requires a value that is defined by the hardware manufacturer. Ask your manufacturer for the correct value or consult the Betaflight wiki of VTX Tables to grab some samples. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> you can put here the label you want for each power level value. It can be numbers (25, 200, 600, 1.2), letters (OFF, MIN, MAX) or a mix of them. <br><br>You must configure <b>only</b> the power levels that are legal at your country.",
+        "message": "This table represents the different values of power that can be used for the VTX. They are divided into two: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> each power level requires a value that is defined by the hardware manufacturer. Ask your manufacturer for the correct value or consult the Betaflight wiki of VTX Tables to grab some samples. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> you can put here the label you want for each power level value. It can be numbers (25, 200, 600, 1.2), letters (OFF, MIN, MAX) or a mix of them. <br /><br />You must configure <b>only</b> the power levels that are legal at your country.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -5631,7 +5631,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "This table represents all the frequencies that can be used for your VTX. You can have several bands and for each band you must configure:<br><b>- $t(vtxTableBandTitleName.message):</b> Name that you want to assign to this band, like BOSCAM_A, FATSHARK or RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Short letter that references the band.<br><b>- $t(vtxTableBandTitleFactory.message):</b> This indicates if it is a factory band. If enabled Betaflight sends to the VTX a band and channel number. The VTX will then use its built-in frequency table and the frequencies configured here are only to show the value in the OSD and other places. If it is not enabled, then Betaflight will send to the VTX the real frequency configured here.<br><b>- Frequencies:</b> Frequencies for this band.<br><br>Remember that not all frequencies are legal at your country. You must put a value of <b>zero</b> to each frequency index that you are not allowed to use to disable it.",
+        "message": "This table represents all the frequencies that can be used for your VTX. You can have several bands and for each band you must configure:<br><b>- $t(vtxTableBandTitleName.message):</b> Name that you want to assign to this band, like BOSCAM_A, FATSHARK or RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Short letter that references the band.<br><b>- $t(vtxTableBandTitleFactory.message):</b> This indicates if it is a factory band. If enabled Betaflight sends to the VTX a band and channel number. The VTX will then use its built-in frequency table and the frequencies configured here are only to show the value in the OSD and other places. If it is not enabled, then Betaflight will send to the VTX the real frequency configured here.<br><b>- Frequencies:</b> Frequencies for this band.<br /><br />Remember that not all frequencies are legal at your country. You must put a value of <b>zero</b> to each frequency index that you are not allowed to use to disable it.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
 
@@ -5819,7 +5819,7 @@
         "message": "Measurement"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivative from Error</b> provides more direct stick response and is mostly prefered for Racing.<br><br><b>Derivative from Measurement</b> provides smoother stick response what is more usefull for freestyling"
+        "message": "<b>Derivative from Error</b> provides more direct stick response and is mostly prefered for Racing.<br /><br /><b>Derivative from Measurement</b> provides smoother stick response what is more usefull for freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID scaling and PID logic is exactly the same. Not necessarily retune needed. Legacy is old betaflight evolved rewrite, which is basic PID controller based on integer math. Betaflight PID controller uses floating point math and has many new features specifically designed for multirotor applications <br> <b>Float vs Integer:</b> PID scaling and PID logic is exactly the same. No retune needed. F1 boards have no onboard FPU and floating point math increases CPU load and integer math will improve performance, but float math might gain slightly more precision."
