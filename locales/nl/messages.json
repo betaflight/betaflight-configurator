@@ -1557,14 +1557,6 @@
         "message": "Voortgang",
         "description": "Advance of the D Min feature"
     },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min biedt de mogelijkheid om standaard lagere D waardes te hebben. Maar tegelijkertijd ook weer hogere waardes bij snellere manoeuvres die zouden kunnen leiden tot een overshoot. Bijvoorbeeld bij snelle flips, rolls en prop wash. De Gain instelling regelt hoe snel de D waarde wordt verhoogd. Het verhogen of verlagen van de D waarde gebeurt met behulp van de gyro input. De Advance instelling maakt gebruik van de setpoint om te bepalen wat de D waarde moet zijn. Advance maakt geen gebruik van de gyro.",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Deze instelling regelt de dempingssterkte (D-term) bij normale voorwaartse vlucht. <br>Met D_min ingeschakeld verandert de actieve D-gain tijdens de vlucht. Bij normale voorwaartse vlucht is de waarde ingesteld op D_min. Tijdens een scherpe beweging of tijdens prop wash stijgt de actieve D-gain tot de D_max gains zoals deze hier links is gespecificeerd. <br> <br>Volledige D_max gains wordt bereikt bij scherpe stick-inputs. Echter worden deze slechts gedeeltelijk bereikt als er prop wash optreedt. <br>Pas de D_Min Gain en Advance instelling aan om de gevoeligheid en timing te regelen.",
-        "description": "D Min helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "PID Controller instellingen"
     },
@@ -1693,9 +1685,6 @@
     "pidTuningFfInterpolateSp": {
         "message": "FF Interpoleren"
     },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "De volgende opties verfijnen de feed-forward van race / agressief naar vloeiend / HD.<br><br> Modus: NoAverage is voor race. Gemiddeld 2 voor race / snel freestyle. Gemiddeld 3 voor HD-opname. Gemiddeld 4 voor HD-film smoothness.<br><br>Smoothness: beperkt de hoeveelheid verandering die een inkomende radiostap kan maken, verhoog deze waarde voor een soepeler FF-signaal. Vermindert deze waarde voor een agressievere FF-reactie.<br><br> Boost: helpt de motorvertraging te overwinnen bij snelle stick-invoer. Deze instelling kan stotteringen veroorzaken. Probeer 10 voor HD, 20 voor racers. Tot 30 kan nuttig zijn voor quads met lage autoriteit. (grote quads). Maar deze waarde kan bij micros overshoot of stotteringen veroorzaken."
-    },
     "pidTuningFfInterpolate": {
         "message": "Modus"
     },
@@ -1720,16 +1709,8 @@
     "pidTuningProportional": {
         "message": "Proportioneel"
     },
-    "pidTuningProportionalHelp": {
-        "message": "Bepaalt hoe sterk jouw quad de positie van de sticks volgt. (de Setpoint).<br><br>Een hogere waarde (gains) zorgt voor het strakker volgen van de positie van de stick. Echter kan dit leiden tot over rotatie als de waarde te hoog zijn in verhouding met de Derivative (D-term). De P-waarde kan je vergeleken met de veer van een schokdemper.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
     "pidTuningIntegral": {
         "message": "Integraal"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "Bepaalt de sterkte van hoe strak de machine de algehele positie van de Setpoint vasthoudt.\n<br>Vergelijkbaar met proportioneel, maar dan voor langere duur. Of voor vaartuigen met een offset van het zwaartepunt (CoG) of aanhoudende invloed van buitenaf zoals constante wind.<br><br>Hogere waarden zorgen voor een strakkere tracking (bijv. in ruime bochten), maar kunnen de quad stijf aan laten voelen.<br>Als de waarde extreem hoog is ingesteld in verhouding tot de D-term kan dit langzame oscillaties veroorzaken.",
-        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivaat"
@@ -1737,16 +1718,8 @@
     "pidTuningDMax": {
         "message": "D max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Bepaalt de sterkte van het dempend effect op alle bewegingen van je quad. Bij bewegingen die geïntroduceerd worden door jou sticks zorgt de D-term er voor dat de invoer wordt gedempt. De D-term dempt ook externe invloeden zoals propwash of een windvlaag.<br><br>Hogere waardes zorgen voor meer demping en voorkomt het overschieten van de P-term en FeedForward.<br>Echter, de D-term is ZEER gevoelig voor vibraties op hoge frequenties. De ruis wordt tussen de 10 en de 100 keer versterkt.<br><br> Hoge frequentie ruis in combinatie met een hoge D-waarde kan er voor zorgen dat motoren warm worden of zelfs uitbranden als de gyro niet correct gefilterd is. (Zie tabblad Filters)<br><br>De D-term kan worden gezien als een schokbreker van een auto. Echter met als extra eigenschap dat deze ruis van de gyro zeer sterk vergroot.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "Is een extra duwterm (veer) op basis van de stick-invoer. FF helpt de P-term het vaartuig te duwen naar de opgedragen stick invoer.<br><br>De P-term duwt op basis van het verschil tussen het opgedragen setpoint (graden/sec.) en de gyro-uitlezing van de huidige rotatiesnelheid (graden/sec.). FF pusht alleen op basis van de opgedragen stick verandering.<br><br>Hogere waarden (gains) zullen resulteren in een scherpere respons op de stick-invoer.<br>Te hoge waarden kunnen leiden tot overshoot, verhoogde motor warmte en motorverzadiging. (Motorverzadiging treed op wanneer de motoren de gewenste veranderingssnelheid niet kunnen bijhouden).<br>Lage waarden of nul (0) zal resulteren in een langzamere maar ook soepelere respons op de stick-input.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Let op:</b></span> zeer hoge waardes kunnen leiden tot desyncs tijdens snelle vertragingen."
@@ -1880,13 +1853,6 @@
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">BELANGRIJK:</span> Het is belangrijk om de motortemperatuur te verifiëren tijdens de eerste vluchten. Hoe hoger de filterwaarde des te beter je quad kan gaat vliegen. Echter krijgen je motoren ook meer ruis te voorduren.<br>De standaardwaarde van 100Hz is optimaal. Maar voor quads die meer ruis hebben kan je proberen om de D-Term filter te verlagen naar 50Hz en dit mogelijk ook toe te passen op de gyro-filter."
     },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">BELANGRIJK:</span> We adviseren u de schuifregelaars te gebruiken om de filterinstellingen te wijzigen. Tevens adviseren wij beide schuifregelaren tegelijk op te laten lopen.<br>Het is het beste om relatief kleine wijzigingen aan te brengen en na elke verandering een testvlucht te doen. Controleer de motortemperatuur nauwkeurig alvorens u verdere wijzigingen doorvoert.<br>Minder filteren (schuifregelaren naar rechts, hogere cutoff waarden) zal de propwash verbeteren, maar er zal dan meer ruis doorkomen in de motoren. Wat resulteert in warmere motoren. Mogelijk warm genoeg om ze uit te laten branden! Minder filteren is mogelijk op nieuwe drones waarbij alles nog in perfecte staat is. Maar bijvoorbeeld ook als rpm filtering is ingeschakeld.<br>Als de schuifregelaars zeer hoog of laag zijn ingesteld kan dit resulteren in flyaways. De standaardinstellingen zijn veilig voor typische 5\" quads.<br><strong>Opmerking:</strong> Het wijzigen van profielen zal alleen de D-term filterinstellingen veranderen. Instellingen voor de Gyro-filter zijn hetzelfde voor alle profielen.",
-        "description": "Filter tuning subtab note"
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Waarschuwing:</b></span> De hoeveelheid filtering die u gebruikt is gevaarlijk laag. Uw drone zal hierdoor waarschijnlijk zeer moeilijk te besturen zijn en kan ook leiden tot flyaways. Het wordt ten zeerste aanbevolen dat u <b> ten minste één 'Gyro Dynamic Lowpass' of 'Gyro Lowpass 1' inschakelt. Maar ook tenminste één 'D Term Dynamic Lowpass' of 'D Term Lowpass 1'</b> inschakelt."
-    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -1976,9 +1942,6 @@
     },
     "receiverModelPreview": {
         "message": "Voorbeeld"
-    },
-    "receiverMspWarningText": {
-        "message": "Met deze sticks kan Betaflight worden ingeschakeld en worden getest zonder dat er een zender of ontvanger aangesloten is. <strong>Deze functie is echter niet bedoeld om mee te vliegen. De propellers moeten bij gebruik van deze functie verwijderd zijn.</strong><br><br>Deze functie garandeert geen betrouwbare controle over uw quad. <strong>Verwijder uw propellors. Doe je dit niet dan is de kans op letsel ZEER groot.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Schakel bedieningselementen in"
@@ -2858,9 +2821,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecteer je bord om de beschikbare online firmware releases te zien - Selecteer de juiste firmware voor je bord."
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Vanaf Betaflight 4.1 is het concept <strong>Unified Targets</strong> geintroduceerd. Met behulp van <strong>Unified Targets</strong> kan dezelfde firmware .hex-bestand worden gebruikt voor alle kaarten die dezelfde MCU gebruiken. (F4, F7) Om toch de verschillende board correct te laten werken wordt er naast de firmware een specifiek configuratiebestand geïmplementeerd.<br>Deze versie van Betaflight-configurator zorgt er voor dat bij het flashen van een Unified Targets de correcte bordspecifieke configuraties in één stap wordt geflashed. De verschillende firmwaretypen die beschikbaar zijn voor elk bord worden als volgt weergegeven in de vervolgkeuzelijst:<br><br><strong>&lt;board naam&gt;</strong> of<br><strong>&lt;board naam&gt; (Legacy)</strong>:<br>non-unified target, of pre-4.1 versies van de firmware voor Unified Targets.<br><br><strong>&lt;board naam&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 karakters manufacturer id)<br>Unified Target.<br><br><strong>Gebruik waar mogelijk Unified Targets.</strong> Als u problemen ondervindt bij het gebruik van een Unified Target, open dan een <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> en gebruik vervolgens een non-unified doel totdat het probleem is opgelost."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecteer de firmwareversie voor uw bord."
     },
@@ -3412,10 +3372,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profielonafhankelijke Filterinstellingen"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Schuifregelaars om de quad-gyro en D-term filtering aan te passen. <br><br>Meer filtering zorgt voor een soepelere vlucht, maar verhoogt ook de vertraging van het gyrosignaal (Phase Delay) naar de PID-loop. Dit resulteert in slechtere vluchtprestaties bij agressieve bewegingen en bij prop wash. En het heeft ook invloed op de stick respons. Maak kan bovendien ook buitensporige oscillaties veroorzaken. <br><br>Minder filtering vermindert de vertraging van het gyrosignaal. Maar kan de motortemperaturen verhogen vanwege de D-term die reageert op de hoogfrequente motortrillingen (ruis).<br>Als de filtering te laag is zal dit ook weer een afname in vliegprestaties veroorzaken. (hogere verhouding tussen ruis en signaal).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Minder filteren",
         "description": "Filter tuning slider low header"
@@ -3432,21 +3388,9 @@
         "message": "Gyro-filtervermenigvuldiger:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "Verhoogt of verlaagt de standaard Gyro Lowpass-filters in verhouding tot elkaar. De gyro-filtering wordt toegepast vóór de PID-loop.<br>Algemene motorruisbereiken verschillen per quad-klasse:<br><br>6\" en grotere quads vallen over het algemeen binnen de 100Hz tot 330Hz;<br>5\" quads vallen over het algemeen binnen de 220Hz tot 500Hz;<br>Whoop tot een grote van 3\" vallen over het algemeen binnen de 300Hz tot 850Hz.<br><br>Over het algemeen wilt u de schuifregelaar zo instellen dat het Gyro Lowpass 1 Dynamic Min / Max Cutoff-bereik het bovenstaande dekt.<br>U kunt eventueel ook meer filtering toepassen voor soepelere vluchten. Gebruik minder filtering om een agressievere filtertune te krijgen.<br><br>WEES VOORZICHTIG met te weinig filtering. Dit kan fly-aways en verbrande motoren veroorzaaken.<br>Let ook op frame resonantieproblemen, slechte lagers en versleten props kunnen ervoor zorgen dat u meer filters nodig heeft.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "D Term Filtervermenigvuldiger:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Verhoogt of verlaagt de standaard D-term Lowpassfilters in verhouding tot elkaar.<br>De D-term filtering wordt toegepast na de PID-loop en ook ALLEEN op de D-term. De rede hiervoor is dat de D-term het meest gevoelig is voor ruis.<br><br>Over het algemeen wilt u de D-term Filter-schuif omhoog verplaatsen gezamelijk met de Gyro Filter-schuif. Het is aan te raden de D-term filter cutoffs ruim onder het motorruisbereik te configureren. En deze ook ruimer te hebben dan wat er wordt toegepast op het hele gyrosignaal met de Gyro Filter Multiplier. <br>Het aanbevolen differentieel is ingebouwd in de standaard instellingen en is ook verwerkt in de schuifregelaren.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Schuifregelaars om de quad-vluchtkarakteristieken aan te passen (PID-gains) <br><br>Master Multiplier: Verhoogt of verlaagt alle PID-gains (hierboven) met het proportionele verschil tussen de gains.<br><br>PD Balans: Past de balans aan (verhouding / proportioneel verschil) tussen de P- en D-termen ('de veer' [p-term] en de 'schokdemper' [d-term]).\n<br><br>PD-Gain: Verhoogt of verlaagt de P & D-Gain tezamen - houdt de verhouding (balans) tussen de twee. Voor meer (of minder) PID-controleautoriteit.<br><br>Stick Response Gain: Verhoogt of verlaagt de FeedForward-gains om het stick-responsgevoel van de quad te regelen.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">VOORZICHTIG</span>: de huidige schuifposities kan leiden tot flyaways, motorschade of onveilig gedrag. Ga voorzichtig te werk.",
@@ -3480,57 +3424,17 @@
         "message": "Hoofd Vermenigvuldiger:",
         "description": "Master tuning slider label"
     },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "Roll Pitch Verhouding:",
-        "description": "Roll pitch ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "Roll Pitch Verhouding",
-        "description": "This needs a meaningful help text"
-    },
-    "pidTuningIGainSlider": {
-        "message": "I Gain:",
-        "description": "I gain slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "I Gain",
-        "description": "This needs a meaningful help text"
-    },
     "pidTuningPDRatioSlider": {
         "message": "PD Balans:",
         "description": "PD balance tuning slider label"
     },
     "pidTuningPDGainSlider": {
         "message": "P and D Gain:",
-        "description": "P and D gain tuning slider label"
-    },
-    "pidTuningDMinRatioSlider": {
-        "message": "D Min Verhouding:",
-        "description": "D Min ratio slider label"
-    },
-    "pidTuningDMinRatioSliderHelp": {
-        "message": "D Min Verhouding",
-        "description": "This needs a meaningful help text"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningResponseSlider": {
         "message": "Stick Response Gain:",
         "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "Over het algemeen hebben grotere quads hogere PID-gains nodig vanwege een lagere verhouding tussen vermogen en gewicht.<br><br>Kleinere quads (micro's) hebben over het algemeen lagere PID-gains nodig vanwege een hogere verhouding tussen vermogen en gewicht.<br><br>Hogere waarden zijn voor quads met een lagere autoriteit. Lagere waarden zijn voor quads met een hogere autoriteit.",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Een relatief hoge D zal het reactievermogen van de stick dempen en kan resulteren in warme motoren. Maar het zorgt er ook voor dat P-oscillaties en propwash-beweging verbeteren.<br><br>Relatief lage D zorgt voor een snellere respons van de stick, maar zal niet helpen bij het verbeteren van propwash.",
-        "description": "PD balance tuning slider helpicon message"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "Lagere P- en D-gain zal resulteren in koelere motoren, maar zal ook resulteren in meer propwash-oscillatie. Een te lage waarde kan ervoor zorgen dat de quad onstabiel wordt.<br> <br>P- en D-waarden werken samen om propwash te verminderen.<br><br>Hogere waarden restulteren in meer motorwarmte en kunnen ook oscillaties introduceren tijdens een soepele voorwaartse vlucht.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "Lagere FF-waarden verslechteren de stick-respons en kunnen resulteren in een trage bounceback aan het einde van een flip of roll (I-term windup).<br><br>Hogere FF-waarden geven een snellere stick-respons in scherpe bewegingen. Te hoge FF-waarden kunnen overshoots en snelle bouncebacks veroorzaken aan het einde van een flip of roll.",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filters"
@@ -3620,10 +3524,6 @@
         "message": "Gyro RPM Filter",
         "description": "Header text for the RPM Filter group"
     },
-    "pidTuningRpmFilterHelp": {
-        "message": "RPM-filtering is een verzameling notch-filters op de gyro die de RPM-telemetriegegevens gebruiken om motorruis met chirurgische precisie te verwijderen.<br><br><b><span class=\"message-positive\">BELANGRIJK</span>: de ESCs moet het bidirectionele DShot-protocol ondersteunen. En de waarde van $t(configurationMotorPoles.message) op het tabblad $t(tabConfiguration.message) moet correct ingevuld zijn wil je dit filter correct laten werken.</b>",
-        "description": "Header text for the RPM Filter group"
-    },
     "pidTuningRpmHarmonics": {
         "message": "Gyro RPM Filter Harmonics-nummer",
         "description": "Text for one of the parameters of the RPM Filter"
@@ -3693,9 +3593,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag Compenseren"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Geeft consistente gas- en PID-prestaties over het bruikbare accuspanningsbereik door batterij sag te compenseren. Het hoeveelheid compensatie kan variëren tussen de 0 en de 100%. Volledige compensatie (100%) wordt aanbevolen. <br><br>Bezoek <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target = \"_blank\" rel=\"noopener noreferrer\">dit wiki-item</a> voor meer info."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3774,9 +3671,6 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamische Stationaire Waarde [* 100 RPM]"
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle verbetert de controle bij een laag toerental en vermindert het risico op motor desyncs. Het corrigeert problemen die worden veroorzaakt door luchtstromen die de props versnellen of vertragen. Waardoor de PID-autoriteit, stabiliteit en reactievermogen worden verbeterd. Het dynamische stationaire toerental moet worden ingesteld op ongeveer 20% onder het toerental van uw Dshot Idle-waarde (zie het tabblad $t(tabMotorTesting.message)). Meestal is het niet nodig om uw DShot standaard idle waarde te wijzigen. Voor een langere hangtime ondersteboven dient u de idle waarde van DShot en het minimale toerental samen te verlagen. <br><br>Bezoek <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\" target=\"_blank\" rel=\"noopener noreferrer\">dit wiki-item</a> voor meer info."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Hoek Limiet"
@@ -4846,9 +4740,6 @@
         "message": "Camera frame",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCameraFrame": {
-        "message": "Voegt een aanpasbaar omtrekelement toe dat is ontworpen om het gezichtsveld van de HD-camera van de piloot weer te geven.<br><br>Je kunt de breedte en hoogte in de CLI aanpassen met het commando 'osd_camera_frame_width' en 'osd_camera_frame_height'"
-    },
     "osdTextElementEfficiency": {
         "message": "Batterij efficiëntie",
         "description": "One of the elements of the OSD"
@@ -5405,10 +5296,6 @@
         "message": "Pit modus",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Wanneer ingeschakeld, komt de VTX in een zeer lage energie-modus terecht. Je kan je quad dan toch aan te hebben zonder andere piloten te storen. Meestal is het bereik van deze modus minder dan 5 meter.<br><br>NOTE: Sommige protocollen, zoals SmartAudio, kunnen Pit Mode niet inschakelen na power-up.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Pit Modus frequentie",
         "description": "Text of one of the fields of the VTX tab"
@@ -5449,10 +5336,6 @@
         "message": "Dit definieert het aantal stroomniveaus die uw VTX ondersteund",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "Deze tabel representeert de verschillende vermogenswaarden die kunnen worden gebruikt door uw VTX. De waarden zijn tweeledig: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> elk stroomniveau heeft een door de hardware-fabrikant gedefinieerde waarde nodig. Vraag uw fabrikant naar de juiste waardes of raadpleeg de Betaflight wiki. Hierop staan enkele voorbeelden.<br><b>- $t(vtxTablePowerLevelsLabel.message):</b> je kunt hier een gewenste label zetten voor elk stroomniveau. Dit is vrij in te vullen. U kunt bijvoorbeeld gebruik maken van getallen zoals (25, 200, 600, 1.), of letters (OFF, MIN, MAX) of een mix ervan. <br><br>U dient hier <b>alleen</b> de stroomniveaus in te vullen die legaal zijn in uw land.",
-        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
-    },
     "vtxTablePowerLevelsValue": {
         "message": "Waarde",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5484,10 +5367,6 @@
     "vtxTableBandTitleFactory": {
         "message": "Fabrieksinstelling",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
-    },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "Deze tabel geeft alle frequenties weer die kunnen worden gebruikt door uw VTX. Je kunt meerdere banden hebben. Voor elke band dient u het volgende te configureren:<br><b>- $t(vtxTableBandTitleName.message): </b>Naam die je aan deze band wilt toewijzen, zoals BOSCAM_A, FATSHARK of RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message): </b>Korte letter die verwijst naar deze band.<br><b>- $t(vtxTableBandTitleFactory.message): </b>Dit geeft aan of het een factory band is. Als dit is ingeschakeld stuurt Betaflight een band en een kanaalnummer naar uw VTX. De VTX gebruikt dan de ingebouwde frequentietabel. De frequenties die hier dan wordt geconfigureerd gelden dan alleen als referentie en worden dan voor weergavedoeleinde gebruikt in de de OSD of andere plaatsen waar dit van toepassing is. Als dit niet is ingeschakeld dan stuurt Betaflight de geconfigureerde frequentie naar de VTX.<br><b>- Frequenties:</b> Frequenties voor deze band.<br><br>Onthoud dat mogelijk niet alle frequenties legaal zijn in uw land. U moet een <b>nul</b> waarde plaatsen voor elke frequentie-index die u niet mag gebruiken. Op deze manier schakelt u dan deze frequentie uit.",
-        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
         "message": "VTX configuratiebestand <span class=\"message-positive\">opgeslagen</span>",
@@ -5670,9 +5549,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Meting"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Afgeleide van Fout</b> biedt meer directe stick-respons. Geniet de voorkeur bij racen. <br><br><b>Afgeleide van Meting</b> zorgt voor een soepelere stick-respons. Wordt bij freestyling vaak verkozen."
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID-schaling en PID-logica zijn bij beide precies hetzelfde. Het is daardoor niet noodzakelijk om opnieuw te PID-tunen. Legacy is de oude betaflight welke werkt met een PID-controller die op basis van integers werkt. De nieuwe Betaflight PID-controller maakt gebruik van floating point berekeningen. <br><b>Float vs Integer:</b> PID-schaalverdeling en PID-logica werken bij beide precies hetzelfde. Er is geen extra tuning benodigd. Integer berekeningen zijn eenvoudiger en is minder belastend voor de CPU. Bij F1 boards heeft dit de voorkeur. Berekeningen met behulp van Floats kost de CPU meer maar daar krijg je meer precisie voor terug."
