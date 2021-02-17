@@ -1574,9 +1574,6 @@
     "tuningHelp": {
         "message": "<b>Ieregulēšanas ieteikumi </b><br /><span class=\"message-negative\">SVARĪGI:</span> Ir svarīgi pārbaudīt motoru temperatūras pirmā lidojuma laikā. Jo lielākas filtru vērtības, jo labāk iespējams tas lidos, bet jūs iegūsiet lielāku trokšņu līmeni motoros. <br>Noklusētā vērtība 100Hz ir optimāla, bet pie trokšņainākām konstrukcijām, jūs varat mēģināt samazināt Dterm filtru uz 50Hz un iespējams arī žiroskopa filtru."
     },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Brīdinājums:</b></span>Šāds filtrācijas daudzums ir bīstami mazs. Visdrīzāk gaisa kuģis būs grūti kontrolējams, un var izraisīt tā pazušanu. \n Ļoti tev iesakām <b>ieslēgt vismaz vienu Žiroskopa dinamisko zemfrekvenču vai Žiroskopa zemfrekvenču 1 un vismaz vienu D Term dinamisko zemfrekvenču vai D Term zemfrekvenču 1</b>."
-    },
     "receiverThrottleMid": {
         "message": "Droseles vidus"
     },
@@ -1654,9 +1651,6 @@
     },
     "receiverModelPreview": {
         "message": "Priekšskatījums"
-    },
-    "receiverMspWarningText": {
-        "message": "Šīs sviras ļauj Betaflight būt atvizētam un notestētam bez raidītāja vai uztvērēja klātbūtnes. Tomēr, <strong>šī iespēja nav paredzēta lidošanai un propelleriem jābūt noņemtiem.</strong><br><br>Šī iespēja negarantē pilnvērtīgu gaisa kuģa vadību. <strong>Ir liela varbūtība, ka būs nopietnas traumas, ja propelleri paliks nenoņemti.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Ieslēgt vadību"
@@ -4588,9 +4582,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Mērījums"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivative no kļūdas</b> sniedz daudz tiešāku sviras atsauci un vairāk piemērots sacensībām.<br><br><b>Derivative no mērījumiem</b> sniedz vienmērīgāku sviras atsauci, kas ir vairāk piemērots frīstailam"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Mantojuma vs Betaflight (peldošais):</b> PID mērogošana un PID loģika ir tāda pati. Nav obligāti nepieciešama atkārtota pieregulēšana. Mantojums ir vecais betaflight, kura pamata PID kontrolieris balstīts uz veselo skaitļu matemātikas. Betaflight PID kontrolieris pielieto peldošā punkta matemātiku un tas dod daudz jaunu iespēju, īpaši izstrādātu priekš multirotoriem<br> <b>Peldošais vs veselais:</b> PID mērogošana un PID loģika ir tāda pati. Nav nepieciešama atkārtota pieregulēšana. F1 platēm nav integrēta FPU un peldoša punkta matemātika ievērojami palielina CPU noslodzi un veselo skaitļu matemātika uzlabo ātrdarbību, bet samazina precizitāti."
