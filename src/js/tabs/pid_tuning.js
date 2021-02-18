@@ -1803,24 +1803,24 @@ TABS.pid_tuning.initialize = function (callback) {
 
             $('#sliderPidsModeSelect').val(FC.TUNING_SLIDERS.slider_pids_mode);
 
-            $('#dMinSwitch').change(function() {
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                $('#dMinSwitch').change(function() {
                     TuningSliders.setDMinFeatureEnabled($(this).is(':checked'));
                     // switch dmin and dmax values on dmin on/off if sliders available
                     if (!TuningSliders.pidSlidersUnavailable) {
                         if (TuningSliders.dMinFeatureEnabled) {
-                            ADVANCED_TUNING.dMinRoll = FC.PIDs[0][2];
-                            ADVANCED_TUNING.dMinPitch = FC.PIDs[1][2];
-                            ADVANCED_TUNING.dMinYaw = FC.PIDs[2][2];
+                            FC.ADVANCED_TUNING.dMinRoll = FC.PIDS[0][2];
+                            FC.ADVANCED_TUNING.dMinPitch = FC.PIDS[1][2];
+                            FC.ADVANCED_TUNING.dMinYaw = FC.PIDS[2][2];
                         } else {
-                            FC.PIDs[0][2] = ADVANCED_TUNING.dMinRoll;
-                            FC.PIDs[1][2] = ADVANCED_TUNING.dMinPitch;
-                            FC.PIDs[2][2] = ADVANCED_TUNING.dMinYaw;
+                            FC.PIDS[0][2] = FC.ADVANCED_TUNING.dMinRoll;
+                            FC.PIDS[1][2] = FC.ADVANCED_TUNING.dMinPitch;
+                            FC.PIDS[2][2] = FC.ADVANCED_TUNING.dMinYaw;
                         }
                         TuningSliders.calculateNewPids();
                     }
-                }
-            });
+                });
+            }
 
             // integrated yaw doesn't work with sliders therefore sliders are disabled
             $('input[id="useIntegratedYaw"]').change(() => TuningSliders.updatePidSlidersDisplay());
