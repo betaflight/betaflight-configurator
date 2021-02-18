@@ -1632,6 +1632,14 @@
         "message": "Ascenso",
         "description": "Advance of the D Min feature"
     },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min ofrece un xeito de ter un nivel inferior de D no voo normal e un nivel máis alto para as manobras rápidas que poden provocar desbordamentos, como flips e rolls. Tamén sube D durante o prop-wash. A ganancia axusta a rapidez de D ata o seu valor máximo e baséase no xiroscopio para determinar os movementos fortes e os eventos de prop-wash. O avance fai que D suba máis cedo empregando o punto de consigna no canto do xiro para determinar os movementos bruscos.",
+        "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Controla a forza de amortiguación (D-term) nun voo recto normal.<br>Con D_Min activado, o valor de D cambia durante o voo. En voo recto normal usa o valor de D Min suave. Durante movementos bruscos ou durante prop-wash, o D aumenta co valor de D Max especificado á esquerda.<br /><br />O valor D máximo obtense con movementos bruscos dos controis, pero có prop-wash só se obteñen incrementos parciais.<br>Axuste o valor de Ganancia de D Mine e Avance para controlar a cantidade e sensibilidade do incremento.",
+        "description": "D Min helpicon message on PID table titlebar"
+    },
     "pidTuningPidSettings": {
         "message": "Configuración do controlador PID"
     },
@@ -1760,6 +1768,9 @@
     "pidTuningFfInterpolateSp": {
         "message": "FF Interpolate"
     },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "As seguintes opcións axustan a prealimentación dende a carreira/agresiva ata suave/HD.<br /><br /> Modo: axustado a Non promedia para carreira, Media 2 para carreira/ freestyle rápido, Media 3 para a gravación HD, Media 4 para Suavidade cinematográfica en HD.<br /><br /> Suavidade: limita a cantidade de cambios que pode facer calquera paso de radio entrante, aumentar para obter un sinal FF máis suave, diminuír para obter respostas FF máis agresivas.<br /><br /> Impulso: axuda a superar o lag do motor con entradas de stick rápidas, pode aumentar o nerviosismo. Probe 10 para HD, 20 para carreiras. Ata 30 poden ser útiles para quads con pouca autoridade, pero poden causar micro impulsos ou nerviosismo."
+    },
     "pidTuningFfInterpolate": {
         "message": "Modo"
     },
@@ -1784,8 +1795,16 @@
     "pidTuningProportional": {
         "message": "Proporcional"
     },
+    "pidTuningProportionalHelp": {
+        "message": "Controla a forza do seguimento que fai a máquina sobre os sticks (o punto de consigna).<br /><br />Un maior valor (ganancias) proporciona un seguimento máis axustado, pero pode causar excesos se é demasiado alto en proporción á Derivative (D-term). Pense no P-term como nun amortiguador dun coche.",
+        "description": "Proportional Term helpicon message on PID table titlebar"
+    },
     "pidTuningIntegral": {
         "message": "Integral"
+    },
+    "pidTuningIntegralHelp": {
+        "message": "Controla a forza do mantemento da posición global da máquina no punto de consigna. <br>Semellante á Proporcional, pero para sesgos máis longos na aeronave, como un centro de gravidade compensado (CoG) ou unha influencia exterior persistente (vento constante).<br /><br />As maiores ganancias proporcionan un seguimento máis axustado (por exemplo, en xiros radicais), pero poden facer que a aeronave pareza dura para as entradas de stick.<br>Se é extremadamente alta en proporción ao D-term, pode causar oscilacións lentas.",
+        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivada"
@@ -1793,8 +1812,16 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "Controla a forza de amortiguamento a calquera movemento na aeronave. Para os movementos de stick, o D-term amortiza o comando. Para unha influencia externa (prop-wash ou ráfagas de vento), o D-term amortiza a influencia.<br /><br />As maiores ganancias proporcionan máis amortiguamento e reducen o exceso en P-term e FF.<br>Non obstante, o D-term é MOI sensible ás vibracións de alta frecuencia xiro (ruído | aumenta de 10x a 100x).<br /><br />O ruído de alta frecuencia pode provocar calor no motor e queimar motores se as D-gains son demasiado altas ou se o ruído xiro non está ben filtrado (consulte a pestana Filtros).<br /><br />Pense no D-term como o amortiguador do seu coche, pero coa propiedade inherente negativa de aumentar o ruído en alta frecuencia no gyro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
         "message": "Anticipativo"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "É un termo adicional de empuxe (resorte) baseado na entrada de stick. FF axuda ao P-term a empuxar a aeronave para os movementos do stick.<br /><br />O empuxe P-term baséase na diferenza entre o punto de consigna comandado (deg/seg) e a lectura giroscópica da velocidade de rotación actual (deg/seg). Empuxe FF baseado só no cambio comandado dos sticks.<br /><br />Valores máis elevados (ganancias) producirán unha resposta da máquina máis nítida á entrada do stick.<br>Un valor demasiado elevado pode producir algún exceso, aumento da calor do motor e saturación do motor (onde os motores non poden manter o ritmo de cambio desexado).<br>Os valores máis baixos ou cero (0) producirán unha resposta máis lenta e suave ás entradas do stick.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Aviso:</b></span>Taxas moi altas poden producir desyncs dende desaceleracións rápidas."
@@ -1927,6 +1954,10 @@
     },
     "tuningHelp": {
         "message": "<b>Consellos de axuste</b><br/><span class=\"message-negative\"> IMPORTANTE: </span> É importante verificar as temperaturas do motor durante os primeiros voos. Canto maior sexa o valor do filtro, mellor pode voar, pero tamén conseguirá máis ruído nos motores. <br> O valor predeterminado de 100Hz é óptimo, pero para configuracións de ruído pode intentar baixar o filtro Dterm a 50Hz e posiblemente tamén o filtro xiratorio."
+    },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">IMPORTANTE:</span> Recomendamos usar os controis deslizantes para cambiar a configuración do filtro. Mova os dous controis deslizantes xuntos.<br>É mellor facer cambios relativamente pequenos e probar despois de cada cambio. Comprobe de preto as temperaturas do motor antes de facer máis cambios.<br>Menos filtros (deslizadores á dereita, valores de corte máis altos) mellorarán o prop-wash, pero deixarán pasar máis ruído aos motores, facéndoos máis quentes, posiblemente o suficientemente quentes como para queimar por fóra. É posible un menor filtrado na maioría das versións limpas e se o filtrado de rpm está habilitado.<br>A configuración de filtro inusualmente alta ou baixa pode provocar fallos no armado. Os valores predeterminados son seguros para os quads típicos de 5\".<br><strong>Nota:</strong> O cambio de perfís só cambiará a configuración do filtro do D-term. A configuración do filtro giroscópico é a mesma para todos os perfís.",
+        "description": "Filter tuning subtab note"
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
