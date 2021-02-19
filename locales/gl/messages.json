@@ -1959,6 +1959,9 @@
         "message": "<span class=\"message-negative\">IMPORTANTE:</span> Recomendamos usar os controis deslizantes para cambiar a configuración do filtro. Mova os dous controis deslizantes xuntos.<br>É mellor facer cambios relativamente pequenos e probar despois de cada cambio. Comprobe de preto as temperaturas do motor antes de facer máis cambios.<br>Menos filtros (deslizadores á dereita, valores de corte máis altos) mellorarán o prop-wash, pero deixarán pasar máis ruído aos motores, facéndoos máis quentes, posiblemente o suficientemente quentes como para queimar por fóra. É posible un menor filtrado na maioría das versións limpas e se o filtrado de rpm está habilitado.<br>A configuración de filtro inusualmente alta ou baixa pode provocar fallos no armado. Os valores predeterminados son seguros para os quads típicos de 5\".<br><strong>Nota:</strong> O cambio de perfís só cambiará a configuración do filtro do D-term. A configuración do filtro giroscópico é a mesma para todos os perfís.",
         "description": "Filter tuning subtab note"
     },
+    "filterWarning": {
+        "message": "<span class=\"message-negative\"><b>Aviso:</b></span> A cantidade de filtrado que está a usar é perigosamente baixa. É probable que isto faga que a aeronave sexa difícil de controlar e poida producir desarmados. É altamente recomendable <b>activar polo menos un dos Gyro Dynamic Lowpass ou Gyro Lowpass 1 e polo menos un dos D-Term Dynamic Lowpass ou D Term Lowpass 1</b>."
+    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
@@ -2048,6 +2051,9 @@
     },
     "receiverModelPreview": {
         "message": "Vista Previa"
+    },
+    "receiverMspWarningText": {
+        "message": "Estes stick permiten armar e probar Betaflight sen que estea presente un transmisor ou receptor. Non obstante, <strong> esta función non está pensada para o voo e non se deben colocar hélices.</strong><br /><br />Esta función non garante un control fiable da súa aeronave. <strong>É probable que se produzan lesións graves se se deixan as hélices postas.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Activar controis"
@@ -2927,6 +2933,9 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Elixa a súa placa para poder ver as versións de firmware dispoñibles en linea - Seleccione a versión correcta de firmware apropiada para a súa controladora."
     },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Comezando con Betaflight 4.1, Betaflight introduce soporte para<strong>Placas unificadas</strong>. O concepto de obxectivos unificados significa que se pode usar o mesmo ficheiro .hex de firmware para todas as placas que utilizan o mesmo MCU (F4, F7). Para que as diferentes placas funcionen co mesmo firmware, despregase un ficheiro de configuración específico xunto co firmware cando se flaxea unha placa unificada.<br>Esta versión do configurador Betaflight admite o flashing de placas unificadas coas respectivas configuracións específicas da placa nun paso. Os diferentes tipos de firmware dispoñibles para cada placa móstranse no menú despregable do seguinte xeito:<br /><br /><strong>&lt;board name&gt;</strong> ou<br><strong>&lt;board name&gt; (Legacy) </strong>:<br> destino non unificado ou versións anteriores ao firmware do firmware para placas unificadas.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (identificador do fabricante de 4 caracteres)<br>Placas unificadas.<br /><br /><strong>Utilice placas unificadas cando estea dispoñible.</strong> Se atopa problemas ao usar un placa unificada, abra un <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problema</a> e despois usa placa non unificada ata que se resolva o problema."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Elixa a versión de firmware para a súa controladora."
     },
@@ -3478,6 +3487,10 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Axustes do perfil de Filtros independentes"
     },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Control deslizantes para axustar o xiroscopio e o filtrado D-term.<br /><br />Máis filtrado ofrécelle un voo máis suave, pero tamén aumenta o atraso do sinal do xiroscopio (Delay da fase) ao bucle PID o que provocará un peor rendemento de voo agresivo, manipulación de prop-wash, resposta de stick e se é excesiva pode causar oscilacións.<br /><br />Menos filtros reducen o atraso do sinal do xiroscopio, pero poden aumentar as temperaturas do motor debido a que o D-term reacciona ás vibracións do motor de alta frecuencia (ruído).<br>Ademais, se o filtrado é excesivamente baixo, causará unha diminución do rendemento do voo (maior relación ruído / sinal).",
+        "description": "Overall helpicon message for filter tuning sliders"
+    },
     "pidTuningSliderLowFiltering": {
         "message": "Menos filtrado",
         "description": "Filter tuning slider low header"
@@ -3494,9 +3507,21 @@
         "message": "Multiplicador de filtro Gyro:",
         "description": "Gyro filter tuning slider label"
     },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "Aumente ou reduza os filtros de paso baixo giroscopio predeterminados en proporción entre si. O filtrado giroscópico aplícase antes do bucle PID.<br>Rangos xerais de ruído do motor por clase de quad:<br /><br /> Quads de 6\"+ - xeralmente entre 100 Hz e 330 Hz<br>quads de 5\" - xeralmente dentro de 220 Hz a 500 Hz<br>quads de 3 \"- normalmente entre 300 Hz e 850 Hz<br /><br />Xeralmente, desexa configurar o control deslizante para que o rango de corte mínimo / máximo dinámico Gyro Lowpass 1 cubra o anterior.<br>Non obstante, para voos máis suaves, use Máis filtrado na barra deslizante. Para obter unha sintonía de filtro máis agresiva, use Menos filtros na barra deslizante.<br /><br /> Con menos filtrado ATENCIÓN para non radicalizarse como provocar desarmados ou motores queimados.<br>Teña en conta os problemas de resonancia do frame, os malos rodamentos e as hélices que poden causar que precise máis filtrado.",
+        "description": "Gyro filtering tuning slider helpicon message"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "D Multiplicador de filtro de prazo:",
         "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Aumente ou reduza os filtros de paso baixo predeterminados do D-term en proporción entre si. <br> O filtrado do D-term aplícase despois do lazo PID, SÓ no D-term, xa que é o termo máis sensible ao ruído e pode amplifique calquera ruído de alta frecuencia entre 10 e 100 veces máis.<br /><br />Xeralmente desexa mover o control deslizante Filtro en D-term co control deslizante Filtro giroscópico. Quere que os límites do filtro D-term estean moi por debaixo do rango de ruído do motor para un filtrado máis durado que o que se aplica a todo o sinal giroscópico co multiplicador de filtros giroscópicos.<br> O diferencial recomendado está integrado no predeterminado e no control deslizante escalar.",
+        "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Deslizadores para axustar as características do voo en quad (ganancias PID)<br /><br />Multiplicador principal: aumenta ou baixa todas as ganancias PID (arriba) mantendo unha diferenza proporcional entre as ganancias.<br /><br />PD Balance: Axusta o equilibrio (relación \\ diferenza proporcional) entre os termos P e D (\"o resorte\" [P-term] e \"amortiguador\" [D-term]).<br /><br />Ganancia PD: aumenta ou Diminúe as ganancias de P&D xuntas (mantendo a relación (balance) entre os dous - para obter máis (ou menos) autoridade de control PID.<br /><br />Ganancia de resposta Stick: Aumenta ou reduce as ganancias FeedForward para controlar a sensación da resposta do stick do quad.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATENCIÓN</span>: As posicións deslizantes actuais poden causar volantes, danos no motor ou comportamentos seguros. Proceda con precaución.",
@@ -3530,6 +3555,14 @@
         "message": "Mestre multiplicador:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Proporción Pitch-Roll:",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Ganancia I-term:",
+        "description": "I-term slider label"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Balance de PD:",
         "description": "PD balance tuning slider label"
@@ -3537,6 +3570,10 @@
     "pidTuningPDGainSlider": {
         "message": "Ganancia P e D:",
         "description": "P and D Gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "Caída de Ganancia D_Min:",
+        "description": "D Min slider label"
     },
     "pidTuningResponseSlider": {
         "message": "Ganancia de resposta de stick:",
@@ -4859,6 +4896,13 @@
     },
     "osdDescTotalFlights": {
         "message": "Número total aproximado de voos"
+    },
+    "osdTextElementUpDownReference": {
+        "message": "Referencia arriba (Pitch 90 grad)/Abaixo (Pitch -90 grad)",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "Símbolo OSD que mostra cando o pitch se acerca á vertical (90 grad, U) e D cara abaixo (-90 deg, D)"
     },
     "osdTextElementUnknown": {
         "message": "Descoñecido $1",
