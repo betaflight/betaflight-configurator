@@ -225,12 +225,30 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 #portsinput {
-    width: 180px;
+    width: 220px;
     margin-right: 15px;
 }
 
 #portsinput .dropdown {
     margin-bottom: 5px;
+}
+
+#auto-connect-and-baud {
+    float: right;
+}
+
+#auto-connect-switch {
+    width: 110px;
+    float: left;
+    margin-top: 4px;
+    margin-left: 5px;
+    margin-right: 20px;
+}
+
+#baudselect {
+    width: 80px;
+    float: right;
+    margin-right: 2px;
 }
 
 #port-picker .auto_connect, .gray {
@@ -241,12 +259,13 @@ input[type="number"]::-webkit-inner-spin-button {
     height: 76px;
     width: 180px;
     margin-right: 15px;
+    margin-top: 16px;
     display: none;
 }
 
 #port-override-option {
     height: 76px;
-    margin-top: 7px;
+    margin-top: 24px;
     margin-right: 15px;
 }
 
