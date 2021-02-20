@@ -32,7 +32,7 @@
         "message": "Aquesta operació no és compatible amb el teu maquinari."
     },
     "storageDeviceNotReady": {
-        "message": "El dispositiu d'emmagatzematge no està llest. En cas d'una targeta microSD, assegureu-vos de que és correctament reconeguda per la seva controladora del vol."
+        "message": "El dispositiu d'emmagatzematge no està llest. En cas d'una targeta microSD, assegureu-vos de que és correctament reconegut per la controladora del vol."
     },
     "options_title": {
         "message": "Opcions de l'aplicació"
@@ -114,11 +114,11 @@
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
-        "message": "Cap dataflash <br>xip trobat",
+        "message": "<br>No s'ha trobat cap xip flash",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
-        "message": "Dataflash: espai lliure",
+        "message": "Flash: espai lliure",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorStatusGyro": {
