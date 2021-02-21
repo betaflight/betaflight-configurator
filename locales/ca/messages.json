@@ -440,7 +440,7 @@
         "message": "<strong>la versió del configurador que utilitzeu ($3) és més antiga que el firmware que utilitzeu ($4)</strong>. <br> $t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat</strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabConfiguration.message)\".<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat</strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabMotorTesting.message)\".<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>l’acceleròmetre està activat, però no està calibrat</strong>.<br>Si voleu utilitzar l’acceleròmetre, seguiu les instruccions per a '$t(initialSetupButtonCalibrateAccel.message)' a la pestanya '$t(tabSetup.message)'. Si està habilitada qualsevol funció que requereixi l’acceleròmetre (modes de nivell automàtic, rescat GPS, ...), es desactivarà l’armament de la aeronau fins que s’hagi calibrat l’acceleròmetre.<br>Si no teniu previst utilitzar l'acceleròmetre, es recomana inhabilitar-lo a \"$t(configurationSystem.message)\" a la pestanya \"$t(tabConfiguration.message)\"."
@@ -2491,7 +2491,7 @@
         "message": "<strong>Entenc els riscos</strong>, <br />totes les hèlix estan tretes."
     },
     "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>Avís d'informació</strong><br /> Per canviar el sentit de gir del motor, cal connectar la bateria i configurar el protocol ESC correcte a la pestanya $t(tabConfiguration.message). Tingueu en compte que no tots els ESC de Dshot funcionaran amb aquest diàleg. Comproveu el firmware del vostre ESC."
+        "message": "<strong>Avís d'informació</strong><br /> Per canviar els sentits de gir dels motors, cal connectar la bateria i configurar el protocol ESC correcte a la pestanya $t(tabMotorTesting.message). Tingueu en compte que no tots els ESC de Dshot funcionaran amb aquest diàleg. Comproveu el firmware del vostre ESC."
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Establiu el sentit de gir del motor seleccionant i girant cada motor individualment."
@@ -2530,10 +2530,10 @@
         "message": "Els motors giraran quan s’estableixi el sentit!"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "La funció només funciona amb DSHOT ESC.<br/>Verifiqueu que el vostre ESC (controlador de velocitat elèctric) admeti el protocol DSHOT i canvieu-lo a la pestanya $t(tabConfiguration.message)."
+        "message": "La funció només funciona amb DSHOT ESC.<br />Verifiqueu que el vostre ESC (controlador de velocitat elèctric) admeti el protocol DSHOT i canvieu-lo a la pestanya $t(tabMotorTesting.message)."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "El nombre de motors és 0.<br />Verifiqueu el mesclador actual a la pestanya $t(tabConfiguration.message) o configureu-ne un de personalitzat mitjançant CLI. Consulteu aquesta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">pàgina Wiki</a>."
+        "message": "El nombre de motors és 0.<br />Verifiqueu el mesclador actual a la pestanya $t(tabMotorTesting.message) o configureu-ne un de personalitzat mitjançant CLI. Consulteu aquesta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Pàgina Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualitzeu el microprogramari.<br /> Assegureu-vos que utilitzeu el microprogramari més recent: Betaflight 4.3 o posterior."
@@ -3613,7 +3613,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "El filtratge RPM és un banc de filtres Notch (de banda eliminada) al Giro que utilitzen les dades de telemetria RPM per eliminar el soroll del motor amb precisió quirúrgica.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span>: El ESC ha de ser compatible amb el protocol DShot bidireccional i el valor del $t(configurationMotorPoles.message) a la pestanya $t(tabConfiguration.message) ha de ser correcte perquè aquest filtre funcioni.</b>",
+        "message": "El filtratge RPM és un banc de filtres Notch (de banda eliminada) al Giro que utilitzen les dades de telemetria RPM per eliminar el soroll del motor amb precisió quirúrgica.<br /><br /><b><span class=\"message-positive\">IMPORTANT</span>: El ESC ha de ser compatible amb el protocol DShot bidireccional i el valor del $t(configurationMotorPoles.message) a la pestanya $t(tabMotorTesting.message) ha de ser correcte perquè aquest filtre funcioni.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
