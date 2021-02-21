@@ -421,9 +421,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>您正在使用的配置程式版本 ($3) 落後於您正在使用的固件版本 ($4) </strong>。<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>尚未選擇任何電調協議</strong>。<br>請在 ‘$t(tabConfiguration.message)’ 頁面內 ‘$t(configurationEscFeatures.message)’ 中選擇適合您電調的輸出協議。<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>加速度計已啟用，但未進行校準</strong>。<br>如果您計劃使用加速度計，請遵循 \"$t(tabSetup.message)\" 頁面中的 \"$t(initialSetupButtonCalibrateAccel.message)\" 操作指南。如果開啟了任何需要調用加速度計的功能 (例如自穩模式, GPS 救援, …)，在加速度計完成校準之间將無法解鎖。<br>如果您並不計劃使用加速度計，建議您在 \"$t(tabConfiguration.message)\" 頁面中通過 \"$t(configurationSystem.message)\" 禁用加速度計。"
     },
