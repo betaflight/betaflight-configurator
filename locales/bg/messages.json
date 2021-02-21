@@ -431,9 +431,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>версията на конфигуратора който използвате($3) е по стар от фърмуера който използвате($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>не е избран протокол за управление на двигателя</strong>.<br>Моля, изберете протокола за управление на двигателя, който съответства на вашия ESC в $t(configurationEscFeatures.message)в раздела$t(tabConfiguration.message).<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>акселерометъра е активиран но не е калибриран</strong>.<br>Ако планирате да използвате акселерометъра, моля следвайте инструкциите за '$t(initialSetupButtonCalibrateAccel.message)' в '$t(tabSetup.message)' прозорец.Ако някоя функция която изисква акселерометър (режим авто стабилизиране, ......)е активирана, активирането на дрона ще е деактивирано докато не се направи калибриране на акселерометара.<br>Ако няма да използвате акселерометара е препоръчително да се деактивира в '$t(configurationSystem.message)' в '$t(tabConfiguration.message)' прозорец."
     },
@@ -2439,9 +2436,6 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong> Разбирам рисковете </strong>, <br /> всички витла са премахнати."
     },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong> Информационно известие </strong> <br /> За да промените посоките на двигателя, батерията трябва да бъде включена и в раздела $t(tabConfiguration.message) трябва да се настрои правилният ESC протокол. Имайте предвид, че не всички Dshot ESC ще работят с този диалогов прозорец. Проверете вашата ESC firmware."
-    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Задайте посоката на въртене на двигателя, като изберете и завъртите всеки двигател поотделно."
     },
@@ -2477,12 +2471,6 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Двигателите ще се завъртят когато се зададе посоката!"
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "Функцията работи само с DSHOT ESC. <br /> Проверете дали вашият ESC (електрически регулатор на скоростта) поддържа протокол DSHOT и го променете в раздела $t(tabConfiguration.message)."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Броят на двигателите е 0. <br /> Проверете текущия миксер в раздела $t(tabConfiguration.message) или настройте персонализиран чрез CLI. Обърнете се към тази <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\"> Wiki страница </a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Актуализирайте фърмуера. <br /> Уверете се, че използвате най-новия фърмуер: Betaflight 4.3 или по-нов."
