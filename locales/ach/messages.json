@@ -523,7 +523,7 @@
         "message": "crwdns10070:0$3crwdnd10070:0$4crwdnd10070:0$t(configuratorUpdateHelp.message)crwdne10070:0"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "crwdns10072:0$t(configurationEscFeatures.message)crwdnd10072:0$t(tabConfiguration.message)crwdnd10072:0$t(escProtocolDisabledMessage.message)crwdne10072:0"
+        "message": "crwdns10442:0$t(configurationEscFeatures.message)crwdnd10442:0$t(tabMotorTesting.message)crwdnd10442:0$t(escProtocolDisabledMessage.message)crwdne10442:0"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "crwdns10074:0$t(initialSetupButtonCalibrateAccel.message)crwdnd10074:0$t(tabSetup.message)crwdnd10074:0$t(configurationSystem.message)crwdnd10074:0$t(tabConfiguration.message)crwdne10074:0"
@@ -2577,7 +2577,7 @@
         "message": "crwdns10312:0crwdne10312:0"
     },
     "escDshotDirectionDialog-InformationNotice": {
-        "message": "crwdns10314:0$t(tabConfiguration.message)crwdne10314:0"
+        "message": "crwdns10444:0$t(tabMotorTesting.message)crwdne10444:0"
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "crwdns10316:0crwdne10316:0"
@@ -2616,10 +2616,10 @@
         "message": "crwdns10338:0crwdne10338:0"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "crwdns10340:0$t(tabConfiguration.message)crwdne10340:0"
+        "message": "crwdns10446:0$t(tabMotorTesting.message)crwdne10446:0"
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "crwdns10342:0$t(tabConfiguration.message)crwdne10342:0"
+        "message": "crwdns10448:0$t(tabMotorTesting.message)crwdne10448:0"
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "crwdns10344:0crwdne10344:0"
@@ -3699,7 +3699,7 @@
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "crwdns10426:0$t(configurationMotorPoles.message)crwdnd10426:0$t(tabConfiguration.message)crwdne10426:0",
+        "message": "crwdns10450:0$t(configurationMotorPoles.message)crwdnd10450:0$t(tabMotorTesting.message)crwdne10450:0",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
