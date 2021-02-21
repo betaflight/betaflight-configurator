@@ -499,9 +499,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>사용 중인 컨피규레이터의 버전 ($3)은 사용 중인 펌웨어 ($4)보다 오래되었습니다</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>선택된 모터 출력 프로토콜이 없습니다</strong>.<br>'$t(tabConfiguration.message)' 탭의 '$t(configurationEscFeatures.message)'에서 ESC에 적합한 모터 출력 프로토콜을 선택하십시오.<br> $t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>가속도계가 활성화되었지만 교정되지 않았습니다</strong>.<br> 가속도계를 사용하려는 경우 '$t(tabSetup.message)' 탭에서 '$t(initialSetupButtonCalibrateAccel.message)'에 대한 지침을 따르십시오. 가속도계(자동 레벨 모드, GPS 레스큐 등)가 필요한 기능이 활성화된 경우, 가속도계가 교정될 때까지 기체의 아밍이 비활성화됩니다.<br>가속도계를 사용할 계획이 없는 경우 '$t(tabConfiguration.message)' 탭의 '$t(configurationSystem.message)'에서 가속도계를 사용하지 않도록 설정하는 것이 좋습니다."
     },
@@ -2513,9 +2510,6 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>나는 위험을 인지하고 있으며</strong>,<br />모든 프로펠러가 제거되었습니다."
     },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>정보 공지</strong><br />모터 방향을 변경하려면 배터리를 연결해야 하며 $t(tabConfiguration.message) 탭에서 올바른 ESC 프로토콜을 설정해야 합니다. 일부 Dshot ESC는 이 대화상자에서 작동하지 않습니다. ESC 펌웨어를 확인하세요."
-    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "각 모터를 개별적으로 선택하고 회전하여 모터 회전방향을 설정합니다."
     },
@@ -2551,12 +2545,6 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "방향을 설정할 때 모터가 회전합니다!"
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "기능은 DSHOT ESC에서만 작동합니다.<br /> ESC(전기 속도 제어기)가 DSHOT 프로토콜을 지원하는지 확인하고 $t(tabConfiguration.message) 탭에서 변경하세요."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "모터의 수가 0입니다.<br />$t(tabConfiguration.message) 탭에서 현재의 믹서를 확인하거나 CLI를 통해 사용자 지정 믹서를 설정하세요. 이 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">위키 페이지</a>를 참고하세요."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "펌웨어를 업데이트하세요.<br />최신 펌웨어를 사용하고 있는지 확인합니다: 베타플라이트 4.3 이상."
