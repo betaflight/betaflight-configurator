@@ -424,9 +424,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>a versão do configurador que você está utilizando ($3) é mais antiga do que o firmware utilizado ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Nenhum protocolo de saída para o motor foi selecionado</strong>.<br>Por favor selecione o protocolo do motor apropriado para o seu ESC no campo '$t(configurationEscFeatures.message)' na aba '$t(tabConfiguration.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> o acelerômetro está habilitado, mas não está calibrado</strong>.<br>Se você planeja usar o acelerômetro, siga as instruções para '$t(initialSetupButtonCalibrateAccel.message)' na guia '$t(tabSetup.message)'. Se qualquer função que exija o acelerômetro estiver habilitada (por exemplo: modo de nível automático ou resgate por GPS), não será possível armar a aeronave até que o acelerômetro seja calibrado.<br>Se você não planeja usar o acelerômetro, é recomendável desativá-lo em '$t(configurationSystem.message)' na guia '$t(tabConfiguration.message)'."
     },
