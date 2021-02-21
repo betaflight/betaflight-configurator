@@ -431,9 +431,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>La versione del configuratore che stai utilizzando ($3) è più vecchia del firmware che stai usando ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Non è stato selezionato alcun protocollo di output dei motori</strong>.<br>Si prega di selezionare un protocollo di output dei motori appropriato per i tuoi ESC in '$t(configurationEscFeatures.message)' nella scheda '$t(tabConfiguration.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>L'accelerometro è abilitato ma non è calibrato</strong>. <br>Se hai intenzione di usare l'accelerometro segui le istruzioni e $t(initialSetupButtonCalibrateAccel.message) nella scheda $t(tabSetup.message). Se è attivata una qualsiasi funzione che richiede l'accelerometro (modalità stabilizzata, GPS rescue, ...), l'armamento del modello sarà disattivato fin quando l'accelerometro non verrà calibrato. <br>Se non prevedi di utilizzare l'accelerometro è consigliabile disattivarlo in $t(configurationSystem.message) nella scheda $t(tabConfiguration.message)."
     },
@@ -2445,9 +2442,6 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>Sono al corrente dei rischi</strong>,<br />le eliche sono rimosse."
     },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>Avviso</strong><br />Per cambiare le direzioni dei motori la batteria deve essere collegata e deve essere impostato il protocollo ESC corretto nella scheda $t(tabConfiguration.message). Nota che non tutti gli ESC DSHOT funzioneranno con questa finestra. Controlla il firmware ESC."
-    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Imposta la direzione di rotazione dei motori selezionando e facendo girare ogni motore individualmente."
     },
@@ -2483,12 +2477,6 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "I motori gireranno quando si imposta la direzione!"
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "Funziona solo con ESC DSHOT.<br />Verifica il supporto del protocollo DSHOT da parte del tuo ESC o cambialo nella scheda $t(tabConfiguration.message)."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Il numero di motori è 0.<br />Verifica il Mixer attuale sulla scheda $t(tabConfiguration.message) oppure impostane uno personalizzato via CLI. Fai riferimento a questa <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">pagina Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Aggiorna il firmware.<br /> Assicurati di utilizzare l'ultimo firmware: Betaflight 4.3 o successivo."
