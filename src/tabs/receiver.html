@@ -10,6 +10,66 @@
         <div class="grid-row">
             <div class="grid-col col6 bars"></div>
             <div class="grid-col col6">
+
+                <!-- RECEIVER -->
+                <div class="receiver">
+                    <div class="gui_box receiver grey">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="configurationReceiver"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <select class="features rxMode" name="rxMode">
+                                <!-- list generated here -->
+                            </select>
+                            <span i18n="configurationReceiverMode"></span>
+                        </div>
+                        <div class="serialRXBox spacer_box">
+                            <div class="note">
+                                <p i18n="configurationSerialRXHelp"></p>
+                            </div>
+                            <select class="serialRX">
+                                <!-- list generated here -->
+                            </select>
+                            <span i18n="configurationSerialRX"></span>
+                        </div>
+                        <div class="spiRxBox spacer_box">
+                            <div class="note">
+                                <p i18n="configurationSpiRxHelp"></p>
+                            </div>
+                            <select class="spiRx">
+                                <!-- list generated here -->
+                            </select>
+                            <span i18n="configurationSpiRX"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RSSI -->
+                <div class="rssi">
+                    <div class="gui_box grey">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title" i18n="configurationRSSI"></div>
+                            <div class="helpicon cf_tip" i18n_title="configurationRSSIHelp"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th scope="rssi" i18n="configurationFeatureEnabled"></th>
+                                    <th scope="rssi" i18n="configurationFeatureDescription"></th>
+                                    <th scope="rssi" i18n="configurationFeatureName"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="features rssi">
+                                <!-- table generated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RSSI CHANNEL-->
+
                 <div class="rssi_channel_wrapper grey">
                     <div class="head" i18n="receiverRssiChannel"></div>
                     <select name="rssi_channel">
@@ -371,6 +431,9 @@
         </div>
         <div class="btn update_btn">
             <a class="update" href="#" i18n="receiverButtonSave"></a>
+        </div>
+        <div class="btn save_btn">
+            <a class="save" href="#" i18n="configurationButtonSave"></a>
         </div>
     </div>
 </div>

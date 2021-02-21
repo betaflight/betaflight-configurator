@@ -4,7 +4,7 @@ TABS.configuration = {
     analyticsChanges: {},
 };
 
-TABS.configuration.initialize = function (callback, scrollPosition) {
+TABS.configuration.initialize = function (callback) {
     const self = this;
 
     if (GUI.active_tab != 'configuration') {
@@ -12,129 +12,34 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         GUI.configuration_loaded = true;
     }
 
-    function load_config() {
-        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, load_beeper_config);
-    }
-
-    function load_beeper_config() {
-        const nextCallBack = load_serial_config;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-            MSP.send_message(MSPCodes.MSP_BEEPER_CONFIG, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
     function load_serial_config() {
-        mspHelper.loadSerialConfig(load_board_alignment_config);
+        mspHelper.loadSerialConfig(load_config);
     }
 
-    function load_board_alignment_config() {
-        MSP.send_message(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG, false, false, load_rx_map);
-    }
-
-    function load_rx_map() {
-        MSP.send_message(MSPCodes.MSP_RX_MAP, false, false, load_rssi_config);
-    }
-
-    function load_rssi_config() {
-        MSP.send_message(MSPCodes.MSP_RSSI_CONFIG, false, false, load_gps_config);
-    }
-
-    function load_gps_config() {
-        const nextCallBack = load_acc_trim;
-        if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-            MSP.send_message(MSPCodes.MSP_GPS_CONFIG, false, false, load_acc_trim);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_acc_trim() {
-        MSP.send_message(MSPCodes.MSP_ACC_TRIM, false, false, load_misc);
-    }
-
-    function load_misc() {
-        const nextCallBack = load_arming_config;
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-            MSP.send_message(MSPCodes.MSP_MISC, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_arming_config() {
-        const nextCallBack = load_rc_deadband;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.8.0")) {
-            MSP.send_message(MSPCodes.MSP_ARMING_CONFIG, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_rc_deadband() {
-        const nextCallBack = load_sensor_config;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.17.0")) {
-            MSP.send_message(MSPCodes.MSP_RC_DEADBAND, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_sensor_config() {
-        const nextCallBack = load_sensor_alignment;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
-            MSP.send_message(MSPCodes.MSP_SENSOR_CONFIG, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_sensor_alignment() {
-        const nextCallBack = load_name;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
-            MSP.send_message(MSPCodes.MSP_SENSOR_ALIGNMENT, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_name() {
-        const nextCallBack = load_rx_config;
-        if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-            MSP.send_message(MSPCodes.MSP_NAME, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_rx_config() {
-        const nextCallBack = load_filter_config;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-            MSP.send_message(MSPCodes.MSP_RX_CONFIG, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_filter_config() {
-        const nextCallBack = load_advanced_config;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            MSP.send_message(MSPCodes.MSP_FILTER_CONFIG, false, false, nextCallBack);
-        } else {
-            nextCallBack();
-        }
-    }
-
-    function load_advanced_config() {
-        MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, load_html);
+    function load_config() {
+        Promise
+        .resolve(true)
+        .then(() => { return MSP.promise(MSPCodes.MSP_FEATURE_CONFIG); })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36) ? MSP.promise(MSPCodes.MSP_BEEPER_CONFIG) : true; })
+        .then(() => { return MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG); })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33) ? MSP.promise(MSPCodes.MSP_GPS_CONFIG) : true; })
+        .then(() => { return MSP.promise(MSPCodes.MSP_ACC_TRIM); })
+        .then(() => { return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_33) ? MSP.promise(MSPCodes.MSP_MISC) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.8.0") ? MSP.promise(MSPCodes.MSP_ARMING_CONFIG) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.17.0") ? MSP.promise(MSPCodes.MSP_RC_DEADBAND) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.16.0") ? MSP.promise(MSPCodes.MSP_SENSOR_CONFIG) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.15.0") ? MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, "1.20.0") ? MSP.promise(MSPCodes.MSP_NAME) : true; })
+        .then(() => { return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31) ? MSP.promise(MSPCodes.MSP_RX_CONFIG) : true; })
+        .then(() => { return MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG); })
+        .then(() => { load_html(); });
     }
 
     function load_html() {
         $('#content').load("./tabs/configuration.html", process_html);
     }
 
-    load_config();
+    load_serial_config();
 
     function process_html() {
         self.analyticsChanges = {};
@@ -455,8 +360,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
         // Only show these sections for supported FW
         if (semver.lt(FC.CONFIG.apiVersion, "1.16.0")) {
-            $('.selectProtocol').hide();
-            $('.checkboxPwm').hide();
             $('.selectPidProcessDenom').hide();
         }
 
@@ -586,96 +489,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gpsBaudrateElement.parent().hide();
         }
 
-        const serialRXSelectEl = $('select.serialRX');
-        FC.getSerialRxTypes().forEach(function(serialRxType, index) {
-            serialRXSelectEl.append(`<option value="${index}">${serialRxType}</option>`);
-        });
-
-        serialRXSelectEl.change(function () {
-            const serialRxValue = parseInt($(this).val());
-
-            let newValue;
-            if (serialRxValue !== FC.RX_CONFIG.serialrx_provider) {
-                newValue = $(this).find('option:selected').text();
-            }
-            self.analyticsChanges['SerialRx'] = newValue;
-
-            FC.RX_CONFIG.serialrx_provider = serialRxValue;
-        });
-
-        // select current serial RX type
-        serialRXSelectEl.val(FC.RX_CONFIG.serialrx_provider);
-        const spiRxTypes = [];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
-            spiRxTypes.push(
-                'NRF24_V202_250K',
-                'NRF24_V202_1M',
-                'NRF24_SYMA_X',
-                'NRF24_SYMA_X5C',
-                'NRF24_CX10',
-                'CX10A',
-                'NRF24_H8_3D',
-                'NRF24_INAV',
-                'FRSKY_D'
-            );
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
-                spiRxTypes.push(
-                    'FRSKY_X',
-                    'A7105_FLYSKY',
-                    'A7105_FLYSKY_2A',
-                    'NRF24_KN',
-                );
-            }
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                spiRxTypes.push(
-                    'SFHSS',
-                    'SPEKTRUM',
-                    'FRSKY_X_LBT',
-                );
-            }
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                spiRxTypes.push(
-                    'REDPINE',
-                );
-            }
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                spiRxTypes.push(
-                    'FRSKY_X_V2',
-                    'FRSKY_X_LBT_V2',
-                );
-            }
-
-            const spiRx_e = $('select.spiRx');
-            for (let i = 0; i < spiRxTypes.length; i++) {
-                spiRx_e.append(`<option value="${i}">${spiRxTypes[i]}</option>`);
-            }
-
-            spiRx_e.change(function () {
-                const value = parseInt($(this).val());
-
-                let newValue = undefined;
-                if (value !== FC.RX_CONFIG.rxSpiProtocol) {
-                    newValue = $(this).find('option:selected').text();
-                }
-                self.analyticsChanges['SPIRXProtocol'] = newValue;
-
-                FC.RX_CONFIG.rxSpiProtocol = value;
-            });
-
-            // select current serial RX type
-            spiRx_e.val(FC.RX_CONFIG.rxSpiProtocol);
-            }
-
-        // for some odd reason chrome 38+ changes scroll according to the touched select element
-        // i am guessing this is a bug, since this wasn't happening on 37
-        // code below is a temporary fix, which we will be able to remove in the future (hopefully)
-        $('#content').scrollTop((scrollPosition) ? scrollPosition : 0);
-
         // fill board alignment
         $('input[name="board_align_roll"]').val(FC.BOARD_ALIGNMENT_CONFIG.roll);
         $('input[name="board_align_pitch"]').val(FC.BOARD_ALIGNMENT_CONFIG.pitch);
@@ -691,21 +504,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         }
 
         // UI hooks
-        function checkShowSerialRxBox() {
-            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SERIAL')) {
-                $('div.serialRXBox').show();
-            } else {
-                $('div.serialRXBox').hide();
-            }
-        }
-
-        function checkShowSpiRxBox() {
-            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI')) {
-                $('div.spiRxBox').show();
-            } else {
-                $('div.spiRxBox').hide();
-            }
-        }
 
         function checkUpdateGpsControls() {
             if (FC.FEATURE_CONFIG.features.isEnabled('GPS')) {
@@ -738,11 +536,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
             FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
-
-            if (element.attr('name') === 'rxMode') {
-                    checkShowSerialRxBox();
-                    checkShowSpiRxBox();
-            }
         });
 
         $('input.condition', beeper_e).change(function () {
@@ -750,8 +543,6 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             FC.BEEPER_CONFIG.beepers.updateData(element);
         });
 
-        checkShowSerialRxBox();
-        checkShowSpiRxBox();
         checkUpdateGpsControls();
 
         $('a.save').on('click', function() {
@@ -805,96 +596,30 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             FC.CONFIG.name = $.trim($('input[name="craftName"]').val());
 
             function save_serial_config() {
-                const nextCallBack = save_feature_config;
-                mspHelper.sendSerialConfig(nextCallBack);
+                mspHelper.sendSerialConfig(save_config);
             }
 
-            function save_feature_config() {
-                const nextCallBack = save_beeper_config;
-                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, nextCallBack);
-            }
-
-            function save_beeper_config() {
-                const nextCallBack = save_misc;
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
-                    MSP.send_message(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG), false, nextCallBack);
-                } else {
-                    nextCallBack();
-                }
-            }
-
-            function save_misc() {
-                const nextCallBack = save_board_alignment_config;
-                if(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-                    MSP.send_message(MSPCodes.MSP_SET_MISC, mspHelper.crunch(MSPCodes.MSP_SET_MISC), false, nextCallBack);
-                } else {
-                    nextCallBack();
-                }
-            }
-
-            function save_board_alignment_config() {
-                const nextCallBack = save_gps_config;
-                MSP.send_message(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG), false, nextCallBack);
-            }
-
-
-            function save_gps_config() {
-                const nextCallBack = save_rc_deadband;
-                if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-                    MSP.send_message(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG), false, nextCallBack);
-                } else {
-                    nextCallBack();
-                }
-            }
-
-            function save_rc_deadband() {
-                MSP.send_message(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND), false, save_sensor_alignment);
-            }
-
-            function save_sensor_alignment() {
-                MSP.send_message(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT), false, save_esc_protocol);
-            }
-
-            function save_esc_protocol() {
-                MSP.send_message(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG), false, save_acc_trim);
-            }
-
-            function save_acc_trim() {
-                MSP.send_message(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM), false, save_arming_config);
-            }
-
-            function save_arming_config() {
-                MSP.send_message(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG), false, save_sensor_config);
-            }
-
-            function save_sensor_config() {
-                MSP.send_message(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG), false, save_name);
-            }
-
-            function save_name() {
-                MSP.send_message(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME), false, save_rx_config);
-            }
-
-            function save_rx_config() {
-                const nextCallBack = save_filter_config;
-                if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
-                    MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, nextCallBack);
-                } else {
-                    nextCallBack();
-                }
-            }
-
-            function save_filter_config() {
-                const nextCallBack = save_to_eeprom;
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-                    MSP.send_message(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG), false, nextCallBack);
-                } else {
-                    nextCallBack();
-                }
-            }
-
-            function save_to_eeprom() {
-                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
+            function save_config() {
+                Promise
+                .resolve(true)
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG)); })
+                .then(() => { return (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) ?
+                    MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG)) : true; })
+                .then(() => { return (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_33)) ?
+                    MSP.promise(MSPCodes.MSP_SET_MISC, mspHelper.crunch(MSPCodes.MSP_SET_MISC)) : true; })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG)); })
+                .then(() => { return (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) ?
+                    MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG)) : true; })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND)); })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_SENSOR_ALIGNMENT, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT)); })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG)); })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM)); })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)); })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG)); })
+                .then(() => { return MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME)); })
+                .then(() => { return (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) ? MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)) : true; })
+                .then(() => { return MSP.promise(MSPCodes.MSP_EEPROM_WRITE); })
+                .then(() => { reboot(); });
             }
 
             function reboot() {

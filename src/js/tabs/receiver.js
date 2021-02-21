@@ -4,7 +4,9 @@ TABS.receiver = {
     rateChartHeight: 117,
     useSuperExpo: false,
     deadband: 0,
-    yawDeadband: 0
+    yawDeadband: 0,
+    analyticsChanges: {},
+    needReboot: false,
 };
 
 TABS.receiver.initialize = function (callback) {
@@ -59,6 +61,12 @@ TABS.receiver.initialize = function (callback) {
     MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, get_rc_data);
 
     function process_html() {
+        self.analyticsChanges = {};
+
+        const featuresElement = $('.tab-receiver .features');
+
+        FC.FEATURE_CONFIG.features.generateElements(featuresElement);
+
         // translate to user-selected language
         i18n.localizePage();
 
@@ -230,14 +238,158 @@ TABS.receiver.initialize = function (callback) {
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);
 
+        const serialRxSelectElement = $('select.serialRX');
+        FC.getSerialRxTypes().forEach((serialRxType, index) => {
+            serialRxSelectElement.append(`<option value="${index}">${serialRxType}</option>`);
+        });
+
+        serialRxSelectElement.change(function () {
+            const serialRxValue = parseInt($(this).val());
+
+            let newValue;
+            if (serialRxValue !== FC.RX_CONFIG.serialrx_provider) {
+                newValue = $(this).find('option:selected').text();
+                updateSaveButton(true);
+            }
+            tab.analyticsChanges['SerialRx'] = newValue;
+
+            FC.RX_CONFIG.serialrx_provider = serialRxValue;
+        });
+
+        // select current serial RX type
+        serialRxSelectElement.val(FC.RX_CONFIG.serialrx_provider);
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
+            const spiRxTypes = [
+                'NRF24_V202_250K',
+                'NRF24_V202_1M',
+                'NRF24_SYMA_X',
+                'NRF24_SYMA_X5C',
+                'NRF24_CX10',
+                'CX10A',
+                'NRF24_H8_3D',
+                'NRF24_INAV',
+                'FRSKY_D',
+            ];
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_37)) {
+                spiRxTypes.push(
+                    'FRSKY_X',
+                    'A7105_FLYSKY',
+                    'A7105_FLYSKY_2A',
+                    'NRF24_KN'
+                );
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
+                spiRxTypes.push(
+                    'SFHSS',
+                    'SPEKTRUM',
+                    'FRSKY_X_LBT'
+                );
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
+                spiRxTypes.push(
+                    'REDPINE'
+                );
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                spiRxTypes.push(
+                    'FRSKY_X_V2',
+                    'FRSKY_X_LBT_V2'
+                );
+            }
+
+            const spiRxElement = $('select.spiRx');
+            for (let i = 0; i < spiRxTypes.length; i++) {
+                spiRxElement.append(`<option value="${i}">${spiRxTypes[i]}</option>`);
+            }
+
+            spiRxElement.change(function () {
+                const value = parseInt($(this).val());
+
+                let newValue = undefined;
+                if (value !== FC.RX_CONFIG.rxSpiProtocol) {
+                    newValue = $(this).find('option:selected').text();
+                    updateSaveButton(true);
+                }
+                tab.analyticsChanges['SPIRXProtocol'] = newValue;
+
+                FC.RX_CONFIG.rxSpiProtocol = value;
+            });
+
+            // select current serial RX type
+            spiRxElement.val(FC.RX_CONFIG.rxSpiProtocol);
+        }
+
+
         // UI Hooks
+
+        function updateSaveButton(reboot=false) {
+            if (reboot) {
+                tab.needReboot = true;
+            }
+            if (tab.needReboot) {
+                $('.update_btn').hide();
+                $('.save_btn').show();
+            } else {
+                $('.update_btn').show();
+                $('.save_btn').hide();
+            }
+        }
+
+        $('input.feature', featuresElement).change(function () {
+            const element = $(this);
+
+            FC.FEATURE_CONFIG.features.updateData(element);
+            updateTabList(FC.FEATURE_CONFIG.features);
+
+            if (element.attr('name') === "RSSI_ADC") {
+                updateSaveButton(true);
+            }
+        });
+
+        function checkShowSerialRxBox() {
+            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SERIAL')) {
+                $('div.serialRXBox').show();
+            } else {
+                $('div.serialRXBox').hide();
+            }
+        }
+
+        function checkShowSpiRxBox() {
+            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI')) {
+                $('div.spiRxBox').show();
+            } else {
+                $('div.spiRxBox').hide();
+            }
+        }
+
+        $(featuresElement).filter('select').change(function () {
+            const element = $(this);
+            FC.FEATURE_CONFIG.features.updateData(element);
+            updateTabList(FC.FEATURE_CONFIG.features);
+            if (element.attr('name') === 'rxMode') {
+                checkShowSerialRxBox();
+                checkShowSpiRxBox();
+                updateSaveButton(true);
+            }
+        });
+
+        checkShowSerialRxBox();
+        checkShowSpiRxBox();
+        updateSaveButton();
+
         $('a.refresh').click(function () {
             tab.refresh(function () {
                 GUI.log(i18n.getMessage('receiverDataRefreshed'));
             });
         });
 
-        $('a.update').click(function () {
+        function saveConfiguration(boot=false) {
+
             if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
                 FC.RX_CONFIG.stick_max = parseInt($('.sticks input[name="stick_max"]').val());
                 FC.RX_CONFIG.stick_center = parseInt($('.sticks input[name="stick_center"]').val());
@@ -290,7 +442,7 @@ TABS.receiver.initialize = function (callback) {
             }
 
             function save_rx_config() {
-                const nextCallback = save_to_eeprom;
+                const nextCallback = (boot) ? save_feature_config : save_to_eeprom;
                 if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG), false, nextCallback);
                 } else {
@@ -298,13 +450,37 @@ TABS.receiver.initialize = function (callback) {
                 }
             }
 
-            function save_to_eeprom() {
-                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-                    GUI.log(i18n.getMessage('receiverEepromSaved'));
-                });
+            function save_feature_config() {
+                MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, save_to_eeprom);
             }
 
+            function save_to_eeprom() {
+                MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
+            }
+
+            function reboot() {
+                GUI.log(i18n.getMessage('configurationEepromSaved'));
+                if (boot) {
+                    GUI.tab_switch_cleanup(function() {
+                        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+                        reinitialiseConnection(tab);
+                    });
+                }
+            }
+
+            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges);
+            tab.analyticsChanges = {};
+
             MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_rssi_config);
+        }
+
+        $('a.update').click(function () {
+            saveConfiguration(false);
+        });
+
+        $('a.save').click(function () {
+            saveConfiguration(true);
+            tab.needReboot = false;
         });
 
         $("a.sticks").click(function() {
