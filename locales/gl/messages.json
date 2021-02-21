@@ -523,7 +523,7 @@
         "message": "<strong>A versión do configurador que está empregando ($3) é máis antigua que o firmware que está empregando ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong> non hai ningún protocolo de saída do motor seleccionado </strong>.<br> Por favor, seleccione un protocolo de saída de motor adecuado para os seus ESCs na '$t(configurationEscFeatures.message)' na pestana '$t(tabConfiguration.message)'.<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>Non hai ningún protocolo de saída do motor seleccionado</strong>.<br>Seleccione un protocolo de saída do motor adecuado para os seus ESC en '$t(configurationEscFeatures.message)' na pestana '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> o acelerómetro está activado, pero non está calibrado </strong>.<br> Se pretende usar o acelerómetro, siga as instrucións de '$t(initialSetupButtonCalibrateAccel.message)' na '$t(tabSetup.message)'pestana. Se está habilitada algunha función que requira o acelerómetro (modos de nivel automático, rescate GPS, ...), o armado desactivarase ata que se calibre o acelerómetro.<br> Se non está usando o acelerómetro é recomendable deshabilitalo en '$t(configurationSystem.message)' na pestana '$t(tabConfiguration.message)'."
@@ -2574,7 +2574,7 @@
         "message": "<strong>Entendo os riscos</strong>,<br />tódalas hélices están retiradas."
     },
     "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>Aviso informativo</strong><br />Para cambiala dirección dos motores, a batería debe estar conectada e o protocolo ESC correcto debe estar configurado na pestana $t(tabConfiguration.message). Teña en conta que non tódolos Dshot ESCs funcionarán con este diálogo. Comprobe o firmware do seu ESC."
+        "message": "<strong>Aviso de información</strong><br />Para cambiar as direccións do motor, ten que conectar a batería e configurar o protocolo ESC correcto na pestana $t(tabMotorTesting.message). Teña en conta que non todos os Dshot ESC's funcionarán con este diálogo. Comprobe o firmware do ESC."
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Configure a dirección de xiro do motor seleccionando e xirando cada motor individualmente."
@@ -2613,10 +2613,10 @@
         "message": "Os motores xirarán ao definir a dirección."
     },
     "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "A función só funciona con DSHOT ESC.<br />Verifique que o seu ESC (controlador de velocidade eléctrico) admita o protocolo DSHOT e pode cambialo na pestana $t(tabConfiguration.message)."
+        "message": "Esta función só funciona con DSHOT ESC.<br />Verifique que o ESC (controlador de velocidade eléctrico) admita o protocolo DSHOT e cámbieo na pestana $t(tabMotorTesting.message)."
     },
     "escDshotDirectionDialog-WrongMixerText": {
-        "message": "O número de motores é 0.<br />Verifique o Mixer actual na pestana $t(tabConfiguration.message) ou configure un personalizado mediante CLI. Consulte esta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
+        "message": "O número de motores é 0.<br />Verifique o Mixer actual na pestana $t(tabMotorTesting.message) ou configure un personalizado mediante CLI. Consulte esta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">páxina da Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualice o firmware.<br /> Asegúrese de que está a usar o firmware máis recente: Betaflight 4.3 ou máis recente."
@@ -3559,9 +3559,17 @@
         "message": "Proporción Pitch-Roll:",
         "description": "Pitch-Roll Ratio slider label"
     },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "A proporción Pitch-Roll é o balance do momento de inercia (MdI) entre o eixo Pitch e Roll.<br /><br />Xeralmente, o eixo Pitch ten un MdI máis alto e, polo tanto, pode ser apropiado ter ganancias PID máis altas no eixo Pitch vs eixo Roll. Non obstante, en \"Strechted X\" ou noutras configuracións, é posible que non sexa o caso.<br /><br />Xeralmente para afinar, suba o control deslizable \"Ganancia P e D\" ata que un eixo comeza a amosar oscilación D-term a longo prazo (un ruído \"trillante\") e logo retrocédaia. Blackbox é o método máis doado para determinar que eixe está \"trillando\". Unha vez que atope que eixo está no límite do D-term, pode empregar o control deslizante Pitch-Roll Gain para levar ó outro eixe a pouca distancia do mesmo límite para equilibrar o quad para obter o mellor rendemento en voo.",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
     "pidTuningIGainSlider": {
         "message": "Ganancia I-term:",
         "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "I-term ten que estar en equilibrio con P-term; semellante a como o P-term debe estar en equilibrio co D-term (Secuencia de sintonización: filtros -> D-term -> P-term -> I-term).<br /><br />Os controis deslizantes de ganancia do I-term axustan as ganancias de I-term mentres manteñen as ganancias de P-term constantes para axustar a proporción entre os dous termos.<br /><br />Se detecta oscilacións lentas cando baixa o acelerador ó 0%, indica que as ganancias do I-term son demasiado altas e debería baixar o control deslizante de ganancia do I-term<b>OU</b>subir o control deslizante de ganancia de P e D se aínda non axustou os D-term e PD (o que debería primeiro antes de baixar I-term).<br /><br />Dito isto, xeralmente vai querer que as ganancias do I-term sexan o máis fortes que poidan ser (pero dentro dun equilibrio) para manter o seguimento do quad nas manobras en xiros de espiral, órbitas, ect...",
+        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSlider": {
         "message": "Balance de PD:",
@@ -3575,9 +3583,29 @@
         "message": "Caída de Ganancia D_Min:",
         "description": "D Min slider label"
     },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "Controla a cantidade de ganancias D que se suprimen nun voo recto normal. Baixe o control  móbil para soltar MÁIS as ganancias D nun voo recto normal. Suba o control móbil para que as ganacias D caian MENOS nu voo recto normal.<br /><br />Con D_min activado, a ganancia D activa cambia durante o voo. En voo recto normal (con D_min activado) a ganancia D activa sitúase xusto por encima dos valores de ganancia D_min. Durante os movementos fortes ou propwash, a ganancia activa D aumenta ata a ganancia D_max. Vexa os consellos D_min / D_max anteriores para obter máis información.<br /><br /> As ganancias en D máis baixas poden axudar a suavizar o voo cara a adiante, negando a necesidade de aumentar o filtrado no xiro e / ou no D-term na pestana Configuración de filtros.; mentres aumenta as ganancias activas D ata os valores D_max cando se precisa máis D-term para controlar a superación e / ou para estabilizar o quad en condicións de propwash ou para resistir forzas externas (vento).",
+        "description": "D_min slider helpicon message"
+    },
     "pidTuningResponseSlider": {
         "message": "Ganancia de resposta de stick:",
         "description": "Response tuning slider label"
+    },
+    "pidTuningMasterSliderHelp": {
+        "message": "Xeralmente os quads máis grandes necesitan maiores ganancias de PID debido a que teñen unha proporción de potencia menor ao momento de inercia (MdI).<br /><br />Os quads máis pequenos (micros) normalmente necesitan ganancias de PID máis baixos debido a unha maior relación potencia / MdI.<br /><br />Os valores máis altos son para os quads de menor autoridade. Os valores máis baixos son para os quads de maior autoridade.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Un D-term relativamente alto amortecerá a capacidade de resposta do stick e pode quentar os motores, pero debería axudar a controlar as oscilacións do P-term e mellorará a oscilación no propwash.<br /><br />un D-term relativamente baixo proporciona unha resposta máis rápida do stick, debilitará o rendemento có propwash e reaccionará ás forzas externas (vento).",
+        "description": "PD balance tuning slider helpicon message"
+    },
+    "pidTuningPDGainSliderHelp": {
+        "message": "A ganancia máis baixa de P e D producirá motores máis fríos, pero tamén propwash. Un valor demasiado baixo pode provocar que o quad sexa inestable.<br /><br />Os termos P e D funcionan xuntos para reducir o propwash.<br /><br />Valores máis altos aumentarán a calor do motor e poderían aumentar as oscilacións durante voo suave cara adiante debido a maiores ganancias de D-term.",
+        "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "Valores máis baixos de FF empeorarán a resposta do stick e poden provocar un rebote lento ao final dun flipnou roll debido a que o quad queda demasiado atrasado ós mandos e acumula moito I-term e causa \"I-term Bounceback\".<br /><br />Valores FF máis altos darán respostas de stick máis rápidas en movementos bruscos. Valores FF excesivamente altos poden causar desbordamentos e rebotes rápidos ao final dun flipnou roll.<br /><br />Nota:<br />A función I-term Relax pode impedir a acumulación do I-term por movemento dos sticks en quads con pouca autoridade ou se se usan ganancias de resposta de stick baixas.",
+        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Paso Baixo do Xiro"
@@ -3667,6 +3695,10 @@
         "message": "Filtro Gyro RPM",
         "description": "Header text for the RPM Filter group"
     },
+    "pidTuningRpmFilterHelp": {
+        "message": "O filtrado RPM é un banco de filtros Noch do xiroscopio que utilizan os datos de telemetría RPM para eliminar o ruído do motor con precisión cirúrxica.<br /><br /><b><span class=\"message-positive\">IMPORTANTE</span>: O ESC debe soportar o protocolo bidireccional DShot e o valor de $t(configurationMotorPoles.message) na pestana $t(tabMotorTesting.message) debe ser correcto para que este filtro funcione.</b>",
+        "description": "Header text for the RPM Filter group"
+    },
     "pidTuningRpmHarmonics": {
         "message": "Número de armónicos do filtro Gyro RPM",
         "description": "Text for one of the parameters of the RPM Filter"
@@ -3736,6 +3768,9 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Compensación da caída de tensión"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Ofrece un rendemento constante do acelerador e PID no rango de tensión da batería útil compensando a caída da batería. O importe da compensación pode variar entre o 0 e o 100%. Recoméndase a compensación completa (100%).<br /><br />Visita <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\"> esta entrada do wiki </a> para obter máis información."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3814,6 +3849,9 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "Valor Dinámico Idle [* 100 RPM]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "Dynamic Idle mellora o control a baixas rpm e reduce o risco de desincronización do motor. Corrixe problemas causados ​​pola aceleración ou desaceleración do fluxo de aire, mellorando a autoridade PID, a estabilidade, a freada do motor e a capacidade de resposta. As rpm dinámicas de ralentí deben estar configuradas para ser aproximadamente un 20% por debaixo das rpm do seu valor inactivo de Dshot (consulte a pestana $t(tabMotorTesting.message)). Normalmente non é necesario cambiar o valor inactivo de DShot por defecto. Para un tempo de espera máis longo invertido, o valor de inactividade de DShot e as rpm mínimas deben reducirse xuntas.<br /><br />Visite <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\"> esta entrada da wiki </a> para obter máis información."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Ángulo límite para Entrenador Acro"
@@ -4883,6 +4921,9 @@
         "message": "Marco da cámara",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCameraFrame": {
+        "message": "Engade un elemento de contorno axustable deseñado para representar o campo de visión da cámara HD do piloto para o enmarcado visual.<br /><br />Pode axustar o ancho e a altura na CLI con 'osd_camera_frame_width' e 'osd_camera_frame_height'"
+    },
     "osdTextElementEfficiency": {
         "message": "Eficiencia Batería",
         "description": "One of the elements of the OSD"
@@ -5446,6 +5487,10 @@
         "message": "Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxPitModeHelp": {
+        "message": "Cando está activado, o VTX entra nun modo de moi baixa potencia para deixar o quad no banco sen molestar a outros pilotos. Normalmente o alcance deste modo é inferior a 5 m.<br /><br />NOTA: Algúns protocolos, como SmartAudio, non poden habilitar o modo Pit a través do software despois do arranque.",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
     "vtxPitModeFrequency": {
         "message": "Frecuencia do Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
@@ -5486,6 +5531,10 @@
         "message": "Isto define o número de niveis de potencia soportados polo VTX",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
+    "vtxTablePowerLevelsTableHelp": {
+        "message": "Esta táboa representa os diferentes valores de potencia que se poden usar para o VTX. Divídense en dous:<br><b> - $t(vtxTablePowerLevelsValue.message): </b> cada nivel de potencia require un valor definido polo fabricante do hardware. Pregúntelle ao seu fabricante o valor correcto ou consulte a wiki Betaflight das táboas VTX para coller algunhas mostras.<br><b> - $t(vtxTablePowerLevelsLabel.message): </b> pode poñer aquí a etiqueta que desexe para cada valor de nivel de potencia. Pode ser números (25, 200, 600, 1,2), letras (OFF, MIN, MAX) ou unha mestura deles.<br /><br />Debe configurar <b> só </b> os niveis de potencia legais no seu país.",
+        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
+    },
     "vtxTablePowerLevelsValue": {
         "message": "Valor",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5517,6 +5566,10 @@
     "vtxTableBandTitleFactory": {
         "message": "Factory",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsChannelsTableHelp": {
+        "message": "Esta táboa representa todas as frecuencias que se poden usar para o seu VTX. Pode ter varias bandas e para cada banda debe configurar: <br> <b> - $t(vtxTableBandTitleName.message): </b> Nome que quere asignar a esta banda, como BOSCAM_A, FATSHARK ou RACEBAND.<br><b> - $t(vtxTableBandTitleLetter.message): </b> Letra curta que fai referencia á banda.<br><b> - $t(vtxTableBandTitleFactory.message): </b> Isto indica se é un banda de fábrica. Se está activado, Betaflight envía ao VTX un número de banda e canle. O VTX empregará a súa táboa de frecuencias integrada e as frecuencias aquí configuradas só son para amosar o valor no OSD e noutros lugares. Se non está habilitado, entón Betaflight enviará ao VTX a frecuencia real aquí configurada. <br><b> - Frecuencias: </b> Frecuencias desta banda.<br /><br /> Lembre que non todas as frecuencias son legais no seu país. Debe poñer un valor de <b> cero </b> a cada índice de frecuencia que non estea autorizado a usar para deshabilitalo.",
+        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
         "message": "Arquivo de configuración VTX <span class=\"message-positive\">gardado</span>",
@@ -5699,6 +5752,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Medida"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivado dede erro </b> proporciona unha resposta máis directa e prefírese principalmente para Racing.<br /><br /><b>Derivado de medición </b> proporciona unha resposta máis suave o que é máis útil para o freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Tradicional vs Betaflight (planear):</b> A escala e a lóxica do PID son exactamente as mesmas. Non se necesita reaxustar. Tradicional é o antiguo betaflight evolucionado e reescrito, que é o controlador PID básico basado en matemáticas integradas. O controlador PID de Betaflight usa matemáticas en punto flotante e ten moitas novas funcionalidades especialmente diseñadas para aplicacións multirotor<br><b>Flotante vs Enteiro:</b> A escala e a lóxica do PID son exactamente as mesmas. No se necesita reaxustar. As placas F1 non teñen FPU integrada e o cálculo en punto flotante incrementa a carga de CPU e a matemática integral melloraría o rendimento, pero a matemática en punto flotante pode dar algo máis de precisión."
