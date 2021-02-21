@@ -488,9 +488,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>la version de configurateur que vous utilisez ($3) est plus ancienne que le firmware que vous utilisez ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Aucun protocole sortant vers les moteurs n'est sélectionné</strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' onglet '$t(tabConfiguration.message)'.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>l'accéléromètre est activé mais il n'est pas calibré</strong>. <br>Si vous envisagez d'utiliser l'accéléromètre, veuillez suivre les instructions '$t(initialSetupButtonCalibrateAccel.message)' dans l'onglet '$t(tabSetup.message)'. Si une fonction nécessitant l'accéléromètre (auto level modes, sauvetage GPS, . .) est activée, l'armement de l'engin sera désactivé jusqu'à ce que l'accéléromètre ait été calibré.<br>Si vous ne prévoyez pas d'utiliser l'accéléromètre, il est recommandé de le désactiver dans '$t(configurationSystem.message)' dans l'onglet '$t(tabConfiguration.message)'."
     },
