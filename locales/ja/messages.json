@@ -431,9 +431,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>使用しているConfiguratorバージョン ($3) が、使用しているファームウェア ($4) よりも古いです。</strong><br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>モーター出力プロトコルが選択されていません。</strong><br>『$t(tabConfiguration.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>加速度センサーは有効になっていますがキャリブレーションされていません。</strong><br>加速度センサーを使用する場合は『$t(tabSetup.message)』タブの『$t(initialSetupButtonCalibrateAccel.message)』の指示に従ってください。加速度センサーを必要とする機能 (オートレベルモード、GPSレスキュー等) が有効になっている場合、加速度センサーのキャリブレーションが完了するまで機体のアームは有効になりません。<br>加速度センサーを使用しない場合は『$t(tabConfiguration.message)』タブの『$t(configurationSystem.message)』で無効にすることを推奨します。"
     },
@@ -2439,9 +2436,6 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>リスクを正しく理解</strong>し、<br />プロペラを全て外してください。"
     },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>お知らせ</strong><br />モーター回転方向を変更するには、バッテリーを接続し$t(tabConfiguration.message)タブで正しいESCプロトコルを設定する必要があります。全てのDshot対応ESCがこのダイアログにて動作するわけでありませんのでご注意ください。またESCファームウェアをご確認ください。"
-    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "それぞれのモーターを個別に選択・回転させることで、モーター回転方向を設定します。"
     },
@@ -2477,12 +2471,6 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "回転方向を設定するとモーターが回転します！"
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "この機能はDSHOT対応ESCのみで動作します。<br />お使いのESC (electric speed controller) がDSHOTプロトコルに対応していることを確認し$t(tabConfiguration.message)タブで変更してください。"
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "モーター数は0です。<br />現在のミキサー設定を$t(tabConfiguration.message)タブで確認するか、CLIを使ってカスタムミキサーとして設定してください。詳しくはこちらの<a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wikiページ</a>をご覧ください。"
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "ファームウェアを更新します。<br /> 最新ファームウェア (Betaflight 4.3以降) を使用していることを確認してください。"
