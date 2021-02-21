@@ -434,9 +434,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong> a konfiguráló program verziója, amelyet használ ($3), régebbi, mint a használt firmware ($4) </strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>nincs kiválasztva motorkimeneti protokoll</strong>.<br>Válassza ki az ESC-knek megfelelő motorkimeneti protokollt a '$t(tabConfiguration.message)' fül '$t(configurationEscFeatures.message)' részében.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> a gyorsulásmérő engedélyezve van, de nincs kalibrálva </strong>. <br> Ha a gyorsulásmérő használatát tervezi, kérjük, kövesse az '$t(initialSetupButtonCalibrateAccel.message)' útmutatásait a '$t(tabSetup.message)'fülre. Ha engedélyezve van egy olyan funkció, amely megköveteli a gyorsulásmérő használatát (automatikus szintű módok, GPS mentés, ...), akkor az eszköz élesítését addig ki kell kapcsolni, amíg a gyorsulásmérőt nem kalibrálják. <br> Ha nem tervezi a gyorsulásmérő használatát, akkor azt javasolt kikapcsolni, a '$t(configurationSystem.message)' menüben a '$t(tabConfiguration.message)' lapon."
     },
