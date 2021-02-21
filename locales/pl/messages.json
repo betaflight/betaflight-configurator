@@ -431,9 +431,6 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>wersja konfiguratora, której używasz ($3) jest starsza niż oprogramowanie, którego używasz ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>nie wybrano protokołu sterowania silnika/ów</strong>.Wybierz protokół sterowania silnika odpowiedni dla twoich ESC w '$t(configurationEscFeatures.message)' na karcie '$t(tabConfiguration.message)'. $t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
     },
@@ -2439,9 +2436,6 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>Rozumiem ryzyko</strong>,<br />śmigła są zdjęte."
     },
-    "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>Notatka informacyjna</strong><br />Aby zmienić kierunek obrotu silnika podłącz baterie oraz wybierz prawidłowy protokół ESC. Możesz to zrobić w $t(tabConfiguration.message). Pamiętaj, że nie wszystkie ESC z protokołem Dshot będą wspierały tę funkcje. Sprawdź czy twoje ESC obsługuje funkcje zmiany kierunku obrotów."
-    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Ustaw kierunek obrotu silnika poprzez wybranie każdego silnika osobno."
     },
@@ -2477,12 +2471,6 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Silniki będą obracać się podczas ustawiania kierunku!"
-    },
-    "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "Funkcja działa tylko z ESC z protokołem DSHOT.<br />Sprawdź, czy ESC (elektryczny kontroler prędkości) którego używasz obsługuje protokół DSHOT i zmień go w ustawieniach $t(tabConfiguration.message)."
-    },
-    "escDshotDirectionDialog-WrongMixerText": {
-        "message": "Liczba silników wynosi 0.<br />Zweryfikuj aktualny Mixer w $t(tabConfiguration.message) lub zmień ustawienia przez CLI. Więcej info<a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">strona Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Zaktualizuj oprogramowanie.<br /> Upewnij się, że używasz najnowszego firmware: Betaflight 4.3 lub nowszego."
