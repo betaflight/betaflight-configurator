@@ -1538,6 +1538,14 @@
         "message": "詳細設定",
         "description": "Advance of the D Min feature"
     },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D値最小[D_Min] は、通常の飛行ではD値のレベルを低くし、フリップやロールなどオーバーシュートを引き起こすような素早い操縦が必要な場合には、D値のレベルを高くする機能を提供します。またD値を上げ過ぎるとプロップウォッシュとなります。強度[ゲイン] は、D値が最大値に到達する速度を調整し、それによりジャイロに基づき、鋭い動きとプロップウォッシュ状態が決まります。詳細設定は、ジャイロの代わりにセットポイントを使用して鋭い動きが決まり、D値を素早く上昇させます。",
+        "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "通常の直進飛行での減衰の強度 (D値) を制御します。<br>D_min値を有効にすると、飛行中に有効なD値強度が可変します。有効の場合、D値強度は飛行中に変化し通常の直進飛行ではD_min値以下の強度となります。急激な挙動またはプロップウォッシュが発生した際、有効なD値強度は左に指定されたD_max値強度まで上昇します。<br /><br />急激なスティック入力の場合はD_max値強度が最大となりますが、プロップウォッシュ時は部分的な強度にしかなりません。<br>D_minの強度[ゲイン] と詳細設定を調整して、ブーストの感度とタイミングを制御しましょう。",
+        "description": "D Min helpicon message on PID table titlebar"
+    },
     "pidTuningPidSettings": {
         "message": "PIDコントローラ設定"
     },
@@ -1689,6 +1697,10 @@
     },
     "pidTuningProportional": {
         "message": "Proportional"
+    },
+    "pidTuningProportionalHelp": {
+        "message": "機体がスティックに対してどのくらい厳密に追従するか (セットポイント) の強度を制御します。<br /><br />値[ゲイン] を大きくするとスティックに対する追従が厳密になりますが、微分制御 (D値) に比例し値が高過ぎるとオーバーシュートを引き起こすことがあります。P値に関しては自動車でいうサスペンションのスプリングとお考えください。",
+        "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "Integral"
@@ -2387,6 +2399,9 @@
     },
     "motorsEnableControl": {
         "message": "<strong>リスクを認識し</strong>、プロペラは全て外しました - モーター制御とアーミングを可能にし、暴走離陸防止機能を無効にします。"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
     },
     "motorOutputReorderDialogClose": {
         "message": "キャンセル"
@@ -3390,6 +3405,14 @@
         "message": "基準乗算値:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "ピッチロール比:",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningIGainSlider": {
+        "message": "I値 強度[ゲイン]:",
+        "description": "I-term slider label"
+    },
     "pidTuningPDRatioSlider": {
         "message": "PD値 バランス:",
         "description": "PD balance tuning slider label"
@@ -3397,6 +3420,10 @@
     "pidTuningPDGainSlider": {
         "message": "P&D値 強度:",
         "description": "P and D Gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "D_min 強度損失:",
+        "description": "D Min slider label"
     },
     "pidTuningResponseSlider": {
         "message": "スティック応答速度:",
@@ -4720,6 +4747,13 @@
     "osdDescTotalFlights": {
         "message": "総フライト数の目安"
     },
+    "osdTextElementUpDownReference": {
+        "message": "Up (ピッチ 90度)/Down (ピッチ -90度) リファレンス",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "ピッチが垂直方向(90度 Up) に近づいている場合、Dがノーズダウンしている場合(-90度 Down) にOSDシンボルが表示"
+    },
     "osdTextElementUnknown": {
         "message": "不明 $1",
         "description": "One of the elements of the OSD"
@@ -5262,6 +5296,10 @@
         "message": "ピットモード",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxPitModeHelp": {
+        "message": "有効にすると、VTXは非常に低い送信出力モードになり、他パイロットの邪魔をすることなく機体をピット内で電源を入れることができます。通常このモードでの有効範囲は5m未満です。<br /><br />注: SmartAudio等の一部のプロトコルは、電源投入後ソフト的にピットモードを有効にすることができません。",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
     "vtxPitModeFrequency": {
         "message": "ピットモード周波数",
         "description": "Text of one of the fields of the VTX tab"
@@ -5302,6 +5340,10 @@
         "message": "VTXでサポートされる送信出力レベルの数値を定義します",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
+    "vtxTablePowerLevelsTableHelp": {
+        "message": "このテーブルはVTXに使用できる送信出力のさまざまな値を表しており、大きく2つに分かれています:<br><b>- $t(vtxTablePowerLevelsValue.message):</b> \n各送信出力レベルには、ハードウェアの製造元にて定義された値が必要です。\n製造元に正しい値を問い合わせるか、Betaflight wikiのVTXテーブルを参照してサンプルを入手してください。<br><b>- $t(vtxTablePowerLevelsLabel.message):</b>各送信出力レベル毎に、ここに必要なラベルを設定することができます。 数値 (25, 200, 600, 1.2) 、文字 (OFF, MIN, MAX)、またはそれらの組み合わせを指定します。<br /><br />あなたの国で合法となる送信出力レベル<b>のみ</b>を設定しなければなりません。",
+        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
+    },
     "vtxTablePowerLevelsValue": {
         "message": "値",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5333,6 +5375,10 @@
     "vtxTableBandTitleFactory": {
         "message": "工場出荷時",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsChannelsTableHelp": {
+        "message": "次の表は、VTXで使用できる全ての周波数を表しています。複数バンドを保持、各バンドに対して設定する必要があります:<br><b>- $t(vtxTableBandTitleName.message):</b> BOSCAM_A、FATSHARK、RACEBAND等、これらバンドに割り当てる名称です。<br><b>- $t(vtxTableBandTitleLetter.message):</b> バンドを表す略称です。<br><b>- $t(vtxTableBandTitleFactory.message):</b> これは工場出荷時バンドかどうかを示します。有効にすると、BetaflightはVTXにバンドとチャンネル番号を送信します。次にVTXは組み込みの周波数テーブルを使用し、ここで設定された周波数はOSDおよび他の場所で値を表示するためだけのものとなります。有効になっていない場合、Betaflightはここで設定した実際の周波数をVTXに送信します。<br><b>- 周波数:</b> このバンドの周波数です。<br /><br />全ての周波数があなたの国で合法であるとは限らないことに注意してください。無効とするためには、使用できない各周波数インデックスに<b>ゼロ</b>の値を設定する必要があります。",
+        "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
         "message": "VTX設定ファイルを<span class=\"message-positive\">保存しました</span>",
@@ -5515,6 +5561,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "測定"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivative from Error</b>は、よりダイレクトなスティックレスポンスを提供し、レースでの使用に適しています。 <br /><br /><b>Derivative from Measurement</b>は、よりスムーズなスティックレスポンスを提供し、フリースタイルでの使用に適しています。"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PIDスケーリングとPIDロジックはまったく同じ仕様です。必ずしも再調整は必要ありません。Legacyは、整数演算に基づく基本的なPIDコントローラである旧ベータ版の進化型演算方式です。 Betaflight PIDコントローラは浮動小数点演算を使用し、マルチローター用に特別に設計された多くの新機能を備えています。<br><b>Float vs Integer:</b> PIDスケーリングとPIDロジックはまったく同じ仕様です。再調整は必要ありません。F1ボードにはオンボードFPUがないため、浮動小数点演算によってCPU負荷が増加するため、整数演算にて性能が向上しますが、浮動小数点演算の方がわずかに精度が向上します。"
