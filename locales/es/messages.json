@@ -431,6 +431,9 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>la versión del configurador que estás utilizando ($3) es más antigua que el firmware que estás usando ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>no hay ningún protocolo de salida de motor seleccionado</strong>.<br>Por favor, selecciona un protocolo de salida de motor apropiado para tus ESCs en '$t(configurationEscFeatures.message)' en la pestaña '$t(tabMotorTesting.message)'.<br> $t(escProtocolDisabledMessage.message)"
+    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>el acelerómetro está habilitado pero no está calibrado</strong>.<br>Si tienes intención de utilizar el acelerómetro, sigue las instrucciones para '$t(initialSetupButtonCalibrateAccel.message)' en la pestaña '$t(tabSetup.message)'. Si hay alguna función que requiera que el acelerómetro (modos de nivelado automático, GPS rescate, . .) esté activado, el armado de la aeronave se desactivará hasta que el acelerómetro haya sido calibrado.<br>Si no vas a utilizar el acelerómetro, se recomienda deshabilitarlo en '$t(configurationSystem.message)' en la pestaña '$t(tabConfiguration.message)'."
     },
@@ -2479,6 +2482,9 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>Entiendo los riesgos</strong>,<br />todas las hélices están quitadas."
     },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Aviso informativo</strong><br />Para cambiar la dirección de los motores, la batería debe estar conectada y el protocolo ESC correcto debe estar configurado en la pestaña $t(tabMotorTesting.message). Ten en cuenta que no todos los ESC Dshot funcionarán con este diálogo. Comprueba el firmware de tu ESC."
+    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Configura la dirección de giro del motor seleccionando y girando cada motor individualmente."
     },
@@ -2514,6 +2520,12 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "¡Los motores girarán al configurar la dirección!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Esta funcionalidad sólo trabaja con ESCs DSHOT.<br />Verifica que tu ESC (controlador de velocidad electrónico) soporta el protocolo DSHOT y selecciónalo en la pestaña $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "El número de motores es 0.<br />Verifica el Mezclador actual en la pestaña $t(tabMotorTesting.message) o configura uno personalizado a través del CLI. Consulta esta <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">página Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Actualiza el firmware.<br />Asegúrate de que estás usando el último firmware: Betaflight 4.3 o posterior."
@@ -3590,6 +3602,10 @@
     },
     "pidTuningRpmFilterGroup": {
         "message": "Giro Filtro RPM",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmFilterHelp": {
+        "message": "El filtrado RPM es un banco de filtros notch en el giro que usan los datos de la telemetría RPM para eliminar el ruido del motor con precisión quirúrgica.<br /><br /><b><span class=\"message-positive\">IMPORTANTE</span>: El ESC debe soportar el protocolo DShot Bidireccional y el valor de $t(configurationMotorPoles.message) en la pestaña $t(tabMotorTesting.message) debe ser correcto para que este filtro funcione.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
