@@ -973,6 +973,9 @@
     "featureFAILSAFETip": {
         "message": "<strong>Poznámka:</strong> Ak je druhý stupeň ZAKÁZANÝ, záložné nastavenie <strong>Auto</strong> je použité namiesto užívateľských nastavení pre všetky letové kanály (Náklon (Roll), Sklon (Pitch), Otáčanie (Yaw) a Plyn (Throttle))."
     },
+    "configurationFeatureDescription": {
+        "message": "Opis"
+    },
     "configurationReceiver": {
         "message": "Prijímač"
     },
