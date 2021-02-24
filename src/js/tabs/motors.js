@@ -5,7 +5,8 @@ TABS.motors = {
     previousFilterDynQ: null,
     previousFilterDynWidth: null,
     analyticsChanges: {},
-    isDirty: false,
+    configHasChanged: false,
+    configChanges: {},
     feature3DEnabled: false,
     sensor: "gyro",
     sensorGyroRate: 20,
@@ -48,6 +49,8 @@ TABS.motors.initialize = function (callback) {
 
     self.armed = false;
     self.escProtocolIsDshot = false;
+    self.configHasChanged = false;
+    self.configChanges = {};
 
     // Update filtering defaults based on API version
     const FILTER_DEFAULT = FC.getFilterDefaults();
@@ -233,32 +236,83 @@ TABS.motors.initialize = function (callback) {
         } else {
             // Hide telemetry from unused motors (to hide the tooltip in an empty blank space)
             for (let i = FC.MOTOR_CONFIG.motor_count; i < FC.MOTOR_DATA.length; i++) {
-                $(".motor_testing .telemetry .motor-" + i).hide();
+                $(`.motor_testing .telemetry .motor-${i}`).hide();
             }
         }
 
-        const toolButtons = $('.tool-buttons');
-
-        function setContentToolbarButtons() {
-            if (self.isDirty) {
-                // save and reboot button appears after changing settings
-                toolButtons.hide();
-                $('.save_btn').show();
-            } else {
-                // hide save and reboot until settings are actually changed.
-                // if done this way we don't have to stop motors because it can't activate after settings changed.
-                $('.save_btn').hide();
-            }
+        function isInt(n) {
+            return n % 1 === 0;
         }
 
-        setContentToolbarButtons();
+        function setContentButtons(motorsTesting=false) {
+            $('.btn .tool').toggleClass("disabled", self.configHasChanged || motorsTesting);
+            $('.btn .save').toggleClass("disabled", !self.configHasChanged);
+        }
+
+        const defaultConfiguration = {
+            mixer:              FC.MIXER_CONFIG.mixer,
+            reverseMotorSwitch: FC.MIXER_CONFIG.reverseMotorDir,
+            escprotocol:        FC.PID_ADVANCED_CONFIG.fast_pwm_protocol + 1,
+            feature3:           FC.FEATURE_CONFIG.features.isEnabled('MOTOR_STOP'),
+            feature9:           FC.FEATURE_CONFIG.features.isEnabled('3D'),
+            feature20:          FC.FEATURE_CONFIG.features.isEnabled('ESC_SENSOR'),
+            dshotBidir:         FC.MOTOR_CONFIG.use_dshot_telemetry,
+            motorPoles:         FC.MOTOR_CONFIG.motor_poles,
+            digitalIdlePercent: FC.PID_ADVANCED_CONFIG.digitalIdlePercent,
+            _3ddeadbandlow:     FC.MOTOR_3D_CONFIG.deadband3d_low,
+            _3ddeadbandhigh:    FC.MOTOR_3D_CONFIG.deadband3d_high,
+            _3dneutral:         FC.MOTOR_3D_CONFIG.neutral,
+            unsyncedPWMSwitch:  FC.PID_ADVANCED_CONFIG.use_unsyncedPwm,
+            unsyncedpwmfreq:    FC.PID_ADVANCED_CONFIG.motor_pwm_rate,
+            minthrottle:        FC.MOTOR_CONFIG.minthrottle,
+            maxthrottle:        FC.MOTOR_CONFIG.maxthrottle,
+            mincommand:         FC.MOTOR_CONFIG.mincommand,
+        };
+
+        setContentButtons();
 
         // Stop motor testing on configuration changes
         function disableHandler(e) {
             if (e.target !== e.currentTarget) {
-                self.isDirty = true;
-                disableMotorTest();
-                setContentToolbarButtons();
+                const item = e.target.id === '' ? e.target.name : e.target.id;
+                let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+
+                switch (e.target.type) {
+                    case "checkbox":
+                        if (item === "reverseMotorSwitch") {
+                            value = value === false ? 0 : 1;
+                        }
+                        break;
+                    case "number":
+                        value = isInt(value) ? parseInt(value) : parseFloat(value);
+                        break;
+                    case "select-one":
+                        value = parseInt(value);
+                        break;
+                    default:
+                        console.log(`Undefined case ${e.target.type} encountered, please check code`);
+                }
+
+                self.configChanges[item] = value;
+
+                if (item in defaultConfiguration) {
+                    if (value !== defaultConfiguration[item]) {
+                        self.configHasChanged = true;
+                    } else {
+                        delete self.configChanges[item];
+                        if (Object.keys(self.configChanges).length === 0) {
+                            console.log('All configuration changes reverted');
+                            self.configHasChanged = false;
+                          }
+                    }
+                } else {
+                    console.log(`Unknown item ${item} found with type ${e.target.type}, please add to the defaultConfiguration object.`);
+                    self.configHasChanged = true;
+                }
+
+                // disables Motor Testing if settings are being changed (must save and reboot or undo changes).
+                motorsEnableTestModeElement.trigger("change");
+                setContentButtons();
             }
             e.stopPropagation();
         }
@@ -679,9 +733,9 @@ TABS.motors.initialize = function (callback) {
 
         //fill 3D
         $('.tab-motors ._3d').show();
-        $('input[name="3ddeadbandlow"]').val(FC.MOTOR_3D_CONFIG.deadband3d_low);
-        $('input[name="3ddeadbandhigh"]').val(FC.MOTOR_3D_CONFIG.deadband3d_high);
-        $('input[name="3dneutral"]').val(FC.MOTOR_3D_CONFIG.neutral);
+        $('input[name="_3ddeadbandlow"]').val(FC.MOTOR_3D_CONFIG.deadband3d_low);
+        $('input[name="_3ddeadbandhigh"]').val(FC.MOTOR_3D_CONFIG.deadband3d_high);
+        $('input[name="_3dneutral"]').val(FC.MOTOR_3D_CONFIG.neutral);
 
         /*
         * UI hooks
@@ -741,15 +795,13 @@ TABS.motors.initialize = function (callback) {
             if (isEnabled && !self.armed) {
                 $('div.sliders input').slice(0, self.numberOfValidOutputs).prop('disabled', false);
 
-                // unlock master slider and hide tool-buttons
+                // unlock master slider
                 $('div.sliders input:last').prop('disabled', false);
-                toolButtons.hide();
             } else {
                 setSlidersDefault();
 
-                // disable sliders / min max and show tool-buttons
+                // disable sliders / min max
                 $('div.sliders input').prop('disabled', true);
-                toolButtons.show();
             }
 
             $('div.sliders input').trigger('input');
@@ -757,25 +809,19 @@ TABS.motors.initialize = function (callback) {
 
         setSlidersDefault();
 
-        // disables Motor Testing if settings are being changed (must save and reboot).
-        function disableMotorTest() {
-            self.isDirty = true;
-            motorsEnableTestModeElement.trigger("change");
-        }
-
         motorsEnableTestModeElement.change(function () {
             let enabled = $(this).is(':checked');
-            // prevent testing if dirty flag is set.
-            if (self.isDirty) {
-                // if enabled or trying to enable - Inform the user to save settings if silent flag is not set
+            // prevent or disable testing if configHasChanged flag is set.
+            if (self.configHasChanged) {
                 if (enabled) {
                     const message = i18n.getMessage('motorsDialogSettingsChanged');
                     showDialogSettingsChanged(message);
+                    enabled = false;
                 }
-                enabled = false;
                 // disable input
                 motorsEnableTestModeElement.prop('checked', false);
             }
+            setContentButtons(enabled);
             setSlidersEnabled(enabled);
 
             $('div.sliders input').trigger('input');
@@ -959,18 +1005,14 @@ TABS.motors.initialize = function (callback) {
                 FC.MOTOR_CONFIG.motor_poles = parseInt($('input[name="motorPoles"]').val());
             }
 
-            FC.MOTOR_3D_CONFIG.deadband3d_low = parseInt($('input[name="3ddeadbandlow"]').val());
-            FC.MOTOR_3D_CONFIG.deadband3d_high = parseInt($('input[name="3ddeadbandhigh"]').val());
-            FC.MOTOR_3D_CONFIG.neutral = parseInt($('input[name="3dneutral"]').val());
+            FC.MOTOR_3D_CONFIG.deadband3d_low = parseInt($('input[name="_3ddeadbandlow"]').val());
+            FC.MOTOR_3D_CONFIG.deadband3d_high = parseInt($('input[name="_3ddeadbandhigh"]').val());
+            FC.MOTOR_3D_CONFIG.neutral = parseInt($('input[name="_3dneutral"]').val());
 
             FC.PID_ADVANCED_CONFIG.fast_pwm_protocol = parseInt(escProtocolElement.val() - 1);
             FC.PID_ADVANCED_CONFIG.use_unsyncedPwm = unsyncedPWMSwitchElement.is(':checked') ? 1 : 0;
             FC.PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
             FC.PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
-
-            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
-                FC.PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
-            }
 
             Promise
             .resolve(true)
@@ -991,7 +1033,7 @@ TABS.motors.initialize = function (callback) {
 
             analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
             self.analyticsChanges = {};
-            self.isDirty = false;
+            self.configHasChanged = false;
         });
 
         // enable Status and Motor data pulling
@@ -1023,6 +1065,9 @@ TABS.motors.initialize = function (callback) {
 
         if (!dialogSettingsChanged.hasAttribute('open')) {
             dialogSettingsChanged.showModal();
+            $('#dialog-settings-reset-confirmbtn').click(function() {
+                TABS.motors.refresh();
+            });
             $('#dialog-settings-changed-confirmbtn').click(function() {
                 dialogSettingsChanged.close();
             });
@@ -1100,6 +1145,18 @@ TABS.motors.initialize = function (callback) {
 
         callbackFunction();
     }
+};
+
+TABS.motors.refresh = function (callback) {
+    const self = this;
+
+    GUI.tab_switch_cleanup(function() {
+        self.initialize();
+
+        if (callback) {
+            callback();
+        }
+    });
 };
 
 TABS.motors.cleanup = function (callback) {

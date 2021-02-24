@@ -2591,7 +2591,12 @@
     "motorsRemapDialogStartOver": {
         "message": "Start over"
     },
-
+    "motorsButtonReset": {
+        "message": "Reset"
+    },
+    "motorsButtonSave": {
+        "message": "Save and Reboot"
+    },
     "escDshotDirectionDialog-Title": {
         "message": "Motor Direction - <strong class=\"message-negative-italic\">Warning: Ensure props are removed!</strong>"
     },
