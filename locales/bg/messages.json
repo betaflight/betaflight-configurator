@@ -431,6 +431,9 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>версията на конфигуратора който използвате($3) е по стар от фърмуера който използвате($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>не е избран протокол за управление на двигателя</strong>.<br>Моля, изберете протокола за управление на двигателя, който съответства на вашия ESC в $t(configurationEscFeatures.message)в $t(tabMotorTesting.message)раздела.<br>$t(escProtocolDisabledMessage.message)"
+    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>акселерометъра е активиран но не е калибриран</strong>.<br>Ако планирате да използвате акселерометъра, моля следвайте инструкциите за '$t(initialSetupButtonCalibrateAccel.message)' в '$t(tabSetup.message)' прозорец.Ако някоя функция която изисква акселерометър (режим авто стабилизиране, ......)е активирана, активирането на дрона ще е деактивирано докато не се направи калибриране на акселерометара.<br>Ако няма да използвате акселерометара е препоръчително да се деактивира в '$t(configurationSystem.message)' в '$t(tabConfiguration.message)' прозорец."
     },
@@ -1538,6 +1541,14 @@
         "message": "Предварение",
         "description": "Advance of the D Min feature"
     },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min осигурява способността за понижаване на нивото на D по време на нормален полет и увеличаване на нивото по време на бързи маневри, които могат да доведат до превишаване на стойностите. Той също вдига D, когато има пропуош. Регулира колко бързо D ще достигне максималната си стойност и се основава на жиросигнала за откриване на внезапни движения и пропуош. Advance кара D да се покачва по-рано, използвайки зададена точка, а не жироскопа за откриване на резки движения.",
+        "description": "D Min feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Контролиране на амортизационната сила (D-term) по време на нормален прав полет. <br> С активиран D_min, Active D-gain се променя по време на полет. По време на нормален полет в права линия, той е равен на D_min. По време на резки движения, текущият D-gain се увеличава до стойността D_max, определена вляво. <br /> <br /> Максимални D-max се постигат по време на резки движения със стиковете, но само частично при пропуош.<br>Настройте D_Min Gain и Advance за да контролирате степента на усилване на чувствителността и времето.",
+        "description": "D Min helpicon message on PID table titlebar"
+    },
     "pidTuningPidSettings": {
         "message": "Настройки на PID контролера"
     },
@@ -1666,6 +1677,9 @@
     "pidTuningFfInterpolateSp": {
         "message": "FF Интерполация"
     },
+    "pidTuningFfInterpolateSpHelp": {
+        "message": "Следните опции донастройват feed forward от състезание / агресивно към плавно / HD.<br /><br /> Режим: зададен на NoAverage за състезание, средно 2 за състезание / бърз фристайл, средно 3 за HD запис, средно 4 за HD кинематографично плавност.<br /><br /> Гладкост: ограничава количеството промяна, която може да направи всяка входяща радио стъпка, увеличава се за по-плавен сигнал на FF, намалява за по-агресивни реакции на FF.<br /><br /> Boost: помага за преодоляване на моторното изоставане с бързи команди от стиковете, могат да увеличат трептенето. Опитайте 10 за HD, 20 за състезатели. До 30 може да са полезни за low authority дронове, но могат да причинят микро overshoot или трептене."
+    },
     "pidTuningFfInterpolate": {
         "message": "Режим"
     },
@@ -1690,8 +1704,16 @@
     "pidTuningProportional": {
         "message": "Пропорционално"
     },
+    "pidTuningProportionalHelp": {
+        "message": "Контролира силата на това колко плътно дрона следва стиковете (зададената точка).<br /><br /> По-високата стойност (gains) осигурява добро следване, но може да доведе до overshoot, ако е твърде висока, пропорционално на Derivative (D-term). Мислете за P-term като за пружината на автомобил.",
+        "description": "Proportional Term helpicon message on PID table titlebar"
+    },
     "pidTuningIntegral": {
         "message": "Integral"
+    },
+    "pidTuningIntegralHelp": {
+        "message": "Контролира силата на това колко плътно дрона задържа общото положение в дадена точка. <br> Подобно на Proportional, но за по-дълги периоди от време, като например изместен център на тежестта (CoG) или постоянно външно влияние (постоянен вятър). <br /><br /> По-висок gains осигурява по-стегнато следене (напр. при мащабни завои), но могат да накарат дрона да се почувства стегнат за командите от стика. <br> Ако стойноста е прекалено висока, може да причини бавни трептения.",
+        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivative"
@@ -1699,8 +1721,16 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "Контролира силата на затихване при всяко движение на дрона. За движения на стика, D-term забавя самата команда. За външни влияния (пропуош или вятър), D-term намалява този ефект. <br><br> По-високите стойности дават повече забавяне и намаляват превишенията в P-term и FF. <br> D-term обаче е МНОГО чувствителен към високочестотни вибрация на жироскопа (шумът се усилва 10-100 пъти). <br><br> Ако коефициентът на D-gains е твърде висок или шумът на жироскопа не е филтриран (вижте раздела Настройки на филтъра), високочестотният шум може да доведе до загряване и изгаряне на двигателите.<br><br> Мислете за D-term като за амортисьор на вашата кола, но с отрицателното свойство да увеличава жиро шума.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "Допълнителен параметър за натискане (пружина) въз основа на команди на стика. FF помага на P-term за движението дрона въз основа на движението на стика. <br><br> P-term задава движение на базата на разликата между желаната зададена точка (градус/сек) и отчитане на жироскопа (текуща скорост на въртене, градус/сек). FF променя само въз основа на промени в командата на стика. <br><br> По-високите стойности (gains) ще доведат до по-рязък отговор на дрона към командата на стика. <br> Прекалено високите стойности могат да доведат до някои overshoot, повишени температури на двигателя и пренасищане на двигателите (когато двигателите не могат да поддържат желаната скорост на промяна). <br> Ниските или нулевите стойности (0) водят до забавяне и по-плавен отговор на командите.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"> <b> Предупреждение: </b> </span> много високи рейтове могат да доведат до десинхронизация на двигателите по време на бързо забавяне."
@@ -1834,6 +1864,13 @@
     "tuningHelp": {
         "message": "<b>Препоръка</b><br /><span class=\"message-negative\">ВАЖНО:</span> Важно е да проверявате температурата на моторите повреме на първите полети. Колкото по висока е стойността на филтъра, толкова по-добре би трябвало да летите, но също така ще имате повече шум от моторите. <br>Стойността по подразбиране от 100Hz е оптимална, но за по шумни конфигурации може да опитате да намалите Dterm филтъра на 50Hz и най-вероятно gyro филтъра."
     },
+    "tuningHelpSliders": {
+        "message": "<span class=\"message-negative\">Важно:</span> Препоръчваме  ви да използвате плъзгача за да промените настойките на филтъра. Движете двата плъзгача заедно.<br> Най-добре е да правите малки промени и да правите тестов полет след всяка промяна. Проверявайте температурата на моторите обстойно преди да правите бъдещи промени.<br>По-малка филтрация (плъзгачите надясно, по-високи гранични стойности) ще подобрят  вибрациите (propwash), моторите ще станат по-шумни, което ще ги накара да загряват, ще ги загрява до толкова, че е възможно да ги изгорите.  По-малката филтрация е възможна на най-свежите конфигурации и ако rpm филтъра е включен.<br>Необичайните високи или ниски настройки на филтъра могат да причинят странно поведение след армване на дрона. Настойките по подразбиране са безопасни за обичайните 5” дрони.<br><strong>Забележка:</strong> Промяна на профилите ще промени само стойносттана на D-term филтъра. Gyro filter стойностита са еднакви за всички профили.",
+        "description": "Filter tuning subtab note"
+    },
+    "filterWarning": {
+        "message": "<span class=\"message-negative\"><b> Предупреждение: </b></span> Количеството филтриране, което използвате, е опасно ниско. Това вероятно ще затрудни летателният съд и може да доведе до проблеми. Силно се препоръчва да <b> активирате поне един от динамичните нискочестотни или жиро-нискочестотни 1 и поне един от динамичните нискочестотни или D-терминални нискочестотни 1 </b>."
+    },
     "receiverThrottleMid": {
         "message": "Throttle Средно положение"
     },
@@ -1923,6 +1960,9 @@
     },
     "receiverModelPreview": {
         "message": "Преглед"
+    },
+    "receiverMspWarningText": {
+        "message": "Тези стикове позволяват на Betaflight да бъде армната и тествана без да бъде поставен предавател или приемник. Въпреки всичко <strong>тази функция не е предназначена за полет и витлата не трябва да бъдат поставени.</strong><br /><br />Тази функция не гарантира надежден контол върху вашия дрон. <strong>Може да получите сериозни наранявани в резултат на това, че витлата не са премахнати.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Активиране на контролите"
@@ -2388,6 +2428,12 @@
     "motorsEnableControl": {
         "message": "<strong>Поемам рисковете</strong>, витлата са премахнати - включи управлението на моторите и армването, и изключи Runaway Takeoff Prevention."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Установени са промени в конфигурацията. <br /><br /><strong class=\"message-negative-italic\"> Режимът на тестване на двигателя е деактивиран, докато настройките не бъдат запазени. </strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Отмени"
     },
@@ -2436,6 +2482,9 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong> Разбирам рисковете </strong>, <br /> всички витла са премахнати."
     },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong> Информационно известие </strong><br /> За да промените посоките на двигателя, батерията трябва да бъде включена и в раздела $t(tabMotorTesting.message) трябва да се настрои правилният ESC протокол. Имайте предвид, че не всички Dshot ESC ще работят с този диалогов прозорец. Проверете вашата ESC firmware."
+    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Задайте посоката на въртене на двигателя, като изберете и завъртите всеки двигател поотделно."
     },
@@ -2471,6 +2520,12 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Двигателите ще се завъртят когато се зададе посоката!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Функцията работи само с DSHOT ESC. <br /> Проверете дали вашият ESC (електрически регулатор на скоростта) поддържа протокол DSHOT и го променете в раздела $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Броят на двигателите е 0. <br /> Проверете текущия миксер в раздела $t(tabMotorTesting.message) или настройте персонализиран чрез CLI. Обърнете се към тази <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\"> Wiki страница </a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Актуализирайте фърмуера. <br /> Уверете се, че използвате най-новия фърмуер: Betaflight 4.3 или по-нов."
@@ -2784,8 +2839,110 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Изберете тип изграждане, за да видите наличните контролери."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Изберете вашият board, за да видите наличните онлайн версии на фърмуера - Изберете правилния фърмуер, подходящ за вашият board."
+    },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Започвайки с Betaflight 4.1, Betaflight въвежда поддръжка за <strong> Унифицирани цели </strong>. Концепцията на Unified Targets означава, че един и същ .hex файл на фърмуера може да се използва за всички платки, използващи един и същ MCU (F4, F7). За да накарат различните платки да работят с един и същ фърмуер, заедно с фърмуера се разгръща специфичен конфигурационен файл, когато се инсталира Unified Target. <br> Тази версия на конфигуратора Betaflight поддържа ионсталация на Unified Targets със съответните конфигурации на конкретната платка в една стъпка. Различните типове фърмуер, които са достъпни за всяка платка, са показани в падащото меню, както следва: <br /><br /><strong>&lt;board name&gt;</strong> или <br><strong>&lt;board name&gt; (Наследство) </strong>:<br> не унифицирана цел или версии преди фромуера на 4.1 за Unified Targets. <br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;) </strong>: <br> (4 знака производител идентификатор) <br> Унифицирана цел. <br /><br /> <strong> Моля, използвайте унифицирани цели, когато са налични. </strong> Ако срещнете проблеми при използване на унифицирана цел, моля, отворете <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> проблем </a> и след това използвайте неунифицираната цел, докато проблемът не бъде решен."
+    },
+    "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
+        "message": "Изберете версията на фърмуера за вашата платка."
+    },
+    "firmwareFlasherNoRebootDescription": {
+        "message": "Активирайте, ако вашият FC е в режим на зареждане. т.е., ако сте включили вашия FC с щифтове на буутлоудъра, или докато сте задържали бутона за зареждане на вашия FC."
+    },
+    "firmwareFlasherFlashOnConnect": {
+        "message": "Инсталиране при свързване"
+    },
+    "firmwareFlasherFlashOnConnectDescription": {
+        "message": "Опит за автоматично инсталиране на платката (задействано от новооткрит сериен порт)."
+    },
     "firmwareFlasherFullChipErase": {
         "message": "Пълно изтриване на чипа"
+    },
+    "firmwareFlasherFullChipEraseDescription": {
+        "message": "Изтрива всички конфигурационни данни съхранявани в платката."
+    },
+    "firmwareFlasherFlashDevelopmentFirmware": {
+        "message": "Използвайте фърмуера за разработка"
+    },
+    "firmwareFlasherFlashDevelopmentFirmwareDescription": {
+        "message": "Инсталиране на най-новия (непроверен) фърмуер за разработка."
+    },
+    "firmwareFlasherManualPort": {
+        "message": "Порт"
+    },
+    "firmwareFlasherManualBaud": {
+        "message": "Ръчна скорост на предаване"
+    },
+    "firmwareFlasherManualBaudDescription": {
+        "message": "Ръчен избор на скорост на предаване за платки, които не поддържат скоростта по подразбиране или за инсталиране през Bluetooth. <br /><span class=\"message-negative\"> Забележка: </span> Не се използва при инсталиране през USB DFU"
+    },
+    "firmwareFlasherBaudRate": {
+        "message": "Скорост на предаване"
+    },
+    "firmwareFlasherShowDevelopmentReleases": {
+        "message": "Показване на нестабилни издания"
+    },
+    "firmwareFlasherShowDevelopmentReleasesDescription": {
+        "message": "Покажете кандидатите в допълнение към стабилните версии"
+    },
+    "firmwareFlasherOptionLoading": {
+        "message": "Зареждане ..."
+    },
+    "firmwareFlasherOptionLabelBuildTypeRelease": {
+        "message": "Издания"
+    },
+    "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
+        "message": "Издания и кандидати за издания"
+    },
+    "firmwareFlasherOptionLabelBuildTypeDevelopment": {
+        "message": "Разработка"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
+        "message": "3.3 AKK & RDQ VTX Patch"
+    },
+    "firmwareFlasherOptionLabelBuildTypeAKK3_4": {
+        "message": "3.4 AKK & RDQ VTX Patch"
+    },
+    "firmwareFlasherOptionLabelSelectFirmware": {
+        "message": "Изберете фърмуер / платка"
+    },
+    "firmwareFlasherOptionLabelSelectBoard": {
+        "message": "Избор на платка"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersion": {
+        "message": "Изберете версия на фърмуера"
+    },
+    "firmwareFlasherOptionLabelSelectFirmwareVersionFor": {
+        "message": "Изберете версия на фърмуера за"
+    },
+    "firmwareFlasherButtonLoadLocal": {
+        "message": "Зареждане на фърмуера [Local]"
+    },
+    "firmwareFlasherButtonLoadOnline": {
+        "message": "Зареждане на фърмуера [Online]"
+    },
+    "firmwareFlasherButtonDownloading": {
+        "message": "Изтегляне..."
+    },
+    "firmwareFlasherExitDfu": {
+        "message": "Излез от DFU режим"
+    },
+    "firmwareFlasherFlashFirmware": {
+        "message": "Инсталиране на фърмуера"
+    },
+    "firmwareFlasherGithubInfoHead": {
+        "message": "GitHub Firmware информация"
+    },
+    "firmwareFlasherCommiter": {
+        "message": "Извършител:"
+    },
+    "firmwareFlasherDate": {
+        "message": "Дата:"
+    },
+    "firmwareFlasherHash": {
+        "message": "Разбъркване:"
     },
     "ledStripFunctionBatteryOption": {
         "message": "Батерия",
@@ -2866,6 +3023,10 @@
     "ledStripWiring": {
         "message": "Свързване на светодиодна лента",
         "description": "One of the modes in Led Strip"
+    },
+    "ledStripWiringClearControl": {
+        "message": "Изчисти избраните",
+        "description": "Control button in the wiring modes in Led Strip"
     },
     "ledStripBlinkTitle": {
         "message": "Мигане"
