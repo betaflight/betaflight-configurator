@@ -15,7 +15,10 @@ const PortHandler = new function () {
 };
 
 PortHandler.initialize = function () {
-    this.portPickerElement = $('div#port-picker #port');
+    const portPickerElementSelector = "div#port-picker #port";
+    this.portPickerElement = $(portPickerElementSelector);
+    this.selectList = document.querySelector(portPickerElementSelector);
+    this.initialWidth = this.selectList.offsetWidth + 12;
 
     // fill dropdown with version numbers
     generateVirtualApiVersions();
@@ -87,11 +90,13 @@ PortHandler.check_usb_devices = function (callback) {
                     data: {isManual: true},
                 }));
                 self.portPickerElement.val('DFU').change();
+                self.setPortsInputWidth();
             }
             self.dfu_available = true;
         } else {
             if (dfuElement.length) {
                dfuElement.remove();
+               self.setPortsInputWidth();
             }
             self.dfu_available = false;
         }
@@ -234,6 +239,7 @@ PortHandler.updatePortSelect = function (ports) {
         data: {isManual: true},
     }));
 
+    this.setPortsInputWidth();
     return ports;
 };
 
@@ -253,6 +259,39 @@ PortHandler.selectPort = function(ports) {
             }
         }
     }
+};
+
+PortHandler.setPortsInputWidth = function() {
+
+    function getWidthofText(text) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        context.font = getComputedStyle(document.body).font;
+
+        return Math.ceil(context.measureText(text).width);
+    }
+
+    function findMaxLengthOption(selectEl) {
+        let max = 0;
+
+        $(selectEl.options).each(function () {
+            const textSize = getWidthofText(this.textContent);
+            if (textSize > max) {
+                max = textSize;
+            }
+        });
+
+        return max;
+    }
+
+    const correction = 24; // account for up/down button and spacing
+    let width = findMaxLengthOption(this.selectList) + correction;
+
+    width = (width > this.initialWidth) ? width : this.initialWidth;
+
+    const portsInput = document.querySelector("div#port-picker #portsinput");
+    portsInput.style.width = `${width}px`;
 };
 
 PortHandler.port_detected = function(name, code, timeout, ignore_timeout) {
