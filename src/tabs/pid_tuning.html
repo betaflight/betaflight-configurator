@@ -170,10 +170,10 @@
 
                     <!-- TUNING SLIDERS-->
                     <div id="slidersPidsBox" class="gui_box grey topspacer tuningPIDSliders">
-                        <table class="pid_titlebar firmwareSlider">
+                        <table class="pid_titlebar">
                             <tr>
                                 <th scope="col" class="sm-min">
-                                    <select id="sliderPidsModeSelect">
+                                    <select id="sliderPidsModeSelect" class="sliderMode">
                                         <option value="0">OFF</option>
                                         <option value="1">RP</option>
                                         <option value="2">RPY</option>
@@ -189,13 +189,8 @@
                             </tr>
                         </table>
                         <table class="sliderLabels">
-                            <tr class="xs sliderHeaders">
-                                <td colspan="5">
-                                    <span i18n="pidTuningMasterSlider"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="sm-min">
+                            <tr class="MasterSlider">
+                                <td>
                                     <span i18n="pidTuningMasterSlider"></span>
                                 </td>
                                 <td>
@@ -208,40 +203,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningMasterSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="xs sliderHeaders firmwareSlider">
-                                <td colspan="5">
-                                    <span i18n="pidTuningPDRatioSlider"></span>
-                                </td>
-                            </tr>
-                            <tr class="firmwareSlider">
-                                <td class="sm-min">
-                                    <span i18n="pidTuningRollPitchRatioSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderRollPitchRatio-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.05" class="tuningSlider" id="sliderRollPitchRatio" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningRollPitchRatioSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="firmwareSlider">
-                                <td>
-                                    <span i18n="pidTuningIGainSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderIGain-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.05" class="tuningSlider" id="sliderIGain" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningIGainSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr>
+                            <tr class="baseSlider">
                                 <td>
                                     <span i18n="pidTuningPDRatioSlider"/>
                                 </td>
@@ -255,14 +217,9 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPDRatioSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="xs sliderHeaders">
-                                <td colspan="5">
-                                    <span i18n="pidTuningPDGainSlider"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="sm-min">
-                                    <span i18n="pidTuningPDGainSlider"></span>
+                            <tr class="baseSlider">
+                                <td>
+                                    <span i18n="pidTuningPDGainSlider"/>
                                 </td>
                                 <td>
                                     <output type="number" name="sliderPDGain-number"></output>
@@ -274,26 +231,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPDGainSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="xs sliderHeaders firmwareSlider">
-                                <td colspan="5">
-                                    <span i18n="pidTuningResponseSlider"></span>
-                                </td>
-                            </tr>
-                            <tr class="firmwareSlider">
-                                <td class="sm-min">
-                                    <span i18n="pidTuningDMinRatioSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderDMinRatio-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.05" class="tuningSlider" id="sliderDMinRatio" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMinRatioSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr>
+                            <tr class="baseSlider">
                                 <td>
                                     <span i18n="pidTuningResponseSlider"/>
                                 </td>
@@ -307,7 +245,48 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningResponseSliderHelp"></div>
                                 </td>
                             </tr>
-                        </table>
+                            <tr class="advancedSlider">
+                                <td>
+                                    <span i18n="pidTuningIGainSlider"/>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderIGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.05" class="tuningSlider" id="sliderIGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningIGainSliderHelp"></div>
+                                </td>
+                            <tr class="DMinRatioSlider">
+                                <td>
+                                    <span i18n="pidTuningDMinRatioSlider"/>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderDMinRatio-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.05" class="tuningSlider" id="sliderDMinRatio" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMinRatioSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="advancedSlider">
+                                <td>
+                                    <span i18n="pidTuningRollPitchRatioSlider"/>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderRollPitchRatio-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.05" class="tuningSlider" id="sliderRollPitchRatio" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningRollPitchRatioSliderHelp"></div>
+                                </td>
+                            </tr>
+                         </table>
                     </div>
 
                     <!-- BARO, MAG, GPS -->
