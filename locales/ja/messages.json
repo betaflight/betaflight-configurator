@@ -3468,6 +3468,10 @@
         "message": "ピッチロール比:",
         "description": "Pitch-Roll Ratio slider label"
     },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "ピッチ-ロール比とは、ピッチ軸とロール軸の慣性モーメント (MoI) のバランスを示します。<br /><br />一般的にピッチ軸の方がMoIが高いため、PID強度はロール軸よりもピッチ軸の方が高い方が適切な場合があります。ただし『Stretched X』やその他の設定では、このようにならない場合があります。<br /><br />一般的にチューニングでは、1つの軸がD値の振動 (『トリリング』ノイズ) を示すようになるまで『P&D値 強度』スライダーを上げていき、その後、少し下げていきます。ブラックボックスは、どの軸が『トリリング』しているかを判断する簡単な方法です。どの軸がD値の限界値にあるかを見つけたら、ピッチ-ロール強度スライダーを使用して、他の軸を同じ限界値のすぐ近くまで持っていき、一番良い飛行性能に機体バランスを取ることができます。",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
     "pidTuningIGainSlider": {
         "message": "I値 強度[ゲイン]:",
         "description": "I-term slider label"
@@ -3491,6 +3495,18 @@
     "pidTuningMasterSliderHelp": {
         "message": "一般的に機体が大きくなればなるほど、パワー対慣性モーメント (MoI) の比率が低くなるため、PID値を高くする必要があります。<br /><br />より小さな機体 (マイクロ機) は一般的にパワー対MoI比率が高いため、PID値を低くする必要があります。<br /><br />PID値の高い値はパワー対慣性モーメント比の低い機体、低い値は、比率の高い機体となります。",
         "description": "Master Gain tuning slider helpicon message"
+    },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "D値が比較的高いとスティックの応答性が悪くなり、モーターが高温になりますが、P値の振動を抑え、プロップウォッシュの振動を改善します。<br /><br />D値が比較的低いとスティックの反応は速くなりますが、外力 (風) に反応してプロップウォッシュの処理が弱くなる場合があります。",
+        "description": "PD balance tuning slider helpicon message"
+    },
+    "pidTuningPDGainSliderHelp": {
+        "message": "P値とD値の強度[ゲイン] が低いと、モーターは冷却されますが、プロップウォッシュによる振動が大きくなります。値が低すぎると機体が不安定になる場合があります。<br /><br />P値とD値は連動してプロップウォッシュを減少させます。<br /><br />値を高くするとモーターは高温となり、D値強度が高くなるため、スムーズな直進飛行中に振動が増加する場合があります。",
+        "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "FF値を低くするとスティックのレスポンスが悪くなり、フリップやロールの最後にはスティックが機体に遅れすぎてI値が終いには『I値 バウンスバック』が発生する可能性があります。<br /><br />FF 値を高くすると、シャープな動きとなりスティックのレスポンスが良くなります。FF値が高すぎるとオーバーシュートを起こしたり、フリップやロールの最後に素早く跳ね上がったりすることがあります。<br /><br />備考: <br />特徴であるI値リラックスは、信頼性の低い機体や、スティック反応強度が低い場合におけるスティック動作での最後の揺らぎを止めることができます。",
+        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "ジャイロ ローパスフィルター"
@@ -3580,6 +3596,10 @@
         "message": "ジャイロRPMフィルター",
         "description": "Header text for the RPM Filter group"
     },
+    "pidTuningRpmFilterHelp": {
+        "message": "RPMフィルタリングは、ジャイロノッチフィルターのバンク[グループ化] であり、RPMテレメトリーデータを使用して、高い精度でモーターノイズを除去します。<br /><br /><b><span class=\"message-positive\">重要:</span> ESCは双方向DShotプロトコルをサポートする必要があり、このフィルターが機能するには $t(tabMotorTesting.message) タブの $t(configurationMotorPoles.message) 値が正しくなければなりません。</b>",
+        "description": "Header text for the RPM Filter group"
+    },
     "pidTuningRpmHarmonics": {
         "message": "ジャイロRPMフィルター 高調波数",
         "description": "Text for one of the parameters of the RPM Filter"
@@ -3649,6 +3669,9 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Vbat サグ値補正"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "バッテリーサグ値を補正することにより、使用可能なバッテリー電圧範囲にて一貫したスロットルとPIDパフォーマンスを提供します。補正量は0～100%の間で変更でき、完全な補正 (100%) を推奨します。<br /><br />詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -3727,6 +3750,9 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "動的アイドル値 [* 100 RPM]"
+    },
+    "pidTuningIdleMinRpmHelp": {
+        "message": "動的アイドル値は、低回転数での制御を改善しモーターの非同期リスクを軽減します。プロペラのスピードアップまたはスローダウンによって引き起こされる問題を修正し、PID制御権限、安定性、モーター減速性および応答性を改善します。動的アイドル回転数は、Dshotアイドル値の回転数の約80%に設定する必要があります。($t(tabMotorTesting.message)タブを参照) 通常DShotアイドル値をデフォルトから変更する必要はありません。より長い制御不能時間を戻したい場合は、DShotアイドル値と最小回転数を一緒に下げる必要があります。<br /><br />詳しくは<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ</a>をご覧ください。"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "アクロトレーナー 角度制限"
@@ -4795,6 +4821,9 @@
     "osdTextElementCameraFrame": {
         "message": "カメラフレーム",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCameraFrame": {
+        "message": "視覚的フレーミングのためパイロットのHDカメラの視野を表すように設計された、調整可能なアウトラインを追加します。<br /><br />『osd_camera_frame_width』および『osd_camera_frame_height』を使用してCLIで幅と高さを調整できます。"
     },
     "osdTextElementEfficiency": {
         "message": "バッテリー効率",
