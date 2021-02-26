@@ -3476,6 +3476,10 @@
         "message": "I値 強度[ゲイン]:",
         "description": "I-term slider label"
     },
+    "pidTuningIGainSliderHelp": {
+        "message": "I値はP値とのバランスが取れている必要があり、P値がD値とのバランスを取る手法と同様です。(チューニング順序：フィルター →D値 → P値 → I値) <br /><br />I値 強度スライダーは、P値 強度を一定に保ちながらI値 強度を調整して、2つの値の比率を調整します。<br /><br />スロットルを0%に落としたときに、ゆっくりとしたウォブル [ふらつき] が発生する場合は、I値 強度が高すぎるため、I値 強度スライダーを下げるか <b>または</b> D値とPDバランスを調整していない場合は、P値とD値 強度スライダーを上げる必要があります。(I値を下げる前に、まずP値とD値の強度スライダーを上げる必要があります) <br /><br />とはいえ、一般的にはスパイラルターン、オービットなどで機体をスティックに追従させるために、I値 強度をできるだけ強くする必要があります。 (ただしバランスの範囲内で)",
+        "description": "I-gain Gain tuning slider helpicon message"
+    },
     "pidTuningPDRatioSlider": {
         "message": "PD値 バランス:",
         "description": "PD balance tuning slider label"
@@ -3487,6 +3491,10 @@
     "pidTuningDMinRatioSlider": {
         "message": "D_min 強度損失:",
         "description": "D Min slider label"
+    },
+    "pidTuningDMinRatioSliderHelp": {
+        "message": "通常の直進飛行時にD値 強度をどれだけ抑えるかをコントロールします。スライダーを下げると、通常の直進飛行時にD値 強度が大きく低下します。 スライダーを上げると、通常の前方飛行ではDゲインが低下します。<br /><br />D_minを有効にすると、有効なD値 強度は飛行中に変化します。 (D_minを有効にした場合の) 通常の直進飛行では、有効なD値 強度はD_min強度のすぐ上で推移します。素早いスティックの動きやプロップウォッシュ時には、有効D値 強度がD_max強度まで上昇します。詳細は上記のD_min / D_maxのヒントをご参照ください。<br /><br />低いD値 強度は直進飛行をスムーズにするのに役立ち、フィルター設定タブのジャイロやD値のフィルターを増やす必要がありません; 一方、オーバーシュートを制御したり、プロップウォッシュ時の機体を安定させたり、外力 (風) に抵抗したりするために、より多くのD値が必要な場合には有効D値 強度をD_max値にブーストします。",
+        "description": "D_min slider helpicon message"
     },
     "pidTuningResponseSlider": {
         "message": "スティック応答速度:",
