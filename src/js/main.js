@@ -1,8 +1,5 @@
 import { i18n } from './localization';
 
-window.googleAnalytics = analytics;
-window.analytics = null;
-
 $(document).ready(function () {
 
     useGlobalNodeFunctions();
@@ -40,7 +37,6 @@ function appReady() {
         });
     });
 }
-window.appReady = appReady;
 
 function checkSetupAnalytics(callback) {
     if (!analytics) {
@@ -57,8 +53,6 @@ function checkSetupAnalytics(callback) {
         callback(analytics);
     }
 }
-
-window.checkSetupAnalytics = checkSetupAnalytics;
 
 function getBuildType() {
     return GUI.Mode;
@@ -301,7 +295,7 @@ function startProcess() {
 
                 switch (tab) {
                     case 'landing':
-                        TABS.landing.initialize(content_ready);
+                        import('./tabs/landing').then(({ landing }) => landing.initialize(content_ready));
                         break;
                     case 'changelog':
                         TABS.staticTab.initialize('changelog', content_ready);
@@ -548,15 +542,12 @@ function setDarkTheme(enabled) {
     });
 }
 
-window.setDarkTheme = setDarkTheme;
 
 function checkForConfiguratorUpdates() {
     const releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');
 
     releaseChecker.loadReleaseData(notifyOutdatedVersion);
 }
-
-window.checkForConfiguratorUpdates = checkForConfiguratorUpdates;
 
 function notifyOutdatedVersion(releaseData) {
     ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
@@ -610,8 +601,6 @@ function notifyOutdatedVersion(releaseData) {
 function isExpertModeEnabled() {
     return $('input[name="expertModeCheckbox"]').is(':checked');
 }
-
-window.isExpertModeEnabled = isExpertModeEnabled;
 
 function updateTabList(features) {
 
@@ -667,8 +656,6 @@ function updateTabList(features) {
 
 }
 
-window.updateTabList = updateTabList;
-
 function zeroPad(value, width) {
 
     let valuePadded = String(value);
@@ -700,8 +687,6 @@ function generateFilename(prefix, suffix) {
     return `${filename}.${suffix}`;
 }
 
-window.generateFilename = generateFilename;
-
 function showErrorDialog(message) {
    const dialog = $('.dialogError')[0];
 
@@ -713,8 +698,6 @@ function showErrorDialog(message) {
 
     dialog.showModal();
 }
-
-window.showErrorDialog = showErrorDialog;
 
 function showDialogDynFiltersChange() {
     const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
@@ -728,4 +711,16 @@ function showDialogDynFiltersChange() {
     }
 }
 
+// TODO: all of these are used as globals in other parts.
+// once moved to modules extract to own module.
 window.showDialogDynFiltersChange = showDialogDynFiltersChange;
+window.googleAnalytics = analytics;
+window.analytics = null;
+window.showErrorDialog = showErrorDialog;
+window.generateFilename = generateFilename;
+window.updateTabList = updateTabList;
+window.isExpertModeEnabled = isExpertModeEnabled;
+window.checkForConfiguratorUpdates = checkForConfiguratorUpdates;
+window.setDarkTheme = setDarkTheme;
+window.appReady = appReady;
+window.checkSetupAnalytics = checkSetupAnalytics;
