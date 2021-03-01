@@ -320,7 +320,8 @@ function dist_rollup() {
                 'components/init': 'src/components/init.js',
                 'js/main_cordova': 'src/js/main_cordova.js',
                 'js/utils/common': 'src/js/utils/common.js',
-                'js/tabs/logging': 'src/js/tabs/logging.js'
+                'js/tabs/logging': 'src/js/tabs/logging.js',
+                'js/main': 'src/js/main.js',
             },
             plugins: [
                 alias({

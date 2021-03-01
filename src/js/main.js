@@ -1,4 +1,4 @@
-'use strict';
+import { i18n } from './localization';
 
 window.googleAnalytics = analytics;
 window.analytics = null;
@@ -40,6 +40,7 @@ function appReady() {
         });
     });
 }
+window.appReady = appReady;
 
 function checkSetupAnalytics(callback) {
     if (!analytics) {
@@ -56,6 +57,8 @@ function checkSetupAnalytics(callback) {
         callback(analytics);
     }
 }
+
+window.checkSetupAnalytics = checkSetupAnalytics;
 
 function getBuildType() {
     return GUI.Mode;
@@ -545,11 +548,15 @@ function setDarkTheme(enabled) {
     });
 }
 
+window.setDarkTheme = setDarkTheme;
+
 function checkForConfiguratorUpdates() {
     const releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');
 
     releaseChecker.loadReleaseData(notifyOutdatedVersion);
 }
+
+window.checkForConfiguratorUpdates = checkForConfiguratorUpdates;
 
 function notifyOutdatedVersion(releaseData) {
     ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
@@ -603,6 +610,8 @@ function notifyOutdatedVersion(releaseData) {
 function isExpertModeEnabled() {
     return $('input[name="expertModeCheckbox"]').is(':checked');
 }
+
+window.isExpertModeEnabled = isExpertModeEnabled;
 
 function updateTabList(features) {
 
@@ -658,6 +667,8 @@ function updateTabList(features) {
 
 }
 
+window.updateTabList = updateTabList;
+
 function zeroPad(value, width) {
 
     let valuePadded = String(value);
@@ -689,6 +700,8 @@ function generateFilename(prefix, suffix) {
     return `${filename}.${suffix}`;
 }
 
+window.generateFilename = generateFilename;
+
 function showErrorDialog(message) {
    const dialog = $('.dialogError')[0];
 
@@ -701,6 +714,8 @@ function showErrorDialog(message) {
     dialog.showModal();
 }
 
+window.showErrorDialog = showErrorDialog;
+
 function showDialogDynFiltersChange() {
     const dialogDynFiltersChange = $('.dialogDynFiltersChange')[0];
 
@@ -712,3 +727,5 @@ function showDialogDynFiltersChange() {
         });
     }
 }
+
+window.showDialogDynFiltersChange = showDialogDynFiltersChange;
