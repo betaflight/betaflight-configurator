@@ -431,6 +431,9 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>используемая вами версия конфигуратора ($3) старше используемой прошивки ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>не выбран протокол управления двигателями</strong>.<br>Пожалуйста, выберите протокол управления двигателями, соответствующий вашему ESC в '$t(configurationEscFeatures.message)' на вкладке '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
+    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>акселерометр включен, но не откалиброван</strong>. <br>Если вы планируете использовать акселерометр, пожалуйста, следуйте инструкциям '$t(initialSetupButtonCalibrateAccel.message)' на вкладке '$t(tabSetup.message)'. Если выбрана любая функция, которая требует акселерометра (режим автоуровня, GPS возврат и т.д.), то арминг будет недоступен до тех пор, пока акселерометр не будет откалиброван.<br>Если вы не планируете использовать акселерометр, рекомендуется отключить его в '$t(configurationSystem.message)' на вкладке '$t(tabConfiguration.message)'."
     },
@@ -1538,6 +1541,10 @@
         "message": "Опережение",
         "description": "Advance of the D Min feature"
     },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min обеспечивает возможность понизить уровень D при нормальном полете и повысить уровень во время быстрых маневров, таких как флипы и роллы, которые могут привести к проскакиваниям. Он также поднимает D во время пропвашей. Регулирует с какой скоростью D достигнет максимального значения и основан на сигнале гироскопа для определения резких перемещений и пропвашей. Advance заставляет D расти раньше, используя setpoint, а не гиро, чтобы определить резкие движения.",
+        "description": "D Min feature helpicon message"
+    },
     "pidTuningPidSettings": {
         "message": "Настройки PID-контроллера"
     },
@@ -2478,6 +2485,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Моторы будут вращаться при настройке направления!"
     },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Количество моторов равно 0.<br />Проверьте текущий Mixer на вкладке $t(tabMotorTesting.message) или настройте через CLI. Обратитесь к этой <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">странице</a>."
+    },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Обновите прошивку.<br /> Убедитесь, что вы используете последнюю прошивку: Betaflight 4.3 или новее."
     },
@@ -3396,6 +3406,10 @@
         "message": "Главный множитель:",
         "description": "Master tuning slider label"
     },
+    "pidTuningIGainSlider": {
+        "message": "Усиление I-терм:",
+        "description": "I-term slider label"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Баланс PD:",
         "description": "PD balance tuning slider label"
@@ -3407,6 +3421,14 @@
     "pidTuningResponseSlider": {
         "message": "Коэфф. реакции на движения стиков:",
         "description": "Response tuning slider label"
+    },
+    "pidTuningMasterSliderHelp": {
+        "message": "В целом, большие квадрокоптеры требуют более высоких коэффициентов PID из-за низкого отношения мощности к весу.<br /><br />Маленькие (микро) квадрокоптеры обычно требует пониженных коэффициентов PID из-за высокого отношения мощности к весу.<br /><br />Высокие значения PID предназначены для менее чувствительных к изменению газа квадрокоптеров и наоборот, низкие значения PID - для более чувствительных квадрокоптеров.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Относительно высокое D снизит чувствительность стиков и может разогреть двигатели, но должно помочь контролировать осцилляции P и может улучшить propwash.<br /><br />Относительно низкое D дает более быструю реакцию на стик, но может ослабить обработку пропвашей и реакцию на внешние силы (ветер).",
+        "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro НЧ фильтры"
@@ -3494,6 +3516,10 @@
     },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM фильтр",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmFilterHelp": {
+        "message": "Фильтрация RPM – это набор режекторных фильтров для гироскопа, использующий телеметрические данные RPM для высокоточного удаления шума двигателей.<br /><br /><b><span class=\"message-positive\">ВАЖНО</span>: ESC должны поддерживать протокол двунаправленного DShot и значение $t(configurationMotorPoles.message) во вкладке $t(tabMotorTesting.message) должно быть правильным для работы этого фильтра.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -4712,6 +4738,9 @@
         "message": "Рамка камеры",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCameraFrame": {
+        "message": "Добавляет регулируемый контурный элемент, предназначенный для отображения поля (угла) зрения HD камеры.<br /><br />Ширину и высоту можно настроить в CLI с помощью 'osd_camera_frame_width' и 'osd_camera_frame_height'"
+    },
     "osdTextElementEfficiency": {
         "message": "Эффективность батареи",
         "description": "One of the elements of the OSD"
@@ -4725,6 +4754,9 @@
     },
     "osdDescTotalFlights": {
         "message": "Приблизительно общее количество полетов"
+    },
+    "osdDescUpDownReference": {
+        "message": "Символ OSD для отображения при приближении высоты к вертикали (90 градусов, U) и D для носа вниз (-90 градусов, D)"
     },
     "osdTextElementUnknown": {
         "message": "Неизвестно ($1)",
@@ -5268,6 +5300,10 @@
         "message": "Режим пит-стопа",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxPitModeHelp": {
+        "message": "Когда включен, видеопередатчик входит в режим очень низкой мощности, для того чтобы позволить кваду быть включенным и не мешать другим пилотам. Обычно дистанция приёма в этом режиме меньше чем 5м. <br /><br />ЗАМЕТКА: Некоторые протоколы, например SmartAudio, не позволяют программно включить режим пит-стопа после подачи питания.",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
     "vtxPitModeFrequency": {
         "message": "Частота режима пит-стоп",
         "description": "Text of one of the fields of the VTX tab"
@@ -5521,6 +5557,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Measurement"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivative from Error</b> обеспечивает более резкую отзывчивость стиков и это предпочтительнее для гонок. <br /><br /><b>Derivative from Measurement</b> обеспечивает более плавную отзывчивость стиков, что больше подходит для фристайла"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID коэффициенты и PID логика абсолютно те же. Нет необходимости их перенастраивать. Legacy - это старый betaflight, чей PID-контроллер был основан на целочисленных вычислениях. PID-контроллер Betaflight использует вычисления с дробными числами и имеет множество новых возможностей, специально разработанных для мультироторных приложений. <br> <b>Float vs Integer:</b> PID коэффициенты и PID логика абсолютно те же. Перенастройка не нужна. Полётные контроллеры F1 не имели встроенного FPU и вычисления с дробными числами увеличивают нагрузку на CPU, а вычисления с целыми числами повышают повышают производительность, но вычисления с дробными числами немного увеличивают точность."
