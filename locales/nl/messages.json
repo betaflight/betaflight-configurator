@@ -447,6 +447,9 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>de versie van de configuratie die u gebruikt ($3) is ouder dan de firmware die u gebruikt ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>er is geen motoruitgangsprotocol geselecteerd</strong>.<br> Selecteer een motoruitgangsprotocol dat geschikt is voor uw ESC's in '$t(configurationEscFeatures.message)' op het tabblad '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
+    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>de versnellingsmeter is ingeschakeld maar is niet gekalibreerd</strong>.<br>Als u de versnellingsmeter wilt gebruiken, volg dan de instructies voor '$t(initialSetupButtonCalibrateAccel.message)' op het tabblad '$t(tabSetup.message). Als een functie zoals autolevel modus of GPS-reddingende die de versnellingsmeter vereist is ingeschakeld, zal arming van het vaartuig worden uitgeschakeld totdat de versnellingsmeter is gekalibreerd.<br>Als u niet van plan bent om de versnellingsmeter te gebruiken wordt aanbevolen om deze uit te schakelen in '$t(configuratiesysteem).message)' op het tabblad '$t(tabConfiguration.message)."
     },
@@ -2458,6 +2461,9 @@
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>Ik begrijp de risico's</strong>, <br />alle propellers zijn verwijderd."
     },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong> Informatiebericht</strong><br />Om de motorrichting te wijzigen, moet de batterij zijn aangesloten en moet het juiste ESC-protocol zijn ingesteld op het tabblad $t(tabMotorTesting.message). Merk op dat niet alle Dshot ESC's met dit dialoogvenster zullen werken. Controleer uw ESC-firmware."
+    },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Stel de draairichting van de motor in door elke motor afzonderlijk te selecteren en te laten draaien."
     },
@@ -2493,6 +2499,12 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Motoren zullen draaien bij het bepalen van de richting!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Deze functie werkt alleen met DSHOT ESC's.<br />Controleer of uw ESC (elektrische snelheidsregelaar) het DSHOT-protocol ondersteunt en wijzig het zo nodig op het tabblad $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Het aantal motoren is 0.<br />Controleer de huidige mixer op het tabblad $t(tabMotorTesting.message) of stel een aangepaste mixer in via de CLI. Raadpleeg deze <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki-pagina</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Update de firmware.<br />Zorg ervoor dat u de nieuwste firmware gebruikt: Betaflight 4.3 of nieuwer."
@@ -3412,6 +3424,14 @@
         "message": "Hoofd Vermenigvuldiger:",
         "description": "Master tuning slider label"
     },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Pitch-Roll verhouding:",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningIGainSlider": {
+        "message": "I-term Gain:",
+        "description": "I-term slider label"
+    },
     "pidTuningPDRatioSlider": {
         "message": "PD Balans:",
         "description": "PD balance tuning slider label"
@@ -3419,6 +3439,10 @@
     "pidTuningPDGainSlider": {
         "message": "P and D Gain:",
         "description": "P and D Gain tuning slider label"
+    },
+    "pidTuningDMinRatioSlider": {
+        "message": "D_min Gain drop:",
+        "description": "D Min slider label"
     },
     "pidTuningResponseSlider": {
         "message": "Stick Response Gain:",
@@ -3510,6 +3534,10 @@
     },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM Filter",
+        "description": "Header text for the RPM Filter group"
+    },
+    "pidTuningRpmFilterHelp": {
+        "message": "RPM-filtering is een reeks notch-filters die wordt toegepast op de gyroscoop met behulp van de RPM-telemetriegegevens. Om zodoende motorvibraties met chirurgische precisie te verwijderen.<br /><br /><b><span class=\"message-positive\">BELANGRIJK</span>: De ESC moet het bidirectionele DShot-protocol ondersteunen en de waarde van $t(configurationMotorPoles.message) op het tabblad $t(tabMotorTesting.message) moet correct zijn om dit filter te laten werken.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
