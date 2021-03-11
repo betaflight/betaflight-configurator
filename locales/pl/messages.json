@@ -855,7 +855,7 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "Filtrowanie w oparciu o RPM jest włączone ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowaniewspierające dwukierunkową telemetrię DSHOT.",
+        "message": "Filtrowanie w oparciu o RPM jest włączone ale jedno lub więcej ESC nie dostarcza odpowiedniego sygnału telemetrii DSHOT. Sprawdź czy ESC są odpowiednie i mają zainstalowane wymagane oprogramowanie wspierające dwukierunkową telemetrię DSHOT.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQD": {
@@ -1158,7 +1158,7 @@
         "message": "Uzbrojenie jest zawsze wyłączone, gdy przepustnica nie jest nisko. Bądź ostrożny, ponieważ możesz przypadkowo rozbroić przez przełącznik podczas lotu, gdy ta opcja jest aktywna."
     },
     "configurationDigitalIdlePercent": {
-        "message": "Wartość przepustnicy dla bezczynnego silnika [percent]"
+        "message": "Wartość przepustnicy po uzbrojeniu silników [%]"
     },
     "configurationDigitalIdlePercentHelp": {
         "message": "Wartość „DShot idle” to procentowa wartość maksymalnego gazu wysyłanego do ESC, gdy gaz znajduje się w położeniu minimalnej wartości gdy maszyna jest uzbrojona. Zwiększ go, aby zyskać większą prędkość biegu jałowego i uniknąć desynchronizacji. Zbyt wysoka wartość spowoduje uczucie pływającej maszyny."
@@ -2435,6 +2435,9 @@
     },
     "escDshotDirectionDialog-UnderstandRisks": {
         "message": "<strong>Rozumiem ryzyko</strong>,<br />śmigła są zdjęte."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Notatka informacyjna</strong><br />Aby zmienić kierunek obrotu silnika podłącz baterie oraz wybierz prawidłowy protokół ESC. Możesz to zrobić w $t(tabMotorTesting.message). Pamiętaj, że nie wszystkie ESC z protokołem Dshot będą wspierały tę funkcje. Sprawdź czy twoje ESC obsługują funkcje zmiany kierunku obrotów."
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "Ustaw kierunek obrotu silnika poprzez wybranie każdego silnika osobno."
@@ -5415,7 +5418,7 @@
         "message": "Częstotliwość PWM silnika"
     },
     "configurationDshotBidir": {
-        "message": "Dwukierunkowy DShot (wymaga aby oprogramowanieESC wspierało tą funkcje)",
+        "message": "Dwukierunkowy DShot (wymaga aby oprogramowanie ESC wspierało tą funkcje)",
         "description": "Feature for the ESC/Motor"
     },
     "configurationDshotBidirHelp": {
