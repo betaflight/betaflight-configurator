@@ -431,6 +431,9 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>wersja konfiguratora, której używasz ($3) jest starsza niż oprogramowanie, którego używasz ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>nie wybrano protokołu sterowania silnikami</strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC w '$t(configurationEscFeatures.message)' karcie '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
+    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>akcelerometr jest włączony, ale nie jest skalibrowany</strong>. Jeśli planujesz użyć akcelerometru, proszę postąpić zgodnie z instrukcją dla '$t(initialSetupButtonCalibrateAccel.message)' w zakładce '$t(tabSetup.message)'. Jeśli jakakolwiek funkcja wymagająca akcelerometru (tryb automatycznego poziomowania, automatyczny powrót do domu na podstawie GPS, . .) jest włączona, uzbrojenie jednostki latającej będzie niemożliwe aż do chwili gdy akcelerometr zostanie skalibrowany. Jeśli nie planujesz używać akcelerometru, zaleca się wyłączenie go w '$t(configurationSystem.message)' w zakładce '$t(tabConfiguration.message)'."
     },
@@ -1538,6 +1541,10 @@
         "message": "Wyprzedzenie",
         "description": "Advance of the D Min feature"
     },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min umożliwia osiągnięcie niższego poziomu D w normalnym locie i wyższego poziomu w przypadku szybkich manewrów takich jak flipy i beczki, które mogą powodować przewrócenie modelu, podnosi on również D podczas gdy podczas lotu występuje efekt prop-wash. Maximum dostosowuje D do maksymalnej wartości i opiera się na wskazaniach żyroskopu aby określić agresywność manewrów. Wyprzedzenie sprawia, że ​​D używa wartości określonej wcześniej przez użytkownika, zamiast żyroskopu do określania ostrych manewrów.",
+        "description": "D Min feature helpicon message"
+    },
     "pidTuningPidSettings": {
         "message": "Ustawienia regulatora PID"
     },
@@ -2387,6 +2394,9 @@
     },
     "motorsEnableControl": {
         "message": "<strong> Rozumiem zagrożenia </strong>."
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "Ok"
     },
     "motorOutputReorderDialogClose": {
         "message": "Anuluj"
