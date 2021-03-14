@@ -60,6 +60,13 @@ const chromeapiSerial = {
         stopBits: 'one',
         ctsFlowControl: false,
     },
+    getDriver: function(vid, pid) {
+        if (vid === 4292 && pid === 60000) {
+            return 'Cp21xxSerialDriver'; //for Silabs CP2102 and all other CP210x
+        }  else {
+            return 'CdcAcmSerialDriver';
+        }
+    },
     setConnectionOptions: function(ConnectionOptions) {
         if (ConnectionOptions.persistent) {
             this.connection.persistent = ConnectionOptions.persistent;
@@ -158,7 +165,7 @@ const chromeapiSerial = {
             const vid = parseInt(pathSplit[0]);
             const pid = parseInt(pathSplit[1]);
             console.log(`${self.logHeader}request permission (vid=${vid} / pid=${pid})`);
-            cordova_serial.requestPermission({vid: vid, pid: pid}, function() {
+            cordova_serial.requestPermission({vid: vid, pid: pid, driver: self.getDriver(vid, pid)}, function() {
                 const options = self.getCordovaSerialConnectionOptions();
                 cordova_serial.open(options, function () {
                     cordova_serial.registerReadCallback(function (data) {

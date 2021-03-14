@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <usb-device vendor-id="1155" product-id="22336" /> <!--STMicroelectronics / Virtual COM Port -->
+    <usb-device vendor-id="4292" product-id="60000" /> <!--CP2102 and other CP210x single port devices -->
 </resources>
