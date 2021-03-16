@@ -1,7 +1,7 @@
-'use strict';
+import { i18n } from '../localization';
 
-TABS.staticTab = {};
-TABS.staticTab.initialize = function (staticTabName, callback) {
+const staticTab = {};
+staticTab.initialize = function (staticTabName, callback) {
 
     if (GUI.active_tab != staticTabName) {
         GUI.active_tab = staticTabName;
@@ -18,3 +18,7 @@ TABS.staticTab.initialize = function (staticTabName, callback) {
 
 };
 // Just noting that other tabs have cleanup functions.
+
+// TODO: remove when modules are in place
+window.TABS.staticTab = staticTab;
+export { staticTab };
