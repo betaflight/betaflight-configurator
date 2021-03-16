@@ -1,7 +1,5 @@
-'use strict';
-
-TABS.landing = {};
-TABS.landing.initialize = function (callback) {
+const landing = {};
+landing.initialize = function (callback) {
 
   if (GUI.active_tab != 'landing') {
     GUI.active_tab = 'landing';
@@ -49,6 +47,12 @@ TABS.landing.initialize = function (callback) {
 
 };
 
-TABS.landing.cleanup = function (callback) {
+landing.cleanup = function (callback) {
     if (callback) callback();
+};
+
+// TODO: remove after all is using modules
+window.TABS.landing = landing;
+export {
+    landing
 };

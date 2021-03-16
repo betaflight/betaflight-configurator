@@ -1,7 +1,4 @@
-'use strict';
-
-window.googleAnalytics = analytics;
-window.analytics = null;
+import { i18n } from './localization';
 
 $(document).ready(function () {
 
@@ -298,7 +295,7 @@ function startProcess() {
 
                 switch (tab) {
                     case 'landing':
-                        TABS.landing.initialize(content_ready);
+                        import('./tabs/landing').then(({ landing }) => landing.initialize(content_ready));
                         break;
                     case 'changelog':
                         TABS.staticTab.initialize('changelog', content_ready);
@@ -313,7 +310,7 @@ function startProcess() {
                         TABS.firmware_flasher.initialize(content_ready);
                         break;
                     case 'help':
-                        TABS.help.initialize(content_ready);
+                        import('./tabs/help').then(({ help }) => help.initialize(content_ready));
                         break;
                     case 'auxiliary':
                         TABS.auxiliary.initialize(content_ready);
@@ -545,6 +542,7 @@ function setDarkTheme(enabled) {
     });
 }
 
+
 function checkForConfiguratorUpdates() {
     const releaseChecker = new ReleaseChecker('configurator', 'https://api.github.com/repos/betaflight/betaflight-configurator/releases');
 
@@ -712,3 +710,17 @@ function showDialogDynFiltersChange() {
         });
     }
 }
+
+// TODO: all of these are used as globals in other parts.
+// once moved to modules extract to own module.
+window.showDialogDynFiltersChange = showDialogDynFiltersChange;
+window.googleAnalytics = analytics;
+window.analytics = null;
+window.showErrorDialog = showErrorDialog;
+window.generateFilename = generateFilename;
+window.updateTabList = updateTabList;
+window.isExpertModeEnabled = isExpertModeEnabled;
+window.checkForConfiguratorUpdates = checkForConfiguratorUpdates;
+window.setDarkTheme = setDarkTheme;
+window.appReady = appReady;
+window.checkSetupAnalytics = checkSetupAnalytics;
