@@ -2395,6 +2395,9 @@
     "motorsEnableControl": {
         "message": "<strong> Rozumiem zagrożenia </strong>."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Wykryto zmiany konfiguracji.<br /><br /><strong class=\"message-negative-italic\">Tryb testowy silnika jest wyłączony dopóki ustawienia nie zostaną zapisane.</strong>"
+    },
     "motorsDialogSettingsChangedOk": {
         "message": "Ok"
     },
@@ -2484,6 +2487,12 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Silniki będą obracać się podczas ustawiania kierunku!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Funkcja działa tylko z ESC z protokołem DSHOT.<br />Sprawdź, czy ESC (elektryczny kontroler prędkości) którego używasz obsługuje protokół DSHOT i zmień go w ustawieniach $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Liczba silników wynosi 0.<br />Zweryfikuj aktualny Mixer w $t(tabMotorTesting.message) lub zmień ustawienia przez CLI. Więcej info<a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">strona Wiki</a>."
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "Zaktualizuj oprogramowanie.<br /> Upewnij się, że używasz najnowszego firmware: Betaflight 4.3 lub nowszego."
@@ -3350,6 +3359,10 @@
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Ustawienia filtra niezależne od profilu"
+    },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Suwaki do regulacji żyroskopu i filtrowania D-term. <br /><br /> Większe Filtrowanie zapewnia płynniejszy lot, ale zwiększa opóźnienie sygnału żyroskopowego (opóźnienie fazowe) do pętli PID, co powoduje pogorszenie agresywnej wydajności lotu, znoszenie modelu, zmianę reakcji drążka, a jeśli filtrowania jest zbyt duże może powodować oscylacje.<br /><br /> Mniej filtrowania zmniejsza opóźnienie sygnału żyroskopu, ale może zwiększyć temperaturę silnika z powodu reakcji D-term na wibracje silnika (szum) o wysokiej częstotliwości. <br> Dodatkowo jeśli filtrowanie jest zbyt niskie, spowoduje spadek wydajności lotu (wyższy stosunek szumu do sygnału).",
+        "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
         "message": "Lekkie filtrowanie",
