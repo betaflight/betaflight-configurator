@@ -5288,6 +5288,10 @@
         "message": "Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxPitModeHelp": {
+        "message": "Gdy włączysz tą opcję VTX wchodzi w tryb bardzo niskiej mocy, aby można było włączyć model na czas naprawy bez zakłócania transmisji innych pilotów. Zwykle zasięg tego trybu jest mniejszy niż 5 m.<br /><br />UWAGA: Niektóre protokoły, takie jak SmartAudio, nie mogą włączyć trybu Pit Mode za pomocą oprogramowania zaraz po uruchomieniu.",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
     "vtxPitModeFrequency": {
         "message": "Częstotliwość Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
@@ -5541,6 +5545,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Pomiar"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Pochodna liczona na podstawie Błędu</b> zapewnia bardziej bezpośrednią odpowiedź na drążki i jest przeważnie preferowana w bardziej agresywnym stylu lotu.<br /><br /><b>Pochodna na podstawie Pomiaru</b> zapewnia bardziej płynną odpowiedź na drążki, co jest przydatne dla osób ceniących styl mniej agresywny"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Stara \"Legacy(integer)\" kontra nowa wersja Betaflight (float):</b> Ustawienia i silnik PID są dokładnie takie same. Nie jest konieczne ponowne strojenie kontrolera PID. \"Legacy\" to stary silnik PID który jest podstawowym kontrolerem PID, został zmodernizowany i jest oparty na arytmetyce całkowitoliczbowej(integer). Natomiast kontroler PID Betaflight wykorzystuje matematykę zmiennoprzecinkową i posiada wiele nowych funkcji zaprojektowanych specjalnie dla aplikacji wielofunkcyjnych <br> <b>zmiennoprzecinkowy \"Float\" vs całkowitoliczbowy\"Integer\":</b> skalowanie PID i logika PID są dokładnie takie same. mikrokontrolery serii F1 (czyli też płytki mające w nazwie F1) nie mają sprzętowego FPU. Arytmetyka zmiennoprzecinkowa zwiększa obciążenie procesora dlatego zastosowano całkowitoliczbowe obliczenia aby odciążyć CPU i przyspieszyć proces liczenia PID.\nJednakże obliczenia przeprowadzane w arytmetyce zmiennoprzecinkowej (w czym pomaga koprocesor FPU(floating point unit)) oferują dużo lepszą dokładność uzyskanego wyniku."
