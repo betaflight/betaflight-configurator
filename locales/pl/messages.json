@@ -4732,6 +4732,9 @@
         "message": "Ramka aparatu",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCameraFrame": {
+        "message": "Dodaje regulowany element obrysowy przeznaczony do prezentacji pola widzenia kamery HD pilota dla ramy wizualnej.<br /><br />Możesz dostosować szerokość i wysokość w wierszu poleceń za pomocą 'osd_camera_frame_width' i 'osd_camera_frame_height'"
+    },
     "osdTextElementEfficiency": {
         "message": "Sprawność baterii",
         "description": "One of the elements of the OSD"
@@ -4745,6 +4748,9 @@
     },
     "osdDescTotalFlights": {
         "message": "Szacowana suma Lotów"
+    },
+    "osdDescUpDownReference": {
+        "message": "Symbol OSD do pokazania, gdy nachylenie zbliża się do pionu (90 stopni, U) i D dla nosa (-90 stopnia, D)"
     },
     "osdTextElementUnknown": {
         "message": "Nieznane $1",
