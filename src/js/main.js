@@ -179,6 +179,13 @@ function startProcess() {
             GUI.nwGui.Shell.openExternal(url);
         });
         nwWindow.on('close', closeHandler);
+        // TODO: Remove visibilitychange Listener when upgrading to NW2
+        // capture Command H on MacOS and change it to minimize
+        document.addEventListener("visibilitychange", function() {
+            if (GUI.operating_system === "MacOS" && document.visibilityState === "hidden") {
+                nwWindow.minimize();
+            }
+        }, false);
     } else if (GUI.isCordova()) {
         window.addEventListener('beforeunload', closeHandler);
         document.addEventListener('backbutton', function(e) {
