@@ -167,7 +167,6 @@ function startProcess() {
 
     GUI.log(i18n.getMessage('infoVersions', {
         operatingSystem: GUI.operating_system,
-        chromeVersion: window.navigator.appVersion.replace(/.*Chrome\/([0-9.]*).*/, "$1"),
         configuratorVersion: CONFIGURATOR.version }));
 
     if (GUI.isNWJS()) {
@@ -208,7 +207,7 @@ function startProcess() {
     // our view is reactive to model changes
     // updateTopBarVersion();
 
-    if (!GUI.isOther() && GUI.operating_system !== 'ChromeOS') {
+    if (!GUI.isOther()) {
         checkForConfiguratorUpdates();
     }
 

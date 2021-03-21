@@ -53,23 +53,19 @@ TABS.options.initRememberLastTab = function () {
 };
 
 TABS.options.initCheckForConfiguratorUnstableVersions = function () {
-    if (GUI.operating_system !== 'ChromeOS') {
-        ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
-            if (result.checkForConfiguratorUnstableVersions) {
-                $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
-            }
+    ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
+        if (result.checkForConfiguratorUnstableVersions) {
+            $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
+        }
 
-            $('div.checkForConfiguratorUnstableVersions input').change(function () {
-                const checked = $(this).is(':checked');
+        $('div.checkForConfiguratorUnstableVersions input').change(function () {
+            const checked = $(this).is(':checked');
 
-                ConfigStorage.set({'checkForConfiguratorUnstableVersions': checked});
+            ConfigStorage.set({'checkForConfiguratorUnstableVersions': checked});
 
-                checkForConfiguratorUpdates();
-            });
+            checkForConfiguratorUpdates();
         });
-    } else {
-        $('div.checkForConfiguratorUnstableVersions').hide();
-    }
+    });
 };
 
 TABS.options.initAnalyticsOptOut = function () {
