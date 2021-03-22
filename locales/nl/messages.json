@@ -2446,6 +2446,12 @@
     "motorsRemapDialogStartOver": {
         "message": "Begin opnieuw"
     },
+    "motorsButtonReset": {
+        "message": "Resetten"
+    },
+    "motorsButtonSave": {
+        "message": "Sla op en herstart"
+    },
     "escDshotDirectionDialog-Title": {
         "message": "Motor richting - <strong class=\"message-negative-italic\">Waarschuwing: Zorg ervoor dat de propellers verwijderd zijn!</strong>"
     },
