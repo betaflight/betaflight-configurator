@@ -256,6 +256,16 @@
     width: calc(100% - 160px);
 }
 
+.tab-motors .btn .disabled {
+    cursor: default;
+    color: #fff;
+    background-color: #AFAFAF;
+    border: none;
+    pointer-events: none;
+    text-shadow: none;
+    opacity: 0.5;
+}
+
 .tab-motors #dialogMotorOutputReorder-closebtn {
     margin-right: 0px;
     margin-bottom: 0px;
@@ -298,10 +308,13 @@
 }
 
 .tab-motors #dialog-settings-changed {
-    width: 400px;
-    height: 100px;
+    height: 120px;
 }
 
+.tab-motors #dialog-settings-reset-confirmbtn {
+    margin-bottom: 12px;
+    position: relative;
+}
 .tab-motors #dialog-settings-changed-confirmbtn {
     margin-right: 0px;
     margin-bottom: 0px;
@@ -322,7 +335,7 @@
     flex-grow: 1;
 }
 
-.tab-motors .tool-buttons {
+.tab-motors .dialog-buttons {
     float: right;
     margin-bottom: -3%;
 }

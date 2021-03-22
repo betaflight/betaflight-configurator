@@ -151,7 +151,7 @@ Features.prototype.generateElements = function (featuresElements) {
             if (listElements.length === 0) {
                 newElements.push($('<option class="feature" value="-1" i18n="featureNone" />'));
             }
-            const newElement = $(`<option class="feature" id="feature-${i}" name="${rawFeatureName}" value="${featureBit}" i18n="feature${rawFeatureName}" />`);
+            const newElement = $(`<option class="feature" id="feature${i}" name="${rawFeatureName}" value="${featureBit}" i18n="feature${rawFeatureName}" />`);
 
             newElements.push(newElement);
             listElements.push(newElement);
@@ -161,7 +161,7 @@ Features.prototype.generateElements = function (featuresElements) {
                 featureName = `<td><div>${rawFeatureName}</div></td>`;
             }
 
-            let element = `<tr><td><input class="feature toggle" id="feature-${i}"`;
+            let element = `<tr><td><input class="feature toggle" id="feature${i}"`;
             element += `name="${self._features[i].name}" title="${self._features[i].name}"`;
             element += `type="checkbox"/></td><td><div>${featureName}</div>`;
             element += `<span class="xs" i18n="feature${self._features[i].name}"></span></td>`;
