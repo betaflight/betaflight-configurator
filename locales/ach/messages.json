@@ -2561,6 +2561,12 @@
     "motorsRemapDialogStartOver": {
         "message": "crwdns10264:0crwdne10264:0"
     },
+    "motorsButtonReset": {
+        "message": "crwdns10452:0crwdne10452:0"
+    },
+    "motorsButtonSave": {
+        "message": "crwdns10454:0crwdne10454:0"
+    },
     "escDshotDirectionDialog-Title": {
         "message": "crwdns10304:0crwdne10304:0"
     },
