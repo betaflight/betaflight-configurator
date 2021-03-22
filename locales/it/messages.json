@@ -2467,6 +2467,12 @@
     "motorsRemapDialogStartOver": {
         "message": "Ricomincia"
     },
+    "motorsButtonReset": {
+        "message": "Ripristina"
+    },
+    "motorsButtonSave": {
+        "message": "Salva e Riavvia"
+    },
     "escDshotDirectionDialog-Title": {
         "message": "Direzione motore - <strong class=\"message-negative-italic\">Attenzione: assicurati di aver rimosso le eliche!</strong>"
     },
