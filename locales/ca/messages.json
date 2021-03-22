@@ -2475,6 +2475,12 @@
     "motorsRemapDialogStartOver": {
         "message": "Comença de nou"
     },
+    "motorsButtonReset": {
+        "message": "Reinici"
+    },
+    "motorsButtonSave": {
+        "message": "Desa i reinicia"
+    },
     "escDshotDirectionDialog-Title": {
         "message": "Direcció del motor - <strong class=\"message-negative-italic\">Advertiment: assegureu-vos que les hèlix están fora. </strong>"
     },
