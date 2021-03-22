@@ -5334,6 +5334,10 @@
         "message": "Enregistré",
         "description": "Saved action button in the VTX tab"
     },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} déverrouillé",
+        "description": "Indicates if SA device is unlocked"
+    },
     "mainHelpArmed": {
         "message": "Moteur armé"
     },
