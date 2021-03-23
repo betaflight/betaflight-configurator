@@ -302,13 +302,19 @@ function startProcess() {
 
                 switch (tab) {
                     case 'landing':
-                        import('./tabs/landing').then(({ landing }) => landing.initialize(content_ready));
+                        import("./tabs/landing").then(({ landing }) =>
+                            landing.initialize(content_ready)
+                        );
                         break;
                     case 'changelog':
-                        TABS.staticTab.initialize('changelog', content_ready);
+                        import("./tabs/static_tab").then(({ staticTab }) =>
+                            staticTab.initialize("changelog", content_ready)
+                        );
                         break;
                     case 'privacy_policy':
-                        TABS.staticTab.initialize('privacy_policy', content_ready);
+                        import("./tabs/static_tab").then(({ staticTab }) =>
+                            staticTab.initialize("privacy_policy", content_ready)
+                        );
                         break;
                     case 'options':
                         TABS.options.initialize(content_ready);
