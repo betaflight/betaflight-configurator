@@ -643,7 +643,7 @@
         "message": "기여하기"
     },
     "defaultContributingText": {
-        "message": "베타플라이트를 훨씬 더 좋게 만들고 싶다면, 다음과 같은 여러 가지 방법으로 도울 수 있습니다:<br /><ul><li>베타플라이트에 대한 지식을 활용하여 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">위키</a>에 대한 내용을 만들거나, 온라인 포럼에서 다른 사용자의 질문에 답변할 수 있습니다;</li><li>펌웨어와 컨피규레이터에 대한 코드 - 새로운 기능, 수정, 개선 사항에 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">코드를 공헌</a>할 수 있습니다;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">새로운 기능과 수정</a>을 테스트하고, 피드백을 제공할 수 있습니다;</li><li>다른 사용자들이 <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈 트랙커</a>에 보고한 문제를 해결하여 도움을 줄 수 있으며, 기능 요청에 대한 논의에 참여할 수 있습니다;</li><li>베타플라이트 컨피규레이터를 새로운 언어로 <a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">번역</a>하거나, 기존 번역을 유지하도록 도울 수 있습니다.<br />한글번역(교정) 문의: 짱JJang FPV(oto4futur@gmail.com)</li></ul><br /><ul>베타플라이트 설정이 처음이시거나 새로운 기능을 배우시려면, <a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 설정 가이드(한글판)</a>을 참고하세요.</ul>"
+        "message": "베타플라이트를 훨씬 더 좋게 만들고 싶다면, 다음과 같은 여러 가지 방법으로 도울 수 있습니다:<br /><ul><li>베타플라이트에 대한 지식을 활용하여 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">위키</a>에 대한 내용을 만들거나, 온라인 포럼에서 다른 사용자의 질문에 답변할 수 있습니다;</li><li>펌웨어와 컨피규레이터에 대한 코드 - 새로운 기능, 수정, 개선 사항에 <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/development/Development.md\" target=\"_blank\" rel=\"noopener noreferrer\">코드를 공헌</a>할 수 있습니다;</li><li><a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">새로운 기능과 수정</a>을 테스트하고, 피드백을 제공할 수 있습니다;</li><li>다른 사용자들이 <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈 트랙커</a>에 보고한 문제를 해결하여 도움을 줄 수 있으며, 기능 요청에 대한 논의에 참여할 수 있습니다;</li><li>베타플라이트 컨피규레이터를 새로운 언어로 <a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">번역</a>하거나, 기존 번역을 유지하도록 도울 수 있습니다.<br />한글번역(교정) 문의: 짱아부지JJangPapa(oto4futur@gmail.com)</li></ul><br /><ul>베타플라이트 설정이 처음이시거나 새로운 기능을 배우시려면, <a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 설정 가이드(한글판)</a>을 참고하세요.</ul>"
     },
     "defaultFacebookText": {
         "message": "우리는 또한 <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">페이스북 그룹</a>이 있습니다.<br />우리와 함께 베타플라이트에 대해 이야기하고, 환경설정 질문을 하거나, 동료 파일럿과 어울릴 수 있습니다."
@@ -704,7 +704,7 @@
         "message": "<a href=\"http://betaflight.info\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 위키</a>"
     },
     "defaultSupport3": {
-        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell 베타플라이트 동영상</a><br /><a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">JJang FPV 베타플라이트 동영상(한글판)</a>"
+        "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8kdK6yHr7vhsU9iRTr5HxP4\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell 베타플라이트 동영상</a><br /><a href=\"https://www.youtube.com/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">JJangPapa 베타플라이트 동영상(한글판)</a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https://github.com/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"
@@ -2534,6 +2534,12 @@
     },
     "motorsRemapDialogStartOver": {
         "message": "재시작"
+    },
+    "motorsButtonReset": {
+        "message": "초기화"
+    },
+    "motorsButtonSave": {
+        "message": "저장 및 재부팅"
     },
     "escDshotDirectionDialog-Title": {
         "message": "모터 방향 - <strong class=\"message-negative-italic\">경고: 프롭이 제거되었는지 확인하십시오!</strong>"
