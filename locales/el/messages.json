@@ -49,6 +49,13 @@
     "portsSelectManual": {
         "message": "Χειροκίνητη επιλογή"
     },
+    "portsSelectVirtual": {
+        "message": "Εικονική λειτουργία (Πειραματικό)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Εικονική Έκδοση Λογισμικού"
+    },
     "portOverrideText": {
         "message": "Θύρα:"
     },
@@ -81,6 +88,9 @@
     },
     "analyticsOptOut": {
         "message": "Απαλλαγή από την περισυλλογή ανωνυμοποιημένων στατιστικών δεδομένων"
+    },
+    "cordovaForceComputerUI": {
+        "message": "Χρησιμοποιήστε το πρόγραμμα του υπολογιστή αντί του προγράμματος της κινητής συσκευής"
     },
     "language_changed": {
         "message": "Η γλώσσα άλλαξε"
@@ -156,6 +166,27 @@
     },
     "configuratorUpdateWebsite": {
         "message": "Μετάβαση στη Σελίδα Εκδόσεων"
+    },
+    "deviceRebooting": {
+        "message": "Η συσκευή - <span class=\"message-negative\">επανεκκινείται</span>"
+    },
+    "deviceRebooting_flashBootloader": {
+        "message": "Η συσκευή - <span class=\"message-negative\">Επανεκκίνηση για εγκατάσταση BOOTLOADER</span>"
+    },
+    "deviceRebooting_romBootloader": {
+        "message": "Η συσκευή - <span class=\"message-negative\">επανεκκινείται σε ROM BOOTLOADER</span>"
+    },
+    "deviceReady": {
+        "message": "Η συσκευή - <span class=\"message-positive\">είναι έτοιμη</span>"
+    },
+    "backupFileIncompatible": {
+        "message": "Αυτό το αντίγραφο ασφαλείας έχει δημιουργηθεί για προηγούμενη έκδοση του διαμορφωτή και δεν είναι συμβατό με αυτή την έκδοση. Ζητούμε συγγνώμη"
+    },
+    "backupFileUnmigratable": {
+        "message": "Αυτό το αντίγραφο ασφαλείας έχει δημιουργηθεί από προηγούμενη έκδοση του διαμορφωτή και δεν μπορεί να μεταβιβαστεί. Συγγνώμη."
+    },
+    "configMigrationFrom": {
+        "message": "Μετεγκατάσταση του αρχείου ρυθμίσεων που κατασκεύασε ο διαμορφωτής (configurator): $1"
     },
     "tabHelp": {
         "message": "Τεκμηρίωση και υποστήριξη"
@@ -408,6 +439,13 @@
         "message": "Γραμματοσειρά {{fontName}}",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupVideoFormatTitle": {
+        "message": "Μορφή Βίντεο"
+    },
+    "osdSetupVideoFormatOptionAuto": {
+        "message": "Αυτόματο",
+        "description": "Option for the video format in the OSD"
+    },
     "osdTextElementTimer": {
         "message": "Χρονόμετρο",
         "description": "One of the elements of the OSD"
@@ -437,5 +475,8 @@
     },
     "osdSettingsSaved": {
         "message": "Οι ρυθμίσεις της ΟΑΓ αποθηκεύτηκαν"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Είστε σίγουροι ότι θέλετε να τερματίσετε τον διαμορφωτή (configurator);"
     }
 }
