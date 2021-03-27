@@ -2558,6 +2558,12 @@
     "motorsRemapDialogStartOver": {
         "message": "Comezar de novo"
     },
+    "motorsButtonReset": {
+        "message": "Restablecer"
+    },
+    "motorsButtonSave": {
+        "message": "Gardar e Reiniciar"
+    },
     "escDshotDirectionDialog-Title": {
         "message": "Dirección do Motor - <strong class=\"message-negative-italic\">Atención: ¡Asegúrese de que as hélices non están postas!</strong>"
     },
