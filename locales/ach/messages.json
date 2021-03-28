@@ -529,8 +529,8 @@
         "message": "crwdns10074:0$t(initialSetupButtonCalibrateAccel.message)crwdnd10074:0$t(tabSetup.message)crwdnd10074:0$t(configurationSystem.message)crwdnd10074:0$t(tabConfiguration.message)crwdne10074:0"
     },
     "infoVersions": {
-        "message": "crwdns8710:0{{operatingSystem}}crwdnd8710:0{{chromeVersion}}crwdnd8710:0{{configuratorVersion}}crwdne8710:0",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
+        "message": "crwdns10456:0{{operatingSystem}}crwdnd10456:0{{configuratorVersion}}crwdne10456:0",
+        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
     },
     "buildServerLoaded": {
         "message": "crwdns8827:0$1crwdne8827:0"
@@ -3051,13 +3051,13 @@
         "message": "crwdns6001:0crwdne6001:0"
     },
     "firmwareFlasherWarningText": {
-        "message": "crwdns6002:0crwdne6002:0"
+        "message": "crwdns10458:0crwdne10458:0"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "crwdns6377:0crwdne6377:0"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "crwdns10104:0crwdne10104:0"
+        "message": "crwdns10460:0crwdne10460:0"
     },
     "firmwareFlasherButtonLeave": {
         "message": "crwdns6005:0crwdne6005:0"
