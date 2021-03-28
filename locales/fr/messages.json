@@ -491,10 +491,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>l'accéléromètre est activé mais il n'est pas calibré</strong>. <br>Si vous envisagez d'utiliser l'accéléromètre, veuillez suivre les instructions '$t(initialSetupButtonCalibrateAccel.message)' dans l'onglet '$t(tabSetup.message)'. Si une fonction nécessitant l'accéléromètre (auto level modes, sauvetage GPS, . .) est activée, l'armement de l'engin sera désactivé jusqu'à ce que l'accéléromètre ait été calibré.<br>Si vous ne prévoyez pas d'utiliser l'accéléromètre, il est recommandé de le désactiver dans '$t(configurationSystem.message)' dans l'onglet '$t(tabConfiguration.message)'."
     },
-    "infoVersions": {
-        "message": "Version - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurateur: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Informations sur la version de $1 chargées depuis le serveur."
     },
@@ -2853,14 +2849,8 @@
     "firmwareFlasherMessage": {
         "message": "Message:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Merci de ne<span class=\"message-negative\"> pas</span> essayer de flasher de<strong>non-Betaflight</strong> carte avec cet outil.<br />Ne <span class=\"message-negative\">pas </span> <strong>déconnecter</strong> la carte ou <strong>la débrancher</strong> pendant que vous flashez.<br /><br /><strong>Note: </strong>le bootloader est stocké dans la ROM, il ne peut pas être supprimé.<br /><strong>Note: </strong><span class=\"message-negative\">Auto-Connecte</span> est toujours désactivé pendant le flashage.<br /><strong>Note: </strong>Assurez-vous d'avoir une sauvegarde parfois un flashage supprime toutes vos configurations..<br /><strong>Note:</strong> Si vous rencontrez un problème <strong>essayez de déconnecter votre FC</strong> en premier essayez de rebooter, faites les mises à jour chrome et des drivers STM.<br /><strong>Note:</strong> Quand vous flashez une carte par l'USB assurez d'avoir connaissance de toutes les documentations et d'avoir les bon drivers installés."
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Récupération / Communication coupée</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Si vous avez perdu la communication avec votre carte suivez ces étapes: <ul><li>Débranchez</li><li> Activez 'Séquence sans redémarrage', activez 'Effacement complet de la puce '.</li><li>shuntez les bornes BOOT ou maintenez le bouton BOOT.</li><li>Re branchez (La LED d'activité ne doit PAS s'allumer).</li><li>Installez les drivers STM32 drivers et Zadig si besoin: (voir <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">Flash USB</a> section of Betaflight manual).</li><li>Fermez le configurateur, fermez toutes les instances de Chrome, fermez toutes les applications Chrome, redémarrez le Configurateur.</li><li>Relâchez le bouton BOOT.</li><li>Flashez avec le bon firmware (en utilisant le baudrate préconisé pour votre carte).</li><li>Déconnectez.</li><li>Supprimez le shunt sur le BOOT.</li><li>Re branchez (La LED d'activité devrait clignoter).</li><li>Connectez normalement.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Quitter le firmware flasheur"
