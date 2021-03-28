@@ -453,10 +453,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>de versnellingsmeter is ingeschakeld maar is niet gekalibreerd</strong>.<br>Als u de versnellingsmeter wilt gebruiken, volg dan de instructies voor '$t(initialSetupButtonCalibrateAccel.message)' op het tabblad '$t(tabSetup.message). Als een functie zoals autolevel modus of GPS-reddingende die de versnellingsmeter vereist is ingeschakeld, zal arming van het vaartuig worden uitgeschakeld totdat de versnellingsmeter is gekalibreerd.<br>Als u niet van plan bent om de versnellingsmeter te gebruiken wordt aanbevolen om deze uit te schakelen in '$t(configuratiesysteem).message)' op het tabblad '$t(tabConfiguration.message)."
     },
-    "infoVersions": {
-        "message": "Gebruikt - Besturingssyteem: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Build informatie geladen voor $1 van build server."
     },
@@ -2932,14 +2928,8 @@
     "firmwareFlasherMessage": {
         "message": "Bericht:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Probeer <span class=\"message-negative\">niet</span> om firmware <strong>anders dan Betaflight firmware</strong> te flashen met deze tool!<br />Ontkoppel <span class=\"message-negative\">niet</span> <strong>het bord</strong> of zet <strong>niet</strong> je computer uit tijdens het flashen!<br /><br /><strong>Opmerking: </strong>STM32 bootloader is opgeslagen in ROM, deze kan niet aangepast worden.<br /><strong>Opmerking: </strong><span class=\"message-negative\">Auto-Connect</span> is altijd uitgeschakeld als u op de firmware flasher pagina bent.<br /><strong>Opmerking: </strong>Zorg ervoor dat u een back-up heeft; sommige upgrades/downgrades kunnen uw configuratie wissen.<br /><strong>Opmerking:</strong> Als je problemen hebt met het flashen, <strong>probeer dan eerst alle kabels los te koppelen van uw vluchtcontroller. </strong>Probeer uw computer opnieuw te starten, upgrade naar de laatste versie van chrome en upgrade alle drivers.<br /><strong>Opmerking:</strong> Als u een bord flasht die direct verbonden is met een USB aansluiting (Dit is het geval bij bijna alle nieuwe borden) zorg er dan voor dat u de Betaflight handleiding heeft gelezen en dat u de juiste software en drivers heeft geïnstalleerd"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Herstellen / Communicatie verloren</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Als je de communicatie met je board bent kwijtgeraakt, volg dan de volgende stappen om de communicatie te herstellen:<ul><li>Power off</li><li>Schakel 'No reboot sequence' in, schakel 'Full chip erase' in.</li><li>Verbind de BOOT-pinnen of houd de BOOT-knop ingedrukt.</li><li>Power on (activiteits-LED knippert NIET als het correct is gedaan).</li><li>Installeer indien nodig alle STM32-stuurprogramma's. (zie <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> -gedeelte van de Betaflight-handleiding).</li><li>Sluit de configurator. Sluit alle actieve Chrome-instanties. Sluit alle Chrome-apps. Start de Configurator opnieuw op.</li><li>Laat de BOOT-knop los als uw FC er een heeft.</li><li>Flash met de juiste firmware (met handmatige baudrate indien gespecificeerd in de handleiding van uw FC).</li><li>Power off.</li><li>Verwijder de BOOT-jumper.</li><li>Power on (activiteits-LED moet knipperen).</li><li>Maak normaal verbinding.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasher verlaten"
