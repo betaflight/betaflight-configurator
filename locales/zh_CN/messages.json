@@ -488,10 +488,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>加速度计已启用，但未进行校准</strong>。<br>如果您打算使用加速度计，请遵循 \"$t(tabSetup.message)\" 页面中的 \"$t(initialSetupButtonCalibrateAccel.message)\" 操作指南。如果开启了任何需要调用加速度计的功能 (例如自稳模式, GPS 救援, …)，在加速度计完成校准之间将无法解锁。<br>如果您并不想使用加速度计，建议您在 \"$t(tabConfiguration.message)\" 页面中通过 \"$t(configurationSystem.message)\" 禁用加速度计。"
     },
-    "infoVersions": {
-        "message": "操作系统: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, 配置程序: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "已从生成服务器加载 $1 的生成信息。"
     },
@@ -2817,14 +2813,8 @@
     "firmwareFlasherMessage": {
         "message": "信息："
     },
-    "firmwareFlasherWarningText": {
-        "message": "请<span class=\"message-negative\">不要</span>尝试烧写<strong> Betaflight 不支持的飞控板</strong>。<br />烧写固件过程中千万<span class=\"message-negative\">不要</span> <strong>断开飞控连接</strong> 或 <strong>关闭电脑</strong><br /><br /><strong>注意：</strong>STM32 的 bootloader 储存在ROM中，所以不会有变砖可能。<br /><strong>注意：在固件烧写页面</strong><span class=\"message-negative\">自动连接</span>会被自动禁用。<br /><strong>注意：</strong>烧写固件可能会清空设置，请务必先备份好你的数据。<br /><strong>注意：</strong>如果烧写遇到问题，<strong>尝试拔掉连接到飞控的所有连线</strong> 然后尝试重启，更新配置程序，升级驱动。<br /><strong>注意：</strong>当使用虚拟USB（VCP）的飞控（大多数新的飞控都是），请仔细阅读 Betaflight 手册 USB flashing 部分章节，并确保驱动和软件已正确安装。"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> 恢复/丢失通信 </strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "如果飞控板失去通信，你可以按照以下的几个步骤来恢复：<ul><li>关闭电源</li><li>打开'无重启序列'，打开‘擦除整个芯片‘选项。</li><li>短接 BOOT 引脚，或者按住 BOOT 按键。</li><li>上电(如果操作正确，飞控的“活动”灯不会闪烁)。</li><li>如果需要请安装 STM32 驱动和 Zadig (参阅 Betaflight 手册<a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> 部分 ).</li><li>关闭 Befaflight 软件，关闭所有 Chrome 应用，然后重新启动Betaflight。</li><li>释放 BOOT 按键（如有）。</li><li>烧写正确的固件(参照飞控厂商制定的波特率)。</li><li>断电。</li><li>移除 BOOT 引脚的短接。</li><li>上电(飞控“活动”灯应该会闪烁).</li><li>正常连接。</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "关闭固件烧写"
