@@ -430,10 +430,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu</strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
     },
-    "infoVersions": {
-        "message": "Sistema Eragilea: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfiguratzailea: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Bertsioaren informazioa $1 -rentzat bertsio zerbidoreetatik kargatuta."
     },
@@ -2819,14 +2815,8 @@
     "firmwareFlasherMessage": {
         "message": "Mezua:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Mesedez, <span class=\"message-negative\">ez</span> saiatu <strong>Betaflight</strong> hardwarea lantzen Firmware-Flasheatzaile honekin.<br/> <span class=\"message-negative\">Ez</span> <strong>deskonektatu</strong> kontroladorea edo <strong>itzali</strong> ordenagailua flasheatzen ari zaren bitartean.<br/><br/><strong>Oharra:</strong> STM32 abiarazlea ROMan gordetzen da, ezin da brickeatu.</strong>Oharra:</strong> <span class=\"message-negative\">Konektatu automatikoki</span> beti desgaituta dago firmware flasheatzailean zaudenean.<br/><strong>Oharra:</strong> Segurtasun kopia duzula ziurtatu; bertsio berritzaile/bertsio batzuek zure konfigurazioa ezabatu egingo dute.<br/><strong>Oharra:</strong> flasheatzen arazoa badaukazu <strong>saiatu kontroladorearen kableak deskonektatzen</strong> lehen, saiatu berrabiarazten, Chrome berritzen, gidariak berritzen.<br/><strong>Oharra:</strong>Zuzeneko konexioak dituzten USB entxufeak (kontroladore berrienak) zuzentzen direnean, ziurtatu Betaflight eskuliburuko USB Flashing atala irakurri duzula eta software eta Target egokiak instalatuta dituzula"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Berreskuratutako/Galdutako komunikazioa</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Kontroladorearekin komunikazioa galdu baduzu, jarraitu urrats hauek komunikazioa berreskuratzeko: <ul><li>Itzali</li><li> 'Berrabiarazi gabeko sekuentzia' gaitu, 'Txip osoa ezabatzea' gaitu.</li><li>BOOT pinak lotu edo BOOT botoia mantendu.</li><li>Piztu (jarduera LED EZ da keinuka izango behar bezala egiten bada).</li><li>STM32 kontrolatzaile guztiak instalatu eta Zadig behar izanez gero (ikusi <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\"> USB flasheatzea</a> Betaflight eskuliburuaren atala). </li> <li>Konfiguratzailea itxi, Chrome apps guztiak itxi eta Konfiguratzailea berriarazi</li><li>Askatu BOOT botoia zure FC- k badu.</li><li>Flash firmware egokiarekin (eskuzko baud tasa erabiliz zure FCen eskuliburuan zehazten bada).</li><li>itzali.</li><li>Kendu BOOT jumper.</li><li>Piztu (jardueraren LEDak keinu egin behar du).</li><li>Lotu normalean.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasheatzailea Utzi"
