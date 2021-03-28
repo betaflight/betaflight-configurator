@@ -427,10 +427,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> o acelerômetro está habilitado, mas não está calibrado</strong>.<br>Se você planeja usar o acelerômetro, siga as instruções para '$t(initialSetupButtonCalibrateAccel.message)' na guia '$t(tabSetup.message)'. Se qualquer função que exija o acelerômetro estiver habilitada (por exemplo: modo de nível automático ou resgate por GPS), não será possível armar a aeronave até que o acelerômetro seja calibrado.<br>Se você não planeja usar o acelerômetro, é recomendável desativá-lo em '$t(configurationSystem.message)' na guia '$t(tabConfiguration.message)'."
     },
-    "infoVersions": {
-        "message": "Executando - SO: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Informação da versão do $1 carregadas do servidor de compilação."
     },
@@ -2792,14 +2788,8 @@
     "firmwareFlasherMessage": {
         "message": "Mensagem:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Por favor <span class=\"message-negative\">não</span> tente atualizar hardware <strong>não-betaflight</strong> utilizando este atualizador de firmware.<br /><span class=\"message-negative\">Não</span><strong> desconecte</strong> a placa ou <strong>desligue</strong> seu computador durante a atualização<br /><br /><strong>Nota: </strong>o bootloader do STM32 é salvo na ROM, não é possível danificá-lo.<br /><strong>Nota: </strong><span class=\"message-negative\">Auto-Conectar</span> está sempre desativado enquanto você está na tela de atualização.<br /><strong>Nota: </strong>Tenha a certeza de que você tem um backup; algumas atualizações podem limpar as suas configurações.<br /><strong>Nota:</strong> Se não conseguir atualizar, <strong> tente primeiro desconectar todos os cabos do seu controlador de voo</strong>, tente reiniciar, atualizar o chrome ou atualizar seus drivers.<br /><strong>Nota:</strong> Quando for atualizar placas com uma conexão USB direta (como a maioria das placas recentes) tenha a certeza de que você leu a seção de atualização por USB (USB Flashing) do manual do Betaflight e que também os drivers e softwares corretos estão instalados"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperação / Comunicação perdida</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Se você perdeu a comunicação com sua placa, siga estas instruções para restaurar a comunicação: <ul><li>Desligue a placa</li><li>Ative a opção 'Sem sequencia de reinicialização' e 'Formatar chip'.</li><li> Faça 'curto-circuito' aos pinos BOOT ou segure o botão BOOT.</li><li>Ligue a placa (O LED de atividade NÃO irá piscar se realizado corretamente).</li><li>Instale todos os drivers STM32 e Zadig se necessário (veja a sessão <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> do manual do Betaflight).</li><li>Feche o Configurador. Feche todas as janelas no Chrome, Feche todos aplicativos do Chrome, Reinicie o Configurador.</li><li>Solte o botão BOOT se seu FC tem um.</li><li>Atualize o Firmware correto (usando o Baud rate manual se especificado no manual do seu FC).</li><li>Desligue a placa.</li><li>Remova o 'curto-circuito' do BOOT.</li><li>Ligue a placa (O LED de atividade deve piscar).</li><li>Conecte normalmente.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Sair do atualizador de Firmware"
