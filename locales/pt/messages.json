@@ -397,10 +397,6 @@
     "resetToCustomDefaultsAccept": {
         "message": "Aplicar Padrões Personalizados"
     },
-    "infoVersions": {
-        "message": "Executando - SO: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Informação da versão do $1 carregadas do servidor de compilação."
     },
@@ -2559,9 +2555,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Mensagem:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "Por favor <span class=\"message-negative\">não</span> tente atualizar hardware <strong>não-betaflight</strong> utilizando este atualizador de firmware.<br /><span class=\"message-negative\">Não</span><strong> desconecte</strong> a placa ou <strong>desligue</strong> seu computador durante a atualização<br /><br /><strong>Nota: </strong>o bootloader do STM32 é salvo na ROM, não é possível danificá-lo.<br /><strong>Nota: </strong><span class=\"message-negative\">Auto-Conectar</span> está sempre desativado enquanto você está na tela de atualização.<br /><strong>Nota: </strong>Tenha a certeza de que você tem um backup; algumas atualizações podem limpar as suas configurações.<br /><strong>Nota:</strong> Se não conseguir atualizar, <strong> tente primeiro desconectar todos os cabos do seu controlador de voo</strong>, tente reiniciar, atualizar o chrome ou atualizar seus drivers.<br /><strong>Nota:</strong> Quando for atualizar placas com uma conexão USB direta (como a maioria das placas recentes) tenha a certeza de que você leu a seção de atualização por USB (USB Flashing) do manual do Betaflight e que também os drivers e softwares corretos estão instalados"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperação / Comunicação perdida</strong>"
