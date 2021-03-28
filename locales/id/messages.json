@@ -331,10 +331,6 @@
     "firmwareUpgradeRequired": {
         "message": "Firmware pada perangkat ini perlu ditingkatkan ke versi yang lebih baru. Gunakan CLI untuk backup sebelum flashing. Prosedur backup/restore CLI ada di dokumentasi.<br />Atau unduh dan gunakan Betaflight versi lama jika anda belum siap untuk upgrade."
     },
-    "infoVersions": {
-        "message": "Sistem Operasi: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Memuat informasi build untuk $1 dari server build."
     },
@@ -2179,9 +2175,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Pesan:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "<span class =\"message-negative\">Jangan</span> coba flashing perangkat keras<strong> non-Betaflight</strong> dengan flasher firmware ini.<br /> <span class =\"message-negative\" >Jangan </span><strong>memutuskan</strong> sambungan ke FC atau<strong>mematikan</strong> komputer Anda saat flashing.<br /><br /><strong> Catatan: </strong> bootloader STM32 disimpan dalam ROM, tidak akan rusak. <br /><strong>Catatan:</strong><span class =\"message-negative\">Sambungan-otomatis</span> selalu dinonaktifkan saat Anda berada di dalam flasher firmware. <br /><strong>Catatan:</strong>Pastikan Anda memiliki backup; beberapa upgrade / downgrade akan menghapus konfigurasi anda. <br /><strong>Catatan:</strong>Jika Anda mengalami masalah flashing <strong>coba lepaskan semua kabel dari FC</strong>terlebih dulu, coba reboot, upgrade chrome, upgrade driver <br /><strong>Catatan: </strong>Saat flashing FC yang terhubung langsung dengan soket USB (FC generasi baru) pastikan Anda telah membaca bagian USB Flashing di manual Betaflight dan menginstal perangkat lunak dan driver yang benar"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Pemulihan / Komunikasi terputus</strong>"
