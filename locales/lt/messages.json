@@ -283,10 +283,6 @@
     "reportProblemsDialogFooter": {
         "message": "Prašome <strong>ištaisyti šias problemas prieš bandant skristi</strong>."
     },
-    "infoVersions": {
-        "message": "Vykdoma - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigūratorius: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "$1 sąrankų informacija įkelta iš kompiliavimo serverio."
     },
@@ -1531,14 +1527,8 @@
     "firmwareFlasherMessage": {
         "message": "Pranešimas:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Prašome <span class=\"message-negative\">nebandyti</span> programuoti <strong>ne-Betaflight</strong> aparatinę įrangą su šiuo programatoriumi.<br /><span class=\"message-negative\">Neatjunginėkite</span> <strong></strong> plokštės ir <strong>neišjunkite</strong> jūsų kompiuterio tol, kol vyksta programavimas.<br /><br /><strong>Pastaba: </strong>STM32 bootloader randasi ROM atmintyje ir negali būti sugadintas.<br /><strong>Pastaba: </strong><span class=\"message-negative\">Auto-Prisijungimas</span> visada išjungtas kol jus esate Mikroprogramos programatoriuje.<br /><strong>Pastaba: </strong>Įsitikinkite, kad esate padarę rezervinę kopiją; kai kurie atnaujinimai ištrins jūsų nustatymus.<br /><strong>Pastaba:</strong> Jeigu jums nepavyksta suprogramuoti valdiklio, pradžiai <strong>pabandykite atjungti visus kabelius nuo jūsų valdiklio</strong>, perkraukite kompiuterį, atnaujinkite Chrome, atnaujinkite tvarkykles.<br /><strong>Pastaba:</strong> Programuojant plokštes, turinčias USB jungtį (dauguma naujesnių plokščių) įsitikinkite, kad esate perskaitę USB Flashing skyrių Betaflight instrukcijoje ir esate įdiegę tinkamą programinę įrangą ir tvarkykles"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Atstatymas / Prarastas ryšys</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Praradus ryšį su plokštė sekite šiais žingsniais: <ul><li>Atjunkite maitinimą</li><li>Įjunkite 'Be persikrovimo', įjunkite 'Pilnas atminties ištrynimas'.</li><li>Užtrumpinkite BOOT kontaktus arba nuspauskite ir laikykite BOOT mygtuką.</li><li>Įjunkte maitinimą (jeigu viską atlikote teisingai - activity LED NEMIRKSĖS).</li><li>Įdiekite visas STM32 tvarkykles ir Zadig, jeigu jo reikia (žr. <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> skyrių Betaflight instrukcijoje).</li><li>Uždarykite Konfigūratorių, uždarykite visus Chrome langus, perkraukite Konfigūratorių.</li><li>Paleiskite BOOT mygtuką, jeigu jūsų skrydžio valdiklis turi tokį.</li><li>Suprogramuotike tinkamą mikroprogramą (jeigu jūsų valdiklio dokumentacija nurodo naudoti specifinį greitį - pasirinkite jį).</li><li>Atjunkite maitinimą.</li><li>Pašalinkite trumpiklį nuo BOOT kontaktu.</li><li>Įjunkite maitinimą (activity LED turi pradėt mirksėt).</li><li>Prisijunkite įprasta tvarka.</li></ul>"
     },
     "unstableFirmwareAcknoledgementFlash": {
         "message": "Programuoti"
