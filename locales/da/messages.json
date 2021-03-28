@@ -304,10 +304,6 @@
     "stm32UnprotectUnplug": {
         "message": "HANDLING KRÆVES: Frakobl og tilkobl flight controller i DFU-tilstand for at forsøge gen-flashning!"
     },
-    "infoVersions": {
-        "message": "Kører - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Indlæst builds-information for $1 fra build-server."
     },
