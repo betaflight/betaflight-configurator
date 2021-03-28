@@ -59,21 +59,17 @@ TABS.motors.initialize = function (callback) {
         GUI.active_tab = 'motors';
     }
 
-    Promise
-    .resolve(true)
-    .then(() => { return MSP.promise(MSPCodes.MSP_STATUS); })
-    .then(() => { return MSP.promise(MSPCodes.MSP_FEATURE_CONFIG); })
-    .then(() => { return MSP.promise(MSPCodes.MSP_MIXER_CONFIG); })
-    .then(() => { return (FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor) ? MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY) : true; })
-    .then(() => { return MSP.promise(MSPCodes.MSP_MOTOR_CONFIG); })
-    .then(() => { return MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG); })
-    .then(() => { return MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING); })
-    .then(() => { return MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG); })
-    .then(() => { return MSP.promise(MSPCodes.MSP_ARMING_CONFIG); })
-    .then(() => { return (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) ? MSP.promise(MSPCodes.MSP_FILTER_CONFIG) : true; })
-    .then(() => { return MSP.promise(MSPCodes.MSP_MIXER_CONFIG); })
-    .then(() => { return (semver.gte(FC.CONFIG.apiVersion, "1.8.0")) ? MSP.promise(MSPCodes.MSP_ARMING_CONFIG) : true; })
-    .then(() => { load_html(); });
+    MSP.promise(MSPCodes.MSP_STATUS)
+    .then(() => MSP.promise(MSPCodes.MSP_FEATURE_CONFIG))
+    .then(() => MSP.promise(MSPCodes.MSP_MIXER_CONFIG))
+    .then(() => FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor ? MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY) : true)
+    .then(() => MSP.promise(MSPCodes.MSP_MOTOR_CONFIG))
+    .then(() => MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG))
+    .then(() => MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING))
+    .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
+    .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) ? MSP.promise(MSPCodes.MSP_FILTER_CONFIG) : true)
+    .then(() => semver.gte(FC.CONFIG.apiVersion, "1.8.0") ? MSP.promise(MSPCodes.MSP_ARMING_CONFIG) : true)
+    .then(() => load_html());
 
     function load_html() {
         $('#content').load("./tabs/motors.html", process_html);
