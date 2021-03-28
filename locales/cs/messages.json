@@ -319,10 +319,6 @@
     "firmwareUpgradeRequired": {
         "message": "Firmware na tomto zařízení vyžaduje aktualizaci na novější verzi. Použijte CLI režim pro zálohování před instalací. Procedura CLI zálohování a obnovení je popsána v dokumentaci.<br />Můžete také stáhnout starší verzi konfigurátoru, pokud nechcete provést aktualizaci."
     },
-    "infoVersions": {
-        "message": "Spuštěno - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurátor: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Načteny informace o $1 z buildovacího serveru."
     },
