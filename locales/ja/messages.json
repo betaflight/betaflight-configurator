@@ -437,10 +437,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>加速度センサーは有効になっていますがキャリブレーションされていません。</strong><br>加速度センサーを使用する場合は『$t(tabSetup.message)』タブの『$t(initialSetupButtonCalibrateAccel.message)』の指示に従ってください。加速度センサーを必要とする機能 (オートレベルモード、GPSレスキュー等) が有効になっている場合、加速度センサーのキャリブレーションが完了するまで機体のアームは有効になりません。<br>加速度センサーを使用しない場合は『$t(tabConfiguration.message)』タブの『$t(configurationSystem.message)』で無効にすることを推奨します。"
     },
-    "infoVersions": {
-        "message": "実行中 - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "サーバから $1 の開発情報が読み込まれました。"
     },
@@ -2950,14 +2946,8 @@
     "firmwareFlasherMessage": {
         "message": "メッセージ:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "このファームフラッシャーで<strong>Betaflight以外</strong>のフラッシュイメージを<span class=\"message-negative\">書き換えないで</span>ください。<br />書き換えをしている間はボードを<strong>取り外したり</strong>、コンピュータの<strong>電源を切ったり</strong><span class=\"message-negative\">しないで</span>ください。<br /><br /><strong>注:</strong> \n STM32ブートローダーはROMに格納されており、別途生成や改修はできません。<br /><strong>注:</strong> ファームフラッシャーモードの間は、<span class=\"message-negative\">自動接続</span>は常に無効になっています。<br /><strong>注:</strong> バックアップがあることを確認してください。アップグレード / ダウングレードでいくつかの設定が消去される場合があります。<br /><strong>注:</strong> 書き換えに問題がある場合は、<strong>FCから全てのケーブルを取り外し</strong>最初に再起動を行い、Chromeの最新アップグレード、ドライバのアップグレードをお試しください。<br /><strong>注:</strong> (大部分の最新FCボードに) 直接USBソケットを搭載しているFCボードに対してファームウェアを書き換えるときは、Betaflightマニュアルの [USB Flashing] 章を読み、正しいソフトウェアとドライバをインストールしてください。"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>リカバリー / 通信ロスト</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "FCボードとの通信が切断された場合は、次の手順に従って通信を復元してください: <ul><li>電源をオフします。</li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。</li><li>BOOTピンをジャンパするか、またはBOOTボタンを押し続けます。</li><li>電源をオンします。(正しく行われればアクティビティLEDは点滅しません) </li><li>必要に応じて、全てのSTM32ドライバとZadigをインストールします。(Betaflightマニュアルの [<a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a>] 章を参照) </li><li>Configuratorを閉じ、全てのChromeアプリケーションを終了し、Configuratorを再起動します。</li><li>FCのBOOTボタン1つだけであれば、BOOTボタンを放してください。</li><li>正常なファームウェアをフラッシュしてください。(FCのマニュアルで指定されている場合は手動で伝送速度を調整してください) </li><li>電源をオフします。</li><li>BOOTピンのジャンパを取り外します。</li><li>電源をオンします。(アクティビティLEDが点滅するはずです) </li><li>再度、通常通り接続してください。</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "ファームフラッシャーより退避"
