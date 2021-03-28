@@ -1857,9 +1857,6 @@
     "firmwareFlasherMessage": {
         "message": "Viesti:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "<span class=\"message-negative\">Ethän</span> yritä päivittää <strong>Betaflight-yhteensopimatonta</strong> laitteistoa tällä laiteohjelmiston päivittäjällä.<br /><span class=\"message-negative\">Älä</span> <strong>katkaise yhteyttä</strong> lento-ohjaimeen tai <strong>sammuta</strong> tietokonettasi kun ohjelmointi on kesken.<br /><br /><strong>Huom: </strong>STM32-piirien bootloader on tallennettu ROM-muistiin, sitä ei saa \"brickattua\" epäonnistuneella ohjelmoinnilla.<br /><strong>Huom: </strong><span class=\"message-negative\">Automaattinen yhdistäminen</span> on aina pois käytöstä laiteohjelmiston päivitysikkunan ollessa auki.<br /><strong>Huom: </strong>Teethän varmuukopion ennen päivitystä; jotkin laiteohjelmistoversiot (up-/downgrade) saattavat nollata asetuksesi.<br /><strong>Huom:</strong> Jos kohtaat ongelmia päivityksessä <strong> yritä ottaa lento-ohjaimesta kaikki ylimääräiset johdot irti.</strong> Yritä ensin kuitenkin uudelleenkäynnistää lento-ohjain ja tietokoneesi, päivitä Chrome ja ajurit.<br /><strong>Huom:</strong> Kun ohjelmoit lento-ohjaimia, jotka ovat suoraan USB-yhteydessä, varmistu että olet lukenut \"USB Flashing\" -osion Betaflightin ohjekirjasta ja että käytät oikeaa ohjelmistoa ja ajureita."
-    },
     "firmwareFlasherButtonLeave": {
         "message": "Poistu laiteohjelmiston päivittäjästä"
     },
