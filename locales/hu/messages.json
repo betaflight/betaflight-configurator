@@ -437,10 +437,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> a gyorsulásmérő engedélyezve van, de nincs kalibrálva </strong>. <br> Ha a gyorsulásmérő használatát tervezi, kérjük, kövesse az '$t(initialSetupButtonCalibrateAccel.message)' útmutatásait a '$t(tabSetup.message)'fülre. Ha engedélyezve van egy olyan funkció, amely megköveteli a gyorsulásmérő használatát (automatikus szintű módok, GPS mentés, ...), akkor az eszköz élesítését addig ki kell kapcsolni, amíg a gyorsulásmérőt nem kalibrálják. <br> Ha nem tervezi a gyorsulásmérő használatát, akkor azt javasolt kikapcsolni, a '$t(configurationSystem.message)' menüben a '$t(tabConfiguration.message)' lapon."
     },
-    "infoVersions": {
-        "message": "Futtatás - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurátor: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Verzió információk betölve $1 -nak/-nek a szerverről."
     },
@@ -2807,14 +2803,8 @@
     "firmwareFlasherMessage": {
         "message": "Üzenet:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Kérjük <span class=\"message-negative\">ne</span> próbáljon <strong>nem Betaflight</strong> hardware-t égetni ezzel a konfigurátorral.<br /><span class=\"message-negative\">Ne</span> <strong>csatlakakoztassa le</strong> a vezérlőt és <strong>ne kapcsolja ki a számitógépét</strong> mialatt az dolgozik.<br /><br /><strong>Megjegyzés: </strong>STM32 eszközindító a ROM-ban tárolódik, nem lehet tönkre tenni.<br /><strong>Megjegyzés: </strong>Az <span class=\"message-negative\">automatikus csatlakozás</span> mindig ki van kapcsolva amikor a Firmware frissítőben van.<br /><strong>Megjegyzés: </strong>Győződjön meg mindig arról, hogy van biztonsági másolata; néhány frissítés / visszafrissítés törli a beállításait.<br /><strong>Megjegyzés:</strong> Ha problémája van az égetéssel elsőnek <strong>próbálja meg kihúzni az USB kábelt a vezérlőjéből majd vissza </strong> ha nem müködik probálja frissíteni a  chrome-ot, vagy frissíteni a drivereket.<br /><strong>Megjegyzés:</strong> A közvetlenül USB-aljzattal csatlakoztatott vezérlők esetén győződjön meg arról, hogy elolvasta a Betaflight kézikönyv, USB ledekre való részét, és telepítette-e a megfelelő szoftvert és illesztőprogramokat."
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Visszaállítás / Elvesztett kapcsolat</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Ha elmulasztotta a kommunikációt a fórummal, kövesse az alábbi lépéseket a kommunikáció visszaállításához: <ul><li> Kikapcsolás </li><li> Engedélyezze a „Nincs újraindítási sorrend” lehetőséget, engedélyezze a „Teljes chip törlés” lehetőséget. </li> <li > Kösse át a BOOT érintkezőket vagy tartsa lenyomva a BOOT gombot. </li><li> Bekapcsolás (az aktivitás LED-je nem villog, ha helyesen hajtják végre.) = \"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\" target = \"_blank\" rel = \"noopener noreferrer\"> USB égetés </a> szakasz a Betaflight kézikönyvében). </li> <li > Zárja be a konfigurátort, zárja be az összes futó Chrome példányt, zárja be az összes Chrome-alkalmazást, indítsa újra a konfigurátort. </li><li> Engedje el a BOOT gombot, ha FC-jén van. </li><li> Villog helyes firmware-rel (kézi adatátviteli sebességgel) ha az FC kézikönyve meghatározza). </li> <li> Kapcsolja ki. </li><li> Távolítsa el a BOOT jumpert. </li> <li> Bekapcsolva (az aktivitás LED-nek villognia kell.) </li><li> Normál módon csatlakoztassa. </li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Frissítő elhagyása"
