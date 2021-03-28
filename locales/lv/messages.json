@@ -370,10 +370,6 @@
     "firmwareUpgradeRequired": {
         "message": "Šai programmatūrai uz šīs iekārtas nepieciešama atjaunināšana uz jaunāku versiju. Izmantojiet CLI, lai dublētu datus pirms programmēšanas. CLI dublēšanas/atjaunošanas procedūras ir dokumentācijā. <br />Alternatīva ir lejupielādēt un lietot veco konfiguratora versiju, ja jūs neesat gatavs atjaunināt."
     },
-    "infoVersions": {
-        "message": "Darbojās - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Ielādēja informāciju priekš $1 no buildservera."
     },
@@ -2434,9 +2430,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Ziņa:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "Lūdzu <span class=\"message-negative\">nemēģiniet</span> programmēt <strong>ne-Betaflight</strong> dzelžus ar šo programmatoru.<br /> <span class=\"message-negative\">Nemēģiniet </span> <strong>atvienot</strong> plati vai <strong>slēgt ārā</strong> jūsu datoru kamēr programmējas.<br /><br /><strong>Piezīme: </strong>STM32 ielādētājs atrodas uz ROM atmiņas, to nav iespējams sabojāt.<br /><strong>Piezīme: </strong><span class=\"message-negative\">Auto-savienojums</span> ir vienmēr izslēgts kamēr jūs esat programmatora cilnē.<br /><strong>Piezīme: </strong>Pārliecinieties ka jums ir rezerves kopija; daži atjauninājumi var pilnībā notīrīt jūsu konfigurāciju.<br /><strong>Piezīme:</strong> Ja jums ir sarežģījumi ar programmēšanu, no sākuma <strong>pamēģiniet atslēgt visu kabeļus no kontroliera</strong>, pamēģiniet pārstartēt, atjaunināt Chrome, atjaunināt draiverus.<br /><strong>Piezīme:</strong> Kad programmējat plates kurām ir tiešs USB ligzdas savienojums (lielākoties jaunās plates), pārliecinieties, ka izlasījāt USB programmēšanas sadaļu no Betaflight manuāla, un esat pareizi instalējuši programmatūru un draiverus"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Atkopšanas / Zaudēja komunikāciju</strong>"
