@@ -6,10 +6,10 @@
 */
 .tab-motors select {
     border: 1px solid var(--subtleAccent);
-    width: 230px;
+    width: fit-content;
     height: 20px;
     float: left;
-    margin-right: 15px;
+    margin-right: 55px;
     border-radius: 3px;
 }
 
@@ -32,6 +32,7 @@
 
 .tab-motors table td {
     padding: 5px 3px;
+    margin-right: 20px;
     border-bottom: 1px solid var(--subtleAccent);
 }
 
@@ -55,11 +56,13 @@
     border-bottom: 1px solid var(--subtleAccent);
 }
 
-.tab-motors .mixerList {
-    width: 44%;
+.tab-motors .mixerPreview img {
+    width: 150px;
+    height: 150px;
+    margin-left: 18px;
 }
 
-.tab-motors .mixerPreview img {
+.tab-motors select .escprotocol {
     width: 150px;
     height: 150px;
     margin-left: 48px;
@@ -230,7 +233,7 @@
     margin: 3px;
 }
 
-.tab-configuration .mixer .gui_box, .tab-configuration .motorstop .gui_box {
+.tab-motors .mixer .gui_box, .tab-motors .motorstop .gui_box {
     float: left;
 }
 
@@ -238,6 +241,10 @@
     margin-top: 10px;
     float: left;
     width: 100%;
+}
+
+.tab-motors ._3d div {
+    margin-right: 17px;
 }
 
 .tab-motors .modelAndGraph {
@@ -656,10 +663,6 @@
         display: flex;
         flex-wrap: wrap;
     }
-    .tab-motors select.escprotocol {
-        width: 100%;
-        margin-right: 0;
-    }
     .tab-motors .mixer .gui_box, .tab-motors .motorstop .gui_box {
         min-height: auto;
     }
@@ -723,11 +726,29 @@
     }
 }
 
-@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+@media all and (max-width: 1055px) {
     .tab-motors .gui_box span {
         line-height: 17px;
     }
     .tab-motors .mixer .gui_box, .tab-motors .motorstop .gui_box {
         float: left;
+    }
+}
+
+@media all and (max-width: 1600px) {
+    .tab-motors select .escprotocol {
+        margin-left: 24px;
+    }
+}
+
+@media all and (min-width: 1920px) {
+    .tab-motors select .escprotocol {
+        margin-left: 48px;
+    }
+    .tab-motors ._3d div {
+        margin-right: 17px;
+    }
+    .tab-motors select {
+        margin-right: 120px;
     }
 }
