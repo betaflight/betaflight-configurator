@@ -172,10 +172,6 @@
     "firmwareVersionNotSupported": {
         "message": "Bu donanım yazılımı <span class=\"message-negative\">desteklenmiyor</span>. Lütfen api sürüm <strong>$1</strong> veya üstünü destekleyen donanım yazılımına yükseltin. Yanıp sönmeden önce yedeklemek için CLI kullanın. CLI yedekleme/geri kazanma prosedürü dökümanın içindedir.<br /> Yükseltmeye hazır değilseniz, alternatif olarak eski sürüm bir yapılandırıcıyı indirip kullanabilirsiniz."
     },
-    "infoVersions": {
-        "message": "Çalışan İşletim Sistemi: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Yapılandırıcı: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "releaseCheckFailed": {
         "message": "<b>$1 sürümü için GitHub sorgusu başarısız oldu, önbellek bilgileri kullanılıyor. Sebep: <code>$2</code></b>"
     },
@@ -1324,9 +1320,6 @@
     },
     "firmwareFlasherHash": {
         "message": "Karıştır:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "Lütfen <strong>Betaflight dışı</strong> donanımları bu yazılım flaşçısıyla <span class=\"message-negative\">flaşlamayın</span>.<br />Flaşlama işlemi sırasında bilgisayarınızı <strong>kapatmayın</strong> veya panelinizin <strong>bağlantısını</strong><span class=\"message-negative\">kesmeyin</span>.<br /><br /><strong>Not:</strong> STM 32 bootlader programı ROM da yüklüdür, tuğlalaşamaz.<br /><strong>Not:</strong>Siz Yazılım flaşçısının içindeyken <span class=\"message-negative\">Otomatik-Bağlanma</span> her zaman devre dışı bırakılır.<br /><strong>Not:</strong>Yedekleme aldığınızdan emin olun, bazı yükseltme/düşürme işlemleri tüm ayarlarınızı yok edecektir.<br /><strong>Not:</strong> Flaşlama sorunları yaşıyorsanız ilk olarak <strong>FC nizdeki tüm kabloları sökmeyi deneyin<strong>, ardından yeniden başlatın, chrome', sürücüleri güncelleyin.<br /><strong>Not:</strong> Doğrudan doğruya USB soketleriyle bağlanmış panelleri (yeni panellerin çoğu) flaşlarken, Betaflight kullanma klavuzundaki UBS flaşlama bölümünü okuduğunuzdan ve doğru yazılım ve sürücüleri yüklediğinizden emin olun"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Kurtarma / Kayıp iletişimi</strong>"
