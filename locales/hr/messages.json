@@ -379,10 +379,6 @@
     "resetToCustomDefaultsAccept": {
         "message": "Primijeni prilagođene tvorničke postavke"
     },
-    "infoVersions": {
-        "message": "Koristi se - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Učitane informacije o verzijama za $1 s build servera."
     },
@@ -2479,9 +2475,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Poruka:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "Molimo da <span class=\"message-negative\">ne</span> pokušavate ažurirati <strong>hardware koji nije namjenjen za Betaflight</strong> s ovim alatom za ažuriranje.<br /> <span class=\"message-negative\">Nemojte </span><strong>odspajati</strong> kontroler ili <strong>gasiti</strong> računalo tijekom ažuriranja. <br /><br /><strong>Napomena: </strong>STM32 bootloader je smješten u ROM-u i ne može se uništiti.<br /><strong>Napomena:</strong><span class=\"message-negative\"> Automatsko povezivanje</span> je uvijek onemogućeno dok koristite alat za ažuriranje firmwarea.<br /><strong>Napomena:</strong> Uvijek imajte backup jer postoji mogućnost gubitka cijele konfiguracije. <br /><strong>Napomena:</strong> Ako imate problema pri ažuriranju pokušajte prije svega <strong>ponovno spojiti kabel s kontrolera leta</strong>, ponovno pokrenuti konfigurator, ažurirati Chrome i drivere. <br /><strong>Napomena:</strong> Kada ažurirate kontrolere koji se direktno spajaju na USB priključak(većina novih kontrolera) obvezno pročitajte poglavlje 'USB Flashing' u Betaflight uputstvima"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Oporavljanje / Izgubljena komunikacija</strong>"
