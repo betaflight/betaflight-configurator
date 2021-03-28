@@ -437,10 +437,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>акселерометр включен, но не откалиброван</strong>. <br>Если вы планируете использовать акселерометр, пожалуйста, следуйте инструкциям '$t(initialSetupButtonCalibrateAccel.message)' на вкладке '$t(tabSetup.message)'. Если выбрана любая функция, которая требует акселерометра (режим автоуровня, GPS возврат и т.д.), то арминг будет недоступен до тех пор, пока акселерометр не будет откалиброван.<br>Если вы не планируете использовать акселерометр, рекомендуется отключить его в '$t(configurationSystem.message)' на вкладке '$t(tabConfiguration.message)'."
     },
-    "infoVersions": {
-        "message": "Запуск - ОС: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Конфигуратор: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Загружена информация о сборках для $1 от сервера сборки."
     },
@@ -2908,14 +2904,8 @@
     "firmwareFlasherMessage": {
         "message": "Сообщение:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать </span> <strong>не поддерживаемые</strong> Betaflight-ом контроллеры этим программатором.<br /><span class=\"message-negative\">Не </span><strong>отключайте</strong> кабель от полётного контроллера и <strong>не выключайте</strong> ваш компьютер во время прошивки.<br /><br /><strong>Примечание:</strong> STM32-загрузчик хранится в ROM-памяти, его нельзя стереть.<br /><strong>Примечание:</strong><span class=\"message-negative\"> Подключаться автоматически</span> всегда выключено, когда Вы находитесь во вкладке \"Программатор\".<br /><strong>Примечание:</strong> Убедитесь, что Вы сделали резервную копию, т. к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки. <br /><strong>Примечание:</strong> Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера</strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<br /><strong>Примечание:</strong> При прошивке полётных контроллеров непосредственно через USB кабель (особенно новых моделей контроллеров) обязательно ознакомьтесь с разделом USB Flashing в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйверы"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи / Восстановление связи</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Если возникла потеря связи с вашим устройством, то выполните следующие действия, чтобы восстановить связь:<ul><li>Отключите питание</li><li>Включите \"Без перезагрузки\", включите \"Полное стирание чипа\".</li><li>Замкните контакты \"BOOT\" или удерживайте кнопку BOOT нажатой.</li><li>Включите питание (светодиод НЕ будет мигать, если всё сделано правильно).</li><li>Установите STM32 драйверы и Zadig, если это необходимо (см. раздел <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\">USB Flashing</a> в инструкции Betaflight).</li><li>Закройте Конфигуратор, закройте все Chrome приложения и завершите все Chrome процессы, перезапустите Конфигуратор.</li><li>Отпустите кнопку \"BOOT\", если она есть.</li><li>Залейте нужную прошивку (укажите Ручной битрейт, если он указан в инструкции вашего полётного контроллера).</li><li>Отключите питание</li><li>Разомкните контакты \"BOOT\".</li><li>Включите питание (светодиод должен мигать).</li><li>Пробуйте подключиться.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
