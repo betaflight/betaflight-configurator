@@ -506,8 +506,8 @@
         "message": "<strong>가속도계가 활성화되었지만 교정되지 않았습니다</strong>.<br> 가속도계를 사용하려는 경우 '$t(tabSetup.message)' 탭에서 '$t(initialSetupButtonCalibrateAccel.message)'에 대한 지침을 따르십시오. 가속도계(자동 레벨 모드, GPS 레스큐 등)가 필요한 기능이 활성화된 경우, 가속도계가 교정될 때까지 기체의 아밍이 비활성화됩니다.<br>가속도계를 사용할 계획이 없는 경우 '$t(tabConfiguration.message)' 탭의 '$t(configurationSystem.message)'에서 가속도계를 사용하지 않도록 설정하는 것이 좋습니다."
     },
     "infoVersions": {
-        "message": "운영-OS: <strong>{{operatingSystem}}</strong>, 크롬: <strong>{{chromeVersion}}</strong>, 컨피규레이터: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
+        "message": "운영-OS: <strong>{{operatingSystem}}</strong>, 컨피규레이터: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
     },
     "buildServerLoaded": {
         "message": "빌드 서버로부터 $1에 대한 빌드 정보가 로드되었습니다."
@@ -3025,13 +3025,13 @@
         "message": "메시지:"
     },
     "firmwareFlasherWarningText": {
-        "message": "이 펌웨어 플래시 도구로 <strong>베타플라이트가 아닌</strong> 하드웨어를 플래시하지 <span class=\"message-negative\">마십시오</span>.<br />플래시하는 중에 보드의 <strong>연결을 끊거나</strong> 컴퓨터의 <strong>전원을 끄지</strong> <span class=\"message-negative\">마십시오</span>.<br /><br /><strong>노트: </strong>STM32 부트로더는 ROM에 저장되어 있어, 벽돌상태가 될 수 없습니다.<br /><strong>노트: </strong><span class=\"message-negative\">자동-연결</span>은 당신이 펌웨어 플래시 도구에 있는 동안 항상 비활성화됩니다.<br /><strong>노트: </strong>반드시 백업을 하십시오; 일부 업그레이드/다운그레이드는 당신의 환경설정을 지워질 것입니다.<br /><strong>노트:</strong> 플래시하는 데 문제가 있는 경우 먼저 <strong>FC에서 모든 케이블의 연결을 끊고</strong>, 재부팅, 크롬 업그레이드, 드라이브 업그레이드를 시도하십시오.<br /><strong>노트:</strong> 직접 연결된 USB 소켓(대부분의 새로운 보드들) 이 있는 보드를 플래시할 경우, 베타플라이트 매뉴얼의 USB 플래싱 섹션을 읽고 올바른 소프트웨어 및 드라이버를 설치했는지 확인하십시오."
+        "message": "이 펌웨어 플래시 도구로 <strong>베타플라이트가 아닌</strong> 하드웨어를 플래시하지 <span class=\"message-negative\">마십시오</span>.<br />플래시하는 중에 보드의 <strong>연결을 끊거나</strong> 컴퓨터의 <strong>전원을 끄지</strong> <span class=\"message-negative\">마십시오</span>.<br /><br /><strong>노트: </strong>STM32 부트로더는 ROM에 저장되어 있어, 벽돌상태가 될 수 없습니다.<br /><strong>노트: </strong><span class=\"message-negative\">자동-연결</span>은 당신이 펌웨어 플래시 도구에 있는 동안 항상 비활성화됩니다.<br /><strong>노트: </strong>반드시 백업을 하십시오; 일부 업그레이드/다운그레이드는 당신의 환경설정을 지워질 것입니다.<br /><strong>노트:</strong> 플래시하는 데 문제가 있는 경우 먼저 <strong>FC에서 모든 케이블의 연결을 끊고</strong>, 재부팅, 드라이브 업그레이드를 시도하십시오.<br /><strong>노트:</strong> 직접 연결된 USB 소켓(대부분의 새로운 보드들) 이 있는 보드를 플래시할 경우, 베타플라이트 매뉴얼의 USB 플래싱 섹션을 읽고 올바른 소프트웨어 및 드라이버를 설치했는지 확인하십시오."
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>통신 복구 / 손실</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오: <ul><li>전원을 끄십시오.</li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.</li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.</li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)</li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱</a> 섹션을 보십시오.)</li><li>컨피규레이터를 닫고, 모든 실행 중인 크롬 인스턴트, 크롬 앱을 닫으십시오. 컨피규레이터를 다시 시작하십시오.</li><li>FC에 BOOT 버튼이 있으면 해제하십시오.</li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).</li><li>전원을 끄십시오.</li><li>BOOT 점퍼를 제거하십시오.</li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).</li><li>정상적으로 연결하십시오.</li></ul>"
+        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오: <ul><li>전원을 끄십시오.</li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.</li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.</li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)</li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱</a> 섹션을 보십시오.)</li><li>컨피규레이터를 닫고, 컨피규레이터를 다시 시작하십시오.</li><li>FC에 BOOT 버튼이 있으면 해제하십시오.</li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).</li><li>전원을 끄십시오.</li><li>BOOT 점퍼를 제거하십시오.</li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).</li><li>정상적으로 연결하십시오.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "펌웨어 플래시 도구 나가기"
