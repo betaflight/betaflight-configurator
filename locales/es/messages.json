@@ -437,10 +437,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>el acelerómetro está habilitado pero no está calibrado</strong>.<br>Si tienes intención de utilizar el acelerómetro, sigue las instrucciones para '$t(initialSetupButtonCalibrateAccel.message)' en la pestaña '$t(tabSetup.message)'. Si hay alguna función que requiera que el acelerómetro (modos de nivelado automático, GPS rescate, . .) esté activado, el armado de la aeronave se desactivará hasta que el acelerómetro haya sido calibrado.<br>Si no vas a utilizar el acelerómetro, se recomienda deshabilitarlo en '$t(configurationSystem.message)' en la pestaña '$t(tabConfiguration.message)'."
     },
-    "infoVersions": {
-        "message": "Ejecutando - SO: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Cargada información de compilaciones para $1 desde el servidor."
     },
@@ -2956,14 +2952,8 @@
     "firmwareFlasherMessage": {
         "message": "Mensaje:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Por favor <span class=\"message-negative\">no</span> intentes usar este instalador de firmware en hardware <strong>no-Betaflight</strong>.<br /><span class=\"message-negative\">No</span> <strong>desconectes</strong> la placa o <strong>apagues</strong> tu ordenador mientras se está instalando.<br /><br /><strong>Nota: </strong>El gestor de arranque del STM32 está almacenado en ROM, por lo que no puede quedarse inutilizado.<br /><strong>Nota: </strong><span class=\"message-negative\">Auto-Conectar</span> siempre está desactivado mientras estés dentro del instalador de firmware.<br /><strong>Nota: </strong>Asegúrate de que tienes una copia de seguridad; algunas actualizaciones borrarán tu configuración.<br /><strong>Nota:</strong> Si tienes problemas al instalar <strong>intenta desconectar todos los cables de tu FC</strong> primero, intenta reiniciar, actualizar chrome, actualizar drivers.<br /><strong>Nota:</strong> Al instalar en placas que tienen directamente conectados puertos USB (la mayoría de placas nuevas) asegúrate de que has leído la sección de Instalación por USB del manual de Betaflight y tienes el software y drivers correctos instalados."
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperación / Pérdida de comunicación</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Si has perdido la comunicación con tu placa sigue estos pasos para restaurar la comunicación: <ul><li>Apagar.</li><li>Activar 'No reiniciar', activar 'Borrado completo del chip'.</li><li>Unir los pins BOOT o pulsar el botón BOOT.</li><li>Encender (el LED de actividad NO parpadeará si se hace correctamente).</li><li>Instalar todos los drivers para STM32 y Zadig si es necesario (ver sección <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">Instalación por USB</a> del manual).</li><li>Cerrar el Configurator, cerrar todas las instancias en ejecución de Chrome, cerrar todas las aplicaciones Chrome, reiniciar el Configurator.</li><li>Soltar botón BOOT si tu FC tiene uno.</li><li>Instalar el firmware correcto (configurando la velocidad de transmisión si viene especificada en el manual de tu FC).</li><li>Apagar.</li><li>Liberar pins BOOT.</li><li>Encender (el LED de actividad debe parpadear).</li><li>Conectar normalmente.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Abandonar el Instalador de Firmware"
