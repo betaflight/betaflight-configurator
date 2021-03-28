@@ -443,10 +443,6 @@
     "firmwareUpgradeRequired": {
         "message": "Firmwaren på den här enheten behöver uppgraderas till en nyare version. Använd CLI för säkerhetskopiering innan du flashar. CLI-säkerhetskopierings/återställningsförfarandet finns i dokumentationen.<br />Alternativt kan du ladda ner och använda en gammal version av konfiguratorn om du inte vill uppgradera."
     },
-    "infoVersions": {
-        "message": "Kör - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Hämtade versionsinformation för $1 från versionsservern."
     },
@@ -2551,9 +2547,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Meddelande:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "Försök <span class=\"message-negative\">inte</span> uppdatera <strong>icke-Betaflight</strong>-hårdvara med denna firmware-uppdaterare.<br /><strong>Koppla</strong> <span class=\"message-negative\">inte</span> <strong>bort</strong> styrkortet eller <strong>stäng av </strong> din dator medan uppdatering pågår.<br /><br /><strong>Observera: </strong>STM32-bootloadern är lagrad i ROM, den kan inte förstöras.<br /><strong>Observera: </strong><span class=\"message-negative\">Anslut automatiskt</span> är alltid inaktiverad medan Firmware-uppdateraren är aktiv.<br /><strong>Observera: </strong>Säkerställ att du har gjort en säkerhetskopia; vissa uppdateringar/nedgraderingar kommer att radera din konfiguration.<br /><strong>Observera:</strong> Om du har problem med att uppdatera, <strong>försök att koppla loss alla kablar från din flygkontroller</strong> först, starta om, uppgradera Chrome, uppgradera drivrutiner.<br /><strong>Observera:</strong> Vid uppdatering av styrkort som har direktanslutna USB-uttag (de flesta nyare styrkort), läs först USB Flashing-sektionen i Betaflight-manualen och se till att rätt programvara och drivrutiner är installerade."
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Återställning / tappad kommunikation</strong>"
