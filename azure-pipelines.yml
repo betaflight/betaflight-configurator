@@ -61,12 +61,12 @@ stages:
         testResultsFormat: 'VSTest'
         testResultsFiles: '**/test_results.xml'
         testRunTitle: 'Windows'
-        buildPlatform: 'Win32'
-    - script: yarn gulp release --win32
-      displayName: 'Run yarn release for win32'
+        buildPlatform: 'Win64'
+    - script: yarn gulp release --win64
+      displayName: 'Run yarn release for win64'
       condition: and(succeeded(), eq('${{ parameters.releaseBuild }}', true))
-    - script: yarn gulp debug-release --win32
-      displayName: 'Run yarn debug release for win32'
+    - script: yarn gulp debug-release --win64
+      displayName: 'Run yarn debug release for win64'
       condition: and(succeeded(), eq('${{ parameters.releaseBuild }}', false))
     - powershell: Set-Content -Path '$(System.DefaultWorkingDirectory)/release/log.txt' -Value $env:BUILD_SOURCEVERSIONMESSAGE
     - task: PublishPipelineArtifact@1

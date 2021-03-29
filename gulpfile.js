@@ -173,7 +173,7 @@ function getDefaultPlatform() {
 
         break;
     case 'win32':
-        defaultPlatform = 'win32';
+        defaultPlatform = 'win64';
 
         break;
 
