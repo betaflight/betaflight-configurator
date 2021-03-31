@@ -5,6 +5,7 @@ TABS.cli = {
     profileSwitchDelayMs: 100,
     outputHistory: "",
     cliBuffer: "",
+    startProcessing: false,
     GUI: {
         snippetPreviewWindow: null,
         copyButton: null,
@@ -83,6 +84,7 @@ TABS.cli.initialize = function (callback) {
 
     self.outputHistory = "";
     self.cliBuffer = "";
+    self.startProcessing = false;
 
     const enterKeyCode = 13;
 
@@ -108,7 +110,7 @@ TABS.cli.initialize = function (callback) {
                 }, delay);
             });
         }, 0);
-}
+    }
 
     $('#content').load("./tabs/cli.html", function () {
         // translate to user-selected language
@@ -400,9 +402,11 @@ TABS.cli.read = function (readInfo) {
 
     for (let i = 0; i < data.length; i++) {
         const currentChar = String.fromCharCode(data[i]);
+        const isCRLF = currentChar.charCodeAt() === lineFeedCode || currentChar.charCodeAt() === carriageReturnCode;
 
-        if (!CONFIGURATOR.cliValid) {
-            // try to catch part of valid CLI enter message
+        if (!CONFIGURATOR.cliValid && (isCRLF || this.startProcessing)) {
+            // try to catch part of valid CLI enter message (firmware message starts with CRLF)
+            this.startProcessing = true;
             validateText += currentChar;
             writeToOutput(currentChar);
             continue;
@@ -419,32 +423,34 @@ TABS.cli.read = function (readInfo) {
             continue;
         }
 
-        switch (data[i]) {
-            case lineFeedCode:
-                if (GUI.operating_system === "Windows") {
-                    writeLineToOutput(this.cliBuffer);
-                    this.cliBuffer = "";
-                }
-                break;
-            case carriageReturnCode:
-                if (GUI.operating_system !== "Windows") {
-                    writeLineToOutput(this.cliBuffer);
-                    this.cliBuffer = "";
-                }
-                break;
-            case 60:
-                this.cliBuffer += '&lt';
-                break;
-            case 62:
-                this.cliBuffer += '&gt';
-                break;
-            case backspaceCode:
-                this.cliBuffer = this.cliBuffer.slice(0, -1);
-                this.outputHistory = this.outputHistory.slice(0, -1);
-                continue;
+        if (CONFIGURATOR.cliValid) {
+            switch (data[i]) {
+                case lineFeedCode:
+                    if (GUI.operating_system === "Windows") {
+                        writeLineToOutput(this.cliBuffer);
+                        this.cliBuffer = "";
+                    }
+                    break;
+                case carriageReturnCode:
+                    if (GUI.operating_system !== "Windows") {
+                        writeLineToOutput(this.cliBuffer);
+                        this.cliBuffer = "";
+                    }
+                    break;
+                case 60:
+                    this.cliBuffer += '&lt';
+                    break;
+                case 62:
+                    this.cliBuffer += '&gt';
+                    break;
+                case backspaceCode:
+                    this.cliBuffer = this.cliBuffer.slice(0, -1);
+                    this.outputHistory = this.outputHistory.slice(0, -1);
+                    continue;
 
-            default:
-                this.cliBuffer += currentChar;
+                default:
+                    this.cliBuffer += currentChar;
+            }
         }
 
         if (!CliAutoComplete.isBuilding()) {
