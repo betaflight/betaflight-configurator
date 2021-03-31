@@ -2932,6 +2932,9 @@
     "firmwareFlasherMessage": {
         "message": "Bericht:"
     },
+    "firmwareFlasherWarningText": {
+        "message": "Probeer alsjeblieft <span class=\"message-negative\">niet</span> om <strong>niet-Betaflight-hardware</strong> te flashen met deze firmware-flasher.<br /><span class=\"message-negative\">Ontkoppel</span><strong>niet</strong> het bord <strong> gedurende </strong> het flashen.<br /> <br /> <strong>Opmerking:</strong>STM32 bootloader wordt opgeslagen in ROM, deze kan niet worden gebricked.<br /><strong>Opmerking:</strong><span class=\"message-negative\">Auto-Connect</span>is altijd uitgeschakeld als u zich in de firmware-flasher bevindt.<br /><strong>Opmerking:</strong> zorg ervoor dat u een back-up heeft; sommige upgrades / downgrades zullen al uw configuratie wissen.<br /><strong>Opmerking:</strong>Als u problemen heeft met flashen<strong> probeer dan eerst alle kabels van uw FC los te koppelen</strong>, probeer vervolgens opnieuw op te starten en upgrade uw stuurprogramma's.<br /><strong>Opmerking: </strong> bij het flashen van kaarten die rechtstreeks aangesloten USB-aansluitingen hebben (de meeste nieuwere kaarten), zorg ervoor dat u de sectie USB Flashing van de Betaflight-handleiding heeft gelezen en dat de juiste software en stuurprogramma's zijn geïnstalleerd"
+    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Herstellen / Communicatie verloren</strong>"
     },
