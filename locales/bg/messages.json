@@ -437,6 +437,10 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>акселерометъра е активиран но не е калибриран</strong>.<br>Ако планирате да използвате акселерометъра, моля следвайте инструкциите за '$t(initialSetupButtonCalibrateAccel.message)' в '$t(tabSetup.message)' прозорец.Ако някоя функция която изисква акселерометър (режим авто стабилизиране, ......)е активирана, активирането на дрона ще е деактивирано докато не се направи калибриране на акселерометара.<br>Ако няма да използвате акселерометара е препоръчително да се деактивира в '$t(configurationSystem.message)' в '$t(tabConfiguration.message)' прозорец."
     },
+    "infoVersions": {
+        "message": "Стартиране - ОС:<strong>{{operatingSystem}}</strong>, Конфигуратор:<strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
+    },
     "buildServerLoaded": {
         "message": "Заредена информация за компилация за $1 от сървър за компилация."
     },
@@ -2463,6 +2467,12 @@
     "motorsRemapDialogStartOver": {
         "message": "Стартиране отначало"
     },
+    "motorsButtonReset": {
+        "message": "Изчисти"
+    },
+    "motorsButtonSave": {
+        "message": "Запази и рестартирай"
+    },
     "escDshotDirectionDialog-Title": {
         "message": "Посока на двигателя - <strong class=\"message-negative-italic\">Предупреждение: Уверете се, че витлата са премахнати! </strong>"
     },
@@ -2939,6 +2949,36 @@
     },
     "firmwareFlasherHash": {
         "message": "Разбъркване:"
+    },
+    "firmwareFlasherUrl": {
+        "message": "Отидете на GitHub, за да прегледате..."
+    },
+    "firmwareFlasherMessage": {
+        "message": "Съобщение:"
+    },
+    "firmwareFlasherWarningText": {
+        "message": "Моля, <span class=\"message-negative\"> не </span> се опитвайте да инсталирате <strong> не-Betaflight </strong> хардуер с този инсталатор на фърмуера. <br /> Моля <span class=\"message-negative\"> не </span> <strong> изключвайте </strong> платката или </strong> компютъра си, докато се инсталира. <br /> <br /> <strong> Забележка: </strong> STM32 bootloader се съхранява в ROM, не може да бъде брикнат. <br /> <strong> Забележка: </strong> <span class=\"message-negative\"> Автоматичното свързване </span> винаги е деактивирано, докато сте в инсталатора на фърмуера. <br /> <strong> Забележка: </strong> Уверете се, че имате резервно копие; някои надстройки / понижения ще изтрият вашата конфигурация. <br /> <strong> Забележка: </strong> Ако имате проблеми с инсталирането <strong> първо опитайте да изключите всички кабели от вашия FC </strong>, опитайте да рестартирате, надстройте драйверите. <br /><strong> Забележка: </strong> Когато инсталирате платки, които имат директно свързани USB контакти (повечето по-нови платки) уверете се, че сте прочели раздела USB Flashing в ръководството за Betaflight и сте инсталирали правилния софтуер и драйвери"
+    },
+    "firmwareFlasherRecoveryHead": {
+        "message": "<strong> Възстановяване / загубена комуникация </strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Ако сте загубили комуникация с вашия борд, изпълнете следните стъпки за да възстановите комуникацията: <ul> <li> Изключете </li> <li> Активирайте „ Без рестартиране на последователността“, активирайте „Пълно изтриване на чипа“. </li><li> Преместете щифтовете BOOT или задръжте бутона BOOT. </li> <li> Включете (светодиодът за активност НЕ мига, ако е направен правилно). </li> <li> Инсталирайте всички драйвери на STM32 и Zadig, ако е необходимо (вижте <a href=\"https://github.com/betafligh/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB </a> раздел на ръководството за Betaflight).</li><li> Затворете конфигуратора, рестартирайте конфигуратора. </li> <li> Освободете бутона BOOT, ако вашият FC има такъв. </li> <li> Инсталация с правилен фърмуер (използвайки ръчна скорост на предаване, ако е посочено в ръководството на вашия FC). </li> <li> Изключване. </li> <li> Премахване на джъмпера BOOT. </li> <li> Включване (светодиодът за активност трябва да мига). </li> <li> Свържете нормално. </li> </ul>"
+    },
+    "firmwareFlasherButtonLeave": {
+        "message": "Оставете Инсталаторa на Firmware"
+    },
+    "firmwareFlasherFirmwareNotLoaded": {
+        "message": "Фърмуерът не е зареден"
+    },
+    "firmwareFlasherFirmwareLocalLoaded": {
+        "message": "Зареден локален фърмуер: ($1 байта)"
+    },
+    "firmwareFlasherFirmwareOnlineLoaded": {
+        "message": "Зареден Online фърмуер: ($1 байта)"
+    },
+    "firmwareFlasherHexCorrupted": {
+        "message": "HEX файлът изглежда е повреден"
     },
     "ledStripFunctionBatteryOption": {
         "message": "Батерия",
