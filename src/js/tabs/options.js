@@ -1,7 +1,7 @@
-'use strict';
+import { i18n } from '../localization';
 
-TABS.options = {};
-TABS.options.initialize = function (callback) {
+const options = {};
+options.initialize = function (callback) {
     if (GUI.active_tab !== 'options') {
         GUI.active_tab = 'options';
     }
@@ -21,13 +21,13 @@ TABS.options.initialize = function (callback) {
     });
 };
 
-TABS.options.cleanup = function (callback) {
+options.cleanup = function (callback) {
     if (callback) {
         callback();
     }
 };
 
-TABS.options.initPermanentExpertMode = function () {
+options.initPermanentExpertMode = function () {
     ConfigStorage.get('permanentExpertMode', function (result) {
         if (result.permanentExpertMode) {
             $('div.permanentExpertMode input').prop('checked', true);
@@ -43,7 +43,7 @@ TABS.options.initPermanentExpertMode = function () {
     });
 };
 
-TABS.options.initRememberLastTab = function () {
+options.initRememberLastTab = function () {
     ConfigStorage.get('rememberLastTab', function (result) {
         $('div.rememberLastTab input')
             .prop('checked', !!result.rememberLastTab)
@@ -52,7 +52,7 @@ TABS.options.initRememberLastTab = function () {
     });
 };
 
-TABS.options.initCheckForConfiguratorUnstableVersions = function () {
+options.initCheckForConfiguratorUnstableVersions = function () {
     ConfigStorage.get('checkForConfiguratorUnstableVersions', function (result) {
         if (result.checkForConfiguratorUnstableVersions) {
             $('div.checkForConfiguratorUnstableVersions input').prop('checked', true);
@@ -68,7 +68,7 @@ TABS.options.initCheckForConfiguratorUnstableVersions = function () {
     });
 };
 
-TABS.options.initAnalyticsOptOut = function () {
+options.initAnalyticsOptOut = function () {
     ConfigStorage.get('analyticsOptOut', function (result) {
         if (result.analyticsOptOut) {
             $('div.analyticsOptOut input').prop('checked', true);
@@ -94,7 +94,7 @@ TABS.options.initAnalyticsOptOut = function () {
     });
 };
 
-TABS.options.initCliAutoComplete = function () {
+options.initCliAutoComplete = function () {
     $('div.cliAutoComplete input')
         .prop('checked', CliAutoComplete.configEnabled)
         .change(function () {
@@ -105,7 +105,7 @@ TABS.options.initCliAutoComplete = function () {
         }).change();
 };
 
-TABS.options.initCordovaForceComputerUI = function () {
+options.initCordovaForceComputerUI = function () {
     if (GUI.isCordova() && cordovaUI.canChangeUI) {
         ConfigStorage.get('cordovaForceComputerUI', function (result) {
             if (result.cordovaForceComputerUI) {
@@ -127,7 +127,7 @@ TABS.options.initCordovaForceComputerUI = function () {
     }
 };
 
-TABS.options.initDarkTheme = function () {
+options.initDarkTheme = function () {
     $('#darkThemeSelect')
         .val(DarkTheme.configEnabled)
         .change(function () {
@@ -137,3 +137,7 @@ TABS.options.initDarkTheme = function () {
             setDarkTheme(value);
         }).change();
 };
+
+// TODO: remove when modules are in place
+window.TABS.options = options;
+export { options };
