@@ -2980,6 +2980,113 @@
     "firmwareFlasherHexCorrupted": {
         "message": "HEX файлът изглежда е повреден"
     },
+    "firmwareFlasherConfigCorrupted": {
+        "message": "Изглежда, че конфигурационният файл е повреден, ASCII е приет (символи 0-255)",
+        "description": "shown in the progress bar at the bottom, be brief"
+    },
+    "firmwareFlasherConfigCorruptedLogMessage": {
+        "message": "Изглежда, че конфигурационният файл е повреден, ASCII е приет (символи 0-255), символите извън този диапазон са позволени като коментари",
+        "description": "shown in the log, more wordy"
+    },
+    "firmwareFlasherRemoteFirmwareLoaded": {
+        "message": "<span class=\"message-positive\"> Дистанционният фърмуер е зареден, готов за инсталиране </span>"
+    },
+    "firmwareFlasherFailedToLoadOnlineFirmware": {
+        "message": "Неуспешно зареждане на дистанционния фърмуер"
+    },
+    "firmwareFlasherFailedToLoadUnifiedConfig": {
+        "message": "Зареждането на дистанционната конфигурация за {{remote_file}} не бе успешно"
+    },
+    "firmwareFlasherLegacyLabel": {
+        "message": "{{target}} (Legacy)",
+        "description": "If we have a Unified target and a old style target available, we are labeling the older one"
+    },
+    "firmwareFlasherNoFirmwareSelected": {
+        "message": "<b> Няма избран фърмуер за зареждане </b>"
+    },
+    "firmwareFlasherNoValidPort": {
+        "message": "<span class=\"message-negative\"> Моля, изберете валиден сериен порт </span>"
+    },
+    "firmwareFlasherWritePermissions": {
+        "message": "Нямате <span class=\"message-negative\"> разрешения за запис </span> на този файл"
+    },
+    "firmwareFlasherFlashTrigger": {
+        "message": "Открито: <strong>$1</strong> - задействане на флаш при свързване"
+    },
+    "unstableFirmwareAcknoledgementDialog": {
+        "message": "Предстои ви инсталиране на <strong> разработка на фърмуера </strong>. Тези компилации са в процес на разработка и могат да се получат следните грешки: <strong> <ul> <li> фърмуерът изобщо да не работи; </li> <li> фърмуерът не може да се използва; </li> <li> има проблеми с безопасността на фърмуера, например flyaways </li> <li> фърмуерът може да доведе до това, че контролерът на полета да не реагира или да се повреди </li> </ul> </strong> Ако продължете с инсталирането на този фърмуер, <strong> поемате пълната отговорност за риска от което и да е от горепосочените </strong>. Освен това вие признавате, че е необходимо да извършите <strong> задълбочени тестове на стенд без перки </strong> преди всякакви опити за полет с този фърмуер."
+    },
+    "unstableFirmwareAcknoledgementAcknowledge": {
+        "message": "Прочетох горното и <strong> поемам пълна отговорност <strong> за инсталиране на нестабилен фърмуер"
+    },
+    "unstableFirmwareAcknoledgementFlash": {
+        "message": "Инсталиране"
+    },
+    "firmwareFlasherPreviousDevice": {
+        "message": "Открито: <strong>$1</strong> - предишното устройство все още се инсталира, моля включете отново"
+    },
+    "ledStripHelp": {
+        "message": "Контролерът на полета може да контролира цветовете и ефектите на отделни светодиоди на лента. <br /> Конфигурирайте светодиодите на мрежата и реда на окабеляване, след което прикачете светодиоди на вашия летателен апарат според позициите на мрежата. Светодиодите без номер за поръчка на проводници няма да бъдат запазени. <br /> Щракнете двукратно върху цвят, за да редактирате HSV стойностите."
+    },
+    "ledStripButtonSave": {
+        "message": "Запази"
+    },
+    "ledStripColorSetupTitle": {
+        "message": "Настройка на цвета",
+        "description": "Color setup title of the led strip"
+    },
+    "ledStripH": {
+        "message": "H",
+        "description": "Abbreviation of Hue in HSV (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripS": {
+        "message": "S",
+        "description": "Abbreviation of Saturation in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripV": {
+        "message": "V",
+        "description": "Abbreviation of Brightness in HSV  (Hue, Saturation, Brightness) color model"
+    },
+    "ledStripRemainingText": {
+        "message": "Оставащо",
+        "description": "In the LED STRIP, text next the counter of leds remaining"
+    },
+    "ledStripClearSelectedButton": {
+        "message": "Изчисти избраните",
+        "description": "In the LED STRIP, clear selected leds"
+    },
+    "ledStripClearAllButton": {
+        "message": "Изчисти всичко",
+        "description": "In the LED STRIP, clear all leds"
+    },
+    "ledStripEepromSaved": {
+        "message": "EEPROM<span class=\"message-positive\">запазен</span>"
+    },
+    "ledStripVtxOverlay": {
+        "message": "VTX (използва vtx честота за задаване на цвят)"
+    },
+    "ledStripFunctionSection": {
+        "message": "LED функции"
+    },
+    "ledStripFunctionTitle": {
+        "message": "Функция"
+    },
+    "ledStripFunctionNoneOption": {
+        "message": "Няма",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionColorOption": {
+        "message": "Цвят",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionModesOption": {
+        "message": "Режими &amp; Ориентация",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripFunctionArmOption": {
+        "message": "Статус за запалване",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionBatteryOption": {
         "message": "Батерия",
         "description": "One of the modes of the Led Strip"
@@ -2992,8 +3099,22 @@
         "message": "ГПС",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionRingOption": {
+        "message": "Звън",
+        "description": "One of the modes of the Led Strip"
+    },
+    "ledStripColorModifierTitle": {
+        "message": "Модификатор на цвета"
+    },
+    "ledStripModeColorsTitle": {
+        "message": "Режим на цветовете"
+    },
     "ledStripModeColorsModeOrientation": {
         "message": "Ориентация",
+        "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeColorsModeHeadfree": {
+        "message": "Headfree",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeHorizon": {
