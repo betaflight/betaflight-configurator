@@ -528,6 +528,10 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> o acelerómetro está activado, pero non está calibrado </strong>.<br> Se pretende usar o acelerómetro, siga as instrucións de '$t(initialSetupButtonCalibrateAccel.message)' na '$t(tabSetup.message)'pestana. Se está habilitada algunha función que requira o acelerómetro (modos de nivel automático, rescate GPS, ...), o armado desactivarase ata que se calibre o acelerómetro.<br> Se non está usando o acelerómetro é recomendable deshabilitalo en '$t(configurationSystem.message)' na pestana '$t(tabConfiguration.message)'."
     },
+    "infoVersions": {
+        "message": "Executando - OS: <strong>{{operatingSystem}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
+    },
     "buildServerLoaded": {
         "message": "Lendo construcción informativa para $1 dende o servidor de compilación."
     },
@@ -3043,8 +3047,14 @@
     "firmwareFlasherMessage": {
         "message": "Mensaxe:"
     },
+    "firmwareFlasherWarningText": {
+        "message": "Porfavor <span class=\"message-negative\"> non </span> intente instalar <strong> hardware non Betaflight </strong> con este instalador de firmware. <br /> Vostede <span class=\"message-negative\"> non </span> <strong> desconecte </strong> a tarxeta ou <strong> apague </strong> o ordenador mentres instale. <br /><br /><strong> Nota: </strong> o cargador de arranque STM32 almacénase na ROM, non se pode estragar. <br /><strong> Nota: </strong><span class=\"message-negative\"> Auto-Conectar </span> sempre está desactivado mentres estea no instalador de firmware. <br /><strong> Nota: </strong> Asegúrese de ter unha copia de seguridade; algunhas actualizacións / descargas limparán a súa configuración. <br /><strong> Nota: </strong> Se ten problemas na instalación <strong> primeiro tente desconectar todos os cables do seu FC, </strong> tente reiniciar e actualiza os controladores. <br /><strong> Nota: </strong> Cando instale placas que teñan conectados directamente tomas USB (a maioría das placas máis novas) asegúrese de ler a sección instalar USB do manual de Betaflight e de ter instalado o software e controladores correctos"
+    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> Recuperación / comunicación perdida </strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Se perdeu a comunicación coa súa tarxeta, siga estes pasos para restablecer a comunicación: <ul><li> Apagar </li><li> Habilite \"Non hai secuencia de reinicio\", active \"Borrar chip completo\". </li><li> Pase os pins BOOT ou manteña premido o botón BOOT. </li><li> Encenda (o LED de actividade NON parpadeará se se fai correctamente). </li><li> Instale todos os controladores STM32 e Zadig se é necesario (consulte <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\"> Instalador USB </a> do manual de Betaflight). </li><li> Peche o configurador e reinicie o configurador. </li><li> Solte o botón ARRANQUE se o seu FC ten un. </li><li> Instalar un firmware correcto (usando a velocidade de transmisión manual se se especifica no manual do seu FC). </Li><li> Apague. </li><li> Retire o ponte BOOT. </li> <li> Acenda (o LED de actividade debería parpadear). </li><li> Conéctese normalmente. </li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Abandoando o Instalador o Firmware"
