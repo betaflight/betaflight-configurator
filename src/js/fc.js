@@ -570,6 +570,7 @@ const FC = {
             descendRate:                    0,
             allowArmingWithoutFix:          0,
             altitudeMode:                   0,
+            minRescueDth:                   0,
         };
 
         this.RXFAIL_CONFIG = [];

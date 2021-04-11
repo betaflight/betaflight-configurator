@@ -4001,6 +4001,12 @@
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Descent distance (meters)"
     },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimum distance to home (meters)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "The minimum distance to home needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Ground speed (meters/second)"
     },
