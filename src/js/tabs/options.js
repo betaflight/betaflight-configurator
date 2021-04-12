@@ -14,6 +14,7 @@ options.initialize = function (callback) {
         TABS.options.initCheckForConfiguratorUnstableVersions();
         TABS.options.initAnalyticsOptOut();
         TABS.options.initCliAutoComplete();
+        TABS.options.initAutoConnectConnectionTimeout();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
 
@@ -103,6 +104,18 @@ options.initCliAutoComplete = function () {
             ConfigStorage.set({'cliAutoComplete': checked});
             CliAutoComplete.setEnabled(checked);
         }).change();
+};
+
+options.initAutoConnectConnectionTimeout = function () {
+    ConfigStorage.get('connectionTimeout', function (result) {
+        if (result.connectionTimeout) {
+            $('#connectionTimeoutSelect').val(result.connectionTimeout);
+        }
+        $('#connectionTimeoutSelect').on('change', function () {
+            const value = parseInt($(this).val());
+            ConfigStorage.set({'connectionTimeout': value});
+        });
+    });
 };
 
 options.initCordovaForceComputerUI = function () {

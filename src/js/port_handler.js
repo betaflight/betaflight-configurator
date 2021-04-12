@@ -174,9 +174,15 @@ PortHandler.detectPort = function(currentPorts) {
         if (GUI.auto_connect && !GUI.connecting_to && !GUI.connected_to) {
             // start connect procedure. We need firmware flasher protection over here
             if (GUI.active_tab !== 'firmware_flasher') {
-                GUI.timeout_add('auto-connect_timeout', function () {
-                    $('div#header_btns a.connect').click();
-                }, 100); // timeout so bus have time to initialize after being detected by the system
+                let connectionTimeout = 100;
+                ConfigStorage.get('connectionTimeout', function (result) {
+                    if (result.connectionTimeout) {
+                        connectionTimeout = result.connectionTimeout;
+                    }
+                    GUI.timeout_add('auto-connect_timeout', function () {
+                        $('div#header_btns a.connect').click();
+                    }, connectionTimeout); // timeout so bus have time to initialize after being detected by the system
+                });
             }
         }
         // trigger callbacks

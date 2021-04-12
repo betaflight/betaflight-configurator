@@ -827,26 +827,32 @@ function update_dataflash_global() {
 
 function reinitialiseConnection(originatorTab, callback) {
     GUI.log(i18n.getMessage('deviceRebooting'));
+    let connectionTimeout = 200;
+    ConfigStorage.get('connectionTimeout', function (result) {
+        if (result.connectionTimeout) {
+            connectionTimeout = result.connectionTimeout;
+        }
 
-    if (FC.boardHasVcp()) { // VCP-based flight controls may crash old drivers, we catch and reconnect
-        GUI.timeout_add('waiting_for_disconnect', function waiting_for_bootup() {
-            if (callback) {
-                callback();
-            }
-        }, 200);
-        //TODO: Need to work out how to do a proper reconnect here.
-        // caveat: Timeouts set with `GUI.timeout_add()` are removed on disconnect.
-    } else {
-        GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
-            MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
-                GUI.log(i18n.getMessage('deviceReady'));
-                originatorTab.initialize(false, $('#content').scrollTop());
-            });
+        if (FC.boardHasVcp()) { // VCP-based flight controls may crash old drivers, we catch and reconnect
+            GUI.timeout_add('waiting_for_disconnect', function waiting_for_bootup() {
+                if (callback) {
+                    callback();
+                }
+            }, connectionTimeout);
+            //TODO: Need to work out how to do a proper reconnect here.
+            // caveat: Timeouts set with `GUI.timeout_add()` are removed on disconnect.
+        } else {
+            GUI.timeout_add('waiting_for_bootup', function waiting_for_bootup() {
+                MSP.send_message(MSPCodes.MSP_STATUS, false, false, function() {
+                    GUI.log(i18n.getMessage('deviceReady'));
+                    originatorTab.initialize(false, $('#content').scrollTop());
+                });
 
-            if (callback) {
-                callback();
-            }
+                if (callback) {
+                    callback();
+                }
 
-        }, 1500); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
-    }
+            }, connectionTimeout); // 1500 ms seems to be just the right amount of delay to prevent data request timeouts
+        }
+    });
 }
