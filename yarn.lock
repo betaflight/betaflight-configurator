@@ -2490,10 +2490,10 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-djv@^2.1.3-alpha.0:
-  version "2.1.3-alpha.0"
-  resolved "https://registry.yarnpkg.com/djv/-/djv-2.1.3-alpha.0.tgz#554daa91f22e0e8e9f48c9550766a6c07e8ce180"
-  integrity sha512-vrKAFr/wbhMjfqo+eoXZRIx/6YbN1DSZlxUsE3tHDPYB0zWRtOBhqmKbcgCjfP3+KevqidBGn2jNRnqRhjIzYg==
+djv@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/djv/-/djv-2.1.4.tgz#a6bde1a87184be4f10640184de76079c1423023f"
+  integrity sha512-giDn+BVbtLlwtkvtcsZjbjzpALHB77skiv3FIu6Wp8b5j8BunDcVJYH0cGUaexp6s0Sb7IkquXXjsLBJhXwQpA==
   optionalDependencies:
     "@korzio/djv-draft-04" "^2.0.1"
 
