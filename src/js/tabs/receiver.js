@@ -612,6 +612,12 @@ TABS.receiver.initialize = function (callback) {
             $('.tab-receiver .rcSmoothing-auto-smoothness').hide();
         }
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+            $('.tab-receiver .rcSmoothing-derivative-type').hide();
+            $('.tab-receiver .rcSmoothing-input-type').hide();
+            $('.tab-receiver input[name="rcSmoothingAutoSmoothness-number"]').attr("max", "250");
+        }
+
         // Only show the MSP control sticks if the MSP Rx feature is enabled
         $(".sticks_btn").toggle(FC.FEATURE_CONFIG.features.isEnabled('RX_MSP'));
 
