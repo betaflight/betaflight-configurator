@@ -253,36 +253,26 @@ TuningSliders.legacyUpdateFilterSlidersDisplay = function() {
 };
 
 TuningSliders.updatePidSlidersDisplay = function() {
-    // check if pid values changed manually by saving current values, doing the slider based calculation, and comaparing
-    // if values before and after calculation, if all of them are equal the values haven't been changed manually
+    // check if pid values changed manually by comparing the current values with those calculated by the sliders,
+    // if all of them are equal the values haven't been changed manually
     const WARNING_P_GAIN = 70;
     const WARNING_I_GAIN = 120;
     const WARNING_DMAX_GAIN = 60;
     const WARNING_DMIN_GAIN = 40;
 
     this.pidSlidersUnavailable = false;
-    let currentPIDs = [];
-    FC.PID_NAMES.forEach(function(elementPid, indexPid) {
-        const pidElements = $(`.pid_tuning .${elementPid} input`);
-        pidElements.each(function (indexInput) {
-            if (indexPid < 3 && indexInput < 5) {
-                currentPIDs.push($(this).val());
-            }
-        });
-    });
 
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        this.calculateNewPids();
+        this.calculateNewPids(true);
     }
 
-    FC.PID_NAMES.forEach(function(elementPid, indexPid) {
+    FC.PID_NAMES.forEach(function (elementPid, indexPid) {
         const pidElements = $(`.pid_tuning .${elementPid} input`);
         pidElements.each(function (indexInput) {
-            if (indexPid < 3 && indexInput < 5) {
-                if (currentPIDs[indexPid * 5 + indexInput] != $(this).val()) {
+            if (indexPid < 3 && indexInput < 3) {
+                if (parseInt($(this).val()) !== FC.PIDS[indexPid][indexInput]) {
                     TuningSliders.pidSlidersUnavailable = true;
                 }
-                $(this).val(currentPIDs[indexPid * 5 + indexInput]);
             }
         });
     });
@@ -378,22 +368,24 @@ TuningSliders.updateFilterSlidersDisplay = function() {
                                                      this.sliderDTermFilterMultiplier <= WARNING_FILTER_LOW_GAIN) && !this.DTermSliderUnavailable));
 };
 
-TuningSliders.updateFormPids = function() {
-    FC.PID_NAMES.forEach(function(elementPid, indexPid) {
-        const pidElements = $(`.pid_tuning .${elementPid} input`);
-        pidElements.each(function (indexInput) {
-            if (indexPid < 3 && indexInput < 3) {
-                $(this).val(FC.PIDS[indexPid][indexInput]);
-            }
+TuningSliders.updateFormPids = function(updateSlidersOnly = false) {
+    if (!updateSlidersOnly) {
+        FC.PID_NAMES.forEach(function (elementPid, indexPid) {
+            const pidElements = $(`.pid_tuning .${elementPid} input`);
+            pidElements.each(function (indexInput) {
+                if (indexPid < 3 && indexInput < 3) {
+                    $(this).val(FC.PIDS[indexPid][indexInput]);
+                }
+            });
         });
-    });
 
-    $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
-    $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
-    $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
-    $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
-    $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
-    $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
+        $('.pid_tuning input[name="dMinRoll"]').val(FC.ADVANCED_TUNING.dMinRoll);
+        $('.pid_tuning input[name="dMinPitch"]').val(FC.ADVANCED_TUNING.dMinPitch);
+        $('.pid_tuning input[name="dMinYaw"]').val(FC.ADVANCED_TUNING.dMinYaw);
+        $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll);
+        $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch);
+        $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw);
+    }
 
     $('output[name="sliderMasterMultiplier-number"]').val(this.sliderMasterMultiplier);
     $('output[name="sliderRollPitchRatio-number"]').val(this.sliderRollPitchRatio);
@@ -405,7 +397,7 @@ TuningSliders.updateFormPids = function() {
 
 };
 
-TuningSliders.legacyCalculatePids = function() {
+TuningSliders.legacyCalculatePids = function(updateSlidersOnly = false) {
     const MAX_PID_GAIN = 200;
     const MAX_DMIN_GAIN = 100;
     const MAX_FF_GAIN = 2000;
@@ -458,16 +450,16 @@ TuningSliders.legacyCalculatePids = function() {
         FC.ADVANCED_TUNING.dMinYaw = Math.min(Math.round(FC.ADVANCED_TUNING.dMinYaw * this.sliderMasterMultiplier), MAX_DMIN_GAIN);
     }
 
-    this.updateFormPids();
+    this.updateFormPids(updateSlidersOnly);
     TABS.pid_tuning.updatePIDColors();
 
 };
 
-TuningSliders.calculateNewPids = function() {
+TuningSliders.calculateNewPids = function(updateSlidersOnly = false) {
     // this is the main calculation for PID sliders, inputs are in form of slider position values
     // values get set both into forms and their respective variables
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        this.legacyCalculatePids();
+        this.legacyCalculatePids(updateSlidersOnly);
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -485,7 +477,7 @@ TuningSliders.calculateNewPids = function() {
         .then(() => MSP.promise(MSPCodes.MSP_PID))
         .then(() => MSP.promise(MSPCodes.MSP_PID_ADVANCED))
         .then(() => {
-            this.updateFormPids();
+            this.updateFormPids(updateSlidersOnly);
             TABS.pid_tuning.updatePIDColors();
         });
     }
