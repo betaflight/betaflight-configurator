@@ -113,7 +113,7 @@
     "mocha": "^7.0.1",
     "nw-builder": "^3.5.7",
     "os": "^0.1.1",
-    "postcss": "^8.1.1",
+    "postcss": "^8.2.10",
     "rollup": "^2.28.2",
     "rollup-plugin-vue": "^5.*.*",
     "rpm-builder": "^1.2.1",
