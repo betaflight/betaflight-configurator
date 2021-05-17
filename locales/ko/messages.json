@@ -3653,12 +3653,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "다이나믹 노치 Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "다이나믹 노치 최소 Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "다이나믹 노치 최대 Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "다이나믹 노치는 작동할수 있는 세 개의 주파수 범위를 가집니다: 6+인치처럼 낮은 모터속도를 가진 쿼드는 LOW(80-330Hz), 일반적인 5인치 쿼드는 MEDIUM(140-550Hz), 매우 높은 모터속도를 가진 2.5-3인치는 HIGH(230-800Hz). AUTO 옵션은 자이로 다이나믹 저역통과 1 필터의 최대 컷오프 주파수의 값에 따라 범위를 선택합니다."
     },
