@@ -3253,9 +3253,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Q des dynamischen Notch-Filters"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Minimale Frequenz des dynamischen Notch-Filters"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Der dynamische Notchfilter hat drei Frequenzbereiche, in denen er funktionieren kann: LOW(80-330hz) für langsam drehende Quads wie 6+ Zoll, MEDIUM(140-550hz) für einen normalen 5 Zoll Quad, HIGH(230-800hz) für sehr hoch drehende 2,5-3 Zoll Quads."
     },
