@@ -3593,12 +3593,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Q dinàmic de banda eliminada (Notch)"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Mìnin Hz del Notch dinàmic"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Màxims Hz del Notch dinàmic"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Notch (banda eliminada) dinàmic té tres rangs de freqüència en els quals pot funcionar: BAIX (80-330hz) per a quads revolucionats de 6 o més polzades, MITJA (140-550hz) per a un quad normal de 5 polzades, ALT (230-800Hz) per quads molt revolucionats de 2,5-3 polzades. L'opció AUTO selecciona l'abast en funció del valor de la freqüència màxima de tall del filtre dinàmic passa-baixos de Giro 1."
     },
