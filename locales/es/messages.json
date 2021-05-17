@@ -3585,12 +3585,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Giro Filtro Notch Dinámico Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Giro Filtro Notch Dinámico Min [Hz]"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Giro Filtro Notch Dinámico Max [Hz]"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Filtro Notch Dinámico tiene tres rangos de frecuencias en las que puede operar: LOW (80-300Hz) para quads con pocas revoluciones como 6\" o más, MEDIUM (140-550Hz) para un quad normal de 5\", HIGH (230-800Hz) para quads de altas revoluciones como por ejemplo 2,5\"-3\". La opción AUTO selecciona el rango dependiendo del valor de la frecuencia de corte máxima del filtro Giro Paso Bajo 1 Dinámico."
     },
