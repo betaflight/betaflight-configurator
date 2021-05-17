@@ -3585,12 +3585,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "動的ノッチ Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "動的ノッチ 最小Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "動的ノッチ 最大Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "動的ノッチには、設定可能な3つの周波数範囲があります。6インチ以上の低回転型クワッドコプターの場合はLOW(80-330hz)、通常の5インチの場合はMEDIUM(140-550hz)、2.5～3インチのような非常に高回転の場合はHIGH(230-800hz) となります。AUTOオプションは、動的ジャイロローパスフィルター1の最大カットオフ周波数の値に応じて範囲を選択します。"
     },
