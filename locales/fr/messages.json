@@ -3416,12 +3416,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Notch Dynamique Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Hz Min Notch Dynamique"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Hz max Notch Dynamique"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Le Notch Dynamique peut fonctionner sur trois plages de fréquences : BAS(80-330hz) pour des quads à vitesse de rotation faible comme les 6 pouces et +, MEDIUM(140-550hz) pour un quad normal de 5 pouces, HIGH(230-800hz) pour des vitesses de rotation élevées comme les 2,5-3 pouces. AUTO choisit la plage selon les valeurs de coupure du filtre Dynamique Gyro Lowpass 1."
     },
