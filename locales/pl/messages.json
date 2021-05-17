@@ -3481,12 +3481,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Uwaga dynamiczna Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Wycięcie dynamiczne Min Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Wycięcie dynamiczne Max Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Równanie dynamiczne ma trzy zakresy częstotliwości, w których może działać: NISKIE (80-330hz) dla gorzej odwołujących się quadów na śmigłach 6 cali i eięcej, ŚREDNIE (140-550hz) dla normalnego qada o długości śmigieł 5 cali, WYSOKIE (230-800hz) dla bardzo małych 2-3 calowych quadów. Opcja AUTO wybiera zakres w zależności od wartości maksymalnej częstotliwości dolnoprzepustowego filtra żyroskopu."
     },
