@@ -3517,12 +3517,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Dynamic Notch Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Dynamic Notch Min Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Dynamic Notch Max Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "De dynamische notch heeft drie frequentiebereiken waarin hij kan werken: LOW (80-330Hz) voor quads met een lager toerental zoals 6+ inch, MEDIUM (140-550Hz) voor een normale 5 inch quad, HIGH (230-800Hz) 2 tot 3 inch quads met hoge RPMs. De AUTO-optie selecteert het bereik afhankelijk van de waarde die is ingesteld bij de maximale afsnijfrequentie van de Gyro Dynamic Lowpass 1 Filter."
     },
