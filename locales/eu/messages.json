@@ -3382,12 +3382,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Q Notch Dinamikoa"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Notch Dinamikoa Min Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Notch Dinamikoa Max Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Notch dinamikoak hiru frekuentzian funtziona dezake: BAXUA (80-330hz) 6+ hazbeteko bezalako birakatze txikiagoetarako, ERDIA (140-550hz) 5 hazbeteko quad normal, ALTUA (230-800hz) oso altuerako 2,5-3 hazbeteko quad-ak berpiztea AUTO aukerak barrutia hautatzen du 1. Giro Behe-paseko Dinamiko Iragazkiaren ebakidura frekuentzia maximoaren balioaren arabera."
     },
