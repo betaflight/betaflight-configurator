@@ -453,6 +453,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.GPS_RESCUE.allowArmingWithoutFix = data.readU8();
                     FC.GPS_RESCUE.altitudeMode          = data.readU8();
                 }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    FC.GPS_RESCUE.minRescueDth = data.readU16();
+                }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
                 FC.RSSI_CONFIG.channel = data.readU8();
@@ -1817,6 +1820,9 @@ MspHelper.prototype.crunch = function(code) {
                           .push16(FC.GPS_RESCUE.descendRate)
                           .push8(FC.GPS_RESCUE.allowArmingWithoutFix)
                           .push8(FC.GPS_RESCUE.altitudeMode);
+                }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    buffer.push16(FC.GPS_RESCUE.minRescueDth);
                 }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:

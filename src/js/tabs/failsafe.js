@@ -316,6 +316,12 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                     $('select[name="gps_rescue_altitude_mode"]').closest('.number').hide();
                 }
 
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    $('input[name="gps_rescue_min_dth"]').val(FC.GPS_RESCUE.minRescueDth);
+                } else {
+                    $('input[name="gps_rescue_min_dth"]').closest('.number').hide();
+                }
+
             } else {
                 // GPS Rescue Parameters not available
                 $('.pro4 > .proceduresettings').hide();
@@ -375,6 +381,10 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 FC.GPS_RESCUE.descendRate = $('input[name="gps_rescue_descend_rate"]').val() * 100;
                 FC.GPS_RESCUE.allowArmingWithoutFix = $('input[name="gps_rescue_allow_arming_without_fix"]').prop('checked') ? 1 : 0;
                 FC.GPS_RESCUE.altitudeMode = parseInt($('select[name="gps_rescue_altitude_mode"]').val());
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                FC.GPS_RESCUE.minRescueDth = $('input[name="gps_rescue_min_dth"]').val();
             }
 
             function save_failssafe_config() {
