@@ -316,7 +316,9 @@ function startProcess() {
                         );
                         break;
                     case 'options':
-                        TABS.options.initialize(content_ready);
+                        import("./tabs/options").then(({ options }) =>
+                            options.initialize(content_ready)
+                        );
                         break;
                     case 'firmware_flasher':
                         TABS.firmware_flasher.initialize(content_ready);

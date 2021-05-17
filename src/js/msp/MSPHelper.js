@@ -453,6 +453,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     FC.GPS_RESCUE.allowArmingWithoutFix = data.readU8();
                     FC.GPS_RESCUE.altitudeMode          = data.readU8();
                 }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    FC.GPS_RESCUE.minRescueDth = data.readU16();
+                }
                 break;
             case MSPCodes.MSP_RSSI_CONFIG:
                 FC.RSSI_CONFIG.channel = data.readU8();
@@ -1097,6 +1100,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             }
                             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                                 FC.FILTER_CONFIG.dyn_lpf_curve_expo = data.readU8();
+                                FC.FILTER_CONFIG.dyn_notch_count = data.readU8();
+                                FC.FILTER_CONFIG.dyn_notch_bandwidth_hz = data.readU16();
                             }
                         }
                     }
@@ -1818,6 +1823,9 @@ MspHelper.prototype.crunch = function(code) {
                           .push8(FC.GPS_RESCUE.allowArmingWithoutFix)
                           .push8(FC.GPS_RESCUE.altitudeMode);
                 }
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    buffer.push16(FC.GPS_RESCUE.minRescueDth);
+                }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
             buffer.push8(FC.RSSI_CONFIG.channel);
@@ -2065,7 +2073,9 @@ MspHelper.prototype.crunch = function(code) {
                     buffer.push16(FC.FILTER_CONFIG.dyn_notch_max_hz);
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo);
+                    buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo)
+                          .push8(FC.FILTER_CONFIG.dyn_notch_count)
+                          .push16(FC.FILTER_CONFIG.dyn_notch_bandwidth_hz);
                 }
             }
             break;
