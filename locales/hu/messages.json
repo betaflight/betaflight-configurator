@@ -3370,12 +3370,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Dinamikus Notch Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Dinamikus Notch minimum Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Dinamikus Notch maximum Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "A dinamikus Notch-nak három frekvenciatartománya van, amelyeken képes működni: LOW (80-330hz) alacsonyabb fordulatszámú drónokhoz, mint 6 colosok, MEDIUM (140-550hz) normál 5 colos quadok, HIGH (230-800hz) nagyon magas fordulatú 2,5-3 colos quadok. Az AUTO opció választja ki a tartományt a giroszkópikus aluljáró 1 szűrő maximális kikapcsolási frekvenciájának értékétől függően."
     },
