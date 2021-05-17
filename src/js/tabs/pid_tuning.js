@@ -385,12 +385,22 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_filter select[name="dynamicNotchRange"]').val(FC.FILTER_CONFIG.dyn_notch_range);
             dynamicNotchWidthPercent_e.val(FC.FILTER_CONFIG.dyn_notch_width_percent);
             dynamicNotchQ_e.val(FC.FILTER_CONFIG.dyn_notch_q);
+            $('.pid_filter input[name="dynamicNotchCount"]').val(FC.FILTER_CONFIG.dyn_notch_count);
+            $('.pid_filter input[name="dynamicNotchBandwidthHz"]').val(FC.FILTER_CONFIG.dyn_notch_bandwidth_hz);
             $('.pid_filter input[name="dynamicNotchMinHz"]').val(FC.FILTER_CONFIG.dyn_notch_min_hz);
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                 $('.pid_filter input[name="dynamicNotchMinHz"]').attr("max","250");
                 $('.pid_filter input[name="dynamicNotchMaxHz"]').val(FC.FILTER_CONFIG.dyn_notch_max_hz);
             } else {
                 $('.dynamicNotchMaxHz').hide();
+            }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                $('.dynamicNotchHelp').attr('title', i18n.getMessage('pidTuningMultiDynamicNotchFilterHelp'));
+                $('.dynamicNotchWidthPercent').hide();
+                $('.dynamicNotchQ').hide();
+            } else {
+                $('.dynamicNotchCount').hide();
+                $('.dynamicNotchBandwidthHz').hide();
             }
 
             $('.rpmFilter').toggle(FC.MOTOR_CONFIG.use_dshot_telemetry);
@@ -991,6 +1001,8 @@ TABS.pid_tuning.initialize = function (callback) {
             FC.FILTER_CONFIG.dyn_lpf_curve_expo = parseInt($('.pid_filter input[name="dtermLowpassDynExpo"]').val());
             FC.ADVANCED_TUNING.vbat_sag_compensation = $('input[id="vbatSagCompensation"]').is(':checked') ? parseInt($('input[name="vbatSagValue"]').val()) : 0;
             FC.ADVANCED_TUNING.thrustLinearization = $('input[id="thrustLinearization"]').is(':checked') ? parseInt($('input[name="thrustLinearValue"]').val()) : 0;
+            FC.FILTER_CONFIG.dyn_notch_count = parseInt($('.pid_filter input[name="dynamicNotchCount"]').val());
+            FC.FILTER_CONFIG.dyn_notch_bandwidth_hz = parseInt($('.pid_filter input[name="dynamicNotchBandwidthHz"]').val());
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
