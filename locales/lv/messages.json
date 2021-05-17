@@ -2895,9 +2895,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Dinamiskā joslās Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Dinamiskais joslas min Hz"
-    },
     "pidTuningFilterSettings": {
         "message": "Profila atkarīgo filtru iestatījumi"
     },
