@@ -3316,12 +3316,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "動態陷波濾波器Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "動態陷波濾波器最低頻率"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "動態陷波濾波器最高頻率"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "動態陷波濾波器有三個頻率範圍可供運行：LOW(80-330hz) 用於6英寸及以上的低速巡航機，MEDIU(140-550hz) 用於常見的5英寸飛行器，HIGH(230-800hz)用於電機轉速較高的2.5-3英寸的飛行器。 AUTO 選項將會使用陀螺儀低通濾波器1最高截止頻率範圍來決定頻率範圍。"
     },
