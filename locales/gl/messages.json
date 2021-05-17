@@ -3676,12 +3676,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Notch Q Dinámico"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Notch dinámico Min Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Dynamic Notch Max Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O Notch dinámico ten tres intervalos de frecuencia nos que pode operar: BAIXO (80-330 Hz) para baixas revolucións en quads como 6+ polgadas, MEDIO (140-550Hz) para un quad normal de 5 polgadas, ALTO (230-800Hz) para moi altas revolucións en quads de 2,5-3 polgadas. A opción AUTO selecciona o rango en función do valor da frecuencia de corte máxima do filtro Gyro Dynamic Lowpass 1."
     },
