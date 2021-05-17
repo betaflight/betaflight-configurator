@@ -3667,6 +3667,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "crwdns9530:0crwdne9530:0"
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "crwdns10462:0crwdne10462:0"
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "crwdns9532:0$t(configurationFeatures.message)crwdnd9532:0$t(tabConfiguration.message)crwdne9532:0"
     },
@@ -3680,10 +3683,16 @@
         "message": "crwdns9538:0crwdne9538:0"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "crwdns9540:0crwdne9540:0"
+        "message": "crwdns10464:0[Hz]crwdne10464:0"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "crwdns9941:0crwdne9941:0"
+        "message": "crwdns10466:0[Hz]crwdne10466:0"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "crwdns10468:0crwdne10468:0"
+    },
+    "pidTuningDynamicNotchBandwidthHz": {
+        "message": "crwdns10470:0[Hz]crwdne10470:0"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "crwdns9542:0crwdne9542:0"
@@ -3699,6 +3708,12 @@
     },
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "crwdns9945:0crwdne9945:0"
+    },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "crwdns10472:0crwdne10472:0"
+    },
+    "pidTuningDynamicNotchBandwidthHzHelp": {
+        "message": "crwdns10474:0crwdne10474:0"
     },
     "pidTuningRpmFilterGroup": {
         "message": "crwdns9814:0crwdne9814:0",
@@ -3957,6 +3972,12 @@
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "crwdns8878:0crwdne8878:0"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "crwdns10476:0crwdne10476:0"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "crwdns10478:0crwdne10478:0"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "crwdns8880:0crwdne8880:0"
