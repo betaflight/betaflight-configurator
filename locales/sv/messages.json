@@ -3071,9 +3071,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Dynamisk bandspärr Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Dynamisk bandspärr Min Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Den dynamiska bandspärren kan arbeta i tre frekvensomfång: LOW(80-330hz) för långsamt roterande quadar, som 6 tum eller större, MEDIUM(140-550hz) för en normal 5-tumsquad, HIGH(230-800hz) för snabbt roterande 2.5-3-tumsquadar. Alternativet AUTO väljer omfång utifrån värdet på den maximala cutoff-frekvensen på gyrons dynamiska lågpassfilter 1."
     },
