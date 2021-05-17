@@ -3355,12 +3355,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Filtro Notch dinâmico - Q"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Filtro Notch dinâmico - Frequência mínima [Hz]"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Filtro Notch dinâmico - Frequência máxima [Hz]"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O filtro Notch (Rejeita Faixa) dinâmico possui três faixas de frequência em que pode operar: BAIXO (80-330hz) para aeronaves lentas de 6\" ou mais, MÉDIO (140-550hz) para aeronaves convencionais de 5\", ALTO (230-800hz) para aeronaves rápidas de 2.5\" a 3\". a opção AUTO seleciona a faixa de acordo com a frequência de corte máxima do fitro Lowpass 1 Dinâmico do Gyro."
     },
