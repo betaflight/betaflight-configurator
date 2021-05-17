@@ -3585,12 +3585,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Q Notch dinamico"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Hz minimi Notch dinamico"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Hz massimi Notch dinamico"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Il notch dinamico ha tre intervalli di frequenze in cui può funzionare: Basso (80-330Hz) per quad con giri del motore bassi come 6\" (e più grandi), Medio (140-550Hz) per un normale quad da 5\", Alto (230-800Hz) per quad 2.5-3\" con giri del motore alti. L'opzione AUTO seleziona l'intervallo in base al valore della frequenza massima del passa-basso dinamico 1 del giroscopio."
     },
