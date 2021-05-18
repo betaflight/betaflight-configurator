@@ -3581,6 +3581,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "El filtre Notch (banda eliminada) dinàmic rastreja la freqüència màxima del soroll dels motors i col·loca un o dos filtres Notch amb el seu centre a aquesta freqüència."
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "Dynamic Notch Filter fa un seguiment de les freqüències de pic màximes del gyro i col·loca entre 1 y 5 filtres amb el seu centre en aquestes freqüències per cada eix."
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong> Avís:</strong> El filtre Notch dinàmic està desactivat. Per configurar-lo i utilitzar-lo, activa la funció 'FILTRE DINÀMIC' a la secció '$t(configurationFeatures.message)' de la pestanya '$t(tabConfiguration.message)'."
     },
@@ -3592,6 +3595,18 @@
     },
     "pidTuningDynamicNotchQ": {
         "message": "Q dinàmic de banda eliminada (Notch)"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Freqüència dinámica mínima del filtre Notch [Hz]"
+    },
+    "pidTuningDynamicNotchMaxHz": {
+        "message": "Freqüència dinámica màxima del filtre Notch [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Comptador dinàmic de tall"
+    },
+    "pidTuningDynamicNotchBandwidthHz": {
+        "message": "Freqüència d'ample de banda del filtre Notch [Hz]"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Notch (banda eliminada) dinàmic té tres rangs de freqüència en els quals pot funcionar: BAIX (80-330hz) per a quads revolucionats de 6 o més polzades, MITJA (140-550hz) per a un quad normal de 5 polzades, ALT (230-800Hz) per quads molt revolucionats de 2,5-3 polzades. L'opció AUTO selecciona l'abast en funció del valor de la freqüència màxima de tall del filtre dinàmic passa-baixos de Giro 1."
@@ -3607,6 +3622,12 @@
     },
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Configureu-lo a la freqüència de soroll entrant més alta que fa falta per ser controlat pel Notch dinàmic."
+    },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "Estableix el nombre de talls dinàmiques per eix. Amb el filtre RPM activat, es recomana un valor d'1 o 2. Sense filtre RPM es recomana un valor de 4 o 5. Un nombre inferior reduirà el retard del filtre, però pot augmentar la temperatura del motor."
+    },
+    "pidTuningDynamicNotchBandwidthHzHelp": {
+        "message": "L’amplada de banda en Hz ajusta l’amplitud de cada tall dinàmica del filtre Notch. Els valors més alts el fan cada cop més ampli. Els valors més baixos el fan més estret i precís, però pot augmentar la temperatura del motor. Tenir un valor realment alt augmentarà el retard del filtre."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Filtre giro RPM",
@@ -3865,6 +3886,12 @@
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distància de baixada (metres)"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distància mínima fins a casa (metres)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "La distància mínima a casa necessària per activar el rescat GPS"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Velocitat del sòl (metres/segon)"
