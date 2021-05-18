@@ -3505,6 +3505,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Dynamic Notch Filter volgt de ruisfrequentie van de motoren. Deze filter plaatst een of twee notch-filters in het midden van deze frequentie."
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "Dynamic Notch Filter volgt piekfrequenties van ruis en plaatst één tot vijf notch-filters met hun midden op deze frequenties. En dit doet hij voor elke as."
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Let op:</strong> Het dynamische notch filter is uitgeschakeld. Om het in te schakelen en te configureren, schakel de 'DYNAMIC_FILTER' functie in de '$t(configurationFeatures.message)' sectie op het '$t(tabConfiguration.message)' tabblad."
     },
@@ -3516,6 +3519,18 @@
     },
     "pidTuningDynamicNotchQ": {
         "message": "Dynamic Notch Q"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Dynamische Notch Min Frequentie [Hz]"
+    },
+    "pidTuningDynamicNotchMaxHz": {
+        "message": "Dynamische Notch Max Frequentie [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Dynamische Notch Aantal"
+    },
+    "pidTuningDynamicNotchBandwidthHz": {
+        "message": "Dynamische Notch bandbreedtefrequentie [Hz]"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "De dynamische notch heeft drie frequentiebereiken waarin hij kan werken: LOW (80-330Hz) voor quads met een lager toerental zoals 6+ inch, MEDIUM (140-550Hz) voor een normale 5 inch quad, HIGH (230-800Hz) 2 tot 3 inch quads met hoge RPMs. De AUTO-optie selecteert het bereik afhankelijk van de waarde die is ingesteld bij de maximale afsnijfrequentie van de Gyro Dynamic Lowpass 1 Filter."
@@ -3531,6 +3546,12 @@
     },
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Stel dit in op de hoogste inkomende ruisfrequentie die moet worden gebruikt door de dynamische notch."
+    },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "Stelt het aantal dynamische notches per as in. Als het RPM-filter is ingeschakeld, wordt een waarde van 1 of 2 aanbevolen. Zonder RPM-filter wordt een waarde van 4 of 5 aanbevolen. Lagere cijfers verminderen de filtervertraging, maar kunnen de motortemperatuur verhogen."
+    },
+    "pidTuningDynamicNotchBandwidthHzHelp": {
+        "message": "Bandbreedte in Hz past aan hoe smal of breed elke dynamische notch zal zijn. Hogere waarden maken hem breder. Lagere waarden maken hem smaller en nauwkeuriger, maar het kan de motortemperatuur verhogen. Een zeer hoge waarde zal de filtervertraging vergroten."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM Filter",
@@ -3783,6 +3804,12 @@
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Afstand inzet daling (meters)"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Minimale afstand tot thuis (meter)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "De minimale afstand tot thuis die nodig is om GPS-redding te activeren"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Grondsnelheid (meter/seconde)"
@@ -4769,6 +4796,13 @@
     },
     "osdDescTotalFlights": {
         "message": "Geschat totaal aantal vluchten"
+    },
+    "osdTextElementUpDownReference": {
+        "message": "Omhoog (Pitch 90 graden)/Omlaag (Pitch -90 graden) Referentie",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "OSD-symbool dat aangeeft wanneer de pitch verticaal (90 graden, U) en (-90 graden, D) nadert"
     },
     "osdTextElementUnknown": {
         "message": "Onbekend $1",
