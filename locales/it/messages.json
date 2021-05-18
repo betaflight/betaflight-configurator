@@ -3573,6 +3573,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Il filtro notch dinamico tiene traccia della frequenza di picco del rumore dei motori e posiziona uno o due filtri notch con il loro centro a questa frequenza."
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "Il filtro notch dinamico traccia la frequenza di picco del rumore del gyro e posiziona da uno a cinque filtri notch con il loro centro a questa frequenza."
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Avviso:</strong> Il filtro dinamico notch è disabilitato. Per configurarlo e usarlo si prega di abilitare la funzione 'DYNAMIC_FILTER' nella sezione '$t(configurationFeatures.message)' della scheda '$t(tabConfiguration.message)'."
     },
@@ -3584,6 +3587,18 @@
     },
     "pidTuningDynamicNotchQ": {
         "message": "Q Notch dinamico"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Frequenza Minima Notch Dinamico [Hz]"
+    },
+    "pidTuningDynamicNotchMaxHz": {
+        "message": "Frequenza Massima Notch Dinamico [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Numero Notch Dinamici"
+    },
+    "pidTuningDynamicNotchBandwidthHz": {
+        "message": "Larghezza Banda Notch Dinamico [Hz]"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Il notch dinamico ha tre intervalli di frequenze in cui può funzionare: Basso (80-330Hz) per quad con giri del motore bassi come 6\" (e più grandi), Medio (140-550Hz) per un normale quad da 5\", Alto (230-800Hz) per quad 2.5-3\" con giri del motore alti. L'opzione AUTO seleziona l'intervallo in base al valore della frequenza massima del passa-basso dinamico 1 del giroscopio."
@@ -3599,6 +3614,12 @@
     },
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Impostala alla frequenza più alta del rumore in ingresso che deve essere controllato dal notch dinamico."
+    },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "Imposta il numero di notch dinamici per asse. Con il filtro RPM abilitato è consigliato un valore di 1 o 2. Senza il filtro RPM è consigliato un valore di 4 o 5. Valori più bassi ridurranno il ritardo del filtro ma potrebbero aumentare la temperatura dei motori."
+    },
+    "pidTuningDynamicNotchBandwidthHzHelp": {
+        "message": "La larghezza di banda in Hz regola quanto sarà stretto o largo ogni filtro notch dinamico. Valori più alti lo rendono più ampio. Valori inferiori lo rendono più stretto e più preciso, ma può aumentare la temperatura dei motori. Avere un valore davvero alto aumenterà il ritardo del filtro."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Filtro giroscopio RPM",
@@ -3857,6 +3878,12 @@
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distanza di discesa (metri)"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distanza minima da home (metri)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "La distanza minima da home necessaria per attivare il GPS rescue"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Velocità al suolo (metri/secondo)"
