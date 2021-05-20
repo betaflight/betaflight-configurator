@@ -568,9 +568,6 @@
     "defaultWelcomeHead": {
         "message": "Аппаратная часть"
     },
-    "defaultWelcomeText": {
-        "message": "Программа поддерживает все аппаратные средства, которые могут запускать Betaflight. Проверьте вкладку прошивки для получения полного списка оборудования.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight Blackbox Log Viewer</a><br /><br />Исходный код прошивки можно загрузить <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br /><br />Последние <b>STM USB VCP драйверы</b> можно загрузить <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Для устаревшего оборудования использующего чип CP210x USB to Serial:<br />Последние <b>CP210x драйверы</b> могут быть загружены <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Последний <b>Zadig</b> для установки USB драйвера Windows можно загрузить <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Содействие"
     },
