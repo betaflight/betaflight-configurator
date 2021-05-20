@@ -564,9 +564,6 @@
     "defaultWelcomeHead": {
         "message": "Hardver"
     },
-    "defaultWelcomeText": {
-        "message": "Az alkalmazás támogatja az összes hardvert, amely képes futtatni a Betaflight-ot. Ellenőrizze a flash fület a hardver teljes listáján.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Töltse le a Betaflight Blackbox Log Viewer alkalmazást</a><br /><br />A firmware forráskódja letölthető <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">innen</a><br /><br />A legújabb <b>STM USB VCP Drivers</b> letölthető <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">innen</a><br />Régi hardverekhez, CP210x USB-t és soros chipet használva:<br />a legújabb <b>CP210x Drivers</b> letölthető <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">innen</a><br /> A legújabb <b>Zadig</b> Windowshoz az USB illesztőprogram telepítése letölthető <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">innen</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Hozzájárulásod fontos számunkra"
     },
