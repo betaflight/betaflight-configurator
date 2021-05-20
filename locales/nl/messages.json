@@ -584,9 +584,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "De applicatie ondersteund alle hardware die Betaflight kan draaien. Controleer het tabblad flash voor de volledige hardware lijst.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight Blackbox Log Viewer</a><br /><br />De firmware bron code kan gedownload worden van <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br /><br />De laatste <b>STM USB VCP Drivers</b> kunnen gedownload worden van <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />Voor oudere hardware die gebruik maakt van een CP210x USB to serial chip:<br />De laatste <b>CP210x Drivers</b> kunnen gedownload worden van <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />De laatste <b>Zadig</b> voor Windows USB driver installation kunnen gedownload worden van <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Bijdragen"
     },
