@@ -557,9 +557,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "Aplikazio honek Betaflight exekutatu dezakeen hardware guztia onartzen du. Begiratu flash fitxa, hardware zerrenda osoa lortzeko.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewer Deskargatu</a><br /><br />Firmware iturri kodea deskargatu daiteke <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /><br /><b>STM USB VCP Drivers</b> berrienak <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a> deskargatu daiteke<br />CP210x USB ondarearen hardwarera serie txip bidez erabiltzeko:<br /><b>CP210x Drivers</b> berrienak <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a> deskargatu ahal dira<br />Azken <b>Zadig</b> Windows-erako USB kontrolatzaileen instalazioa <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /> deskargatu daiteke"
-    },
     "defaultContributingHead": {
         "message": "Hartu parte"
     },
