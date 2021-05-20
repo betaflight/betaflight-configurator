@@ -1190,6 +1190,15 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: 'U',
         },
+        OSD_LAND_NOW_WARNING: {
+            name: 'OSD_LAND_NOW_WARNING',
+            text: 'osdTextLandNow',
+            desc: 'osdDescLandNow',
+            defaultPosition: -1,
+            draw_order: 470,
+            positionable: true,
+            preview: 'LAND NOW',
+        },
     };
 };
 
@@ -1612,6 +1621,7 @@ OSD.chooseFields = function() {
                                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                         F.TOTAL_FLIGHTS,
                                                         F.OSD_UP_DOWN_REFERENCE,
+                                                        F.OSD_LAND_NOW_WARNING,
                                                     ]);
                                                 }
                                             }
