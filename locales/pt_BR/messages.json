@@ -542,9 +542,6 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "Esta aplicação é compatível com todo hardware que consegue executar o Betaflight. Verifique a aba \"Atualização de firmware\" para ver a lista completa de hardware compatível.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Faça o download do Betaflight Blackbox Log Viewer aqui</a><br /><br />É possível obter o código fonte do firmware <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br /><br />Faça do download do driver <b>STM USB VCP</b> mais recente <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />Para hardware legado que utiliza o chip serial CP210x USB<br />Os <b>drivers CP210x</b> mais recentes estão disponíveis <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />Faça o download do driver <b>Zadig USB para Windows</b> mais recente <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
