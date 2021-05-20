@@ -539,9 +539,6 @@
     "defaultWelcomeHead": {
         "message": "硬體"
     },
-    "defaultWelcomeText": {
-        "message": "本應用支援所有能運行 Betaflight 的飛控。在 “固件燒寫” 頁面查看所有支援的飛控列表。<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">下載 Betaflight Blackbox 日誌查看工具</a><br /><br />固件源代碼可以點擊<a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">這裡</a>下載<br /><br />最新的<b>STM USB VCP 驅動</b>可以点击<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a>下载<br />对于舊的使用 CP210x USB 轉串口晶片的硬體：<br />最新的<b>CP210x 驅動</b>可以點擊<a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">這裡</a>下載<br />最新的<b>Zadig</b> Windows USB驅動安裝程式可以點擊<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">這裡</a>下載<br />"
-    },
     "defaultContributingHead": {
         "message": "參與開發"
     },
