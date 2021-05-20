@@ -564,9 +564,6 @@
     "defaultWelcomeHead": {
         "message": "Sprzęt"
     },
-    "defaultWelcomeText": {
-        "message": "Aplikacja obsługuje wszystkie urządzenia, które pracują z Betaflight. Sprawdź zakładkę programowania \"Flash\", aby uzyskać pełną listę wspieranego sprzętu.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\">Pobierz przeglądarkę logów Betaflight \"Betaflight Blackbox Log Viewer\"</a><br /><br />Kod źródłowy można pobrać <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\">tutaj</a><br /><br />Najnowszy <b>sterownik USB VCP</b> można pobrać <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\">tutaj</a><br />Dla starszego sprzętu używającego konwertera CP210x USB do portu szeregowego:<br />Najnowszy <b>sterownik CP210x</b> można pobrać <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\">tutaj</a><br />Najnowszy program <b>Zadig</b> do instalacji sterownika USB Windows można pobrać <a href=\"http://zadig.akeo.ie/\" target=\"_blank\">tutaj</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Współtworzenie"
     },
