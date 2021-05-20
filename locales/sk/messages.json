@@ -548,9 +548,6 @@
     "defaultWelcomeHead": {
         "message": "Hardvér"
     },
-    "defaultWelcomeText": {
-        "message": "Táto aplikácia podporuje každý hardvér ktorý dokáže spustiť Betaflight. Pre kompletný zoznam harvéru pozrite záložku programovania.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Stiahnuť Betaflight utilitu pre prezeranie dát z čiernej skrinky</a><br /><br />Zdrojový kód firmvéru možete stiahnuť <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br /><br />Najnovšie <b>STM USB VCP ovládače</b> možete stiahnuť <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br />Pre starší hardvér používajúci CP210x USB prevodník:<br />Najnovšie <b>CP210x ovládače</b> možete stiahnuť <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br />Najnovšiu utilitu <b>Zadig</b> pre výber USB ovládačov vo Windowse, možete stiahnuť <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">tu</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Spolupráca"
     },
