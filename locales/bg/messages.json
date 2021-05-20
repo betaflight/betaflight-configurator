@@ -568,9 +568,6 @@
     "defaultWelcomeHead": {
         "message": "Хардуер"
     },
-    "defaultWelcomeText": {
-        "message": "Програмата поддържа целия хардуер, който Betaflight може да изпълнява. Проверете раздела на фърмуера за пълен списък с хардуер.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Изтегли Betaflight Blackbox Log Viewer </a><br /><br />Изходният код на фърмуера може да бъде изтеглен<a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br /><br />Най новите<b>STM USB VCP драйвъри</b>могат да бъдат свалени от<a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br />За старо оборудване, използващо CP210x USB към сериен чип:<br />Най новите<b>CP210x драйвъри</b>могат да бъдат свалени от<a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br />Най новият <b>Zadig</b>за да инсталирате Windows USB драйвер, можете да изтеглите<a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">тук</a><br />"
-    },
     "defaultContributingHead": {
         "message": "Принос"
     },
