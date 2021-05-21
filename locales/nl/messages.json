@@ -584,6 +584,9 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
+    "defaultWelcomeText": {
+        "message": "De applicatie ondersteunt alle hardware die Betaflight kan draaien. Controleer het flash-tabblad voor de volledige lijst met hardware.<br /> <br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewer downloaden</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua-scripts downloaden</a><br /><br />De broncode van de firmware kan worden gedownload van <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br /><br />De nieuwste <b>STM USB VCP-stuurprogramma's</b> kunnen worden gedownload van <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />Voor oudere hardware die een CP210x USB-naar-seriële chip gebruikt:<br />De nieuwste <b>CP210x-stuurprogramma's</b> kunnen worden gedownload van <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />Het nieuwste <b>Zadig</b> voor Windows USB-stuurprogramma-installatie kan worden gedownload van <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hier</a><br />"
+    },
     "defaultContributingHead": {
         "message": "Bijdragen"
     },
@@ -3451,6 +3454,10 @@
         "message": "Stick Response Gain:",
         "description": "Response tuning slider label"
     },
+    "pidTuningMasterSliderHelp": {
+        "message": "Over het algemeen hebben grotere quads hogere PID-waardes nodig vanwege een lagere verhouding tussen vermogen en traagheidsmoment (MoI).<br /><br />Kleinere quads (micros) hebben over het algemeen lagere PID-waarden nodig vanwege een hogere verhouding tussen vermogen en MoI.<br /><br />Hogere waarden zijn voor quads met een lagere autoriteit. Lagere waarden zijn voor quads met een hogere autoriteit.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filters"
     },
@@ -5342,6 +5349,10 @@
     "vtxPitMode": {
         "message": "Pit modus",
         "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxPitModeHelp": {
+        "message": "Indien ingeschakeld gaat de VTX in een zeer energiezuinige modus zodat je aan je quad kan werken ​​zonder andere piloten te storen. Normaal is het bereik van deze modus minder dan 5 meter.<br /><br />OPMERKING: Sommige protocollen, zoals SmartAudio, kunnen de Pit-modus na het opstarten niet via software inschakelen.",
+        "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxPitModeFrequency": {
         "message": "Pit Modus frequentie",
