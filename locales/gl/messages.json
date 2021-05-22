@@ -659,6 +659,9 @@
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
+    "defaultWelcomeText": {
+        "message": "A aplicación admite todo o hardware que pode executar Betaflight. Comprobe a pestana Flash para ver a lista completa de hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\"> Descargar Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight TX Lua Scripts</a><br /><br /> O código fonte do firmware pódese descargar desde <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br /><br /> Os últimos <b>controladores STM USB VCP</b> pódense descargar desde <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">aquí </a><br />Para hardware herdado que usa un CP210x USB a chip serie: <br /> Os últimos<b>controladores CP210x</b> pódense descargar de <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí</a><br /> a última instalación do controlador USB de <b> Zadig </b> para Windows pode descargarse desde <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\"> aquí </a><br />"
+    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -3661,6 +3664,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Filtro dinámico de Notch rastrea a frecuencia de ruído dos motores máximos e coloca un ou dous filtros de notch co seu centro a esa frecuencia."
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "O filtro do Notch dinámico realiza un seguimento das frecuencias de ruído xiroscópico máximas e coloca de un a cinco filtros de muescas co seu centro nestas frecuencias en todos os eixos."
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Aviso:</strong>O filtro de notch dinámico está desactivado. Para configuralo e utilizalo, active a función 'DYNAMIC_FILTER' na sección '$t(configurationFeatures.message)' da ventá '$t(tabConfiguration.message)'."
     },
@@ -3672,6 +3678,18 @@
     },
     "pidTuningDynamicNotchQ": {
         "message": "Notch Q Dinámico"
+    },
+    "pidTuningDynamicNotchMinHz": {
+        "message": "Frecuencia Mínima Notch Dinamico [Hz]"
+    },
+    "pidTuningDynamicNotchMaxHz": {
+        "message": "Frecuencia Máxima Notch Dynamique [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Contador do Notch dinámico"
+    },
+    "pidTuningDynamicNotchBandwidthHz": {
+        "message": "Frecuencia de ancho de banda do Notch dinámico [Hz]"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O Notch dinámico ten tres intervalos de frecuencia nos que pode operar: BAIXO (80-330 Hz) para baixas revolucións en quads como 6+ polgadas, MEDIO (140-550Hz) para un quad normal de 5 polgadas, ALTO (230-800Hz) para moi altas revolucións en quads de 2,5-3 polgadas. A opción AUTO selecciona o rango en función do valor da frecuencia de corte máxima do filtro Gyro Dynamic Lowpass 1."
@@ -3687,6 +3705,12 @@
     },
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Estableza isto na frecuencia de ruído máis alta que se debe controlar polo dynamic notch."
+    },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "Establece o número de filtros dinámicos por eixe. Con filtro rpm activado, recoméndase un valor de 1 ou 2. Sen filtro RPM recoméndase un valor de 4 ou 5. Os números máis baixos reducirán o atraso do filtro, pero pode aumentar a temperatura do motor."
+    },
+    "pidTuningDynamicNotchBandwidthHzHelp": {
+        "message": "Ancho de banda en Hz axusta o estreito ou ancho que será cada filtro dinámico. Os valores máis altos fan que sexa máis ancho e máis amplo. Os valores máis baixos fan que sexa máis estreito e máis preciso, pero pode aumentar a temperatura do motor. Ter un valor moi alto aumentará o atraso do filtro."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Filtro Gyro RPM",
@@ -3945,6 +3969,12 @@
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Distancia de descenso (metros)"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Distancia mínima a casa (metros)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Distancia mínima a casa necesaria para que o GPS rescue poida activarse"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Velocidade de aterraxe (metros/segundo)"
