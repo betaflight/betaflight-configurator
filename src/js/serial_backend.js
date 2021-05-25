@@ -429,6 +429,7 @@ function checkReportProblems() {
 
             problemDialog.showModal();
             $('#dialogReportProblems').scrollTop(0);
+            $('#dialogReportProblems-closebtn').focus();
         }
 
         processUid();
