@@ -34,8 +34,12 @@
     font-family: monospace;
     color: white;
     box-sizing: border-box;
-    -webkit-user-select: text;
     float: left;
+}
+
+
+.tab-cli .window .wrapper, .tab-cli .window .wrapper > * {
+    user-select: text;
 }
 
 .tab-cli textarea[name='commands'] {
