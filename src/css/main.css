@@ -33,6 +33,10 @@
     -webkit-app-region: no-drag;
 }
 
+*[draggable="true"] {
+    -webkit-user-drag: element;
+}
+
 html, body {
     height: 100%;
 }
