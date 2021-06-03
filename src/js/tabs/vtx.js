@@ -608,16 +608,13 @@ TABS.vtx.initialize = function (callback) {
     }
 
     function save_lua() {
-        const suggestedName = 'model01';
         const suffix = 'lua';
 
-        let filename;
-        if(FC.CONFIG.name && FC.CONFIG.name.trim() !== '') {
-            filename = FC.CONFIG.name.trim().replace(' ', '_');
-        }else{
-            filename = suggestedName;
-        }
-        filename += `.${suffix}`;
+        const uid0 = FC.CONFIG.uid[0].toString(16).padStart(8, '0');
+        const uid1 = FC.CONFIG.uid[1].toString(16).padStart(8, '0');
+        const uid2 = FC.CONFIG.uid[2].toString(16).padStart(8, '0');
+
+        const filename = `${uid0}${uid1}${uid2}.${suffix}`;
 
         const accepts = [{
             description: `${suffix.toUpperCase()} files`, extensions: [suffix],
