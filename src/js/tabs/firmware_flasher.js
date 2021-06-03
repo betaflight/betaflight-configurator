@@ -7,6 +7,7 @@ const firmware_flasher = {
     gitHubApi: new GitHubApi(),
     localFirmwareLoaded: false,
     selectedBoard: undefined,
+    boardNeedsVerification: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     unifiedTarget: {}, // the Unified Target configuration to be spliced into the configuration
@@ -316,6 +317,8 @@ firmware_flasher.initialize = function (callback) {
                     $('select[name="board"]').val(boardReleases ? result.selected_board : 0).trigger('change');
                 }
             });
+
+            verifyBoard();
         }
 
         const buildTypes = [
@@ -535,7 +538,7 @@ firmware_flasher.initialize = function (callback) {
             $("a.load_remote_file").addClass('disabled');
             const target = $(this).val();
 
-            if (!GUI.connect_lock) {
+            if (!GUI.connect_lock && target) {
                 if (TABS.firmware_flasher.selectedBoard !== target) {
                     // We're sure the board actually changed
                     if (self.isConfigLocal) {
@@ -763,6 +766,68 @@ firmware_flasher.initialize = function (callback) {
                 analytics.sendEvent(analytics.EVENT_CATEGORIES.FLASHING, 'Flashing', self.unifiedTarget.fileName || null);
 
                 STM32DFU.connect(usbDevices, firmware, options);
+            }
+        }
+
+        function verifyBoard() {
+            if (!$('option:selected', portPickerElement).data().isDFU) {
+
+                function onFinishClose() {
+                    MSP.clearListeners();
+                    GUI.connect_lock = false;
+                }
+
+                function onClose() {
+                    serial.disconnect(onFinishClose);
+                    MSP.disconnect_cleanup();
+                }
+
+                function onFinish() {
+                    const board = FC.CONFIG.boardName;
+                    if (board) {
+                        $('select[name="board"]').val(board).trigger('change');
+                        GUI.log(i18n.getMessage('firmwareFlasherBoardVerificationSuccess', {boardName: board}));
+                    } else {
+                        GUI.log(i18n.getMessage('firmwareFlasherBoardVerificationFail'));
+                    }
+                    onClose();
+                }
+
+                function getBoard() {
+                    console.log(`Requesting board information`);
+                    MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, onFinish));
+                }
+
+                function onConnect(openInfo) {
+                    if (openInfo) {
+                        GUI.connect_lock = true;
+                        serial.onReceive.addListener(data => MSP.read(data));
+                        const mspHelper = new MspHelper();
+                        MSP.listen(mspHelper.process_data.bind(mspHelper));
+                        getBoard();
+                    } else {
+                        console.dir('Failed to open connection:', openInfo);
+                    }
+                }
+
+                // Can only verify if not in DFU mode.
+                if (String(portPickerElement.val()) !== '0') {
+                    const port = String(portPickerElement.val());
+                    let baud = 115200;
+                    if ($('input.flash_manual_baud').is(':checked')) {
+                        baud = parseInt($('#flash_manual_baud_rate').val());
+                    }
+                    console.log('Query board information to preselect right firmware');
+                    if (!(serial.connected || serial.connectionId)) {
+                        serial.connect(port, {bitrate: baud}, onConnect);
+                    } else {
+                        console.warn('Attempting to connect while there still is a connection', serial.connected, serial.connectionId);
+                        serial.disconnect();
+                    }
+                } else {
+                    console.log('Please select valid serial port');
+                    GUI.log(i18n.getMessage('firmwareFlasherNoValidPort'));
+                }
             }
         }
 
@@ -1015,6 +1080,13 @@ firmware_flasher.initialize = function (callback) {
                 if ($('option:selected', this).data().isDFU) {
                     exitDfuElement.removeClass('disabled');
                 } else {
+                    // Porthandler resets board on port detect
+                    if (self.boardNeedsVerification) {
+                        // reset to prevent multiple calls
+                        self.boardNeedsVerification = false;
+                        verifyBoard();
+                    }
+
                     $("a.load_remote_file").removeClass('disabled');
                     $("a.load_file").removeClass('disabled');
                     exitDfuElement.addClass('disabled');
@@ -1238,6 +1310,37 @@ firmware_flasher.enableFlashing = function (enabled) {
         $('a.flash_firmware').removeClass('disabled');
     } else {
         $('a.flash_firmware').addClass('disabled');
+    }
+};
+
+firmware_flasher.refresh = function (callback) {
+    const self = this;
+
+    GUI.tab_switch_cleanup(function() {
+        self.initialize();
+
+        if (callback) {
+            callback();
+        }
+    });
+};
+
+firmware_flasher.showDialogVerifyBoard = function (selected, verified, onAbort, onAccept) {
+    const dialogVerifyBoard = $('#dialog-verify-board')[0];
+
+    $('#dialog-verify-board-content').html(i18n.getMessage('firmwareFlasherVerifyBoard', {selected_board: selected, verified_board: verified}));
+
+    if (!dialogVerifyBoard.hasAttribute('open')) {
+        dialogVerifyBoard.showModal();
+        $('#dialog-verify-board-abort-confirmbtn').click(function() {
+            ConfigStorage.set({'selected_board': FC.CONFIG.boardName});
+            dialogVerifyBoard.close();
+            onAbort();
+        });
+        $('#dialog-verify-board-continue-confirmbtn').click(function() {
+            dialogVerifyBoard.close();
+            onAccept();
+        });
     }
 };
 

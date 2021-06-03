@@ -92,7 +92,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
         var startFlashing = function() {
             // refresh device list
             PortHandler.check_usb_devices(function(dfu_available) {
-                if(dfu_available) {
+                if (dfu_available) {
                     STM32DFU.connect(usbDevices, hex, options);
                 } else {
                     serial.connect(self.port, {bitrate: self.baud, parityBit: 'even', stopBits: 'one'}, function (openInfo) {
@@ -105,6 +105,16 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                     });
                 }
             });
+        };
+
+        const onDisconnect = disconnectionResult => {
+            if (disconnectionResult) {
+                // delay to allow board to boot in bootloader mode
+                // required to detect if a DFU device appears
+                setTimeout(startFlashing, 1000);
+            } else {
+                GUI.connect_lock = false;
+            }
         };
 
         var legacyRebootAndFlash = function() {
@@ -124,15 +134,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                 bufferView[0] = 0x52;
 
                 serial.send(bufferOut, function () {
-                    serial.disconnect(function (disconnectionResult) {
-                        if (disconnectionResult) {
-                            // delay to allow board to boot in bootloader mode
-                            // required to detect if a DFU device appears
-                            setTimeout(startFlashing, 1000);
-                        } else {
-                            GUI.connect_lock = false;
-                        }
-                    });
+                    serial.disconnect(disconnectionResult => onDisconnect(disconnectionResult));
                 });
             });
         };
@@ -151,7 +153,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
             } else {
                 console.log('Looking for capabilities via MSP');
 
-                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, function () {
+                MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, () => {
                     var rebootMode = 0; // FIRMWARE
                     if (bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_FLASH_BOOTLOADER)) {
                         // Board has flash bootloader
@@ -164,25 +166,36 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
                         rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
                     }
 
-                    var buffer = [];
-                    buffer.push8(rebootMode);
-                    MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, function() {
+                    const selectedBoard = TABS.firmware_flasher.selectedBoard;
+                    const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : 'UNKNOWN';
 
-                        // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
+                    function reboot() {
+                        const buffer = [];
+                        buffer.push8(rebootMode);
+                        MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, () => {
 
-                        self.msp_connector.disconnect(function (disconnectionResult) {
-                            if (disconnectionResult) {
-                                // delay to allow board to boot in bootloader mode
-                                // required to detect if a DFU device appears
-                                setTimeout(startFlashing, 1000);
-                            } else {
-                                GUI.connect_lock = false;
-                            }
-                        });
+                            // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
 
-                    }, function () {
-                        console.log('Reboot request recevied by device');
-                    });
+                            self.msp_connector.disconnect(disconnectionResult => onDisconnect(disconnectionResult));
+
+                        }, () => console.log('Reboot request received by device'));
+
+                    }
+
+                    function onAbort() {
+                        GUI.connect_lock = false;
+                        rebootMode = 0;
+                        console.log('User cancelled because selected target does not match verified board');
+                        reboot();
+                        TABS.firmware_flasher.refresh();
+                    }
+
+                    if (selectedBoard !== connectedBoard) {
+                        TABS.firmware_flasher.showDialogVerifyBoard(selectedBoard, connectedBoard, onAbort, reboot);
+                    } else {
+                        reboot();
+                    }
+
                 });
             }
         };
