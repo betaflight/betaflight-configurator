@@ -5231,10 +5231,6 @@
         "message": "Salvar Script Lua",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxLuaFileHelp": {
-        "message": "O botão '$t(vtxButtonSaveLua.message)' gera um arquivo <i>Nome_Da_Aeronave</i>.lua contendo a configuração da tabela vtx que pode ser utilizado com os scripts lua do betaflight. (Veja mais informações <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aqui</a>.)",
-        "description": "Tooltip message for the Save Lua script button in the VTX tab"
-    },
     "vtxButtonLoadFile": {
         "message": "Carregar do arquivo",
         "description": "Load to file button in the VTX tab"
