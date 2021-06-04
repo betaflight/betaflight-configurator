@@ -5540,7 +5540,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "El botón '$t(vtxButtonSaveLua.message)' te permite guardar un archivo <i>nombredeaeronave</i>.lua que contiene la tabla de configuración VTX que puede ser utilizada con los scripts lua de Betaflight (más información <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">aquí</a>.)",
+        "message": "El botón '$t(vtxButtonSaveLua.message)' te permitirá guardar un archivo <i>mcuid</i>.lua que contiene la configuración de la tabla VTX que puede ser usada con los <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>A partir de la versión 1.6.0 se puede usar el archivo tal cual, pero para versiones anteriores de los scripts debería ser renombrado para que coincida con el nombre del modelo en el TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
