@@ -5634,7 +5634,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "crwdns9898:0$t(vtxButtonSaveLua.message)crwdne9898:0",
+        "message": "crwdns10482:0$t(vtxButtonSaveLua.message)crwdne10482:0",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
