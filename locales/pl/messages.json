@@ -5383,10 +5383,6 @@
         "message": "Zapisz skrypt Lua",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxLuaFileHelp": {
-        "message": "Przycisk '$t(vtxButtonSaveLua.message)' pozwala zapisać plik zawierający tabelę konfiguracji vtx <i>craftname.lua</i>. Konfiguracja może być użyta w skryptach <i>*.lua</i> Betaflight (więcej informacji <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">tutaj</a>.)",
-        "description": "Tooltip message for the Save Lua script button in the VTX tab"
-    },
     "vtxButtonLoadFile": {
         "message": "Wczytaj plik",
         "description": "Load to file button in the VTX tab"
