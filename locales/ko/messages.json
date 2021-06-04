@@ -5608,7 +5608,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "$t(vtxButtonSaveLua.message) 버튼을 누르면 베타플라이트 루아 스크립트로 사용될 수 있는 vtx 테이블을 포함하는 <i>기체이름</i>.lua 파일로 저장됩니다. (더 자세한 정보는 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">여기</a>를 보세요.)",
+        "message": "'$t(vtxButtonSaveLua.message)' 버튼을 사용하면 <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 TX 루아 스크립트</a>와 함께 사용할 수 있는 VTX 테이블 구성이 들어 있는 <i>mcuid</i>.lua 파일을 저장할 수 있습니다.<br><br>버전 1.6.0 이상에서는 파일을 그대로 사용할 수 있지만 이전 버전의 스크립트의 경우 TX의 모델 이름과 일치하도록 이름을 변경해야 합니다.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
