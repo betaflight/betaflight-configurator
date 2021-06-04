@@ -1557,6 +1557,10 @@
         "message": "Voortgang",
         "description": "Advance of the D Min feature"
     },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Min biedt een manier om een ​​lager niveau van D te hebben tijdens normale vlucht en een hoger niveau voor snelle manoeuvres die overshoot kunnen veroorzaken. Zoals flips en rolls. Het verhoogt ook de D tijdens prop-wash. Gain past aan hoe snel de D waarde zijn maximale waarde bereikt en is gebaseerd op gyro om scherpe bewegingen en prop-wash-gebeurtenissen te bepalen. Advance zorgt ervoor dat de D waarde eerder omhoog gaat door het setpoint te gebruiken in plaats van de gyro om scherpe bewegingen te bepalen.",
+        "description": "D Min feature helpicon message"
+    },
     "pidTuningPidSettings": {
         "message": "PID Controller instellingen"
     },
@@ -5459,7 +5463,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "Met de knop '$t(vtxButtonSaveLua.message)' kunt u een <i>crafname</i>.lua bestand opslaan die de vtx configuratie bevat welke gebruikt kan worden met de betaflight lua scripts. (Voor meer informatie klik <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hier</a>.)",
+        "message": "Met de knop '$t(vtxButtonSaveLua.message)' kunt u een <i>mcuid</i>.lua-bestand opslaan met daarin de VTX-tabelconfiguratie. Welke kan worden gebruikt met de <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua-scripts</a>.<br><br>Versie 1.6.0 en hoger kunnen het bestand gebruiken zoals het nu is, maar voor oudere versies van de scripts moet het bestand worden hernoemd zodat het overeenkomt met de modelnaam op de TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
