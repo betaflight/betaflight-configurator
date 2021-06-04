@@ -5252,10 +5252,6 @@
         "message": "保存 Lua 脚本",
         "description": "Save Lua script button in the VTX tab"
     },
-    "vtxLuaFileHelp": {
-        "message": "'$t(vtxButtonSaveLua.message)' 可以为你保存一个包含了图传表配置的名为<i>飞机名称</i>.lua 的文件可供 Betaflight Lua 脚本使用。（在<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">这里</a>查看更多。）",
-        "description": "Tooltip message for the Save Lua script button in the VTX tab"
-    },
     "vtxButtonLoadFile": {
         "message": "从文件加载",
         "description": "Load to file button in the VTX tab"
