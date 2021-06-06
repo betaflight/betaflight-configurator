@@ -2697,6 +2697,10 @@ TABS.pid_tuning.changeRatesSystem = function(sameType) {
                 rc_rate_pitch_e.val((FC.RC_TUNING.rcPitchRate * 1000).toFixed(0));
                 rc_rate_e.val((FC.RC_TUNING.RC_RATE * 1000).toFixed(0));
                 rc_rate_yaw_e.val((FC.RC_TUNING.rcYawRate * 1000).toFixed(0));
+            } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                rcRateDefault = (70).toFixed(0);
+                rateDefault = (670).toFixed(0);
+                expoDefault = (0).toFixed(2);
             } else {
                 rcRateDefault = (200).toFixed(0);
                 rateDefault = (670).toFixed(0);
