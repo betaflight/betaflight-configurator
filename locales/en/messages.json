@@ -3732,9 +3732,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "Dynamic Notch Count"
     },
-    "pidTuningDynamicNotchBandwidthHz": {
-        "message": "Dynamic Notch Bandwidth Frequency [Hz]"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving quads like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch quad, HIGH(230-800hz) for very high revving 2.5-3 inch quads. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
     },
@@ -3752,9 +3749,6 @@
     },
     "pidTuningDynamicNotchCountHelp": {
         "message": "Sets the number of dynamic notches per axis. With RPM filter enabled a value of 1 or 2 is recommended. Without RPM filter a value of 4 or 5 is recommended. Lower numbers will reduce filter delay, however it may increase motor temperature."
-    },
-    "pidTuningDynamicNotchBandwidthHzHelp": {
-        "message": "Bandwidth in Hz adjusts how narrow or wide every dynamic notch will be. Higher values makes it wider and broader. Lower values makes it narrower and more precise, however it may increase motor temperature. Having a really high value will increase filter delay."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM Filter",
