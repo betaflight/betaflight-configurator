@@ -5539,6 +5539,10 @@
         "message": "Luaスクリプトを保存",
         "description": "Save Lua script button in the VTX tab"
     },
+    "vtxLuaFileHelp": {
+        "message": "『$t(vtxButtonSaveLua.message)』ボタンをクリックすると、<a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>で使用できるVTXテーブル設定を含む<i>mcuid</i>.luaファイルを保存することができます。<br><br>バージョン1.6.0以降ではこのファイルをそのまま使用できますが、古いバージョンのスクリプトでは送信機のモデル名に合わせてファイル名を変更する必要があります。",
+        "description": "Tooltip message for the Save Lua script button in the VTX tab"
+    },
     "vtxButtonLoadFile": {
         "message": "ファイルからロード",
         "description": "Load to file button in the VTX tab"
