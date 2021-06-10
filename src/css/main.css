@@ -24,6 +24,13 @@
     border: 0;
     list-style: none;
     outline: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-app-region: no-drag;
+}
+
+*[draggable="true"] {
+    -webkit-user-drag: element;
 }
 
 html, body {
@@ -866,6 +873,10 @@ input[type="number"]::-webkit-inner-spin-button {
     padding: 5px 5px 4px 10px;
     position: relative;
     bottom: 0;
+}
+
+#log .wrapper > *, #log .wrapper > * > *{
+    user-select: text;
 }
 
 #log a {
