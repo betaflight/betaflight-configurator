@@ -1394,6 +1394,10 @@ TABS.pid_tuning.initialize = function (callback) {
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                 filterTypeValues.push("FIR");
             }
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                filterTypeValues.push("PT2");
+                filterTypeValues.push("PT3");
+            }
             return filterTypeValues;
         }
 
