@@ -679,9 +679,11 @@ OSD.loadDisplayFields = function() {
             default_position: -1,
             draw_order: 810,
             positionable: true,
-            preview: function (osd_data) {
-                return FONT.symbol(SYM.SPEED) + ' 40' + (osd_data.unit_mode === 0 ? FONT.symbol(SYM.MPH) : FONT.symbol(SYM.KPH));
-            }
+            preview(osdData) {
+                const UNIT_METRIC = OSD.constants.UNIT_TYPES.indexOf("METRIC");
+                const unit = FONT.symbol(osdData.unit_mode === UNIT_METRIC ? SYM.KPH : SYM.MPH);
+                return `${FONT.symbol(SYM.SPEED)}40${unit}`;
+            },
         },
         GPS_SATS: {
             name: 'GPS_SATS',
