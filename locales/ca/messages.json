@@ -4889,6 +4889,13 @@
     "osdDescUpDownReference": {
         "message": "Símbol OSD es mostra quan el stick s'apropa a la vertical (90 graus, U) i D es baixa avall (-90 graus, D)"
     },
+    "osdTextElementTxUplinkPower": {
+        "message": "Potència d'enllaç ascendent Tx",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Mostra un valor de la potència Tx (mW o W). Útil quan <i>Potència dinàmica</i> està activat per suportar ràdios"
+    },
     "osdTextElementUnknown": {
         "message": "Desconegut $1",
         "description": "One of the elements of the OSD"
