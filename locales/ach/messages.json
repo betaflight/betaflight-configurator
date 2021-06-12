@@ -4975,6 +4975,13 @@
     "osdDescUpDownReference": {
         "message": "crwdns10374:0crwdne10374:0"
     },
+    "osdTextElementTxUplinkPower": {
+        "message": "crwdns10484:0crwdne10484:0",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "crwdns10486:0crwdne10486:0"
+    },
     "osdTextElementUnknown": {
         "message": "crwdns9334:0$1crwdne9334:0",
         "description": "One of the elements of the OSD"
