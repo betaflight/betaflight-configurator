@@ -5028,6 +5028,13 @@
     "osdDescUpDownReference": {
         "message": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
     },
+    "osdTextElementTxUplinkPower": {
+        "message": "Tx uplink power",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Shows a value of the Tx power (mW or W). Useful when <i>Dynamic Power</i> is enabled for supporting radios"
+    },
     "osdTextElementUnknown": {
         "message": "Unknown $1",
         "description": "One of the elements of the OSD"

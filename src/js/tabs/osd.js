@@ -1191,6 +1191,15 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: 'U',
         },
+        OSD_TX_UPLINK_POWER: {
+            name: 'OSD_TX_UPLINK_POWER',
+            text: 'osdTextElementTxUplinkPower',
+            desc: 'osdDescTxUplinkPower',
+            defaultPosition: -1,
+            draw_order: 470,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.RSSI)}250MW`,
+        },
     };
 };
 
@@ -1613,6 +1622,7 @@ OSD.chooseFields = function() {
                                                     OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
                                                         F.TOTAL_FLIGHTS,
                                                         F.OSD_UP_DOWN_REFERENCE,
+                                                        F.OSD_TX_UPLINK_POWER,
                                                     ]);
                                                 }
                                             }
