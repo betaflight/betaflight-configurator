@@ -296,6 +296,73 @@ OSD.initData = function() {
 };
 OSD.initData();
 
+OSD.getVariantForPreview = function(osdData, elementName) {
+    return osdData.displayItems.find(element => element.name === elementName).variant;
+};
+
+OSD.generateAltitudePreview = function(osdData) {
+    const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
+    const variantSelected = OSD.getVariantForPreview(osdData, 'ALTITUDE');
+    return `${FONT.symbol(SYM.ALTITUDE)}399${variantSelected === 0? '.7' : ''}${unit}`;
+};
+
+OSD.generateBatteryUsagePreview = function(osdData) {
+    const variantSelected = OSD.getVariantForPreview(osdData, 'MAIN_BATT_USAGE');
+    let value;
+    switch (variantSelected) {
+        case 0:
+            value = FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
+                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
+                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY)
+                + FONT.symbol(SYM.PB_CLOSE);
+            break;
+
+        case 1:
+            value = FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
+                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY)
+                + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_EMPTY)
+                + FONT.symbol(SYM.PB_CLOSE);
+            break;
+
+        case 2:
+            value = `${FONT.symbol(SYM.MAH)}67%`;
+            break;
+
+        case 3:
+            value = `${FONT.symbol(SYM.MAH)}33%`;
+            break;
+
+    }
+    return value;
+};
+
+OSD.generateGpsLatLongPreview = function(osdData, elementName) {
+
+    const variantSelected = OSD.getVariantForPreview(osdData, elementName);
+
+    let value;
+    switch (variantSelected) {
+        case 0:
+            value = elementName === 'GPS_LON' ? `${FONT.symbol(SYM.GPS_LON)}-000.0000000` : `${FONT.symbol(SYM.GPS_LAT)}-00.0000000 `;
+            break;
+
+        case 1:
+            value = elementName === 'GPS_LON' ? `${FONT.symbol(SYM.GPS_LON)}-000.0000` : `${FONT.symbol(SYM.GPS_LAT)}-00.0000 `;
+            break;
+
+        case 2:
+            const degreesSymbol = FONT.symbol(SYM.STICK_OVERLAY_SPRITE_HIGH);
+            value = elementName === 'GPS_LON' ? `${FONT.symbol(SYM.GPS_LON)}00${degreesSymbol}000'00.0"N` : `${FONT.symbol(SYM.GPS_LAT)}00${degreesSymbol}00'00.0"E `;
+            break;
+
+        case 3:
+            value = `${FONT.symbol(SYM.GPS_SAT_L)}${FONT.symbol(SYM.GPS_SAT_R)}000000AA+BBB`;
+            break;
+
+    }
+    return value;
+};
+
 OSD.generateTimerPreview = function(osdData, timerIndex) {
     let preview = '';
     switch (osdData.timers[timerIndex].src) {
@@ -675,9 +742,12 @@ OSD.loadDisplayFields = function() {
             defaultPosition: 62,
             draw_order: 160,
             positionable: true,
+            variants: [
+                'osdTextElementAltitudeVariant1Decimal',
+                'osdTextElementAltitudeVariantNoDecimal',
+            ],
             preview(osdData) {
-                const unit = FONT.symbol(osdData.unit_mode === 0 ? SYM.FEET : SYM.METRE);
-                return `${FONT.symbol(SYM.ALTITUDE)}399.7${unit}`;
+                return OSD.generateAltitudePreview(osdData);
             },
         },
         ONTIME: {
@@ -734,7 +804,15 @@ OSD.loadDisplayFields = function() {
             defaultPosition: -1,
             draw_order: 830,
             positionable: true,
-            preview: `${FONT.symbol(SYM.GPS_LON)}-000.0000000`,
+            variants: [
+                'osdTextElementGPSVariant7Decimals',
+                'osdTextElementGPSVariant4Decimals',
+                'osdTextElementGPSVariantDegMinSec',
+                'osdTextElementGPSVariantOpenLocation',
+            ],
+            preview(osdData) {
+                return OSD.generateGpsLatLongPreview(osdData, 'GPS_LON');
+            },
         },
         GPS_LAT: {
             name: 'GPS_LAT',
@@ -743,7 +821,15 @@ OSD.loadDisplayFields = function() {
             defaultPosition: -1,
             draw_order: 820,
             positionable: true,
-            preview: `${FONT.symbol(SYM.GPS_LAT)}-00.0000000 `,
+            variants: [
+                'osdTextElementGPSVariant7Decimals',
+                'osdTextElementGPSVariant4Decimals',
+                'osdTextElementGPSVariantDegMinSec',
+                'osdTextElementGPSVariantOpenLocation',
+            ],
+            preview(osdData) {
+                return OSD.generateGpsLatLongPreview(osdData, 'GPS_LAT');
+            },
         },
         DEBUG: {
             name: 'DEBUG',
@@ -843,10 +929,15 @@ OSD.loadDisplayFields = function() {
             defaultPosition: -17,
             draw_order: 270,
             positionable: true,
-            preview: FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
-                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
-                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY)
-                + FONT.symbol(SYM.PB_CLOSE),
+            variants: [
+                'osdTextElementMainBattUsageVariantGraphrRemain',
+                'osdTextElementMainBattUsageVariantGraphUsage',
+                'osdTextElementMainBattUsageVariantValueRemain',
+                'osdTextElementMainBattUsageVariantValueUsage',
+            ],
+            preview(osdData) {
+                return OSD.generateBatteryUsagePreview(osdData);
+            },
         },
         ARMED_TIME: {
             name: 'ARMED_TIME',
@@ -1205,6 +1296,7 @@ OSD.loadDisplayFields = function() {
 
 OSD.constants = {
     VISIBLE: 0x0800,
+    VARIANTS: 0xC000,
     VIDEO_TYPES: [
         'AUTO',
         'PAL',
@@ -1812,7 +1904,9 @@ OSD.msp = {
     * b: blink flag
     * y: y coordinate
     * x: x coordinate
-    * 0000 vbyy yyyx xxxx
+    * p: profile
+    * t: variant type
+    * ttpp vbyy yyyx xxxx
     */
     helpers: {
         unpack: {
@@ -1831,6 +1925,9 @@ OSD.msp = {
                     for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
                         displayItem.isVisible[osd_profile] = (bits & (OSD.constants.VISIBLE << osd_profile)) !== 0;
                     }
+
+                    displayItem.variant = (bits & OSD.constants.VARIANTS) >> 14;
+
                 } else {
                     displayItem.position = (bits === -1) ? defaultPosition : bits;
                     displayItem.isVisible = [bits !== -1];
@@ -1850,13 +1947,17 @@ OSD.msp = {
             position(displayItem) {
                 const isVisible = displayItem.isVisible;
                 const position = displayItem.position;
+                const variant = displayItem.variant;
+
                 if (semver.gte(FC.CONFIG.apiVersion, "1.21.0")) {
 
                     let packed_visible = 0;
                     for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
                         packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
                     }
-                    return packed_visible | (((position / FONT.constants.SIZES.LINE) & 0x001F) << 5) | (position % FONT.constants.SIZES.LINE);
+                    const variantSelected = (variant << 14);
+
+                    return packed_visible | variantSelected | (((position / FONT.constants.SIZES.LINE) & 0x001F) << 5) | (position % FONT.constants.SIZES.LINE);
                 } else {
                     const realPosition = position === -1 ? 0 : position;
                     return isVisible[0] ? realPosition : -1;
@@ -1965,6 +2066,7 @@ OSD.msp = {
                 index: j,
                 draw_order: c.draw_order,
                 preview: suffix ? c.preview + suffix : c.preview,
+                variants: c.variants,
                 ignoreSize,
             }, this.helpers.unpack.position(item, c)));
         }
@@ -2821,6 +2923,32 @@ TABS.osd.initialize = function(callback) {
 
                         const finalFieldName = titleizeField(field);
                         $field.append(`<label for="${field.name}" class="char-label">${finalFieldName}</label>`);
+
+
+                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && field.variants && field.variants.length > 0) {
+
+                            const selectVariant = $('<select class="osd-variant" />')
+                                .data('field', field)
+                                .on("change", function() {
+                                    const fieldChanged = $(this).data('field');
+                                    fieldChanged.variant = parseInt($(this).val());
+                                    MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged))
+                                        .then(function() {
+                                            updateOsdView();
+                                        });
+                                    });
+
+                            for (const [variantIndex, variantText] of field.variants.entries()) {
+                                selectVariant.append($('<option/>')
+                                             .val(variantIndex)
+                                             .html(i18n.getMessage(variantText)));
+                            }
+
+                            selectVariant.val(field.variant);
+
+                            $field.append(selectVariant);
+                        }
+
                         if (field.positionable && field.isVisible[OSD.getCurrentPreviewProfile()]) {
                             $field.append(
                                 $(`<input type="number" class="${field.index} position"></input>`)

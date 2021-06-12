@@ -449,6 +449,10 @@ button {
   border-radius: 3px;
 }
 
+.tab-osd select.osd-variant {
+  max-width: 100%;
+}
+
 .tab-osd .preview {
   width: 360px;
   float: left; 

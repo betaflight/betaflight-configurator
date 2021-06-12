@@ -4657,6 +4657,14 @@
     "osdDescElementAltitude": {
         "message": "Current altitude (flashes when above alarm threshold)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "With 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Without decimals",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "On time",
         "description": "One of the elements of the OSD"
@@ -4705,6 +4713,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "GPS latitude coordinate"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "With 7 decimals",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "With 4 decimals",
+        "description": "One of the variants for the GPS element of the OSD"        
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Using degrees, minutes and seconds",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Using Open Location Code",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Debug",
@@ -4782,6 +4806,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Graphical representation of battery capacity usage"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Graphical remaining",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Graphical used",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Percentage remaining",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Percentage used",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Timer: armed time",
