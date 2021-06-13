@@ -169,7 +169,8 @@
 }
 
 .tab-pid_tuning table.compensation .helpicon {
-    margin-top: 3px
+    margin-top: 3px;
+    margin-left: auto;
 }
 
 .tab-pid_tuning table.compensation .suboption {
