@@ -4518,6 +4518,14 @@
     "osdDescElementAltitude": {
         "message": "Altitud actual (pampallugeja por sobre del nivell d'alarma)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "Amb 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Sense decimals",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "A l'hora",
         "description": "One of the elements of the OSD"
@@ -4566,6 +4574,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "Latitud coordenades GPS"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "Amb 7 decimals",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "Amb 4 decimals",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Utilitzant graus, minuts i segons",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Utilitzant el codi d’ubicació obert",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Depuració",
@@ -4643,6 +4667,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Representació gràfica de l'ús de la bateria"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Gràfic restant",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Gràfic utilitzat",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Percentatge restant",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Percentatge utilitzat",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Temporitzador: temps armat",
