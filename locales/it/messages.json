@@ -4510,6 +4510,14 @@
     "osdDescElementAltitude": {
         "message": "Altitudine attuale (lampeggia se sopra la soglia di allarme)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "Con 1 decimale",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Senza decimali",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Tempo accensione",
         "description": "One of the elements of the OSD"
@@ -4558,6 +4566,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "Coordinata di latitudine GPS"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "Con 7 decimali",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "Con 4 decimali",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Usa gradi, minuti e secondi",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Usa Open Location Code",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Debug",
@@ -4635,6 +4659,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Rappresentazione grafica dell'utilizzo della capacità della batteria"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Grafico rimanente",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Grafico utilizzata",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Percentuale rimanente",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Percentuale utilizzata",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Timer: tempo armato",
@@ -4880,6 +4920,13 @@
     },
     "osdDescUpDownReference": {
         "message": "Simbolo OSD da mostrare quando il pitch si avvicina alla verticale (90 gradi, U) e per il naso verso il basso (-90 gradi, D)"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "Potenza uplink TX",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Mostra il valore della potenza (in mW o W). Utile quando è abilitata la <i>Potenza dinamica</i> nelle TX supportate"
     },
     "osdTextElementUnknown": {
         "message": "Sconosciuto $1",
@@ -5538,6 +5585,10 @@
     "vtxButtonSaveLua": {
         "message": "Salva script Lua",
         "description": "Save Lua script button in the VTX tab"
+    },
+    "vtxLuaFileHelp": {
+        "message": "Il pulsante '$t(vtxButtonSaveLua.message)' ti permetterà di salvare un file <i>mcuid</i>.lua contenente la configurazione della tabella VTX che può essere utilizzata con gli <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Script TX Lua Betaflight</a>.<br><br>Dalla versione 1.6.0 si può usare il file così com'è, ma per le versioni precedenti degli script dovrebbe essere rinominato per corrispondere al nome del modello sulla TX.",
+        "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
         "message": "Carica da file",
