@@ -4604,6 +4604,14 @@
     "osdDescElementAltitude": {
         "message": "crwdns6243:0crwdne6243:0"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "crwdns10488:0crwdne10488:0",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "crwdns10490:0crwdne10490:0",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "crwdns9236:0crwdne9236:0",
         "description": "One of the elements of the OSD"
@@ -4652,6 +4660,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "crwdns9252:0crwdne9252:0"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "crwdns10492:0crwdne10492:0",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "crwdns10494:0crwdne10494:0",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "crwdns10496:0crwdne10496:0",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "crwdns10498:0crwdne10498:0",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "crwdns9254:0crwdne9254:0",
@@ -4729,6 +4753,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "crwdns6261:0crwdne6261:0"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "crwdns10500:0crwdne10500:0",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "crwdns10502:0crwdne10502:0",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "crwdns10504:0crwdne10504:0",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "crwdns10506:0crwdne10506:0",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "crwdns9276:0crwdne9276:0",
