@@ -4444,6 +4444,14 @@
     "osdDescElementAltitude": {
         "message": "Huidige hoogte (knippert wanneer deze boven drempel uit komt)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "Met 1 decimaal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Zonder decimalen",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Tijd aan",
         "description": "One of the elements of the OSD"
@@ -4492,6 +4500,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "GPS breedtegraad coördinaat"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "Met 7 decimalen",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "Met 4 decimalen",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Gebruik graden, minuten en seconden",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Gebruik van Open Location Code",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Debug",
@@ -4569,6 +4593,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Grafische weergave van de batterijcapaciteit"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Grafisch resterende",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Grafisch gebruikt",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Percentage resterend",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Percentage gebruikt",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Timer: armed tijd",
@@ -4811,6 +4851,13 @@
     },
     "osdDescUpDownReference": {
         "message": "OSD-symbool dat aangeeft wanneer de pitch verticaal (90 graden, U) en (-90 graden, D) nadert"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "Tx uplink vermogen",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Toont de waarde van het Tx-vermogen (mW of W). Handig wanneer <i>Dynamic Power</i> is ingeschakeld voor radio's die dit ondersteunen"
     },
     "osdTextElementUnknown": {
         "message": "Onbekend $1",
