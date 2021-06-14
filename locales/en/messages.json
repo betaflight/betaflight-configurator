@@ -665,6 +665,9 @@
     "dfu_error_image_size": {
         "message": "<span class=\"message-negative\">Error</span>: Supplied image is larger then flash available on the chip! Image: $1 KiB, limit = $2 KiB"
     },
+    "dfu_error_image_mismatch": {
+        "message": "<span class=\"message-negative\">Error</span>: Supplied image is not suitable for the flash chip"
+    },
 
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"

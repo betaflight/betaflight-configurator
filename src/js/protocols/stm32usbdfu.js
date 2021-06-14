@@ -333,10 +333,20 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
             // F72x: "@Internal Flash  /0x08000000/04*016Kg,01*64Kg,03*128Kg"
             // F74x: "@Internal Flash  /0x08000000/04*032Kg,01*128Kg,03*256Kg"
 
-            // H750 SPRacing H7 EXST: "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka"
-            // H750 SPRacing H7 EXST: "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka" - Early BL firmware with incorrect string, treat as above.
+            // H750 SPRacing H7 EXST
+            // Descriptors:
+            // "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka" (standard)
+            // "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka" (Early BL firmware with incorrect string, treat as above)
+            // Partitions:
+            // Flash, Config, Firmware, 1x BB Management block + x BB Replacement blocks
 
-            // H750 Partitions: Flash, Config, Firmware, 1x BB Management block + x BB Replacement blocks)
+            // H730 SPRacing H7 EXST with SPRacingPixelOSD
+            // Descriptors:
+            // "@External Flash /0x90000000/111*8Kg,16*8Kg,1*8Kg,128*8Kg,0*8Ka"
+            // Partitions:
+            // OSD data (fonts, logos, etc), System Partition, Config, Firmware, BB Management block + x BB Replacement blocks
+
+
             if (str == "@External Flash /0x90000000/1001*128Kg,3*128Kg,20*128Ka") {
                 str = "@External Flash /0x90000000/998*128Kg,1*128Kg,4*128Kg,21*128Ka";
             }
@@ -583,22 +593,30 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                             });
                         }
                     } else if (typeof chipInfo.external_flash !== "undefined") {
-                        // external flash, flash to the 3rd partition.
+                        // external flash, exst images must match the size of the partition being flashed.
+                        //
+                        // since the actual addresses to be flashed are in the .hex file this is not ideal
+                        // really we just need to make sure the flash chip contains addresses/offsets that match the ones in the .hex file.
+
                         self.chipInfo = chipInfo;
                         self.flash_layout = chipInfo.external_flash;
+                        self.available_flash_size = 0;
 
-                        var firmware_partition_index = 2;
-                        var firmware_sectors = self.flash_layout.sectors[firmware_partition_index];
-                        var firmware_partition_size = firmware_sectors.total_size;
+                        // Find a partition that matches the size of the hex.
+                        for (const firmwareSectors of self.flash_layout.sectors) {
 
-                        self.available_flash_size = firmware_partition_size;
+                            const firmwarePartitionSize = firmwareSectors.total_size;
+
+                            if (firmwarePartitionSize === self.hex.bytes_total) {
+                                self.available_flash_size = firmwarePartitionSize;
+                                break;
+                            }
+                        }
 
                         GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
 
-                        if (self.hex.bytes_total > self.available_flash_size) {
-                            GUI.log(i18n.getMessage('dfu_error_image_size',
-                                [(self.hex.bytes_total / 1024.0).toFixed(1),
-                                (self.available_flash_size / 1024.0).toFixed(1)]));
+                        if (self.available_flash_size === 0) {
+                            GUI.log(i18n.getMessage('dfu_error_image_mismatch'));
                             self.cleanup();
                         } else {
                             self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
