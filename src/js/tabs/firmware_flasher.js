@@ -15,9 +15,9 @@ const firmware_flasher = {
 };
 
 firmware_flasher.initialize = function (callback) {
-    var self = this;
+    const self = this;
 
-    if (GUI.active_tab != 'firmware_flasher') {
+    if (GUI.active_tab !== 'firmware_flasher') {
         GUI.active_tab = 'firmware_flasher';
     }
 
@@ -27,7 +27,7 @@ firmware_flasher.initialize = function (callback) {
     self.intel_hex = undefined;
     self.parsed_hex = undefined;
 
-    var unifiedSource = 'https://api.github.com/repos/betaflight/unified-targets/contents/configs/default';
+    const unifiedSource = 'https://api.github.com/repos/betaflight/unified-targets/contents/configs/default';
 
     function onFirmwareCacheUpdate(release) {
         $('select[name="firmware_version"] option').each(function () {
@@ -46,7 +46,7 @@ firmware_flasher.initialize = function (callback) {
 
         function parse_hex(str, callback) {
             // parsing hex in different thread
-            var worker = new Worker('./js/workers/hex_parser.js');
+            const worker = new Worker('./js/workers/hex_parser.js');
 
             // "callback"
             worker.onmessage = function (event) {
@@ -59,7 +59,7 @@ firmware_flasher.initialize = function (callback) {
 
         function show_loaded_hex(summary) {
             self.flashingMessage('<a class="save_firmware" href="#" title="Save Firmware">' + i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', self.parsed_hex.bytes_total) + '</a>',
-                     self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             self.enableFlashing(true);
 
@@ -82,7 +82,7 @@ firmware_flasher.initialize = function (callback) {
                 $('div.release_info #unifiedTargetInfo').hide();
             }
 
-            var formattedNotes = summary.notes.replace(/#(\d+)/g, '[#$1](https://github.com/betaflight/betaflight/pull/$1)');
+            let formattedNotes = summary.notes.replace(/#(\d+)/g, '[#$1](https://github.com/betaflight/betaflight/pull/$1)');
             formattedNotes = marked(formattedNotes);
             $('div.release_info .notes').html(formattedNotes);
             $('div.release_info .notes').find('a').each(function() {
@@ -123,7 +123,7 @@ firmware_flasher.initialize = function (callback) {
             process_hex(data, summary);
             $("a.load_remote_file").removeClass('disabled');
             $("a.load_remote_file").text(i18n.getMessage('firmwareFlasherButtonLoadOnline'));
-        };
+        }
 
         function populateBoardOptions(builds) {
             if (!builds) {
@@ -133,26 +133,24 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
-            var boards_e = $('select[name="board"]');
+            const boards_e = $('select[name="board"]');
             boards_e.empty();
             boards_e.append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectBoard")}</option>`));
 
-            var versions_e = $('select[name="firmware_version"]');
+            const versions_e = $('select[name="firmware_version"]');
             versions_e.empty();
             versions_e.append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectFirmwareVersion")}</option>`));
 
 
-            var selectTargets = [];
+            const selectTargets = [];
             Object.keys(builds)
                 .sort()
                 .forEach(function(target, i) {
-                    var descriptors = builds[target];
+                    const descriptors = builds[target];
                     descriptors.forEach(function(descriptor){
-                        if($.inArray(target, selectTargets) == -1) {
+                        if ($.inArray(target, selectTargets) === -1) {
                             selectTargets.push(target);
-                            var select_e = $(
-                                `<option value='${descriptor.target}'>${descriptor.target}</option>`,
-                            );
+                            const select_e = $(`<option value='${descriptor.target}'>${descriptor.target}</option>`)      ;
                             boards_e.append(select_e);
                         }
                     });
@@ -162,25 +160,25 @@ firmware_flasher.initialize = function (callback) {
 
             ConfigStorage.get('selected_board', function (result) {
                 if (result.selected_board) {
-                    var boardBuilds = builds[result.selected_board];
+                    const boardBuilds = builds[result.selected_board];
                     $('select[name="board"]').val(boardBuilds ? result.selected_board : 0).trigger('change');
                 }
             });
         }
 
         function processBoardOptions(releaseData, showDevReleases) {
-            var releases = {};
-            var sortedTargets = [];
-            var unsortedTargets = [];
+            const releases = {};
+            let sortedTargets = [];
+            const unsortedTargets = [];
             releaseData.forEach(function(release) {
                 release.assets.forEach(function(asset) {
-                    var targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
-                    var match = targetFromFilenameExpression.exec(asset.name);
+                    const targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
+                    const match = targetFromFilenameExpression.exec(asset.name);
                     if ((!showDevReleases && release.prerelease) || !match) {
                         return;
                     }
-                    var target = match[2];
-                    if($.inArray(target, unsortedTargets) == -1) {
+                    const target = match[2];
+                    if ($.inArray(target, unsortedTargets) === -1) {
                         unsortedTargets.push(target);
                     }
                 });
@@ -190,23 +188,23 @@ firmware_flasher.initialize = function (callback) {
                 releases[release] = [];
             });
             releaseData.forEach(function(release) {
-                var versionFromTagExpression = /v?(.*)/;
-                var matchVersionFromTag = versionFromTagExpression.exec(release.tag_name);
-                var version = matchVersionFromTag[1];
+                const versionFromTagExpression = /v?(.*)/;
+                const matchVersionFromTag = versionFromTagExpression.exec(release.tag_name);
+                const version = matchVersionFromTag[1];
                 release.assets.forEach(function(asset) {
-                    var targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
-                    var match = targetFromFilenameExpression.exec(asset.name);
+                    const targetFromFilenameExpression = /betaflight_([\d.]+)?_?(\w+)(\-.*)?\.(.*)/;
+                    const match = targetFromFilenameExpression.exec(asset.name);
                     if ((!showDevReleases && release.prerelease) || !match) {
                         return;
                     }
-                    var target = match[2];
-                    var format = match[4];
-                    if (format != 'hex') {
+                    const target = match[2];
+                    const format = match[4];
+                    if (format !== 'hex') {
                         return;
                     }
-                    var date = new Date(release.published_at);
-                    var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
-                    var descriptor = {
+                    const date = new Date(release.published_at);
+                    const formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+                    const descriptor = {
                         "releaseUrl": release.html_url,
                         "name"      : version,
                         "version"   : version,
@@ -220,7 +218,7 @@ firmware_flasher.initialize = function (callback) {
                 });
             });
             loadUnifiedBuilds(releases);
-        };
+        }
 
         function supportsUnifiedTargets(version) {
             return semver.gte(version.split(' ')[0], '4.1.0-RC1');
@@ -236,14 +234,14 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function loadUnifiedBuilds(builds) {
-            var expirationPeriod = 3600 * 2; // Two of your earth hours.
-            var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
+            const expirationPeriod = 3600 * 2; // Two of your earth hours.
+            const checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
             if (builds && hasUnifiedTargetBuild(builds)) {
                 console.log('loaded some builds for later');
                 const storageTag = 'unifiedSourceCache';
                 chrome.storage.local.get(storageTag, function (result) {
                     let storageObj = result[storageTag];
-                    if(!storageObj || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod) {
+                    if (!storageObj || !storageObj.lastUpdate || checkTime - storageObj.lastUpdate > expirationPeriod) {
                         console.log('go get', unifiedSource);
                         $.get(unifiedSource, function(data, textStatus, jqXHR) {
                             // Cache the information for later use.
@@ -295,19 +293,16 @@ firmware_flasher.initialize = function (callback) {
                 unifiedConfigs[targetName] = (unifiedConfigs[targetName] || {});
                 unifiedConfigs[targetName][manufacturerId] = target;
             });
-            var boards_e = $('select[name="board"]');
-            var versions_e = $('select[name="firmware_version"]');
+            const boards_e = $('select[name="board"]');
+            const versions_e = $('select[name="firmware_version"]');
             boards_e.empty()
                 .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectBoard")}</option>`));
 
             versions_e.empty()
                 .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectFirmwareVersion")}</option>`));
-            var selectTargets = [];
             Object.keys(items)
                 .sort()
-                .forEach(function(target, i) {
-                    let item = items[target];
-
+                .forEach(function(target) {
                     const select_e = $(`<option value='${target}'>${target}</option>"`);
                     boards_e.append(select_e);
                 });
@@ -316,14 +311,14 @@ firmware_flasher.initialize = function (callback) {
 
             ConfigStorage.get('selected_board', function (result) {
                 if (result.selected_board) {
-                    var boardReleases = TABS.firmware_flasher.unifiedConfigs[result.selected_board]
+                    const boardReleases = TABS.firmware_flasher.unifiedConfigs[result.selected_board]
                         || TABS.firmware_flasher.releases[result.selected_board];
                     $('select[name="board"]').val(boardReleases ? result.selected_board : 0).trigger('change');
                 }
             });
         }
 
-        var buildTypes = [
+        const buildTypes = [
             {
                 tag: 'firmwareFlasherOptionLabelBuildTypeRelease',
                 loader: () => self.releaseChecker.loadReleaseData(releaseData => processBoardOptions(releaseData, false))
@@ -334,7 +329,7 @@ firmware_flasher.initialize = function (callback) {
             }
         ];
 
-        var ciBuildsTypes = self.jenkinsLoader._jobs.map(job => {
+        const ciBuildsTypes = self.jenkinsLoader._jobs.map(job => {
             if (job.title === "Development") {
                 return {
                     tag: "firmwareFlasherOptionLabelBuildTypeDevelopment",
@@ -346,9 +341,9 @@ firmware_flasher.initialize = function (callback) {
                 loader: () => self.jenkinsLoader.loadBuilds(job.name, loadUnifiedBuilds)
             };
         });
-        var buildTypesToShow;
+    let buildTypesToShow;
 
-        var buildType_e = $('select[name="build_type"]');
+        const buildType_e = $('select[name="build_type"]');
         function buildBuildTypeOptionsList() {
             buildType_e.empty();
             buildTypesToShow.forEach(({ tag, title }, index) => {
@@ -364,7 +359,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function showOrHideBuildTypes() {
-            var showExtraReleases = $(this).is(':checked');
+            const showExtraReleases = $(this).is(':checked');
 
             if (showExtraReleases) {
                 $('tr.build_type').show();
@@ -376,9 +371,9 @@ firmware_flasher.initialize = function (callback) {
             }
         }
 
-        var globalExpertMode_e = $('input[name="expertModeCheckbox"]');
+        const globalExpertMode_e = $('input[name="expertModeCheckbox"]');
         function showOrHideBuildTypeSelect() {
-            var expertModeChecked = $(this).is(':checked');
+            const expertModeChecked = $(this).is(':checked');
 
             globalExpertMode_e.prop('checked', expertModeChecked);
             if (expertModeChecked) {
@@ -391,7 +386,7 @@ firmware_flasher.initialize = function (callback) {
             }
         }
 
-        var expertMode_e = $('.tab-firmware_flasher input.expert_mode');
+        const expertMode_e = $('.tab-firmware_flasher input.expert_mode');
         expertMode_e.prop('checked', globalExpertMode_e.is(':checked'));
         $('input.show_development_releases').change(showOrHideBuildTypes).change();
         expertMode_e.change(showOrHideBuildTypeSelect).change();
@@ -403,7 +398,7 @@ firmware_flasher.initialize = function (callback) {
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_CHANNEL, $('option:selected', this).text());
 
             $("a.load_remote_file").addClass('disabled');
-            var build_type = $(this).val();
+            const build_type = $(this).val();
 
             $('select[name="board"]').empty()
             .append($(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`));
@@ -477,21 +472,19 @@ firmware_flasher.initialize = function (callback) {
 
                         let versionLabel;
                         if (version.isLegacy && Object.values(builds).some(function (build) {
-                                return build.descriptor.version === version.descriptor.version && !build.isLegacy;
-                            })) {
+                            return build.descriptor.version === version.descriptor.version && !build.isLegacy;
+                        })) {
                             versionLabel = i18n.getMessage("firmwareFlasherLegacyLabel", { target: version.descriptor.version });
                         } else if (!version.isLegacy && Object.values(builds).some(function (build) {
-                                return build.descriptor.version === version.descriptor.version && build.manufacturerId !== version.manufacturerId && !build.isLegacy;
-                            })) {
+                            return build.descriptor.version === version.descriptor.version && build.manufacturerId !== version.manufacturerId && !build.isLegacy;
+                        })) {
                             versionLabel = `${version.descriptor.version} (${version.manufacturerId})`;
                         } else {
                             versionLabel = version.descriptor.version;
                         }
 
 
-                        var select_e = $(
-                            `<option value='${versionName}'>${version.descriptor.date} - ${versionLabel}</option>`
-                        );
+                        const select_e = $(`<option value='${versionName}'>${version.descriptor.date} - ${versionLabel}</option>`);
                         if (FirmwareCache.has(version.descriptor)) {
                             select_e.addClass("cached");
                         }
@@ -540,10 +533,10 @@ firmware_flasher.initialize = function (callback) {
 
         $('select[name="board"]').change(function() {
             $("a.load_remote_file").addClass('disabled');
-            var target = $(this).val();
+            const target = $(this).val();
 
             if (!GUI.connect_lock) {
-                if (TABS.firmware_flasher.selectedBoard != target) {
+                if (TABS.firmware_flasher.selectedBoard !== target) {
                     // We're sure the board actually changed
                     if (self.isConfigLocal) {
                         console.log('Board changed, unloading local config');
@@ -566,9 +559,9 @@ firmware_flasher.initialize = function (callback) {
                     self.enableFlashing(false);
                 }
 
-                var versions_e = $('select[name="firmware_version"]');
-                if (target == 0) {
-                    // target == 0 is the "Choose a Board" option. Throw out anything loaded
+                const versions_e = $('select[name="firmware_version"]');
+                if (target === 0) {
+                    // target is 0 is the "Choose a Board" option. Throw out anything loaded
                     clearBufferedFirmware();
 
                     versions_e.empty();
@@ -590,7 +583,6 @@ firmware_flasher.initialize = function (callback) {
                         )
                     );
 
-                    let selecteBuild = buildTypesToShow[$('select[name="build_type"]').val()];
                     const builds = [];
 
                     const finishPopulatingBuilds = function () {
@@ -604,8 +596,8 @@ firmware_flasher.initialize = function (callback) {
 
                     if (TABS.firmware_flasher.unifiedConfigs[target]) {
                         const storageTag = 'unifiedConfigLast';
-                        var expirationPeriod = 3600; // One of your earth hours.
-                        var checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
+                        const expirationPeriod = 3600; // One of your earth hours.
+                        const checkTime = Math.floor(Date.now() / 1000); // Lets deal in seconds.
                         chrome.storage.local.get(storageTag, function (result) {
                             let storageObj = result[storageTag];
                             const unifiedConfigList = TABS.firmware_flasher.unifiedConfigs[target];
@@ -713,10 +705,10 @@ firmware_flasher.initialize = function (callback) {
             let output = [];
             let inComment = false;
             for (let i=0; i < input.length; i++) {
-                if (input.charAt(i) == "\n" || input.charAt(i) == "\r") {
+                if (input.charAt(i) === "\n" || input.charAt(i) === "\r") {
                     inComment = false;
                 }
-                if (input.charAt(i) == "#") {
+                if (input.charAt(i) === "#") {
                     inComment = true;
                 }
                 if (!inComment && input.charCodeAt(i) > 255) {
@@ -735,9 +727,9 @@ firmware_flasher.initialize = function (callback) {
 
         const portPickerElement = $('div#port-picker #port');
         function flashFirmware(firmware) {
-            var options = {};
+            const options = {};
 
-            var eraseAll = false;
+            let eraseAll = false;
             if ($('input.erase_chip').is(':checked')) {
                 options.erase_chip = true;
 
@@ -810,7 +802,7 @@ firmware_flasher.initialize = function (callback) {
 
             // bind UI hook so the status is saved on change
             $('input.updating').change(function() {
-                var status = $(this).is(':checked');
+                const status = $(this).is(':checked');
 
                 if (status) {
                     $('.flash_on_connect_wrapper').show();
@@ -834,7 +826,7 @@ firmware_flasher.initialize = function (callback) {
 
             // bind UI hook so the status is saved on change
             $('input.flash_manual_baud').change(function() {
-                var status = $(this).is(':checked');
+                const status = $(this).is(':checked');
                 ConfigStorage.set({'flash_manual_baud': status});
             });
 
@@ -846,7 +838,7 @@ firmware_flasher.initialize = function (callback) {
 
             // bind UI hook so the status is saved on change
             $('#flash_manual_baud_rate').change(function() {
-                var baud = parseInt($('#flash_manual_baud_rate').val());
+                const baud = parseInt($('#flash_manual_baud_rate').val());
                 ConfigStorage.set({'flash_manual_baud_rate': baud});
             });
 
@@ -878,15 +870,15 @@ firmware_flasher.initialize = function (callback) {
                 $('div.git_info').slideUp();
 
                 chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
-                    console.log('Loading file from: ' + path);
+                    console.log('Loading file from:', path);
 
                     fileEntry.file(function (file) {
                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, file.name);
-                        var reader = new FileReader();
+                        const reader = new FileReader();
 
                         reader.onloadend = function(e) {
-                            if (e.total != 0 && e.total == e.loaded) {
-                                console.log('File loaded (' + e.loaded + ')');
+                            if (e.total !== 0 && e.total === e.loaded) {
+                                console.log(`File loaded (${e.loaded})`);
 
                                 if (file.name.split('.').pop() === "hex") {
                                     self.intel_hex = e.target.result;
@@ -933,7 +925,7 @@ firmware_flasher.initialize = function (callback) {
             if (!self.localFirmwareLoaded) {
                 self.enableFlashing(false);
                 self.flashingMessage(i18n.getMessage('firmwareFlasherLoadFirmwareFile'), self.FLASH_MESSAGE_TYPES.NEUTRAL);
-                if(self.parsed_hex && self.parsed_hex.bytes_total) {
+                if (self.parsed_hex && self.parsed_hex.bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
                     console.log('throw out loaded hex');
                     self.intel_hex = undefined;
@@ -949,7 +941,7 @@ firmware_flasher.initialize = function (callback) {
 
                     FirmwareCache.get(release, cached => {
                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, release.file);
-                        console.info("Release found in cache: " + release.file);
+                        console.info("Release found in cache:", release.file);
 
                         self.developmentFirmwareLoaded = buildTypesToShow[$('select[name="build_type"]').val()].tag === 'firmwareFlasherOptionLabelBuildTypeDevelopment';
 
@@ -970,7 +962,7 @@ firmware_flasher.initialize = function (callback) {
 
             analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'http');
 
-            if ($('select[name="firmware_version"]').val() == "0") {
+            if ($('select[name="firmware_version"]').val() === "0") {
                 GUI.log(i18n.getMessage('firmwareFlasherNoFirmwareSelected'));
                 return;
             }
@@ -982,14 +974,14 @@ firmware_flasher.initialize = function (callback) {
                 i18n.localizePage();
             }
 
-            var summary = $('select[name="firmware_version"] option:selected').data('summary');
+            const summary = $('select[name="firmware_version"] option:selected').data('summary');
             if (summary) { // undefined while list is loading or while running offline
                 if (self.isConfigLocal && FirmwareCache.has(summary)) {
                     // Load the .hex from Cache if available when the user is providing their own config.
                     analytics.setFirmwareData(analytics.DATA.FIRMWARE_SOURCE, 'cache');
                     FirmwareCache.get(summary, cached => {
                         analytics.setFirmwareData(analytics.DATA.FIRMWARE_NAME, summary.file);
-                        console.info("Release found in cache: " + summary.file);
+                        console.info("Release found in cache:", summary.file);
                         onLoadSuccess(cached.hexdata, summary);
                     });
                     return;
@@ -1104,7 +1096,7 @@ firmware_flasher.initialize = function (callback) {
                 if (self.parsed_hex) {
                     try {
                         if (self.unifiedTarget.config && !self.parsed_hex.configInserted) {
-                            var configInserter = new ConfigInserter();
+                            const configInserter = new ConfigInserter();
 
                             if (configInserter.insertConfig(self.parsed_hex, self.unifiedTarget.config)) {
                                 self.parsed_hex.configInserted = true;
@@ -1127,22 +1119,22 @@ firmware_flasher.initialize = function (callback) {
         }
 
         $('span.progressLabel a.save_firmware').click(function () {
-            var summary = $('select[name="firmware_version"] option:selected').data('summary');
+            const summary = $('select[name="firmware_version"] option:selected').data('summary');
             chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: summary.file, accepts: [{description: 'HEX files', extensions: ['hex']}]}, function (fileEntry) {
                 if (checkChromeRuntimeError()) {
                     return;
                 }
 
                 chrome.fileSystem.getDisplayPath(fileEntry, function (path) {
-                    console.log('Saving firmware to: ' + path);
+                    console.log('Saving firmware to:', path);
 
                     // check if file is writable
                     chrome.fileSystem.isWritableEntry(fileEntry, function (isWritable) {
                         if (isWritable) {
-                            var blob = new Blob([self.intel_hex], {type: 'text/plain'});
+                            const blob = new Blob([self.intel_hex], {type: 'text/plain'});
 
                             fileEntry.createWriter(function (writer) {
-                                var truncated = false;
+                                let truncated = false;
 
                                 writer.onerror = function (e) {
                                     console.error(e);
@@ -1174,16 +1166,16 @@ firmware_flasher.initialize = function (callback) {
         });
 
         $('input.flash_on_connect').change(function () {
-            var status = $(this).is(':checked');
+            const status = $(this).is(':checked');
 
             if (status) {
-                var catch_new_port = function () {
+                const catch_new_port = function () {
                     PortHandler.port_detected('flash_detected_device', function (result) {
-                        var port = result[0];
+                        const port = result[0];
 
                         if (!GUI.connect_lock) {
                             GUI.log(i18n.getMessage('firmwareFlasherFlashTrigger', [port]));
-                            console.log('Detected: ' + port + ' - triggering flash on connect');
+                            console.log(`Detected: ${port} - triggering flash on connect`);
 
                             // Trigger regular Flashing sequence
                             GUI.timeout_add('initialization_timeout', function () {
@@ -1205,7 +1197,7 @@ firmware_flasher.initialize = function (callback) {
         }).change();
 
         $(document).keypress(function (e) {
-            if (e.which == 13) { // enter
+            if (e.which === 13) { // enter
                 // Trigger regular Flashing sequence
                 $('a.flash_firmware').click();
             }
@@ -1249,10 +1241,12 @@ firmware_flasher.enableFlashing = function (enabled) {
     }
 };
 
-firmware_flasher.FLASH_MESSAGE_TYPES = {NEUTRAL : 'NEUTRAL',
-                                             VALID   : 'VALID',
-                                             INVALID : 'INVALID',
-                                             ACTION  : 'ACTION'};
+firmware_flasher.FLASH_MESSAGE_TYPES = {
+    NEUTRAL : 'NEUTRAL',
+    VALID   : 'VALID',
+    INVALID : 'INVALID',
+    ACTION  : 'ACTION',
+};
 
 firmware_flasher.flashingMessage = function(message, type) {
     let self = this;
@@ -1276,7 +1270,7 @@ firmware_flasher.flashingMessage = function(message, type) {
             progressLabel_e.removeClass('valid invalid actionRequired');
             break;
     }
-    if (message != null) {
+    if (message !== null) {
         progressLabel_e.html(message);
     }
 
