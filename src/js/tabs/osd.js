@@ -308,20 +308,15 @@ OSD.generateAltitudePreview = function(osdData) {
 
 OSD.generateBatteryUsagePreview = function(osdData) {
     const variantSelected = OSD.getVariantForPreview(osdData, 'MAIN_BATT_USAGE');
+
     let value;
     switch (variantSelected) {
         case 0:
-            value = FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
-                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
-                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY)
-                + FONT.symbol(SYM.PB_CLOSE);
+            value = FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL).repeat(9) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_CLOSE);
             break;
 
         case 1:
-            value = FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL)
-                + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_FULL) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY)
-                + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_EMPTY) + FONT.symbol(SYM.PB_EMPTY)
-                + FONT.symbol(SYM.PB_CLOSE);
+            value = FONT.symbol(SYM.PB_START) + FONT.symbol(SYM.PB_FULL).repeat(5) + FONT.symbol(SYM.PB_END) + FONT.symbol(SYM.PB_EMPTY).repeat(5) + FONT.symbol(SYM.PB_CLOSE);
             break;
 
         case 2:
