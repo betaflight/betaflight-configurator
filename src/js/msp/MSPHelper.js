@@ -1101,7 +1101,6 @@ MspHelper.prototype.process_data = function(dataHandler) {
                             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                                 FC.FILTER_CONFIG.dyn_lpf_curve_expo = data.readU8();
                                 FC.FILTER_CONFIG.dyn_notch_count = data.readU8();
-                                FC.FILTER_CONFIG.dyn_notch_bandwidth_hz = data.readU16();
                             }
                         }
                     }
@@ -2074,8 +2073,7 @@ MspHelper.prototype.crunch = function(code) {
                 }
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     buffer.push8(FC.FILTER_CONFIG.dyn_lpf_curve_expo)
-                          .push8(FC.FILTER_CONFIG.dyn_notch_count)
-                          .push16(FC.FILTER_CONFIG.dyn_notch_bandwidth_hz);
+                          .push8(FC.FILTER_CONFIG.dyn_notch_count);
                 }
             }
             break;

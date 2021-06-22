@@ -464,6 +464,7 @@ const FC = {
             dyn_notch_q:                0,
             dyn_notch_min_hz:           0,
             dyn_notch_max_hz:           0,
+            dyn_notch_count:            0,
             gyro_rpm_notch_harmonics:   0,
             gyro_rpm_notch_min_hz:      0,
         };
@@ -628,7 +629,7 @@ const FC = {
             dterm_lowpass_hz:               100,
             dterm_lowpass_dyn_min_hz:       150,
             dterm_lowpass_dyn_max_hz:       250,
-            dyn_lpf_curve_expo:             5,
+            dyn_lpf_curve_expo:               5,
             dterm_lowpass_type:             this.FILTER_TYPE_FLAGS.PT1,
             dterm_lowpass2_hz:              150,
             dterm_lowpass2_type:            this.FILTER_TYPE_FLAGS.BIQUAD,
@@ -637,8 +638,10 @@ const FC = {
             yaw_lowpass_hz:                 100,
             dyn_notch_q:                    120,
             dyn_notch_width_percent:          8,
+            dyn_notch_count:                  3,
             dyn_notch_q_rpm:                250, // default with rpm filtering
             dyn_notch_width_percent_rpm:      0,
+            dyn_notch_count_rpm:              1,
             dyn_notch_min_hz:               150,
             dyn_notch_max_hz:               600,
         };
@@ -821,6 +824,10 @@ const FC = {
                 versionFilterDefaults.dterm_lowpass_type = this.FILTER_TYPE_FLAGS.PT1;
                 versionFilterDefaults.dterm_lowpass2_hz = 150;
                 versionFilterDefaults.dterm_lowpass2_type = this.FILTER_TYPE_FLAGS.PT1;
+            }
+            if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_44)) {
+                versionFilterDefaults.dyn_notch_q_rpm = 500;
+                versionFilterDefaults.dyn_notch_q = 300;
             }
         }
         return versionFilterDefaults;
