@@ -3597,9 +3597,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "Numero Notch Dinamici"
     },
-    "pidTuningDynamicNotchBandwidthHz": {
-        "message": "Larghezza Banda Notch Dinamico [Hz]"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Il notch dinamico ha tre intervalli di frequenze in cui può funzionare: Basso (80-330Hz) per quad con giri del motore bassi come 6\" (e più grandi), Medio (140-550Hz) per un normale quad da 5\", Alto (230-800Hz) per quad 2.5-3\" con giri del motore alti. L'opzione AUTO seleziona l'intervallo in base al valore della frequenza massima del passa-basso dinamico 1 del giroscopio."
     },
@@ -3617,9 +3614,6 @@
     },
     "pidTuningDynamicNotchCountHelp": {
         "message": "Imposta il numero di notch dinamici per asse. Con il filtro RPM abilitato è consigliato un valore di 1 o 2. Senza il filtro RPM è consigliato un valore di 4 o 5. Valori più bassi ridurranno il ritardo del filtro ma potrebbero aumentare la temperatura dei motori."
-    },
-    "pidTuningDynamicNotchBandwidthHzHelp": {
-        "message": "La larghezza di banda in Hz regola quanto sarà stretto o largo ogni filtro notch dinamico. Valori più alti lo rendono più ampio. Valori inferiori lo rendono più stretto e più preciso, ma può aumentare la temperatura dei motori. Avere un valore davvero alto aumenterà il ritardo del filtro."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Filtro giroscopio RPM",
