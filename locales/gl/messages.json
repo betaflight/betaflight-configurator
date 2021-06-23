@@ -3688,9 +3688,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "Contador do Notch dinámico"
     },
-    "pidTuningDynamicNotchBandwidthHz": {
-        "message": "Frecuencia de ancho de banda do Notch dinámico [Hz]"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "O Notch dinámico ten tres intervalos de frecuencia nos que pode operar: BAIXO (80-330 Hz) para baixas revolucións en quads como 6+ polgadas, MEDIO (140-550Hz) para un quad normal de 5 polgadas, ALTO (230-800Hz) para moi altas revolucións en quads de 2,5-3 polgadas. A opción AUTO selecciona o rango en función do valor da frecuencia de corte máxima do filtro Gyro Dynamic Lowpass 1."
     },
@@ -3708,9 +3705,6 @@
     },
     "pidTuningDynamicNotchCountHelp": {
         "message": "Establece o número de filtros dinámicos por eixe. Con filtro rpm activado, recoméndase un valor de 1 ou 2. Sen filtro RPM recoméndase un valor de 4 ou 5. Os números máis baixos reducirán o atraso do filtro, pero pode aumentar a temperatura do motor."
-    },
-    "pidTuningDynamicNotchBandwidthHzHelp": {
-        "message": "Ancho de banda en Hz axusta o estreito ou ancho que será cada filtro dinámico. Os valores máis altos fan que sexa máis ancho e máis amplo. Os valores máis baixos fan que sexa máis estreito e máis preciso, pero pode aumentar a temperatura do motor. Ter un valor moi alto aumentará o atraso do filtro."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Filtro Gyro RPM",
