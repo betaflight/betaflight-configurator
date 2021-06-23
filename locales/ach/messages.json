@@ -3691,9 +3691,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "crwdns10468:0crwdne10468:0"
     },
-    "pidTuningDynamicNotchBandwidthHz": {
-        "message": "crwdns10470:0[Hz]crwdne10470:0"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "crwdns9542:0crwdne9542:0"
     },
@@ -3711,9 +3708,6 @@
     },
     "pidTuningDynamicNotchCountHelp": {
         "message": "crwdns10472:0crwdne10472:0"
-    },
-    "pidTuningDynamicNotchBandwidthHzHelp": {
-        "message": "crwdns10474:0crwdne10474:0"
     },
     "pidTuningRpmFilterGroup": {
         "message": "crwdns9814:0crwdne9814:0",
