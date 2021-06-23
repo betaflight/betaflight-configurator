@@ -3605,9 +3605,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "Comptador dinàmic de tall"
     },
-    "pidTuningDynamicNotchBandwidthHz": {
-        "message": "Freqüència d'ample de banda del filtre Notch [Hz]"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "El Notch (banda eliminada) dinàmic té tres rangs de freqüència en els quals pot funcionar: BAIX (80-330hz) per a quads revolucionats de 6 o més polzades, MITJA (140-550hz) per a un quad normal de 5 polzades, ALT (230-800Hz) per quads molt revolucionats de 2,5-3 polzades. L'opció AUTO selecciona l'abast en funció del valor de la freqüència màxima de tall del filtre dinàmic passa-baixos de Giro 1."
     },
@@ -3625,9 +3622,6 @@
     },
     "pidTuningDynamicNotchCountHelp": {
         "message": "Estableix el nombre de talls dinàmiques per eix. Amb el filtre RPM activat, es recomana un valor d'1 o 2. Sense filtre RPM es recomana un valor de 4 o 5. Un nombre inferior reduirà el retard del filtre, però pot augmentar la temperatura del motor."
-    },
-    "pidTuningDynamicNotchBandwidthHzHelp": {
-        "message": "L’amplada de banda en Hz ajusta l’amplitud de cada tall dinàmica del filtre Notch. Els valors més alts el fan cada cop més ampli. Els valors més baixos el fan més estret i precís, però pot augmentar la temperatura del motor. Tenir un valor realment alt augmentarà el retard del filtre."
     },
     "pidTuningRpmFilterGroup": {
         "message": "Filtre giro RPM",
