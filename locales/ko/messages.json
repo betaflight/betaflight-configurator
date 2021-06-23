@@ -3665,9 +3665,6 @@
     "pidTuningDynamicNotchCount": {
         "message": "다이나믹 노치 수"
     },
-    "pidTuningDynamicNotchBandwidthHz": {
-        "message": "다이나믹 노치 대역폭 주파수 [Hz]"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "다이나믹 노치는 작동할수 있는 세 개의 주파수 범위를 가집니다: 6+인치처럼 낮은 모터속도를 가진 쿼드는 LOW(80-330Hz), 일반적인 5인치 쿼드는 MEDIUM(140-550Hz), 매우 높은 모터속도를 가진 2.5-3인치는 HIGH(230-800Hz). AUTO 옵션은 자이로 다이나믹 저역통과 1 필터의 최대 컷오프 주파수의 값에 따라 범위를 선택합니다."
     },
@@ -3685,9 +3682,6 @@
     },
     "pidTuningDynamicNotchCountHelp": {
         "message": "축당 다이나믹 노치 수를 설정합니다. RPM 필터를 활성화한 경우 1 또는 2의 값을 사용하는 것이 좋습니다. RPM 필터를 사용하지 않는 경우는 4 또는 5의 값이 권장됩니다. 숫자가 작을수록 필터 지연은 감소하지만, 모터 온도를 높일 수 있습니다."
-    },
-    "pidTuningDynamicNotchBandwidthHzHelp": {
-        "message": "대역폭(Hz)은 모든 다이나믹 노치가 얼마나 좁거나 넓을지를 조정합니다. 값이 높을수록 범위가 커지고 넓어집니다. 값이 낮을수록 더 좁고 정밀하지만, 모터 온도를 높일 수 있습니다. 값이 매우 높으면 필터 지연이 증가합니다."
     },
     "pidTuningRpmFilterGroup": {
         "message": "자이로 RPM 필터",
