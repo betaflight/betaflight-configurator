@@ -4943,6 +4943,10 @@
     "osdDescUpDownReference": {
         "message": "피치가 수직 (90 도, U) 및 노즈다운 (-90 도, D)에 근접할 때 표시되는 OSD 심볼"
     },
+    "osdTextElementTxUplinkPower": {
+        "message": "Tx 업링크 출력",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementUnknown": {
         "message": "알 수 없음 $1",
         "description": "One of the elements of the OSD"
