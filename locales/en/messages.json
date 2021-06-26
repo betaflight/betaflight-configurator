@@ -3146,6 +3146,24 @@
     "firmwareFlasherFlashTrigger": {
         "message": "Detected: <strong>$1</strong> - triggering flash on connect"
     },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>Firmware mismatch</h3><br />The connected board is <strong>{{verified_board}}</strong> while you selected <strong>{{selected_board}}</strong>.<br /><br />Do you want to continue flashing?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Configurator has <span class=\"message-positive\">successfully</span> detected and verified the board: <strong>{{boardName}}</strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "Configurator <span class=\"message-negative\">failed</span> to verify the board, if this does not work please try switching tab slowly to retry, make a new usb connection or connect first if you might have forgotten to apply custom defaults",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "Abort"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "Continue"
+    },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "You are about to flash a <strong>development build of the firmware</strong>. These builds are a work in progress, and any of the following can be the case:<strong><ul><li>the firmware does not work at all;</li><li>the firmware is not flyable;</li><li>there are safety issues with the firmware, for example flyaways</li><li>the firmware can cause the flight controller to become unresponsive, or damaged</li></ul></strong>If you proceed with flashing this firmware, <strong>you are assuming full responsibility for the risk of any of the above happening</strong>. Furthermore you acknowledge that it is necessary to perform <strong>thorough bench tests with props off</strong> before any attempts to fly this firmware."
     },
