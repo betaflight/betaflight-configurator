@@ -92,6 +92,10 @@
     "analyticsOptOut": {
         "message": "Opt out of the anonymised collection of statistics data"
     },
+    "connectionTimeout": {
+        "message": "Set connection timeout to allow longer initialisation on device plugin or reboot",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
     "cordovaForceComputerUI": {
         "message": "Use computers interface instead of phones interface"
     },
