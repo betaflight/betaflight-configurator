@@ -4504,6 +4504,14 @@
     "osdDescElementAltitude": {
         "message": "Altitud actual (parpadea por encima del umbral de alarma)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "Con 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Sin decimales",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Tiempo encendido",
         "description": "One of the elements of the OSD"
@@ -4552,6 +4560,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "Coordenada de latitud del GPS"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "Con 7 decimales",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "Con 4 decimales",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Usando grados, minutos y segundos",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Usando Códigos de Ubicación Abiertos",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Depuración",
@@ -4629,6 +4653,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Representación gráfica del uso de la capacidad de la batería"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Gráfico restante",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Gráfico usado",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Porcentaje restante",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Porcentaje usado",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Temporizador: tiempo armado",
@@ -4874,6 +4914,13 @@
     },
     "osdDescUpDownReference": {
         "message": "Símbolo OSD que muestra cuando el pitch se acerca a la vertical (90 grad, U) y hacia abajo (-90 deg, D)"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "TX: potencia de subida",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Muestra un valor de la potencia de TX (mW o W). Útil cuando <i>Energía Dinámica</i> está activada en las radios que lo soportan"
     },
     "osdTextElementUnknown": {
         "message": "Desconocido $1",
