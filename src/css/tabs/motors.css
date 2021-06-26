@@ -314,6 +314,11 @@
     flex-grow: 1;
 }
 
+.tab-motors #dialog-mixer-reset {
+    width: 400px;
+    height: fit-content;
+}
+
 .tab-motors #dialog-settings-changed {
     height: 120px;
 }

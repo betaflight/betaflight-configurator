@@ -362,7 +362,37 @@ TABS.motors.initialize = function (callback) {
         // select current mixer configuration
         mixerListElement.val(FC.MIXER_CONFIG.mixer).change();
 
+        function validateMixerOutputs() {
+            MSP.promise(MSPCodes.MSP_MOTOR).then(() => {
+                const mixer = FC.MIXER_CONFIG.mixer;
+                const motors = mixerList[mixer - 1].motors;
+                // initialize for models with zero motors
+                self.numberOfValidOutputs = motors;
+
+                for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
+                    if (FC.MOTOR_DATA[i] === 0) {
+                        self.numberOfValidOutputs = i;
+                        if (motors > self.numberOfValidOutputs && motors > 0) {
+                            const msg = i18n.getMessage('motorsDialogMixerReset', {
+                                mixerName: mixerList[mixer - 1].name,
+                                mixerMotors: motors,
+                                outputs: self.numberOfValidOutputs,
+                            });
+                            showDialogMixerReset(msg);
+                        }
+                        return;
+                    }
+                }
+            });
+        }
+
         update_model(FC.MIXER_CONFIG.mixer);
+
+        // Reference: src/main/drivers/motor.h for motorPwmProtocolTypes_e;
+        const ESC_PROTOCOL_UNDEFINED = 9;
+        if (FC.PID_ADVANCED_CONFIG.fast_pwm_protocol !== ESC_PROTOCOL_UNDEFINED) {
+            validateMixerOutputs();
+        }
 
         // Always start with default/empty sensor data array, clean slate all
         initSensorData();
@@ -563,7 +593,6 @@ TABS.motors.initialize = function (callback) {
             accelOffsetEstablished = false;
         });
 
-        self.numberOfValidOutputs = (FC.MOTOR_DATA.indexOf(0) > -1) ? FC.MOTOR_DATA.indexOf(0) : 8;
         let rangeMin;
         let rangeMax;
         let neutral3d;
@@ -714,6 +743,7 @@ TABS.motors.initialize = function (callback) {
         }
 
         escProtocolElement.val(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
+        console.log(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
         escProtocolElement.on("change", function () {
             const escProtocolValue = parseInt($(this).val()) - 1;
 
@@ -841,7 +871,7 @@ TABS.motors.initialize = function (callback) {
 
             $('div.values li').eq(index).text($(this).val());
 
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < self.numberOfValidOutputs; i++) {
                 const val = parseInt($('div.sliders input').eq(i).val());
                 buffer.push16(val);
             }
@@ -930,14 +960,26 @@ TABS.motors.initialize = function (callback) {
             }
         }
 
+        function getMotorOutputs() {
+            const motorData = [];
+            const motorsTesting = motorsEnableTestModeElement.is(':checked');
+
+            for (let i = 0; i < self.numberOfValidOutputs; i++) {
+                motorData[i] = motorsTesting ? FC.MOTOR_DATA[i] : rangeMin;
+            }
+
+            return motorData;
+        }
+
         const fullBlockScale = rangeMax - rangeMin;
 
         function update_ui() {
             const previousArmState = self.armed;
             const blockHeight = $('div.m-block:first').height();
+            const motorValues = getMotorOutputs();
 
-            for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
-                const motorValue = FC.MOTOR_DATA[i];
+            for (let i = 0; i < motorValues.length; i++) {
+                const motorValue = motorValues[i];
                 const barHeight = motorValue - rangeMin,
                 marginTop = blockHeight - (barHeight * (blockHeight / fullBlockScale)).clamp(0, blockHeight),
                 height = (barHeight * (blockHeight / fullBlockScale)).clamp(0, blockHeight),
@@ -1018,22 +1060,20 @@ TABS.motors.initialize = function (callback) {
             FC.PID_ADVANCED_CONFIG.motor_pwm_rate = parseInt($('input[name="unsyncedpwmfreq"]').val());
             FC.PID_ADVANCED_CONFIG.digitalIdlePercent = parseFloat($('input[name="digitalIdlePercent"]').val());
 
-            Promise
-            .resolve(true)
-            .then(() => { return MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG)); })
-            .then(() => { return MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG)); })
-            .then(() => { return MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG)); })
-            .then(() => { return MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG)); })
-            .then(() => { return MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG)); })
-            .then(() => { return MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)); })
-            .then(() => { return (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) ? MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG,
-                 mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG)) : true; })
-            .then(() => { return MSP.promise(MSPCodes.MSP_EEPROM_WRITE); })
-            .then(() => {
-                GUI.log(i18n.getMessage('configurationEepromSaved'));
-                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
-                reinitialiseConnection(self);
-             });
+            if (semver.gte(FC.CONFIG.apiVersion, "1.25.0") && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
+                FC.PID_ADVANCED_CONFIG.gyroUse32kHz = $('input[id="gyroUse32kHz"]').is(':checked') ? 1 : 0;
+            }
+
+            MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG))
+            .then(() => MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG)))
+            .then(() => MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG)))
+            .then(() => MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG)))
+            .then(() => MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG)))
+            .then(() => MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)))
+            .then(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) ?
+                MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG)) : true)
+            .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
+            .then(() => reboot());
 
             analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
             self.analyticsChanges = {};
@@ -1060,6 +1100,30 @@ TABS.motors.initialize = function (callback) {
         }
 
         GUI.content_ready(callback);
+    }
+
+    function reboot() {
+        GUI.log(i18n.getMessage('configurationEepromSaved'));
+        MSP.promise(MSPCodes.MSP_SET_REBOOT, false, false).then(() => reinitialiseConnection());
+    }
+
+    function showDialogMixerReset(message) {
+        const dialogMixerReset = $('#dialog-mixer-reset')[0];
+
+        $('#dialog-mixer-reset-content').html(message);
+
+        if (!dialogMixerReset.hasAttribute('open')) {
+            dialogMixerReset.showModal();
+            $('#dialog-mixer-reset-confirmbtn').click(function() {
+                dialogMixerReset.close();
+
+                FC.MIXER_CONFIG.mixer = 3;
+
+                MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG))
+                .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
+                .then(() => reboot());
+            });
+        }
     }
 
     function showDialogSettingsChanged(message) {
