@@ -509,9 +509,9 @@ const FC = {
             motorOutputLimit:           0,
             autoProfileCellCount:       0,
             idleMinRpm:                 0,
-            ff_interpolate_sp:          0,
-            ff_smooth_factor:           0,
-            ff_boost:                   0,
+            feedforward_averaging:      0,
+            feedforward_smooth_factor:  0,
+            feedforward_boost:          0,
             vbat_sag_compensation:      0,
             thrustLinearization:        0,
         };

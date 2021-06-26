@@ -32,8 +32,9 @@ TABS.pid_tuning.initialize = function (callback) {
         self.activeSubtab = 'pid';
     }
 
-    // Update filtering defaults based on API version
+    // Update filtering and pid defaults based on API version
     const FILTER_DEFAULT = FC.getFilterDefaults();
+    const PID_DEFAULT = FC.getPidDefaults();
 
     // requesting MSP_STATUS manually because it contains FC.CONFIG.profile
     MSP.promise(MSPCodes.MSP_STATUS).then(function() {
@@ -481,20 +482,30 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            // FF Interpolate
-            const ffInterpolateCheck = $('input[id="ffInterpolateSp"]');
-            const NO_AVERAGE = 1;
+            // Feedforward
+            const feedforwardGroupCheck = $('input[id="feedforwardGroup"]');
+            const PID_FEEDFORWARD = (FC.ADVANCED_TUNING.feedforwardRoll ||
+                FC.ADVANCED_TUNING.feedforwardPitch ||
+                FC.ADVANCED_TUNING.feedforwardYaw);
 
-            ffInterpolateCheck.prop('checked', FC.ADVANCED_TUNING.ff_interpolate_sp !== 0);
-            $('select[id="ffInterpolate"]').val(FC.ADVANCED_TUNING.ff_interpolate_sp > 0 ? FC.ADVANCED_TUNING.ff_interpolate_sp : NO_AVERAGE);
-            $('input[name="ffSmoothFactor"]').val(FC.ADVANCED_TUNING.ff_smooth_factor);
-            $('input[name="ffBoost"]').val(FC.ADVANCED_TUNING.ff_boost);
+            feedforwardGroupCheck.prop('checked', PID_FEEDFORWARD !== 0);
+            $('select[id="feedforwardAveraging"]').val(FC.ADVANCED_TUNING.feedforward_averaging);
+            $('input[name="feedforwardSmoothFactor"]').val(FC.ADVANCED_TUNING.feedforward_smooth_factor);
+            $('input[name="feedforwardBoost"]').val(FC.ADVANCED_TUNING.feedforward_boost);
 
-            ffInterpolateCheck.change(function() {
+            feedforwardGroupCheck.change(function() {
                 const checked = $(this).is(':checked');
-                $('.ffInterpolateSp .suboption').toggle(checked);
+                $('.feedforwardGroup .suboption').toggle(checked);
+                if (!checked) {
+                    $('.pid_tuning .ROLL input[name="f"]').val(0);
+                    $('.pid_tuning .PITCH input[name="f"]').val(0);
+                    $('.pid_tuning .YAW input[name="f"]').val(0);
+                } else {
+                    $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll > 0 ? FC.ADVANCED_TUNING.feedforwardRoll : PID_DEFAULT[4]);
+                    $('.pid_tuning .PITCH input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardPitch > 0 ? FC.ADVANCED_TUNING.feedforwardPitch : PID_DEFAULT[9]);
+                    $('.pid_tuning .YAW input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardYaw > 0 ? FC.ADVANCED_TUNING.feedforwardYaw : PID_DEFAULT[14]);
+                }
             }).change();
-
             // Vbat Sag Compensation
             const vbatSagCompensationCheck = $('input[id="vbatSagCompensation"]');
 
@@ -517,7 +528,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 $('.thrustLinearization .suboption').toggle(checked);
             }).change();
         } else {
-            $('.ffInterpolateSp').hide();
+            $('.feedforwardOption').hide();
             $('.vbatSagCompensation').hide();
             $('.thrustLinearization').hide();
         }
@@ -996,9 +1007,9 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            FC.ADVANCED_TUNING.ff_interpolate_sp = $('input[id="ffInterpolateSp"]').is(':checked') ? $('select[id="ffInterpolate"]').val() : 0;
-            FC.ADVANCED_TUNING.ff_smooth_factor = parseInt($('input[name="ffSmoothFactor"]').val());
-            FC.ADVANCED_TUNING.ff_boost = parseInt($('input[name="ffBoost"]').val());
+            FC.ADVANCED_TUNING.feedforward_averaging = $('select[id="feedforwardAveraging"]').val();
+            FC.ADVANCED_TUNING.feedforward_smooth_factor = parseInt($('input[name="feedforwardSmoothFactor"]').val());
+            FC.ADVANCED_TUNING.feedforward_boost = parseInt($('input[name="feedforwardBoost"]').val());
             FC.FILTER_CONFIG.dyn_lpf_curve_expo = parseInt($('.pid_filter input[name="dtermLowpassDynExpo"]').val());
             FC.ADVANCED_TUNING.vbat_sag_compensation = $('input[id="vbatSagCompensation"]').is(':checked') ? parseInt($('input[name="vbatSagValue"]').val()) : 0;
             FC.ADVANCED_TUNING.thrustLinearization = $('input[id="thrustLinearization"]').is(':checked') ? parseInt($('input[name="thrustLinearValue"]').val()) : 0;

@@ -1171,9 +1171,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                                     FC.ADVANCED_TUNING.idleMinRpm = data.readU8();
 
                                                     if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                                                        FC.ADVANCED_TUNING.ff_interpolate_sp = data.readU8();
-                                                        FC.ADVANCED_TUNING.ff_smooth_factor = data.readU8();
-                                                        FC.ADVANCED_TUNING.ff_boost = data.readU8();
+                                                        FC.ADVANCED_TUNING.feedforward_averaging = data.readU8();
+                                                        FC.ADVANCED_TUNING.feedforward_smooth_factor = data.readU8();
+                                                        FC.ADVANCED_TUNING.feedforward_boost = data.readU8();
                                                         FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
                                                         FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
                                                     }
@@ -2140,9 +2140,9 @@ MspHelper.prototype.crunch = function(code) {
                                                       .push8(FC.ADVANCED_TUNING.idleMinRpm);
 
                                                 if(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                                                    buffer.push8(FC.ADVANCED_TUNING.ff_interpolate_sp)
-                                                          .push8(FC.ADVANCED_TUNING.ff_smooth_factor)
-                                                          .push8(FC.ADVANCED_TUNING.ff_boost)
+                                                    buffer.push8(FC.ADVANCED_TUNING.feedforward_averaging)
+                                                          .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
+                                                          .push8(FC.ADVANCED_TUNING.feedforward_boost)
                                                           .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
                                                           .push8(FC.ADVANCED_TUNING.thrustLinearization);
                                                 }
