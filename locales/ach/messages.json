@@ -92,6 +92,10 @@
     "analyticsOptOut": {
         "message": "crwdns8831:0crwdne8831:0"
     },
+    "connectionTimeout": {
+        "message": "crwdns10508:0crwdne10508:0",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
     "cordovaForceComputerUI": {
         "message": "crwdns10174:0crwdne10174:0"
     },
@@ -2522,6 +2526,9 @@
     "motorsEnableControl": {
         "message": "crwdns6381:0crwdne6381:0"
     },
+    "motorsDialogMixerReset": {
+        "message": "crwdns10520:0{{mixerName}}crwdnd10520:0{{mixerMotors}}crwdnd10520:0{{outputs}}crwdne10520:0"
+    },
     "motorsDialogSettingsChanged": {
         "message": "crwdns10368:0crwdne10368:0"
     },
@@ -3106,6 +3113,24 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "crwdns6013:0$1crwdne6013:0"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "crwdns10510:0{{verified_board}}crwdnd10510:0{{selected_board}}crwdne10510:0",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "crwdns10512:0{{boardName}}crwdne10512:0",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "crwdns10514:0crwdne10514:0",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "crwdns10516:0crwdne10516:0"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "crwdns10518:0crwdne10518:0"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "crwdns10018:0crwdne10018:0"
