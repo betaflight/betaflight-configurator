@@ -4504,6 +4504,14 @@
     "osdDescElementAltitude": {
         "message": "現在の高度 (アラーム値を超えると点滅)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "小数点以下 1桁",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "小数点なし",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "On time",
         "description": "One of the elements of the OSD"
@@ -4552,6 +4560,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "GPS 緯度座標"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "小数点以下 7桁",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "小数点以下 4桁",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "度、分、秒を使用",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Open Location Codeを使用",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "デバッグ",
@@ -4629,6 +4653,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "バッテリー容量の使用状況をグラフ表示"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "残像をグラフィカル表示",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "使用量をグラフィカル表示",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "残存率",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "使用率",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "タイマー: アーム後 経過時間",
@@ -4874,6 +4914,13 @@
     },
     "osdDescUpDownReference": {
         "message": "ピッチが垂直方向(90度 Up) に近づいている場合、Dがノーズダウンしている場合(-90度 Down) にOSDシンボルが表示"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "送信アップリンク出力",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "送信出力値 (mW or W) を表示します。対応する送信機で<i>Dynamic Power</i>が有効になっている場合に使用できます。"
     },
     "osdTextElementUnknown": {
         "message": "不明 $1",
