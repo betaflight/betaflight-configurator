@@ -4572,6 +4572,14 @@
     "osdDescElementAltitude": {
         "message": "현재 고도 (임계값 이상일 때 깜빡임)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "소수 첫째자리로",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "소수점 없이",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "사용 시간",
         "description": "One of the elements of the OSD"
@@ -4620,6 +4628,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "GPS 위도 좌표"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "소수 7째자리로",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "소수 4째자리로",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "도, 분 및 초 사용",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "오픈 지역코드 사용",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "디버그",
@@ -4697,6 +4721,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "배터리 용량 사용에 대한 그래픽 표현"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "그래픽 유지중",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "그래픽 사용",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "백분율 유지중",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "백분율 사용",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "타이머: 아밍된 시간",
@@ -4946,6 +4986,9 @@
     "osdTextElementTxUplinkPower": {
         "message": "Tx 업링크 출력",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Tx 출력 값 (mW 또는 W)을 표시합니다. 지원되는 라디오를 위해 <i>다이나믹 출력</i>이 활성화 된 경우에 유용합니다."
     },
     "osdTextElementUnknown": {
         "message": "알 수 없음 $1",
