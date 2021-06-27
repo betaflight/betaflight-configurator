@@ -1417,9 +1417,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interpolācijas intervāls [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward pāreja"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Ar šo parametru, Feedforward iestatījuma svars var tikt samazināts tuvu sviras centram, kas rezultējas ar maigāku nobeigumu pie flipiem un rolliem.<br> Šī vērtība reprezentē sviras ielieces punktu: 0 - svira centā, 1 - pilnīga ieliece. Kad svira ir virs šī punkta, Feedforward ir konstants tā konfigurētajā vērtībā. Kad svira ir zem šī punkta, Feedforward ir samazināts proporcionāli, sasniedzot 0 sviras centra pozīcijā.<br> Vērtība 1 dod maksimālu izlīdzinājumu efektu, kamēr 0 vērtība uztur Feedforward fiksētu uz tā konfigurēto vērtību visā svirās gājiena diapazonā."
     },
