@@ -1613,9 +1613,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC 插值間隙 [毫秒]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "前饋過度閥值"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "通過這個參數， 前饋值會在接近搖桿中點附近時被降低，使翻滾動作在結束得更平滑一點。<br> 該值表示搖桿偏移量：0代表搖桿居中，1代表搖桿打滿。當搖桿實際位置大於該值時，前饋值保持在用戶設定的數字不變。當搖桿實際位置小於該值時，前饋值會按比例下降。在搖桿居中時降低到0。<br> 設置為1可以獲得最平滑的效果，而設置為0時將保持前饋值在整個行程內都保持在用戶設定的數字不變。"
     },
@@ -1633,30 +1630,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 強烈不建議將D設定點轉換閾值設置為0到0.1之間的值。這樣做可能會導致不穩定，以及降低搖桿在穿過中點時的響應速度。</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "前饋插值"
-    },
-    "pidTuningFfInterpolate": {
-        "message": "模式"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "無平均"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "2點平均"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "3點平均"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "4點平均"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "平滑度"
-    },
-    "pidTuningFfBoost": {
-        "message": "增壓"
     },
     "pidTuningProportional": {
         "message": "Proportional"
