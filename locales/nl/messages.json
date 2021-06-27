@@ -1665,9 +1665,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interpolatie interval [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward transitie"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Met deze parameter kan de Feedforward-term worden gereduceerd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Wanneer de stick zich boven dat punt bevindt, wordt Feedforward constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt Feedforward proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 de Feedforward op zijn geconfigureerde waarde houdt over het hele stickbereik."
     },
@@ -1685,30 +1682,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Het gebruik van een D Setpoint transitie tussen de 0 en 0.1 wordt afgeraden. Mocht je dit wel doen dan kan dit leiden tot instabiliteit en verminderde reactievermogen als je sticks het centrum van hun bereik passeren.</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "FF Interpoleren"
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Modus"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "Geen gemiddelde"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Gemiddeld 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Gemiddeld 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Gemiddeld 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Smoothness"
-    },
-    "pidTuningFfBoost": {
-        "message": "Versterken"
     },
     "pidTuningProportional": {
         "message": "Proportioneel"
