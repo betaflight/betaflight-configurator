@@ -1486,9 +1486,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalo de Interpolação RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transição do Feedforward"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Com este parâmetro, o termo Feedforward pode ser reduzido próximo ao centro dos sticks, isto faz com que o final de um giro (flip ou roll) fique mais suave.<br> Este valor representa a posição do stick: \"0\" - stick no centro, \"1\" - stick nas extremidades. Quando o stick estiver acima do ponto especificado, o termo Feedforward permanece constante no valor configurado. Quando estiver abaixo do ponto especificado, o termo Feedforward será reduzido proporcionalmente, atingindo 0 quando o stick estiver no centro.<br> O valor \"1\" gera o efeito mais suave possível; O valor \"0\" mantém o valor configurado do termo Feedforward fixo durante todo o movimento do stick."
     },
