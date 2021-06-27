@@ -1628,9 +1628,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpollációs Tartomány [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward átmenet"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Ezzel a paraméterrel a Feedforward időtartama csökkenthető a karok középpontja közelében, aminek eredményeként a fordulások simábbak lesznek.<br> Az érték a kar eltérítési pontját jelzi: 0 - a kar középpontjában, 1 - a teljes elhajlás. Amikor a kar e pont fölött van, a Feedforward folyamatosan állandó marad a konfigurált értékén. Ha a kart e pont alá helyezik, a Feedforward arányosan csökken, és a kar középhelyzetében eléri a 0.<br> 1 érték biztosítja a maximális simítási hatást, míg a 0 érték tartja a Feedforward konfigurált értékén rögzítve a teljes tartományban."
     },
@@ -1648,24 +1645,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message)</strong> A 0-nál nagyobb és 0,1-nél kisebb D alapjel-átmenetet erősen visszaszorítja. Ellenkező esetben instabilitást és csökkent karkészlet-reakciót okozhat, mivel a karok áthaladnak a középponton.</span>"
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Mód"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Átlag 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Átlag 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Átlag 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Simaság"
-    },
-    "pidTuningFfBoost": {
-        "message": "Boost"
     },
     "pidTuningProportional": {
         "message": "P érték"
