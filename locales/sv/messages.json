@@ -1503,9 +1503,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC-interpolationsintervall [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Framkopplingsövergång"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Med denna parameter kan framkopplings-termen reduceras nära mitten av spakarna, vilket resulterar i jämnare avslut på flippar och rollar.<br> Värdet representerar en böjningspunkt: 0 - spaken centrerad, 1 - full böjning. När spaken är över denna punkt, hålls framkoppling konstant vid sitt konfigurerade värde. När spaken är under denna punkt, reduceras framkoppling proportionellt, och blir 0 vid spakens mittposition.<br> Värdet 1 ger maximal utjämningseffekt, medan värdet 0 håller framkoppling konstant vid sitt konfigurerade värde över hela spakens räckvidd."
     },
