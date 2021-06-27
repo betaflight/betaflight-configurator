@@ -1631,9 +1631,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolazio Interbaloa [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward trantsizioa"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Parametro honen bidez, palanka zentrotik gertu daudenean, Feedforward murriztu egin daiteke palankak eta biribilak leuntzeko.<br> 0-palanka zentratua, 1-erabat lekuz aldatuta. Palanka puntu horren gainetik dagoenean, elikadura aurrekoa etengabe mantentzen da ezarritako balioan. Palanka puntu horren azpitik dagoenean, FeedFordward proportzionalki murrizten da, palankaren posizio zentralean 0 izatera. <br> 1-ren balioa leuntzeko gehienezko efektua ematen du; 0-ren balioa, berriz, FeedFordward finkatuta mantentzen da palanka-barruti osoan."
     },
@@ -1651,30 +1648,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message): </strong>Ezda gomendagarria 0 Setpoint-en trantsizioa 0 eta 0.1 baino txikiagoa. Hori egitean, ezegonkortasuna eta makilen erantzuna murriztea eragin dezakete, makilek erdiko puntua zeharkatzen duten bitartean.</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "FF Interpolatua"
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Modua"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "EzBatezBeste"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "BatezBeste 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "BatezBeste 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "BatezBeste 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Leuntasuna"
-    },
-    "pidTuningFfBoost": {
-        "message": "Bultzada"
     },
     "pidTuningProportional": {
         "message": "Proportzionala (P)"
