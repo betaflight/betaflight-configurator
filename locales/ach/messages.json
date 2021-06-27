@@ -1752,7 +1752,7 @@
         "message": "crwdns5695:0[ms]crwdne5695:0"
     },
     "pidTuningFeedforwardTransition": {
-        "message": "crwdns8807:0crwdne8807:0"
+        "message": "crwdns10522:0crwdne10522:0"
     },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "crwdns8808:0crwdne8808:0"
@@ -1772,32 +1772,32 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "crwdns8732:0$t(warningTitle.message)crwdne8732:0"
     },
-    "pidTuningFfInterpolateSp": {
-        "message": "crwdns10156:0crwdne10156:0"
+    "pidTuningFeedforwardGroup": {
+        "message": "crwdns10524:0crwdne10524:0"
     },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "crwdns10380:0crwdne10380:0"
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "crwdns10526:0crwdne10526:0"
     },
-    "pidTuningFfInterpolate": {
-        "message": "crwdns10160:0crwdne10160:0"
+    "pidTuningFeedforwardAveraging": {
+        "message": "crwdns10528:0crwdne10528:0"
     },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "crwdns10162:0crwdne10162:0"
+    "pidTuningFeedforwardAveragingOptionOff": {
+        "message": "crwdns10530:0crwdne10530:0"
     },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "crwdns10164:0crwdne10164:0"
+    "pidTuningFeedforwardAveragingOption2Point": {
+        "message": "crwdns10532:0crwdne10532:0"
     },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "crwdns10166:0crwdne10166:0"
+    "pidTuningFeedforwardAveragingOption3Point": {
+        "message": "crwdns10534:0crwdne10534:0"
     },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "crwdns10168:0crwdne10168:0"
+    "pidTuningFeedforwardAveragingOption4Point": {
+        "message": "crwdns10536:0crwdne10536:0"
     },
-    "pidTuningFfSmoothFactor": {
-        "message": "crwdns10170:0crwdne10170:0"
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "crwdns10538:0crwdne10538:0"
     },
-    "pidTuningFfBoost": {
-        "message": "crwdns10172:0crwdne10172:0"
+    "pidTuningFeedforwardBoost": {
+        "message": "crwdns10540:0crwdne10540:0"
     },
     "pidTuningProportional": {
         "message": "crwdns5700:0crwdne5700:0"
