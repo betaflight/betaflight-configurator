@@ -1232,9 +1232,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC-interpoleringsinterval [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward-overgang"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Med denne parameter kan Feedforward-tiden reduceres tæt ved pindenes centerpositioner, hvilket betyder en mere glidene afslutning på flips og rolls.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind centreret, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Feedforward konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Feedforward proportionalt og når 0 ved pindens centerposition. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Feedforward på den opsatte værdi over hele pindområdet."
     },
