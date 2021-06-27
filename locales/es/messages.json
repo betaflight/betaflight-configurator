@@ -1653,9 +1653,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalo de Interpolación RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transición de la prealimentación"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Con este parámetro, la Prealimentación (Feedforward) puede reducirse cuando las palancas están cerca del centro, lo cual provoca que el final de los flips y rolls sea más suave.<br>El valor representa un punto del movimiento de la palanca: 0 - palanca centrada, 1 - completamente desplazada. Cuando la palanca está por encima de ese punto, la Prealimentación se mantiene constante en el valor configurado. Cuando la palanca se sitúa por debajo de ese punto, la Prealimentación se reduce proporcionalmente, llegando a 0 en la posición central de la palanca. <br> El valor de 1 da el máximo efecto de suavizado, mientras que el valor de 0 mantiene la Prealimentación fija en su valor configurado sobre el rango completo de la palanca."
     },
@@ -1673,33 +1670,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> El uso de un Punto de Ajuste de Transición de D mayor que 0 y menor que 0.1 está altamente desaconsejado. Puede causar inestabilidad y reducir la respuesta de los controles al cruzar el punto central.</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "Interpolar FF"
-    },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "Las siguientes opciones ajustan la prealimentación (FF) desde carrera/agresiva a suave/HD.<br /><br /> Modo: establecido a No promedio para carrera, Promedio 2 para la carrera/freestyle rápido, Promedio de 3 para grabaciones HD, Promedio 4 para suavidad cinematográfica HD.<br /><br /> Suavizado: limita la cantidad de cambio que cualquier paso de radio entrante puede realizar, incrementar para una señal FF más suave, disminuir para respuestas FF más agresivas.<br /><br /> Impulso: ayuda a superar el retraso del motor cuando hay entradas de los mandos rápidas, aunque puede provocar inestabilidad en la señal. Prueba 10 para HD, 20 para carreras. Hasta 30 puede ser útil para quads de baja autoridad, pero puede causar micro sobregiro o inestabilidad."
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Modo"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "No promediar"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Promediar 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Promediar 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Promediar 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Suavizado"
-    },
-    "pidTuningFfBoost": {
-        "message": "Impulso"
     },
     "pidTuningProportional": {
         "message": "Proporcional (P)"
