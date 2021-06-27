@@ -1650,9 +1650,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Интервал на RC интерполация [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward преход"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "С този параметър, терминът Feedforward може да бъде намален близо до центъра на стиковете, което води до по-гладък край при flips и rolls. <br> Стойността представлява точка на отклонение на стика: 0 - центриран стик, 1 - пълна деформация. Когато стикът е над тази точка, Feedforward се поддържа постоянен при конфигурираната стойност. Когато пръчката е позиционирана под тази точка, Feedforward се намалява пропорционално, достигайки 0 в централната позиция на стика. <br> Стойността 1 дава максимален изглаждащ ефект, докато стойността 0 поддържа Feedforward фиксиран на конфигурираната стойност за целия диапазон на стика."
     },
@@ -1670,33 +1667,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Силно се препоръчва използването на D Setpoint transition по-голям от 0 и по-малък от 0,1. Това може да доведе до нестабилност и намалена реакция на стика, докато стиковете пресичат централната точка</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "FF Интерполация"
-    },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "Следните опции донастройват feed forward от състезание / агресивно към плавно / HD.<br /><br /> Режим: зададен на NoAverage за състезание, средно 2 за състезание / бърз фристайл, средно 3 за HD запис, средно 4 за HD кинематографично плавност.<br /><br /> Гладкост: ограничава количеството промяна, която може да направи всяка входяща радио стъпка, увеличава се за по-плавен сигнал на FF, намалява за по-агресивни реакции на FF.<br /><br /> Boost: помага за преодоляване на моторното изоставане с бързи команди от стиковете, могат да увеличат трептенето. Опитайте 10 за HD, 20 за състезатели. До 30 може да са полезни за low authority дронове, но могат да причинят микро overshoot или трептене."
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Режим"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "НеСредно"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Средно 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Средно 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Средно 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Гладкост"
-    },
-    "pidTuningFfBoost": {
-        "message": "Увеличете"
     },
     "pidTuningProportional": {
         "message": "Пропорционално"
