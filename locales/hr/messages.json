@@ -1434,9 +1434,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interval interpolacije [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward tranzicija"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "S ovom vrijednosti, Feedforward može biti smanjen kada su kontrole na sredini, što poboljšava završetke flipova i rollova.<br> Vrijednost reprezentira točku otklon kontrola od centra: 0 - kontrole centrirane, 1 - maksimalni otklon od centra. Kad je kontrola iznad zadadne vrijednosti, Feedforward je konstantan na konfiguriranoj vrijednosti. Kada je kontrola ispod zadane vrijednosti, Feedforward se smanjuje proporcionalno do 0 kada su kontrole na centru. <br> Vrijednost 1 daje maksimalno efekt poravnavanja, dok vrijednost 0 drži Feedforward fiksnim na konfiguriranoj vrijednosti kroz cijeli hod kontrola."
     },
