@@ -1210,9 +1210,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Interval Interpolasi RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transisi feedforward"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Dengan parameter ini, Feedforward term dapat dikurangi hingga dekat dengan nilai tengah stick, yang menghasilkan akhir flip dan roll yang lebih halus.<br> Nilai mewakili defleksi stik dari titik tengah: 0 - stick di tengah, 1 - defleksi penuh. Ketika stick diatas titik itu, Feedforward akan tetap pada nilai yang telah ditentukan. Ketika stick berada di bawah, Feedforward akan berkurang secara proporsional, hingga mencapai titik 0 pada posisi tengah stick.<br> Nilai 1 memberikan efek smoothing yang maksimum, sedangkan nilai 0 menjaga Feedforward pada nilai yang telah ditentukan untuk seluruh kisaran stick."
     },
