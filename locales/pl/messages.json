@@ -1642,9 +1642,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Interwał interpolacji RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Przejście do poprzedniej wersji"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Za pomocą tego parametru można skrócić termin Feedforward w pobliżu środka drążków, co skutkuje gładszym końcem podczas robienia flipów lub beczek. <br> Wartość reprezentuje punkt ugięcia drążka: 0 - wyśrodkowany drążek, 1 - pełne ugięcie. Kiedy drążek znajduje się powyżej tego punktu, Feedforward jest utrzymywany na stałym poziomie zgodnie ze skonfigurowaną wartością. Gdy drążek znajduje się poniżej tego punktu, Feedforward jest proporcjonalnie zmniejszany, osiągając 0 w środkowej pozycji drążka. <br> Wartość 1 daje maksymalny efekt wygładzenia."
     },
@@ -1662,30 +1659,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): </strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. </span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "Interpolacja FF"
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Tryb"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "Nieprzeciętna"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Przeciętna 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Przeciętna 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Przeciętna 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Wygładzenie"
-    },
-    "pidTuningFfBoost": {
-        "message": "Wzmocnienie"
     },
     "pidTuningProportional": {
         "message": "Proporcjonalny"
