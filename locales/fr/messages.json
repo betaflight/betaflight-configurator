@@ -1680,9 +1680,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalle d'interpolation RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward transition"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Avec ce paramètre, l'effet du Feedforward term peut être diminué prés du centre des sticks, donnant de la souplesse à la fin des flips et rolls.<br> La valeur représente un point de déflection des sticks: 0 - stick centré, 1 - déflection complète. Lorsque le stick dépasse ce point, le Feedforward est maintenu à la valeur configurée. Lorsque le stick passe sous ce point, le Feedforward est réduit proportionnellement, jusqu'à 0 lorsque le stick est au centre.<br> Une valeur de 1 donne un maximum de souplesse, 0 conserve sur toute la course de stick le FeeForward à sa valeur configurée."
     },
@@ -1700,30 +1697,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Régler le D Setpoint transition sur une valeur comprise entre 0 et 0.1 est vivement déconseillée. Risques d'instabilité et manque réactivité vers les centres des sticks.</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "Interpolation FF"
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Mode"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "Pas de moyenne"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Moyenne 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Moyenne 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Moyenne 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Lissage"
-    },
-    "pidTuningFfBoost": {
-        "message": "Boost"
     },
     "pidTuningProportional": {
         "message": "Proportionnelle"
