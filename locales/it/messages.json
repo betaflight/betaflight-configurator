@@ -1653,9 +1653,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervallo di interpolazione RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transizione Feedforward"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Con questo parametro, il termine Feedforward può essere ridotto vicino al centro degli stick, il che si traduce flip e roll più fluidi. <br> Il valore rappresenta un punto di deviazione degli stick: 0 - stick centrato, 1 - deflessione completa. Quandogli stick sono sopra quel punto, il Feedforward viene mantenuto costante al valore configurato. Quando lo stick è posizionato sotto quel punto, il Feedforward viene ridotto proporzionalmente, raggiungendo 0 nella posizione centrale dello stick. <br> Il valore di 1 dà il massimo effetto di fluidità, mentre il valore di 0 mantiene il Feedforward fisso sul suo valore configurato sull'intera gamma dello stick."
     },
@@ -1673,33 +1670,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> L'utilizzo di un D Setpoint transition più grande di 0 e minore di 0.1 è fortemente sconsigliato. Se lo fai può portare instabilità e ridurre la risposta degli stick quando si trova in posizioni centrali.</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "Interpolazione FF"
-    },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "Le seguenti impostazioni controllano finemente il feedforward da gara/aggressivo a fluido/HD.<br /><br /> Imposta su NoMedia per gara, Media 2 per gara/freestyle veloce, Media 3 per la registrazione HD, Media 4 per la fluidità cinematografica in HD.<br /><br /> Fluidità: limita la quantità di cambiamento che qualsiasi canale radio può effettuare, aumenta per un segnale FF più liscio, diminuisci per risposte del FF più aggressive.<br /><br /> Boost: aiuta a superare il ritardo dei motori con movimenti rapidi degli stick, può aumentare il jitter. Prova 10 per HD, 20 per gara. Fino a 30 può essere utile per i quad con bassa potenza, ma può causare micro overshoot o jitter."
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Modalità"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "NoMedia"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Media 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Media 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Media 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Fluidità"
-    },
-    "pidTuningFfBoost": {
-        "message": "Boost"
     },
     "pidTuningProportional": {
         "message": "Proporzionale"
