@@ -1653,9 +1653,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC補間間隔 [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "フィードフォワード遷移"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "このパラメータを使用すると、スティックの中心付近でフィードフォワードを減らすことができ、フリップとロールのエンドアクションがスムーズになります。<br>この値は、スティック偏向点を表します。0-スティック中心、1-完全偏向です。スティックがその値を上回ると、フィードフォワードは設定された値で一定に保たれます。スティックがその値以下に位置すると、フィードフォワードは比例して減少し、スティック中心位置で0になります。<br>1の値はスムージング効果を最大にし、0の値はスティック範囲全体にわたって設定された値にフィードフォワードを固定します。"
     },
@@ -1673,33 +1670,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 0より大きく0.1より小さいD値セットポイントの設定はしないでください。スティックが中心を横切るときに不安定となり、スティック応答性が低下する可能性があります。</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "FF 補間"
-    },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "次のオプションは、レース/アグレッシブからスムーズ/HD空撮まで、フィードフォワード値を微調整することができます。<br /><br /> モード: レースの場合は平均値 無効、レース/高速フリースタイルの場合は平均値 2、HD空撮の場合は平均値 3、HD動画の滑らかさを求める場合は平均値 4に設定します。<br /><br /> 滑らかさ: 1回受信する送信機通信ステップが行う際の変更量を制限し、滑らかなFFを求めるには増加させ、より積極的なFF応答性を求める場合には減少させます。<br /><br /> ブースト: クイックなスティック入力によるモーター出力ラグを克服させることができますが、揺らぎは増加します。HD空撮の場合は10、レースの場合は20をお試しください。制御があまりできないような機体には最大30まで有効となりますが、細かなオーバーシュートや揺らぎを引き起こしてしまう場合があります。"
-    },
-    "pidTuningFfInterpolate": {
-        "message": "モード"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "平均値 無効"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "平均値 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "平均値 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "平均値 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "滑らかさ"
-    },
-    "pidTuningFfBoost": {
-        "message": "ブースト"
     },
     "pidTuningProportional": {
         "message": "Proportional"
