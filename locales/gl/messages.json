@@ -1744,9 +1744,6 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalo de interpolación RC [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transición de Feedforward"
-    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Con este parámetro, o termo Feedforward pode reducirse preto do centro dos sticks, o que resulta nun final máis suave dos flips e rolls.<br> O valor representa un punto de desvío do stick: 0 - stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, Feedforward mantense constante no seu valor configurado. Cando o stick colócase por debaixo dese punto, Feedforward redúcese proporcionalmente, alcanzando 0 na posición central do stick.<br> O valor de 1 dá o efecto de alisado máximo, mentres que o valor de 0 mantén o Feedforward fixado no seu valor configurado en todo o intervalo de stick."
     },
@@ -1764,33 +1761,6 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong> $t(warningTitle.message):</strong> Desaconséllase moito o uso dunha transición de punto de consecuencia maior que 0 e inferior a 0,1. Se o fai, pode levar a inestabilidade e reducir a capacidade de resposta dos stick mentres atravesan o punto central.</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "FF Interpolate"
-    },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "As seguintes opcións axustan a prealimentación dende a carreira/agresiva ata suave/HD.<br /><br /> Modo: axustado a Non promedia para carreira, Media 2 para carreira/ freestyle rápido, Media 3 para a gravación HD, Media 4 para Suavidade cinematográfica en HD.<br /><br /> Suavidade: limita a cantidade de cambios que pode facer calquera paso de radio entrante, aumentar para obter un sinal FF máis suave, diminuír para obter respostas FF máis agresivas.<br /><br /> Impulso: axuda a superar o lag do motor con entradas de stick rápidas, pode aumentar o nerviosismo. Probe 10 para HD, 20 para carreiras. Ata 30 poden ser útiles para quads con pouca autoridade, pero poden causar micro impulsos ou nerviosismo."
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Modo"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "Non promedio"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "Promedio 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "Promedio 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "Promedio 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Suavizado"
-    },
-    "pidTuningFfBoost": {
-        "message": "Impulso"
     },
     "pidTuningProportional": {
         "message": "Proporcional"
