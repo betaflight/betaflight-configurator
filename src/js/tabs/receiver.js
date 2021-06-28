@@ -506,7 +506,9 @@ TABS.receiver.initialize = function (callback) {
                     }
                 };
 
-                windowWatcherUtil.passValue(createdWindow, 'darkTheme', DarkTheme.isDarkThemeEnabled(DarkTheme.configEnabled));
+                DarkTheme.isDarkThemeEnabled(function(isEnabled) {
+                    windowWatcherUtil.passValue(createdWindow, 'darkTheme', isEnabled);
+                });
 
             });
         });
