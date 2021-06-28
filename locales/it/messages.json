@@ -89,6 +89,10 @@
     "analyticsOptOut": {
         "message": "Disattiva la raccolta anonima di dati statistici"
     },
+    "connectionTimeout": {
+        "message": "Imposta il timeout della connessione per consentire una inizializzazione più lunga durante il plugin o il riavvio",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
     "cordovaForceComputerUI": {
         "message": "Usa l'interfaccia computer invece dell'interfaccia telefono"
     },
@@ -1653,6 +1657,9 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervallo di interpolazione RC [ms]"
     },
+    "pidTuningFeedforwardTransition": {
+        "message": "Transizione"
+    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Con questo parametro, il termine Feedforward può essere ridotto vicino al centro degli stick, il che si traduce flip e roll più fluidi. <br> Il valore rappresenta un punto di deviazione degli stick: 0 - stick centrato, 1 - deflessione completa. Quandogli stick sono sopra quel punto, il Feedforward viene mantenuto costante al valore configurato. Quando lo stick è posizionato sotto quel punto, il Feedforward viene ridotto proporzionalmente, raggiungendo 0 nella posizione centrale dello stick. <br> Il valore di 1 dà il massimo effetto di fluidità, mentre il valore di 0 mantiene il Feedforward fisso sul suo valore configurato sull'intera gamma dello stick."
     },
@@ -1670,6 +1677,33 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> L'utilizzo di un D Setpoint transition più grande di 0 e minore di 0.1 è fortemente sconsigliato. Se lo fai può portare instabilità e ridurre la risposta degli stick quando si trova in posizioni centrali.</span>"
+    },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feedforward"
+    },
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "Le seguenti impostazioni controllano finemente il feedforward da gara/aggressivo a fluido/HD.<br /><br /> Imposta su Spento per gara, 2 Punti per gara/freestyle veloce, 3 Punti per la registrazione HD, 4 Punti per la fluidità cinematografica in HD.<br /><br /> Fluidità: limita la quantità di cambiamento che qualsiasi canale radio può effettuare, aumenta per un segnale FF più liscio, diminuisci per risposte del FF più aggressive.<br /><br /> Boost: aiuta a superare il ritardo dei motori con movimenti rapidi degli stick, può aumentare il jitter. Prova 10 per HD, 20 per gara. Fino a 30 può essere utile per i quad con bassa potenza, ma può causare micro overshoot o jitter."
+    },
+    "pidTuningFeedforwardAveraging": {
+        "message": "Media"
+    },
+    "pidTuningFeedforwardAveragingOptionOff": {
+        "message": "SPENTO"
+    },
+    "pidTuningFeedforwardAveragingOption2Point": {
+        "message": "2 Punti"
+    },
+    "pidTuningFeedforwardAveragingOption3Point": {
+        "message": "3 Punti"
+    },
+    "pidTuningFeedforwardAveragingOption4Point": {
+        "message": "4 Punti"
+    },
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Fluidità"
+    },
+    "pidTuningFeedforwardBoost": {
+        "message": "Boost"
     },
     "pidTuningProportional": {
         "message": "Proporzionale"
@@ -2398,6 +2432,9 @@
     "motorsEnableControl": {
         "message": "<strong>Ho compreso i rischi</strong>, le eliche sono state rimosse - abilita il controllo motori e armamento motori e disabilita la prevenzione del decollo fuori controllo."
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong>Modalità mixer selezionata non valida.</strong><br /><br />La modalità {{mixerName}} ha bisogno di {{mixerMotors}} motori.<br /><br />Se si utilizza una modalità mixer personalizzata è necessario definire un mmix personalizzato prima di cambiare la modalità mixer. Se torni alla scheda motore dopo aver impostato un mmix per la tua modalità, non resetterà più la modalità. Consulta la wiki per maggiori informazioni su come configurare.<br /><br />Non sarai in grado di testare alcun motore o volare perché il firmware ha {{outputs}} uscite per la modalità selezionata.<br /><br />Ripristinando la modalità mixer predefinita"
+    },
     "motorsDialogSettingsChanged": {
         "message": "Sono state rilevate modifiche alla configurazione.<br /><br /><strong class=\"message-negative-italic\">La Modalità Test Motori è disabilitata fino a quando le impostazioni non verranno salvate.</strong>"
     },
@@ -2982,6 +3019,24 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Rilevato: <strong>$1</strong> - attivazione del flash alla connessione"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>Firmware non corrispondente</h3><br />Hai connesso la scheda <strong>{{verified_board}}</strong> ma hai selezionato <strong>{{selected_board}}</strong>.<br /><br />Vuoi continuare con il flash?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Il configuratore ha rilevato e verificato con <span class=\"message-positive\">successo</span> la scheda: <strong>{{boardName}}</strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "Il configuratore <span class=\"message-negative\">non è riuscito</span> a verificare la scheda, se questo non funziona si prega di provare a cambiare schede lentamente per riprovare, fare una nuova connessione usb o connettersi prima in caso tu abbia dimenticato di applicare impostazioni personalizzate",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "Interrompi"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "Continua"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "Stai per flashare una <strong>build di sviluppo del firmware</strong>. Queste build sono work in progress e potrebbero verificarsi i seguenti casi:<strong><ul><li>il firmware non è funzionante;</li><li>il firmware non è in grado di far volare il modello;</li><li>ci sono problemi di sicurezza con il firmware, per esempio flyaway</li><li>il firmware può far diventare il controllore del volo non rispondente o danneggiarlo</li></ul></strong>Se prosegui con il flash di questo firmware, <strong>ti assumi la piena responsabilità dei rischi di cui sopra</strong>. Inoltre riconosci che è necessario eseguire <strong>test approfonditi sul banco di lavoro con le eliche rimosse</strong> prima di qualsiasi tentativo di volare con questo firmware."
