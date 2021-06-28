@@ -89,6 +89,10 @@
     "analyticsOptOut": {
         "message": "匿名の統計データ収集を無効"
     },
+    "connectionTimeout": {
+        "message": "接続タイムアウトを設定し、デバイスプラグインのより長めの初期化や再起動を許可する",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
     "cordovaForceComputerUI": {
         "message": "電話インターフェイスの代わりにコンピュータインターフェイスを使用"
     },
@@ -1653,6 +1657,9 @@
     "receiverRcInterpolationInterval": {
         "message": "RC補間間隔 [ms]"
     },
+    "pidTuningFeedforwardTransition": {
+        "message": "遷移"
+    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "このパラメータを使用すると、スティックの中心付近でフィードフォワードを減らすことができ、フリップとロールのエンドアクションがスムーズになります。<br>この値は、スティック偏向点を表します。0-スティック中心、1-完全偏向です。スティックがその値を上回ると、フィードフォワードは設定された値で一定に保たれます。スティックがその値以下に位置すると、フィードフォワードは比例して減少し、スティック中心位置で0になります。<br>1の値はスムージング効果を最大にし、0の値はスティック範囲全体にわたって設定された値にフィードフォワードを固定します。"
     },
@@ -1670,6 +1677,33 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 0より大きく0.1より小さいD値セットポイントの設定はしないでください。スティックが中心を横切るときに不安定となり、スティック応答性が低下する可能性があります。</span>"
+    },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feedforward"
+    },
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "以下のオプションは、レース/アグレッシブからスムース/HDまでをフィードフォワードにて微調整します。<br /><br />モード: レースではオフ、レース/高速フリースタイルでは平均2 Point、HD録画では平均3 Point、HD動画のような滑らかさでは平均4 Pointに設定します。<br /><br />Smoothness: 入力される送信信号1ステップによる変化量を制限するもので、FF信号が滑らかになるようにするには増加させ、より攻撃的なFF反応になるようにするには減少させます。<br /><br />ブースト: 素早いスティック入力によるモーターラグ問題を助けますが、ジッターを増加させてしまいます。HD動画では10、レースでは20を目安にしてください。30以上は制御が弱い機体には有効かもしれませんが、微小なオーバーシュートやジッターの原因になります。"
+    },
+    "pidTuningFeedforwardAveraging": {
+        "message": "平均化"
+    },
+    "pidTuningFeedforwardAveragingOptionOff": {
+        "message": "OFF"
+    },
+    "pidTuningFeedforwardAveragingOption2Point": {
+        "message": "2 Point"
+    },
+    "pidTuningFeedforwardAveragingOption3Point": {
+        "message": "3 Point"
+    },
+    "pidTuningFeedforwardAveragingOption4Point": {
+        "message": "4 Point"
+    },
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Smoothness"
+    },
+    "pidTuningFeedforwardBoost": {
+        "message": "ブースト"
     },
     "pidTuningProportional": {
         "message": "Proportional"
@@ -2398,6 +2432,9 @@
     "motorsEnableControl": {
         "message": "<strong>リスクを認識し</strong>、プロペラは全て外しました - モーター制御とアーミングを可能にし、暴走離陸防止機能を無効にします。"
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong>無効なミキサーモードが選択されました。</strong><br /><br /> {{mixerName}} モデルには {{mixerMotors}} のモーターリソースが必要です。<br /><br />カスタムミキサーモードを使用している場合、ミキサーモードを変更する前にcustom mmixを定義する必要があります。モードにmmixを設定した後にモータータブに戻るとモードはリセットされません。設定方法の詳細についてはwikiをご覧ください。<br /><br />ファームウェアには選択されたモードの {{outputs}} 出力があるため、モーターのテストや飛行ができません。<br /><br />ミキサーモードをデフォルトに戻します。"
+    },
     "motorsDialogSettingsChanged": {
         "message": "設定の変更が検出されました。<br /><br /><strong class=\"message-negative-italic\">設定が保存されるまで、モータテストモードは無効になります。</strong>"
     },
@@ -2982,6 +3019,24 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "検出: <strong>$1</strong> - 接続時フラッシュをトリガーとします"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>ファームウェア 不一致</h3><br /><strong>{{verified_board}}</strong>を選択していますが接続されているFC基板は<strong>{{selected_board}}</strong>となっています。<br /><br />ファームフラッシュを続けますか？",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Betaflight ConfiguratorはFC基板の検出と検証に<span class=\"message-positive\">成功</span>しました: <strong>{{boardName}}</strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "Betaflight Configuratorでボードの検証に<span class=\"message-negative\">失敗</span>しました。うまくいかない場合はタブをゆっくりと切り替え再試行してください。またUSB接続を改めてやり直すか、カスタムデフォルトを適用し忘れた場合は最初から接続し直してください。",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "中断"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "続行"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "<strong>開発ビルド版ファームウェア</strong>をフラッシュしようとしています。これらのビルドは開発作業中のものであり、次のいずれかが当てはまる場合があります:<strong><ul><li>ファームウェアがまったく機能しない場合;</li><li>ファームウェアが飛行不能な場合;</li><li>飛行距離など、ファームウェアに安全性の問題がある場合;</li><li>ファームウェアが原因で、フライトコントローラが応答しなくなったり、破損したりする可能性がある場合</li></ul></strong>このファームウェアのフラッシュを続行する場合は、<strong>上記のいずれかのリスクに対して自己責任を負うこととなります。</strong>さらにこのファームウェアを飛ばす前に、<strong>プロペラを外し徹底的なベンチテストを実行する</strong>必要があることを周知してください。"
