@@ -1025,7 +1025,7 @@ TABS.pid_tuning.initialize = function (callback) {
             FC.TUNING_SLIDERS.slider_pd_ratio = Math.round(TuningSliders.sliderPDRatio * 20) * 5;
             FC.TUNING_SLIDERS.slider_pd_gain = Math.round(TuningSliders.sliderPDGain * 20) * 5;
             FC.TUNING_SLIDERS.slider_dmin_ratio = Math.round(TuningSliders.sliderDMinRatio * 20) * 5;
-            FC.TUNING_SLIDERS.slider_ff_gain = Math.round(TuningSliders.sliderFFGain * 20) * 5;
+            FC.TUNING_SLIDERS.slider_feedforward_gain = Math.round(TuningSliders.sliderFeedforwardGain * 20) * 5;
 
             FC.TUNING_SLIDERS.slider_dterm_filter = TuningSliders.sliderDTermFilter ? 1 : 0;
             FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(TuningSliders.sliderDTermFilterMultiplier * 20) * 5;
@@ -1875,11 +1875,11 @@ TABS.pid_tuning.initialize = function (callback) {
 
             let allPidTuningSliders;
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                allPidTuningSliders = $('#sliderMasterMultiplier, #sliderPDRatio, #sliderPDGain, #sliderFFGain');
+                allPidTuningSliders = $('#sliderMasterMultiplier, #sliderPDRatio, #sliderPDGain, #sliderFeedforwardGain');
                 $('.tab-pid_tuning .advancedSlider').hide();
                 $('.tab-pid_tuning .sliderMode').hide();
             } else {
-                allPidTuningSliders = $('#sliderMasterMultiplier, #sliderRollPitchRatio, #sliderIGain, #sliderPDRatio, #sliderPDGain, #sliderDMinRatio, #sliderFFGain');
+                allPidTuningSliders = $('#sliderMasterMultiplier, #sliderRollPitchRatio, #sliderIGain, #sliderPDRatio, #sliderPDGain, #sliderDMinRatio, #sliderFeedforwardGain');
                 $('.tab-pid-tuning .baseSlider').show();
                 $('.tab-pid-tuning .MasterSlider').show();
             }
@@ -1912,8 +1912,8 @@ TABS.pid_tuning.initialize = function (callback) {
                     TuningSliders.sliderPDGain = scaledValue;
                 } else if (slider.is('#sliderDMinRatio')) {
                     TuningSliders.sliderDMinRatio = scaledValue;
-                } else if (slider.is('#sliderFFGain')) {
-                    TuningSliders.sliderFFGain = scaledValue;
+                } else if (slider.is('#sliderFeedforwardGain')) {
+                    TuningSliders.sliderFeedforwardGain = scaledValue;
                 }
                 TuningSliders.calculateNewPids();
                 self.analyticsChanges['PidTuningSliders'] = "On";
@@ -1941,8 +1941,8 @@ TABS.pid_tuning.initialize = function (callback) {
                     TuningSliders.sliderPDGain = 1;
                 } else if (slider.is('#sliderDMinRatio')) {
                     TuningSliders.sliderDMinRatio = 1;
-                } else if (slider.is('#sliderFFGain')) {
-                    TuningSliders.sliderFFGain = 1;
+                } else if (slider.is('#sliderFeedforwardGain')) {
+                    TuningSliders.sliderFeedforwardGain = 1;
                 }
                 TuningSliders.calculateNewPids();
                 TuningSliders.updatePidSlidersDisplay();

@@ -662,7 +662,7 @@ const FC = {
             slider_pd_ratio:                    0,
             slider_pd_gain:                     0,
             slider_dmin_ratio:                  0,
-            slider_ff_gain:                     0,
+            slider_feedforward_gain:            0,
             slider_dterm_filter:                0,
             slider_dterm_filter_multiplier:     0,
             slider_gyro_filter:                 0,
