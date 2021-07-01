@@ -549,6 +549,47 @@ STM32DFU_protocol.prototype.verify_flash = function (first_array, second_array) 
     return true;
 };
 
+STM32DFU_protocol.prototype.isBlockUsable = function(startAddress, length) {
+    var self = this;
+
+    let result = false;
+
+    let searchAddress = startAddress;
+    let remainingLength = length;
+
+    let restart;
+    do {
+        restart = false;
+
+        for (const sector of self.flash_layout.sectors) {
+            const sectorStart = sector.start_address;
+            const sectorLength = sector.num_pages * sector.page_size;
+            const sectorEnd = sectorStart + sectorLength - 1; // - 1 for inclusive
+
+            const addressInSector = (searchAddress >= sectorStart) && (searchAddress <= sectorEnd);
+
+            if (addressInSector) {
+                const endAddress = searchAddress + remainingLength - 1; // - 1 for inclusive
+
+                const endAddressInSector = (endAddress <= sectorEnd);
+                if (endAddressInSector) {
+                    result = true;
+                    restart = false;
+                    break;
+                }
+
+                // some of the block is in this sector, search for the another sector that contains the next part of the block
+                searchAddress = sectorEnd + 1;
+                remainingLength -= sectorLength;
+                restart = true;
+                break;
+            }
+        }
+    } while (restart);
+
+    return result;
+};
+
 STM32DFU_protocol.prototype.upload_procedure = function (step) {
     var self = this;
 
@@ -559,59 +600,52 @@ STM32DFU_protocol.prototype.upload_procedure = function (step) {
                     console.log('Failed to detect chip info, resultCode: ' + resultCode);
                     self.cleanup();
                 } else {
+                    let nextAction;
+
                     if (typeof chipInfo.internal_flash !== "undefined") {
                         // internal flash
+                        nextAction = 1;
+
                         self.chipInfo = chipInfo;
-
                         self.flash_layout = chipInfo.internal_flash;
-                        self.available_flash_size = self.flash_layout.total_size - (self.hex.start_linear_address - self.flash_layout.start_address);
 
-                        GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
-
-                        if (self.hex.bytes_total > self.available_flash_size) {
-                            GUI.log(i18n.getMessage('dfu_error_image_size',
-                                [(self.hex.bytes_total / 1024.0).toFixed(1),
-                                (self.available_flash_size / 1024.0).toFixed(1)]));
-                            self.cleanup();
-                        } else {
-                            self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
-                                self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
-                                console.log('Using transfer size: ' + self.transferSize);
-                                self.clearStatus(function () {
-                                    self.upload_procedure(1);
-                                });
-                            });
-                        }
                     } else if (typeof chipInfo.external_flash !== "undefined") {
-                        // external flash, flash to the 3rd partition.
+                        // external flash
+                        nextAction = 2; // no option bytes
+
                         self.chipInfo = chipInfo;
                         self.flash_layout = chipInfo.external_flash;
-
-                        var firmware_partition_index = 2;
-                        var firmware_sectors = self.flash_layout.sectors[firmware_partition_index];
-                        var firmware_partition_size = firmware_sectors.total_size;
-
-                        self.available_flash_size = firmware_partition_size;
-
-                        GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
-
-                        if (self.hex.bytes_total > self.available_flash_size) {
-                            GUI.log(i18n.getMessage('dfu_error_image_size',
-                                [(self.hex.bytes_total / 1024.0).toFixed(1),
-                                (self.available_flash_size / 1024.0).toFixed(1)]));
-                            self.cleanup();
-                        } else {
-                            self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
-                                self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
-                                console.log('Using transfer size: ' + self.transferSize);
-                                self.clearStatus(function () {
-                                    self.upload_procedure(2); // no option bytes to deal with
-                                });
-                            });
-                        }
                     } else {
                         console.log('Failed to detect internal or external flash');
                         self.cleanup();
+                    }
+
+                    if (typeof nextAction !== "undefined") {
+                        GUI.log(i18n.getMessage('dfu_device_flash_info', (self.flash_layout.total_size / 1024).toString()));
+
+                        // verify all addresses in the hex are writable.
+
+                        const unusableBlocks = [];
+
+                        for (const block of self.hex.data) {
+                            const usable = self.isBlockUsable(block.address, block.bytes);
+                            if (!usable) {
+                                unusableBlocks.push(block);
+                            }
+                        }
+
+                        if (unusableBlocks.length > 0) {
+                            GUI.log(i18n.getMessage('dfu_hex_address_errors'));
+                            self.cleanup();
+                        } else {
+                            self.getFunctionalDescriptor(0, function (descriptor, resultCode) {
+                                self.transferSize = resultCode ? 2048 : descriptor.wTransferSize;
+                                console.log('Using transfer size: ' + self.transferSize);
+                                self.clearStatus(function () {
+                                    self.upload_procedure(nextAction);
+                                });
+                            });
+                        }
                     }
                 }
             });
