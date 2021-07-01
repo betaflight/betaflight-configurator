@@ -89,6 +89,10 @@
     "analyticsOptOut": {
         "message": "Meld af voor het anoniem verzamelen van gegevens voor statistieken"
     },
+    "connectionTimeout": {
+        "message": "Stel een verbindingstime-out in om een langere initialisatie op apparaatplug-in of opstarten mogelijk te maken",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
     "cordovaForceComputerUI": {
         "message": "Gebruik computerschermindeling in plaats van telefoon indeling"
     },
@@ -2384,6 +2388,9 @@
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong>Ongeldige mixermodus geselecteerd.</strong><br /><br />Het {{mixerName}}-model heeft {{mixerMotors}} motorbronnen nodig.<br /><br />Als een aangepaste mixermodus wordt gebruikt u moet een aangepaste mix definiëren voordat u de mixermodus wijzigt. Als je terugkeert naar het motor-tabblad nadat je een mmix voor je modus hebt ingesteld, wordt de modus niet meer gereset. Raadpleeg de wiki voor meer informatie over het instellen hiervan.<br /><br />Je kunt geen motoren testen of vliegen omdat de firmware {{outputs}} uitgangen heeft voor de geselecteerde modus.<br /><br />De standaard mixermodus is terug gezet"
+    },
     "motorsDialogSettingsChanged": {
         "message": "Configuratiewijzigingen zijn gedetecteerd.<br /><br /><strong class=\"message-negative-italic\">Motortestmodus is uitgeschakeld totdat de instellingen zijn opgeslagen.</strong>"
     },
@@ -2965,6 +2972,10 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Gedetecteerd: <strong>$1</strong> - flashen wordt gestart bij verbinding"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>Firmware komt niet overeen</h3><br />Het verbonden bord is <strong>{{verified_board}}</strong> terwijl je <strong>{{selected_board}}</strong> hebt geselecteerd.<br /><br />Wilt u doorgaan met flashen?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "U staat op het punt een <strong>ontwikkelaarsversie van de firmware</strong> te flashen. Aan deze builds wordt nog gewerkt waardoor de volgende situaties kunnen optreden:<strong><ul><li>de firmware werkt helemaal niet;</li><li>de firmware is niet vliegbaar;</li><li>er zijn veiligheidsproblemen met de firmware, bijvoorbeeld flyaways;</li><li>de firmware kan ervoor zorgen dat de vluchtcontroller niet meer reageert of beschadigd raakt.</li></ul></strong>Als u toch deze firmware gaat flashen <strong>neemt u de volledige verantwoordelijkheid voor het risico van een van de bovenstaande gebeurtenissen</strong>. Verder erkent u dat het nodig is om <strong>grondige bench tests uit te voeren met de propellors verwijderd</strong> alvorens er getracht wordt met behulp van deze firmware te vliegen."
