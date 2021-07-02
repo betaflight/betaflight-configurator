@@ -89,6 +89,10 @@
     "analyticsOptOut": {
         "message": "익명화된 통계 데이타 수집 선택 해제"
     },
+    "connectionTimeout": {
+        "message": "디바이스 플러그인 또는 재부팅 시 더 긴 초기화를 허용하도록 연결 시간 타임아웃 설정",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
     "cordovaForceComputerUI": {
         "message": "폰 인터페이스 대신 컴퓨터 인터페이스 사용"
     },
@@ -2496,6 +2500,9 @@
     "motorsEnableControl": {
         "message": "<strong>나는 위험을 인지하고 있으며</strong>, 프로펠러가 제거되었음을 확인합니다 - 모터 제어, 아밍 및 폭주 이륙 방지 비활성."
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong>잘못된 믹서 모드를 선택했습니다.</strong><br /><br />{{mixerName}} 모델은 {{mixerMotors}} 개의 모터 자원이 필요합니다.<br /><br />사용자 정의 믹서 모드를 사용하는 경우 믹서 모드를 변경하기 전에 사용자 정의 mmix를 정의해야 합니다. 모드에 대한 mmix를 설정한 후 모터 탭으로 돌아오면 모드가 더 이상 재설정되지 않습니다. 설정 방법에 대한 자세한 내용은 wiki를 참조하십시오.<br /><br />펌웨어가 선택한 모드에 대해 {{outputs}} 개의 출력을 가지고 있기 때문에 모터를 테스트하거나 비행할 수 없습니다.<br /><br />기본 믹서 모드로 초기화 중입니다."
+    },
     "motorsDialogSettingsChanged": {
         "message": "환경설정 변경사항이 감지되었습니다.<br /><br /><strong class=\"message-negative-italic\">모터 테스트 모드는 설정이 저장될 때까지 비활성화됩니다.</strong>"
     },
@@ -3080,6 +3087,24 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "감지됨: <strong>$1</strong> - 연결시 플래시를 시작합니다."
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>펌웨어 불일치</h3><br />연결된 보드는 <strong>{{verified_board}}</strong>인 반면에 당신이 선택한 보드는 <strong>{{selected_board}}</strong>입니다.<br /><br />계속 플래싱을 하시겠습니까?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "컨피규레이터가 보드: <strong>{{boardName}}</strong>를 <span class=\"message-positive\">성공적으로</span> 감지하고 검증하였습니다.",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "컨피규레이터가 보드를 검증하는 데 <span class=\"message-negative\">실패하였습니다</span>, 만약 이 기능이 작동하지 않으면 탭을 천천히 전환하여 다시 시도하거나, 새 usb 연결을 만들거나, 사용자 지정 기본값을 적용하는 것을 잊은 경우 먼저 연결하십시오.",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "중지"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "계속"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "당신은 이제 막 <strong>펌웨어의 개발 빌드</strong>을 플래시하려고 합니다. 이러한 빌드는 진행 중인 작업이며, 다음 중 하나의 경우가 될 수 있습니다:<strong><ul><li>펌웨어가 전혀작동하지 않습니다;</li><li>펌웨어는 비행할 수 없습니다;</li><li>폭주이륙(flyaways) 같은 펌웨어에 안전 문제가 있습니다;</li><li>펌웨어는 비행 컨트롤러를 응답하지 않거나 손상을 줄 수 있습니다.</li></ul></strong>만약 당신이 이 펌웨어를 계속 플래시한다면, <strong>당신은 위와 같은 일이 일어날 위험에 대해 모든 책임을 져야 할 것입니다.</strong> 또한 당신은 이 펌웨어를 띄우려고 시도하기 전에 <strong>프롭을 제거하고 벤치 테스트를</strong> 수행해야 한다는 것을 인지하여야 합니다."
