@@ -1669,6 +1669,9 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interpolatie interval [ms]"
     },
+    "pidTuningFeedforwardTransition": {
+        "message": "Overgang"
+    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Met deze parameter kan de Feedforward-term worden gereduceerd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Wanneer de stick zich boven dat punt bevindt, wordt Feedforward constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt Feedforward proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 de Feedforward op zijn geconfigureerde waarde houdt over het hele stickbereik."
     },
@@ -1687,8 +1690,36 @@
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Het gebruik van een D Setpoint transitie tussen de 0 en 0.1 wordt afgeraden. Mocht je dit wel doen dan kan dit leiden tot instabiliteit en verminderde reactievermogen als je sticks het centrum van hun bereik passeren.</span>"
     },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feedforward"
+    },
+    "pidTuningFeedforwardAveraging": {
+        "message": "Gemiddeld"
+    },
+    "pidTuningFeedforwardAveragingOptionOff": {
+        "message": "UIT"
+    },
+    "pidTuningFeedforwardAveragingOption2Point": {
+        "message": "2 Punt"
+    },
+    "pidTuningFeedforwardAveragingOption3Point": {
+        "message": "3 Punt"
+    },
+    "pidTuningFeedforwardAveragingOption4Point": {
+        "message": "4 Punt"
+    },
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Smoothness"
+    },
+    "pidTuningFeedforwardBoost": {
+        "message": "Boost"
+    },
     "pidTuningProportional": {
         "message": "Proportioneel"
+    },
+    "pidTuningProportionalHelp": {
+        "message": "Regelt de sterkte van hoe strak de quad de sticks volgt (het instelpunt/Setpoint).<br /><br />Hogere waarde (gains) zorgen voor een strakkere tracking, maar kan overshoot veroorzaken als deze te hoog is in verhouding tot de afgeleide (D-term). Zie de P-term als de veer van een auto zijn schokbreker.",
+        "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "Integraal"
@@ -2976,6 +3007,20 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Firmware komt niet overeen</h3><br />Het verbonden bord is <strong>{{verified_board}}</strong> terwijl je <strong>{{selected_board}}</strong> hebt geselecteerd.<br /><br />Wilt u doorgaan met flashen?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "De configurator heeft <span class=\"message-positive\">succesvol</span> het bord gedetecteerd en geverifieerd: <strong>{{boardName}}</strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "De configurator <span class=\"message-negative\">kan het bord niet verifiëren</span>. Als dit niet werkt, probeer dan eerst langzaam tussen de tabbladen te wisselen. Of maak een nieuwe Usb-verbinding. Of als laatst, pas de standaardinstellingen toe op dit bord en probeer het opnieuw",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "Afbreken"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "Doorgaan"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "U staat op het punt een <strong>ontwikkelaarsversie van de firmware</strong> te flashen. Aan deze builds wordt nog gewerkt waardoor de volgende situaties kunnen optreden:<strong><ul><li>de firmware werkt helemaal niet;</li><li>de firmware is niet vliegbaar;</li><li>er zijn veiligheidsproblemen met de firmware, bijvoorbeeld flyaways;</li><li>de firmware kan ervoor zorgen dat de vluchtcontroller niet meer reageert of beschadigd raakt.</li></ul></strong>Als u toch deze firmware gaat flashen <strong>neemt u de volledige verantwoordelijkheid voor het risico van een van de bovenstaande gebeurtenissen</strong>. Verder erkent u dat het nodig is om <strong>grondige bench tests uit te voeren met de propellors verwijderd</strong> alvorens er getracht wordt met behulp van deze firmware te vliegen."
@@ -4809,6 +4854,9 @@
         "message": "Camera frame",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCameraFrame": {
+        "message": "Voegt een aanpasbaar omtrekelement toe dat is ontworpen om het gezichtsveld van de HD-camera van de piloot weer te geven voor visuele framing.<br /><br />U kunt de breedte en hoogte in CLI aanpassen met 'osd_camera_frame_width' en 'osd_camera_frame_height'"
+    },
     "osdTextElementEfficiency": {
         "message": "Batterij efficiëntie",
         "description": "One of the elements of the OSD"
@@ -5636,6 +5684,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Meting"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Afgeleide van Fout</b> zorgt voor een directere stick-respons en heeft vooral de voorkeur bij racen.<br /><br /><b>Afgeleide van Meting</b> zorgt voor een soepelere stick-respons, wat handiger is voor freestylen"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID-schaling en PID-logica zijn bij beide precies hetzelfde. Het is daardoor niet noodzakelijk om opnieuw te PID-tunen. Legacy is de oude betaflight welke werkt met een PID-controller die op basis van integers werkt. De nieuwe Betaflight PID-controller maakt gebruik van floating point berekeningen. <br><b>Float vs Integer:</b> PID-schaalverdeling en PID-logica werken bij beide precies hetzelfde. Er is geen extra tuning benodigd. Integer berekeningen zijn eenvoudiger en is minder belastend voor de CPU. Bij F1 boards heeft dit de voorkeur. Berekeningen met behulp van Floats kost de CPU meer maar daar krijg je meer precisie voor terug."
