@@ -49,6 +49,13 @@
     "portsSelectManual": {
         "message": "Choisir un port"
     },
+    "portsSelectVirtual": {
+        "message": "Mode Virtuel (Expérimental)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Version du firmware virtuel"
+    },
     "portOverrideText": {
         "message": "Port:"
     },
@@ -81,6 +88,10 @@
     },
     "analyticsOptOut": {
         "message": "Ne pas participer à la collecte anonymes de données statistiques"
+    },
+    "connectionTimeout": {
+        "message": "Définir le délai d'expiration de connexion afin de permettre une initialisation plus longue au branchement ou au redémarrage de l'appareil",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
     "cordovaForceComputerUI": {
         "message": "Utiliser l'interface ordinateur au lieu de l'interface smartphone"
@@ -488,8 +499,15 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>la version de configurateur que vous utilisez ($3) est plus ancienne que le firmware que vous utilisez ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
+    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
+        "message": "<strong>Aucun protocole de sortie vers les moteurs n'est sélectionné</strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' l'onglet '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
+    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>l'accéléromètre est activé mais il n'est pas calibré</strong>. <br>Si vous envisagez d'utiliser l'accéléromètre, veuillez suivre les instructions '$t(initialSetupButtonCalibrateAccel.message)' dans l'onglet '$t(tabSetup.message)'. Si une fonction nécessitant l'accéléromètre (auto level modes, sauvetage GPS, . .) est activée, l'armement de l'engin sera désactivé jusqu'à ce que l'accéléromètre ait été calibré.<br>Si vous ne prévoyez pas d'utiliser l'accéléromètre, il est recommandé de le désactiver dans '$t(configurationSystem.message)' dans l'onglet '$t(tabConfiguration.message)'."
+    },
+    "infoVersions": {
+        "message": "Version - OS: <strong>{{operatingSystem}}</strong>, Configurateur: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
     },
     "buildServerLoaded": {
         "message": "Informations sur la version de $1 chargées depuis le serveur."
@@ -573,6 +591,14 @@
         "message": "Utilisation du port:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Erreur paquet:",
         "description": "Packet error text shown in the status bar"
@@ -584,6 +610,10 @@
     "statusbar_cycle_time": {
         "message": "Durée de cycle:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Charge CPU:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Veuillez utiliser le 'Firmware Flasheur' pour accéder aux dispositifs en DFU"
@@ -2396,6 +2426,12 @@
     "motorsEnableControl": {
         "message": "<strong>Je comprends les riques</strong>, les hélices sont retirées - autoriser l'armement et le contrôle des moteurs et désactiver le Runaway Takeoff Prevention."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Des changements dans la configuration ont été détectés.<br /><br /><strong class=\"message-negative-italic\">Le mode Test Moteurs est désactivé jusqu'à ce que les paramètres aient été enregistrés.</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
+    },
     "motorOutputReorderDialogClose": {
         "message": "Annuler"
     },
@@ -2420,11 +2456,23 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Avis de sécurité</strong><br /><strong class=\"message-negative\">Retirez toutes les hélices pour éviter les blessures !</strong><br />Les moteurs vont <strong>tourner !</strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Information</strong><br />Les moteurs vont tourner un par un et vous pourrez choisir quel moteur tourne. La batterie doit être branchée, le bon protocole ESC doit être sélectionné. Cet utilitaire ne peut réorganiser que les moteurs actuellement actifs. Un remapping plus complexe nécessite la commande CLI Resource. Référez-vous à cette <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">page du Wiki</a>."
+    },
     "motorsRemapDialogSave": {
         "message": "Enregistrer"
     },
     "motorsRemapDialogStartOver": {
         "message": "Commencer"
+    },
+    "motorsButtonReset": {
+        "message": "Réinitialiser"
+    },
+    "motorsButtonSave": {
+        "message": "Sauvegarder et Redémarrer"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Sens du moteur - <strong class=\"message-negative-italic\">Attention : Assurez-vous que les hélices sont retirées !</strong>"
     },
     "sensorsInfo": {
         "message": "Gardez à l'esprit que le rafraîchissement fréquent des données et la génération de plusieurs graphiques en même temps est exigeant en ressources et vide la batterie de votre ordinateur portable rapidement.<br /> Nous conseillons de ne générer les graphiques que pour les capteurs utiles avec des temps de rafraîchissements raisonnables."
