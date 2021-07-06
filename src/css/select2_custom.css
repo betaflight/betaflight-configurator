@@ -6,7 +6,7 @@
 }
 
 .select2-selection__rendered {
-    line-height: 19px !important;
+    line-height: 18.5px !important;
     padding-left: 4px !important;
     color: var(--defaultText) !important;
     border-radius: 2px !important;
