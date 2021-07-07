@@ -888,8 +888,8 @@ function updateInterpolationView() {
         $('.tab-receiver .rc-smoothing-channels').hide();
         $('.tab-receiver input[name="rcSmoothingAutoFactor-number"]').attr("max", "250");
         $('.tab-receiver .rcSmoothingType').hide();
-        $('.rcSmoothingOff').text('OFF');
-        $('.rcSmoothingOn').text('ON');
+        $('.tab-receiver .rcSmoothingOff').text(i18n.getMessage('off'));
+        $('.tab-receiver .rcSmoothingOn').text(i18n.getMessage('on'));
     } else {
         $('.tab-receiver .rcSmoothingMode').hide();
     }
