@@ -418,6 +418,16 @@
     "portsFunction_FRSKY_OSD": {
         "message": "ΟΑΓ (Πρωτόκολλο FrSky)"
     },
+    "pidTuningAntiGravityThres": {
+        "message": "Κατώφλι",
+        "description": "Anti Gravity Threshold Parameter"
+    },
+    "receiverStickMin": {
+        "message": "Κατώφλι 'Στικ Χαμηλό'"
+    },
+    "receiverStickMax": {
+        "message": "Κατώφλι 'Στικ Υψηλό'"
+    },
     "adjustmentsFunction29": {
         "message": "Επιλογή Προφίλ ΟΑΓ"
     },
@@ -446,6 +456,12 @@
         "message": "Αυτόματο",
         "description": "Option for the video format in the OSD"
     },
+    "osdDescElementMainBattVoltage": {
+        "message": "Στιγμιαία τάση της κύριας μπαταρίας (αναβοσβήνει όταν είναι κάτω από το κατώφλι συναγερμού)"
+    },
+    "osdDescElementRssiValue": {
+        "message": "Στιγμιαία τιμή RSSI (αναβοσβήνει όταν είναι κάτω από το όριο συναγερμού)"
+    },
     "osdTextElementTimer": {
         "message": "Χρονόμετρο",
         "description": "One of the elements of the OSD"
@@ -466,12 +482,40 @@
         "message": "Όνομα σκάφους",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementAltitude": {
+        "message": "Τρέχον υψόμετρο (αναβοσβήνει όταν είναι πάνω από το όριο συναγερμού)"
+    },
+    "osdDescElementFlyTime": {
+        "message": "Συνολικός χρόνος οπλισμού του σκάφους στον τρέχοντα κύκλο λειτουργείας (αναβοσβήνει όταν είναι πάνω από το όριο συναγερμού)"
+    },
+    "osdDescElementBatteryWarning": {
+        "message": "Προειδοποιητικό κείμενο που εμφανίζεται όταν η τάση της μπαταρίας πέσει κάτω από το όριο ασφαλείας"
+    },
+    "osdTimerAlarmTooltip": {
+        "message": "Επιλέξτε το όριο ειδοποίησης του χρονομέτρου σε λεπτά, όταν ο χρόνος υπερβεί αυτή την τιμή το στοιχείο στο OSD θα αναβοσβήνει, ορίζοντας το 0 απενεργοποιεί την ειδοποίηση"
+    },
+    "osdWarningBatteryWarning": {
+        "message": "Ειδοποιεί όταν η τάση της μπαταρίας πέσει κάτω από το προειδοποιητικό όριο"
+    },
+    "osdWarningEscFail": {
+        "message": "Απαριθμεί μια λίστα με τα ESC / κινητήρες που παρουσιάζουν βλάβη (RPM ή θερμοκρασία είναι εκτός του ρυθμισμένου ορίου)"
+    },
+    "osdWarningCoreTemperature": {
+        "message": "Προειδοποιεί όταν η θερμοκρασία πυρήνα MCU υπερβαίνει ένα καθορισμένο όριο"
+    },
     "osdWarningTextFailsafe": {
         "message": "Ασφαλής Αποτυχία",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
+    "osdWarningTextOverCap": {
+        "message": "Υπερφόρτιση μπαταρίας",
+        "description": "One of the warnings that can be selected to be shown in the OSD"
+    },
     "osdSectionHelpElements": {
         "message": "Ενεργοποιήστε ή απενεργοποιήστε στοιχεία στην ΟΑΓ."
+    },
+    "osdSectionHelpAlarms": {
+        "message": "Ορίστε τα όρια που χρησιμοποιούνται για στοιχεία OSD με καταστάσεις ειδοποίησης."
     },
     "osdSettingsSaved": {
         "message": "Οι ρυθμίσεις της ΟΑΓ αποθηκεύτηκαν"
