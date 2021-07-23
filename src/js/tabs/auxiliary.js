@@ -293,6 +293,9 @@ TABS.auxiliary.initialize = function (callback) {
             }
         }
 
+        const length = Math.max(...(FC.AUX_CONFIG.map(el => el.length)));
+        $('.tab-auxiliary .mode .info').css('min-width', `${Math.round(length * getTextWidth('A'))}px`);
+
         $('a.addRange').click(function () {
             const modeElement = $(this).data('modeElement');
             // auto select AUTO option; default to 'OR' logic

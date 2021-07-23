@@ -274,20 +274,11 @@ PortHandler.selectPort = function(ports) {
 
 PortHandler.setPortsInputWidth = function() {
 
-    function getWidthofText(text) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-
-        context.font = getComputedStyle(document.body).font;
-
-        return Math.ceil(context.measureText(text).width);
-    }
-
     function findMaxLengthOption(selectEl) {
         let max = 0;
 
         $(selectEl.options).each(function () {
-            const textSize = getWidthofText(this.textContent);
+            const textSize = getTextWidth(this.textContent);
             if (textSize > max) {
                 max = textSize;
             }
