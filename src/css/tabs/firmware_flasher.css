@@ -78,8 +78,12 @@
     text-align: left;
 }
 
-.tab-firmware_flasher td {
-    text-align: left;
+.tab-firmware_flasher td.board-description {
+    padding: 1px 0 3px 0;
+}
+
+.tab-firmware_flasher .helpicon {
+    margin-top: 3px;
 }
 
 .tab-firmware_flasher .options label input {
@@ -200,6 +204,16 @@
     pointer-events: none;
     text-shadow: none;
     opacity: 0.5;
+}
+
+.tab-firmware_flasher .default_btn {
+    margin: 1px 7px 0 0;
+    width: fit-content;
+}
+
+.tab-firmware_flasher .default_btn a {
+    padding: 0 4px 2px 4px;
+    font-size: 11px;
 }
 
 #dialogUnstableFirmwareAcknoledgement .content {

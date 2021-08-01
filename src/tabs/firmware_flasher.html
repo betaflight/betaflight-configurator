@@ -26,7 +26,14 @@
                         <td class="board-select"><select name="board">
                                 <option value="0" i18n="firmwareFlasherOptionLoading">Loading ...</option>
                         </select></td>
-                        <td><span class="description" i18n="firmwareFlasherOnlineSelectBoardDescription"></span><div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherOnlineSelectBoardHint"></div></td>
+                        <td class="board-description">
+                            <div class="btn default_btn">
+                                <a class="detect-board disabled" href="#" i18n="firmwareFlasherDetectBoardButton"></a>
+                            </div>
+                            <span class="description" i18n="firmwareFlasherOnlineSelectBoardDescription"></span>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherOnlineSelectBoardHint"></div>
+                            <div class="helpicon cf_tip_wide" i18n_title="firmwareFlasherDetectBoardDescriptionHint"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td><select name="firmware_version">
