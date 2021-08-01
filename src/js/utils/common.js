@@ -85,9 +85,19 @@ export function getMixerImageSrc(mixerIndex, reverseMotorDir, apiVersion)
     return `./resources/motor_order/${mixerList[mixerIndex - 1].image}${reverse}.svg`;
 }
 
+export function getTextWidth(text) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    context.font = getComputedStyle(document.body).font;
+
+    return Math.ceil(context.measureText(text).width);
+}
+
 // TODO: these are temp binding while transition to module happens
 window.degToRad = degToRad;
 window.bytesToSize = bytesToSize;
 window.checkChromeRuntimeError = checkChromeRuntimeError;
 window.generateVirtualApiVersions = generateVirtualApiVersions;
 window.getMixerImageSrc = getMixerImageSrc;
+window.getTextWidth = getTextWidth;
