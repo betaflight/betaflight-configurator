@@ -1652,20 +1652,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Suavidade automática",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Axusta o cálculo de suavización automática, 10 é a relación de atrasamento predeterminada. Aumentar o número suavizará máis as entradas RC, engadindo tamén un atraso. Isto pode ser útil para conexións RC non fiables ou para voos cinematográficos.<br> Ten coidado cos números que se acheguen aos 50, o retraso de entrada farase notar. <br> Use o comando CLI rc_smoothing_info mentres TX e RX están alimentados para ver o suavizado RC calculado automaticamente cortes. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Tipo de corte derivado"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Tipo de corte de entrada"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolación"
     },
@@ -1675,44 +1661,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Tipo de suavizado RC usado"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "A frecuencia de corte en Hz usada polo filtro de entrada. Usar valores máis baixos dará como resultado entradas máis suaves e máis apropiadas para protocolos de recepción máis lentos. A maioría dos usuarios deberían deixar isto en 0 correspondente a \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "A frecuencia de corte en Hz usada polo filtro derivado da entrada. Usar valores máis baixos dará como resultado entradas máis suaves e máis apropiadas para protocolos de recepción máis lentos. A maioría dos usuarios deberían deixar isto en 0 correspondente a \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "A suavización de canles aplícase a"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "O tipo de método de filtrado usado para a derivada de referencia. A partir do 4.2 recoméndase o valor predeterminado de \"Auto\". Para 4.1 e versións anteriores, a maioría dos usuarios deberían usar o valor predeterminado \"BIQUAD\" xa que proporciona un bo equilibrio entre suavidade e atraso. \"PT1\" reduce lixeiramente o atraso pero proporciona menos suavización."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "O tipo de método de filtrado empregado para a entrada. A maioría dos usuarios deben usar o valor \"BIQUAD\" predeterminado xa que proporciona un bo equilibrio entre a suavidade e o atraso. \"PT1\" reduce o atraso lixeiramente pero proporciona menos suavización."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Seleccionar se a frecuencia de corte do filtro de entrada é calculada automaticamente (recomendada) ou seleccionada manualmente polo usuario. Non se recomenda usar \"Manual\" para protocolos de recepción como Crossfire que poden cambiar en voo."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Seleccionar se a frecuencia de corte do filtro derivado da consola é calculada automaticamente (recomendada) ou seleccionada manualmente polo usuario. Non se recomenda usar \"Manual\" para protocolos de recepción como Crossfire que poden cambiar en voo."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Frecuencia de corte de entrada"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frecuencia de corte derivada"
-    },
-    "receiverRcInputType": {
-        "message": "Tipo de filtro de entrada"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Tipo de filtro derivado"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Apagado"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Canles suavizados"
@@ -2905,9 +2855,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Seleccione o tipo de compilación para ver as dispoñibles."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Elixa a súa placa para poder ver as versións de firmware dispoñibles en linea - Seleccione a versión correcta de firmware apropiada para a súa controladora."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Comezando con Betaflight 4.1, Betaflight introduce soporte para<strong>Placas unificadas</strong>. O concepto de obxectivos unificados significa que se pode usar o mesmo ficheiro .hex de firmware para todas as placas que utilizan o mesmo MCU (F4, F7). Para que as diferentes placas funcionen co mesmo firmware, despregase un ficheiro de configuración específico xunto co firmware cando se flaxea unha placa unificada.<br>Esta versión do configurador Betaflight admite o flashing de placas unificadas coas respectivas configuracións específicas da placa nun paso. Os diferentes tipos de firmware dispoñibles para cada placa móstranse no menú despregable do seguinte xeito:<br /><br /><strong>&lt;board name&gt;</strong> ou<br><strong>&lt;board name&gt; (Legacy) </strong>:<br> destino non unificado ou versións anteriores ao firmware do firmware para placas unificadas.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (identificador do fabricante de 4 caracteres)<br>Placas unificadas.<br /><br /><strong>Utilice placas unificadas cando estea dispoñible.</strong> Se atopa problemas ao usar un placa unificada, abra un <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problema</a> e despois usa placa non unificada ata que se resolva o problema."
