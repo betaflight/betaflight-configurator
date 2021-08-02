@@ -1550,20 +1550,6 @@
     "receiverRcSmoothingManual": {
         "message": "Ręcznie"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto wygładzenie",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Dostosowuje obliczenia Automatycznego wygładzania, 10 jest domyślnym współczynnikiem wygładzania do opóźnienia. Zwiększenie liczby uczyni wejścia RC bardziej gładkimi, jednocześnie dodając opóźnienie. Może to być przydatne w przypadku niepewnych połączeniach RC lub latania z kamerą w celu kręcenia filmów. <br> Uważaj na liczby zbliżające się do 50, opóźnienie wejściowe stanie się zauważalne. <br> Użyj polecenia: rc_smoothing_info w wierszu poleceń, gdy TX i RX są zasilane, aby zobaczyć automatycznie obliczone wygładzanie RC. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Rodzaj odcięcia"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Typ odcięcia wejściowego"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolacja"
     },
@@ -1573,44 +1559,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Typ wykorzystywanego wygładzania RC"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Częstotliwość odcięcia w Hz używana przez filtr wejściowy. Stosowanie niższych wartości spowoduje płynniejsze wejście i jest bardziej odpowiednie dla protokołów wolniejszego odbiornika. Większość użytkowników powinna zostawić to na 0 co odpowiada \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Częstotliwość odcięcia w Hz wykorzystywana przez filtr wartości zadanej. Zastosowanie niższych wartości spowoduje płynniejsze wejście i będzie bardziej odpowiednie dla wolniejszych protokołów odbiornika. Większość użytkowników powinna pozostawić wartość 0 odpowiadającą „Auto”."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanały do których odnosi się wygładzanie"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Rodzaj metody filtrowania stosowanej do pochodnej wartości zadanej. Począwszy od Betaflight 4.2 zalecana jest domyślna wartość „Auto”. W wersji 4.1 i wcześniejszych większość użytkowników powinna używać domyślnej wartości „BIQUAD”, ponieważ zapewnia ona dobrą równowagę między płynnością a opóźnieniem. „PT1” nieznacznie zmniejsza opóźnienie, ale zapewnia mniej wygładzania."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Rodzaj metody filtrowania zastosowany dla danych wejściowych. Większość użytkowników powinna używać domyślnej wartości „BIQUAD”, ponieważ zapewnia ona równowagę między płynnością a opóźnieniem. „PT1” nieznacznie zmniejsza opóźnienie, ale zapewnia mniej wygładzania."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Wybiera, czy częstotliwość odcięcia filtra wejściowego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, takich jak Crossfire które mogą zmieniać się w locie."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Wybiera, czy częstotliwość odcięcia pochodnego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, nieich jak Crossfire które mogą zmieniać się w locie."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Wejściowa częstotliwość odcięcia"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Pochodna częstotliwość odcięcia"
-    },
-    "receiverRcInputType": {
-        "message": "Typ filtra wejściowego"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Typ filtra pochodnego"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Wył"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Automatyczne"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanały wygładzone"
@@ -2771,9 +2721,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Wybierz typ build'u żeby zobaczyć dostępne płytki."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Wybierz swój kontroler lotu, aby zobaczyć dostępne wersje oprogramowania online. Wybierz odpowiednie oprogramowaniedla twojego kontrolera lotu."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wybierz wersję oprogramowania dla swojej płytki."
