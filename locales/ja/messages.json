@@ -1565,20 +1565,6 @@
     "receiverRcSmoothingManual": {
         "message": "手動"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "オートスムーズ",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "オートスムーズ演算を調整します。10はデフォルトでの滑らかさと遅延の比率です。数値を増加させると、RC入力がより滑らかとなり、遅延も追加されます。これは、信頼性の低いRC接続や映画のようなフライトに役立ちます。<br>数値が50に近づくと、入力遅延が顕著になりますので注意してください。<br>TXおよびRXに電力が供給されている間にCLIコマンドrc_smoothing_infoを使用して、自動計算されたRCスムージング カットオフを確認します。 ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "D値 カットオフ タイプ"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "入力 カットオフ タイプ"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "補間"
     },
@@ -1588,44 +1574,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "使用するRCスムージングタイプ"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "入力フィルターで使用されるカットオフ周波数(Hz)。値を小さくすると入力信号がスムーズとなり、受信機プロトコルの通信が遅延する際に適切に設定できます。ほとんどのユーザは、「自動」となる0としてください。"
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "D値セットポイントフィルターで使用されるカットオフ周波数(Hz)。値を小さくすると入力信号がスムーズとなり、受信機プロトコルの通信が遅延する際に適切に設定できます。ほとんどのユーザは、「自動」となる0としてください。"
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "適用するスムージングチャンネル"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "セットポイント関数に使用されるフィルタリング方法のタイプ。4.2以降、デフォルト値の【自動】が推奨されます。4.1以前の場合、ほとんどのユーザは、スムーズさと遅延のバランスが良いため、デフォルト値の【BIQUAD】の使用してください。「PT1」は遅延をわずかに削減させますが、スムーズさは弱くなります。"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "入力フィルターで使用されるフィルタリング方法のタイプ。ほとんどのユーザは、スムーズさと遅延のバランスが良いため、デフォルト値の「BIQUAD」を使用してください。「PT1」は遅延をわずかに減少させますが、スムーズさは弱くなります。"
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "入力フィルターカットオフ周波数を自動計算する(推奨)か、ユーザ手動選択するかを設定します。 「手動」を使用する場合、飛行中にパラメータを変更できるCrossfireのような受信プロトコルにはお勧めできません。"
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "D値セットポイント カットオフ周波数を自動計算する(推奨)か、ユーザ手動選択するかを設定します。 「手動」を使用する場合、飛行中にパラメータを変更できるCrossfireのような受信プロトコルにはお勧めできません。"
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "入力 カットオフ 周波数"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "D値 カットオフ 周波数"
-    },
-    "receiverRcInputType": {
-        "message": "入力 フィルタータイプ"
-    },
-    "receiverRcDerivativeType": {
-        "message": "D値 フィルタータイプ"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "OFF"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "自動"
     },
     "receiverRcSmoothingChannel": {
         "message": "スムージングチャンネル"
@@ -2851,9 +2801,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "使用可能なFCボードを表示するには、ビルドタイプを選択します。"
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "FCボードチップセットを選択すると、オンラインでファームウェアの確認ができます - 適切なファームウェアを選択してください。"
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight 4.1以降、Betaflightは <strong>Unified Targets</strong> のサポートを導入しています。Unified Targetsという概念は、同じファームウェア[.hexファイル]が同じMCU (F4, F7) を搭載する全てのFCボードに適用できることを意味します。異なるFCボードを同じファームウェアで動作させるために、Unified Targetsがファームフラッシュされると、ファームウェアとともに特定の設定ファイルが展開されます。<br>このバージョンのBetaflight Configuratorは、1回のステップでそれぞれのFCボード固有の設定に合わせたUnified Targets書き込みをサポートします。各FCボードで使用可能な様々なファームウェアタイプが、次のようにドロップダウンにて表示されます:<br /><br /><strong>&lt;board name&gt;</strong> or <br><strong>&lt;board name&gt; (レガシー) </strong>:<br>non-unified target, or pre-4.1 versions of the firmware for Unified Targets.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (4文字の製造元ID) <br>Unified Target.<br /><br /><strong>利用可能であればUnified Targetsを使用してください。</strong>もしUnified Targetsを使用して問題が発生した場合には、<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>を開いてから問題が解決するまでnon-unified targetを使用してください。"
