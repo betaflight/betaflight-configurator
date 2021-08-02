@@ -1573,18 +1573,18 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto Suavitzat",
-        "description": "Auto Smoothness parameter for RC smoothing"
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Factor automàtic",
+        "description": "Auto Factor parameter for RC smoothing"
     },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Ajusta el càlcul de suavitzat automàtic, 10 és la relació predeterminada de suavització i retard. L’augment del nombre suavitzarà més les entrades de RC, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per volar cinematogràfics.<br>Compte amb els números que s’aproximen als 50, el retard d’entrada es farà notori.<br>Utilitzeu la comanda CLI rc_smoothing_info mentre que TX i RX s’alimenten per veure el retalls del suavitzat RC automàticament calculat. ",
-        "description": "Auto Smoothness parameter help message"
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Ajusta el càlcul de factor automàtic, 10 és la relació predeterminada de suavització i retard. L’augment del nombre suavitzarà més les entrades de RC, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per volar cinematogràfics.<br>Compte amb els números que s’aproximen als 50, el retard d’entrada es farà notori.<br>Utilitzeu la comanda CLI rc_smoothing_info mentre que TX i RX s’alimenten per veure el retalls del suavitzat RC automàticament calculat. ",
+        "description": "Auto Factor parameter help message"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Tipus de tall derivat"
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "FeedForward Cutoff Tipus"
     },
-    "receiverRcInputTypeSelect": {
+    "receiverRcSetpointTypeSelect": {
         "message": "Tipus de tall d’entrada"
     },
     "receiverRcSmoothingInterpolation": {
@@ -1596,43 +1596,43 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Tipus de suavitzat RC utilitzat"
     },
-    "rcSmoothingInputCutoffHelp": {
+    "rcSmoothingSetpointCutoffHelp": {
         "message": "La freqüència de tall en Hz utilitzada pel filtre d’entrada. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
     },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "La freqüència de tall en Hz usada pel filtre derivat de consigna. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
+    "rcSmoothingFeedforwardCutoffHelp": {
+        "message": "La freqüència de tall en Hz utilitzada pel filtre d’entrada. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "El suavitzat de canals s’aplica a"
     },
-    "rcSmoothingDerivativeTypeHelp": {
+    "rcSmoothingFeedforwardTypeHelp": {
         "message": "El tipus de mètode de filtratge utilitzat per l'entrada derivada. A partir del 4.2 es recomana el valor predeterminat de \"Auto\". Per a 4.1 i versions anteriors, la majoria d'usuaris han d'utilitzar el valor predeterminat de \"BIQUAD\", ja que proporciona un bon equilibri entre suavitat i retard. \"PT1\" redueix lleugerament el retard però proporciona menys suavitat."
     },
-    "rcSmoothingInputTypeHelp": {
+    "rcSmoothingSetpointTypeHelp": {
         "message": "El tipus de mètode de filtratge utilitzat per l'entrada. La majoria dels usuaris han d'utilitzar el valor predeterminat de \"BIQUAD\" ja que proporciona un bon equilibri entre suavitat i retard. \"PT1\" redueix lleugerament el retard però proporciona menys suavitat."
     },
-    "receiverRcSmoothingInputManual": {
+    "receiverRcSmoothingSetpointManual": {
         "message": "Selecciona si la freqüència de tall del filtre d’entrada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
     },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Selecciona si la freqüència de tall del ajust de derivada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "Selecciona si la freqüència de tall del filtre d’entrada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
     },
-    "receiverRcSmoothingInputHz": {
+    "receiverRcSmoothingSetpointHz": {
         "message": "Freqüència de tall d'entrada"
     },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Freqüència de tall de derivada"
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "FeedForward Cutoff Freqëncia"
     },
-    "receiverRcInputType": {
-        "message": "Tipus de filtre d'entrada"
+    "receiverRcSetpointType": {
+        "message": "Escull tipus de filtre"
     },
-    "receiverRcDerivativeType": {
-        "message": "Tipus de filtre derivat"
+    "receiverRcFeedforwardType": {
+        "message": "Feedforward Filter Tipus"
     },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Inactiu"
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "Desactivat"
     },
-    "receiverRcSmoothingDerivativeTypeAuto": {
+    "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
@@ -1664,6 +1664,9 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "Interval d'Interpolació RC [ms]"
+    },
+    "receiverRcSmoothingMode": {
+        "message": "Tipus de suavització"
     },
     "pidTuningFeedforwardTransition": {
         "message": "Transició"
@@ -2861,7 +2864,7 @@
         "message": "Seleccioneu tipus de versió per veure les controladores disponibles."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecciona la teva controladora per veure les versions de firmware online disponibles - Selecciona el firmware correcte que s'adeqüi a la teva controladora."
+        "message": "Selecciona la teva placa per veure les versions de firmware online disponibles - Selecciona el firmware correcte que s'adeqüi a la teva placa."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "A partir de Betaflight 4.1, Betaflight està donant suport a <strong>Plataformes unificades</strong>. El concepte plataforma unificada significa que el mateix fitxer .hex del programari es pot utilitzar per a totes les plaques amb la mateixa MCU (F4, F7). Perquè els diferents controladores funcionin amb el mateix programari, es desplega un fitxer de configuració específic al costat del programari quan apareix un objecte unificat.<br> Aquesta versió del configurador Betaflight soporta l'actualització d'objectes unificats amb les configuracions específiques de la placa en un sol pas. Els diferents tipus de programari disponibles per a cada placa es mostren a la llista desplegable de la següent manera:<br /><br /><strong>&lt;board name&gt;</strong> o<br><strong>&lt;board name&gt; (Sistema llegat)</strong>:<br>objecte no unificat, o versions pre-4.1 de programari pero objectes unificats.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 caràcters del ID del fabricant)<br>Objectes Unificat.<br /><br /><strong>Si us plau, utilitzeu Objectes unificats si es posible.</strong> Si teniu problemes amb l’ús d’un objecte unificat, obriu un <a href=\"https://github.com/betaflight/betaflight/issues\"target=\"_ blank\"rel=\"noopener noreferrer\">Problema</a> i després utilitzeu el objecte no unificat fins que s'hagi resolt el problema."
@@ -3045,6 +3048,15 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Continuar"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Auto detectar"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "La detecció automàtica només funciona quan no es troba en mode DFU i quan la comunicació MSP funciona. De vegades cal tornar-ho a provar algunes vegades o fins i tot tornar a connectar l'USB. Proveu de connectar-vos amb la normalitat primer, ja que podríeu haver oblidat aplicar els valors predeterminats personalitzats. Reinicieu després de parpellejar: torneu a connectar l'USB."
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "Seleccioneu l'informació de la placa per preseleccionar el firmware adequat"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "Estàs a punt de fer una <strong> actualització en desenvolupament del firmware </strong>. Aquestes compilacions són una treball en curs i es pot donar qualsevol dels casos següents:<strong><ul><li>El firmware no funciona en absolut;</li><li>amb el firmware no es pot volar;</li><li>hi ha problemes de seguretat amb el firmware, per exemple flyaways</li><li>el firmware pot fer que el controlador de vol no respongui o es danyi</li></ul></strong>Si continueu amb el flaix d’aquest firmware, <strong>assumiu tota la responsabilitat del risc que passi de qualsevol dels casos anteriors</strong>. A més, reconeix que és necessari dur a terme <strong>proves completes de banc amb els accessoris desactivats</strong> abans de qualsevol intent de volar aquest firmware."
