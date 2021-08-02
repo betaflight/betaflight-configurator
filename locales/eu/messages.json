@@ -1539,20 +1539,6 @@
     "receiverRcSmoothingManual": {
         "message": "Eskuz"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Leuntze automatikoa",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Smooth automatikoaren kalkulua doitzen du, 10 da aurreipiñitako smoothing-añer atzerapen erlazioaren. Kopurua handituz mugimenduak lehundu, baina atzerapena gehiagotu ere egingo da. Hau erabilgarria izan daiteke Quad konexio fidagarriak eta hegaldi zinematikoetarako.<br>Kontuz 50 zenbakira hurbiltzen diren zenbakiekin, agintean atzerapena nabarituko bait da.<br>Erabili rc_smoothing_info CLI Agintean TX-a eta RX-a pizturik daudela automatikoki RC Smoothing moztuera kalkulatzeko. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Deribatuaren ebaki mota"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Sarrerako ebaki mota"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolazioa"
     },
@@ -1562,44 +1548,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Erabilitako RC leuntze mota"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Sarrera iragazkiak erabiltzen duen Hz- en ebakidura frekuentzia. Balio txikiagoak erabiltzeak sarrera leunagoak ekarriko ditu eta egokiagoak dira hartzaileen protokolo motelagoetarako. Erabiltzaile gehienek hau \"Auto\" ri dagokion 0 zenbakian utzi beharko lukete."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Helburuko balioaren deribazio iragazkiak Hz-en erabiltzen duen ebakidura frekuentzia. Balio baxuagoak erabiliz, sarrera leunagoak lortzen dira eta egokiagoak dira protokolo motelagoak dituzten hartzaileentzat. Erabiltzaile gehienek 0 \"0\" utzi beharko lukete."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Leuntzea aplikatzeko kanalak"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Ezarpen-metodoaren deribaziorako erabiltzen den iragazketa-metodoa. 4.2-tik hasita \"Auto\" -ren balio lehenetsia gomendatzen da. 4.1 eta lehenago erabiltzaile gehienek \"BIQUAD\" balio lehenetsia erabili beharko lukete, leuntasunaren eta atzerapenaren arteko oreka ona ematen duelako. \"PT1\" atzerapen apur bat murrizten du baina leuntze gutxiago ematen du."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Sarrerarako erabiltzen den iragazketa metodoa. Erabiltzaile gehienek \"BIQUAD\" balioa erabili behar dute, leuntasunaren eta atzerapenaren arteko oreka ona ematen duelako. \"PT1\" atzerapena apur bat murrizten du baina leuntze gutxiago ematen du."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Sarrerako iragazkiaren ebakidura frekuentzia automatikoki kalkulatzen (gomendatzen da) edo erabiltzaileak eskuz hautatzen den ala ez aukeratu. \"Eskuliburua\" erabiltzea ez da gomendagarria hartzaileentzat hegaldientan alda daitezkeen Crossfire bezalako protokoloekin."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Aukeratu xede-balioa duen saihesbide iragazkiaren ebakidura frekuentzia automatikoki kalkulatzen den ala ez (gomendagarria) edo erabiltzaileak eskuz aukeratzen duen. \"Eskuliburua\" erabiltzea ez da gomendagarria hartzaileentzat hegaldietan alda daitezkeen Crossfire bezalako protokoloekin."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Sarrerra-ebaketaren maiztasuna"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Eratorritako ebaketa maistazuna"
-    },
-    "receiverRcInputType": {
-        "message": "Sarrera iragazki mota"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Deribatuaren iragazki mota"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Itzalita"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanalak leundu"
@@ -2676,9 +2626,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Kontroladore eskuragarriak ikusteko, bertsio mota bat aukeratu."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Hautatu zure kontroladorea lineako firmware erabilgarriak ikusteko. Hautatu zure kontroladorearako firmware egokia."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Zure kontroladorearen firmware bertsioa aukeratu."
