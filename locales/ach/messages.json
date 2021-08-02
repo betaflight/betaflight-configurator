@@ -1659,19 +1659,19 @@
     "receiverRcSmoothingManual": {
         "message": "crwdns8835:0crwdne8835:0"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "crwdns9716:0crwdne9716:0",
-        "description": "Auto Smoothness parameter for RC smoothing"
+    "receiverRcSmoothingAutoFactor": {
+        "message": "crwdns10549:0crwdne10549:0",
+        "description": "Auto Factor parameter for RC smoothing"
     },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "crwdns9718:0crwdne9718:0",
-        "description": "Auto Smoothness parameter help message"
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "crwdns10551:0crwdne10551:0",
+        "description": "Auto Factor parameter help message"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "crwdns8836:0crwdne8836:0"
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "crwdns10553:0crwdne10553:0"
     },
-    "receiverRcInputTypeSelect": {
-        "message": "crwdns8837:0crwdne8837:0"
+    "receiverRcSetpointTypeSelect": {
+        "message": "crwdns10555:0crwdne10555:0"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "crwdns8838:0crwdne8838:0"
@@ -1682,44 +1682,44 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "crwdns8840:0crwdne8840:0"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "crwdns8841:0crwdne8841:0"
+    "rcSmoothingSetpointCutoffHelp": {
+        "message": "crwdns10557:0crwdne10557:0"
     },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "crwdns8842:0crwdne8842:0"
+    "rcSmoothingFeedforwardCutoffHelp": {
+        "message": "crwdns10559:0crwdne10559:0"
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "crwdns8843:0crwdne8843:0"
     },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "crwdns9925:0crwdne9925:0"
+    "rcSmoothingFeedforwardTypeHelp": {
+        "message": "crwdns10561:0crwdne10561:0"
     },
-    "rcSmoothingInputTypeHelp": {
-        "message": "crwdns8845:0crwdne8845:0"
+    "rcSmoothingSetpointTypeHelp": {
+        "message": "crwdns10563:0crwdne10563:0"
     },
-    "receiverRcSmoothingInputManual": {
-        "message": "crwdns8846:0crwdne8846:0"
+    "receiverRcSmoothingSetpointManual": {
+        "message": "crwdns10565:0crwdne10565:0"
     },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "crwdns8847:0crwdne8847:0"
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "crwdns10567:0crwdne10567:0"
     },
-    "receiverRcSmoothingInputHz": {
-        "message": "crwdns8848:0crwdne8848:0"
+    "receiverRcSmoothingSetpointHz": {
+        "message": "crwdns10569:0crwdne10569:0"
     },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "crwdns8849:0crwdne8849:0"
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "crwdns10571:0crwdne10571:0"
     },
-    "receiverRcInputType": {
-        "message": "crwdns8850:0crwdne8850:0"
+    "receiverRcSetpointType": {
+        "message": "crwdns10573:0crwdne10573:0"
     },
-    "receiverRcDerivativeType": {
-        "message": "crwdns8851:0crwdne8851:0"
+    "receiverRcFeedforwardType": {
+        "message": "crwdns10575:0crwdne10575:0"
     },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "crwdns8852:0crwdne8852:0"
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "crwdns10577:0crwdne10577:0"
     },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "crwdns9927:0crwdne9927:0"
+    "receiverRcSmoothingFeedforwardTypeAuto": {
+        "message": "crwdns10579:0crwdne10579:0"
     },
     "receiverRcSmoothingChannel": {
         "message": "crwdns8853:0crwdne8853:0"
@@ -1750,6 +1750,9 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "crwdns5695:0[ms]crwdne5695:0"
+    },
+    "receiverRcSmoothingMode": {
+        "message": "crwdns10581:0crwdne10581:0"
     },
     "pidTuningFeedforwardTransition": {
         "message": "crwdns10522:0crwdne10522:0"
@@ -2947,7 +2950,7 @@
         "message": "crwdns8765:0crwdne8765:0"
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "crwdns5972:0crwdne5972:0"
+        "message": "crwdns10541:0crwdne10541:0"
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "crwdns10396:0crwdne10396:0"
@@ -3131,6 +3134,15 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "crwdns10518:0crwdne10518:0"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "crwdns10543:0crwdne10543:0"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "crwdns10545:0crwdne10545:0"
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "crwdns10547:0crwdne10547:0"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "crwdns10018:0crwdne10018:0"
