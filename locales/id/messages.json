@@ -1132,12 +1132,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Tipe CutOff Derivatif"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Tipe Cutoff Input"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolasi"
     },
@@ -1147,38 +1141,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Smoothing RC yang digunakan"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Frekuensi cutoff dalam Hz yang digunakan filter input. Menggunakan nilai yang rendah akan menhasilkan input yang lebih halus dan lebih sesuai untuk protokol receiver yang lebih lambat. Pengguna pada umumnya cukup membiarkan nilai 0 yang berarti \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Frekuensi batas dalam Hz yang digunakan filter setpoint derivatif. Menggunakan nilai yang rendah akan menhasilkan input yang lebih halus dan lebih sesuai untuk protokol receiver yang lebih lambat. Pengguna pada umumnya cukup membiarkan nilai 0 yang berarti \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Channel smoothing diterapkan pada"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Metoda filter yang digunakan untuk input. Pengguna umumnya menggunakan nilai default \"BIQUAD\" karena seimbang antara smoothness dan delay. \"PT1\" mengurangi delay sekaligus mengurangi efek smoothing."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Pilih apakah frekuensi cutoff filter input dihitung otomatis (disarankan) atau dipilih manual oleh pengguna. Menggunakan \"Manual\" tidak disarankan untuk protokol receiver seperti Crossfire yang dapat berubah pada saat terbang."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Pilih apakah frekuensi cutoff derivatif setpoint dihitung otomatis (disarankan) atau dipilih manual oleh pengguna. Menggunakan \"Manual\" tidak disarankan untuk protokol receiver seperti Crossfire yang dapat berubah pada saat terbang."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Frekuensi CutOff Input"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frekuensi CutOff Derivatif"
-    },
-    "receiverRcInputType": {
-        "message": "Tipe Filter Input"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Tipe Filter Derivatif"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Mati"
     },
     "receiverRcSmoothingChannel": {
         "message": "Channels Smoothed"
@@ -2067,9 +2031,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Pilih jenis frame untuk melihat FC yang didukung."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Pilih papan Anda untuk melihat rilis firmware online yang tersedia - Pilih firmware yang benar sesuai untuk papan Anda."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Pilih versi firmware untuk forum Anda."
