@@ -1565,20 +1565,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuale"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto Smoothness",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Regola il calcolo dello smoothing automatico. ll rapporto smoothing-ritardo predefinito è 10. Aumentando il numero l'input RC verrà ammorbidito maggiormente, aumentando però il ritardo. Questo può essere utile per connessioni radio instabili o per voli cinematografici.<br>Con numeri che si avvicinano a 50 il ritardo nell'input diventerà evidente.<br>Usa il comando CLI rc_smoothing_info mentre TX e RX sono collegati per vedere i cutoff dello smoothing calcolati automaticamente. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Tipo di taglio derivativo"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Tipo di taglio di Input"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolazione"
     },
@@ -1588,44 +1574,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Tipo di RC Smoothing usato"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "La frequenza di interruzione in Hz usata dal input filter. Usando valori più bassi si otterranno input più regolari e più appropriati per i protocolli dei ricevitori più lenti. La maggior parte degli utenti dovrebbe lasciare questa opzione a 0 che corrisponde ad \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "La frequenza di interruzione in Hz usata dal setpoint derivative filter. Usando valori più bassi si otterranno input più regolari e più appropriati per i protocolli dei ricevitori più lenti. La maggior parte degli utenti dovrebbe lasciare questa opzione a 0 che corrisponde ad \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Lo smoothing dei canali si applica a"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Il metodo di filtraggio usato per il setpoint derivative. A partire dalla versione 4.2 è raccomandato il valore predefinito \"Auto\". Per la 4.1 e precedenti la maggior parte degli utenti dovrebbe usare il valore predefinito \"BIQUAD\", in quanto fornisce un buon compromesso tra fluidità e ritardo. \"PT1\" riduce leggermente il ritardo ma ammorbidisce meno."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Il tipo di metodo di filtraggio usato per l'input. La maggior parte degli utenti dovrebbe usare il valore di default \"BIQUAD\" poichè esso è un buon compromesso tra fluidità e ritardo. \"PT1\" riduce leggermente il ritardo ma offre meno fluidità."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Seleziona se la frequenza di taglio del filtro di ingresso viene calcolata automaticamente (consigliata) o selezionata manualmente dall'utente. L'uso di \"Manuale\" non è raccomandato per i protocolli di ricezione che cambiano in volo come Crossfire."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Seleziona se la frequenza di taglio del filtro derivativo del setpoint viene calcolata automaticamente (consigliata) o selezionata manualmente dall'utente. L'uso di \"Manuale\" non è raccomandato per i protocolli di ricezione come Crossfire che possono cambiare in volo."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Frequenza di Cutoff d'ingresso"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frequenza di Cutoff Derivativa"
-    },
-    "receiverRcInputType": {
-        "message": "Tipo filtro di input"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Tipo di filtro derivativo"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Spento"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Canali con smoothing"
@@ -2851,9 +2801,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Seleziona il tipo di build per vedere le schede disponibili."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Seleziona la tua scheda per vedere i relativi firmware disponibili online - Seleziona il firmware appropriato per la tua scheda."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "A partire da Betaflight 4.1, Betaflight sta introducendo il supporto per i <strong>Target Unificati</strong>. Il concetto dei Target Unificati è che lo stesso file .hex del firmware può essere usato per tutte le schede con lo stesso MCU (F4, F7). Per far sì che schede differenti funzionino con lo stesso firmware, verrà usato durante il flash un file di configurazione specifico insieme al firmware.<br>Questa versione del configuratore di Betaflight supporta il flashing in un solo passaggio dei Target Unificati con i rispettivi file di configurazione delle schede. I tipi differenti di firmware disponibili per ogni scheda sono mostrati nel menu a tendina come mostrato:<br /><br /><strong>&lt;nome scheda&gt;</strong> o<br><strong>&lt;nome scheda&gt; (Legacy)</strong>:<br>target non unificato o versione pre-4.1 del firmware per Target Unificati.<br /><br /><strong>&lt;nome scheda&gt; (&lt;id costruttore&gt;)</strong>:<br>(id costruttore di 4 caratteri)<br>Target Unificato.<br /><br /><strong>Per favore usa i Target Unificati quando disponibili.</strong> Se riscontri problemi usando i Target Unificati apri una <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> e usa il target non unificato fin quando il problema non verrà risolto."
