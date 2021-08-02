@@ -1421,16 +1421,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuell"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Automatisk utjämning",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Derivativ cutoff-typ"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Input cutoff-typ"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolering"
     },
@@ -1440,38 +1430,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Typ av RC-utjämning som används"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Cutoff-frekvensen i Hz som används av input-filtret. Lägre värden ger utjämnade inputvärden och passar bra för långsammare mottagarprotokoll. De flesta användare bör låta detta vara 0, vilket motsvarar \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Cutoff-frekvensen i Hz som används av setpoint derivat-filtret. Lägre värden ger utjämnade inputvärden och passar bra för långsammare mottagarprotokoll. De flesta användare bör låta detta vara 0, vilket motsvarar \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanalutjämningen gäller"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Typen av filtreringsmetod som används för inputen. De flesta användare bör använda standardvärdet \"BIQUAD\" eftersom det ger en bra balans mellan utjämning och fördröjning. \"PT1\" minskar fördröjningen något men ger mindre utjämning."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Väljer om input-filtrets cutoff-frekvens räknas ut automatiskt (rekommenderas) eller sätts manuellt av användaren. Att använda \"Manuellt\" rekommenderas inte för mottagarprotokoll som Crossfire, som kan ändras under flygning."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Väljer om setpoint-derivativfiltrets cutoff-frekvens räknas ut automatiskt (rekommenderas) eller sätts manuellt av användaren. Att använda \"Manuellt\" rekommenderas inte för mottagarprotokoll som Crossfire, som kan ändras under flygning."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Input cutoff-frekvens"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Derivativ cutoff-frekvens"
-    },
-    "receiverRcInputType": {
-        "message": "Input-filtertyp"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Derivativ filtertyp"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Av"
     },
     "receiverRcSmoothingChannel": {
         "message": "Utjämnade kanaler"
@@ -2439,9 +2399,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Välj versionstyp för att se tillgängliga styrkort."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Välj ditt styrkort för att se tillgängliga firmware-utgåvor online - Välj rätt firmware som passar ditt styrkort."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Välj firmware-version för ditt styrkort."
