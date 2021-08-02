@@ -1154,12 +1154,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuel"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Afledt Cutoff-type"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Input Cutoff-type"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
     },
@@ -1169,38 +1163,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Anvendt RC-udjævningstype"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtagerprotokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Afskæringsfrekvensen i Hz brugt af det afledte setpoint-filter. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtagerprotokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanaludjævningen gælder for"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Filtreringsmetoden, der benyttes til indput. De fleste brugere bør bruge standardværdien \"BIQUAD\", da den giver en god balance mellem jævnhed og forsinkelse. \"PT1\" reducerer forsinkelsen lidt, men giver mindre udjævning."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Vælger, om inputfilterafskæringsfrekvensen beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, der kan ændre sig under flyvning."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Vælger, om den afledte setpoint-filterafskæringsfrekvens beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, der kan ændre sig under flyvning."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Inputafskæringsfrekvens"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Afledt Afskæringsfrekvens"
-    },
-    "receiverRcInputType": {
-        "message": "Inputfiltertype"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Afledt Filtertype"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Fra"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanaler udjævnet"
