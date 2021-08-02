@@ -1397,20 +1397,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Suavidade Automática",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Ajusta o calculo da Suavidade Automática, 10 é o valor padrão para a relação entre suavidade e atraso de resposta. Aumentar o valor irá aumentar o atraso, porém será mais suave. Isso pode ser útil em conexões RC instáveis ou para um voo cinemático.<br> Cuidado com valores próximos de 50, uma vez que o atraso na resposta será perceptível. <br>Com o TX e RX ligados, na linha de comandos (CLI), digite o comando rc_smoothing_info para ver os cortes de suavidade RC calculados automaticamente.",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Tipo do corte"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Tipo de corte de entrada"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolação"
     },
@@ -1420,41 +1406,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Tipo de suavização de RC usado"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "A frequência de corte em Hz usado pelo filtro de entrada. Usar valores mais baixos resultará em entradas mais suaves e são mais adequadas para protocolos de receptores mais lentos. A maioria dos usuários deve deixar em 0 correspondente a \"Automático\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "A frequência de corte em Hz usada pelo filtro derivado setpoint. Usar valores mais baixos resultará em entradas mais suaves e são mais adequadas para protocolos de receptores mais lentos. A maioria dos usuários deve deixar em 0 correspondente a \"Automático\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Os canais de suavização aplicam-se a"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "O tipo de método de filtro usado para a entrada. A maioria dos usuários deve usar a predefinição \"BIQUAD\" que é um bom balanço entre suavização e atraso. \"PT1\" reduz um pouco o atraso, mas é menos suave."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Seleciona se a frequência de corte do filtro de entrada é calculada automaticamente (recomendado) ou manualmente selecionada pelo usuário. Usar o \"Manual\" não é recomendado para protocolos do receptor como Crossfire que podem mudar durante o voo."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Seleciona se a frequência de corte do filtro derivado setpoint é calculada automaticamente (recomendado) ou manualmente selecionada pelo usuário. Usar o \"Manual\" não é recomendado para protocolos do receptor como Crossfire que podem mudar durante o voo."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Frequência de corte de entrada"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frequência de corte de derivada"
-    },
-    "receiverRcInputType": {
-        "message": "Tipo do filtro de entrada"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Tipo do filtro derivado"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Desligado"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Canais suavizados"
@@ -2447,9 +2400,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Selecione o tipo de compilação para ver as placas disponíveis."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecione a sua placa para ver os Firmwares disponíveis online - Selecione o firmware apropriado para a sua placa."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecione a versão do firmware para sua placa."
