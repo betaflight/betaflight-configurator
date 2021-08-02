@@ -970,12 +970,6 @@
     "receiverRcSmoothingFilter": {
         "message": "Filtr"
     },
-    "receiverRcInputType": {
-        "message": "Typ vstupního filtru"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Vypnuto"
-    },
     "receiverRcSmoothingChannel": {
         "message": "Vyhlazování kanálů"
     },
@@ -1326,9 +1320,6 @@
     },
     "firmwareFlasherNoReboot": {
         "message": "Bez restartu"
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Vyberte desku pro zobrazení dostupných verzí firmware - Vyberte vhodnou verzi firmware pro vaši desku."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Vyberte verzi firmware pro vaši desku."
