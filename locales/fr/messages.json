@@ -1629,20 +1629,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuel"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Lissage Automatique",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Ajuste le smoothing Auto, 10 est le ratio de lissage par défaut. Augmenter ce nombre lisse plus les entrées RC et ajouter de la latence. Ca peut être utile pour les connections RC peu fiables ou les vols cinematiques.<br>Prudence, avec des valeurs proches de 50, la latence se fait bien ressentir.<br>Utiliser la commande CLI rc_smoothing_info avec le TX et le RX alimentés afin de voir les cutoff calculés automatiquement et appliqués au RC Smoothing.",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Type de Cutoff de dérivée"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Type d’entrée de Cutoff"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
     },
@@ -1652,44 +1638,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Type de RC smoothing utilisé"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "La fréquence de coupure en Hz utilisée par le filtre d’entrée. Des valeurs faibles rendent les entrées plus lisses et sont plus appropriée pour les protocoles de récepteur plus lents. La plupart des utilisateurs devraient laisser le paramètre à 0 correspondant à « Auto »."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Fréquence de coupure en Hz utilisée par le filtre dérivée setpoint. Des valeurs faibles rendent les entrées plus lisses et sont plus appropriée pour les protocoles de récepteur plus lents. La plupart des utilisateurs devraient laisser le paramètre à 0 correspondant à « Auto »."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Le lissage des canaux s'applique à"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Le type de méthode de filtrage utilisée pour la dérivée setpoint. À compter de la version 4.2, la valeur par défaut \"Auto\" est recommandée. Concernant les versions 4.1 et antérieures, la plupart des utilisateurs devraient utiliser le « BIQUAD » par défaut car il offre un bon équilibre entre souplesse et latence. « PT1 » réduit légèrement la latence mais offre moins de lissage."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Le type de filtre utilisé pour l'entrée. La plupart des utilisateurs devraient utiliser le « BIQUAD » par défaut car il offre un bon équilibre entre souplesse et latence. « PT1 » réduit légèrement la latence mais offre moins de lissage."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Sélectionne si la fréquence de coupure du filtre d’entrée est calculée automatiquement (recommandé) ou fixée manuellement par l’utilisateur. « Manuel » n’est pas recommandé pour les protocoles de récepteur comme Crossfire qui peuvent changer en vol."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Sélectionne si la fréquence de coupure du filtre dérivé setpoint est calculée automatiquement (recommandé) ou fixée manuellement par l’utilisateur. « Manuel » n’est pas recommandé pour les protocoles de récepteur comme Crossfire qui peuvent changer en vol."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Fréquence de coupure de l'entrée"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Fréquence de coupure de dérivée"
-    },
-    "receiverRcInputType": {
-        "message": "Type de filtre d'entrée"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Type de filtre de dérivée"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Désactivé"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Canaux lissés"
@@ -2909,9 +2859,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Choisir le type de build pour voir les cartes disponibles."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Sélectionnez votre carte pour voir les microprogrammes disponibles - Sélectionnez le microprogramme approprié à votre carte."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Sélectionnez la version du microprogramme pour votre carte."
