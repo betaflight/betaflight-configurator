@@ -1536,20 +1536,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuális"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Automatikus simaság",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Beállítja az automatikus simítás számítását, a 10 az alapértelmezett simítási és késleltetési arány. A szám növelésével az RC bemenetek jobban simulnak, miközben késleltetés nő. Ez hasznos lehet megbízhatatlan RC-kapcsolatoknál vagy mozgó repüléseknél. <br>Vigyázzon, ha a számok megközelítik az 50-et, a bemeneti késleltetés észrevehető lesz.<br> Használja az rc_smoothing_info CLI parancsot, miközben a TX és az RX áram alá van helyezve, látható lesz az automatikusan kiszámított RC simítás levágása. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Származékos levágás típusa"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Bemeneti elvágás típusa"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpoláció"
     },
@@ -1559,44 +1545,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "RC simítás típusa"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "A bemeneti szűrő által használt határfrekvencia Hz-ben. Az alacsonyabb értékek használata simább bemeneteket eredményez, és megfelelőbb a lassabb vevői protokollokhoz. A legtöbb felhasználónak ezt 0-nál kell hagynia, amely megfelel az \"Auto\" -nak."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Az alapjel-származékos szűrő által használt Hz-ben megadott küszöbérték. Az alacsonyabb értékek használata simább bemeneteket eredményez, és megfelelőbb a lassabb vevői protokollokhoz. A legtöbb felhasználónak ezt 0-nál kell hagynia, amely megfelel az \"Auto\" -nak."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "A csatornák simítása vonatkozik"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Az alapjel-származékhoz használt szűrési módszer típusa. A 4.2-től kezdődően az \"Auto\" alapértelmezett értéke ajánlott. A 4.1-es és korábbi verziók esetén a legtöbb felhasználónak az alapértelmezett \"BIQUAD\" értéket kell használnia, mivel ez jó egyensúlyt biztosít a simaság és a késés között. A \"PT1\" kissé csökkenti a késleltetést, de kevesebb simítást biztosít."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "A bemenethez használt szűrési módszer típusa. A legtöbb felhasználónak az alapértelmezett \"BIQUAD\" értéket kell használnia, mivel ez jó egyensúlyt biztosít a simaság és a késés között. A \"PT1\" kissé csökkenti a késleltetést, de kevesebb simítást biztosít."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Kiválaszthatja, hogy a bemeneti szűrő levágási frekvenciáját automatikusan kiszámolja (ajánlott) vagy manuálisan válassza-e a felhasználó. A \"Kézi\" használata nem javasolt olyan vevő-protokollokhoz, mint a Crossfire, amelyek repülés közben megváltozhatnak."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Annak kiválasztása, hogy az alapérték-származékos szűrő levágási frekvenciáját automatikusan kiszámolja (ajánlja), vagy a felhasználó manuálisan válassza ki. A \"Kézi\" használata nem javasolt olyan vevő-protokollokhoz, mint a Crossfire, amelyek repülés közben megváltozhatnak."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Bemeneti levágás frekvenciája"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Származékos levágás frekvenciája"
-    },
-    "receiverRcInputType": {
-        "message": "Bemeneti Szűrő típusa"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Származékos szűrő típusa"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Ki"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Automatikus"
     },
     "receiverRcSmoothingChannel": {
         "message": "Csatornák simítva"
@@ -2670,9 +2620,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Válassza ki az vezérlő típust az elérhető vezérlők megtekintéséhez."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Válassza ki a repülésirányítóját a rendelkezésre álló online firmware verziók megtekintéséhez - Válssza ki a megfelelő firmware-t a repülésirányítójához."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Válasszon firmware verziót a chipjéhez."
