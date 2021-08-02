@@ -1521,20 +1521,6 @@
     "receiverRcSmoothingManual": {
         "message": "手動"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "自動平滑",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "調整自動平滑計算，10 是默認的平滑/延遲比。增加數字將加大對 RC 輸入訊號的平滑度，但同時會增加延遲。對於 RC 鏈接並不可靠的情況和電影式飛行來說這可能非常有用。<br>當數字接近 50 時請小心，輸入延遲將會變得非常明顯。<br>當遙控器與接收機都上電時，可以使用 CLI 命令 rc_smoothing_info 查看自動計算的 RC 平滑的截止頻率。 ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "導數(Derivative) 截止類型"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "輸入截止類型"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "插值"
     },
@@ -1544,44 +1530,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "使用 RC 平滑的類型"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "輸入濾波器使用的以 Hz 為單位的截止頻率。使用較低的值將得到更平滑的輸入，更適合較慢的接收機協議。大多數用戶應該把它留在0，對應“自動”。"
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "設定點導數濾波器使用的以 Hz 為單位的截止頻率。使用較低的值將得到更平滑的輸入，更適合較慢的接收機協議。大多數用戶應該把它留在0，對應“自動”。"
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "適用平滑的通道"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "用於設定點導數訊號的濾波方法的類型。從 4.2 起，推薦使用默認的 “Auto”。對於使用 4.1 及早期版本的用戶應該使用默認的 “BIQUAD”，因為它在平滑和延遲之間提供了良好的平衡。“PT1” 稍微減少了延遲，但提供的平滑程度也較低。"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "用於輸入訊號的濾波方法的類型。大多數用戶應該使用默認的 “BIQUAD”，因為它在平滑和延遲之間提供了良好的平衡。“PT1” 稍微減少了延遲，但提供的平滑程度也較低。"
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "用於選擇輸入訊號濾波器截止頻率是自動計算的（推薦使用這個）還是由用戶手動選擇。對於可能在飛行中發生變化的接收機協議，比如 Crossfire，不建議使用 “手動”。"
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "用於選擇設定點倒數濾波器的截止頻率是自動計算的（推薦使用這個）還是由用戶手動選擇。對於可能在飛行中變化的接收機協議，比如 Crossfire，不建議使用 “手動”。"
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "輸入截止頻率"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Derivative 截止頻率"
-    },
-    "receiverRcInputType": {
-        "message": "輸入濾波器類型"
-    },
-    "receiverRcDerivativeType": {
-        "message": "導數（Derivative）濾波器類型"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "關閉"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "自動"
     },
     "receiverRcSmoothingChannel": {
         "message": "平滑通道"
@@ -2610,9 +2560,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "選擇 “生成類型” 以查看可用的飛控板。"
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "選擇你的飛控型號"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "選擇對應你飛控型號的固件版本"
