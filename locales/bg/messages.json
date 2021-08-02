@@ -1558,20 +1558,6 @@
     "receiverRcSmoothingManual": {
         "message": "Ръчно"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Автоматично изглаждане",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Регулира изчисляването на Автоматичното изглаждане, 10 е по подразбиране (съотношението за изглаждане и забавяне). Увеличаването ще изглади RC входа повече но ще добави и забавяне. Това може да бъде полезно за ненадеждни RC връзки или за филмови полети. <br> Внимавайте с числа, приближаващи се до 50, латентността на командите ще стане забележима. <br> Използвайте командата rc_smoothing_info CLI, докато TX и RX работят, за да видите автоматично изчислените рамки за сглаждане. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Derivative Cutoff Type"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Input Cutoff Type"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Интерполация"
     },
@@ -1581,44 +1567,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Тип на използваното RC заглаждане"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Cutoff frequency в Hz, използвана от входния филтър. Използването на по-ниски стойности ще доведе до по-плавни входове и е по-приемливо за протоколи с бавен приемник. Повечето потребители трябва да оставят това на 0, което съответства на \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Cutoff frequency в Hz, използвана от входния филтър. Използването на по-ниски стойности ще доведе до по-плавни входове и е по-приемливо за по бавни протоколи. Повечето потребители трябва да оставят това на 0, което съответства на \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Прилага се изглаждане на канала"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Типът на метода за филтриране, използван за setpoint derivative. Започвайки с 4.2, препоръчва се стойността по подразбиране да е на „Auto“. За 4.1 и по-стари версии повечето потребители трябва да използват стойността по подразбиране \"BIQUAD\", тъй като тя осигурява добър баланс между плавност и забавяне. \"PT1\" намалява забавянето леко, но осигурява по-малко изглаждане."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Видът на метода за филтриране, използван за въвеждане. Повечето потребители трябва да използват стойността по подразбиране \"BIQUAD\", тъй като тя осигурява добър баланс между плавност и забавяне. \"PT1\" намалява забавянето леко, но осигурява по-малко изглаждане."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Избира дали честотата на прекъсване на входния филтър се изчислява автоматично (препоръчва се) или ръчно се избира от потребителя. Използването на „Ръчно“ не се препоръчва за протоколи като Crossfire, които могат да се променят по време на полет."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Избира дали честотата на прекъсване на производния филтър на зададената стойност се изчислява автоматично (препоръчително) или ръчно се избира от потребителя. Използването на „Ръчно“ не се препоръчва за протоколи като Crossfire, които могат да се променят по време на полет."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Input Cutoff Frequency"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Derivative Cutoff Frequency"
-    },
-    "receiverRcInputType": {
-        "message": "Тип на входния филтър"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Тип производен филтър"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Изключено"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Автоматично"
     },
     "receiverRcSmoothingChannel": {
         "message": "Канали изгладени"
@@ -2811,9 +2761,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Изберете тип изграждане, за да видите наличните контролери."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Изберете вашият board, за да видите наличните онлайн версии на фърмуера - Изберете правилния фърмуер, подходящ за вашият board."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Започвайки с Betaflight 4.1, Betaflight въвежда поддръжка за <strong> Унифицирани цели </strong>. Концепцията на Unified Targets означава, че един и същ .hex файл на фърмуера може да се използва за всички платки, използващи един и същ MCU (F4, F7). За да накарат различните платки да работят с един и същ фърмуер, заедно с фърмуера се разгръща специфичен конфигурационен файл, когато се инсталира Unified Target. <br> Тази версия на конфигуратора Betaflight поддържа ионсталация на Unified Targets със съответните конфигурации на конкретната платка в една стъпка. Различните типове фърмуер, които са достъпни за всяка платка, са показани в падащото меню, както следва: <br /><br /><strong>&lt;board name&gt;</strong> или <br><strong>&lt;board name&gt; (Наследство) </strong>:<br> не унифицирана цел или версии преди фромуера на 4.1 за Unified Targets. <br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;) </strong>: <br> (4 знака производител идентификатор) <br> Унифицирана цел. <br /><br /> <strong> Моля, използвайте унифицирани цели, когато са налични. </strong> Ако срещнете проблеми при използване на унифицирана цел, моля, отворете <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> проблем </a> и след това използвайте неунифицираната цел, докато проблемът не бъде решен."
