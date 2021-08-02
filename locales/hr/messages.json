@@ -1352,16 +1352,6 @@
     "receiverRcSmoothingManual": {
         "message": "Ručno"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto poravnavanje",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Način odrezivanja derivacijskog filtera"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Način odrezivanja ulaznog filtera"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolacija"
     },
@@ -1371,38 +1361,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Vrsta RC poravnanja koja se koristi"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Cutoff frekvencija u Hz koju koristi ulazni filter. Korištenje nižih vrijednosti će rezultirati ravnomjernijim inputima i primjerenije su sporijim protokolima prijemnika. Većina korisnika bi trebala ostaviti ovo na 0, tj. \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Cutoff frekvencija u Hz koju koristi setpoint D filter. Korištenje nižih vrijednosti će rezultirati ravnomjernijim inputima i primjerenije su sporijim protokolima prijemnika. Većina korisnika bi trebala ostaviti ovo na 0, tj. \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Poravnavanje kanale se primjenjuje na"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Vrsta metode filtriranje korištena za ulazne kontrole. Većina korisnike bi trebala koristiti zadanu \"BIQUAD\" opciju jer ona daje odličnu ravnotežu između poravnatosti i kašnjenja. \"PT1\" smanjuje kašnjenje, ali i poravnanja."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Određuje računali se cutoff frekvencija filtera ulaznih kontrola automatski(preporučeno) ili ručno. Korištenje opcije \"Ručno\" nije preporučena za protokole prijemnika poput Crossfirea čija se brzina mijenja u letu."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Određuje računali se cutoff frekvencija setpoint D filtera automatski(preporučeno) ili ručno. Korištenje opcije \"Ručno\" nije preporučena za protokole prijemnika poput Crossfirea čija se brzina mijenja u letu."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Frekvencija odrezivanja ulaza"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frekvencija odrezivanja dervacijskog ulaznog filtera"
-    },
-    "receiverRcInputType": {
-        "message": "Vrsta ulaznog filtera"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Vrsta derivacijskog filtera"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Isključeno"
     },
     "receiverRcSmoothingChannel": {
         "message": "Poravnavanje kanala"
@@ -2367,9 +2327,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Odaberite vrstu verzije za dostupne kontrolere."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Odaberite kontroler leta kako biste vidjeli dostupna izdanja firmwarea - Odaberite ispravan firmware koji odgovara vašem kontroleru leta."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Odaberite verziju firmwarea za vaš kontroler."
