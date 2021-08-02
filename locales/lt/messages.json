@@ -1024,58 +1024,11 @@
     "receiverRcSmoothingManual": {
         "message": "Rankinis"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Automatinis glotninimas",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Reguliuoja Automatinio glotninimo skaičiavimus, 10 - numatytasis glotninimo-uždelsimo santykis. Skaičiaus didinimas suteiks daugiau filtravimo, tačiau pridės daugiau uždėlsimo. Tai gali būti naudojama blogąjį ryšį turinčioms/filmavimui skirtoms skraidyklėms.<br>Būkite atsargus su reikšmėmis, siekiančiomis 50, uždelsimas bus labai juntamas.<br>Norint pamatyti automatiškai apskaičiuotą glotninimo ribojimą naudokite CLI komandą rs_smoothing_info, tuo metų kai TX ir RX yra įjungti. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Išvestiniės ribos tipas"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Įejimo ribojimo tipas"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpoliacija"
     },
     "receiverRcSmoothingFilter": {
         "message": "Filtras"
-    },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Ribojimo dažnis (hercais), naudojamas įėjimo filtrui. Naudojant žemesnę reikšmę, glotinimas bus stipresnis, kas patartina letesnėms įmtuvų protokolams. Dauguma vartotojų turi palikti reikšmę 0, kas reiškia \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Ribojimo dažnis (hercais), naudojamas išvestiniam setpoint filtrui. Naudojant žemesnę reikšmę, glotinimas bus stipresnis, kas patartina letesnėms įmtuvų protokolams. Dauguma vartotojų turi palikti reikšmę 0, kas reiškia \"Auto\"."
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Filtravimo tipas. Pradedant versija 4.2 numatytoji reikšmė yra \"Auto\". Versijai 4.1 arba žemesnei dauguma vartotojų turi naudoti numatytąjį \"BIQUAD\", nes tai leidžia išlaikyt balansą tarp glotninimo ir uždelsimų. \"PT1\" šiek tiek sumažina uždelsimą, tačiau mažiau glotnina."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Filtravimo tipas. Dauguma vartotojų turėtu naudoti \"BIQUAD\", nes tai leidžia išlaikyt balansą tarp glotninimo ir uždelsimų. \"PT1\" šiek tiek sumažina uždelsimą, tačiau mažiau glotnina."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Pasirinkite, ar įėjimo filtro ribojimo dažnis bus skaičiuojamas automatiškai (rekomenduojama), ar bus fiksuotas vartotojo pasirinktu. Varianto \"Rankinis\" naudojimas nėra rekomenduojamas imtuvų protokolams kaip Crossfire, kurie gali keistis beskraidant."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Pasirenka, ar setpoint išvestinio filtro ribojimo dažnis bus skaičiuojamas automatiškai (rekomenduojama), ar bus fiksuotas vartotojo pasirinktu. Varianto \"Rankinis\" naudojimas nėra rekomenduojamas imtuvų protokolams kaip Crossfire, kurie gali keistis beskraidant."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Įėjimo ribojimo dažnis"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Išvestiniės ribos dažnis"
-    },
-    "receiverRcInputType": {
-        "message": "Įėjimo filtro tipas"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Išvestinės filtro tipas"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Išj."
     },
     "receiverRcSmoothingChannel": {
         "message": "Glotninami kanalai"
@@ -1442,9 +1395,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Pasirinkus versiją matysite galimus plokščių variantus."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Pasirinkus plokštę matysite online pasiekiamus mikroprogramų leidimus - Pasirinkite teisingą mikroprogramą, atitinkančią Jūsų plokštę."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Pasirinkite mikroprogramos versiją jūsų plokštei."
