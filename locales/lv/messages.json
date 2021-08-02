@@ -1339,12 +1339,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuāla"
     },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Derivative nogriešanas tips"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Ievades nogriešanas tips"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolācija"
     },
@@ -1354,38 +1348,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Pielietotās RC izlīdzināšanas tips"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Nogriešanas frekvence Hz, ko pielieto ievades filtrs. Izmantojot zemāku vērtību rezultēsies ar gludāku ieeju un atbalstošāku priekš lēnākiem uztvērēju protokoliem. Lielākai daļai lietotāju vajadzētu to atstāt uz 0, kas atbilst \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Nogriešanas frekvence Hz, ko pielieto iestatījuma derivative filtrs. Izmantojot zemāku vērtību rezultēsies ar gludāku ieeju un atbalstošāku priekš lēnākiem uztvērēju protokoliem. Lielākai daļai lietotāju vajadzētu to atstāt uz 0, kas atbilst \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanāli uz kuriem pielieto izlīdzināšanu"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Filtrēšanas metodes tips, ko pielieto ievadei. Vairums lietotāju vajadzētu izmantot noklusēto vērtību \"BIQUAD\", jo tas nodrošina pieņemamu līdzsvaru starp gludumu un aizturi. \"PT1\" nedaudz samazina aizturi, bet dod mazāku izlīdzināšanu."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Izvēlieties vai ieejas filtra nogriešanas frekvence tiek automātiski aprēķināta (ieteicamais) vai manuāli izvēlēta. Izmantot \"Manuāli\" nav ieteicams priekš uztvērēju protokoliem kā Crossfire, kas to var mainīt lidojuma laikā."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Izvēlieties vai iestatījuma derivative filtra nogriešanas frekvence tiek automātiski aprēķināta (ieteicamais) vai manuāli izvēlēta. Izmantot \"Manuāli\" nav ieteicams priekš uztvērēju protokoliem kā Crossfire, kas to var mainīt lidojuma laikā."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Ievades nogriešanas frekvence"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Derivative nogriešanas frekvence"
-    },
-    "receiverRcInputType": {
-        "message": "Ievades filtra tips"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Derivative filtra tips"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Izslg."
     },
     "receiverRcSmoothingChannel": {
         "message": "Izlīdzinātie kanāli"
@@ -2322,9 +2286,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Izvēlieties bilda tipu, lai redzētu pieejamās plates."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Izvēlieties jūsu kontrolieri, lai redzētu pieejamās programmaparatūras relīzes - izvēlieties pareizo programmatūru, kas piemērota jūsu kontrolierim."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Izvēlieties programmaparatūras versiju jūsu kontrolierim."
