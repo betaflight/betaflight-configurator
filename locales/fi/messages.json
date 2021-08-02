@@ -1773,9 +1773,6 @@
     "firmwareFlasherNoReboot": {
         "message": "Ei uudelleenkäynnistystä"
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Valitse lento-ohjaimesi nähdäksesi verkosta saatavilla olevat laiteohjelmistoversiot - Valitse lento-ohjaintasi vastaava laiteohjelmistoversio."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Valitse laiteohjelmiston versio"
     },
