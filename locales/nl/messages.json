@@ -1577,20 +1577,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manueel"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Automatische Smoothness",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Past de berekening van Automatische afvlakking aan, 10 is de standaard verhouding tussen afvlakking en vertraging. Door het aantal te verhogen, worden RC-ingangen vloeiender maar wordt er ook vertraging toegevoegd. Dit kan handig zijn voor onbetrouwbare RC-verbindingen of voor filmisch vliegen.<br>Wees voorzichtig met nummers die de 50 naderen, de ingangsvertraging wordt dan merkbaar.<br>Gebruik het CLI-commando rc_smoothing_info terwijl je TX en RX zijn ingeschakeld om de automatisch berekende RC-afvlakking te zien. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Afgeleide afsnijdingstype"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Input afsnijdingstype"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolatie"
     },
@@ -1600,44 +1586,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Type RC smoothing gebruikt"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "De afsnijfrequentie in Hz die wordt gebruikt door het ingangsfilter. Het gebruik van lagere waarden resulteert in vloeiendere invoer en is geschikter voor langzamere ontvangerprotocollen. De meeste gebruikers moeten dit op 0 laten staan, wat overeenkomt met \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "De afsnijfrequentie in Hz die wordt gebruikt door het setpoint-afgeleide filter. Het gebruik van lagere waarden resulteert in vloeiendere invoer en is geschikter voor langzamere ontvangerprotocollen. De meeste gebruikers moeten dit op 0 laten staan, wat overeenkomt met \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "De kanalen waarop de afvlakking invloed op heeft"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Het type filtermethode dat wordt gebruikt voor de setpointderivaat. Vanaf 4.2 wordt de standaardwaarde \"Auto\" aanbevolen. Voor 4.1 en eerder zouden de meeste gebruikers de standaard \"BIQUAD\" -waarde moeten gebruiken omdat het een goede balans biedt tussen soepelheid en vertraging. \"PT1\" vermindert de vertraging enigszins, maar zorgt voor minder afvlakking."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Het type filtermethode gebruikt voor de invoer. De meeste gebruikers dienen de standaardwaarde \"BIQUAD\" te gebruiken. Deze waarde biedt een goede balans tussen een vloeiende invoer en een daardoor geïntroduceerde vertraging. \"PT1\" vermindert de vertraging enigszins, maar geeft een mindere vloeiende invoer."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Selecteert of de invoer filter cutoff frequentie automatisch wordt berekend of handmatig wordt geselecteerd door de gebruiker. Automatisch is aanbevolen. Het gebruik van \"Handmatig\" wordt niet aanbevolen voor protocollen zoals Crossfire. Deze kunnen namelijk gedurende de vlucht veranderen."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Selecteert of de afsnijfrequentie van het setpoint-afgeleide filter automatisch wordt berekend (aanbevolen) of handmatig wordt geselecteerd door de gebruiker. Het gebruik van \"Manual\" wordt niet aanbevolen voor ontvangerprotocollen zoals Crossfire die tijdens de vlucht kunnen veranderen."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Ingang Afsnijfrequentie"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Afgeleide afsnijfrequentie"
-    },
-    "receiverRcInputType": {
-        "message": "Invoer Filter Type"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Afgeleide filtertype"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Uit"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Automatisch"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanalen Smoothed"
@@ -2838,9 +2788,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Selecteer build type om beschikbare borden te zien."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Selecteer je bord om de beschikbare online firmware releases te zien - Selecteer de juiste firmware voor je bord."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecteer de firmwareversie voor uw bord."
