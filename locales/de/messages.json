@@ -1497,20 +1497,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuell"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto-Glättung",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Verändert die automatische Glättungs-Berechnung, 10 ist der Standard des Glättung- / Verzögerungsverhältnisses. Die Erhöhung des Wertes glättet RC-Eingaben mehr, was aber auch zu mehr Verzögerung führt. Dies kann für unzuverlässige RC-Verbindungen oder für cinematisches Fliegen nützlich sein.<br>Sei mit Zahlen, die sich 50 annähern vorsichtig, die Eingabeverzögerung wird bemerkbar.<br>Benutze den CLI-Befehl rc_smoothing_info, während die Fernsteuerung und der Empfänger eingeschaltetsind, um die automatisch berechneten RC-Glättungswerte zu sehen. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "D-Term Cutoff Typ"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Input Cutoff Typ"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
     },
@@ -1520,44 +1506,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Art der verwendeten RC-Glättung"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Die Cutoff-Frequenz in Hz, die der Eingangsfilter verwendet. Niedrigere Werte führen zu glattere Inputs und sind besser geeignet für langsamere Empfänger Protokolle. Die meisten Benutzer sollten dies bei 0 belassen, was a\"Automatisch\" entspricht."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Die Cutoff-Frequenz in Hz welche vom Setpointt Derivative Filter verwendet wird. Niedrigere Werten führen zu glatteren Inputs und sind besser geeignet für langsamere Empfänger Protokolle. Die meisten Benutzer sollten dies bei 0 belassen, was a\"Automatisch\" entspricht."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Die Kanalglättung gilt für"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Der Typ der Filtermethode welcher für \"Setpoint Derivative\" verwendet wird. Ab Version 4.2 wird der Standardwert \"Auto\" empfohlen. Die meisten Benutzer sollten den Standardwert \"BIQUAD\" verwenden, da er eine gute Balance zwischen Glättung und Verzögerung bietet. \"PT1\" bietet weniger Glättung aber die Verzögerung ist etwas reduziert."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Der Typ der Filtermethode welcher für \"Input\" verwendet wird. Die meisten Benutzer sollten den Standardwert \"BIQUAD\" verwenden, da er eine gute Balance zwischen Glättung und Verzögerung bietet. \"PT1\" bietet weniger Glättung aber die Verzögerung ist etwas reduziert."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Wählt aus, ob die Input Filter-Cutoff-Frequenz automatisch errechnet (empfohlen) oder manuell durch den Benutzer ausgewählt wird. \"Händisch\" ist nicht für Empfänger Protokolle wie Crossfire empfohlen, welche sich während des Fluges ändern können."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Wählt aus, ob die Setpoint Derivative-Cutoff-Frequenz automatisch errechnet (empfohlen) oder manuell durch den Benutzer ausgewählt wird. \"Händisch\" ist nicht für Empfänger Protokolle wie Crossfire empfohlen, welche sich während des Fluges ändern können."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Wähle Input Cutoff Frequency"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Derivative Cutoff Typ"
-    },
-    "receiverRcInputType": {
-        "message": "Input Filter Typ"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Derivative Filter Typ"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Aus"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Automatisch"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanäle geglättet"
@@ -2580,9 +2530,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Wähle anzuzeigenden Entwicklungsstand der Firmware für die jeweiligen FC's."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Wähle deinen FC, um online verfügbare Firmware-Versionen zu sehen. Wähle dann die richtige Firmware für deinen FC."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wähle die Firmware-Version für deinen FC."
