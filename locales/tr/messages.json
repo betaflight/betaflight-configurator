@@ -1270,9 +1270,6 @@
     "firmwareFlasherNoReboot": {
         "message": "Yeniden başlatma dizisi yok"
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Kullanılabilir çevrimiçi aygıt yazılımı sürümlerini görmek için panelinizi seçin - Paneliniz için uygun yazılımı seçin."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Paneliniz için uygun yazılım sürümü seçin."
     },
