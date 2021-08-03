@@ -1577,6 +1577,10 @@
     "receiverRcSmoothingManual": {
         "message": "Manueel"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Auto Factor",
+        "description": "Auto Factor parameter for RC smoothing"
+    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolatie"
     },
@@ -1588,6 +1592,18 @@
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "De kanalen waarop de afvlakking invloed op heeft"
+    },
+    "receiverRcSetpointType": {
+        "message": "Setpoint filtertype"
+    },
+    "receiverRcFeedforwardType": {
+        "message": "Feedforward filtertype"
+    },
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "Uit"
+    },
+    "receiverRcSmoothingFeedforwardTypeAuto": {
+        "message": "Automatisch"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanalen Smoothed"
@@ -1618,6 +1634,9 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "RC interpolatie interval [ms]"
+    },
+    "receiverRcSmoothingMode": {
+        "message": "Vloeiende Modus"
     },
     "pidTuningFeedforwardTransition": {
         "message": "Overgang"
