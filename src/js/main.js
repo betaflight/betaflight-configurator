@@ -501,12 +501,12 @@ function startProcess() {
     });
 
     ConfigStorage.get('permanentExpertMode', function (result) {
-        const experModeCheckbox = 'input[name="expertModeCheckbox"]';
+        const expertModeCheckbox = 'input[name="expertModeCheckbox"]';
         if (result.permanentExpertMode) {
-            $(experModeCheckbox).prop('checked', true);
+            $(expertModeCheckbox).prop('checked', true);
         }
 
-        $(experModeCheckbox).change(function () {
+        $(expertModeCheckbox).change(function () {
             const checked = $(this).is(':checked');
             checkSetupAnalytics(function (analyticsService) {
                 analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
