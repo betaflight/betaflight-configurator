@@ -1565,6 +1565,20 @@
     "receiverRcSmoothingManual": {
         "message": "Manuale"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Fattori automatici",
+        "description": "Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Regola il calcolo automatico dei fattori. ll rapporto fattori-ritardo predefinito è 10. Aumentando il numero l'input RC verrà ammorbidito maggiormente, aumentando però il ritardo. Questo può essere utile per connessioni radio instabili o per voli cinematografici.<br>Con numeri che si avvicinano a 50 il ritardo nell'input diventerà evidente.<br>Usa il comando CLI rc_smoothing_info mentre TX e RX sono collegati per vedere i cutoff dello smoothing calcolati automaticamente. ",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "Tipo di taglio del FeedForward"
+    },
+    "receiverRcSetpointTypeSelect": {
+        "message": "Tipo di taglio del Setpoint"
+    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolazione"
     },
@@ -1574,8 +1588,44 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Tipo di RC Smoothing usato"
     },
+    "rcSmoothingSetpointCutoffHelp": {
+        "message": "La frequenza di cutoff in Hz usata dal filtro setpoint. Usando valori più bassi si otterranno input più regolari e più appropriati per i protocolli dei ricevitori più lenti. La maggior parte degli utenti dovrebbe lasciare questa opzione a 0 che corrisponde ad \"Auto\"."
+    },
+    "rcSmoothingFeedforwardCutoffHelp": {
+        "message": "La frequenza di taglio in Hz usata dal filtro feedforward. Usando valori più bassi si otterranno input più regolari e più appropriati per i protocolli dei ricevitori più lenti. La maggior parte degli utenti dovrebbe lasciare questa opzione a 0 che corrisponde ad \"Auto\"."
+    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Lo smoothing dei canali si applica a"
+    },
+    "rcSmoothingFeedforwardTypeHelp": {
+        "message": "Il metodo di filtraggio usato per il feedforward. A partire dalla versione 4.2 è raccomandato il valore predefinito \"Auto\". Per la 4.1 e precedenti la maggior parte degli utenti dovrebbe usare il valore predefinito \"BIQUAD\", in quanto fornisce un buon compromesso tra fluidità e ritardo. \"PT1\" riduce leggermente il ritardo ma ammorbidisce meno."
+    },
+    "rcSmoothingSetpointTypeHelp": {
+        "message": "Il tipo di metodo di filtraggio usato per il setpoint. La maggior parte degli utenti dovrebbe usare il valore di default \"BIQUAD\" poichè esso è un buon compromesso tra fluidità e ritardo. \"PT1\" riduce leggermente il ritardo ma offre meno fluidità."
+    },
+    "receiverRcSmoothingSetpointManual": {
+        "message": "Seleziona se la frequenza di taglio del filtro del setpoint viene calcolata automaticamente (consigliata) o selezionata manualmente dall'utente. L'uso di \"Manuale\" non è raccomandato per i protocolli di ricezione che cambiano in volo come Crossfire."
+    },
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "Seleziona se la frequenza di taglio del filtro del feedforward viene calcolata automaticamente (consigliata) o selezionata manualmente dall'utente. L'uso di \"Manuale\" non è raccomandato per i protocolli di ricezione che cambiano in volo come Crossfire."
+    },
+    "receiverRcSmoothingSetpointHz": {
+        "message": "Frequenza di taglio del setpoint"
+    },
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "Frequenza di taglio del FeedForward"
+    },
+    "receiverRcSetpointType": {
+        "message": "Tipo Filtro Setpoint"
+    },
+    "receiverRcFeedforwardType": {
+        "message": "Tipo Filtro Feedforward"
+    },
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "Spento"
+    },
+    "receiverRcSmoothingFeedforwardTypeAuto": {
+        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Canali con smoothing"
@@ -1606,6 +1656,9 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "Intervallo di interpolazione RC [ms]"
+    },
+    "receiverRcSmoothingMode": {
+        "message": "Modalità smoothing"
     },
     "pidTuningFeedforwardTransition": {
         "message": "Transizione"
@@ -2802,6 +2855,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Seleziona il tipo di build per vedere le schede disponibili."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Seleziona o rileva automaticamente la tua scheda per vedere i relativi firmware disponibili online - Seleziona il firmware appropriato per la tua scheda."
+    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "A partire da Betaflight 4.1, Betaflight sta introducendo il supporto per i <strong>Target Unificati</strong>. Il concetto dei Target Unificati è che lo stesso file .hex del firmware può essere usato per tutte le schede con lo stesso MCU (F4, F7). Per far sì che schede differenti funzionino con lo stesso firmware, verrà usato durante il flash un file di configurazione specifico insieme al firmware.<br>Questa versione del configuratore di Betaflight supporta il flashing in un solo passaggio dei Target Unificati con i rispettivi file di configurazione delle schede. I tipi differenti di firmware disponibili per ogni scheda sono mostrati nel menu a tendina come mostrato:<br /><br /><strong>&lt;nome scheda&gt;</strong> o<br><strong>&lt;nome scheda&gt; (Legacy)</strong>:<br>target non unificato o versione pre-4.1 del firmware per Target Unificati.<br /><br /><strong>&lt;nome scheda&gt; (&lt;id costruttore&gt;)</strong>:<br>(id costruttore di 4 caratteri)<br>Target Unificato.<br /><br /><strong>Per favore usa i Target Unificati quando disponibili.</strong> Se riscontri problemi usando i Target Unificati apri una <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a> e usa il target non unificato fin quando il problema non verrà risolto."
     },
@@ -2984,6 +3040,15 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Continua"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Automatico"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "Il rilevamento automatico funziona quando non si è in modalità DFU e quando la comunicazione MSP è attiva. A volte è necessario riprovare un paio di volte o anche ricollegare l'USB. Prova a connetterti normalmente prima poiché potresti aver dimenticato di applicare le impostazioni predefinite personalizzate. Riavvia dopo aver flashato - ricollega l'USB."
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "Recupera le informazioni della scheda per scegliere il firmware giusto"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "Stai per flashare una <strong>build di sviluppo del firmware</strong>. Queste build sono work in progress e potrebbero verificarsi i seguenti casi:<strong><ul><li>il firmware non è funzionante;</li><li>il firmware non è in grado di far volare il modello;</li><li>ci sono problemi di sicurezza con il firmware, per esempio flyaway</li><li>il firmware può far diventare il controllore del volo non rispondente o danneggiarlo</li></ul></strong>Se prosegui con il flash di questo firmware, <strong>ti assumi la piena responsabilità dei rischi di cui sopra</strong>. Inoltre riconosci che è necessario eseguire <strong>test approfonditi sul banco di lavoro con le eliche rimosse</strong> prima di qualsiasi tentativo di volare con questo firmware."
