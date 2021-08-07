@@ -468,7 +468,7 @@ TABS.receiver.initialize = function (callback) {
                 }
             }
 
-            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges);
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges, 'receiver');
             tab.analyticsChanges = {};
 
             MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_rssi_config);
