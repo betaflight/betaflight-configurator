@@ -696,7 +696,6 @@ function update_live_status() {
     });
 
     if (GUI.active_tab != 'cli') {
-        MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);
         } else {
