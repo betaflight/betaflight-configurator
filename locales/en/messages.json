@@ -1980,9 +1980,6 @@
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
 
-    "receiverHelp": {
-        "message": "Please read receiver chapter of the documentation.  Configure serial port (if required), receiver mode (serial/ppm/pwm), provider (for serial receivers), bind receiver, set channel map, configure channel endpoints/range on TX so that all channels go from ~1000 to ~2000.  Set midpoint (default 1500), trim channels to 1500, configure stick deadband, verify behaviour when TX is off or out of range.<br /><span class=\"message-negative\">IMPORTANT:</span> Before flying read failsafe chapter of documentation and configure failsafe."
-    },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
@@ -1992,6 +1989,9 @@
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the craft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D-Term Dynamic Lowpass or D Term Lowpass 1</b>."
+    },
+    "receiverHelp": {
+        "message": "<b>Basic setup</b>: For serial connections, go to the Ports tab and enable ‘Serial Rx’ for the UART to which the Rx is connected.  In the Receivers tab, choose ‘Serial based receiver…’, and set the correct link/data format at the ‘Serial Rx Provider’ drop-down.  For other types of receiver, set the correct mode (ppm, pwm etc).  Choose the correct ‘Channel Map’ for your radio.  Bind the receiver and check that the Roll, Pitch and other channel bar graphs move correctly when you move the sticks.  You may need to reconfigure Map, Mode, Channels or Mix so that, for example, moving the Roll stick changes Roll values.  Adjust the channel endpoint or range values in the transmitter so that all channels go from ~1000 to ~2000.  Trim the midpoint to 1500.  RC Smoothing is best left at defaults.  For more information, please read receiver chapter of the <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>.<br /></br /><span class=\"message-negative\"><strong>Important</strong></span>:<br /> &#8226; Do not forget to configure and check failsafe in the Failsafe tab!<br /> &#8226; For performance reasons, it is highly recommended that users disable the ADC filter in OpenTX, for more information see <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disable-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>"
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
