@@ -1565,6 +1565,20 @@
     "receiverRcSmoothingManual": {
         "message": "手動"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "オートファクター",
+        "description": "Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "オートファクター演算を調整します。10がデフォルトファクターと遅延の比率です。この数値を増加させると、RCの入力がより滑らかとなりますが、遅延も付加されます。これは信頼性の低いRC接続や映画のようなフライトに役立ちます。<br>数値が50に近づくと、入力遅延が顕著になりますので注意してください。<br>TXとRXの電力が供給されている間にCLIコマンドrc_smoothing_infoを使用すると、自動計算されたRCスムージング カットオフを確認できます。 ",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "フィードフォワード カットオフタイプ"
+    },
+    "receiverRcSetpointTypeSelect": {
+        "message": "セットポイント カットオフタイプ"
+    },
     "receiverRcSmoothingInterpolation": {
         "message": "補間"
     },
@@ -1574,8 +1588,44 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "使用するRCスムージングタイプ"
     },
+    "rcSmoothingSetpointCutoffHelp": {
+        "message": "セットポイントフィルターで使用されるカットオフ周波数(Hz)。値を小さくすると入力信号がスムーズとなり、受信機プロトコルの通信が遅延する際に適切に設定できます。ほとんどのユーザーは、「自動」となる0としてください。"
+    },
+    "rcSmoothingFeedforwardCutoffHelp": {
+        "message": "フィードフォワードフィルターで使用されるカットオフ周波数(Hz)。値を小さくすると入力信号がスムーズとなり、受信機プロトコルの通信が遅延する際に適切に設定できます。ほとんどのユーザーは、「自動」となる0としてください。"
+    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "適用するスムージングチャンネル"
+    },
+    "rcSmoothingFeedforwardTypeHelp": {
+        "message": "フィードフォワードに使用されるフィルタリング方法のタイプ。4.2以降、デフォルト値の【自動】が推奨されます。4.1以前の場合、ほとんどのユーザは、スムーズさと遅延のバランスが良いため、デフォルト値の【BIQUAD】の使用してください。「PT1」は遅延をわずかに減少させますが、スムーズさは弱くなります。"
+    },
+    "rcSmoothingSetpointTypeHelp": {
+        "message": "セットポイントで使用されるフィルタリング方法のタイプ。ほとんどのユーザは、スムーズさと遅延のバランスが良いため、デフォルト値の「BIQUAD」を使用してください。「PT1」は遅延をわずかに減少させますが、スムーズさは弱くなります。"
+    },
+    "receiverRcSmoothingSetpointManual": {
+        "message": "セットポイントフィルターカットオフ周波数を自動計算する(推奨)か、ユーザ手動選択するかを設定します。「手動」を使用する場合、飛行中にパラメータを変更できるCrossfireのような受信プロトコルにはお勧めできません。"
+    },
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "フィードフォワードフィルターカットオフ周波数を自動計算する(推奨)か、ユーザ手動選択するかを設定します。「手動」を使用する場合、飛行中にパラメータを変更できるCrossfireのような受信プロトコルにはお勧めできません。"
+    },
+    "receiverRcSmoothingSetpointHz": {
+        "message": "セットポイント カットオフ 周波数"
+    },
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "フィードフォワード カットオフ 周波数"
+    },
+    "receiverRcSetpointType": {
+        "message": "セットポイント フィルタータイプ"
+    },
+    "receiverRcFeedforwardType": {
+        "message": "フィードフォワード フィルタータイプ"
+    },
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "OFF"
+    },
+    "receiverRcSmoothingFeedforwardTypeAuto": {
+        "message": "自動"
     },
     "receiverRcSmoothingChannel": {
         "message": "スムージングチャンネル"
@@ -1606,6 +1656,9 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "RC補間間隔 [ms]"
+    },
+    "receiverRcSmoothingMode": {
+        "message": "スムージングモード"
     },
     "pidTuningFeedforwardTransition": {
         "message": "遷移"
@@ -2802,6 +2855,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "使用可能なFCボードを表示するには、ビルドタイプを選択します。"
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "FCボードを任意選択もしくは自動検出すると、オンラインでファームウェアの確認ができます - 適切なファームウェアを選択して下さい。"
+    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Betaflight 4.1以降、Betaflightは <strong>Unified Targets</strong> のサポートを導入しています。Unified Targetsという概念は、同じファームウェア[.hexファイル]が同じMCU (F4, F7) を搭載する全てのFCボードに適用できることを意味します。異なるFCボードを同じファームウェアで動作させるために、Unified Targetsがファームフラッシュされると、ファームウェアとともに特定の設定ファイルが展開されます。<br>このバージョンのBetaflight Configuratorは、1回のステップでそれぞれのFCボード固有の設定に合わせたUnified Targets書き込みをサポートします。各FCボードで使用可能な様々なファームウェアタイプが、次のようにドロップダウンにて表示されます:<br /><br /><strong>&lt;board name&gt;</strong> or <br><strong>&lt;board name&gt; (レガシー) </strong>:<br>non-unified target, or pre-4.1 versions of the firmware for Unified Targets.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (4文字の製造元ID) <br>Unified Target.<br /><br /><strong>利用可能であればUnified Targetsを使用してください。</strong>もしUnified Targetsを使用して問題が発生した場合には、<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>を開いてから問題が解決するまでnon-unified targetを使用してください。"
     },
@@ -2984,6 +3040,15 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "続行"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "自動検出"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "自動検出は、DFUモードおよびMSP通信が動作している場合にのみ機能します。上手くいかない場合は、何度か再試行するかUSBを再接続する必要があります。デフォルト値からカスタムした値を適用し忘れているかもしれないので、一度通常通りに接続してください。書き込み後に再起動し、USBを再接続をお願いします。"
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "適切なファームウェアを選択するためにボード情報を照会する"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "<strong>開発ビルド版ファームウェア</strong>をフラッシュしようとしています。これらのビルドは開発作業中のものであり、次のいずれかが当てはまる場合があります:<strong><ul><li>ファームウェアがまったく機能しない場合;</li><li>ファームウェアが飛行不能な場合;</li><li>飛行距離など、ファームウェアに安全性の問題がある場合;</li><li>ファームウェアが原因で、フライトコントローラが応答しなくなったり、破損したりする可能性がある場合</li></ul></strong>このファームウェアのフラッシュを続行する場合は、<strong>上記のいずれかのリスクに対して自己責任を負うこととなります。</strong>さらにこのファームウェアを飛ばす前に、<strong>プロペラを外し徹底的なベンチテストを実行する</strong>必要があることを周知してください。"
