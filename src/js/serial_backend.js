@@ -66,7 +66,7 @@ function initializeSerialBackend() {
                 $('select#baud').hide();
             } else if (portName !== '0') {
                 if (!clicks) {
-                    console.log(`${serial.connectionType}: connecting to: ${portName}`);
+                    console.log(`Connecting to: ${portName}`);
                     GUI.connecting_to = portName;
 
                     // lock port select & baud while we are connecting / connected
@@ -90,8 +90,7 @@ function initializeSerialBackend() {
                     }
                     GUI.timeout_kill_all();
                     GUI.interval_kill_all();
-                    GUI.tab_switch_cleanup();
-                    GUI.tab_switch_in_progress = false;
+                    GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
 
                     function onFinishCallback() {
                         finishClose(toggleStatus);
