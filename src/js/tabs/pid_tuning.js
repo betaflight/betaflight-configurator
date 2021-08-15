@@ -2120,7 +2120,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 self.refresh();
             });
 
-            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'pid_tuning');
             self.analyticsChanges = {};
         });
 

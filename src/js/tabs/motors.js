@@ -1075,7 +1075,7 @@ TABS.motors.initialize = function (callback) {
             .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
             .then(() => reboot());
 
-            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};
             self.configHasChanged = false;
         });

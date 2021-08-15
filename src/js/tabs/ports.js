@@ -351,7 +351,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
    function on_save_handler() {
-        analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+        analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
        self.analyticsChanges = {};
 
         // update configuration based on current ui state

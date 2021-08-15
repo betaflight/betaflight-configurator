@@ -109,6 +109,14 @@ Analytics.prototype.sendChangeEvents = function (category, changeList) {
     }
 };
 
+Analytics.prototype.sendSaveAndChangeEvents = function (category, changeList, tabName) {
+    this.sendEvent(category, 'Save', {
+        eventLabel: tabName,
+        eventValue: Object.keys(changeList).length,
+    });
+    this.sendChangeEvents(category, changeList);
+};
+
 Analytics.prototype.sendAppView = function (viewName) {
     this._googleAnalytics.screenview(viewName);
 };
