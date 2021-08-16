@@ -376,7 +376,7 @@ firmware_flasher.initialize = function (callback) {
         function showOrHideBuildTypeSelect() {
             const expertModeChecked = $(this).is(':checked');
 
-            globalExpertMode_e.prop('checked', expertModeChecked);
+            globalExpertMode_e.prop('checked', expertModeChecked).trigger('change');
             if (expertModeChecked) {
                 buildTypesToShow = buildTypes.concat(ciBuildsTypes);
                 buildBuildTypeOptionsList();
