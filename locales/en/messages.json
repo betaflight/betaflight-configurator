@@ -2559,7 +2559,7 @@
         "message": "<strong>I understand the risks</strong>, the propellers are removed - enable motor control and arming, and disable Runaway Takeoff Prevention."
     },
     "motorsDialogMixerReset": {
-        "message": "<strong>Invalid mixer mode selected.</strong><br /><br />The {{mixerName}} model needs {{mixerMotors}} motor resources.<br /><br />If using a custom mixer mode you need to define a custom mmix before changing mixer mode. If you come back to the motor tab after setting a mmix for your mode it won't reset the mode anymore. Please see the wiki for more information how to set this up.<br /><br />You are not able to test any motors or fly because firmware has {{outputs}} outputs for the selected mode.<br /><br />Resetting to default mixer mode"
+        "message": "<strong>Mixer mode problem detected</strong><br /><br />The {{mixerName}} model needs <strong class=\"message-positive\">{{mixerMotors}}</strong> motor resources and the current configuration of the firmware provides <strong class=\"message-positive\">{{outputs}}</strong> usable output(s) for the selected mode.<br /><br />If using a custom mixer mode you need to define a custom mmix before changing mixer mode.<br /><br />Please check your configuration and add the required motor resources."
     },
     "motorsDialogSettingsChanged": {
         "message": "Configuration changes have been detected.<br /><br /><strong class=\"message-negative-italic\">Motor Test Mode is disabled until the settings have seen saved.</strong>"

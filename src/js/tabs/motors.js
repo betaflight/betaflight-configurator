@@ -330,6 +330,8 @@ TABS.motors.initialize = function (callback) {
             });
         }
 
+        sortElement('select.mixerList');
+
         function refreshMixerPreview() {
             const mixer = FC.MIXER_CONFIG.mixer;
             const reverse = FC.MIXER_CONFIG.reverseMotorDir ? "_reversed" : "";
@@ -608,6 +610,12 @@ TABS.motors.initialize = function (callback) {
             neutral3d = (FC.MOTOR_3D_CONFIG.neutral > 1575 || FC.MOTOR_3D_CONFIG.neutral < 1425) ? 1500 : FC.MOTOR_3D_CONFIG.neutral;
         }
 
+        let zeroThrottleValue = rangeMin;
+
+        if (self.feature3DEnabled) {
+            zeroThrottleValue = neutral3d;
+        }
+
         const motorsWrapper = $('.motors .bar-wrapper');
 
         for (let i = 0; i < 8; i++) {
@@ -642,6 +650,8 @@ TABS.motors.initialize = function (callback) {
         for (let j = 0; j < escProtocols.length; j++) {
             escProtocolElement.append(`<option value="${j + 1}">${escProtocols[j]}</option>`);
         }
+
+        sortElement('select.escprotocol');
 
         const unsyncedPWMSwitchElement = $("input[id='unsyncedPWMSwitch']");
         const divUnsyncedPWMFreq = $('div.unsyncedpwmfreq');
@@ -743,7 +753,7 @@ TABS.motors.initialize = function (callback) {
         }
 
         escProtocolElement.val(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
-        console.log(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
+
         escProtocolElement.on("change", function () {
             const escProtocolValue = parseInt($(this).val()) - 1;
 
@@ -818,11 +828,7 @@ TABS.motors.initialize = function (callback) {
 
         function setSlidersDefault() {
             // change all values to default
-            if (self.feature3DEnabled) {
-                $('div.sliders input').val(neutral3d);
-            } else {
-                $('div.sliders input').val(rangeMin);
-            }
+            $('div.sliders input').val(zeroThrottleValue);
         }
 
         function setSlidersEnabled(isEnabled) {
@@ -903,7 +909,7 @@ TABS.motors.initialize = function (callback) {
 
         for (let i = 0; i < self.numberOfValidOutputs; i++) {
             if (!self.feature3DEnabled) {
-                if (FC.MOTOR_DATA[i] > rangeMin) {
+                if (FC.MOTOR_DATA[i] > zeroThrottleValue) {
                     motorsRunning = true;
                 }
             } else {
@@ -965,7 +971,7 @@ TABS.motors.initialize = function (callback) {
             const motorsTesting = motorsEnableTestModeElement.is(':checked');
 
             for (let i = 0; i < self.numberOfValidOutputs; i++) {
-                motorData[i] = motorsTesting ? FC.MOTOR_DATA[i] : rangeMin;
+                motorData[i] = motorsTesting ? FC.MOTOR_DATA[i] : zeroThrottleValue;
             }
 
             return motorData;
@@ -1034,7 +1040,7 @@ TABS.motors.initialize = function (callback) {
             //keep the following here so at least we get a visual cue of our motor setup
             update_arm_status();
 
-            if (previousArmState != self.armed) {
+            if (previousArmState !== self.armed) {
                 console.log('arm state change detected');
 
                 motorsEnableTestModeElement.change();
@@ -1083,12 +1089,6 @@ TABS.motors.initialize = function (callback) {
         // enable Status and Motor data pulling
         GUI.interval_add('motor_and_status_pull', get_status, 50, true);
 
-        let zeroThrottleValue = rangeMin;
-
-        if (self.feature3DEnabled) {
-            zeroThrottleValue = neutral3d;
-        }
-
         setup_motor_output_reordering_dialog(SetupEscDshotDirectionDialogCallback, zeroThrottleValue);
 
         function SetupEscDshotDirectionDialogCallback() {
@@ -1116,12 +1116,6 @@ TABS.motors.initialize = function (callback) {
             dialogMixerReset.showModal();
             $('#dialog-mixer-reset-confirmbtn').click(function() {
                 dialogMixerReset.close();
-
-                FC.MIXER_CONFIG.mixer = 3;
-
-                MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG))
-                .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
-                .then(() => reboot());
             });
         }
     }
