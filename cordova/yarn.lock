@@ -555,6 +555,11 @@ cordova-app-hello-world@^4.0.0:
   resolved "https://registry.yarnpkg.com/cordova-app-hello-world/-/cordova-app-hello-world-4.0.0.tgz#a30e896b210787332337069c50845e1802dabcff"
   integrity sha512-hTNYHUJT5YyMa1cQQE1naGyU6Eh5D5Jl33sMnCh3+q15ZwWTL/TOy3k8+mUvjTp8bwhO5eECGKULYoVO+fp9ZA==
 
+cordova-chrome-sockets-tcp@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/cordova-chrome-sockets-tcp/-/cordova-chrome-sockets-tcp-1.4.0.tgz#cc3df8c78e82900183cea63dc8b947bdf5b3272e"
+  integrity sha512-5S44MTUxjUY5E7ww9AwfF2ySqzpqmUmsS6imqpsPWw+nHw+DNToagj75MJDFfO30duNHPbL5M8lrhm07U4fofw==
+
 cordova-clipboard@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/cordova-clipboard/-/cordova-clipboard-1.3.0.tgz#0911da4cbdea5df2e3a769f5b3aab00e0be0e679"
