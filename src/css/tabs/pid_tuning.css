@@ -93,6 +93,12 @@
     border-bottom: 0 solid var(--subtleAccent);
 }
 
+.tab-pid_tuning .sliderDivider {
+    padding: 3px;
+    border-top: 1px solid var(--subtleAccent);
+    border-bottom: 1px solid var(--subtleAccent);
+}
+
 .tab-pid_tuning table th {
     padding: 0;
     border: 0;

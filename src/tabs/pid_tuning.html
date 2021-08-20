@@ -39,9 +39,11 @@
                 <div class="default_btn copyrateprofilebtn">
                     <a href="#" id="copyRateProfile" i18n="pidTuningCopyRateProfile"></a>
                 </div>
-                <div class="default_btn resetbt">
-                    <a href="#" id="resetProfile" i18n="pidTuningResetProfile"></a>
-                </div>
+                <span class="cf_tip resetwarning">
+                    <div class="default_btn resetbt">                    
+                        <a href="#" id="resetProfile" i18n="pidTuningResetProfile"></a>
+                    </div>
+                </span>
                 <div class="default_btn show showAllPids">
                     <a href="#" id="showAllPids" i18n="pidTuningShowAllPids"></a>
                 </div>
@@ -89,7 +91,7 @@
                                 </th>
                                 <th class="derivative">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningDerivative" class="derivativeText"></div>
+                                        <div i18n="pidTuningDMax" class="derivativeText"></div>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningDerivativeHelp"></div>
                                     </div>
                                 </th>
@@ -117,29 +119,29 @@
                             <tr class="ROLL">
                                 <!-- 0 -->
                                 <td class="pid_roll"></td>
-                                <td class="pid_data"><input type="number" name="p" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="i" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="d" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="dMinRoll" step="1" min="0" max="100" /></td>
+                                <td class="pid_data"><input type="number" name="p" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="i" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="d" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="dMinRoll" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
 
                             </tr>
                             <tr class="PITCH">
                                 <!-- 1 -->
                                 <td class="pid_pitch"></td>
-                                <td class="pid_data"><input type="number" name="p" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="i" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="d" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="dMinPitch" step="1" min="0" max="100" /></td>
+                                <td class="pid_data"><input type="number" name="p" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="i" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="d" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="dMinPitch" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
                             </tr>
                             <tr class="YAW">
                                 <!-- 2 -->
                                 <td class="pid_yaw"></td>
-                                <td class="pid_data"><input type="number" name="p" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="i" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="d" step="1" min="0" max="200" /></td>
-                                <td class="pid_data"><input type="number" name="dMinYaw" step="1" min="0" max="100" /></td>
+                                <td class="pid_data"><input type="number" name="p" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="i" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="d" step="1" min="0" max="250" /></td>
+                                <td class="pid_data"><input type="number" name="dMinYaw" step="1" min="0" max="250" /></td>
                                 <td class="pid_data"><input type="number" name="f" step="1" min="0" max="2000" /></td>
                             </tr>
                             <tr class="YAW_JUMP_PREVENTION">
@@ -177,7 +179,8 @@
                                         <option value="0">OFF</option>
                                         <option value="1">RP</option>
                                         <option value="2">RPY</option>
-                                    <select>
+                                    </select>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningSliderModeHelp"></div>
                                 </th>
                                 <th></th>
                                 <th i18n="pidTuningSliderLow"></th>
@@ -189,7 +192,165 @@
                             </tr>
                         </table>
                         <table class="sliderLabels">
-                            <tr class="MasterSlider">
+                            <tr class="legacySlider">
+                                <td>
+                                    <span i18n="pidTuningMasterSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderMasterMultiplierLegacy-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderMasterMultiplierLegacy" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningMasterSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="legacySlider">
+                                <td>
+                                    <span i18n="pidTuningPDRatioSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderPDRatio-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPDRatio" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningPDRatioSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="legacySlider">
+                                <td>
+                                    <span i18n="pidTuningPDGainSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderPDGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPDGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningPDGainSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="legacySlider">
+                                <td>
+                                    <span i18n="pidTuningResponseSliderLegacy"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderFeedforwardGainLegacy-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderFeedforwardGainLegacy" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningResponseSliderLegacyHelp"></div>
+                                </td>
+                            </tr>
+
+                            <tr class="baseSlider">
+                                <td>
+                                    <span i18n="pidTuningDGainSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderDGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderDGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningDGainSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="baseSlider">
+                                <td>
+                                    <span i18n="pidTuningPIGainSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderPIGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPIGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningPIGainSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="baseSlider">
+                                <td>
+                                    <span i18n="pidTuningResponseSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderFeedforwardGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderFeedforwardGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningResponseSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="advancedSlider">
+                                <td colspan="6" class="sliderDivider"><hr /></td>
+                            </tr>
+                            <tr class="DMaxGainSlider">
+                                <td>
+                                    <span i18n="pidTuningDMaxGainSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderDMaxGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderDMaxGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMaxGainSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="advancedSlider">
+                                <td>
+                                    <span i18n="pidTuningIGainSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderIGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderIGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningIGainSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="advancedSlider">
+                                <td>
+                                    <span i18n="pidTuningRollPitchRatioSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderRollPitchRatio-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderRollPitchRatio" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningRollPitchRatioSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="advancedSlider">
+                                <td>
+                                    <span i18n="pidTuningPitchPIGainSlider"></span>
+                                </td>
+                                <td>
+                                    <output type="number" name="sliderPitchPIGain-number"></output>
+                                </td>
+                                <td colspan="3">
+                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPitchPIGain" />
+                                </td>
+                                <td>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningPitchPIGainSliderHelp"></div>
+                                </td>
+                            </tr>
+                            <tr class="advancedSlider">
                                 <td>
                                     <span i18n="pidTuningMasterSlider"></span>
                                 </td>
@@ -203,89 +364,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningMasterSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="baseSlider">
-                                <td>
-                                    <span i18n="pidTuningPDRatioSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderPDRatio-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPDRatio" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningPDRatioSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="baseSlider">
-                                <td>
-                                    <span i18n="pidTuningPDGainSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderPDGain-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPDGain" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningPDGainSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="baseSlider">
-                                <td>
-                                    <span i18n="pidTuningResponseSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderFeedforwardGain-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderFeedforwardGain" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningResponseSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="advancedSlider">
-                                <td>
-                                    <span i18n="pidTuningIGainSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderIGain-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderIGain" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningIGainSliderHelp"></div>
-                                </td>
-                            <tr class="DMinRatioSlider">
-                                <td>
-                                    <span i18n="pidTuningDMinRatioSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderDMinRatio-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderDMinRatio" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMinRatioSliderHelp"></div>
-                                </td>
-                            </tr>
-                            <tr class="advancedSlider">
-                                <td>
-                                    <span i18n="pidTuningRollPitchRatioSlider"/>
-                                </td>
-                                <td>
-                                    <output type="number" name="sliderRollPitchRatio-number"></output>
-                                </td>
-                                <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderRollPitchRatio" />
-                                </td>
-                                <td>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningRollPitchRatioSliderHelp"></div>
-                                </td>
-                            </tr>
+
                          </table>
                     </div>
 
@@ -344,7 +423,6 @@
                                 <!-- 4 -->
                                 <td></td>
                                 <td><input type="number" name="p" step="1" min="0" max="255" /></td>
-                                <!-- <td><input type="number" name="i" step="1" min="0" max="255" /></td>  -->
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -705,10 +783,10 @@
                             </tr>
 
                             <tr class="dminGroup">
-                                <td><input type="checkbox" id="dMinSwitch" class="toggle" /></td>
+                                <td class="dMinGroupCheckbox"><input type="checkbox" id="dMinSwitch" class="toggle" /></td>
                                 <td colspan="3">
                                     <div class="helpicon cf_tip" i18n_title="pidTuningDMinFeatureHelp"></div>
-                                    <span i18n="pidTuningDMin"></span>
+                                    <span i18n="pidTuningDMinFeatureTitle"></span>
 
                                     <span class="suboption">
                                         <input type="number" name="dMinGain" step="1" min="0" max="100" />
@@ -1086,7 +1164,7 @@
                                 <output type="number" name="sliderDTermFilterMultiplier-number"></output>
                             </td>
                             <td colspan="3">
-                                <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderDTermFilterMultiplier" />
+                                <input type="range" min="0.8" max="1.2" step="0.05" class="tuningSlider" id="sliderDTermFilterMultiplier" />
                             </td>
                             <td>
                                 <div class="helpicon cf_tip" i18n_title="pidTuningDTermFilterSliderHelp"></div>
@@ -1108,7 +1186,7 @@
                                 <th colspan="2">
                                     <div class="pid_mode">
                                         <div i18n="pidTuningGyroLowpassFiltersGroup" ></div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningLowpassFilterHelp" ></div>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningGyroLowpassFilterHelp" ></div>
                                     </div>
                                 </th>
                             </tr>
@@ -1428,7 +1506,7 @@
                                 <th colspan="2">
                                     <div class="pid_mode">
                                         <div i18n="pidTuningDTermLowpassFiltersGroup" ></div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningLowpassFilterHelp" ></div>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningDTermLowpassFilterHelp" ></div>
                                     </div>
 
                                     </div>

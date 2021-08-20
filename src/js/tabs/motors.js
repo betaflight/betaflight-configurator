@@ -237,10 +237,6 @@ TABS.motors.initialize = function (callback) {
             }
         }
 
-        function isInt(n) {
-            return n % 1 === 0;
-        }
-
         function setContentButtons(motorsTesting=false) {
             $('.btn .tool').toggleClass("disabled", self.configHasChanged || motorsTesting);
             $('.btn .save').toggleClass("disabled", !self.configHasChanged);
