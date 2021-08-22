@@ -37,6 +37,7 @@
         <preference name="SplashMaintainAspectRatio" value="true"/>
         <preference name="SplashShowOnlyFirstTime" value="true"/>
         <preference name="android-minSdkVersion" value="19"/>
+        <preference name="android-targetSdkVersion" value="30" />
         <config-file parent="/manifest/application/activity" target="AndroidManifest.xml">
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
