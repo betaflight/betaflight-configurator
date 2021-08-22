@@ -29,8 +29,17 @@ const CONFIGURATOR = {
     virtualApiVersion: '0.0.1',
     cliActive: false,
     cliValid: false,
-    gitChangesetId: 'unknown',
+    productName: 'Betaflight Configurator',
     version: '0.0.1',
+    gitRevision: 'norevision',
     latestVersion: '0.0.1',
     latestVersionReleaseUrl: 'https://github.com/betaflight/betaflight-configurator/releases',
+
+    getDisplayVersion: function () {
+        if (this.version.indexOf(this.gitRevision) === -1) {
+            return `${this.version} (${this.gitRevision})`;
+        } else {
+            return `${this.version}`;
+        }
+    },
 };

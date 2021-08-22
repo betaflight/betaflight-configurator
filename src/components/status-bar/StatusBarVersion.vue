@@ -8,7 +8,6 @@
     <span v-if="hardwareId">
       , {{ $t("versionLabelTarget") }}: {{ hardwareId }}
     </span>
-    ({{ gitChangesetId }})
   </div>
 </template>
 
@@ -25,9 +24,6 @@ export default {
       type: String,
     },
     hardwareId: {
-      type: String,
-    },
-    gitChangesetId: {
       type: String,
     },
   },

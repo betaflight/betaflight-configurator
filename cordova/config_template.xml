@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="com.betaflight.betaflightconfigurator" version="[INJECTED_BY_GULPFILE]">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="[INJECTED_BY_GULPFILE]" version="[INJECTED_BY_GULPFILE]">
     <name>[INJECTED_BY_GULPFILE]</name>
     <description>[INJECTED_BY_GULPFILE]</description>
     <author href="https://betaflight.com">[INJECTED_BY_GULPFILE]</author>
@@ -44,6 +44,7 @@
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/usb_device_filter"/>
         </config-file>
         <resource-file src="usb_device_filter.xml" target="app/src/main/res/xml/usb_device_filter.xml"/>
+        <resource-file src="manifest.json" target="app/src/main/assets/www/manifest.json"/>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*"/>

@@ -26,7 +26,6 @@
       :firmware-version="firmwareVersion"
       :firmware-id="firmwareId"
       :hardware-id="hardwareId"
-      :git-changeset-id="gitChangesetId"
     />
   </div>
 </template>
@@ -71,9 +70,6 @@ export default {
       type: String,
     },
     hardwareId: {
-      type: String,
-    },
-    gitChangesetId: {
       type: String,
     },
   },

@@ -21,20 +21,23 @@ function useGlobalNodeFunctions() {
     }
 }
 
+function readConfiguratorVersionMetadata() {
+    let manifest = chrome.runtime.getManifest();
+    CONFIGURATOR.productName = manifest.productName;
+    CONFIGURATOR.version = manifest.version;
+    CONFIGURATOR.gitRevision = manifest.gitRevision;
+}
+
 function appReady() {
-    $.getJSON('version.json', function(data) {
-        CONFIGURATOR.version = data.version;
-        CONFIGURATOR.gitChangesetId = data.gitChangesetId;
+    readConfiguratorVersionMetadata();
+    i18n.init(function() {
+        startProcess();
 
-        i18n.init(function() {
-            startProcess();
-
-            checkSetupAnalytics(function (analyticsService) {
-                analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
-            });
-
-            initializeSerialBackend();
+        checkSetupAnalytics(function (analyticsService) {
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
         });
+
+        initializeSerialBackend();
     });
 }
 
@@ -74,7 +77,7 @@ function setupAnalytics(result) {
 
     const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    window.analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', CONFIGURATOR.version, CONFIGURATOR.gitChangesetId, GUI.operating_system,
+    window.analytics = new Analytics('UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system,
         checkForDebugVersions, optOut, debugMode, getBuildType());
 
     function logException(exception) {
@@ -165,9 +168,8 @@ function startProcess() {
     // translate to user-selected language
     i18n.localizePage();
 
-    GUI.log(i18n.getMessage('infoVersions', {
-        operatingSystem: GUI.operating_system,
-        configuratorVersion: CONFIGURATOR.version }));
+    GUI.log(i18n.getMessage('infoVersionOs', { operatingSystem: GUI.operating_system }));
+    GUI.log(i18n.getMessage('infoVersionConfigurator', { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
     if (GUI.isNWJS()) {
         let nwWindow = GUI.nwGui.Window.get();

@@ -1,6 +1,6 @@
 'use strict';
 
-const Analytics = function (trackingId, userId, appName, appVersion, changesetId, os, checkForDebugVersions, optOut, debugMode, buildType) {
+const Analytics = function (trackingId, userId, appName, appVersion, gitRevision, os, checkForDebugVersions, optOut, debugMode, buildType) {
     this._trackingId = trackingId;
 
     this.setOptOut(optOut);
@@ -76,7 +76,7 @@ const Analytics = function (trackingId, userId, appName, appVersion, changesetId
     };
 
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_OS, os);
-    this.setDimension(this.DIMENSIONS.CONFIGURATOR_CHANGESET_ID, changesetId);
+    this.setDimension(this.DIMENSIONS.CONFIGURATOR_CHANGESET_ID, gitRevision);
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_USE_DEBUG_VERSIONS, checkForDebugVersions);
     this.setDimension(this.DIMENSIONS.CONFIGURATOR_BUILD_TYPE, buildType);
 
