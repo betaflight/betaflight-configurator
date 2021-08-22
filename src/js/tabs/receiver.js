@@ -259,6 +259,15 @@ TABS.receiver.initialize = function (callback) {
         // select current serial RX type
         serialRxSelectElement.val(FC.RX_CONFIG.serialrx_provider);
 
+        // Convert to select2 and order alphabetic
+        serialRxSelectElement.select2({
+            sorter(data) {
+                return data.sort(function(a, b) {
+                    return a.text.localeCompare(b.text);
+                });
+            },
+        });
+
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             const spiRxTypes = [
                 'NRF24_V202_250K',
