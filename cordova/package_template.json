@@ -27,7 +27,10 @@
     "cordova-plugin-whitelist": "^1.3.4",
     "cordova-plugin-theme-detection": "^1.2.1",
     "cordova-chrome-sockets-tcp": "^1.4.0",
-    "bf-cordovarduino": "^1.0.0"
+    "bf-cordovarduino": "^1.0.0",
+    "@ionic-native/core": "^5.1.0",
+    "@ionic-native/ionic-webview": "^5.36.0",
+    "rxjs": "^6.5.0"
   },
   "cordova": {
     "platforms": [
@@ -52,7 +55,8 @@
       "bf-cordova-open-native-settings": {},
       "cordova-plugin-theme-detection": {},
       "bf-cordova-plugin-appavailability": {},
-      "cordova-chrome-sockets-tcp": {}
+      "cordova-chrome-sockets-tcp": {},
+      "cordova-plugin-ionic-webview": {}
     }
   }
 }
