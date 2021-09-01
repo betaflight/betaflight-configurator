@@ -2530,7 +2530,7 @@
         "message": "crwdns6381:0crwdne6381:0"
     },
     "motorsDialogMixerReset": {
-        "message": "crwdns10520:0{{mixerName}}crwdnd10520:0{{mixerMotors}}crwdnd10520:0{{outputs}}crwdne10520:0"
+        "message": "crwdns10583:0{{mixerName}}crwdnd10583:0{{mixerMotors}}crwdnd10583:0{{outputs}}crwdne10583:0"
     },
     "motorsDialogSettingsChanged": {
         "message": "crwdns10368:0crwdne10368:0"
