@@ -2435,9 +2435,6 @@
     "motorsEnableControl": {
         "message": "<strong>リスクを認識し</strong>、プロペラは全て外しました - モーター制御とアーミングを可能にし、暴走離陸防止機能を無効にします。"
     },
-    "motorsDialogMixerReset": {
-        "message": "<strong>無効なミキサーモードが選択されました。</strong><br /><br /> {{mixerName}} モデルには {{mixerMotors}} のモーターリソースが必要です。<br /><br />カスタムミキサーモードを使用している場合、ミキサーモードを変更する前にcustom mmixを定義する必要があります。モードにmmixを設定した後にモータータブに戻るとモードはリセットされません。設定方法の詳細についてはwikiをご覧ください。<br /><br />ファームウェアには選択されたモードの {{outputs}} 出力があるため、モーターのテストや飛行ができません。<br /><br />ミキサーモードをデフォルトに戻します。"
-    },
     "motorsDialogSettingsChanged": {
         "message": "設定の変更が検出されました。<br /><br /><strong class=\"message-negative-italic\">設定が保存されるまで、モータテストモードは無効になります。</strong>"
     },
