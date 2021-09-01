@@ -2443,9 +2443,6 @@
     "motorsEnableControl": {
         "message": "<strong>Entenc els riscos</strong>, les pales estan tretes - habilita el control dels motors i armat i deshabilita el Runaway Takeoff Prevention."
     },
-    "motorsDialogMixerReset": {
-        "message": "<strong>El mode de mesclador no és vàlid.</strong><br /><br />El model {{mixerName}} necessita recursos de motor {{mixerMotors}}.<br /><br /> Si utilitzeu un mode de mesclador personalitzat cal definir un mmix personalitzat abans de canviar el mode de mesclador. Si torneu a la pestanya del motor després de configurar un mmix per al vostre mode, ja no restablirà el mode. Consulteu la wiki per obtenir més informació sobre com configurar-ho.<br /><br /> No podeu provar cap motor ni volar perquè el firmware té {{outputs}} sortides per al mode seleccionat.<br /><br /> Restablint al mode mesclador predeterminat"
-    },
     "motorsDialogSettingsChanged": {
         "message": "S'han detectat canvis en la configuració.<br /><br /><strong class = \"message-negative-italic\">El mode de prova del motor està desactivat fins que la configuració s'hagi desat.</strong>"
     },
