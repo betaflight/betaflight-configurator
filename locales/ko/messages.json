@@ -2450,9 +2450,6 @@
     "motorsEnableControl": {
         "message": "<strong>나는 위험을 인지하고 있으며</strong>, 프로펠러가 제거되었음을 확인합니다 - 모터 제어, 아밍 및 폭주 이륙 방지 비활성."
     },
-    "motorsDialogMixerReset": {
-        "message": "<strong>잘못된 믹서 모드를 선택했습니다.</strong><br /><br />{{mixerName}} 모델은 {{mixerMotors}} 개의 모터 자원이 필요합니다.<br /><br />사용자 정의 믹서 모드를 사용하는 경우 믹서 모드를 변경하기 전에 사용자 정의 mmix를 정의해야 합니다. 모드에 대한 mmix를 설정한 후 모터 탭으로 돌아오면 모드가 더 이상 재설정되지 않습니다. 설정 방법에 대한 자세한 내용은 wiki를 참조하십시오.<br /><br />펌웨어가 선택한 모드에 대해 {{outputs}} 개의 출력을 가지고 있기 때문에 모터를 테스트하거나 비행할 수 없습니다.<br /><br />기본 믹서 모드로 초기화 중입니다."
-    },
     "motorsDialogSettingsChanged": {
         "message": "환경설정 변경사항이 감지되었습니다.<br /><br /><strong class=\"message-negative-italic\">모터 테스트 모드는 설정이 저장될 때까지 비활성화됩니다.</strong>"
     },
