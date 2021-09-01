@@ -2435,9 +2435,6 @@
     "motorsEnableControl": {
         "message": "<strong>Ho compreso i rischi</strong>, le eliche sono state rimosse - abilita il controllo motori e armamento motori e disabilita la prevenzione del decollo fuori controllo."
     },
-    "motorsDialogMixerReset": {
-        "message": "<strong>Modalità mixer selezionata non valida.</strong><br /><br />La modalità {{mixerName}} ha bisogno di {{mixerMotors}} motori.<br /><br />Se si utilizza una modalità mixer personalizzata è necessario definire un mmix personalizzato prima di cambiare la modalità mixer. Se torni alla scheda motore dopo aver impostato un mmix per la tua modalità, non resetterà più la modalità. Consulta la wiki per maggiori informazioni su come configurare.<br /><br />Non sarai in grado di testare alcun motore o volare perché il firmware ha {{outputs}} uscite per la modalità selezionata.<br /><br />Ripristinando la modalità mixer predefinita"
-    },
     "motorsDialogSettingsChanged": {
         "message": "Sono state rilevate modifiche alla configurazione.<br /><br /><strong class=\"message-negative-italic\">La Modalità Test Motori è disabilitata fino a quando le impostazioni non verranno salvate.</strong>"
     },
