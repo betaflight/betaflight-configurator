@@ -2388,9 +2388,6 @@
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },
-    "motorsDialogMixerReset": {
-        "message": "<strong>Ongeldige mixermodus geselecteerd.</strong><br /><br />Het {{mixerName}}-model heeft {{mixerMotors}} motorbronnen nodig.<br /><br />Als een aangepaste mixermodus wordt gebruikt u moet een aangepaste mix definiëren voordat u de mixermodus wijzigt. Als je terugkeert naar het motor-tabblad nadat je een mmix voor je modus hebt ingesteld, wordt de modus niet meer gereset. Raadpleeg de wiki voor meer informatie over het instellen hiervan.<br /><br />Je kunt geen motoren testen of vliegen omdat de firmware {{outputs}} uitgangen heeft voor de geselecteerde modus.<br /><br />De standaard mixermodus is terug gezet"
-    },
     "motorsDialogSettingsChanged": {
         "message": "Configuratiewijzigingen zijn gedetecteerd.<br /><br /><strong class=\"message-negative-italic\">Motortestmodus is uitgeschakeld totdat de instellingen zijn opgeslagen.</strong>"
     },
