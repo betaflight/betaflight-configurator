@@ -2388,6 +2388,9 @@
     "motorsEnableControl": {
         "message": "<strong>Ik begrijp de risico's</strong>, de propellers zijn verwijderd - schakel motorbesturing in en schakel Runaway Takeoff Preventie uit."
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong>Probleem met mixermodus gedetecteerd</strong><br /><br />Het {{mixerName}}-model heeft <strong class=\"message-positive\">{{mixerMotors}}</strong> motorresources nodig en de huidige configuratie van de firmware biedt <strong class=\"message-positive\">{{outputs}}</strong> bruikbare output(s) voor de geselecteerde modus.<br /><br />Als u een aangepaste mixermodus gebruikt, moet u een aangepaste mmix definiëren voordat u de mixermodus wijzigt.<br /><br />Controleer uw configuratie en voeg de vereiste motorbronnen toe."
+    },
     "motorsDialogSettingsChanged": {
         "message": "Configuratiewijzigingen zijn gedetecteerd.<br /><br /><strong class=\"message-negative-italic\">Motortestmodus is uitgeschakeld totdat de instellingen zijn opgeslagen.</strong>"
     },
@@ -2984,6 +2987,12 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "Doorgaan"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Automatische detectie"
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "Vraag bordinformatie op om de juiste firmware vooraf te selecteren"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "U staat op het punt een <strong>ontwikkelaarsversie van de firmware</strong> te flashen. Aan deze builds wordt nog gewerkt waardoor de volgende situaties kunnen optreden:<strong><ul><li>de firmware werkt helemaal niet;</li><li>de firmware is niet vliegbaar;</li><li>er zijn veiligheidsproblemen met de firmware, bijvoorbeeld flyaways;</li><li>de firmware kan ervoor zorgen dat de vluchtcontroller niet meer reageert of beschadigd raakt.</li></ul></strong>Als u toch deze firmware gaat flashen <strong>neemt u de volledige verantwoordelijkheid voor het risico van een van de bovenstaande gebeurtenissen</strong>. Verder erkent u dat het nodig is om <strong>grondige bench tests uit te voeren met de propellors verwijderd</strong> alvorens er getracht wordt met behulp van deze firmware te vliegen."
