@@ -1,8 +1,4 @@
 {
-    "yes": {
-        "message": "Sì",
-        "description": "General Yes message to be used across the application"
-    },
     "no": {
         "message": "No",
         "description": "General No message to be used across the application"
