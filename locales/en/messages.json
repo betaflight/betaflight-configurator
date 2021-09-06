@@ -543,9 +543,13 @@
         "message": "<strong>the accelerometer is enabled but it is not calibrated</strong>.<br>If you plan to use the accelerometer, please follow the instructions for '$t(initialSetupButtonCalibrateAccel.message)' on the '$t(tabSetup.message)' tab. If any function that requires the accelerometer (auto level modes, GPS rescue, ...) is enabled, arming of the craft will be disabled until the accelerometer has been calibrated.<br>If you are not planning on using the accelerometer it is recommended that you disable it in '$t(configurationSystem.message)' on the '$t(tabConfiguration.message)' tab."
     },
 
-    "infoVersions": {
-        "message" : "Running - OS: <strong>{{operatingSystem}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
+    "infoVersionOs": {
+        "message" : "OS: <strong>{{operatingSystem}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message" : "Configurator: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
         "message" : "Loaded builds information for $1 from build server."

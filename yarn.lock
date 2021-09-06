@@ -63,6 +63,18 @@
   resolved "https://registry.yarnpkg.com/@korzio/djv-draft-04/-/djv-draft-04-2.0.1.tgz#2984289426cac5ed622b26a58c3af8584aefbdfe"
   integrity sha512-MeTVcNsfCIYxK6T7jW1sroC7dBAb4IfLmQe6RoCqlxHN5NFkzNpgdnBPR+/0D2wJDUJHM9s9NQv+ouhxKjvUjg==
 
+"@kwsites/file-exists@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@kwsites/file-exists/-/file-exists-1.1.1.tgz#ad1efcac13e1987d8dbaf235ef3be5b0d96faa99"
+  integrity sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==
+  dependencies:
+    debug "^4.1.1"
+
+"@kwsites/promise-deferred@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
+  integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -513,11 +525,6 @@ any-promise@^1.0.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
   integrity sha1-q8av7tzqUugJzcA3au0845Y10X8=
-
-any-shell-escape@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/any-shell-escape/-/any-shell-escape-0.1.1.tgz#d55ab972244c71a9a5e1ab0879f30bf110806959"
-  integrity sha1-1Vq5ciRMcaml4asIefML8RCAaVk=
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -2264,6 +2271,13 @@ debug@^4.1.1:
   dependencies:
     ms "^2.1.1"
 
+debug@^4.3.1:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
+  integrity sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
+  dependencies:
+    ms "2.1.2"
+
 debug@~3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
@@ -3352,13 +3366,6 @@ fined@^1.0.1:
     object.pick "^1.2.0"
     parse-filepath "^1.0.1"
 
-first-chunk-stream@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/first-chunk-stream/-/first-chunk-stream-2.0.0.tgz#1bdecdb8e083c0664b91945581577a43a9f31d70"
-  integrity sha1-G97NuOCDwGZLkZRVgVd6Q6nzHXA=
-  dependencies:
-    readable-stream "^2.0.2"
-
 flagged-respawn@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/flagged-respawn/-/flagged-respawn-1.0.1.tgz#e7de6f1279ddd9ca9aac8a5971d618606b3aab41"
@@ -3927,20 +3934,6 @@ gulp-debian@~0.1.8:
     gulp-util "^3.0.8"
     through2 "^2.0.1"
     title-case "^2.1.0"
-
-gulp-git@^2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/gulp-git/-/gulp-git-2.10.0.tgz#ba96e596c79c3f864392285b5f5b3d951f5ea371"
-  integrity sha512-AYh0xXpKdDYS+ftCuyF9+LFXoltjtFlpfKITTCKDI0LunztpwVuHFtp31SvRSFVZikvRHTHUGMZ9Z0TnXjDIxQ==
-  dependencies:
-    any-shell-escape "^0.1.1"
-    fancy-log "^1.3.2"
-    lodash.template "^4.4.0"
-    plugin-error "^1.0.1"
-    require-dir "^1.0.0"
-    strip-bom-stream "^3.0.0"
-    through2 "^2.0.3"
-    vinyl "^2.0.1"
 
 gulp-json-editor@^2.5.4:
   version "2.5.4"
@@ -5435,14 +5428,6 @@ lodash.template@^3.0.0:
     lodash.restparam "^3.0.0"
     lodash.templatesettings "^3.0.0"
 
-lodash.template@^4.4.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.template/-/lodash.template-4.5.0.tgz#f976195cf3f347d0d5f52483569fe8031ccce8ab"
-  integrity sha512-84vYFxIkmidUiFxidA/KjjH9pAycqW+h980j7Fuz5qxRtO9pgB7MDFTdys1N7A5mcucRiDyEq4fusljItR1T/A==
-  dependencies:
-    lodash._reinterpolate "^3.0.0"
-    lodash.templatesettings "^4.0.0"
-
 lodash.templatesettings@^3.0.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/lodash.templatesettings/-/lodash.templatesettings-3.1.1.tgz#fb307844753b66b9f1afa54e262c745307dba8e5"
@@ -5450,13 +5435,6 @@ lodash.templatesettings@^3.0.0:
   dependencies:
     lodash._reinterpolate "^3.0.0"
     lodash.escape "^3.0.0"
-
-lodash.templatesettings@^4.0.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/lodash.templatesettings/-/lodash.templatesettings-4.2.0.tgz#e481310f049d3cf6d47e912ad09313b154f0fb33"
-  integrity sha512-stgLz+i3Aa9mZgnjr/O+v9ruKZsPsndy7qPZOchbqk2cnTU1ZaldKK+v7m54WoKIyxiuMZTKT2H81F8BeAc3ZQ==
-  dependencies:
-    lodash._reinterpolate "^3.0.0"
 
 lodash.union@^4.6.0:
   version "4.6.0"
@@ -7400,11 +7378,6 @@ request@^2.88.0:
     tunnel-agent "^0.6.0"
     uuid "^3.3.2"
 
-require-dir@^1.0.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/require-dir/-/require-dir-1.2.0.tgz#0d443b75e96012d3ca749cf19f529a789ae74817"
-  integrity sha512-LY85DTSu+heYgDqq/mK+7zFHWkttVNRXC9NKcKGyuGLdlsfbjEPrIEYdCVrx6hqnJb+xSu3Lzaoo8VnmOhhjNA==
-
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -7813,6 +7786,15 @@ simple-concat@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/simple-concat/-/simple-concat-1.0.1.tgz#f46976082ba35c2263f1c8ab5edfe26c41c9552f"
   integrity sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q==
+
+simple-git@^2.44.0:
+  version "2.44.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.44.0.tgz#94eca4162b7e21707b5a1a40b22e6f29b007d3a8"
+  integrity sha512-wIjcAmymhzgdaM0Y/a+XxmNGlivvHQTPZDYXVmyHMShVDwdeVqu3+OOyDbYu0DnfVzqLs2EOxRTgMNbC3YquwQ==
+  dependencies:
+    "@kwsites/file-exists" "^1.1.1"
+    "@kwsites/promise-deferred" "^1.1.1"
+    debug "^4.3.1"
 
 simple-glob@~0.2.0:
   version "0.2.0"
@@ -8252,21 +8234,6 @@ strip-ansi@^6.0.0:
   integrity sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
   dependencies:
     ansi-regex "^5.0.0"
-
-strip-bom-buf@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/strip-bom-buf/-/strip-bom-buf-1.0.0.tgz#1cb45aaf57530f4caf86c7f75179d2c9a51dd572"
-  integrity sha1-HLRar1dTD0yvhsf3UXnSyaUd1XI=
-  dependencies:
-    is-utf8 "^0.2.1"
-
-strip-bom-stream@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/strip-bom-stream/-/strip-bom-stream-3.0.0.tgz#956bcc5d84430f69256a90ed823765cd858e159c"
-  integrity sha1-lWvMXYRDD2klapDtgjdlzYWOFZw=
-  dependencies:
-    first-chunk-stream "^2.0.0"
-    strip-bom-buf "^1.0.0"
 
 strip-bom@^2.0.0:
   version "2.0.0"
@@ -9047,7 +9014,7 @@ vinyl@^0.5.0:
     clone-stats "^0.0.1"
     replace-ext "0.0.1"
 
-vinyl@^2.0.0, vinyl@^2.0.1, vinyl@^2.1.0:
+vinyl@^2.0.0, vinyl@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/vinyl/-/vinyl-2.2.0.tgz#d85b07da96e458d25b2ffe19fece9f2caa13ed86"
   integrity sha512-MBH+yP0kC/GQ5GwBqrTPTzEfiiLjta7hTtvQtbxBgTeSXsmKQRQecjibMbxIXzVT3Y9KJK+drOz1/k+vsu8Nkg==

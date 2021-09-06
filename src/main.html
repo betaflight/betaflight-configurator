@@ -162,7 +162,7 @@
             <em class="fas fa-bars"></em>
         </div>
         <betaflight-logo
-            :configurator-version="CONFIGURATOR.version" 
+            :configurator-version="CONFIGURATOR.getDisplayVersion()"
             :firmware-version="FC.CONFIG.flightControllerVersion" 
             :firmware-id="FC.CONFIG.flightControllerIdentifier" 
             :hardware-id="FC.CONFIG.hardwareName" 
@@ -297,7 +297,7 @@
     <div id="tab-content-container">
         <div class="tab_container">
             <betaflight-logo
-                :configurator-version="CONFIGURATOR.version" 
+                :configurator-version="CONFIGURATOR.getDisplayVersion()"
                 :firmware-version="FC.CONFIG.flightControllerVersion" 
                 :firmware-id="FC.CONFIG.flightControllerIdentifier" 
                 :hardware-id="FC.CONFIG.hardwareName" 
@@ -373,11 +373,10 @@
             :cycle-time="FC.CONFIG.cycleTime"
             :cpu-load="FC.CONFIG.cpuload"
 
-            :configurator-version="CONFIGURATOR.version" 
+            :configurator-version="CONFIGURATOR.getDisplayVersion()"
             :firmware-version="FC.CONFIG.flightControllerVersion" 
             :firmware-id="FC.CONFIG.flightControllerIdentifier" 
             :hardware-id="FC.CONFIG.hardwareName" 
-            :git-changeset-id="CONFIGURATOR.gitChangesetId" 
     ></status-bar>
     <div id="cache">
         <div class="data-loading">

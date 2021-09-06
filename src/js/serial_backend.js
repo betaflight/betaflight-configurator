@@ -408,7 +408,7 @@ function checkReportProblems() {
         if (semver.gt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
             const problemName = 'API_VERSION_MAX_SUPPORTED';
             problemItemTemplate.clone().html(i18n.getMessage(`reportProblemsDialog${problemName}`,
-                [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.version, FC.CONFIG.flightControllerVersion])).appendTo(problemDialogList);
+                [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.getDisplayVersion(), FC.CONFIG.flightControllerVersion])).appendTo(problemDialogList);
             needsProblemReportingDialog = true;
 
             analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT,
