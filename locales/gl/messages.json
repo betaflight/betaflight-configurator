@@ -528,10 +528,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> o acelerómetro está activado, pero non está calibrado </strong>.<br> Se pretende usar o acelerómetro, siga as instrucións de '$t(initialSetupButtonCalibrateAccel.message)' na '$t(tabSetup.message)'pestana. Se está habilitada algunha función que requira o acelerómetro (modos de nivel automático, rescate GPS, ...), o armado desactivarase ata que se calibre o acelerómetro.<br> Se non está usando o acelerómetro é recomendable deshabilitalo en '$t(configurationSystem.message)' na pestana '$t(tabConfiguration.message)'."
     },
-    "infoVersions": {
-        "message": "Executando - OS: <strong>{{operatingSystem}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Lendo construcción informativa para $1 dende o servidor de compilación."
     },
