@@ -457,10 +457,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>de versnellingsmeter is ingeschakeld maar is niet gekalibreerd</strong>.<br>Als u de versnellingsmeter wilt gebruiken, volg dan de instructies voor '$t(initialSetupButtonCalibrateAccel.message)' op het tabblad '$t(tabSetup.message). Als een functie zoals autolevel modus of GPS-reddingende die de versnellingsmeter vereist is ingeschakeld, zal arming van het vaartuig worden uitgeschakeld totdat de versnellingsmeter is gekalibreerd.<br>Als u niet van plan bent om de versnellingsmeter te gebruiken wordt aanbevolen om deze uit te schakelen in '$t(configuratiesysteem).message)' op het tabblad '$t(tabConfiguration.message)."
     },
-    "infoVersions": {
-        "message": "Actief - OS: <strong>{{operatingSystem}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Build informatie geladen voor $1 van build server."
     },
