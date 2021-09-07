@@ -532,9 +532,13 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "crwdns10074:0$t(initialSetupButtonCalibrateAccel.message)crwdnd10074:0$t(tabSetup.message)crwdnd10074:0$t(configurationSystem.message)crwdnd10074:0$t(tabConfiguration.message)crwdne10074:0"
     },
-    "infoVersions": {
-        "message": "crwdns10456:0{{operatingSystem}}crwdnd10456:0{{configuratorVersion}}crwdne10456:0",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
+    "infoVersionOs": {
+        "message": "crwdns10585:0{{operatingSystem}}crwdne10585:0",
+        "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "crwdns10587:0{{configuratorVersion}}crwdne10587:0",
+        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
         "message": "crwdns8827:0$1crwdne8827:0"
