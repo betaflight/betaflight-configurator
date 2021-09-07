@@ -437,10 +437,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>el acelerómetro está habilitado pero no está calibrado</strong>.<br>Si tienes intención de utilizar el acelerómetro, sigue las instrucciones para '$t(initialSetupButtonCalibrateAccel.message)' en la pestaña '$t(tabSetup.message)'. Si hay alguna función que requiera que el acelerómetro (modos de nivelado automático, GPS rescate, . .) esté activado, el armado de la aeronave se desactivará hasta que el acelerómetro haya sido calibrado.<br>Si no vas a utilizar el acelerómetro, se recomienda deshabilitarlo en '$t(configurationSystem.message)' en la pestaña '$t(tabConfiguration.message)'."
     },
-    "infoVersions": {
-        "message": "Ejecutando - SO: <strong>{{operatingSystem}}</strong>, Configurador: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Cargada información de compilaciones para $1 desde el servidor."
     },
