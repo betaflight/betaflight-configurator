@@ -509,10 +509,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>가속도계가 활성화되었지만 교정되지 않았습니다</strong>.<br> 가속도계를 사용하려는 경우 '$t(tabSetup.message)' 탭에서 '$t(initialSetupButtonCalibrateAccel.message)'에 대한 지침을 따르십시오. 가속도계(자동 레벨 모드, GPS 레스큐 등)가 필요한 기능이 활성화된 경우, 가속도계가 교정될 때까지 기체의 아밍이 비활성화됩니다.<br>가속도계를 사용할 계획이 없는 경우 '$t(tabConfiguration.message)' 탭의 '$t(configurationSystem.message)'에서 가속도계를 사용하지 않도록 설정하는 것이 좋습니다."
     },
-    "infoVersions": {
-        "message": "운영-OS: <strong>{{operatingSystem}}</strong>, 컨피규레이터: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "빌드 서버로부터 $1에 대한 빌드 정보가 로드되었습니다."
     },
