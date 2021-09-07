@@ -1,4 +1,8 @@
 {
+    "yes": {
+        "message": "Sì",
+        "description": "General Yes message to be used across the application"
+    },
     "no": {
         "message": "No",
         "description": "General No message to be used across the application"
@@ -437,9 +441,13 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>L'accelerometro è abilitato ma non è calibrato</strong>. <br>Se hai intenzione di usare l'accelerometro segui le istruzioni e $t(initialSetupButtonCalibrateAccel.message) nella scheda $t(tabSetup.message). Se è attivata una qualsiasi funzione che richiede l'accelerometro (modalità stabilizzata, GPS rescue, ...), l'armamento del modello sarà disattivato fin quando l'accelerometro non verrà calibrato. <br>Se non prevedi di utilizzare l'accelerometro è consigliabile disattivarlo in $t(configurationSystem.message) nella scheda $t(tabConfiguration.message)."
     },
-    "infoVersions": {
-        "message": "Sistema operativo: <strong>{{operatingSystem}}</strong>, Configuratore: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
+    "infoVersionOs": {
+        "message": "SO: <strong>{{operatingSystem}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "Configuratore: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
         "message": "Caricate informazioni delle build per $1 dal server."
@@ -2430,6 +2438,9 @@
     },
     "motorsEnableControl": {
         "message": "<strong>Ho compreso i rischi</strong>, le eliche sono state rimosse - abilita il controllo motori e armamento motori e disabilita la prevenzione del decollo fuori controllo."
+    },
+    "motorsDialogMixerReset": {
+        "message": "<strong>Problema della modalità Mixer rilevato</strong><br /><br />Il modello {{mixerName}} ha bisogno di <strong class=\"message-positive\">{{mixerMotors}}</strong> risorse per motori e la configurazione corrente del firmware fornisce <strong class=\"message-positive\">{{outputs}}</strong> output utilizzabili per la modalità selezionata.<br /><br />Se si utilizza una modalità mixer personalizzata, è necessario definire un mmix personalizzato prima di cambiare la modalità mixer.<br /><br />Controlla la tua configurazione e aggiungi le risorse per motori richieste."
     },
     "motorsDialogSettingsChanged": {
         "message": "Sono state rilevate modifiche alla configurazione.<br /><br /><strong class=\"message-negative-italic\">La Modalità Test Motori è disabilitata fino a quando le impostazioni non verranno salvate.</strong>"
