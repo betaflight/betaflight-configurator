@@ -441,10 +441,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>加速度センサーは有効になっていますがキャリブレーションされていません。</strong><br>加速度センサーを使用する場合は『$t(tabSetup.message)』タブの『$t(initialSetupButtonCalibrateAccel.message)』の指示に従ってください。加速度センサーを必要とする機能 (オートレベルモード、GPSレスキュー等) が有効になっている場合、加速度センサーのキャリブレーションが完了するまで機体のアームは有効になりません。<br>加速度センサーを使用しない場合は『$t(tabConfiguration.message)』タブの『$t(configurationSystem.message)』で無効にすることを推奨します。"
     },
-    "infoVersions": {
-        "message": "稼働 - OS: <strong>{{operatingSystem}}</strong>, Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "サーバから $1 の開発情報が読み込まれました。"
     },
