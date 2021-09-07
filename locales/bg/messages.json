@@ -437,10 +437,6 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>акселерометъра е активиран но не е калибриран</strong>.<br>Ако планирате да използвате акселерометъра, моля следвайте инструкциите за '$t(initialSetupButtonCalibrateAccel.message)' в '$t(tabSetup.message)' прозорец.Ако някоя функция която изисква акселерометър (режим авто стабилизиране, ......)е активирана, активирането на дрона ще е деактивирано докато не се направи калибриране на акселерометара.<br>Ако няма да използвате акселерометара е препоръчително да се деактивира в '$t(configurationSystem.message)' в '$t(tabConfiguration.message)' прозорец."
     },
-    "infoVersions": {
-        "message": "Стартиране - ОС:<strong>{{operatingSystem}}</strong>, Конфигуратор:<strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Заредена информация за компилация за $1 от сървър за компилация."
     },
