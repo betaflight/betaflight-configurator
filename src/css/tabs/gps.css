@@ -1,3 +1,16 @@
+.tab-gps .GPS_signal_strength table td:nth-child(2) {
+    text-align: center;
+}
+
+.tab-gps .GPS_signal_strength table td:nth-child(3) {
+    text-align: center;
+}
+
+.tab-gps .GPS_signal_strength table td:nth-child(4) {
+    text-align: left;
+    padding-left: 10px;
+}
+
 .tab-gps progress {
     width: 100%;
     border-radius: 3px;
