@@ -27,8 +27,10 @@ const os = require('os');
 const git = require('simple-git')();
 const source = require('vinyl-source-stream');
 const stream = require('stream');
+const prompt = require('gulp-prompt');
 
 const cordova = require("cordova-lib").cordova;
+
 const browserify = require('browserify');
 const glob = require('glob');
 
@@ -44,7 +46,6 @@ const LINUX_INSTALL_DIR = '/opt/betaflight';
 const NODE_ENV = process.env.NODE_ENV || 'production';
 
 const NAME_REGEX = /-/g;
-
 
 const nwBuilderOptions = {
     version: '0.54.1',
@@ -110,18 +111,18 @@ const debugDistBuild = gulp.series(process_package_debug, dist_src, dist_changel
 const distRebuild = gulp.series(clean_dist, distBuild);
 gulp.task('dist', distRebuild);
 
-const appsBuild = gulp.series(gulp.parallel(clean_apps, distRebuild), apps, gulp.series(cordova_apps()), gulp.parallel(listPostBuildTasks(APPS_DIR)));
+const appsBuild = gulp.series(gulp.parallel(clean_apps, distRebuild), apps, gulp.series(cordova_apps(true)), gulp.parallel(listPostBuildTasks(APPS_DIR)));
 gulp.task('apps', appsBuild);
 
-const debugAppsBuild = gulp.series(gulp.parallel(clean_debug, gulp.series(clean_dist, debugDistBuild)), debug, gulp.series(cordova_apps()), gulp.parallel(listPostBuildTasks(DEBUG_DIR)));
+const debugAppsBuild = gulp.series(gulp.parallel(clean_debug, gulp.series(clean_dist, debugDistBuild)), debug, gulp.series(cordova_apps(false)), gulp.parallel(listPostBuildTasks(DEBUG_DIR)));
 
 const debugBuild = gulp.series(debugDistBuild, debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)), start_debug);
 gulp.task('debug', debugBuild);
 
-const releaseBuild = gulp.series(gulp.parallel(clean_release, appsBuild), gulp.parallel(listReleaseTasks(APPS_DIR)));
+const releaseBuild = gulp.series(gulp.parallel(clean_release, appsBuild), gulp.parallel(listReleaseTasks(true, APPS_DIR)));
 gulp.task('release', releaseBuild);
 
-const debugReleaseBuild = gulp.series(gulp.parallel(clean_release, debugAppsBuild), gulp.parallel(listReleaseTasks(DEBUG_DIR)));
+const debugReleaseBuild = gulp.series(gulp.parallel(clean_release, debugAppsBuild), gulp.parallel(listReleaseTasks(false, DEBUG_DIR)));
 gulp.task('debug-release', debugReleaseBuild);
 
 gulp.task('default', debugBuild);
@@ -292,21 +293,48 @@ function processPackage(done, gitRevision, isReleaseBuild) {
         metadata.packageId = pkg.name;
     }
 
-    const packageJson = new stream.Readable;
-    packageJson.push(JSON.stringify(pkg, undefined, 2));
-    packageJson.push(null);
+    function version_prompt() {
+        return gulp.src('.')
+            .pipe(prompt.prompt([{
+                type: 'input',
+                name: 'version',
+                message: `Package version (default: ${pkg.version}):`,
+            }, {
+                type: 'input',
+                name: 'storeVersion',
+                message: 'Google Play store version (<x.y.z>, default: package version):',
+            }], function(res) {
+                if (res.version) {
+                    pkg.version = res.version;
+                }
+                if (res.storeVersion) {
+                    metadata.storeVersion = res.storeVersion;
+                }
+            }));
+    }
 
-    Object.keys(pkg)
-        .filter(key => metadataKeys.includes(key))
-        .forEach((key) => {
-            metadata[key] = pkg[key];
-        });
+    function write_package_file() {
+        Object.keys(pkg)
+            .filter(key => metadataKeys.includes(key))
+            .forEach((key) => {
+                metadata[key] = pkg[key];
+            });
 
-    packageJson
-        .pipe(source('package.json'))
-        .pipe(gulp.dest(DIST_DIR));
+        const packageJson = new stream.Readable;
+        packageJson.push(JSON.stringify(pkg, undefined, 2));
+        packageJson.push(null);
 
-    done();
+        return packageJson
+            .pipe(source('package.json'))
+            .pipe(gulp.dest(DIST_DIR));
+    }
+
+    const platforms = getPlatforms();
+    if (platforms.indexOf('android') !== -1 && isReleaseBuild) {
+        gulp.series(version_prompt, write_package_file)(done);
+    } else {
+        gulp.series(write_package_file)(done);
+    }
 }
 
 function dist_src() {
@@ -465,7 +493,7 @@ function debug(done) {
     buildNWAppsWrapper(platforms, 'sdk', DEBUG_DIR, done);
 }
 
-function injectARMCache(flavor, callback) {
+function injectARMCache(flavor, done) {
     const flavorPostfix = `-${flavor}`;
     const flavorDownloadPostfix = flavor !== 'normal' ? `-${flavor}` : '';
     clean_cache().then(function() {
@@ -528,7 +556,7 @@ function injectARMCache(flavor, callback) {
                             clean_debug();
                             process.exit(1);
                         }
-                        callback();
+                        done();
                     }
                 );
             }
@@ -592,10 +620,10 @@ function buildNWApps(platforms, flavor, dir, done) {
 
 function getGitRevision(done, callback, isReleaseBuild) {
     let gitRevision = 'norevision';
-    git.diff([ '--shortstat' ], function (err, diff) {
-        if (!err && !diff) {
-            git.log([ '-1', '--pretty=format:%h' ], function (err, rev) {
-                if (!err) {
+    git.diff([ '--shortstat' ], function (err1, diff) {
+        if (!err1 && !diff) {
+            git.log([ '-1', '--pretty=format:%h' ], function (err2, rev) {
+                if (!err2) {
                     gitRevision = rev.latest.hash;
                 }
 
@@ -608,7 +636,6 @@ function getGitRevision(done, callback, isReleaseBuild) {
 }
 
 function start_debug(done) {
-
     const platforms = getPlatforms();
 
     if (platforms.length === 1) {
@@ -813,7 +840,7 @@ function createDirIfNotExists(dir) {
 }
 
 // Create a list of the gulp tasks to execute for release
-function listReleaseTasks(appDirectory) {
+function listReleaseTasks(isReleaseBuild, appDirectory) {
 
     const platforms = getPlatforms();
 
@@ -869,7 +896,11 @@ function listReleaseTasks(appDirectory) {
 
     if (platforms.indexOf('android') !== -1) {
         releaseTasks.push(function release_android() {
-            return cordova_release();
+            if (isReleaseBuild) {
+                return cordova_release();
+            } else {
+                return cordova_debug_release();
+            }
         });
     }
 
@@ -891,6 +922,7 @@ function cordova_dist() {
         distTasks.push(cordova_packagejson);
         distTasks.push(cordova_manifestjson);
         distTasks.push(cordova_configxml);
+        distTasks.push(cordova_rename_build_json);
         distTasks.push(cordova_browserify);
         distTasks.push(cordova_depedencies);
         if (cordovaDependencies) {
@@ -903,11 +935,16 @@ function cordova_dist() {
     }
     return distTasks;
 }
-function cordova_apps() {
+
+function cordova_apps(isReleaseBuild) {
     const appsTasks = [];
     const platforms = getPlatforms();
     if (platforms.indexOf('android') !== -1) {
-        appsTasks.push(cordova_build);
+        if (isReleaseBuild) {
+            appsTasks.push(cordova_build);
+        } else {
+            appsTasks.push(cordova_debug_build);
+        }
     } else {
         appsTasks.push(function cordova_dist_none(done) {
             done();
@@ -933,7 +970,6 @@ function cordova_copy_www() {
 }
 
 function cordova_resources() {
-
     return gulp.src('assets/android/**')
         .pipe(gulp.dest(`${CORDOVA_DIST_DIR}resources/android/`));
 }
@@ -947,7 +983,7 @@ function cordova_include_www() {
 }
 
 function cordova_copy_src() {
-    return gulp.src([`${CORDOVA_DIR}**`, `!${CORDOVA_DIR}config_template.xml`, `!${CORDOVA_DIR}package_template.json`])
+    return gulp.src([`${CORDOVA_DIR}**`, `!${CORDOVA_DIR}config_template.xml`, `!${CORDOVA_DIR}package_template.json`, `!${CORDOVA_DIR}build_template.json`])
         .pipe(gulp.dest(`${CORDOVA_DIST_DIR}`));
 }
 
@@ -972,6 +1008,8 @@ function cordova_packagejson() {
             'author': metadata.author,
             'license': metadata.license,
         }))
+        .pipe(gulp.dest(CORDOVA_DIST_DIR))
+        .pipe(rename('manifest.json'))
         .pipe(gulp.dest(CORDOVA_DIST_DIR));
 }
 
@@ -984,7 +1022,7 @@ function cordova_manifestjson() {
 }
 
 function cordova_configxml() {
-    let androidName = metadata.packageId.replace(NAME_REGEX, '_');
+    const androidName = metadata.packageId.replace(NAME_REGEX, '_');
 
     return gulp.src([`${CORDOVA_DIST_DIR}config.xml`])
         .pipe(xmlTransformer([
@@ -994,12 +1032,18 @@ function cordova_configxml() {
         ], 'http://www.w3.org/ns/widgets'))
         .pipe(xmlTransformer([
             { path: '.', attr: { 'id': `com.betaflight.${androidName}` } },
-            { path: '.', attr: { 'version': metadata.version } },
+            { path: '.', attr: { 'version': metadata.storeVersion ? metadata.storeVersion : metadata.version } },
         ]))
         .pipe(gulp.dest(CORDOVA_DIST_DIR));
 }
 
-function cordova_browserify(callback) {
+function cordova_rename_build_json() {
+    return gulp.src(`${CORDOVA_DIR}build_template.json`)
+        .pipe(rename('build.json'))
+        .pipe(gulp.dest(CORDOVA_DIST_DIR));
+}
+
+function cordova_browserify(done) {
     const readFile = function(file) {
         return new Promise(function(resolve) {
             if (!file.includes("node_modules")) {
@@ -1017,7 +1061,7 @@ function cordova_browserify(callback) {
     glob(`${CORDOVA_DIST_DIR}www/**/*.js`, {}, function (err, files) {
         const readLoop = function() {
             if (files.length === 0) {
-                callback();
+                done();
             } else {
                 const file = files.pop();
                 readFile(file).then(function() {
@@ -1056,24 +1100,77 @@ function cordova_debug() {
     cordova.run();
 }
 
-function cordova_build(cb) {
+function cordova_debug_build(done) {
     cordova.build({
         'platforms': ['android'],
         'options': {
-            release: true,
+            release: false,
             buildConfig: 'build.json',
         },
     }).then(function() {
         process.chdir('../');
-        cb();
+
+        console.log(`APK has been generated at ${CORDOVA_DIST_DIR}platforms/android/app/build/outputs/apk/release/app-release.apk`);
+
+        done();
     });
-    console.log(`APK will be generated at ${CORDOVA_DIST_DIR}platforms/android/app/build/outputs/apk/release/app-release.apk`);
+}
+
+function cordova_build(done) {
+    let storePassword = '';
+    return gulp.series(function password_prompt() {
+        return gulp.src('.')
+            .pipe(prompt.prompt({
+                type: 'password',
+                name: 'storePassword',
+                message: 'Please enter the keystore password:',
+            }, function(res) {
+                storePassword = res.storePassword;
+            }));
+    }, function set_password() {
+        return gulp.src(`build.json`)
+            .pipe(jeditor({
+                'android': {
+                    'release' : {
+                        'storePassword': storePassword,
+                    },
+                },
+            }))
+            .pipe(gulp.dest('./'));
+    }, function build(done2) {
+        return cordova.build({
+            'platforms': ['android'],
+            'options': {
+                release: true,
+                buildConfig: 'build.json',
+            },
+        }).then(function() {
+            // Delete the file containing the store password
+            del(['build.json'], { force: true });
+            process.chdir('../');
+
+            console.log('AAB has been generated at dist_cordova/platforms/android/app/build/outputs/bundle/release/app.aab');
+            done2();
+        });
+    })(done);
+}
+
+async function cordova_debug_release() {
+    const filename = getReleaseFilename('android', 'apk');
+
+    console.log(`Release APK : release/${filename}`);
+
+    return gulp.src(`${CORDOVA_DIST_DIR}platforms/android/app/build/outputs/apk/debug/app-debug.apk`)
+        .pipe(rename(filename))
+        .pipe(gulp.dest(RELEASE_DIR));
 }
 
 async function cordova_release() {
-    const filename = await getReleaseFilename('android', 'apk');
-    console.log(`Release APK : release/${filename}`);
-    return gulp.src(`${CORDOVA_DIST_DIR}platforms/android/app/build/outputs/apk/release/app-release.apk`)
+    const filename = getReleaseFilename('android', 'aab');
+
+    console.log(`Release AAB : release/${filename}`);
+
+    return gulp.src(`${CORDOVA_DIST_DIR}platforms/android/app/build/outputs/bundle/release/app.aab`)
         .pipe(rename(filename))
         .pipe(gulp.dest(RELEASE_DIR));
 }

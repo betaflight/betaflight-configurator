@@ -86,7 +86,7 @@ stages:
       displayName: 'Install Node.js 10.16.3'
     - script: yarn install
       displayName: 'Run yarn install'
-    - script: yarn gulp release --android
+    - script: yarn gulp debug-release --android
       displayName: 'Run yarn release for android'
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Android release'

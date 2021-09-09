@@ -22,7 +22,7 @@ function useGlobalNodeFunctions() {
 }
 
 function readConfiguratorVersionMetadata() {
-    let manifest = chrome.runtime.getManifest();
+    const manifest = chrome.runtime.getManifest();
     CONFIGURATOR.productName = manifest.productName;
     CONFIGURATOR.version = manifest.version;
     CONFIGURATOR.gitRevision = manifest.gitRevision;
@@ -30,6 +30,7 @@ function readConfiguratorVersionMetadata() {
 
 function appReady() {
     readConfiguratorVersionMetadata();
+
     i18n.init(function() {
         startProcess();
 

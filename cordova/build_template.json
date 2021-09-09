@@ -1,0 +1,18 @@
+{
+    "android": {
+        "debug": {
+            "keystore": "debug.keystore",
+            "storePassword": "betaflight_debug",
+            "alias": "betaflight_debug",
+            "password": "password",
+            "packageType": "apk"
+        },
+        "release": {
+            "keystore": "bundle.keystore",
+            "storePassword": "[INJECTED_BY_GULPFILE]",
+            "alias": "betaflight",
+            "password": "password",
+            "packageType": "bundle"
+        }
+    }
+}
