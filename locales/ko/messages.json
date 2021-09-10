@@ -509,6 +509,14 @@
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>가속도계가 활성화되었지만 교정되지 않았습니다</strong>.<br> 가속도계를 사용하려는 경우 '$t(tabSetup.message)' 탭에서 '$t(initialSetupButtonCalibrateAccel.message)'에 대한 지침을 따르십시오. 가속도계(자동 레벨 모드, GPS 레스큐 등)가 필요한 기능이 활성화된 경우, 가속도계가 교정될 때까지 기체의 아밍이 비활성화됩니다.<br>가속도계를 사용할 계획이 없는 경우 '$t(tabConfiguration.message)' 탭의 '$t(configurationSystem.message)'에서 가속도계를 사용하지 않도록 설정하는 것이 좋습니다."
     },
+    "infoVersionOs": {
+        "message": "OS: <strong>{{operatingSystem}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "컨피규레이터: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating Configurator version"
+    },
     "buildServerLoaded": {
         "message": "빌드 서버로부터 $1에 대한 빌드 정보가 로드되었습니다."
     },
@@ -1629,6 +1637,20 @@
     "receiverRcSmoothingManual": {
         "message": "수동"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "자동 환경인자",
+        "description": "Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "자동 환경인자 계산을 조정하며, 10은 기본 환경인자 대 지연 비율입니다. 숫자를 늘리면 RC 입력이 더 부드러워지는 동시에 지연도 더해집니다. 이것은 신뢰할 수 없는 RC 연결 또는 시네마틱 비행에 유용할 수 있습니다.<br>숫자가 50에 가까워지면 입력 지연이 눈에 띄게 됩니다.<br>TX와 RX가 전원이 공급되는 동안 CLI 명령 rc_smoothing_info를 사용하여 자동으로 계산된 RC 스무딩 컷오프를 확인하십시오. ",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "피드포워드 컷오프 형식"
+    },
+    "receiverRcSetpointTypeSelect": {
+        "message": "셋포인트 컷오프 형식"
+    },
     "receiverRcSmoothingInterpolation": {
         "message": "보간"
     },
@@ -1638,8 +1660,44 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "사용된 RC 스무딩 형식"
     },
+    "rcSmoothingSetpointCutoffHelp": {
+        "message": "셋포인트 필터에 의해 사용되는 컷오프 주파수 (Hz)입니다. 낮은 값을 사용하면 입력이 부드러워지고 느린 수신기 프로토콜에 더 적합합니다. 대부분의 사용자는 이 값을 \"자동\"에 해당하는 0에 두어야합니다."
+    },
+    "rcSmoothingFeedforwardCutoffHelp": {
+        "message": "피드포워드 필터에 의해 사용되는 컷오프 주파수 (Hz)입니다. 낮은 값을 사용하면 입력이 부드러워지고 느린 수신기 프로토콜에 더 적합합니다. 대부분의 사용자는 이 값을 \"자동\"에 해당하는 0에 두어야합니다."
+    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "채널 스무딩은 다음에 적용됩니다"
+    },
+    "rcSmoothingFeedforwardTypeHelp": {
+        "message": "피드포워드에 사용되는 필터링 방법의 형식입니다. 4.2로 시작하는 사용자는 기본 \"자동\"을 추천합니다. 4.1과 그 이전의 대부분의 사용자는 부드러움과 지연 간의 적절한 균형을 제공하는 기본 \"BIQUAD\" 값을 사용해야합니다. \"PT1\"은 약간 지연을 줄이지만 덜 부드럽게 만듭니다."
+    },
+    "rcSmoothingSetpointTypeHelp": {
+        "message": "셋포인트에 사용되는 필터링 방법의 형식입니다. 대부분의 사용자는 부드러움과 지연 간의 적절한 균형을 제공하는 기본 \"BIQUAD\" 값을 사용해야합니다. \"PT1\"은 약간 지연을 줄이지만 덜 부드럽게 만듭니다."
+    },
+    "receiverRcSmoothingSetpointManual": {
+        "message": "셋포인트 필터 컷오프 주파수를 자동으로 계산할지(권장) 사용자가 수동으로 선택할지 선택합니다. \"수동\"을 사용하는 것은 Crossfire와 같은 비행 중 변경될 수 있는 수신 프로토콜에 권장되지 않습니다."
+    },
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "피드포워드 필터 컷오프 주파수를 자동으로 계산할지(권장) 사용자가 수동으로 선택할지 선택합니다. \"수동\"을 사용하는 것은 Crossfire와 같은 비행 중 변경될 수 있는 수신 프로토콜에 권장되지 않습니다."
+    },
+    "receiverRcSmoothingSetpointHz": {
+        "message": "셋포인트 컷오프 주파수"
+    },
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "피드포워드 컷오프 주파수"
+    },
+    "receiverRcSetpointType": {
+        "message": "셋포인트 필터 형식"
+    },
+    "receiverRcFeedforwardType": {
+        "message": "피드포워드 필터 형식"
+    },
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "끄기"
+    },
+    "receiverRcSmoothingFeedforwardTypeAuto": {
+        "message": "자동"
     },
     "receiverRcSmoothingChannel": {
         "message": "채널 평활화"
@@ -1670,6 +1728,9 @@
     },
     "receiverRcInterpolationInterval": {
         "message": "RC 신호보간 간격 [ms]"
+    },
+    "receiverRcSmoothingMode": {
+        "message": "스무딩 모드"
     },
     "pidTuningFeedforwardTransition": {
         "message": "전환"
@@ -2446,6 +2507,9 @@
     "motorsEnableControl": {
         "message": "<strong>나는 위험을 인지하고 있으며</strong>, 프로펠러가 제거되었음을 확인합니다 - 모터 제어, 아밍 및 폭주 이륙 방지 비활성."
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong>믹서 모드 문제가 감지됨</strong><br /><br />{{mixerName}} 모델에는 <strong class=\"message-positive\">{{mixerMotors}}</strong> 모터 리소스가 필요하며, 펌웨어의 현재 환경설정은 선택한 모드에 대해 <strong class=\"message-positive\">{{outputs}}</strong>의 사용 가능한 출력(들)을 제공합니다.<br /><br />사용자 정의 믹서 모드를 사용하는 경우 믹서 모드를 변경하기 전에 사용자 정의 mmix를 정의해야 합니다.<br /><br />환경설정을 확인하고 필요한 모터 리소스를 추가하십시오."
+    },
     "motorsDialogSettingsChanged": {
         "message": "환경설정 변경사항이 감지되었습니다.<br /><br /><strong class=\"message-negative-italic\">모터 테스트 모드는 설정이 저장될 때까지 비활성화됩니다.</strong>"
     },
@@ -2863,6 +2927,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "사용 가능한 보드를 보고 빌드 형식을 선택하세요."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "보드를 선택하거나 자동-감지로 사용 가능한 온라인 펌웨어 릴리즈를 확인하십시오 - 보드에 적합한 올바른 펌웨어를 선택하십시오."
+    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "베타플라이트 4.1을 시작으로 베타플라이트가 <strong>통합 타겟</strong>을 지원합니다. 통합 타겟의 개념은 동일한 MCU(F4, F7)를 사용하는 모든 보드에 동일한 펌웨어 .hex 파일을 사용할 수 있다는 것을 의미합니다. 서로 다른 보드가 동일한 펌웨어에서 작동하도록 하기 위해, 통합 타겟이 플래시될 때 펌웨어와 함께 특정 구성 파일이 배치됩니다.<br>이 버전의 베타프라이트 컨피규레이터는 각각의 보드별 특정 구성을 갖는 통합 타겟의 플래시를 지원합니다. 각 보드에 사용할 수 있는 다양한 펌웨어 유형은 다음과 같이 드롭다운에 나타납니다:<br /><br /><strong>&lt;보드 이름&gt;</strong> 또는 <br><strong>&lt;보드 이름&gt; (레거시)</strong>:<br>비통합 타겟 또는 통합 타겟에 대한 펌웨어 4.1 이전 버전.<br /><br /><strong>&lt;보드 이름&gt; (&lt;제조업체 ID&gt;)</strong>:<br>(4글자 제조업체 ID)<br>통합 타겟.<br /><br /><strong>가능한 경우 통합 타겟을 사용하십시오.</strong> 통합 타겟을 사용하여 문제가 발생할 경우, <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈</a>를 열고 문제가 해결될 때까지 비통합 타겟을 사용하십시오."
     },
@@ -3045,6 +3112,15 @@
     },
     "firmwareFlasherButtonContinue": {
         "message": "계속"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "자동-감지"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "자동-감지는 DFU 모드가 아니고 MSP 통신이 작동 중일 때만 작동합니다. 경우에 따라 몇 번 다시 시도하거나 USB를 다시 연결해야 합니다. 사용자 지정 기본값을 적용하는 것을 잊어버렸을 수 있으므로 먼저 정상적으로 연결해 보십시오. 깜박인 후 다시 부팅하십시오 - USB를 다시 연결하십시오."
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "올바른 펌웨어를 미리 선택하기 위한 보드 정보 쿼리"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "당신은 이제 막 <strong>펌웨어의 개발 빌드</strong>을 플래시하려고 합니다. 이러한 빌드는 진행 중인 작업이며, 다음 중 하나의 경우가 될 수 있습니다:<strong><ul><li>펌웨어가 전혀작동하지 않습니다;</li><li>펌웨어는 비행할 수 없습니다;</li><li>폭주이륙(flyaways) 같은 펌웨어에 안전 문제가 있습니다;</li><li>펌웨어는 비행 컨트롤러를 응답하지 않거나 손상을 줄 수 있습니다.</li></ul></strong>만약 당신이 이 펌웨어를 계속 플래시한다면, <strong>당신은 위와 같은 일이 일어날 위험에 대해 모든 책임을 져야 할 것입니다.</strong> 또한 당신은 이 펌웨어를 띄우려고 시도하기 전에 <strong>프롭을 제거하고 벤치 테스트를</strong> 수행해야 한다는 것을 인지하여야 합니다."
