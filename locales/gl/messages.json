@@ -92,6 +92,10 @@
     "analyticsOptOut": {
         "message": "Elimina os datos anónimos das estatísticas"
     },
+    "connectionTimeout": {
+        "message": "Cambia o tempo de espera ó auto-arrancar ou tras reiniciar para permitir a inicialización máis longa no dispositivo",
+        "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
     "cordovaForceComputerUI": {
         "message": "Empregue a interface do computador no canto da interface de teléfonos"
     },
@@ -527,6 +531,14 @@
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> o acelerómetro está activado, pero non está calibrado </strong>.<br> Se pretende usar o acelerómetro, siga as instrucións de '$t(initialSetupButtonCalibrateAccel.message)' na '$t(tabSetup.message)'pestana. Se está habilitada algunha función que requira o acelerómetro (modos de nivel automático, rescate GPS, ...), o armado desactivarase ata que se calibre o acelerómetro.<br> Se non está usando o acelerómetro é recomendable deshabilitalo en '$t(configurationSystem.message)' na pestana '$t(tabConfiguration.message)'."
+    },
+    "infoVersionOs": {
+        "message": "SO: <strong>{{operatingSystem}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "Configurador: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
         "message": "Lendo construcción informativa para $1 dende o servidor de compilación."
@@ -1648,6 +1660,20 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Factor Automático",
+        "description": "Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Axusta o cálculo do factor automático, 10 é o factor predeterminado do retardo. Aumentar o número vai suavizar as entradas de RC máis, mentres que tamén engadirá atraso. Isto pode ser útil para conexións RC fiables ou para voos cinematográficos.<br>Teña coidado cos números que se achegan a 50, o atraso de entrada será notábel. Cortos.<br>Use o comando do CLI rc_smoothing_info mentres TX e RX son alimentados para ver os puntos de corte de suavización RC calculadas automaticamente. ",
+        "description": "Auto Factor parameter help message"
+    },
+    "receiverRcFeedforwardTypeSelect": {
+        "message": "Tipo de Corte de Prealimentación (Ff)"
+    },
+    "receiverRcSetpointTypeSelect": {
+        "message": "Tipo de corte de entrada"
+    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolación"
     },
@@ -1657,8 +1683,44 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Tipo de suavizado RC usado"
     },
+    "rcSmoothingSetpointCutoffHelp": {
+        "message": "A frecuencia de corte en Hz utilizada polo filtro de setpoint. Usar valores máis baixos producirá entradas máis suaves e son máis axeitados para protocolos de receptores máis lentos. A maioría dos usuarios deben deixar isto a 0 correspondentes a \"auto\"."
+    },
+    "rcSmoothingFeedforwardCutoffHelp": {
+        "message": "A frecuencia de corte en Hz utilizada polo filtro Feedforward. Usar valores máis baixos producirá entradas máis suaves e son máis axeitados para protocolos de receptores máis lentos. A maioría dos usuarios deben deixar isto a 0 correspondentes a \"auto\"."
+    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "A suavización de canles aplícase a"
+    },
+    "rcSmoothingFeedforwardTypeHelp": {
+        "message": "O tipo de método de filtrado utilizado para o feedorward. Comezado na 4.2 recoméndase o valor predeterminado de \"auto\". Para 4.1 e anteriores, a maioría dos usuarios deben usar o valor predeterminado \"Biquad\" xa que proporciona un bo equilibrio entre a suavidade eo atraso. \"PT1\" reduce o atraso lixeiramente, pero proporciona menos alisado."
+    },
+    "rcSmoothingSetpointTypeHelp": {
+        "message": "O tipo de método de filtrado utilizado para a entrada. A maioría dos usuarios deben empregar o valor predeterminado \"biquad\" xa que proporciona un bo equilibrio entre a suavidade eo atraso. \"PT1\" reduce o atraso lixeiramente, pero proporciona menos alisado."
+    },
+    "receiverRcSmoothingSetpointManual": {
+        "message": "Seleccione se a entrada da frecuencia de corte do filtro é automaticamente calculada (recomendada) ou seleccionada manualmente polo usuario. O uso de \"manual\" non se recomenda para os protocolos de receptores como Crossfire que pode cambiar en voo."
+    },
+    "receiverRcSmoothingFeedforwardManual": {
+        "message": "Selecciona se a frecuencia de corte de filtro de Feedorward é calculada automaticamente (recomendada) ou seleccionada manualmente polo usuario. O uso de \"manual\" non se recomenda para os protocolos de receptores como Crossfire que pode cambiar en voo."
+    },
+    "receiverRcSmoothingSetpointHz": {
+        "message": "Frecuencia de corte de entrada"
+    },
+    "receiverRcSmoothingFeedforwardCutoff": {
+        "message": "Frecuencia de corte de alimentación"
+    },
+    "receiverRcSetpointType": {
+        "message": "Tipo de filtro de entrada"
+    },
+    "receiverRcFeedforwardType": {
+        "message": "Tipo de filtro de alimentación"
+    },
+    "receiverRcSmoothingFeedforwardTypeOff": {
+        "message": "Apagado"
+    },
+    "receiverRcSmoothingFeedforwardTypeAuto": {
+        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Canles suavizados"
@@ -1690,6 +1752,12 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalo de interpolación RC [ms]"
     },
+    "receiverRcSmoothingMode": {
+        "message": "Modo suavizado"
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Transición"
+    },
     "pidTuningFeedforwardTransitionHelp": {
         "message": "Con este parámetro, o termo Feedforward pode reducirse preto do centro dos sticks, o que resulta nun final máis suave dos flips e rolls.<br> O valor representa un punto de desvío do stick: 0 - stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, Feedforward mantense constante no seu valor configurado. Cando o stick colócase por debaixo dese punto, Feedforward redúcese proporcionalmente, alcanzando 0 na posición central do stick.<br> O valor de 1 dá o efecto de alisado máximo, mentres que o valor de 0 mantén o Feedforward fixado no seu valor configurado en todo o intervalo de stick."
     },
@@ -1707,6 +1775,33 @@
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong> $t(warningTitle.message):</strong> Desaconséllase moito o uso dunha transición de punto de consecuencia maior que 0 e inferior a 0,1. Se o fai, pode levar a inestabilidade e reducir a capacidade de resposta dos stick mentres atravesan o punto central.</span>"
+    },
+    "pidTuningFeedforwardGroup": {
+        "message": "Feedforward"
+    },
+    "pidTuningFeedforwardGroupHelp": {
+        "message": "As seguintes opcións axustan a prealimentación dende a carreira/agresiva ata suave/HD.<br /><br /> Modo: apagado para carreira, Media 2 para carreira/ freestyle rápido, Media 3 para a gravación HD, Media 4 para Suavidade cinematográfica en HD.<br /><br /> Suavidade: limita a cantidade de cambios que pode facer calquera paso de radio entrante, aumentar para obter un sinal FF máis suave, diminuír para obter respostas FF máis agresivas.<br /><br /> Impulso: axuda a superar o lag do motor con entradas de stick rápidas, pode aumentar o nerviosismo. Probe 10 para HD, 20 para carreiras. Ata 30 poden ser útiles para quads con pouca autoridade, pero poden causar micro impulsos ou nerviosismo."
+    },
+    "pidTuningFeedforwardAveraging": {
+        "message": "Promedio"
+    },
+    "pidTuningFeedforwardAveragingOptionOff": {
+        "message": "Apagado"
+    },
+    "pidTuningFeedforwardAveragingOption2Point": {
+        "message": "Punto 2"
+    },
+    "pidTuningFeedforwardAveragingOption3Point": {
+        "message": "Punto 3"
+    },
+    "pidTuningFeedforwardAveragingOption4Point": {
+        "message": "Punto 4"
+    },
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Suavidade"
+    },
+    "pidTuningFeedforwardBoost": {
+        "message": "Impulso"
     },
     "pidTuningProportional": {
         "message": "Proporcional"
@@ -2435,6 +2530,9 @@
     "motorsEnableControl": {
         "message": "<strong> Comprendo os riscos </strong>, as hélices están retiradas: permítese o control e armado do motor, e desactívase a prevención do despegue de Runaway."
     },
+    "motorsDialogMixerReset": {
+        "message": "<strong> Problema de modo de mesturar detectado </strong><br /><br /> O modelo {{mixerName}} necesita <strong class=\"message-positive\">{{mixerMotors}}</strong> Resources motor e a configuración actual do firmware proporciona <strong class=\"message-positive\">{{outputs}}</strong> saída (s) usable para o modo seleccionado. <br /><br /> Se usa un modo de mesturar personalizado necesidade definir un mmix personalizado antes de cambiar o modo de mezclado. <br /><br /> Verifique a súa configuración e engada os resources o motor requiridos."
+    },
     "motorsDialogSettingsChanged": {
         "message": "Detectáronse cambios na configuración.<br /><br /><strong class=\"message-negative-italic\">O modo proba de motor estará desactivado ata que se garden os cambios.</strong>"
     },
@@ -2852,6 +2950,9 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Seleccione o tipo de compilación para ver as dispoñibles."
     },
+    "firmwareFlasherOnlineSelectBoardDescription": {
+        "message": "Selecciona ou detecta automaticamente a súa placa para ver os lanzamentos de firmware en liña dispoñibles - Seleccione o firmware correcto axeitado para a súa placa."
+    },
     "firmwareFlasherOnlineSelectBoardHint": {
         "message": "Comezando con Betaflight 4.1, Betaflight introduce soporte para<strong>Placas unificadas</strong>. O concepto de obxectivos unificados significa que se pode usar o mesmo ficheiro .hex de firmware para todas as placas que utilizan o mesmo MCU (F4, F7). Para que as diferentes placas funcionen co mesmo firmware, despregase un ficheiro de configuración específico xunto co firmware cando se flaxea unha placa unificada.<br>Esta versión do configurador Betaflight admite o flashing de placas unificadas coas respectivas configuracións específicas da placa nun paso. Os diferentes tipos de firmware dispoñibles para cada placa móstranse no menú despregable do seguinte xeito:<br /><br /><strong>&lt;board name&gt;</strong> ou<br><strong>&lt;board name&gt; (Legacy) </strong>:<br> destino non unificado ou versións anteriores ao firmware do firmware para placas unificadas.<br /><br /><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br> (identificador do fabricante de 4 caracteres)<br>Placas unificadas.<br /><br /><strong>Utilice placas unificadas cando estea dispoñible.</strong> Se atopa problemas ao usar un placa unificada, abra un <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">problema</a> e despois usa placa non unificada ata que se resolva o problema."
     },
@@ -3016,6 +3117,33 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "Detectado: <strong>$1</strong> - executando instalar ó conectar"
+    },
+    "firmwareFlasherVerifyBoard": {
+        "message": "<h3>Discordancia do firmware</h3><br />A placa conectada é <strong>{{verified_board}}</strong>mentres seleccionou <strong>{{selected_board}}</strong>.<br /><br />¿Quere seguir instalando?",
+        "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "O configurador <span class=\"message-positive\">detectou</span> correctamente e verificou a placa: <strong>{{boardName}}</strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "O configurador <span class=\"message-negative\">fallou</span>ó verificar a placa, se esto non funciona, intente cambiar a pestana lentamente para volver a intentalo, faga unha nova conexión Usb o conecte primero, se é posible aplique os valores predeterminados personalizados",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
+    "firmwareFlasherButtonAbort": {
+        "message": "Abortar"
+    },
+    "firmwareFlasherButtonContinue": {
+        "message": "Continuar"
+    },
+    "firmwareFlasherDetectBoardButton": {
+        "message": "Detección Automática"
+    },
+    "firmwareFlasherDetectBoardDescriptionHint": {
+        "message": "Detectar automaticamente só funciona cando non está en modo DFU e cando a comunicación MSP está funcionando. Ás veces ten que reintentar algunhas veces ou incluso reconectar o USB. Probe a conectar normal por primeira vez como podería esquecer de aplicar estándares personalizados. Reinicie despois de instalar - retire o seu USB."
+    },
+    "firmwareFlasherDetectBoardQuery": {
+        "message": "Consulte a información da placa para preseleccionar firmware adecuado"
     },
     "unstableFirmwareAcknoledgementDialog": {
         "message": "Está a piques de flashear un <strong>versión en desenvolvemento de firmware</strong>. Estas versións son unha obra en curso e pode ter un dos seguintes casos:<strong><ul><li>o firmware non funciona en absoluto;</li><li>o firmware non é voable;</li><li>hai problemas de seguridade co firmware, por exemplo flyaways</li><li>o firmware pode provocar que o controlador de voo non responda ou sexa danado</li></ul></strong> Se continúa coa instalación deste firmware, <strong>está a asumir a responsabilidade total do risco de que suceda algo do anterior</strong>. Ademais, recoñece que é necesario realizar <strong> probas completas de banco sen aspas</strong> antes de intentar voar este firmware."
@@ -4508,6 +4636,14 @@
     "osdDescElementAltitude": {
         "message": "Altitude actual (parpadea por riba do limiar de alarma)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "Con 1 decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Sen decimal",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Unha vez",
         "description": "One of the elements of the OSD"
@@ -4556,6 +4692,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "Coordenada latitude GPS"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "Con 7 decimais",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "Con 4 decimais",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Usando grados, minutos e segundos",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Usando Códigos de Ubicación Abertos",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Depuración",
@@ -4633,6 +4785,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Representación gráfica da capacidad da batería usada"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Gráfico restante",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Gráfico usado",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Porcentaxe restante",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Porcentaxe empregado",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Temporizador: Tempo armado",
@@ -4878,6 +5046,13 @@
     },
     "osdDescUpDownReference": {
         "message": "Símbolo OSD que mostra cando o pitch se acerca á vertical (90 grad, U) e D cara abaixo (-90 deg, D)"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "Potencia de subida Tx",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Mostra un valor da potencia de Tx (mW o W). Útil cando <i>Potencia Dinámica</i> está activada nas radios que o soportan"
     },
     "osdTextElementUnknown": {
         "message": "Descoñecido $1",
@@ -5536,6 +5711,10 @@
     "vtxButtonSaveLua": {
         "message": "Gardar Lua script",
         "description": "Save Lua script button in the VTX tab"
+    },
+    "vtxLuaFileHelp": {
+        "message": "El botón '$t(vtxButtonSaveLua.message)' permitiralle gardar un arquivo <i>mcuid</i>.lua que conten a configuración da taboa VTX que pode ser empregada cos <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>A partir da versión 1.6.0 e superiores, pódese empregar o arquivo tal cual, pero para versións anteriores dos scripts debería ser renomeado para que coincida co nome do modelo no TX.",
+        "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
         "message": "Cargar dende arquivo",
