@@ -116,8 +116,10 @@ gulp.task('apps', appsBuild);
 
 const debugAppsBuild = gulp.series(gulp.parallel(clean_debug, gulp.series(clean_dist, debugDistBuild)), debug, gulp.series(cordova_apps(false)), gulp.parallel(listPostBuildTasks(DEBUG_DIR)));
 
-const debugBuild = gulp.series(debugDistBuild, debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)), start_debug);
+const debugBuildNoStart = gulp.series(debugDistBuild, debug, gulp.parallel(listPostBuildTasks(DEBUG_DIR)));
+const debugBuild = gulp.series(debugBuildNoStart, start_debug);
 gulp.task('debug', debugBuild);
+gulp.task('debug-no-start', debugBuildNoStart);
 
 const releaseBuild = gulp.series(gulp.parallel(clean_release, appsBuild), gulp.parallel(listReleaseTasks(true, APPS_DIR)));
 gulp.task('release', releaseBuild);
