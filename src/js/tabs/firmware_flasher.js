@@ -90,9 +90,10 @@ firmware_flasher.initialize = function (callback) {
                 $(this).attr('target', '_blank');
             });
 
-            $('div.release_info').slideDown();
-
-            $('.tab-firmware_flasher .content_wrapper').animate({ scrollTop: $('div.release_info').position().top }, 1000);
+            if (self.releases) {
+                $('div.release_info').slideDown();
+                $('.tab-firmware_flasher .content_wrapper').animate({ scrollTop: $('div.release_info').position().top }, 1000);
+            }
         }
 
         function process_hex(data, summary) {
@@ -861,11 +862,9 @@ firmware_flasher.initialize = function (callback) {
         });
 
         function updateDetectBoardButton() {
-            const board = $('select[name="board"] option:selected').val();
-            const firmwareVersion = $('select[name="firmware_version"] option:selected').val();
             const isDfu = portPickerElement.val().includes('DFU');
             const isBusy = GUI.connect_lock;
-            const isLoaded = board !== '0' && firmwareVersion !== '0';
+            const isLoaded = self.releases ? Object.keys(self.releases).length > 1 : false;
             const isAvailable = PortHandler.port_available || false;
             const isButtonDisabled = isDfu || isBusy || !isLoaded || !isAvailable;
 
