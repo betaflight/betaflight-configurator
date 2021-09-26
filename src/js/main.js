@@ -265,7 +265,7 @@ function startProcess() {
                 if (GUI.connected_to || GUI.connecting_to) {
                     $('a.connect').click();
                 } else {
-                    self.disconnect();
+                    serial.disconnect();
                 }
                 $('div.open_firmware_flasher a.flash').click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
