@@ -500,6 +500,7 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.pid_tuning .YAW input[name="d"]').attr("max", "200");
             $('.pid_tuning .YAW input[name="dMinPitch"]').attr("max", "1000");
             $('#sliderDTermFilterMultiplier').attr({ "min": "0.5", "max": "1.5", "step": "0.025" });
+            $('#sliderGyroFilterMultipier').attr({ "min": "0.5", "max": "1.5", "step": "0.025" });
         }
 
         // Feedforward
@@ -2146,14 +2147,7 @@ TABS.pid_tuning.initialize = function (callback) {
             allFilterTuningSliders.on('input mouseup', function() {
                 const slider = $(this);
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    if (slider.is('#sliderGyroFilterMultiplier')) {
-                        slider.attr('step', SLIDER_STEP_UPPER * 2);
-                    } else {
-                        slider.attr('step', SLIDER_STEP_UPPER);
-                    }
-                } else {
-                    // adjust step for more smoothness above 1x
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     if (slider.val() >= 1) {
                         slider.attr('step', SLIDER_STEP_LOWER);
                     } else {
@@ -2161,20 +2155,41 @@ TABS.pid_tuning.initialize = function (callback) {
                     }
                 }
                 if (!TuningSliders.expertMode) {
-                    if (slider.val() > NON_EXPERT_SLIDER_MAX) {
-                        slider.val(NON_EXPERT_SLIDER_MAX);
-                    } else if (slider.val() < NON_EXPERT_SLIDER_MIN) {
-                        slider.val(NON_EXPERT_SLIDER_MIN);
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                        const NON_EXPERT_SLIDER_MIN_GYRO = 0.4;
+                        const NON_EXPERT_SLIDER_MAX_GYRO = 1.5;
+                        const NON_EXPERT_SLIDER_MIN_DTERM = 0.8;
+                        const NON_EXPERT_SLIDER_MAX_DTERM = 1.2;
+
+                        if (slider.is('#sliderGyroFilterMultiplier')) {
+                            if (slider.val() > NON_EXPERT_SLIDER_MAX_GYRO) {
+                                slider.val(NON_EXPERT_SLIDER_MAX_GYRO);
+                            } else if (slider.val() < NON_EXPERT_SLIDER_MIN_GYRO) {
+                                slider.val(NON_EXPERT_SLIDER_MIN_GYRO);
+                            }
+                        } else if (slider.is('#sliderDTermFilterMultiplier')) {
+                            if (slider.val() > NON_EXPERT_SLIDER_MAX_DTERM) {
+                                slider.val(NON_EXPERT_SLIDER_MAX_DTERM);
+                            } else if (slider.val() < NON_EXPERT_SLIDER_MIN_DTERM) {
+                                slider.val(NON_EXPERT_SLIDER_MIN_DTERM);
+                            }
+                        }
+                    } else {
+                        if (slider.val() > NON_EXPERT_SLIDER_MAX) {
+                            slider.val(NON_EXPERT_SLIDER_MAX);
+                        } else if (slider.val() < NON_EXPERT_SLIDER_MIN) {
+                            slider.val(NON_EXPERT_SLIDER_MIN);
+                        }
                     }
                 }
                 const sliderValue = isInt(slider.val()) ? parseInt(slider.val()) : parseFloat(slider.val());
-                const scaledValue = TuningSliders.scaleSliderValue(sliderValue);
+                const newValue = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? sliderValue : TuningSliders.scaleSliderValue(sliderValue);
                 if (slider.is('#sliderGyroFilterMultiplier')) {
-                    TuningSliders.sliderGyroFilterMultiplier = scaledValue;
+                    TuningSliders.sliderGyroFilterMultiplier = newValue;
                     TuningSliders.calculateNewGyroFilters();
                     self.analyticsChanges['GyroFilterTuningSlider'] = "On";
                 } else if (slider.is('#sliderDTermFilterMultiplier')) {
-                    TuningSliders.sliderDTermFilterMultiplier = sliderValue;
+                    TuningSliders.sliderDTermFilterMultiplier = newValue;
                     TuningSliders.calculateNewDTermFilters();
                     self.analyticsChanges['DTermFilterTuningSlider'] = "On";
                 }
