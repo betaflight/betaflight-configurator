@@ -748,6 +748,11 @@
     background-repeat: no-repeat;
 }
 
+.tab-pid_tuning .disabledSliders .tuningSlider::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgb(197, 197, 197) -50%, rgb(241, 241, 241) 50%, rgb(197, 197, 197) 150%);
+    background-repeat: no-repeat;
+}
+
 .tab-pid_tuning .tuningSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 23px;
@@ -760,6 +765,20 @@
     bottom: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
+
+.tab-pid_tuning .disabledSliders .tuningSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: transparent;
+    border: solid 1px #828885;
+    cursor: pointer;
+    position: relative;
+    bottom: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
 
 .tab-pid_tuning .sliderLabels tr {
     border-bottom: 1px solid var(--subtleAccent);

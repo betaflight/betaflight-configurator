@@ -39,11 +39,9 @@
                 <div class="default_btn copyrateprofilebtn">
                     <a href="#" id="copyRateProfile" i18n="pidTuningCopyRateProfile"></a>
                 </div>
-                <span class="cf_tip resetwarning">
-                    <div class="default_btn resetbt">                    
-                        <a href="#" id="resetProfile" i18n="pidTuningResetProfile"></a>
-                    </div>
-                </span>
+                <div class="default_btn resetbt">                    
+                    <a href="#" id="resetProfile" i18n="pidTuningResetProfile"></a>
+                </div>
                 <div class="default_btn show showAllPids">
                     <a href="#" id="showAllPids" i18n="pidTuningShowAllPids"></a>
                 </div>
@@ -166,7 +164,7 @@
                         </table>
                     </div>
 
-                    <div class="gui_box topspacer nonExpertModeSlidersNote">
+                    <div class="gui_box topspacer legacyNonExpertModeSlidersNote">
                         <p i18n="pidTuningSlidersNonExpertMode"></p>
                     </div>
 
@@ -257,7 +255,7 @@
                                     <output type="number" name="sliderDGain-number"></output>
                                 </td>
                                 <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderDGain" />
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderDGain" />
                                 </td>
                                 <td>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningDGainSliderHelp"></div>
@@ -271,7 +269,7 @@
                                     <output type="number" name="sliderPIGain-number"></output>
                                 </td>
                                 <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPIGain" />
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderPIGain" />
                                 </td>
                                 <td>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPIGainSliderHelp"></div>
@@ -294,7 +292,7 @@
                             <tr class="advancedSlider">
                                 <td colspan="6" class="sliderDivider"><hr /></td>
                             </tr>
-                            <tr class="DMaxGainSlider">
+                            <tr class="advancedSlider">
                                 <td>
                                     <span i18n="pidTuningDMaxGainSlider"></span>
                                 </td>
@@ -316,7 +314,7 @@
                                     <output type="number" name="sliderIGain-number"></output>
                                 </td>
                                 <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderIGain" />
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderIGain" />
                                 </td>
                                 <td>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningIGainSliderHelp"></div>
@@ -330,7 +328,7 @@
                                     <output type="number" name="sliderRollPitchRatio-number"></output>
                                 </td>
                                 <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderRollPitchRatio" />
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderRollPitchRatio" />
                                 </td>
                                 <td>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningRollPitchRatioSliderHelp"></div>
@@ -344,7 +342,7 @@
                                     <output type="number" name="sliderPitchPIGain-number"></output>
                                 </td>
                                 <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderPitchPIGain" />
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderPitchPIGain" />
                                 </td>
                                 <td>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPitchPIGainSliderHelp"></div>
@@ -358,7 +356,7 @@
                                     <output type="number" name="sliderMasterMultiplier-number"></output>
                                 </td>
                                 <td colspan="3">
-                                    <input type="range" min="0.5" max="1.5" step="0.025" class="tuningSlider" id="sliderMasterMultiplier" />
+                                    <input type="range" min="0.0" max="2.0" step="0.05" class="tuningSlider" id="sliderMasterMultiplier" />
                                 </td>
                                 <td>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningMasterSliderHelp"></div>
@@ -366,6 +364,10 @@
                             </tr>
 
                          </table>
+                    </div>
+
+                    <div class="gui_box topspacer nonExpertModeSlidersNote">
+                        <p i18n="pidTuningPidSlidersNonExpertMode"></p>
                     </div>
 
                     <!-- BARO, MAG, GPS -->
@@ -1113,7 +1115,7 @@
                         </td>
                     </table>
                 </div>
-                <div class="gui_box topspacer nonExpertModeSlidersNote">
+                <div class="gui_box topspacer legacyNonExpertModeSlidersNote">
                     <p i18n="pidTuningSlidersNonExpertMode"></p>
                 </div>
 
@@ -1171,6 +1173,10 @@
                             </td>
                         </tr>
                     </table>
+                </div>
+
+                <div class="gui_box topspacer nonExpertModeSlidersNote">
+                    <p i18n="pidTuningFilterSlidersNonExpertMode"></p>
                 </div>
 
                 <div class="cf_column two_columns">

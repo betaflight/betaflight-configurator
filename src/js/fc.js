@@ -871,8 +871,8 @@ const FC = {
             ];
         } else if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_44)) {
             versionPidDefaults = [
-                45, 90, 40, 30, 120,
-                47, 94, 46, 34, 125,
+                45, 80, 40, 30, 120,
+                47, 84, 46, 34, 125,
                 45, 90,  0,  0, 120,
             ];
         }
