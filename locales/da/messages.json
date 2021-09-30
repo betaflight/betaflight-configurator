@@ -1140,7 +1140,7 @@
     },
     "pidTuningDMinGain": {
         "message": "Gain",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID Controller-indstillinger"
@@ -1196,20 +1196,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC-interpoleringsinterval [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Med denne parameter kan Feedforward-tiden reduceres tæt ved pindenes centerpositioner, hvilket betyder en mere glidene afslutning på flips og rolls.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind centreret, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Feedforward konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Feedforward proportionalt og når 0 ved pindens centerposition. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Feedforward på den opsatte værdi over hele pindområdet."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint-overgang"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint-vægtning"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes centerpositioner, hvilket betyder en mere glidene afslutning på flips og rolls.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind centreret, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens centerposition. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pindområdet."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Denne parameter afgør pindaccelerationseffekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle målemetode, hvor D kun sporer gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pindsporingsforhold.<br> Lavere værdi modsvarer langsommere/jævnere pindrespons, mens højere værdi giver øget pindaccelerationsrespons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser centerpositionerne.</span>"
