@@ -22,9 +22,6 @@ TABS.pid_tuning = {
     activeSubtab: 'pid',
     analyticsChanges: {},
 
-    sliderChanges: {},
-    sliderRetainMode: false,
-    sliderRetainPosition: false,
     sliderRetainConfiguration: false,
 };
 
@@ -1809,6 +1806,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 && $(item).attr('class') !== "nonProfile") {
                 $(item).change(function () {
                     self.setDirty(true);
+                    self.sliderRetainConfiguration = true;
                 });
             }
         });
@@ -1901,59 +1899,16 @@ TABS.pid_tuning.initialize = function (callback) {
             const SLIDER_STEP_LOWER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.05 : 0.1;
             const SLIDER_STEP_UPPER = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) ? 0.05 : 0.1;
 
+            const sliderPidsModeSelect = $('#sliderPidsModeSelect');
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                if (!self.sliderRetainConfiguration) {
+                if (self.sliderRetainConfiguration) {
+                        self.setDirty(true);
+                } else {
                     TuningSliders.saveInitialSettings();
                 }
 
-                const initialConfiguration = TuningSliders.initialSettings;
-
-                // we only target the range target type.
-                function sliderHandler(e) {
-                    if (e.target !== e.currentTarget) {
-                        const item = e.target.id === '' ? e.target.name : e.target.id;
-                        const value = isInt(e.target.value) ? parseInt(e.target.value) : parseFloat(e.target.value);
-                        self.sliderChanges[item] = value;
-
-                        if (item in initialConfiguration) {
-                            if (value !== initialConfiguration[item]) {
-                                self.sliderRetainPosition = true;
-                            } else {
-                                delete self.sliderChanges[item];
-                                if (Object.keys(self.sliderChanges).length === 0) {
-                                    self.sliderRetainPosition = false;
-                                }
-                            }
-                        }
-                    }
-                    e.stopPropagation();
-                }
-
-                function disableSliderOnManualChange(e, angle) {
-                    const sliderPidsModeSelectElement = $('#sliderPidsModeSelect');
-                    const mode = parseInt(sliderPidsModeSelectElement.val());
-                    if (mode > 0) {
-                        if (mode === 1 && angle === 'YAW') {
-                            e.preventDefault();
-                        } else {
-                            sliderPidsModeSelectElement.val(0).trigger('change');
-                            self.sliderRetainMode = true;
-                        }
-                    } else {
-                        self.updateGuiElements();
-                    }
-                }
-
-                function HandleEventParams(param) {
-                    return (e) => disableSliderOnManualChange(e, param);
-                }
-
-                document.querySelectorAll('.sliderLabels').forEach(elem => elem.addEventListener('change', sliderHandler));
-                document.querySelectorAll('.sliderMode').forEach(elem => elem.addEventListener('change', sliderHandler));
-                document.querySelectorAll('.ROLL').forEach(elem => elem.addEventListener('change', HandleEventParams('ROLL')));
-                document.querySelectorAll('.PITCH').forEach(elem => elem.addEventListener('change', HandleEventParams('PITCH')));
-                document.querySelectorAll('.YAW').forEach(elem => elem.addEventListener('change', HandleEventParams('YAW')));
-                $('#sliderPidsModeSelect').val(FC.TUNING_SLIDERS.slider_pids_mode);
+                sliderPidsModeSelect.val(FC.TUNING_SLIDERS.slider_pids_mode);
             } else {
                 $('#dMinSwitch').change(function() {
                     TuningSliders.setDMinFeatureEnabled($(this).is(':checked'));
@@ -1978,10 +1933,28 @@ TABS.pid_tuning.initialize = function (callback) {
 
             // trigger Slider Display update when PID mode is changed
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                $('select[id="sliderPidsModeSelect"]').change(function () {
-                    TuningSliders.sliderPidsMode = parseInt($(this).val());
+                $('select[id="sliderPidsModeSelect"]').on('change', function () {
+                    const originalMode = TuningSliders.initialSettings.sliderPidsModeSelect;
+                    const setMode = parseInt($(this).val());
+
+                    TuningSliders.sliderPidsMode = setMode;
                     TuningSliders.updatePidSlidersDisplay();
-                }).change();
+
+                    const allowRP = originalMode === 0 && setMode === 0;
+                    const allowRPY = originalMode < 2 && originalMode === setMode;
+
+                    $('.ROLL .pid_data input').each(function() {
+                        $(this).prop('disabled', !allowRP);
+                    });
+
+                    $('.PITCH .pid_data input').each(function() {
+                        $(this).prop('disabled', !allowRP);
+                    });
+
+                    $('.YAW .pid_data input').each(function() {
+                        $(this).prop('disabled', !allowRPY);
+                    });
+                }).trigger('change');
             }
 
             let allPidTuningSliders;
@@ -2046,6 +2019,7 @@ TABS.pid_tuning.initialize = function (callback) {
                     }
                 }
                 TuningSliders.calculateNewPids();
+                self.updateGuiElements();
                 self.analyticsChanges['PidTuningSliders'] = "On";
             });
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -2107,12 +2081,18 @@ TABS.pid_tuning.initialize = function (callback) {
                 TuningSliders.calculateNewPids();
                 TuningSliders.updatePidSlidersDisplay();
             });
+
             // enable PID sliders button
             $('a.buttonPidTuningSliders').click(function() {
-                //set Slider PID mode to RPY when re-enabling Sliders
+                // set Slider PID mode to RP(Y) when re-enabling Sliders
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    $('#sliderPidsModeSelect').val(2).trigger('change');
-                    self.sliderRetainMode = true;
+                    const firmwareMode = TuningSliders.initialSettings.sliderPidsModeSelect;
+                    const workingMode = firmwareMode === 1 ? 1 : 2;
+
+                    if (firmwareMode !== workingMode) {
+                        self.sliderRetainConfiguration = true;
+                    }
+                    sliderPidsModeSelect.val(workingMode).trigger('change');
                 }
                 // if values were previously changed manually and then sliders are reactivated, reset pids to previous valid values if available, else default
                 TuningSliders.resetPidSliders();
@@ -2190,7 +2170,8 @@ TABS.pid_tuning.initialize = function (callback) {
             });
             // enable Filter sliders button
             $('a.buttonFilterTuningSliders').click(function() {
-                self.sliderRetainMode = true;
+                self.sliderRetainConfiguration = true;
+
                 if (TuningSliders.GyroSliderUnavailable) {
                     //set Slider mode to ON when re-enabling Sliders
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -2296,10 +2277,6 @@ TABS.pid_tuning.initialize = function (callback) {
                 return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             }).then(function () {
                 self.updating = false;
-
-                self.sliderRetainPosition = false;
-                self.sliderRetainMode = false;
-                self.sliderChanges = {};
                 self.sliderRetainConfiguration = false;
 
                 self.setDirty(false);
@@ -2411,7 +2388,7 @@ TABS.pid_tuning.cleanup = function (callback) {
 TABS.pid_tuning.refresh = function (callback) {
     const self = this;
 
-    if ((self.sliderRetainPosition || self.sliderRetainMode) && !self.updating) {
+    if (self.sliderRetainConfiguration && !self.updating) {
         TuningSliders.restoreInitialSettings();
     }
 

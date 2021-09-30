@@ -45,7 +45,7 @@ const D_MIN_RATIO = 0.85;
 
 TuningSliders.saveInitialSettings = function () {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        this.initialSettings.sliderPidsMode = FC.TUNING_SLIDERS.slider_pids_mode;
+        this.initialSettings.sliderPidsModeSelect = FC.TUNING_SLIDERS.slider_pids_mode;
         this.initialSettings.sliderDGain = FC.TUNING_SLIDERS.slider_d_gain / 100;
         this.initialSettings.sliderPIGain = FC.TUNING_SLIDERS.slider_pi_gain / 100;
         this.initialSettings.sliderFeedforwardGain = FC.TUNING_SLIDERS.slider_feedforward_gain / 100;
@@ -63,11 +63,7 @@ TuningSliders.saveInitialSettings = function () {
 
 TuningSliders.restoreInitialSettings = function () {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        if (this.sliderModeHasChanged && this.initialSetting.sliderPidsMode !== this.sliderPidsmode) {
-            $('#sliderPidsModeSelect').val(this.initialSettings.sliderPidsMode).trigger('change');
-        }
-
-        FC.TUNING_SLIDERS.slider_pids_mode = this.initialSettings.sliderPidsMode;
+        FC.TUNING_SLIDERS.slider_pids_mode = this.initialSettings.sliderPidsModeSelect;
 
         FC.TUNING_SLIDERS.slider_d_gain = Math.round(this.initialSettings.sliderDGain * 20) * 5;
         FC.TUNING_SLIDERS.slider_pi_gain = Math.round(this.initialSettings.sliderPIGain * 20) * 5;
@@ -88,12 +84,12 @@ TuningSliders.restoreInitialSettings = function () {
         .then(() => MSP.promise(MSPCodes.MSP_PID_ADVANCED))
         .then(() => MSP.promise(MSPCodes.MSP_FILTER_CONFIG))
         .then(() => {
-            TABS.pid_tuning.configChanges = {};
             if (GUI.active_tab === 'pid_tuning') {
                 this.updateFormPids();
                 TABS.pid_tuning.updatePIDColors();
             }
         });
+        TABS.pid_tuning.sliderRetainConfiguration = false;
     }
 };
 

@@ -252,7 +252,7 @@ function startProcess() {
             const tabName = $(self).text();
 
             if (GUI.active_tab === 'pid_tuning') {
-                if (TABS.pid_tuning.sliderRetainPosition || TABS.pid_tuning.sliderRetainMode || TABS.pid_tuning.sliderRetainConfiguration) {
+                if (TABS.pid_tuning.sliderRetainConfiguration) {
                     TuningSliders.restoreInitialSettings();
                 }
             }
