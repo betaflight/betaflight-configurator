@@ -1635,21 +1635,25 @@
     "pidTuningDMinDisabledNote": {
         "message": "crwdns9686:0$t(pidTuningPidSettings.message)crwdne9686:0"
     },
+    "pidTuningDMinFeatureTitle": {
+        "message": "crwdns10589:0crwdne10589:0",
+        "description": "Title for the options panel for the D Max feature"
+    },
     "pidTuningDMinGain": {
         "message": "crwdns9054:0crwdne9054:0",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "crwdns9056:0crwdne9056:0",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningDMinFeatureHelp": {
-        "message": "crwdns10376:0crwdne10376:0",
-        "description": "D Min feature helpicon message"
+        "message": "crwdns10591:0crwdne10591:0",
+        "description": "D Max feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "crwdns10378:0crwdne10378:0",
-        "description": "D Min helpicon message on PID table titlebar"
+        "message": "crwdns10593:0crwdne10593:0",
+        "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "crwdns5687:0crwdne5687:0"
@@ -1762,7 +1766,7 @@
         "message": "crwdns10522:0crwdne10522:0"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "crwdns8808:0crwdne8808:0"
+        "message": "crwdns10595:0crwdne10595:0"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "crwdns5696:0crwdne5696:0"
@@ -1771,10 +1775,10 @@
         "message": "crwdns5697:0crwdne5697:0"
     },
     "pidTuningDtermSetpointTransitionHelp": {
-        "message": "crwdns5698:0crwdne5698:0"
+        "message": "crwdns10597:0crwdne10597:0"
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "crwdns5699:0crwdne5699:0"
+        "message": "crwdns10599:0crwdne10599:0"
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "crwdns8732:0$t(warningTitle.message)crwdne8732:0"
@@ -1827,14 +1831,14 @@
         "message": "crwdns10062:0crwdne10062:0"
     },
     "pidTuningDerivativeHelp": {
-        "message": "crwdns10386:0crwdne10386:0",
-        "description": "Derivative Term helpicon message on PID table titlebar"
+        "message": "crwdns10601:0crwdne10601:0",
+        "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "crwdns8809:0crwdne8809:0"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "crwdns10388:0crwdne10388:0",
+        "message": "crwdns10603:0crwdne10603:0",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -1970,11 +1974,18 @@
         "message": "crwdns6388:0crwdne6388:0"
     },
     "tuningHelpSliders": {
-        "message": "crwdns10390:0crwdne10390:0",
+        "message": "crwdns10605:0crwdne10605:0",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
         "message": "crwdns10392:0crwdne10392:0"
+    },
+    "sliderPidsModeSelect": {
+        "message": "crwdns10607:0crwdne10607:0",
+        "description": "Pidtuning slider mode can be OFF, RP or RPY"
+    },
+    "pidTuningSliderModeHelp": {
+        "message": "crwdns10609:0crwdne10609:0"
     },
     "receiverThrottleMid": {
         "message": "crwdns5735:0crwdne5735:0"
@@ -3538,7 +3549,7 @@
         "message": "crwdns6080:0crwdne6080:0"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "crwdns10398:0crwdne10398:0",
+        "message": "crwdns10611:0crwdne10611:0",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -3558,7 +3569,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "crwdns10400:0crwdne10400:0",
+        "message": "crwdns10613:0crwdne10613:0",
         "description": "Gyro filtering tuning slider helpicon message"
     },
     "pidTuningDTermFilterSlider": {
@@ -3566,11 +3577,11 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "crwdns10402:0crwdne10402:0",
+        "message": "crwdns10615:0crwdne10615:0",
         "description": "D Term filtering tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "crwdns10404:0[p-term]crwdnd10404:0[d-term]crwdne10404:0",
+        "message": "crwdns10617:0crwdne10617:0",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -3589,6 +3600,14 @@
         "message": "crwdns9840:0crwdne9840:0",
         "description": "Sliders restricted message"
     },
+    "pidTuningPidSlidersNonExpertMode": {
+        "message": "crwdns10619:0crwdne10619:0",
+        "description": "Firmware Pid sliders restricted message"
+    },
+    "pidTuningFilterSlidersNonExpertMode": {
+        "message": "crwdns10621:0crwdne10621:0",
+        "description": "Firmware filter sliders restricted message"
+    },
     "pidTuningSliderLow": {
         "message": "crwdns9786:0crwdne9786:0",
         "description": "Tuning Slider Low header"
@@ -3605,57 +3624,89 @@
         "message": "crwdns9792:0crwdne9792:0",
         "description": "Master tuning slider label"
     },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "crwdns10406:0crwdne10406:0",
-        "description": "Pitch-Roll Ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "crwdns10408:0crwdne10408:0",
-        "description": "Pitch-Roll Ratio tuning slider helpicon message"
-    },
-    "pidTuningIGainSlider": {
-        "message": "crwdns10410:0crwdne10410:0",
-        "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "crwdns10412:0crwdne10412:0",
-        "description": "I-gain Gain tuning slider helpicon message"
+    "pidTuningMasterSliderHelp": {
+        "message": "crwdns10623:0crwdne10623:0",
+        "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningPDRatioSlider": {
         "message": "crwdns9794:0crwdne9794:0",
         "description": "PD balance tuning slider label"
     },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "crwdns10625:0crwdne10625:0",
+        "description": "D_term tuning slider helpicon message"
+    },
     "pidTuningPDGainSlider": {
         "message": "crwdns9796:0crwdne9796:0",
         "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningDMinRatioSlider": {
-        "message": "crwdns10414:0crwdne10414:0",
-        "description": "D Min slider label"
-    },
-    "pidTuningDMinRatioSliderHelp": {
-        "message": "crwdns10416:0crwdne10416:0",
-        "description": "D_min slider helpicon message"
-    },
-    "pidTuningResponseSlider": {
-        "message": "crwdns9798:0crwdne9798:0",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "crwdns10418:0crwdne10418:0",
-        "description": "Master Gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "crwdns10420:0crwdne10420:0",
-        "description": "PD balance tuning slider helpicon message"
     },
     "pidTuningPDGainSliderHelp": {
         "message": "crwdns10422:0crwdne10422:0",
         "description": "P and D gain tuning slider helpicon message"
     },
-    "pidTuningResponseSliderHelp": {
-        "message": "crwdns10424:0crwdne10424:0",
+    "pidTuningResponseSliderLegacy": {
+        "message": "crwdns10627:0crwdne10627:0",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningResponseSliderLegacyHelp": {
+        "message": "crwdns10629:0crwdne10629:0",
         "description": "Stick response gain tuning slider helpicon message"
+    },
+    "pidTuningDGainSlider": {
+        "message": "crwdns10631:0crwdne10631:0",
+        "description": "D Gain (Damping) tuning slider label"
+    },
+    "pidTuningDGainSliderHelp": {
+        "message": "crwdns10633:0crwdne10633:0",
+        "description": "D gain balance tuning slider helpicon message"
+    },
+    "pidTuningPIGainSlider": {
+        "message": "crwdns10635:0crwdne10635:0",
+        "description": "P and I Gain (Stability) tuning slider label"
+    },
+    "pidTuningPIGainSliderHelp": {
+        "message": "crwdns10637:0crwdne10637:0",
+        "description": "P and I gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSlider": {
+        "message": "crwdns10639:0crwdne10639:0",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "crwdns10641:0crwdne10641:0",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
+    "pidTuningIGainSlider": {
+        "message": "crwdns10643:0crwdne10643:0",
+        "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "crwdns10645:0crwdne10645:0",
+        "description": "I-gain Gain tuning slider helpicon message"
+    },
+    "pidTuningDMaxGainSlider": {
+        "message": "crwdns10647:0crwdne10647:0",
+        "description": "D Min slider label"
+    },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "crwdns10649:0crwdne10649:0",
+        "description": "D_min slider helpicon message"
+    },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "crwdns10651:0crwdne10651:0",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "crwdns10653:0crwdne10653:0",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "crwdns10655:0crwdne10655:0",
+        "description": "Pitch P & I slider label"
+    },
+    "pidTuningPitchPIGainSliderHelp": {
+        "message": "crwdns10657:0crwdne10657:0",
+        "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "crwdns8733:0crwdne8733:0"
@@ -3681,8 +3732,11 @@
     "pidTuningGyroLowpass2Type": {
         "message": "crwdns8737:0crwdne8737:0"
     },
-    "pidTuningLowpassFilterHelp": {
-        "message": "crwdns9026:0crwdne9026:0"
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "crwdns10659:0crwdne10659:0"
+    },
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "crwdns10661:0crwdne10661:0"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "crwdns8738:0crwdne8738:0"
