@@ -1528,15 +1528,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Wzmocnienie",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Wyprzedzenie",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min umożliwia osiągnięcie niższego poziomu D w normalnym locie i wyższego poziomu w przypadku szybkich manewrów takich jak flipy i beczki, które mogą powodować przewrócenie modelu, podnosi on również D podczas gdy podczas lotu występuje efekt prop-wash. Maximum dostosowuje D do maksymalnej wartości i opiera się na wskazaniach żyroskopu aby określić agresywność manewrów. Wyprzedzenie sprawia, że ​​D używa wartości określonej wcześniej przez użytkownika, zamiast żyroskopu do określania ostrych manewrów.",
-        "description": "D Min feature helpicon message"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Ustawienia regulatora PID"
@@ -1592,20 +1588,11 @@
     "receiverRcInterpolationInterval": {
         "message": "Interwał interpolacji RC [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Za pomocą tego parametru można skrócić termin Feedforward w pobliżu środka drążków, co skutkuje gładszym końcem podczas robienia flipów lub beczek. <br> Wartość reprezentuje punkt ugięcia drążka: 0 - wyśrodkowany drążek, 1 - pełne ugięcie. Kiedy drążek znajduje się powyżej tego punktu, Feedforward jest utrzymywany na stałym poziomie zgodnie ze skonfigurowaną wartością. Gdy drążek znajduje się poniżej tego punktu, Feedforward jest proporcjonalnie zmniejszany, osiągając 0 w środkowej pozycji drążka. <br> Wartość 1 daje maksymalny efekt wygładzenia."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D przejście do wartości zadanej"
     },
     "pidTuningDtermSetpoint": {
         "message": "D siłą wartości zadanej"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Za pomocą tego parametru można zmniejszyć wagę wartości zadanej D w pobliżu środka drążków, co skutkuje gładszym końcem podczas robienia flipów i beczek. <br> Wartość reprezentuje punkt ugięcia drążka: 0 - wyśrodkowany drążek, 1 - pełne ugięcie. Gdy drążek znajduje się powyżej tego punktu, wartość zadana siły jest utrzymywana na stałym poziomie zgodnie ze skonfigurowaną wartością. Gdy drążek jest ustawiony poniżej tego punktu, siła zadana jest proporcjonalnie zmniejszana, osiągając 0 w środkowej pozycji drążka. <br> Wartość 1 daje maksymalny efekt wygładzenia, a wartość 0 utrzymuje stałą wartość zadaną na skonfigurowanej wartości w całym zakresie ruchu drążków."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Ten parametr określa efekt przyspieszenia drążka w składniku pochodnym. <br> Wartość 0 jest równa starej metodzie pomiaru, w której D śledzi tylko żyroskop, a wartość 1 jest równa starej metodzie błędu o równym żyroskopie i współczynniku śledzenia drążka. <br> Dolna wartość jest równa wolniejszej / płynniejszej reakcji drążka, a wyższa wartość zapewnia większą odpowiedź przyspieszania drążka. <br> Należy pamiętać, że zaleca się włączenie interpolacji RC przy wyższych wartościach, aby zapobiec hałasowaniu uderzeń sterujących."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): </strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. </span>"
@@ -3267,10 +3254,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Ustawienia filtra niezależne od profilu"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Suwaki do regulacji żyroskopu i filtrowania D-term. <br /><br /> Większe Filtrowanie zapewnia płynniejszy lot, ale zwiększa opóźnienie sygnału żyroskopowego (opóźnienie fazowe) do pętli PID, co powoduje pogorszenie agresywnej wydajności lotu, znoszenie modelu, zmianę reakcji drążka, a jeśli filtrowania jest zbyt duże może powodować oscylacje.<br /><br /> Mniej filtrowania zmniejsza opóźnienie sygnału żyroskopu, ale może zwiększyć temperaturę silnika z powodu reakcji D-term na wibracje silnika (szum) o wysokiej częstotliwości. <br> Dodatkowo jeśli filtrowanie jest zbyt niskie, spowoduje spadek wydajności lotu (wyższy stosunek szumu do sygnału).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Lekkie filtrowanie",
         "description": "Filter tuning slider low header"
@@ -3331,10 +3314,6 @@
         "message": "Wzmocnienie P i D:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
-        "message": "Wzmocnienie reakcji na drążek:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtry dolnoprzepustowe Żyroskopu"
     },
@@ -3358,9 +3337,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Typ dolnoprzepustowego filtru 2 dla żyroskopu"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Filtry dolnoprzepustowe mogą mieć dwa warianty: statyczny i dynamiczny. Dla określonego numeru filtra dolnoprzepustowego można jednocześnie włączyć tylko jeden (statyczny lub dynamiczny). Statyczny ma tylko wartość odcięcia, która jest wartością, która w jakiś sposób określa początek filtra. Dynamika określa wartości minimalne i maksymalne, czyli zakres, w którym umieszczana jest wartość odcięcia. Ta wartość graniczna przesuwa się od min. Do max. W tym samym czasie, gdy poruszasz drążkiem przepustnicy."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Pasmowo zaporowy filtr żyroskopu"
