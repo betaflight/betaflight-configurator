@@ -1521,11 +1521,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Irabazia",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Aurreratua",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID kontroladorearen ezarpenak"
@@ -1581,20 +1581,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolazio Interbaloa [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Parametro honen bidez, palanka zentrotik gertu daudenean, Feedforward murriztu egin daiteke palankak eta biribilak leuntzeko.<br> 0-palanka zentratua, 1-erabat lekuz aldatuta. Palanka puntu horren gainetik dagoenean, elikadura aurrekoa etengabe mantentzen da ezarritako balioan. Palanka puntu horren azpitik dagoenean, FeedFordward proportzionalki murrizten da, palankaren posizio zentralean 0 izatera. <br> 1-ren balioa leuntzeko gehienezko efektua ematen du; 0-ren balioa, berriz, FeedFordward finkatuta mantentzen da palanka-barruti osoan."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D setpoint trantsizioa"
     },
     "pidTuningDtermSetpoint": {
         "message": "D setpoint pisua"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Parametro honen bidez, D Setpoint doikuntza-puntua murriztu daiteke stick-ak zentrotik gertu daudenean, honek txirbilen eta biribilen amaiera leunagoa egiten du. <br>Balioak stickaren desflexio puntu bat adierazten du: 0 - stick zentratuta, 1 - desbideratze osoa. Stick puntu horren gainetik dagoenean, Ezarpen- pisua konstante mantentzen da konfiguratutako balioan. Stick puntu horren azpitik kokatuta dagoenean, Ezarpenen Pisua proportzionalki murrizten da, eta 0 mailara iristen da. <br> 1-ko balioak leuntze-efektua ematen du; 0-ren balioa, aldiz, Ezarpen- Pisua bere konfiguratutako balioari eusten dio stick-sorta osoan."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Parametro honek palanka azelerazioaren eragina deribatuen osagaiaren barruan zehazten du. <br> 0 balioa Neurketa metodo zaharraren berdina da, D txanda bakarrik jarraitzen duen bitartean; 1, berriz, erro metodo zaharraren jarraipena birarekin berdina da eta palanka erradioan. <br> Balio txikiagoa palanka erantzun motelagoa eta leunaren berdina da, balore altuek palankaren erantzunean azelerazio handiagoa ematen dute. <br> Oharra izan aktibatzea gomendatzen dela RC interpolazioa balio altuekin kontrolean kolpeak eragindako zarata ekiditeko."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message): </strong>Ezda gomendagarria 0 Setpoint-en trantsizioa 0 eta 0.1 baino txikiagoa. Hori egitean, ezegonkortasuna eta makilen erantzuna murriztea eragin dezakete, makilek erdiko puntua zeharkatzen duten bitartean.</span>"
@@ -3232,10 +3223,6 @@
         "message": "P eta D Irabazia:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
-        "message": "Stick-en Erantzun Irabazia:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Giro Behe-paseko Iragazkiak"
     },
@@ -3259,9 +3246,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "2. Giro Behe-paseko Iragazki Mota"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Behe-paseko iragazkiek bi aldaera izan ditzakete: estatikoa eta dinamikoa. Zehaztutako pasagune iragazki zenbaki bakarra aldi berean (estatikoa edo dinamikoa) gaitu daiteke. Estatiko iragazkia nolabait definitzen duen ebaki bat besterik ez du. Dinamikoak min eta max balioak definitzen ditu, hau da, ebakidura kokatzen den eremua. Ebaketa hau minimoaren eta maximoaren artean mugitzen dagasaren palanka mugitzen duzun bitartean."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giro Notch Iragazkiak"
