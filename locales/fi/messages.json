@@ -1014,12 +1014,6 @@
     "pidTuningDtermSetpoint": {
         "message": "D asetuspisteen painoarvo"
     },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Tällä parametrillä \"D asetuspisteen painoarvoa\", voidaan vähentää ohjaustikkujen keskikohdan lähellä, mikä johtaa volttien ja muiden nopeiden liikkeiden pehmeämpään lopetukseen.<br> Tämä arvo on piste tikun liikeradassa: 0 - tikku keskellä, 1- tikku täysin laidassa. Kun tikku ylittää määritetyn pisteen, \"asetuspisteen painoarvo\" pidetään vakiona, sille määritetyssä arvossa. Kun tikku on alle määritetyn pisteen, \"asetuspisteen painoarvoa\" vähennetään suhteellisesti, kunnes se saavuttaa arvon 0 tikun keskipisteessä.<br> Arvo 1 antaa suurimman tasauksen liikkeeseen, kun taas arvo 0 pitää säädetyn \"asetuspisteen painoarvon\" kiinteänä koko tikun liikeradan alueella."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Tämä parametri määrittää ohjaustikun liikkeen kiihtyvyyden vaikutuksen johdannaisarvossa (D-voimakkuus).<br> Arvo 0 vastaa vanhaa mittaustapaa, jossa D seuraa ainoastaan gyroa. Arvo 1 vastaa vanhaa virhemetodia, jossa gyron arvojen ja tikun liikkeen eroa seurattiin samassa suhteessa toisiinsa.<br> Matalempi arvo tuottaa hitaamman/pehmeämmän tikkuvasteen, kun taas korkeampi arvo tarjoaa herkemmän vasteen tikun liikkeen kiihtyvyyden muutoksiin.<br> Huom: RC interpolointi on suositeltavaa ottaa käyttöön käytettäessä korkeampia arvoja. Voimakkaat ohjaussyötteet voivat muuten aiheuttaa kohinaa (häiriösignaaleja) PID-looppiin."
-    },
     "pidTuningProportional": {
         "message": "Verrannollinen (proportional)"
     },
