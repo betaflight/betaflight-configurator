@@ -251,6 +251,12 @@ function startProcess() {
             const tab = tabClass.substring(4);
             const tabName = $(self).text();
 
+            if (GUI.active_tab === 'pid_tuning') {
+                if (TABS.pid_tuning.sliderRetainPosition || TABS.pid_tuning.sliderRetainMode || TABS.pid_tuning.sliderRetainConfiguration) {
+                    TuningSliders.restoreInitialSettings();
+                }
+            }
+
             if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
                 GUI.log(i18n.getMessage('tabSwitchConnectionRequired'));
                 return;
