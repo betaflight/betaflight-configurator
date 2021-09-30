@@ -1611,19 +1611,11 @@
     },
     "pidTuningDMinGain": {
         "message": "게인",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "가속",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D 최소값은 정상적인 비행에서 낮은 수준의 D값을 가지며, 플립이나 롤과 같이 오버슈트를 일으킬 수 있는 빠른 기동을 위한 더 높은 수준의 방법을 제공합니다. 그것은 또한 프롭워시가 생길 때 D를 올려줍니다. 게인은 D가 최대값에 도달하는 속도를 조정하고 자이로를 기반으로 하여 날카로운 움직임과 프롭워시 이벤트를 결정합니다. 가속은 날카로운 움직임을 결정하기 위하여 자이로 대신 설정점을 사용해 D를 더 빨리 올려줍니다.",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "정상적인 전진 비행 시 감쇠 강도(D-텀)를 제어합니다.<br>D_최소값을 활성화하면  비행 중 능동형 D-게인이 변화합니다. 정상적인 전진 비행에서 D-게인을 D_최소값으로 낮춥니다. 급격한 움직임이나 프롭워시에서는 능동형 D-게인은 좌측에 명시된 D_최대값으로 게인을 증가시킵니다.<br /><br />날카로운 스틱 입력에서 완전한 D_최대 게인에 도달하지만, 일부분만 프롭워시 동안에 도달합니다.<br>게인 부스트 민감도 및 타이밍을 제어하기 위해 D_최소값 게인과 가속을 조정하십시오.",
-        "description": "D Min helpicon message on PID table titlebar"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID 컨트롤러 설정"
@@ -1735,20 +1727,11 @@
     "pidTuningFeedforwardTransition": {
         "message": "전환"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "이 파라미터를 사용하면, 피드포워드 텀이 스틱의 중립 근처에서 감소하여 플립과 롤이 부드럽게 끝납니다.<br> 값은 스틱의 편향을 나타냅니다: 0 - 스틱 중립, 1 - 전체 편향. 스틱이 그 지점보다 높을 때, 피드포워드는 설정된 값으로 일정하게 유지됩니다. 스틱이 그 지점 아래에 위치하면, 피드포워드는 스틱 중심점에서 0에 도달하는 것에 비례하여 감소합니다.<br> 값 1은 최대 스무딩 효과를 주며, 값 0은 피드포워드를 전체 스틱 범위에 걸쳐 설정된 값으로 고정합니다."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D 설정점 전환"
     },
     "pidTuningDtermSetpoint": {
         "message": "D 설정점 가중치"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "이 파라미터를 사용하면, D 설정점 가중치가 스틱의 중립 근처에서 감소하여 플립과 롤이 부드럽게 끝납니다.<br> 값은 스틱의 편향을 나타냅니다: 0 - 스틱 중립, 1 - 전체 편향. 스틱이 그 지점보다 높을 때, 설정점 가중치는 설정된 값으로 일정하게 유지됩니다. 스틱이 그 지점 아래에 위치하면, 설정점 가중치는 스틱 중심점에서 0에 도달하는 것에 비례하여 감소합니다.<br> 값 1은 최대 스무딩 효과를 주며, 값 0은 설정점 가중치를 전체 스틱 범위에 걸쳐 설정된 값으로 고정합니다."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "이 파라미터는 미분 요소 내 스틱 가속 효과를 결정합니다. <br> 0은 D가 오직 자이로만을 추적하는 이전 측정 방법과 동일합니다. 반면에 1은 동일한 자이로와 스틱 추적 레이트를 갖는 이전 오류 방법과 같습니다. <br> 값이 낮을 수록 스틱 반응이 더욱 느리고/부드러워지며, 반면에 값이 높을 수록 스틱 가속 응답을 더 많이 제공합니다. <br> RC 신호보간은 컨트롤 킥이 노이즈를 발생시키지 않도록 더 높은 값으로 설정하는 것이 좋습니다."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 0 보다 크고 0.1 보다 작은 D 설정값 전환의 사용은 불안정을 유발시킬 수 있으며, 중립포인트에서 만나는 스틱의 반응성이 감소될 수 있습니다.</span>"
@@ -1800,16 +1783,8 @@
     "pidTuningDMax": {
         "message": "D 최대값"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "기체의 어떤 움직임에도 감쇠의 강도를 제어합니다. 스틱이 움직일 때, D-텀은 명령을 감쇠시킵니다. 외부 영향(프롭위시 또는 풍력) 의 경우 D-텀은 그러한 영향을 감쇠합니다.<br /><br />높은 게인은 더 많은 감쇠를 제공하고 P-텀과 FF에 의한 오버슈트를 감소시킵니다.<br>단, D-텀은 자이로 고주파 진동(노이즈 | 10배에서 100배까지 확대) 에 민감합니다.<br /><br />D-게인이 너무 높거나 자이로 노이즈가 잘 필터링되지 않을 경우 고주파 노이즈로 모터 열과 소실 현상이 발생할 수 있습니다(필터 탭 참조).<br /><br />D-텀을 당신의 자동차에서 쇼크 업소버로 생각하되, 고주파 자이로 노이즈 확대라는 부정적 고유 속성으로 생각해 보십시오.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "피드포워드"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "스틱 입력에 기초한 추가 푸시 항목(스프링) FF는 P-텀이 명령을 준 스틱 움직임에 비례하여 기체를 밀도록 도와줍니다.<br /><br />P-텀은 명령을 준 설정점(도/초) 과 현재 회전 속도(도/초) 의 자이로 판독값 사이의 차이를 기반으로 밀어줍니다. 반면 FF는 명령을 준 스틱의 변화만을 기반으로 밀어줍니다.<br /><br />값(게인) 이 높을수록 스틱 입력에 대한 기계 반응이 더 날카로워집니다.<br>너무 높은 값은 일부 오버슈트, 모터 열 증가, 모터 포화(모터가 원하는 변화율을 따라가지 못하는 경우) 가 발생할 수 있습니다.<br>낮은 값 또는 (0) 값은 스틱 입력에 대해 더 느리고 부드러운 반응을 일으킵니다.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>경고:</b></span> 매우 높은 레이트는 빠른 감속으로부터 디싱크를 초래할 수 있습니다."
@@ -1942,10 +1917,6 @@
     },
     "tuningHelp": {
         "message": "<b>튜닝 팁</b><br /><span class=\"message-negative\">중요:</span> 첫 비행 중 모터 온도를 확인하는 것이 중요합니다. 필터 값이 높을수록 더 잘 날 수 있지만 모터에 더 많은 노이즈가 들리게 됩니다. <br> 기본값 100Hz가 최적이지만, 노이즈 설정을 위하여 D텀 필터를 50Hz로 낮출 수 있으며, 자이로 필터를 낮추는 것 또한 가능합니다."
-    },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">중요:</span>필터 설정을 변경하기 위해 슬라이더를 사용할 것을 권장합니다. 두 슬라이더를 함께 이동하십시오.<br>변경할 때마다 비교적 작은 변화를 주고 시험 비행을 하는 것이 가장 좋습니다. 추가로 변경하기 전에 모터 온도를 자세히 점검하십시오.<br>적은 필터링(오른쪽으로 슬라이더, 컷오프 값이 더 높음) 은 프롭워시를 개선하지만, 모터까지 더 많은 소음이 전달되어 더 뜨겁고, 소진될 수 있을 정도로 뜨거워질 수 있습니다. 대부분의 클린 빌드 및 rpm 필터링을 활성화한 경우 적은 필터링이 가능합니다.<br> 평소와 달리 필터 설정이 높거나 낮으면 아밍시 기체가 멀리 날아갈 수 있습니다. 기본값은 일반적인 5\" 쿼드에 대해 안전합니다.<br><strong>노트:</strong>프로파일을 변경하면 D-텀 필터 설정만 변경됩니다. 자이로 필터 설정은 모든 프로파일에 대해 동일합니다.",
-        "description": "Filter tuning subtab note"
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>경고:</b></span> 당신이 사용하는 필터링 양은 위험할 정도로 낮습니다. 이는 기체를 제어하기 힘들게 하고, 분실을 초래할 수 있습니다. <b>최소한 하나의 자이로 다이나믹 저역통과 또는 자이로 저역통과 1과 최소한 하나의 D-텀 다이나믹 저역통과 또는 D텀 저역통과 1을 활성화</b>할 것을 강력히 권장합니다."
@@ -3511,10 +3482,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "프로파일 독립적 필터 설정"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "쿼드 자이로 및 D-텀 필터링을 조정하는 슬라이더입니다.<br /><br />많은 필터링은 더 부드러운 비행을 제공하지만, PID 루프에 대한 자이로 신호 지연(위상 지연) 을 증가시켜 공격적 비행 성능, 프롭워시 핸들링, 스틱 반응에 나쁜 결과를 초래할 수 있으며, 과도할 경우 진동을 일으킬 수 있습니다.<br /><br />적은 필터링은 자이로 신호 지연을 감소시키지만, 고주파 모터 진동(노이즈) 에 대한 D-텀 반응으로 모터 온도를 높일 수 있습니다.<br>또한 필터링이 지나치게 낮으면 비행성능 저하(노이즈 대 신호비 상승) 를 초래할 수 있습니다.",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "적은 필터링",
         "description": "Filter tuning slider low header"
@@ -3531,21 +3498,9 @@
         "message": "자이로 필터 승수:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "기본 자이로 저역통과 필터를 각각에 비례하여 올리거나 낮춥니다. 자이로 필터링은 PID 루프 전에 적용됩니다.<br>쿼드 규격별 일반적인 모터 노이즈 범위:<br /><br />6\"+ 쿼드 - 일반적으로 100hz ~ 330hz<br>5\" 쿼드 - 일반적으로 220hz ~ 500hz<br>후프부터 3\" 쿼드 - 일반적으로 300hz ~ 850hz<br /><br />일반적으로, 슬라이더를 자이로 저역통과 1 다이나믹 최소/최대 컷오프 범위가 위의 내용을 포함하도록 설정하십시오.<br>그러나, 부드러운 비행을 위해서는 슬라이더에 많은 필터링을 사용하세요. 보다 적극적인 필터 튜닝을 얻으려면 슬라이더에서 적은 필터링을 사용하십시오.<br /><br />적은 필터링에서 기체가 멀리 날아가거나 모터가 타는 것을 발생시킬 수 있으므로 과격한 행동을 취하지 않도록 주의하십시오.<br>참고로 프레임 공진 문제, 잘못된 베어링, 그리고 박살난 프롭은 더 많은 필터링을 필요로 합니다.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "D 텀 필터 승수:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "기본 D-텀 저역통과 필터를 각각에 비례하여 올리거나 내리십시오.<br>D-텀 필터링은 노이즈에 가장 민감한 항목으로서 고주파 노이즈를 10배에서 100배 이상 증폭시킬 수 있으므로 D-텀에 한하여 PID 루프 이후에 적용됩니다.<br /><br />일반적으로 D-텀 필터 슬라이더를 자이로 필터 슬라이더와 함께 올립니다. 강한 D-텀 필터링을 위해 모터 노이즈 범위보다 훨씬 낮은 D-텀 필터 컷오프를 선택한 다음 자이로 필터 승수를 사용하여 전체 자이로 신호에 적용하세요.<br>권장 D값은 기본과 슬라이더 스케일링에 내장되어 있습니다.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "쿼드 비행 특성(PID 게인) 을 조정하는 슬라이더<br /><br />마스터 승수: (위의) 모든 PID 게인이 게인 사이의 비례적 차이를 유지하도록 증가시키거나 감소시킵니다.<br /><br />PD 밸런스: P와 D텀('스프링' [p-term] 과 '쇽 옵져버' [d-term]) 사이의 균형(비율 \\ 비례 차이) 을 조정합니다.<br /><br />PD 게인: P&D 게인을 함께 증가 또는 감소합니다 - 더 많은 (또는 적은) PID 제어 권한을 위하여 둘 사이의 비율(밸런스) 를 유지합니다.<br /><br />스틱 반응 게인: 피드포워드 게인을 올리거나 낮추어 쿼드의 스틱 반응 감각을 제어합니다.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">주의</span>: 현재 슬라이더 위치는 기체가 멀리 날아가거나, 모터 손상 또는 안전하지 않은 기체 동작이 발생할 수 있습니다. 신중하게 진행하십시오.",
@@ -3579,22 +3534,6 @@
         "message": "마스터 승수:",
         "description": "Master tuning slider label"
     },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "피치-롤 비율:",
-        "description": "Pitch-Roll Ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "피치-롤 비율은 피치와 롤 축 사이의 관성 모멘트(MoI) 균형입니다.<br /><br />일반적으로 피치 축은 MoI가 높기 때문에 피치 축과 롤 축에서 PID 이득이 더 높은 것이 적절할 수 있습니다.  그러나 '스트레치형 X' 또는 기타 구성에서는 그렇지 않을 수 있습니다.<br /><br />일반적으로 튜닝을 위해 한 축에서 D-텀 진동('트릴링' 노이즈) 이 나타나기 시작할 때까지 'P 및 D 게인' 슬라이더를 위쪽으로 이동한 다음 일부를 뒤로 젖힙니다.  블랙박스는 어느 축이 '트릴링'인지 쉽게 판단할 수 있는 방법입니다.  어느 축이 D-텀 한계점에 있는지 확인한 후에는 피치-롤 게인 슬라이더를 사용하여 다른 축을 같은 한계치에 약간 못 미치도록 하여 최대 비행 성능을 위해 쿼드의 균형을 맞출 수 있습니다.",
-        "description": "Pitch-Roll Ratio tuning slider helpicon message"
-    },
-    "pidTuningIGainSlider": {
-        "message": "I-텀 게인:",
-        "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "I-텀은 P-텀과 균형을 이루어야 하며, P-텀이 D-텀과 균형을 이루어야 하는 방법과 유사합니다(튜닝 절차: 필터 -> D-텀 -> P-텀 -> I-텀).<br /><br />I-텀 게인 슬라이더는 I-텀 게인을 조정하면서 P-텀 게인을 일정하게 유지하여 두 조건 간의 비율을 조정합니다.<br /><br />0% 스로틀로 하강할 때 느린 흔들림이 나타나는 경우, 이는 I-텀 게인이 너무 높다는 것을 나타내는 것으로, I-텀 게인 슬라이더를 낮추거나 <b>또는</b> D-텀 및 PD 밸런스를 아직 조정하지 않은 경우 (I-텀을 낮추기 전에 먼저 해야할), P 및 D 게인 슬라이더를 올려야 합니다.<br /><br />이 말은, 일반적으로 나선형 회전, 궤도 등에서 쿼드가 스틱을 따라 잘 유지되게 하기 위해 I-텀 게인을 가능한 강하게(하지만 밸런스 내에서) 원한다는 것입니다.",
-        "description": "I-gain Gain tuning slider helpicon message"
-    },
     "pidTuningPDRatioSlider": {
         "message": "PD 밸런스:",
         "description": "PD balance tuning slider label"
@@ -3603,33 +3542,9 @@
         "message": "P & D 게인:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningDMinRatioSlider": {
-        "message": "D_최소값 게인 감소:",
-        "description": "D Min slider label"
-    },
-    "pidTuningDMinRatioSliderHelp": {
-        "message": "정상적인 전진 비행에서 억제되는 D-게인의 양을 제어합니다.  슬라이더를 내려 일반적인 전진 비행에서 D-게인을 더 많이 떨어뜨립니다.  슬라이더를 위로 올려 정상적인 전방 비행에서 D-게인을 적게 떨어뜨립니다.<br /><br />D_최소값을 활성화하면, 비행 중에 액티브 D-게인이 변경됩니다. 정상적인 전진 비행(D_최소값을 활성화한 경우) 에서 액티브 D-게인은 D_최소값 게인 값 바로 위에 맴돕니다. 급격한 스틱 이동 또는 프롭 워시 중에 액티브 D-게인이 D_최대값 게인으로 상승합니다. 자세한 내용은 위의 D_최소값 / D_최대값 팁을 참조하십시오.<br /><br />낮은 D-게인은 전진 비행을 평탄화하여 필터 설정 탭에서 자이로 및/또는 D-텀에 대한 필터링을 증가시킬 필요가 없도록 할 수 있습니다; 반면 오버슈팅 제어 및/또는 쿼드를 프롭-워시로부터 안정화하거나 외부 압력(바람)을 견디기 위해 더 많은 D-텀이 필요할 때 액티브 D-게인을 D_최대값으로 상승시킵니다.",
-        "description": "D_min slider helpicon message"
-    },
-    "pidTuningResponseSlider": {
-        "message": "스틱 반응 게인:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "일반적으로 큰 쿼드는 낮은 전력 대 관성 모멘트(MoI)로 인해 더 높은 PID 게인을 필요로 합니다.<br /><br />소형 쿼드(마이크로) 는 일반적으로 높은 전력 대 MoI 비로 인해 더 낮은 PID 게인을 필요로 합니다.<br /><br />더 높은 값은 낮은 권한의 쿼드에 대한 값입니다. 더 낮은 값은 높은 권한의 쿼드에 대한 값입니다.",
-        "description": "Master Gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "상대적으로 높은 D-텀은 스틱 반응성을 저해하고 모터를 뜨겁게 만들 수 있지만 P-텀 진동을 제어하는 데 도움이 되며 프롭-워시 진동을 개선할 수 있습니다.<br /><br />상대적으로 낮은 D-텀은 더 빠른 스틱 응답성을 제공하지만 프롭-워시 성능과 외부 압력(바람)에 대한 반응성이 약해질 수 있습니다.",
-        "description": "PD balance tuning slider helpicon message"
-    },
     "pidTuningPDGainSliderHelp": {
         "message": "낮은 P와 D 게인은 모터를 차갑게하는 결과를 가져오지만 또한 프롭-워시 진동이 더 커지는 결과를 가져옵니다. 너무 낮은 값은 쿼드를 불안정하게 할 수 있습니다.<br /><br />P와 D 텀은 프롭-워시를 줄이기 위해 함께 작동합니다.<br /><br />값이 높을수록 모터 열이 증가하며 높은 D 텀 게인으로 인해 부드러운 전진 비행 중에 진동이 증가할 수 있습니다.",
         "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "낮은 FF 값은 스틱 반응을 더 나쁘게 할 수 있고, 플립이나 롤의 끝에서 쿼드가 스틱에 너무 많이 뒤쳐져 느린 바운스백과 I-텀 윈딩 업 및 'I-텀 바운스백'을 유발할 수 있습니다.<br /><br />높은 FF 값은 날카로운 움직임에서 딱딱한 스틱 반응을 가져올 수 있습니다. 지나치게 높은 FF 값은 플립이나 롤의 끝에서 오버슈트와 빠른 바운스백을 유발할 수 있습니다.<br /><br />노트:<br />I-텀 릴렉스 기능은 낮은 권위의 쿼드나 낮은 스틱 반응 게인이 사용될 경우에 대한 스틱 움직임에서 윈딩 업으로부터 I-텀을 멈추게 할 수 있습니다.",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "자이로 저역통과 필터"
@@ -3654,9 +3569,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "자이로 저역통과 2 필터 형식"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "저역통과 필터는 두 가지 변형을 가질 수 있습니다: 정적 필터와 동적 필터. 결정된 저역통과 필터의 경우 한 개 (정적 또는 동적) 만 동시에 활성화할 수 있습니다. 정적에는 필터가 시작되는 어떤 방식으로 정의되는 값인 컷오프만 있습니다. 동적에서는 최소값과 최대값, 즉 컷오프가 위치한 범위를 정의합니다. 이 컷오프는 스로틀 스틱을 이동하는 것보다 최소에서 최대로 동시에 이동합니다."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "자이로 노치 필터"
