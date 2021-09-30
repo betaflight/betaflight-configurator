@@ -1567,11 +1567,11 @@
     },
     "pidTuningDMinGain": {
         "message": "增益（Gain）",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "超前",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID 控制器设置"
@@ -1627,20 +1627,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC 插值间隙 [毫秒]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "通过这个参数， 前馈值在接近摇杆中点附近时被降低，使翻滚动作的结束过程更平滑一些。<br> 该值表示摇杆偏移量：0代表摇杆居中，1代表摇杆打满。当摇杆实际位置大于该值时，前馈值保持在用户设定的数字不变。当摇杆实际位置小于该值时，前馈值会按比例下降，在摇杆居中时降低到0。<br> 设置为1可以获得最平滑的效果，而设置为0将保持前馈值在整个行程内都保持在用户设定的数字不变。"
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D 设定点转换阈值"
     },
     "pidTuningDtermSetpoint": {
         "message": "D 设定点权重"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "通过这个参数， D 设定点权重可以被降低到接近摇杆中点，使翻滚动作结束得更平滑一些。<br> 该值表示摇杆偏移量：0代表摇杆居中，1代表摇杆打满。当摇杆实际位置大于该值时，设定点权重保持在用户设定的数字不变。当摇杆实际位置小于该值时，设定点权重会按比例下降，在摇杆居中时降低到0。<br> 设置为1可以获得最平滑的效果，而设置为0将保持设定点权重在全程都保持在用户设定的数字不变。"
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "该参数在导数范围里影响摇杆的“加速”效果。<br> 0等同于旧的 D 只追踪陀螺仪的“测量”方法，1等同于同时追踪陀螺仪和摇杆的”误差“方法。<br> 较低的值提供较为平滑缓和的摇杆响应，较高的值则使摇杆的反应（加速）更迅猛。<br> 注意使用较高值时，建议同时启用 RC 插值以避免信号噪声。"
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 强烈不建议将D设定点转换设置为0到0.1之间的值。这样做可能会导致不稳定，以及降低摇杆在穿过中点时的响应速度。</span>"
@@ -3230,10 +3221,6 @@
         "message": "P 和 D 增益:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
-        "message": "摇杆响应增益:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "陀螺仪低通滤波器"
     },
@@ -3257,9 +3244,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "陀螺仪低通滤波器2类型"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "低通滤波器有两个类型：静态和动态。某一给定低通滤波器，同一时刻只能启用一个类型（静态或动态）。静态滤波器需要预先定义一个截止频率，它是一个以滤波器某种初始化过程而定义的值。动态滤波器则通过设置最低和最高值，来定义一个截止频率的移动范围。截止频率跟随油门摇杆在最低和最高范围内移动。"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "陀螺仪陷波滤波器"
