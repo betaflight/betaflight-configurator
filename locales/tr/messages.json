@@ -625,12 +625,6 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interpolasyon aralığı [ms]"
     },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Bu parametre ile, D Ayar Noktası Ağırlığı, çubukların ortasında azaltılır ve bu da çevirme ve ruloların daha pürüzsüz bir şekilde bitmesine yol açar. <br> Değer, bir çubuk saptırma noktasını temsil eder: 0 - merkezli çubuk, 1 - tam sapma. Sopa bu noktanın üzerinde olduğunda, Ayar Noktası Ağırlığı yapılandırılmış değerinde sabit tutulur. Çubuk bu noktanın altına yerleştirildiğinde, Ayar Noktası Ağırlığı orantılı olarak azaltılır ve çubuk merkezi konumunda 0'a ulaşır. <br>1 değeri, maksimum yumuşatma efekti verirken, 0 değeri, Ayar Noktası Ağırlığını yapılandırılmış değerin tamamında sabit tutar sopa aralığı."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Bu parametre, türev bileşen içindeki uçak kumanda çubuğunun hızlandırıcı etkisini belirler.<br> 0 değeri, D değerinin yalnızca cayroyu izlediği eski Ölçüm metoduna eşitken, 1 değeri, eşit cayro ve uçak kumanda çubuğunun izleme oranın eşit olduğu eski Hata metoduna eşittir.<br> Daha düşük değer daha yavaş/daha yumuşak çubuk tepkisine eşitken, daha yüksek değer daha fazla çubuk ivme tepkisi sağlar.<br> Denetim tekmelerinin gürültü yapmasını önlemek için radyo kontrol enterpolasyonunun daha yüksek değerlerle etkinleştirilmesi önerildiğini not edin."
-    },
     "pidTuningProportional": {
         "message": "Orantılı"
     },
