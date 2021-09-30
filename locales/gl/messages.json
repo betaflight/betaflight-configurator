@@ -1634,19 +1634,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Ganancia",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Ascenso",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min ofrece un xeito de ter un nivel inferior de D no voo normal e un nivel máis alto para as manobras rápidas que poden provocar desbordamentos, como flips e rolls. Tamén sube D durante o prop-wash. A ganancia axusta a rapidez de D ata o seu valor máximo e baséase no xiroscopio para determinar os movementos fortes e os eventos de prop-wash. O avance fai que D suba máis cedo empregando o punto de consigna no canto do xiro para determinar os movementos bruscos.",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Controla a forza de amortiguación (D-term) nun voo recto normal.<br>Con D_Min activado, o valor de D cambia durante o voo. En voo recto normal usa o valor de D Min suave. Durante movementos bruscos ou durante prop-wash, o D aumenta co valor de D Max especificado á esquerda.<br /><br />O valor D máximo obtense con movementos bruscos dos controis, pero có prop-wash só se obteñen incrementos parciais.<br>Axuste o valor de Ganancia de D Mine e Avance para controlar a cantidade e sensibilidade do incremento.",
-        "description": "D Min helpicon message on PID table titlebar"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Configuración do controlador PID"
@@ -1758,20 +1750,11 @@
     "pidTuningFeedforwardTransition": {
         "message": "Transición"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Con este parámetro, o termo Feedforward pode reducirse preto do centro dos sticks, o que resulta nun final máis suave dos flips e rolls.<br> O valor representa un punto de desvío do stick: 0 - stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, Feedforward mantense constante no seu valor configurado. Cando o stick colócase por debaixo dese punto, Feedforward redúcese proporcionalmente, alcanzando 0 na posición central do stick.<br> O valor de 1 dá o efecto de alisado máximo, mentres que o valor de 0 mantén o Feedforward fixado no seu valor configurado en todo o intervalo de stick."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "Transición de punto D"
     },
     "pidTuningDtermSetpoint": {
         "message": "Peso do punto D"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Con este parámetro, o termo Feedforward pode reducirse preto do centro dos sticks, o que resulta nun final máis suave dos flips e rolls.<br> O valor representa un punto de desvío do stick: 0 - stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, Feedforward mantense constante no seu valor configurado. Cando o stick colócase por debaixo dese punto, Feedforward redúcese proporcionalmente, alcanzando 0 na posición central do stick.<br> O valor de 1 dá o efecto de alisado máximo, mentres que o valor de 0 mantén o Feedforward fixado no seu valor configurado en todo o intervalo de stick."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Este parámetro determina o efecto de aceleración de stick dentro do compoñente derivado.<br> Valor de 0 é igual ao antigo método de medición onde D só rastrexa o xiro, mentres que o valor de 1 é igual ao antigo método de rotación con igual xiro e relación de seguimento do stick.<br> Un valor baixo equivale a unha resposta de pau máis lenta / suave, mentres que un valor máis elevado proporciona máis resposta de aceleración de stick.<br> Recoméndase que a interpolación de RC estea habilitada con valores máis altos para evitar que os golpes de control fagan ruído."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong> $t(warningTitle.message):</strong> Desaconséllase moito o uso dunha transición de punto de consecuencia maior que 0 e inferior a 0,1. Se o fai, pode levar a inestabilidade e reducir a capacidade de resposta dos stick mentres atravesan o punto central.</span>"
@@ -1823,16 +1806,8 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla a forza de amortiguamento a calquera movemento na aeronave. Para os movementos de stick, o D-term amortiza o comando. Para unha influencia externa (prop-wash ou ráfagas de vento), o D-term amortiza a influencia.<br /><br />As maiores ganancias proporcionan máis amortiguamento e reducen o exceso en P-term e FF.<br>Non obstante, o D-term é MOI sensible ás vibracións de alta frecuencia xiro (ruído | aumenta de 10x a 100x).<br /><br />O ruído de alta frecuencia pode provocar calor no motor e queimar motores se as D-gains son demasiado altas ou se o ruído xiro non está ben filtrado (consulte a pestana Filtros).<br /><br />Pense no D-term como o amortiguador do seu coche, pero coa propiedade inherente negativa de aumentar o ruído en alta frecuencia no gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Anticipativo"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "É un termo adicional de empuxe (resorte) baseado na entrada de stick. FF axuda ao P-term a empuxar a aeronave para os movementos do stick.<br /><br />O empuxe P-term baséase na diferenza entre o punto de consigna comandado (deg/seg) e a lectura giroscópica da velocidade de rotación actual (deg/seg). Empuxe FF baseado só no cambio comandado dos sticks.<br /><br />Valores máis elevados (ganancias) producirán unha resposta da máquina máis nítida á entrada do stick.<br>Un valor demasiado elevado pode producir algún exceso, aumento da calor do motor e saturación do motor (onde os motores non poden manter o ritmo de cambio desexado).<br>Os valores máis baixos ou cero (0) producirán unha resposta máis lenta e suave ás entradas do stick.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Aviso:</b></span>Taxas moi altas poden producir desyncs dende desaceleracións rápidas."
@@ -1965,10 +1940,6 @@
     },
     "tuningHelp": {
         "message": "<b>Consellos de axuste</b><br/><span class=\"message-negative\"> IMPORTANTE: </span> É importante verificar as temperaturas do motor durante os primeiros voos. Canto maior sexa o valor do filtro, mellor pode voar, pero tamén conseguirá máis ruído nos motores. <br> O valor predeterminado de 100Hz é óptimo, pero para configuracións de ruído pode intentar baixar o filtro Dterm a 50Hz e posiblemente tamén o filtro xiratorio."
-    },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">IMPORTANTE:</span> Recomendamos usar os controis deslizantes para cambiar a configuración do filtro. Mova os dous controis deslizantes xuntos.<br>É mellor facer cambios relativamente pequenos e probar despois de cada cambio. Comprobe de preto as temperaturas do motor antes de facer máis cambios.<br>Menos filtros (deslizadores á dereita, valores de corte máis altos) mellorarán o prop-wash, pero deixarán pasar máis ruído aos motores, facéndoos máis quentes, posiblemente o suficientemente quentes como para queimar por fóra. É posible un menor filtrado na maioría das versións limpas e se o filtrado de rpm está habilitado.<br>A configuración de filtro inusualmente alta ou baixa pode provocar fallos no armado. Os valores predeterminados son seguros para os quads típicos de 5\".<br><strong>Nota:</strong> O cambio de perfís só cambiará a configuración do filtro do D-term. A configuración do filtro giroscópico é a mesma para todos os perfís.",
-        "description": "Filter tuning subtab note"
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Aviso:</b></span> A cantidade de filtrado que está a usar é perigosamente baixa. É probable que isto faga que a aeronave sexa difícil de controlar e poida producir desarmados. É altamente recomendable <b>activar polo menos un dos Gyro Dynamic Lowpass ou Gyro Lowpass 1 e polo menos un dos D-Term Dynamic Lowpass ou D Term Lowpass 1</b>."
@@ -3534,10 +3505,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Axustes do perfil de Filtros independentes"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Control deslizantes para axustar o xiroscopio e o filtrado D-term.<br /><br />Máis filtrado ofrécelle un voo máis suave, pero tamén aumenta o atraso do sinal do xiroscopio (Delay da fase) ao bucle PID o que provocará un peor rendemento de voo agresivo, manipulación de prop-wash, resposta de stick e se é excesiva pode causar oscilacións.<br /><br />Menos filtros reducen o atraso do sinal do xiroscopio, pero poden aumentar as temperaturas do motor debido a que o D-term reacciona ás vibracións do motor de alta frecuencia (ruído).<br>Ademais, se o filtrado é excesivamente baixo, causará unha diminución do rendemento do voo (maior relación ruído / sinal).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Menos filtrado",
         "description": "Filter tuning slider low header"
@@ -3554,21 +3521,9 @@
         "message": "Multiplicador de filtro Gyro:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "Aumente ou reduza os filtros de paso baixo giroscopio predeterminados en proporción entre si. O filtrado giroscópico aplícase antes do bucle PID.<br>Rangos xerais de ruído do motor por clase de quad:<br /><br /> Quads de 6\"+ - xeralmente entre 100 Hz e 330 Hz<br>quads de 5\" - xeralmente dentro de 220 Hz a 500 Hz<br>quads de 3 \"- normalmente entre 300 Hz e 850 Hz<br /><br />Xeralmente, desexa configurar o control deslizante para que o rango de corte mínimo / máximo dinámico Gyro Lowpass 1 cubra o anterior.<br>Non obstante, para voos máis suaves, use Máis filtrado na barra deslizante. Para obter unha sintonía de filtro máis agresiva, use Menos filtros na barra deslizante.<br /><br /> Con menos filtrado ATENCIÓN para non radicalizarse como provocar desarmados ou motores queimados.<br>Teña en conta os problemas de resonancia do frame, os malos rodamentos e as hélices que poden causar que precise máis filtrado.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "D Multiplicador de filtro de prazo:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Aumente ou reduza os filtros de paso baixo predeterminados do D-term en proporción entre si. <br> O filtrado do D-term aplícase despois do lazo PID, SÓ no D-term, xa que é o termo máis sensible ao ruído e pode amplifique calquera ruído de alta frecuencia entre 10 e 100 veces máis.<br /><br />Xeralmente desexa mover o control deslizante Filtro en D-term co control deslizante Filtro giroscópico. Quere que os límites do filtro D-term estean moi por debaixo do rango de ruído do motor para un filtrado máis durado que o que se aplica a todo o sinal giroscópico co multiplicador de filtros giroscópicos.<br> O diferencial recomendado está integrado no predeterminado e no control deslizante escalar.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Deslizadores para axustar as características do voo en quad (ganancias PID)<br /><br />Multiplicador principal: aumenta ou baixa todas as ganancias PID (arriba) mantendo unha diferenza proporcional entre as ganancias.<br /><br />PD Balance: Axusta o equilibrio (relación \\ diferenza proporcional) entre os termos P e D (\"o resorte\" [P-term] e \"amortiguador\" [D-term]).<br /><br />Ganancia PD: aumenta ou Diminúe as ganancias de P&D xuntas (mantendo a relación (balance) entre os dous - para obter máis (ou menos) autoridade de control PID.<br /><br />Ganancia de resposta Stick: Aumenta ou reduce as ganancias FeedForward para controlar a sensación da resposta do stick do quad.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATENCIÓN</span>: As posicións deslizantes actuais poden causar volantes, danos no motor ou comportamentos seguros. Proceda con precaución.",
@@ -3602,22 +3557,6 @@
         "message": "Mestre multiplicador:",
         "description": "Master tuning slider label"
     },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "Proporción Pitch-Roll:",
-        "description": "Pitch-Roll Ratio slider label"
-    },
-    "pidTuningRollPitchRatioSliderHelp": {
-        "message": "A proporción Pitch-Roll é o balance do momento de inercia (MdI) entre o eixo Pitch e Roll.<br /><br />Xeralmente, o eixo Pitch ten un MdI máis alto e, polo tanto, pode ser apropiado ter ganancias PID máis altas no eixo Pitch vs eixo Roll. Non obstante, en \"Strechted X\" ou noutras configuracións, é posible que non sexa o caso.<br /><br />Xeralmente para afinar, suba o control deslizable \"Ganancia P e D\" ata que un eixo comeza a amosar oscilación D-term a longo prazo (un ruído \"trillante\") e logo retrocédaia. Blackbox é o método máis doado para determinar que eixe está \"trillando\". Unha vez que atope que eixo está no límite do D-term, pode empregar o control deslizante Pitch-Roll Gain para levar ó outro eixe a pouca distancia do mesmo límite para equilibrar o quad para obter o mellor rendemento en voo.",
-        "description": "Pitch-Roll Ratio tuning slider helpicon message"
-    },
-    "pidTuningIGainSlider": {
-        "message": "Ganancia I-term:",
-        "description": "I-term slider label"
-    },
-    "pidTuningIGainSliderHelp": {
-        "message": "I-term ten que estar en equilibrio con P-term; semellante a como o P-term debe estar en equilibrio co D-term (Secuencia de sintonización: filtros -> D-term -> P-term -> I-term).<br /><br />Os controis deslizantes de ganancia do I-term axustan as ganancias de I-term mentres manteñen as ganancias de P-term constantes para axustar a proporción entre os dous termos.<br /><br />Se detecta oscilacións lentas cando baixa o acelerador ó 0%, indica que as ganancias do I-term son demasiado altas e debería baixar o control deslizante de ganancia do I-term<b>OU</b>subir o control deslizante de ganancia de P e D se aínda non axustou os D-term e PD (o que debería primeiro antes de baixar I-term).<br /><br />Dito isto, xeralmente vai querer que as ganancias do I-term sexan o máis fortes que poidan ser (pero dentro dun equilibrio) para manter o seguimento do quad nas manobras en xiros de espiral, órbitas, ect...",
-        "description": "I-gain Gain tuning slider helpicon message"
-    },
     "pidTuningPDRatioSlider": {
         "message": "Balance de PD:",
         "description": "PD balance tuning slider label"
@@ -3626,33 +3565,9 @@
         "message": "Ganancia P e D:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningDMinRatioSlider": {
-        "message": "Caída de Ganancia D_Min:",
-        "description": "D Min slider label"
-    },
-    "pidTuningDMinRatioSliderHelp": {
-        "message": "Controla a cantidade de ganancias D que se suprimen nun voo recto normal. Baixe o control  móbil para soltar MÁIS as ganancias D nun voo recto normal. Suba o control móbil para que as ganacias D caian MENOS nu voo recto normal.<br /><br />Con D_min activado, a ganancia D activa cambia durante o voo. En voo recto normal (con D_min activado) a ganancia D activa sitúase xusto por encima dos valores de ganancia D_min. Durante os movementos fortes ou propwash, a ganancia activa D aumenta ata a ganancia D_max. Vexa os consellos D_min / D_max anteriores para obter máis información.<br /><br /> As ganancias en D máis baixas poden axudar a suavizar o voo cara a adiante, negando a necesidade de aumentar o filtrado no xiro e / ou no D-term na pestana Configuración de filtros.; mentres aumenta as ganancias activas D ata os valores D_max cando se precisa máis D-term para controlar a superación e / ou para estabilizar o quad en condicións de propwash ou para resistir forzas externas (vento).",
-        "description": "D_min slider helpicon message"
-    },
-    "pidTuningResponseSlider": {
-        "message": "Ganancia de resposta de stick:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "Xeralmente os quads máis grandes necesitan maiores ganancias de PID debido a que teñen unha proporción de potencia menor ao momento de inercia (MdI).<br /><br />Os quads máis pequenos (micros) normalmente necesitan ganancias de PID máis baixos debido a unha maior relación potencia / MdI.<br /><br />Os valores máis altos son para os quads de menor autoridade. Os valores máis baixos son para os quads de maior autoridade.",
-        "description": "Master Gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Un D-term relativamente alto amortecerá a capacidade de resposta do stick e pode quentar os motores, pero debería axudar a controlar as oscilacións do P-term e mellorará a oscilación no propwash.<br /><br />un D-term relativamente baixo proporciona unha resposta máis rápida do stick, debilitará o rendemento có propwash e reaccionará ás forzas externas (vento).",
-        "description": "PD balance tuning slider helpicon message"
-    },
     "pidTuningPDGainSliderHelp": {
         "message": "A ganancia máis baixa de P e D producirá motores máis fríos, pero tamén propwash. Un valor demasiado baixo pode provocar que o quad sexa inestable.<br /><br />Os termos P e D funcionan xuntos para reducir o propwash.<br /><br />Valores máis altos aumentarán a calor do motor e poderían aumentar as oscilacións durante voo suave cara adiante debido a maiores ganancias de D-term.",
         "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "Valores máis baixos de FF empeorarán a resposta do stick e poden provocar un rebote lento ao final dun flipnou roll debido a que o quad queda demasiado atrasado ós mandos e acumula moito I-term e causa \"I-term Bounceback\".<br /><br />Valores FF máis altos darán respostas de stick máis rápidas en movementos bruscos. Valores FF excesivamente altos poden causar desbordamentos e rebotes rápidos ao final dun flipnou roll.<br /><br />Nota:<br />A función I-term Relax pode impedir a acumulación do I-term por movemento dos sticks en quads con pouca autoridade ou se se usan ganancias de resposta de stick baixas.",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Paso Baixo do Xiro"
@@ -3677,9 +3592,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Tipo de Filtro Xiro Paso Baixo 2"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Os Filtros Paso Baixo poden ter duas variantes: estático e dinámico. Para un determinado número de filtro paso baixo só uno pode estar activado á vez (estático ou dinámico). O estático só ten un Corte que define de algunha maneira dónde empeza o filtro. O dinámico define valores mínimos e máximos, que é o rango dónde se sitúa o Corte. Este Corte móvese entre o mínimo e o máximo á vez que se move o stick do acelerador."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch do Xiro"
