@@ -1321,11 +1321,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Gain",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Advance",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID kontroliera iestatījumi"
@@ -1381,20 +1381,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interpolācijas intervāls [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Ar šo parametru, Feedforward iestatījuma svars var tikt samazināts tuvu sviras centram, kas rezultējas ar maigāku nobeigumu pie flipiem un rolliem.<br> Šī vērtība reprezentē sviras ielieces punktu: 0 - svira centā, 1 - pilnīga ieliece. Kad svira ir virs šī punkta, Feedforward ir konstants tā konfigurētajā vērtībā. Kad svira ir zem šī punkta, Feedforward ir samazināts proporcionāli, sasniedzot 0 sviras centra pozīcijā.<br> Vērtība 1 dod maksimālu izlīdzinājumu efektu, kamēr 0 vērtība uztur Feedforward fiksētu uz tā konfigurēto vērtību visā svirās gājiena diapazonā."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D iestatījuma pāreja"
     },
     "pidTuningDtermSetpoint": {
         "message": "D iestatījuma svars"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Ar šo parametru, D iestatījuma svars var tikt samazināts tuvu sviras centram, kas rezultējas ar maigāku nobeigumu pie flipiem un rolliem.<br> Šī vērtība reprezentē sviras ielieces punktu: 0 - svira centā, 1 - pilnīga ieliece. Kad svira ir virs šī punkta, iestatījuma svars ir konstants tā konfigurētajā vērtībā. Kad svira ir zem šī punkta, iestatījuma svars ir samazināts proporcionāli, sasniedzot 0 sviras centra pozīcijā.<br> Vērtība 1 dod maksimālu izlīdzinājumu efektu, kamēr 0 vērtība uztur iestatījuma svaru fiksētu uz tā konfigurēto vērtību visā svirās gājiena diapazonā."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Šis parametrs nosaka sviras akselerācijas efektu derivative komponentē. <br> Vērtība 0 ir ekvivalenta vecajai mērījuma metodei, kur D seko tika žiroskopam, kamēr vērtība 1 ekvivalenta vecajai mērījuma metodei ar vienādu žiroskopa un sviru sekošanu attiecību.<br> Zemāka vērtība sniedz lēnāku/vienmērīgāku sviras atsauci, kamēr augstāka vērtība sniedz lielāku sviras akselerācijas atsauci.<br> Atcerieties ka pie augstām vērtībām RC interpolāciju ieteicams ieslēgt, tas novērsīs vadības sviras trokšņu ģenerēšanu."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong>Izmantojot D iestatījuma pāreju lielāku par 0 un mazāku par 0.1 ir drosmīgs gājiens. Tā darot, tas var novest līdz nestabilitātei un samazināt vadības sviru atsaucību, kad tās šķērso centra punktu.</span>"
@@ -2813,9 +2804,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Žiroskopa zemfrekvenču 2 filtra tips"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Zemfrekvenču filtri var būt divu tipu: statiski un dinamiski. Dēļ ierobežotā zemfrekvenču filtra skaita tikai viens (statisks vai dinamisks) var tikt ieslēgts vienlaicīgi. Statiskajam ir tikai nogriešanas frekvence, kas ir vērtība kas nosaka vietu kur sākās filtrs. Dinamiskais nosaka minimālo un maksimālo vērtību, kas ir diapazons kurā uzstādās nogriešanas frekvence. Šī nogriešana pārvietojas no min līdz maks vienlaicīgi, kad jūs pārvietojat droseli sviru."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Žiroskopa joslas filtrs"
