@@ -1334,11 +1334,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Gain",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Advance",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Postavke PID kontrolera"
@@ -1394,20 +1394,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interval interpolacije [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "S ovom vrijednosti, Feedforward može biti smanjen kada su kontrole na sredini, što poboljšava završetke flipova i rollova.<br> Vrijednost reprezentira točku otklon kontrola od centra: 0 - kontrole centrirane, 1 - maksimalni otklon od centra. Kad je kontrola iznad zadadne vrijednosti, Feedforward je konstantan na konfiguriranoj vrijednosti. Kada je kontrola ispod zadane vrijednosti, Feedforward se smanjuje proporcionalno do 0 kada su kontrole na centru. <br> Vrijednost 1 daje maksimalno efekt poravnavanja, dok vrijednost 0 drži Feedforward fiksnim na konfiguriranoj vrijednosti kroz cijeli hod kontrola."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint prijelaz"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint težina"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "S ovom vrijednosti, D Setpoint težina može biti smanjena kada su kontrole na sredini, što poboljšava završetke flipova i rollova.<br> Vrijednost reprezentira točku otklona kontrola od centra: 0 - kontrole centrirane, 1 - maksimalni otklon od centra. Kad je kontrola iznad zadadne vrijednosti, Setpoint težina je konstantna na konfiguriranoj vrijednosti. Kada je kontrola ispod zadane vrijednosti, Setpoint težina se smanjuje proporcionalno do 0 kada su kontrole na centru. <br> Vrijednost 1 daje maksimalni efekt poravnavanja, dok vrijednost 0 drži Setpoint težinu fiksnom na konfiguriranoj vrijednosti kroz cijeli hod kontrola."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Ovaj parametar određuje akceleracijski efekt kontrole derivacijske komponente.<br> Vrijednost od 0 je jednaka staroj metodi gdje D samo prati žiroskop, dok vrijednost od 1 je jednaka staroj metodi pogreške s jednakim praćenjem žirskopa i kontrolnog omjera.<br>Niža vrijednost znači sporiji/uglađeniji odziv na kontrolu, dok viša vrijednost nudi više akceleracijskog odziva kontrole.<br>Napomena: RC poravnavanje je preporučeno sa višim vrijednostima kako bi se smanjile vibracije kod naglih kontrola."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Kokrištenje D Setpoint prijelaza većeg od 0 i manjeg od 0.1 se ne preporučuje. To može dovesti do nestabilnosti i smanjenog odzina na upravljanje kod prijela središnje točke stickova</span>"
@@ -2906,9 +2897,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro Lowpass 2 vrsta filtera"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Lowpass filteri imaju dvije varijante: statički i dinamički. Za određeni lowpass filter samo jedan (statički ili dinamički) može biti omogućen i isto vrijeme. Statički ima samo cutoff što je vrijednost koja određuje gdje filter započinje. Dinamički ima raspon od min do max vrijednosti, u tom se rasponu nalazi cutoff i on se pomiče u tom rasponu kako se mijenja gas/throttle."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filteri"
