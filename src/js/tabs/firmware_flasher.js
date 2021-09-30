@@ -419,7 +419,7 @@ firmware_flasher.initialize = function (callback) {
         function populateBuilds(builds, target, manufacturerId, duplicateName, targetVersions, callback) {
             if (targetVersions) {
                 targetVersions.forEach(function(descriptor) {
-                    const versionRegex = /^(\d.\d.\d(?:-\w+)?)(?: #(\d+))?$/;
+                    const versionRegex = /^(\d+.\d+.\d+(?:-\w+)?)(?: #(\d+))?$/;
                     const versionParts = descriptor.version.match(versionRegex);
                     if (!versionParts) {
                         return;
