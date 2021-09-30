@@ -1379,11 +1379,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Ganho",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Avanço",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Configurar controlador PID"
@@ -1439,20 +1439,11 @@
     "receiverRcInterpolationInterval": {
         "message": "Intervalo de Interpolação RC [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Com este parâmetro, o termo Feedforward pode ser reduzido próximo ao centro dos sticks, isto faz com que o final de um giro (flip ou roll) fique mais suave.<br> Este valor representa a posição do stick: \"0\" - stick no centro, \"1\" - stick nas extremidades. Quando o stick estiver acima do ponto especificado, o termo Feedforward permanece constante no valor configurado. Quando estiver abaixo do ponto especificado, o termo Feedforward será reduzido proporcionalmente, atingindo 0 quando o stick estiver no centro.<br> O valor \"1\" gera o efeito mais suave possível; O valor \"0\" mantém o valor configurado do termo Feedforward fixo durante todo o movimento do stick."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "Transição do ponto D"
     },
     "pidTuningDtermSetpoint": {
         "message": "Influência do ponto D"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Com este parâmetro, a influência do ponto D pode ser reduzida próximo ao centro dos sticks, isso faz com que o fim dos flips e rolls seja mais suave.<br> O valor representa a posição do stick: 0 - stick centralizado, 1 - stick nas extremidades. Quando o stick estiver acima deste valor, a influência do ponto D será mantido constante com o valor configurado. quando o stick estiver abaixo deste valor, a influência do ponto D é reduzida proporcionalmente, até atingir 0 com o stick centralizado.<br> Valor 1 gera o efeito mais suave possível, enquanto o valor 0 mantém a influência fixa ao valor configurado durante todo o movimento do stick."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Este parâmetro determina o efeito de aceleração do stick em relação ao componente derivativo D.<br> Com o valor em 0, será usado o antigo método de medição onde D monitora somente o giroscópio, enquanto o valor em 1 usa o antigo método de correção de erro com monitoramento igual entre o giroscópio e o stick.<br> Valores mais baixos resultam em uma resposta mais lenta/suave do stick, enquanto valores mais altos resultam em uma resposta mais acelerada.<br> É recomendado ativar a interpolação do RC com valores mais altos para evitar ruídos."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Usar a Transição do ponto D com um valor maior que 0 e menor do que 0.1 não é recomendado. Fazer isso pode causar instabilidade e resposta reduzida do stick conforme o stick atravessa a posição central.</span>"
@@ -2982,10 +2973,6 @@
         "message": "Ganho de P e D:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
-        "message": "Ganho na Resposta do Stick:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Lowpass (Passa Baixa) do GIROSCÓPIO"
     },
@@ -3009,9 +2996,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro - Lowpass 2 - Tipo do filtro"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Os filtros Lowpass (Passa Baixa) têm dois tipos: Estático e dinâmico. Para cada filtro lowpass, somente um dos dois tipos pode estar ativo. O tipo estático tem uma única frequência de corte que determina o começo do filtro. O tipo dinâmico define um valor máximo e mínimo, a frequência de corte é então posicionada entre esses valores de acordo o movimento do Stick do Acelerador."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch (Rejeita Faixa) do GIROSCÓPIO"
