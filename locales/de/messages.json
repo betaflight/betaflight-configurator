@@ -1479,11 +1479,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Verstärkung",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Vorhaltezeit",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID Kontroller EInstellungen"
@@ -1539,20 +1539,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolationsinterval (ms)"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Mit diesem Parameter kann man die Feedforward Regelung an der Mittelstellung der Sticks reduzieren und damit ein weicheres Enden von Flips und Rolls erreichen.<br> Der Wert bedeutet eine Auslenkung des Sticks von 0 - Knüppel mittig bis 1 - voller Ausschlag. Wenn der Knüppel weiter ausgelenkt wird als dieser Wert, hat die Feedforward Regelung den eingestellten Wert. Wenn der Stick weniger ausgelenkt ist, wird die Feedforward Regelung proportional reduziert und erreicht 0 in der Nullstellung des Knüppels.<br> Ein Wert von 1 ergibt den maximalen Glättungseffekt, ein Wert von 0 hält die Feedforward Regelung über den gesamten Steuerbereich auf seinem eingestellten Wert."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Gewichtung"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Mit diesem Parameter kann man D Setpoint Weight an der Mittelstellung der Sticks reduzieren und damit weichere Enden von Flips und Rolls erreichen.<br> Der Wert bedeutet eine Auslenkung des Sticks von 0 - mittig bis 1 - voller Ausschlag. Wenn der Stick weiter ausgelenkt ist als dieser Wert, hat Setpoint Weight seinen eingestellten Wert. Wenn der Stick weniger ausgelenkt ist, wird Setpoint Weight proportional reduziert und erreicht 0 in der Nullstellung des Sticks.<br> Ein Wert von 1 ergibt den maximalen Glättungseffekt, ein Wert von 0 hält Setpoint Weight über den gesammten Steuerbereich auf seinem eingestellten Wert."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Gibt an wie hart der PID Controller bei Eingaben der Sticks vom Zentrum weg reagieren soll. 0 bedeutet das es keinen Unterschied zwischen Stick Eingaben und Abweichungen durch die Umgebung (z.B. Wind gibt). Kleinere Werte führen zu einem sauberen und \"smootheren\" Quad, höhere Werte führen zu einem direkterem Fluggefühl. <br /> Bei hohen Werten wird der Einsatz der RC Interpolation empfohlen um ein Überreagieren zu verhindern."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.</span>"
@@ -3127,10 +3118,6 @@
         "message": "P und D Verstärkung:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
-        "message": "Steuerknüppel Reaktionsverstärkung:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filter"
     },
@@ -3154,9 +3141,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro Lowpass 2 Filter Type"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Die Lowpass Filter können zwei Ausprägungen haben: statisch und dynamisch. Nur eine der beiden Varianten kann für einen funktionsfähigen Lowpass Filter aktiviert sein. Der Statische definiert einen Wert, bei dem die Filterung beginnt. Der Dynamische definiert Min- und Maxwerte, zwischen denen die Filterung patziert wird. Diese bewegt sich dann mit der Gashebelstellung in diesem Korridor."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filter"
