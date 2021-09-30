@@ -1403,11 +1403,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Ökning",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Advance",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID-kontrollerinställningar"
@@ -1463,20 +1463,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC-interpolationsintervall [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Med denna parameter kan framkopplings-termen reduceras nära mitten av spakarna, vilket resulterar i jämnare avslut på flippar och rollar.<br> Värdet representerar en böjningspunkt: 0 - spaken centrerad, 1 - full böjning. När spaken är över denna punkt, hålls framkoppling konstant vid sitt konfigurerade värde. När spaken är under denna punkt, reduceras framkoppling proportionellt, och blir 0 vid spakens mittposition.<br> Värdet 1 ger maximal utjämningseffekt, medan värdet 0 håller framkoppling konstant vid sitt konfigurerade värde över hela spakens räckvidd."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D setpoint-övergång"
     },
     "pidTuningDtermSetpoint": {
         "message": "D setpoint-vikt"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Med denna parameter kan D setpoint-vikten reduceras nära mitten av spakarna, vilket resulterar i jämnare avslut på flippar och rollar.<br> Värdet representerar en böjningspunkt: 0 - spaken centrerad, 1 - full böjning. När spaken är över denna punkt, hålls setpoint-vikten konstant vid sitt konfigurerade värde. När spaken är under denna punkt, reduceras setpoint-vikten proportionellt, och blir 0 vid spakens mittposition.<br> Värdet 1 ger maximal utjämningseffekt, medan värdet 0 håller setpoint-vikten konstant vid sitt konfigurerade värde över hela spakens räckvidd."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Denna parameter bestämmer spakens accelerationseffekt inom den derivativa komponenten.<br> Värdet 0 innebär en äldre mätbaserad metod där D endast följer gyron, och värdet 1 innebär en äldre felbaserad metod där gyro- och spakar följs likvärdigt.<br> Lägre värden innebär långsammare/jämnare spakrespons, och högre värden ger en mer accelererande spakrespons.<br> Observera att aktivering av RC-interpolering rekommenderas vid högre värden för att undvika att plötsliga ändringar orsakar brus."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Användning av en D setpoint-övergång mellan 0 och 0.1 avråds bestämt. Det kan resultera i instabilitet och sämre spakrespons när spakarna korsar mittpunkten.</span>"
@@ -2958,10 +2949,6 @@
         "message": "P- och D-ökning:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
-        "message": "Spakresponsökning:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro lågpassfilter"
     },
@@ -2985,9 +2972,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro lågpassfiltertyp 2"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Lågpassfiltren finns i två varianter: statiska och dynamiska. För ett förutbestämt lågpassfilternummer kan bara ett (statiskt eller dynamiskt) vara aktivt samtidigt. Det statiska filtret har ett Cutoff-värde som på något sätt definierar var filtret startar. Det dynamiska filtret sätter ett min- och ett maxvärde, som är Cutoff-omfånget. Denna Cutoff förflyttas från min till max samtidigt som styrspaken flyttas."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro bandspärrfilter"
