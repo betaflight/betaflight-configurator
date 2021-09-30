@@ -1522,7 +1522,7 @@
     },
     "pidTuningDMinGain": {
         "message": "Érzékenység",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID Kontroller Beállítások"
@@ -1578,20 +1578,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpollációs Tartomány [ms]"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Ezzel a paraméterrel a Feedforward időtartama csökkenthető a karok középpontja közelében, aminek eredményeként a fordulások simábbak lesznek.<br> Az érték a kar eltérítési pontját jelzi: 0 - a kar középpontjában, 1 - a teljes elhajlás. Amikor a kar e pont fölött van, a Feedforward folyamatosan állandó marad a konfigurált értékén. Ha a kart e pont alá helyezik, a Feedforward arányosan csökken, és a kar középhelyzetében eléri a 0.<br> 1 érték biztosítja a maximális simítási hatást, míg a 0 érték tartja a Feedforward konfigurált értékén rögzítve a teljes tartományban."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Alapjel átmenet"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Alapjel súlya"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Ezzel a paraméterrel a D alapjel-tömeg csökkenthető a karok középpontja közelében, aminek következtében a fordulások simábbak lesznek.<br> Amikor a kar e pont fölött van, az alapjel súlyát állandóan tartja a konfigurált értékén. Ha a kart e pont alá helyezik, az alapjel-súly arányosan csökken, és a kar középhelyzetében eléri a 0.<br>1 érték maximális simítási hatást biztosít, míg a 0 érték megtartja az alapjel súlyát a konfigurált értékén az egész tartományban."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Ez a paraméter határozza meg a gyorsító hatást a derivált komponensben.<br> 0 értéke megegyezik a régi mérési módszerrel, ahol D csak a giroszkópot követi, míg az 1 érték megegyezik a régi módszerrel, egyenlő giroszkóp és kar követési arány mellett.<br> Alsó érték megegyezik a lassabb / simább kar reakcióval, míg a magasabb érték annál nagyobb gyorsulási választ ad.<br> Vegye figyelembe, hogy az RC interpolációt nagyobb értékekkel engedélyezni kell, hogy megakadályozzák a vezérlő zajkeltését."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message)</strong> A 0-nál nagyobb és 0,1-nél kisebb D alapjel-átmenetet erősen visszaszorítja. Ellenkező esetben instabilitást és csökkent karkészlet-reakciót okozhat, mivel a karok áthaladnak a középponton.</span>"
@@ -3226,10 +3217,6 @@
         "message": "P és D érzékenység:",
         "description": "P and D Gain tuning slider label"
     },
-    "pidTuningResponseSlider": {
-        "message": "Kar válasz érzékenység:",
-        "description": "Response tuning slider label"
-    },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Giroszkóp aluláteresztő Szűrő"
     },
@@ -3253,9 +3240,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Giroszkóp aluláteresztő 2 Szűrő típusa"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Az aluláteresztő szűrőknek két változata lehet: statikus és dinamikus. Egy meghatározott alsó áteresztő szűrőnél csak egy (statikus vagy dinamikus) engedélyezhető egyszerre. A statikusnak csak olyan kivágása van, amely olyan érték, amely valamilyen módon meghatározza a szűrő indulásának helyét. A dinamika meghatározza a min és a max értékeket, azaz azt a tartományt, amelybe a levágás kerül. Ez a levágás min-ről max-ra mozog ugyanabban az időben, mint a gázkar mozgatása."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giroszkóp Notch szűrők"
