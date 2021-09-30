@@ -1559,15 +1559,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Toename",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Voortgang",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min biedt een manier om een ​​lager niveau van D te hebben tijdens normale vlucht en een hoger niveau voor snelle manoeuvres die overshoot kunnen veroorzaken. Zoals flips en rolls. Het verhoogt ook de D tijdens prop-wash. Gain past aan hoe snel de D waarde zijn maximale waarde bereikt en is gebaseerd op gyro om scherpe bewegingen en prop-wash-gebeurtenissen te bepalen. Advance zorgt ervoor dat de D waarde eerder omhoog gaat door het setpoint te gebruiken in plaats van de gyro om scherpe bewegingen te bepalen.",
-        "description": "D Min feature helpicon message"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID Controller instellingen"
@@ -1645,20 +1641,11 @@
     "pidTuningFeedforwardTransition": {
         "message": "Overgang"
     },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Met deze parameter kan de Feedforward-term worden gereduceerd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Wanneer de stick zich boven dat punt bevindt, wordt Feedforward constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt Feedforward proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 de Feedforward op zijn geconfigureerde waarde houdt over het hele stickbereik."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Met deze parameter kan het D-setpointgewicht worden verlaagd nabij het midden van de sticks, wat resulteert in een soepeler einde van flips en rolls.<br>De waarde vertegenwoordigt een punt van stick-deflectie: 0 - stick gecentreerd, 1 - volledige deflectie. Als de stick zich boven dat punt bevindt, wordt het setpointgewicht constant gehouden op de geconfigureerde waarde. Wanneer de stick onder dat punt wordt gepositioneerd, wordt het setpointgewicht proportioneel verlaagd tot 0 in het midden van de stick.<br>Waarde van 1 geeft een maximaal afvlakeffect, terwijl een waarde van 0 het setpointgewicht over het gehele bereik van de stick op de geconfigureerde waarde houdt."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Deze parameter bepaalt het stickversnellende effect binnen het afgeleide component.<br>Een waarde van 0 is gelijk aan de oude meetmethode waarbij D alleen de gyro volgt. Een waarde van 1 gelijk is aan oude foutmethode met zowel de gyro als de stick tracking.<br>Een lagere waarde is gelijk aan een langzamere / vloeiendere stick-respons, terwijl een hogere waarde meer stick-acceleratierespons biedt.<br>Let op. Het is aanbevolen om RC-interpolatie in te schakelen bij een hogere ingestelde waarde."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Het gebruik van een D Setpoint transitie tussen de 0 en 0.1 wordt afgeraden. Mocht je dit wel doen dan kan dit leiden tot instabiliteit en verminderde reactievermogen als je sticks het centrum van hun bereik passeren.</span>"
@@ -3439,14 +3426,6 @@
         "message": "Hoofd Vermenigvuldiger:",
         "description": "Master tuning slider label"
     },
-    "pidTuningRollPitchRatioSlider": {
-        "message": "Pitch-Roll verhouding:",
-        "description": "Pitch-Roll Ratio slider label"
-    },
-    "pidTuningIGainSlider": {
-        "message": "I-term Gain:",
-        "description": "I-term slider label"
-    },
     "pidTuningPDRatioSlider": {
         "message": "PD Balans:",
         "description": "PD balance tuning slider label"
@@ -3454,18 +3433,6 @@
     "pidTuningPDGainSlider": {
         "message": "P and D Gain:",
         "description": "P and D Gain tuning slider label"
-    },
-    "pidTuningDMinRatioSlider": {
-        "message": "D_min Gain drop:",
-        "description": "D Min slider label"
-    },
-    "pidTuningResponseSlider": {
-        "message": "Stick Response Gain:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "Over het algemeen hebben grotere quads hogere PID-waardes nodig vanwege een lagere verhouding tussen vermogen en traagheidsmoment (MoI).<br /><br />Kleinere quads (micros) hebben over het algemeen lagere PID-waarden nodig vanwege een hogere verhouding tussen vermogen en MoI.<br /><br />Hogere waarden zijn voor quads met een lagere autoriteit. Lagere waarden zijn voor quads met een hogere autoriteit.",
-        "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filters"
@@ -3490,9 +3457,6 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Gyro Lowpass 2 Filtertype"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "De Lowpass filters zijn er in twee varianten: statisch en dynamisch. De statische filter heeft een afsnijdingswaarde die definieert waar het filter precies begint en eindigt. Bij de dynamische filter definieer je een minimum- en een maximumwaarde. Hiermee geef je het bereik van de filter aan. De bepaling waar de afsnijding precies plaats vindt wordt bepaald door de positie van de gashendel."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filters"
