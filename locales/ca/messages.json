@@ -1549,6 +1549,10 @@
     "pidTuningDMinDisabledNote": {
         "message": "<strong>Nota:</strong>La funció D Min està desactivada i els seus paràmetres estan ocults. Per utilitzar D Min, activa-la a $t(pidTuningPidSettings.message)."
     },
+    "pidTuningDMinFeatureTitle": {
+        "message": "Amortiment dinàmic",
+        "description": "Title for the options panel for the D Max feature"
+    },
     "pidTuningDMinGain": {
         "message": "Guany",
         "description": "Gain of the D Max feature"
@@ -1556,6 +1560,14 @@
     "pidTuningDMinAdvance": {
         "message": "Avanç",
         "description": "Advance of the D Max feature"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "L’algorisme d’augment de D Max aporta D al valor D Max durant els moviments ràpids. Té dues entrades suavitzades, cadascuna amb un rang de 0 a 100, i totes dues són additives. \"Avanç\" augmenta D cap a D Max durant els moviments del stick de lemisora, lleugerament per davant de \"Gain\", que augmenta D cap a D Max quan el quad gira o tremola al rentat de prop. Només \"Gain\" aixeca D amb sacsejades o propwash. Tots dos responen amb més força al moviment més ràpid que lent. Normalment, només es necessita \"Guany\". Es pot afegir avanç per als quads de baixa autoritat que tendeixen a superar amb força. Amb valors predeterminats de 30, D arriba a D Max només durant moviments molt ràpids. Un valor de 100 portaria D fins a D Max molt fàcilment, de manera que el D efectiu durant gairebé qualsevol moviment seria el valor de D Max.",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Controla la força de l’esmorteïment a qualsevol moviment de l’arenau. Per als moviments de stick, el terme D esmorteix l'ordre. Per a una influència exterior (propwash o ratxa de vent), el terme D esmorteix la influència. <br /><br />Els guanys més alts proporcionen més amortiment i redueixen els excessos en termes P i FF. <br /> No obstant això, el El terme D és MOLT sensible a les vibracions d'alta freqüència del giroscopi (el soroll | augmenta de 10 a 100x). <br /><br /> El soroll d'alta freqüència pot provocar calor del motor i cremar motors si els guanys D són massa elevats o el giroscopi el soroll no es filtra bé (vegeu la pestanya Filtres). <br /><br /> Penseu en el terme D com l’amortidor del vostre cotxe, però amb la propietat inherent negativa d’ampliar el soroll giroscòpic d’alta freqüència.",
+        "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Ajustament del Controlador de PIDs"
@@ -1667,11 +1679,20 @@
     "pidTuningFeedforwardTransition": {
         "message": "Transició"
     },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Amb aquest paràmetre, els canvis de transició (Feedforward) poden ser reduït al centre dels sticks, que resulta en flips i rolls finals més suaus.<br> El valor representa un punt en la deflexió del stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick està per sobre d'aquest punt, el canvi de transició es manté constant al valor configurat. Quan l'stick està per sota d'aquest punt, el canvi de transició és redueix proporcionalment, arribant a 0 a la posició central de l'stick.<br> El valor 1 dona el màxim efecte de suavitzat, mentre el valor 0 manté el canvi de transició al valor configurat durant tot el recorregut de l'stick."
+    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Amb aquest paràmetre, D Setpoint Weight pot ser reduït al centre dels sticks, que resulta en flips i rolls més suaus.<br> El valor representa la desciació de l'stick: 0 - stick centrat, 1 - totalment desviat. Quan l'stick està per sobre d'aquest punt, Setpoint Weight es manté constant al valor configurat. Quan l'stick està per sota d'aquest punt, Setpoint Weight és reduït proporcionalment, arribant a 0 a la posició central de l'stick.<br> El valor 1 dona el màxim valor suavitzant, mentre el valor 0 manté el Setpoint Weight fixat añ valor configurat durant tot el recorregut de l'stick."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Aquest paràmetre determina l'efecte d'acceleració de l'stick en el component derivat.<br> El valor de 0 és igual a l'anterior mètode de mesura on D només fa el seguiment del giròscop, mentre que el valor d'1 és igual al mètode antic d'error amb la ràtio de seguiment de gir i stick igual.<br> Valor inferior és igual a una resposta d'stick més lenta/més suau, mentre que un valor més alt proporciona més resposta d'acceleració d'stick.<br> es recomana que la interpolació RC estigui activada amb valors més alts, per evitar que els cops de control facin soroll."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Es desaconsella l'ús d'una transició de punt de partida D superior a 0 i inferior a 0,1. Si ho fa, pot generar inestabilitat i una menor capacitat de resposta a mesura que els sticks passen pel punt central.</span>"
@@ -1723,8 +1744,16 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "D Max proporciona un nivell més elevat de D per a maniobres ràpides que d’altra manera podrien causar desbordaments, com voltes i rotacions. És particularment útil en construccions sorolloses o màquines amb poca autoritat. D Max permet establir el valor bàsic de D, o amortiment, per sota del que podria ser necessari, ajudant a mantenir els motors més freds i activant-se més ràpidament. D Max també aporta D durant el propwash. D Els valors d’avanç i guany màxims controlen el temps i la força de l’increment. Els pilots de versions HD Freestyle i Cinematic solen tenir un valor derivat relativament alt per aconseguir l’estabilitat en el vol cap endavant i no necessiten tant d’un augment de D Max. Els pilots de carreres normalment es preocupen de mantenir els motors frescos fins i tot amb pales doblegades, de manera que funcionen amb valors D bàsics més baixos i mantenen D Max alçat per controlar el desbordament.",
+        "description": "D Max Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
         "message": "Transició"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "És un terme addicional d’empenta (molla) basat en l’entrada del stick. FF ajuda el P term a empènyer la aeronau per als moviments del sticks.<br><br>El P term empeny basat en la diferència entre el punt de comandat (graus/seg) i la lectura del giroscopi de la velocitat de rotació actual (graus/ sec). L'empenyament de la FF es basa només en el canvi comandat dels sticks.<br><br> Valors més elevats (guanys) produiran una resposta més forta de la aeronau a l'entrada de stick.<br>Un nivell massa elevat de valors pot provocar una sobrealimentació, augment del calor del motor i saturació del motor (quan els motors no poden mantindre la velocitat de canvi desitjada).<br> Els valors inferiors o nuls (0) produiran una resposta més lenta i suau a les entrades del stick.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Advertència:</b></span> taxes molt altes poden donar lloc a desincronitzacions en desacceleracions ràpides."
@@ -1858,8 +1887,19 @@
     "tuningHelp": {
         "message": "<b>Consells d'ajustament</b><br /><span class=\"message-negative\">IMPORTANT:</span> És important verificar la temperatura del motor durant els primers vols. Com més gran sigui el valor del filtre, millor volarà, però també tindràs més soroll als motors.<br>El valor predeterminat de 100Hz és òptim, però per a les configuracions de sorolloses pots provar de baixar el filtre Dterm a 50Hz i possiblement també el filtre del giròscop."
     },
+    "tuningHelpSliders": {
+        "message": "Es recomana utilitzar els control lliscants per ajustar el filtratge. <br>Feu canvis relativament petits, proveu la volada i comproveu la temperatura del motor després de cada canvi. <br>Si moveu els lliscadors cap a la dreta es donen valors de tall més alts; això pot millorar el propwash, però deixa passar més soroll als motors, fent-los més calents, possiblement prou calents com per cremar-se. <br>La majoria de versions netes amb filtratge de rpm estaran bé amb el filtrat giroscòpic a la dreta.<br>En canvi , tingueu molta precaució quan moveu els control lliscants del filtre D cap a la dreta. <br> Els paràmetres de filtre inusualment alts o baixos poden provocar fallades en l'armament. Els valors predeterminats són segurs per a quads típics de 5 \". <br><strong>Nota:</strong> Si canvieu els perfils, només canviarà la configuració del filtre en termini D. Els paràmetres del filtre giroscòpic són els mateixos per a tots els perfils.",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class =\"message-negative\"><b>Advertència:</b></span> La quantitat de filtratge que utilitzeu és perillosament baixa. És probable que això faci que l'aeronau sigui difícil de controlar i que es pugui traduir en fugides. És molt recomanable que <b>activeu almenys un pasaa baix dinàmic del Giro o passa baix 1 de Giro i almenys un passa baix dinàmic D Term o pas baix D Term 1</b>."
+    },
+    "sliderPidsModeSelect": {
+        "message": "Mode:",
+        "description": "Pidtuning slider mode can be OFF, RP or RPY"
+    },
+    "pidTuningSliderModeHelp": {
+        "message": "<strong>Mode de control lliscant de sintonització de PID</strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><strong class=\"message-negative\">Important: </strong><br><br>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -3422,6 +3462,10 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Ajustament de Filtres independents del perfil"
     },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Control lliscants per ajustar els filtres giroscòpics i en termini D. <br> <br> Un filtratge més fort (control lliscant cap a l'esquerra i freqüències de tall més baixes) manté els motors més freds eliminant més soroll, però també augmenta el retard del senyal giroscòpic (retard de fase) al bucle PID . Això pot empitjorar el propwash i pot empitjorar les oscil·lacions ressonants. Quads menys sensibles, per exemple, X-Class, sovint funcionen bé amb un filtratge més fort. <br> <br> Menys filtratges (control lliscant cap a la dreta, freqüències de tall més altes) redueixen el retard del senyal giroscòpic i, sovint, milloren el propwash. Moure el filtre de gir baix giroscòpic cap a la dreta sol estar bé, però els motors poden escalfar-se. Normalment no cal desplaçar el filtre D cap a la dreta i pot provocar ràpidament motors molt calents.",
+        "description": "Overall helpicon message for filter tuning sliders"
+    },
     "pidTuningSliderLowFiltering": {
         "message": "Menys filtrat",
         "description": "Filter tuning slider low header"
@@ -3438,9 +3482,21 @@
         "message": "Multiplicador del filtre del Giro:",
         "description": "Gyro filter tuning slider label"
     },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "Augmenta o disminueix els filtres Gyro Lowpass per defecte en proporció entre si. El filtratge giroscòpic s'aplica abans del bucle PID. <br />Rangs generals de soroll del motor per classe de quads:<br /><br />Quads de 6 \"+, generalment entre 100hz i 330hz<br />Quads de 5\", generalment dins De 220hz a 500hz<br />Whoops o quads de 3 \", generalment de 300hz a 850hz<br /><br />En general, voleu configurar el control lliscant perquè el rang de tall mínim / màxim dinàmic Gyro Lowpass 1 cobreixi l'anterior.<br />No obstant això, per a vols més suaus, utilitzeu més filtratge al control lliscant. Per obtenir una sintonia de filtre més agressiva, utilitzeu menys filtratge al control lliscant. provoqueu una volada o esgotin els motors.<br />Tingueu en compte els problemes de ressonància del quadre del quad, els coixinets defectuosos i les pales doblegades que poden fer que necessiteu més filtratge.",
+        "description": "Gyro filtering tuning slider helpicon message"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "Multiplicador del filtre D Term:",
         "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Canvia els límits de filtre de pas baix del terme D. <br /> Si moveu el control lliscant cap a l'esquerra es dóna un filtrat D més fort (freqüència de tall inferior); a la dreta proporciona menys filtrat (freqüència de tall més alta). <br /><br />El terme D és l'element PID més sensible al soroll i la ressonància. Pot amplificar qualsevol soroll d'alta freqüència entre 10 i 100 vegades més. Per això, els límits dels filtres D són molt més baixos que els filtres giroscòpics. <br /><br />El filtrat a termini D s’aplica després del filtratge giroscòpic, a més de. Un fort filtrat D reduirà la calor del motor en quads sorollosos i pot ser útil amb valors PID 'D' elevats per minimitzar la ressonància D a freqüències mitjanes a altes. No obstant això, un fort filtrat D pot retardar el senyal D, empitjorant la manipulació del propwash i afavorint les ressonàncies D. El filtratge D per defecte és òptim per a la majoria de quads. Les màquines més grans amb D alta poden funcionar millor amb un filtrat D més fort que els valors predeterminats. En general, no cal desplaçar el control lliscant del filtre de pas baix D cap a la dreta. En quads nous, anar a la dreta pot atenuar el propwash. S’ha de fer amb molta precaució, ja que tenir menys filtrat a D pot provocar ressonàncies sobtades (incloses els rodaments del motor o l’enlairament de l’armament) i una calor del motor extrema.",
+        "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Control lliscant per ajustar les característiques del vol del quad (guanys PID)<br /><br />Amortiment (guany D): Resisteix el moviment ràpid, minimitza l’oscil·lació P. <br /><br />Seguiment (guany P i I): encoratja la capacitat de resposta del quad, si és massa alta, pot provocar trillacions o oscil·lacions. <br /><br />Resposta al stick (Feedforward): augmenta la capacitat de resposta del quad a moviments de stick més ràpids. <br /><br />Deriva - Wobble (Jo guanyo, expert): ajust fi de I.<br /><br />Dynamic D (D Max, expert): estableix la quantitat màxima a la qual es pot augmentar D durant moviments ràpids. <br /><br />Pitch Damping (Pitch: Roll D ratio, expert): augmenta la quantitat d'amortiment en el pitch respecte al roll. <br /><br />Pitch Tracking (Pitch: Roll P, I and F ratio, expert): Augmenta força estabilitzadora en el to respecte al rodament. <br /><br />Multiplicador principal (Tots els guanys, expert): augmenta o disminueix tots els guanys PID, mantenint les seves proporcions constants.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATENCIÓ</span>: Les posicions dels controls lliscant actuals poden causar volades, danys del motor o comportaments no segurs per les aeronaus. Procediu amb precaució.",
@@ -3458,6 +3514,14 @@
         "message": "<strong>Nota:</strong> El recorregut dels lliscants està restringida perquè no esteu en mode expert. Aquest rang es l'adequat per a la majoria de construccions i principiants.",
         "description": "Sliders restricted message"
     },
+    "pidTuningPidSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> El recorregut dels lliscants està restringida perquè no esteu en mode expert. Aquest rang es l'adequat per a la majoria de construccions i principiants.",
+        "description": "Firmware Pid sliders restricted message"
+    },
+    "pidTuningFilterSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> El recorregut dels lliscants està restringida perquè no esteu en mode expert. Aquest rang es l'adequat per a la majoria de construccions i principiants.",
+        "description": "Firmware filter sliders restricted message"
+    },
     "pidTuningSliderLow": {
         "message": "Baix",
         "description": "Tuning Slider Low header"
@@ -3474,9 +3538,17 @@
         "message": "Multiplicador mestre:",
         "description": "Master tuning slider label"
     },
+    "pidTuningMasterSliderHelp": {
+        "message": "Augmenta tots els paràmetres PID per igual. No canvieu aquest control lliscant tret que us quedeu sense ajustar en els altres lliscadors. Normalment, això només es necessita per a quads amb baixa autoritat o moment d’inèrcia elevat (MoI) com les versions X-Class o cinelifter. Un excés de guany mestre pot provocar oscil·lacions trillants o motors calents.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Balanç PD:",
         "description": "PD balance tuning slider label"
+    },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Una D relativament alta amortirà la resposta del stick i pot fer que els motors estiguin calents, però haurien d’ajudar a controlar les oscil·lacions P i poden millorar el propwash.<br /><br />Relativament una D baixa proporciona una resposta més ràpida al stick, però pot debilitar la gestió del propwash i la seva reacció devant de forçes externes (vent).",
+        "description": "D_term tuning slider helpicon message"
     },
     "pidTuningPDGainSlider": {
         "message": "Guany P i D:",
@@ -3485,6 +3557,70 @@
     "pidTuningPDGainSliderHelp": {
         "message": "Valors baixos de P i D donarà lloc a motors més frescos, però també provocará una oscil·lació de propwash. Un valor massa baix pot fer que el quad sigui inestable.<br /><br />els terms de P i D treballen junts per reduir el propwash.<br /><br />Valors més alts augmentaran la calor del motor i podrien augmentar les oscil·lacions durant un vol cap endavant suau per un major augment del guany de D term.",
         "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderLegacy": {
+        "message": "Guany de resposta del stick:",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningResponseSliderLegacyHelp": {
+        "message": "Valors més baixos de FF empitjoraran la resposta del stick i poden provocar un rebot lent al final d'un flip o roll a causa que el quad retarda massa els sticks i el I-term puja donan lloc a un \"Rebot de I-term\".<br /><br />Valors de FF més alts donaran respostes del stick més ràpides en moviments forts. Els valors de FF excessivament alts poden provocar desbordaments i rebots ràpids al final d'una flip o roll.<br /><br />Nota:<br />La característica I-term Relax pot evitar el I-term I acabi amunt en el moviment del stick per quads amb baixa autoritat o si s'utilitzen guanys de resposta de stick baixos.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
+    "pidTuningDGainSlider": {
+        "message": "Amortiment:<br /><i><small>Guany D</small></i>",
+        "description": "D Gain (Damping) tuning slider label"
+    },
+    "pidTuningDGainSliderHelp": {
+        "message": "Una D relativament alta amortirà la resposta del stick i pot fer que els motors estiguin calents, però haurien d’ajudar a controlar les oscil·lacions P i poden millorar el propwash.<br /><br />Relativament una D baixa proporciona una resposta més ràpida al stick, però pot debilitar la gestió del propwash i la seva reacció devant de forçes externes (vent).",
+        "description": "D gain balance tuning slider helpicon message"
+    },
+    "pidTuningPIGainSlider": {
+        "message": "Seguiment:<br /><i><small>P & I Guanys</small></i>",
+        "description": "P and I Gain (Stability) tuning slider label"
+    },
+    "pidTuningPIGainSliderHelp": {
+        "message": "Augmenteu el control lliscant de seguiment per afinar la resposta dels quads a les vostres ordres i també a influències externes; evitant que el nas del quad surti del rumb en qualsevol condició.<br /><br />Els valors més baixos de \"seguiment\" tindran molts bolets i es retiraran del rumb si es mouen els pals i es renten els accessoris. Un \"seguiment\" elevat pot provocar una oscil·lació i un rebot ràpid (difícil de veure, però es pot escoltar). Un seguiment excessiu pot provocar oscil·lacions i motors calents.",
+        "description": "P and I gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSlider": {
+        "message": "Resposta del Stick:<br /><i><small>Guany FF</small></i>",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "La resposta de stick inferior augmentarà la latència dels moviments del quad a les ordres i pot provocar un rebot lent al final d’un gir o tirada. Una resposta de pal més alta donarà una resposta més ràpida als quadres als moviments forts de pal. Una resposta de pal excessivament alta pot provocar desbordaments i rebots ràpids al final d'un flip o roll. <br /><br /><strong>Nota: </strong><br />La funció \"Terme relaxat\" pot aturar-se rebot per a quads de baixa autoritat o si s’utilitzen guanys de resposta del stick baixos.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Drift - Wobble:<br /><i><small>Guany</small></i>",
+        "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Augmenta o disminueix I. Més alt pot millorar el seguiment en girs en espiral, en òrbites o en comandaments del 0% d’acceleració. Massa I, sobretot amb P insuficient, pot provocar oscil·lacions o rebots després de donar voltes o rodar o accelerar l’accelerador al 0%.<br /><br />Generalment voleu que el control lliscant \"Drift - Wobble\" sigui tan alt com pot ser mantenir el seguiment del quad en girs en espiral, òrbites, etc., però no tan alt que comenceu a veure oscil·lacions al baixar el throttlet a 0%.<br /><br /><strong>Nota:</strong><br />Si experimenteu un rebot en qualsevol moment que sigui fàcil de veure, assegureu-vos que estigui activat \"I-term Relax\" i proveu de reduir el valor iterm_relax_cutoff.",
+        "description": "I-gain Gain tuning slider helpicon message"
+    },
+    "pidTuningDMaxGainSlider": {
+        "message": "Amortiment Dinàmic:<br /><i><small>Guany D</small></i>",
+        "description": "D Min slider label"
+    },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "Augmenta D màx, la quantitat màxima que pot augmentar D durant moviments més ràpids.<br /><br />Per a quads de carreres, on el control lliscant d'amortiment principal s'ha establert baix per minimitzar la calor del motor, si es mou aquest control lliscant cap a la dreta, millorarà control de desbordament per a canvis ràpids de direcció.<br /><br />Per a quads d'alta definició o cinematogràfics, la inestabilitat en el vol cap endavant s'aborda millor movent el control lliscant Damping (no el control lliscant Damping Boost) cap a la dreta. Comproveu sempre si hi ha calor en els motors i escolteu si hi ha sorolls estranys durant les entrades ràpides quan ajusteu aquest control lliscant cap a la dreta.<br /><br />Per als quads d’estil lliure, especialment per a construccions més pesades, moure aquest control lliscant cap a la dreta pot ajudar a controlar el desbordament en flips i rolls.<br /><br /><strong>Nota:</strong><br />Generalment, la superació en flips i rolls es deu a que no hi ha prou \"i-Term Relax\", a desincronització del motor o a una autoritat inadequada (equivalent a una saturació del motor). Si trobeu que el desplaçament del control lliscant Damping Boost cap a la dreta no millora el tiratge o el desplaçament en excés, torneu a situar-lo a la posició normal i cerqueu el motiu del desbordament o oscil·lació.",
+        "description": "D_min slider helpicon message"
+    },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Amortiment Pitch:<br /><i><small>Pitch: Roll D</small></i>",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Augmenta l’amortiment (D) NOMÉS a l’eix del pas, és a dir, per al pas respecte al Roll. Ajuda a controlar la sobrecàrrega o el rebot específic del pitch específic.<br /><br />Els quads amb un moment d’inèrcia \"més pesat\" a l'eix Pitch solen necessitar més autoritat d'amortiment (ja que Pitch té més inèrcia i acumula més impuls).<br / ><br />Sintonitzeu primer els lliscadors mòbils \"Amortiment\" i / o \"Seguiment\" fins que obtingueu un bon comportament de l'eix de rotació. A continuació, utilitzeu els lliscadors Pitch (augmentar o disminuir) per afinar l'eix del Pitch sense afectar al Roll.",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "Seguiment Pitch:<br><i><small>Pitch: Roll P & I & FF</small></i>",
+        "description": "Pitch P & I slider label"
+    },
+    "pidTuningPitchPIGainSliderHelp": {
+        "message": "Augmenta la força de seguiment NOMÉS a l'eix del pas, canviant els valors del pas P i I en relació amb Roll. Permet una autoritat de seguiment més forta a l'eix del pas en comparació amb el rodament.<br /><br />Augmenta per estabilitzar el pitch (nas) amb entrades de pas afilades o cops d'accelerador. Penseu també en augmentar els guanys del Antigravity.<br /><br />Sintonitzeu primer els lliscadors mòbils \"Amortiment\" i / o \"Seguiment\" fins que tingueu un bon comportament de l'eix de rotació. A continuació, utilitzeu els lliscadors Pitch (augmentar o disminuir) per afinar l'eix del Pitch sense afectar al Roll.",
+        "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtres Passabaixos del Giro"
@@ -3509,6 +3645,12 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Tipus de Filtre Passa-baixos 2 del Giro"
+    },
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "Els filtres de pas baix giroscòpic atenuen el soroll de freqüència més alta per mantenir-lo fora del bucle PID. Hi ha dos filtres giroscòpics configurables de manera independent; per defecte, tots dos estan actius.<br /><br />El primer pas baix D pot ser estàtic (tall fix) o dinàmic; el segon pas baix D sempre és estàtic. Quan un pas baix està en mode dinàmic, el filtre serà més fort a l’accelerador baix i el tall augmentarà (menys filtrat) a mesura que augmenti l’accelerador.<br /><br />Sense filtrar RPM, els dos filtres PT1 haurien d’estar habilitats per defecte Talls (o més forts), amb pas baix 1 en mode dinàmic. <br /><br />Amb el filtre RPM, el control lliscant del filtre giroscòpic sovint es pot moure d'alguna manera cap a la dreta. En quads nous, pot anar fins a la dreta o, alternativament, pot ser suficient un sol filtre de gir inferior estàtic a 500 Hz.<br /><br />Un quad tindrà menys propwash amb el menor retard de filtre giroscòpic (control lliscant cap a la dreta), valors de tall més alts).<br /><br />Comproveu sempre si els motors están calents quan es passa a un filtratge giroscòpic inferior (control lliscant cap a la dreta). Amb un mínim filtrat giroscòpic, és essencial tenir un filtre D suficient. Tingueu cura!"
+    },
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "Els filtres pasa baixos del Term D atenuen el soroll i les ressonàncies de freqüència més alta que, en cas contrari, serien amplificats pel guany D. <br /><br />Hi ha dos filtres D. Els seus efectes s'dha sumen. Per defecte, tots dos estan actius i el tipus de filtre és PT1. Tots dos són necessaris en gairebé tots els quads, tot i que es pot utilitzar un sol PT2 en lloc de PT1 dual.<br /><br />El primer pasa baix D pot ser estàtic (freqüència fixa) o dinàmic; el segon pas baix D sempre és estàtic. Quan un pasa baix està en mode dinàmic, el filtratge serà més fort (freqüència de tall inferior) a l’accelerador baix i el tall augmentarà (menys filtrat i menys retard) a mesura que augmenti l’accelerador. <br /><br />El filtratge dinàmic de pas baix és útil per proporcionar un filtrat D fort al ralentí, on hi ha un risc de \"gripat del motor\" o volades inesperades en l'armament, mentre es produeix menys retard un cop a l'aire, per obtenir un millor rendiment de propwash.<br /><br />La transició de tall baix a alt es produirà abans, a mesura que s’accelera l’accelerador, amb valors d’exposició de passos baixos a més llarg termini en D. D lowpass expo es pot utilitzar per afinar la quantitat de filtratge de D en diferents punts de l'accelerador.<br /><br />En general, el quad volarà millor i tindrà menys propwash amb el retard de filtre més baix (barres lliscants cap a la dreta, valors de tall més alts), PERO, sobretot amb filtres D, això augmentarà considerablement la possibilitat d’obtenir motors calents.<br /><br />És molt fàcil cremar motors si no teniu prou filtratge D. Tingueu cura!"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtres Notch (banda eliminada) del Giro"
