@@ -15,5 +15,11 @@ module.exports = {
         "no-trailing-spaces": "error",
         "eol-last": "error",
         semi: "error"
+    },    
+    overrides: [
+    {
+        files: ["**/*.js"],
+        "parser": "babel-eslint",
     }
+    ]
 }
