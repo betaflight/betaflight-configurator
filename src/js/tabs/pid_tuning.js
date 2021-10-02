@@ -3017,3 +3017,8 @@ TABS.pid_tuning.changeRatesTypeLogo = function() {
             break;
     }
 };
+
+
+TABS.pid_tuning.expertModeChanged = function(expertModeEnabled) {
+    TuningSliders.setExpertMode(expertModeEnabled);
+};

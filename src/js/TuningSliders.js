@@ -115,7 +115,7 @@ TuningSliders.initialize = function() {
         this.setDMinFeatureEnabled($('#dMinSwitch').is(':checked'));
     }
 
-    this.setExpertMode($('input[name="expertModeCheckbox"]').is(':checked'));
+    this.setExpertMode(isExpertModeEnabled());
 
     this.initPidSlidersPosition();
     this.initGyroFilterSliderPosition();
@@ -130,8 +130,8 @@ TuningSliders.initialize = function() {
     this.updateFilterSlidersDisplay();
 };
 
-TuningSliders.setExpertMode = function() {
-    this.expertMode = isExpertModeEnabled();
+TuningSliders.setExpertMode = function(expertModeEnabled) {
+    this.expertMode = expertModeEnabled;
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
         document.getElementById('sliderDMaxGain').disabled = !this.expertMode;
