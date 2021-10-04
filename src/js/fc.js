@@ -863,13 +863,14 @@ const FC = {
     getPidDefaults() {
         let versionPidDefaults = this.DEFAULT_PIDS;
         // if defaults change they should go here
-        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_43)) {
+        if (semver.eq(this.CONFIG.apiVersion, API_VERSION_1_43)) {
             versionPidDefaults = [
                 42, 85, 35, 23, 90,
                 46, 90, 38, 25, 95,
                 45, 90,  0,  0, 90,
             ];
-        } else if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_44)) {
+        }
+        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_44)) {
             versionPidDefaults = [
                 45, 80, 40, 30, 120,
                 47, 84, 46, 34, 125,
