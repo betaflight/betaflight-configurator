@@ -862,7 +862,7 @@
         "description": "Message that pops up to describe the GPS arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRESC": {
-        "message": "【GPS レスキュー】スイッチが有効になりました",
+        "message": "『GPS レスキュー』スイッチが有効になりました",
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
@@ -1535,11 +1535,15 @@
         "message": "アンチグラビティは、スロットルの素早い変化が検出されるとI値をブーストします。 強度を大きくすると、スロットルを操作したときに安定性と姿勢保持が向上します。"
     },
     "pidTuningDMin": {
-        "message": "D値最小",
+        "message": "D Min",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {
         "message": "<strong>注:</strong> D Min機能は無効になり、そのパラメーターは非表示になります。D Min機能を使用するには $t(pidTuningPidSettings.message) で有効にしてください。"
+    },
+    "pidTuningDMinFeatureTitle": {
+        "message": "ダイナミックダンピング",
+        "description": "Title for the options panel for the D Max feature"
     },
     "pidTuningDMinGain": {
         "message": "強度[ゲイン]",
@@ -1548,6 +1552,14 @@
     "pidTuningDMinAdvance": {
         "message": "詳細設定",
         "description": "Advance of the D Max feature"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "D Maxブーストアルゴリズムは素早い動きの際にD値を最大値に近づけます。これは2つのスムージングされた入力値が0～100の範囲で両方加算されます。『詳細設定』はスティック操作範囲内でD値をD Max値に向かって増加させ『強度』は少し前に機体が回転したりプロップウォッシュで揺れているときにD Max値に向かってD値を増加させます。『強度』のみ揺れやプロップウォッシュにてD値を引き上げます。どちらも遅い動きよりも速い動きに強く反応します。通常は『強度』のみ設定が必要です。大きくオーバーシュートする傾向のある影響力の弱い機体は詳細設定を施しましょう。デフォルト値30では非常に素早い動きの時にのみD値がD Maxに達します。値を100にするとD値は直ぐにD Maxに達し、ほとんどの挙動に有効となるD値がD Max値となります。",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "機体のあらゆる動きに対する減衰の強度を制御します。スティックの動きに対し、命令によりD値を減衰させます。外部からの影響 (プロップウォッシュまたは突風) に対してはD値がその影響を和らげます。<br /><br />強度を高くすると減推力が大きくなり、P値およびFF値によるオーバーシュートを抑止することができます。<br />ただしD値はジャイロにおける高周波振動に非常に敏感です。 (ノイズ | 10倍から100倍へ拡大)<br /><br />D値強度が高すぎる場合、またはジャイロノイズが適切にフィルタリングされていない場合、高周波ノイズによりモーターが発熱し、モーターが焼損する可能性があります。 (フィルタータブ参照) <br /><br />D値は自動車のショックアブソーバーのようなものですが、高周波ジャイロノイズを増幅させてしまうという、負の特性を持っていることをご了承願います。",
+        "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PIDコントローラ設定"
@@ -1594,7 +1606,7 @@
         "message": "適用するスムージングチャンネル"
     },
     "rcSmoothingFeedforwardTypeHelp": {
-        "message": "フィードフォワードに使用されるフィルタリング方法のタイプ。4.2以降、デフォルト値の【自動】が推奨されます。4.1以前の場合、ほとんどのユーザは、スムーズさと遅延のバランスが良いため、デフォルト値の【BIQUAD】の使用してください。「PT1」は遅延をわずかに減少させますが、スムーズさは弱くなります。"
+        "message": "フィードフォワードに使用されるフィルタリング方法のタイプ。4.2以降、デフォルト値の『自動』が推奨されます。4.1以前の場合、ほとんどのユーザはスムーズさと遅延のバランスが良いため、デフォルト値の『BIQUAD』の使用してください。『PT1』は遅延をわずかに減少させますが、スムーズさは弱くなります。"
     },
     "rcSmoothingSetpointTypeHelp": {
         "message": "セットポイントで使用されるフィルタリング方法のタイプ。ほとんどのユーザは、スムーズさと遅延のバランスが良いため、デフォルト値の「BIQUAD」を使用してください。「PT1」は遅延をわずかに減少させますが、スムーズさは弱くなります。"
@@ -1659,11 +1671,20 @@
     "pidTuningFeedforwardTransition": {
         "message": "遷移"
     },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "このパラメータを使用すると、スティックの中心付近でフィードフォワードを減らすことができ、フリップとロールのエンドアクションがスムーズになります。<br>この値は、スティック偏向点を表します。0-スティック中心、1-完全偏向です。スティックがその値を上回ると、フィードフォワードは設定された値で一定に保たれます。スティックがその値以下に位置すると、フィードフォワードは比例して減少し、スティック中心位置で0になります。<br>1の値はスムージング効果を最大にし、0の値はスティック範囲全体にわたって設定された値にフィードフォワードを固定します。"
+    },
     "pidTuningDtermSetpointTransition": {
         "message": "D値 セットポイント 遷移"
     },
     "pidTuningDtermSetpoint": {
         "message": "D値 セットポイント 影響力"
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "このパラメータを使用すると、D値セットポイントの影響力をスティックの中央付近で減らすことができ、その結果フリップおよびロール時のエンドアクションがスムーズになります。<br>この値はスティック偏向点を表します。0-スティック中心、1-完全偏向です。スティックがその値を上回ると、設定された値での影響力は一定に保たれます。スティックがその値以下に位置すると、設定値の影響力は比例して減少し、スティック中心位置で0になります。<br>1の値はスムージング効果を最大にし、0の値はスティック範囲全体にわたって設定された値に固定します。"
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "このパラメータは、D値におけるスティック加速効果を決定します。<br>値が0の場合は、D値がジャイロのみを追従した古い測定方式、値が1の場合はジャイロとスティック操作範囲を追従した古いエラー検出方式と同一です。<br>値が小さいほどスティックの反応はゆっくり / スムースに、値が大きいほどスティック加速反応が大きくなります。<br>なお、制御キックバックノイズを防ぐために、RC補間は高めの値とすることを推奨します。"
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> 0より大きく0.1より小さいD値セットポイントの設定はしないでください。スティックが中心を横切るときに不安定となり、スティック応答性が低下する可能性があります。</span>"
@@ -1713,10 +1734,18 @@
         "message": "Derivative"
     },
     "pidTuningDMax": {
-        "message": "D値最大"
+        "message": "D Max"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "D Maxはフリップやロール等のオーバーシュートを引き起こすような機敏な操作のため、より高いレベルでのD値を提供します。これはノイズの多い機体や低出力な機体で特に有効です。D Maxでは基本的なD値（ダンピング）を必要以上に低く設定することができ、モーター温度を低く保ち、ターンインを速くすることができます。またD Maxはプロップウォッシュ時にD値を上昇させます。D Maxの詳細設定と強度の値は、上昇のタイミングと強さをコントロールします。HDフリースタイルと空撮機体のパイロットは、一般的に直進飛行での安定性を得るために比較的高いD値を設定し、D Max値による増加をそれほど必要としないでしょう。レースパイロットは、プロペラが曲がってもモーター温度を保つ事に気を配る必要があるので、基本的なD値を低くし、オーバーシュートを抑えるためにD Max値を高くします。",
+        "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "Feedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "スティック入力に基づく (スプリングのような) 追加の押し込み値の項目です。FFは命令されたスティック操作に対して、P値がより機体をプッシュする効果を補います。<br><br>P値は命令されたセットポイント (角度/秒) と現在の角速度のジャイロ読取値 (角度/秒) の差異を基づいてプッシュします。FFは命令されたスティック可変だけでプッシュします。<br><br>値 (ゲイン) が高いほど、スティック入力に対する機体の応答がより機敏になります。<br>値が高すぎると、オーバーシュート、モーター熱の増加、モーターの飽和が発生する可能性があります。 (モーターが指定した変化率に追従できない場合) <br>値を低くまたはゼロ (0) にすると、スティック入力に対する応答が遅くなり、スムーズな反応となります。",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> レートを非常に高くすると、急激な減速から（各モーターの）非同期が発生する可能性があります。"
@@ -1850,8 +1879,19 @@
     "tuningHelp": {
         "message": "<b>チューニングTips</b><br /><span class=\"message-negative\">重要:</span> 最初のフライト中はモーターの温度を確認することが重要です。フィルター値が高くなるほど飛行が軽快となりますが、モーターにはより多くのノイズが発生します。<br>デフォルト値である100Hzが最適値となりますが、ノイズ低減設定ではD値フィルターを50Hzに、またはジャイロフィルターの値を下げてみてください。"
     },
+    "tuningHelpSliders": {
+        "message": "スライダーを使用してフィルタリングを調整することを推奨します。<br>比較的小さな変更を行い、テスト飛行をして、変更後にモーターの温度をチェックしてください。<br>スライダーを右側に動かすとカットオフ値が高くなります。プロップウォッシュが改善されるかもしれませんが、モーターにノイズが伝わりやすくなり、モーターの温度が高くなり、焼損する可能性があります。<br>RPMフィルターを使用した新造 (クリーンビルド) 機体であれば、ジャイロフィルタリングを右側に動かしても問題ありません。<br>反対に、D値フィルターのスライダーを右側に動かすときは非常に注意して設定してください！<br>フィルターの設定が異常に高かったり低かったりすると、アーミング時にフライアウェイ (遥か彼方へ飛んで行ってしまう事象) が発生する可能性があります。デフォルトの設定は一般的な5インチ機体には安全です。<br><strong>注意:</strong> プロファイルを変更すると、D値フィルターの設定のみが変更されます。ジャイロフィルターの設定は、すべてのプロファイルで同一です。",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ない状態です。これは機体制御が困難となる可能性があり、飛行中に大きく影響する可能性があります。<b>『動的ジャイロローパス』または『ジャイロローパス 1』の少なくとも1つと『D値動的ローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
+    },
+    "sliderPidsModeSelect": {
+        "message": "モード:",
+        "description": "Pidtuning slider mode can be OFF, RP or RPY"
+    },
+    "pidTuningSliderModeHelp": {
+        "message": "<strong>PIDチューニングスライダーモード</strong><br><br>PIDチューニングスライダーモードは次のようになります: <br><br>&bull;　\nOFF - スライダーを使用せず、手動で値を入力<br>&bull; RP - スライダーはロールとピッチのみを制御し、ヨーの値は手動で入力<br>&bull; RPY - スライダーが全てのPID値を設定<br><br><strong class=\"message-negative\">重要事項:</strong><br><br>スライダーモードを変更した後は、他の設定を変更する前に必ず保存してください。"
     },
     "receiverThrottleMid": {
         "message": "スロットルMID"
@@ -3414,6 +3454,10 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile毎のPID制御設定"
     },
+    "pidTuningFilterSlidersHelp": {
+        "message": "ジャイロおよびD値フィルターを調整するスライダーとなります。<br><br>フィルタリングを強くすると (スライダーを左側に動かしカットオフ周波数を低くする)、より多くのノイズを除去することでモーターを低温に保つことができますが、PIDループへのジャイロ信号遅延 (位相遅延) も増加させます。これによりプロップウォッシュと共振振動を悪化させる可能性があります。X-Classのような反応が悪い機体は、より強力なフィルタリングでうまくいくことが多々あります。<br><br>フィルタリングを少なくすると (スライダーを右側に動かし、カットオフ周波数を高くする)、ジャイロ信号の遅延が減少し、プロップウォッシュが改善されることが多々あります。ジャイロローパスフィルターを右側へ動かすと、通常は問題ありませんが、モーターが暖かくなることがあります。D値フィルターを右側に動かすことは通常は必要ありませんが、モーターが非常に熱くなることがあります。",
+        "description": "Overall helpicon message for filter tuning sliders"
+    },
     "pidTuningSliderLowFiltering": {
         "message": "フィルター減少",
         "description": "Filter tuning slider low header"
@@ -3430,9 +3474,17 @@
         "message": "ジャイロフィルター乗算値:",
         "description": "Gyro filter tuning slider label"
     },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "デフォルトのジャイロローパスフィルターを互いに比例して増減させます。ジャイロフィルタリングはPIDループの前に適用されます。<br />クワッドクラス毎の一般的なモーターノイズ範囲:<br /><br />6インチ以上 - 通常100hz〜330hz以内<br />5インチ - 通常220hz～500hz以内<br />3インチ以下&Whoop - 通常300hz～850hz以内<br /><br />通常、動的ジャイロローパスフィルター1の最小/最大カットオフ範囲が上記をカバーするようにスライダーを設定します。<br />ただし、よりスムーズな飛行を実現するには、スライダーで『フィルター増加』を使用します。より積極的なフィルター調整を行うには、スライダーの『フィルター減少』を使用します。<br /><br />フィルター減少では、フライアウェイやモーターの焼損を引き起こすような過激な設定にならないよう注意してください。<br />フレームの共振問題、ベアリングの不良、プロペラの劣化等により、更にフィルタリングが必要になる場合もありますのでご注意ください。",
+        "description": "Gyro filtering tuning slider helpicon message"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "D値フィルター乗算値:",
         "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "D値ローパスフィルター カットオフ周波数を変更します。<br />スライダーを左側に動かすとD値のフィルタリングが強く (カットオフ周波数が低く) なり、右側に動かすとフィルタリングが弱く (カットオフ周波数が高く) なります。<br /><br />D値はノイズや共振に最も敏感となるPIDの要素です。高い周波数のノイズは10倍から100倍以上に増幅されてしまいます。D値フィルター カットオフ周波数がジャイロフィルターよりもずっと低いのはそのためです。<br /><br />D値フィルタリングはジャイロフィルタリングの後、あるいはそれに加えて行われます。強いD値フィルタリングは、ノイズの多い機体のモーターの発熱を抑え、中～高周波でのD値共振を最小限に抑えることができ、PIDの『D値』を高くすることで効果を示します。しかし強いD値フィルタリングはD値の信号遅延、プロップウォッシュによる操作性の悪化、低周波数でのD値共振を助長させてしまう可能性があります。デフォルトのD値フィルタリングはほとんどの機体に最適です。D値が高い大型機では、デフォルトよりも強いD値フィルタリングを行った方が良い場合があります。D値ローパスフィルターのスライダーを右側に動かすことは、通常は必要ありません。新造機体 (クリーンビルド) 等では、右側に動かすことでプロップウォッシュを減衰させることができます。D値フィルタリングを弱くすると、突然の共振 (アーミング時におけるモーター始動や離陸等) や、極端なモーターの発熱を引き起こす可能性があるため、非常に慎重に行う必要があります。",
+        "description": "D Term filtering tuning slider helpicon message"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">警告:</span> 現在のスライダー位置は、ふらついた飛行やモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
@@ -3477,6 +3529,38 @@
     "pidTuningPDGainSliderHelp": {
         "message": "P値とD値の強度[ゲイン] が低いと、モーターは冷却されますが、プロップウォッシュによる振動が大きくなります。値が低すぎると機体が不安定になる場合があります。<br /><br />P値とD値は連動してプロップウォッシュを減少させます。<br /><br />値を高くするとモーターは高温となり、D値強度が高くなるため、スムーズな直進飛行中に振動が増加する場合があります。",
         "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderLegacy": {
+        "message": "スティックレスポンス 強度:",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningDGainSlider": {
+        "message": "ダンピング:<br /><i><small>D 強度</small></i>",
+        "description": "D Gain (Damping) tuning slider label"
+    },
+    "pidTuningPIGainSlider": {
+        "message": "トラッキング:<br /><i><small>P & I 強度</small></i>",
+        "description": "P and I Gain (Stability) tuning slider label"
+    },
+    "pidTuningResponseSlider": {
+        "message": "スティックレスポンス:<br /><i><small>FF 強度</small></i>",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningIGainSlider": {
+        "message": "ドリフト - よろめき<br /><i><small>I 強度</small></i>",
+        "description": "I-term slider label"
+    },
+    "pidTuningDMaxGainSlider": {
+        "message": "ダイナミックダンピング:<br /><i><small>D Max</small></i>",
+        "description": "D Min slider label"
+    },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "ピッチダンピング:<br /><i><small>Pitch:Roll D</small></i>",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "ピッチトラッキング:<br><i><small>Pitch:Roll P & I & FF</small></i>",
+        "description": "Pitch P & I slider label"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "ジャイロ ローパスフィルター"
@@ -3530,7 +3614,7 @@
         "message": "動的ノッチフィルターは、ジャイロノイズのピーク周波数を追跡し、その周波数を中心とした1～5つのノッチフィルターを各軸に適用します。"
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>注:</strong> 動的ノッチフィルターは無効です。設定して使用するには【$t(tabConfiguration.message)】タブの【$t(configurationFeatures.message)】項で『動的フィルター』機能を有効にしてください。"
+        "message": "<strong>注:</strong> 動的ノッチフィルターは無効です。設定して使用するには『$t(tabConfiguration.message)』タブの『$t(configurationFeatures.message)』項で『動的フィルター』機能を有効にしてください。"
     },
     "pidTuningDynamicNotchRange": {
         "message": "動的ノッチフィルター範囲"
@@ -4796,7 +4880,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisplayName": {
-        "message": "CLIコマンド【display_name】で設定した表示名"
+        "message": "CLIコマンド『display_name』で設定した表示名"
     },
     "osdTextElementEscRpmFreq": {
         "message": "ESC RPM 周波数",
