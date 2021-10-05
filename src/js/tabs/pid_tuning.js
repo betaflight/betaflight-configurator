@@ -1364,7 +1364,7 @@ TABS.pid_tuning.initialize = function (callback) {
             updatePidDisplay();
         });
 
-        $('#resetProfile').on('click', function(){
+        $('#resetPidProfile').on('click', function(){
             self.updating = true;
             self.sliderRetainConfiguration = true;
 
@@ -1372,7 +1372,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 self.refresh(function () {
                     self.updating = false;
 
-                    GUI.log(i18n.getMessage('pidTuningProfileReset'));
+                    GUI.log(i18n.getMessage('pidTuningPidProfileReset'));
                 });
             });
         });
