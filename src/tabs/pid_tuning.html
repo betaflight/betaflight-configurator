@@ -172,7 +172,7 @@
                     <div id="slidersPidsBox" class="gui_box grey topspacer tuningPIDSliders">
                         <table class="pid_titlebar">
                             <tr>
-                                <th scope="col" class="sm-min">
+                                <th scope="col" class="sm-min">Mode
                                     <select id="sliderPidsModeSelect" class="sliderMode">
                                         <option value="0">OFF</option>
                                         <option value="1">RP</option>
@@ -247,7 +247,7 @@
                                 </td>
                             </tr>
 
-                            <tr class="baseSlider">
+                            <tr class="baseSlider baseSliderDGain">
                                 <td>
                                     <span i18n="pidTuningDGainSlider"></span>
                                 </td>
@@ -261,7 +261,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningDGainSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="baseSlider">
+                            <tr class="baseSlider baseSliderPIGain">
                                 <td>
                                     <span i18n="pidTuningPIGainSlider"></span>
                                 </td>
@@ -275,7 +275,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPIGainSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="baseSlider">
+                            <tr class="baseSlider baseSliderFeedforwardGain">
                                 <td>
                                     <span i18n="pidTuningResponseSlider"></span>
                                 </td>
@@ -292,7 +292,7 @@
                             <tr class="advancedSlider">
                                 <td colspan="6" class="sliderDivider"><hr /></td>
                             </tr>
-                            <tr class="advancedSlider">
+                            <tr class="advancedSlider advancedSliderDmaxGain">
                                 <td>
                                     <span i18n="pidTuningDMaxGainSlider"></span>
                                 </td>
@@ -306,7 +306,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningDMaxGainSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="advancedSlider">
+                            <tr class="advancedSlider advancedSliderIGain">
                                 <td>
                                     <span i18n="pidTuningIGainSlider"></span>
                                 </td>
@@ -320,7 +320,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningIGainSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="advancedSlider">
+                            <tr class="advancedSlider advancedSliderRollPitchRatio">
                                 <td>
                                     <span i18n="pidTuningRollPitchRatioSlider"></span>
                                 </td>
@@ -334,7 +334,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningRollPitchRatioSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="advancedSlider">
+                            <tr class="advancedSlider advancedSliderPitchPIGain">
                                 <td>
                                     <span i18n="pidTuningPitchPIGainSlider"></span>
                                 </td>
@@ -348,7 +348,7 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningPitchPIGainSliderHelp"></div>
                                 </td>
                             </tr>
-                            <tr class="advancedSlider">
+                            <tr class="advancedSlider advancedSliderMaster">
                                 <td>
                                     <span i18n="pidTuningMasterSlider"></span>
                                 </td>
@@ -368,6 +368,9 @@
 
                     <div class="gui_box topspacer nonExpertModeSlidersNote">
                         <p i18n="pidTuningPidSlidersNonExpertMode"></p>
+                    </div>
+                    <div class="gui_box topspacer expertSettingsDetectedNote">
+                        <p i18n="pidTuningSlidersExpertSettingsDetectedNote"></p>
                     </div>
 
                     <!-- BARO, MAG, GPS -->
@@ -1139,7 +1142,7 @@
                                 <span i18n="pidTuningGyroFilterSlider"></span>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="sliderGyroFilter">
                             <td class="sm-min">
                                 <span i18n="pidTuningGyroFilterSlider"></span>
                             </td>
@@ -1158,7 +1161,7 @@
                                 <span i18n="pidTuningDTermFilterSlider"></span>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="sliderDtermFilter">
                             <td class="sm-min">
                                 <span i18n="pidTuningDTermFilterSlider"></span>
                             </td>
@@ -1177,6 +1180,10 @@
 
                 <div class="gui_box topspacer nonExpertModeSlidersNote">
                     <p i18n="pidTuningFilterSlidersNonExpertMode"></p>
+                </div>
+
+                <div class="gui_box topspacer expertSettingsDetectedNote">
+                    <p i18n="pidTuningSlidersExpertSettingsDetectedNote"></p>
                 </div>
 
                 <div class="cf_column two_columns">
