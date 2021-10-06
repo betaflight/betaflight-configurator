@@ -361,16 +361,16 @@ TuningSliders.updateSlidersWarning = function(slidersUnavailable = false) {
     let WARNING_I_GAIN = 120;
     const WARNING_DMAX_GAIN = 60;
     let WARNING_DMIN_GAIN = 40;
-    let condition;
+    let enableWarning;
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
         WARNING_I_GAIN = 2.5 * FC.PIDS[0][0];
         WARNING_DMIN_GAIN = 42;
-        condition = FC.PIDS[0][0] > WARNING_P_GAIN || FC.PIDS[0][1] > WARNING_I_GAIN || FC.PIDS[0][2] > WARNING_DMAX_GAIN || FC.ADVANCED_TUNING.dMinRoll > WARNING_DMIN_GAIN;
+        enableWarning = FC.PIDS[0][0] > WARNING_P_GAIN || FC.PIDS[0][1] > WARNING_I_GAIN || FC.PIDS[0][2] > WARNING_DMAX_GAIN || FC.ADVANCED_TUNING.dMinRoll > WARNING_DMIN_GAIN;
     } else {
-        condition = FC.PIDS[1][0] > WARNING_P_GAIN || FC.PIDS[1][1] > WARNING_I_GAIN || FC.PIDS[1][2] > WARNING_DMAX_GAIN || FC.ADVANCED_TUNING.dMinPitch > WARNING_DMIN_GAIN;
+        enableWarning = FC.PIDS[1][0] > WARNING_P_GAIN || FC.PIDS[1][1] > WARNING_I_GAIN || FC.PIDS[1][2] > WARNING_DMAX_GAIN || FC.ADVANCED_TUNING.dMinPitch > WARNING_DMIN_GAIN;
     }
-    $('.subtab-pid .slidersWarning').toggle(condition && !slidersUnavailable);
+    $('.subtab-pid .slidersWarning').toggle(enableWarning && !slidersUnavailable);
 };
 
 TuningSliders.updateFilterSlidersWarning = function(gyroSliderUnavailable = false, DTermSliderUnavailable = false) {
@@ -430,7 +430,7 @@ TuningSliders.updatePidSlidersDisplay = function() {
     $('.subtab-pid .slidersDisabled').toggle(this.pidSlidersUnavailable);
     $('.subtab-pid .nonExpertModeSlidersNote').toggle(!this.pidSlidersUnavailable && !this.expertMode);
 
-    this.updateSlidersWarning();
+    this.updateSlidersWarning(this.pidSlidersUnavailable);
 };
 
 TuningSliders.updateFilterSlidersDisplay = function() {

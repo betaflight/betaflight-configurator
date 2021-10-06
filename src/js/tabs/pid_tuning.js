@@ -1943,15 +1943,15 @@ TABS.pid_tuning.initialize = function (callback) {
                     const allowRP = originalMode === 0 && setMode === 0;
                     const allowRPY = originalMode < 2 && originalMode === setMode;
 
-                    $('.ROLL .pid_data input').each(function() {
+                    $('#pid_main .ROLL .pid_data input').each(function() {
                         $(this).prop('disabled', !allowRP);
                     });
 
-                    $('.PITCH .pid_data input').each(function() {
+                    $('#pid_main .PITCH .pid_data input').each(function() {
                         $(this).prop('disabled', !allowRP);
                     });
 
-                    $('.YAW .pid_data input').each(function() {
+                    $('#pid_main .YAW .pid_data input').each(function() {
                         $(this).prop('disabled', !allowRPY);
                     });
                 }).trigger('change');

@@ -3634,6 +3634,10 @@
         "message": "<strong>Note:</strong> Sliders are disabled because values were changed manually. Clicking the '$t(pidTuningSliderEnableButton.message)' button will activate them again. This will reset the values and any unsaved changes will be lost.",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
+    "pidTuningPidSlidersDisabled": {
+        "message": "<strong>Note:</strong> Sliders are disabled. Clicking the '$t(pidTuningSliderEnableButton.message)' button will change the PID values to match your previously saved slider position.",
+        "description": "Tuning sliders disabled note"
+    },
     "pidTuningSliderEnableButton": {
         "message": "Enable Sliders",
         "description": "Button label for enabling sliders"
