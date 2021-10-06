@@ -515,8 +515,8 @@ function startProcess() {
             $(expertModeCheckbox).prop('checked', true);
         }
 
-        $(expertModeCheckbox).change(function () {
-            const checked = $(this).is(':checked');
+        $(expertModeCheckbox).on("change", () => {
+            const checked = $(expertModeCheckbox).is(':checked');
             checkSetupAnalytics(function (analyticsService) {
                 analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
             });
@@ -525,8 +525,12 @@ function startProcess() {
                 updateTabList(FC.FEATURE_CONFIG.features);
             }
 
-            TuningSliders.setExpertMode(checked);
-        }).change();
+            if (GUI.active_tab) {
+                TABS[GUI.active_tab]?.expertModeChanged?.(checked);
+            }
+        });
+
+        $(expertModeCheckbox).trigger("change");
     });
 
     ConfigStorage.get('cliAutoComplete', function (result) {
