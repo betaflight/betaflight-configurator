@@ -3506,6 +3506,10 @@
         "message": "<strong>Nota:</strong> Els lliscadors estan desactivats perquè els valors s'han canviat manualment. Feu clic al botó '$t(pidTuningSliderEnableButton.message)' per tornar-los a activar. Això restablirà els valors i es perdran els canvis no desats.",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
+    "pidTuningPidSlidersDisabled": {
+        "message": "<strong>Nota:</strong> Els control lliscants estan desactivats. En fer clic al botó '$t(pidTuningSliderEnableButton.message)', es canviaran els valors PID perquè coincideixin amb la posició del control lliscant desada anteriorment.",
+        "description": "Tuning sliders disabled note"
+    },
     "pidTuningSliderEnableButton": {
         "message": "Activeu controls lliscants",
         "description": "Button label for enabling sliders"
