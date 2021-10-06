@@ -3592,6 +3592,10 @@
         "message": "crwdns9782:0$t(pidTuningSliderEnableButton.message)crwdne9782:0",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
+    "pidTuningPidSlidersDisabled": {
+        "message": "crwdns10663:0$t(pidTuningSliderEnableButton.message)crwdne10663:0",
+        "description": "Tuning sliders disabled note"
+    },
     "pidTuningSliderEnableButton": {
         "message": "crwdns9784:0crwdne9784:0",
         "description": "Button label for enabling sliders"
