@@ -3498,6 +3498,10 @@
         "message": "<strong>注:</strong> 値が手動で変更されたため、スライダーは無効になっています。『$t(pidTuningSliderEnableButton.message)』ボタンをクリックすると再び有効となります。これにより値がリセットされ、保存されていない変更は失われます。",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
+    "pidTuningPidSlidersDisabled": {
+        "message": "<strong>注:</strong> スライダーが無効です。『$t(pidTuningSliderEnableButton.message)』ボタンをクリックすると、以前に保存したスライダーの位置に戻りPID値を変更できます。",
+        "description": "Tuning sliders disabled note"
+    },
     "pidTuningSliderEnableButton": {
         "message": "スライダー有効",
         "description": "Button label for enabling sliders"
