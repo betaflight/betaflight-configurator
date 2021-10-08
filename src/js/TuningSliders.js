@@ -400,14 +400,6 @@ TuningSliders.legacyUpdateFilterSlidersDisplay = function() {
     }
 };
 
-TuningSliders.updateSwitchBoxes = function() {
-    const FF_SWITCH = FC.ADVANCED_TUNING.feedforwardRoll || FC.ADVANCED_TUNING.feedforwardPitch || FC.ADVANCED_TUNING.feedforwardYaw;
-    $('input[id="feedforwardGroup"]').prop('checked', FF_SWITCH).trigger('change');
-
-    const DMIN_SWITCH = FC.PIDS[0][2] !== FC.ADVANCED_TUNING.dMinRoll || FC.PIDS[1][2] !== FC.ADVANCED_TUNING.dMinPitch || FC.PIDS[2][2] !== FC.ADVANCED_TUNING.dMinYaw;
-    $('#dMinSwitch').prop('checked', DMIN_SWITCH).trigger('change');
-};
-
 TuningSliders.updateSlidersWarning = function(slidersUnavailable = false) {
     const WARNING_P_GAIN = 70;
     let WARNING_I_GAIN = 120;
@@ -664,7 +656,6 @@ TuningSliders.calculateNewPids = function(updateSlidersOnly = false) {
         .then(() => {
             this.updateFormPids(updateSlidersOnly);
             this.updateSlidersWarning();
-            this.updateSwitchBoxes();
         });
     } else {
         this.legacyCalculatePids(updateSlidersOnly);

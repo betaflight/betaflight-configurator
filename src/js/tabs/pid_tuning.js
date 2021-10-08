@@ -499,10 +499,6 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // Feedforward
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            const feedforwardGroupCheck = $('input[id="feedforwardGroup"]');
-            const PID_FEEDFORWARD = FC.ADVANCED_TUNING.feedforwardRoll || FC.ADVANCED_TUNING.feedforwardPitch || FC.ADVANCED_TUNING.feedforwardYaw;
-            feedforwardGroupCheck.prop('checked', PID_FEEDFORWARD);
-            $('.feedforwardGroupCheckbox').addClass('switchery-disabled');
             $('select[id="feedforwardAveraging"]').val(FC.ADVANCED_TUNING.feedforward_averaging);
             $('input[name="feedforwardSmoothFactor"]').val(FC.ADVANCED_TUNING.feedforward_smooth_factor);
             $('input[name="feedforwardBoost"]').val(FC.ADVANCED_TUNING.feedforward_boost);
@@ -529,10 +525,6 @@ TABS.pid_tuning.initialize = function (callback) {
                 $('.thrustLinearization .suboption').toggle(checked);
             }).change();
         } else {
-            const checkbox = document.getElementById('feedforwardGroup');
-            if (checkbox.parentNode) {
-                checkbox.parentNode.removeChild(checkbox);
-            }
             $('.vbatSagCompensation').hide();
             $('.thrustLinearization').hide();
 
@@ -628,7 +620,10 @@ TABS.pid_tuning.initialize = function (callback) {
             const dMinSwitch = $('#dMinSwitch');
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                $('.dMinGroupCheckbox').addClass('switchery-disabled');
+                const box = document.getElementById('dMinSwitch');
+                if (box.parentNode) {
+                    box.parentNode.removeChild(box);
+                }
                 $('.dMinDisabledNote').hide();
             } else {
                 dMinSwitch.prop('checked', FC.ADVANCED_TUNING.dMinRoll > 0 || FC.ADVANCED_TUNING.dMinPitch > 0 || FC.ADVANCED_TUNING.dMinYaw > 0);
@@ -1938,15 +1933,15 @@ TABS.pid_tuning.initialize = function (callback) {
                     TuningSliders.updateFormPids();
                     TuningSliders.updatePidSlidersDisplay();
 
-                    const allowRP = !!setMode;
-                    const allowY = setMode !== 1;
+                    const disableRP = !!setMode;
+                    const disableY = setMode > 1;
 
                     $('#pid_main .ROLL .pid_data input, #pid_main .PITCH .pid_data input').each(function() {
-                        $(this).prop('disabled', allowRP);
+                        $(this).prop('disabled', disableRP);
                     });
 
                     $('#pid_main .YAW .pid_data input').each(function() {
-                        $(this).prop('disabled', allowY);
+                        $(this).prop('disabled', disableY);
                     });
                 }).trigger('change');
             }
@@ -2013,7 +2008,6 @@ TABS.pid_tuning.initialize = function (callback) {
                     }
                 }
                 TuningSliders.calculateNewPids();
-                self.updateGuiElements();
                 self.analyticsChanges['PidTuningSliders'] = "On";
             });
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -2756,23 +2750,6 @@ TABS.pid_tuning.updatePIDColors = function(clear = false) {
     setTuningElementColor($('.pid_tuning .ROLL input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardRoll, FC.ADVANCED_TUNING.feedforwardRoll);
     setTuningElementColor($('.pid_tuning .PITCH input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardPitch, FC.ADVANCED_TUNING.feedforwardPitch);
     setTuningElementColor($('.pid_tuning .YAW input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardYaw, FC.ADVANCED_TUNING.feedforwardYaw);
-};
-
-TABS.pid_tuning.updateGuiElements = function() {
-    const rollF = parseInt($('.pid_tuning .ROLL input[name="f"]').val());
-    const pitchF = parseInt($('.pid_tuning .PITCH input[name="f"]').val());
-    const yawF = parseInt($('.pid_tuning .YAW input[name="f"]').val());
-    const FF_SWITCH = rollF || pitchF || yawF;
-    $('input[id="feedforwardGroup"]').prop('checked', FF_SWITCH).trigger('change');
-
-    const dRoll = parseInt($('.pid_tuning .ROLL input[name="d"]').val());
-    const dPitch = parseInt($('.pid_tuning .PITCH input[name="d"]').val());
-    const dYaw = parseInt($('.pid_tuning .YAW input[name="d"]').val());
-    const dMinRoll = parseInt($('.pid_tuning input[name="dMinRoll"]').val());
-    const dMinPitch = parseInt($('.pid_tuning input[name="dMinPitch"]').val());
-    const dMinYaw = parseInt($('.pid_tuning input[name="dMinYaw"]').val());
-    const DMAX_GAIN_SWITCH = dRoll !== dMinRoll || dPitch !== dMinPitch || dYaw !== dMinYaw;
-    $('#dMinSwitch').prop('checked', DMAX_GAIN_SWITCH).trigger('change');
 };
 
 TABS.pid_tuning.changeRatesType = function(rateTypeID) {
