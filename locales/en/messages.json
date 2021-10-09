@@ -1963,11 +1963,11 @@
     "dialogCopyProfileClose": {
         "message": "Cancel"
     },
-    "pidTuningResetProfile": {
-        "message": "Reset all profile values"
+    "pidTuningResetPidProfile": {
+        "message": "Reset current PID profile settings"
     },
-    "pidTuningProfileReset": {
-        "message": "Loaded default profile values."
+    "pidTuningPidProfileReset": {
+        "message": "Loaded default values for the current PID profile."
     },
     "pidTuningReceivedProfile": {
         "message": "Flight controller set Profile: <strong class=\"message-positive\">$1</strong>"
