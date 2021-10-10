@@ -499,10 +499,6 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // Feedforward
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            const feedforwardGroupCheck = $('input[id="feedforwardGroup"]');
-            const PID_FEEDFORWARD = FC.ADVANCED_TUNING.feedforwardRoll || FC.ADVANCED_TUNING.feedforwardPitch || FC.ADVANCED_TUNING.feedforwardYaw;
-            feedforwardGroupCheck.prop('checked', PID_FEEDFORWARD);
-            $('.feedforwardGroupCheckbox').addClass('switchery-disabled');
             $('select[id="feedforwardAveraging"]').val(FC.ADVANCED_TUNING.feedforward_averaging);
             $('input[name="feedforwardSmoothFactor"]').val(FC.ADVANCED_TUNING.feedforward_smooth_factor);
             $('input[name="feedforwardBoost"]').val(FC.ADVANCED_TUNING.feedforward_boost);
@@ -529,10 +525,6 @@ TABS.pid_tuning.initialize = function (callback) {
                 $('.thrustLinearization .suboption').toggle(checked);
             }).change();
         } else {
-            const checkbox = document.getElementById('feedforwardGroup');
-            if (checkbox.parentNode) {
-                checkbox.parentNode.removeChild(checkbox);
-            }
             $('.vbatSagCompensation').hide();
             $('.thrustLinearization').hide();
 
@@ -628,9 +620,11 @@ TABS.pid_tuning.initialize = function (callback) {
             const dMinSwitch = $('#dMinSwitch');
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                $('.dMinGroupCheckbox').addClass('switchery-disabled');
+                const box = document.getElementById('dMinSwitch');
+                if (box.parentNode) {
+                    box.parentNode.removeChild(box);
+                }
                 $('.dMinDisabledNote').hide();
-                self.updateGuiElements();
             } else {
                 dMinSwitch.prop('checked', FC.ADVANCED_TUNING.dMinRoll > 0 || FC.ADVANCED_TUNING.dMinPitch > 0 || FC.ADVANCED_TUNING.dMinYaw > 0);
 
@@ -668,8 +662,8 @@ TABS.pid_tuning.initialize = function (callback) {
                         $('.pid_tuning input[name="dMinYaw"]').val(0);
                     }
                 });
+                dMinSwitch.trigger('change');
             }
-            dMinSwitch.trigger('change');
         }
 
         $('input[id="gyroNotch1Enabled"]').change(function() {
@@ -861,7 +855,7 @@ TABS.pid_tuning.initialize = function (callback) {
             // Assign each value
             searchRow.each(function (indexInput) {
                 if ($(this).val()) {
-                    FC.PIDS[indexPid][indexInput] = parseFloat($(this).val());
+                    FC.PIDS[indexPid][indexInput] = parseInt($(this).val());
                 }
             });
         });
@@ -1806,7 +1800,6 @@ TABS.pid_tuning.initialize = function (callback) {
                 && $(item).attr('class') !== "nonProfile") {
                 $(item).change(function () {
                     self.setDirty(true);
-                    self.sliderRetainConfiguration = true;
                 });
             }
         });
@@ -1903,11 +1896,10 @@ TABS.pid_tuning.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                 if (self.sliderRetainConfiguration) {
-                        self.setDirty(true);
+                    self.setDirty(true);
                 } else {
                     TuningSliders.saveInitialSettings();
                 }
-
                 sliderPidsModeSelect.val(FC.TUNING_SLIDERS.slider_pids_mode);
             } else {
                 $('#dMinSwitch').change(function() {
@@ -1934,25 +1926,22 @@ TABS.pid_tuning.initialize = function (callback) {
             // trigger Slider Display update when PID mode is changed
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                 $('select[id="sliderPidsModeSelect"]').on('change', function () {
-                    const originalMode = TuningSliders.initialSettings.sliderPidsModeSelect;
                     const setMode = parseInt($(this).val());
 
                     TuningSliders.sliderPidsMode = setMode;
+                    TuningSliders.calculateNewPids();
+                    TuningSliders.updateFormPids();
                     TuningSliders.updatePidSlidersDisplay();
 
-                    const allowRP = originalMode === 0 && setMode === 0;
-                    const allowRPY = originalMode < 2 && originalMode === setMode;
+                    const disableRP = !!setMode;
+                    const disableY = setMode > 1;
 
-                    $('#pid_main .ROLL .pid_data input').each(function() {
-                        $(this).prop('disabled', !allowRP);
-                    });
-
-                    $('#pid_main .PITCH .pid_data input').each(function() {
-                        $(this).prop('disabled', !allowRP);
+                    $('#pid_main .ROLL .pid_data input, #pid_main .PITCH .pid_data input').each(function() {
+                        $(this).prop('disabled', disableRP);
                     });
 
                     $('#pid_main .YAW .pid_data input').each(function() {
-                        $(this).prop('disabled', !allowRPY);
+                        $(this).prop('disabled', disableY);
                     });
                 }).trigger('change');
             }
@@ -2019,7 +2008,6 @@ TABS.pid_tuning.initialize = function (callback) {
                     }
                 }
                 TuningSliders.calculateNewPids();
-                self.updateGuiElements();
                 self.analyticsChanges['PidTuningSliders'] = "On";
             });
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -2029,9 +2017,6 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('.pid_tuning .PITCH input[name="d"]').change();
                     $('.pid_tuning .YAW input[name="d"]').change();
                 });
-            } else {
-                TuningSliders.updatePidSlidersDisplay();
-                TuningSliders.updateSlidersWarning();
             }
             // reset to middle with double click
             allPidTuningSliders.dblclick(function() {
@@ -2079,14 +2064,13 @@ TABS.pid_tuning.initialize = function (callback) {
                 slider.val(value);
 
                 TuningSliders.calculateNewPids();
-                TuningSliders.updatePidSlidersDisplay();
             });
 
             // enable PID sliders button
             $('a.buttonPidTuningSliders').click(function() {
                 // set Slider PID mode to RP(Y) when re-enabling Sliders
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    const firmwareMode = TuningSliders.initialSettings.sliderPidsModeSelect;
+                    const firmwareMode = TuningSliders.initialSettings.sliderPidsMode;
                     const workingMode = firmwareMode === 1 ? 1 : 2;
 
                     if (firmwareMode !== workingMode) {
@@ -2200,11 +2184,18 @@ TABS.pid_tuning.initialize = function (callback) {
 
             // update on pid table inputs
             $('#pid_main input').on('input', function() {
-                TuningSliders.updatePidSlidersDisplay();
-                self.analyticsChanges['PidTuningSliders'] = "Off";
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    self.sliderRetainConfiguration = true;
+                } else {
+                    TuningSliders.updatePidSlidersDisplay();
+                    self.analyticsChanges['PidTuningSliders'] = "Off";
+                }
             });
             // update on filter value or type changes
             $('.pid_filter tr:not(.newFilter) input, .pid_filter tr:not(.newFilter) select').on('input', function() {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    self.sliderRetainConfiguration = true;
+                }
                 TuningSliders.updateFilterSlidersDisplay();
                 if (TuningSliders.GyroSliderUnavailable) {
                     self.analyticsChanges['GyroFilterTuningSlider'] = "Off";
@@ -2729,6 +2720,10 @@ TABS.pid_tuning.updateFilterWarning = function() {
 };
 
 TABS.pid_tuning.updatePIDColors = function(clear = false) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        return;
+    }
+
     const setTuningElementColor = function(element, mspValue, currentValue) {
         if (clear) {
             element.css({ "background-color": "transparent" });
@@ -2755,23 +2750,6 @@ TABS.pid_tuning.updatePIDColors = function(clear = false) {
     setTuningElementColor($('.pid_tuning .ROLL input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardRoll, FC.ADVANCED_TUNING.feedforwardRoll);
     setTuningElementColor($('.pid_tuning .PITCH input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardPitch, FC.ADVANCED_TUNING.feedforwardPitch);
     setTuningElementColor($('.pid_tuning .YAW input[name="f"]'), FC.ADVANCED_TUNING_ACTIVE.feedforwardYaw, FC.ADVANCED_TUNING.feedforwardYaw);
-};
-
-TABS.pid_tuning.updateGuiElements = function() {
-    const rollF = parseInt($('.pid_tuning .ROLL input[name="f"]').val());
-    const pitchF = parseInt($('.pid_tuning .PITCH input[name="f"]').val());
-    const yawF = parseInt($('.pid_tuning .YAW input[name="f"]').val());
-    const FF_SWITCH = rollF || pitchF || yawF;
-    $('input[id="feedforwardGroup"]').prop('checked', FF_SWITCH).trigger('change');
-
-    const dRoll = parseInt($('.pid_tuning .ROLL input[name="d"]').val());
-    const dPitch = parseInt($('.pid_tuning .PITCH input[name="d"]').val());
-    const dYaw = parseInt($('.pid_tuning .YAW input[name="d"]').val());
-    const dMinRoll = parseInt($('.pid_tuning input[name="dMinRoll"]').val());
-    const dMinPitch = parseInt($('.pid_tuning input[name="dMinPitch"]').val());
-    const dMinYaw = parseInt($('.pid_tuning input[name="dMinYaw"]').val());
-    const DMAX_GAIN_SWITCH = dRoll !== dMinRoll || dPitch !== dMinPitch || dYaw !== dMinYaw;
-    $('#dMinSwitch').prop('checked', DMAX_GAIN_SWITCH).trigger('change');
 };
 
 TABS.pid_tuning.changeRatesType = function(rateTypeID) {

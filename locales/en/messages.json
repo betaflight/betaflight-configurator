@@ -2006,7 +2006,7 @@
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "<strong>Pid Tuning Slider Mode</strong><br><br>Pidtuning slider mode can be:<br><br>&bull; OFF - no sliders, enter values manually<br>&bull; RP - sliders control Roll and Pitch only, enter Yaw values manually<br>&bull; RPY - sliders control all PID values<br><br><strong class=\"message-negative\">Important:</strong><br><br>Please save after changing slider mode before changing other settings."
+        "message": "<strong>Pid Tuning Slider Mode</strong><br><br>Pidtuning slider mode can be:<br><br>&bull; OFF - no sliders, enter values manually<br>&bull; RP - sliders control Roll and Pitch only, enter Yaw values manually<br>&bull; RPY - sliders control all PID values<br><br><span class=\"message-negative\"><b>Warning:</b></span>Going from RP to RPY mode will overwrite Yaw settings with firmware settings."
     },
 
     "receiverThrottleMid": {
@@ -3653,6 +3653,10 @@
     "pidTuningFilterSlidersNonExpertMode": {
         "message": "<strong>Note:</strong> Sliders range is restricted because you are not in expert mode. This range should be suitable for most builds and beginners.",
         "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<span class=\"message-negative\">CAUTION</span>: expert settings detected while in non-expert mode. Please enable Expert Mode to be able to make affected sliders accessible again.",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Low",
