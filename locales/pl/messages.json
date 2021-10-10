@@ -1714,12 +1714,6 @@
     "dialogCopyProfileClose": {
         "message": "Anuluj"
     },
-    "pidTuningResetProfile": {
-        "message": "Zresetuj wszystkie wartości w profilu"
-    },
-    "pidTuningProfileReset": {
-        "message": "Załaduj domyślne wartości w profilu."
-    },
     "pidTuningReceivedProfile": {
         "message": "Profil kontrolera lotu: <strong class=\"message-positive\">$1</strong>"
     },
