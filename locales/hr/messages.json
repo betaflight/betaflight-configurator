@@ -1511,12 +1511,6 @@
     "dialogCopyProfileClose": {
         "message": "Poništi"
     },
-    "pidTuningResetProfile": {
-        "message": "Resetiraj sve vrijednosti profila"
-    },
-    "pidTuningProfileReset": {
-        "message": "Učitaj zadane vrijednosti profila."
-    },
     "pidTuningReceivedProfile": {
         "message": "Kontroler leta postavi Profil:<strong class=\"message-positive\">$1</strong>"
     },
