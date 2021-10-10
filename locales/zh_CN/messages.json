@@ -1753,12 +1753,6 @@
     "dialogCopyProfileClose": {
         "message": "取消"
     },
-    "pidTuningResetProfile": {
-        "message": "重置所有 PID 配置文件"
-    },
-    "pidTuningProfileReset": {
-        "message": "加载默认 PID 配置文件"
-    },
     "pidTuningReceivedProfile": {
         "message": "当前飞控 PID 配置文件: <strong class=\"message-positive\">$1</strong>"
     },
