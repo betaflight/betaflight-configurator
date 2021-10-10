@@ -1812,7 +1812,7 @@
     "pidTuningFeedforwardAveraging": {
         "message": "Averaging"
     },
-    "pidTuningFeedforwardAveragingOptionOff": {
+    "pidTuningOptionOff": {
         "message": "OFF"
     },
     "pidTuningFeedforwardAveragingOption2Point": {
@@ -2001,7 +2001,7 @@
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Warning:</b></span> The amount of filtering you are using is dangerously low. This is likely to make the craft hard to control, and can result in flyaways. It is highly recommended that you <b>enable at least one of Gyro Dynamic Lowpass or Gyro Lowpass 1 and at least one of D-Term Dynamic Lowpass or D Term Lowpass 1</b>."
     },
-    "sliderPidsModeSelect": {
+    "pidTuningSliderPidsMode": {
         "message": "Mode:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
@@ -3970,10 +3970,10 @@
         "message": "Axes",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
+    "pidTuningOptionRP": {
         "message": "RP"
     },
-    "pidTuningItermRelaxAxesOptionRPY": {
+    "pidTuningOptionRPY": {
         "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {

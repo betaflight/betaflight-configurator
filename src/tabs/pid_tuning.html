@@ -172,11 +172,12 @@
                     <div id="slidersPidsBox" class="gui_box grey topspacer tuningPIDSliders">
                         <table class="pid_titlebar">
                             <tr>
-                                <th scope="col" class="sm-min">Mode
+                                <th scope="col">
+                                    <div i18n="pidTuningSliderPidsMode" class="sm-min"></div>
                                     <select id="sliderPidsModeSelect" class="sliderMode">
-                                        <option value="0">OFF</option>
-                                        <option value="1">RP</option>
-                                        <option value="2">RPY</option>
+                                        <option value="0" i18n="pidTuningOptionOff"></option>
+                                        <option value="1" i18n="pidTuningOptionRP"></option>
+                                        <option value="2" i18n="pidTuningOptionRPY"></option>
                                     </select>
                                     <div class="helpicon cf_tip" i18n_title="pidTuningSliderModeHelp"></div>
                                 </th>
@@ -612,7 +613,7 @@
 
                                     <span class="feedforwardOption feedforwardAveraging suboption">
                                         <select id="feedforwardAveraging">
-                                            <option i18n="pidTuningFeedforwardAveragingOptionOff"         value="0"/>
+                                            <option i18n="pidTuningOptionOff"         value="0"/>
                                             <option i18n="pidTuningFeedforwardAveragingOption2Point"      value="1"/>
                                             <option i18n="pidTuningFeedforwardAveragingOption3Point"      value="2"/>
                                             <option i18n="pidTuningFeedforwardAveragingOption4Point"      value="3"/>
@@ -757,8 +758,8 @@
 
                                     <span class="suboption">
                                         <select id="itermrelaxAxes">
-                                            <option i18n="pidTuningItermRelaxAxesOptionRP"     value="1">
-                                            <option i18n="pidTuningItermRelaxAxesOptionRPY"    value="2"/>
+                                            <option i18n="pidTuningOptionRP"     value="1">
+                                            <option i18n="pidTuningOptionRPY"    value="2"/>
                                             <option i18n="pidTuningItermRelaxAxesOptionRPInc"  value="3"/>
                                             <option i18n="pidTuningItermRelaxAxesOptionRPYInc" value="4"/>
                                         </select>
