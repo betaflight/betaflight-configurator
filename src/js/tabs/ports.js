@@ -160,6 +160,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
            20: 'USB VCP',
            30: 'SOFTSERIAL1',
            31: 'SOFTSERIAL2',
+           40: 'LPUART1',
         };
 
         let gpsBaudrateElement = $('select.gps_baudrate');
