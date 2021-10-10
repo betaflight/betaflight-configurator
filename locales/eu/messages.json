@@ -1707,12 +1707,6 @@
     "dialogCopyProfileClose": {
         "message": "Ezeztatu"
     },
-    "pidTuningResetProfile": {
-        "message": "Profilen balio guztiak berrezarri"
-    },
-    "pidTuningProfileReset": {
-        "message": "Profilaren lehenetsi balioak kargatu dira."
-    },
     "pidTuningReceivedProfile": {
         "message": "Hegaldi-kontroladorea ezarrita Profila: <strong class=\"message-positive\">$1</strong>"
     },
