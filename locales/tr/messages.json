@@ -703,12 +703,6 @@
     "dialogCopyProfileClose": {
         "message": "İptal"
     },
-    "pidTuningResetProfile": {
-        "message": "Tüm profil deperlerini Sıfırla"
-    },
-    "pidTuningProfileReset": {
-        "message": "Varsayılan profil değerleri yüklendi."
-    },
     "pidTuningReceivedProfile": {
         "message": "Uçuş kontrolörü bu profile ayarlandı: <strong class=\"message-positive\">$1</strong>"
     },
