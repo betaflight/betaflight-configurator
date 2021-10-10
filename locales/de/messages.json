@@ -1665,12 +1665,6 @@
     "dialogCopyProfileClose": {
         "message": "Abbrechen"
     },
-    "pidTuningResetProfile": {
-        "message": "alle Profileinstellungen zurücksetzen"
-    },
-    "pidTuningProfileReset": {
-        "message": "Standartprofilwerte geladen."
-    },
     "pidTuningReceivedProfile": {
         "message": "Geladenes Profil: <strong class=\"message-positive\">$1</strong>"
     },
