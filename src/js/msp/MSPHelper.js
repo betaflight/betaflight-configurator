@@ -1484,7 +1484,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_SET_TUNING_SLIDERS:
-                console.log("Tuning Sliders data sent");
+	        // This is done in a loop whenever the sliders are moved. Avoid logging to optimise the performance.
                 break;
 
             case MSPCodes.MSP_TUNING_SLIDERS:
