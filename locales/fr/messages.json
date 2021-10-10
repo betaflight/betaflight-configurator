@@ -1823,12 +1823,6 @@
     "dialogCopyProfileClose": {
         "message": "Annuler"
     },
-    "pidTuningResetProfile": {
-        "message": "Réinitialiser toutes les valeurs du profil"
-    },
-    "pidTuningProfileReset": {
-        "message": "Charger les valeur par défaut du profil."
-    },
     "pidTuningReceivedProfile": {
         "message": "Profil du contrôleur de vol activé: <strong class=\"message-positive\">$1</strong>"
     },
