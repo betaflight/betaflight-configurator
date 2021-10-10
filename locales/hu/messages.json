@@ -1704,12 +1704,6 @@
     "dialogCopyProfileClose": {
         "message": "Visszavonás"
     },
-    "pidTuningResetProfile": {
-        "message": "Minden profil érték visszaállítása"
-    },
-    "pidTuningProfileReset": {
-        "message": "Alapértelmezett profilértékek beolvasása"
-    },
     "pidTuningReceivedProfile": {
         "message": "Repülésvezérlő Profil: <strong class=\"message-positive\">$1</strong>"
     },
