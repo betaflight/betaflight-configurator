@@ -1086,12 +1086,6 @@
     "dialogCopyProfileClose": {
         "message": "Peruuta"
     },
-    "pidTuningResetProfile": {
-        "message": "Nollaa kaikki profiilin arvot"
-    },
-    "pidTuningProfileReset": {
-        "message": "Ladattiin profiilin oletusarvot"
-    },
     "pidTuningReceivedProfile": {
         "message": "Lento-ohjain asetettu Profiili: <strong class=\"message-positive\">$1</strong>"
     },
