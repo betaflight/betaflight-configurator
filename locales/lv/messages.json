@@ -1492,12 +1492,6 @@
     "dialogCopyProfileClose": {
         "message": "Atcelt"
     },
-    "pidTuningResetProfile": {
-        "message": "Atiestatīt profilu vērtības"
-    },
-    "pidTuningProfileReset": {
-        "message": "Ielādētas profila noklusējuma vērtības."
-    },
     "pidTuningReceivedProfile": {
         "message": "Lidojuma kontroliera iestatītais Profils: <strong class=\"message-positive\">$1</strong>"
     },
