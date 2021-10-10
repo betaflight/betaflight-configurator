@@ -1725,12 +1725,6 @@
     "dialogCopyProfileClose": {
         "message": "Cancelar"
     },
-    "pidTuningResetProfile": {
-        "message": "Reiniciar perfil"
-    },
-    "pidTuningProfileReset": {
-        "message": "Cargados valores por defecto del perfil."
-    },
     "pidTuningReceivedProfile": {
         "message": "Controlador de vuelo establecido Perfil: <strong class=\"message-positive\">$1</strong>"
     },
