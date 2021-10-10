@@ -1943,11 +1943,11 @@
     "dialogCopyProfileClose": {
         "message": "crwdns5724:0crwdne5724:0"
     },
-    "pidTuningResetProfile": {
-        "message": "crwdns5725:0crwdne5725:0"
+    "pidTuningResetPidProfile": {
+        "message": "crwdns10665:0crwdne10665:0"
     },
-    "pidTuningProfileReset": {
-        "message": "crwdns5726:0crwdne5726:0"
+    "pidTuningPidProfileReset": {
+        "message": "crwdns10667:0crwdne10667:0"
     },
     "pidTuningReceivedProfile": {
         "message": "crwdns5727:0$1crwdne5727:0"
@@ -1985,7 +1985,7 @@
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "crwdns10609:0crwdne10609:0"
+        "message": "crwdns10669:0crwdne10669:0"
     },
     "receiverThrottleMid": {
         "message": "crwdns5735:0crwdne5735:0"
@@ -3611,6 +3611,10 @@
     "pidTuningFilterSlidersNonExpertMode": {
         "message": "crwdns10621:0crwdne10621:0",
         "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "crwdns10671:0crwdne10671:0",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "crwdns9786:0crwdne9786:0",
