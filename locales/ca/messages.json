@@ -1857,11 +1857,11 @@
     "dialogCopyProfileClose": {
         "message": "Canceŀla"
     },
-    "pidTuningResetProfile": {
-        "message": "Resetejar els valors del perfil"
+    "pidTuningResetPidProfile": {
+        "message": "Restableix la configuració actual del perfil PID"
     },
-    "pidTuningProfileReset": {
-        "message": "Carregar els valors per defecte del perfil."
+    "pidTuningPidProfileReset": {
+        "message": "S'han carregat els valors predeterminats del perfil PID actual."
     },
     "pidTuningReceivedProfile": {
         "message": "Controladora de vol selecciona Perfil: <strong class=\"message-positive\">$1</strong>"
@@ -1899,7 +1899,7 @@
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "<strong>Mode de control lliscant de sintonització de PID</strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><strong class=\"message-negative\">Important: </strong><br><br>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
+        "message": "<strong>Mode de control lliscant de sintonització de PID</strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><span class=\"message-negative\">Important: <b></b></span>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
     },
     "receiverThrottleMid": {
         "message": "Throttle MID"
@@ -3525,6 +3525,10 @@
     "pidTuningFilterSlidersNonExpertMode": {
         "message": "<strong>Nota:</strong> El recorregut dels lliscants està restringida perquè no esteu en mode expert. Aquest rang es l'adequat per a la majoria de construccions i principiants.",
         "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<span class = \"message-negative\"> ATENCIÓ </span>: s'ha detectat una configuració d'expert en mode no expert. Si us plau, activeu el mode expert per tornar a fer accessibles els control lliscants afectats.",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Baix",
