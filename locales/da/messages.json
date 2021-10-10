@@ -1280,12 +1280,6 @@
     "dialogCopyProfileClose": {
         "message": "Annullér"
     },
-    "pidTuningResetProfile": {
-        "message": "Nulstil alle profilværdier"
-    },
-    "pidTuningProfileReset": {
-        "message": "Standard profilværdier indlæst."
-    },
     "pidTuningLoadedProfile": {
         "message": "Indlæst Profil: <strong class=\"message-positive\">$1</strong>"
     },
