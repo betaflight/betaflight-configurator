@@ -1820,12 +1820,6 @@
     "dialogCopyProfileClose": {
         "message": "Cancelar"
     },
-    "pidTuningResetProfile": {
-        "message": "Reiniciar valores"
-    },
-    "pidTuningProfileReset": {
-        "message": "Valores padrão do perfil carregados."
-    },
     "pidTuningReceivedProfile": {
         "message": "Perfil aplicado a partir do controlador de voo: <strong class=\"message-positive\">$1</strong>"
     },
