@@ -1722,12 +1722,6 @@
     "dialogCopyProfileClose": {
         "message": "Отмени"
     },
-    "pidTuningResetProfile": {
-        "message": "Нулирайте всички стойности на профила"
-    },
-    "pidTuningProfileReset": {
-        "message": "Зареждане на фабричните профилни стойности."
-    },
     "pidTuningReceivedProfile": {
         "message": "Полетен контролер Профил: <strong class=\"message-positive\">$1</strong>"
     },
