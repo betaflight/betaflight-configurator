@@ -1285,12 +1285,6 @@
     "dialogCopyProfileClose": {
         "message": "Batal"
     },
-    "pidTuningResetProfile": {
-        "message": "Atur ulang semua nilai-nilai profil"
-    },
-    "pidTuningProfileReset": {
-        "message": "Nilai profil bawaan dimuat."
-    },
     "pidTuningReceivedProfile": {
         "message": "Profil Flight controller: <strong class = \"message-positive\"> $1 </strong>"
     },
