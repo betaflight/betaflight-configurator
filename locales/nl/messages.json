@@ -1795,12 +1795,6 @@
     "dialogCopyProfileClose": {
         "message": "Annuleer"
     },
-    "pidTuningResetProfile": {
-        "message": "Alle profielwaarden resetten"
-    },
-    "pidTuningProfileReset": {
-        "message": "Standaard profielwaarden geladen."
-    },
     "pidTuningReceivedProfile": {
         "message": "Vluchtcontroller stel profiel in: <strong class=\"message-positive\">$1</strong>"
     },
