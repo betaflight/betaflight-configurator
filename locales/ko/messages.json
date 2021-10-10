@@ -1888,12 +1888,6 @@
     "dialogCopyProfileClose": {
         "message": "취소"
     },
-    "pidTuningResetProfile": {
-        "message": "모든 프로파일 값 초기화"
-    },
-    "pidTuningProfileReset": {
-        "message": "기본 프로파일 값이 로드됨"
-    },
     "pidTuningReceivedProfile": {
         "message": "비행 컨트롤러 설정 프로파일:  <strong class=\"message-positive\">$1</strong>"
     },
