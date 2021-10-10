@@ -1580,12 +1580,6 @@
     "dialogCopyProfileClose": {
         "message": "Avbryt"
     },
-    "pidTuningResetProfile": {
-        "message": "Återställ alla profilvärden"
-    },
-    "pidTuningProfileReset": {
-        "message": "Laddade standard-profilvärden."
-    },
     "pidTuningReceivedProfile": {
         "message": "Flygkontrollern aktiverade profil: <strong class=\"message-positive\">$1</strong>"
     },
