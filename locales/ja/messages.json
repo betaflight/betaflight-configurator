@@ -1849,12 +1849,6 @@
     "dialogCopyProfileClose": {
         "message": "キャンセル"
     },
-    "pidTuningResetProfile": {
-        "message": "全Profileをリセット"
-    },
-    "pidTuningProfileReset": {
-        "message": "デフォルトProfileをロードしました。"
-    },
     "pidTuningReceivedProfile": {
         "message": "Profileをセット:<strong class=\"message-positive\">$1</strong>"
     },
@@ -1889,9 +1883,6 @@
     "sliderPidsModeSelect": {
         "message": "モード:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
-    },
-    "pidTuningSliderModeHelp": {
-        "message": "<strong>PIDチューニングスライダーモード</strong><br><br>PIDチューニングスライダーモードは次のようになります: <br><br>&bull;　\nOFF - スライダーを使用せず、手動で値を入力<br>&bull; RP - スライダーはロールとピッチのみを制御し、ヨーの値は手動で入力<br>&bull; RPY - スライダーが全てのPID値を設定<br><br><strong class=\"message-negative\">重要事項:</strong><br><br>スライダーモードを変更した後は、他の設定を変更する前に必ず保存してください。"
     },
     "receiverThrottleMid": {
         "message": "スロットルMID"
