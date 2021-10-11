@@ -32,7 +32,6 @@ const TuningSliders = {
     PID_DEFAULT: [],
     FILTER_DEFAULT: {},
     SLIDER_DEFAULT: {},
-    initialSettings: {},
 
     cachedPidSliderValues: false,
     cachedGyroSliderValues: false,
@@ -42,56 +41,6 @@ const TuningSliders = {
 };
 
 const D_MIN_RATIO = 0.85;
-
-TuningSliders.saveInitialSettings = function () {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        this.initialSettings.sliderPidsMode = FC.TUNING_SLIDERS.slider_pids_mode;
-        this.initialSettings.sliderDGain = FC.TUNING_SLIDERS.slider_d_gain / 100;
-        this.initialSettings.sliderPIGain = FC.TUNING_SLIDERS.slider_pi_gain / 100;
-        this.initialSettings.sliderFeedforwardGain = FC.TUNING_SLIDERS.slider_feedforward_gain / 100;
-        this.initialSettings.sliderDMaxGain = FC.TUNING_SLIDERS.slider_dmax_gain / 100;
-        this.initialSettings.sliderIGain = FC.TUNING_SLIDERS.slider_i_gain / 100;
-        this.initialSettings.sliderRollPitchRatio = FC.TUNING_SLIDERS.slider_roll_pitch_ratio / 100;
-        this.initialSettings.sliderPitchPIGain = FC.TUNING_SLIDERS.slider_pitch_pi_gain / 100;
-        this.initialSettings.sliderMasterMultiplier = FC.TUNING_SLIDERS.slider_master_multiplier / 100;
-        this.initialSettings.sliderGyroFilter = FC.TUNING_SLIDERS.slider_gyro_filter;
-        this.initialSettings.sliderGyroFilterMultiplier = FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100;
-        this.initialSettings.sliderDTermFilter = FC.TUNING_SLIDERS.slider_dterm_filter;
-        this.initialSettings.sliderDTermFilterMultiplier = FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100;
-    }
-};
-
-TuningSliders.restoreInitialSettings = function () {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        FC.TUNING_SLIDERS.slider_pids_mode = this.initialSettings.sliderPidsMode;
-
-        FC.TUNING_SLIDERS.slider_d_gain = Math.round(this.initialSettings.sliderDGain * 20) * 5;
-        FC.TUNING_SLIDERS.slider_pi_gain = Math.round(this.initialSettings.sliderPIGain * 20) * 5;
-        FC.TUNING_SLIDERS.slider_feedforward_gain = Math.round(this.initialSettings.sliderFeedforwardGain * 20) * 5;
-        FC.TUNING_SLIDERS.slider_dmax_gain = Math.round(this.initialSettings.sliderDMaxGain * 20) * 5;
-        FC.TUNING_SLIDERS.slider_i_gain = Math.round(this.initialSettings.sliderIGain * 20) * 5;
-        FC.TUNING_SLIDERS.slider_roll_pitch_ratio = Math.round(this.initialSettings.sliderRollPitchRatio * 20) * 5;
-        FC.TUNING_SLIDERS.slider_pitch_pi_gain = Math.round(this.initialSettings.sliderPitchPIGain * 20) * 5;
-        FC.TUNING_SLIDERS.slider_master_multiplier = Math.round(this.initialSettings.sliderMasterMultiplier * 20) * 5;
-
-        FC.TUNING_SLIDERS.slider_gyro_filter = this.initialSettings.sliderGyroFilter;
-        FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = this.initialSettings.sliderGyroFilterMultiplier * 100;
-        FC.TUNING_SLIDERS.slider_dterm_filter = this.initialSettings.sliderDTermFilter;
-        FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = this.initialSettings.sliderDTermFilterMultiplier * 100;
-
-        MSP.promise(MSPCodes.MSP_SET_TUNING_SLIDERS, mspHelper.crunch(MSPCodes.MSP_SET_TUNING_SLIDERS))
-        .then(() => MSP.promise(MSPCodes.MSP_PID))
-        .then(() => MSP.promise(MSPCodes.MSP_PID_ADVANCED))
-        .then(() => MSP.promise(MSPCodes.MSP_FILTER_CONFIG))
-        .then(() => {
-            if (GUI.active_tab === 'pid_tuning') {
-                this.updateFormPids();
-                TABS.pid_tuning.updatePIDColors();
-            }
-        });
-        TABS.pid_tuning.sliderRetainConfiguration = false;
-    }
-};
 
 TuningSliders.setDMinFeatureEnabled = function(dMinFeatureEnabled) {
     this.dMinFeatureEnabled = dMinFeatureEnabled;
