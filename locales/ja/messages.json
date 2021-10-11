@@ -450,7 +450,7 @@
         "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerLoaded": {
-        "message": "サーバから $1 の開発情報が読み込まれました。"
+        "message": "ビルドサーバの $1 より開発情報をロードしました。"
     },
     "buildServerLoadFailed": {
         "message": "<b>サーバからの $1 リリース情報の読み込みに失敗した為、キャッシュ情報を使用します。理由：<code>$2</code></b>"
@@ -459,7 +459,7 @@
         "message": "$1 開発情報のキャッシュを参照します。"
     },
     "releaseCheckLoaded": {
-        "message": "$1 GitHubよりリリース情報が読み込まれました。"
+        "message": "GitHubの $1 よりリリース情報をロードしました。"
     },
     "releaseCheckFailed": {
         "message": "<b>GitHub情報 $1リリースの読み込みに失敗した為、キャッシュ情報を使用します。理由: <code>$2</code></b>"
@@ -1019,7 +1019,7 @@
         "message": "エアモードを常時有効にする"
     },
     "featureSUPEREXPO_RATES": {
-        "message": "Super Expo レート"
+        "message": "Super Expo Rates"
     },
     "featureSDCARD": {
         "message": "SDカード対応 (ログ用)"
@@ -1849,6 +1849,12 @@
     "dialogCopyProfileClose": {
         "message": "キャンセル"
     },
+    "pidTuningResetPidProfile": {
+        "message": "現在のPID Profile設定をリセット"
+    },
+    "pidTuningPidProfileReset": {
+        "message": "現在のPID Profileのデフォルト値をロードしました。"
+    },
     "pidTuningReceivedProfile": {
         "message": "Profileをセット:<strong class=\"message-positive\">$1</strong>"
     },
@@ -1856,10 +1862,10 @@
         "message": "Rateprofileをセット:<strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": "Profileをロードしました:<strong class=\"message-positive\">$1</strong>"
+        "message": "Profileをロードしました: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": "Rateprofileをロードしました:<strong class=\"message-positive\">$1</strong>"
+        "message": "Rateprofileをロードしました: <strong class=\"message-positive\">$1</strong>"
     },
     "pidTuningDataRefreshed": {
         "message": "PIDデータ <strong>更新しました</strong>"
@@ -1874,7 +1880,7 @@
         "message": "<b>チューニングTips</b><br /><span class=\"message-negative\">重要:</span> 最初のフライト中はモーターの温度を確認することが重要です。フィルター値が高くなるほど飛行が軽快となりますが、モーターにはより多くのノイズが発生します。<br>デフォルト値である100Hzが最適値となりますが、ノイズ低減設定ではD値フィルターを50Hzに、またはジャイロフィルターの値を下げてみてください。"
     },
     "tuningHelpSliders": {
-        "message": "スライダーを使用してフィルタリングを調整することを推奨します。<br>比較的小さな変更を行い、テスト飛行をして、変更後にモーターの温度をチェックしてください。<br>スライダーを右側に動かすとカットオフ値が高くなります。プロップウォッシュが改善されるかもしれませんが、モーターにノイズが伝わりやすくなり、モーターの温度が高くなり、焼損する可能性があります。<br>RPMフィルターを使用した新造 (クリーンビルド) 機体であれば、ジャイロフィルタリングを右側に動かしても問題ありません。<br>反対に、D値フィルターのスライダーを右側に動かすときは非常に注意して設定してください！<br>フィルターの設定が異常に高かったり低かったりすると、アーミング時にフライアウェイ (遥か彼方へ飛んで行ってしまう事象) が発生する可能性があります。デフォルトの設定は一般的な5インチ機体には安全です。<br><strong>注:</strong> プロファイルを変更すると、D値フィルターの設定のみが変更されます。ジャイロフィルターの設定は、すべてのプロファイルで同一です。",
+        "message": "スライダーを使用してフィルタリングを調整することを推奨します。<br>比較的小さな変更を行い、テスト飛行をして、変更後にモーターの温度をチェックしてください。<br>スライダーを右側に動かすとカットオフ値が高くなります。プロップウォッシュが改善されるかもしれませんが、モーターにノイズが伝わりやすくなり、モーターの温度が高くなり、焼損する可能性があります。<br>RPMフィルターを使用した新造 (クリーンビルド) 機体であれば、ジャイロフィルタリングを右側に動かしても問題ありません。<br>反対に、D値フィルターのスライダーを右側に動かすときは非常に注意して設定してください！<br>フィルターの設定が異常に高かったり低かったりすると、アーミング時にフライアウェイ (遥か彼方へ飛んで行ってしまう事象) が発生する可能性があります。デフォルトの設定は一般的な5インチ機体には安全です。<br><strong>注:</strong> Profileを変更すると、D値フィルターの設定のみが変更されます。ジャイロフィルターの設定は、すべてのProfileで同一です。",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
@@ -1883,6 +1889,9 @@
     "sliderPidsModeSelect": {
         "message": "モード:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
+    },
+    "pidTuningSliderModeHelp": {
+        "message": "<strong>PIDチューニング スライダーモード</strong><br><br>PIDチューニング スライダーモードは以下のように使用します: <br><br>&bull; OFF - スライダーを使用せず手動で値を入力<br>&bull; RP - スライダーはロールとピッチのみをコントロールし、ヨーの値は手動で入力<br>&bull; RPY - スライダーにて全てのPID値をコントロール<br><br><span class=\"message-negative\"><b>警告:</b></span>RPモードからRPYモードに切り替えると、ヨーの設定がファームウェアのデフォルト値に上書きされます。"
     },
     "receiverThrottleMid": {
         "message": "スロットルMID"
@@ -2162,10 +2171,10 @@
         "message": "ヨー F値 調整"
     },
     "adjustmentsFunction29": {
-        "message": "OSDプロファイルの選択"
+        "message": "OSD Profileの選択"
     },
     "adjustmentsFunction30": {
-        "message": "LEDプロファイルの選択"
+        "message": "LED Profileの選択"
     },
     "adjustmentsSave": {
         "message": "保存"
@@ -2643,7 +2652,7 @@
         "message": "ファイルからロード"
     },
     "cliConfirmSnippetDialogTitle": {
-        "message": "ロードファイル <strong>{{fileName}}</strong> より、読み出されたコマンドをレビューします。"
+        "message": "ファイル <strong>{{fileName}}</strong> をロードしました。ロードされたコマンドをレビューします。"
     },
     "cliConfirmSnippetNote": {
         "message": "<strong>備考</strong>: 実行前にコマンドを確認及び編集することができます。"
@@ -2682,7 +2691,7 @@
         "message": "少なくとも1つのプロパティからログを選択してください"
     },
     "loggingAutomaticallyRetained": {
-        "message": "自動的に以前のログファイルをロード: <strong>$1</strong>"
+        "message": "自動的に以前のログファイルをロードしました: <strong>$1</strong>"
     },
     "blackboxNotSupported": {
         "message": "このフライトコントローラのファームウェアは、ブラックボックスによるログをサポートしていません。"
@@ -2985,13 +2994,13 @@
         "message": "ファームフラッシャーより退避"
     },
     "firmwareFlasherFirmwareNotLoaded": {
-        "message": "ファームウェアがロードできません"
+        "message": "ファームウェアがロードできませんでした"
     },
     "firmwareFlasherFirmwareLocalLoaded": {
-        "message": "ロードされたローカル ファームウェア: ($1 bytes)"
+        "message": "ローカル ファームウェアをロードしました: ($1 bytes)"
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
-        "message": "ロードされたオンラインファームウェア: ($1 bytes)"
+        "message": "オンラインファームウェアをロードしました: ($1 bytes)"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEXファイルが破損しているようです"
@@ -3380,7 +3389,7 @@
         "message": "AUX 16"
     },
     "pidTuningBasic": {
-        "message": "ベーシック / アクロ"
+        "message": "標準 / アクロ"
     },
     "pidTuningYawJumpPrevention": {
         "message": "ヨージャンプ防止"
@@ -3440,7 +3449,7 @@
         "message": "セル数"
     },
     "pidTuningCellCountHelp": {
-        "message": "接続したバッテリーと同じセル数を持つ最初のプロファイルを自動的に適用します。"
+        "message": "接続したバッテリーと同じセル数を持つ最初のProfileを自動的に適用します。"
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile毎のPID制御設定"
@@ -3478,7 +3487,7 @@
         "description": "D Term filtering tuning slider helpicon message"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "機体のの飛行特性 (PID強度) を調整するスライダー<br /><br />ダンピング(D値強度): 速い動きに抵抗し、P値における振動を最小限に抑えます。<br /><br />トラッキング (P値&I値強度): 機体の応答性を高めます。機体反応を向上させますが、値が高すぎるとトリルや振動発生の原因となります。<br /><br />スティックレスポンス (FF値強度): 機体の反応性を高めます。機敏なスティックの動きに対する機体のの反応を高めます。<br /><br />ドリフト - ふらつき (I値強度,上級者向け): I値の微調整が可能です。<br /><br />動的D値 (D Max,上級者向け):  D値の最大値を設定します。機敏な挙動の際にD値をブーストできる最大値を設定します。<br /><br />ピッチダンピング (Pitch:RollのD値比,上級者向け): ピッチのダンピング量を設定します。ロールに対するピッチのダンピング量を増加させます。<br /><br />ピッチトラッキング (Pitch:Roll P値&I値TFF値比,上級者向け): ピッチの安定性を高めます。ロールに対するピッチのスタビライズ強度を増加させます。<br /><br />基準値 倍率設定 (PID強度 上級者向け): すべてのPID強度を、その比率を一定に保ちながら増減します。",
+        "message": "機体のの飛行特性 (PID強度) を調整するスライダー<br /><br />ダンピング (D値強度): 速い動きに抵抗し、P値における振動を最小限に抑えます。<br /><br />トラッキング (P値&I値強度): 機体の応答性を高めます。機体反応を向上させますが、値が高すぎるとトリルや振動発生の原因となります。<br /><br />スティックレスポンス (FF値強度): 機体の反応性を高めます。機敏なスティックの動きに対する機体のの反応を高めます。<br /><br />ドリフト - ふらつき (I値強度,上級者向け): I値の微調整が可能です。<br /><br />動的D値 (D Max,上級者向け):  D値の最大値を設定します。機敏な挙動の際にD値をブーストできる最大値を設定します。<br /><br />ピッチダンピング (Pitch:RollのD値比,上級者向け): ピッチのダンピング量を設定します。ロールに対するピッチのダンピング量を増加させます。<br /><br />ピッチトラッキング (Pitch:Roll P値&I値TFF値比,上級者向け): ピッチの安定性を高めます。ロールに対するピッチのスタビライズ強度を増加させます。<br /><br />基準値 倍率設定 (PID強度 上級者向け): すべてのPID強度を、その比率を一定に保ちながら増減します。",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -3494,20 +3503,24 @@
         "description": "Tuning sliders disabled note"
     },
     "pidTuningSliderEnableButton": {
-        "message": "スライダー有効",
+        "message": "スライダー 有効",
         "description": "Button label for enabling sliders"
     },
     "pidTuningSlidersNonExpertMode": {
-        "message": "<strong>注:</strong> エキスパートモードではないため、スライダー範囲が制限されています。この範囲は、ほとんどの機体と初心者に適しているはずです。",
+        "message": "<strong>注:</strong> Expertモードではないため、スライダーの範囲が制限されています。この範囲は、ほとんどの機体や初心者に適しているはずです。",
         "description": "Sliders restricted message"
     },
     "pidTuningPidSlidersNonExpertMode": {
-        "message": "<strong>注:</strong> エキスパートモードではないため、スライダーの設定内容と範囲が制限されています。ベーシックモードは、ほとんどの機体や初心者に適しているはずです。",
+        "message": "<strong>注:</strong> Expertモードではないため、スライダーの設定内容と範囲が制限されています。標準モードは、ほとんどの機体や初心者に適しているはずです。",
         "description": "Firmware Pid sliders restricted message"
     },
     "pidTuningFilterSlidersNonExpertMode": {
-        "message": "<strong>注:</strong> エキスパートモードではないため、スライダーの範囲が制限されています。この範囲は、ほとんどの機体や初心者に適しているはずです。",
+        "message": "<strong>注:</strong> Expertモードではないため、スライダーの範囲が制限されています。この範囲は、ほとんどの機体や初心者に適しているはずです。",
         "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<span class=\"message-negative\">注意</span>: Expertモードでない状態でExpert設定が検出されました。Expertモードを有効にして、影響を受けるスライダーに対して再び操作できるようにしてください。",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "低",
@@ -4342,7 +4355,7 @@
         "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
     },
     "osdSetupPreviewForTitle": {
-        "message": "ここでプロファイルまたはフォントを変更しても、FC側のプロファイルまたはフォントは変更されず、プレビュー画面にのみ反映します。変更したい場合は、それぞれ $t(osdSetupSelectedProfileTitle.message) オプションまたは\n $t(osdSetupFontManager.message) ボタンを使用してください。",
+        "message": "ここでProfileまたはフォントを変更しても、FC側のProfileまたはフォントは変更されず、プレビュー画面にのみ反映します。変更したい場合は、それぞれ $t(osdSetupSelectedProfileTitle.message) オプションまたは $t(osdSetupFontManager.message) ボタンを使用してください。",
         "description": "Help content for the OSD profile and font PREVIEW"
     },
     "osdSetupSelectedProfileTitle": {
@@ -4456,7 +4469,7 @@
         "message": "アップロード中..."
     },
     "osdSetupUploadingFontEnd": {
-        "message": "全ての {{length}} 文字をOSDにアップロード"
+        "message": "全ての {{length}} 文字をOSDにアップロードしました"
     },
     "osdSetupSave": {
         "message": "保存"
@@ -4703,11 +4716,11 @@
         "message": "瞬間電力消費量"
     },
     "osdTextElementPIDRateProfile": {
-        "message": "Profile: PID＆レート",
+        "message": "Profile: PID & Rate",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRateProfile": {
-        "message": "有効PIDおよびRateprofile数値表示"
+        "message": "有効なPID & Rateprofile番号の表示"
     },
     "osdTextElementBatteryWarning": {
         "message": "バッテリー警告",
@@ -4943,25 +4956,25 @@
         "message": "回転数レポート by ESCテレメトリー"
     },
     "osdTextElementRateProfileName": {
-        "message": "Profile: レートプロファイル名",
+        "message": "Profile: Rateprofile名",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRateProfileName": {
         "message": "現在のRateprofile名を表示"
     },
     "osdTextElementPidProfileName": {
-        "message": "Profile: PIDプロファイル名",
+        "message": "Profile: PID Profile名",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPidProfileName": {
-        "message": "現在のPIDプロファイル名を表示"
+        "message": "現在のPID Profile名を表示"
     },
     "osdTextElementOsdProfileName": {
-        "message": "Profile: OSDプロファイル名",
+        "message": "Profile: OSD Profile名",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOsdProfileName": {
-        "message": "\"osd_profile_1_name\"、\"osd_profile_2_name\"、\"osd_profile_3_name\"はCLIにて設定されているOSDプロファイル名"
+        "message": "\"osd_profile_1_name\"、\"osd_profile_2_name\"、\"osd_profile_3_name\"はCLIにて設定されているOSD Profile名"
     },
     "osdTextElementRssiDbmValue": {
         "message": "RSSI値 (dBm)",
@@ -5802,13 +5815,13 @@
         "message": "Rateprofile"
     },
     "pidTuningRateProfileTip": {
-        "message": "1つのProfileにつき最大3つの異なるRateprofileをフライトコントローラに保存することができます。Rateprofileには、RCレート、レート、RC Expo、スロットル、およびTPAの設定が含まれます。 [調整] タブの [Rateprofile選択] の3POSスイッチを設定することで、Rateprofileの切り替えが可能です。"
+        "message": "1つのProfileにつき最大3つの異なるRateprofileをフライトコントローラに保存することができます。RateprofileにはRCレート、Super Rate、RC Expo、スロットル、およびTPAの設定が含まれます。 [調整] タブの [Rateprofile選択] の3POSスイッチを設定することで、Rateprofileの切り替えが可能です。"
     },
     "pidTuningRateSetup": {
-        "message": "基本/アクロ レート"
+        "message": "標準 / アクロ レート"
     },
     "pidTuningRateSetupHelp": {
-        "message": "これらの値を調整してレートを設定します。RC Rateを使用すると全体の最大レートが上がり、Super Rateを使用するとスティック移動の終端に高いレートを設定することができ、RC Expoを使用すると中央のスティック位置は滑らかになります。",
+        "message": "これらの値を調整してレートを設定します。RCレートを使用すると全体の最大レートが上がり、Super Rateを使用するとスティック移動の終端に高いレートを設定することができ、RC Expoを使用すると中央のスティック位置は滑らかになります。",
         "description": "Rate table helpicon message"
     },
     "pidTuningDelta": {
