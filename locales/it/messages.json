@@ -1541,6 +1541,10 @@
     "pidTuningDMinDisabledNote": {
         "message": "<strong>Nota:</strong> La funzione D Min è disabilitata e i suoi parametri sono nascosti. Per usare D Min, abilitalo in $t(pidTuningPidSettings.message)."
     },
+    "pidTuningDMinFeatureTitle": {
+        "message": "Damping Dinamico",
+        "description": "Title for the options panel for the D Max feature"
+    },
     "pidTuningDMinGain": {
         "message": "Guadagno",
         "description": "Gain of the D Max feature"
@@ -1548,6 +1552,14 @@
     "pidTuningDMinAdvance": {
         "message": "Avanzamento",
         "description": "Advance of the D Max feature"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "L'algoritmo di boost del D Max porta la D verso il valore di D Max durante i movimenti rapidi. Ha due ingressi, ciascuno con un range di 0-100 ed entrambi additivi. 'Avanza' aumenta la D verso il D Max durante il movimento degli stick, leggermente più avanti di 'Guadagno', il quale aumenta la D verso il D Max quando il quad vira o sta avendo un propwash. Solo 'Guadagno' aumenta la D in vibrazioni e propwash. Entrambi rispondono maggiormente ai movimenti rapidi rispetto a quelli lenti. Generalmente è necessario solo 'Guadagno'. 'Avanza' può essere aggiunto in quad a bassa potenza che tendono a dare molto overshoot. Con il valore predefinito di 30, la D raggiungerà D Max solo durante movimenti molto rapidi. Un valore di 100 poterà la D a D Max molto velocemente, cosicché la D effettiva durante tutti i movimenti sia il valore di D Max.",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Controlla la forza dello smorzamento di QUALSIASI movimento del modello. Per il movimento degli stick, il D-term smorza i comandi. Per un'influenza esterna (prop wash o folata di vento) il D-term smorza l'influenza.<br /><br />Guadagni più alti consentono smorzamenti maggiori e riducono gli overshoot dovuti a P-term e FF.<br />Tuttavia il D-term è MOLTO sensibile alle vibrazioni ad alta frequenza del giroscopio (rumore | lo aumenta da 10 a 100 volte).<br /><br />Il rumore ad alta frequenza può provocare surriscaldamento e bruciare i motori se il D-gain è troppo alto o il rumore del giroscopio non è filtrato bene (vedi la scheda Filtri).<br /><br />Pensa al D-term come l'ammortizzatore di una macchina, ma con lo svantaggio intrinseco di amplificare il rumore ad alta frequenza del giroscopio.",
+        "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Impostazioni del controller PID"
@@ -1659,11 +1671,20 @@
     "pidTuningFeedforwardTransition": {
         "message": "Transizione"
     },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Con questo parametro, il termine Feedforward può essere ridotto vicino al centro degli stick, il che si traduce flip e roll più fluidi. <br>Il valore rappresenta un punto di deviazione degli stick: 0 - stick centrato, 1 - deflessione completa. Quandogli stick sono sopra quel punto, il Feedforward viene mantenuto costante al valore configurato. Quando lo stick è posizionato sotto quel punto, il Feedforward viene ridotto proporzionalmente, raggiungendo 0 nella posizione centrale dello stick. <br> Il valore di 1 dà il massimo effetto di fluidità, mentre il valore di 0 mantiene il Feedforward fisso sul suo valore configurato sull'intera gamma dello stick."
+    },
     "pidTuningDtermSetpointTransition": {
         "message": "Transizione Setpoint D"
     },
     "pidTuningDtermSetpoint": {
         "message": "Peso Setpoint D"
+    },
+    "pidTuningDtermSetpointTransitionHelp": {
+        "message": "Con questo parametro, il Peso del Setpoint D può essere ridotto vicino al centro degli stick, il che si traduce in una fine più fluida dei flip e dei roll. <br> Il valore rappresenta un punto di deviazione dello stick: 0 - stick centrato, 1 - deflessione completa. Quando lo stick è sopra quel punto, il Peso del Setpoint viene mantenuto costante sul suo valore configurato. Quando lo stick è posizionato al di sotto di quel punto, il Peso del Setpoint viene ridotto proporzionalmente, raggiungendo 0 nella posizione centrale dello stick.<br>Il valore di 1 dà il massimo effetto di fluidità, mentre il valore di 0 mantiene il Peso del Setpoint fisso sul suo valore configurato sull'intero intervallo dello stick."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Questo parametro determina l'effetto di accelerazione dello stick all'interno del componente di derivata.<br> Il valore di 0 è uguale al vecchio metodo di misurazione dove D traccia solo il giroscopio, mentre il valore di 1 è uguale al vecchio metodo di errore con tracciamento di gyro e stick uguale.<br> Un valore più basso equivale a una risposta dello stick più lenta/più fluida, mentre un valore più alto fornisce una maggiore risposta all'accelerazione dello stick.<br>È consigliato abilitare l'interpolazione RC con valori più alti per evitare che comandi veloci producano rumore."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> L'utilizzo di un D Setpoint transition più grande di 0 e minore di 0.1 è fortemente sconsigliato. Se lo fai può portare instabilità e ridurre la risposta degli stick quando si trova in posizioni centrali.</span>"
@@ -1715,8 +1736,16 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "Il D Max fornisce un valore superiore di D per manovre rapide che potrebbero altrimenti causare overshot, come i flip e i roll. È particolarmente utile sulle build rumorose o sui modelli a bassa potenza. D Max consente di impostare il valore di base D, o Damping, inferiore a quello che altrimenti potrebbe essere necessario, aiutando a mantenere i motori più freddi e virate più veloci. D Max aumenta anche D durante il propwash. I valori di D Max Avanza e Guadagno controllano la tempistica e la forza dell'aumento. Piloti con build per Freestyle HD e Cinematico generalmente hanno valori di Derivata più alti per avere più stabilità durante il volo in avanti e non hanno bisogno di un grande aumento fino a D Max. Piloti da gara tipicamente vogliono mantenere i motori più freddi, anche con pale storte, quindi hanno valori base di D più bassi e aumentano D Max per controllare gli overshot.",
+        "description": "D Max Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "È un ulteriore termine di spinta (molla) basato sull'input degli stick. Il FF aiuta il P-term a spingere il modello in base ai comandi degli stick.<br><br>Il P-term spinge il modello in base alla differenza tra il Setpoint (gradi/s) e il valore della velocità di rotazione del giroscopio (gradi/s). Il FF spinge solo sulla base del comando degli stick.<br><br>Valori (guadagni) più alti porteranno ad una risposta più pronta agli input degli stick.<br>Un valore troppo alto potrebbe causare un po' di overshoot, un aumento di temperatura dei motori e saturazione del motore (dove i motori non possono stare al passo con la velocità desiderata).<br>Valori bassi o zero (0) porteranno a una risposta più lenta e fluida agli input degli stick.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Attenzione:</b></span> rates molto alti possono causare desincronizzazione durante decelerazioni rapide."
@@ -1820,6 +1849,12 @@
     "dialogCopyProfileClose": {
         "message": "Annulla"
     },
+    "pidTuningResetPidProfile": {
+        "message": "Ripristina le impostazioni dell'attuale profilo PID"
+    },
+    "pidTuningPidProfileReset": {
+        "message": "Caricati i valori predefiniti per l'attuale profilo PID."
+    },
     "pidTuningReceivedProfile": {
         "message": "Profilo del controllore di volo: <strong class=\"message-positive\">$1</strong>"
     },
@@ -1844,8 +1879,19 @@
     "tuningHelp": {
         "message": "<b>Suggerimento per la messa a punto</b><br /><span class=\"message-negative\">IMPORTANTE:</span> È importante verificare la temperatura dei motori durante i primi voli. Più alto è il valore del filtro, più dovrebbe volare meglio, ma avrai anche più rumore nei motori.<br>Il valore predefinito di 100Hz è ottimale, ma per setup più rumorosi puoi provare ad abbassare il filtro Dterm a 50Hz e possibilmente anche il filtro del giroscopio."
     },
+    "tuningHelpSliders": {
+        "message": "Si consiglia di utilizzare gli slider per modificare i filtri. <br>Fai piccole modifiche e, dopo ogni cambiamento, fare un volo di test e controlla la temperatura dei motori. <br>Muovendo i cursori a destra si avranno valori di taglio più alti; questo potrebbe migliorare il propwash, ma farà arrivare più rumore ai motori, rendendoli più caldi, anche abbastanza da farli bruciare.<br>Molte build pulite con il filtro RPM abilitato saranno ok con il filtraggio del gyro tutto a destra.<br>D'altra parte sii molto cauto nel muovere lo slider del filtro per D verso destra!<br>Impostazioni dei filtri molto basse o molto alte potrebbero causare flyaway. Le impostazioni predefinite sono sicure per quad di 5\".<br><strong>Nota:</strong> Cambiando i profili verranno modificate solo le impostazioni del filtro D-term. Le impostazioni del filtro del giroscopio sono uguali per tutti i profili.",
+        "description": "Filter tuning subtab note"
+    },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Avviso:</b></span> La quantità di filtraggio che stai utilizzando è pericolosamente bassa. È probabile che ciò renda difficile il controllo del modello e che possa causare flyaway. Si consiglia vivamente di <b>abilitare almeno uno dei Passabasso Dinamico del Gyro o Passabasso 1 del Gyro e almeno uno dei D Passabasso Dinamico del D Term o Passabasso 1 del D Term</b>."
+    },
+    "sliderPidsModeSelect": {
+        "message": "Modalità:",
+        "description": "Pidtuning slider mode can be OFF, RP or RPY"
+    },
+    "pidTuningSliderModeHelp": {
+        "message": "<strong>Modalità slider per tuning PID</strong><br><br>La modalità slider per tuning PID può essere:<br><br>&bull; OFF - no slider, inserisci manualmente i valori<br>&bull; RP - i cursori controllano solo Roll e Pitch, inserisci manualmente i valori Yaw<br>&bull; RPY - i cursori controllano tutti i valori PID<br><br><span class=\"message-negative\"><b>Attenzione:</b></span>Passando dalla modalità RP a RPY sovrascriverà le impostazioni di Yaw con quelle del firmware."
     },
     "receiverThrottleMid": {
         "message": "Gas Medio"
@@ -3408,6 +3454,10 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Impostazioni filtro indipendenti dal profilo"
     },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Slider per regolare i filtri del gyro e della D.<br><br>Filtraggi maggiori (slider a sinistra, frequenze di taglio minori) mantengono i motori più freddi rimuovendone il rumore, ma aumentano anche il ritardo nel segnale del gyro (ritardo di fase) nel loop PID. Questo può peggiorare il propwash e le oscillazioni di risonanza. Quad meno responsivi come X-Class spesso volano meglio con più filtraggio.<br><br>Un filtraggio minore (slider a destra, frequenze di taglio maggiori) riduce il ritardo del segnale del gyro e spesso migliora i propwash. Muovendo il filtro passabasso del gyro verso destra è generalmente OK, ma i motori potrebbero diventare caldi. Muovendo il filtro della D a destra non è generalmente richiesto e può risultare in motori molto caldi.",
+        "description": "Overall helpicon message for filter tuning sliders"
+    },
     "pidTuningSliderLowFiltering": {
         "message": "Meno filtraggio",
         "description": "Filter tuning slider low header"
@@ -3424,9 +3474,21 @@
         "message": "Moltiplicatore filtro Giroscopio:",
         "description": "Gyro filter tuning slider label"
     },
+    "pidTuningGyroFilterSliderHelp": {
+        "message": "Aumenta o riduce i filtri passa basso predefiniti del Giroscopio in proporzione l'un l'altro. Il filtro del giroscopio viene applicato prima del loop PID.<br />Range generale di rumore dei motori per classe di quad:<br /><br />6\"+ - generalmente tra 100Hz e 330Hz<br />5\" - generalmente tra 220Hz e 500Hz<br />Da whoop a 3\" - generalmente tra 300Hz e 850Hz<br /><br />Generalmente si vuole impostare lo slider in modo che il limite min/max del passabasso dinamico 1 del giroscopio copra i valori precedenti.<br />Tuttavia, per voli più fluidi, si può utilizzare Più Filtraggio sullo slider. Per ottenere un settaggio più aggressivo, utilizzare Meno Filtraggio sullo slider.<br /><br />PRESTA ATTENZIONE a non diventare radicale con Meno Filtraggio, in modo da non causare flyaway o bruciare motori.<br />Nota che problemi di risonanza del frame, cuscinetti rotti ed eliche rotte potrebbero necessitare di più filtraggio.",
+        "description": "Gyro filtering tuning slider helpicon message"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "Moltiplicatore Filtro D Term:",
         "description": "D Term filter tuning slider label"
+    },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Cambia i cutoff del filtro passabasso del D-term.<br />Muovendo lo slider a sinistra si avrà un filtraggio maggiore sulla D (frequenze di taglio minori); a destra si avrà minor filtraggio (frequenze di taglio maggiori).<br /><br />Il D-tem è l'elemento del PID più sensibile a rumore e risonanza. Può amplificare qualsiasi rumore ad alta frequenza da 10 a 100 e più volte. Questo è il perché i cutoff per i filtri della D sono molto minori rispetto a quelli dei filtri del gyro.<br /><br />Il filtro al D-term è applicato dopo (in aggiunta) al filtro del gyro. Un filtraggio di D maggiore ridurrà il calore dei motori su quad rumorosi e può essere utile con valori di D alti per minimizzare la risonanza di D a medie ed alte frequenze. Maggior filtraggio su D aumenta però il ritardo nel segnale di D, peggiorando la gestione del propwash e aumentando le risonanze di D a bassa frequenza. Modelli più grandi con D alto potrebbero migliorare con un maggior filtraggio di D rispetto ai predefiniti. Muovendo a destra lo slider del filtro passabasso di D non è generalmente richiesto. Su build molto pulite, andando a destra potrebbe attenuare il propwash. Questo dovrebbe essere fatto con molta cautela, poiché avere minor filtraggio su D può risultare in risonanze improvvise (come decollo all'armamento o motor grinding) e motori estremamente caldi.",
+        "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Slider per regolare le caratteristiche di volo del quad (guadagni PID)<br /><br />Damping (guadagno D): Resiste ai movimenti rapidi, minimizza le oscillazioni di P.<br /><br />Tracking (guadagni P e I): Incrementa la responsività del quad, se troppo alto può causare trilling o oscillazioni.<br /><br />Risposta stick (Feedforward): Aumenta la responsività del quad a movimenti rapidi degli stick.<br /><br />Drift - Wobble (guadagni I, esperto): regolazione fine di I.<br /><br />Damping Dinamico (D max, esperto): Setta il valore massimo a cui la D può essere incrementata durante i movimenti rapidi.<br /><br />Damping Pitch (rapporto D Pitch:Roll, esperto): Aumenta la quantità di damping sul pitch relativamente al roll.<br /><br />Tracking Pitch (rapporti P, I ed F Pitch:Roll, esperto): Aumenta la forza stabilizzante sul pitch relativamente al roll.<br /><br />Moltiplicatore Master (tutti i guadagni, esperto): Aumenta o Diminuisce tutti i guadagni PID, mantenendo costanti le loro proporzioni.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATTENZIONE</span>: Le posizioni correnti degli slider possono causare flyaway, danni ai motori o funzionamento pericoloso. Procedi con cautela.",
@@ -3436,6 +3498,10 @@
         "message": "<strong>Nota:</strong> gli slider sono disabilitati perché i valori sono stati modificati manualmente. Possono essere riattivati cliccando su '$t(pidTuningSliderEnableButton.message)'. Questo reimposterà i valori e tutte le modifiche non salvate andranno perse.",
         "description": "Tuning sliders disabled note when manual changes are detected"
     },
+    "pidTuningPidSlidersDisabled": {
+        "message": "<strong>Nota:</strong> gli slider sono disabilitati. Cliccando il pulsante '$t(pidTuningSliderEnableButton.message)' cambieranno i valori PID facendoli corrispondere alla posizione degli slider precedentemente salvata.",
+        "description": "Tuning sliders disabled note"
+    },
     "pidTuningSliderEnableButton": {
         "message": "Abilita slider",
         "description": "Button label for enabling sliders"
@@ -3443,6 +3509,18 @@
     "pidTuningSlidersNonExpertMode": {
         "message": "<strong>Nota:</strong> Il range degli slider è limitato perché non sei in modalità esperto. Questo range dovrebbe essere adatto alla maggior parte delle build e per i principianti.",
         "description": "Sliders restricted message"
+    },
+    "pidTuningPidSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> Gli slider non sono accessibili perché non sei in modalità esperto. La modalità base dovrebbe essere adatta alla maggior parte delle build e per i principianti.",
+        "description": "Firmware Pid sliders restricted message"
+    },
+    "pidTuningFilterSlidersNonExpertMode": {
+        "message": "<strong>Nota:</strong> Il range degli slider è limitato perché non sei in modalità esperto. Questo range dovrebbe essere adatto alla maggior parte delle build e per i principianti.",
+        "description": "Firmware filter sliders restricted message"
+    },
+    "pidTuningSlidersExpertSettingsDetectedNote": {
+        "message": "<span class=\"message-negative\">ATTENZIONE</span>: sono state rilevate impostazioni da esperto mentre non in modalità esperto. Per favore abilita la modalità esperto per rendere accessibili nuovamente gli slider interessati.",
+        "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
         "message": "Basso",
@@ -3460,9 +3538,17 @@
         "message": "Moltiplicatore Master:",
         "description": "Master tuning slider label"
     },
+    "pidTuningMasterSliderHelp": {
+        "message": "Aumenta tutti i parametri PID allo stesso modo. Non cambiare questo slider a meno che non sia stata eseguita la regolazione sugli altri slider. Tipicamente questo è necessario solo per quad a bassa potenza o con alto momento d'inerzia (MoI) come i quad X-class o le build cinelifter. Troppo guadagno sul master può causare oscillazioni o motori caldi.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
     "pidTuningPDRatioSlider": {
         "message": "Bilanciamento PD:",
         "description": "PD balance tuning slider label"
+    },
+    "pidTuningPDRatioSliderHelp": {
+        "message": "Cambia D e il D massimo. Un D relativamente alto smorzerà la risposta agli stick e potrebbe far riscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni del P-term e migliorerà la gestione del propwash.<br /><br />Un D-term relativamente basso dà una risposta agli stick più veloce ma peggiorerà la gestione del propwash e la reazione a forze esterne (vento).",
+        "description": "D_term tuning slider helpicon message"
     },
     "pidTuningPDGainSlider": {
         "message": "Guadagno P e D:",
@@ -3471,6 +3557,66 @@
     "pidTuningPDGainSliderHelp": {
         "message": "Un minor guadagno di P e D si tradurrà in motori più freddi, ma aumenterà l'oscillazione del propwash. Un valore troppo basso potrebbe rendere il quad instabile.<br /><br />I term P e D lavorano insieme per ridurre il propwash.<br /><br />Valori più alti aumenteranno la temperatura dei motori e potrebbero aumentare le oscillazioni durante il volo in avanti a causa di guadagni D-term superiori.",
         "description": "P and D gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSliderLegacy": {
+        "message": "Guadagno risposta stick:",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningResponseSliderLegacyHelp": {
+        "message": "Valori di FF bassi peggioreranno la risposta agli stick e potrebbero causare un rimbalzo lento alla fine di un flip o un roll a causa del ritardo di risposta del quad e dell'accumulo dell'I-term che causa un 'I-term Bounceback'.<br /><br />Valori di FF più alti daranno risposte agli stick più nette. Valori di FF eccessivamente alti possono causare overshoot e rimbalzo veloce alla fine di un flip o un roll.<br /><br />Nota:<br />La funzione I-term Relax può impedire all'I-term di accumularsi con movimenti degli stick su quad a bassa potenza o se vengono utilizzati guadagni di risposta agli stick bassi.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
+    "pidTuningDGainSlider": {
+        "message": "Damping:<br /><i><small>Guadagni D</small></i>",
+        "description": "D Gain (Damping) tuning slider label"
+    },
+    "pidTuningDGainSliderHelp": {
+        "message": "Un guadagno D relativamente alto smorzerà la risposta agli stick e potrebbe far riscaldare i motori, ma dovrebbe aiutare a controllare le oscillazioni rapide del P-term e migliorerà la gestione del propwash.<br /><br />Un D-term relativamente basso dà una risposta agli stick più veloce ma peggiorerà la gestione del propwash e la reazione a forze esterne (vento).",
+        "description": "D gain balance tuning slider helpicon message"
+    },
+    "pidTuningPIGainSlider": {
+        "message": "Tracking:<br /><i><small>Guadagni P e I</small></i>",
+        "description": "P and I Gain (Stability) tuning slider label"
+    },
+    "pidTuningPIGainSliderHelp": {
+        "message": "Aumenta lo slider del Tracking per affinare la risposta del quad ai tuoi comandi e alle influenze esterne; evita di far andare il naso del quad fuori rotta in qualsiasi condizione.<br /><br />Valori di 'Tracking' minori daranno molti bobbles e faranno andare fuori rotta in movimenti di stick e propwash. Valori alti di 'Tracking' possono dare oscillazioni e rimbalzi veloci (difficili da vedere ma possono essere uditi). Un tracking eccessivo può dare oscillazioni e motori caldi.",
+        "description": "P and I gain tuning slider helpicon message"
+    },
+    "pidTuningResponseSlider": {
+        "message": "Risposta stick:<br /><i><small>Guadagni FF</small></i>",
+        "description": "Response tuning slider label"
+    },
+    "pidTuningResponseSliderHelp": {
+        "message": "Una risposta agli stick minore aumenterà la latenza dei movimenti del quad rispetto ai comandi e può risultare in rimbalzi lenti alla fine di flip e roll. Una risposta agli stick più alta darà una risposta del quad più secca con movimenti rapidi degli stick. Una risposta agli stick eccessivamente alta può causare overshoot e rimbalzi veloci alla fine di flip e roll.<br /><br /><strong>Nota:</strong><br /> la funzione \"I-term Relax\" può fermare i rimbalzi in quad a bassa potenza oppure se vengono utilizzati bassi guadagni di risposta agli stick.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
+    "pidTuningIGainSlider": {
+        "message": "Drift - Wobble:<br /><i><small>Guadagni I</small></i>",
+        "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Aumenta o diminuisce la I. Un I più alto migliorerà il tracking in virate a spirale, orbite o comandi con gas al 0%. Troppo I, particolarmente con P insufficiente, può causare wobble o rimbalzi dopo flip/roll o dopo tagli di gas allo 0%.<br /><br />Generalmente si vuole lo slider 'Drift - Wobble' il più alto possibile per mantenere il tracking del quad virate a spirale, orbite, ecc... ma non così alto da vedere wobble con tagli di gas allo 0%.<br /><br /><strong>Nota:</strong><br />Se si verificano rimbalzi in qualsiasi momento e facili da vedere assicurati che sia abilitato \"I-term Relax\" e prova ad abbassare il valore di iterm_relax_cutoff.",
+        "description": "I-gain Gain tuning slider helpicon message"
+    },
+    "pidTuningDMaxGainSlider": {
+        "message": "Damping dinamico:<br /><i><small>D Max</small></i>",
+        "description": "D Min slider label"
+    },
+    "pidTuningRollPitchRatioSlider": {
+        "message": "Damping Pitch:<br /><i><small>D Pitch e Roll</small></i>",
+        "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Aumenta il Damping (D) SOLAMENTE sull'asse di Pitch, per es., per Pitch relativo al Roll. Aiuta a controllare overshoot e rimbalzi specifici per il Pitch.<br /><br />Quad con momento d'inerzia più alto sull'asse di Pitch necessitano generalmente di più Damping (perché il Pitch ha più inerzia e accumula più momento).<br /><br />Regola prime gli slider principali 'Damping' e/o 'Tracking' finché non hai un buon controllo sull'asse di Roll. Poi usa gli slider del Pitch (aumenta o diminuisci) per regolare finemente l'asse di Pitch senza influenzare il Roll.",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
+    },
+    "pidTuningPitchPIGainSlider": {
+        "message": "Tracking Pitch:<br><i><small>P, I e FF Pitch e Roll</small></i>",
+        "description": "Pitch P & I slider label"
+    },
+    "pidTuningPitchPIGainSliderHelp": {
+        "message": "Aumenta la forza di tracking SOLAMENTE sull'asse di pitch, cambiando i valori di I e P del pitch in relazione al roll. Consente una maggiore forza di tracking sul pitch relativamente al roll.<br /><br />Aumenta per stabilizzare il bobble sul pitch (naso) durante input di pitch violento o tagli del gas. Considera anche di aumentare i guadagni dell'Anti-Gravity.<br /><br />Prima regola gli slider del 'Damping' principale e/o del 'Tracking' finché non avrai un buon funzionamento dell'asse del roll. Poi usa gli slider del pitch (aumenta o diminuisci) per regolare finemente l'asse di pitch senza influenzare l'asse di roll.",
+        "description": "Pitch P & I Gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtri passabasso del giroscopio"
