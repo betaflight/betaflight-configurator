@@ -1656,9 +1656,6 @@
     "pidTuningFeedforwardAveraging": {
         "message": "Gemiddeld"
     },
-    "pidTuningFeedforwardAveragingOptionOff": {
-        "message": "UIT"
-    },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "2 Punt"
     },
@@ -3629,12 +3626,6 @@
     "pidTuningItermRelaxAxes": {
         "message": "Assen",
         "description": "Iterm Relax Axes selection"
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (alleen increment)"
