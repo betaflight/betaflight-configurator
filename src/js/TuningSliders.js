@@ -487,14 +487,10 @@ TuningSliders.updateFilterSlidersDisplay = function() {
 
 TuningSliders.updateFormPids = function(updateSlidersOnly = false) {
     if (!updateSlidersOnly) {
-        let rows = 3;
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-            rows = this.sliderPidsMode === 1 ? 2 : 3;
-        }
         FC.PID_NAMES.forEach(function (elementPid, indexPid) {
             const pidElements = $(`.pid_tuning .${elementPid} input`);
             pidElements.each(function (indexInput) {
-                if (indexPid < rows && indexInput < rows) {
+                if (indexPid < 3 && indexInput < 3) {
                     $(this).val(FC.PIDS[indexPid][indexInput]);
                 }
             });
