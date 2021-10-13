@@ -3549,12 +3549,6 @@
         "message": "Oси",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (только увеличения)"
     },
