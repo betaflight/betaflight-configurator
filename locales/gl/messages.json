@@ -1768,9 +1768,6 @@
     "pidTuningFeedforwardAveraging": {
         "message": "Promedio"
     },
-    "pidTuningFeedforwardAveragingOptionOff": {
-        "message": "Apagado"
-    },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "Punto 2"
     },
@@ -3767,12 +3764,6 @@
     "pidTuningItermRelaxAxes": {
         "message": "Eixos",
         "description": "Iterm Relax Axes selection"
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (solo incremento)"
