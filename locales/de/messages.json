@@ -3271,12 +3271,6 @@
         "message": "Achsen",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP (roll+pitch)"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (nur inkrementell)"
     },
