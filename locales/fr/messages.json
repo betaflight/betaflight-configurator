@@ -1680,9 +1680,6 @@
     "pidTuningFeedforwardAveraging": {
         "message": "Moyenne"
     },
-    "pidTuningFeedforwardAveragingOptionOff": {
-        "message": "OFF"
-    },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "2 Points"
     },
@@ -3644,12 +3641,6 @@
     "pidTuningItermRelaxAxes": {
         "message": "Axes",
         "description": "Iterm Relax Axes selection"
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (incrémente uniquement)"
