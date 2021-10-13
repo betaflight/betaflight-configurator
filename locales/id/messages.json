@@ -2604,12 +2604,6 @@
     "pidTuningItermRelaxHelp": {
         "message": "Membatasi akumulasi I Term ketika bergerak cepat. Membantu untuk mengurangi efek bouncing pada akhir roll dan manuver lainnya. Anda dapet memilih di sumbu mana yang aktif, dan pilihan untuk deteksi pergerakan cepat menggunakan Gyro atau Setpoint (stick)."
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (hanya penambahan)"
     },
