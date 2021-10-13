@@ -3491,12 +3491,6 @@
         "message": "Osie",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (tylko przyrost)"
     },
