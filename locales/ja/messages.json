@@ -1698,9 +1698,6 @@
     "pidTuningFeedforwardAveraging": {
         "message": "平均化"
     },
-    "pidTuningFeedforwardAveragingOptionOff": {
-        "message": "OFF"
-    },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "2 Point"
     },
@@ -1885,10 +1882,6 @@
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>警告:</b></span> 現在適用されているフィルタリング量が非常に少ない状態です。これは機体制御が困難となる可能性があり、飛行中に大きく影響する可能性があります。<b>『動的ジャイロローパス』または『ジャイロローパス 1』の少なくとも1つと『D値動的ローパス』または『D値ローパス1』の少なくとも1つを有効とする</b>ことを強くお奨めします。"
-    },
-    "sliderPidsModeSelect": {
-        "message": "モード:",
-        "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>PIDチューニング スライダーモード</strong><br><br>PIDチューニング スライダーモードは以下のように使用します: <br><br>&bull; OFF - スライダーを使用せず手動で値を入力<br>&bull; RP - スライダーはロールとピッチのみをコントロールし、ヨーの値は手動で入力<br>&bull; RPY - スライダーにて全てのPID値をコントロール<br><br><span class=\"message-negative\"><b>警告:</b></span>RPモードからRPYモードに切り替えると、ヨーの設定がファームウェアのデフォルト値に上書きされます。"
@@ -3832,12 +3825,6 @@
     "pidTuningItermRelaxAxes": {
         "message": "軸",
         "description": "Iterm Relax Axes selection"
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (インクリメントのみ)"
