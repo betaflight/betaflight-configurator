@@ -1792,8 +1792,8 @@
     "pidTuningFeedforwardAveraging": {
         "message": "crwdns10528:0crwdne10528:0"
     },
-    "pidTuningFeedforwardAveragingOptionOff": {
-        "message": "crwdns10530:0crwdne10530:0"
+    "pidTuningOptionOff": {
+        "message": "crwdns10673:0crwdne10673:0"
     },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "crwdns10532:0crwdne10532:0"
@@ -1980,8 +1980,8 @@
     "filterWarning": {
         "message": "crwdns10392:0crwdne10392:0"
     },
-    "sliderPidsModeSelect": {
-        "message": "crwdns10607:0crwdne10607:0",
+    "pidTuningSliderPidsMode": {
+        "message": "crwdns10675:0crwdne10675:0",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
@@ -3927,11 +3927,11 @@
         "message": "crwdns9696:0crwdne9696:0",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "crwdns8794:0crwdne8794:0"
+    "pidTuningOptionRP": {
+        "message": "crwdns10677:0crwdne10677:0"
     },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "crwdns8795:0crwdne8795:0"
+    "pidTuningOptionRPY": {
+        "message": "crwdns10679:0crwdne10679:0"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "crwdns8796:0crwdne8796:0"
