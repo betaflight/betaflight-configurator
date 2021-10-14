@@ -22,7 +22,14 @@ TABS.pid_tuning = {
     activeSubtab: 'pid',
     analyticsChanges: {},
 
-    sliderRetainConfiguration: false,
+    retainConfiguration: false,
+
+    CONFIGURATOR_PIDS: [],
+    CONFIGURATOR_ADVANCED_TUNING: {},
+    CONFIGURATOR_FILTER_CONFIG: {},
+    CONFIGURATOR_RC_TUNING: {},
+    CONFIGURATOR_FEATURE_CONFIG: {},
+    CONFIGURATOR_TUNING_SLIDERS: {},
 };
 
 TABS.pid_tuning.initialize = function (callback) {
@@ -1360,7 +1367,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('#resetPidProfile').on('click', function(){
             self.updating = true;
-            self.sliderRetainConfiguration = true;
+            self.retainConfiguration = true;
 
             MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID).then(function () {
                 self.refresh(function () {
@@ -1895,10 +1902,10 @@ TABS.pid_tuning.initialize = function (callback) {
             const sliderPidsModeSelect = $('#sliderPidsModeSelect');
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                if (self.sliderRetainConfiguration) {
+                if (self.retainConfiguration) {
                     self.setDirty(true);
                 } else {
-                    TuningSliders.saveInitialSettings();
+                    self.saveInitialSettings();
                 }
                 sliderPidsModeSelect.val(FC.TUNING_SLIDERS.slider_pids_mode);
             } else {
@@ -1943,6 +1950,11 @@ TABS.pid_tuning.initialize = function (callback) {
                     $('#pid_main .YAW .pid_data input').each(function() {
                         $(this).prop('disabled', disableY);
                     });
+
+                    if (setMode !== self.CONFIGURATOR_TUNING_SLIDERS.slider_pids_mode) {
+                        self.setDirty(true);
+                    }
+
                 }).trigger('change');
             }
 
@@ -2070,11 +2082,11 @@ TABS.pid_tuning.initialize = function (callback) {
             $('a.buttonPidTuningSliders').click(function() {
                 // set Slider PID mode to RP(Y) when re-enabling Sliders
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    const firmwareMode = TuningSliders.initialSettings.sliderPidsMode;
+                    const firmwareMode = self.CONFIGURATOR_TUNING_SLIDERS.slider_pids_mode;
                     const workingMode = firmwareMode === 1 ? 1 : 2;
 
                     if (firmwareMode !== workingMode) {
-                        self.sliderRetainConfiguration = true;
+                        self.retainConfiguration = true;
                     }
                     sliderPidsModeSelect.val(workingMode).trigger('change');
                 }
@@ -2154,8 +2166,6 @@ TABS.pid_tuning.initialize = function (callback) {
             });
             // enable Filter sliders button
             $('a.buttonFilterTuningSliders').click(function() {
-                self.sliderRetainConfiguration = true;
-
                 if (TuningSliders.GyroSliderUnavailable) {
                     //set Slider mode to ON when re-enabling Sliders
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
@@ -2184,18 +2194,13 @@ TABS.pid_tuning.initialize = function (callback) {
 
             // update on pid table inputs
             $('#pid_main input').on('input', function() {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    self.sliderRetainConfiguration = true;
-                } else {
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                     TuningSliders.updatePidSlidersDisplay();
                     self.analyticsChanges['PidTuningSliders'] = "Off";
                 }
             });
             // update on filter value or type changes
             $('.pid_filter tr:not(.newFilter) input, .pid_filter tr:not(.newFilter) select').on('input', function() {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                    self.sliderRetainConfiguration = true;
-                }
                 TuningSliders.updateFilterSlidersDisplay();
                 if (TuningSliders.GyroSliderUnavailable) {
                     self.analyticsChanges['GyroFilterTuningSlider'] = "Off";
@@ -2268,7 +2273,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             }).then(function () {
                 self.updating = false;
-                self.sliderRetainConfiguration = false;
+                self.retainConfiguration = false;
 
                 self.setDirty(false);
 
@@ -2379,8 +2384,8 @@ TABS.pid_tuning.cleanup = function (callback) {
 TABS.pid_tuning.refresh = function (callback) {
     const self = this;
 
-    if (self.sliderRetainConfiguration && !self.updating) {
-        TuningSliders.restoreInitialSettings();
+    if (self.retainConfiguration && !self.updating) {
+        self.restoreInitialSettings();
     }
 
     GUI.tab_switch_cleanup(function () {
@@ -2392,6 +2397,41 @@ TABS.pid_tuning.refresh = function (callback) {
             callback();
         }
     });
+};
+
+TABS.pid_tuning.saveInitialSettings = function () {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        this.CONFIGURATOR_PIDS = [ ...FC.PIDS ];
+        this.CONFIGURATOR_ADVANCED_TUNING = { ...FC.ADVANCED_TUNING };
+        this.CONFIGURATOR_FILTER_CONFIG = { ...FC.FILTER_CONFIG };
+        this.CONFIGURATOR_RC_TUNING = { ...FC.RC_TUNING };
+        this.CONFIGURATOR_FEATURE_CONFIG = { ...FC.FEATURE_CONFIG };
+        this.CONFIGURATOR_TUNING_SLIDERS = { ...FC.TUNING_SLIDERS};
+    }
+};
+
+TABS.pid_tuning.restoreInitialSettings = function () {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+        FC.PIDS = [ ...this.CONFIGURATOR_PIDS ];
+        FC.ADVANCED_TUNING = { ...this.CONFIGURATOR_ADVANCED_TUNING };
+        FC.FILTER_CONFIG = { ...this.CONFIGURATOR_FILTER_CONFIG };
+        FC.RC_TUNING = { ...this.CONFIGURATOR_RC_TUNING };
+        FC.FEATURE_CONFIG = { ...this.CONFIGURATOR_FEATURE_CONFIG };
+        FC.TUNING_SLIDERS = { ...this.CONFIGURATOR_TUNING_SLIDERS };
+
+        Promise.resolve(true)
+        .then(() => MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID)))
+        .then(() => MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED)))
+        .then(() => MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG)))
+        .then(() => MSP.promise(MSPCodes.MSP_SET_RC_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_RC_TUNING)))
+        .then(() => MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG)))
+        .then(() => MSP.promise(MSPCodes.MSP_SET_TUNING_SLIDERS, mspHelper.crunch(MSPCodes.MSP_SET_TUNING_SLIDERS)))
+        .then(() => {
+            TABS.pid_tuning.retainConfiguration = false;
+
+            console.log('Configuration restored to initial values');
+        });
+    }
 };
 
 TABS.pid_tuning.setProfile = function () {
@@ -2415,6 +2455,10 @@ TABS.pid_tuning.setDirty = function (isDirty) {
     $('.tab-pid_tuning select[name="profile"]').prop('disabled', isDirty);
     if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
         $('.tab-pid_tuning select[name="rate_profile"]').prop('disabled', isDirty);
+    }
+
+    if (isDirty) {
+        self.retainConfiguration = true;
     }
 };
 
