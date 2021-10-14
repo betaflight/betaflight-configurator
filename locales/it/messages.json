@@ -1698,6 +1698,9 @@
     "pidTuningFeedforwardAveraging": {
         "message": "Media"
     },
+    "pidTuningOptionOff": {
+        "message": "SPENTO"
+    },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "2 Punti"
     },
@@ -1882,6 +1885,10 @@
     },
     "filterWarning": {
         "message": "<span class=\"message-negative\"><b>Avviso:</b></span> La quantità di filtraggio che stai utilizzando è pericolosamente bassa. È probabile che ciò renda difficile il controllo del modello e che possa causare flyaway. Si consiglia vivamente di <b>abilitare almeno uno dei Passabasso Dinamico del Gyro o Passabasso 1 del Gyro e almeno uno dei D Passabasso Dinamico del D Term o Passabasso 1 del D Term</b>."
+    },
+    "pidTuningSliderPidsMode": {
+        "message": "Modalità:",
+        "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Modalità slider per tuning PID</strong><br><br>La modalità slider per tuning PID può essere:<br><br>&bull; OFF - no slider, inserisci manualmente i valori<br>&bull; RP - i cursori controllano solo Roll e Pitch, inserisci manualmente i valori Yaw<br>&bull; RPY - i cursori controllano tutti i valori PID<br><br><span class=\"message-negative\"><b>Attenzione:</b></span>Passando dalla modalità RP a RPY sovrascriverà le impostazioni di Yaw con quelle del firmware."
@@ -3595,6 +3602,10 @@
         "message": "Damping dinamico:<br /><i><small>D Max</small></i>",
         "description": "D Min slider label"
     },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "Aumenta D max, il valore massimo a cui la D può aumentare durante i movimenti più veloci.<br /><br />Per quad da gara, dove lo slider principale del Damping è stato impostato basso per minimizzare il calore dei motori, muovendo lo slider a destra migliorerà il controllo dell'overshoot in cambi rapidi di direzione.<br /><br />Per i quad HD e cinematici, l'instabilità nel volo in avanti può essere risolta meglio muovendo lo slider Damping (non lo slider Boost del Damping) verso destra. Controlla sempre il calore dei motori e rumori strani durante input veloci quando sposti lo slider verso destra.<br /><br />Per quad freestyle, specialmente build più pesanti, muovendo questo slider verso destra può aiutare a controllare overshoot in flip e roll.<br /><br /><strong>Nota:</strong><br />Generalmente l'overshoot in flip e roll è dovuto a \"I-Term Relax' insufficiente, desync dei motori o potenza inadeguata (alias Saturazione dei Motori). Se scopri che muovendo lo slider Boost del Damping a destra non migliora gli overshoot di flip e roll, riportalo in posizione normale e cerca il motivo per gli overshoot o il wobble.",
+        "description": "D_min slider helpicon message"
+    },
     "pidTuningRollPitchRatioSlider": {
         "message": "Damping Pitch:<br /><i><small>D Pitch e Roll</small></i>",
         "description": "Pitch-Roll Ratio slider label"
@@ -3634,6 +3645,12 @@
     },
     "pidTuningGyroLowpass2Type": {
         "message": "Tipo filtro passabasso 2 del giroscopio"
+    },
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "I filtri passabasso del gyro attenuano il rumore ad alta frequenza per tenerlo fuori dal loop PID. Ci sono due filtri del gyro configurabili indipendentemente; entrambi attivi di default.<br /><br />Il primo passabasso D può essere statico (cutoff fisso) o dinamico; il secondo passabasso D è sempre statico. Quando un passabasso è in modalità dinamica il filtro sarà maggiore con gas basso e il cutoff si alzerà (meno filtraggio) alzando il gas.<br /><br />Senza il filtro RPM, entrambi i filtri PT1 dovrebbero essere abilitati a cutoff di default (o più bassi), con passabasso 1 in modalità dinamica.<br /><br />Con il filtro RPM, lo slider del gyro può essere spesso spostato verso destra. Su quad puliti può essere spostato tutto a destra o, in alternativa, può essere sufficiente un singolo filtro passabasso sul gyro a 500Hz.<br /><br />Un quad avrà meno propwash con il minor ritardo del filtro del gyro (slider a destra, cutoff più alti).<br /><br />Controlla sempre il calore dei motori quando imposti meno filtraggio (slider a destra). Con poco filtraggio del gyro è essenziale avere abbastanza filtraggio su D! Stai attento!"
+    },
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "I filtri passabasso del D-term attenuano il rumore ad alta frequenza e le risonanza che verrebbero altrimenti amplificati dal guadagno di D.<br /><br />Questi sono due filtri di D e i loro effetti sono additivi. Di default entrambi sono attivi e di tipo PT1. Entrambi sono necessari in quasi tutti i quad, un singolo PT2 può però essere utilizzato al posto dei due PT1.<br /><br />Il primo passabasso D può essere statico (frequenza fissa) o dinamico; il secondo passabasso D è sempre statico. Quando un passabasso è in modalità dinamica il filtraggio sarà maggiore (minore frequenza di cutoff) con gas basso, mentre il cutoff si alzerà (meno filtraggio e meno ritardo) quando si alza il gas.<br /><br />Il passabasso dinamico è utile per avere maggior filtraggio di D con gas minimo, dove c'è rischio di 'motor grinding' o flyaway inaspettati durante l'armamento, mentre si ha meno ritardo una volta in volo, per una performance migliore nei propwash.<br /><br />La transizione da un cutoff basso ad alto alzando il gas avverrà prima con valori più alti dell'expo del passabasso del D-term. L'expo del passabasso del D può essere usato per controllare finemente la quantità di filtraggio di D in punti differenti del gas.<br /><br />Generalmente il quad volerà meglio e avrà meno propwash con minori ritardi nei filtri (slider a destra, valori di cutoff maggiori), MA, particolarmente con i filtri D, questo aumenterà enormemente le probabilità di avere motori caldi.<br /><br />È molto facile bruciare i motori se non hai abbastanza filtraggio su D. Stai attento!"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtri Notch del giroscopio"
@@ -3815,6 +3832,12 @@
     "pidTuningItermRelaxAxes": {
         "message": "Assi",
         "description": "Iterm Relax Axes selection"
+    },
+    "pidTuningOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningOptionRPY": {
+        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (solo incremento)"
