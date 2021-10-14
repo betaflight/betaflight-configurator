@@ -90,7 +90,7 @@
         "message": "Desactiveu la col·lecció anònima de dades d’estadístiques"
     },
     "connectionTimeout": {
-        "message": "Establiu el temps d'espera de la connexió per permetre una inicialització més llarga al connector del dispositiu o reiniciar-lo",
+        "message": "Establiu el temps d'espera de la connexió per permetre una inicialització més llarga al connectar del dispositiu o reiniciar-lo",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
     "cordovaForceComputerUI": {
@@ -467,7 +467,7 @@
         "message": "Fent servir 'informació des de memòria cau de versions $1."
     },
     "releaseCheckLoaded": {
-        "message": "Informació de release carregada de $1 carregada de GitHub."
+        "message": "Informació de versió per $1 carregada des de GitHub."
     },
     "releaseCheckFailed": {
         "message": "<b>La consulta a GitHub per les versions de $1 ha fallat. Fent servir informació cau. Raó: <code>$2</code></b>"
@@ -1706,6 +1706,9 @@
     "pidTuningFeedforwardAveraging": {
         "message": "Promitjant"
     },
+    "pidTuningOptionOff": {
+        "message": "Desactivat"
+    },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "Punt 2"
     },
@@ -1890,6 +1893,10 @@
     },
     "filterWarning": {
         "message": "<span class =\"message-negative\"><b>Advertència:</b></span> La quantitat de filtratge que utilitzeu és perillosament baixa. És probable que això faci que l'aeronau sigui difícil de controlar i que es pugui traduir en fugides. És molt recomanable que <b>activeu almenys un pasaa baix dinàmic del Giro o passa baix 1 de Giro i almenys un passa baix dinàmic D Term o pas baix D Term 1</b>."
+    },
+    "pidTuningSliderPidsMode": {
+        "message": "Mode:",
+        "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
         "message": "<strong>Mode de control lliscant de sintonització de PID</strong><br><br>El mode de control lliscant de sintonització de Pid pot ser:<br><br>&bull; DESACTIVAT: sense control lliscant, introduïu valors manualment<br>&bull; RP: els control lliscants només controlen Roll and Pitch, introduïu els valors de Yaw manualment<br>&bull; RPY: els control lliscants controlen tots els valors PID <br><br><span class=\"message-negative\">Important: <b></b></span>Si us plau, deseu després de canviar el mode lliscant abans de canviar altres paràmetres."
@@ -3833,6 +3840,12 @@
     "pidTuningItermRelaxAxes": {
         "message": "Eixos",
         "description": "Iterm Relax Axes selection"
+    },
+    "pidTuningOptionRP": {
+        "message": "RP"
+    },
+    "pidTuningOptionRPY": {
+        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (nomès incrementar)"
