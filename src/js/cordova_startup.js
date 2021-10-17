@@ -22,29 +22,27 @@ const cordovaUI = {
         if (screenWidth > 575 && screenHeight > 575) {
             self.canChangeUI = false;
         }
-        ConfigStorage.get('cordovaForceComputerUI', function (result) {
-            if (result.cordovaForceComputerUI === undefined) {
-                if ((orientation === 'landscape' && screenHeight <= 575)
-                    || (orientation === 'portrait' && screenWidth <= 575)) {
-                    ConfigStorage.set({'cordovaForceComputerUI': false});
-                } else {
-                    ConfigStorage.set({'cordovaForceComputerUI': true});
-                }
+        const result = ConfigStorage.get('cordovaForceComputerUI');
+        if (result.cordovaForceComputerUI === undefined) {
+            if ((orientation === 'landscape' && screenHeight <= 575)
+                || (orientation === 'portrait' && screenWidth <= 575)) {
+                ConfigStorage.set({'cordovaForceComputerUI': false});
+            } else {
+                ConfigStorage.set({'cordovaForceComputerUI': true});
             }
-        });
+        }
         self.set();
     },
     set: function() {
         const self = this;
-        ConfigStorage.get('cordovaForceComputerUI', function (result) {
-            if (result.cordovaForceComputerUI) {
-                window.screen.orientation.lock('landscape');
-                $('body').css('zoom', self.uiZoom);
-            } else {
-                window.screen.orientation.lock('portrait');
-                $('body').css('zoom', 1);
-            }
-        });
+        const result = ConfigStorage.get('cordovaForceComputerUI');
+        if (result.cordovaForceComputerUI) {
+            window.screen.orientation.lock('landscape');
+            $('body').css('zoom', self.uiZoom);
+        } else {
+            window.screen.orientation.lock('portrait');
+            $('body').css('zoom', 1);
+        }
     },
 };
 

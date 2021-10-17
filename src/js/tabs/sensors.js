@@ -428,40 +428,39 @@ TABS.sensors.initialize = function (callback) {
             }
         });
 
-        ConfigStorage.get('sensor_settings', function (result) {
-            // set refresh speeds according to configuration saved in storage
-            if (result.sensor_settings) {
-                $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
-                $('.tab-sensors select[name="gyro_scale"]').val(result.sensor_settings.scales.gyro);
+        const result = ConfigStorage.get('sensor_settings');
+        // set refresh speeds according to configuration saved in storage
+        if (result.sensor_settings) {
+            $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
+            $('.tab-sensors select[name="gyro_scale"]').val(result.sensor_settings.scales.gyro);
 
-                $('.tab-sensors select[name="accel_refresh_rate"]').val(result.sensor_settings.rates.accel);
-                $('.tab-sensors select[name="accel_scale"]').val(result.sensor_settings.scales.accel);
+            $('.tab-sensors select[name="accel_refresh_rate"]').val(result.sensor_settings.rates.accel);
+            $('.tab-sensors select[name="accel_scale"]').val(result.sensor_settings.scales.accel);
 
-                $('.tab-sensors select[name="mag_refresh_rate"]').val(result.sensor_settings.rates.mag);
-                $('.tab-sensors select[name="mag_scale"]').val(result.sensor_settings.scales.mag);
+            $('.tab-sensors select[name="mag_refresh_rate"]').val(result.sensor_settings.rates.mag);
+            $('.tab-sensors select[name="mag_scale"]').val(result.sensor_settings.scales.mag);
 
-                $('.tab-sensors select[name="altitude_refresh_rate"]').val(result.sensor_settings.rates.altitude);
-                $('.tab-sensors select[name="sonar_refresh_rate"]').val(result.sensor_settings.rates.sonar);
+            $('.tab-sensors select[name="altitude_refresh_rate"]').val(result.sensor_settings.rates.altitude);
+            $('.tab-sensors select[name="sonar_refresh_rate"]').val(result.sensor_settings.rates.sonar);
 
-                $('.tab-sensors select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
+            $('.tab-sensors select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
 
-                // start polling data by triggering refresh rate change event
-                $('.tab-sensors .rate select:first').change();
-            } else {
-                // start polling immediatly (as there is no configuration saved in the storage)
-                $('.tab-sensors .rate select:first').change();
+            // start polling data by triggering refresh rate change event
+            $('.tab-sensors .rate select:first').change();
+        } else {
+            // start polling immediatly (as there is no configuration saved in the storage)
+            $('.tab-sensors .rate select:first').change();
+        }
+
+        const resultGraphs = ConfigStorage.get('graphs_enabled');
+        if (resultGraphs.graphs_enabled) {
+            const _checkboxes = $('.tab-sensors .info .checkboxes input');
+            for (let i = 0; i < resultGraphs.graphs_enabled.length; i++) {
+                _checkboxes.eq(i).not(':disabled').prop('checked', resultGraphs.graphs_enabled[i]).change();
             }
-            ConfigStorage.get('graphs_enabled', function (resultGraphs) {
-                if (resultGraphs.graphs_enabled) {
-                    const _checkboxes = $('.tab-sensors .info .checkboxes input');
-                    for (let i = 0; i < resultGraphs.graphs_enabled.length; i++) {
-                        _checkboxes.eq(i).not(':disabled').prop('checked', resultGraphs.graphs_enabled[i]).change();
-                    }
-                } else {
-                    $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
-                }
-            });
-        });
+        } else {
+            $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
+        }
 
         // status data pulled via separate timer with static speed
         GUI.interval_add('status_pull', function status_pull() {

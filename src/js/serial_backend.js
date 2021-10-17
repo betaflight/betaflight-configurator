@@ -33,16 +33,17 @@ function initializeSerialBackend() {
         ConfigStorage.set({'portOverride': $('#port-override').val()});
     });
 
-    ConfigStorage.get('portOverride', function (data) {
+    const data = ConfigStorage.get('portOverride');
+    if (data.portOverride) {
         $('#port-override').val(data.portOverride);
-    });
+    }
 
     $('div#port-picker #port').change(function (target) {
         GUI.updateManualPortVisibility();
     });
 
     $('div.connect_controls a.connect').click(function () {
-        if (GUI.connect_lock != true) { // GUI control overrides the user control
+        if (!GUI.connect_lock) { // GUI control overrides the user control
 
             const toggleStatus = function() {
                 clicks = !clicks;
@@ -113,40 +114,39 @@ function initializeSerialBackend() {
     });
 
     // auto-connect
-    ConfigStorage.get('auto_connect', function (result) {
-        if (result.auto_connect === undefined || result.auto_connect) {
-            // default or enabled by user
-            GUI.auto_connect = true;
+    const result = ConfigStorage.get('auto_connect');
+    if (result.auto_connect === undefined || result.auto_connect) {
+        // default or enabled by user
+        GUI.auto_connect = true;
 
-            $('input.auto_connect').prop('checked', true);
+        $('input.auto_connect').prop('checked', true);
+        $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectEnabled'));
+
+        $('select#baud').val(115200).prop('disabled', true);
+    } else {
+        // disabled by user
+        GUI.auto_connect = false;
+
+        $('input.auto_connect').prop('checked', false);
+        $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
+    }
+
+    // bind UI hook to auto-connect checkbos
+    $('input.auto_connect').change(function () {
+        GUI.auto_connect = $(this).is(':checked');
+
+        // update title/tooltip
+        if (GUI.auto_connect) {
             $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectEnabled'));
 
             $('select#baud').val(115200).prop('disabled', true);
         } else {
-            // disabled by user
-            GUI.auto_connect = false;
-
-            $('input.auto_connect').prop('checked', false);
             $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
+
+            if (!GUI.connected_to && !GUI.connecting_to) $('select#baud').prop('disabled', false);
         }
 
-        // bind UI hook to auto-connect checkbox
-        $('input.auto_connect').change(function () {
-            GUI.auto_connect = $(this).is(':checked');
-
-            // update title/tooltip
-            if (GUI.auto_connect) {
-                $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectEnabled'));
-
-                $('select#baud').val(115200).prop('disabled', true);
-            } else {
-                $('input.auto_connect, span.auto_connect').prop('title', i18n.getMessage('autoConnectDisabled'));
-
-                if (!GUI.connected_to && !GUI.connecting_to) $('select#baud').prop('disabled', false);
-            }
-
-            ConfigStorage.set({'auto_connect': GUI.auto_connect});
-        });
+        ConfigStorage.set({'auto_connect': GUI.auto_connect});
     });
 
     PortHandler.initialize();

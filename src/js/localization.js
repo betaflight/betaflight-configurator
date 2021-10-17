@@ -190,22 +190,16 @@ i18n.localizePage = function(forceReTranslate) {
  * returns the current locale to the callback
  */
 function getStoredUserLocale(cb) {
+    let userLanguage = 'DEFAULT';
     if (typeof ConfigStorage !== 'undefined') {
-        ConfigStorage.get('userLanguageSelect', function (result) {
-            let userLanguage = 'DEFAULT';
-            if (result.userLanguageSelect) {
-                userLanguage = result.userLanguageSelect;
-            }
-            i18n.selectedLanguage = userLanguage;
-
-            userLanguage = getValidLocale(userLanguage);
-
-            cb(userLanguage);
-        });
-    } else {
-        const userLanguage = getValidLocale('DEFAULT');
-        cb(userLanguage);
+        const result = ConfigStorage.get('userLanguageSelect');
+        if (result.userLanguageSelect) {
+            userLanguage = result.userLanguageSelect;
+        }
+        i18n.selectedLanguage = userLanguage;
     }
+    userLanguage = getValidLocale(userLanguage);
+    cb(userLanguage);
 }
 
 function getValidLocale(userLocale) {

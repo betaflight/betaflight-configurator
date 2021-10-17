@@ -783,13 +783,12 @@ TABS.receiver.initialize = function (callback) {
             GUI.interval_add('receiver_pull', get_rc_refresh_data, plotUpdateRate, true);
         });
 
-        ConfigStorage.get('rx_refresh_rate', function (result) {
-            if (result.rxRefreshRate) {
-                rxRefreshRate.val(result.rxRefreshRate).change();
-            } else {
-                rxRefreshRate.change(); // start with default value
-            }
-        });
+        const result = ConfigStorage.get('rx_refresh_rate');
+        if (result.rxRefreshRate) {
+            rxRefreshRate.val(result.rxRefreshRate).change();
+        } else {
+            rxRefreshRate.change(); // start with default value
+        }
 
         // Setup model for preview
         tab.initModelPreview();

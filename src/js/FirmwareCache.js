@@ -44,19 +44,18 @@ let FirmwareCache = (function () {
         function persist(data) {
             let obj = {};
             obj[CACHEKEY] = data;
-            chrome.storage.local.set(obj);
+            ConfigStorage.set(obj);
         }
 
         /**
          * @param {Function} callback
          */
         function load(callback) {
-            chrome.storage.local.get(CACHEKEY, obj => {
-                let entries = typeof obj === "object" && obj.hasOwnProperty(CACHEKEY)
-                    ? obj[CACHEKEY]
-                    : [];
-                callback(entries);
-            });
+            const obj = ConfigStorage.get(CACHEKEY);
+            let entries = typeof obj === "object" && obj.hasOwnProperty(CACHEKEY)
+                ? obj[CACHEKEY]
+                : [];
+            callback(entries);
         }
 
         return {
@@ -76,18 +75,14 @@ let FirmwareCache = (function () {
         }
         let key = oldest[0];
         let cacheKey = withCachePrefix(key);
-        chrome.storage.local.get(cacheKey, obj => {
-            /** @type {CacheItem} */
-            let cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey)
-                ? obj[cacheKey]
-                : null;
-            if (cached === null) {
-                return;
-            }
-            chrome.storage.local.remove(cacheKey, () => {
-                onRemoveFromCache(cached.release);
-            });
-        });
+        const obj = ConfigStorage.get(cacheKey);
+        /** @type {CacheItem} */
+        const cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey) ? obj[cacheKey] : null;
+        if (cached === null) {
+            return undefined;
+        }
+        ConfigStorage.remove(cacheKey);
+        onRemoveFromCache(cached.release);
         return oldest;
     };
 
@@ -143,9 +138,8 @@ let FirmwareCache = (function () {
             release: release,
             hexdata: hexdata,
         };
-        chrome.storage.local.set(obj, () => {
-            onPutToCache(release);
-        });
+        ConfigStorage.set(obj);
+        onPutToCache(release);
     }
 
     /**
@@ -163,13 +157,9 @@ let FirmwareCache = (function () {
             return;
         }
         let cacheKey = withCachePrefix(key);
-        chrome.storage.local.get(cacheKey, obj => {
-            /** @type {CacheItem} */
-            let cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey)
-                ? obj[cacheKey]
-                : null;
-            callback(cached);
-        });
+        const obj = ConfigStorage.get(cacheKey);
+        const cached = typeof obj === "object" && obj.hasOwnProperty(cacheKey) ? obj[cacheKey] : null;
+        callback(cached);
     }
 
     /**
@@ -184,19 +174,19 @@ let FirmwareCache = (function () {
         for (let key of journal.keys()) {
             cacheKeys.push(withCachePrefix(key));
         }
-        chrome.storage.local.get(cacheKeys, obj => {
-            if (typeof obj !== "object") {
-                return;
+        const obj = ConfigStorage.get(cacheKeys);
+        if (typeof obj !== "object") {
+            return;
+        }
+        console.log(obj.entries());
+        for (let cacheKey of cacheKeys) {
+            if (obj.hasOwnProperty(cacheKey)) {
+                /** @type {CacheItem} */
+                let item = obj[cacheKey];
+                onRemoveFromCache(item.release);
             }
-            for (let cacheKey of cacheKeys) {
-                if (obj.hasOwnProperty(cacheKey)) {
-                    /** @type {CacheItem} */
-                    let item = obj[cacheKey];
-                    onRemoveFromCache(item.release);
-                }
-            }
-            chrome.storage.local.remove(cacheKeys);
-        });
+        }
+        ConfigStorage.remove(cacheKeys);
         journal.clear();
         JournalStorage.persist(journal.toJSON());
     }

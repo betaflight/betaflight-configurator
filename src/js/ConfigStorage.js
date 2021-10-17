@@ -4,7 +4,7 @@
 // localStorage deals with strings, not objects, so the objects have been serialized.
 const ConfigStorage = {
     // key can be one string, or array of strings
-    get: function(key, callback) {
+    get: function(key) {
         let result = {};
         if (Array.isArray(key)) {
             key.forEach(function (element) {
@@ -14,7 +14,6 @@ const ConfigStorage = {
                     // is okay
                 }
             });
-            callback?.(result);
         } else {
             const keyValue = window.localStorage.getItem(key);
             if (keyValue) {
@@ -23,9 +22,6 @@ const ConfigStorage = {
                 } catch (e) {
                     // It's fine if we fail that parse
                 }
-                callback?.(result);
-            } else {
-                callback?.(result);
             }
         }
 
@@ -38,5 +34,8 @@ const ConfigStorage = {
             tmpObj[element] = input[element];
             window.localStorage.setItem(element, JSON.stringify(tmpObj));
         });
+    },
+    remove: function(item) {
+        window.localStorage.removeItem(item);
     },
 };

@@ -32,9 +32,12 @@ PortHandler.initialize = function () {
 
 PortHandler.check = function () {
     const self = this;
+    let result;
 
-    ConfigStorage.get('showVirtualMode', res => self.showVirtualMode = res.showVirtualMode);
-    ConfigStorage.get('showAllSerialDevices', res => self.showAllSerialDevices = res.showAllSerialDevices);
+    result = ConfigStorage.get('showVirtualMode');
+    self.showVirtualMode = result.showVirtualMode;
+    result = ConfigStorage.get('showAllSerialDevices');
+    self.showAllSerialDevices = result.showAllSerialDevices;
 
     self.check_usb_devices();
     self.check_serial_devices();
@@ -168,17 +171,16 @@ PortHandler.detectPort = function(currentPorts) {
         currentPorts = self.updatePortSelect(currentPorts);
         console.log(`PortHandler - Found: ${JSON.stringify(newPorts)}`);
 
-        ConfigStorage.get('last_used_port', function (result) {
-            if (result.last_used_port) {
-                if (result.last_used_port.includes('tcp')) {
-                    self.portPickerElement.val('manual');
-                } else if (newPorts.length === 1) {
-                    self.portPickerElement.val(newPorts[0].path);
-                } else if (newPorts.length > 1) {
-                    self.selectPort(currentPorts);
-                }
+        const result = ConfigStorage.get('last_used_port');
+        if (result.last_used_port) {
+            if (result.last_used_port.includes('tcp')) {
+                self.portPickerElement.val('manual');
+            } else if (newPorts.length === 1) {
+                self.portPickerElement.val(newPorts[0].path);
+            } else if (newPorts.length > 1) {
+                self.selectPort(currentPorts);
             }
-        });
+        }
 
         self.port_available = true;
         // Signal board verification
