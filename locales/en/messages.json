@@ -1815,6 +1815,9 @@
     "pidTuningOptionOff": {
         "message": "OFF"
     },
+    "pidTuningOptionOn": {
+        "message": "ON"
+    },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "2 Point"
     },
@@ -3614,6 +3617,10 @@
         "message": "Raises or Lowers the default Gyro Lowpass Filters in proportion to each-other. The gyro filtering is applied before the PID loop.<br />General motor noise ranges per quad class:<br /><br />6\"+ quads - generally within 100hz to 330hz<br />5\" quads - generally within 220hz to 500hz<br />Whoop to 3\" quads - generally within 300hz to 850hz<br /><br />Generally, you want to set the slider to have the Gyro Lowpass 1 Dynamic Min/Max Cutoff range cover the above.<br />However, for smoother flights use More Filtering on the slider. To get a more aggressive filter tune, use Less Filtering on the slider.<br /><br />With Less Filtering BE CAREFUL to not get radical as to cause a fly-away or burn out motors.<br />Note frame resonance issues, bad bearings, and beat up props may cause you to need more filtering.",
         "description": "Gyro filtering tuning slider helpicon message"
     },
+    "pidTuningGyroSliderEnabled": {
+        "message": "Use Gyro Slider",
+        "description": "Disable or enable Gyro Filter Tuning Slider"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "D Term Filter Multiplier:",
         "description": "D Term filter tuning slider label"
@@ -3621,6 +3628,10 @@
     "pidTuningDTermFilterSliderHelp": {
         "message": "Changes the D-term Lowpass Filter cutoffs.<br />Moving the slider to the left gives stronger D filtering (lower cutoff frequency); to the right gives less filtering (higher cutoff frequency).<br /><br />D-term is the most sensitive PID element to noise and resonance. It can amplify any high frequency noise by 10x to 100x plus. That's why the cutoffs for the D filters are much lower than the gyro filters.<br /><br />D-term filtering is applied after - in addition to - the gyro filtering. Strong D filtering will reduce motor heat on noisy quads and can be useful with high PID 'D' values to minimise D resonance at medium to high frequencies. However, strong D filtering may delay the D signal, worsening propwash handling and encouraging lower frequency D resonances. The default D filtering is optimal for most quads. Larger machines with high D may do better with stronger D filtering than defaults. Moving the D lowpass filter slider to the right is generally not required. On very clean builds, going to the right can attenuate propwash. It should be done very cautiously since having less filtering on D can result in sudden resonances (including motor grinding or taking off on arming) and extreme motor heat.",
         "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningDTermSliderEnabled": {
+        "message": "Use D Term Slider",
+        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Sliders to adjust the quad flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enchances the responsiveness of the quad, if too high may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the quad to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strenght on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or Lowers all the PID gains, keeping their proportions constant.",
@@ -3633,6 +3644,14 @@
     "pidTuningSlidersDisabled": {
         "message": "<strong>Note:</strong> Sliders are disabled because values were changed manually. Clicking the '$t(pidTuningSliderEnableButton.message)' button will activate them again. This will reset the values and any unsaved changes will be lost.",
         "description": "Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningGyroSliderDisabled": {
+        "message": "<strong>Note:</strong> Gyro Slider is disabled because values were changed manually. Clicking the '$t(pidTuningGyroSliderEnableButton.message)' button will activate them again. This will reset the values and any unsaved changes will be lost.",
+        "description": "Gyro Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningDTermSliderDisabled": {
+        "message": "<strong>Note:</strong> DTerm Slider is disabled because values were changed manually. Clicking the '$t(pidTuningDTermSliderEnableButton.message)' button will activate them again. This will reset the values and any unsaved changes will be lost.",
+        "description": "DTerm Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningPidSlidersDisabled": {
         "message": "<strong>Note:</strong> Sliders are disabled. Clicking the '$t(pidTuningSliderEnableButton.message)' button will change the PID values to match your previously saved slider position.",
@@ -3762,26 +3781,44 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filters"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Lowpass 1 Cutoff Frequency [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 Filter Type"
+    },    
+    "pidTuningGyroLowpassFrequency": {
+        "message": "Cutoff Frequency [Hz]"
+    },
+    "pidTuningGyroLowpass": {
+        "message": "Gyro Lowpass 1"
+    },
+    "pidTuningGyroLowpassMode": {
+        "message": "Mode"
+    },
+    "pidTuningLowpassStatic": {
+        "message": "STATIC"
+    },
+    "pidTuningLowpassDynamic": {
+        "message": "DYNAMIC"
+    },
+    "pidTuningLowpassFilterType": {
+        "message": "Filter Type"
+    },
+    "pidTuningGyroLowpassDyn": {
+        "message": "Gyro Lowpass Dynamic Filter"
     },
     "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
+        "message": "Min Cutoff Frequency [Hz]"
     },
     "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
+        "message": "Max Cutoff Frequency [Hz]"
     },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro Lowpass 1 Dynamic Filter Type"
     },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro Lowpass 2 Cutoff Frequency [Hz]"
+    "pidTuningGyroLowpass2": {
+        "message": "Gyro Lowpass 2"
     },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro Lowpass 2 Filter Type"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningGyroLowpassFilterHelp": {
         "message": "Gyro lowpass filters attenuate higher frequency noise to keep it out of the PID loop. There are two independently configurable gyro filters; by default both are active.<br /><br />The first D lowpass can be static (fixed cutoff) or dynamic; the second D lowpass is always static. When a lowpass is in dynamic mode, filter will be stronger at low throttle, and the cutoff will go higher (less filtering) as throttle increases.<br /><br />Without RPM filtering, both PT1 filters should be enabled at default (or stronger) cutoffs, with lowpass 1 in dynamic mode.<br /><br />With RPM filtering, the gyro filter slider can often be moved some way to the right. On clean quads it can go all the way right, or alternatively a single static gyro lowpass filter at 500hz may be sufficient.<br /><br />A quad will have less propwash with the least gyro filter delay (sliders to the right, higher cutoff values).<br /><br />Always check for motor heat when shifting to less gyro filtering (sliders to the right). With minimal gyro filtering, it is essential to have enough D filtering! Take care!" 
@@ -3791,6 +3828,12 @@
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filters"
+    },
+    "pidTuningGyroNotchFilter": {
+        "message": "Gyro Notch Filter 1"
+    },
+    "pidTuningGyroNotchFilter2": {
+        "message": "Gyro Notch Filter 2"
     },
     "pidTuningGyroNotch1Frequency": {
         "message": "Gyro Notch Filter 1 Center Frequency [Hz]"
@@ -3852,6 +3895,9 @@
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Set this to the highest incoming noise frequency that is needed to be controlled by the dynamic notch."
     },
+    "pidTuningGyroLowpassType": {
+        "message": "Gyro Lowpass 1 Filter Type"
+    },    
     "pidTuningDynamicNotchCountHelp": {
         "message": "Sets the number of dynamic notches per axis. With RPM filter enabled a value of 1 or 2 is recommended. Without RPM filter a value of 4 or 5 is recommended. Lower numbers will reduce filter delay, however it may increase motor temperature."
     },
@@ -3882,6 +3928,15 @@
     "pidTuningFilterSettings": {
         "message": "Profile dependent Filter Settings"
     },
+    "pidTuningDTermLowpass": {
+        "message": "D Term Lowpass 1"
+    },
+    "pidTuningDTermLowpassMode": {
+        "message": "Mode"
+    },
+    "pidTuningDTermLowpass2": {
+        "message": "D Term Lowpass 2"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "D Term Lowpass Filters"
     },
@@ -3889,13 +3944,16 @@
         "message": "D Term Lowpass 1 Filter Type"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass 1 Cutoff Frequency [Hz]"
+        "message": "D Term Lowpass 1 Static Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Lowpass 2 Cutoff Frequency [Hz]"
+        "message": "D Term Lowpass 2 Static Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term Lowpass 2 Filter Type"
+    },
+    "pidTuningDTermLowpassDyn": {
+        "message": "D Term Lowpass Dynamic Filter"
     },
     "pidTuningDTermLowpassDynMinFrequency": {
         "message": "D Term Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
@@ -3903,11 +3961,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D Term Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 Dynamic Filter Type"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D Term Lowpass 1 Dynamic Curve Expo"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term Lowpass 1 Dynamic Filter Type"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filters"
@@ -3918,7 +3976,7 @@
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch Filter Cutoff Frequency [Hz]"
     },
-    "pidTuningYawLospassFiltersGroup": {
+    "pidTuningYawLowpassFiltersGroup": {
         "message": "Yaw Lowpass Filters"
     },
     "pidTuningYawLowpassFrequency": {

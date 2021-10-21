@@ -853,6 +853,7 @@ const FC = {
                 versionFilterDefaults.gyro_lowpass_hz = 250;
                 versionFilterDefaults.gyro_lowpass_dyn_min_hz = 250;
                 versionFilterDefaults.gyro_lowpass2_hz = 500;
+                versionFilterDefaults.dterm_lowpass_hz = 75;
                 versionFilterDefaults.dterm_lowpass_dyn_min_hz = 75;
                 versionFilterDefaults.dterm_lowpass_dyn_max_hz = 150;
             }
