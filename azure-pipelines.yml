@@ -149,6 +149,8 @@ stages:
 - stage: Release
   jobs:
   - job: Release
+    pool:
+      vmImage: '$(linuxVmImage)'
 
     steps:
     - task: DownloadPipelineArtifact@2
