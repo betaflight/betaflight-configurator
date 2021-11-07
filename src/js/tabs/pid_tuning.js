@@ -547,6 +547,10 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="useIntegratedYaw"]').change(function() {
             const checked = $(this).is(':checked');
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                this.sliderPidsMode = 0;
+            }
+            $('#pid_main .pid_data input').prop('disabled', !checked);
             $('#pidTuningIntegratedYawCaution').toggle(checked);
         }).change();
 
