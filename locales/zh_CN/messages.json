@@ -3415,9 +3415,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "绝对控制"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "此功能解决了 $t(pidTuningItermRotation.message) 存在的一些潜在问题，并从某种角度上来说取代了它。此功能累积陀螺仪在四轴飞行器坐标系每个轴上的绝对误差，并按比例将其校正值混合到设定值中。要使它工作，您需要启用 $t(pidTuningItermRelax.message) (轴设置为 $t(pidTuningItermRelaxAxesOptionRP.message) )。如果此功能与 $t(pidTuningIntegratedYaw.message) 一起使用，则可以将 $t(pidTuningItermRelax.message) 的轴设置为 $t(pidTuningItermRelaxAxesOptionRPY.message) 。"
-    },
     "pidTuningThrottleBoost": {
         "message": "油门增压"
     },
