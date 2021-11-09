@@ -3865,9 +3865,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Controllo assoluto"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Questa funzione risolve alcuni problemi dell'$t(pidTuningItermRotation.message) e dovrebbe sostituirlo ad un certo punto. Questa funzione accumula l'errore assoluto del giroscopio nelle coordinate del quad e inserisce una correzione proporzionale nel setpoint. Affinché funzioni bisogna abilitare Airmode e $t(pidTuningItermRelax.message) (per $t(pidTuningItermRelaxAxesOptionRP.message)). Se combini questa funzione con il $t(pidTuningIntegratedYaw.message), puoi abilitare l'$t(pidTuningItermRelax.message) per $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Boost del Gas"
     },
