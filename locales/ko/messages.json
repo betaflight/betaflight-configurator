@@ -3933,9 +3933,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "절대 제어"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "이 기능은 $t(pidTuningItermRotation.message)의 기본 문제를 해결하고, 희망적으로 어느 시점에서 그것을 대체합니다. 이 기능은 쿼드 좌표에 절대 자이로 오류를 축적하고 설정점에 비례 교정을 혼합합니다. 당신이 그것을 작동하려면 에어모드와 $t(pidTuningItermRelax.message) ($t(pidTuningItermRelaxAxesOptionRP.message)로)을 활셩화해야 합니다. 만약 이 기능을 $t(pidTuningIntegratedYaw.message)와 결합하려면, $t(pidTuningItermRelax.message)을 $t(pidTuningItermRelaxAxesOptionRPY.message)로 설정할 수 있습니다."
-    },
     "pidTuningThrottleBoost": {
         "message": "스로틀 부스트"
     },
