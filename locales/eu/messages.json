@@ -3426,9 +3426,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Kontrol absolutua"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Ezaugarri honek $t(pidTuningItermRotation.message)azpiko arazo batzuk konpontzen ditu eta beste punturen batekin ordeztu beharko luke. Ezaugarri honek giroko errore absolutua koordenatu koadroetan metatzen du eta zuzenketa proportzionala nahasten du puntu-puntuan. ($t(pidTuningItermRelaxAxesOptionRP.message)) Lan egiteko, AirMode eta $t(pidTuningItermRelax.message) gaitu behar dituzu. Ezaugarri hauek batera konbinatzen badituzu $t(pidTuningIntegratedYaw.message) ezarri ahal izango duzu $t(pidTuningItermRelax.message) gaituta $t(pidTuningItermRelaxAxesOptionRPY.message)-rako."
-    },
     "pidTuningThrottleBoost": {
         "message": "Throttlearen Bultzada"
     },
