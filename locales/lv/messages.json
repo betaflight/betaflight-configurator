@@ -2928,9 +2928,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Absolūtā kontrole"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Šī funkcionalitāte atrisina dažas $t(pidTuningItermRotation.message) pamatproblēmas un cerams kādreiz aizvietos to pilnībā. Šī funkcionalitāte akumulē absolūto žiroskopa kļūdu iekš multirotorā koordinātām un jauc kopā ar proporcionālo korekciju iekš iestatījuma. Lai tas strādātu jums jāieslēdz AirMode un $t(pidTuningItermRelax.message) (priekš $t(pidTuningItermRelaxAxesOptionRP.message)). Ja jūs kombinējat šo funkcionalitāti ar $t(pidTuningIntegratedYaw.message), jūs varat ieslēgt $t(pidTuningItermRelax.message) priekš $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Droseles būsts"
     },
