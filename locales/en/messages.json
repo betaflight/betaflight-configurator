@@ -4003,7 +4003,7 @@
         "message": "Absolute Control"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "This feature solves some underlying problems of $t(pidTuningItermRotation.message) and should hopefully replace it at some point. This feature accumulates the absolute gyro error in quad coordinates and mixes a proportional correction into the setpoint. For it to work you need to enable AirMode and $t(pidTuningItermRelax.message) (for $t(pidTuningItermRelaxAxesOptionRP.message)). If you combine this feature with $t(pidTuningIntegratedYaw.message), you can set $t(pidTuningItermRelax.message) enabled for $t(pidTuningItermRelaxAxesOptionRPY.message)."
+        "message": "This feature solves some underlying problems of $t(pidTuningItermRotation.message) and should hopefully replace it at some point. This feature accumulates the absolute gyro error in quad coordinates and mixes a proportional correction into the setpoint. For it to work you need to enable AirMode and $t(pidTuningItermRelax.message) (for $t(pidTuningOptionRP.message)). If you combine this feature with $t(pidTuningIntegratedYaw.message), you can set $t(pidTuningItermRelax.message) enabled for $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
