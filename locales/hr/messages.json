@@ -3022,9 +3022,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Apsolutna kontrola"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Ova mogućnost riješava probleme $t(pidTuningItermRotation.message) i trebala bi biti uskoro zamijenjena. Ova mogućnost akumulira apsolutnu pogrešku žiroskopa u koordinatama letjelice i dodaje proporcionalnu korekciju u setpoint. Kako bi radila, potrebno je da omogućite AirMode i $t(pidTuningItermRelax.message) (za $t(pidTuningItermRelaxAxesOptionRP.message)). Ako kombinirate ovu mogućnost s $t(pidTuningIntegratedYaw.message), možete omogućiti $t(pidTuningItermRelax.message) za $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Gas/Throttle Boost"
     },
