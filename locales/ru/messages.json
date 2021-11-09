@@ -3575,9 +3575,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Абсолютный контроль"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Эта функция решает некоторые основные проблемы $t(pidTuningItermRotation.message) и, как можно надеяться, заменит их в какой-то момент. Этот параметр накапливает значение абсолютной погрешности гироскопа относительно координат квадрокоптера и подмешивает пропорциональную коррекцию в setpoint. Для её работы необходимо включить AirMode и $t(pidTuningItermRelax.message) (для $t(pidTuningItermRelaxAxesOptionRP.message)). Если вы используете эту функцию совместно с $t(pidTuningIntegratedYaw.message), вы можете включить $t(pidTuningItermRelax.message) для $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Увеличение газа"
     },
