@@ -3517,9 +3517,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Kontrola całkowita"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Ta funkcja rozwiązuje niektóre podstawowe problemy z $t(pidTuningItermRotation.message) i powinna w pewnym momencie być zmieniona. Ta funkcja gromadzi bezwzględny błąd żyroskopowy we współrzędnych maszyny i dodaje poprawkę do wyniku. Aby to działało, musisz włączyć AirMode i $t(pidTuningItermRelax.message) (dla $t(pidTuningItermRelaxAxesOptionRP.message)). Jeśli łączysz tę funkcję z $t(pidTuningIntegratedYaw.message), możesz ustawić $t(pidTuningItermRelax.message) włączone dla $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Wzmocnienie przepustnicy"
     },
