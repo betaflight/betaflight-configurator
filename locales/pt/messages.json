@@ -3149,9 +3149,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Controle Absoluto"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Esta função resolve alguns dos problemas da $t(pidTuningItermRotation.message) e provavelmente a substituirá no futuro. A função acumula o erro absoluto do gyro em coordenadas da aeronave e adiciona uma correção proporcional no setpoint. Para que funcione, é necessário ativar as funções AirMode e $t(pidTuningItermRelax.message) nos eixos $t(pidTuningItermRelaxAxesOptionRP.message). Se deseja combinar esta função com o $t(pidTuningIntegratedYaw.message), poderá habilitar $t(pidTuningItermRelax.message) nos eixos $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Ganho no acelerador"
     },
