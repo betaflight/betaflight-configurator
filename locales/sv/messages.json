@@ -3105,9 +3105,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Absolut kontroll"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Denna funktion löser några underliggande problem med $t(pidTuningItermRotation.message) och kommer förhoppningsvis att ersätta den helt så småningom. Funktionen ackumulerar det absoluta gyro-felet i quad-koordinater och mixar in ett proportionellt korrigeringsvärde i setpointen. För att det ska fungera måste du aktivera AirMode och $t(pidTuningItermRelax.message) (for $t(pidTuningItermRelaxAxesOptionRP.message)). Om du kombinerar denna funktion med $t(pidTuningIntegratedYaw.message), kan du sätta $t(pidTuningItermRelax.message) till aktiverad för $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Trottelförstärkning"
     },
