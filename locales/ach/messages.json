@@ -3960,7 +3960,7 @@
         "message": "crwdns8801:0crwdne8801:0"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "crwdns9094:0$t(pidTuningItermRotation.message)crwdnd9094:0$t(pidTuningItermRelax.message)crwdnd9094:0$t(pidTuningItermRelaxAxesOptionRP.message)crwdnd9094:0$t(pidTuningIntegratedYaw.message)crwdnd9094:0$t(pidTuningItermRelax.message)crwdnd9094:0$t(pidTuningItermRelaxAxesOptionRPY.message)crwdne9094:0"
+        "message": "crwdns10681:0$t(pidTuningItermRotation.message)crwdnd10681:0$t(pidTuningItermRelax.message)crwdnd10681:0$t(pidTuningOptionRP.message)crwdnd10681:0$t(pidTuningIntegratedYaw.message)crwdnd10681:0$t(pidTuningItermRelax.message)crwdnd10681:0$t(pidTuningOptionRPY.message)crwdne10681:0"
     },
     "pidTuningThrottleBoost": {
         "message": "crwdns8803:0crwdne8803:0"
