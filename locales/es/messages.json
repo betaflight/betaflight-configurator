@@ -3575,9 +3575,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Control Absoluto"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Esta funcionalidad soluciona algunos problemas con la $t(pidTuningItermRotation.message) y debería reemplazarla totalmente en algún momento. Esta funcionalidad acumula el error absoluto del giro en coordenadas de la aeronave y mezcla una corrección proporcional en el valor objetivo. Para que funcione necesita que tengas activado AirMode y $t(pidTuningItermRelax.message) (para $t(pidTuningItermRelaxAxesOptionRP.message)). Si combinas esta funcionalidad con $t(pidTuningIntegratedYaw.message), puedes tener $t(pidTuningItermRelax.message) activado para $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Potenciar Acelerador"
     },
