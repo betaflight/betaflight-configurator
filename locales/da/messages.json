@@ -1840,9 +1840,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Control"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Denne funktion løser nogle af $t(pidTuningItermRotation.message) underliggende problemer og erstatter den forhåbentlig på et tidspunkt. Denne funktion akkumulerer den absolutte gyrofejl i quadkoordinater og indfører en proportionalkorrektion i setpoint. For at det skal fungere, skal AirMode og $t(pidTuningItermRelax.message) aktiveres (for $t(pidTuningItermRelaxAxesOptionRP.message)). Kombineres denne funktion med $t(pidTuningIntegratedYaw.message), kan du sætte $t(pidTuningItermRelax.message) aktiveret for $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe-opsætning er ændret betydeligt. Benyt Betaflight <strong>v1.12.0+</strong> for at aktivere det forbedrede opsætningspanel."
     },
