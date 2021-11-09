@@ -3414,9 +3414,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Abszolút vezérlés"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Ez a szolgáltatás megoldja a$t(pidTuningItermRotation.message)néhány alapvető problémáját és remélhetőleg egy bizonyos ponton felváltja azt. Ez a szolgáltatás felhalmozza az abszolút giroszkóp hibát koordinátákban, és kever egy arányos korrekciót az alapértékbe. A működéshez engedélyeznie kell az AirMode és a$t(pidTuningItermRelax.message) szolgáltatást $t(pidTuningItermRelaxAxesOptionRP.message)). Ha ezt a funkciót kombinálja a $t(pidTuningIntegratedYaw.message)-vel, beállíthatja a $t(pidTuningItermRelax.message)engedélyezését a $t(pidTuningItermRelaxAxesOptionRPY.message)-ra."
-    },
     "pidTuningThrottleBoost": {
         "message": "Gáz növelés"
     },
