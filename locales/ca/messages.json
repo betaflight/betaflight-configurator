@@ -3873,6 +3873,9 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Control absolut"
     },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Aquesta característica resol alguns problemes subjacents de $t(pidTuningItermRotation.message) i caldria substituir-lo en algun moment. Aquesta característica acumula l'error absolut de gir en les coordenades del quad i barreja una correcció proporcional al punt d'ajust. Perquè funcioni, heu d’habilitar AirMode i $t(pidTuningItermRelax.message) (per $t(pidTuningOptionRP.message)). Si combines aquesta característica amb $t(pidTuningIntegratedYaw.message), pots definir $t(pidTuningItermRelax.message) habilitada per a $t(pidTuningOptionRPY.message)."
+    },
     "pidTuningThrottleBoost": {
         "message": "Reforç de Throttle"
     },
