@@ -4004,7 +4004,7 @@
         "message": "GPS 衛星捕捉数 最小値"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "修正せずにアーム許可 - <span class=\"message-negative\">警告: GPSレスキューは利用できません</span>"
+        "message": "GPS捕捉せずにアーム許可 - <span class=\"message-negative\">警告: GPSレスキューは利用できません</span>"
     },
     "failsafeGpsRescueItemAltitudeMode": {
         "message": "高度維持モード"
