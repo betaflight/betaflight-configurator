@@ -644,7 +644,7 @@
         "message": "Betaflight 的文档和发布说明可以在 wiki 里面找到。<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "学习 Betaflight 最好的资源是使用 Betaflight wiki，而不是听信各种“老师”，它在 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a> 。"
+        "message": "学习 Betaflight 最好的资源是使用 Betaflight wiki，而不是听信各种“老师”和质量堪忧的“教学”视频，它在 <a href=\"https://github.com/betaflight/betaflight/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a> 。"
     },
     "defaultDocumentation2": {
         "message": "最新发布版本的信息可以在 <a href=\"https://github.com/Betaflight/Betaflight/releases\" target=\"_blank\" rel=\"noopener noreferrer\">这里</a> 找到。"
@@ -1787,7 +1787,7 @@
         "message": "'摇杆低位' 阈值"
     },
     "receiverHelpStickMin": {
-        "message": "摇杆最小值(摇杆最低/最左) 的数值 (微秒) (大于这个值飞控认为遥控信号正常)"
+        "message": "摇杆最小值 (摇杆最低点和摇杆最左) 的数值 (微秒) (只有实际值大于这个值，飞控才会认为是正常的遥控信号)"
     },
     "receiverStickCenter": {
         "message": "摇杆中点"
@@ -1799,7 +1799,7 @@
         "message": "'摇杆高位' 阈值"
     },
     "receiverHelpStickMax": {
-        "message": "摇杆最大值(摇杆最高/最右) 的数值 (微秒) (小于这个值飞控认为遥控信号正常)"
+        "message": "摇杆最大值 (摇杆最高/摇杆最右) 的数值 (微秒) (只有实际值小于这个值，飞控才会认为是正常的遥控信号)"
     },
     "receiverDeadband": {
         "message": "RC 死区区间"
