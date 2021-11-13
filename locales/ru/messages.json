@@ -1725,6 +1725,12 @@
     "dialogCopyProfileClose": {
         "message": "Отмена"
     },
+    "pidTuningResetPidProfile": {
+        "message": "Сбросить настройки текущего PID профиля"
+    },
+    "pidTuningPidProfileReset": {
+        "message": "Загружены значения по умолчанию для текущего PID профиля."
+    },
     "pidTuningReceivedProfile": {
         "message": "Установить профиль полетного контроллера: <strong class=\"message-positive\">$1</strong>"
     },
