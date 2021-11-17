@@ -1791,6 +1791,18 @@
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "Max Rate Limit"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "Attenuates feedforward towards zero as the sticks move quickly towards maximum deflection (maximum set turn rate), eg at the start of a quick flip or roll, to minimise overshoot. Does nothing at the end of a flip or roll. Lower values make the attenuation start earlier. Usually this value does not require modification. The highest value consistent with acceptable overshoot at the start of rolls or flips is best."
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "Jitter Reduction"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "Jitter reduction reduces Feedforward when the sticks move slowly. This allows smooth, jitter-free flight when making smooth slow arcs, yet provides full feedforward without any delay when the sticks are moved quickly. A higher threshold value (10-12) is more useful for cinematic or HD freestyle purposes, and a slightly lower value (5) better for racing or higher speed RC links."
+    },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
     },

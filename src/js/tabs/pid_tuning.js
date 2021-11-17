@@ -509,6 +509,8 @@ TABS.pid_tuning.initialize = function (callback) {
             $('select[id="feedforwardAveraging"]').val(FC.ADVANCED_TUNING.feedforward_averaging);
             $('input[name="feedforwardSmoothFactor"]').val(FC.ADVANCED_TUNING.feedforward_smooth_factor);
             $('input[name="feedforwardBoost"]').val(FC.ADVANCED_TUNING.feedforward_boost);
+            $('input[name="feedforwardMaxRateLimit"]').val(FC.ADVANCED_TUNING.feedforward_max_rate_limit);
+            $('input[name="feedforwardJitterFactor"]').val(FC.ADVANCED_TUNING.feedforward_jitter_factor);
 
             // Vbat Sag Compensation
             const vbatSagCompensationCheck = $('input[id="vbatSagCompensation"]');
@@ -534,6 +536,8 @@ TABS.pid_tuning.initialize = function (callback) {
         } else {
             $('.vbatSagCompensation').hide();
             $('.thrustLinearization').hide();
+            $('.feedforwardMaxRateLimit').hide();
+            $('.feedforwardJitterFactor').hide();
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_40)) {
                 $('.pid_tuning .ROLL input[name="f"]').val(FC.ADVANCED_TUNING.feedforwardRoll > 0 ? FC.ADVANCED_TUNING.feedforwardRoll : PID_DEFAULT[4]);
@@ -1066,6 +1070,8 @@ TABS.pid_tuning.initialize = function (callback) {
             FC.ADVANCED_TUNING.feedforward_averaging = $('select[id="feedforwardAveraging"]').val();
             FC.ADVANCED_TUNING.feedforward_smooth_factor = parseInt($('input[name="feedforwardSmoothFactor"]').val());
             FC.ADVANCED_TUNING.feedforward_boost = parseInt($('input[name="feedforwardBoost"]').val());
+            FC.ADVANCED_TUNING.feedforward_max_rate_limit = parseInt($('input[name="feedforwardMaxRateLimit"]').val());
+            FC.ADVANCED_TUNING.feedforward_jitter_factor = parseInt($('input[name="feedforwardJitterFactor"]').val());
             FC.FILTER_CONFIG.dyn_lpf_curve_expo = parseInt($('.pid_filter input[name="dtermLowpassDynExpo"]').val());
             FC.ADVANCED_TUNING.vbat_sag_compensation = $('input[id="vbatSagCompensation"]').is(':checked') ? parseInt($('input[name="vbatSagValue"]').val()) : 0;
             FC.ADVANCED_TUNING.thrustLinearization = $('input[id="thrustLinearization"]').is(':checked') ? parseInt($('input[name="thrustLinearValue"]').val()) : 0;
