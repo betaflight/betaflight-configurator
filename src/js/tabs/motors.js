@@ -61,6 +61,7 @@ TABS.motors.initialize = function (callback) {
     }
 
     MSP.promise(MSPCodes.MSP_STATUS)
+    .then(() => MSP.promise(MSPCodes.MSP_PID_ADVANCED))
     .then(() => MSP.promise(MSPCodes.MSP_FEATURE_CONFIG))
     .then(() => MSP.promise(MSPCodes.MSP_MIXER_CONFIG))
     .then(() => FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor ? MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY) : true)
@@ -735,6 +736,16 @@ TABS.motors.initialize = function (callback) {
             divUnsyncedPWMFreq.toggle(protocolConfigured && !digitalProtocol);
 
             $('div.digitalIdlePercent').toggle(protocolConfigured && digitalProtocol);
+
+            $('input[name="digitalIdlePercent"]').prop('disabled', protocolConfigured && digitalProtocol && FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry);
+
+            if (FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry) {
+                const dynamicIdle = FC.ADVANCED_TUNING.idleMinRpm * 100;
+                $('span.digitalIdlePercentDisabled').text(i18n.getMessage('configurationDigitalIdlePercentDisabled', { dynamicIdle }));
+            } else {
+                $('span.digitalIdlePercentDisabled').text(i18n.getMessage('configurationDigitalIdlePercent'));
+            }
+
             $('.escSensor').toggle(protocolConfigured && digitalProtocol);
 
             $('div.checkboxDshotBidir').toggle(protocolConfigured && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && digitalProtocol);
