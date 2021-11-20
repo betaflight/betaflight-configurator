@@ -250,10 +250,12 @@ function startProcess() {
 
             const tab = tabClass.substring(4);
             const tabName = $(self).text();
+            let timeout = 0;
 
             if (GUI.active_tab === 'pid_tuning') {
                 if (TABS.pid_tuning.retainConfiguration) {
                     TABS.pid_tuning.restoreInitialSettings();
+                    timeout = 100;
                 }
             }
 
@@ -399,9 +401,9 @@ function startProcess() {
                         TABS.onboard_logging.initialize(content_ready);
                         break;
                     case 'cli':
-                        TABS.cli.initialize(content_ready, GUI.nwGui);
+                        // Add a little timeout to let MSP comands finish
+                        GUI.timeout_add('wait_for_msp_finished', () => TABS.cli.initialize(content_ready, GUI.nwGui), timeout);
                         break;
-
                     default:
                         console.log(`Tab not found: ${tab}`);
                 }
