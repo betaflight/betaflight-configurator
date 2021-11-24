@@ -1,0 +1,112 @@
+.preset_detailed_dialog_title {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#presets_detailed_dialog_content_wrapper .preset_title_panel_title {
+    padding-bottom: .5ex;
+    border-bottom: 1px solid var(--accent);
+    margin-bottom: 2ex;
+}
+
+.presets-detailed-dialog-property-table {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.presets-detailed-dialog-property-table td {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.presets-detailed-dialog-property-table-first-col {
+    width: 150px;
+}
+
+.presets_detailed_dialog_text {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: 12px;
+    overflow-y: scroll;
+    height: 270px;
+    font-size: 110%;
+    white-space: pre-line;
+    user-select: text;
+}
+
+#presets_detailed_dialog_properties {
+    height: 360px;
+}
+
+#presets_detailed_dialog_content_wrapper  .left-panel {
+    position: absolute;
+    left: 0px;
+    padding-left: 20px;
+}
+
+#presets_detailed_dialog_loading {
+    height: 300px;
+}
+
+#presets_options_select {
+    width: 296px;
+}
+
+#presets_options_panel {
+    height: 26px;
+    margin-top: 6px;
+}
+
+#presets_options_panel > span{
+    line-height: 26px;
+}
+
+#preset_options_label {
+    width : 100px;
+    display: inline-block;
+}
+
+@media all and (max-width: 575px) {
+    .presets_detailed_dialog_text {
+        height: unset;
+        padding-bottom: 100px;
+    }
+
+    #presets_detailed_dialog .content_toolbar {
+        position: fixed;
+        height: 70px;
+    }
+
+    #presets_options_panel {
+        height: 26px;
+        margin-top: 6px;
+        grid-template-columns: 100px 1fr;
+        display: grid;
+    }
+
+    #presets_options_select {
+        width: 100%;
+    }
+
+    #presets_detailed_dialog .btn {
+        margin-left: 0px;
+        width: 100%;
+    }
+
+    #presets_detailed_dialog .btn .left-panel {
+        margin-left: 12px;
+        margin-bottom: 12px;
+        padding-left: 0px;
+    }
+
+    #presets_detailed_dialog .btn .left-panel .regular-button {
+        float: none;
+        display: inline-block;
+    }
+
+    #presets_detailed_dialog .btn .regular-button:not(#presets_detailed_dialog .btn .left-panel .regular-button) {
+        margin-top: 40px;
+    }
+}

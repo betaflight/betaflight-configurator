@@ -1,0 +1,426 @@
+.tab-presets {
+    height: 100%;
+}
+
+.tab-presets .content_wrapper {
+    height: calc(100% - 30px - 3ex);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.tab-presets p {
+    padding: 0;
+    border: 0 dotted var(--subtleAccent);
+}
+
+.tab-presets .presets_warnings {
+    padding-left : 20px;
+    padding-right : 20px;
+}
+
+#presets_content_wrapper {
+    padding: 0px;
+    position: relative;
+}
+
+.presets_top_bar_pannel {
+    margin-left: auto;
+}
+
+.presets_title_text {
+    display: inline-block;
+}
+
+.presets_top_bar_button_pannel {
+    display: inline;
+}
+
+.presets_warning_backup {
+    display: grid;
+    grid-template-columns: 1fr fit-content(300px);
+}
+
+.presets_warning_backup_text {
+    padding-right: 24px;
+}
+
+.presets_warning_backup_button_hide {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    line-height: 17px;
+    font-size: 10px;
+    height: 17px;
+}
+
+.tab-presets .top_panel_spacer {
+    width: 0px;
+    display: inline;
+    border: 1px var(--subtleAccent);
+    border-style: none none none solid;
+    height: 60%;
+    margin-right: 10px;
+    float: right;
+}
+
+.tab-presets .tab_title .presets_top_bar_button_pannel .regular-button{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    line-height : 17px;
+    font-size : 10px;
+    border-radius: 3px;
+}
+
+.presetsWikiButton {
+    margin-right: 0px;
+}
+
+.tab-presets .tab_title
+{
+    padding: 20px 20px 0px 20px;
+}
+
+#presets_list {
+    padding: 0px 0px 20px 0px;
+    height: calc(100% - 180px);
+    display: grid;
+    grid-gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+}
+
+#preset_list_wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#presets_global_loading {
+    padding: 0px 20px 20px 20px;
+    display: none;
+    width: 50%;
+    height: 50%;
+    margin: auto;
+}
+
+#presets_global_loading_error {
+    padding: 0px 20px 20px 20px;
+    display: none;
+}
+
+#presets_main_content {
+    display: none;
+}
+
+#presets_list:last-child::after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: "&nbsp;";
+    clear: both;
+    height: 0;
+}
+
+.presets_filter_select {
+    width: 100%;
+    background-color: var(--boxBackground);
+    color: var(--defaultText);
+}
+
+.presets_search_settings {
+    position: sticky;
+    top: 0px;
+    background-color: var(--boxBackground);
+}
+
+.tab-presets .ms-choice,.ms-drop {
+    background-color: var(--boxBackground)!important;
+    color: var(--defaultText)!important;
+}
+
+.presets_text_input {
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
+    background-color: var(--boxBackground);
+    color: var(--defaultText);
+}
+
+#presets_filter_text {
+    height: 26px;
+    flex: 1;
+    padding-left: 5px;
+}
+
+#presets_search_hint {
+    float: left;
+    width: 28px;
+    height: 28px;
+    margin-right: 12px;
+    background-repeat: no-repeat;
+    background-image: url(../../images/icons/cf_icon_search_orange.svg);
+}
+
+#presets_search_bar_wrapper {
+    display: flex;
+    padding: 2ex 20px 2ex 20px;
+}
+
+#presets_cli {
+    width: 100%;
+}
+
+#presets_cli_background {
+    border: 1px solid var(--subtleAccent);
+    background-color: rgba(64, 64, 64, 1);
+    margin-top: 0;
+    height: 300px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.80);
+}
+
+.tab-presets .window {
+    height: 100%;
+    width: 100%;
+    padding: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: monospace;
+    color: white;
+    box-sizing: border-box;
+    -webkit-user-select: text;
+    user-select: text;
+    float: left;
+}
+
+.presets_fitler_table_header
+{
+    background: var(--quietHeader);
+    color: var(--quietText);
+    border-right: 1px solid var(--subtleAccent);
+    font-weight: normal;
+    text-align: left;
+    padding: 4px 4px 4px 6px;
+}
+
+.presets_fitler_table_value {
+    background-color: var(--alternativeBackground);
+    width: 100%;
+}
+
+.tab-presets textarea[name='commands'] {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 6px;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: white;
+    border: 1px solid var(--subtleAccent);
+    background-color: rgba(64, 64, 64, 1);
+    resize: none;
+}
+
+.tab-presets .presets_cli_errors_dialog_warning {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+}
+
+.tab-presets #content-watermark {
+    z-index: 0;
+}
+
+#presets_cli_errors_dialog .regular-button {
+    margin-bottom: 0px;
+    margin-left: 12px;
+    margin-right: 0px;
+    float: right;
+}
+
+.tab-presets .window .wrapper {
+    white-space: pre-wrap;
+    user-select: text;
+}
+
+.tab-presets .window .error_message {
+    color: red;
+    font-weight: bold;
+}
+
+.tab-presets .save {
+    color: white;
+}
+
+#presets_detailed_dialog {
+    width : 600px;
+    height : 520px;
+    padding: 12px;
+}
+
+#presets_sources_dialog {
+    width : 600px;
+    height : 520px;
+    padding: 12px;
+}
+
+#presets_cli_errors_dialog {
+    width : 600px;
+    padding: 24px;
+}
+
+#presets_apply_progress_dialog {
+    width: 300px;
+    padding: 24px;
+}
+
+.tab-presets .presets_apply_progress_dialog_progress_bar {
+    width: 100%;
+    height: 20px;
+    margin-top: 12px;
+}
+
+.tab-presets .ms-drop {
+    z-index: 2001;
+}
+
+/* hack-fix for multiple-select with small font size. Originally checkboxes are not ligned with the text options when the font size is smaller than 0.7em */
+.tab-presets
+.ms-drop input[type="radio"], .ms-drop input[type="checkbox"] {
+    margin-top: 0.1rem !important;
+}
+
+.presets_filter_table_wrapper {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    padding: 0px 20px 0px 20px;
+}
+
+.presets_filter_table_wrapper .freelabel {
+    display: inline-block;
+    padding: 4px 0 4px 0;
+}
+
+.tab-presets .cf_doc_version_bt {
+    margin-top: 20px;
+}
+
+#presets_list_no_found, #presets_list_too_many_found {
+    font-size: 1.5em;
+}
+
+@media only screen and (max-width: 1055px) , only screen and (max-device-width: 1055px) {
+
+    .tab-presets .content_wrapper {
+        height: calc(100% - 87px);
+    }
+    .tab-presets .content_toolbar {
+        margin-top: 5px;
+    }
+
+    .presets_search_settings {
+        position: static;
+        top: unset;
+    }
+}
+
+.presets_secondary_top_bar_panel_buttons {
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-bottom: 8px;
+}
+
+.presets_secondary_top_bar_panel_buttons .regular-button {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    line-height: 17px;
+    font-size: 10px;
+    border-radius: 3px;
+}
+
+@media all and (max-width: 575px) {
+    .tab-presets .content_wrapper {
+        height: calc(100% - 51px);
+    }
+
+    .tab-presets .tab_title
+    {
+        padding: 20px 10px 10px 10px;
+    }
+
+    .tab-presets .backdrop {
+        background-size: 100%;
+    }
+
+    #presets_list {
+        grid-template-columns: 100%;
+    }
+
+    #preset_list_wrapper, .presets_search_settings {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    #presets_search_bar_wrapper {
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 1ex;
+    }
+
+    .presets_filter_row {
+        display: table-row;
+    }
+
+    .presets_filter_table_wrapper {
+        display: table;
+        border-spacing: 6px;
+        margin-right: -6px;
+        margin-left: -6px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .presets_fitler_table_header {
+        display: table-cell;
+        background-color: unset;
+        border-right: unset;
+    }
+
+    .presets_fitler_table_value {
+        display: table-cell;
+    }
+
+    .tab-presets .presets_warnings {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    #presets_cli_errors_dialog {
+        padding: 12px;
+    }
+
+    #presets_apply_progress_dialog {
+        padding: 12px;
+    }
+
+    #presets_cli_errors_dialog .btn {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+    }
+    #presets_cli {
+        height: calc(100% - 121px);
+    }
+
+    #presets_cli_background {
+        height: 100%;
+    }
+
+    .presets_warning_backup {
+        display: block;
+        grid-template-columns: 1fr fit-content(300px);
+    }
+
+    .presets_warning_backup_text {
+        padding-right: 24px;
+        margin-bottom: 6px;
+    }
+}
