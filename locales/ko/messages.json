@@ -3693,26 +3693,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "자이로 저역통과 필터"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "자이로 저역통과 1 컷오프 주파수 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "자이로 저역통과 1 필터 형식"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "자이로 저역통과 1 다이나믹 최소 컷오프 주파수 [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "자이로 저역통과 1 다이나믹 최대 컷오프 주파수 [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "자이로 저역통과 1 다이나믹 필터 형식"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "자이로 저역통과 2 컷오프 주파수 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "자이로 저역통과 2 필터 형식"
     },
     "pidTuningGyroLowpassFilterHelp": {
         "message": "자이로 저역통과 필터는 고주파수 노이즈를 감쇠하여 PID 루프에서 벗어나도록 합니다. 2개의 독립적으로 구성 가능한 자이로 필터가 있습니다. 기본적으로 둘 다 활성화됩니다.<br /><br />첫 번째 D 저역 통과는 정적(고정 컷오프) 또는 동적일 수 있습니다. 두 번째 D 저역통과는 항상 정적입니다. 저역통과가 동적 모드일 때 필터는 낮은 스로틀에서 더 강해지고 스로틀이 증가함에 따라 컷오프는 더 높아집니다(필터링이 적음).<br /><br />RPM 필터링이 없으면, 저역통과 1은 다이나믹 모드로, 두 PT1 필터 모두 기본 (또는 더 강한) 컷오프로 활성화되어야 합니다.<br /><br />RPM 필터링을 사용하면, 자이로 필터 슬라이더를 종종 오른쪽으로 이동할 수 있습니다. 클린 쿼드에서는 제대로 작동하거나, 500hz의 단일 정적 자이로 저역통과 필터로 충분할 수 있습니다.<br /><br />쿼드는 최소한의 자이로 필터 지연 (슬라이더가 오른쪽으로 이동, 더 높은 컷오프 값) 으로 매우 적은 프롭워시를 가집니다.<br /><br />낮은 자이로 필터링 (슬라이더를 오른쪽으로 이동) 으로 전환할 때, 항상 모터 열을 확인하십시오. 최소한의 자이로 필터링을 가질 경우, 충분한 D 필터링은 필수입니다! 주의하세요!"
@@ -3819,12 +3804,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D 텀 저역통과 1 필터 형식"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D 텀 저역통과 1 컷오프 주파수 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D 텀 저역통과 2 컷오프 주파수 [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D 텀 저역통과 2 필터 형식"
     },
@@ -3834,11 +3813,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D 텀 저역통과 1 다이나믹 최대 컷오프 주파수 [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D 텀 저역통과 1 다이나믹 필터 형식"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D 텀 저역통과 1 다이나믹 곡선 엑스포"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D 텀 저역통과 1 다이나믹 필터 형식"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D 텀 노치 필터"
@@ -3848,9 +3827,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D 텀 노치 필터 컷오프 주파수 [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "요 저역통과 필터"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "요 저역통과 컷오프 주파수 [Hz]"
