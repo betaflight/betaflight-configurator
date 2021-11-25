@@ -605,12 +605,19 @@
                                     <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardGroupHelp"></div>
                                     <span i18n="pidTuningFeedforwardGroup"></span>
 
-                                    <span class="feedforwardTransition suboption">
-                                        <input type="number" name="feedforwardTransition-number" step="0.01" min="0.00" max="1.00"/>
+                                    <span class="feedforwardJitterFactor suboption">
+                                        <input type="number" name="feedforwardJitterFactor" step="1" min="0" max="20"/>
                                         <label>
-                                            <span i18n="pidTuningFeedforwardTransition"></span>
+                                            <span i18n="pidTuningFeedforwardJitter"></span>
                                         </label>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardTransitionHelp"></div>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardJitterHelp"></div>
+                                    </span>
+
+                                    <span class="feedforwardOption feedforwardSmoothFactor suboption">
+                                        <input type="number" name="feedforwardSmoothFactor" step="1" min="0" max="75" />
+                                        <label for="feedforwardSmoothFactor">
+                                            <span i18n="pidTuningFeedforwardSmoothFactor"></span>
+                                        </label>
                                     </span>
 
                                     <span class="feedforwardOption feedforwardAveraging suboption">
@@ -625,18 +632,27 @@
                                         </label>
                                     </span>
 
-                                    <span class="feedforwardOption feedforwardSmoothFactor suboption">
-                                        <input type="number" name="feedforwardSmoothFactor" step="1" min="0" max="75" />
-                                        <label for="feedforwardSmoothFactor">
-                                            <span i18n="pidTuningFeedforwardSmoothFactor"></span>
-                                        </label>
-                                    </span>
-
                                     <span class="feedforwardOption feedforwardBoost suboption">
                                         <input type="number" name="feedforwardBoost" step="1" min="0" max="50" />
                                         <label for="feedforwardBoost">
                                             <span i18n="pidTuningFeedforwardBoost"></span>
                                         </label>
+                                    </span>
+
+                                    <span class="feedforwardMaxRateLimit suboption">
+                                        <input type="number" name="feedforwardMaxRateLimit" step="1" min="0" max="150"/>
+                                        <label>
+                                            <span i18n="pidTuningFeedforwardMaxRateLimit"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardMaxRateLimitHelp"></div>
+                                    </span>
+
+                                    <span class="feedforwardTransition suboption">
+                                        <input type="number" name="feedforwardTransition-number" step="0.01" min="0.00" max="1.00"/>
+                                        <label>
+                                            <span i18n="pidTuningFeedforwardTransition"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardTransitionHelp"></div>
                                     </span>
                                 </td>
                             </tr>
