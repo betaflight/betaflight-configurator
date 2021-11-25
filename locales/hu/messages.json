@@ -3214,26 +3214,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Giroszkóp aluláteresztő Szűrő"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Giroszkóp aluláteresztő 1 levágási frekvencia [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Giroszkóp aluláteresztő 1 Szűrő típusa"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Giroszkóp aluláteresztő 1 dinamikus minimum levágási frekvencia [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Giroszkóp aluláteresztő 1 dinamikus maximum levágási frekvencia [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Giroszkóp aluláteresztő 1 dinamikus Szűrő típusa"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Giroszkóp aluláteresztő 2 levágási frekvencia [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Giroszkóp aluláteresztő 2 Szűrő típusa"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giroszkóp Notch szűrők"
@@ -3315,12 +3300,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D term aluláteresztő 1 szűrő típusa"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D term aluláteresztő 1 levágási frekvencia [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D term aluláteresztő 2 levágási frekvencia [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D term aluláteresztő 2 szűrő típusa"
     },
@@ -3330,11 +3309,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D term aluláteresztő 1 dinamikus maximum levágási frekvencia [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D term aluláteresztő 1 dinamikus szűrő típusa"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D-érték aluláteresztő 1 dinamikus görbe típusa"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D term aluláteresztő 1 dinamikus szűrő típusa"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D term Notch szűrő"
@@ -3344,9 +3323,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D term Notch szűrő levágási frekvenciája [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw aluláteresztő szűrő"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw aluláteresztő levágási frekvencia [Hz]"
