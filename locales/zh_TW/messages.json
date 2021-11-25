@@ -3154,26 +3154,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "陀螺儀低通濾波器"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "陀螺儀低通濾波器1截止頻率 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "陀螺儀低通濾波器1類型"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "陀螺儀低通濾波器1動態最低截止頻率 [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "陀螺儀低通濾波器1動態最高截止頻率 [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "陀螺儀低通濾波器1動態濾波器類型"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "陀螺儀低通濾波器2截止頻率 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "陀螺儀低通濾波器2類型"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "陀螺儀陷波濾波器"
@@ -3255,12 +3240,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term 低通濾波器"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term 低通濾波器1截止頻率 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term 低通濾波器2截止頻率 [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term 低通濾波器2類型"
     },
@@ -3270,11 +3249,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D Term 低通濾波器1動態最高截止頻率 [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term 低通濾波器1動態濾波器類型"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D Term 低通濾波器1動態曲線指數"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term 低通濾波器1動態濾波器類型"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term 陷波濾波器"
@@ -3284,9 +3263,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term 陷波濾波器截止頻率 [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "偏航低通濾波器"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "偏航低通濾波器截止頻率 [Hz]"
