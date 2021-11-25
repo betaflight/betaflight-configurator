@@ -3625,26 +3625,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "ジャイロ ローパスフィルター"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "ジャイロ ローパス1 カットオフ周波数 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "ジャイロ ローパス1 フィルタータイプ"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "ジャイロ ローパス1 動的最小値 カットオフ周波数 [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "ジャイロ ローパス1 動的最大値 カットオフ周波数 [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "ジャイロ ローパス1 動的フィルタータイプ"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "ジャイロ ローパス2 カットオフ周波数 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "ジャイロ ローパス2 フィルタータイプ"
     },
     "pidTuningGyroLowpassFilterHelp": {
         "message": "ジャイロローパスフィルターは、高周波数のノイズを減衰させ、PIDループに混入しないようにします。独立して設定可能な2つのジャイロフィルターがあり、デフォルトでは両方とも有効となっています。<br /><br />1番目のD値ローパスは静的 (カットオフ値固定) または動的にすることができ、2番目のD値ローパスは常に静的となります。ローパスが動的モードの場合、スロットルが低いときはフィルタリングが強くなり、スロットルを上げるにつれてカットオフが高く (フィルタリングが弱く) なります。<br /><br />RPMフィルタリングを行わない場合は、ローパス1を動的モードにして両方のPT1フィルターをデフォルト (またはより強く) カットオフを有効にする必要があります。<br /><br />RPMフィルタリングを使用すると、ジャイロフィルターのスライダーを右側に動かすことができます。\n新造機体 (クリーンビルド) では、右側いっぱいまで動かすことができます。あるいは500hzの静的なジャイロローパスフィルターを\n1つ使用すれば十分でしょう。<br /><br />機体はジャイロフィルターの遅延が少ない (スライダーを右側に動かしカットオフ値を高くする) ほど、プロップウォッシュが少なくなります。<br /><br />ジャイロフィルタリングを少なくする (スライダーを右側に動かす) 場合は、モーターの発熱を常にチェックしてください。ジャイロフィルタリングを最小にした場合、十分なD値フィルタリングが必要になります！特にご注意ください！"
@@ -3751,12 +3736,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D値 ローパス1 フィルタータイプ"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D値 ローパス1 カットオフ周波数 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D値 ローパス2 カットオフ周波数 [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D値 ローパス2 フィルタータイプ"
     },
@@ -3766,11 +3745,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D値 ローパス1 動的最大値 カットオフ周波数 [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D値 ローパス1 動的フィルタータイプ"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D値 ローパス1 動的カーブExpo"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D値 ローパス1 動的フィルタータイプ"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D値 ノッチフィルター"
@@ -3780,9 +3759,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D値 ノッチフィルター カットオフ周波数 [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "ヨー ローパスフィルター"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "ヨー ローパス カットオフ周波数 [Hz]"
