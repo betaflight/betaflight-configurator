@@ -3347,26 +3347,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Paso Bajo del Giro"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Giro Paso Bajo 1 Frecuencia de Corte [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Giro Paso Bajo 1 Tipo de Filtro"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Giro Paso Bajo 1 Dinámico Frecuencia de Corte Min [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Giro Paso Bajo 1 Dinámico Frecuencia de Corte Max [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Giro Paso Bajo 1 Dinámico Tipo de Filtro"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Giro Paso Bajo 2 Frecuencia de Corte [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Giro Paso Bajo 2 Tipo de Filtro"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch del Giro"
@@ -3467,12 +3452,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term Paso Bajo 1 Tipo de Filtro"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Paso Bajo 1 Frecuencia de Corte [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Paso Bajo 2 Frecuencia de Corte [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term Paso Bajo 2 Tipo de Filtro"
     },
@@ -3482,11 +3461,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D Term Paso Bajo 1 Dinámico Frecuencia de Corte Max [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Paso Bajo 1 Dinámico Tipo de Filtro"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D Term Paso Bajo 1 Dinámico Expo de la Curva"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term Paso Bajo 1 Dinámico Tipo de Filtro"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtros Notch del D Term"
@@ -3496,9 +3475,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Filtro Notch Frecuencia de Corte [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filtros Paso Bajo del Yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Paso Bajo Frecuencia de Corte [Hz]"
