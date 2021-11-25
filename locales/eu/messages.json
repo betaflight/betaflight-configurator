@@ -3220,26 +3220,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Giro Behe-paseko Iragazkiak"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "1. Giro Behe-paseko Ebakidura Frekuentzia [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "1. Giro Behe-paseko Iragazki Mota"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "1. Giro Behe-paseko Iragazki Dinamikoa Ebakidura Min Frekuentzia [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "1. Giro Behe-paseko Iragazki Dinamikoa Ebakidura Max Frekuentzia [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "1. Giro Behe-paseko Iragazki Dinamikoa Mota"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "2. Giro Behe-paseko Iragazki Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "2. Giro Behe-paseko Iragazki Mota"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giro Notch Iragazkiak"
@@ -3321,12 +3306,6 @@
     "pidTuningDTermLowpassType": {
         "message": "1. D Term Behe-paseko Iragazki Mota"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "1. D Term Behe-paseko Iragazki Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "2. D Term Behe-paseko Iragazki Ebakidura Frekuentzia [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "2. D Term Behe-paseko Iragazki Mota"
     },
@@ -3336,11 +3315,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "1. D Term Behe-paseko Iragazki Dinamikoa Ebakidura Max Frekuentzia [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "1. D Term Behe-paseko Iragazkiko Iragazki Dinamikoa Mota"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "1. D Term Behe-paseko Iragazki Dinamiko Kurbaren Expoa"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "1. D Term Behe-paseko Iragazkiko Iragazki Dinamikoa Mota"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Tem Notch Iragazkiak"
@@ -3350,9 +3329,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch Iragazkiaren Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw Behe-paseko Iragazkiak"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Behe-paseko Ebakitzeko Frekuentzia [Hz]"
