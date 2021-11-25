@@ -3443,26 +3443,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtres gyro passe-bas"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Fréquence de Coupure du filtre passe-bas gyro 1 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Type de filtre gyro passe-bas 1"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Fréquence de Coupure Min du filtre passe-bas gyro 1 [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Fréquence Max de Coupure du filtre passe-bas Gyro 1 [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Type de filtre dynamique Gyro passe-bas 1"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Fréquence de Coupure du filtre passe-bas gyro 2 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Type de filtre gyro passe-bas 2"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtres gyro Notch"
@@ -3563,12 +3548,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Type du filtre passe-bas D Term 1"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Fréquence de coupure du filtre passe-bas D Term 1 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Fréquence de coupure du filtre passe-bas D Term 2 [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "Type du filtre passe-bas D Term 2"
     },
@@ -3578,11 +3557,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "Fréquence de coupure Max du filtre passe-bas dynamique D Term 1 [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Type de filtre dynamique D Term passe-bas 1"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo de la courbe dynamique du D term passe-bas 1"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Type de filtre dynamique D Term passe-bas 1"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtres Notch D Term"
@@ -3592,9 +3571,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Fréquence de coupure du filtre Notch D Term [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filtres passe-bas Yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Fréquence de coupure du filtre passe-bas Yaw [Hz]"
