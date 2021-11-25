@@ -3353,26 +3353,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro НЧ фильтры"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Lowpass 1 частота среза [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1, тип фильтра"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic, мин. частота среза [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic, макс. частота среза [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro Lowpass 1 Dynamic, тип фильтра"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro Lowpass 2, частота среза [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro Lowpass 2, тип фильтра"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro режекторные фильтры"
@@ -3473,12 +3458,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term Lowpass 1, тип фильтра"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass 1, частота среза [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Lowpass 2, частота среза [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term Lowpass 2, тип фильтра"
     },
@@ -3488,11 +3467,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D Term Lowpass 1 Dynamic, макс. частота среза [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 Dynamic, тип фильтра"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Экспонента 1 кривой нижнего фильтра параметра D"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term Lowpass 1 Dynamic, тип фильтра"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term режекторный фильтр"
@@ -3502,9 +3481,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch фильтр, частота среза [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw Lowpass фильтр"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass фильтр, частота среза [Hz]"
