@@ -2871,26 +2871,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filteri"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Lowpass 1 Cutoff Frekvencija [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 vrsta filtera"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro Lowpass 1 Dinamička Min Cutoff Frekvencija [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro Lowpass 1 Dinamička Max Cutoff Frekvencija [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro Lowpass 1 vrsta dinamičkog filtera"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro Lowpass 2 Cutoff Frekvencija [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro Lowpass 2 vrsta filtera"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filteri"
@@ -2938,12 +2923,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term Lowpass 1 vrsta filtera"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass 1 Cutoff Frekvencija [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Lowpass 2 Cutoff Frekvencija [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term Lowpass 2 vrsta filtera"
     },
@@ -2964,9 +2943,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch Filter Cutoff Frekvencija[Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw Lowpass Filteri"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass Cutoff Frekvencija[Hz]"
