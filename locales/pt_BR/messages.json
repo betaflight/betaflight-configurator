@@ -3472,26 +3472,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Lowpass (Passa Baixa) do GIROSCÓPIO"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro - Lowpass 1 - Frequência de corte [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro - Lowpass 1 - Tipo do filtro"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro - Lowpass 1 Dinâmico - Frequência de corte mínima [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro - Lowpass 1 Dinâmico - Frequência de corte máxima [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro - Lowpass 1 Dinâmico - Tipo do filtro"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro - Lowpass 2 - Frequência de corte [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro - Lowpass 2 - Tipo do filtro"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch (Rejeita Faixa) do GIROSCÓPIO"
@@ -3592,12 +3577,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Termo D - Lowpass 1 - Tipo do filtro"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Termo D - Lowpass 1 - Frequência de corte [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Termo D - Lowpass 2 - Frequência de corte [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "Termo D - Lowpass 2 - Tipo do filtro"
     },
@@ -3607,11 +3586,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "Termo D - Lowpass 1 Dinâmico - Frequência de corte máxima [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Termo D - Lowpass 1 Dinâmico - Tipo do filtro"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Termo D - Lowpass 1 - Expo da Curva Dinâmico"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Termo D - Lowpass 1 Dinâmico - Tipo do filtro"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtros Notch (Rejeita Faixa) do TERMO D"
@@ -3621,9 +3600,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Termo D - Notch - Frequência de corte [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filtro Lowpass (Passa Baixa) do YAW"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw - Lowpass - Frequência de corte [Hz]"
