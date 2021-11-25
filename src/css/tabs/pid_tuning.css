@@ -163,11 +163,15 @@
     padding-right: 5px;
 }
 
-.tab-pid_tuning table.compensation td:first-child {
+.tab-pid_tuning table.compensation td:first-child:not(.filterTable) {
     width: 65px;
     text-align: center;
     vertical-align: top;
     padding-top: 4px;
+}
+
+.tab-pid_tuning table.filterTable.compensation td:first-child {
+    width: 5%;
 }
 
 .tab-pid_tuning table.compensation td:last-child {
@@ -912,10 +916,6 @@
 
 .tab-pid_tuning table.filterTable {
     table-layout: auto;
-}
-
-.tab-pid_tuning table.filterTable td:first-child {
-    width: 25%;
 }
 
 @media only screen and (max-width: 1205px) {
