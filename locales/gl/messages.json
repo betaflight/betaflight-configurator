@@ -1632,6 +1632,10 @@
     "pidTuningDMinDisabledNote": {
         "message": "<strong> Nota: </strong> A función D Min está desactivada e os seus parámetros están ocultos. Para empregar D Min, habiliteo en $t(pidTuningPidSettings.message)."
     },
+    "pidTuningDMinFeatureTitle": {
+        "message": "Amortiguación dinámica",
+        "description": "Title for the options panel for the D Max feature"
+    },
     "pidTuningDMinGain": {
         "message": "Ganancia",
         "description": "Gain of the D Max feature"
@@ -1639,6 +1643,14 @@
     "pidTuningDMinAdvance": {
         "message": "Ascenso",
         "description": "Advance of the D Max feature"
+    },
+    "pidTuningDMinFeatureHelp": {
+        "message": "O algoritmo D Max Boost trae D cara ao valor D Max durante movementos rápidos. Ten dúas entradas suavizadas, cada unha cun rango de 0-100 e ambos son aditivos. 'ADVANCE' aumenta D cara a D Max durante os movementos de stick, lixeiramente por diante de 'ganancia', que aumenta D cara a D Max cando o quad xira ou está tremendo en Propwash. Só 'gañar' aumenta D con tremores ou propwash. Ambos responden máis fortemente a un movemento máis rápido que máis lento. Normalmente, só é necesario \"ganancia\". Avanzado pódese engadir para quads de baixa autoridade que tenden a excederse fortemente. Os valores predeterminados de 30, D alcanza a D Max só durante movementos moi rápidos. Un valor de 100 faría superar D a D Max moi facilmente, de xeito que o D durante case calquera movemento sería o valor máximo.",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMinHelp": {
+        "message": "Controla a forza de amortiguamento a calquera movemento no quad. Para os movementos de Stick, o D-Term diminúe o comando. Para unha influencia externa (propwash ou ráfaga de vento) o D-Term diminúe a influencia.<br /><br />As ganancias máis altas proporcionan máis amortiguamento e reducen o exceso por P-Term e FF. <br />Con todo, o D-term é moi sensible ás vibracións de alta frecuencia de gyro (ruído | magnifica por 10x a 100x). <br /><br />O ruído de alta frecuencia pode causar calor e queimar motores se D-gains é demasiado alto ou o ruido do gyro non está ben filtrado (vexa a pestana de filtros).<br /><br />Pensar no D-Term como o amortiguador no seu coche, pero coa propiedade negativa inherente á ampliación do ruído de gyro de alta frecuencia.",
+        "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "Configuración do controlador PID"
@@ -3563,26 +3575,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtros Paso Baixo do Xiro"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Frecuencia de Corte Xiro Paso Baixo 1 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Tipo de Filtro Xiro Paso Baixo 1"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Frecuencia de Corte Min do Xiro Paso Baixo 1 Dinámico [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Frecuencia de Corte Max Xiro Paso Baixo 1 Dinámico [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Tipo de Filtro Xiro Paso Baixo 1 Dinámico"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Frecuencia de Corte Xiro Paso Baixo 2 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Tipo de Filtro Xiro Paso Baixo 2"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtros Notch do Xiro"
@@ -3683,12 +3680,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Tipo de Filtro D Term Paso Baixo 1"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Frecuencia de Corte D Term Paso Baixo 1 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Frecuencia de Corte D Term Paso Baixo 2 [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "Tipo de filtro D Termo Lowpass 2"
     },
@@ -3698,11 +3689,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D Termo Lowpass 1 Frecuencia máxima de corte dinámica [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 Tipo de filtro dinámico"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D Term Paso Baixo 1 Dinámico Curve Expo"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "D Term Lowpass 1 Tipo de filtro dinámico"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtros Notch de termo D"
@@ -3712,9 +3703,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Frecuencia de corte do filtro D de termo Notch [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filtros Paso Baixo do Yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Frecuencia de corte de paso baixo de Yaw [Hz]"
