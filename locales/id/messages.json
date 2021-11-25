@@ -2520,17 +2520,8 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filter Lowpass Gyro"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Frekuensi Cutoff Lowpass Gyro 1 [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Tipe Filter Lowpass Gyro 1"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Frekuensi Cutoff Lowpass Gyro 2 [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Tipe Filter Lowpass Gyro 2"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filter Notch Gyro"
@@ -2559,12 +2550,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Tipe Filter Lowpass D Term 1"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Frekuensi CutOff Lowpass D Term 1 [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Frekuensi CutOff Lowpass D Term 2 [Hz]"
-    },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filter Notch D Term"
     },
@@ -2573,9 +2558,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Frekuensi CutOff Filter Notch D Term [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filter Lowpass Yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Frekuensi CutOff Lowpass Yaw [Hz]"
