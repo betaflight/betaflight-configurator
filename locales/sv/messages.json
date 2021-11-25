@@ -2946,26 +2946,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro lågpassfilter"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro lågpass 1 cutoff-frekvens [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro lågpassfiltertyp 1"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro lågpass 1 dynamisk Min cutoff-frekvens [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro lågpass 1 dynamisk Max cutoff-frekvens [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro lågpass 1 dynamisk filtertyp"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro lågpass 2 cutoff-frekvens [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro lågpassfiltertyp 2"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro bandspärrfilter"
@@ -3021,12 +3006,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term lågpassfiltertyp 1"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term lågpass 1 cutoff-frekvens [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term lågpass 2 cutoff-frekvens [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term lågpass 2 filtertyp"
     },
@@ -3047,9 +3026,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term bandspärrfilter cutoff-frekvens [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Gir lågpassfilter"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Gir lågpass cutoff-frekvens [Hz]"
