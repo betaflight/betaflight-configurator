@@ -1771,6 +1771,18 @@
     "pidTuningDtermSetpointTransition": {
         "message": "crwdns5696:0crwdne5696:0"
     },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "crwdns10683:0crwdne10683:0"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "crwdns10685:0crwdne10685:0"
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "crwdns10687:0crwdne10687:0"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "crwdns10689:0crwdne10689:0"
+    },
     "pidTuningDtermSetpoint": {
         "message": "crwdns5697:0crwdne5697:0"
     },
@@ -1794,6 +1806,9 @@
     },
     "pidTuningOptionOff": {
         "message": "crwdns10673:0crwdne10673:0"
+    },
+    "pidTuningOptionOn": {
+        "message": "crwdns10691:0crwdne10691:0"
     },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "crwdns10532:0crwdne10532:0"
@@ -3572,6 +3587,10 @@
         "message": "crwdns10613:0crwdne10613:0",
         "description": "Gyro filtering tuning slider helpicon message"
     },
+    "pidTuningGyroSliderEnabled": {
+        "message": "crwdns10693:0crwdne10693:0",
+        "description": "Disable or enable Gyro Filter Tuning Slider"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "crwdns9774:0crwdne9774:0",
         "description": "D Term filter tuning slider label"
@@ -3579,6 +3598,10 @@
     "pidTuningDTermFilterSliderHelp": {
         "message": "crwdns10615:0crwdne10615:0",
         "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningDTermSliderEnabled": {
+        "message": "crwdns10695:0crwdne10695:0",
+        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "crwdns10617:0crwdne10617:0",
@@ -3591,6 +3614,14 @@
     "pidTuningSlidersDisabled": {
         "message": "crwdns9782:0$t(pidTuningSliderEnableButton.message)crwdne9782:0",
         "description": "Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningGyroSliderDisabled": {
+        "message": "crwdns10697:0$t(pidTuningGyroSliderEnableButton.message)crwdne10697:0",
+        "description": "Gyro Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningDTermSliderDisabled": {
+        "message": "crwdns10699:0$t(pidTuningDTermSliderEnableButton.message)crwdne10699:0",
+        "description": "DTerm Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningPidSlidersDisabled": {
         "message": "crwdns10663:0$t(pidTuningSliderEnableButton.message)crwdne10663:0",
@@ -3719,26 +3750,44 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "crwdns8733:0crwdne8733:0"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "crwdns8734:0[Hz]crwdne8734:0"
-    },
     "pidTuningGyroLowpassType": {
         "message": "crwdns8735:0crwdne8735:0"
     },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "crwdns10701:0[Hz]crwdne10701:0"
+    },
+    "pidTuningGyroLowpass": {
+        "message": "crwdns10703:0crwdne10703:0"
+    },
+    "pidTuningGyroLowpassMode": {
+        "message": "crwdns10705:0crwdne10705:0"
+    },
+    "pidTuningLowpassStatic": {
+        "message": "crwdns10707:0crwdne10707:0"
+    },
+    "pidTuningLowpassDynamic": {
+        "message": "crwdns10709:0crwdne10709:0"
+    },
+    "pidTuningLowpassFilterType": {
+        "message": "crwdns10711:0crwdne10711:0"
+    },
+    "pidTuningGyroLowpassDyn": {
+        "message": "crwdns10713:0crwdne10713:0"
+    },
     "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "crwdns9020:0[Hz]crwdne9020:0"
+        "message": "crwdns10715:0[Hz]crwdne10715:0"
     },
     "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "crwdns9022:0[Hz]crwdne9022:0"
+        "message": "crwdns10717:0[Hz]crwdne10717:0"
     },
     "pidTuningGyroLowpassDynType": {
         "message": "crwdns9024:0crwdne9024:0"
     },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "crwdns8736:0[Hz]crwdne8736:0"
+    "pidTuningGyroLowpass2": {
+        "message": "crwdns10719:0crwdne10719:0"
     },
-    "pidTuningGyroLowpass2Type": {
-        "message": "crwdns8737:0crwdne8737:0"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "crwdns10721:0[Hz]crwdne10721:0"
     },
     "pidTuningGyroLowpassFilterHelp": {
         "message": "crwdns10659:0crwdne10659:0"
@@ -3748,6 +3797,12 @@
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "crwdns8738:0crwdne8738:0"
+    },
+    "pidTuningGyroNotchFilter": {
+        "message": "crwdns10723:0crwdne10723:0"
+    },
+    "pidTuningGyroNotchFilter2": {
+        "message": "crwdns10725:0crwdne10725:0"
     },
     "pidTuningGyroNotch1Frequency": {
         "message": "crwdns8739:0[Hz]crwdne8739:0"
@@ -3839,6 +3894,15 @@
     "pidTuningFilterSettings": {
         "message": "crwdns8744:0crwdne8744:0"
     },
+    "pidTuningDTermLowpass": {
+        "message": "crwdns10727:0crwdne10727:0"
+    },
+    "pidTuningDTermLowpassMode": {
+        "message": "crwdns10729:0crwdne10729:0"
+    },
+    "pidTuningDTermLowpass2": {
+        "message": "crwdns10731:0crwdne10731:0"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "crwdns8745:0crwdne8745:0"
     },
@@ -3846,13 +3910,16 @@
         "message": "crwdns8746:0crwdne8746:0"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "crwdns8747:0[Hz]crwdne8747:0"
+        "message": "crwdns10733:0[Hz]crwdne10733:0"
     },
     "pidTuningDTermLowpass2Frequency": {
-        "message": "crwdns8748:0[Hz]crwdne8748:0"
+        "message": "crwdns10735:0[Hz]crwdne10735:0"
     },
     "pidTuningDTermLowpass2Type": {
         "message": "crwdns9028:0crwdne9028:0"
+    },
+    "pidTuningDTermLowpassDyn": {
+        "message": "crwdns10737:0crwdne10737:0"
     },
     "pidTuningDTermLowpassDynMinFrequency": {
         "message": "crwdns9030:0[Hz]crwdne9030:0"
@@ -3860,11 +3927,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "crwdns9032:0[Hz]crwdne9032:0"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "crwdns9034:0crwdne9034:0"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "crwdns10154:0crwdne10154:0"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "crwdns9034:0crwdne9034:0"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "crwdns8749:0crwdne8749:0"
@@ -3875,8 +3942,8 @@
     "pidTuningDTermNotchCutoff": {
         "message": "crwdns8751:0[Hz]crwdne8751:0"
     },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "crwdns8752:0crwdne8752:0"
+    "pidTuningYawLowpassFiltersGroup": {
+        "message": "crwdns10739:0crwdne10739:0"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "crwdns8753:0[Hz]crwdne8753:0"
