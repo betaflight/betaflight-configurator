@@ -1685,6 +1685,18 @@
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "Limit Rate Max"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "Atenua l'avanç cap a zero a mesura que els sticks es mouen ràpidament cap a la màxima deflexió (índex màxim de gir establert), per exemple, a l'inici d'un gir o un gir ràpid, per minimitzar l'excés. No fa res al final d'un gir o rotllo. Els valors més baixos fan que l'atenuació comenci abans. Normalment, aquest valor no requereix modificació. El millor és el valor més alt que coincideixi amb la superació acceptable a l'inici de rolls o girs."
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "Reducció del jitter"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "La reducció de la fluctuació redueix el Feedforward quan els sticks es mouen lentament. Això permet un vol suau i sense tremolar quan es fan arcs lents suaus, però proporciona una alimentació completa sense cap retard quan els sticks es mouen ràpidament. Un valor de llindar més alt (10-12) és més útil per a propòsits cinematogràfics o d'estil lliure en HD, i un valor lleugerament inferior (5) és millor per a carreres o de velocitat més alta."
+    },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
     },
@@ -1708,6 +1720,9 @@
     },
     "pidTuningOptionOff": {
         "message": "Desactivat"
+    },
+    "pidTuningOptionOn": {
+        "message": "ACTIVAT"
     },
     "pidTuningFeedforwardAveragingOption2Point": {
         "message": "Punt 2"
@@ -3486,6 +3501,10 @@
         "message": "Augmenta o disminueix els filtres Gyro Lowpass per defecte en proporció entre si. El filtratge giroscòpic s'aplica abans del bucle PID. <br />Rangs generals de soroll del motor per classe de quads:<br /><br />Quads de 6 \"+, generalment entre 100hz i 330hz<br />Quads de 5\", generalment dins De 220hz a 500hz<br />Whoops o quads de 3 \", generalment de 300hz a 850hz<br /><br />En general, voleu configurar el control lliscant perquè el rang de tall mínim / màxim dinàmic Gyro Lowpass 1 cobreixi l'anterior.<br />No obstant això, per a vols més suaus, utilitzeu més filtratge al control lliscant. Per obtenir una sintonia de filtre més agressiva, utilitzeu menys filtratge al control lliscant. provoqueu una volada o esgotin els motors.<br />Tingueu en compte els problemes de ressonància del quadre del quad, els coixinets defectuosos i les pales doblegades que poden fer que necessiteu més filtratge.",
         "description": "Gyro filtering tuning slider helpicon message"
     },
+    "pidTuningGyroSliderEnabled": {
+        "message": "Utilitzeu el control lliscant del Giro",
+        "description": "Disable or enable Gyro Filter Tuning Slider"
+    },
     "pidTuningDTermFilterSlider": {
         "message": "Multiplicador del filtre D Term:",
         "description": "D Term filter tuning slider label"
@@ -3493,6 +3512,10 @@
     "pidTuningDTermFilterSliderHelp": {
         "message": "Canvia els límits de filtre de pas baix del terme D. <br /> Si moveu el control lliscant cap a l'esquerra es dóna un filtrat D més fort (freqüència de tall inferior); a la dreta proporciona menys filtrat (freqüència de tall més alta). <br /><br />El terme D és l'element PID més sensible al soroll i la ressonància. Pot amplificar qualsevol soroll d'alta freqüència entre 10 i 100 vegades més. Per això, els límits dels filtres D són molt més baixos que els filtres giroscòpics. <br /><br />El filtrat a termini D s’aplica després del filtratge giroscòpic, a més de. Un fort filtrat D reduirà la calor del motor en quads sorollosos i pot ser útil amb valors PID 'D' elevats per minimitzar la ressonància D a freqüències mitjanes a altes. No obstant això, un fort filtrat D pot retardar el senyal D, empitjorant la manipulació del propwash i afavorint les ressonàncies D. El filtratge D per defecte és òptim per a la majoria de quads. Les màquines més grans amb D alta poden funcionar millor amb un filtrat D més fort que els valors predeterminats. En general, no cal desplaçar el control lliscant del filtre de pas baix D cap a la dreta. En quads nous, anar a la dreta pot atenuar el propwash. S’ha de fer amb molta precaució, ja que tenir menys filtrat a D pot provocar ressonàncies sobtades (incloses els rodaments del motor o l’enlairament de l’armament) i una calor del motor extrema.",
         "description": "D Term filtering tuning slider helpicon message"
+    },
+    "pidTuningDTermSliderEnabled": {
+        "message": "Utilitzeu el control lliscant de D Term",
+        "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
         "message": "Control lliscant per ajustar les característiques del vol del quad (guanys PID)<br /><br />Amortiment (guany D): Resisteix el moviment ràpid, minimitza l’oscil·lació P. <br /><br />Seguiment (guany P i I): encoratja la capacitat de resposta del quad, si és massa alta, pot provocar trillacions o oscil·lacions. <br /><br />Resposta al stick (Feedforward): augmenta la capacitat de resposta del quad a moviments de stick més ràpids. <br /><br />Deriva - Wobble (Jo guanyo, expert): ajust fi de I.<br /><br />Dynamic D (D Max, expert): estableix la quantitat màxima a la qual es pot augmentar D durant moviments ràpids. <br /><br />Pitch Damping (Pitch: Roll D ratio, expert): augmenta la quantitat d'amortiment en el pitch respecte al roll. <br /><br />Pitch Tracking (Pitch: Roll P, I and F ratio, expert): Augmenta força estabilitzadora en el to respecte al rodament. <br /><br />Multiplicador principal (Tots els guanys, expert): augmenta o disminueix tots els guanys PID, mantenint les seves proporcions constants.",
@@ -3505,6 +3528,14 @@
     "pidTuningSlidersDisabled": {
         "message": "<strong>Nota:</strong> Els lliscadors estan desactivats perquè els valors s'han canviat manualment. Feu clic al botó '$t(pidTuningSliderEnableButton.message)' per tornar-los a activar. Això restablirà els valors i es perdran els canvis no desats.",
         "description": "Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningGyroSliderDisabled": {
+        "message": "<strong>Nota:</strong> Els lliscadors del Giro están desactivats perquè els valors s'han canviat manualment. Feu clic al botó '$t(pidTuningGyroSliderEnableButton.message)' per tornar-los a activar. Això restablirà els valors i es perdran els canvis no desats.",
+        "description": "Gyro Tuning sliders disabled note when manual changes are detected"
+    },
+    "pidTuningDTermSliderDisabled": {
+        "message": "<strong>Nota:</strong> Els lliscadors del D Term están desactivats perquè els valors s'han canviat manualment. Feu clic al botó '$t(pidTuningDTermSliderEnableButton.message)' per tornar-los a activar. Això restablirà els valors i es perdran els canvis no desats.",
+        "description": "DTerm Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningPidSlidersDisabled": {
         "message": "<strong>Nota:</strong> Els control lliscants estan desactivats. En fer clic al botó '$t(pidTuningSliderEnableButton.message)', es canviaran els valors PID perquè coincideixin amb la posició del control lliscant desada anteriorment.",
@@ -3633,26 +3664,44 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtres Passabaixos del Giro"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Freqüència de tall [Hz] passa-baixos Giro"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Tipus de Filtre Passabaixos 1 del Giro"
     },
+    "pidTuningGyroLowpassFrequency": {
+        "message": "Freqüència de tall [Hz]"
+    },
+    "pidTuningGyroLowpass": {
+        "message": "Passa-baix 1 Giro"
+    },
+    "pidTuningGyroLowpassMode": {
+        "message": "Mode"
+    },
+    "pidTuningLowpassStatic": {
+        "message": "ESTÀTIC"
+    },
+    "pidTuningLowpassDynamic": {
+        "message": "DÌNAMIC"
+    },
+    "pidTuningLowpassFilterType": {
+        "message": "Tipus de filtre"
+    },
+    "pidTuningGyroLowpassDyn": {
+        "message": "Filtre Passa-baixos dinàmic del Giro"
+    },
     "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Freqüència dinàmica mínima de tall [Hz] passa-baixos 1 Giro"
+        "message": "Freqüència de tall Minima [Hz]"
     },
     "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Freqüència dinàmica màxima de tall [Hz] passa-baixos 1 Giro"
+        "message": "Freqüència de tall Máxima [Hz]"
     },
     "pidTuningGyroLowpassDynType": {
         "message": "Tipus filtre Passa-baixos dinàmic 1 del Giro"
     },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Freqüència de tall [Hz] passa-baixos 2 Giro"
+    "pidTuningGyroLowpass2": {
+        "message": "Passa-baix 2 Giro"
     },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Tipus de Filtre Passa-baixos 2 del Giro"
+    "pidTuningGyroLowpass2Frequency": {
+        "message": "Freqüència de tall [Hz]"
     },
     "pidTuningGyroLowpassFilterHelp": {
         "message": "Els filtres de pas baix giroscòpic atenuen el soroll de freqüència més alta per mantenir-lo fora del bucle PID. Hi ha dos filtres giroscòpics configurables de manera independent; per defecte, tots dos estan actius.<br /><br />El primer pas baix D pot ser estàtic (tall fix) o dinàmic; el segon pas baix D sempre és estàtic. Quan un pas baix està en mode dinàmic, el filtre serà més fort a l’accelerador baix i el tall augmentarà (menys filtrat) a mesura que augmenti l’accelerador.<br /><br />Sense filtrar RPM, els dos filtres PT1 haurien d’estar habilitats per defecte Talls (o més forts), amb pas baix 1 en mode dinàmic. <br /><br />Amb el filtre RPM, el control lliscant del filtre giroscòpic sovint es pot moure d'alguna manera cap a la dreta. En quads nous, pot anar fins a la dreta o, alternativament, pot ser suficient un sol filtre de gir inferior estàtic a 500 Hz.<br /><br />Un quad tindrà menys propwash amb el menor retard de filtre giroscòpic (control lliscant cap a la dreta), valors de tall més alts).<br /><br />Comproveu sempre si els motors están calents quan es passa a un filtratge giroscòpic inferior (control lliscant cap a la dreta). Amb un mínim filtrat giroscòpic, és essencial tenir un filtre D suficient. Tingueu cura!"
@@ -3662,6 +3711,12 @@
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Filtres Notch (banda eliminada) del Giro"
+    },
+    "pidTuningGyroNotchFilter": {
+        "message": "Filtre Notch (banda eliminada) 1"
+    },
+    "pidTuningGyroNotchFilter2": {
+        "message": "Filtre Notch (banda eliminada) 2"
     },
     "pidTuningGyroNotch1Frequency": {
         "message": "Giro Filtre Notch 1 Freqüència Central [Hz]"
@@ -3753,6 +3808,15 @@
     "pidTuningFilterSettings": {
         "message": "Perfil dependent dels ajustos de filtre"
     },
+    "pidTuningDTermLowpass": {
+        "message": "Passa-baixos 1 del D Term"
+    },
+    "pidTuningDTermLowpassMode": {
+        "message": "Mode"
+    },
+    "pidTuningDTermLowpass2": {
+        "message": "Passa-baixos 2 del D Term"
+    },
     "pidTuningDTermLowpassFiltersGroup": {
         "message": "Filtres Passabaixos del D Term"
     },
@@ -3760,7 +3824,7 @@
         "message": "Filtres Passabaixos 1 del D Term"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "Freqüència de tall [Hz] D Term passa-baixos"
+        "message": "Freqüència de tall [Hz] D Term passa-baixos 1"
     },
     "pidTuningDTermLowpass2Frequency": {
         "message": "Freqüència de tall [Hz] D Term passa-baixos 2"
@@ -3768,17 +3832,20 @@
     "pidTuningDTermLowpass2Type": {
         "message": "Tipus de filtre Passa-baixos 2 del D Term"
     },
+    "pidTuningDTermLowpassDyn": {
+        "message": "Filtre Passa-baixos dinàmic del D Term"
+    },
     "pidTuningDTermLowpassDynMinFrequency": {
         "message": "Freqüència dinàmica mínima de tall [Hz] D Term passa-baixos 1"
     },
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "Freqüència dinàmica màxima de tall [Hz] D Term passa-baixos 1"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipus filtre Passa-baixos dinàmic 1 del D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "D Term filtre passa-baixos dinàmic 1 curva Expo"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Tipus filtre Passa-baixos dinàmic 1 del D Term"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtres Notch D Term"
@@ -3789,7 +3856,7 @@
     "pidTuningDTermNotchCutoff": {
         "message": "Freqüència de tall del filtre Notch D Term [Hz]"
     },
-    "pidTuningYawLospassFiltersGroup": {
+    "pidTuningYawLowpassFiltersGroup": {
         "message": "Filtres Passa-baixos del Yaw"
     },
     "pidTuningYawLowpassFrequency": {
