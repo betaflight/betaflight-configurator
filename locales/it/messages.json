@@ -1677,6 +1677,18 @@
     "pidTuningDtermSetpointTransition": {
         "message": "Transizione Setpoint D"
     },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "Limite Rate Massimo"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "Attenua il feedforward verso lo zero quando gli stick si muovono rapidamente verso la deflessione massima (massimo rate impostato), es all'inizio di un flip o roll veloce, per minimizzare l'overshoot. Non agisce alla fine di flip o roll. Valori più bassi faranno iniziare prima l'attenuazione. Generalmente questo valore non ha bisogno di modifiche. Il valore migliore è il più alto con consistenti overshoot accettabili all'inizio di flip e roll."
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "Riduzione Jitter"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "La riduzione del Jitter riduce il Feedforward quando gli stick si muovono lentamente. Ciò consente un volo morbido e privo di jitter quando si effettuano archi lenti, ma fornisce un feedforward massimo senza alcun ritardo quando gli stick vengono spostati rapidamente. Un valore soglia più elevato (10-12) è utile per scopi cinematografici o HD freestyle; un valore leggermente inferiore (5) risulta essere migliore per le corse o i sistemi radio a velocità elevata."
+    },
     "pidTuningDtermSetpoint": {
         "message": "Peso Setpoint D"
     },
@@ -3625,26 +3637,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtri passabasso del giroscopio"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Frequenza [Hz] di taglio passabasso 1 del giroscopio"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Tipo filtro passabasso 1 del giroscopio"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Frequenza Minima di cutoff Passabasso dinamico 1 gyro [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Frequenza Massima di cutoff Passabasso dinamico 1 gyro [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Tipo filtro passabasso dinamico 1 del giroscopio"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Frequenza di cutoff Passabasso dinamico 2 gyro [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Tipo filtro passabasso 2 del giroscopio"
     },
     "pidTuningGyroLowpassFilterHelp": {
         "message": "I filtri passabasso del gyro attenuano il rumore ad alta frequenza per tenerlo fuori dal loop PID. Ci sono due filtri del gyro configurabili indipendentemente; entrambi attivi di default.<br /><br />Il primo passabasso D può essere statico (cutoff fisso) o dinamico; il secondo passabasso D è sempre statico. Quando un passabasso è in modalità dinamica il filtro sarà maggiore con gas basso e il cutoff si alzerà (meno filtraggio) alzando il gas.<br /><br />Senza il filtro RPM, entrambi i filtri PT1 dovrebbero essere abilitati a cutoff di default (o più bassi), con passabasso 1 in modalità dinamica.<br /><br />Con il filtro RPM, lo slider del gyro può essere spesso spostato verso destra. Su quad puliti può essere spostato tutto a destra o, in alternativa, può essere sufficiente un singolo filtro passabasso sul gyro a 500Hz.<br /><br />Un quad avrà meno propwash con il minor ritardo del filtro del gyro (slider a destra, cutoff più alti).<br /><br />Controlla sempre il calore dei motori quando imposti meno filtraggio (slider a destra). Con poco filtraggio del gyro è essenziale avere abbastanza filtraggio su D! Stai attento!"
@@ -3751,12 +3748,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Tipo filtro passabasso 1 del D Term"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Frequenza di cutoff passabasso 1 del D Term [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "Frequenza di cutoff passabasso 2 del D Term [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "Tipo filtro passabasso 2 del D Term"
     },
@@ -3766,11 +3757,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "Frequenza massima di cutoff Passabasso dinamico 1 del D Term [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Tipo filtro passabasso dinamico 1 del D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Expo Curva passabasso dinamico 1 del D Term"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Tipo filtro passabasso dinamico 1 del D Term"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtri Notch del D Term"
@@ -3780,9 +3771,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Frequenza di cutoff del Filtro Notch del D Term [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filtri passobasso yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Frequenza di cutoff passabasso Yaw [Hz]"
@@ -3864,6 +3852,9 @@
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Controllo assoluto"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Questa funzione risolve alcuni problemi dell'$t(pidTuningItermRotation.message) e dovrebbe sostituirlo ad un certo punto. Questa funzione accumula l'errore assoluto del giroscopio nelle coordinate del quad e inserisce una correzione proporzionale nel setpoint. Affinché funzioni bisogna abilitare Airmode e $t(pidTuningItermRelax.message) (per $t(pidTuningOptionRP.message)). Se combini questa funzione con il $t(pidTuningIntegratedYaw.message), puoi abilitare l'$t(pidTuningItermRelax.message) per $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Boost del Gas"
