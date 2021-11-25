@@ -3311,26 +3311,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Filtry dolnoprzepustowe Żyroskopu"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Częstotliwość odcięcia [Hz] dolnoprzepustowego filtru 1 żyroskopu"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Typ dolnoprzepustowego fitru 1 dla żyroskopu"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Min częstotliwość odcięcia [Hz] Dynamicznego dolnoprzepustowego filtu 1 żyroskopu"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Max częstotliwość odcięcia [Hz] Dynamicznego dolnoprzepustowego filtru 1 żyroskopu"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Typ Dynamicznego dolnoprzepustowego filtru 1 dla żyroskopu"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Częstotliwość odcięcia [Hz] dolnoprzepustowego filtru 2 żyroskopu"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Typ dolnoprzepustowego filtru 2 dla żyroskopu"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Pasmowo zaporowy filtr żyroskopu"
@@ -3412,12 +3397,6 @@
     "pidTuningDTermLowpassType": {
         "message": "Typ 1 Filtra dolnoprzepustowego D Term"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Dolnoprzepustowy 1 Częstotliwość odcięcia [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Dolnoprzepustowy 2 Częstotliwość odcięcia [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "Typ 2 Filtra dolnoprzepustowego D Term"
     },
@@ -3427,11 +3406,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "Maksymalna częstotliwość odcięcia dynamicznego filtru dolnoprzepustowego 1 dla członu D [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "Typ Filtra dolnoprzepustowego D Term"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Krzywa Expo filtru Dolnoprzepustowego 1 członu D"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "Typ Filtra dolnoprzepustowego D Term"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "Filtr Notch D Term"
@@ -3441,9 +3420,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "Częstotliwość [Hz] odcięcia filtra pasmowo-zaporowego \"notch\" dla D Term"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Filtr dolnoprzepustowy Yaw"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Częstotliwość odcięcia dolnoprzepustowa Yaw [Hz]"
