@@ -2778,26 +2778,11 @@
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Žiroskopa zemfrekvenču filtrs"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Žiroskopa zemfrekvenču 1 nogriešanas frekvence [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Žiroskopa zemfrekvenču 1 filtra tips"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Žiroskopa zemfrekvenču 1 dinamiskā minimālā nogriešanas frekvence [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Žiroskopa zemfrekvenču 1 dinamiskā maksimālā nogriešanas frekvence [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Žiroskopa zemfrekvenču 1 dinamiskā filtra tips"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Žiroskopa zemfrekvenču 2 nogriešanas frekvence [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Žiroskopa zemfrekvenču 2 filtra tips"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Žiroskopa joslas filtrs"
@@ -2844,12 +2829,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term zemfrekvenču 1 filtra tips"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term zemfrekvenču 1 nogriešanas frekvence [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term zemfrekvenču 2 nogriešanas frekvence [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term zemfrekvenču 2 filtra tips"
     },
@@ -2870,9 +2849,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term joslas filtra nogriešanas frekvence [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw zemfrekvenču filtrs"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw zemfrekvenču nogriešanas frekvence [Hz]"
