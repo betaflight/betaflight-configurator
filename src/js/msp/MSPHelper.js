@@ -1178,6 +1178,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                                         FC.ADVANCED_TUNING.feedforward_averaging = data.readU8();
                                                         FC.ADVANCED_TUNING.feedforward_smooth_factor = data.readU8();
                                                         FC.ADVANCED_TUNING.feedforward_boost = data.readU8();
+                                                        FC.ADVANCED_TUNING.feedforward_max_rate_limit = data.readU8();
+                                                        FC.ADVANCED_TUNING.feedforward_jitter_factor = data.readU8();
                                                         FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
                                                         FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
                                                     }
@@ -2150,6 +2152,8 @@ MspHelper.prototype.crunch = function(code) {
                                                     buffer.push8(FC.ADVANCED_TUNING.feedforward_averaging)
                                                           .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
                                                           .push8(FC.ADVANCED_TUNING.feedforward_boost)
+                                                          .push8(FC.ADVANCED_TUNING.feedforward_max_rate_limit)
+                                                          .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
                                                           .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
                                                           .push8(FC.ADVANCED_TUNING.thrustLinearization);
                                                 }
