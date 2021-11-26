@@ -78,6 +78,18 @@ a.disabled {
     background-position: center;
 }
 
+.standard_input {
+    padding-left: 3px;
+    height: 20px;
+    line-height: 20px;
+    text-align: left;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: normal;
+    border: 1px solid var(--subtleAccent);
+    background: var(--boxBackground);
+}
+
 /* Help-Icon  */
 .helpicon {
     float: right;
@@ -740,8 +752,19 @@ input[type="number"]::-webkit-inner-spin-button {
     background-image: url(../images/icons/cf_icon_link_active.svg);
 }
 
+/** Header (not phones) **/
+@media not all and (max-width: 575px) {
+    .visible-on-phone-only {
+        display: none !important;
+    }
+}
+
 /** Header (phones) **/
 @media all and (max-width: 575px) {
+    .visible-on-desktop-only {
+        display: none !important;
+    }
+
     .headerbar {
         height: 56px;
         background: rgba(0, 0, 0, 0.15);
@@ -1541,10 +1564,67 @@ dialog .dialog_toolbar .btn a.disabled {
     opacity: 0.5;
 }
 
+.dialogYesNo .dialogYesNoContent {
+    margin-bottom: 12px;
+    margin-top: 12px;
+    white-space: pre-line;
+}
+
+.dialogYesNo .dialogYesNo-yesButton, .dialogYesNo .dialogYesNo-noButton {
+    margin: 0px;
+}
+
+.dialogYesNo .dialogYesNo-yesButton {
+    margin-right: 12px;
+}
+
+.dialogYesNo {
+    width: fit-content;
+    max-width: 400px;
+}
+
+.dialogWait {
+    width: fit-content;
+    max-width: 500px;
+    min-width: 300px;
+}
+
+.dialogWait .data-loading {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px;
+    height: 100px;
+}
+
+.dialogWait .dialogWaitTitle {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 16px;
+    width: fit-content;
+}
+
+.dialogInformation .dialogInformationContent {
+    margin-bottom: 12px;
+    margin-top: 12px;
+    white-space: pre-line;
+}
+
+.dialogInformation .dialogInformation-confirmButton {
+    margin: 0px;
+}
+
+.dialogInformation {
+    width: fit-content;
+    max-width: 400px;
+}
+
 @media all and (max-width: 575px) {
     dialog {
         position: fixed;
-        width: calc(100% - 2em) !important;
+        width: calc(100% - 2em - 2px) !important; /* 2px - border */
+        max-width: unset;
         height: auto !important;
         bottom: 0;
         top: 56px;
@@ -2348,7 +2428,6 @@ input {
 .noUi-connect {
     box-shadow: none;
 }
-
 /** Responsive grid **/
 @media all and (max-width: 575px) {
     .sm, .md, .lg, .xl {

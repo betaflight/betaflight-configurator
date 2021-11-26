@@ -18,6 +18,8 @@ options.initialize = function (callback) {
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
 
+        TABS.options.initShowWarnings();
+
         GUI.content_ready(callback);
     });
 };
@@ -26,6 +28,19 @@ options.cleanup = function (callback) {
     if (callback) {
         callback();
     }
+};
+
+options.initShowWarnings = function () {
+    ConfigStorage.get('showPresetsWarningBackup', function (result) {
+        if (result.showPresetsWarningBackup) {
+            $('div.presetsWarningBackup input').prop('checked', true);
+        }
+
+        $('div.presetsWarningBackup input').change(function () {
+            const checked = $(this).is(':checked');
+            ConfigStorage.set({'showPresetsWarningBackup': checked});
+        }).change();
+    });
 };
 
 options.initPermanentExpertMode = function () {

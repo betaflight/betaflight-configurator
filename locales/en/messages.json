@@ -31,6 +31,9 @@
     "noticeTitle": {
         "message": "Notice"
     },
+    "dontShowAgain": {
+        "message": "Don't show again"
+    },
     "operationNotSupported": {
         "message": "This operation is not supported by your hardware."
     },
@@ -68,6 +71,9 @@
     "close": {
         "message": "Close"
     },
+    "OK": {
+        "message": "OK"
+    },
     "cancel": {
         "message": "Cancel"
     },
@@ -85,6 +91,9 @@
     },
     "permanentExpertMode": {
         "message": "Permanently enable Expert Mode"
+    },
+    "warningSettings": {
+        "message": "Show warnings"
     },
     "rememberLastTab": {
         "message": "Reopen last tab on connect"
@@ -6275,5 +6284,205 @@
     },
     "cordovaExitAppMessage": {
         "message": "Do you really want to close the configurator?"
+    },
+    "dropDownSelectAll": {
+        "message": "[Select all]",
+        "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownAll": {
+        "message": "All",
+        "description": "Text indicating everything is selected in the drop down/multiple select"
+    },
+    "tabPresets": {
+        "message": "Presets",
+        "description": "Presets tab title"
+    },
+    "presetsReload": {
+        "message": "Reload",
+        "description": "Text on the reload button that appears when there in an error loading presets index"
+    },
+    "presetsAuthor": {
+        "message": "Author:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsKeywords": {
+        "message": "Keywords:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsVersions": {
+        "message": "Firmware:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsOfficial": {
+        "message": "Official",
+        "description": "Hint text in the presets detailed dialog indication preset is official"
+    },
+    "presetsCommunity": {
+        "message": "Community",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but community"
+    },
+    "presetsExperimental": {
+        "message": "Experimental",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but experimental"
+    },
+    "presetsApply": {
+        "message": "Pick",
+        "description": "Button to pick a preset"
+    },
+    "presetsViewOnline": {
+        "message": "View online&hellip;",
+        "description": "Link text for opening preset file online"
+    },
+    "presetsOpenDiscussion": {
+        "message": "Discussion&hellip;",
+        "description": "Link text for opening preset discussion"
+    },
+    "presetsShowCli": {
+        "message": "Show CLI",
+        "description": "Button to show CLI code of a preset"
+    },
+    "presetsHideCli": {
+        "message": "Hide CLI",
+        "description": "Button to hide CLI code of a preset"
+    },
+    "presetsOptions": {
+        "message": "Options",
+        "description": "Text label for Options drop down select"
+    },
+    "presetsFilterCategory": {
+        "message": "Categories",
+        "description": "UI filter name"
+    },
+    "presetsFilterKeyword": {
+        "message": "Keywords",
+        "description": "UI filter name"
+    },
+    "presetsFilterAuthor": {
+        "message": "Authors",
+        "description": "UI filter name"
+    },
+    "presetsFilterFirmware": {
+        "message": "Firmwares",
+        "description": "UI filter name"
+    },
+    "presetsFilterStatus": {
+        "message": "Status",
+        "description": "UI filter name - official/community/experimental"
+    },
+    "presetsLoadError": {
+        "message": "Error loading presets from the internet",
+        "description": "Error report when failed to load presets index or a specific preset"
+    },
+    "presetsButtonSave": {
+        "message": "Save and Reboot",
+        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+    },
+    "presetsButtonCancel": {
+        "message": "Cancel",
+        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+    },
+    "presetsApplyingPresets": {
+        "message": "Applying configuration...",
+        "description": "First label in the progress dialog when applying configuration (presets or user config)"
+    },
+    "presetsPleaseWait": {
+        "message": "Please wait.",
+        "description": "Second label in the progress dialog when applying presets"
+    },
+    "presetsCliErrorsWaring": {
+        "message": "<span class='message-negative'>WARNING!</span><br/>Configuration has been applied with CLI errors.",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
+    },
+    "presetsSaveAnyway": {
+        "message": "Save anyway",
+        "description": "Save anyway button on the CLI errors presets dialog"
+    },
+    "presetsWarningDialogTitle": {
+        "message": "WARNING!",
+        "description": "Warning title in the warning dialog in the presets"
+    },
+    "presetsWarningDialogYesButton": {
+        "message": "Agree",
+        "description": "Agree button in the presets warning dialog"
+    },
+    "presetsWarningDialogNoButton": {
+        "message": "Cancel",
+        "description": "Cancel button in the presets warning dialog"
+    },
+    "presetsWiki": {
+        "message": "Presets Wiki",
+        "description": "Button to open Presets Wiki link"
+    },
+    "presetsBackupSave": {
+        "message": "Save backup",
+        "description": "Button to backup current configuration to file"
+    },
+    "presetsBackupLoad": {
+        "message": "Load backup",
+        "description": "Button to load backup from the file"
+    },
+    "presetsLoadingDumpAll": {
+        "message": "Loading current configuration from the flight controller",
+        "description": "Title for the waiting dialog when loading dump all into a file"
+    },
+    "dumpAllNotSavedWarning": {
+        "message": "Error occured while saving current configuration",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
+    },
+    "presetSources": {
+        "message": "Preset sources...",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogTitle": {
+        "message": "Preset sources",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogAddNew": {
+        "message": "Add new source",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogDefaultSourceName": {
+        "message": "New Custom Preset Source",
+        "description": "A default preset source (repo) name"
+    },
+    "presetsSourcesDialogSaveSource": {
+        "message": "Save",
+        "description": "Presets tab, sources dialog, button to save new or editable source"
+    },
+    "presetsSourcesDialogResetSource": {
+        "message": "Reset",
+        "description": "Presets tab, sources dialog, button to reset source after modifications"
+    },
+    "presetsSourcesDialogMakeSourceActive": {
+        "message": "Make Active",
+        "description": "Presets tab, sources dialog, button to make selected source active"
+    },
+    "presetsSourcesDialogDeleteSource": {
+        "message": "Delete",
+        "description": "Presets tab, sources dialog, button to delete selected source"
+    },
+    "presetsWarningNotOfficialSource": {
+        "message": "<span class=\"message-negative\">WARNING!</span> A third party preset source is selected.",
+        "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsWarningBackup": {
+        "message": "Please make sure you backup your current configuration ('$t(presetsBackupSave.message)' button or via CLI if the button is disabled) <strong>before</strong> picking and applying presets. Otherwise there is no way to return to previous configuration after applying presets.",
+        "description": "Warning message that shows up at the top of the presets tab"
+    },
+    "presets_sources_dialog_warning": {
+        "message": "<span class=\"message-negative\">WARNING!</span> Using third party preset sources could be dangerous.<br/>Make sure you add and use only trusted sources. Malicious or bad preset sources will break your drone configuration and can potentially harm your devices.",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsWarningWrongVersionConfirmation": {
+        "message": "Picked preset requires firmware version $1<br/> Current firmware version is $2",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "No presets found for the given search paramteres",
+        "description": "Message that apprears on presets tab if no presets were found"
+    },
+    "presetsTooManyPresetsFound": {
+        "message": "Reached the maximum limit of the shown presets number",
+        "description": "Message that apprears on presets tab if too many presets found"
     }
 }
