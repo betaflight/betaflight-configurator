@@ -23,10 +23,13 @@
         "message": "Error"
     },
     "warningTitle": {
-        "message": "Advertència"
+        "message": "Advertiment"
     },
     "noticeTitle": {
         "message": "Avís"
+    },
+    "dontShowAgain": {
+        "message": "No ho mostris més"
     },
     "operationNotSupported": {
         "message": "Aquesta operació no és compatible amb el teu maquinari."
@@ -65,6 +68,9 @@
     "close": {
         "message": "Tanca"
     },
+    "OK": {
+        "message": "OK"
+    },
     "cancel": {
         "message": "Canceŀlar"
     },
@@ -82,6 +88,9 @@
     },
     "permanentExpertMode": {
         "message": "Habilita el mode expert permanentment"
+    },
+    "warningSettings": {
+        "message": "Mostra els advertiments"
     },
     "rememberLastTab": {
         "message": "Torna a obrir l'última pestanya al conectar"
@@ -6123,5 +6132,205 @@
     },
     "cordovaExitAppMessage": {
         "message": "Esteu segur que voleu tancar el configurador?"
+    },
+    "dropDownSelectAll": {
+        "message": "[Seleccionar tot]",
+        "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownAll": {
+        "message": "Tot",
+        "description": "Text indicating everything is selected in the drop down/multiple select"
+    },
+    "tabPresets": {
+        "message": "Preajustos",
+        "description": "Presets tab title"
+    },
+    "presetsReload": {
+        "message": "Recarregar",
+        "description": "Text on the reload button that appears when there in an error loading presets index"
+    },
+    "presetsAuthor": {
+        "message": "Autor:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsKeywords": {
+        "message": "Paraules claus:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsVersions": {
+        "message": "Programari:",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsOfficial": {
+        "message": "Oficial",
+        "description": "Hint text in the presets detailed dialog indication preset is official"
+    },
+    "presetsCommunity": {
+        "message": "Comunitat",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but community"
+    },
+    "presetsExperimental": {
+        "message": "Experimental",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but experimental"
+    },
+    "presetsApply": {
+        "message": "Tria",
+        "description": "Button to pick a preset"
+    },
+    "presetsViewOnline": {
+        "message": "Veure en línia&hellip;",
+        "description": "Link text for opening preset file online"
+    },
+    "presetsOpenDiscussion": {
+        "message": "Debat&hellip;",
+        "description": "Link text for opening preset discussion"
+    },
+    "presetsShowCli": {
+        "message": "Mostra CLI",
+        "description": "Button to show CLI code of a preset"
+    },
+    "presetsHideCli": {
+        "message": "Amaga CLI",
+        "description": "Button to hide CLI code of a preset"
+    },
+    "presetsOptions": {
+        "message": "Opcions",
+        "description": "Text label for Options drop down select"
+    },
+    "presetsFilterCategory": {
+        "message": "Categories",
+        "description": "UI filter name"
+    },
+    "presetsFilterKeyword": {
+        "message": "Paraules claus",
+        "description": "UI filter name"
+    },
+    "presetsFilterAuthor": {
+        "message": "Autors",
+        "description": "UI filter name"
+    },
+    "presetsFilterFirmware": {
+        "message": "Programaris",
+        "description": "UI filter name"
+    },
+    "presetsFilterStatus": {
+        "message": "Estat",
+        "description": "UI filter name - official/community/experimental"
+    },
+    "presetsLoadError": {
+        "message": "Error al carregar preajustos des de Internet",
+        "description": "Error report when failed to load presets index or a specific preset"
+    },
+    "presetsButtonSave": {
+        "message": "Desa i reinicia",
+        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+    },
+    "presetsButtonCancel": {
+        "message": "Canceŀlar",
+        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+    },
+    "presetsApplyingPresets": {
+        "message": "Aplicant configuració...",
+        "description": "First label in the progress dialog when applying configuration (presets or user config)"
+    },
+    "presetsPleaseWait": {
+        "message": "Espereu, si us plau.",
+        "description": "Second label in the progress dialog when applying presets"
+    },
+    "presetsCliErrorsWaring": {
+        "message": "<span class='message-negative'>ADVERTIMENT!</span><br/>La configuració s'ha aplicat amb errors de CLI.",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
+    },
+    "presetsSaveAnyway": {
+        "message": "Desa de totes maneres",
+        "description": "Save anyway button on the CLI errors presets dialog"
+    },
+    "presetsWarningDialogTitle": {
+        "message": "ADVERTÈNCIA!",
+        "description": "Warning title in the warning dialog in the presets"
+    },
+    "presetsWarningDialogYesButton": {
+        "message": "D'acord",
+        "description": "Agree button in the presets warning dialog"
+    },
+    "presetsWarningDialogNoButton": {
+        "message": "Canceŀlar",
+        "description": "Cancel button in the presets warning dialog"
+    },
+    "presetsWiki": {
+        "message": "Preajustos Wiki",
+        "description": "Button to open Presets Wiki link"
+    },
+    "presetsBackupSave": {
+        "message": "Desa la còpia de seguretat",
+        "description": "Button to backup current configuration to file"
+    },
+    "presetsBackupLoad": {
+        "message": "Carrega la còpia de seguretat",
+        "description": "Button to load backup from the file"
+    },
+    "presetsLoadingDumpAll": {
+        "message": "S'està carregant la configuració actual des de la controladora de vol",
+        "description": "Title for the waiting dialog when loading dump all into a file"
+    },
+    "dumpAllNotSavedWarning": {
+        "message": "S'ha produït un error en desar la configuració actual",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
+    },
+    "presetSources": {
+        "message": "Fonts de pre-adjustos...",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogTitle": {
+        "message": "Fonts de pre-adjustos",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogAddNew": {
+        "message": "Afegeix una nova font",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogDefaultSourceName": {
+        "message": "Nova font predeterminada personalitzada",
+        "description": "A default preset source (repo) name"
+    },
+    "presetsSourcesDialogSaveSource": {
+        "message": "Desa",
+        "description": "Presets tab, sources dialog, button to save new or editable source"
+    },
+    "presetsSourcesDialogResetSource": {
+        "message": "Reinici",
+        "description": "Presets tab, sources dialog, button to reset source after modifications"
+    },
+    "presetsSourcesDialogMakeSourceActive": {
+        "message": "Activa",
+        "description": "Presets tab, sources dialog, button to make selected source active"
+    },
+    "presetsSourcesDialogDeleteSource": {
+        "message": "Eliminar",
+        "description": "Presets tab, sources dialog, button to delete selected source"
+    },
+    "presetsWarningNotOfficialSource": {
+        "message": "<span class=\"message-negative\">ADVERTIMENT!</span> S'ha seleccionat una font de preajustos predeterminada de tercers.",
+        "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsWarningBackup": {
+        "message": "Assegureu-vos de fer una còpia de seguretat de la vostra configuració actual (botó '$t(presetsBackupSave.message)' o mitjançant CLI si el botó està desactivat) <strong>abans</strong> d'escollir i aplicar els valors predefinits. En cas contrari, no hi ha manera de tornar a la configuració anterior després d'aplicar els valors predefinits.",
+        "description": "Warning message that shows up at the top of the presets tab"
+    },
+    "presets_sources_dialog_warning": {
+        "message": "<span class=\"message-negative\">ADVERTIMENT!</span> L'ús de fonts predeterminades de tercers pot ser perillós.<br/>Assegureu-vos que afegiu i feu servir només fonts de confiança. Les fonts predeterminades malicioses o dolentes trencaran la configuració del vostre drone i poden danyar els vostres dispositius.",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsWarningWrongVersionConfirmation": {
+        "message": "La configuració predeterminada seleccionada requereix la versió de microprogramari $1<br/> La versió actual de microprogramari és $2",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "No s'han trobat preajustos per als paràmetres de cerca entrats",
+        "description": "Message that apprears on presets tab if no presets were found"
+    },
+    "presetsTooManyPresetsFound": {
+        "message": "S'ha assolit el límit màxim del nombre de preajustos mostrats",
+        "description": "Message that apprears on presets tab if too many presets found"
     }
 }
