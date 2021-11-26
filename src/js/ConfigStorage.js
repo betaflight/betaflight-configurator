@@ -5,30 +5,31 @@
 const ConfigStorage = {
     // key can be one string, or array of strings
     get: function(key, callback) {
+        let result = {};
         if (Array.isArray(key)) {
-            let obj = {};
             key.forEach(function (element) {
                 try {
-                    obj = {...obj, ...JSON.parse(window.localStorage.getItem(element))};
+                    result = {...result, ...JSON.parse(window.localStorage.getItem(element))};
                 } catch (e) {
                     // is okay
                 }
             });
-            callback(obj);
+            callback?.(result);
         } else {
             const keyValue = window.localStorage.getItem(key);
             if (keyValue) {
-                let obj = {};
                 try {
-                    obj = JSON.parse(keyValue);
+                    result = JSON.parse(keyValue);
                 } catch (e) {
                     // It's fine if we fail that parse
                 }
-                callback(obj);
+                callback?.(result);
             } else {
-                callback({});
+                callback?.(result);
             }
         }
+
+        return result;
     },
     // set takes an object like {'userLanguageSelect':'DEFAULT'}
     set: function(input) {

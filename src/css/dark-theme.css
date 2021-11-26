@@ -111,6 +111,11 @@ dialog {
     border: 1px solid #ffbb2a;
 }
 
+.standard_input {
+    background: var(--boxBackground);
+    color: white;
+}
+
 #quad-status_wrapper {
     color: #393b3a;
 }

@@ -7,6 +7,8 @@
 }
 .tab-options .margin-bottom {
     margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: fit-content(300px) 1fr;
 }
 .tab-options select {
     background: var(--boxBackground);

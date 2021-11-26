@@ -1,0 +1,82 @@
+.preset_title_panel {
+    color: var(--defaultText);
+}
+
+.preset_title_panel_border {
+    background-color: var(--boxBackground);
+    border: 1px solid var(--subtleAccent);
+    cursor: pointer;
+    padding: 1.5ex;
+    box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.25);
+    border-radius: 4px;
+}
+
+.preset_title_panel_title {
+    font-size: 1.5em;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 1ex;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.preset_title_panel_category {
+    color: var(--mutedText);
+    font-weight: bold;
+}
+
+.preset_title_panel_official {
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: inline-block;
+    color: white;
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+.preset_title_panel_status_official {
+    background-color: green;
+}
+
+.preset_title_panel_status_community {
+    background-color: var(--accent);
+}
+
+.preset_title_panel_status_experimental {
+    background-color: red;
+}
+
+.preset_title_panel_versions_text {
+    font-weight: bold;
+}
+
+.preset_title_panel_keywords_text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.presets_title_panel_table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.presets_title_panel_table td{
+    overflow: hidden;
+    height: 24px;
+    width: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.presets_title_panel_table td:nth-child(1){
+    width: 100px;
+}
+
+.preset_title_panel_label {
+    color: var(--quietHeader);
+}

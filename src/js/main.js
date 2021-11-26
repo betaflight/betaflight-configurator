@@ -404,6 +404,10 @@ function startProcess() {
                         // Add a little timeout to let MSP comands finish
                         GUI.timeout_add('wait_for_msp_finished', () => TABS.cli.initialize(content_ready, GUI.nwGui), timeout);
                         break;
+                    case 'presets':
+                        TABS.presets.initialize(content_ready, GUI.nwGui);
+                        break;
+
                     default:
                         console.log(`Tab not found: ${tab}`);
                 }

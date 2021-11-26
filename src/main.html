@@ -22,6 +22,11 @@
     <link type="text/css" rel="stylesheet" href="./css/tabs/led_strip.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/sensors.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/cli.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./tabs/presets/presets.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./tabs/presets/TitlePanel/PresetTitlePanel.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./tabs/presets/DetailedDialog/PresetsDetailedDialog.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./tabs/presets/SourcesDialog/SourcesDialog.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./tabs/presets/SourcesDialog/SourcePanel.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/logging.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/onboard_logging.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/tabs/firmware_flasher.css" media="all"/>
@@ -42,6 +47,7 @@
     <link type="text/css" rel="stylesheet" href="./components/MotorOutputReordering/Styles.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./css/select2_custom.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./node_modules/select2/dist/css/select2.min.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="./node_modules/multiple-select/dist/multiple-select.min.css" media="all"/>
     <link type="text/css" rel="stylesheet" href="./components/EscDshotDirection/Styles.css" media="all"/>
 
     <link type="text/css" rel="stylesheet" href="./css/dark-theme.css" media="all" disabled/>
@@ -126,6 +132,18 @@
     <script type="text/javascript" src="./js/tabs/cli.js"></script>
     <!-- TODO: might be removed when everythign is in modules -->
     <script type="module" src="./js/tabs/logging.js"></script>
+    <script type="text/javascript" src="./tabs/presets/presets.js"></script>
+    <script type="text/javascript" src="./tabs/presets/CliEngine.js"></script>
+    <script type="text/javascript" src="./tabs/presets/PickedPreset.js"></script>
+    <script type="text/javascript" src="./tabs/presets/DetailedDialog/PresetsDetailedDialog.js"></script>
+    <script type="text/javascript" src="./tabs/presets/TitlePanel/PresetTitlePanel.js"></script>
+    <script type="text/javascript" src="./tabs/presets/PresetsRepoIndexed/PresetsRepoIndexed.js"></script>
+    <script type="text/javascript" src="./tabs/presets/PresetsRepoIndexed/PresetsGithubRepo.js"></script>
+    <script type="text/javascript" src="./tabs/presets/PresetsRepoIndexed/PresetsWebsiteRepo.js"></script>
+    <script type="text/javascript" src="./tabs/presets/SourcesDialog/SourcesDialog.js"></script>
+    <script type="text/javascript" src="./tabs/presets/SourcesDialog/SourcePanel.js"></script>
+    <script type="text/javascript" src="./tabs/presets/SourcesDialog/PresetSource.js"></script>
+    <script type="text/javascript" src="./js/tabs/logging.js"></script>
     <script type="text/javascript" src="./js/tabs/onboard_logging.js"></script>
     <script type="text/javascript" src="./js/FirmwareCache.js"></script>
     <script type="text/javascript" src="./js/tabs/failsafe.js"></script>
@@ -145,6 +163,7 @@
     <script type="text/javascript" src="./components/MotorOutputReordering/MotorOutputReorderingCanvas.js"></script>
     <script type="text/javascript" src="./components/MotorOutputReordering/MotorOutputReorderingConfig.js"></script>
     <script type="text/javascript" src="./node_modules/select2/dist/js/select2.min.js"></script>
+    <script type="text/javascript" src="./node_modules/multiple-select/dist/multiple-select.min.js"></script>
     <script type="text/javascript" src="./js/utils/EscProtocols.js"></script>
     <script type="text/javascript" src="./js/utils/DshotCommand.js"></script>
     <script type="text/javascript" src="./components/EscDshotDirection/EscDshotDirectionComponent.js"></script>
@@ -326,6 +345,9 @@
                                              i18n_title="tabPower"></a></li>
                     <li class="tab_failsafe"><a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe"
                                                 i18n_title="tabFailsafe"></a></li>
+                    <li class="tab_presets">
+                        <a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"></a>
+                    </li>
                     <li class="tab_pid_tuning"><a href="#" i18n="tabPidTuning" class="tabicon ic_pid"
                                                   i18n_title="tabPidTuning"></a></li>
                     <li class="tab_receiver"><a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"></a></li>
@@ -462,6 +484,30 @@
         </div>
     </dialog>
 
+    <dialog class="dialogYesNo">
+        <h3 class="dialogYesNoTitle"></h3>
+        <div class="dialogYesNoContent"></div>
+        <div class="buttons">
+            <a href="#" class="dialogYesNo-yesButton regular-button"></a>
+            <a href="#" class="dialogYesNo-noButton regular-button"></a>
+        </div>
+    </dialog>
+
+    <dialog class="dialogWait">
+        <div class="data-loading"></div>
+        <h3 class="dialogWaitTitle"></h3>
+        <div class="buttons">
+            <a href="#" class="dialogWait-cancelButton regular-button" i18n="cancel"></a>
+        </div>
+    </dialog>
+
+    <dialog class="dialogInformation">
+        <h3 class="dialogInformationTitle"></h3>
+        <div class="dialogInformationContent"></div>
+        <div class="buttons">
+            <a href="#" class="dialogInformation-confirmButton regular-button"></a>
+        </div>
+    </dialog>
     <!-- CORDOVA_INCLUDE cordova.js -->
 </body>
 </html>

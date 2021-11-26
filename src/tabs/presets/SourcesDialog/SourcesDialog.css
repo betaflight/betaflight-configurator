@@ -1,0 +1,27 @@
+
+.presets_sources_dialog_title_panel {
+    padding-bottom: .5ex;
+    border-bottom: 1px solid var(--accent);
+    margin-bottom: 2ex;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.presets_sources_dialog_scrollable {
+    height: 430px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+@media all and (max-width: 575px) {
+    #presets_sources_dialog_content_wrapper .content_toolbar {
+        position: fixed;
+    }
+
+    .presets_sources_dialog_scrollable {
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 51px;
+        height: unset;
+    }
+}

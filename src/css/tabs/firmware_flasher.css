@@ -200,7 +200,7 @@
     cursor: default;
     color: #fff;
     background-color: #AFAFAF;
-    border: none;
+    border: 1px solid #AFAFAF;
     pointer-events: none;
     text-shadow: none;
     opacity: 0.5;
