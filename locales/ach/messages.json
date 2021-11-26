@@ -31,6 +31,9 @@
     "noticeTitle": {
         "message": "crwdns5315:0crwdne5315:0"
     },
+    "dontShowAgain": {
+        "message": "crwdns10741:0crwdne10741:0"
+    },
     "operationNotSupported": {
         "message": "crwdns8778:0crwdne8778:0"
     },
@@ -68,6 +71,9 @@
     "close": {
         "message": "crwdns5323:0crwdne5323:0"
     },
+    "OK": {
+        "message": "crwdns10743:0crwdne10743:0"
+    },
     "cancel": {
         "message": "crwdns9848:0crwdne9848:0"
     },
@@ -85,6 +91,9 @@
     },
     "permanentExpertMode": {
         "message": "crwdns5327:0crwdne5327:0"
+    },
+    "warningSettings": {
+        "message": "crwdns10745:0crwdne10745:0"
     },
     "rememberLastTab": {
         "message": "crwdns8815:0crwdne8815:0"
@@ -6209,5 +6218,205 @@
     },
     "cordovaExitAppMessage": {
         "message": "crwdns10236:0crwdne10236:0"
+    },
+    "dropDownSelectAll": {
+        "message": "crwdns10747:0crwdne10747:0",
+        "description": "Select all item in the drop down/multiple select"
+    },
+    "dropDownAll": {
+        "message": "crwdns10749:0crwdne10749:0",
+        "description": "Text indicating everything is selected in the drop down/multiple select"
+    },
+    "tabPresets": {
+        "message": "crwdns10751:0crwdne10751:0",
+        "description": "Presets tab title"
+    },
+    "presetsReload": {
+        "message": "crwdns10753:0crwdne10753:0",
+        "description": "Text on the reload button that appears when there in an error loading presets index"
+    },
+    "presetsAuthor": {
+        "message": "crwdns10755:0crwdne10755:0",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsKeywords": {
+        "message": "crwdns10757:0crwdne10757:0",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsVersions": {
+        "message": "crwdns10759:0crwdne10759:0",
+        "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsOfficial": {
+        "message": "crwdns10761:0crwdne10761:0",
+        "description": "Hint text in the presets detailed dialog indication preset is official"
+    },
+    "presetsCommunity": {
+        "message": "crwdns10763:0crwdne10763:0",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but community"
+    },
+    "presetsExperimental": {
+        "message": "crwdns10765:0crwdne10765:0",
+        "description": "Hint text in the presets detailed dialog indication preset is not official but experimental"
+    },
+    "presetsApply": {
+        "message": "crwdns10767:0crwdne10767:0",
+        "description": "Button to pick a preset"
+    },
+    "presetsViewOnline": {
+        "message": "crwdns10769:0crwdne10769:0",
+        "description": "Link text for opening preset file online"
+    },
+    "presetsOpenDiscussion": {
+        "message": "crwdns10771:0crwdne10771:0",
+        "description": "Link text for opening preset discussion"
+    },
+    "presetsShowCli": {
+        "message": "crwdns10773:0crwdne10773:0",
+        "description": "Button to show CLI code of a preset"
+    },
+    "presetsHideCli": {
+        "message": "crwdns10775:0crwdne10775:0",
+        "description": "Button to hide CLI code of a preset"
+    },
+    "presetsOptions": {
+        "message": "crwdns10777:0crwdne10777:0",
+        "description": "Text label for Options drop down select"
+    },
+    "presetsFilterCategory": {
+        "message": "crwdns10779:0crwdne10779:0",
+        "description": "UI filter name"
+    },
+    "presetsFilterKeyword": {
+        "message": "crwdns10781:0crwdne10781:0",
+        "description": "UI filter name"
+    },
+    "presetsFilterAuthor": {
+        "message": "crwdns10783:0crwdne10783:0",
+        "description": "UI filter name"
+    },
+    "presetsFilterFirmware": {
+        "message": "crwdns10785:0crwdne10785:0",
+        "description": "UI filter name"
+    },
+    "presetsFilterStatus": {
+        "message": "crwdns10787:0crwdne10787:0",
+        "description": "UI filter name - official/community/experimental"
+    },
+    "presetsLoadError": {
+        "message": "crwdns10789:0crwdne10789:0",
+        "description": "Error report when failed to load presets index or a specific preset"
+    },
+    "presetsButtonSave": {
+        "message": "crwdns10791:0crwdne10791:0",
+        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+    },
+    "presetsButtonCancel": {
+        "message": "crwdns10793:0crwdne10793:0",
+        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+    },
+    "presetsApplyingPresets": {
+        "message": "crwdns10795:0crwdne10795:0",
+        "description": "First label in the progress dialog when applying configuration (presets or user config)"
+    },
+    "presetsPleaseWait": {
+        "message": "crwdns10797:0crwdne10797:0",
+        "description": "Second label in the progress dialog when applying presets"
+    },
+    "presetsCliErrorsWaring": {
+        "message": "crwdns10799:0crwdne10799:0",
+        "description": "Text to show when there are CLI errors after applying presets or user configuration"
+    },
+    "presetsSaveAnyway": {
+        "message": "crwdns10801:0crwdne10801:0",
+        "description": "Save anyway button on the CLI errors presets dialog"
+    },
+    "presetsWarningDialogTitle": {
+        "message": "crwdns10803:0crwdne10803:0",
+        "description": "Warning title in the warning dialog in the presets"
+    },
+    "presetsWarningDialogYesButton": {
+        "message": "crwdns10805:0crwdne10805:0",
+        "description": "Agree button in the presets warning dialog"
+    },
+    "presetsWarningDialogNoButton": {
+        "message": "crwdns10807:0crwdne10807:0",
+        "description": "Cancel button in the presets warning dialog"
+    },
+    "presetsWiki": {
+        "message": "crwdns10809:0crwdne10809:0",
+        "description": "Button to open Presets Wiki link"
+    },
+    "presetsBackupSave": {
+        "message": "crwdns10811:0crwdne10811:0",
+        "description": "Button to backup current configuration to file"
+    },
+    "presetsBackupLoad": {
+        "message": "crwdns10813:0crwdne10813:0",
+        "description": "Button to load backup from the file"
+    },
+    "presetsLoadingDumpAll": {
+        "message": "crwdns10815:0crwdne10815:0",
+        "description": "Title for the waiting dialog when loading dump all into a file"
+    },
+    "dumpAllNotSavedWarning": {
+        "message": "crwdns10817:0crwdne10817:0",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
+    },
+    "presetSources": {
+        "message": "crwdns10819:0crwdne10819:0",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogTitle": {
+        "message": "crwdns10821:0crwdne10821:0",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogAddNew": {
+        "message": "crwdns10823:0crwdne10823:0",
+        "description": "A button to show preset sources dialog"
+    },
+    "presetsSourcesDialogDefaultSourceName": {
+        "message": "crwdns10825:0crwdne10825:0",
+        "description": "A default preset source (repo) name"
+    },
+    "presetsSourcesDialogSaveSource": {
+        "message": "crwdns10827:0crwdne10827:0",
+        "description": "Presets tab, sources dialog, button to save new or editable source"
+    },
+    "presetsSourcesDialogResetSource": {
+        "message": "crwdns10829:0crwdne10829:0",
+        "description": "Presets tab, sources dialog, button to reset source after modifications"
+    },
+    "presetsSourcesDialogMakeSourceActive": {
+        "message": "crwdns10831:0crwdne10831:0",
+        "description": "Presets tab, sources dialog, button to make selected source active"
+    },
+    "presetsSourcesDialogDeleteSource": {
+        "message": "crwdns10833:0crwdne10833:0",
+        "description": "Presets tab, sources dialog, button to delete selected source"
+    },
+    "presetsWarningNotOfficialSource": {
+        "message": "crwdns10835:0crwdne10835:0",
+        "description": "Warning message that shows up when a third party preset source is selected"
+    },
+    "presetsWarningBackup": {
+        "message": "crwdns10837:0$t(presetsBackupSave.message)crwdne10837:0",
+        "description": "Warning message that shows up at the top of the presets tab"
+    },
+    "presets_sources_dialog_warning": {
+        "message": "crwdns10839:0crwdne10839:0",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsWarningWrongVersionConfirmation": {
+        "message": "crwdns10841:0$1crwdnd10841:0$2crwdne10841:0",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "crwdns10843:0crwdne10843:0",
+        "description": "Message that apprears on presets tab if no presets were found"
+    },
+    "presetsTooManyPresetsFound": {
+        "message": "crwdns10845:0crwdne10845:0",
+        "description": "Message that apprears on presets tab if too many presets found"
     }
 }
