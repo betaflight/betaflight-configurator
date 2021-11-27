@@ -1045,7 +1045,7 @@
         "message": "&lt;Select One&gt;"
     },
     "featureRX_PPM": {
-        "message": "PPM (single wire PWM)"
+        "message": "PPM/CPPM (single wire)"
     },
     "featureVBAT": {
         "message": "Battery voltage monitoring"
