@@ -6220,7 +6220,7 @@
         "message": "File name"
     },
     "dialogFileNameDescription": {
-        "message": "The file will be saved in the '{{folder}}' folder in your internal storage."
+        "message": "The file will be saved in the 'Android/data/betaflight-configurator/{{folder}}' folder in your internal storage."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "This file already exists!"

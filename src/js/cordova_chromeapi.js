@@ -309,7 +309,7 @@ const chromeapiFilesystem = {
             options.suggestedName = 'newfile';
         }
         const extension = self.getFileExtension(options.suggestedName);
-        const folder = 'Betaflight configurator';
+        const folder = 'files';
         navigator.notification.prompt(i18n.getMessage('dialogFileNameDescription', {
             folder: folder,
         }), function(res) {
@@ -319,10 +319,9 @@ const chromeapiFilesystem = {
                 if (newExtension === undefined) {
                     fileName += `.${extension}`;
                 }
-                window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function(rootEntry) {
+                window.resolveLocalFileSystemURL(cordova.file.externalApplicationStorageDirectory, function(rootEntry) {
                     rootEntry.getDirectory(folder, { create: true }, function(directoryEntry) {
                         directoryEntry.getFile(fileName, { create: false }, function(fileEntry) {
-                            console.log(fileEntry);
                             navigator.notification.confirm(i18n.getMessage('dialogFileAlreadyExistsDescription'), function(resp) {
                                 if (resp === 1) {
                                     chromeCallbackWithSuccess(fileEntry, callback);
