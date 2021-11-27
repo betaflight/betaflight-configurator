@@ -1120,7 +1120,7 @@
         "message": "Configure via the BlackBox tab after enabling."
     },
     "featureRX_SPI": {
-        "message": "SPI (e.g. built-in Rx)"
+        "message": "SPI Rx (e.g. built-in Rx)"
     },
     "featureESC_SENSOR": {
         "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
