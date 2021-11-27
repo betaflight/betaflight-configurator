@@ -1045,7 +1045,7 @@
         "message": "&lt;Select One&gt;"
     },
     "featureRX_PPM": {
-        "message": "PPM RX input"
+        "message": "PPM (single wire PWM)"
     },
     "featureVBAT": {
         "message": "Battery voltage monitoring"
@@ -1054,7 +1054,7 @@
         "message": "In-flight level calibration"
     },
     "featureRX_SERIAL": {
-        "message": "Serial-based receiver (SPEKSAT, SBUS, SUMD)"
+        "message": "Serial (CRSF, SBUS, Ghost...)"
     },
     "featureMOTOR_STOP": {
         "message": "Don't spin the motors when armed"
@@ -1090,10 +1090,10 @@
         "message": "3D mode (for use with reversible ESCs)"
     },
     "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX input (one wire per channel)"
+        "message": "PWM (one wire per channel)"
     },
     "featureRX_MSP": {
-        "message": "MSP RX input (control via MSP port)"
+        "message": "MSP (control via MSP port)"
     },
     "featureRSSI_ADC": {
         "message": "Analog RSSI input"
@@ -1120,7 +1120,7 @@
         "message": "Configure via the BlackBox tab after enabling."
     },
     "featureRX_SPI": {
-        "message": "SPI RX support"
+        "message": "SPI (e.g. built-in Rx)"
     },
     "featureESC_SENSOR": {
         "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
