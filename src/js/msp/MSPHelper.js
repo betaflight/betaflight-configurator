@@ -645,8 +645,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('Voltage config saved');
                 break;
             case MSPCodes.MSP_DEBUG:
-                for (let i = 0; i < 4; i++)
+                for (let i = 0; i < 4; i++) {
                     FC.SENSOR_DATA.debug[i] = data.read16();
+                }
                 break;
             case MSPCodes.MSP_SET_MOTOR:
                 console.log('Motor Speeds Updated');
@@ -1177,6 +1178,8 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                                         FC.ADVANCED_TUNING.feedforward_averaging = data.readU8();
                                                         FC.ADVANCED_TUNING.feedforward_smooth_factor = data.readU8();
                                                         FC.ADVANCED_TUNING.feedforward_boost = data.readU8();
+                                                        FC.ADVANCED_TUNING.feedforward_max_rate_limit = data.readU8();
+                                                        FC.ADVANCED_TUNING.feedforward_jitter_factor = data.readU8();
                                                         FC.ADVANCED_TUNING.vbat_sag_compensation = data.readU8();
                                                         FC.ADVANCED_TUNING.thrustLinearization = data.readU8();
                                                     }
@@ -1483,7 +1486,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_SET_TUNING_SLIDERS:
-                console.log("Tuning Sliders data sent");
+	        // This is done in a loop whenever the sliders are moved. Avoid logging to optimise the performance.
                 break;
 
             case MSPCodes.MSP_TUNING_SLIDERS:
@@ -1491,15 +1494,15 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 FC.TUNING_SLIDERS.slider_master_multiplier = data.readU8();
                 FC.TUNING_SLIDERS.slider_roll_pitch_ratio = data.readU8();
                 FC.TUNING_SLIDERS.slider_i_gain = data.readU8();
-                FC.TUNING_SLIDERS.slider_pd_ratio = data.readU8();
-                FC.TUNING_SLIDERS.slider_pd_gain = data.readU8();
-                FC.TUNING_SLIDERS.slider_dmin_ratio = data.readU8();
+                FC.TUNING_SLIDERS.slider_d_gain = data.readU8();
+                FC.TUNING_SLIDERS.slider_pi_gain = data.readU8();
+                FC.TUNING_SLIDERS.slider_dmax_gain = data.readU8();
                 FC.TUNING_SLIDERS.slider_feedforward_gain = data.readU8();
+                FC.TUNING_SLIDERS.slider_pitch_pi_gain = data.readU8();
                 FC.TUNING_SLIDERS.slider_dterm_filter = data.readU8();
                 FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = data.readU8();
                 FC.TUNING_SLIDERS.slider_gyro_filter = data.readU8();
                 FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = data.readU8();
-
                 break;
 
             case MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL:
@@ -1565,7 +1568,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 console.log('Name set');
                 break;
             case MSPCodes.MSP_SET_FILTER_CONFIG:
-                console.log('Filter config set');
+                // removed as this fires a lot with firmware sliders console.log('Filter config set');
                 break;
             case MSPCodes.MSP_SET_ADVANCED_CONFIG:
                 console.log('Advanced config parameters set');
@@ -2149,6 +2152,8 @@ MspHelper.prototype.crunch = function(code) {
                                                     buffer.push8(FC.ADVANCED_TUNING.feedforward_averaging)
                                                           .push8(FC.ADVANCED_TUNING.feedforward_smooth_factor)
                                                           .push8(FC.ADVANCED_TUNING.feedforward_boost)
+                                                          .push8(FC.ADVANCED_TUNING.feedforward_max_rate_limit)
+                                                          .push8(FC.ADVANCED_TUNING.feedforward_jitter_factor)
                                                           .push8(FC.ADVANCED_TUNING.vbat_sag_compensation)
                                                           .push8(FC.ADVANCED_TUNING.thrustLinearization);
                                                 }
@@ -2309,19 +2314,20 @@ MspHelper.prototype.crunch = function(code) {
             break;
 
         case MSPCodes.MSP_SET_TUNING_SLIDERS:
-            buffer.push8(FC.TUNING_SLIDERS.slider_pids_mode)
-                  .push8(FC.TUNING_SLIDERS.slider_master_multiplier)
-                  .push8(FC.TUNING_SLIDERS.slider_roll_pitch_ratio)
-                  .push8(FC.TUNING_SLIDERS.slider_i_gain)
-                  .push8(FC.TUNING_SLIDERS.slider_pd_ratio)
-                  .push8(FC.TUNING_SLIDERS.slider_pd_gain)
-                  .push8(FC.TUNING_SLIDERS.slider_dmin_ratio)
-                  .push8(FC.TUNING_SLIDERS.slider_feedforward_gain)
-                  .push8(FC.TUNING_SLIDERS.slider_dterm_filter)
-                  .push8(FC.TUNING_SLIDERS.slider_dterm_filter_multiplier)
-                  .push8(FC.TUNING_SLIDERS.slider_gyro_filter)
-                  .push8(FC.TUNING_SLIDERS.slider_gyro_filter_multiplier);
-
+            buffer
+                .push8(FC.TUNING_SLIDERS.slider_pids_mode)
+                .push8(FC.TUNING_SLIDERS.slider_master_multiplier)
+                .push8(FC.TUNING_SLIDERS.slider_roll_pitch_ratio)
+                .push8(FC.TUNING_SLIDERS.slider_i_gain)
+                .push8(FC.TUNING_SLIDERS.slider_d_gain)
+                .push8(FC.TUNING_SLIDERS.slider_pi_gain)
+                .push8(FC.TUNING_SLIDERS.slider_dmax_gain)
+                .push8(FC.TUNING_SLIDERS.slider_feedforward_gain)
+                .push8(FC.TUNING_SLIDERS.slider_pitch_pi_gain)
+                .push8(FC.TUNING_SLIDERS.slider_dterm_filter)
+                .push8(FC.TUNING_SLIDERS.slider_dterm_filter_multiplier)
+                .push8(FC.TUNING_SLIDERS.slider_gyro_filter)
+                .push8(FC.TUNING_SLIDERS.slider_gyro_filter_multiplier);
             break;
 
         default:

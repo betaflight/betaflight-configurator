@@ -1,7 +1,7 @@
 'use strict';
 
-var ReleaseChecker = function (releaseName, releaseUrl) {
-    var self = this;
+const ReleaseChecker = function (releaseName, releaseUrl) {
+    const self = this;
 
     self._releaseName = releaseName;
     self._releaseDataTag = `${self._releaseName}ReleaseData`;

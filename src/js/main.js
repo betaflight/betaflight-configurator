@@ -21,20 +21,24 @@ function useGlobalNodeFunctions() {
     }
 }
 
+function readConfiguratorVersionMetadata() {
+    const manifest = chrome.runtime.getManifest();
+    CONFIGURATOR.productName = manifest.productName;
+    CONFIGURATOR.version = manifest.version;
+    CONFIGURATOR.gitRevision = manifest.gitRevision;
+}
+
 function appReady() {
-    $.getJSON('version.json', function(data) {
-        CONFIGURATOR.version = data.version;
-        CONFIGURATOR.gitChangesetId = data.gitChangesetId;
+    readConfiguratorVersionMetadata();
 
-        i18n.init(function() {
-            startProcess();
+    i18n.init(function() {
+        startProcess();
 
-            checkSetupAnalytics(function (analyticsService) {
-                analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
-            });
-
-            initializeSerialBackend();
+        checkSetupAnalytics(function (analyticsService) {
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'SelectedLanguage', i18n.selectedLanguage);
         });
+
+        initializeSerialBackend();
     });
 }
 
@@ -74,7 +78,7 @@ function setupAnalytics(result) {
 
     const debugMode = typeof process === "object" && process.versions['nw-flavor'] === 'sdk';
 
-    window.analytics = new Analytics('UA-123002063-1', userId, 'Betaflight Configurator', CONFIGURATOR.version, CONFIGURATOR.gitChangesetId, GUI.operating_system,
+    window.analytics = new Analytics('UA-123002063-1', userId, CONFIGURATOR.productName, CONFIGURATOR.version, CONFIGURATOR.gitRevision, GUI.operating_system,
         checkForDebugVersions, optOut, debugMode, getBuildType());
 
     function logException(exception) {
@@ -165,9 +169,8 @@ function startProcess() {
     // translate to user-selected language
     i18n.localizePage();
 
-    GUI.log(i18n.getMessage('infoVersions', {
-        operatingSystem: GUI.operating_system,
-        configuratorVersion: CONFIGURATOR.version }));
+    GUI.log(i18n.getMessage('infoVersionOs', { operatingSystem: GUI.operating_system }));
+    GUI.log(i18n.getMessage('infoVersionConfigurator', { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
     if (GUI.isNWJS()) {
         let nwWindow = GUI.nwGui.Window.get();
@@ -247,6 +250,14 @@ function startProcess() {
 
             const tab = tabClass.substring(4);
             const tabName = $(self).text();
+            let timeout = 0;
+
+            if (GUI.active_tab === 'pid_tuning') {
+                if (TABS.pid_tuning.retainConfiguration) {
+                    TABS.pid_tuning.restoreInitialSettings();
+                    timeout = 100;
+                }
+            }
 
             if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
                 GUI.log(i18n.getMessage('tabSwitchConnectionRequired'));
@@ -262,7 +273,7 @@ function startProcess() {
                 if (GUI.connected_to || GUI.connecting_to) {
                     $('a.connect').click();
                 } else {
-                    self.disconnect();
+                    serial.disconnect();
                 }
                 $('div.open_firmware_flasher a.flash').click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
@@ -390,7 +401,11 @@ function startProcess() {
                         TABS.onboard_logging.initialize(content_ready);
                         break;
                     case 'cli':
-                        TABS.cli.initialize(content_ready, GUI.nwGui);
+                        // Add a little timeout to let MSP comands finish
+                        GUI.timeout_add('wait_for_msp_finished', () => TABS.cli.initialize(content_ready, GUI.nwGui), timeout);
+                        break;
+                    case 'presets':
+                        TABS.presets.initialize(content_ready, GUI.nwGui);
                         break;
 
                     default:
@@ -501,13 +516,13 @@ function startProcess() {
     });
 
     ConfigStorage.get('permanentExpertMode', function (result) {
-        const experModeCheckbox = 'input[name="expertModeCheckbox"]';
+        const expertModeCheckbox = 'input[name="expertModeCheckbox"]';
         if (result.permanentExpertMode) {
-            $(experModeCheckbox).prop('checked', true);
+            $(expertModeCheckbox).prop('checked', true);
         }
 
-        $(experModeCheckbox).change(function () {
-            const checked = $(this).is(':checked');
+        $(expertModeCheckbox).on("change", () => {
+            const checked = $(expertModeCheckbox).is(':checked');
             checkSetupAnalytics(function (analyticsService) {
                 analyticsService.setDimension(analyticsService.DIMENSIONS.CONFIGURATOR_EXPERT_MODE, checked ? 'On' : 'Off');
             });
@@ -516,8 +531,12 @@ function startProcess() {
                 updateTabList(FC.FEATURE_CONFIG.features);
             }
 
-            TuningSliders.setExpertMode(checked);
-        }).change();
+            if (GUI.active_tab) {
+                TABS[GUI.active_tab]?.expertModeChanged?.(checked);
+            }
+        });
+
+        $(expertModeCheckbox).trigger("change");
     });
 
     ConfigStorage.get('cliAutoComplete', function (result) {

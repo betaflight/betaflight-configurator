@@ -259,6 +259,17 @@ TABS.receiver.initialize = function (callback) {
         // select current serial RX type
         serialRxSelectElement.val(FC.RX_CONFIG.serialrx_provider);
 
+        // Convert to select2 and order alphabetic
+        if (!GUI.isCordova()) {
+            serialRxSelectElement.select2({
+                sorter(data) {
+                    return data.sort(function(a, b) {
+                        return a.text.localeCompare(b.text);
+                    });
+                },
+            });
+        }
+
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             const spiRxTypes = [
                 'NRF24_V202_250K',
@@ -322,6 +333,17 @@ TABS.receiver.initialize = function (callback) {
 
             // select current serial RX type
             spiRxElement.val(FC.RX_CONFIG.rxSpiProtocol);
+
+            if (!GUI.isCordova()) {
+                // Convert to select2 and order alphabetic
+                spiRxElement.select2({
+                    sorter(data) {
+                        return data.sort(function(a, b) {
+                            return a.text.localeCompare(b.text);
+                        });
+                    },
+                });
+            }
         }
 
 
@@ -468,7 +490,7 @@ TABS.receiver.initialize = function (callback) {
                 }
             }
 
-            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges);
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, tab.analyticsChanges, 'receiver');
             tab.analyticsChanges = {};
 
             MSP.send_message(MSPCodes.MSP_SET_RX_MAP, mspHelper.crunch(MSPCodes.MSP_SET_RX_MAP), false, save_rssi_config);

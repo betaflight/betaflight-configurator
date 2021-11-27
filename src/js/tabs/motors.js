@@ -61,6 +61,7 @@ TABS.motors.initialize = function (callback) {
     }
 
     MSP.promise(MSPCodes.MSP_STATUS)
+    .then(() => MSP.promise(MSPCodes.MSP_PID_ADVANCED))
     .then(() => MSP.promise(MSPCodes.MSP_FEATURE_CONFIG))
     .then(() => MSP.promise(MSPCodes.MSP_MIXER_CONFIG))
     .then(() => FC.MOTOR_CONFIG.use_dshot_telemetry || FC.MOTOR_CONFIG.use_esc_sensor ? MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY) : true)
@@ -237,10 +238,6 @@ TABS.motors.initialize = function (callback) {
             }
         }
 
-        function isInt(n) {
-            return n % 1 === 0;
-        }
-
         function setContentButtons(motorsTesting=false) {
             $('.btn .tool').toggleClass("disabled", self.configHasChanged || motorsTesting);
             $('.btn .save').toggleClass("disabled", !self.configHasChanged);
@@ -329,6 +326,8 @@ TABS.motors.initialize = function (callback) {
                 }
             });
         }
+
+        sortElement('select.mixerList');
 
         function refreshMixerPreview() {
             const mixer = FC.MIXER_CONFIG.mixer;
@@ -608,6 +607,12 @@ TABS.motors.initialize = function (callback) {
             neutral3d = (FC.MOTOR_3D_CONFIG.neutral > 1575 || FC.MOTOR_3D_CONFIG.neutral < 1425) ? 1500 : FC.MOTOR_3D_CONFIG.neutral;
         }
 
+        let zeroThrottleValue = rangeMin;
+
+        if (self.feature3DEnabled) {
+            zeroThrottleValue = neutral3d;
+        }
+
         const motorsWrapper = $('.motors .bar-wrapper');
 
         for (let i = 0; i < 8; i++) {
@@ -642,6 +647,8 @@ TABS.motors.initialize = function (callback) {
         for (let j = 0; j < escProtocols.length; j++) {
             escProtocolElement.append(`<option value="${j + 1}">${escProtocols[j]}</option>`);
         }
+
+        sortElement('select.escprotocol');
 
         const unsyncedPWMSwitchElement = $("input[id='unsyncedPWMSwitch']");
         const divUnsyncedPWMFreq = $('div.unsyncedpwmfreq');
@@ -729,6 +736,16 @@ TABS.motors.initialize = function (callback) {
             divUnsyncedPWMFreq.toggle(protocolConfigured && !digitalProtocol);
 
             $('div.digitalIdlePercent').toggle(protocolConfigured && digitalProtocol);
+
+            $('input[name="digitalIdlePercent"]').prop('disabled', protocolConfigured && digitalProtocol && FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry);
+
+            if (FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry) {
+                const dynamicIdle = FC.ADVANCED_TUNING.idleMinRpm * 100;
+                $('span.digitalIdlePercentDisabled').text(i18n.getMessage('configurationDigitalIdlePercentDisabled', { dynamicIdle }));
+            } else {
+                $('span.digitalIdlePercentDisabled').text(i18n.getMessage('configurationDigitalIdlePercent'));
+            }
+
             $('.escSensor').toggle(protocolConfigured && digitalProtocol);
 
             $('div.checkboxDshotBidir').toggle(protocolConfigured && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && digitalProtocol);
@@ -743,7 +760,7 @@ TABS.motors.initialize = function (callback) {
         }
 
         escProtocolElement.val(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol + 1);
-        console.log(FC.PID_ADVANCED_CONFIG.fast_pwm_protocol);
+
         escProtocolElement.on("change", function () {
             const escProtocolValue = parseInt($(this).val()) - 1;
 
@@ -818,11 +835,7 @@ TABS.motors.initialize = function (callback) {
 
         function setSlidersDefault() {
             // change all values to default
-            if (self.feature3DEnabled) {
-                $('div.sliders input').val(neutral3d);
-            } else {
-                $('div.sliders input').val(rangeMin);
-            }
+            $('div.sliders input').val(zeroThrottleValue);
         }
 
         function setSlidersEnabled(isEnabled) {
@@ -903,7 +916,7 @@ TABS.motors.initialize = function (callback) {
 
         for (let i = 0; i < self.numberOfValidOutputs; i++) {
             if (!self.feature3DEnabled) {
-                if (FC.MOTOR_DATA[i] > rangeMin) {
+                if (FC.MOTOR_DATA[i] > zeroThrottleValue) {
                     motorsRunning = true;
                 }
             } else {
@@ -965,7 +978,7 @@ TABS.motors.initialize = function (callback) {
             const motorsTesting = motorsEnableTestModeElement.is(':checked');
 
             for (let i = 0; i < self.numberOfValidOutputs; i++) {
-                motorData[i] = motorsTesting ? FC.MOTOR_DATA[i] : rangeMin;
+                motorData[i] = motorsTesting ? FC.MOTOR_DATA[i] : zeroThrottleValue;
             }
 
             return motorData;
@@ -1034,7 +1047,7 @@ TABS.motors.initialize = function (callback) {
             //keep the following here so at least we get a visual cue of our motor setup
             update_arm_status();
 
-            if (previousArmState != self.armed) {
+            if (previousArmState !== self.armed) {
                 console.log('arm state change detected');
 
                 motorsEnableTestModeElement.change();
@@ -1075,19 +1088,13 @@ TABS.motors.initialize = function (callback) {
             .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
             .then(() => reboot());
 
-            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'motors');
             self.analyticsChanges = {};
             self.configHasChanged = false;
         });
 
         // enable Status and Motor data pulling
         GUI.interval_add('motor_and_status_pull', get_status, 50, true);
-
-        let zeroThrottleValue = rangeMin;
-
-        if (self.feature3DEnabled) {
-            zeroThrottleValue = neutral3d;
-        }
 
         setup_motor_output_reordering_dialog(SetupEscDshotDirectionDialogCallback, zeroThrottleValue);
 
@@ -1116,12 +1123,6 @@ TABS.motors.initialize = function (callback) {
             dialogMixerReset.showModal();
             $('#dialog-mixer-reset-confirmbtn').click(function() {
                 dialogMixerReset.close();
-
-                FC.MIXER_CONFIG.mixer = 3;
-
-                MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG))
-                .then(() => MSP.promise(MSPCodes.MSP_EEPROM_WRITE))
-                .then(() => reboot());
             });
         }
     }

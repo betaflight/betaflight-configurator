@@ -17,6 +17,7 @@ variables:
   repoName: betaflight-configurator-nightlies
   debugReleaseNotes: This is a nightly build off the tip of 'master'. It may be unstable and result in corrupted configurations or data loss. **Use only for testing.**
   releaseNotes: This is a release build. It does not contain the debug console.
+  linuxVmImage: 'ubuntu-20.04'
 
 parameters:
   - name: releaseBuild
@@ -86,7 +87,7 @@ stages:
       displayName: 'Install Node.js 10.16.3'
     - script: yarn install
       displayName: 'Run yarn install'
-    - script: yarn gulp release --android
+    - script: yarn gulp debug-release --android
       displayName: 'Run yarn release for android'
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Android release'
@@ -121,7 +122,7 @@ stages:
 
   - job: 'Linux'
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: '$(linuxVmImage)'
 
     steps:
     - task: UseNode@1
@@ -148,6 +149,8 @@ stages:
 - stage: Release
   jobs:
   - job: Release
+    pool:
+      vmImage: '$(linuxVmImage)'
 
     steps:
     - task: DownloadPipelineArtifact@2

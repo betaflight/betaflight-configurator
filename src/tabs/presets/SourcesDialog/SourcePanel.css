@@ -1,0 +1,70 @@
+.presets_source_panel {
+    background-color: var(--boxBackground);
+    border: 1px solid var(--subtleAccent);
+    padding: 1.5ex;
+    box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.25);
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.presets_source_panel_not_selected {
+    cursor: pointer;
+}
+
+.presets_source_panel_selected {
+    cursor: unset;
+}
+
+.presets_source_panel_not_selected:hover {
+    background-color: var(--subtleAccent);
+    box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.5);
+}
+
+.presets_source_panel_editing_table {
+    display: table;
+    width: 100%;
+    border-spacing: 6px;
+}
+
+.presets_source_panel_editing_row {
+    display: table-row;
+}
+
+.presets_source_panel_editing_field_label {
+    display: table-cell;
+    white-space: pre;
+    padding-right: 10px;
+    min-width: 100px;
+}
+
+.presets_source_panel_editing_field_edit {
+    display: table-cell;
+    width: 100%;
+    padding-right: 10px;
+}
+
+.presets_source_panel_editing_row .standard_input {
+    width: 100%;
+    margin-right: 12px;
+}
+
+.presets_source_panel_no_editing_name {
+    font-size: 130%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.presets_source_panel_no_editing_selected {
+    background-image: url(../../../images/icons/cf_icon_check_orange.svg);
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.presets_source_panel_reset, .presets_source_panel_save, .presets_source_panel_delete {
+    float: right;
+}

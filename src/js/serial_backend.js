@@ -66,7 +66,7 @@ function initializeSerialBackend() {
                 $('select#baud').hide();
             } else if (portName !== '0') {
                 if (!clicks) {
-                    console.log(`${serial.connectionType}: connecting to: ${portName}`);
+                    console.log(`Connecting to: ${portName}`);
                     GUI.connecting_to = portName;
 
                     // lock port select & baud while we are connecting / connected
@@ -90,8 +90,7 @@ function initializeSerialBackend() {
                     }
                     GUI.timeout_kill_all();
                     GUI.interval_kill_all();
-                    GUI.tab_switch_cleanup();
-                    GUI.tab_switch_in_progress = false;
+                    GUI.tab_switch_cleanup(() => GUI.tab_switch_in_progress = false);
 
                     function onFinishCallback() {
                         finishClose(toggleStatus);
@@ -408,7 +407,7 @@ function checkReportProblems() {
         if (semver.gt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
             const problemName = 'API_VERSION_MAX_SUPPORTED';
             problemItemTemplate.clone().html(i18n.getMessage(`reportProblemsDialog${problemName}`,
-                [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.version, FC.CONFIG.flightControllerVersion])).appendTo(problemDialogList);
+                [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl, CONFIGURATOR.getDisplayVersion(), FC.CONFIG.flightControllerVersion])).appendTo(problemDialogList);
             needsProblemReportingDialog = true;
 
             analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT,
@@ -584,13 +583,17 @@ function onClosed(result) {
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;
+    CONFIGURATOR.cliEngineValid = false;
+    CONFIGURATOR.cliEngineActive = false;
 }
 
 function read_serial(info) {
-    if (!CONFIGURATOR.cliActive) {
-        MSP.read(info);
-    } else if (CONFIGURATOR.cliActive) {
+    if (CONFIGURATOR.cliActive) {
         TABS.cli.read(info);
+    } else if (CONFIGURATOR.cliEngineActive) {
+        TABS.presets.read(info);
+    } else {
+        MSP.read(info);
     }
 }
 
@@ -695,7 +698,7 @@ function update_live_status() {
        display: 'inline-block'
     });
 
-    if (GUI.active_tab != 'cli') {
+    if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
         MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_32)) {
             MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false);

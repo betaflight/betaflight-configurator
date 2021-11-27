@@ -1,0 +1,116 @@
+<div class="tab-presets toolbar_fixed_bottom">
+    <div class="content_wrapper" id="presets_content_wrapper">
+        <div class="tab_title">
+            <div i18n="tabPresets" class="presets_title_text"></div>
+            <div class="presets_top_bar_button_pannel">
+                <a i18n="presetsWiki" class="presetsWikiButton tool regular-button right" href="https://github.com/betaflight/betaflight/wiki/Presets-in-BF-4.3" target="_blank" rel="noopener noreferrer">Presets Wiki</a>
+                <div class = "top_panel_spacer visible-on-desktop-only"></div>
+                <a href="#" class="presets_sources_show tool regular-button right" i18n="presetSources"></a>
+                <div class = "top_panel_spacer visible-on-desktop-only"></div>
+                <a href="#" class="presets_load_config visible-on-desktop-only tool regular-button right" i18n="presetsBackupLoad"></a>
+                <a href="#" class="presets_save_config visible-on-desktop-only tool regular-button right" i18n="presetsBackupSave"></a>
+            </div>
+        </div>
+        <div class="visible-on-phone-only presets_secondary_top_bar_panel_buttons">
+            <a href="#" class="presets_load_config tool regular-button disabled" i18n="presetsBackupLoad"></a>
+            <a href="#" class="presets_save_config tool regular-button disabled" i18n="presetsBackupSave"></a>
+        </div>
+        <div class="presets_warnings">
+            <div class="note presets_warning_not_official_source" i18n="presetsWarningNotOfficialSource"></div>
+            <div class="note presets_warning_backup">
+                <div class="presets_warning_backup_text" i18n="presetsWarningBackup"></div>
+                <a href="#" id="" class="tool regular-button presets_warning_backup_button_hide" i18n="dontShowAgain">Don't show again</a>
+            </div>
+        </div>
+        <div id="presets_global_loading" class="data-loading">
+        </div>
+        <div id="presets_global_loading_error">
+            <h3 i18n="presetsLoadError"></h3>
+            <a href="#" id="presets_reload" class="tool regular-button" i18n="presetsReload"></a>
+        </div>
+        <div id="presets_main_content">
+            <div class="presets_search_settings">
+                <div class="presets_filter_table_wrapper">
+                    <div class="presets_filter_row">
+                        <div class = "presets_fitler_table_header" i18n="presetsFilterCategory"></div>
+                        <div class = "presets_fitler_table_value">
+                            <select multiple="multiple" class="presets_filter_select" id="presets_filter_category"></select>
+                        </div>
+                    </div>
+                    <div class="presets_filter_row">
+                        <div class = "presets_fitler_table_header" i18n="presetsFilterKeyword"></div>
+                        <div class = "presets_fitler_table_value">
+                            <select multiple="multiple" class="presets_filter_select" id="presets_filter_keyword"></select>
+                        </div>
+                    </div>
+                    <div class="presets_filter_row">
+                        <div class = "presets_fitler_table_header" i18n="presetsFilterAuthor"></div>
+                        <div class = "presets_fitler_table_value">
+                            <select multiple="multiple" class="presets_filter_select" id="presets_filter_author"></select>
+                        </div>
+                    </div>
+                    <div class="presets_filter_row">
+                        <div class = "presets_fitler_table_header" i18n="presetsFilterFirmware"></div>
+                        <div class = "presets_fitler_table_value">
+                            <select multiple="multiple" class="presets_filter_select" id="presets_filter_firmware_version"></select>
+                        </div>
+                    </div>
+                    <div class="presets_filter_row">
+                        <div class = "presets_fitler_table_header" i18n="presetsFilterStatus"></div>
+                        <div class = "presets_fitler_table_value">
+                            <select multiple="multiple" class="presets_filter_select" id="presets_filter_status"></select>
+                        </div>
+                    </div>
+                </div>
+                <div id="presets_search_bar_wrapper">
+                    <div id="presets_search_hint">
+                    </div>
+                    <input type="text" class="presets_text_input" id="presets_filter_text"/>
+                </div>
+            </div>
+            <div id="preset_list_wrapper">
+                <div id="presets_list_no_found" i18n="presetsNoPresetsFound"></div>
+                <div id="presets_list"></div>
+                <div id="presets_list_too_many_found" i18n="presetsTooManyPresetsFound">Too many found</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content_toolbar">
+        <div class="btn">
+            <a href="#" id="presets_save_button" class="tool regular-button" i18n="presetsButtonSave"></a>
+            <a href="#" id="presets_cancel_button" class="tool regular-button" i18n="presetsButtonCancel"></a>
+        </div>
+    </div>
+
+    <dialog id="presets_detailed_dialog">
+    </dialog>
+
+    <dialog id="presets_sources_dialog">
+    </dialog>
+
+    <dialog id="presets_apply_progress_dialog">
+        <div class="presets_apply_progress_dialog_label" i18n="presetsApplyingPresets"></div>
+        <div class="presets_apply_progress_dialog_please_wait" i18n="presetsPleaseWait"></div>
+        <progress class="presets_apply_progress_dialog_progress_bar" value="0" max="100"></progress>
+    </dialog>
+
+    <dialog id="presets_cli_errors_dialog">
+        <div class="presets_cli_errors_dialog_warning" i18n="presetsCliErrorsWaring"></div>
+        <div id="presets_cli">
+            <div id="presets_cli_background">
+                <div class="window" id="presets_cli_window">
+                    <div class="wrapper" id="presets_cli_window_wrapper"></div>
+                </div>
+            </div>
+            <div class="commandline">
+                <textarea name="commands" id="presets_cli_command" rows="1" cols="0"></textarea>
+            </div>
+        </div>
+        <div class="btn">
+            <a href="#" id="presets_cli_errors_save_anyway_button" class="tool regular-button" i18n="presetsSaveAnyway"></a>
+            <a href="#" id="presets_cli_errors_exit_no_save_button" class="tool regular-button" i18n="presetsButtonCancel"></a>
+        </div>
+    </dialog>
+
+</div>

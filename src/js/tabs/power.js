@@ -477,7 +477,7 @@ TABS.power.initialize = function (callback) {
             FC.BATTERY_CONFIG.vbatwarningcellvoltage = parseFloat($('input[name="warningcellvoltage"]').val());
             FC.BATTERY_CONFIG.capacity = parseInt($('input[name="capacity"]').val());
 
-            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'power');
 
             save_power_config();
         });

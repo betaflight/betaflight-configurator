@@ -3152,7 +3152,7 @@ TABS.osd.initialize = function(callback) {
                 }
             });
 
-            analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+            analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'osd');
             self.analyticsChanges = {};
         });
 

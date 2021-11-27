@@ -160,6 +160,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
            20: 'USB VCP',
            30: 'SOFTSERIAL1',
            31: 'SOFTSERIAL2',
+           40: 'LPUART1',
         };
 
         let gpsBaudrateElement = $('select.gps_baudrate');
@@ -351,7 +352,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     }
 
    function on_save_handler() {
-        analytics.sendChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges);
+        analytics.sendSaveAndChangeEvents(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
        self.analyticsChanges = {};
 
         // update configuration based on current ui state
