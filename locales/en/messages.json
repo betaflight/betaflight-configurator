@@ -1290,6 +1290,9 @@
     "configurationDigitalIdlePercent": {
         "message": "Motor Idle Throttle Value [percent]"
     },
+    "configurationDigitalIdlePercentDisabled": {
+        "message": "Motor Idle Throttle Value % is disabled because Dynamic Idle is enabled with value at {{dynamicIdle}}rpm in PID tuning tab"
+    },
     "configurationDigitalIdlePercentHelp": {
         "message": "The 'DShot idle' value is the percent of maximum throttle that is sent to the ESCs when the throttle at minimum stick position and the craft is armed. Increase it to gain more idle speed and avoid desyncs.  Too high and the craft feels floaty."
     },
@@ -4095,6 +4098,9 @@
     },
     "pidTuningIdleMinRpmHelp": {
         "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. It corrects problems caused by airflow speeding up or slowing down the props, improving PID authority, stability, motor braking and responsiveness. The Dynamic Idle rpm should be set to be about 20% below the rpm of your Dshot Idle value (see the $t(tabMotorTesting.message) tab). Usually there is no need to change your DShot idle value from defaults. For longer inverted hang time, DShot idle value and Minimum rpm should be lowered together.<br /><br />Visit <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+    },
+    "pidTuningIdleMinRpmDisabled": {
+        "message": "Dynamic Idle is disabled as Dshot Telemetry is disabled"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"

@@ -454,7 +454,13 @@ TABS.pid_tuning.initialize = function (callback) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             $('.pid_tuning input[name="motorLimit"]').val(FC.ADVANCED_TUNING.motorOutputLimit);
             $('.pid_tuning input[name="cellCount"]').val(FC.ADVANCED_TUNING.autoProfileCellCount);
-            $('input[name="idleMinRpm-number"]').val(FC.ADVANCED_TUNING.idleMinRpm);
+            $('input[name="idleMinRpm-number"]').val(FC.ADVANCED_TUNING.idleMinRpm).prop('disabled', !FC.MOTOR_CONFIG.use_dshot_telemetry);
+
+            if (FC.MOTOR_CONFIG.use_dshot_telemetry) {
+                $('span.pidTuningIdleMinRpmDisabled').text(i18n.getMessage('pidTuningIdleMinRpm'));
+            } else {
+                $('span.pidTuningIdleMinRpmDisabled').text(i18n.getMessage('pidTuningIdleMinRpmDisabled'));
+            }
         } else {
             $('.motorOutputLimit').hide();
             $('.idleMinRpm').hide();
