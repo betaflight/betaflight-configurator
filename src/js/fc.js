@@ -512,6 +512,8 @@ const FC = {
             feedforward_averaging:      0,
             feedforward_smooth_factor:  0,
             feedforward_boost:          0,
+            feedforward_max_rate_limit: 0,
+            feedforward_jitter_factor:  0,
             vbat_sag_compensation:      0,
             thrustLinearization:        0,
         };
