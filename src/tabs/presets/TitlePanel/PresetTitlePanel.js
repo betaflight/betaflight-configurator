@@ -9,6 +9,7 @@ class PresetTitlePanel
         this._onLoadedCallback = onLoadedCallback;
         this._domId = `preset_title_panel_${PresetTitlePanel.s_panelCounter}`;
         this._preset = preset;
+        this._clickable = clickable;
 
         this._parentDiv.append(`<div class="${this._domId}"></div>`);
         this._domWrapperDiv = $(`.${this._domId}`);
@@ -41,6 +42,10 @@ class PresetTitlePanel
     }
 
     setPicked(isPicked) {
+        if (!this._clickable) {
+            return;
+        }
+
         this._preset.isPicked = isPicked;
 
         if (isPicked) {
