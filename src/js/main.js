@@ -255,7 +255,7 @@ function startProcess() {
             if (GUI.active_tab === 'pid_tuning') {
                 if (TABS.pid_tuning.retainConfiguration) {
                     TABS.pid_tuning.restoreInitialSettings();
-                    timeout = 100;
+                    timeout = 500;
                 }
             }
 
@@ -402,7 +402,14 @@ function startProcess() {
                         break;
                     case 'cli':
                         // Add a little timeout to let MSP comands finish
-                        GUI.timeout_add('wait_for_msp_finished', () => TABS.cli.initialize(content_ready, GUI.nwGui), timeout);
+                        if (timeout > 0) {
+                            GUI.timeout_add('wait_for_msp_finished', () => {
+                                MSP.disconnect_cleanup();
+                                TABS.cli.initialize(content_ready, GUI.nwGui);
+                            }, timeout);
+                        } else {
+                            TABS.cli.initialize(content_ready, GUI.nwGui);
+                        }
                         break;
                     case 'presets':
                         TABS.presets.initialize(content_ready, GUI.nwGui);
