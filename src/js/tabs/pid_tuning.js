@@ -377,51 +377,76 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
-            const dynamicNotchWidthPercent_e = $('.pid_filter input[name="dynamicNotchWidthPercent"]');
-            const dynamicNotchQ_e = $('.pid_filter input[name="dynamicNotchQ"]');
-            const dynamicNotchCount_e = $('.pid_filter input[name="dynamicNotchCount"]');
 
             $('.smartfeedforward').hide();
 
-            if (FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
-                $('.dynamicNotch').show();
-            } else {
-                $('.dynamicNotch').hide();
+            // Dynamic Notch Filter
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                if (FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
+                    $('.dynamicNotch span.inputSwitch').hide();
+                } else {
+                    $('.dynamicNotch').hide();
+                }
             }
-            $('.dynamicNotchRange').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_43));
-            $('.pid_filter select[name="dynamicNotchRange"]').val(FC.FILTER_CONFIG.dyn_notch_range);
+
+            const dynamicNotchRange_e = $('.pid_filter select[name="dynamicNotchRange"]');
+            const dynamicNotchWidthPercent_e = $('.pid_filter input[name="dynamicNotchWidthPercent"]');
+            const dynamicNotchCount_e = $('.pid_filter input[name="dynamicNotchCount"]');
+            const dynamicNotchQ_e = $('.pid_filter input[name="dynamicNotchQ"]');
+            const dynamicNotchMinHz_e = $('.pid_filter input[name="dynamicNotchMinHz"]');
+            const dynamicNotchMaxHz_e = $('.pid_filter input[name="dynamicNotchMaxHz"]');
+
+            dynamicNotchRange_e.val(FC.FILTER_CONFIG.dyn_notch_range);
             dynamicNotchWidthPercent_e.val(FC.FILTER_CONFIG.dyn_notch_width_percent);
-            dynamicNotchQ_e.val(FC.FILTER_CONFIG.dyn_notch_q);
             dynamicNotchCount_e.val(FC.FILTER_CONFIG.dyn_notch_count);
-            $('.pid_filter input[name="dynamicNotchMinHz"]').val(FC.FILTER_CONFIG.dyn_notch_min_hz);
+            dynamicNotchQ_e.val(FC.FILTER_CONFIG.dyn_notch_q);
+            dynamicNotchMinHz_e.val(FC.FILTER_CONFIG.dyn_notch_min_hz);
+            dynamicNotchMaxHz_e.val(FC.FILTER_CONFIG.dyn_notch_max_hz);
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-                $('.pid_filter input[name="dynamicNotchMinHz"]').attr("max","250");
-                $('.pid_filter input[name="dynamicNotchMaxHz"]').val(FC.FILTER_CONFIG.dyn_notch_max_hz);
+                dynamicNotchMinHz_e.attr("max","250");
             } else {
                 $('.dynamicNotchMaxHz').hide();
             }
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                $('.dynamicNotchHelp').attr('title', i18n.getMessage('pidTuningMultiDynamicNotchFilterHelp'));
-                $('.dynamicNotchWidthPercent').hide();
-            } else {
-                $('.dynamicNotchCount').hide();
-            }
 
+            const dynamicNotchSwitch_e = $('.pid_filter input[id="dynamicNotchEnabled"]');
+
+            dynamicNotchSwitch_e.on('change', function() {
+
+                const checked = $(this).is(':checked');
+                const count = parseInt(dynamicNotchCount_e.val());
+
+                if (checked && !count) {
+                    dynamicNotchCount_e.val(FILTER_DEFAULT.dyn_notch_count);
+                }
+
+                $('.dynamicNotch span.suboption').toggle(checked);
+                $('.dynamicNotchRange').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_43) && checked);
+                $('.dynamicNotchMaxHz').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43) && checked);
+                $('.dynamicNotchWidthPercent').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44) && checked);
+                $('.dynamicNotchCount').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && checked);
+
+            }).prop('checked', FC.FILTER_CONFIG.dyn_notch_count !== 0 || FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')).trigger('change');
+
+            // RPM Filter
             $('.rpmFilter').toggle(FC.MOTOR_CONFIG.use_dshot_telemetry);
 
-            $('.pid_filter input[name="rpmFilterHarmonics"]').val(FC.FILTER_CONFIG.gyro_rpm_notch_harmonics);
-            $('.pid_filter input[name="rpmFilterMinHz"]').val(FC.FILTER_CONFIG.gyro_rpm_notch_min_hz);
+            const rpmFilterHarmonics_e = $('.pid_filter input[name="rpmFilterHarmonics"]');
+            const rpmFilterMinHz_e = $('.pid_filter input[name="rpmFilterMinHz"]');
 
-            $('.pid_filter #rpmFilterEnabled').change(function() {
+            rpmFilterHarmonics_e.val(FC.FILTER_CONFIG.gyro_rpm_notch_harmonics);
+            rpmFilterMinHz_e.val(FC.FILTER_CONFIG.gyro_rpm_notch_min_hz);
 
-                let harmonics = $('.pid_filter input[name="rpmFilterHarmonics"]').val();
-                let checked = $(this).is(':checked') && harmonics != 0;
+            $('.pid_filter #rpmFilterEnabled').on('change', function() {
 
-                $('.pid_filter input[name="rpmFilterHarmonics"]').attr('disabled', !checked);
-                $('.pid_filter input[name="rpmFilterMinHz"]').attr('disabled', !checked);
+                const harmonics = rpmFilterHarmonics_e.val();
+                const checked = $(this).is(':checked') && harmonics !== 0;
+
+                rpmFilterHarmonics_e.attr('disabled', !checked);
+                rpmFilterMinHz_e.attr('disabled', !checked);
 
                 if (harmonics == 0) {
-                    $('.pid_filter input[name="rpmFilterHarmonics"]').val(FILTER_DEFAULT.gyro_rpm_notch_harmonics);
+                    rpmFilterHarmonics_e.val(FILTER_DEFAULT.gyro_rpm_notch_harmonics);
                 }
 
                 if (checked !== (FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0)) { // if rpmFilterEnabled is not the same value as saved in the fc
@@ -442,8 +467,10 @@ TABS.pid_tuning.initialize = function (callback) {
                     dynamicNotchQ_e.val(FC.FILTER_CONFIG.dyn_notch_q);
                     dynamicNotchWidthPercent_e.val(FC.FILTER_CONFIG.dyn_notch_width_percent);
                 }
+
                 $('.rpmFilter span.suboption').toggle(checked);
-            }).prop('checked', FC.FILTER_CONFIG.gyro_rpm_notch_harmonics != 0).change();
+
+            }).prop('checked', FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0).trigger('change');
 
         } else {
             $('.itermRelaxCutoff').hide();
@@ -1325,7 +1352,7 @@ TABS.pid_tuning.initialize = function (callback) {
             FC.FILTER_CONFIG.dyn_notch_q = parseInt($('.pid_filter input[name="dynamicNotchQ"]').val());
             FC.FILTER_CONFIG.dyn_notch_min_hz = parseInt($('.pid_filter input[name="dynamicNotchMinHz"]').val());
 
-            let rpmFilterEnabled = $('.pid_filter #rpmFilterEnabled').is(':checked');
+            const rpmFilterEnabled = $('.pid_filter #rpmFilterEnabled').is(':checked');
             FC.FILTER_CONFIG.gyro_rpm_notch_harmonics = rpmFilterEnabled ? parseInt($('.pid_filter input[name="rpmFilterHarmonics"]').val()) : 0;
             FC.FILTER_CONFIG.gyro_rpm_notch_min_hz = parseInt($('.pid_filter input[name="rpmFilterMinHz"]').val());
         }
@@ -1356,7 +1383,9 @@ TABS.pid_tuning.initialize = function (callback) {
             FC.ADVANCED_TUNING.vbat_sag_compensation = $('input[id="vbatSagCompensation"]').is(':checked') ? parseInt($('input[name="vbatSagValue"]').val()) : 0;
             FC.ADVANCED_TUNING.thrustLinearization = $('input[id="thrustLinearization"]').is(':checked') ? parseInt($('input[name="thrustLinearValue"]').val()) : 0;
             FC.FILTER_CONFIG.dyn_lpf_curve_expo = parseInt($('.pid_filter input[name="dtermLowpassExpo"]').val());
-            FC.FILTER_CONFIG.dyn_notch_count = parseInt($('.pid_filter input[name="dynamicNotchCount"]').val());
+
+            const dynamicNotchEnabled = $('.pid_filter input[id="dynamicNotchEnabled"]').is(':checked');
+            FC.FILTER_CONFIG.dyn_notch_count = dynamicNotchEnabled ? parseInt($('.pid_filter input[name="dynamicNotchCount"]').val()) : 0;
 
             FC.TUNING_SLIDERS.slider_pids_mode = TuningSliders.sliderPidsMode;
             //round slider values to nearest multiple of 5 and passes to the FW. Avoid dividing calc by (* x 100)/5 = 20
@@ -3072,7 +3101,7 @@ TABS.pid_tuning.updateFilterWarning = function() {
     } else {
         warningE.hide();
     }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
         if (FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
             warningDynamicNotchE.hide();
         } else {

@@ -84,9 +84,13 @@ const Features = function (config) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             features.push(
-                {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
-                {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'}
+                {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true}
             );
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) { // DYNAMIC_FILTER got removed from FEATURES in BF 4.3 / API 1.44
+                features.push(
+                    {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'}
+                );
+            }
         }
 
         if (!semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
