@@ -15,6 +15,14 @@ const serial = {
     transmitting:   false,
     outputBuffer:   [],
 
+    serialDevices: [
+        {'vendorId': 1027, 'productId': 24577}, // FT232R USB UART
+        {'vendorId': 1155, 'productId': 22336}, // STM Electronics Virtual COM Port
+        {'vendorId': 4292, 'productId': 60000}, // CP210x
+        {'vendorId': 4292, 'productId': 60001}, // CP210x
+        {'vendorId': 4292, 'productId': 60002}, // CP210x
+    ],
+
     connect: function (path, options, callback) {
         const self = this;
         const testUrl = path.match(/^tcp:\/\/([A-Za-z0-9\.-]+)(?:\:(\d+))?$/);
@@ -258,13 +266,21 @@ const serial = {
         }
     },
     getDevices: function (callback) {
+        const self = this;
+
         chrome.serial.getDevices(function (devices_array) {
             const devices = [];
             devices_array.forEach(function (device) {
-                devices.push({
-                              path: device.path,
-                              displayName: device.displayName,
-                             });
+                const isFC = self.serialDevices.some(el => el.vendorId === device.vendorId) && self.serialDevices.some(el => el.productId === device.productId);
+
+                if (isFC) {
+                    devices.push({
+                        path: device.path,
+                        displayName: device.displayName,
+                        vendorId: device.vendorId,
+                        productId: device.productId,
+                    });
+                }
             });
 
             callback(devices);
