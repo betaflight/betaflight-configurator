@@ -8,9 +8,27 @@
             <p i18n="receiverHelp"></p>
         </div>
         <div class="grid-row">
-            <div class="grid-col col6 bars"></div>
+            <div class="grid-col col6 bars">
+                <div class="gui_box grey tunings topspacer">
+                    <table class="pid_titlebar">
+                        <thead>
+                        <tr>
+                            <th i18n="receiverModelPreview"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="model_preview_cell">
+                                <div class="model_preview background_paper">
+                                    <canvas id="canvas"></canvas>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div class="grid-col col6">
-
                 <!-- RECEIVER -->
                 <div class="receiver">
                     <div class="gui_box receiver grey">
@@ -328,24 +346,6 @@
                                 </div>
                             </td>
                         </tr>
-                    </table>
-                </div>
-                <div class="gui_box grey tunings topspacer">
-                    <table class="pid_titlebar">
-                        <thead>
-                        <tr>
-                            <th i18n="receiverModelPreview"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="model_preview_cell">
-                                <div class="model_preview background_paper">
-                                    <canvas id="canvas"></canvas>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
                     </table>
                 </div>
             </div>

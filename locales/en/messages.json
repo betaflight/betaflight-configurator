@@ -1045,7 +1045,7 @@
         "message": "&lt;Select One&gt;"
     },
     "featureRX_PPM": {
-        "message": "PPM RX input"
+        "message": "PPM/CPPM (single wire)"
     },
     "featureVBAT": {
         "message": "Battery voltage monitoring"
@@ -1054,7 +1054,7 @@
         "message": "In-flight level calibration"
     },
     "featureRX_SERIAL": {
-        "message": "Serial-based receiver (SPEKSAT, SBUS, SUMD)"
+        "message": "Serial (via UART)"
     },
     "featureMOTOR_STOP": {
         "message": "Don't spin the motors when armed"
@@ -1090,10 +1090,10 @@
         "message": "3D mode (for use with reversible ESCs)"
     },
     "featureRX_PARALLEL_PWM": {
-        "message": "PWM RX input (one wire per channel)"
+        "message": "PWM (one wire per channel)"
     },
     "featureRX_MSP": {
-        "message": "MSP RX input (control via MSP port)"
+        "message": "MSP (control via MSP port)"
     },
     "featureRSSI_ADC": {
         "message": "Analog RSSI input"
@@ -1120,7 +1120,7 @@
         "message": "Configure via the BlackBox tab after enabling."
     },
     "featureRX_SPI": {
-        "message": "SPI RX support"
+        "message": "SPI Rx (e.g. built-in Rx)"
     },
     "featureESC_SENSOR": {
         "message": "Use KISS/BLHeli_32 ESC telemetry <b>over a separate wire</b>"
@@ -1204,7 +1204,7 @@
         "message": "<strong>Note:</strong> Not all combinations of features are valid.  When the flight controller firmware detects invalid feature combinations conflicting features will be disabled.<br /><strong>Note:</strong> Configure serial ports <span class=\"message-negative\">before</span> enabling the features that will use the ports."
     },
     "configurationSerialRXHelp": {
-        "message": "<strong>Note:</strong> Remember to configure a Serial Port (via Ports tab) and choose a Serial Receiver Provider when using RX_SERIAL feature."
+        "message": "&#8226; The UART for the receiver must be set to ‘Serial Rx’ (in the <i>Ports</i> tab)<br>&#8226; Select the correct data format from the drop-down, below:"
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Note:</strong> The SPI RX provider will only work if the required hardware is on board or connected to an SPI bus."
@@ -2015,9 +2015,6 @@
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
 
-    "receiverHelp": {
-        "message": "Please read receiver chapter of the documentation.  Configure serial port (if required), receiver mode (serial/ppm/pwm), provider (for serial receivers), bind receiver, set channel map, configure channel endpoints/range on TX so that all channels go from ~1000 to ~2000.  Set midpoint (default 1500), trim channels to 1500, configure stick deadband, verify behaviour when TX is off or out of range.<br /><span class=\"message-negative\">IMPORTANT:</span> Before flying read failsafe chapter of documentation and configure failsafe."
-    },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
@@ -2035,7 +2032,9 @@
     "pidTuningSliderModeHelp": {
         "message": "<strong>Pid Tuning Slider Mode</strong><br><br>Pidtuning slider mode can be:<br><br>&bull; OFF - no sliders, enter values manually<br>&bull; RP - sliders control Roll and Pitch only, enter Yaw values manually<br>&bull; RPY - sliders control all PID values<br><br><span class=\"message-negative\"><b>Warning:</b></span>Going from RP to RPY mode will overwrite Yaw settings with firmware settings."
     },
-
+    "receiverHelp": {
+        "message": "&#8226;  <b><strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Failsafe.md#testing\" target=\"_blank\" rel=\"noopener noreferrer\">Always check that your Failsafe is working properly!</a></strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Disable the hardware ADC filter</a></strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, read the <strong><a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Rx.md\" target=\"_blank\" rel=\"noopener noreferrer\">documentation</a></strong>."
+    },
     "receiverThrottleMid": {
         "message": "Throttle MID"
     },
