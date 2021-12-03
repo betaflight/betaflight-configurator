@@ -15,6 +15,7 @@ options.initialize = function (callback) {
         TABS.options.initAnalyticsOptOut();
         TABS.options.initCliAutoComplete();
         TABS.options.initAutoConnectConnectionTimeout();
+        TABS.options.initShowAllSerialDevices();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
 
@@ -131,6 +132,17 @@ options.initAutoConnectConnectionTimeout = function () {
             ConfigStorage.set({'connectionTimeout': value});
         });
     });
+};
+
+options.initShowAllSerialDevices = function() {
+    const showAllSerialDevicesElement = $('div.showAllSerialDevices input');
+    ConfigStorage.get('showAllSerialDevices', result => {
+        showAllSerialDevicesElement
+            .prop('checked', !!result.showAllSerialDevices)
+            .on('change', () => ConfigStorage.set({ showAllSerialDevices: showAllSerialDevicesElement.is(':checked') }))
+            .trigger('change');
+    });
+
 };
 
 options.initCordovaForceComputerUI = function () {
