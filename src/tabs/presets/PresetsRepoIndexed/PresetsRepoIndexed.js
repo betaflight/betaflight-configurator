@@ -12,7 +12,7 @@ class PresetsRepoIndexed {
     }
 
     loadIndex() {
-        return fetch(this._urlRaw + "index.json")
+        return fetch(this._urlRaw + "index.json", {cache: "no-cache"})
             .then(res => res.json())
             .then(out => this._index = out);
     }
@@ -205,7 +205,7 @@ class PresetsRepoIndexed {
 
     _loadPresetText(fullUrl) {
         return new Promise((resolve, reject) => {
-            fetch(fullUrl)
+            fetch(fullUrl, {cache: "no-cache"})
             .then(res => res.text())
             .then(text => resolve(text))
             .catch(err => {
