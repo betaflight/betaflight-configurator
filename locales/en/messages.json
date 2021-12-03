@@ -1150,7 +1150,7 @@
         "message": "Video Transmitter"
     },
     "featureANTI_GRAVITY": {
-        "message": "Permanently enable Anti Gravity"
+        "message": "Permanently enable"
     },
     "featureANTI_GRAVITYTip": {
         "message": "If this is disabled, the 'ANTI GRAVITY' mode can be used to enable Anti Gravity with a switch."
@@ -1288,13 +1288,13 @@
         "message": "Arming is always disabled when the throttle is not low. Be careful as you could disarm accidentally with a switch while flying with this option active."
     },
     "configurationDigitalIdlePercent": {
-        "message": "Motor Idle Throttle Value [percent]"
+        "message": "Motor Idle ( %, static)"
     },
     "configurationDigitalIdlePercentDisabled": {
-        "message": "Motor Idle Throttle Value % is disabled because Dynamic Idle is enabled with value at {{dynamicIdle}}rpm in PID tuning tab"
+        "message": "Motor Idle is disabled. Dynamic Idle is active at {{dynamicIdle}} rpm. See the PID tuning tab."
     },
     "configurationDigitalIdlePercentHelp": {
-        "message": "The 'DShot idle' value is the percent of maximum throttle that is sent to the ESCs when the throttle at minimum stick position and the craft is armed. Increase it to gain more idle speed and avoid desyncs.  Too high and the craft feels floaty."
+        "message": "The 'Motor Idle (static)' value is the percent of maximum throttle that is sent to the ESCs when the throttle at minimum stick position and the craft is armed. <br><br>Increase it to gain more idle speed and avoid desyncs. Too high and the craft feels floaty. Too low and the motors can desync or be slow to start up.<br><br>In 4.3, when Dynamic Idle is active, the static idle value is disregarded, because the idle value is continually adjusted to maintain the configured minimum rpm on the slowest motor."
     },
     "configurationMotorPoles": {
         "message": "Motor poles",
@@ -1658,37 +1658,55 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravity boosts the I term when fast throttle changes are detected. Higher gain values provide stability and better attitude hold when you pump the throttle."
+        "message": "Anti Gravity boosts I (and, in 4.3, P) during and shortly after fast throttle changes, increasing attitude stability during throttle pumps.<br><br>Higher gain values may improve stability on low authority machines or those with an offset centre of gravity."
     },
     "pidTuningDMin": {
-        "message": "D Min",
+        "message": "<b>D</b>erivative",
         "description": "Table header of the D Min feature in the PIDs tab"
     },
     "pidTuningDMinDisabledNote": {
-        "message": "<strong>Note:</strong> D Min feature is disabled and its parameters are hidden. To use D Min please enable it in $t(pidTuningPidSettings.message)."
+        "message": "<strong>Note:</strong> D Max feature is disabled and its parameters are hidden. To use D Max please enable it in $t(pidTuningPidSettings.message)."
     },
     "pidTuningDMinFeatureTitle": {
-        "message": "Dynamic Damping",
+        "message": "Dynamic Damping / D Max settings",
         "description": "Title for the options panel for the D Max feature"
+    },
+    "pidTuningDMaxSettingTitle": {
+        "message": "Dynamic<br>Damping",
+        "description": "Sidebar title for the options panel for the D Max feature"
     },
     "pidTuningDMinGain": {
         "message": "Gain",
         "description": "Gain of the D Max feature"
     },
+    "pidTuningDMaxGainHelp": {
+        "message": "D Max Gain increases the sensitivity of the system that increases D  when the quad turns quickly or is shaking in propwash.<br><br>Higher Gain values bring D up more readily than lower values, lifting D towards D Max more quickly.  Values of 40 or even 50 may work well for clean Freestyle builds.<br><br>Lower values will not raise D towards DMax except in really fast moves, and may suit race setups better by minimising D lag.<br><br>WARNING: Either Gain, or Advance, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningDMinAdvance": {
         "message": "Advance",
         "description": "Advance of the D Max feature"
     },
+    "pidTuningDMaxAdvanceHelp": {
+        "message": "D Max Advance adds sensitivity to the Gain factor when the sticks are moved quickly.<br><br>Advance does not respond to gyro or propwash. It acts earlier than the Gain factor and is occasionally useful for low authority quads that tend to lag badly at the start of a move.<br><br>Generally it is best left at zero.<br><br>WARNING: Either Advance, or Gain, must be set above about 20, or D will not increase as it should. Setting both to zero will lock D at the base value.",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningDMinFeatureHelp": {
-        "message": "The D Max boost algorithm brings D towards the D Max value during fast movements. It has two smoothed inputs, each with a 0-100 range, and both are additive. 'Advance' increases D towards D Max during stick movements, slightly ahead of 'Gain', which increases D towards D Max when the quad turns, or is shaking in propwash. Only 'Gain' lifts D with shaking or propwash. Both respond more strongly to faster than slower movement. Usually, only 'Gain' is needed. Advance can be added for low authority quads that tend to overshoot heavily. At default values of 30, D reaches D Max only during very fast movements. A value of 100 would bring D up to D Max very readily, so that the effective D during almost any movement would be the D Max value.",
+        "message": "D Max increases D during quicker gyro and/or stick movements.<br><br>The 'Gain' factor increases D when the quad turns quickly or is shaking in propwash. Usually only 'Gain' is needed. <br><br>The 'Advance' factor increases D towards D Max during stick inputs. Usually it is not needed and should be set to zero.  Advance can be useful for low authority quads that tend to overshoot heavily.<br><br>Higher Gain values (eg 40) may be more suitable for freestyle by lifting D more readily.<br><br>WARNING: One of Gain or Advance must be set above about 20 or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMinHelp": {
-        "message": "Controls the strength of dampening to ANY motion on the craft. For stick moves, the D-term dampens the command. For an outside influence (prop-wash OR wind gust) the D-term dampens the influence.<br /><br />Higher gains provide more dampening and reduce overshoot by P-term and FF.<br />However, the D-term is VERY sensitive to gyro high frequency vibrations (noise | magnifies by 10x to 100x).<br /><br />High frequency noise can cause motor heat and burn out motors if D-gains are too high or the gyro noise is not filtered well (see Filters tab).<br /><br />Think of the D-term as the shock absorber on your car, but with the negative inherent property of magnifying high frequency gyro noise.",
+        "message": "Baseline damping of ANY motion of the craft. <br /><br />Opposes movement whether caused by stick inputs or external influences (e.g. prop-wash or wind gusts)<br /><br />Higher D Min gains provide more stability and reduce overshoot.<br /><br />D amplifies noise (magnifies by 10x to 100x).  This can burn out motors if gains are too high or D isn't filtered well.<br /><br />D-term is a bit like the shock absorber on your car.",
         "description": "Derivative helpicon message on PID table titlebar"
     },
     "pidTuningPidSettings": {
         "message": "PID Controller Settings"
+    },
+    "pidTuningMotorSettings": {
+        "message": "Throttle and Motor Settings"
+    },
+    "pidTuningMiscSettings": {
+        "message": "Miscellaneous Settings"
     },
     "receiverRcSmoothing": {
         "message": "RC Smoothing"
@@ -1708,7 +1726,7 @@
         "description": "Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
-        "message": "FeedForward Cutoff Type"
+        "message": "Feedforward Cutoff Type"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Setpoint Cutoff Type"
@@ -1747,7 +1765,7 @@
         "message": "Setpoint Cutoff Frequency"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "FeedForward Cutoff Frequency"
+        "message": "Feedforward Cutoff Frequency"
     },
     "receiverRcSetpointType": {
         "message": "Setpoint Filter Type"
@@ -1794,26 +1812,8 @@
     "receiverRcSmoothingMode": {
         "message": "Smoothing Mode"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Transition"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "With this parameter, the Feedforward term can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br>The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Feedforward is kept constant at its configured value. When the stick is positioned below that point, Feedforward is reduced proportionally, reaching 0 at the stick center position.<br>Value of 1 gives maximum smoothing effect, while value of 0 keeps the Feedforward fixed at its configured value over the whole stick range."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
-    },
-    "pidTuningFeedforwardMaxRateLimit": {
-        "message": "Max Rate Limit"
-    },
-    "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "Attenuates feedforward towards zero as the sticks move quickly towards maximum deflection (maximum set turn rate), eg at the start of a quick flip or roll, to minimise overshoot. Does nothing at the end of a flip or roll. Lower values make the attenuation start earlier. Usually this value does not require modification. The highest value consistent with acceptable overshoot at the start of rolls or flips is best."
-    },
-    "pidTuningFeedforwardJitter": {
-        "message": "Jitter Reduction"
-    },
-    "pidTuningFeedforwardJitterHelp": {
-        "message": "Jitter reduction reduces Feedforward when the sticks move slowly. This allows smooth, jitter-free flight when making smooth slow arcs, yet provides full feedforward without any delay when the sticks are moved quickly. A higher threshold value (10-12) is more useful for cinematic or HD freestyle purposes, and a slightly lower value (5) better for racing or higher speed RC links."
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
@@ -1828,13 +1828,28 @@
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Feedforward"
+        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
-        "message": "The following options fine-tune feed forward from race/aggressive to smooth/HD.<br /><br /> Mode: set to Off for race, 2 Point averaging for race/fast freestyle, 3 Point averaging for HD recording, 4 Point averaging for HD cinematic smoothness.<br /><br /> Smoothness: limits the amount of change that any one incoming radio step can make, increase for smoother feedforward signal, decrease for more aggressive feedforward responses.<br /><br /> Boost: helps overcome motor lag with quick stick inputs, can increase jitter. Try 10 for HD, 20 for racers. Up to 30 may be useful for low authority quads but can cause micro overshoot or jitter."
+        "message": "Feedforward adjusts stick responsiveness.<br /><br /> These options let you adjust it to provide anything from crisp, immediate stick responses for racing, or soft smooth responses for cinematic / HD purposes."
+    },
+    "pidTuningFeedforwardJitter": {
+        "message": "Jitter Reduction"
+    },
+    "pidTuningFeedforwardJitterHelp": {
+        "message": "Jitter Reduction reduces Feedforward when the sticks move slowly, regardless of their position.<br><br>This allows smooth, jitter-free flight when making smooth slow arcs, yet provides full feedforward without any delay when the sticks are moved quickly. Transition is not required, and should be set to zero, when jitter reduction is active.<br><br>Default is 7. Higher values, eg 10-12, are good for cinematic or HD freestyle purposes, 5 may be better for racing with fast RC links."
+    },
+    "pidTuningFeedforwardSmoothFactor": {
+        "message": "Smoothness"
+    },
+    "pidTuningFeedforwardSmoothnessHelp": {
+        "message": "Feedforward smoothing is essential to attenuate noise in the feedforward trace.<br><br>The smallest value that gives a smooth trace is best.<br><br>The default of 25 is good for 50-150hz RC links. For 250hz RC links, use 40-50.  For 500hz links, use 60-65."
     },
     "pidTuningFeedforwardAveraging": {
         "message": "Averaging"
+    },
+    "pidTuningFeedforwardAveragingHelp": {
+        "message": "Feedforward Averaging takes the average of the last 2 or 3 feedforward steps.  This smooths the feedforward trace, but adds some delay.<br><br>It is most effective when there is sequential up/down jitter in the signal, which is common with faster RC links.<br><br>2 point averaging is needed for 500hz links and noisy 250hz links, or for Cinematic / HD flying. Crossfire (before CRSFShot) needs 3 point averaging in 150hz mode."
     },
     "pidTuningOptionOff": {
         "message": "OFF"
@@ -1851,41 +1866,57 @@
     "pidTuningFeedforwardAveragingOption4Point": {
         "message": "4 Point"
     },
-    "pidTuningFeedforwardSmoothFactor": {
-        "message": "Smoothness"
-    },
     "pidTuningFeedforwardBoost": {
         "message": "Boost"
     },
+    "pidTuningFeedforwardBoostHelp": {
+        "message": "Feedforward boost adds extra push in response to stick acceleration or deceleration.<br><br>This minimises the gyro lag that is caused by motor acceleration delay, and reduces overshoot when the sticks decelerate by pulling back hard on the motors.<br><br>Default boost works for most setups. Race pilots may prefer to increase it a little bit. Boost can be fine-tuned with careful log analysis."
+    },
+    "pidTuningFeedforwardMaxRateLimit": {
+        "message": "Max Rate Limit"
+    },
+    "pidTuningFeedforwardMaxRateLimitHelp": {
+        "message": "Cuts feedforward as the sticks move towards maximum deflection, to minimise overshoot at the start of a flip or roll.<br><br>Does nothing at the end of a flip or roll. Lower values make the attenuation start earlier.<br><br>Usually this value does not require modification. The highest value consistent with acceptable overshoot at the start of rolls or flips is best."
+    },
+    "pidTuningFeedforwardTransition": {
+        "message": "Transition"
+    },
+    "pidTuningFeedforwardTransitionHelp": {
+        "message": "Linearly reduces Feedforward when sticks are close to the centre. <br><br>In 4.2 and earlier, transition can be used to provide smoother stick responses around centre stick position.<br><br>In 4.3, transition is not recommended, as it has been 'replaced' by the jitter reduction function.<br><br>A value of 0 disables transition.  A value of 0.3 cuts feedforward to zero when sticks are at dead centre, but it increases to full normal when sticks are >30% out from centre."
+    },
     "pidTuningProportional": {
-        "message": "Proportional"
+        "message": "<b>P</b>roportional"
     },
     "pidTuningProportionalHelp": {
-        "message": "Controls the strength of how tightly the machine tracks the sticks (the Setpoint).<br /><br />Higher value (gains) provide tighter tracking, but can cause overshoot if too high in proportion to the Derivative (D-term).  Think of the P-term as the spring on a car.",
+        "message": "How tightly the machine tracks the sticks (the Setpoint).<br /><br />Higher value (gains) provide tighter tracking, but can cause overshoot if too high in relation to D, and can cause oscillations in high throttle turns.  Think of P as the spring on a car.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
-        "message": "Integral"
+        "message": "<b>I</b>ntegral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Controls the strength of how tightly the machine holds the overall position of the Setpoint.<br>Similar to Proportional, but for longer biases on the craft such as an offset center of gravity (CoG) or persistent outside influence (steady wind).<br /><br />Higher gains provide tighter tracking (e.g.: in sweeping turns), but can make the craft feel stiff for commanded stick inputs.<br>If extremely high in proportion to the D-term, can cause slow oscillations.",
+        "message": "Controls persisting small offsets.<br><br>Similar to P, but accumulates progressively and slowly until error is zero.  Important for longer-term biases such as an offset center of gravity, or persistent outside influences like wind.<br /><br />Higher gains provide tighter tracking, especially in turns, but can make the craft feel stiff.<br><br>Can cause slow oscillations in low authority builds or if high in proportion to P.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Derivative"
     },
     "pidTuningDMax": {
-        "message": "D Max"
+        "message": "<b>D</b> Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "D Max provides a higher level of D for quick maneuvers that might otherwise cause overshoot, like flips and rolls. It is particularly useful on noisy builds or low authority machines. D Max allows the basic D, or Damping, value to be set lower than otherwise might be needed, helping keep motors cooler, and turn-in faster. D Max also brings D up during prop-wash. D Max Advance and Gain values control the timing and strength of the increase. HD Freestyle and Cinematic builds  pilots typically run a relatively high Derivative value to achieve stability in forward flight, and don't need so much of an increase from D Max. Race pilots typically care about keeping motors cool even with bent props, so they run lower basic D values and keep D Max up to control overshoot.",
+    "pidTuningDMaxHelp": {
+        "message": "Provides stronger damping for quick maneuvers that might otherwise cause overshoot. <br><br>Allows a lower basic D min value than usual, keeping motors cooler, and turn-in faster, but lifts D to control overshoot in flips or fast reversals. <br><br>Most useful for racers, noisy builds or low authority machines.",
         "description": "D Max Term helpicon message on PID table titlebar"
     },
+    "pidTuningDerivativeHelp": {
+        "message": "Controls the strength of dampening to ANY motion on the craft.  For stick moves, the D-term dampens the command. For an outside influence (prop wash OR wind gust) the D-term dampens the influence.<br><br>Higher gains provide more dampening and reduce overshoot by P-term and FF.<br>However, the D-term is VERY sensitive to gyro high frequency vibrations (noise | magnifies by 10x to 100x).<br><br>High frequency noise can cause motor heat and burn out motors if D-gains are too high or the gyro noise is not filtered well (see Filters tab).<br><br>Think of the D-term as the shock absorber on your car, but with the negative inherent property of magnifying high frequency gyro noise.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
+    },
     "pidTuningFeedforward": {
-        "message": "Feedforward"
+        "message": "<b>F</b>eedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "Is an additional pushing term (spring) based on stick input. FF helps the P-term push the craft for commanded stick moves.<br><br>The P-term pushes based on the difference between the commanded Setpoint (deg/sec) and the gyro reading of current rotational rate (deg/sec). FF pushes based on the commanded change of the sticks alone.<br><br>Higher values (gains) will result in a more sharp machine response to stick input.<br>Too high of values may result in some overshoot, increased motor heat, and motor saturation (where motors can not keep up with the desired rate of change).<br>Lower or zero (0) values will result in a slower and smoother response to stick inputs.",
+        "message": "An additional drive factor, derived purely from stick input, that helps push the craft quickly into fast stick moves.<br><br>FF cannot cause oscillation, allows a lower P for similar stick responses, and offsets the natural opposition of D to sick inputs.<br><br>Low or zero values will result in a smoother but more delayed response to stick inputs.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -1967,10 +1998,10 @@
         "message": "PID Controller"
     },
     "pidTuningCopyProfile": {
-        "message": "Copy profile values"
+        "message": "Copy profile"
     },
     "pidTuningCopyRateProfile": {
-        "message": "Copy rateprofile values"
+        "message": "Copy rateprofile"
     },
     "dialogCopyProfileText": {
         "message": "Copy values from current profile to"
@@ -1991,7 +2022,7 @@
         "message": "Cancel"
     },
     "pidTuningResetPidProfile": {
-        "message": "Reset current PID profile settings"
+        "message": "Reset this Profile"
     },
     "pidTuningPidProfileReset": {
         "message": "Loaded default values for the current PID profile."
@@ -3605,13 +3636,13 @@
         "message": "Scale Factor [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Motor output linear scale factor (as percentage). Reduces ESC current and motor heat when using higher cell count batteries, e.g. When using a 6S battery on a craft that has motors, props and tuning designed for 4S, try setting the value at 66%; when using a 4S battery on a craft intended for 3S, try 75%.<br>Always make sure that all of your components can support the voltage of the battery you are using."
+        "message": "Percentage reduction in per-motor drive signal.<br><br>Reduces ESC current and motor heat when using higher cell count batteries on high KV motors.<br><br>When using a 6S battery on a craft that with 4S motors, props and tuning, try 66%; when using a 4S battery on a craft intended for 3S, try 75%.<br><br>Be sure that all of your components can support the voltage of the battery you are using."
     },
     "pidTuningCellCount": {
-        "message": "Cell Count"
+        "message": "Cell Count - for auto Profile switching"
     },
     "pidTuningCellCountHelp": {
-        "message": "Automatically activates the first profile that has a cell count equal to the connected battery."
+        "message": "Automatically activates the first profile that has a cell count equal to that of the connected battery."
     },
     "pidTuningNonProfileFilterSettings": {
         "message": "Profile independent Filter Settings"
@@ -3766,7 +3797,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "Lower Stick Response will increase the latency of the quad movements to commands and may result in slow bounceback at the end of a flip or roll. Higher Stick Response will give snappier quad response to sharp stick moves. Excessively high Stick Response can cause overshoots and fast bounceback at the end of a flip or roll.<br /><br /><strong>Note:</strong><br />The feature “I-term Relax” can stop bounceback for low authority quads or if low Stick Response Gains are used.",
+        "message": "Lower Stick Response will increase the latency of the quad movements to commands and may result in slow bounceback at the end of a flip or roll.<br><br>Higher Stick Response will give snappier quad response to sharp stick moves. Too much Stick Response can cause overshoots at the end of a flip or roll.<br /><br /><strong>Note:</strong><br />“I-term Relax” can reduce bounceback for low authority quads or if low Stick Response Gains are used.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -3782,7 +3813,7 @@
         "description": "D Min slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "Increases D max, the maximum amount that D can increase to during faster movements.<br /><br />For race quads, where the main Damping slider has been set low to minimize motor heat, moving this slider to the right will improve overshoot control for quick direction changes.<br /><br />For HD or cinematic quads, instability in forward flight is best addressed by moving the Damping slider (not the Damping Boost slider) to the right. Always check for motor heat and listen for weird noises during quick inputs when adjusting this slider to the right.<br /><br />For freestyle quads, especially heavier builds, moving this slider to the right may help control overshoot in flips and rolls.<br /><br /><strong>Note:</strong><br />Generally overshoot in flips and rolls is due to not enough 'i-Term Relax', or motor desyncs, or inadequate authority (a.k.a. Motor Saturation). If you find that moving the Damping Boost slider to the right doesn't improve flip or roll overshoot, put it back to the normal position, and seek out the reason for the overshoot or wobble.",
+        "message": "Increases D max, the maximum amount that D can increase to during faster movements.<br /><br />For race quads, where the main Damping slider has been set low to minimize motor heat, moving this slider to the right will improve overshoot control for quick direction changes.<br /><br />For HD or cinematic quads, instability in forward flight is best addressed by moving the Damping slider (not the Dynamic Damping slider) to the right. Check for motor heat and listen for weird noises during quick inputs when moving this slider to the right.<br /><br />For freestyle quads, especially heavier builds, moving this slider to the right may help control overshoot in flips and rolls.<br /><br /><strong>Note:</strong><br />Generally overshoot in flips and rolls is due to not enough 'i-Term Relax', or motor desyncs, or inadequate authority (a.k.a. Motor Saturation). If you find that moving the Damping Boost slider to the right doesn't improve flip or roll overshoot, put it back to the normal position, and seek out the reason for the overshoot or wobble.",
         "description": "D_min slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -3794,7 +3825,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Pitch Tracking:<br><i><small>Pitch:Roll P & I & FF</small></i>",
+        "message": "Pitch Tracking:<br><i><small>Pitch:Roll P, I & FF</small></i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
@@ -4015,7 +4046,7 @@
         "message": "Vbat Sag Compensation"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by compensating for battery sag. The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4024,7 +4055,7 @@
         "message": "Thrust Linearization"
     },
     "pidTuningThrustLinearizationHelp": {
-        "message": "Compensates for the non-linear relationship between throttle and thrust by applying an inverse motor curve to the motor output. The amount of compensation can be varied between 0 and 150%."
+        "message": "Improves low throttle authority and responsiveness. <br><br> Especially useful for whoops and 48k ESCs.  Has no effect at higher throttle.<br><br>The amount of compensation can be varied between 0 and 150%. Usually 30-40% is enough."
     },
     "pidTuningThrustLinearValue": {
         "message": "%"
@@ -4045,7 +4076,7 @@
         "message": "I Term Relax"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Limits the accumulation of I Term when fast movements happen. This helps specially to reduce the bounceback at the end of rolls and other fast movements. You can choose the axes in which this is active, and if the fast movement is detectd using the Gyro or the Setpoint (stick)."
+        "message": "Suppresses I Term accumulation when fast movements occur, reducing bounce-back at the end of rolls, flips and other quick inputs.<br><br> Setpoint mode responds to smoothed stick inputs and works best for responsive quads.<br><br>Gyro mode can be useful for extremely laggy quads.<br><br>Usually iTerm Relax should not be applied to yaw."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Axes",
@@ -4078,34 +4109,34 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "Lower values suppress bounce-back after flips in low authority quads, high values increase high-rate turn precision for racing.<br>Set to 30-40 for racing, 15 for responsive freestyle builds, 10 for heavier freestyle quads, 3-5 for X-class."
+        "message": "Lower values mean stronger suppression of bounce-back after flips in low authority quads.  Higher values increase high-rate turn precision for racing.<br><br>Set to 30-40 for racing, 15 for responsive freestyle builds, 10 for heavier freestyle quads, 3-5 for X-class."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Absolute Control"
     },
     "pidTuningAbsoluteControlGainHelp": {
-        "message": "This feature solves some underlying problems of $t(pidTuningItermRotation.message) and should hopefully replace it at some point. This feature accumulates the absolute gyro error in quad coordinates and mixes a proportional correction into the setpoint. For it to work you need to enable AirMode and $t(pidTuningItermRelax.message) (for $t(pidTuningOptionRP.message)). If you combine this feature with $t(pidTuningIntegratedYaw.message), you can set $t(pidTuningItermRelax.message) enabled for $t(pidTuningOptionRPY.message)."
+        "message": "This feature solves some underlying problems of $t(pidTuningItermRotation.message) and may replace it at some point. It accumulates the absolute gyro error in quad coordinates and mixes a proportional correction into setpoint.<br><br>AirMode must be enabled and $t(pidTuningItermRelax.message) (for $t(pidTuningOptionRP.message)). When combined with $t(pidTuningIntegratedYaw.message), you can set $t(pidTuningItermRelax.message) enabled for $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Throttle Boost"
     },
     "pidTuningThrottleBoostHelp": {
-        "message": "This feature allows throttle to be temporarily boosted on quick stick movements, which increases acceleration torque to the motors, providing a much faster throttle response."
+        "message": "Transiently boosts throttle with faster throttle inputs, providing a more immediate throttle response."
     },
     "pidTuningIdleMinRpm": {
         "message": "Dynamic Idle Value [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. It corrects problems caused by airflow speeding up or slowing down the props, improving PID authority, stability, motor braking and responsiveness. The Dynamic Idle rpm should be set to be about 20% below the rpm of your Dshot Idle value (see the $t(tabMotorTesting.message) tab). Usually there is no need to change your DShot idle value from defaults. For longer inverted hang time, DShot idle value and Minimum rpm should be lowered together.<br /><br />Visit <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. For 4.2, set the DShot idle value low, eg 1%.  There is no need to adjust the DSHot Idle value in 4.3. <br /><br />Visit <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningIdleMinRpmDisabled": {
-        "message": "Dynamic Idle is disabled as Dshot Telemetry is disabled"
+        "message": "Dynamic Idle is OFF because Dshot Telemetry is OFF"
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Acro Trainer Angle Limit"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Adds a new angle limiting mode for pilots who are learning to fly in acro mode. The range valid is 10-80 and must be activated with a switch in the $t(tabAuxiliary.message) tab."
+        "message": "Helps pilots learn to fly in acro mode by limiting the angle that the quad can attaion. Valid limits are 10-80 degrees.  The mode must be activated with a switch in the $t(tabAuxiliary.message) tab."
     },
     "pidTuningIntegratedYaw": {
         "message": "Integrated Yaw"
@@ -4114,9 +4145,8 @@
         "message": "<span class=\"message-negative\">CAUTION</span>: if you enable this feature, you must adjust the YAW PID accordingly. More info <a href=\"https://github.com/betaflight/betaflight/wiki/Integrated-Yaw\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>"
     },
     "pidTuningIntegratedYawHelp": {
-        "message": "Integrated Yaw is a feature which corrects a fundamental issue with quad control: while the pitch and roll axis are controlled by the thrust differentials the props generate yaw is different. Integrated Yaw fixes this by integrating the output of the yaw pid before applying them to the mixer. This normalizes the way the pids work. You can now tune as any other axis. It requires use of absolute control since no I is needed with Integrated Yaw."
+        "message": "Integrated Yaw integrates yaw P, I and D values, allowing yaw P, I and D to be tuned a bit like you'd tune pitch and roll.<br><br>Very little I is required, because the integrated P acts like I, and integrated D acts like P.<br><br>NOTE: Integrated Yaw requires use of Absolute Control, since no I is needed with Integrated Yaw."
     },
-
     "configHelp2": {
         "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },

@@ -479,8 +479,8 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
-            $('.pid_tuning input[name="motorLimit"]').val(FC.ADVANCED_TUNING.motorOutputLimit);
-            $('.pid_tuning input[name="cellCount"]').val(FC.ADVANCED_TUNING.autoProfileCellCount);
+            $('.tab-pid_tuning input[name="motorLimit"]').val(FC.ADVANCED_TUNING.motorOutputLimit);
+            $('.tab-pid_tuning input[name="cellCount"]').val(FC.ADVANCED_TUNING.autoProfileCellCount);
             $('input[name="idleMinRpm-number"]').val(FC.ADVANCED_TUNING.idleMinRpm).prop('disabled', !FC.MOTOR_CONFIG.use_dshot_telemetry);
 
             if (FC.MOTOR_CONFIG.use_dshot_telemetry) {
@@ -1359,8 +1359,8 @@ TABS.pid_tuning.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
             FC.FILTER_CONFIG.dyn_notch_max_hz = parseInt($('.pid_filter input[name="dynamicNotchMaxHz"]').val());
-            FC.ADVANCED_TUNING.motorOutputLimit = parseInt($('.pid_tuning input[name="motorLimit"]').val());
-            FC.ADVANCED_TUNING.autoProfileCellCount = parseInt($('.pid_tuning input[name="cellCount"]').val());
+            FC.ADVANCED_TUNING.motorOutputLimit = parseInt($('.tab-pid_tuning input[name="motorLimit"]').val());
+            FC.ADVANCED_TUNING.autoProfileCellCount = parseInt($('.tab-pid_tuning input[name="cellCount"]').val());
             FC.ADVANCED_TUNING.idleMinRpm = parseInt($('input[name="idleMinRpm-number"]').val());
 
             const selectedRatesType = $('select[id="ratesType"]').val(); // send analytics for rates type

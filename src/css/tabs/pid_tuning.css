@@ -906,7 +906,13 @@
 }
 
 .tab-pid_tuning .subtab-pid .cf_column {
-    min-width: 600px;
+    min-width: 450px;
+    flex: 1.3;
+}
+
+.tab-pid_tuning .subtab-pid .cf_column_right{
+    min-width: 300px;
+    margin-left: 15px;
     flex: 1;
 }
 
@@ -1011,6 +1017,15 @@
         width: 100%;
     }
 
+    .tab-pid_tuning .subtab-pid .cf_column_right {
+        min-width: 100%;
+        margin-left: 0px;
+    }
+
+    .tab-pid_tuning .note-button td:first-child {
+        width: 60%;
+    }
+
     .tab-pid_tuning .spacer_left {
         width: 100%;
     }
@@ -1057,5 +1072,11 @@
 
     .tab-pid_tuning .tuningPIDSliders .pid_titlebar th:nth-child(2), .tab-pid_tuning .tuningFilterSliders .pid_titlebar th:nth-child(2) {
         width: 20%;
+    }
+
+    .tab-pid_tuning .pid_titlebar th div .xs {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 }

@@ -75,35 +75,32 @@
                                 <th class="name"></th>
                                 <th class="proportional">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningProportional" class="sm-min"></div>
-                                        <div class="xs">P</div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningProportionalHelp"></div>
+                                        <div class="xs">Proportional</div>
+                                        <div class="cf_tip sm-min" i18n="pidTuningProportional" i18n_title="pidTuningProportionalHelp"></div>
                                     </div>
                                 </th>
                                 <th class="integral">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningIntegral" class="sm-min"></div>
-                                        <div class="xs">I</div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningIntegralHelp"></div>
+                                        <div class="xs">Integral</div>
+                                        <div class="cf_tip sm-min" i18n="pidTuningIntegral" i18n_title="pidTuningIntegralHelp"></div>
                                     </div>
                                 </th>
                                 <th class="derivative">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningDMax" class="derivativeText"></div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningDerivativeHelp"></div>
+                                        <div class="xs">D Max</div>
+                                        <div class="cf_tip sm-min" i18n="pidTuningDMax" i18n_title="pidTuningDMaxHelp"></div>
                                     </div>
                                 </th>
                                 <th class="dmin">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningDMin"></div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningDMinHelp"></div>
+                                        <div class="xs">Derivative</div>
+                                        <div class="cf_tip sm-min" i18n="pidTuningDMin" i18n_title="pidTuningDMinHelp"></div>
                                     </div>
                                 </th>
                                 <th class="feedforward">
                                     <div class="name-helpicon-flex">
-                                        <div i18n="pidTuningFeedforward" class="sm-min"></div>
                                         <div class="xs">Feedforward</div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardHelp"></div>
+                                        <div class="cf_tip sm-min" i18n="pidTuningFeedforward" i18n_title="pidTuningFeedforwardHelp"></div>
                                     </div>
                                 </th>
                             </tr>
@@ -181,9 +178,10 @@
                                         <option value="1" i18n="pidTuningOptionRP"></option>
                                         <option value="2" i18n="pidTuningOptionRPY"></option>
                                     </select>
+                                </th>
+                                <th scope="col">
                                     <div class="helpicon cf_tip" i18n_title="pidTuningSliderModeHelp"></div>
                                 </th>
-                                <th></th>
                                 <th i18n="pidTuningSliderLow"></th>
                                 <th i18n="pidTuningSliderDefault"></th>
                                 <th i18n="pidTuningSliderHigh"></th>
@@ -497,44 +495,9 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="gui_box grey topspacer pid_tuning motorOutputLimit">
-                        <table class="pid_tuning motorOutputLimit">
-                            <tr>
-                                <th colspan="3">
-                                    <div class="pid_mode">
-                                        <div i18n="pidTuningMotorOutputLimit" class="float-left"></div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </table>
-                        <table class="pid_titlebar pid_titlebar_extended motorOutputLimit">
-                            <tr>
-                                <th class="third"></th>
-                                <th class="third" style="width: 33%;">
-                                    <div>
-                                        <div i18n="pidTuningMotorLimit" class="float-left"></div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningMotorLimitHelp"></div>
-                                    </div>
-                                </th>
-                                <th class="third" style="width: 33%;">
-                                    <div>
-                                        <div i18n="pidTuningCellCount" class="float-left"></div>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningCellCountHelp"></div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </table>
-                        <table class="motorOutputLimit">
-                            <tr>
-                                <td class="third"></td>
-                                <td class="third"><input type="number" name="motorLimit" step="1" min="1" max="100" /></td>
-                                <td class="third"><input type="number" name="cellCount" step="1" min="-1" max="8" /></td>
-                            </tr>
-                        </table>
-                    </div>
                 </div>
 
-                <div class="cf_column">
+                <div class="cf_column_right">
                     <!-- Pid controller advanced settings -->
                     <div class="gui_box grey pidTuningSuperexpoRates spacer_left">
                         <table class="pid_titlebar new_rates">
@@ -600,10 +563,8 @@
                             </tr>
 
                             <tr class="feedforwardGroup">
-                                <td></td>
+                                <td><span i18n="pidTuningFeedforwardGroup"></span></td>
                                 <td colspan="2">
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardGroupHelp"></div>
-                                    <span i18n="pidTuningFeedforwardGroup"></span>
 
                                     <span class="feedforwardOption feedforwardJitterFactor suboption">
                                         <input type="number" name="feedforwardJitterFactor" step="1" min="0" max="20"/>
@@ -618,6 +579,7 @@
                                         <label for="feedforwardSmoothFactor">
                                             <span i18n="pidTuningFeedforwardSmoothFactor"></span>
                                         </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardSmoothnessHelp"></div>
                                     </span>
 
                                     <span class="feedforwardOption feedforwardAveraging suboption">
@@ -630,6 +592,7 @@
                                         <label for="feedforwardAveraging">
                                             <span i18n="pidTuningFeedforwardAveraging"></span>
                                         </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardAveragingHelp"></div>
                                     </span>
 
                                     <span class="feedforwardOption feedforwardBoost suboption">
@@ -637,6 +600,7 @@
                                         <label for="feedforwardBoost">
                                             <span i18n="pidTuningFeedforwardBoost"></span>
                                         </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardBoostHelp"></div>
                                     </span>
 
                                     <span class="feedforwardOption feedforwardMaxRateLimit suboption">
@@ -654,117 +618,6 @@
                                         </label>
                                         <div class="helpicon cf_tip" i18n_title="pidTuningFeedforwardTransitionHelp"></div>
                                     </span>
-                                </td>
-                            </tr>
-
-                            <tr class="acroTrainerAngleLimit">
-                                <td><input type="number" name="acroTrainerAngleLimit-number" step="1" min="10" max="80"/></td>
-                                <td colspan="2">
-                                    <div>
-                                        <label>
-                                            <span i18n="pidTuningAcroTrainerAngleLimit"></span>
-                                        </label>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningAcroTrainerAngleLimitHelp"></div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr class="throttleBoost">
-                                <td><input type="number" name="throttleBoost-number" step="1" min="0" max="100"/></td>
-                                <td colspan="2">
-                                    <div>
-                                        <label>
-                                            <span i18n="pidTuningThrottleBoost"></span>
-                                        </label>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningThrottleBoostHelp"></div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr class="idleMinRpm">
-                                <td><input type="number" name="idleMinRpm-number" step="1" min="0" max="100"/></td>
-                                <td colspan="2">
-                                    <div>
-                                        <label>
-                                            <span class="pidTuningIdleMinRpmDisabled"></span>
-                                        </label>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningIdleMinRpmHelp"></div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr class="absoluteControlGain">
-                                <td><input type="number" name="absoluteControlGain-number" step="1" min="0" max="20"/></td>
-                                <td colspan="2">
-                                    <div>
-                                        <label>
-                                            <span i18n="pidTuningAbsoluteControlGain"></span>
-                                        </label>
-                                        <div class="helpicon cf_tip" i18n_title="pidTuningAbsoluteControlGainHelp"></div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr class="itermrotation">
-                                <td><input type="checkbox" id="itermrotation" class="toggle" /></td>
-                                <td colspan="2">
-                                    <span i18n="pidTuningItermRotation"></span>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningItermRotationHelp"></div>
-                                </td>
-                            </tr>
-
-                            <tr class="vbatpidcompensation">
-                                <td><input type="checkbox" id="vbatpidcompensation" class="toggle" /></td>
-                                <td colspan="2">
-                                    <span i18n="pidTuningVbatPidCompensation"></span>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningVbatPidCompensationHelp"></div>
-                                </td>
-                            </tr>
-
-                            <tr class="vbatSagCompensation">
-                                <td><input type="checkbox" id="vbatSagCompensation" class="toggle" /></td>
-                                <td colspan="2">
-                                    <span i18n="pidTuningVbatSagCompensation"></span>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningVbatSagCompensationHelp"></div>
-
-                                    <span class="vbatSagValue suboption">
-                                        <input type="number" name="vbatSagValue" step="1" min="1" max="150" />
-                                        <label for="vbatSagValue">
-                                            <span i18n="pidTuningVbatSagValue"></span>
-                                        </label>
-                                    </span>
-                                </td>
-                            </tr>
-                            
-                            <tr class="thrustLinearization">
-                                <td><input type="checkbox" id="thrustLinearization" class="toggle" /></td>
-                                <td colspan="2">
-                                    <span i18n="pidTuningThrustLinearization"></span>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningThrustLinearizationHelp"></div>
-
-                                    <span class="thrustLinearValue suboption">
-                                        <input type="number" name="thrustLinearValue" step="1" min="1" max="150" />
-                                        <label for="thrustLinearValue">
-                                            <span i18n="pidTuningThrustLinearValue"></span>
-                                        </label>
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr class="smartfeedforward">
-                                <td><input type="checkbox" id="smartfeedforward" class="toggle" /></td>
-                                <td colspan="2">
-                                    <span i18n="pidTuningSmartFeedforward"></span>
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningSmartFeedforwardHelp"></div>
-                                </td>
-                            </tr>
-
-                            <tr class="integratedYaw">
-                                <td><input type="checkbox" id="useIntegratedYaw" class="toggle" /></td>
-                                <td colspan="2">
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningIntegratedYawHelp"></div>
-                                    <span i18n="pidTuningIntegratedYaw"></span>
-                                    <span class="spacer_left" id="pidTuningIntegratedYawCaution" i18n="pidTuningIntegratedYawCaution"></span>
                                 </td>
                             </tr>
 
@@ -806,28 +659,6 @@
                                 </td>
                             </tr>
 
-                            <tr class="dminGroup">
-                                <td class="dMinGroupCheckbox"><input type="checkbox" id="dMinSwitch" class="toggle" /></td>
-                                <td colspan="3">
-                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMinFeatureHelp"></div>
-                                    <span i18n="pidTuningDMinFeatureTitle"></span>
-
-                                    <span class="suboption">
-                                        <input type="number" name="dMinGain" step="1" min="0" max="100" />
-                                        <label for="dMinGain">
-                                            <span i18n="pidTuningDMinGain"></span>
-                                        </label>
-                                    </span>
-
-                                    <span class="suboption">
-                                        <input type="number" name="dMinAdvance" step="1" min="0" max="200" />
-                                        <label for="dMinAdvance">
-                                            <span i18n="pidTuningDMinAdvance"></span>
-                                        </label>
-                                    </span>
-                                </td>
-                            </tr>
-
                             <tr class="antigravity">
                                 <td><input type="checkbox" id="antiGravitySwitch" class="toggle" /></td>
                                 <td colspan="3">
@@ -864,6 +695,182 @@
                                             <span i18n="pidTuningAntiGravityThres"></span>
                                         </label>
                                     </span>
+                                </td>
+                            </tr>
+
+                            <tr class="itermrotation">
+                                <td><input type="checkbox" id="itermrotation" class="toggle" /></td>
+                                <td colspan="2">
+                                    <span i18n="pidTuningItermRotation"></span>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningItermRotationHelp"></div>
+                                </td>
+                            </tr>
+
+                            <tr class="dminGroup">
+                                <td class="dMinGroupCheckbox"><input type="checkbox" id="dMinSwitch" class="toggle" /><span i18n="pidTuningDMaxSettingTitle"></span></td>
+                                <td colspan="3">
+                                    <span class="suboption">
+                                        <input type="number" name="dMinGain" step="1" min="0" max="100" />
+                                        <label for="dMinGain">
+                                            <span i18n="pidTuningDMinGain"></span>
+                                        </label>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMaxGainHelp"></div>
+                                    </span>
+
+                                    <span class="suboption">
+                                        <input type="number" name="dMinAdvance" step="1" min="0" max="200" />
+                                        <label for="dMinAdvance">
+                                            <span i18n="pidTuningDMinAdvance"></span>
+                                        </label>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningDMaxAdvanceHelp"></div>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="gui_box grey pidControllerAdvancedSettings spacer_left">
+                        <table class="pid_titlebar new_rates">
+                            <tr>
+                                <th i18n="pidTuningMotorSettings"></th>
+                            </tr>
+                        </table>
+                        <table class="compensation">
+
+                            <tr class="throttleBoost">
+                                <td><input type="number" name="throttleBoost-number" step="1" min="0" max="100"/></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningThrottleBoost"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningThrottleBoostHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="motorOutputLimit">
+                                <td><input type="number" name="motorLimit" step="1" min="1" max="100"/></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningMotorOutputLimit"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningMotorLimitHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="idleMinRpm">
+                                <td><input type="number" name="idleMinRpm-number" step="1" min="0" max="100"/></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label>
+                                            <span class="pidTuningIdleMinRpmDisabled"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningIdleMinRpmHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="vbatSagCompensation">
+                                <td><input type="checkbox" id="vbatSagCompensation" class="toggle" /></td>
+                                <td colspan="2">
+                                    <span i18n="pidTuningVbatSagCompensation"></span>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningVbatSagCompensationHelp"></div>
+
+                                    <span class="vbatSagValue suboption">
+                                        <input type="number" name="vbatSagValue" step="1" min="1" max="150" />
+                                        <label for="vbatSagValue">
+                                            <span i18n="pidTuningVbatSagValue"></span>
+                                        </label>
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr class="thrustLinearization">
+                                <td><input type="checkbox" id="thrustLinearization" class="toggle" /></td>
+                                <td colspan="2">
+                                    <span i18n="pidTuningThrustLinearization"></span>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningThrustLinearizationHelp"></div>
+
+                                    <span class="thrustLinearValue suboption">
+                                        <input type="number" name="thrustLinearValue" step="1" min="1" max="150" />
+                                        <label for="thrustLinearValue">
+                                            <span i18n="pidTuningThrustLinearValue"></span>
+                                        </label>
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr class="vbatpidcompensation">
+                                <td><input type="checkbox" id="vbatpidcompensation" class="toggle" /></td>
+                                <td colspan="2">
+                                    <span i18n="pidTuningVbatPidCompensation"></span>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningVbatPidCompensationHelp"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="gui_box grey pidControllerAdvancedSettings spacer_left">
+                        <table class="pid_titlebar new_rates">
+                            <tr>
+                                <th i18n="pidTuningMiscSettings"></th>
+                            </tr>
+                        </table>
+                        <table class="compensation">
+
+                            <tr class="cellCount">
+                                <td><input type="number" name="cellCount" step="1" min="0" max="8"/></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningCellCount"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningCellCountHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="acroTrainerAngleLimit">
+                                <td><input type="number" name="acroTrainerAngleLimit-number" step="1" min="10" max="80"/></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningAcroTrainerAngleLimit"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningAcroTrainerAngleLimitHelp"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="smartfeedforward">
+                                <td><input type="checkbox" id="smartfeedforward" class="toggle" /></td>
+                                <td colspan="2">
+                                    <span i18n="pidTuningSmartFeedforward"></span>
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningSmartFeedforwardHelp"></div>
+                                </td>
+                            </tr>
+
+                            <tr class="integratedYaw">
+                                <td><input type="checkbox" id="useIntegratedYaw" class="toggle" /></td>
+                                <td colspan="2">
+                                    <div class="helpicon cf_tip" i18n_title="pidTuningIntegratedYawHelp"></div>
+                                    <span i18n="pidTuningIntegratedYaw"></span>
+                                    <span class="spacer_left" id="pidTuningIntegratedYawCaution" i18n="pidTuningIntegratedYawCaution"></span>
+                                </td>
+                            </tr>
+
+                            <tr class="absoluteControlGain">
+                                <td><input type="number" name="absoluteControlGain-number" step="1" min="0" max="20"/></td>
+                                <td colspan="2">
+                                    <div>
+                                        <label>
+                                            <span i18n="pidTuningAbsoluteControlGain"></span>
+                                        </label>
+                                        <div class="helpicon cf_tip" i18n_title="pidTuningAbsoluteControlGainHelp"></div>
+                                    </div>
                                 </td>
                             </tr>
 
