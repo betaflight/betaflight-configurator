@@ -75,16 +75,10 @@ TuningSliders.initialize = function() {
     this.cachedDTermSliderValues = false;
 
     this.updatePidSlidersDisplay();
+
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-        // if sliders are enabled on initialization tuning has not yet updated values according to sliders.
-        if (!FC.TUNING_SLIDERS.slider_gyro_filter) {
-            this.updateFilterSlidersDisplay();
-        }
-
-        if (!FC.TUNING_SLIDERS.slider_dterm_filter) {
-            this.updateFilterSlidersDisplay();
-        }
-
+        this.updateGyroFilterSliderDisplay();
+        this.updateDTermFilterSliderDisplay();
         this.updateFilterSlidersWarning();
 
         $('.subtab-filter .slidersDisabled').hide();
@@ -449,6 +443,7 @@ TuningSliders.updateGyroFilterSliderDisplay = function() {
     const lp2Changed = (lp2Freq > 0) && (lp2Freq !== Math.floor(this.FILTER_DEFAULT.gyro_lowpass2_hz * this.sliderGyroFilterMultiplier));
 
     const hideSlider = (lp1DynMin && (lp1DynamicMinChanged || lp1DynamicMaxChanged)) || (lp1Static && lp1Changed) || (lp2Freq && lp2Changed) || this.sliderGyroFilterDisabled;
+    const lpxDisabled = !lp1DynMin && !lp1Static && !lp2Freq;
 
     if (hideSlider) {
         this.GyroSliderUnavailable = true;
@@ -461,8 +456,8 @@ TuningSliders.updateGyroFilterSliderDisplay = function() {
 
     // update Gyro mode and slider
     $('select[id="sliderGyroFilterModeSelect"]').val(this.sliderGyroFilter);
-    $('.sliderGyroFilter').toggleClass('disabledSliders', !this.sliderGyroFilter || !(lp1Static || lp1DynMin || lp2Freq));
-    $('#sliderGyroFilterMultiplier').prop('disabled', !this.sliderGyroFilter);
+    $('.sliderGyroFilter').toggleClass('disabledSliders', !this.sliderGyroFilter || lpxDisabled);
+    $('input[id="sliderGyroFilterMultiplier"]').prop('disabled', !this.sliderGyroFilter || lpxDisabled);
 };
 
 TuningSliders.updateDTermFilterSliderDisplay = function() {
@@ -478,6 +473,7 @@ TuningSliders.updateDTermFilterSliderDisplay = function() {
     const lp2Changed = (lp2Freq > 0) && (lp2Freq !== Math.floor(this.FILTER_DEFAULT.dterm_lowpass2_hz * this.sliderDTermFilterMultiplier));
 
     const hideSlider = (lp1DynMin && (lp1DynamicMinChanged || lp1DynamicMaxChanged)) || (lp1Static && lp1Changed) || (lp2Freq && lp2Changed) || this.sliderDTermFilterDisabled;
+    const lpxDisabled = !lp1DynMin && !lp1Static && !lp2Freq;
 
     if (hideSlider) {
         this.DTermSliderUnavailable = true;
@@ -490,8 +486,8 @@ TuningSliders.updateDTermFilterSliderDisplay = function() {
 
     // update DTerm mode and slider
     $('select[id="sliderDTermFilterModeSelect"]').val(this.sliderDTermFilter);
-    $('.sliderDTermFilter').toggleClass('disabledSliders', !this.sliderDTermFilter || !(lp1Static || lp1DynMin || lp2Freq));
-    $('#sliderDTermFilterMultiplier').prop('disabled', !this.sliderDTermFilter);
+    $('.sliderDTermFilter').toggleClass('disabledSliders', !this.sliderDTermFilter || lpxDisabled);
+    $('input[id="sliderDTermFilterMultiplier"]').prop('disabled', !this.sliderDTermFilter || lpxDisabled);
 };
 
 TuningSliders.updateFilterSlidersDisplay = function() {
