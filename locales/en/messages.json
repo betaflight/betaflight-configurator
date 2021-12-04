@@ -6408,7 +6408,7 @@
         "description": "UI filter name - official/community/experimental"
     },
     "presetsLoadError": {
-        "message": "Error loading presets from the internet",
+        "message": "Error loading presets from the Internet",
         "description": "Error report when failed to load presets index or a specific preset"
     },
     "presetsButtonSave": {
