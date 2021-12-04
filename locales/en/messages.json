@@ -3917,7 +3917,7 @@
         "message": "Dynamic Notch Filter tracks peak gyro noise frequencies and places one to five notch filters with their center at these frequencies on every axis."
     },
     "pidTuningDynamicNotchFilterDisabledWarning": {
-        "message": "<strong>Notice:</strong> The dynamic notch filter is disabled. In order to configure and use it, please enable the 'DYNAMIC_FILTER' feature in the '$t(configurationFeatures.message)' section of the '$t(tabConfiguration.message)' tab."
+        "message": "<strong>Notice:</strong> The dynamic notch filter is disabled. In order to configure and use it, please enable the 'DYNAMIC_FILTER' feature in the '$t(configurationFeatures.message)' section of the '$t(tabConfiguration.message)' tab. Also make sure the PID looprate is at least 2kHz."
     },
     "pidTuningDynamicNotchRange": {
         "message": "Dynamic Notch Filter Range"

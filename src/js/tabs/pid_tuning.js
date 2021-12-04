@@ -381,8 +381,14 @@ TABS.pid_tuning.initialize = function (callback) {
             $('.smartfeedforward').hide();
 
             // Dynamic Notch Filter
+            const sampleRateHz = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
+
+            let isDynamicNotchActive = FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER');
+            isDynamicNotchActive = isDynamicNotchActive || FC.FILTER_CONFIG.dyn_notch_count !== 0;
+            isDynamicNotchActive = isDynamicNotchActive && sampleRateHz >= 2000;
+
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                if (FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')) {
+                if (isDynamicNotchActive) {
                     $('.dynamicNotch span.inputSwitch').hide();
                 } else {
                     $('.dynamicNotch').hide();
@@ -409,12 +415,10 @@ TABS.pid_tuning.initialize = function (callback) {
                 $('.dynamicNotchMaxHz').hide();
             }
 
-            const dynamicNotchSwitch_e = $('.pid_filter input[id="dynamicNotchEnabled"]');
+            $('.pid_filter input[id="dynamicNotchEnabled"]').on('change', function() {
 
-            dynamicNotchSwitch_e.on('change', function() {
-
-                const checked = $(this).is(':checked');
                 const count = parseInt(dynamicNotchCount_e.val());
+                const checked = $(this).is(':checked');
 
                 if (checked && !count) {
                     dynamicNotchCount_e.val(FILTER_DEFAULT.dyn_notch_count);
@@ -426,7 +430,7 @@ TABS.pid_tuning.initialize = function (callback) {
                 $('.dynamicNotchWidthPercent').toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44) && checked);
                 $('.dynamicNotchCount').toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && checked);
 
-            }).prop('checked', FC.FILTER_CONFIG.dyn_notch_count !== 0 || FC.FEATURE_CONFIG.features.isEnabled('DYNAMIC_FILTER')).trigger('change');
+            }).prop('checked', isDynamicNotchActive).trigger('change');
 
             // RPM Filter
             $('.rpmFilter').toggle(FC.MOTOR_CONFIG.use_dshot_telemetry);
