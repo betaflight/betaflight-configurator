@@ -66,7 +66,7 @@ If you prefer to have the application in English or any other language, you can 
 
 ### Development
 
-1. Install node.js (version 10 required)
+1. Install node.js (version 10 >= 10.13.0 required)
 2. Install yarn: `npm install yarn -g`
 3. (For Android platform only) Install Java JDK 8, Gradle and Android Studio (Android SDK at least level 19)
 4. Change to project folder and run `yarn install`.
