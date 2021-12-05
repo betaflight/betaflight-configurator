@@ -888,7 +888,7 @@ TABS.pid_tuning.initialize = function (callback) {
 
         } else {
 
-            // firmware 4.3 filter selectors for lowpass 1 and 2
+            // firmware 4.3 filter selectors for lowpass 1 and 2; sliders are not yet initialized here
             gyroLowpassEnabled.change(function() {
                 const checked = $(this).is(':checked');
                 let cutoffMin = FILTER_DEFAULT.gyro_lowpass_dyn_min_hz;
@@ -914,8 +914,8 @@ TABS.pid_tuning.initialize = function (callback) {
                         // user is trying to enable the lowpass filter, but it was off (both cutoffs are zero)
                         // initialise in dynamic mode with values at sliders, or use defaults
                         gyroLowpassFilterMode.val(1).change();
-                        cutoffMin = Math.floor(cutoffMin * TuningSliders.sliderGyroFilterMultiplier);
-                        cutoffMax = Math.floor(cutoffMax * TuningSliders.sliderGyroFilterMultiplier);
+                        cutoffMin = Math.floor(cutoffMin * FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100);
+                        cutoffMax = Math.floor(cutoffMax * FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100);
                         gyroLowpassDynMinFrequency.val(cutoffMin);
                         gyroLowpassDynMaxFrequency.val(cutoffMax);
                         FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = cutoffMin;
@@ -940,9 +940,9 @@ TABS.pid_tuning.initialize = function (callback) {
                     FC.FILTER_CONFIG.gyro_lowpass_hz = 0;
                     // if dyn min is zero, set dyn min to sliders or default
                     if (!FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz) {
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && TuningSliders.sliderGyroFilter) {
-                            cutoffMin = Math.floor(cutoffMin * TuningSliders.sliderGyroFilterMultiplier);
-                            cutoffMax = Math.floor(cutoffMax * TuningSliders.sliderGyroFilterMultiplier);
+                        if (FC.TUNING_SLIDERS.slider_gyro_filter) {
+                            cutoffMin = Math.floor(cutoffMin * FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100);
+                            cutoffMax = Math.floor(cutoffMax * FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100);
                         }
                         gyroLowpassDynMinFrequency.val(cutoffMin);
                         gyroLowpassDynMaxFrequency.val(cutoffMax);
@@ -960,8 +960,8 @@ TABS.pid_tuning.initialize = function (callback) {
                     FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = 0;
                     // If static is zero, set the dynamic cutoff field according to sliders or default
                     if (!FC.FILTER_CONFIG.gyro_lowpass_hz) {
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && TuningSliders.sliderGyroFilter) {
-                            cutoff = Math.floor(FILTER_DEFAULT.gyro_lowpass_hz * TuningSliders.sliderGyroFilterMultiplier);
+                        if (FC.TUNING_SLIDERS.slider_gyro_filter) {
+                            cutoff = Math.floor(FILTER_DEFAULT.gyro_lowpass_hz * FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100);
                         }
                         gyroLowpassFrequency.val(cutoff);
                         FC.FILTER_CONFIG.gyro_lowpass_hz = cutoff;
@@ -977,8 +977,8 @@ TABS.pid_tuning.initialize = function (callback) {
                 const checked = $(this).is(':checked');
                 let cutoff = FC.FILTER_CONFIG.gyro_lowpass2_hz > 0 ? FC.FILTER_CONFIG.gyro_lowpass2_hz : FILTER_DEFAULT.gyro_lowpass2_hz;
 
-                if (TuningSliders.sliderGyroFilter) {
-                    cutoff = checked ? Math.floor(FILTER_DEFAULT.gyro_lowpass2_hz * TuningSliders.sliderGyroFilterMultiplier) : 0;
+                if (FC.TUNING_SLIDERS.slider_gyro_filter) {
+                    cutoff = checked ? Math.floor(FILTER_DEFAULT.gyro_lowpass2_hz * FC.TUNING_SLIDERS.slider_gyro_filter_multiplier / 100) : 0;
                     FC.FILTER_CONFIG.gyro_lowpass2_hz = cutoff;
                     TuningSliders.updateFiltersInFirmware();
                 }
@@ -1013,9 +1013,9 @@ TABS.pid_tuning.initialize = function (callback) {
                         // user is trying to enable the lowpass filter, but it was off (both cutoffs are zero)
                         // initialise in dynamic mode with values at sliders, or use defaults
                         dtermLowpassFilterMode.val(1).change();
-                        if (TuningSliders.sliderDTermFilter) {
-                            cutoffMin = Math.floor(cutoffMin * TuningSliders.sliderDTermFilterMultiplier);
-                            cutoffMax = Math.floor(cutoffMax * TuningSliders.sliderDTermFilterMultiplier);
+                        if (FC.TUNING_SLIDERS.slider_dterm_filter) {
+                            cutoffMin = Math.floor(cutoffMin * FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100);
+                            cutoffMax = Math.floor(cutoffMax * FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100);
                         }
                         dtermLowpassDynMinFrequency.val(cutoffMin);
                         dtermLowpassDynMaxFrequency.val(cutoffMax);
@@ -1041,9 +1041,9 @@ TABS.pid_tuning.initialize = function (callback) {
                     FC.FILTER_CONFIG.dterm_lowpass_hz = 0;
                     // if dyn min is zero, set dyn min to sliders or default
                     if (!FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz) {
-                        if (TuningSliders.sliderDTermFilter) {
-                            cutoffMin = Math.floor(cutoffMin * TuningSliders.sliderDTermFilterMultiplier);
-                            cutoffMax = Math.floor(cutoffMax * TuningSliders.sliderDTermFilterMultiplier);
+                        if (FC.TUNING_SLIDERS.slider_dterm_filter) {
+                            cutoffMin = Math.floor(cutoffMin * FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100);
+                            cutoffMax = Math.floor(cutoffMax * FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100);
                         }
                         dtermLowpassDynMinFrequency.val(cutoffMin);
                         dtermLowpassDynMaxFrequency.val(cutoffMax);
@@ -1061,8 +1061,8 @@ TABS.pid_tuning.initialize = function (callback) {
                     FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = 0;
                     // If static is zero, set the dynamic cutoff field according to sliders or default
                     if (!FC.FILTER_CONFIG.dterm_lowpass_hz) {
-                        if (TuningSliders.sliderDTermFilter) {
-                            cutoff = Math.floor(FILTER_DEFAULT.dterm_lowpass_hz * TuningSliders.sliderDTermFilterMultiplier);
+                        if (FC.TUNING_SLIDERS.slider_dterm_filter) {
+                            cutoff = Math.floor(FILTER_DEFAULT.dterm_lowpass_hz * FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100 );
                         }
                         dtermLowpassFrequency.val(cutoff);
                         FC.FILTER_CONFIG.dterm_lowpass_hz = cutoff;
@@ -1077,8 +1077,8 @@ TABS.pid_tuning.initialize = function (callback) {
                 const checked = $(this).is(':checked');
                 let cutoff = FC.FILTER_CONFIG.dterm_lowpass2_hz > 0 ? FC.FILTER_CONFIG.dterm_lowpass2_hz : FILTER_DEFAULT.dterm_lowpass2_hz;
 
-                if (TuningSliders.sliderDTermFilter) {
-                    cutoff = checked ? Math.floor(FILTER_DEFAULT.dterm_lowpass2_hz * TuningSliders.sliderDTermFilterMultiplier) : 0;
+                if (FC.TUNING_SLIDERS.slider_dterm_filter) {
+                    cutoff = checked ? Math.floor(FILTER_DEFAULT.dterm_lowpass2_hz * FC.TUNING_SLIDERS.slider_dterm_filter_multiplier / 100) : 0;
                     FC.FILTER_CONFIG.dterm_lowpass2_hz = cutoff;
                     TuningSliders.updateFiltersInFirmware();
                 }
