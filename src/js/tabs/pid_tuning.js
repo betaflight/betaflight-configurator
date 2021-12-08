@@ -547,10 +547,10 @@ TABS.pid_tuning.initialize = function (callback) {
 
         $('input[id="useIntegratedYaw"]').change(function() {
             const checked = $(this).is(':checked');
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                this.sliderPidsMode = 0;
+            // 4.3 firmware has RP mode.
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                $('#pid_main .pid_data input').prop('disabled', !checked);
             }
-            $('#pid_main .pid_data input').prop('disabled', !checked);
             $('#pidTuningIntegratedYawCaution').toggle(checked);
         }).change();
 
@@ -1806,9 +1806,11 @@ TABS.pid_tuning.initialize = function (callback) {
             });
         });
 
+        // exclude integratedYaw from setDirty for 4.3 as it uses RP mode.
         $('#pid-tuning').find('input').each(function (k, item) {
             if ($(item).attr('class') !== "feature toggle"
-                && $(item).attr('class') !== "nonProfile") {
+                && $(item).attr('class') !== "nonProfile"
+                && (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44) && $(item).attr('id'))) {
                 $(item).change(function () {
                     self.setDirty(true);
                 });
@@ -1931,12 +1933,23 @@ TABS.pid_tuning.initialize = function (callback) {
                 });
             }
 
-            // disable slides if Integrated Yaw is enabled or Slider PID mode is set to OFF
-            $('input[id="useIntegratedYaw"]').change(() => TuningSliders.updatePidSlidersDisplay());
+            const useIntegratedYaw = $('input[id="useIntegratedYaw"]');
+
+            useIntegratedYaw.on('change', () => {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                    // set slider to RP mode if Integrated Yaw is enabled and sliders are enabled
+                    if (useIntegratedYaw.is(':checked') && TuningSliders.sliderPidsMode) {
+                        sliderPidsModeSelect.val(1).trigger('change');
+                    }
+                } else {
+                    // disable sliders if Integrated Yaw is enabled or Slider PID mode is set to OFF
+                    TuningSliders.updatePidSlidersDisplay();
+                }
+            });
 
             // trigger Slider Display update when PID mode is changed
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
-                $('select[id="sliderPidsModeSelect"]').on('change', function () {
+                sliderPidsModeSelect.on('change', function () {
                     const setMode = parseInt($(this).val());
 
                     TuningSliders.sliderPidsMode = setMode;
@@ -1946,6 +1959,11 @@ TABS.pid_tuning.initialize = function (callback) {
 
                     const disableRP = !!setMode;
                     const disableY = setMode > 1;
+
+                    // disable Integrated Yaw when going into RPY mode
+                    if (setMode === 2) {
+                        useIntegratedYaw.prop('checked', false).trigger('change');
+                    }
 
                     $('#pid_main .ROLL .pid_data input, #pid_main .PITCH .pid_data input').each(function() {
                         $(this).prop('disabled', disableRP);
