@@ -3,8 +3,8 @@
 const TIMEOUT_CHECK = 500 ; // With 250 it seems that it produces a memory leak and slowdown in some versions, reason unknown
 
 const usbDevices = { filters: [
-    {'vendorId': 1155, 'productId': 57105},
-    {'vendorId': 10473, 'productId': 393},
+    {'vendorId': 1155, 'productId': 57105}, // STM Device in DFU Mode || Digital Radio in USB mode
+    {'vendorId': 10473, 'productId': 393},  // GD32 DFU Bootloader
 ] };
 
 const PortHandler = new function () {

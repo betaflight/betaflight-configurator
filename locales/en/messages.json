@@ -105,6 +105,10 @@
         "message": "Set connection timeout to allow longer initialisation on device plugin or reboot",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "showAllSerialDevices": {
+        "message": "Show all serial devices (for manufacturers or development)",
+        "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
     "cordovaForceComputerUI": {
         "message": "Use computers interface instead of phones interface"
     },
