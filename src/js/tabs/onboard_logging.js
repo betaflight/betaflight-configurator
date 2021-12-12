@@ -337,13 +337,15 @@ TABS.onboard_logging.initialize = function (callback) {
                 {text: "BARO"},
                 {text: "GPS_RESCUE_THROTTLE_PID"},
                 {text: "DYN_IDLE"},
-                {text: "FF_LIMIT"},
-                {text: "FF_INTERPOLATED"},
+                {text: "FEEDFORWARD_LIMIT"},
+                {text: "FEEDFORWARD"},
                 {text: "BLACKBOX_OUTPUT"},
                 {text: "GYRO_SAMPLE"},
                 {text: "RX_TIMING"},
                 {text: "D_LPF"},
                 {text: "VTX_TRAMP"},
+                {text: "GHOST"},
+                {text: "SCHEDULER_DETERMINISM"},
             ];
 
             for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
