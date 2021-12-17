@@ -1,6 +1,6 @@
-'use strict';
+import { i18n } from "../localization";
 
-TABS.motors = {
+const motors = {
     previousDshotBidir: null,
     previousFilterDynQ: null,
     previousFilterDynWidth: null,
@@ -45,7 +45,7 @@ TABS.motors = {
     DSHOT_3D_NEUTRAL: 1500,
 };
 
-TABS.motors.initialize = function (callback) {
+motors.initialize = function (callback) {
     const self = this;
 
     self.armed = false;
@@ -1216,7 +1216,7 @@ TABS.motors.initialize = function (callback) {
     }
 };
 
-TABS.motors.refresh = function (callback) {
+motors.refresh = function (callback) {
     const self = this;
 
     GUI.tab_switch_cleanup(function() {
@@ -1228,6 +1228,11 @@ TABS.motors.refresh = function (callback) {
     });
 };
 
-TABS.motors.cleanup = function (callback) {
+motors.cleanup = function (callback) {
     if (callback) callback();
+};
+
+window.TABS.motors = motors;
+export {
+    motors
 };
