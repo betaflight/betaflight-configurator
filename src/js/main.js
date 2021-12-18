@@ -460,11 +460,9 @@ function startProcess() {
                         }
                         break;
                     case 'presets':
-                        TABS.presets.initialize(content_ready, GUI.nwGui);
-                        TABS.presets.initialize(content_ready, GUI.nwGui);
-                            import("../tabs/presets/presets").then(({ presets }) =>
-                                presets.initialize(content_ready)
-                            );
+                        import("../tabs/presets/presets").then(({ presets }) =>
+                            presets.initialize(content_ready)
+                        );
                         break;
 
                     default:
