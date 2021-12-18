@@ -55,7 +55,7 @@ presets.readDom = function() {
     this._domListTooManyFound = $("#presets_list_too_many_found");
 };
 
-PresetsCli = function() {
+presets.getPickedPresetsCli = function() {
     let result = [];
     this.pickedPresetList.forEach(pickedPreset => {
         result.push(...pickedPreset.presetCli);
