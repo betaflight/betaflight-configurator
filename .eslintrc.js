@@ -16,5 +16,6 @@ module.exports = {
         "eol-last": "error",
         semi: "error",
         "comma-dangle": ["error", "always-multiline"],
+        "no-var": "error",
     },
 };

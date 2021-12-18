@@ -12,6 +12,9 @@
 */
 'use strict';
 
+// Task for the brave ones. There are quite a few shadow variables which clash when
+// const or let are used. So need to run thorough tests when chaning `var`
+/* eslint-disable no-var */
 var STM32DFU_protocol = function () {
     this.callback = null;
     this.hex = null;
