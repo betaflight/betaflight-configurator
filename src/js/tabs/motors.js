@@ -364,17 +364,17 @@ motors.initialize = function (callback) {
         function validateMixerOutputs() {
             MSP.promise(MSPCodes.MSP_MOTOR).then(() => {
                 const mixer = FC.MIXER_CONFIG.mixer;
-                const motors = mixerList[mixer - 1].motors;
+                const motorCount = mixerList[mixer - 1].motors;
                 // initialize for models with zero motors
-                self.numberOfValidOutputs = motors;
+                self.numberOfValidOutputs = motorCount;
 
                 for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
                     if (FC.MOTOR_DATA[i] === 0) {
                         self.numberOfValidOutputs = i;
-                        if (motors > self.numberOfValidOutputs && motors > 0) {
+                        if (motorCount > self.numberOfValidOutputs && motorCount > 0) {
                             const msg = i18n.getMessage('motorsDialogMixerReset', {
                                 mixerName: mixerList[mixer - 1].name,
-                                mixerMotors: motors,
+                                mixerMotors: motorCount,
                                 outputs: self.numberOfValidOutputs,
                             });
                             showDialogMixerReset(msg);
