@@ -140,7 +140,7 @@ TABS.auxiliary.initialize = function (callback) {
 
         const channel_range = {
                 'min': [  900 ],
-                'max': [ 2100 ]
+                'max': [ 2100 ],
             };
 
         let rangeValues = [1300, 1700]; // matches MultiWii default values for the old checkbox MID range.
@@ -169,7 +169,7 @@ TABS.auxiliary.initialize = function (callback) {
             range: channel_range,
             format: wNumb({
                 decimals: 0,
-            })
+            }),
         });
 
         const elementName =  '#mode-' + modeIndex + '-range-' + rangeIndex;
@@ -184,7 +184,7 @@ TABS.auxiliary.initialize = function (callback) {
             mode: 'values',
             values: sliderValues,
             density: 4,
-            stepped: true
+            stepped: true,
         });
 
         $(rangeElement).find('.deleteRange').data('rangeElement', rangeElement);
@@ -269,7 +269,7 @@ TABS.auxiliary.initialize = function (callback) {
                 let modeRangeExtra = {
                     id: modeRange.id,
                     modeLogic: 0,
-                    linkedTo: 0
+                    linkedTo: 0,
                 };
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_41)) {
                     modeRangeExtra = FC.MODE_RANGES_EXTRA[modeRangeIndex];
@@ -333,15 +333,15 @@ TABS.auxiliary.initialize = function (callback) {
                         auxChannelIndex: parseInt($(this).find('.channel').val()),
                         range: {
                             start: rangeValues[0],
-                            end: rangeValues[1]
-                        }
+                            end: rangeValues[1],
+                        },
                     };
                     FC.MODE_RANGES.push(modeRange);
 
                     const modeRangeExtra = {
                         id: modeId,
                         modeLogic: parseInt($(this).find('.logic').val()),
-                        linkedTo: 0
+                        linkedTo: 0,
                     };
                     FC.MODE_RANGES_EXTRA.push(modeRangeExtra);
                 });
@@ -357,15 +357,15 @@ TABS.auxiliary.initialize = function (callback) {
                             auxChannelIndex: 0,
                             range: {
                                 start: 900,
-                                end: 900
-                            }
+                                end: 900,
+                            },
                         };
                         FC.MODE_RANGES.push(modeRange);
 
                         const modeRangeExtra = {
                             id: modeId,
                             modeLogic: parseInt($(this).find('.logic').val()),
-                            linkedTo: linkedToSelection
+                            linkedTo: linkedToSelection,
                         };
                         FC.MODE_RANGES_EXTRA.push(modeRangeExtra);
                     }
@@ -378,15 +378,15 @@ TABS.auxiliary.initialize = function (callback) {
                     auxChannelIndex: 0,
                     range: {
                         start: 900,
-                        end: 900
-                    }
+                        end: 900,
+                    },
                 };
                 FC.MODE_RANGES.push(defaultModeRange);
 
                 const defaultModeRangeExtra = {
                     id: 0,
                     modeLogic: 0,
-                    linkedTo: 0
+                    linkedTo: 0,
                 };
                 FC.MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
             }

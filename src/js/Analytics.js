@@ -10,7 +10,7 @@ const Analytics = function (trackingId, userId, appName, appVersion, gitRevision
     this._googleAnalytics.initialize(this._trackingId, {
         storage: 'none',
         clientId: userId,
-        debug: !!debugMode
+        debug: !!debugMode,
     });
 
     // Make it work for the Chrome App:

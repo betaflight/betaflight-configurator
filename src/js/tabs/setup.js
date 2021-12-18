@@ -1,7 +1,7 @@
 'use strict';
 
 TABS.setup = {
-    yaw_fix: 0.0
+    yaw_fix: 0.0,
 };
 
 TABS.setup.initialize = function (callback) {

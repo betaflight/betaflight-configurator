@@ -389,5 +389,5 @@ const MSP = {
         this.packet_error = 0; // reset CRC packet error counter for next session
 
         this.callbacks_cleanup();
-    }
+    },
 };

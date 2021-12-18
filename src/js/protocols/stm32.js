@@ -26,7 +26,7 @@ const STM32_protocol = function () {
 
     this.status = {
         ACK:    0x79, // y
-        NACK:   0x1F
+        NACK:   0x1F,
     };
 
     this.command = {
@@ -41,7 +41,7 @@ const STM32_protocol = function () {
         write_protect:          0x63, // Enables the write protection for some sectors
         write_unprotect:        0x73, // Disables the write protection for all Flash memory sectors
         readout_protect:        0x82, // Enables the read protection
-        readout_unprotect:      0x92  // Disables the read protection
+        readout_unprotect:      0x92,  // Disables the read protection
     };
 
     // Erase (x043) and Extended Erase (0x44) are exclusive. A device may support either the Erase command or the Extended Erase command but not both.
@@ -63,7 +63,7 @@ STM32_protocol.prototype.connect = function (port, baud, hex, options, callback)
     self.options = {
         no_reboot:      false,
         reboot_baud:    false,
-        erase_chip:     false
+        erase_chip:     false,
     };
 
     if (options.no_reboot) {

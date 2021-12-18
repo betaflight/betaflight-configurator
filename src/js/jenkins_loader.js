@@ -94,7 +94,7 @@ JenkinsLoader.prototype.loadBuilds = function (jobName, callback) {
                         number: build.number,
                         artifacts: build.artifacts.map(artifact => artifact.relativePath),
                         changes: build.changeSet.items.map(item => `* ${item.msg}`).join('<br>\n'),
-                        timestamp: build.timestamp
+                        timestamp: build.timestamp,
                     }));
 
                 // cache loaded info
@@ -148,7 +148,7 @@ JenkinsLoader.prototype._parseBuilds = function (jobUrl, jobName, builds, callba
                 'file'      : relativePath.split('/').slice(-1)[0],
                 'target'    : target,
                 'date'      : formattedDate,
-                'notes'     : build.changes
+                'notes'     : build.changes,
             };
 
             if (targetBuilds[target]) {

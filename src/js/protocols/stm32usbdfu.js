@@ -26,7 +26,7 @@ var STM32DFU_protocol = function () {
         GETSTATUS:  0x03, // IN,  Requests device to send status report to the Host (including status resulting from the last request execution and the state the device will enter immediately after this request).
         CLRSTATUS:  0x04, // OUT, Requests device to clear error status and move to next step
         GETSTATE:   0x05, // IN,  Requests the device to send only the state it will enter immediately after this request.
-        ABORT:      0x06  // OUT, Requests device to exit the current state/operation and enter idle state immediately.
+        ABORT:      0x06,  // OUT, Requests device to exit the current state/operation and enter idle state immediately.
     };
 
     this.status = {
@@ -45,7 +45,7 @@ var STM32DFU_protocol = function () {
         errUSBR:            0x0C, // Device detected unexpected USB reset signaling.
         errPOR:             0x0D, // Device detected unexpected power on reset.
         errUNKNOWN:         0x0E, // Something went wrong, but the device does not know what it was.
-        errSTALLEDPKT:      0x0F  // Device stalled an unexpected request.
+        errSTALLEDPKT:      0x0F,  // Device stalled an unexpected request.
     };
 
     this.state = {
@@ -59,7 +59,7 @@ var STM32DFU_protocol = function () {
         dfuMANIFEST:            7, // Device is in the Manifestation phase. (Not all devices will be able to respond to DFU_GETSTATUS when in this state.)
         dfuMANIFEST_WAIT_RESET: 8, // Device has programmed its memories and is waiting for a USB reset or a power on reset. (Devices that must enter this state clear bitManifestationTolerant to 0.)
         dfuUPLOAD_IDLE:         9, // The device is processing an upload operation. Expecting DFU_UPLOAD requests.
-        dfuERROR:               10 // An error has occurred. Awaiting the DFU_CLRSTATUS request.
+        dfuERROR:               10, // An error has occurred. Awaiting the DFU_CLRSTATUS request.
     };
 
     this.chipInfo = null; // information about chip's memory
@@ -189,7 +189,7 @@ STM32DFU_protocol.prototype.getString = function (index, callback) {
         'request':      6,
         'value':        0x300 | index,
         'index':        0,  // specifies language
-        'length':       255 // max length to retreive
+        'length':       255, // max length to retreive
     }, function (result) {
         if (checkChromeRuntimeError()) {
             console.log('USB getString failed! ' + result.resultCode);
@@ -258,7 +258,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callb
         'request':      6,
         'value':        0x200,
         'index':        0,
-        'length':       18 + _interface * 9
+        'length':       18 + _interface * 9,
     }, function (result) {
         if (checkChromeRuntimeError()) {
             console.log('USB getInterfaceDescriptor failed! ' + result.resultCode);
@@ -276,7 +276,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callb
             'bInterfaceClass':    buf[5],
             'bInterfaceSubclass': buf[6],
             'bInterfaceProtocol': buf[7],
-            'iInterface':         buf[8]
+            'iInterface':         buf[8],
         };
 
         callback(descriptor, result.resultCode);
@@ -292,7 +292,7 @@ STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, call
         'request':      6,
         'value':        0x2100,
         'index':        0,
-        'length':       255
+        'length':       255,
     }, function (result) {
         if (checkChromeRuntimeError()) {
             console.log('USB getFunctionalDescriptor failed! ' + result.resultCode);
@@ -308,7 +308,7 @@ STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, call
             'bmAttributes':       buf[2],
             'wDetachTimeOut':     (buf[4] << 8)|buf[3],
             'wTransferSize':      (buf[6] << 8)|buf[5],
-            'bcdDFUVersion':      buf[7]
+            'bcdDFUVersion':      buf[7],
         };
 
         callback(descriptor, result.resultCode);
@@ -397,7 +397,7 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
                     'num_pages'    : num_pages,
                     'start_address': start_address + total_size,
                     'page_size'    : page_size,
-                    'total_size'   : num_pages * page_size
+                    'total_size'   : num_pages * page_size,
                 });
 
                 total_size += num_pages * page_size;
@@ -407,7 +407,7 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
                 'type'         : type,
                 'start_address': start_address,
                 'sectors'      : sectors,
-                'total_size'   : total_size
+                'total_size'   : total_size,
             };
         return memory;
     };
@@ -440,7 +440,7 @@ STM32DFU_protocol.prototype.controlTransfer = function (direction, request, valu
             'value':        value,
             'index':        _interface,
             'length':       length,
-            'timeout':      timeout
+            'timeout':      timeout,
         }, function (result) {
             if (checkChromeRuntimeError()) {
                 console.log('USB controlTransfer IN failed for request ' + request + '!');
@@ -468,7 +468,7 @@ STM32DFU_protocol.prototype.controlTransfer = function (direction, request, valu
             'value':        value,
             'index':        _interface,
             'data':         arrayBuf,
-            'timeout':      timeout
+            'timeout':      timeout,
         }, function (result) {
             if (checkChromeRuntimeError()) {
                 console.log('USB controlTransfer OUT failed for request ' + request + '!');

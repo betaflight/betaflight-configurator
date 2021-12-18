@@ -214,7 +214,7 @@ firmware_flasher.initialize = function (callback) {
                         "file"      : asset.name,
                         "target"    : target,
                         "date"      : formattedDate,
-                        "notes"     : release.body
+                        "notes"     : release.body,
                     };
                     releases[target].push(descriptor);
                 });
@@ -323,24 +323,24 @@ firmware_flasher.initialize = function (callback) {
         const buildTypes = [
             {
                 tag: 'firmwareFlasherOptionLabelBuildTypeRelease',
-                loader: () => self.releaseChecker.loadReleaseData(releaseData => processBoardOptions(releaseData, false))
+                loader: () => self.releaseChecker.loadReleaseData(releaseData => processBoardOptions(releaseData, false)),
             },
             {
                 tag: 'firmwareFlasherOptionLabelBuildTypeReleaseCandidate',
-                loader: () => self.releaseChecker.loadReleaseData(releaseData => processBoardOptions(releaseData, true))
-            }
+                loader: () => self.releaseChecker.loadReleaseData(releaseData => processBoardOptions(releaseData, true)),
+            },
         ];
 
         const ciBuildsTypes = self.jenkinsLoader._jobs.map(job => {
             if (job.title === "Development") {
                 return {
                     tag: "firmwareFlasherOptionLabelBuildTypeDevelopment",
-                    loader: () => self.jenkinsLoader.loadBuilds(job.name, loadUnifiedBuilds)
+                    loader: () => self.jenkinsLoader.loadBuilds(job.name, loadUnifiedBuilds),
                 };
             }
             return {
                 title: job.title,
-                loader: () => self.jenkinsLoader.loadBuilds(job.name, loadUnifiedBuilds)
+                loader: () => self.jenkinsLoader.loadBuilds(job.name, loadUnifiedBuilds),
             };
         });
 
@@ -353,8 +353,8 @@ firmware_flasher.initialize = function (callback) {
                     $(
                         `<option value='${index}'>${
                             tag ? i18n.getMessage(tag) : title
-                        }</option>`
-                    )
+                        }</option>`,
+                    ),
                 );
             });
             buildType_e.val($('select[name="build_type"] option:first').val());
@@ -460,9 +460,9 @@ firmware_flasher.initialize = function (callback) {
                 versions_element.append(
                     $(
                         `<option value='0'>${i18n.getMessage(
-                            "firmwareFlasherOptionLabelSelectFirmwareVersionFor"
-                        )} ${target}</option>`
-                    )
+                            "firmwareFlasherOptionLabelSelectFirmwareVersionFor",
+                        )} ${target}</option>`,
+                    ),
                 );
                 targetVersions
                     .sort(sortVersions)
@@ -580,9 +580,9 @@ firmware_flasher.initialize = function (callback) {
                     versions_e.append(
                         $(
                             `<option value='0'>${i18n.getMessage(
-                                "firmwareFlasherOptionLabelSelectFirmwareVersion"
-                            )}</option>`
-                        )
+                                "firmwareFlasherOptionLabelSelectFirmwareVersion",
+                            )}</option>`,
+                        ),
                     );
                 } else {
                     // Show a loading message as there is a delay in loading a configuration
@@ -590,9 +590,9 @@ firmware_flasher.initialize = function (callback) {
                     versions_e.append(
                         $(
                             `<option value='0'>${i18n.getMessage(
-                                "firmwareFlasherOptionLoading"
-                            )}</option>`
-                        )
+                                "firmwareFlasherOptionLoading",
+                            )}</option>`,
+                        ),
                     );
 
                     const builds = [];
@@ -967,9 +967,9 @@ firmware_flasher.initialize = function (callback) {
                 accepts: [
                     {
                         description: 'target files',
-                        extensions: ['hex', 'config']
-                    }
-                ]
+                        extensions: ['hex', 'config'],
+                    },
+                ],
             }, function (fileEntry) {
                 if (checkChromeRuntimeError()) {
                     return;

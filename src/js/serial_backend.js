@@ -695,7 +695,7 @@ function update_live_status() {
     const statuswrapper = $('#quad-status_wrapper');
 
     $(".quad-status-contents").css({
-       display: 'inline-block'
+       display: 'inline-block',
     });
 
     if (GUI.active_tab !== 'cli' && GUI.active_tab !== 'presets') {
@@ -806,25 +806,25 @@ function update_dataflash_global() {
 
     if (supportsDataflash){
         $(".noflash_global").css({
-           display: 'none'
+           display: 'none',
         });
 
         $(".dataflash-contents_global").css({
-           display: 'block'
+           display: 'block',
         });
 
         $(".dataflash-free_global").css({
            width: (100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100) + "%",
-           display: 'block'
+           display: 'block',
         });
         $(".dataflash-free_global div").text('Dataflash: free ' + formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize));
      } else {
         $(".noflash_global").css({
-           display: 'block'
+           display: 'block',
         });
 
         $(".dataflash-contents_global").css({
-           display: 'none'
+           display: 'none',
         });
      }
 }

@@ -418,7 +418,7 @@ TABS.motors.initialize = function (callback) {
             x: [],
             y: [],
             z: [],
-            rms: []
+            rms: [],
         };
 
         $('.plot_control .x, .plot_control .y, .plot_control .z, .plot_control .rms').each(function () {
@@ -529,7 +529,7 @@ TABS.motors.initialize = function (callback) {
                 const gyro = [
                     FC.SENSOR_DATA.gyroscope[0],
                     FC.SENSOR_DATA.gyroscope[1],
-                    FC.SENSOR_DATA.gyroscope[2]
+                    FC.SENSOR_DATA.gyroscope[2],
                 ];
 
                 updateGraphHelperSize(gyroHelpers);

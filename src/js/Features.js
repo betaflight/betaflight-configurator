@@ -18,59 +18,59 @@ const Features = function (config) {
         {bit: 14, group: 'rxMode', mode: 'select', name: 'RX_MSP'},
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
         {bit: 16, group: 'other', name: 'LED_STRIP'},
-        {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true}
+        {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true},
     ];
 
     if (!semver.gte(config.apiVersion, API_VERSION_1_33)) {
         features.push(
-            {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true}
+            {bit: 19, group: 'other', name: 'BLACKBOX', haveTip: true},
         );
     }
 
     if (semver.gte(config.apiVersion, "1.12.0")) {
         features.push(
-            {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING'}
+            {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING'},
         );
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, "1.15.0") && !semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
         features.push(
-            {bit: 8, group: 'rxFailsafe', name: 'FAILSAFE', haveTip: true}
+            {bit: 8, group: 'rxFailsafe', name: 'FAILSAFE', haveTip: true},
         );
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
         features.push(
-            {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true}
+            {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true},
         );
     }
 
     if (config.flightControllerVersion !== '') {
         if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
             features.push(
-                {bit: 22, group: 'other', name: 'AIRMODE'}
+                {bit: 22, group: 'other', name: 'AIRMODE'},
             );
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, "1.16.0")) {
             if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
                 features.push(
-                    {bit: 23, group: 'superexpoRates', name: 'SUPEREXPO_RATES'}
+                    {bit: 23, group: 'superexpoRates', name: 'SUPEREXPO_RATES'},
                 );
             } else if (!semver.gte(config.apiVersion, API_VERSION_1_33)) {
                 features.push(
-                    {bit: 23, group: 'other', name: 'SDCARD'}
+                    {bit: 23, group: 'other', name: 'SDCARD'},
                 );
             }
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, "1.20.0")) {
             features.push(
-                {bit: 18, group: 'other', name: 'OSD'}
+                {bit: 18, group: 'other', name: 'OSD'},
             );
             if (!semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_35)) {
                 features.push(
-                    {bit: 24, group: 'other', name: 'VTX'}
+                    {bit: 24, group: 'other', name: 'VTX'},
                 );
             }
         }
@@ -78,17 +78,17 @@ const Features = function (config) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_31)) {
             features.push(
                 {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
-                {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'}
+                {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
             );
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             features.push(
-                {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true}
+                {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
             );
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_44)) { // DYNAMIC_FILTER got removed from FEATURES in BF 4.3 / API 1.44
                 features.push(
-                    {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'}
+                    {bit: 29, group: 'other', name: 'DYNAMIC_FILTER'},
                 );
             }
         }
@@ -96,7 +96,7 @@ const Features = function (config) {
         if (!semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_36)) {
             features.push(
                 {bit: 1, group: 'batteryVoltage', name: 'VBAT'},
-                {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'}
+                {bit: 11, group: 'batteryCurrent', name: 'CURRENT_METER'},
             );
         }
     }

@@ -2,7 +2,7 @@
 
 TABS.led_strip = {
         wireMode: false,
-        directions: ['n', 'e', 's', 'w', 'u', 'd']
+        directions: ['n', 'e', 's', 'w', 'u', 'd'],
     };
 
 
@@ -288,7 +288,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 if (!colorDefineSliders.is(":hover")) {
                     colorDefineSliders.hide();
                 }
-            }
+            },
         });
 
         $('.funcWire').click(function() {
@@ -422,7 +422,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
                 directionsInSelection.forEach(function(direction_e) {
                     $(direction_e).addClass('btnOn');
                 });
-            }
+            },
         });
 
         // UI: select LED function from drop-down
@@ -691,7 +691,7 @@ TABS.led_strip.initialize = function (callback, scrollPosition) {
             x: 0,
             y: 0,
             directions: '',
-            functions: ''
+            functions: '',
         };
 
         for (let i = 0; i < ledStripLength; i++) {

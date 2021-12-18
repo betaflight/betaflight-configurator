@@ -10,7 +10,7 @@ const Clipboard = {
     readAvailable : null,
     writeAvailable : null,
     writeText : null,
-    readText : null
+    readText : null,
 };
 
 Clipboard._configureClipboardAsNwJs = function(nwGui) {

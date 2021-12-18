@@ -34,5 +34,5 @@ const PortUsage = {
 
         this.port_usage_down = 0;
         this.port_usage_up = 0;
-    }
+    },
 };

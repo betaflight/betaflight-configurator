@@ -38,5 +38,5 @@ const ConfigStorage = {
             tmpObj[element] = input[element];
             window.localStorage.setItem(element, JSON.stringify(tmpObj));
         });
-    }
+    },
 };

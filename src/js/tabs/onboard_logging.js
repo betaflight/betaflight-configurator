@@ -8,7 +8,7 @@ TABS.onboard_logging = {
 
     BLOCK_SIZE: 4096,
     VCP_BLOCK_SIZE_3_0: 512,
-    VCP_BLOCK_SIZE: 4096
+    VCP_BLOCK_SIZE: 4096,
 };
 TABS.onboard_logging.initialize = function (callback) {
     const self = this;
@@ -251,7 +251,7 @@ TABS.onboard_logging.initialize = function (callback) {
                     {num: 1, denom: 7},
                     {num: 1, denom: 8},
                     {num: 1, denom: 16},
-                    {num: 1, denom: 32}
+                    {num: 1, denom: 32},
                 ];
 
 
@@ -406,13 +406,13 @@ TABS.onboard_logging.initialize = function (callback) {
         if (value > 0) {
             bar.css({
                 width: (value / total * 100) + "%",
-                display: 'block'
+                display: 'block',
             });
 
             $("div", bar).text((label ? label + " " : "") + (valuesAreKilobytes ? formatFilesizeKilobytes(value) : formatFilesizeBytes(value)));
         } else {
             bar.css({
-                display: 'none'
+                display: 'none',
             });
         }
     }

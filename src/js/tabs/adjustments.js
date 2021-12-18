@@ -88,7 +88,7 @@ TABS.adjustments.initialize = function (callback) {
 
         const channel_range = {
                 'min': [  900 ],
-                'max': [ 2100 ]
+                'max': [ 2100 ],
             };
 
         let rangeValues = [1300, 1700];
@@ -106,8 +106,8 @@ TABS.adjustments.initialize = function (callback) {
             connect: true,
             range: channel_range,
             format: wNumb({
-                decimals: 0
-            })
+                decimals: 0,
+            }),
         });
 
         $(newAdjustment).find('.channel-slider').Link('lower').to($(newAdjustment).find('.lowerLimitValue'));
@@ -117,7 +117,7 @@ TABS.adjustments.initialize = function (callback) {
             mode: 'values',
             values: [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100],
             density: 4,
-            stepped: true
+            stepped: true,
         });
 
         //
@@ -187,10 +187,10 @@ TABS.adjustments.initialize = function (callback) {
                 auxChannelIndex: 0,
                 range: {
                     start: 900,
-                    end: 900
+                    end: 900,
                 },
                 adjustmentFunction: 0,
-                auxSwitchChannelIndex: 0
+                auxSwitchChannelIndex: 0,
             };
 
             $('.tab-adjustments .adjustments .adjustment').each(function () {
@@ -208,10 +208,10 @@ TABS.adjustments.initialize = function (callback) {
                         auxChannelIndex: parseInt($(this).find('.channelInfo .channel').val()),
                         range: {
                             start: rangeValues[0],
-                            end: rangeValues[1]
+                            end: rangeValues[1],
                         },
                         adjustmentFunction: parseInt($(this).find('.functionSelection .function').val()),
-                        auxSwitchChannelIndex: parseInt($(this).find('.functionSwitchChannel .channel').val())
+                        auxSwitchChannelIndex: parseInt($(this).find('.functionSwitchChannel .channel').val()),
                     };
                     FC.ADJUSTMENT_RANGES.push(adjustmentRange);
                 } else {

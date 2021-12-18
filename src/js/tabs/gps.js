@@ -75,7 +75,7 @@ TABS.gps.initialize = function (callback) {
             const message = {
                 action: 'center',
                 lat: lat,
-                lon: lon
+                lon: lon,
             };
 
             frame = document.getElementById('map');
@@ -142,7 +142,7 @@ TABS.gps.initialize = function (callback) {
         $('#zoom_in').click(function() {
             console.log('zoom in');
             const message = {
-                action: 'zoom_in'
+                action: 'zoom_in',
             };
             frame.contentWindow.postMessage(message, '*');
         });
@@ -150,7 +150,7 @@ TABS.gps.initialize = function (callback) {
         $('#zoom_out').click(function() {
             console.log('zoom out');
             const message = {
-                action: 'zoom_out'
+                action: 'zoom_out',
             };
             frame.contentWindow.postMessage(message, '*');
         });

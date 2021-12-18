@@ -76,7 +76,7 @@ TABS.power.initialize = function (callback) {
                 voltageDataSource[index] = {
                     vbatscale: parseInt($(`input[name="vbatscale-${index}"]`).val()),
                     vbatresdivval: parseInt($(`input[name="vbatresdivval-${index}"]`).val()),
-                    vbatresdivmultiplier: parseInt($(`input[name="vbatresdivmultiplier-${index}"]`).val())
+                    vbatresdivmultiplier: parseInt($(`input[name="vbatresdivmultiplier-${index}"]`).val()),
                 };
             }
         }
