@@ -342,7 +342,7 @@ function startProcess() {
                         );
                         break;
                     case 'auxiliary':
-                        import("./tabs/auxiliary").then(({ auxiliary }) =>
+                        import("./tabs/auxiliary").then(({ auxiliary },) =>
                             auxiliary.initialize(content_ready)
                         );
                         break;
