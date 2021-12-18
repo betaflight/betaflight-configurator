@@ -4,7 +4,7 @@ const transponder = {
     available: false
 };
 
-transponder.initialize = function(callback, scrollPosition) {
+transponder.initialize = function(callback) {
 
     let _persistentInputValues = {};
 

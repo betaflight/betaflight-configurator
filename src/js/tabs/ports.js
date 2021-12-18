@@ -5,7 +5,7 @@ const ports = {
     analyticsChanges: {},
 };
 
-ports.initialize = function (callback, scrollPosition) {
+ports.initialize = function (callback) {
     const self = this;
 
     let board_definition = {};
