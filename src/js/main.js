@@ -250,14 +250,6 @@ function startProcess() {
 
             const tab = tabClass.substring(4);
             const tabName = $(self).text();
-            let timeout = 0;
-
-            if (GUI.active_tab === 'pid_tuning') {
-                if (TABS.pid_tuning.retainConfiguration) {
-                    TABS.pid_tuning.restoreInitialSettings();
-                    timeout = 500;
-                }
-            }
 
             if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
                 GUI.log(i18n.getMessage('tabSwitchConnectionRequired'));
@@ -401,15 +393,7 @@ function startProcess() {
                         TABS.onboard_logging.initialize(content_ready);
                         break;
                     case 'cli':
-                        // Add a little timeout to let MSP comands finish
-                        if (timeout > 0) {
-                            GUI.timeout_add('wait_for_msp_finished', () => {
-                                MSP.disconnect_cleanup();
-                                TABS.cli.initialize(content_ready, GUI.nwGui);
-                            }, timeout);
-                        } else {
-                            TABS.cli.initialize(content_ready, GUI.nwGui);
-                        }
+                        TABS.cli.initialize(content_ready, GUI.nwGui);
                         break;
                     case 'presets':
                         TABS.presets.initialize(content_ready, GUI.nwGui);

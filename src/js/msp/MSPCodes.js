@@ -117,8 +117,14 @@ const MSPCodes = {
 
     MSP_MOTOR_TELEMETRY:            139,
 
-    MSP_TUNING_SLIDERS:             140,
-    MSP_SET_TUNING_SLIDERS:         141,
+    MSP_SIMPLIFIED_TUNING:          140,
+    MSP_SET_SIMPLIFIED_TUNING:      141,
+
+    MSP_CALCULATE_SIMPLIFIED_PID:   142,    // calculate slider values in temp profile
+    MSP_CALCULATE_SIMPLIFIED_GYRO:  143,
+    MSP_CALCULATE_SIMPLIFIED_DTERM: 144,
+
+    MSP_VALIDATE_SIMPLIFIED_TUNING: 145,    // validate slider values in temp profile
 
     MSP_STATUS_EX:                  150,
 
