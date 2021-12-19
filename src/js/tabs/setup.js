@@ -255,7 +255,8 @@ TABS.setup.initialize = function (callback) {
 
                 // All the known elements but the ARM_SWITCH (it must be always the last element)
                 if (i < disarmFlagElements.length - 1) {
-                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${i}" class="cf_tip disarm-flag" title="${i18n.getMessage(`initialSetupArmingDisableFlagsTooltip${disarmFlagElements[i]}`)}" style="display: none;">${disarmFlagElements[i]}</span>`);
+                    const messageKey = `initialSetupArmingDisableFlagsTooltip${disarmFlagElements[i]}`;
+                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${i}" class="cf_tip disarm-flag" title="${i18n.getMessage(messageKey)}" style="display: none;">${disarmFlagElements[i]}</span>`);
 
                 // The ARM_SWITCH, always the last element
                 } else if (i == FC.CONFIG.armingDisableCount - 1) {
