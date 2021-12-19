@@ -205,7 +205,12 @@ firmware_flasher.initialize = function (callback) {
                         return;
                     }
                     const date = new Date(release.published_at);
-                    const formattedDate = `${(`0${  date.getDate()}`).slice(-2)  }-${  (`0${  date.getMonth() + 1}`).slice(-2)  }-${  date.getFullYear()  } ${  (`0${  date.getHours()}`).slice(-2)  }:${  (`0${  date.getMinutes()}`).slice(-2)}`;
+                    const dayOfTheMonth = `0${date.getDate()}`.slice(-2);
+                    const month = `0${date.getMonth() + 1}`.slice(-2);
+                    const year = date.getFullYear();
+                    const hours = `0${date.getHours()}`.slice(-2);
+                    const minutes = `0${  date.getMinutes()}`.slice(-2);
+                    const formattedDate = `${dayOfTheMonth}-${month}-${year} ${hours}:${minutes}`;
                     const descriptor = {
                         "releaseUrl": release.html_url,
                         "name"      : version,

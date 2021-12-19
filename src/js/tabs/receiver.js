@@ -233,7 +233,8 @@ TABS.receiver.initialize = function (callback) {
         rssi_channel_e.append(`<option value="0">${i18n.getMessage("receiverRssiChannelDisabledOption")}</option>`);
         //1-4 reserved for Roll Pitch Yaw & Throttle, starting at 5
         for (let i = 5; i < FC.RC.active_channels + 1; i++) {
-            rssi_channel_e.append(`<option value="${i}">${i18n.getMessage(`controlAxisAux${  i-4}`)}</option>`);
+            const messageKey = `controlAxisAux${i-4}`;
+            rssi_channel_e.append(`<option value="${i}">${i18n.getMessage(messageKey)}</option>`);
         }
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);

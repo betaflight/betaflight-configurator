@@ -167,10 +167,11 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                     `);
                 }
             } else {
+                const messageKey = `controlAxisAux${aux_index++}`;
                 fullChannels_e.append(`\
                     <div class="number">\
                         <div class="channelauxiliary">\
-                            <span class="channelname">${  i18n.getMessage(`controlAxisAux${  aux_index++}`)  }</span>\
+                            <span class="channelname">${  i18n.getMessage(messageKey)  }</span>\
                             ${  auxAssignment[aux_assignment_index++]  }\
                         </div>\
                         <div class="cf_tip channelsetting" title="${  i18n.getMessage("failsafeChannelFallbackSettingsHold")  }">\
