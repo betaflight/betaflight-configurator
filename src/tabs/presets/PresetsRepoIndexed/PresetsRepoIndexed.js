@@ -12,7 +12,7 @@ class PresetsRepoIndexed {
     }
 
     loadIndex() {
-        return fetch(`${this._urlRaw  }index.json`, {cache: "no-cache"})
+        return fetch(`${this._urlRaw}index.json`, {cache: "no-cache"})
             .then(res => res.json())
             .then(out => {
                 this._index = out;

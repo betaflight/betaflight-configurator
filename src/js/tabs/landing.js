@@ -24,7 +24,7 @@ landing.initialize = function (callback) {
     bottomSection.append(' <a href="#" i18n="language_default_pretty" lang="DEFAULT"></a>');
     const languagesAvailables = i18n.getLanguagesAvailables();
     languagesAvailables.forEach(function(element) {
-      bottomSection.append(` <a href="#" lang="${  element  }" i18n="language_${  element  }"></a>`);
+      bottomSection.append(` <a href="#" lang="${element}" i18n="language_${element}"></a>`);
     });
     bottomSection.find('a').each(function(index) {
       let element = $(this);

@@ -1016,7 +1016,7 @@ TABS.motors.initialize = function (callback) {
 
                     // Reduce the size of the value if too big
                     if (rpmMotorValue > 999999) {
-                        rpmMotorValue = `${(rpmMotorValue / 1000000).toFixed(5 - (rpmMotorValue / 1000000).toFixed(0).toString().length)  }M`;
+                        rpmMotorValue = `${(rpmMotorValue / 1000000).toFixed(5 - (rpmMotorValue / 1000000).toFixed(0).toString().length)}M`;
                     }
 
                     rpmMotorValue = rpmMotorValue.toString().padStart(MAX_VALUE_SIZE);

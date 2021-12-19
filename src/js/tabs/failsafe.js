@@ -118,7 +118,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 let modeName = FC.AUX_CONFIG[modeIndex];
                 modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
-                auxAssignment[modeRange.auxChannelIndex] += `<span class="modename">${  modeName  }</span>`;
+                auxAssignment[modeRange.auxChannelIndex] += `<span class="modename">${modeName}</span>`;
             }
         }
 
@@ -139,10 +139,10 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                     fullChannels_e.append(`\
                         <div class="number">\
                             <div class="channelprimary">\
-                                <span>${  channelNames[i]  }</span>\
+                                <span>${channelNames[i]}</span>\
                             </div>\
-                            <div class="cf_tip channelsetting" title="${  i18n.getMessage("failsafeChannelFallbackSettingsAuto")  }">\
-                                <select class="aux_set" id="${  i  }">\
+                            <div class="cf_tip channelsetting" title="${i18n.getMessage("failsafeChannelFallbackSettingsAuto")}">\
+                                <select class="aux_set" id="${i}">\
                                     <option value="0">Auto</option>\
                                     <option value="1">Hold</option>\
                                 </select>\
@@ -153,16 +153,16 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                     fullChannels_e.append(`\
                         <div class="number">\
                             <div class="channelprimary">\
-                                <span>${  channelNames[i]  }</span>\
+                                <span>${channelNames[i]}</span>\
                             </div>\
-                            <div class="cf_tip channelsetting" title="${  i18n.getMessage("failsafeChannelFallbackSettingsAuto")  }">\
-                                <select class="aux_set" id="${  i  }">\
+                            <div class="cf_tip channelsetting" title="${i18n.getMessage("failsafeChannelFallbackSettingsAuto")}">\
+                                <select class="aux_set" id="${i}">\
                                     <option value="0">Auto</option>\
                                     <option value="1">Hold</option>\
                                     <option value="2">Set</option>\
                                 </select>\
                             </div>\
-                            <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="${  i  }"/></div>\
+                            <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="${i}"/></div>\
                         </div>\
                     `);
                 }
@@ -171,16 +171,16 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 fullChannels_e.append(`\
                     <div class="number">\
                         <div class="channelauxiliary">\
-                            <span class="channelname">${  i18n.getMessage(messageKey)  }</span>\
-                            ${  auxAssignment[aux_assignment_index++]  }\
+                            <span class="channelname">${i18n.getMessage(messageKey)}</span>\
+                            ${auxAssignment[aux_assignment_index++]}\
                         </div>\
-                        <div class="cf_tip channelsetting" title="${  i18n.getMessage("failsafeChannelFallbackSettingsHold")  }">\
-                            <select class="aux_set" id="${  i  }">\
+                        <div class="cf_tip channelsetting" title="${i18n.getMessage("failsafeChannelFallbackSettingsHold")}">\
+                            <select class="aux_set" id="${i}">\
                                 <option value="1">Hold</option>\
                                 <option value="2">Set</option>\
                             </select>\
                         </div>\
-                        <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="${  i  }"/></div>\
+                        <div class="auxiliary"><input type="number" name="aux_value" min="750" max="2250" step="25" id="${i}"/></div>\
                     </div>\
                 `);
             }

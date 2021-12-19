@@ -46,7 +46,7 @@ TABS.auxiliary.initialize = function (callback) {
         // Adjust the name of the box if a peripheral is selected
         modeName = adjustBoxNameIfPeripheralWithModeID(modeId, modeName);
 
-        $(newMode).attr('id', `mode-${  modeIndex}`);
+        $(newMode).attr('id', `mode-${modeIndex}`);
         $(newMode).find('.name').text(modeName);
 
         $(newMode).data('index', modeIndex);
@@ -99,7 +99,7 @@ TABS.auxiliary.initialize = function (callback) {
 
         for (let channelIndex = 0; channelIndex < auxChannelCount; channelIndex++) {
             channelOption = channelOptionTemplate.clone();
-            channelOption.text(`AUX ${  channelIndex + 1}`);
+            channelOption.text(`AUX ${channelIndex + 1}`);
             channelOption.val(channelIndex);
             channelList.append(channelOption);
         }
@@ -151,7 +151,7 @@ TABS.auxiliary.initialize = function (callback) {
         const rangeIndex = modeRanges.children().length;
 
         let rangeElement = $('#tab-auxiliary-templates .range').clone();
-        rangeElement.attr('id', `mode-${  modeIndex  }-range-${  rangeIndex}`);
+        rangeElement.attr('id', `mode-${modeIndex}-range-${rangeIndex}`);
         modeRanges.append(rangeElement);
 
         if (rangeIndex == 0) {
@@ -172,9 +172,9 @@ TABS.auxiliary.initialize = function (callback) {
             }),
         });
 
-        const elementName =  `#mode-${  modeIndex  }-range-${  rangeIndex}`;
-        $(`${elementName  } .channel-slider`).Link('lower').to($(`${elementName  } .lowerLimitValue`));
-        $(`${elementName  } .channel-slider`).Link('upper').to($(`${elementName  } .upperLimitValue`));
+        const elementName =  `#mode-${modeIndex}-range-${rangeIndex}`;
+        $(`${elementName} .channel-slider`).Link('lower').to($(`${elementName} .lowerLimitValue`));
+        $(`${elementName} .channel-slider`).Link('upper').to($(`${elementName} .upperLimitValue`));
 
         let sliderValues = [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
         if ($(window).width() < 575) {
@@ -215,7 +215,7 @@ TABS.auxiliary.initialize = function (callback) {
         const linkIndex = modeRanges.children().length;
 
         let linkElement = $('#tab-auxiliary-templates .link').clone();
-        linkElement.attr('id', `mode-${  modeIndex  }-link-${  linkIndex}`);
+        linkElement.attr('id', `mode-${modeIndex}-link-${linkIndex}`);
         modeRanges.append(linkElement);
 
         if (linkIndex == 0) {
@@ -226,7 +226,7 @@ TABS.auxiliary.initialize = function (callback) {
 
         // disable the option associated with this mode
         const linkSelect = $(linkElement).find('.linkedTo');
-        $(linkSelect).find(`option[value="${  modeId  }"]`).prop('disabled',true);
+        $(linkSelect).find(`option[value="${modeId}"]`).prop('disabled',true);
 
         $(linkElement).find('.deleteLink').data('linkElement', linkElement);
         $(linkElement).find('.deleteLink').data('modeElement', modeElement);
@@ -422,7 +422,7 @@ TABS.auxiliary.initialize = function (callback) {
                     return;
                 }
 
-                $(this).find('.marker').css('left', `${percentage  }%`);
+                $(this).find('.marker').css('left', `${percentage}%`);
             });
         }
 
@@ -434,7 +434,7 @@ TABS.auxiliary.initialize = function (callback) {
         function update_ui() {
             let hasUsedMode = false;
             for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-                let modeElement = $(`#mode-${  i}`);
+                let modeElement = $(`#mode-${i}`);
                 if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     // if the mode is unused, skip it
                     modeElement.removeClass('off').removeClass('on').removeClass('disabled');
@@ -469,7 +469,7 @@ TABS.auxiliary.initialize = function (callback) {
                         // that arming is disabled.
                         if (armSwitchActive) {
                             $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('off').addClass('disabled');
-                            $('.mode .name').eq(i).html(`${FC.AUX_CONFIG[i]  }<br>${  i18n.getMessage('auxiliaryDisabled')}`);
+                            $('.mode .name').eq(i).html(`${FC.AUX_CONFIG[i]}<br>${i18n.getMessage('auxiliaryDisabled')}`);
                         } else {
                             $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('disabled').addClass('off');
                             $('.mode .name').eq(i).html(FC.AUX_CONFIG[i]);
@@ -483,7 +483,7 @@ TABS.auxiliary.initialize = function (callback) {
 
             let hideUnused = hideUnusedModes && hasUsedMode;
             for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-                let modeElement = $(`#mode-${  i}`);
+                let modeElement = $(`#mode-${i}`);
                 if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
                     modeElement.toggle(!hideUnused);
                 }

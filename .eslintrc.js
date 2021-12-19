@@ -18,5 +18,6 @@ module.exports = {
         "comma-dangle": ["error", "always-multiline"],
         "no-var": "error",
         "prefer-template": "error",
+        "template-curly-spacing": "error",
     },
 };

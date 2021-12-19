@@ -255,15 +255,15 @@ TABS.setup.initialize = function (callback) {
 
                 // All the known elements but the ARM_SWITCH (it must be always the last element)
                 if (i < disarmFlagElements.length - 1) {
-                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${  i  }" class="cf_tip disarm-flag" title="${  i18n.getMessage(`initialSetupArmingDisableFlagsTooltip${  disarmFlagElements[i]}`)  }" style="display: none;">${  disarmFlagElements[i]  }</span>`);
+                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${i}" class="cf_tip disarm-flag" title="${i18n.getMessage(`initialSetupArmingDisableFlagsTooltip${disarmFlagElements[i]}`)}" style="display: none;">${disarmFlagElements[i]}</span>`);
 
                 // The ARM_SWITCH, always the last element
                 } else if (i == FC.CONFIG.armingDisableCount - 1) {
-                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${  i  }" class="cf_tip disarm-flag" title="${  i18n.getMessage('initialSetupArmingDisableFlagsTooltipARM_SWITCH')  }" style="display: none;">ARM_SWITCH</span>`);
+                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${i}" class="cf_tip disarm-flag" title="${i18n.getMessage('initialSetupArmingDisableFlagsTooltipARM_SWITCH')}" style="display: none;">ARM_SWITCH</span>`);
 
                 // Unknown disarm flags
                 } else {
-                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${  i  }" class="disarm-flag" style="display: none;">${  i + 1  }</span>`);
+                    arming_disable_flags_e.append(`<span id="initialSetupArmingDisableFlags${i}" class="disarm-flag" style="display: none;">${i + 1}</span>`);
                 }
             }
         };
@@ -293,8 +293,8 @@ TABS.setup.initialize = function (callback) {
                 MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, function () {
                     gpsFix_e.html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
                     gpsSats_e.text(FC.GPS_DATA.numSat);
-                    gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)  } deg`);
-                    gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)  } deg`);
+                    gpsLat_e.text(`${(FC.GPS_DATA.lat / 10000000).toFixed(4)} deg`);
+                    gpsLon_e.text(`${(FC.GPS_DATA.lon / 10000000).toFixed(4)} deg`);
                 });
             }
         }

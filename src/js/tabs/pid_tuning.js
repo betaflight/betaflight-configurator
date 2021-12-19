@@ -91,7 +91,7 @@ TABS.pid_tuning.initialize = function (callback) {
         FC.PID_NAMES.forEach(function(elementPid, indexPid) {
 
             // Look into the PID table to a row with the name of the pid
-            const searchRow = $(`.pid_tuning .${  elementPid  } input`);
+            const searchRow = $(`.pid_tuning .${elementPid} input`);
 
             // Assign each value
             searchRow.each((indexInput, element) => {
@@ -1016,14 +1016,14 @@ TABS.pid_tuning.initialize = function (callback) {
 
         // The notch cutoff must be smaller than the notch frecuency
         function adjustNotchCutoff(frequencyName, cutoffName) {
-            const frecuency = parseInt($(`.pid_filter input[name='${  frequencyName  }']`).val());
-            const cutoff = parseInt($(`.pid_filter input[name='${  cutoffName  }']`).val());
+            const frecuency = parseInt($(`.pid_filter input[name='${frequencyName}']`).val());
+            const cutoff = parseInt($(`.pid_filter input[name='${cutoffName}']`).val());
 
             // Change the max and refresh the value if needed
             const maxCutoff = frecuency == 0 ? 0 : frecuency - 1;
-            $(`.pid_filter input[name='${  cutoffName  }']`).attr("max", maxCutoff);
+            $(`.pid_filter input[name='${cutoffName}']`).attr("max", maxCutoff);
             if (cutoff >= frecuency) {
-                $(`.pid_filter input[name='${  cutoffName  }']`).val(maxCutoff);
+                $(`.pid_filter input[name='${cutoffName}']`).val(maxCutoff);
             }
         }
 
@@ -1071,7 +1071,7 @@ TABS.pid_tuning.initialize = function (callback) {
         FC.PID_NAMES.forEach(function(elementPid, indexPid) {
 
             // Look into the PID table to a row with the name of the pid
-            const searchRow = $(`.pid_tuning .${  elementPid  } input`);
+            const searchRow = $(`.pid_tuning .${elementPid} input`);
 
             // Assign each value
             searchRow.each(function (indexInput) {
@@ -1320,10 +1320,10 @@ TABS.pid_tuning.initialize = function (callback) {
         // Only show rows supported by the firmware
         FC.PID_NAMES.forEach(function(elementPid) {
             // Show rows for the PID
-            $(`.pid_tuning .${  elementPid}`).show();
+            $(`.pid_tuning .${elementPid}`).show();
 
             // Show titles and other elements needed by the PID
-            $(`.needed_by_${  elementPid}`).show();
+            $(`.needed_by_${elementPid}`).show();
         });
 
         // Special case
@@ -1549,7 +1549,7 @@ TABS.pid_tuning.initialize = function (callback) {
         function populateProfilesSelector(_selectProfileValues) {
             const profileSelect = $('select[name="profile"]');
             _selectProfileValues.forEach(function(value, key) {
-                profileSelect.append(`<option value="${  key  }">${  value  }</option>`);
+                profileSelect.append(`<option value="${key}">${value}</option>`);
             });
         }
 
@@ -1558,7 +1558,7 @@ TABS.pid_tuning.initialize = function (callback) {
         function populateRateProfilesSelector(_selectRateProfileValues) {
             const rateProfileSelect = $('select[name="rate_profile"]');
             _selectRateProfileValues.forEach(function(value, key) {
-                rateProfileSelect.append(`<option value="${  key  }">${  value  }</option>`);
+                rateProfileSelect.append(`<option value="${key}">${value}</option>`);
             });
         }
 
@@ -1689,9 +1689,9 @@ TABS.pid_tuning.initialize = function (callback) {
         }
 
         function populateFilterTypeSelector(name, selectDtermValues) {
-            const dtermFilterSelect = $(`select[name="${  name  }"]`);
+            const dtermFilterSelect = $(`select[name="${name}"]`);
             selectDtermValues.forEach(function(value, key) {
-                dtermFilterSelect.append(`<option value="${  key  }">${  value  }</option>`);
+                dtermFilterSelect.append(`<option value="${key}">${value}</option>`);
             });
         }
         // Added in API 1.42.0
@@ -1701,7 +1701,7 @@ TABS.pid_tuning.initialize = function (callback) {
         function populateDynamicNotchRangeSelect(selectDynamicNotchRangeValues) {
             const dynamicNotchRangeSelect = $('select[name="dynamicNotchRange"]');
             selectDynamicNotchRangeValues.forEach(function(value, key) {
-                dynamicNotchRangeSelect.append(`<option value="${  key  }">${  value  }</option>`);
+                dynamicNotchRangeSelect.append(`<option value="${key}">${value}</option>`);
             });
         }
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
@@ -1723,15 +1723,15 @@ TABS.pid_tuning.initialize = function (callback) {
         function activateSubtab(subtabName) {
             const names = ['pid', 'rates', 'filter'];
             if (!names.includes(subtabName)) {
-                console.debug(`Invalid subtab name: "${  subtabName  }"`);
+                console.debug(`Invalid subtab name: "${subtabName}"`);
                 return;
             }
             for (name of names) {
-                const el = $(`.tab-pid_tuning .subtab-${  name}`);
+                const el = $(`.tab-pid_tuning .subtab-${name}`);
                 el[name == subtabName ? 'show' : 'hide']();
             }
             $('.tab-pid_tuning .tab-container .tab').removeClass('active');
-            $(`.tab-pid_tuning .tab-container .${  subtabName}`).addClass('active');
+            $(`.tab-pid_tuning .tab-container .${subtabName}`).addClass('active');
             self.activeSubtab = subtabName;
             if (subtabName == 'rates') {
                 // force drawing of throttle curve once the throttle curve container element is available
@@ -1771,7 +1771,7 @@ TABS.pid_tuning.initialize = function (callback) {
             }
 
             for (let i = 0; i < pidControllerList.length; i++) {
-                pidController_e.append(`<option value="${  i  }">${  pidControllerList[i].name  }</option>`);
+                pidController_e.append(`<option value="${i}">${pidControllerList[i].name}</option>`);
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MIN_SUPPORTED_PID_CONTROLLER_CHANGE)) {
@@ -2003,11 +2003,11 @@ TABS.pid_tuning.initialize = function (callback) {
             context.fill();
             context.save();
             let fontSize = 10;
-            context.font = `${fontSize  }pt Verdana, Arial, sans-serif`;
+            context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
             let realthr = thrPercent * 100.0,
                 expothr = 100 - (thrpos.y / canvasHeight) * 100.0,
-                thrlabel = `${Math.round(thrPercent <= 0 ? 0 : realthr)  }%` +
-                    ` = ${  Math.round(thrPercent <= 0 ? 0 : expothr)  }%`,
+                thrlabel = `${Math.round(thrPercent <= 0 ? 0 : realthr)}%` +
+                    ` = ${Math.round(thrPercent <= 0 ? 0 : expothr)}%`,
                 textWidth = context.measureText(thrlabel);
             context.fillStyle = '#000';
             context.scale(textWidth / throttleCurve.clientWidth, 1);
@@ -2855,9 +2855,9 @@ TABS.pid_tuning.updateRatesLabels = function() {
 
             stickContext.save();
 
-            const maxAngularVelRoll   = `${self.maxAngularVelRollElement.text()   } deg/s`;
-            const maxAngularVelPitch  = `${self.maxAngularVelPitchElement.text()  } deg/s`;
-            const maxAngularVelYaw    = `${self.maxAngularVelYawElement.text()    } deg/s`;
+            const maxAngularVelRoll   = `${self.maxAngularVelRollElement.text()} deg/s`;
+            const maxAngularVelPitch  = `${self.maxAngularVelPitchElement.text()} deg/s`;
+            const maxAngularVelYaw    = `${self.maxAngularVelYawElement.text()} deg/s`;
             let currentValues         = [];
             let balloonsDirty         = [];
             const curveHeight         = rcStickElement.height;
@@ -2874,13 +2874,13 @@ TABS.pid_tuning.updateRatesLabels = function() {
             if (windowScale <= 1) {
                 stickContext.font = "24pt Verdana, Arial, sans-serif";
             } else {
-                stickContext.font = `${24 * windowScale  }pt Verdana, Arial, sans-serif`;
+                stickContext.font = `${24 * windowScale}pt Verdana, Arial, sans-serif`;
             }
 
             if (FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
-                currentValues.push(`${self.rateCurve.drawStickPosition(FC.RC.channels[0], self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.roll_rate_limit, maxAngularVel, stickContext, '#FF8080')  } deg/s`);
-                currentValues.push(`${self.rateCurve.drawStickPosition(FC.RC.channels[1], self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.pitch_rate_limit, maxAngularVel, stickContext, '#80FF80')  } deg/s`);
-                currentValues.push(`${self.rateCurve.drawStickPosition(FC.RC.channels[2], self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, self.currentRates.yaw_rate_limit, maxAngularVel, stickContext, '#8080FF')  } deg/s`);
+                currentValues.push(`${self.rateCurve.drawStickPosition(FC.RC.channels[0], self.currentRates.roll_rate, self.currentRates.rc_rate, self.currentRates.rc_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.roll_rate_limit, maxAngularVel, stickContext, '#FF8080')} deg/s`);
+                currentValues.push(`${self.rateCurve.drawStickPosition(FC.RC.channels[1], self.currentRates.pitch_rate, self.currentRates.rc_rate_pitch, self.currentRates.rc_pitch_expo, self.currentRates.superexpo, self.currentRates.deadband, self.currentRates.pitch_rate_limit, maxAngularVel, stickContext, '#80FF80')} deg/s`);
+                currentValues.push(`${self.rateCurve.drawStickPosition(FC.RC.channels[2], self.currentRates.yaw_rate, self.currentRates.rc_rate_yaw, self.currentRates.rc_yaw_expo, self.currentRates.superexpo, self.currentRates.yawDeadband, self.currentRates.yaw_rate_limit, maxAngularVel, stickContext, '#8080FF')} deg/s`);
             } else {
                 currentValues = [];
             }
@@ -2891,7 +2891,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
             stickContext.scale(textScale, 1);
 
             // add the maximum range label
-            drawAxisLabel(stickContext, `${maxAngularVel.toFixed(0)  } deg/s`, ((curveWidth / 2) - 10) / textScale, parseInt(stickContext.font)*1.2, 'right');
+            drawAxisLabel(stickContext, `${maxAngularVel.toFixed(0)} deg/s`, ((curveWidth / 2) - 10) / textScale, parseInt(stickContext.font)*1.2, 'right');
 
             // and then the balloon labels.
             balloonsDirty = []; // reset the dirty balloon draw area (for overlap detection)
@@ -2995,7 +2995,7 @@ TABS.pid_tuning.updatePIDColors = function(clear = false) {
     };
 
     FC.PID_NAMES.forEach(function(elementPid, indexPid) {
-        $(`.pid_tuning .${  elementPid  } input`).each(function(indexInput) {
+        $(`.pid_tuning .${elementPid} input`).each(function(indexInput) {
             setTuningElementColor($(this), FC.PIDS_ACTIVE[indexPid][indexInput], FC.PIDS[indexPid][indexInput]);
         });
     });

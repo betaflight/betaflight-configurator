@@ -158,17 +158,17 @@ logging.initialize = function (callback) {
                     break;
                 case 'MSP_RC':
                     for (let chan = 0; chan < FC.RC.active_channels; chan++) {
-                        head += `${',' + 'RC'}${  chan}`;
+                        head += `${',' + 'RC'}${chan}`;
                     }
                     break;
                 case 'MSP_MOTOR':
                     for (let motor = 0; motor < FC.MOTOR_DATA.length; motor++) {
-                        head += `${',' + 'Motor'}${  motor}`;
+                        head += `${',' + 'Motor'}${motor}`;
                     }
                     break;
                 case 'MSP_DEBUG':
                     for (let debug = 0; debug < FC.SENSOR_DATA.debug.length; debug++) {
-                        head += `${',' + 'Debug'}${  debug}`;
+                        head += `${',' + 'Debug'}${debug}`;
                     }
                     break;
             }
@@ -183,43 +183,43 @@ logging.initialize = function (callback) {
         for (let i = 0; i < requestedProperties.length; i++) {
             switch (requestedProperties[i]) {
                 case 'MSP_RAW_IMU':
-                    sample += `,${  FC.SENSOR_DATA.gyroscope}`;
-                    sample += `,${  FC.SENSOR_DATA.accelerometer}`;
-                    sample += `,${  FC.SENSOR_DATA.magnetometer}`;
+                    sample += `,${FC.SENSOR_DATA.gyroscope}`;
+                    sample += `,${FC.SENSOR_DATA.accelerometer}`;
+                    sample += `,${FC.SENSOR_DATA.magnetometer}`;
                     break;
                 case 'MSP_ATTITUDE':
-                    sample += `,${  FC.SENSOR_DATA.kinematics[0]}`;
-                    sample += `,${  FC.SENSOR_DATA.kinematics[1]}`;
-                    sample += `,${  FC.SENSOR_DATA.kinematics[2]}`;
+                    sample += `,${FC.SENSOR_DATA.kinematics[0]}`;
+                    sample += `,${FC.SENSOR_DATA.kinematics[1]}`;
+                    sample += `,${FC.SENSOR_DATA.kinematics[2]}`;
                     break;
                 case 'MSP_ALTITUDE':
-                    sample += `,${  FC.SENSOR_DATA.altitude}`;
+                    sample += `,${FC.SENSOR_DATA.altitude}`;
                     break;
                 case 'MSP_RAW_GPS':
-                    sample += `,${  FC.GPS_DATA.fix}`;
-                    sample += `,${  FC.GPS_DATA.numSat}`;
-                    sample += `,${  FC.GPS_DATA.lat / 10000000}`;
-                    sample += `,${  FC.GPS_DATA.lon / 10000000}`;
-                    sample += `,${  FC.GPS_DATA.alt}`;
-                    sample += `,${  FC.GPS_DATA.speed}`;
-                    sample += `,${  FC.GPS_DATA.ground_course}`;
+                    sample += `,${FC.GPS_DATA.fix}`;
+                    sample += `,${FC.GPS_DATA.numSat}`;
+                    sample += `,${FC.GPS_DATA.lat / 10000000}`;
+                    sample += `,${FC.GPS_DATA.lon / 10000000}`;
+                    sample += `,${FC.GPS_DATA.alt}`;
+                    sample += `,${FC.GPS_DATA.speed}`;
+                    sample += `,${FC.GPS_DATA.ground_course}`;
                     break;
                 case 'MSP_ANALOG':
-                    sample += `,${  FC.ANALOG.voltage}`;
-                    sample += `,${  FC.ANALOG.amperage}`;
-                    sample += `,${  FC.ANALOG.mAhdrawn}`;
-                    sample += `,${  FC.ANALOG.rssi}`;
+                    sample += `,${FC.ANALOG.voltage}`;
+                    sample += `,${FC.ANALOG.amperage}`;
+                    sample += `,${FC.ANALOG.mAhdrawn}`;
+                    sample += `,${FC.ANALOG.rssi}`;
                     break;
                 case 'MSP_RC':
                     for (let chan = 0; chan < FC.RC.active_channels; chan++) {
-                        sample += `,${  FC.RC.channels[chan]}`;
+                        sample += `,${FC.RC.channels[chan]}`;
                     }
                     break;
                 case 'MSP_MOTOR':
-                    sample += `,${  FC.MOTOR_DATA}`;
+                    sample += `,${FC.MOTOR_DATA}`;
                     break;
                 case 'MSP_DEBUG':
-                    sample += `,${  FC.SENSOR_DATA.debug}`;
+                    sample += `,${FC.SENSOR_DATA.debug}`;
                     break;
             }
         }
@@ -239,7 +239,7 @@ logging.initialize = function (callback) {
         const filename = generateFilename(prefix, suffix);
 
         const accepts = [{
-            description: `${suffix.toUpperCase()  } files`, extensions: [suffix],
+            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
         }];
 
         // create or load the file
@@ -252,7 +252,7 @@ logging.initialize = function (callback) {
 
             // echo/console log path specified
             chrome.fileSystem.getDisplayPath(fileEntry, function(path) {
-                console.log(`Log file path: ${  path}`);
+                console.log(`Log file path: ${path}`);
             });
 
             // change file entry from read only to read/write
@@ -315,7 +315,7 @@ logging.initialize = function (callback) {
             fileWriter.seek(fileWriter.length);
         }
 
-        fileWriter.write(new Blob([`${data  }\n`], {type: 'text/plain'}));
+        fileWriter.write(new Blob([`${data}\n`], {type: 'text/plain'}));
     }
 };
 

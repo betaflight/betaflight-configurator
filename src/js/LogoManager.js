@@ -179,8 +179,8 @@ LogoManager.init = function (font, logoStartIndex) {
     this.logoStartIndex = logoStartIndex;
     // inject logo size variables for dynamic translation strings
     i18n.addResources({
-        logoWidthPx: `${  this.constraints.imageSize.expectedWidth}`, // NOSONAR
-        logoHeightPx: `${  this.constraints.imageSize.expectedHeight}`, // NOSONAR
+        logoWidthPx: `${this.constraints.imageSize.expectedWidth}`, // NOSONAR
+        logoHeightPx: `${this.constraints.imageSize.expectedHeight}`, // NOSONAR
     });
     // find/cache DOM elements
     Object.keys(this.elements).forEach(key => {

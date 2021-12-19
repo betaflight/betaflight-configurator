@@ -88,7 +88,7 @@ TABS.power.initialize = function (callback) {
             const elementVoltageMeter = templateVoltageMeter.clone();
             $(elementVoltageMeter).attr('id', `voltage-meter-${index}`);
 
-            const message = i18n.getMessage(`powerVoltageId${  FC.VOLTAGE_METERS[index].id}`);
+            const message = i18n.getMessage(`powerVoltageId${FC.VOLTAGE_METERS[index].id}`);
             $(elementVoltageMeter).find('.label').text(message);
             destinationVoltageMeter.append(elementVoltageMeter);
 
@@ -106,7 +106,7 @@ TABS.power.initialize = function (callback) {
 
             const attributeNames = ["vbatscale", "vbatresdivval", "vbatresdivmultiplier"];
             for (let attributeName of attributeNames) {
-                $(elementVoltageConfiguration).find(`input[name="${attributeName}"]`).attr('name', `${attributeName  }-${  index}`);
+                $(elementVoltageConfiguration).find(`input[name="${attributeName}"]`).attr('name', `${attributeName}-${index}`);
             }
             destinationVoltageConfiguration.append(elementVoltageConfiguration);
 
@@ -146,7 +146,7 @@ TABS.power.initialize = function (callback) {
             const elementAmperageMeter = templateAmperageMeter.clone();
             $(elementAmperageMeter).attr('id', `amperage-meter-${index}`);
 
-            const message = i18n.getMessage(`powerAmperageId${  FC.CURRENT_METERS[index].id}`);
+            const message = i18n.getMessage(`powerAmperageId${FC.CURRENT_METERS[index].id}`);
             $(elementAmperageMeter).find('.label').text(message);
             destinationAmperageMeter.append(elementAmperageMeter);
 

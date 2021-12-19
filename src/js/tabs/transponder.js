@@ -140,7 +140,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
     }
 
     function pad(n, width) {
-        n = `${n  }`;
+        n = `${n}`;
         return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
     }
 
@@ -192,12 +192,12 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
         let template = $('#transponder-configuration-template').clone();
 
-        template.find('.spacer_box_title').html(i18n.getMessage(`transponderData${  transponderProvider.id}`));
-        template.find('.dataHelp').html(i18n.getMessage(`transponderDataHelp${  transponderProvider.id}`));
+        template.find('.spacer_box_title').html(i18n.getMessage(`transponderData${transponderProvider.id}`));
+        template.find('.dataHelp').html(i18n.getMessage(`transponderDataHelp${transponderProvider.id}`));
 
 
-        if ( i18n.getMessage(`transponderHelp${  transponderProvider.id}`).length ) {
-            $('#transponderHelp').html(i18n.getMessage(`transponderHelp${  transponderProvider.id}`));
+        if ( i18n.getMessage(`transponderHelp${transponderProvider.id}`).length ) {
+            $('#transponderHelp').html(i18n.getMessage(`transponderHelp${transponderProvider.id}`));
             $('#transponderHelpBox').show();
         }
 
@@ -222,7 +222,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                     dataInput.append($('<option>').val(dataOptions).html(dataOptionsKey));
                 }
 
-                if ( dataInput.find(`option[value='${  data  }']`).length > 0 && !clearValue ) {
+                if ( dataInput.find(`option[value='${data}']`).length > 0 && !clearValue ) {
                     dataInput.val(data);
                 } else {
                     dataInput.val(_persistentInputValues[transponderProvider.id] || '');
@@ -239,7 +239,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
         let changedInputValue = function() {
             let dataString = $(this).val();
-            let hexRegExp = new RegExp(`[0-9a-fA-F]{${  transponderProvider.dataLength * 2  }}`, 'gi');
+            let hexRegExp = new RegExp(`[0-9a-fA-F]{${transponderProvider.dataLength * 2}}`, 'gi');
 
             if ( !dataString.match(hexRegExp) ) {
                 FC.TRANSPONDER.data = [];

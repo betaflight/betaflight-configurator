@@ -407,7 +407,7 @@ STM32_protocol.prototype.verify_chip_signature = function (signature) {
         if (this.hex.bytes_total < this.available_flash_size) {
             return true;
         } else {
-            console.log(`Supplied hex is bigger then flash available on the chip, HEX: ${  this.hex.bytes_total  } bytes, limit = ${  this.available_flash_size  } bytes`);
+            console.log(`Supplied hex is bigger then flash available on the chip, HEX: ${this.hex.bytes_total} bytes, limit = ${this.available_flash_size} bytes`);
             return false;
         }
     }

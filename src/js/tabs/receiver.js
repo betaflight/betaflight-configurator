@@ -122,16 +122,16 @@ TABS.receiver.initialize = function (callback) {
             if (i < bar_names.length) {
                 name = bar_names[i];
             } else {
-                name = i18n.getMessage(`controlAxisAux${  auxIndex++}`);
+                name = i18n.getMessage(`controlAxisAux${auxIndex++}`);
             }
 
             barContainer.append(`\
                 <ul>\
-                    <li class="name">${  name  }</li>\
+                    <li class="name">${name}</li>\
                     <li class="meter">\
                         <div class="meter-bar">\
                             <div class="label"></div>\
-                            <div class="fill${  FC.RC.active_channels == 0 ? 'disabled' : ''  }">\
+                            <div class="fill${FC.RC.active_channels == 0 ? 'disabled' : ''}">\
                                 <div class="label"></div>\
                             </div>\
                         </div>\
@@ -716,7 +716,7 @@ TABS.receiver.initialize = function (callback) {
 
                     // update bars with latest data
                     for (let i = 0; i < FC.RC.active_channels; i++) {
-                        meterFillArray[i].css('width', `${((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min) * 100).clamp(0, 100)  }%`);
+                        meterFillArray[i].css('width', `${((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min) * 100).clamp(0, 100)}%`);
                         meterLabelArray[i].text(FC.RC.channels[i]);
                     }
 

@@ -104,7 +104,7 @@ let FirmwareCache = (function () {
      * @returns {string} A key for storing cached data for a release
      */
     function withCachePrefix(key) {
-        return `cache:${  key}`;
+        return `cache:${key}`;
     }
 
     /**
@@ -133,7 +133,7 @@ let FirmwareCache = (function () {
         }
         let key = keyOf(release);
         if (has(release)) {
-            console.debug(`Firmware is already cached: ${  key}`);
+            console.debug(`Firmware is already cached: ${key}`);
             return;
         }
         journal.set(key, true);
@@ -159,7 +159,7 @@ let FirmwareCache = (function () {
         }
         let key = keyOf(release);
         if (!has(release)) {
-            console.debug(`Firmware is not cached: ${  key}`);
+            console.debug(`Firmware is not cached: ${key}`);
             return;
         }
         let cacheKey = withCachePrefix(key);
@@ -208,7 +208,7 @@ let FirmwareCache = (function () {
         if (typeof onPutToCacheCallback === "function") {
             onPutToCacheCallback(release);
         }
-        console.info(`Release put to cache: ${  keyOf(release)}`);
+        console.info(`Release put to cache: ${keyOf(release)}`);
     }
 
     /**
@@ -218,7 +218,7 @@ let FirmwareCache = (function () {
         if (typeof onRemoveFromCacheCallback === "function") {
             onRemoveFromCacheCallback(release);
         }
-        console.debug(`Cache data removed: ${  keyOf(release)}`);
+        console.debug(`Cache data removed: ${keyOf(release)}`);
     }
 
     /**
@@ -231,7 +231,7 @@ let FirmwareCache = (function () {
         }
         journal.assign(pairs);
         journalLoaded = true;
-        console.info(`Firmware cache journal loaded; number of entries: ${  entries.length}`);
+        console.info(`Firmware cache journal loaded; number of entries: ${entries.length}`);
     }
 
     return {
