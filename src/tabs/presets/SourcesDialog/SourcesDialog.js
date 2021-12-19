@@ -104,7 +104,7 @@ class PresetsSourcesDialog {
 
     _scrollDown() {
         this._domDivSourcesPanel.stop();
-        this._domDivSourcesPanel.animate({scrollTop: this._domDivSourcesPanel.prop('scrollHeight') + "px"});
+        this._domDivSourcesPanel.animate({scrollTop: `${this._domDivSourcesPanel.prop('scrollHeight')  }px`});
     }
 
     _addNewSourcePanel(presetSource, isActive = false, isSelected = true) {

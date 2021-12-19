@@ -37,7 +37,7 @@ function commandWithBackSpaces(command, buffer, noOfCharsToDelete) {
 
 function getCliCommand(command, cliBuffer) {
     const buffer = removePromptHash(cliBuffer);
-    const bufferRegex = new RegExp('^' + buffer, 'g');
+    const bufferRegex = new RegExp(`^${  buffer}`, 'g');
     if (command.match(bufferRegex)) {
         return command.replace(bufferRegex, '');
     }
@@ -146,7 +146,7 @@ TABS.cli.initialize = function (callback) {
             const filename = generateFilename(prefix, suffix);
 
             const accepts = [{
-                description: suffix.toUpperCase() + ' files', extensions: [suffix],
+                description: `${suffix.toUpperCase()  } files`, extensions: [suffix],
             }];
 
             chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename, accepts: accepts}, function(entry) {
@@ -377,7 +377,7 @@ function writeLineToOutput(text) {
     if (text.startsWith("###ERROR")) {
         writeToOutput(`<span class="error_message">${text}</span><br>`);
     } else {
-        writeToOutput(text + "<br>");
+        writeToOutput(`${text  }<br>`);
     }
 }
 
@@ -488,11 +488,11 @@ TABS.cli.read = function (readInfo) {
 };
 
 TABS.cli.sendLine = function (line, callback) {
-    this.send(line + '\n', callback);
+    this.send(`${line  }\n`, callback);
 };
 
 TABS.cli.sendNativeAutoComplete = function (line, callback) {
-    this.send(line + '\t', callback);
+    this.send(`${line  }\t`, callback);
 };
 
 TABS.cli.send = function (line, callback) {

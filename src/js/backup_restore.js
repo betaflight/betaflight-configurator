@@ -8,7 +8,7 @@ function configuration_backup(callback) {
     let version = CONFIGURATOR.version;
 
     if (version.indexOf(".") === -1) {
-        version = version + ".0.0";
+        version = `${version}.0.0`;
     }
 
     const configuration = {
@@ -211,7 +211,7 @@ function configuration_backup(callback) {
         const filename = generateFilename(prefix, suffix);
 
         const accepts = [{
-            description: suffix.toUpperCase() + ' files', extensions: [suffix],
+            description: `${suffix.toUpperCase()} files`, extensions: [suffix],
         }];
 
         // create or load the file
@@ -229,7 +229,7 @@ function configuration_backup(callback) {
 
             // echo/console log path specified
             chrome.fileSystem.getDisplayPath(chosenFileEntry, function (path) {
-                console.log('Backup file path: ' + path);
+                console.log(`Backup file path: ${path}`);
             });
 
             // change file entry from read only to read/write
@@ -300,7 +300,7 @@ function configuration_restore(callback) {
 
         // echo/console log path specified
         chrome.fileSystem.getDisplayPath(chosenFileEntry, function (path) {
-            console.log('Restore file path: ' + path);
+            console.log(`Restore file path: ${path}`);
         });
 
         // read contents into variable

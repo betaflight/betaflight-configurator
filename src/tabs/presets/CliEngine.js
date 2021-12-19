@@ -133,7 +133,7 @@ class CliEngine
 
     getCliCommand(command, cliBuffer) {
         const buffer = this.removePromptHash(cliBuffer);
-        const bufferRegex = new RegExp('^' + buffer, 'g');
+        const bufferRegex = new RegExp(`^${  buffer}`, 'g');
 
         if (command.match(bufferRegex)) {
             return command.replace(bufferRegex, '');
@@ -153,7 +153,7 @@ class CliEngine
             this.writeToOutput(`<span class="error_message">${text}</span><br>`);
             this._cliErrorsCount++;
         } else {
-            this.writeToOutput(text + "<br>");
+            this.writeToOutput(`${text  }<br>`);
         }
         this._responseCallback?.();
         this._onRowCameCallback?.(text);
@@ -219,7 +219,7 @@ class CliEngine
     }
 
     sendLine(line, callback, responseCallback) {
-        this.send(line + '\n', callback, responseCallback);
+        this.send(`${line  }\n`, callback, responseCallback);
     }
 
     send(line, callback, responseCallback) {

@@ -122,22 +122,22 @@ TABS.receiver.initialize = function (callback) {
             if (i < bar_names.length) {
                 name = bar_names[i];
             } else {
-                name = i18n.getMessage("controlAxisAux" + (auxIndex++));
+                name = i18n.getMessage(`controlAxisAux${  auxIndex++}`);
             }
 
-            barContainer.append('\
+            barContainer.append(`\
                 <ul>\
-                    <li class="name">' + name + '</li>\
+                    <li class="name">${  name  }</li>\
                     <li class="meter">\
                         <div class="meter-bar">\
                             <div class="label"></div>\
-                            <div class="fill' + (FC.RC.active_channels == 0 ? 'disabled' : '') + '">\
+                            <div class="fill${  FC.RC.active_channels == 0 ? 'disabled' : ''  }">\
                                 <div class="label"></div>\
                             </div>\
                         </div>\
                     </li>\
                 </ul>\
-            ');
+            `);
         }
 
         // we could probably use min and max throttle for the range, will see
@@ -233,7 +233,7 @@ TABS.receiver.initialize = function (callback) {
         rssi_channel_e.append(`<option value="0">${i18n.getMessage("receiverRssiChannelDisabledOption")}</option>`);
         //1-4 reserved for Roll Pitch Yaw & Throttle, starting at 5
         for (let i = 5; i < FC.RC.active_channels + 1; i++) {
-            rssi_channel_e.append(`<option value="${i}">${i18n.getMessage("controlAxisAux" + (i-4))}</option>`);
+            rssi_channel_e.append(`<option value="${i}">${i18n.getMessage(`controlAxisAux${  i-4}`)}</option>`);
         }
 
         $('select[name="rssi_channel"]').val(FC.RSSI_CONFIG.channel);
@@ -715,7 +715,7 @@ TABS.receiver.initialize = function (callback) {
 
                     // update bars with latest data
                     for (let i = 0; i < FC.RC.active_channels; i++) {
-                        meterFillArray[i].css('width', ((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min) * 100).clamp(0, 100) + '%');
+                        meterFillArray[i].css('width', `${((FC.RC.channels[i] - meterScale.min) / (meterScale.max - meterScale.min) * 100).clamp(0, 100)  }%`);
                         meterLabelArray[i].text(FC.RC.channels[i]);
                     }
 

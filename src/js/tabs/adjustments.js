@@ -30,7 +30,7 @@ TABS.adjustments.initialize = function (callback) {
         const template = $('#tab-adjustments-templates .adjustments .adjustment');
         const newAdjustment = template.clone();
 
-        $(newAdjustment).attr('id', 'adjustment-' + adjustmentIndex);
+        $(newAdjustment).attr('id', `adjustment-${  adjustmentIndex}`);
         $(newAdjustment).data('index', adjustmentIndex);
 
         //
@@ -51,7 +51,7 @@ TABS.adjustments.initialize = function (callback) {
         channelOptionTemplate.remove();
         for (let channelIndex = 0; channelIndex < auxChannelCount; channelIndex++) {
             const channelOption = channelOptionTemplate.clone();
-            channelOption.text('AUX ' + (channelIndex + 1));
+            channelOption.text(`AUX ${  channelIndex + 1}`);
             channelOption.val(channelIndex);
             channelList.append(channelOption);
         }
@@ -76,7 +76,7 @@ TABS.adjustments.initialize = function (callback) {
         let switchOption;
         for (let switchIndex = 0; switchIndex < auxChannelCount; switchIndex++) {
             switchOption = switchOptionTemplate.clone();
-            switchOption.text('AUX ' + (switchIndex + 1));
+            switchOption.text(`AUX ${  switchIndex + 1}`);
             switchOption.val(switchIndex);
             switchList.append(switchOption);
         }
@@ -250,7 +250,7 @@ TABS.adjustments.initialize = function (callback) {
                     return;
                 }
 
-                $(this).find('.range .marker').css('left', percentage + '%');
+                $(this).find('.range .marker').css('left', `${percentage  }%`);
             });
         }
 
@@ -304,7 +304,7 @@ TABS.adjustments.adjust_template = function () {
     }
 
     for (let i = 0; i < elementsNumber; i++) {
-        selectFunction.append(new Option(i18n.getMessage('adjustmentsFunction' + i), i));
+        selectFunction.append(new Option(i18n.getMessage(`adjustmentsFunction${  i}`), i));
     }
 
     // For 1.40, the D Setpoint has been replaced, so we replace it with the correct values

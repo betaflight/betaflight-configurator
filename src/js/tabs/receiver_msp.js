@@ -106,10 +106,10 @@ function updateControlPositions() {
                 stickElem = $(".control-stick", gimbalElem);
 
             if (gimbal[0] == stickName) {
-                stickElem.css('top', (1.0 - channelValueToStickPortion(stickValue)) * gimbalSize + "px");
+                stickElem.css('top', `${(1.0 - channelValueToStickPortion(stickValue)) * gimbalSize  }px`);
                 break;
             } else if (gimbal[1] == stickName) {
-                stickElem.css('left', channelValueToStickPortion(stickValue) * gimbalSize + "px");
+                stickElem.css('left', `${channelValueToStickPortion(stickValue) * gimbalSize  }px`);
                 break;
             }
         }
@@ -131,21 +131,21 @@ function localizeAxisNames() {
     for (const gimbalIndex in gimbals) {
         const gimbal = gimbalElems.get(gimbalIndex);
 
-        $(".gimbal-label-vert", gimbal).text(i18n.getMessage("controlAxis" + gimbals[gimbalIndex][0]));
-        $(".gimbal-label-horz", gimbal).text(i18n.getMessage("controlAxis" + gimbals[gimbalIndex][1]));
+        $(".gimbal-label-vert", gimbal).text(i18n.getMessage(`controlAxis${  gimbals[gimbalIndex][0]}`));
+        $(".gimbal-label-horz", gimbal).text(i18n.getMessage(`controlAxis${  gimbals[gimbalIndex][1]}`));
     }
 
     for (let sliderIndex = 0; sliderIndex < 4; sliderIndex++) {
-        $(".slider-label", sliderElems.get(sliderIndex)).text(i18n.getMessage("controlAxisAux" + (sliderIndex + 1)));
+        $(".slider-label", sliderElems.get(sliderIndex)).text(i18n.getMessage(`controlAxisAux${  sliderIndex + 1}`));
     }
 }
 
 function applyDarkTheme() {
-    css_dark.forEach((el) => $('link[href="' + el + '"]').prop('disabled', false));
+    css_dark.forEach((el) => $(`link[href="${  el  }"]`).prop('disabled', false));
 }
 
 function applyNormalTheme() {
-    css_dark.forEach((el) => $('link[href="' + el + '"]').prop('disabled', true));
+    css_dark.forEach((el) => $(`link[href="${  el  }"]`).prop('disabled', true));
 }
 
 $(document).ready(function() {

@@ -59,7 +59,7 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function show_loaded_hex(summary) {
-            self.flashingMessage('<a class="save_firmware" href="#" title="Save Firmware">' + i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', self.parsed_hex.bytes_total) + '</a>',
+            self.flashingMessage(`<a class="save_firmware" href="#" title="Save Firmware">${  i18n.getMessage('firmwareFlasherFirmwareOnlineLoaded', self.parsed_hex.bytes_total)  }</a>`,
                 self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
             self.enableFlashing(true);
@@ -205,7 +205,7 @@ firmware_flasher.initialize = function (callback) {
                         return;
                     }
                     const date = new Date(release.published_at);
-                    const formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+                    const formattedDate = `${(`0${  date.getDate()}`).slice(-2)  }-${  (`0${  date.getMonth() + 1}`).slice(-2)  }-${  date.getFullYear()  } ${  (`0${  date.getHours()}`).slice(-2)  }:${  (`0${  date.getMinutes()}`).slice(-2)}`;
                     const descriptor = {
                         "releaseUrl": release.html_url,
                         "name"      : version,

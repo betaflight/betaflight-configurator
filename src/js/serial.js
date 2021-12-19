@@ -104,7 +104,7 @@ const serial = {
 
                         case 'frame_error':
                         case 'parity_error':
-                            GUI.log(i18n.getMessage('serialError' + inflection.camelize(info.error)));
+                            GUI.log(i18n.getMessage(`serialError${  inflection.camelize(info.error)}`));
                             self.errorHandler(info.error, 'receive');
                             break;
                         case 'break': // This seems to be the error that is thrown under NW.js in Windows when the device reboots after typing 'exit' in CLI

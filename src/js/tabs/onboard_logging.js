@@ -167,21 +167,21 @@ TABS.onboard_logging.initialize = function (callback) {
         deviceSelect.empty();
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_33)) {
-            deviceSelect.append('<option value="0">' + i18n.getMessage('blackboxLoggingNone') + '</option>');
+            deviceSelect.append(`<option value="0">${  i18n.getMessage('blackboxLoggingNone')  }</option>`);
             if (FC.DATAFLASH.supported) {
-                deviceSelect.append('<option value="1">' + i18n.getMessage('blackboxLoggingFlash') + '</option>');
+                deviceSelect.append(`<option value="1">${  i18n.getMessage('blackboxLoggingFlash')  }</option>`);
             }
             if (FC.SDCARD.supported) {
-                deviceSelect.append('<option value="2">' + i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+                deviceSelect.append(`<option value="2">${  i18n.getMessage('blackboxLoggingSdCard')  }</option>`);
             }
-            deviceSelect.append('<option value="3">' + i18n.getMessage('blackboxLoggingSerial') + '</option>');
+            deviceSelect.append(`<option value="3">${  i18n.getMessage('blackboxLoggingSerial')  }</option>`);
         } else {
-            deviceSelect.append('<option value="0">' + i18n.getMessage('blackboxLoggingSerial') + '</option>');
+            deviceSelect.append(`<option value="0">${  i18n.getMessage('blackboxLoggingSerial')  }</option>`);
             if (FC.DATAFLASH.ready) {
-                deviceSelect.append('<option value="1">' + i18n.getMessage('blackboxLoggingFlash') + '</option>');
+                deviceSelect.append(`<option value="1">${  i18n.getMessage('blackboxLoggingFlash')  }</option>`);
             }
             if (FC.SDCARD.supported) {
-                deviceSelect.append('<option value="2">' + i18n.getMessage('blackboxLoggingSdCard') + '</option>');
+                deviceSelect.append(`<option value="2">${  i18n.getMessage('blackboxLoggingSdCard')  }</option>`);
             }
         }
 
@@ -264,11 +264,11 @@ TABS.onboard_logging.initialize = function (callback) {
                         loggingRateUnit = " kHz";
                     }
                 }
-                loggingRatesSelect.append('<option value="' + loggingRates[i].num + '/' + loggingRates[i].denom + '">'
-                    + loggingRate + loggingRateUnit + ' (' + Math.round(loggingRates[i].num / loggingRates[i].denom * 100) + '%)</option>');
+                loggingRatesSelect.append(`<option value="${  loggingRates[i].num  }/${  loggingRates[i].denom  }">${
+                     loggingRate  }${loggingRateUnit  } (${  Math.round(loggingRates[i].num / loggingRates[i].denom * 100)  }%)</option>`);
 
             }
-            loggingRatesSelect.val(FC.BLACKBOX.blackboxRateNum + '/' + FC.BLACKBOX.blackboxRateDenom);
+            loggingRatesSelect.val(`${FC.BLACKBOX.blackboxRateNum  }/${  FC.BLACKBOX.blackboxRateDenom}`);
         }
     }
 
@@ -384,24 +384,24 @@ TABS.onboard_logging.initialize = function (callback) {
 
     function formatFilesizeKilobytes(kilobytes) {
         if (kilobytes < 1024) {
-            return Math.round(kilobytes) + "kB";
+            return `${Math.round(kilobytes)  }kB`;
         }
 
         const megabytes = kilobytes / 1024;
         let gigabytes;
 
         if (megabytes < 900) {
-            return megabytes.toFixed(1) + "MB";
+            return `${megabytes.toFixed(1)  }MB`;
         } else {
             gigabytes = megabytes / 1024;
 
-            return gigabytes.toFixed(1) + "GB";
+            return `${gigabytes.toFixed(1)  }GB`;
         }
     }
 
     function formatFilesizeBytes(bytes) {
         if (bytes < 1024) {
-            return bytes + "B";
+            return `${bytes  }B`;
         }
         return formatFilesizeKilobytes(bytes / 1024);
     }
@@ -409,11 +409,11 @@ TABS.onboard_logging.initialize = function (callback) {
     function update_bar_width(bar, value, total, label, valuesAreKilobytes) {
         if (value > 0) {
             bar.css({
-                width: (value / total * 100) + "%",
+                width: `${value / total * 100}%`,
                 display: 'block',
             });
 
-            $("div", bar).text((label ? label + " " : "") + (valuesAreKilobytes ? formatFilesizeKilobytes(value) : formatFilesizeBytes(value)));
+            $("div", bar).text((label ? `${label  } ` : "") + (valuesAreKilobytes ? formatFilesizeKilobytes(value) : formatFilesizeBytes(value)));
         } else {
             bar.css({
                 display: 'none',
@@ -515,8 +515,8 @@ TABS.onboard_logging.initialize = function (callback) {
         analytics.sendEvent(analytics.EVENT_CATEGORIES.FLIGHT_CONTROLLER, 'SaveDataflash');
 
         const totalTime = (new Date().getTime() - startTime) / 1000;
-        console.log('Received ' + totalBytes + ' bytes in ' + totalTime.toFixed(2) + 's ('
-            + (totalBytes / totalTime / 1024).toFixed(2) + 'kB / s) with block size ' + self.blockSize + '.');
+        console.log(`Received ${  totalBytes  } bytes in ${  totalTime.toFixed(2)  }s (${
+             (totalBytes / totalTime / 1024).toFixed(2)  }kB / s) with block size ${  self.blockSize  }.`);
         if (!isNaN(totalBytesCompressed)) {
             console.log('Compressed into', totalBytesCompressed, 'bytes with mean compression factor of', totalBytes / totalBytesCompressed);
         }
@@ -614,7 +614,7 @@ TABS.onboard_logging.initialize = function (callback) {
         const filename = generateFilename(prefix, suffix);
 
         chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: filename,
-                accepts: [{description: suffix.toUpperCase() + ' files', extensions: [suffix]}]}, function(fileEntry) {
+                accepts: [{description: `${suffix.toUpperCase()  } files`, extensions: [suffix]}]}, function(fileEntry) {
             if (checkChromeRuntimeError()) {
                 if (chrome.runtime.lastError.message !== "User cancelled") {
                     GUI.log(i18n.getMessage('dataflashFileWriteFailed'));
@@ -624,12 +624,12 @@ TABS.onboard_logging.initialize = function (callback) {
 
             // echo/console log path specified
             chrome.fileSystem.getDisplayPath(fileEntry, function(path) {
-                console.log('Dataflash dump file path: ' + path);
+                console.log(`Dataflash dump file path: ${  path}`);
             });
 
             fileEntry.createWriter(function (fileWriter) {
                 fileWriter.onerror = function (e) {
-                    GUI.log('<strong><span class="message-negative">' + i18n.getMessage('error', { errorMessage: e.target.error.message }) + '</span class="message-negative></strong>');
+                    GUI.log(`<strong><span class="message-negative">${  i18n.getMessage('error', { errorMessage: e.target.error.message })  }</span class="message-negative></strong>`);
 
                     console.error(e);
 

@@ -59,12 +59,12 @@ TABS.gps.initialize = function (callback) {
             }
 
             $('.GPS_info td.fix').html((FC.GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
-            $('.GPS_info td.alt').text(alt + ' m');
-            $('.GPS_info td.lat a').prop('href', url).text(lat.toFixed(4) + ' deg');
-            $('.GPS_info td.lon a').prop('href', url).text(lon.toFixed(4) + ' deg');
-            $('.GPS_info td.speed').text(FC.GPS_DATA.speed + ' cm/s');
+            $('.GPS_info td.alt').text(`${alt  } m`);
+            $('.GPS_info td.lat a').prop('href', url).text(`${lat.toFixed(4)  } deg`);
+            $('.GPS_info td.lon a').prop('href', url).text(`${lon.toFixed(4)  } deg`);
+            $('.GPS_info td.speed').text(`${FC.GPS_DATA.speed  } cm/s`);
             $('.GPS_info td.sats').text(FC.GPS_DATA.numSat);
-            $('.GPS_info td.distToHome').text(FC.GPS_DATA.distanceToHome + ' m');
+            $('.GPS_info td.distToHome').text(`${FC.GPS_DATA.distanceToHome  } m`);
 
             // Update GPS Signal Strengths
             const eSsTable = $('div.GPS_signal_strength table');

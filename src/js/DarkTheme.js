@@ -57,9 +57,9 @@ DarkTheme.setConfig = function (result) {
 };
 
 DarkTheme.applyDark = function () {
-    css_dark.forEach((el) => $('link[href="' + el + '"]').prop('disabled', false));
+    css_dark.forEach((el) => $(`link[href="${  el  }"]`).prop('disabled', false));
 };
 
 DarkTheme.applyNormal = function () {
-    css_dark.forEach((el) => $('link[href="' + el + '"]').prop('disabled', true));
+    css_dark.forEach((el) => $(`link[href="${  el  }"]`).prop('disabled', true));
 };

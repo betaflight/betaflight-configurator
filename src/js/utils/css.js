@@ -43,7 +43,7 @@ CSSUtil.prototype.getColorForPercentage = function(percentage, colorTable = null
         b: Math.floor(lower.color.b * percentageLower + upper.color.b * percentageUpper),
         a: lower.color.a * percentageLower + upper.color.a * percentageUpper,
     };
-    return "rgba(" + [color.r, color.g, color.b, color.a].join(",") + ")";
+    return `rgba(${  [color.r, color.g, color.b, color.a].join(",")  })`;
 };
 
 const cssUtil = new CSSUtil();

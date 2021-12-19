@@ -789,17 +789,17 @@ function bit_clear(num, bit) {
 function update_dataflash_global() {
     function formatFilesize(bytes) {
         if (bytes < 1024) {
-            return bytes + "B";
+            return `${bytes  }B`;
         }
         const kilobytes = bytes / 1024;
 
         if (kilobytes < 1024) {
-            return Math.round(kilobytes) + "kB";
+            return `${Math.round(kilobytes)  }kB`;
         }
 
         const megabytes = kilobytes / 1024;
 
-        return megabytes.toFixed(1) + "MB";
+        return `${megabytes.toFixed(1)  }MB`;
     }
 
     const supportsDataflash = FC.DATAFLASH.totalSize > 0;
@@ -814,10 +814,10 @@ function update_dataflash_global() {
         });
 
         $(".dataflash-free_global").css({
-           width: (100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100) + "%",
+           width: `${100-(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize) / FC.DATAFLASH.totalSize * 100}%`,
            display: 'block',
         });
-        $(".dataflash-free_global div").text('Dataflash: free ' + formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize));
+        $(".dataflash-free_global div").text(`Dataflash: free ${  formatFilesize(FC.DATAFLASH.totalSize - FC.DATAFLASH.usedSize)}`);
      } else {
         $(".noflash_global").css({
            display: 'block',

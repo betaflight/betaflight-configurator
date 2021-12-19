@@ -487,7 +487,7 @@ GuiControl.prototype.showInformationDialog = function(informationDialogSettings)
 
 GuiControl.prototype.saveToTextFileDialog = function(textToSave, suggestedFileName, extension) {
     return new Promise((resolve, reject) => {
-        const accepts = [{ description: extension.toUpperCase() + ' files', extensions: [extension] }];
+        const accepts = [{ description: `${extension.toUpperCase()  } files`, extensions: [extension] }];
 
         chrome.fileSystem.chooseEntry(
             {
@@ -535,7 +535,7 @@ GuiControl.prototype._saveToTextFileDialogFileSelected = function(entry, textToS
 
 
 GuiControl.prototype.readTextFileDialog = function(extension) {
-    const accepts = [{ description: extension.toUpperCase() + ' files', extensions: [extension] }];
+    const accepts = [{ description: `${extension.toUpperCase()  } files`, extensions: [extension] }];
 
     return new Promise(resolve => {
         chrome.fileSystem.chooseEntry({type: 'openFile', accepts: accepts}, function(entry) {

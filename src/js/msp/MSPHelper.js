@@ -810,7 +810,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
 
             case MSPCodes.MSP_API_VERSION:
                 FC.CONFIG.mspProtocolVersion = data.readU8();
-                FC.CONFIG.apiVersion = data.readU8() + '.' + data.readU8() + '.0';
+                FC.CONFIG.apiVersion = `${data.readU8()  }.${  data.readU8()  }.0`;
                 break;
 
             case MSPCodes.MSP_FC_VARIANT:
@@ -822,7 +822,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             case MSPCodes.MSP_FC_VERSION:
-                FC.CONFIG.flightControllerVersion = data.readU8() + '.' + data.readU8() + '.' + data.readU8();
+                FC.CONFIG.flightControllerVersion = `${data.readU8()  }.${  data.readU8()  }.${  data.readU8()}`;
                 break;
 
             case MSPCodes.MSP_BUILD_INFO:
@@ -1741,9 +1741,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 break;
 
             default:
-                console.log('Unknown code detected: ' + code);
+                console.log(`Unknown code detected: ${  code}`);
         } else {
-            console.log('FC reports unsupported message error: ' + code);
+            console.log(`FC reports unsupported message error: ${  code}`);
 
             if (code === MSPCodes.MSP_SET_REBOOT) {
                 TABS.onboard_logging.mscRebootFailedCallback();
@@ -2507,12 +2507,12 @@ MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback)
                 }
             } else {
                 // Report address error
-                console.log('Expected address ' + address + ' but received ' + chunkAddress + ' - retrying');
+                console.log(`Expected address ${  address  } but received ${  chunkAddress  } - retrying`);
                 onDataCallback(address, null);  // returning null to the callback forces a retry
             }
         } else {
             // Report crc error
-            console.log('CRC error for address ' + address + ' - retrying');
+            console.log(`CRC error for address ${  address  } - retrying`);
             onDataCallback(address, null);  // returning null to the callback forces a retry
         }
     }, true);
