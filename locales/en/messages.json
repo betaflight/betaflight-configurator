@@ -1298,7 +1298,7 @@
         "message": "Motor Idle ( %, static)"
     },
     "configurationDigitalIdlePercentDisabled": {
-        "message": "Motor Idle is disabled. Dynamic Idle is active at {{dynamicIdle}} rpm. See the PID tuning tab."
+        "message": "Dynamic Idle is active at {{dynamicIdle}} rpm. See the PID tuning tab."
     },
     "configurationDigitalIdlePercentHelp": {
         "message": "The 'Motor Idle (static)' value is the percent of maximum throttle that is sent to the ESCs when the throttle at minimum stick position and the craft is armed. <br><br>Increase it to gain more idle speed and avoid desyncs. Too high and the craft feels floaty. Too low and the motors can desync or be slow to start up.<br><br>In 4.3, when Dynamic Idle is active, the static idle value is disregarded, because the idle value is continually adjusted to maintain the configured minimum rpm on the slowest motor."
