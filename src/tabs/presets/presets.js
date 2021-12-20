@@ -123,7 +123,12 @@ TABS.presets.setupMenuButtons = function() {
     });
     this._domButtonaSaveAnyway.on("click", () => {
         this._domDialogCliErrors.close();
-        this.cliEngine.sendLine(CliEngine.s_commandSave);
+        this.cliEngine.sendLine(CliEngine.s_commandSave, null, () => {
+            // In case of batch CLI commands errors Firmware requeires extra "save" comand for CLI safety.
+            // No need for this safety in presets as preset tab already detected errors and showed them to the user.
+            // At this point user clicked "save anyway".
+            this.cliEngine.sendLine(CliEngine.s_commandSave);
+        });
         this.disconnectCliMakeSure();
     });
     this._domButtonSaveBackup.on("click", () => this.onSaveConfigClick());
