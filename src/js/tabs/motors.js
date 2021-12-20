@@ -737,7 +737,9 @@ TABS.motors.initialize = function (callback) {
 
             $('div.digitalIdlePercent').toggle(protocolConfigured && digitalProtocol);
 
-            $('input[name="digitalIdlePercent"]').prop('disabled', protocolConfigured && digitalProtocol && FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                $('input[name="digitalIdlePercent"]').prop('disabled', protocolConfigured && digitalProtocol && FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry);
+            }
 
             if (FC.ADVANCED_TUNING.idleMinRpm && FC.MOTOR_CONFIG.use_dshot_telemetry) {
                 const dynamicIdle = FC.ADVANCED_TUNING.idleMinRpm * 100;
