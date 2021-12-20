@@ -15,8 +15,8 @@
     "release:windows": "set NODE_ENV=production&& gulp release",
     "pretest": "yarn run lint",
     "test": "karma start test/karma.conf.js",
-    "lint": "eslint --ext .js,.vue src gulpfile.js",
-    "lint:fix": "eslint --fix src gulpfile.js"
+    "lint": "eslint --ext .js,.vue src gulpfile.js gulp-appdmg.js",
+    "lint:fix": "eslint --fix src gulpfile.js gulp-appdmg.js"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
@@ -47,7 +47,7 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
-    "node": "10.x"
+    "node": "14.x"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
@@ -98,8 +98,9 @@
     "gulp-prompt": "^1.2.0",
     "gulp-rename": "^2.0.0",
     "gulp-replace": "^1.0.0",
-    "gulp-xml-transformer": "^3.0.0",
-    "gulp-yarn": "^2.0.0",
+    "gulp-util": "^3.0.8",
+    "gulp-xml-transformer": "^5.1.1",
+    "gulp-yarn": "^3.0.0",
     "gulp-zip": "^5.0.0",
     "husky": "^4.3.0",
     "karma": "^4.0.1",
@@ -124,12 +125,13 @@
     "sinon-chai": "^3.5.0",
     "targz": "^1.0.1",
     "temp": "^0.9.1",
+    "through2": "^4.0.2",
     "vinyl-source-stream": "^2.0.0",
     "vue-template-compiler": "^2.6.12",
     "yarn": "^1.22.17"
   },
   "optionalDependencies": {
-    "gulp-appdmg": "^1.0.3"
+    "appdmg": "^0.6.2"
   },
   "husky": {
     "hooks": {

@@ -50,11 +50,11 @@ stages:
       vmImage: '$(windowsVmImage)'
 
     steps:
-    - task: UseNode@1
+    - task: NodeTool@0
       inputs:
-        version: '10.16.3'
-      displayName: 'Install Node.js 10.16.3'
-    - script: yarn install
+        versionSpec: '14.18.2'
+      displayName: 'Install Node.js 14.18.2'
+    - script: yarn install --ignore-optional
       displayName: 'Run yarn install'
     - script: yarn test
       displayName: 'Run yarn test'
@@ -82,11 +82,11 @@ stages:
       vmImage: '$(windowsVmImage)'
 
     steps:
-    - task: UseNode@1
+    - task: NodeTool@0
       inputs:
-        version: '10.16.3'
-      displayName: 'Install Node.js 10.16.3'
-    - script: yarn install
+        versionSpec: '14.18.2'
+      displayName: 'Install Node.js 14.18.2'
+    - script: yarn install --ignore-optional
       displayName: 'Run yarn install'
     - script: yarn gulp debug-release --android
       displayName: 'Run yarn release for android'
@@ -101,10 +101,10 @@ stages:
       vmImage: 'macos-10.15'
 
     steps:
-    - task: UseNode@1
+    - task: NodeTool@0
       inputs:
-        version: '10.16.3'
-      displayName: 'Install Node.js 10.16.3'
+        versionSpec: '14.18.2'
+      displayName: 'Install Node.js 14.18.2'
     - script: npm install -g gulp
       displayName: 'Install Gulp'
     - script: yarn install
@@ -126,11 +126,11 @@ stages:
       vmImage: '$(linuxVmImage)'
 
     steps:
-    - task: UseNode@1
+    - task: NodeTool@0
       inputs:
-        version: '10.16.3'
-      displayName: 'Install Node.js 10.16.3'
-    - script: yarn install
+        versionSpec: '14.18.2'
+      displayName: 'Install Node.js 14.18.2'
+    - script: yarn install --ignore-optional
       displayName: 'Run yarn install'
     - script: yarn gulp release --linux64
       displayName: 'Run yarn release for linux64'
