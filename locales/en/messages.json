@@ -1482,7 +1482,7 @@
         "description": "Option to use Galileo in the GPS configuration"
     },
     "configurationGPSGalileoHelp": {
-        "message": "When enabled, this removes the QZSS system (Japanese) and replaces it for the Galileo system (European).",
+        "message": "When enabled, the GPS module will also track the Galileo satellite system, usually resulting in more locked satellites. On Betaflight 4.2.x or earlier, it also disables the QZSS augmentation system.",
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
@@ -2519,11 +2519,47 @@
     "gpsSignalStr": {
         "message": "Signal Strength"
     },
+    "gpsSignalGnssId": {
+        "message": "Gnss ID"
+    },
     "gpsSignalSatId": {
         "message": "Sat ID"
     },
-    "gpsSignalQty": {
-        "message": "Qty"
+    "gpsSignalStatusQly": {
+        "message": "Status / Quality"
+    },
+    "gnssQualityNoSignal": {
+        "message": "no signal"
+    },
+    "gnssQualitySearching": {
+        "message": "searching"
+    },
+    "gnssQualityAcquired": {
+        "message": "acquired"
+    },
+    "gnssQualityUnusable": {
+        "message": "unusable"
+    },
+    "gnssQualityLocked": {
+        "message": "locked"
+    },
+    "gnssQualityFullyLocked": {
+        "message": "fully locked"
+    },
+    "gnssUsedUnused": {
+        "message": "unused"
+    },
+    "gnssUsedUsed": {
+        "message": "used"
+    },
+    "gnssHealthyUnknown": {
+        "message": "unknown"
+    },
+    "gnssHealthyHealthy": {
+        "message": "healthy"
+    },
+    "gnssHealthyUnhealthy": {
+        "message": "unhealthy"
     },
 
     "motorsVoltage": {

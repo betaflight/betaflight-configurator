@@ -48,6 +48,11 @@ TABS.gps.initialize = function (callback) {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
             const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const gnssArray = ['GPS', 'SBAS', 'Galileo', 'BeiDou', 'IMES', 'QZSS', 'Glonass'];
+            const qualityArray = ['gnssQualityNoSignal', 'gnssQualitySearching', 'gnssQualityAcquired', 'gnssQualityUnusable', 'gnssQualityLocked',
+                'gnssQualityFullyLocked', 'gnssQualityFullyLocked', 'gnssQualityFullyLocked'];
+            const usedArray = ['gnssUsedUnused', 'gnssUsedUsed'];
+            const healthyArray = ['gnssHealthyUnknown', 'gnssHealthyHealthy', 'gnssHealthyUnhealthy', 'gnssHealthyUnknown'];
             let alt = FC.GPS_DATA.alt;
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_39)) {
                 alt = alt / 10;
@@ -64,12 +69,55 @@ TABS.gps.initialize = function (callback) {
             // Update GPS Signal Strengths
             const eSsTable = $('div.GPS_signal_strength table tr:not(.titles)');
 
-            for (let i = 0; i < FC.GPS_DATA.chn.length; i++) {
-                const row = eSsTable.eq(i);
+            if (FC.GPS_DATA.chn.length <= 16) {
+                // Legacy code path: old BF firmware or old ublox module
+                for (let i = 0; i < FC.GPS_DATA.chn.length; i++) {
+                    const row = eSsTable.eq(i);
 
-                $('td', row).eq(0).text(FC.GPS_DATA.svid[i]);
-                $('td', row).eq(1).text(FC.GPS_DATA.quality[i]);
-                $('td', row).eq(2).find('progress').val(FC.GPS_DATA.cno[i]);
+                    $('td', row).eq(0).text('-');
+                    $('td', row).eq(1).text(FC.GPS_DATA.svid[i]);
+                    $('td', row).eq(2).find('progress').val(FC.GPS_DATA.cno[i]);
+                    $('td', row).eq(3).text(FC.GPS_DATA.quality[i]);
+                }
+                // Cleanup the rest of the table
+                for (let i = FC.GPS_DATA.chn.length; i < 32; i++) {
+                    const row = eSsTable.eq(i);
+
+                    $('td', row).eq(0).text('-');
+                    $('td', row).eq(1).text('-');
+                    $('td', row).eq(2).find('progress').val(0);
+                    $('td', row).eq(3).text(' ');
+                }
+            } else {
+                // M8N/M9N on newer firmware
+
+                const maxUIChannels = 32; //the list in html can only show 32 channels but future firmware could send more
+                let channels = Math.min(maxUIChannels, FC.GPS_DATA.chn.length);
+
+                for (let i = 0; i < channels; i++) {
+                    const row = eSsTable.eq(i);
+
+                    if (FC.GPS_DATA.chn[i] <= 6) {
+                        $('td', row).eq(0).text(gnssArray[FC.GPS_DATA.chn[i]]);
+                    } else {
+                        $('td', row).eq(0).text('-');
+                    }
+
+                    if (FC.GPS_DATA.chn[i] >= 7) {
+                        $('td', row).eq(1).text('-');
+                        $('td', row).eq(2).find('progress').val(0);
+                        $('td', row).eq(3).text(' ');
+                    } else {
+                        $('td', row).eq(1).text(FC.GPS_DATA.svid[i]);
+                        $('td', row).eq(2).find('progress').val(FC.GPS_DATA.cno[i]);
+
+                        const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
+                        const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
+                        const healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
+
+                        $('td', row).eq(3).text(`${quality} | ${used} | ${healthy}`);
+                    }
+                }
             }
 
             const message = {
