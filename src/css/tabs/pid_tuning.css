@@ -255,11 +255,6 @@
     text-align: right;
     border: 1px solid var(--subtleAccent);
     border-radius: 3px;
-    background-color: #f9f9f9;
-}
-
-.tab-pid_tuning .subtab-pid table input:disabled {
-    background-color: #dddddd;
 }
 
 .tab-pid_tuning .subtab-filter table input,
