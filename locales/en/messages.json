@@ -2057,7 +2057,7 @@
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
     },
     "tuningHelpSliders": {
-        "message": "We recommend using the sliders to adjust filtering. <br>Make relatively small changes, test fly and check motor temperature after each change.<br>Moving the sliders to the right gives higher cutoff values; this may improve prop-wash, but lets more noise through to the motors, making them hotter, possibly hot enough to burn out.<br>Most clean builds with rpm filtering will be OK with gyro filtering hard right.<br>In contrast, be very cautious when moving D filter sliders to the right!<br> Unusually high or low filter settings may cause flyaways on arming. The defaults are safe for typical 5\" quads.<br><strong>Note:</strong> Changing profiles will only change the D-term filter settings. Gyro filter settings are the same for all profiles.",
+        "message": "Use the sliders to adjust your filters. Sliders must be switched off to make manual changes.<br>Moving sliders to the right gives higher cutoff values and may improve propwash, but will allow more noise through to the motors, making them hotter.<br>Most clean builds with rpm filtering will be OK with the gyro lowpass slider hard right, or with only lowpass 2 active and the sliders in the middle.<br><strong>WARNING:</strong> Be VERY cautious when moving D sliders to the right! Check motor temperature after each change!<br><strong>Note:</strong> Changing profiles will only change the D-term filter settings. Gyro filter settings are the same for all profiles.",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
@@ -3933,16 +3933,16 @@
         "message": "Gyro Notch Filter 2"
     },
     "pidTuningGyroNotch1Frequency": {
-        "message": "Gyro Notch Filter 1 Center Frequency [Hz]"
+        "message": "Center Frequency [Hz]"
     },
     "pidTuningGyroNotch2Frequency": {
-        "message": "Gyro Notch Filter 2 Center Frequency [Hz]"
+        "message": "Center Frequency [Hz]"
     },
     "pidTuningGyroNotch1Cutoff": {
-        "message": "Gyro Notch Filter 1 Cutoff Frequency [Hz]"
+        "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningGyroNotch2Cutoff": {
-        "message": "Gyro Notch Filter 2 Cutoff Frequency [Hz]"
+        "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningNotchFilterHelp": {
         "message": "The Notch Filter has a Center and a Cutoff. The filter is symmetrical. The Center Frequency is the center of the filter and the Cutoff Frequency is where Notch filter starts. For example with Notch Cutoff of 160 and Notch Center of 260 it means the range is 160-360Hz with most attenuation around center"
@@ -3966,16 +3966,16 @@
         "message": "Dynamic Notch Width Percent"
     },
     "pidTuningDynamicNotchQ": {
-        "message": "Dynamic Notch Q"
+        "message": "Q factor"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "Dynamic Notch Min Frequency [Hz]"
+        "message": "Min Frequency [Hz]"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "Dynamic Notch Max Frequency [Hz]"
+        "message": "Max Frequency [Hz]"
     },
     "pidTuningDynamicNotchCount": {
-        "message": "Dynamic Notch Count"
+        "message": "Notch Count"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "The dynamic notch has three frequency ranges in which it can operate: LOW(80-330hz) for lower revving quads like 6+ inches, MEDIUM(140-550hz) for a normal 5 inch quad, HIGH(230-800hz) for very high revving 2.5-3 inch quads. AUTO option selects the range depending on the value of the Gyro Dynamic Lowpass 1 Filter's max cutoff frequency."
@@ -4038,46 +4038,46 @@
         "message": "D Term Lowpass Filters"
     },
     "pidTuningDTermLowpassType": {
-        "message": "D Term Lowpass 1 Filter Type"
+        "message": "Filter Type"
     },
     "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass 1 Static Cutoff Frequency [Hz]"
+        "message": "Static Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Lowpass 2 Static Cutoff Frequency [Hz]"
+        "message": "Static Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpass2Type": {
-        "message": "D Term Lowpass 2 Filter Type"
+        "message": "Filter Type"
     },
     "pidTuningDTermLowpassDyn": {
         "message": "D Term Lowpass Dynamic Filter"
     },
     "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "D Term Lowpass 1 Dynamic Min Cutoff Frequency [Hz]"
+        "message": "Min Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "D Term Lowpass 1 Dynamic Max Cutoff Frequency [Hz]"
+        "message": "Max Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpassDynExpo": {
-        "message": "D Term Lowpass 1 Dynamic Curve Expo"
+        "message": "Dynamic Curve Expo"
     },
     "pidTuningDTermLowpassDynType": {
-        "message": "D Term Lowpass 1 Dynamic Filter Type"
+        "message": "Dynamic Filter Type"
     },
     "pidTuningDTermNotchFiltersGroup": {
-        "message": "D Term Notch Filters"
+        "message": "D Term Notch Filter"
     },
     "pidTuningDTermNotchFrequency": {
-        "message": "D Term Notch Filter Center Frequency [Hz]"
+        "message": "Center Frequency [Hz]"
     },
     "pidTuningDTermNotchCutoff": {
-        "message": "D Term Notch Filter Cutoff Frequency [Hz]"
+        "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningYawLowpassFiltersGroup": {
-        "message": "Yaw Lowpass Filters"
+        "message": "Yaw Lowpass Filter"
     },
     "pidTuningYawLowpassFrequency": {
-        "message": "Yaw Lowpass Cutoff Frequency [Hz]"
+        "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensation"
