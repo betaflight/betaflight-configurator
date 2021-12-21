@@ -3881,9 +3881,6 @@
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 Filter Type"
     },    
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Cutoff Frequency [Hz]"
-    },
     "pidTuningGyroLowpass": {
         "message": "Gyro Lowpass 1"
     },
@@ -3902,10 +3899,10 @@
     "pidTuningGyroLowpassDyn": {
         "message": "Gyro Lowpass Dynamic Filter"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
+    "pidTuningMinCutoffFrequency": {
         "message": "Min Cutoff Frequency [Hz]"
     },
-    "pidTuningGyroLowpassDynMaxFrequency": {
+    "pidTuningMaxCutoffFrequency": {
         "message": "Max Cutoff Frequency [Hz]"
     },
     "pidTuningGyroLowpassDynType": {
@@ -3913,9 +3910,6 @@
     },
     "pidTuningGyroLowpass2": {
         "message": "Gyro Lowpass 2"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningGyroLowpassFilterHelp": {
         "message": "Gyro lowpass filters attenuate higher frequency noise to keep it out of the PID loop. There are two independently configurable gyro filters; by default both are active.<br /><br />The first D lowpass can be static (fixed cutoff) or dynamic; the second D lowpass is always static. When a lowpass is in dynamic mode, filter will be stronger at low throttle, and the cutoff will go higher (less filtering) as throttle increases.<br /><br />Without RPM filtering, both PT1 filters should be enabled at default (or stronger) cutoffs, with lowpass 1 in dynamic mode.<br /><br />With RPM filtering, the gyro filter slider can often be moved some way to the right. On clean quads it can go all the way right, or alternatively a single static gyro lowpass filter at 500hz may be sufficient.<br /><br />A quad will have less propwash with the least gyro filter delay (sliders to the right, higher cutoff values).<br /><br />Always check for motor heat when shifting to less gyro filtering (sliders to the right). With minimal gyro filtering, it is essential to have enough D filtering! Take care!" 
@@ -3932,16 +3926,10 @@
     "pidTuningGyroNotchFilter2": {
         "message": "Gyro Notch Filter 2"
     },
-    "pidTuningGyroNotch1Frequency": {
+    "pidTuningCenterFrequency": {
         "message": "Center Frequency [Hz]"
     },
-    "pidTuningGyroNotch2Frequency": {
-        "message": "Center Frequency [Hz]"
-    },
-    "pidTuningGyroNotch1Cutoff": {
-        "message": "Cutoff Frequency [Hz]"
-    },
-    "pidTuningGyroNotch2Cutoff": {
+    "pidTuningCutoffFrequency": {
         "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningNotchFilterHelp": {
@@ -4040,10 +4028,7 @@
     "pidTuningDTermLowpassType": {
         "message": "Filter Type"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "Static Cutoff Frequency [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
+    "pidTuningStaticCutoffFrequency": {
         "message": "Static Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpass2Type": {
@@ -4051,12 +4036,6 @@
     },
     "pidTuningDTermLowpassDyn": {
         "message": "D Term Lowpass Dynamic Filter"
-    },
-    "pidTuningDTermLowpassDynMinFrequency": {
-        "message": "Min Cutoff Frequency [Hz]"
-    },
-    "pidTuningDTermLowpassDynMaxFrequency": {
-        "message": "Max Cutoff Frequency [Hz]"
     },
     "pidTuningDTermLowpassDynExpo": {
         "message": "Dynamic Curve Expo"
@@ -4067,17 +4046,8 @@
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Term Notch Filter"
     },
-    "pidTuningDTermNotchFrequency": {
-        "message": "Center Frequency [Hz]"
-    },
-    "pidTuningDTermNotchCutoff": {
-        "message": "Cutoff Frequency [Hz]"
-    },
     "pidTuningYawLowpassFiltersGroup": {
         "message": "Yaw Lowpass Filter"
-    },
-    "pidTuningYawLowpassFrequency": {
-        "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningVbatPidCompensation": {
         "message": "Vbat PID Compensation"
