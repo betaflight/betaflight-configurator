@@ -1281,7 +1281,7 @@
                                     <span class="suboption">
                                         <input type="number" class="nonProfile" name="gyroLowpassFrequency" step="1" min="1" max="255"/>
                                         <label>
-                                            <span i18n="pidTuningGyroLowpassFrequency"></span>
+                                            <span i18n="pidTuningCutoffFrequency"></span>
                                         </label>
                                     </span>
                                     <span class="suboption">
@@ -1327,14 +1327,14 @@
                                     <span class="suboption dynamic">
                                         <input type="number" name="gyroLowpassDynMinFrequency" step="1" min="1" max="1000"/>
                                         <label>
-                                            <span i18n="pidTuningGyroLowpassDynMinFrequency"></span>
+                                            <span i18n="pidTuningMinCutoffFrequency"></span>
                                         </label>
                                     </span>
 
                                     <span class="suboption dynamic">
                                         <input type="number" name="gyroLowpassDynMaxFrequency" step="1" min="1" max="1000"/>
                                         <label>
-                                            <span i18n="pidTuningGyroLowpassDynMaxFrequency"></span>
+                                            <span i18n="pidTuningMaxCutoffFrequency"></span>
                                         </label>
                                     </span>
 
@@ -1361,7 +1361,7 @@
                                     <span class="suboption">
                                         <input type="number" class="nonProfile" name="gyroLowpass2Frequency" step="1" min="1" max="16000"/>
                                         <label>
-                                            <span i18n="pidTuningGyroLowpass2Frequency"></span>
+                                            <span i18n="pidTuningCutoffFrequency"></span>
                                         </label>
                                     </span>
 
@@ -1394,14 +1394,14 @@
                                     <span class="suboption">
                                         <input type="number" class="nonProfile" name="gyroNotch1Frequency" step="1" min="1" max="16000"/>
                                         <label>
-                                            <span i18n="pidTuningGyroNotch1Frequency"></span>
+                                            <span i18n="pidTuningCenterFrequency"></span>
                                         </label>
                                     </span>
 
                                     <span class="suboption">
                                         <input type="number" class="nonProfile" name="gyroNotch1Cutoff" step="1" min="0" max="16000"/>
                                         <label>
-                                            <span i18n="pidTuningGyroNotch1Cutoff"></span>
+                                            <span i18n="pidTuningCutoffFrequency"></span>
                                         </label>
                                     </span>
                                 </td>
@@ -1416,14 +1416,14 @@
                                     <span class="suboption">
                                         <input type="number" class="nonProfile" name="gyroNotch2Frequency" step="1" min="1" max="16000"/>
                                         <label>
-                                            <span i18n="pidTuningGyroNotch2Frequency"></span>
+                                            <span i18n="pidTuningCenterFrequency"></span>
                                         </label>
                                     </span>
 
                                     <span class="suboption">
                                         <input type="number" class="nonProfile" name="gyroNotch2Cutoff" step="1" min="0" max="16000"/>
                                         <label>
-                                            <span i18n="pidTuningGyroNotch2Cutoff"></span>
+                                            <span i18n="pidTuningCutoffFrequency"></span>
                                         </label>
                                     </span>
 
@@ -1556,14 +1556,14 @@
                                     <span class="suboption">
                                         <span class="inputValue"><input type="number" name="dtermLowpassDynMinFrequency" step="1" min="1" max="1000"/></span>
                                         <label>
-                                            <span i18n="pidTuningDTermLowpassDynMinFrequency"></span>
+                                            <span i18n="pidTuningMinCutoffFrequency"></span>
                                         </label>
                                     </span>
 
                                     <span class="suboption">
                                         <span class="inputValue"><input type="number" name="dtermLowpassDynMaxFrequency" step="1" min="1" max="1000"/></span>
                                         <label>
-                                            <span i18n="pidTuningDTermLowpassDynMaxFrequency"></span>
+                                            <span i18n="pidTuningMaxCutoffFrequency"></span>
                                         </label>
                                     </span>
 
@@ -1590,7 +1590,7 @@
                                     <span class="suboption">
                                         <span class="inputValue"><input type="number" name="dtermLowpassFrequency" step="1" min="1" max="16000"/></span>
                                         <label>
-                                            <span i18n="pidTuningDTermLowpassFrequency"></span>
+                                            <span i18n="pidTuningStaticCutoffFrequency"></span>
                                         </label>
 									</span>
                                     <span class="suboption">
@@ -1637,14 +1637,14 @@
                                     <span class="suboption dynamic">
                                         <span class="inputValue"><input type="number" name="dtermLowpassDynMinFrequency" step="1" min="1" max="1000"/></span>
                                         <label>
-                                            <span i18n="pidTuningDTermLowpassDynMinFrequency"></span>
+                                            <span i18n="pidTuningMinCutoffFrequency"></span>
                                         </label>
                                     </span>
  
                                     <span class="suboption dynamic">
                                         <span class="inputValue"><input type="number" name="dtermLowpassDynMaxFrequency" step="1" min="1" max="1000"/></span>
                                         <label>
-                                            <span i18n="pidTuningDTermLowpassDynMaxFrequency"></span>
+                                            <span i18n="pidTuningMaxCutoffFrequency"></span>
                                         </label>
                                         </span>
                     
@@ -1678,7 +1678,7 @@
                                     <span class="suboption">
                                         <span class="inputValue"><input type="number" name="dtermLowpass2Frequency" step="1" min="1" max="16000"/></span>
                                         <label>
-                                            <span i18n="pidTuningDTermLowpass2Frequency"></span>
+                                            <span i18n="pidTuningStaticCutoffFrequency"></span>
                                         </label>
                                     </span>
 
@@ -1710,12 +1710,12 @@
 
                                     <span class="suboption">
                                         <span class="inputValue"><input type="number" name="dTermNotchFrequency" step="1" min="1" max="16000"/></span>
-                                        <label><span i18n="pidTuningDTermNotchFrequency"></span></label>
+                                        <label><span i18n="pidTuningCenterFrequency"></span></label>
                                     </span>
 
                                     <span class="suboption">
                                         <input type="number" name="dTermNotchCutoff" step="1" min="0" max="16000"/>
-                                        <label><span i18n="pidTuningDTermNotchCutoff"></span></label>
+                                        <label><span i18n="pidTuningCutoffFrequency"></span></label>
                                     </span>
                                 </td>
                             </tr>
@@ -1735,7 +1735,7 @@
                                     <span class="suboption">
                                         <span class="inputValue"><input type="number" name="yawLowpassFrequency" step="1" min="1" max="500"/></span>
                                         <label>
-                                            <span i18n="pidTuningYawLowpassFrequency"></span>
+                                            <span i18n="pidTuningCutoffFrequency"></span>
                                         </label>
                                     </span>
                                 </td>
