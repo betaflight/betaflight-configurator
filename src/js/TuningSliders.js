@@ -362,35 +362,40 @@ TuningSliders.updatePidSlidersDisplay = function() {
         $('#sliderPidsModeSelect').val(this.sliderPidsMode);
     } else {
         this.pidSlidersUnavailable = false;
+
         this.calculateNewPids(true);
 
-    FC.PID_NAMES.forEach(function (elementPid, indexPid) {
-        const pidElements = $(`.pid_tuning .${elementPid} input`);
+        FC.PID_NAMES.forEach(function (elementPid, indexPid) {
+            const pidElements = $(`.pid_tuning .${elementPid} input`);
 
-        pidElements.each(function (indexInput) {
-            const val = parseInt($(this).val());
-            if (indexPid < 3 && indexInput < 3) {
-                if (val !== FC.PIDS[indexPid][indexInput]) {
-                    TuningSliders.pidSlidersUnavailable = true;
-                }
-            } else {
-                if (indexPid < 3 && indexInput === 3 && !this.dMinFeatureEnabled) {
-                    const dMinRoll = (val !== FC.ADVANCED_TUNING.dMinRoll) && indexPid === 0;
-                    const dMinPitch = (val !== FC.ADVANCED_TUNING.dMinPitch) && indexPid === 1;
-                    const dMinYaw = (val !== FC.ADVANCED_TUNING.dMinYaw) && indexPid === 2;
-                    if (dMinRoll || dMinPitch || dMinYaw) {
+            pidElements.each(function (indexInput) {
+                const val = parseInt($(this).val());
+
+                if (indexPid < 3 && indexInput < 3) {
+                    if (val !== FC.PIDS[indexPid][indexInput]) {
                         TuningSliders.pidSlidersUnavailable = true;
                     }
-                } else if ((indexPid < 3 && indexInput === 3 && this.dMinFeatureEnabled) ||
-                        (indexPid < 3 && indexInput === 4 && !this.dMinFeatureEnabled)) {
-                    const feedforwardRoll = (val !== FC.ADVANCED_TUNING.feedforwardRoll) && indexPid === 0;
-                    const feedforwardPitch = (val !== FC.ADVANCED_TUNING.feedforwardPitch) && indexPid === 1;
-                    const feedforwardYaw = (val !== FC.ADVANCED_TUNING.feedforwardYaw) && indexPid === 2;
-                    if (feedforwardRoll || feedforwardPitch || feedforwardYaw) {
-                        TuningSliders.pidSlidersUnavailable = true;
+                } else {
+                    if (indexPid < 3 && indexInput === 3 && !this.dMinFeatureEnabled) {
+                        const dMinRoll = (val !== FC.ADVANCED_TUNING.dMinRoll) && indexPid === 0;
+                        const dMinPitch = (val !== FC.ADVANCED_TUNING.dMinPitch) && indexPid === 1;
+                        const dMinYaw = (val !== FC.ADVANCED_TUNING.dMinYaw) && indexPid === 2;
+
+                        if (dMinRoll || dMinPitch || dMinYaw) {
+                            TuningSliders.pidSlidersUnavailable = true;
+                        }
+                    } else if ((indexPid < 3 && indexInput === 3 && this.dMinFeatureEnabled) ||
+                            (indexPid < 3 && indexInput === 4 && !this.dMinFeatureEnabled)) {
+                        const feedforwardRoll = (val !== FC.ADVANCED_TUNING.feedforwardRoll) && indexPid === 0;
+                        const feedforwardPitch = (val !== FC.ADVANCED_TUNING.feedforwardPitch) && indexPid === 1;
+                        const feedforwardYaw = (val !== FC.ADVANCED_TUNING.feedforwardYaw) && indexPid === 2;
+
+                        if (feedforwardRoll || feedforwardPitch || feedforwardYaw) {
+                            TuningSliders.pidSlidersUnavailable = true;
+                        }
                     }
                 }
-            }
+            });
         });
 
         if ($('input[id="useIntegratedYaw"]').is(':checked')) {
