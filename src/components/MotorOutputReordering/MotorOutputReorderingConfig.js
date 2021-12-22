@@ -231,8 +231,8 @@ class MotorOutputReorderConfig
             ArmWidth: 0.1 * screenSize,
             Motors:
             [
-                {x: -frameRadius,  y: 0,},
-                {x:  frameRadius,  y: 0,},
+                {x: -frameRadius,  y: 0},
+                {x:  frameRadius,  y: 0},
             ],
         };
     }

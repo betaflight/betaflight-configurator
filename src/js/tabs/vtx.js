@@ -14,7 +14,7 @@ TABS.vtx = {
     env: new djv(),
     get _DEVICE_STATUS_UPDATE_INTERVAL_NAME() {
         return "vtx_device_status_request";
-    }
+    },
 };
 
 TABS.vtx.isVtxDeviceStatusNotReady = function()
@@ -96,7 +96,7 @@ TABS.vtx.initialize = function (callback) {
                 GUI.interval_add_condition(self._DEVICE_STATUS_UPDATE_INTERVAL_NAME,
                     TABS.vtx.updateVtxDeviceStatus,
                     1000, false,
-                    TABS.vtx.isVtxDeviceStatusNotReady
+                    TABS.vtx.isVtxDeviceStatusNotReady,
                 );
             }
 
@@ -178,7 +178,7 @@ TABS.vtx.initialize = function (callback) {
 
                     console.log("Validation against schema result:", valid);
                     valid ? callback_valid() : callback_error();
-                }
+                },
             );
         }
 
@@ -754,7 +754,7 @@ TABS.vtx.initialize = function (callback) {
                                 console.error('VTX Config from file failed validation against schema');
                                 GUI.log(i18n.getMessage('vtxLoadFileKo'));
 
-                            }
+                            },
                         );
 
                     } catch (err) {
@@ -803,13 +803,13 @@ TABS.vtx.initialize = function (callback) {
                             // JSON is NOT valid
                             GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
                             console.error('VTX Config from clipboard failed validation against schema');
-                        }
+                        },
                     );
 
                 }, function(err) {
                     GUI.log(i18n.getMessage('vtxLoadClipboardKo'));
                     console.error('Failed to read clipboard contents: ', err);
-                }
+                },
             );
 
         } catch (err) {

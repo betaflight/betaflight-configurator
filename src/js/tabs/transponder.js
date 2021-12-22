@@ -2,7 +2,7 @@
 
 
 TABS.transponder = {
-    available: false
+    available: false,
 };
 
 TABS.transponder.initialize = function(callback, scrollPosition) {
@@ -18,10 +18,10 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
     // CONFIGURATION HERE FOR ADD NEW TRANSPONDER
     let transponderConfigurations = {
         0: {
-            dataType: dataTypes.NONE // empty
+            dataType: dataTypes.NONE, // empty
         }, //NONE
         1: {
-            dataType: dataTypes.TEXT //<input type="text">
+            dataType: dataTypes.TEXT, //<input type="text">
         }, //ilap
         2: {
             dataType: dataTypes.LIST, // <select>...</select>
@@ -35,7 +35,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                 'ID 7': 'E003F03F00FF03F0C1',
                 'ID 8': '00FC0FFE071F3E00FE',
                 'ID 9': 'E083BFF00F9E38C0FF',
-            }
+            },
         }, //arcitimer
         3: {
             dataType: dataTypes.LIST, // <select>...</select>
@@ -104,7 +104,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
                 '61':'3D',
                 '62':'3E',
                 '63':'3F',
-            }
+            },
         }, //ERLT
     };
     /////////////////////////////////////////////
@@ -164,7 +164,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
         //build radio buttons
         if (transponderProviders.length > 1) {
             transponderTypeSelect.append(
-                $('<option>').attr('value', 0).html(i18n.getMessage("transponderType0")) // NONE
+                $('<option>').attr('value', 0).html(i18n.getMessage("transponderType0")), // NONE
             );
         }
 
@@ -173,7 +173,7 @@ TABS.transponder.initialize = function(callback, scrollPosition) {
 
             if ( transponderProvider.hasOwnProperty('id') ) {
                 transponderTypeSelect.append(
-                    $('<option>').attr('value', transponderProvider.id).html(i18n.getMessage("transponderType" + transponderProvider.id))
+                    $('<option>').attr('value', transponderProvider.id).html(i18n.getMessage("transponderType" + transponderProvider.id)),
                 );
             }
         }

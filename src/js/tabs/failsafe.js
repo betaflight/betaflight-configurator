@@ -127,7 +127,7 @@ TABS.failsafe.initialize = function (callback, scrollPosition) {
                 i18n.getMessage('controlAxisRoll'),
                 i18n.getMessage('controlAxisPitch'),
                 i18n.getMessage('controlAxisYaw'),
-                i18n.getMessage('controlAxisThrottle')
+                i18n.getMessage('controlAxisThrottle'),
             ],
             fullChannels_e = $('div.activechannellist');
         let aux_index = 1,

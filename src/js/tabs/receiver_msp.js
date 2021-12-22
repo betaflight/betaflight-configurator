@@ -52,7 +52,7 @@ const watchers = {
         } else {
             applyNormalTheme();
         }
-    }
+    },
 };
 
 $(document).ready(function () {
@@ -182,8 +182,8 @@ $(document).ready(function() {
                 start: initialValue,
                 range: {
                     min: CHANNEL_MIN_VALUE,
-                    max: CHANNEL_MAX_VALUE
-                }
+                    max: CHANNEL_MAX_VALUE,
+                },
             }).on('slide change set', function(e, value) {
                 value = Math.round(parseFloat(value));
 

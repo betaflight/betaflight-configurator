@@ -24,7 +24,7 @@ function configuration_backup(callback) {
         MSPCodes.MSP_ACC_TRIM,
         MSPCodes.MSP_SERVO_CONFIGURATIONS,
         MSPCodes.MSP_MODE_RANGES,
-        MSPCodes.MSP_ADJUSTMENT_RANGES
+        MSPCodes.MSP_ADJUSTMENT_RANGES,
     ];
 
     function update_profile_specific_data_list() {
@@ -71,7 +71,7 @@ function configuration_backup(callback) {
                             'ServoConfig': jQuery.extend(true, [], FC.SERVO_CONFIG),
                             'ServoRules': jQuery.extend(true, [], FC.SERVO_RULES),
                             'ModeRanges': jQuery.extend(true, [], FC.MODE_RANGES),
-                            'AdjustmentRanges': jQuery.extend(true, [], FC.ADJUSTMENT_RANGES)
+                            'AdjustmentRanges': jQuery.extend(true, [], FC.ADJUSTMENT_RANGES),
                         });
 
                         if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
@@ -96,7 +96,7 @@ function configuration_backup(callback) {
         MSPCodes.MSP_RX_MAP,
         MSPCodes.MSP_CF_SERIAL_CONFIG,
         MSPCodes.MSP_LED_STRIP_CONFIG,
-        MSPCodes.MSP_LED_COLORS
+        MSPCodes.MSP_LED_COLORS,
     ];
 
     function update_unique_data_list() {
@@ -211,7 +211,7 @@ function configuration_backup(callback) {
         const filename = generateFilename(prefix, suffix);
 
         const accepts = [{
-            description: suffix.toUpperCase() + ' files', extensions: [suffix]
+            description: suffix.toUpperCase() + ' files', extensions: [suffix],
         }];
 
         // create or load the file
@@ -282,7 +282,7 @@ function configuration_restore(callback) {
     let chosenFileEntry = null;
 
     const accepts = [{
-        description: 'JSON files', extensions: ['json']
+        description: 'JSON files', extensions: ['json'],
     }];
 
     // load up the file
@@ -396,7 +396,7 @@ function configuration_restore(callback) {
             if (!configuration.PIDs && configuration.PID) {
                 configuration.PIDs = configuration.PID;
                 configuration.PID = {
-                    controller: 0 // assume pid controller 0 was used.
+                    controller: 0, // assume pid controller 0 was used.
                 };
             }
 
@@ -484,7 +484,7 @@ function configuration_restore(callback) {
                 ports.push(newPort);
             }
             configuration.SERIAL_CONFIG = {
-                ports: ports
+                ports: ports,
             };
 
             GUI.log(i18n.getMessage('configMigratedTo', [migratedVersion]));
@@ -496,14 +496,14 @@ function configuration_restore(callback) {
 
             if (configuration.FC_CONFIG == undefined) {
                 configuration.FC_CONFIG = {
-                    loopTime: 3500
+                    loopTime: 3500,
                 };
             }
 
             if (configuration.ARMING_CONFIG == undefined) {
                 configuration.ARMING_CONFIG = {
                     auto_disarm_delay:      5,
-                    disarm_kill_switch:     1
+                    disarm_kill_switch:     1,
                 };
             }
 
@@ -578,7 +578,7 @@ function configuration_restore(callback) {
                     deadband3d_low:         1406,
                     deadband3d_high:        1514,
                     neutral:                1460,
-                    deadband3d_throttle:    50
+                    deadband3d_throttle:    50,
                 };
             }
 
@@ -603,7 +603,7 @@ function configuration_restore(callback) {
                     configuration.SENSOR_ALIGNMENT = {
                     align_gyro:              0,
                     align_acc:               0,
-                    align_mag:               0
+                    align_mag:               0,
                     };
             }
 
@@ -617,7 +617,7 @@ function configuration_restore(callback) {
                     stick_min:              1100,
                     stick_max:              1900,
                     rx_min_usec:            885,
-                    rx_max_usec:            2115
+                    rx_max_usec:            2115,
                 };
             }
 
@@ -628,7 +628,7 @@ function configuration_restore(callback) {
                     failsafe_throttle:              1000,
                     failsafe_switch_mode:           0,
                     failsafe_throttle_low_delay:    100,
-                    failsafe_procedure:             0
+                    failsafe_procedure:             0,
                 };
             }
 
@@ -637,13 +637,13 @@ function configuration_restore(callback) {
                     {mode: 0, value: 1500},
                     {mode: 0, value: 1500},
                     {mode: 0, value: 1500},
-                    {mode: 0, value: 875}
+                    {mode: 0, value: 875},
                 ];
 
                 for (let i = 0; i < 14; i++) {
                     const rxfailChannel = {
                         mode:  1,
-                        value: 1500
+                        value: 1500,
                     };
                     configuration.RXFAIL_CONFIG.push(rxfailChannel);
                 }
@@ -698,7 +698,7 @@ function configuration_restore(callback) {
                 MSPCodes.MSP_SET_PID_CONTROLLER,
                 MSPCodes.MSP_SET_PID,
                 MSPCodes.MSP_SET_RC_TUNING,
-                MSPCodes.MSP_SET_ACC_TRIM
+                MSPCodes.MSP_SET_ACC_TRIM,
             ];
 
             if (semver.gte(FC.CONFIG.apiVersion, "1.15.0")) {
@@ -772,7 +772,7 @@ function configuration_restore(callback) {
                                 const defaultModeRangeExtra = {
                                     modeId:     FC.MODE_RANGES[modeIndex].modeId,
                                     modeLogic:  0,
-                                    linkedTo:   0
+                                    linkedTo:   0,
                                 };
                                 FC.MODE_RANGES_EXTRA.push(defaultModeRangeExtra);
                             }
@@ -797,7 +797,7 @@ function configuration_restore(callback) {
 
                 const uniqueData = [
                     MSPCodes.MSP_SET_RX_MAP,
-                    MSPCodes.MSP_SET_CF_SERIAL_CONFIG
+                    MSPCodes.MSP_SET_CF_SERIAL_CONFIG,
                 ];
 
                 function update_unique_data_list() {

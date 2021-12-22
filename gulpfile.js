@@ -424,7 +424,7 @@ function dist_rollup() {
                 // accordingly inside of `dist`
                 entryFileNames: '[name].js',
                 dir: DIST_DIR,
-            })
+            }),
         );
 }
 
@@ -559,7 +559,7 @@ function injectARMCache(flavor, done) {
                             process.exit(1);
                         }
                         done();
-                    }
+                    },
                 );
             }
         });
@@ -828,7 +828,7 @@ function release_osx64(appDirectory) {
                     },
                 },
             },
-        })
+        }),
     );
 }
 

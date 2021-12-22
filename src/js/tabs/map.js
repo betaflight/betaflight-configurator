@@ -19,55 +19,55 @@ function initializeMap() {
 
     mapView = new ol.View({
                         center: lonLat,
-                        zoom: DEFAULT_ZOOM
+                        zoom: DEFAULT_ZOOM,
                       });
 
     map = new ol.Map({
         target: 'map-canvas',
         layers: [
           new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
+            source: new ol.source.OSM(),
+          }),
         ],
         view: mapView,
-        controls: []
+        controls: [],
       });
 
     const icon = new ol.style.Icon(({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
-        src: ICON_IMAGE
+        src: ICON_IMAGE,
     }));
 
     const iconNoFix = new ol.style.Icon(({
         anchor: [0.5, 1],
         opacity: 1,
         scale: 0.5,
-        src: ICON_IMAGE_NOFIX
+        src: ICON_IMAGE_NOFIX,
     }));
 
     iconStyle = new ol.style.Style({
-        image: icon
+        image: icon,
     });
 
     iconStyleNoFix = new ol.style.Style({
-        image: iconNoFix
+        image: iconNoFix,
     });
 
     iconGeometry = new ol.geom.Point(lonLat);
     iconFeature = new ol.Feature({
-        geometry: iconGeometry
+        geometry: iconGeometry,
     });
 
     iconFeature.setStyle(iconStyle);
 
     const vectorSource = new ol.source.Vector({
-        features: [iconFeature]
+        features: [iconFeature],
     });
 
     const currentPositionLayer = new ol.layer.Vector({
-        source: vectorSource
+        source: vectorSource,
     });
 
     map.addLayer(currentPositionLayer);

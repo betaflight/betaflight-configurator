@@ -78,7 +78,7 @@ const BOARD_DEFINITIONS = [
 ];
 
 const DEFAULT_BOARD_DEFINITION = {
-    name: "Unknown", identifier: "????", vcp: false
+    name: "Unknown", identifier: "????", vcp: false,
 };
 
 const BOARD = {};

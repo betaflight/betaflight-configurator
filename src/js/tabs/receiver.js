@@ -109,7 +109,7 @@ TABS.receiver.initialize = function (callback) {
             i18n.getMessage('controlAxisRoll'),
             i18n.getMessage('controlAxisPitch'),
             i18n.getMessage('controlAxisYaw'),
-            i18n.getMessage('controlAxisThrottle')
+            i18n.getMessage('controlAxisThrottle'),
         ];
 
         const barContainer = $('.tab-receiver .bars');
@@ -143,7 +143,7 @@ TABS.receiver.initialize = function (callback) {
         // we could probably use min and max throttle for the range, will see
         const meterScale = {
             'min': 800,
-            'max': 2200
+            'max': 2200,
         };
 
         const meterFillArray = [];
@@ -288,7 +288,7 @@ TABS.receiver.initialize = function (callback) {
                     'FRSKY_X',
                     'A7105_FLYSKY',
                     'A7105_FLYSKY_2A',
-                    'NRF24_KN'
+                    'NRF24_KN',
                 );
             }
 
@@ -296,20 +296,20 @@ TABS.receiver.initialize = function (callback) {
                 spiRxTypes.push(
                     'SFHSS',
                     'SPEKTRUM',
-                    'FRSKY_X_LBT'
+                    'FRSKY_X_LBT',
                 );
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_43)) {
                 spiRxTypes.push(
-                    'REDPINE'
+                    'REDPINE',
                 );
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                 spiRxTypes.push(
                     'FRSKY_X_V2',
-                    'FRSKY_X_LBT_V2'
+                    'FRSKY_X_LBT_V2',
                 );
             }
 
@@ -514,9 +514,9 @@ TABS.receiver.initialize = function (callback) {
                 innerBounds: {
                     minWidth: windowWidth, minHeight: windowHeight,
                     width: windowWidth, height: windowHeight,
-                    maxWidth: windowWidth, maxHeight: windowHeight
+                    maxWidth: windowWidth, maxHeight: windowHeight,
                 },
-                alwaysOnTop: true
+                alwaysOnTop: true,
             }, function(createdWindow) {
                 // Give the window a callback it can use to send the channels (otherwise it can't see those objects)
                 createdWindow.contentWindow.setRawRx = function(channels) {

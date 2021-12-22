@@ -54,5 +54,5 @@ landing.cleanup = function (callback) {
 // TODO: remove after all is using modules
 window.TABS.landing = landing;
 export {
-    landing
+    landing,
 };

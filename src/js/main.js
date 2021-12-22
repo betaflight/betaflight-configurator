@@ -45,7 +45,7 @@ function appReady() {
 function checkSetupAnalytics(callback) {
     if (!analytics) {
         setTimeout(function () {
-            ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions', ], function (result) {
+            ConfigStorage.get(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ], function (result) {
                 if (!analytics) {
                     setupAnalytics(result);
                 }
@@ -200,7 +200,7 @@ function startProcess() {
                     }
                 },
                 i18n.getMessage('cordovaExitAppTitle'),
-                [i18n.getMessage('yes'),i18n.getMessage('no')]
+                [i18n.getMessage('yes'),i18n.getMessage('no')],
             );
         });
     }
@@ -305,27 +305,27 @@ function startProcess() {
                 switch (tab) {
                     case 'landing':
                         import("./tabs/landing").then(({ landing }) =>
-                            landing.initialize(content_ready)
+                            landing.initialize(content_ready),
                         );
                         break;
                     case 'changelog':
                         import("./tabs/static_tab").then(({ staticTab }) =>
-                            staticTab.initialize("changelog", content_ready)
+                            staticTab.initialize("changelog", content_ready),
                         );
                         break;
                     case 'privacy_policy':
                         import("./tabs/static_tab").then(({ staticTab }) =>
-                            staticTab.initialize("privacy_policy", content_ready)
+                            staticTab.initialize("privacy_policy", content_ready),
                         );
                         break;
                     case 'options':
                         import("./tabs/options").then(({ options }) =>
-                            options.initialize(content_ready)
+                            options.initialize(content_ready),
                         );
                         break;
                     case 'firmware_flasher':
                         import("./tabs/firmware_flasher").then(({ firmware_flasher }) =>
-                            firmware_flasher.initialize(content_ready)
+                            firmware_flasher.initialize(content_ready),
                         );
                         break;
                     case 'help':

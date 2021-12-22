@@ -276,7 +276,7 @@ CliAutoComplete._initTextcomplete = function() {
                     }, 0);
                 }
             },
-        }
+        },
     )
     .on('textComplete:show', function() {
         /**

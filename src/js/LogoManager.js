@@ -268,7 +268,7 @@ LogoManager.replaceLogoInFont = function (img) {
                 x * this.font.constants.SIZES.CHAR_WIDTH,
                 y * this.font.constants.SIZES.CHAR_HEIGHT,
                 this.font.constants.SIZES.CHAR_WIDTH,
-                this.font.constants.SIZES.CHAR_HEIGHT
+                this.font.constants.SIZES.CHAR_HEIGHT,
             ),
                 newChar = imageToCharacter.apply(this, [imageData.data]);
             replaceChar.apply(this, [newChar, charAddr]);

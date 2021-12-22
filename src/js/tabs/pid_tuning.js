@@ -1453,7 +1453,7 @@ TABS.pid_tuning.initialize = function (callback) {
             yawDeadband: FC.RC_DEADBAND_CONFIG.yaw_deadband,
             roll_rate_limit:   FC.RC_TUNING.roll_rate_limit,
             pitch_rate_limit:  FC.RC_TUNING.pitch_rate_limit,
-            yaw_rate_limit:    FC.RC_TUNING.yaw_rate_limit
+            yaw_rate_limit:    FC.RC_TUNING.yaw_rate_limit,
         };
 
         if (semver.lt(FC.CONFIG.apiVersion, "1.7.0")) {
@@ -1764,18 +1764,18 @@ TABS.pid_tuning.initialize = function (callback) {
                     {name: "LuxFloat"},
                     {name: "MultiWii (2.3 - latest)"},
                     {name: "MultiWii (2.3 - hybrid)"},
-                    {name: "Harakiri"}
+                    {name: "Harakiri"},
                 ];
             } else if (semver.lt(FC.CONFIG.apiVersion, "1.20.0")) {
                 pidControllerList = [
                     {name: ""},
                     {name: "Integer"},
-                    {name: "Float"}
+                    {name: "Float"},
                 ];
             } else {
                 pidControllerList = [
                     {name: "Legacy"},
-                    {name: "Betaflight"}
+                    {name: "Betaflight"},
                 ];
             }
 
@@ -2852,7 +2852,7 @@ TABS.pid_tuning.updateRatesLabels = function() {
         const BALLOON_COLORS = {
             roll    : {color: 'rgba(255,128,128,0.4)', border: 'rgba(255,128,128,0.6)', text: '#000000'},
             pitch   : {color: 'rgba(128,255,128,0.4)', border: 'rgba(128,255,128,0.6)', text: '#000000'},
-            yaw     : {color: 'rgba(128,128,255,0.4)', border: 'rgba(128,128,255,0.6)', text: '#000000'}
+            yaw     : {color: 'rgba(128,128,255,0.4)', border: 'rgba(128,128,255,0.6)', text: '#000000'},
         };
 
         const rcStickElement = $('.rate_curve canvas#rate_curve_layer1').get(0);

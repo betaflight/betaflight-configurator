@@ -391,7 +391,7 @@ const serial = {
                     break;
                 }
             }
-        }
+        },
     },
     onReceiveError: {
         listeners: [],
@@ -411,7 +411,7 @@ const serial = {
                     break;
                 }
             }
-        }
+        },
     },
     emptyOutputBuffer: function () {
         this.outputBuffer = [];

@@ -265,7 +265,7 @@ TABS.sensors.initialize = function (callback) {
             initDataArray(1),
             initDataArray(1),
             initDataArray(1),
-            initDataArray(1)
+            initDataArray(1),
         ];
 
         let gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
@@ -277,13 +277,13 @@ TABS.sensors.initialize = function (callback) {
             initGraphHelpers('#debug1', samples_debug_i),
             initGraphHelpers('#debug2', samples_debug_i),
             initGraphHelpers('#debug3', samples_debug_i),
-            initGraphHelpers('#debug4', samples_debug_i)
+            initGraphHelpers('#debug4', samples_debug_i),
         ];
 
         const raw_data_text_ements = {
             x: [],
             y: [],
-            z: []
+            z: [],
         };
         $('.plot_control .x, .plot_control .y, .plot_control .z').each(function () {
             const el = $(this);
@@ -305,13 +305,13 @@ TABS.sensors.initialize = function (callback) {
                 'mag':    parseInt($('.tab-sensors select[name="mag_refresh_rate"]').val(), 10),
                 'altitude':   parseInt($('.tab-sensors select[name="altitude_refresh_rate"]').val(), 10),
                 'sonar':  parseInt($('.tab-sensors select[name="sonar_refresh_rate"]').val(), 10),
-                'debug':  parseInt($('.tab-sensors select[name="debug_refresh_rate"]').val(), 10)
+                'debug':  parseInt($('.tab-sensors select[name="debug_refresh_rate"]').val(), 10),
             };
 
             const scales = {
                 'gyro':  parseFloat($('.tab-sensors select[name="gyro_scale"]').val()),
                 'accel': parseFloat($('.tab-sensors select[name="accel_scale"]').val()),
-                'mag':   parseFloat($('.tab-sensors select[name="mag_scale"]').val())
+                'mag':   parseFloat($('.tab-sensors select[name="mag_scale"]').val()),
             };
 
             // handling of "data pulling" is a little bit funky here, as MSP_RAW_IMU contains values for gyro/accel/mag but not altitude

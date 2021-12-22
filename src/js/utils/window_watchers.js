@@ -31,7 +31,7 @@ windowWatcherUtil.bindWatchers = function(windowObject, watchersObject) {
         set(target, prop, val, receiver) {
             windowWatcherUtil.invokeWatcher(prop, val, watchersObject);
             return Reflect.set(target, prop, val, receiver);
-        }
+        },
     });
 };
 
@@ -46,7 +46,7 @@ windowWatcherUtil.passValue = function(windows, key, val) {
             win.contentWindow.bindings[key] = val;
         } else {
             win.contentWindow.bindings = {
-                [key]: val
+                [key]: val,
             };
         }
     };

@@ -2569,7 +2569,7 @@ TABS.osd.initialize = function(callback) {
                             .append($(`<input name="video_system" type="radio"/>${videoFormatOptionText}</label>`)
                             .prop('checked', i === OSD.data.video_system)
                             .data('type', type)
-                            .data('type', i)
+                            .data('type', i),
                         );
                         $videoTypes.append($checkbox);
                     }
@@ -2592,7 +2592,7 @@ TABS.osd.initialize = function(callback) {
                                 .append($(`<input name="unit_mode" type="radio"/>${setupUnitOptionText}</label>`)
                                 .prop('checked', i === OSD.data.unit_mode)
                                 .data('type', type)
-                                .data('type', i)
+                                .data('type', i),
                             );
                             $unitMode.append($checkbox);
                         }
@@ -2739,7 +2739,7 @@ TABS.osd.initialize = function(callback) {
                                                 .then(function() {
                                                     updateOsdView();
                                                 });
-                                        })
+                                        }),
                                 );
                                 $field.append(`<label for="${field.name}" class="char-label">${titleizeField(field)}</label>`);
 
@@ -2783,7 +2783,7 @@ TABS.osd.initialize = function(callback) {
                                                 .then(function() {
                                                     updateOsdView();
                                                 });
-                                        })
+                                        }),
                                 );
 
                                 const finalFieldName = titleizeField(field);
@@ -2912,7 +2912,7 @@ TABS.osd.initialize = function(callback) {
                                                 .then(function() {
                                                     updateOsdView();
                                                 });
-                                        })
+                                        }),
                                 );
                         }
 
@@ -2957,7 +2957,7 @@ TABS.osd.initialize = function(callback) {
                                             .then(function() {
                                                 updateOsdView();
                                             });
-                                    }))
+                                    })),
                             );
                         }
 

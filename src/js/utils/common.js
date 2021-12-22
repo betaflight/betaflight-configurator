@@ -51,7 +51,7 @@ const majorFirmwareVersions = {
     "1.39": "3.4.*",
     "1.37": "3.3.0",
     "1.36": "3.2.*",
-    "1.31": "3.1.0"
+    "1.31": "3.1.0",
 };
 
 export function generateVirtualApiVersions() {
