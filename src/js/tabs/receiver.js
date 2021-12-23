@@ -310,6 +310,7 @@ TABS.receiver.initialize = function (callback) {
                 spiRxTypes.push(
                     'FRSKY_X_V2',
                     'FRSKY_X_LBT_V2',
+                    'EXPRESSLRS',
                 );
             }
 
