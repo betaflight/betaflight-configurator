@@ -2148,7 +2148,7 @@ dialog .dialog_toolbar .btn a.disabled {
     width: 33%;
 }
 
-.noboarder td {
+.cf_table tr:last-child td {
     border: none;
 }
 

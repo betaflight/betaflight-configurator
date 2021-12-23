@@ -147,7 +147,7 @@ button {
     border-style: solid;
 }
 
-.noboarder td {
+.cf_table tr:last-child td {
     border-style: unset;
 }
 

@@ -67,56 +67,67 @@ TABS.gps.initialize = function (callback) {
             $('.GPS_info td.distToHome').text(FC.GPS_DATA.distanceToHome + ' m');
 
             // Update GPS Signal Strengths
-            const eSsTable = $('div.GPS_signal_strength table tr:not(.titles)');
+            const eSsTable = $('div.GPS_signal_strength table');
 
+            eSsTable.html('');
+            eSsTable.append(`
+                <tr class="titles">
+                    <td style="width: 12%;" i18n="gpsSignalGnssId">${i18n.getMessage('gpsSignalGnssId')}</td>
+                    <td style="width: 10%;" i18n="gpsSignalSatId">${i18n.getMessage('gpsSignalSatId')}</td>
+                    <td style="width: 25%;" i18n="gpsSignalStr">${i18n.getMessage('gpsSignalStr')}</td>
+                    <td style="width: 53%;" i18n="gpsSignalStatusQly">${i18n.getMessage('gpsSignalStatusQly')}</td>
+                </tr>
+            `);
             if (FC.GPS_DATA.chn.length <= 16) {
                 // Legacy code path: old BF firmware or old ublox module
                 for (let i = 0; i < FC.GPS_DATA.chn.length; i++) {
-                    const row = eSsTable.eq(i);
-
-                    $('td', row).eq(0).text('-');
-                    $('td', row).eq(1).text(FC.GPS_DATA.svid[i]);
-                    $('td', row).eq(2).find('progress').val(FC.GPS_DATA.cno[i]);
-                    $('td', row).eq(3).text(FC.GPS_DATA.quality[i]);
+                    eSsTable.append(`
+                        <tr>
+                            <td>-</td>
+                            <td>${FC.GPS_DATA.svid[i]}</td>
+                            <td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>
+                            <td>${FC.GPS_DATA.quality[i]}</td>
+                        </tr>
+                    `);
                 }
                 // Cleanup the rest of the table
                 for (let i = FC.GPS_DATA.chn.length; i < 32; i++) {
-                    const row = eSsTable.eq(i);
-
-                    $('td', row).eq(0).text('-');
-                    $('td', row).eq(1).text('-');
-                    $('td', row).eq(2).find('progress').val(0);
-                    $('td', row).eq(3).text(' ');
+                    eSsTable.append(`
+                        <tr>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><progress value="0" max="99"></progress></td>
+                            <td> </td>
+                        </tr>
+                    `);
                 }
             } else {
                 // M8N/M9N on newer firmware
 
                 const maxUIChannels = 32; //the list in html can only show 32 channels but future firmware could send more
-                let channels = Math.min(maxUIChannels, FC.GPS_DATA.chn.length);
+                let channels = Math.min(maxUIChannels, FC.GPS_DATA.chn.length) || 32;
 
                 for (let i = 0; i < channels; i++) {
-                    const row = eSsTable.eq(i);
-
+                    let rowContent = '';
                     if (FC.GPS_DATA.chn[i] <= 6) {
-                        $('td', row).eq(0).text(gnssArray[FC.GPS_DATA.chn[i]]);
+                        rowContent += `<td>${gnssArray[FC.GPS_DATA.chn[i]]}</td>`;
                     } else {
-                        $('td', row).eq(0).text('-');
+                        rowContent += '<td>-</td>';
                     }
 
                     if (FC.GPS_DATA.chn[i] >= 7) {
-                        $('td', row).eq(1).text('-');
-                        $('td', row).eq(2).find('progress').val(0);
-                        $('td', row).eq(3).text(' ');
+                        rowContent += '<td>-</td>';
+                        rowContent += `<td><progress value="${0}" max="99"></progress></td>`;
+                        rowContent += `<td> </td>`;
                     } else {
-                        $('td', row).eq(1).text(FC.GPS_DATA.svid[i]);
-                        $('td', row).eq(2).find('progress').val(FC.GPS_DATA.cno[i]);
-
+                        rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
+                        rowContent += `<td><progress value="${FC.GPS_DATA.cno[i]}" max="99"></progress></td>`;
                         const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
                         const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
                         const healthy = i18n.getMessage(healthyArray[(FC.GPS_DATA.quality[i] & 0x30) >> 4]);
-
-                        $('td', row).eq(3).text(`${quality} | ${used} | ${healthy}`);
+                        rowContent += `<td>${quality} | ${used} | ${healthy}</td>`;
                     }
+                    eSsTable.append(`<tr>${rowContent}</tr>`);
                 }
             }
 
