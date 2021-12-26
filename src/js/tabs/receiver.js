@@ -631,6 +631,10 @@ TABS.receiver.initialize = function (callback) {
                 $('.tab-receiver .rcSmoothing-auto-factor').hide();
             }
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
+                $('.receiverRcSmoothingAutoFactorHelp').attr('title', i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
+            }
+
             updateInterpolationView();
         } else {
             $('.tab-receiver .rcInterpolation').show();
