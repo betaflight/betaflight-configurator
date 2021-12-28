@@ -20,10 +20,10 @@
         "message": "Automatikoa"
     },
     "error": {
-        "message": "Errore: {{errorMessage}}"
+        "message": "Errorea: {{errorMessage}}"
     },
     "errorTitle": {
-        "message": "Errore"
+        "message": "Errorea"
     },
     "warningTitle": {
         "message": "Abisua"
@@ -427,15 +427,8 @@
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
         "message": "<strong>Erabiltzen ari zaren konfiguratzaile bertsioa ($3) firmwarean erabilita baino zaharragoa da($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
-    "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>Motorren irteera protokoloa ez da hautatu</strong>.<br>Mesedez, zure ESCetarako egokia den irteera protokoloa aukeratu $t(configurationEscFeatures.message) paragrafoan $t(tabConfiguration.message) fitxan.<br>$t(escProtocolDisabledMessage.message)"
-    },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong> Azelerometroa gaituta dago, baina ez da kalibratu</strong>.<br>Azelerometroa erabiltzeko asmoa baduzu, jarraitu '$t(initialSetupButtonCalibrateAccel.message)' argibideak '$t(tabSetup.message)' fitxan. Azelerometroa eskatzen duen funtzioren bat (maila automatikoko moduak, GPS erreskatea, ...) aktibatuta badago, gailuaren armagintza desaktibatuko da azelerometroa kalibratu arte.<br>Azelerometroa erabiltzeko asmorik ez baduzu, ' $t(tabConfiguration.message)' fitxan '$t(configurationSystem.message)' inabilitatzea gomendagarria da."
-    },
-    "infoVersions": {
-        "message": "Sistema Eragilea: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfiguratzailea: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "buildServerLoaded": {
         "message": "Bertsioaren informazioa $1 -rentzat bertsio zerbidoreetatik kargatuta."
@@ -519,6 +512,14 @@
         "message": "Atakaren erabilera:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Pakete errorea:",
         "description": "Packet error text shown in the status bar"
@@ -530,6 +531,10 @@
     "statusbar_cycle_time": {
         "message": "Zikloaren denbora:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "CPU Karga:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Mesedez, Firmware Flasher erabili DFU gailuak sartzeko"
@@ -551,9 +556,6 @@
     },
     "defaultWelcomeHead": {
         "message": "Hardware"
-    },
-    "defaultWelcomeText": {
-        "message": "Aplikazio honek Betaflight exekutatu dezakeen hardware guztia onartzen du. Begiratu flash fitxa, hardware zerrenda osoa lortzeko.<br /><br /><a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewer Deskargatu</a><br /><br />Firmware iturri kodea deskargatu daiteke <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /><br /><b>STM USB VCP Drivers</b> berrienak <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a> deskargatu daiteke<br />CP210x USB ondarearen hardwarera serie txip bidez erabiltzeko:<br /><b>CP210x Drivers</b> berrienak <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a> deskargatu ahal dira<br />Azken <b>Zadig</b> Windows-erako USB kontrolatzaileen instalazioa <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">hemen</a><br /> deskargatu daiteke"
     },
     "defaultContributingHead": {
         "message": "Hartu parte"
@@ -1519,19 +1521,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Irabazia",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Aurreratua",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "Gutxieneko D-ak hegaldi normaletan D maila baxuagoa ezkeintzen du eta maila handiagoa, Flip eta Roll-ak bezelako gainbiraketak sor ditzaketen maniobra azkarrak egiteko. Bita ere D-a igotzen du Propwhash-a egiten duenean. D-aren irabaziak ezkeintzen du zeinen azkar heldu daiteken D-k bere gehienezkora gyro-an eta Propwash-ak gertatzen direnean hoinarriturik. Advance-k D-a lehenago igotzen du abiapuntuak erabiliz gyro mugimenduak zorrotzagoak zehazteko.",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Aurrerako hegaldi normaletan moteltze-indarra (D-term) kontrolatzen du.<br>D_min piztuta, D-gain hegaldian bakarrik aldatzen da. Aurrerako hegaldi normaletan D_min irabazia lehenaldian dago. Mugimendu zorrotz edo propwhash-ean, D-gain aktiboa ezkerreko zehaztutako D_max irabazietara igotzen da.<br><br>D_max osoko irabaziak makila zorrotz sarreretan lortzen dira, baina aldezka bakarrik gertatzen dira propwhash-ean.<br>Egokitu D_Min irabazia eta Aurreratua, bultzadaren sentsibilitatea eta erritmoa kontrolatzeko.",
-        "description": "D Min helpicon message on PID table titlebar"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "PID kontroladorearen ezarpenak"
@@ -1545,20 +1539,6 @@
     "receiverRcSmoothingManual": {
         "message": "Eskuz"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Leuntze automatikoa",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Smooth automatikoaren kalkulua doitzen du, 10 da aurreipiñitako smoothing-añer atzerapen erlazioaren. Kopurua handituz mugimenduak lehundu, baina atzerapena gehiagotu ere egingo da. Hau erabilgarria izan daiteke Quad konexio fidagarriak eta hegaldi zinematikoetarako.<br>Kontuz 50 zenbakira hurbiltzen diren zenbakiekin, agintean atzerapena nabarituko bait da.<br>Erabili rc_smoothing_info CLI Agintean TX-a eta RX-a pizturik daudela automatikoki RC Smoothing moztuera kalkulatzeko. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Deribatuaren ebaki mota"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Sarrerako ebaki mota"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolazioa"
     },
@@ -1568,44 +1548,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Erabilitako RC leuntze mota"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Sarrera iragazkiak erabiltzen duen Hz- en ebakidura frekuentzia. Balio txikiagoak erabiltzeak sarrera leunagoak ekarriko ditu eta egokiagoak dira hartzaileen protokolo motelagoetarako. Erabiltzaile gehienek hau \"Auto\" ri dagokion 0 zenbakian utzi beharko lukete."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Helburuko balioaren deribazio iragazkiak Hz-en erabiltzen duen ebakidura frekuentzia. Balio baxuagoak erabiliz, sarrera leunagoak lortzen dira eta egokiagoak dira protokolo motelagoak dituzten hartzaileentzat. Erabiltzaile gehienek 0 \"0\" utzi beharko lukete."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Leuntzea aplikatzeko kanalak"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Ezarpen-metodoaren deribaziorako erabiltzen den iragazketa-metodoa. 4.2-tik hasita \"Auto\" -ren balio lehenetsia gomendatzen da. 4.1 eta lehenago erabiltzaile gehienek \"BIQUAD\" balio lehenetsia erabili beharko lukete, leuntasunaren eta atzerapenaren arteko oreka ona ematen duelako. \"PT1\" atzerapen apur bat murrizten du baina leuntze gutxiago ematen du."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Sarrerarako erabiltzen den iragazketa metodoa. Erabiltzaile gehienek \"BIQUAD\" balioa erabili behar dute, leuntasunaren eta atzerapenaren arteko oreka ona ematen duelako. \"PT1\" atzerapena apur bat murrizten du baina leuntze gutxiago ematen du."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Sarrerako iragazkiaren ebakidura frekuentzia automatikoki kalkulatzen (gomendatzen da) edo erabiltzaileak eskuz hautatzen den ala ez aukeratu. \"Eskuliburua\" erabiltzea ez da gomendagarria hartzaileentzat hegaldientan alda daitezkeen Crossfire bezalako protokoloekin."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Aukeratu xede-balioa duen saihesbide iragazkiaren ebakidura frekuentzia automatikoki kalkulatzen den ala ez (gomendagarria) edo erabiltzaileak eskuz aukeratzen duen. \"Eskuliburua\" erabiltzea ez da gomendagarria hartzaileentzat hegaldietan alda daitezkeen Crossfire bezalako protokoloekin."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Sarrerra-ebaketaren maiztasuna"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Eratorritako ebaketa maistazuna"
-    },
-    "receiverRcInputType": {
-        "message": "Sarrera iragazki mota"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Deribatuaren iragazki mota"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Itzalita"
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Auto"
     },
     "receiverRcSmoothingChannel": {
         "message": "Kanalak leundu"
@@ -1637,67 +1581,20 @@
     "receiverRcInterpolationInterval": {
         "message": "RC Interpolazio Interbaloa [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward trantsizioa"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "Parametro honen bidez, palanka zentrotik gertu daudenean, Feedforward murriztu egin daiteke palankak eta biribilak leuntzeko.<br> 0-palanka zentratua, 1-erabat lekuz aldatuta. Palanka puntu horren gainetik dagoenean, elikadura aurrekoa etengabe mantentzen da ezarritako balioan. Palanka puntu horren azpitik dagoenean, FeedFordward proportzionalki murrizten da, palankaren posizio zentralean 0 izatera. <br> 1-ren balioa leuntzeko gehienezko efektua ematen du; 0-ren balioa, berriz, FeedFordward finkatuta mantentzen da palanka-barruti osoan."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D setpoint trantsizioa"
     },
     "pidTuningDtermSetpoint": {
         "message": "D setpoint pisua"
     },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Parametro honen bidez, D Setpoint doikuntza-puntua murriztu daiteke stick-ak zentrotik gertu daudenean, honek txirbilen eta biribilen amaiera leunagoa egiten du. <br>Balioak stickaren desflexio puntu bat adierazten du: 0 - stick zentratuta, 1 - desbideratze osoa. Stick puntu horren gainetik dagoenean, Ezarpen- pisua konstante mantentzen da konfiguratutako balioan. Stick puntu horren azpitik kokatuta dagoenean, Ezarpenen Pisua proportzionalki murrizten da, eta 0 mailara iristen da. <br> 1-ko balioak leuntze-efektua ematen du; 0-ren balioa, aldiz, Ezarpen- Pisua bere konfiguratutako balioari eusten dio stick-sorta osoan."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Parametro honek palanka azelerazioaren eragina deribatuen osagaiaren barruan zehazten du. <br> 0 balioa Neurketa metodo zaharraren berdina da, D txanda bakarrik jarraitzen duen bitartean; 1, berriz, erro metodo zaharraren jarraipena birarekin berdina da eta palanka erradioan. <br> Balio txikiagoa palanka erantzun motelagoa eta leunaren berdina da, balore altuek palankaren erantzunean azelerazio handiagoa ematen dute. <br> Oharra izan aktibatzea gomendatzen dela RC interpolazioa balio altuekin kontrolean kolpeak eragindako zarata ekiditeko."
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message): </strong>Ezda gomendagarria 0 Setpoint-en trantsizioa 0 eta 0.1 baino txikiagoa. Hori egitean, ezegonkortasuna eta makilen erantzuna murriztea eragin dezakete, makilek erdiko puntua zeharkatzen duten bitartean.</span>"
-    },
-    "pidTuningFfInterpolateSp": {
-        "message": "FF Interpolatua"
-    },
-    "pidTuningFfInterpolateSpHelp": {
-        "message": "Aukera hauek Feedforward egokitzen du lasterketa/oldarkorratik leun/HDra.<br><br> Modua: lasterketarako EzBatezBeste ezarri, BatezBeste 2 lasterketa/Freestyle bizkorrerako, BatezBeste 3 grabazio HDrako, BatezBeste 4 HD zinematikorako.<br><br> Leuntasuna: sarrerako irratsaio batek egin dezakeen aldaketa-kopurua mugatzen du, gora egin FFaren seinalea leunagoa izateko, murriztu FFaren erantzun oldarkorragoetarako.<br><br> Bultzada: motoren laga gainditzen laguntzen du makila sarrera azkarrekin, jitter areagotu dezake. Saiatu 10 balioarekin HD-rako, 20 lasterketentzat. 30 saiatzen baliagarriak izan daitezke autoritate gutziko quad-etan, baina mikro-gainkargak edo zailtasunak sor ditzakete."
-    },
-    "pidTuningFfInterpolate": {
-        "message": "Modua"
-    },
-    "pidTuningFfInterpolateSpOptionNoAverage": {
-        "message": "EzBatezBeste"
-    },
-    "pidTuningFfInterpolateSpOptionAverage2": {
-        "message": "BatezBeste 2"
-    },
-    "pidTuningFfInterpolateSpOptionAverage3": {
-        "message": "BatezBeste 3"
-    },
-    "pidTuningFfInterpolateSpOptionAverage4": {
-        "message": "BatezBeste 4"
-    },
-    "pidTuningFfSmoothFactor": {
-        "message": "Leuntasuna"
-    },
-    "pidTuningFfBoost": {
-        "message": "Bultzada"
     },
     "pidTuningProportional": {
         "message": "Proportzionala (P)"
     },
-    "pidTuningProportionalHelp": {
-        "message": "Makinak kontrolarekin jarraitzen duen indarra kontrolatzen du (Setpoint). <br> <br> Balio altuagoak jarraipen zurruna eskaintzen du, baina biraketa eragin dezake Deribatiboaren proportzio handiegia bada (D epea). Pentsa P epea autoan dagoen kaia bezala dela.",
-        "description": "Proportional Term helpicon message on PID table titlebar"
-    },
     "pidTuningIntegral": {
         "message": "Integrala (I)"
-    },
-    "pidTuningIntegralHelp": {
-        "message": "Makinak ezarpenaren posizio orokorra duen indarra kontrolatzen du.<br>Proportzionalaren antzekoa, baina Quad-aren birtualitate luzeagoak lortzeko, hala nola, grabitate zentro konpentsatuz (CoG) edo kanpoko eragin iraunkorraz (haize etengabea).<br><br>Irabazi altuagokoenak jarraipen estuagoa ematen du (adibidez: txandaka), baina gogorragoa nabari daiteke aginteak Quad-ari bidaltzerakoan.<br>D-term-aren proportzioan oso handia bada, oszilazio txikiak sor ditzazke.",
-        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
         "message": "Deribatiboa (D)"
@@ -1705,16 +1602,8 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Nabarmentzen den indarra kontrolatzen ditu Quad-ak.  Agintearen etenguen mobimenduak, D-term-en aginteak arintzen ditu. Kampoko eraginak (propwash-a edo haize boladak) D-term-ak bere eragina arintzen du.<br><br>Irabazi altuagoak amortizazio handiagoa ematen du eta P-term-a eta FF-a overshoot-iña murrizten dute.<br>Hala ere, D-term-a oso sensiblea da giroetako maiztasun handiko bibrazioekin (zarata haundiagotu egiten du 10-tik 100-ra).<br><br>Frekuentzi handiko zaratak motorraren berotzea edota motorrak erretzea eragin dezake D-gain-s handiegiak badira edo giroaren zarata ez badira iragazten (ikusi Iragazkiñak fitxa).<br><br>Pentsa ezazu D-term-ek zure autoaren kuxina dela, baina frekuentzi handiko girotze-zarata handitzeak duen berezko efektu negatiboarekin.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "Agintearen sarreran (malgukak) oinarriturik bultzada gehigarria da. FF-k laguntzen du P-term-ek Quad-a bultzen duela aginteak mugitzerakoan.<br><br>P-term-aren bultzada aginteen eta abiapuntua-an ohinarriturik (deg/sec) eta giro irakurritakoaren (deg/sec) ezberdintazunean. FF-k sakatzen du aginteen aldaketetan bakarrik..<br><br>Balio altuagoak (irabaziak) Quad-en aginteen sarrera zorroztuko dute.<br>Balio altuegiak gainbegiratze bat, motorren beroa eta motorren saturazioa sor dezakete(motoreek nahi duzun aldaketa-tasarekin ezin dutenean eutsi).<br>Gutxieneko edo zero (0) balioak sarreran motelagoa eta leuna emango die.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Kontuz:</b></span>tasa oso altuak deselerazio azkarretan desinkronizazioak sor ditzakete."
@@ -1818,12 +1707,6 @@
     "dialogCopyProfileClose": {
         "message": "Ezeztatu"
     },
-    "pidTuningResetProfile": {
-        "message": "Profilen balio guztiak berrezarri"
-    },
-    "pidTuningProfileReset": {
-        "message": "Profilaren lehenetsi balioak kargatu dira."
-    },
     "pidTuningReceivedProfile": {
         "message": "Hegaldi-kontroladorea ezarrita Profila: <strong class=\"message-positive\">$1</strong>"
     },
@@ -1847,13 +1730,6 @@
     },
     "tuningHelp": {
         "message": "<b>Eguneratzeko aholkuak</b><br/><span class=\"message-negative\">GARRANTZITSUA:</span> Garrantzitsua da lehen hegaldietan motorren tenperatura egiaztatzea. Iragazkiaren balioa zenbat eta handiagoa izan, orduan eta handiagoa izango da hegan egiteko, baina zarata gehiago lortuko duzu motorretan. <br>100Hz-ko balio lehenetsia ezin hobea da, baina zaratagarrien konfigurazioetarako Dterm iragazkia 50Hz-era jaistea probatu dezakezu eta, agian, giro iragazkia ere."
-    },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">GARRANTZITSUA:</span> Graduatzaile ezarpenak aldatzeko erabili gomendatzen dugu. Mugitu bi graduatzaileak batera,<br>hobe da aldaketa txikiak egitea eta aldaketa bakoitzaren ondoren hegaldia probatzea. Begiratu arretaz motoreen tenperatura aldaketa gehiago egin aurretik.<br>Iragazketa gutxiagok (graduatzaileak eskuinaldean, ebakidura handiagoko balioak) turbulentzia portaera hobetzen du, baina zarata gehiago uzten du motorretan, eta horiek berotu egiten dira, baita horiek erretzeraino ere. Eraikuntza garbi gehienetan iragazki gutxiago dago eta rpm iragaztea gaituta badago.<br>Iragazki balio altuek edo baxuek ezusteak eragin ditzakete armatzerakoan. Lehenespideak seguruak dira 5 \"koadro tipikoetarako.<br><strong>Oharra:</strong> Profilak aldatzeak D terminoaren iragazkiaren ezarpenak soilik aldatuko ditu. Giro iragazkiaren ezarpenak berdinak dira profil guztientzat.",
-        "description": "Filter tuning subtab note"
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Kontuz:</b></span> Erabiltzen ari zaren iragazte kantitatea oso arriskutsua da. Horrek litekeena da aireontzia kontrolatzea gogorra izatea eta hegan joan daiteke. Gomendagarria da <b>gutxienez Gyro behe-pase dinamikoa edo 1. Gyro behepase eta gutxienez D Term Behe-pase Dinamikoa edo 1. D Term Behe-pase aktibatzea</b>."
     },
     "receiverThrottleMid": {
         "message": "Azeleragailu MID"
@@ -1944,9 +1820,6 @@
     },
     "receiverModelPreview": {
         "message": "Aurrebista"
-    },
-    "receiverMspWarningText": {
-        "message": "Stick horiei esker, Betaflight armatu eta probatu daiteke, igorle edo hartzailerik egon gabe. Hala ere, <strong>funtzio hau ez da hegaldirako zuzendua eta helizeak ez dira erantsi behar.</strong><br><br> Ezaugarri honek ez du zure aireontxiaren kontrol fidagarria bermatzen. <strong>Zauri larriak gerta daitezke ez baduzu helizeak kentzen.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Kontrolak gaitu"
@@ -2436,9 +2309,6 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>Segurtasun oharra</strong><br /><strong class=\"message-negative\">Helize guztiak kendu lesioak ekiditeko!</strong><br />Motorrak <strong>biraka egingo dute!</strong>"
     },
-    "motorsRemapDialogExplanations": {
-        "message": "<strong>Informazio oharra</strong><br />Motoreak banan-banan bira egingo dute eta biraka hari den motorra hautatzen ahalko duzu. Bateria entxufatu behar da, ESC protokolo egokia aukeratu beharko litzateke. Erabilera honek uneko motor aktiboak ere antolatu ditzake. Birplanteatze konplexuagoak CLI baliabideen komandoa behar du. Kontsultatu <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki orria</a>."
-    },
     "motorsRemapDialogSave": {
         "message": "Gorde"
     },
@@ -2620,10 +2490,13 @@
         "message": "Flash memoria fitxategira gorde..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Flash memoria fitzategira gorde...(zaharkituta)"
+        "message": "Flash memoria fitzategira gorde...(ez da onartzen)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Flash memoria fitxategian gordetzea motela da eta berez akatsak / fitxategiak hondatzeko joera du.<br>Zenbait kasutan fitxategi txikientzat funtzionatuko du, baina hori ez da onartzen eta laguntza eskaerak itxi egingo dira iruzkinik egin gabe - erabili Biltegiratze Masiboa modua ordez."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Konfiguratzailearen bidez KutxaBeltza erregistroak gordeketa motela da eta erroreak jasotzeko joera du. Gomendagarria da <b>$t(onboardLoggingRebootMscText.message)</b> '(behean) Biltegiratzeko Modua aktibatzeko, eta zure hegaldi kontroladorera sar zaitez biltegiratze gailu gisa erregistro fitxategiak deskargatzeko."
+        "message": "Metodo hau motela da eta berez akatsak / fitxategiak hondatzeko joera du, MSP konexioak berak intrintseko eta oinarrizko mugak dituelako, fitxategi transferentzietarako desegokia bihurtzen dutelako. Erregistro fitxategi txikietan bakarrik funtziona dezake. Ez sortu laguntza eskaerarik metodo hau erabiliz gordetako fitxategien transferentziek huts egiten badira. Gomendatutako metodoa '<b>$t(onboardLoggingRebootMscText.message)</b>' (behean) erabiltzea da, biltegiratze masiboa modua aktibatzeko eta zure hegaldiaren kontroladorera sartzeko biltegiratze gailu gisa erregistro fitxategiak gordetzeko."
     },
     "dataflashButtonErase": {
         "message": "Flash garbitu"
@@ -2739,12 +2612,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Kontroladore eskuragarriak ikusteko, bertsio mota bat aukeratu."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Hautatu zure kontroladorea lineako firmware erabilgarriak ikusteko. Hautatu zure kontroladorearako firmware egokia."
-    },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight 4.1 bertsioan hasita, <strong>Target Bateratua</strong> ren laguntza sartu da. Target bateratuaren kontzeptuak .hex fitxategiko firmware bera MCU bera erabiltzen duten kontroladore guztietan (F4, F7) erabil daiteke. Target desberdinak firmware berdinekin lan egin ahal izateko, konfigurazio fitxategi espezifikoa ematen da Target Bateratua instalatuta dagoenean. <br>Betaflight Konfiguratzailea-ren bertsio honek Target Bateratua instalatzea onartzen du, dagozkien plaken beraren konfigurazioaren ondoan. Besterik ez da gertatu. Taula bakoitzerako eskuragarri dagoen firmware mota desberdinak honela agertzen dira pantailan: <br><br><strong>&lt;board name&gt;</strong> edo<br><strong>&lt;board name&gt; (Zaharkituta)</strong>:<br>Target Bateratua gabeko, edo Target Bateratua Firmwarearen pre-4.1 bertsioak.<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4 karaktere Fabrikatzailearen ID)<br>Target Bateratua.<br><br><strong>Mesedez, erabili Target Bateratua ahal denean.</strong> Target Bateratu bat erabiliza arazoak izanez gero, ireki<a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">arazoa</a> eta gero Bateratu gabeko Target erabili, arazoa ebatzi arte."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Zure kontroladorearen firmware bertsioa aukeratu."
     },
@@ -2850,14 +2717,8 @@
     "firmwareFlasherMessage": {
         "message": "Mezua:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Mesedez, <span class=\"message-negative\">ez</span> saiatu <strong>Betaflight</strong> hardwarea lantzen Firmware-Flasheatzaile honekin.<br/> <span class=\"message-negative\">Ez</span> <strong>deskonektatu</strong> kontroladorea edo <strong>itzali</strong> ordenagailua flasheatzen ari zaren bitartean.<br/><br/><strong>Oharra:</strong> STM32 abiarazlea ROMan gordetzen da, ezin da brickeatu.</strong>Oharra:</strong> <span class=\"message-negative\">Konektatu automatikoki</span> beti desgaituta dago firmware flasheatzailean zaudenean.<br/><strong>Oharra:</strong> Segurtasun kopia duzula ziurtatu; bertsio berritzaile/bertsio batzuek zure konfigurazioa ezabatu egingo dute.<br/><strong>Oharra:</strong> flasheatzen arazoa badaukazu <strong>saiatu kontroladorearen kableak deskonektatzen</strong> lehen, saiatu berrabiarazten, Chrome berritzen, gidariak berritzen.<br/><strong>Oharra:</strong>Zuzeneko konexioak dituzten USB entxufeak (kontroladore berrienak) zuzentzen direnean, ziurtatu Betaflight eskuliburuko USB Flashing atala irakurri duzula eta software eta Target egokiak instalatuta dituzula"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Berreskuratutako/Galdutako komunikazioa</strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Kontroladorearekin komunikazioa galdu baduzu, jarraitu urrats hauek komunikazioa berreskuratzeko: <ul><li>Itzali</li><li> 'Berrabiarazi gabeko sekuentzia' gaitu, 'Txip osoa ezabatzea' gaitu.</li><li>BOOT pinak lotu edo BOOT botoia mantendu.</li><li>Piztu (jarduera LED EZ da keinuka izango behar bezala egiten bada).</li><li>STM32 kontrolatzaile guztiak instalatu eta Zadig behar izanez gero (ikusi <a href=\"https://github.com/betaflight/betaflight/wiki/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\"> USB flasheatzea</a> Betaflight eskuliburuaren atala). </li> <li>Konfiguratzailea itxi, Chrome apps guztiak itxi eta Konfiguratzailea berriarazi</li><li>Askatu BOOT botoia zure FC- k badu.</li><li>Flash firmware egokiarekin (eskuzko baud tasa erabiliz zure FCen eskuliburuan zehazten bada).</li><li>itzali.</li><li>Kendu BOOT jumper.</li><li>Piztu (jardueraren LEDak keinu egin behar du).</li><li>Lotu normalean.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Firmware Flasheatzailea Utzi"
@@ -3296,10 +3157,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Profileko iragazki-ezarpen independenteak"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Graduatzaileak quad giroaren eta D epearen iragazketa egokitzeko. <br><br>Iragazketa gehiago hegaldi leunagoa ematen dizu, baina giroaren seinalearen atzerapena (Fase Atzerapena) handitzen du PID begian. Honek hegaldi-errendimendu oldarkorragoa, prop garbiketa manipulatzea, stickaren erantzuna eta oszilazio gehiegizkoak sor ditzake. <br><br>Iragazketa gutxiago giroaren seinalearen atzerapena murrizten du baina motorren tenperaturak igo ditzake frekuentzia altuko motor bibrazioekiko (zarata) erreakzionatzeagatik. <br>Gainera, iragazkia gehiegizkoa bada, hegaldiaren errendimendua gutxitzea eragingo du (zarata handiagoa seinaleen arteko erlazioa).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Iragazketa Gutxiago",
         "description": "Filter tuning slider low header"
@@ -3316,21 +3173,9 @@
         "message": "Giro Iragazkien Biderkatzailea:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "Giro Behe-paseko iragazkiak lehenetsi egiten ditu bata bestearen arabera. Giro iragazkia PID zikloaren aurretik aplikatzen da.<br>Orokorrean, motor klasearen zarata kuadrila bakoitzeko:<br><br> - 6 \"+ quads: normalean 100Hz eta 330Hz artean<br>5 \"Quads: normalean 220Hz eta 500Hz artekoak<br>Whopp 3\" quads: normalean 300Hz eta 850Hz artekoak. aurreko barrutia.<br>Hala ere, hegaldi leunetarako iragazki geihago erabil ezazu. Iragazketa ezarpen erasokorrago bat lortzeko, Iragazki gutxiago erabili. <br>Oharra markoaren erresonantzia arazoak, errodamendu txarrak eta akatsak mozteko moduak iragazki gehiago behar izatea eragin dezake.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "D Term Iragazki Biderkatzailea:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "D Epearen iragazki baxua handitu edo txikitu haien arteko proportzioa mantenduz.<br>D epea iragazkiaren PID zikloaren ondoren aplikatzen da, BAKARRIK D terminoaren gainean, zaratarekiko sentikorrena den terminoa delako eta frekuentzia handiko zaratak 10x eta 100x gehi gehiago anplifika ditzakeelako.<br><br>Orokorrean D terminoaren iragazki labaina mugitu nahi duzu Giro Iragazketa graduatzailearekin. D epea iragazkien ebakidura motorraren zarataren barrutiaren azpitik egon nahi duzu D epea iragazketa gogorragoak izateko, orduan giroko seinale osoan aplikatzen den Giro Iragazketa biderkatzailearekin.<br>Gomendatutako diferentziala lehenetsitako eta graduatzailearen eskalan integratzen da.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Graduatzaileak quad hegaldiaren ezaugarriak egokitzeko (PID irabaziak)<br><br>Nagusi Biderkatzailea: PID irabazi guztiak igo edo mozten ditu (gainetik) irabazien arteko proportzio diferentzia mantenduz <br><br> PD saldoa: P eta D terminoen ('udaberria' [p-term]) eta \"shock amortizer\" [d-term] arteko oreka (ratioa\\proportzionala den aldea) doitzen du.<br><br>PD irabazia: P&D irabaziak batera igotzen ditu edo bien arteko erlazioa (oreka) mantenduz-PID kontrol agintari gehiago (edo gutxiago) lortzeko.<br><br>Stick Erantzun Irabaziak: FeedFordwarden irabaziak handitu edo gutxitu stickaren erantzuna kontrolatzeko.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">KONTUZ</span>: Uneko graduatzaileen posizioek, bolantea, motore kalteak edo portaera ziurra sor ditzakete. Kontuz jarraitu.",
@@ -3370,54 +3215,16 @@
     },
     "pidTuningPDGainSlider": {
         "message": "P eta D Irabazia:",
-        "description": "P and D gain tuning slider label"
-    },
-    "pidTuningResponseSlider": {
-        "message": "Stick-en Erantzun Irabazia:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "Oro har, Quad handiagoek PID irabazi handiagoak behar dituzte, potentzia eta pisu erlazio txikiagoa izateagatik.<br><br>Quad txikiagoek (microak) normalean PID irabazi txikiagoak behar dituzte, potentzia eta pisu erlazio handiagoa direla eta.<br><br>Balio handiek aginte txikiagoko quadak dira. Balio baxuagoak aginte altuen quadetarako dira.",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "D balio nahiko altuak kontrol-erantzuna leuntzen du eta motorrak berotzea eragin dezake, baina P oszilazioak kontrolatzen lagundu beharko luke eta turbulentzia gurdiak hobetu ditzake.<br><br>D balio nahiko baxua kontrolen erantzun azkarragoa sortzen du baina turbulentzia erantzunetan ahulduko du.",
-        "description": "PD balance tuning slider helpicon message"
-    },
-    "pidTuningPDGainSliderHelp": {
-        "message": "P eta D balio baxuak motor freskoagoak sortzen dituzte, baina turbulentzia oszilazio gehiago ere bai. Balio oso baxuak quad ezegonkorra izan dezake.<br><br>P eta D elkarrekin lan egiten dute turbulentzia murrizteko.<br><br>Balio altuek motorren tenperatura igoko dute eta hegaldi zuzen leunetan oszilazioak sor ditzakete. D epearen balioak oso altuak direla eta.",
-        "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "FF balio baxuek kontrolaren erantzuna okertzen dute eta itzulketa motelak sor ditzakete iraulketa edo iraulketa amaieran (I Epearen amaiera).<br><br>FF balio altuek makila erantzun hobea ematen dute mugimendu erasokorrei. FF balio handiegiak buelta eta errebote azkarrak sor ditzakete irauli edo jaurti baten amaieran.",
-        "description": "Stick response gain tuning slider helpicon message"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Giro Behe-paseko Iragazkiak"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "1. Giro Behe-paseko Ebakidura Frekuentzia [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "1. Giro Behe-paseko Iragazki Mota"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "1. Giro Behe-paseko Iragazki Dinamikoa Ebakidura Min Frekuentzia [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "1. Giro Behe-paseko Iragazki Dinamikoa Ebakidura Max Frekuentzia [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "1. Giro Behe-paseko Iragazki Dinamikoa Mota"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "2. Giro Behe-paseko Iragazki Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "2. Giro Behe-paseko Iragazki Mota"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Behe-paseko iragazkiek bi aldaera izan ditzakete: estatikoa eta dinamikoa. Zehaztutako pasagune iragazki zenbaki bakarra aldi berean (estatikoa edo dinamikoa) gaitu daiteke. Estatiko iragazkia nolabait definitzen duen ebaki bat besterik ez du. Dinamikoak min eta max balioak definitzen ditu, hau da, ebakidura kokatzen den eremua. Ebaketa hau minimoaren eta maximoaren artean mugitzen dagasaren palanka mugitzen duzun bitartean."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Giro Notch Iragazkiak"
@@ -3455,12 +3262,6 @@
     "pidTuningDynamicNotchQ": {
         "message": "Q Notch Dinamikoa"
     },
-    "pidTuningDynamicNotchMinHz": {
-        "message": "Notch Dinamikoa Min Hz"
-    },
-    "pidTuningDynamicNotchMaxHz": {
-        "message": "Notch Dinamikoa Max Hz"
-    },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Notch dinamikoak hiru frekuentzian funtziona dezake: BAXUA (80-330hz) 6+ hazbeteko bezalako birakatze txikiagoetarako, ERDIA (140-550hz) 5 hazbeteko quad normal, ALTUA (230-800hz) oso altuerako 2,5-3 hazbeteko quad-ak berpiztea AUTO aukerak barrutia hautatzen du 1. Giro Behe-paseko Dinamiko Iragazkiaren ebakidura frekuentzia maximoaren balioaren arabera."
     },
@@ -3478,10 +3279,6 @@
     },
     "pidTuningRpmFilterGroup": {
         "message": "Giro RPM Iragazkia",
-        "description": "Header text for the RPM Filter group"
-    },
-    "pidTuningRpmFilterHelp": {
-        "message": "RPM iragazketa giro-ko iragazkien banku bat da, eta RPM telemetriaren datuak erabiltzen dituzte motorren zarata doitasun kirurgikoarekin kentzeko..<br><br><b><span class=\"message-positive\">GARRANTZITSUA</span>:ESC-k Bidirectional Dshot protokoloa onartu behar du eta$t(configurationMotorPoles.message) balioa$t(tabConfiguration.message) fitxan zuzena izan behar da iragazki hau funtzionatzeko.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3509,12 +3306,6 @@
     "pidTuningDTermLowpassType": {
         "message": "1. D Term Behe-paseko Iragazki Mota"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "1. D Term Behe-paseko Iragazki Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "2. D Term Behe-paseko Iragazki Ebakidura Frekuentzia [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "2. D Term Behe-paseko Iragazki Mota"
     },
@@ -3524,11 +3315,11 @@
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "1. D Term Behe-paseko Iragazki Dinamikoa Ebakidura Max Frekuentzia [Hz]"
     },
-    "pidTuningDTermLowpassDynType": {
-        "message": "1. D Term Behe-paseko Iragazkiko Iragazki Dinamikoa Mota"
-    },
     "pidTuningDTermLowpassDynExpo": {
         "message": "1. D Term Behe-paseko Iragazki Dinamiko Kurbaren Expoa"
+    },
+    "pidTuningDTermLowpassDynType": {
+        "message": "1. D Term Behe-paseko Iragazkiko Iragazki Dinamikoa Mota"
     },
     "pidTuningDTermNotchFiltersGroup": {
         "message": "D Tem Notch Iragazkiak"
@@ -3538,9 +3329,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch Iragazkiaren Ebakidura Frekuentzia [Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw Behe-paseko Iragazkiak"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Behe-paseko Ebakitzeko Frekuentzia [Hz]"
@@ -3554,10 +3342,16 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag Konpentsazioa"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Throttle eta PID errendimendu koherentea eskaintzen du bateriaren tentsio-barruti osoan bateriaren tentsioa konpentsatuz. Kalte-ordainaren zenbatekoa 0% eta 100% artean alda daiteke. Kalte-ordain osoa (100%) gomendatzen da.<br><br><a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">Wiki sare hau</a> bisitatu informazio gehiagorako."
-    },
     "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Bultzada Linealizazioa"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Azelerazioaren eta bultzadaren arteko erlazio ez-lineala konpentsatzen du motorreko irteerari alderantzizko kurba aplikatuz. Kalte-ordaina 0% eta 150% artean alda daiteke."
+    },
+    "pidTuningThrustLinearValue": {
         "message": "%"
     },
     "pidTuningItermRotation": {
@@ -3581,12 +3375,6 @@
     "pidTuningItermRelaxAxes": {
         "message": "Ardatzak",
         "description": "Iterm Relax Axes selection"
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (gehikuntza bakarrik)"
@@ -3614,9 +3402,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Kontrol absolutua"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Ezaugarri honek $t(pidTuningItermRotation.message)azpiko arazo batzuk konpontzen ditu eta beste punturen batekin ordeztu beharko luke. Ezaugarri honek giroko errore absolutua koordenatu koadroetan metatzen du eta zuzenketa proportzionala nahasten du puntu-puntuan. ($t(pidTuningItermRelaxAxesOptionRP.message)) Lan egiteko, AirMode eta $t(pidTuningItermRelax.message) gaitu behar dituzu. Ezaugarri hauek batera konbinatzen badituzu $t(pidTuningIntegratedYaw.message) ezarri ahal izango duzu $t(pidTuningItermRelax.message) gaituta $t(pidTuningItermRelaxAxesOptionRPY.message)-rako."
-    },
     "pidTuningThrottleBoost": {
         "message": "Throttlearen Bultzada"
     },
@@ -3625,9 +3410,6 @@
     },
     "pidTuningIdleMinRpm": {
         "message": "Idle Dinamiko Balioa [* 100 RPM]"
-    },
-    "pidTuningIdleMinRpmHelp": {
-        "message": "Idle Dinamikoa rpm txikietan kontrola hobetzen du eta motorearen desyncs arriskua murrizten du. Aire-korronteak azkartzean edo atzera helizeak moteltzean eragindako arazoak zuzentzen ditu, PID autoritatea, egonkortasuna, motorra balaztatzea eta erantzuna hobetuz. Idle Dinamiko rpm-ak zure Dshot Idle balioaren (begiratu $t(tabMotorTesting.message) fitxan)baino 20% ingurukoa izan behar da. Normalean ez da zure DShot Idle balio lehenetsia aldatu beharrik. Alderantziz denbora gehiago mugitzeko, DShot Idle balioa eta Gutxieneko rpm alde berean murriztu behar lirateke. <br><br>Informazio gehiago<a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">wiki sare honetan</a>."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Akro Trainerren Angle Muga"
@@ -4697,15 +4479,19 @@
         "message": "Kameraren markoa",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCameraFrame": {
-        "message": "Gehitu ingurune erregulagarri elementua, pilotuaren HD kameraren ikusmen eremua marko bisual batean irudikatzeko.<br><br>Zabalera eta altuera CLIan alda dezakezu 'osd_camera_frame_width' eta 'osd_camera_frame_height' erabiltzen"
-    },
     "osdTextElementEfficiency": {
         "message": "Bateriaren eraginkortasuna",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEfficiency": {
         "message": "Berehalako bateriaren kontsumoa mAh/distantzian. (Baliozko GPS konponbidea eskatzen du)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Hegaldi kopurua",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Gutxi gorabeherako hegaldi kopurua"
     },
     "osdTextElementUnknown": {
         "message": "Ezezaguna $1",
@@ -5249,10 +5035,6 @@
         "message": "Pit modua",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxPitModeHelp": {
-        "message": "Aktibatuta dagoenean, VTX oso potentzia txikiko moduan sartzen da, quad proban egon dadin beste pilotuek trabarik egin gabe. Modu honetan, tartea 5 m baino txikiagoa da. <br> <br> OHARRA: Protokolo batzuek, adibidez SmartAudio, ezin dute Pit modua aktibatu software bidez piztu ondoren.",
-        "description": "Help text for the pit mode field of the VTX tab"
-    },
     "vtxPitModeFrequency": {
         "message": "Pit Moduaren frekuentzia",
         "description": "Text of one of the fields of the VTX tab"
@@ -5293,10 +5075,6 @@
         "message": "Honek zure VTX-k onartzen dituen potentzia-maila definitzen du",
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
-    "vtxTablePowerLevelsTableHelp": {
-        "message": "Taula honek VTXerako erabil daitezkeen potentzia-balio desberdinak adierazten ditu. Bitan banatzen dira: <br><b>- $t(vtxTablePowerLevelsValue.message):</b> potentzia maila bakoitzak fabrikatzaileak zehaztutako balioa eskatzen du. Eskatu zure fabrikatzaileari balio zuzena edo kontsultatu VTX tauletako Betaflight wiki laginak hartzeko. <br><b>- $t(vtxTablePowerLevelsLabel.message):</b> Hemen jarri dezakezu potentzia maila bakoitzerako nahi duzun etiketa. Zenbakiak (25, 200, 600, 1.2), letrak (OFF, MIN, MAX) edo horien nahasketa izan daitezke. <br> Erabili behar duzu <br><b>bakarrik</b> zure herrialdean legezko potentzia mailak.",
-        "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
-    },
     "vtxTablePowerLevelsValue": {
         "message": "Balioa",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -5329,10 +5107,6 @@
         "message": "Fabrika",
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
-    "vtxTableBandsChannelsTableHelp": {
-        "message": "Taula honek zure VTXak erabil ditzakeen frekuentzia guztiak adierazten ditu. Banda desberdinak izan ditzakezu eta banda bakoitzerako konfiguratu behar duzu:<br><b>- $t(vtxTableBandTitleName.message):</b> Banda horri esleitu nahi diozun izena, esaterako, BOSCAM_A, FATSHARK edo RACEBAND.<br><b>- $t(vtxTableBandTitleLetter.message):</b> Banda aipatzen duen letra laburra.<br><b>- $t(vtxTableBandTitleFactory.message):</b> Honek fabrikako banda dela adierazten du. Betaflight aktibatuta badago, banda bakarra eta kanal zenbaki bat bidaliko zaizkio VTX-ri. VTX-ek aurrez konfiguratutako frekuentzia taula erabiliko du eta hemen konfiguratutako maiztasunak balioa OSD eta beste leku batzuetan bistaratzeko bakarrik erabiliko dira. Aktibatuta ez badago, Betaflight-ek hemen ezarritako benetako maiztasuna VTXra bidaliko du. <br><b>Frekuentziak:</b> Banda horren frekuentziak.<br><br>Gogoratu frekuentzia guztiak ez direla legezkoak zure herrialdean. <b>Zero</b> balioa jarri behar duzu desaktibatzeko baimenik ez duzun frekuentzia-indize bakoitzean.",
-        "description": "Help for the table of bands-channels that appears in the VTX tab"
-    },
     "vtxSavedFileOk": {
         "message": "VTX Konfigurazio fitxategia <span class=\"message-positive\">gordeta</span>",
         "description": "Message in the GUI log when the VTX Config file is saved"
@@ -5364,10 +5138,6 @@
     "vtxButtonSaveLua": {
         "message": "Lua Script-a gorde",
         "description": "Save Lua script button in the VTX tab"
-    },
-    "vtxLuaFileHelp": {
-        "message": "'$t(vtxButtonSaveLua.message)' botoiak <i>Gailuaren-izena</i>.lua fitxategi bat gordetzeko aukera ematen du, vtx taula konfigurazioa Betaflight Lua scriptekin erabil daitekeen (informazio gehiago <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">hemen</a>.)",
-        "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
         "message": "Fitxategitik kargatu",
@@ -5510,9 +5280,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Neurketa"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Akats Deribazioa</b>k stick-ak erantzun azkaragoa hemango dizu eta laisterketarakoa nahiagokoa izaten da.<br><br><b>Akats Neurtua</b>k stick-ak erantzun suabeagoa hemango dizu eta frestailean nahiagokoa izaten da"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (flotatzen):</b> PIDaren eskala eta logika berdinak dira. Ez da beharrezkoa berriro egokitzea. Legatua Betaflight eboluzionatu berria da rewrite erabiliz. Oinarrizko matematikaren oinarritutako PID kontroladorea da. Betaflight PID kontroladoreek kontrol flotagarria duten matematika erabiltzen du eta funtzio anitzeko aplikazioetarako bereziki diseinatutako ezaugarri berriak ditu. <br><b>Flotatzen vs Osoa:</b> PIDaren eskala eta logika berdinak dira. Ez da beharrezkoa berriro egokitzea. F1 taulek ez dute FPU integratua eta puntu mugikorreko kalkuluak CPUaren karga handitzen du eta matematika osoak errendimendua hobetuko luke, baina puntu flotagarriek matematikako zehaztasun gehiago eman dezakete."
@@ -5660,9 +5427,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Fitxategi izena"
-    },
-    "dialogFileNameDescription": {
-        "message": "Fitxategia zure barneko biltegian dagoen '{{folder}}' karpetan gordeko da."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Fitxategi hau badago!"

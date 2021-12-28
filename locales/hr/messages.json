@@ -379,10 +379,6 @@
     "resetToCustomDefaultsAccept": {
         "message": "Primijeni prilagođene tvorničke postavke"
     },
-    "infoVersions": {
-        "message": "Koristi se - OS: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Konfigurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
-    },
     "buildServerLoaded": {
         "message": "Učitane informacije o verzijama za $1 s build servera."
     },
@@ -1338,11 +1334,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Gain",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Advance",
-        "description": "Advance of the D Min feature"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Postavke PID kontrolera"
@@ -1356,16 +1352,6 @@
     "receiverRcSmoothingManual": {
         "message": "Ručno"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Auto poravnavanje",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Način odrezivanja derivacijskog filtera"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Način odrezivanja ulaznog filtera"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolacija"
     },
@@ -1375,38 +1361,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Vrsta RC poravnanja koja se koristi"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Cutoff frekvencija u Hz koju koristi ulazni filter. Korištenje nižih vrijednosti će rezultirati ravnomjernijim inputima i primjerenije su sporijim protokolima prijemnika. Većina korisnika bi trebala ostaviti ovo na 0, tj. \"Auto\"."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Cutoff frekvencija u Hz koju koristi setpoint D filter. Korištenje nižih vrijednosti će rezultirati ravnomjernijim inputima i primjerenije su sporijim protokolima prijemnika. Većina korisnika bi trebala ostaviti ovo na 0, tj. \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Poravnavanje kanale se primjenjuje na"
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Vrsta metode filtriranje korištena za ulazne kontrole. Većina korisnike bi trebala koristiti zadanu \"BIQUAD\" opciju jer ona daje odličnu ravnotežu između poravnatosti i kašnjenja. \"PT1\" smanjuje kašnjenje, ali i poravnanja."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Određuje računali se cutoff frekvencija filtera ulaznih kontrola automatski(preporučeno) ili ručno. Korištenje opcije \"Ručno\" nije preporučena za protokole prijemnika poput Crossfirea čija se brzina mijenja u letu."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Određuje računali se cutoff frekvencija setpoint D filtera automatski(preporučeno) ili ručno. Korištenje opcije \"Ručno\" nije preporučena za protokole prijemnika poput Crossfirea čija se brzina mijenja u letu."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Frekvencija odrezivanja ulaza"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Frekvencija odrezivanja dervacijskog ulaznog filtera"
-    },
-    "receiverRcInputType": {
-        "message": "Vrsta ulaznog filtera"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Vrsta derivacijskog filtera"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Isključeno"
     },
     "receiverRcSmoothingChannel": {
         "message": "Poravnavanje kanala"
@@ -1438,23 +1394,11 @@
     "receiverRcInterpolationInterval": {
         "message": "RC interval interpolacije [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward tranzicija"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "S ovom vrijednosti, Feedforward može biti smanjen kada su kontrole na sredini, što poboljšava završetke flipova i rollova.<br> Vrijednost reprezentira točku otklon kontrola od centra: 0 - kontrole centrirane, 1 - maksimalni otklon od centra. Kad je kontrola iznad zadadne vrijednosti, Feedforward je konstantan na konfiguriranoj vrijednosti. Kada je kontrola ispod zadane vrijednosti, Feedforward se smanjuje proporcionalno do 0 kada su kontrole na centru. <br> Vrijednost 1 daje maksimalno efekt poravnavanja, dok vrijednost 0 drži Feedforward fiksnim na konfiguriranoj vrijednosti kroz cijeli hod kontrola."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint prijelaz"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint težina"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "S ovom vrijednosti, D Setpoint težina može biti smanjena kada su kontrole na sredini, što poboljšava završetke flipova i rollova.<br> Vrijednost reprezentira točku otklona kontrola od centra: 0 - kontrole centrirane, 1 - maksimalni otklon od centra. Kad je kontrola iznad zadadne vrijednosti, Setpoint težina je konstantna na konfiguriranoj vrijednosti. Kada je kontrola ispod zadane vrijednosti, Setpoint težina se smanjuje proporcionalno do 0 kada su kontrole na centru. <br> Vrijednost 1 daje maksimalni efekt poravnavanja, dok vrijednost 0 drži Setpoint težinu fiksnom na konfiguriranoj vrijednosti kroz cijeli hod kontrola."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Ovaj parametar određuje akceleracijski efekt kontrole derivacijske komponente.<br> Vrijednost od 0 je jednaka staroj metodi gdje D samo prati žiroskop, dok vrijednost od 1 je jednaka staroj metodi pogreške s jednakim praćenjem žirskopa i kontrolnog omjera.<br>Niža vrijednost znači sporiji/uglađeniji odziv na kontrolu, dok viša vrijednost nudi više akceleracijskog odziva kontrole.<br>Napomena: RC poravnavanje je preporučeno sa višim vrijednostima kako bi se smanjile vibracije kod naglih kontrola."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> Kokrištenje D Setpoint prijelaza većeg od 0 i manjeg od 0.1 se ne preporučuje. To može dovesti do nestabilnosti i smanjenog odzina na upravljanje kod prijela središnje točke stickova</span>"
@@ -1567,12 +1511,6 @@
     "dialogCopyProfileClose": {
         "message": "Poništi"
     },
-    "pidTuningResetProfile": {
-        "message": "Resetiraj sve vrijednosti profila"
-    },
-    "pidTuningProfileReset": {
-        "message": "Učitaj zadane vrijednosti profila."
-    },
     "pidTuningReceivedProfile": {
         "message": "Kontroler leta postavi Profil:<strong class=\"message-positive\">$1</strong>"
     },
@@ -1596,9 +1534,6 @@
     },
     "tuningHelp": {
         "message": "<b>Tuning savjeti</b><br /><span class=\"message-negative\">VAŽNO:</span> Bitno je provjeravati temperature motora tijekom prvih letova. Veće vrijednosti filtera će poboljšava karakteristike leta, ali može povećati temperature motora.<br>Zadana vrijednost od 100Hz je optimalna, ali za sustave koji imaju veće vibracije pokušajte smanjiti Dterm filter na 50Hz i po želji gyro filter."
-    },
-    "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Upozorenje:</b></span> Količina filtriranje koju koristite je opasno niska. Ovo će vjerojatno učiniti letjelicu nestabilnom i može doći do nekontroliranog odljetanja. Preporučuje se da <b>omogućite barem jedan Gryo Dinamički Lowpass ili Gyro Lowpass 1 i barem jedan D Term Dinamčki Lowpass ili D Term Lowpass 1</b>."
     },
     "receiverThrottleMid": {
         "message": "Gas/Throttle MID"
@@ -1677,9 +1612,6 @@
     },
     "receiverModelPreview": {
         "message": "Pregled"
-    },
-    "receiverMspWarningText": {
-        "message": "Ove kontrole omogućuju da Betaflight bude arman i testiran bez stanice i prijemnika. Ali, <strong>ova mogućnosti nije namijenjena za let i propeleri bi trebali biti skinuti. </strong><br><br>Ova mogućnost ne garantira sigurnu kontrolu letjelice.<strong> Ozljede su moguće ako su propeleri na letjelici.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Omogući kontrole"
@@ -2285,12 +2217,6 @@
     "dataflashButtonSaveFile": {
         "message": "Spremanje memorije čipa u datoteku..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Spremi memoriju u datoteku... (''deprecated'')"
-    },
-    "dataflashSaveFileDepreciationHint": {
-        "message": "Spremanje zapisa crne kutije kroz konfigurator je sporo i podložno greškama. Preporučuje se da koristite '<b>$t(onboardLoggingRebootMscText.message)</b>' (ispod) kako biste aktivirali način rada s masovnom pohranom da pristupite memorijskom čipu ili karitici na kontroleru leta da preuzmete zapise direktno."
-    },
     "dataflashButtonErase": {
         "message": "Obriši flash memoriju"
     },
@@ -2386,9 +2312,6 @@
     },
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Odaberite vrstu verzije za dostupne kontrolere."
-    },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Odaberite kontroler leta kako biste vidjeli dostupna izdanja firmwarea - Odaberite ispravan firmware koji odgovara vašem kontroleru leta."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Odaberite verziju firmwarea za vaš kontroler."
@@ -2491,9 +2414,6 @@
     },
     "firmwareFlasherMessage": {
         "message": "Poruka:"
-    },
-    "firmwareFlasherWarningText": {
-        "message": "Molimo da <span class=\"message-negative\">ne</span> pokušavate ažurirati <strong>hardware koji nije namjenjen za Betaflight</strong> s ovim alatom za ažuriranje.<br /> <span class=\"message-negative\">Nemojte </span><strong>odspajati</strong> kontroler ili <strong>gasiti</strong> računalo tijekom ažuriranja. <br /><br /><strong>Napomena: </strong>STM32 bootloader je smješten u ROM-u i ne može se uništiti.<br /><strong>Napomena:</strong><span class=\"message-negative\"> Automatsko povezivanje</span> je uvijek onemogućeno dok koristite alat za ažuriranje firmwarea.<br /><strong>Napomena:</strong> Uvijek imajte backup jer postoji mogućnost gubitka cijele konfiguracije. <br /><strong>Napomena:</strong> Ako imate problema pri ažuriranju pokušajte prije svega <strong>ponovno spojiti kabel s kontrolera leta</strong>, ponovno pokrenuti konfigurator, ažurirati Chrome i drivere. <br /><strong>Napomena:</strong> Kada ažurirate kontrolere koji se direktno spajaju na USB priključak(većina novih kontrolera) obvezno pročitajte poglavlje 'USB Flashing' u Betaflight uputstvima"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Oporavljanje / Izgubljena komunikacija</strong>"
@@ -2946,34 +2866,16 @@
     },
     "pidTuningPDGainSlider": {
         "message": "P i D gain:",
-        "description": "P and D gain tuning slider label"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro Lowpass Filteri"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Lowpass 1 Cutoff Frekvencija [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1 vrsta filtera"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro Lowpass 1 Dinamička Min Cutoff Frekvencija [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro Lowpass 1 Dinamička Max Cutoff Frekvencija [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro Lowpass 1 vrsta dinamičkog filtera"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro Lowpass 2 Cutoff Frekvencija [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro Lowpass 2 vrsta filtera"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Lowpass filteri imaju dvije varijante: statički i dinamički. Za određeni lowpass filter samo jedan (statički ili dinamički) može biti omogućen i isto vrijeme. Statički ima samo cutoff što je vrijednost koja određuje gdje filter započinje. Dinamički ima raspon od min do max vrijednosti, u tom se rasponu nalazi cutoff i on se pomiče u tom rasponu kako se mijenja gas/throttle."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro Notch Filteri"
@@ -3021,12 +2923,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term Lowpass 1 vrsta filtera"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass 1 Cutoff Frekvencija [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Lowpass 2 Cutoff Frekvencija [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term Lowpass 2 vrsta filtera"
     },
@@ -3047,9 +2943,6 @@
     },
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch Filter Cutoff Frekvencija[Hz]"
-    },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw Lowpass Filteri"
     },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass Cutoff Frekvencija[Hz]"
@@ -3082,12 +2975,6 @@
         "message": "Osi",
         "description": "Iterm Relax Axes selection"
     },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
-    },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (increment only)"
     },
@@ -3110,9 +2997,6 @@
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Apsolutna kontrola"
-    },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Ova mogućnost riješava probleme $t(pidTuningItermRotation.message) i trebala bi biti uskoro zamijenjena. Ova mogućnost akumulira apsolutnu pogrešku žiroskopa u koordinatama letjelice i dodaje proporcionalnu korekciju u setpoint. Kako bi radila, potrebno je da omogućite AirMode i $t(pidTuningItermRelax.message) (za $t(pidTuningItermRelaxAxesOptionRP.message)). Ako kombinirate ovu mogućnost s $t(pidTuningIntegratedYaw.message), možete omogućiti $t(pidTuningItermRelax.message) za $t(pidTuningItermRelaxAxesOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Gas/Throttle Boost"
@@ -4787,9 +4671,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Mjerenje"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivacijski iz greške</b> daje direktniju kontrolu i odziv i koristan je za utrkivanje.<br><br><b>Derivacijski iz mjerenja</b>nudi uglađeniji odziv na kontrole i koristan je za freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight(float):</b> PID skaliranje i PID logika su potpuno isti. Nije potrebno ponovno tunirati. Legacy koristi jednostavni PID kontroler baziran na cjelobrojnom izračunu. Betaflight PID kontroler koristi kompleksnije decimalne izračune i ima mnog drugih značajki posebno dizajniranih za letjelice s više propelera. <br><b>Float vs Integer:</b> PID skaliranje i PID logika su potpuno isti. Nije potrebno ponovno tunirati. F1 procesori nemaju FPU i operacije s pomičnim zarezom povećavaju korištenje prcesora, a cjelobrojne(Integer) operacije će poboljšati performanse, ali će biti manje precizne."

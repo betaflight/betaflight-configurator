@@ -49,6 +49,13 @@
     "portsSelectManual": {
         "message": "Выбрать вручную"
     },
+    "portsSelectVirtual": {
+        "message": "Виртуальный режим (экспериментальный)",
+        "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "virtualMSPVersion": {
+        "message": "Версия виртуальной прошивки"
+    },
     "portOverrideText": {
         "message": "Порт:"
     },
@@ -81,6 +88,9 @@
     },
     "analyticsOptOut": {
         "message": "Отказ от анонимной коллекции статистических данных"
+    },
+    "cordovaForceComputerUI": {
+        "message": "Использовать интерфейс компьютера вместо интерфейса телефона"
     },
     "language_changed": {
         "message": "Изменение языка сохранено"
@@ -199,6 +209,9 @@
     "tabHelp": {
         "message": "Документация и поддержка"
     },
+    "tabOptions": {
+        "message": "Настройки"
+    },
     "tabSetup": {
         "message": "Система"
     },
@@ -291,6 +304,9 @@
     },
     "serialUnrecoverable": {
         "message": "Невосстановимый <span class=\"message-negative\">сбой</span> последовательного подключения, разъединяюсь..."
+    },
+    "serialPortLoading": {
+        "message": "Загрузка..."
     },
     "usbDeviceOpened": {
         "message": "USB устройство <span class=\"message-positive\">успешно</span> подключено. ID подключения: $1"
@@ -394,6 +410,9 @@
     "firmwareVersionNotSupported": {
         "message": "Версия этой прошивки <span class=\"message-negative\">не поддерживается</span> данным конфигуратором. Пожалуйста, обновите прошивку, которая поддерживает версию конфигуратора <strong>$1</strong> или выше. Используйте командную строку, чтобы сделать резервную копию прошивки перед тем, как обновлять прошивку. Процедура создания/восстановления резервной копии описана в документации.<br />Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
     },
+    "firmwareTypeNotSupported": {
+        "message": "Прошивка не Betaflight <span class=\"message-negative\">не поддерживается</span>, за исключением режима CLI."
+    },
     "firmwareUpgradeRequired": {
         "message": "Прошивка в этом устройстве нуждается в обновлении до новой версии. Используйте командную строку, чтобы сделать резервную копию перед обновлением прошивки. Процедура создания/восстановления резервной копии описана в документации.<br />Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
     },
@@ -413,14 +432,10 @@
         "message": "<strong>используемая вами версия конфигуратора ($3) старше используемой прошивки ($4)</strong>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
-        "message": "<strong>не выбран протокол управления двигателями</strong>.<br>Пожалуйста, выберите протокол управления двигателями, соответствующий вашему ESC в '$t(configurationEscFeatures.message)' на вкладке '$t(tabConfiguration.message)'.<br>$t(escProtocolDisabledMessage.message)"
+        "message": "<strong>не выбран протокол управления двигателями</strong>.<br>Пожалуйста, выберите протокол управления двигателями, соответствующий вашему ESC в '$t(configurationEscFeatures.message)' на вкладке '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
         "message": "<strong>акселерометр включен, но не откалиброван</strong>. <br>Если вы планируете использовать акселерометр, пожалуйста, следуйте инструкциям '$t(initialSetupButtonCalibrateAccel.message)' на вкладке '$t(tabSetup.message)'. Если выбрана любая функция, которая требует акселерометра (режим автоуровня, GPS возврат и т.д.), то арминг будет недоступен до тех пор, пока акселерометр не будет откалиброван.<br>Если вы не планируете использовать акселерометр, рекомендуется отключить его в '$t(configurationSystem.message)' на вкладке '$t(tabConfiguration.message)'."
-    },
-    "infoVersions": {
-        "message": "Запуск - ОС: <strong>{{operatingSystem}}</strong>, Chrome: <strong>{{chromeVersion}}</strong>, Конфигуратор: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating operating system, Chrome version and Configurator version"
     },
     "buildServerLoaded": {
         "message": "Загружена информация о сборках для $1 от сервера сборки."
@@ -504,6 +519,14 @@
         "message": "Загруженность порта:",
         "description": "Port utilization text shown in the status bar"
     },
+    "statusbar_usage_download": {
+        "message": "D:",
+        "description": "References 'Download' in the status bar, port utilization. Keep one character long if possible"
+    },
+    "statusbar_usage_upload": {
+        "message": "U:",
+        "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
+    },
     "statusbar_packet_error": {
         "message": "Ошибки пакетов:",
         "description": "Packet error text shown in the status bar"
@@ -515,6 +538,10 @@
     "statusbar_cycle_time": {
         "message": "Время цикла:",
         "description": "Cycle time text shown in the status bar"
+    },
+    "statusbar_cpu_load": {
+        "message": "Загрузка ЦПУ:",
+        "description": "CPU load text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Пожалуйста, используйте \"Программатор\" для доступа к DFU устройств"
@@ -538,7 +565,7 @@
         "message": "Аппаратная часть"
     },
     "defaultWelcomeText": {
-        "message": "Программа поддерживает все аппаратные средства, которые могут запускать Betaflight. Проверьте вкладку прошивки для получения полного списка оборудования.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight Blackbox Log Viewer</a><br /><br />Исходный код прошивки можно загрузить <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br /><br />Последние <b>STM USB VCP драйверы</b> можно загрузить <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Для устаревшего оборудования использующего чип CP210x USB to Serial:<br />Последние <b>CP210x драйверы</b> могут быть загружены <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Последний <b>Zadig</b> для установки USB драйвера Windows можно загрузить <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />"
+        "message": "Программа поддерживает все аппаратные средства, на которых возможно запускать Betaflight. Проверьте вкладку прошивки для получения полного списка оборудования.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight Blackbox Log Viewer</a><br /><br />/<a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight TX Lua Scripts</a><br /><br />Исходный код прошивки можно загрузить <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br /><br />Последние <b>STM USB VCP драйверы</b> можно загрузить <a href=\"http://www.st.com/web/en/catalog/tools/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Для устаревшего оборудования использующего чип CP210x USB to Serial:<br />Последние <b>CP210x драйверы</b> могут быть загружены <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />Последний <b>Zadig</b> для установки USB драйвера Windows можно загрузить <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">отсюда</a><br />"
     },
     "defaultContributingHead": {
         "message": "Содействие"
@@ -1337,6 +1364,15 @@
     "configurationButtonSave": {
         "message": "Сохранить и Перезагрузить"
     },
+    "dialogDynFiltersChangeTitle": {
+        "message": "Изменение динамических значений Notch"
+    },
+    "dialogDynFiltersChangeNote": {
+        "message": "<span class=\"message-negative\"><b>ПРЕДУПРЕЖДЕНИЕ: Некоторые значения dynamic notch были изменены на значения по умолчанию</b></span> потому что была активирована/деактивирована фильтрация RPM.<br> Пожалуйста, проверьте перед полетом."
+    },
+    "dialogDynFiltersConfirm": {
+        "message": "OK"
+    },
     "portsIdentifier": {
         "message": "Идентификатор"
     },
@@ -1495,19 +1531,11 @@
     },
     "pidTuningDMinGain": {
         "message": "Амплитуда",
-        "description": "Gain of the D Min feature"
+        "description": "Gain of the D Max feature"
     },
     "pidTuningDMinAdvance": {
         "message": "Опережение",
-        "description": "Advance of the D Min feature"
-    },
-    "pidTuningDMinFeatureHelp": {
-        "message": "D Min обеспечивает возможность понизить уровень D при нормальном полете и повысить уровень во время быстрых маневров, таких как флипы и роллы, которые могут привести к проскакиваниям. Он также поднимает D во время пропвашей. Регулирует с какой скоростью D достигнет максимального значения и основан на сигнале гироскопа для определения резких перемещений и пропвашей. Advance заставляет D расти раньше, используя setpoint, а не гиро, чтобы определить резкие движения.",
-        "description": "D Min feature helpicon message"
-    },
-    "pidTuningDMinHelp": {
-        "message": "Контроль силы демпфирования (D-term) во время нормального полета по прямой.<br>С включенным D_min, текущий D-gain изменяется во время полета. Во время обычного полета по прямой он равен D_min. Во время резких движений или пропвоша, текущий D-gain увеличивается до значения, определенного слева.<br><br>Максимальный D-gain достигаются во время резких движений стиками, но только частично при пропвоше.<br>Настройте D_Min Gain и Advance для контроля степени усиления чувствительности и таймингов.",
-        "description": "D Min helpicon message on PID table titlebar"
+        "description": "Advance of the D Max feature"
     },
     "pidTuningPidSettings": {
         "message": "Настройки PID-контроллера"
@@ -1521,20 +1549,6 @@
     "receiverRcSmoothingManual": {
         "message": "Ручной"
     },
-    "receiverRcSmoothingAutoSmoothness": {
-        "message": "Авто-сглаживание",
-        "description": "Auto Smoothness parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoSmoothnessHelp": {
-        "message": "Регулирует расчет автоматического сглаживания, значение 10 является значением по умолчанию (отношение сглаживания к задержке). Увеличение числа позволит сгладить RC больше при добавлении задержки. Это может быть полезно для ненадежных RC соединений или для кинополетов.<br>Будьте осторожны с числами, приближающимися к 50, задержка команд станет заметной.<br>Используйте команду CLI rc_smoothing_info в то время как TX и RX работают для того, чтобы увидеть автоматически рассчитанные кадры сглаживания. ",
-        "description": "Auto Smoothness parameter help message"
-    },
-    "receiverRcDerivativeTypeSelect": {
-        "message": "Производный тип среза"
-    },
-    "receiverRcInputTypeSelect": {
-        "message": "Входной типа среза"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Интерполяция"
     },
@@ -1544,44 +1558,8 @@
     "receiverRcSmoothingTypeHelp": {
         "message": "Тип RC сглаживания используется"
     },
-    "rcSmoothingInputCutoffHelp": {
-        "message": "Частота среза в Гц, используемая входным фильтром. Использование более низких значений приведет к сглаживанию входов и является более приемлемым для медленных протоколов приемника. Большинство пользователей следует оставить это 0, соответствующему «Auto»."
-    },
-    "rcSmoothingDerivativeCutoffHelp": {
-        "message": "Частота среза в Гц, используемая для установки setpoint производной (D) фильтра. Использование более низких значений приведет к сглаживанию входов, что является приемлемым для медленных протоколов приемника. Большинству пользователей следует оставить это в 0, соответствующему \"Auto\"."
-    },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Сглаживание каналов применяется к"
-    },
-    "rcSmoothingDerivativeTypeHelp": {
-        "message": "Тип метода фильтрации, используемый для производной заданного значения. Большинство пользователей должны использовать значение «BIQUAD» по умолчанию, поскольку оно обеспечивает хороший баланс между гладкостью и задержкой. «PT1» слегка уменьшает задержку, но обеспечивает меньшее сглаживание."
-    },
-    "rcSmoothingInputTypeHelp": {
-        "message": "Тип метода фильтрации, используемый для ввода. Большинство пользователей должны использовать значение «BIQUAD» по умолчанию, поскольку оно обеспечивает хороший баланс между гладкостью и задержкой. «PT1» слегка уменьшает задержку, но обеспечивает меньшее сглаживание."
-    },
-    "receiverRcSmoothingInputManual": {
-        "message": "Выбирает, будет ли автоматически вырезана частота отсечки входного фильтра (рекомендуется) или вручную выбрана пользователем. Использование «Manual» не рекомендуется для протоколов приемников, таких как Crossfire, которые могут меняться в полете."
-    },
-    "receiverRcSmoothingDerivativeManual": {
-        "message": "Выбирает, будет ли автоматически вырезана частота отсечки фильтра заданного значения (рекомендуется) или вручную выбрана пользователем. Использование «Manual» не рекомендуется для протоколов приемников, таких как Crossfire, которые могут меняться в полете."
-    },
-    "receiverRcSmoothingInputHz": {
-        "message": "Входная частота среза"
-    },
-    "receiverRcSmoothingDerivativeCutoff": {
-        "message": "Производная частоты среза"
-    },
-    "receiverRcInputType": {
-        "message": "Тип входного фильтра"
-    },
-    "receiverRcDerivativeType": {
-        "message": "Производный тип фильтра"
-    },
-    "receiverRcSmoothingDerivativeTypeOff": {
-        "message": "Выкл."
-    },
-    "receiverRcSmoothingDerivativeTypeAuto": {
-        "message": "Авто"
     },
     "receiverRcSmoothingChannel": {
         "message": "Сглажеваемые каналы"
@@ -1613,23 +1591,11 @@
     "receiverRcInterpolationInterval": {
         "message": "Интервал RC-интерполяции [ms]"
     },
-    "pidTuningFeedforwardTransition": {
-        "message": "Feedforward переход"
-    },
-    "pidTuningFeedforwardTransitionHelp": {
-        "message": "С этим параметром Feedforward может быть уменьшен вблизи центра стиков, что приводит к более плавным флипам и разворотам. <br> Значение представляет собой точку отклонения стика: 0 - центрированное по центру, 1 - полное отклонение. Когда стик находится выше этой точки, Feedforward поддерживается постоянным по своему сконфигурированному значению. Когда стик расположен ниже этой точки, показатель подачи уменьшается пропорционально, достигая 0 в центральном положении. <br> Значение 1 дает максимальный эффект сглаживания, а значение 0 сохраняет фиксированное значение Feedforward на его заданном значении по всему диапазону стиков."
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
     "pidTuningDtermSetpoint": {
         "message": "D Setpoint Weight"
-    },
-    "pidTuningDtermSetpointTransitionHelp": {
-        "message": "Этот параметр снижает значение D Setpoint Weight, когда стики находятся в районе центра, что делает завершение флипов и роллов более плавными.<br> Он означает отклонение стика: 0 - стик в центре, 1 - полное отклонение стика. Когда стик находится выше этого значения, то Setpoint Weight имеет установленное значение. Когда стик находится ниже этого значения, то Setpoint Weight уменьшается пропорционально, достигая 0, когда стик находятся в центре.<br> Значение 1 даёт максимальный сглаживающий эффект, а значение 0 сохраняет установленное значение Setpoint Weight при любом отклонении стика."
-    },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Этот параметр определяет эффект ускорения компоненты D.<br> Значение 0 эквивалентно методу, основанному на измерении (Derivative Method: Measurement), где D учитывает только параметры гироскопа, а значение 1 эквивалентно методу, основанному на ошибке (Derivative Method: Error), в котором учитываются параметры гироскопа и отклонение стиков.<br>Низкое значение соответствует медленной/плавной отзывчивости стиков, а высокое значение обеспечивает большую отзывчивость на ускорение стиков.<br>Обратите внимание, что рекомендуется включить RC интерполяцию с более высоким значением, чтобы предотвратить скачки управления, создающие шумы."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):</strong> использование D Setpoint больше 0 и меньше, чем 0.1 не рекомендуется. Это может привести к нестабильности и снижению чувствительности стиков когда стик пересекает центральную точку.</span>"
@@ -1638,14 +1604,14 @@
         "message": "Proportional"
     },
     "pidTuningProportionalHelp": {
-        "message": "Управляет силой, насколько плотно аппарат отслеживает стики (Setpoint).<br><br>Высокое значение (усиление) обеспечивает более жесткое отслеживание, но может вызывать overshoot, если оно слишком большое относительно D-term. Думайте о P-term как о пружине на автомобиле.",
+        "message": "Управляет силой, насколько плотно аппарат отслеживает стики (Setpoint).<br /><br />Высокое значение (усиление) обеспечивает более жесткое отслеживание, но может вызывать overshoot, если оно слишком большое относительно D-term. Думайте о P-term как о пружине на автомобиле.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "Integral"
     },
     "pidTuningIntegralHelp": {
-        "message": "Управляет силой, насколько плотно аппарат держит общее положение в заданной точке.<br>Подобно Proportional, но для более длительных интервалов времени, таких как смещение центра тяжести (CoG) или стойкое внешнее влияние (устойчивый ветр).<br><br>Высокие значения обеспечивают более жесткое отслеживание (например в широких поворотах), но могут заставить аппарат вести себя жестко в отношении комманд стиками.<br>В случае если значения чрезвычайно высоки (в соотношении с D-term), это может привести к медленным осцилляциям.",
+        "message": "Управляет силой, насколько плотно аппарат держит общее положение в заданной точке.<br>Подобно Proportional, но для более длительных интервалов времени, таких как смещение центра тяжести (CoG) или стойкое внешнее влияние (устойчивый ветер).<br /><br />Высокие значения обеспечивают более жесткое отслеживание (например в широких поворотах), но могут заставить аппарат вести себя жестко в отношении комманд стиками.<br>В случае если значения чрезвычайно высоки (в соотношении с D-term), это может привести к медленным осцилляциям.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivative": {
@@ -1654,16 +1620,8 @@
     "pidTuningDMax": {
         "message": "D Max"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Контролирует силу гашения любого движения аппарата. Для движений стиками D-term гасит саму команду. Для внешнего влияния (propwash или ветра) D-term гасит это влияние.<br><br>Высокие значения дают большее гашение и уменьшают overshoots по P-term и FF.<br>Тем не менее, D-term ОЧЕНЬ чувствителен к высокочастотным вибрациям гироскопа (шум усиливается в 10-100 раз).<br><br>Если усиление D слишком велико или шум гироскопа не фильтруется (см. вкладку Настройки фильтров), высокочастотный шум может вызвать разогрев двигателей и сжечь их.<br><br>Думайте о D-term как об амортизаторе на вашем автомобиле, но с отрицательным свойством увеличения шума гироскопа.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningFeedforward": {
         "message": "Feedforward"
-    },
-    "pidTuningFeedforwardHelp": {
-        "message": "Дополнительный параметр толкания (пружина), основанный на командах стиков. FF помогает P-term толкать аппарат опираясь на значения команд движений стиками.<br><br>P-term толкает на основе разницы между желаемым setpoint (deg/sec) и считанными данными гироскопа (текущая скорость вращения) (deg/sec). FF толкает только на основе изменения команды стиков.<br><br>Более высокие значения (усиления) приведут к более резкому отклику аппарата на команду стика.<br>Слишком высокие значения могут приводить к некоторым overshoot, увеличению температуры двигателей, и перенасыщенности двигателей (когда двигатели не могут поддерживать желаемую скорость изменения).<br>Низкие или нулевые значения (0) приводят к замедлению и более плавному реагированию на команды.",
-        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Предупреждение:</b></span> очень высокие коэфициенты могут привести к рассинхронизации двигателей при быстрых замедлениях."
@@ -1767,11 +1725,11 @@
     "dialogCopyProfileClose": {
         "message": "Отмена"
     },
-    "pidTuningResetProfile": {
-        "message": "Сбросить все значения профиля"
+    "pidTuningResetPidProfile": {
+        "message": "Сбросить настройки текущего PID профиля"
     },
-    "pidTuningProfileReset": {
-        "message": "Загрузить значения профиля по умолчанию."
+    "pidTuningPidProfileReset": {
+        "message": "Загружены значения по умолчанию для текущего PID профиля."
     },
     "pidTuningReceivedProfile": {
         "message": "Установить профиль полетного контроллера: <strong class=\"message-positive\">$1</strong>"
@@ -1797,12 +1755,8 @@
     "tuningHelp": {
         "message": "<b>Советы по настройке</b><br /><span class=\"message-negative\">Важно:</span> После настройки фильтров, во время первых полётов, убедитесь, что моторы не перегреваются. Более высокое значение фильтра может улучшить стабильность полёта, но, также, вносит больше шумов в моторы, что может вызвать их нагрев.<br>Значение по умолчанию 100 Гц является оптимальным, но для более шумных аппаратов вы можете снизить значение Dterm-фильтра до 50 Гц и, возможно, также понизить значение фильтра гироскопа."
     },
-    "tuningHelpSliders": {
-        "message": "<span class=\"message-negative\">ВАЖНО:</span> Мы рекомендуем использовать слайдеры для изменения настроек фильтра. Перемещайте оба ползунка вместе.<br>Лучше всего делать относительно небольшие изменения и тестировать в полёте после каждого изменения. Перед тем как вносить дальнейшие изменения, проверьте температуру двигателей.<br>Меньшая фильтрация (ползунки вправо, более высокие значения) улучшит propwash, но это позволит большему количеству шумов достичь двигателей, что сделает их более горячими, и, возможно, достаточно горячими, чтобы их сжечь. На самых \"чистых\" сборках возможна меньшая фильтрация и при включенной rpm фильтрации.<br>Необычно высокие или низкие настройки фильтра могут привести к появлению flyaways при арминге. Значения по умолчанию - безопасны для обычных 5\" квадрокоптеров.<br><strong>Примечание:</strong> Изменение профилей только изменит параметры фильтра D-term . Настройки Gyro фильтра одинаковы для всех профилей.",
-        "description": "Filter tuning subtab note"
-    },
     "filterWarning": {
-        "message": "<span class=\"message-negative\"><b>Предупреждение:</b></span> Количество используемой вами фильтрации опасно мало. Это может сделать аппарат тяжелым в управлении и в результате может привести к улетанию. Настоятельно рекомендуется <b>включить не менее одного Gyro Dynamic Lowpass или Gyro Lowpass 1 и не менее одного D Term Dynamic Lowpass или D Term Lowpass 1</b>."
+        "message": "<span class=\"message-negative\"><b>Предупреждение:</b></span> Количество фильтрации, которое вы используете, является опасно низким. Это, вероятно, затруднит контроль над коптером и может привести к неконтролируемому полёту. Настоятельно рекомендуем <b>включить хотя бы один динамических Gyro Lowpass или Gyro Lowpass 1 и, по крайней мере, один из D-Term Dynamic Lowpass или D Term Lowpass 1</b>."
     },
     "receiverThrottleMid": {
         "message": "Газ, средняя точка"
@@ -1864,6 +1818,12 @@
     "receiverRefreshRateTitle": {
         "message": "Частота обновления граф"
     },
+    "receiverResetRefreshRate": {
+        "message": "Сбросить"
+    },
+    "receiverResetRefreshRateTitle": {
+        "message": "Сброс частоты обновления"
+    },
     "receiverButtonSave": {
         "message": "Сохранить"
     },
@@ -1889,7 +1849,7 @@
         "message": "Предпросмотр"
     },
     "receiverMspWarningText": {
-        "message": "Эти стики позволяют Betaflight армиться и тестироваться без установленного приемника или передатчика. Тем не менее, <strong>эта фича не предназначена для полетов и пропеллеры должны быть сняты.</strong><br><br>Эта фича не гарантирует надежного управления аппаратом. <strong>Если не снять пропеллеры это может привести к серьёзным травмам.</strong>"
+        "message": "Эти стики позволяют Betaflight армиться и тестироваться без установленного приемника или передатчика. Тем не менее, <strong>эта фича не предназначена для полетов и пропеллеры должны быть сняты.</strong><br /><br />Эта фича не гарантирует надежного управления аппаратом. <strong>Если не снять пропеллеры это может привести к серьёзным травмам.</strong>"
     },
     "receiverMspEnableButton": {
         "message": "Включить управление"
@@ -2355,6 +2315,126 @@
     "motorsEnableControl": {
         "message": "<strong>Я понимаю всю опасность</strong>, пропеллеры сняты - включить управление моторами и арминг, и отключить \"Режим Защиты От Неконтролируемого Полёта\"."
     },
+    "motorsDialogSettingsChanged": {
+        "message": "Обнаружены изменения конфигурации.<br /><br /><strong class=\"message-negative-italic\">Тестовый режим моторов отключен до тех пор, пока настройки не будут сохранены</strong>"
+    },
+    "motorsDialogSettingsChangedOk": {
+        "message": "OK"
+    },
+    "motorOutputReorderDialogClose": {
+        "message": "Отмена"
+    },
+    "motorOutputReorderDialogAgree": {
+        "message": "Старт"
+    },
+    "motorsRemapDialogTitle": {
+        "message": "Переназначение моторов"
+    },
+    "motorOutputReorderDialogOpen": {
+        "message": "Переназначить моторы"
+    },
+    "motorOutputReorderDialogSelectSpinningMotor": {
+        "message": "Нажмите на вращающийся мотор..."
+    },
+    "motorOutputReorderDialogRemapIsDone": {
+        "message": "Готово! Проверьте порядок вращения двигателей, нажав на изображение."
+    },
+    "motorsRemapDialogUnderstandRisks": {
+        "message": "<strong>Я понимаю риски</strong>,<br />пропеллеры сняты."
+    },
+    "motorsRemapDialogRiskNotice": {
+        "message": "<strong>Уведомление о безопасности</strong><br /><strong class=\"message-negative\">Для предотвращения травм, снимите все пропеллеры!</strong><br />Моторы будут <strong>вращаться!</strong>"
+    },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>Информационное уведомление</strong><br />Моторы будут вращаться по очереди, и вы сможете выбрать, какой из них будет вращаться. Необходимо, чтобы был подключен аккумулятор и правильно выбран протокол ESC. Эта утилита может изменять только активные в настоящий момент моторы. Для более сложных переназначений требуется введение команд CLI. Для справки обратитесь на <a href=\"https://github.com/betaflight/betaflight/wiki/Betaflight-resource-remapping\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki страницу</a>."
+    },
+    "motorsRemapDialogSave": {
+        "message": "Сохранить"
+    },
+    "motorsRemapDialogStartOver": {
+        "message": "Начать заново"
+    },
+    "motorsButtonReset": {
+        "message": "Сброс"
+    },
+    "motorsButtonSave": {
+        "message": "Сохранить и перезагрузить"
+    },
+    "escDshotDirectionDialog-Title": {
+        "message": "Направление вращения мотора- <strong class=\"message-negative-italic\">Предупреждение: Убедитесь, что пропеллеры сняты!</strong>"
+    },
+    "escDshotDirectionDialog-SelectMotor": {
+        "message": "Выберите один или все моторы"
+    },
+    "escDshotDirectionDialog-SelectMotorSafety": {
+        "message": "Моторы будут вращаться при выборе!"
+    },
+    "escDshotDirectionDialog-RiskNotice": {
+        "message": "<strong>Уведомление безопасности</strong><br /><strong class=\"message-negative-italic\">Для предотвращения травм, снимите все пропеллеры!</strong><br />Моторы начнут<strong>вращаться</strong>сразу после выбора!"
+    },
+    "escDshotDirectionDialog-UnderstandRisks": {
+        "message": "<strong>Я понимаю риски</strong>,<br />все пропеллеры сняты."
+    },
+    "escDshotDirectionDialog-InformationNotice": {
+        "message": "<strong>Информационное уведомление</strong><br />Чтобы изменить направление вращения мотора, необходимо, чтобы был подключен аккумулятор и во вкладке $t(tabMotorTesting.message) выбран правильный протокол ESC. Обратите внимание, что не все протоколы Dshot ESC могут работать с этой настройкой. Проверьте вашу прошивку ESC."
+    },
+    "escDshotDirectionDialog-NormalInformationNotice": {
+        "message": "Установите направление вращения двигателя выбором и вращением каждого двигателя по отдельности."
+    },
+    "escDshotDirectionDialog-WizardInformationNotice": {
+        "message": "Сбрасывает все направления вращения двигателя, а затем позволяет пользователю выбрать, какие из них отменить."
+    },
+    "escDshotDirectionDialog-Open": {
+        "message": "Направление мотора"
+    },
+    "escDshotDirectionDialog-CommandNormal": {
+        "message": "Обычный"
+    },
+    "escDshotDirectionDialog-CommandReverse": {
+        "message": "Обратный"
+    },
+    "escDshotDirectionDialog-CommandSpin": {
+        "message": "Испытать двигатель"
+    },
+    "escDshotDirectionDialog-ReleaseButtonToStop": {
+        "message": "Отпустить кнопку, чтобы остановить"
+    },
+    "escDshotDirectionDialog-ReleaseToStop": {
+        "message": "Отпустите, чтобы остановить"
+    },
+    "escDshotDirectionDialog-Start": {
+        "message": "Индивидуально"
+    },
+    "escDshotDirectionDialog-StartWizard": {
+        "message": "Мастер настройки"
+    },
+    "escDshotDirectionDialog-SetDirectionHint": {
+        "message": "Изменить направление движения выбранного мотора(-ов)"
+    },
+    "escDshotDirectionDialog-SetDirectionHintSafety": {
+        "message": "Моторы будут вращаться при настройке направления!"
+    },
+    "escDshotDirectionDialog-WrongProtocolText": {
+        "message": "Функция работает только с DSHOT ESC.<br />Убедитесь, что ваш ESC (контроллер скорости) поддерживает протокол DSHOT и измените его на вкладке $t(tabMotorTesting.message)."
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "Количество моторов равно 0.<br />Проверьте текущий Mixer на вкладке $t(tabMotorTesting.message) или настройте через CLI. Обратитесь к этой <a href=\"https://github.com/betaflight/betaflight/blob/master/docs/Mixer.md\" target=\"_blank\" rel=\"noopener noreferrer\">странице</a>."
+    },
+    "escDshotDirectionDialog-WrongFirmwareText": {
+        "message": "Обновите прошивку.<br /> Убедитесь, что вы используете последнюю прошивку: Betaflight 4.3 или новее."
+    },
+    "escDshotDirectionDialog-WizardActionHint": {
+        "message": "Нажмите на номера двигателей индивидуально, чтобы изменить направление вращения"
+    },
+    "escDshotDirectionDialog-WizardActionHintSecondLine": {
+        "message": "Проверить направление вращения всех двигателей"
+    },
+    "escDshotDirectionDialog-SpinWizard": {
+        "message": "Пуск / вращение двигателей"
+    },
+    "escDshotDirectionDialog-StopWizard": {
+        "message": "Остановить моторы"
+    },
     "sensorsInfo": {
         "message": "Имейте в виду, что используя быстрое обновление периодов и рендеринга множества графов достаточно тяжело для ресурсов и будет сжигать вашу батарею быстрее, если вы используете ноутбук.<br />мы рекомендуем только отображения графики датчиков интересующих разумное обновление периодов."
     },
@@ -2384,6 +2464,9 @@
     },
     "sensorsGyroTitle": {
         "message": "Гироскоп - град/с"
+    },
+    "sensorsAccelTitle": {
+        "message": "Акселерометр - g"
     },
     "sensorsMagTitle": {
         "message": "Магнитометр - Ga"
@@ -2527,10 +2610,13 @@
         "message": "Сохранено в файл..."
     },
     "dataflashButtonSaveFileDeprecated": {
-        "message": "Сохранить в файл... (устарело)"
+        "message": "Сохранить флеш в файл... (не поддерживается)"
+    },
+    "dataflashSavetoFileNote": {
+        "message": "Непосредственное сохранение флэш в файл медленно и неизбежно подвержено ошибке / повреждению файла.<br>В некоторых случаях он будет работать для небольших файлов, но это не поддерживается и запросы на поддержку будут закрыты без комментариев - вместо этого используйте режим массового хранения."
     },
     "dataflashSaveFileDepreciationHint": {
-        "message": "Сохранение журналов черного ящика из конфигуратора происходит медленно и с возможными ошибками. Рекомендуется вместо этого использовать '<b>$t(onboardLoggingRebootMscText.message)</b> для включения режима передачи данных и доступа к вашему полетному контроллеру как к устройству хранения для загрузки файлов журнала."
+        "message": "Этот метод медленный и неизбежно подвержен ошибке / повреждению файла, потому что соединение с MSP само по себе имеет intrinsic, фундаментальные ограничения, которые делают его непригодным для передачи файлов. Он может работать только для небольших лог файлов. Не создавайте запросы поддержки, если передача файлов не будет произведена при использовании этого метода. Рекомендуется использовать '<b>$t(onboardLoggingRebootMscText.message)</b>' (ниже) для активации режима массового хранения и доступа к контроллеру полета в качестве устройства хранения для загрузки лог файлов."
     },
     "dataflashButtonErase": {
         "message": "Стереть флэш"
@@ -2646,11 +2732,8 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Выберите тип сборки, чтобы увидеть доступные платы полетных контроллеров."
     },
-    "firmwareFlasherOnlineSelectBoardDescription": {
-        "message": "Выбрав из списка полётный контроллер, вы увидите доступные для скачивания версии прошивок. Выберите прошивку, подходящую для Вашего полётного контроллера."
-    },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Начиная с Betaflight 4.1, Betaflight представляет поддержку <strong>Unified Targets (Унифицированных целей)</strong>. Концепция Unified Targets означает, что один и тот же файл прошивки .hex можно использовать для всех плат, использующих один и тот же тип MCU (F4, F7). Чтобы различные платы работали с одной и той же микропрограммой, при прошивке Unified Target вместе с микропрограммой развертывается определенный файл конфигурации.<br>Эта версия конфигуратора Betaflight поддерживает перепрограммирование Unified Targets с помощью соответствующих конфигураций платы в один шаг. Различные типы микропрограмм, которые доступны для каждой платы, показаны в раскрывающемся списке следующим образом:<br><br><strong>&lt;название платы&gt;</strong> или<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>неунифицированная цель или версии встроенного ПО для Unified Targets до 4.1<br><br><strong>&lt;название платы&gt; (&lt;идентификатор производителя&gt;)</strong>:<br>(4-символьный идентификатор производителя)<br>Unified Target.<br><br><strong>Пожалуйста, используйте Unified Target, где это возможно.</strong> Если у вас возникли проблемы с использованием Unified Target, создайте <a href. = \"https://github.com/betaflight/betaflight/issues\" target = \"_ blank\" rel = \"noopener noreferrer\"> проблему </a>, а затем используйте неунифицированную цель, пока проблема не будет решена."
+        "message": "Начиная с Betaflight 4.1, Betaflight представляет поддержку <strong>Unified Targets (Унифицированных целей)</strong>. Концепция Unified Targets означает, что один и тот же файл прошивки .hex можно использовать для всех плат, использующих один и тот же тип MCU (F4, F7). Чтобы различные платы работали с одной и той же микропрограммой, при прошивке Unified Target вместе с микропрограммой развертывается определенный файл конфигурации.<br>Эта версия конфигуратора Betaflight поддерживает перепрограммирование Unified Targets с помощью соответствующих конфигураций платы в один шаг. Различные типы микропрограмм, которые доступны для каждой платы, показаны в раскрывающемся списке следующим образом:<br /><br /><strong>&lt;board name&gt;</strong> или<br><strong>&lt;board name&gt; (Legacy)</strong>:<br>неунифицированная цель или версии встроенного ПО для Unified Targets до 4.1<br><br><strong>&lt;board name&gt; (&lt;manufacturer id&gt;)</strong>:<br>(4-символьный идентификатор производителя)<br>Unified Target.<br><br><strong>Пожалуйста, используйте Unified Target, где это возможно.</strong> Если у вас возникли проблемы с использованием Unified Target, создайте <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_ blank\" rel=\"noopener noreferrer\">проблему</a>, а затем используйте неунифицированную цель, пока проблема не будет решена."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Выберите версию прошивки для Вашей платы."
@@ -2758,7 +2841,7 @@
         "message": "Сообщение:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать </span> <strong>не поддерживаемые</strong> Betaflight-ом контроллеры этим программатором.<br /><span class=\"message-negative\">Не </span><strong>отключайте</strong> кабель от полётного контроллера и <strong>не выключайте</strong> ваш компьютер во время прошивки.<br /><br /><strong>Примечание:</strong> STM32-загрузчик хранится в ROM-памяти, его нельзя стереть.<br /><strong>Примечание:</strong><span class=\"message-negative\"> Подключаться автоматически</span> всегда выключено, когда Вы находитесь во вкладке \"Программатор\".<br /><strong>Примечание:</strong> Убедитесь, что Вы сделали резервную копию, т. к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки. <br /><strong>Примечание:</strong> Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера</strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<br /><strong>Примечание:</strong> При прошивке полётных контроллеров непосредственно через USB кабель (особенно новых моделей контроллеров) обязательно ознакомьтесь с разделом USB Flashing в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйверы"
+        "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать </span> <strong>не поддерживаемые</strong> Betaflight-ом контроллеры этим программатором.<br /><span class=\"message-negative\">Не </span><strong>отключайте</strong> кабель от полётного контроллера и <strong>не выключайте</strong> ваш компьютер во время прошивки.<br /><br /><strong>Примечание:</strong> STM32-загрузчик хранится в ROM-памяти, его нельзя стереть.<br /><strong>Примечание:</strong><span class=\"message-negative\"> Подключаться автоматически</span> всегда выключено во вкладке \"Программатор\".<br /><strong>Примечание:</strong> Убедитесь, что Вы сделали резервную копию, т. к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки. <br /><strong>Примечание:</strong> Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера</strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<br /><strong>Примечание:</strong> При прошивке полётных контроллеров непосредственно через USB кабель (особенно новых моделей контроллеров) обязательно ознакомьтесь с разделом USB Flashing в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйвера"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи / Восстановление связи</strong>"
@@ -3203,10 +3286,6 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Настройки фильтра вне зависимости от выбранного профиля"
     },
-    "pidTuningFilterSlidersHelp": {
-        "message": "Ползунки для настройки фильтрации гироскопа и D-term ПИД регулятора.<br><br>Повышенная фильтрация приводит к более плавному полету, но также увеличивает задержку сигнала от гироскопа до ПИД регулятора (фазовая задержка), что приводит к ухудшению агрессивных качеств полета, совладания с PropWash, реагированию на стики и, если чрезмерно большая, и к осцилляциям.<br><br>Пониженная фильтрация уменьшает задержку сигнала гироскопа, но может увеличить температуру двигателей из-за реагирования D-term ПИД-регулятора на высокую частоту моторных вибраций (шум).<br>Так же при слишком низкой фильтрации происходит снижение производительности полета (более высокое соотношение шума к полезному сигналу).",
-        "description": "Overall helpicon message for filter tuning sliders"
-    },
     "pidTuningSliderLowFiltering": {
         "message": "Меньше фильтрации",
         "description": "Filter tuning slider low header"
@@ -3223,21 +3302,9 @@
         "message": "Множитель фильтра Gyro:",
         "description": "Gyro filter tuning slider label"
     },
-    "pidTuningGyroFilterSliderHelp": {
-        "message": "Повышает или понижает фильтры низких частот гироскопа, пропорционально друг другу. Фильтрация гироскопа применяется до ПИД контроллера.<br>Обобщенные диапазоны шума для квадрокоптеров различных классов:<br><br>6\"+ квадрокоптеров - в пределах 100 - 330Гц<br>5\" квадрокоптеров - в пределах 220 - 500Гц<br>Whoop - 3\" квадрокоптеров - в пределах 300 - 850Гц<br><br>Обычно, требуется установить слайдеры так, чтобы диапазон Gyro Lowpass 1 Dynamic Min/Max частота среза покрывал вышеупомянутые интервалы.<br>Однако для плавных полетов используйте больше Фильтрации при помощи слайдера. Чтобы получить более агрессивную настройку фильтра, используйте меньшую Фильтрацию при помощи слайдера.<br><br>Меньшее количество фильтрации следует использовать С ОСОБОЙ ОСТОРОЖНОСТЬЮ, дабы не получить черезчур радикальный результат, что может вызвать неконтроллируемый полёт или привести к сгоранию двигателей.<br>Замечание: резонанс рамы, плохие подшипники и кривые пропеллеры могут требовать повышенной фильтрации.",
-        "description": "Gyro filtering tuning slider helpicon message"
-    },
     "pidTuningDTermFilterSlider": {
         "message": "Множитель фильтра D-Term:",
         "description": "D Term filter tuning slider label"
-    },
-    "pidTuningDTermFilterSliderHelp": {
-        "message": "Повышает или понижает стандартные фильтры низких частот D-term пропорционально друг другу.<br>Фильтр D-term применяется после ПИД контроллера, и ТОЛЬКО для D-term, поскольку эта составляющая наиболее чувствительна к шумам и может усиливать любой высокочастотный шум в 10-100 раз, и более.<br><br> Обычно требуется переместить ползунок D-term filter вверх с помощью ползунка Gyro Filter, чтобы срезы фильтра D-term были значительно ниже диапазона шумов двигателей, для более жесткой фильтрации D-term, чем те, что применяются к сигналам гироскопа с помощью Множитель фильтра Gyro.<br>Эта рекомендуемая разница встроена в стандартные значения и слайдер масштабирования.",
-        "description": "D Term filtering tuning slider helpicon message"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Ползунки для настройки характеристик полета (усиление ПИД-регулятора)<br><br> Главный множитель: повышает или понижает все коэффициенты усиления ПИД-регулятора (выше), удерживая пропорциональную разницу между коэффициентами усиления.<br><br>Баланс PD: регулирует баланс (отношение \\ пропорциональная разница) между компонентами P и D («пружина» [p-компонент] и «амортизатор» [d-компонент]).<br><br>Коэф. усиления P и D: вместе увеличивает или уменьшает усиление P и D, поддерживая соотношение (баланс) между ними, для большего (или меньшего) влияния ПИД-контроллера на полётные характеристики.<br><br>Коэфф. реакции на движения стиков: увеличивает или уменьшает усиление FeedForward для управления ощущением отклика стиков.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ВНИМАНИЕ</span>: Текущие позиции слайдеров могут быть причиной улетаний коптера, повреждений моторов и небезопасного поведения. Пожалуйста, продолжайте с осторожностью!",
@@ -3277,54 +3344,20 @@
     },
     "pidTuningPDGainSlider": {
         "message": "Коэфф. усиления P и D:",
-        "description": "P and D gain tuning slider label"
-    },
-    "pidTuningResponseSlider": {
-        "message": "Коэфф. реакции на движения стиков:",
-        "description": "Response tuning slider label"
-    },
-    "pidTuningMasterSliderHelp": {
-        "message": "В целом, большие квадрокоптеры требуют более высоких коэффициентов PID из-за низкого отношения мощности к весу.<br /><br />Маленькие (микро) квадрокоптеры обычно требует пониженных коэффициентов PID из-за высокого отношения мощности к весу.<br /><br />Высокие значения PID предназначены для менее чувствительных к изменению газа квадрокоптеров и наоборот, низкие значения PID  - для более чувствительных квадрокоптеров.",
-        "description": "Master gain tuning slider helpicon message"
-    },
-    "pidTuningPDRatioSliderHelp": {
-        "message": "Относительно высокое D снизит чувствительность стиков и может разогреть двигатели, но должно помочь контролировать осцилляции P и может улучшить propwash.<br><br>Относительно низкое D дает более быструю реакцию на стик, но может ослабить обработку propwash.",
-        "description": "PD balance tuning slider helpicon message"
+        "description": "P and D Gain tuning slider label"
     },
     "pidTuningPDGainSliderHelp": {
-        "message": "Результатом понижения параметров P и D будут более холодные двигатели, но при этом будет больше пропвош.<br><br>Параметры P и D работают вместе для того чтобы снизить эффект пропвоша.<br><br>Более высокие значения усилят нагрев моторов и могут увеличить осцилляции во время плавного полета из-за повышения параметра D.",
+        "message": "Результатом понижения параметров P и D будут более холодные двигатели, но при этом будет больше пропвош.<br /><br />Параметры P и D работают вместе для того чтобы снизить эффект пропвоша.<br /><br />Более высокие значения усилят нагрев моторов и могут увеличить осцилляции во время плавного полета из-за повышения параметра D.",
         "description": "P and D gain tuning slider helpicon message"
-    },
-    "pidTuningResponseSliderHelp": {
-        "message": "Низкие значения FF ухудшат реакцию на движение стиков и могут привести к медленному отскоку (bounce-back) назад в конце флипа или ролла (I-term windup).<br><br>Высокие значения повысят отзывчивость на резкие движения стиков. Однако слишком высокие значения могут вызвать проскакивание (overshoot) квадрокоптера и быстрый отскок назад в конце флипа или ролла.",
-        "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningGyroLowpassFiltersGroup": {
         "message": "Gyro НЧ фильтры"
     },
-    "pidTuningGyroLowpassFrequency": {
-        "message": "Gyro Lowpass 1 частота среза [Hz]"
-    },
     "pidTuningGyroLowpassType": {
         "message": "Gyro Lowpass 1, тип фильтра"
     },
-    "pidTuningGyroLowpassDynMinFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic, мин. частота среза [Hz]"
-    },
-    "pidTuningGyroLowpassDynMaxFrequency": {
-        "message": "Gyro Lowpass 1 Dynamic, макс. частота среза [Hz]"
-    },
     "pidTuningGyroLowpassDynType": {
         "message": "Gyro Lowpass 1 Dynamic, тип фильтра"
-    },
-    "pidTuningGyroLowpass2Frequency": {
-        "message": "Gyro Lowpass 2, частота среза [Hz]"
-    },
-    "pidTuningGyroLowpass2Type": {
-        "message": "Gyro Lowpass 2, тип фильтра"
-    },
-    "pidTuningLowpassFilterHelp": {
-        "message": "Фильтры нижних частот бывают статическими и динамическими. Каждый отдельный фильтр может быть или статическим или динамическим. В статическом есть только значение Cutoff, частота среза, и подавляются все частоты входного сигнала выше этой частоты. В динамическом определены 2 частоты среза (Min и Max). Значение частоты среза внутри этого диапазона определяется динамически с движением стика газа."
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro режекторные фильтры"
@@ -3350,6 +3383,9 @@
     "pidTuningDynamicNotchFilterHelp": {
         "message": "Динамический режекторный фильтр отслеживает пиковую частоту шума моторов и размещает один или два фильтра их центрами на этой частоте."
     },
+    "pidTuningMultiDynamicNotchFilterHelp": {
+        "message": "Динамический режекторный фильтр отслеживает пиковую частоту шума моторов и размещает один или два фильтра их центрами на этой частоте."
+    },
     "pidTuningDynamicNotchFilterDisabledWarning": {
         "message": "<strong>Внимание:</strong> Динамический режекторный фильтр отключен. Чтобы настроить и использовать его, пожалуйста, включите функцию 'DYNAMIC_FILTER' в разделе '$t(configurationFeatures.message)' во вкладке '$t(tabConfiguration.message)'."
     },
@@ -3363,10 +3399,13 @@
         "message": "Q динамического режекторного фильтра"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "Минимальная частота динамического режекторного фильтра, Гц"
+        "message": "Минимальная частота Динамического Notch [Hz]"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "Максимальная частота динамического режекторного фильтра, Гц"
+        "message": "Максимальная частота динамического Notch [Hz]"
+    },
+    "pidTuningDynamicNotchCount": {
+        "message": "Количество динамических Notch"
     },
     "pidTuningDynamicNotchRangeHelp": {
         "message": "Динамический режекторный фильтр имеет три частотных диапазона, в которых он может работать: LOW(80-330гц) для более низкооборотных квадрокоптеров, таких как 6+ дюймов, MEDIUM(140-550гц) для \"нормальных\" 5 дюймовых квадрокоптеров и HIGH(230-800гц) для сверхвысокооборотных 2-3 дюймовых квадрокоптеров. AUTO выбирает диапазон в зависимости от значения максимальной (cutoff) частоты динамического фильтра нижних частот Gyro."
@@ -3383,12 +3422,15 @@
     "pidTuningDynamicNotchMaxHzHelp": {
         "message": "Установите это параметр на максимальную частоту входящего шума, которая должна контролироваться динамическим режекторным фильтром."
     },
+    "pidTuningDynamicNotchCountHelp": {
+        "message": "Устанавливает количество динамических нотчей на ось. При включённом RPM фильтре рекомендуется значение 1 или 2. Без RPM фильтра рекомендуется значение 4 или 5. Меньшие значения уменьшит задержку фильтров, однако может увеличить температуру двигателя."
+    },
     "pidTuningRpmFilterGroup": {
         "message": "Gyro RPM фильтр",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmFilterHelp": {
-        "message": "Фильтрация RPM – это набор режекторных фильтров для гироскопа, использующий телеметрические данные RPM для высокоточного удаления шума двигателей.<br><br><b><span class=\"message-positive\">ВАЖНО</span>: ESC должны поддерживать протокол двунаправленного DShot и значение $t(configurationMotorPoles.message) во вкладке $t(tabConfiguration.message) должно быть правильным для работы этого фильтра.</b>",
+        "message": "Фильтрация RPM – это набор режекторных фильтров для гироскопа, использующий телеметрические данные RPM для высокоточного удаления шума двигателей.<br /><br /><b><span class=\"message-positive\">ВАЖНО</span>: ESC должны поддерживать протокол двунаправленного DShot и значение $t(configurationMotorPoles.message) во вкладке $t(tabMotorTesting.message) должно быть правильным для работы этого фильтра.</b>",
         "description": "Header text for the RPM Filter group"
     },
     "pidTuningRpmHarmonics": {
@@ -3416,12 +3458,6 @@
     "pidTuningDTermLowpassType": {
         "message": "D Term Lowpass 1, тип фильтра"
     },
-    "pidTuningDTermLowpassFrequency": {
-        "message": "D Term Lowpass 1, частота среза [Hz]"
-    },
-    "pidTuningDTermLowpass2Frequency": {
-        "message": "D Term Lowpass 2, частота среза [Hz]"
-    },
     "pidTuningDTermLowpass2Type": {
         "message": "D Term Lowpass 2, тип фильтра"
     },
@@ -3430,6 +3466,9 @@
     },
     "pidTuningDTermLowpassDynMaxFrequency": {
         "message": "D Term Lowpass 1 Dynamic, макс. частота среза [Hz]"
+    },
+    "pidTuningDTermLowpassDynExpo": {
+        "message": "Экспонента 1 кривой нижнего фильтра параметра D"
     },
     "pidTuningDTermLowpassDynType": {
         "message": "D Term Lowpass 1 Dynamic, тип фильтра"
@@ -3443,9 +3482,6 @@
     "pidTuningDTermNotchCutoff": {
         "message": "D Term Notch фильтр, частота среза [Hz]"
     },
-    "pidTuningYawLospassFiltersGroup": {
-        "message": "Yaw Lowpass фильтр"
-    },
     "pidTuningYawLowpassFrequency": {
         "message": "Yaw Lowpass фильтр, частота среза [Hz]"
     },
@@ -3454,6 +3490,24 @@
     },
     "pidTuningVbatPidCompensationHelp": {
         "message": "Увеличивает значения PID-ов, в целях компенсации, при низком заряде батареи. Это даёт более стабильные лётные характеристики на протяжении всего полёта. Значение компенсации вычисляется исходя $t(powerBatteryMaximum.message), установленного во вкладке $t(tabPower.message)."
+    },
+    "pidTuningVbatSagCompensation": {
+        "message": "Компенсация просадки напряжения батареи"
+    },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Обеспечивает равномерную отзывчивость дросселя и PID-ов в пределах используемого напряжения аккумулятора за счет компенсации просадки напряжения аккумулятора. Размер компенсации может быть изменен в пределах от 0 до 100%. Рекомендуется использовать полную компенсацию (100%).<br /><br />Посетите <a href=\"https://github.com/betaflight/betaflight/wiki/4.2-Tuning-Notes#dynamic-battery-sag-compensation\"target=\"_blank\" rel=\"noopener noreferrer\">эту запись wiki</a> для получения дополнительной информации."
+    },
+    "pidTuningVbatSagValue": {
+        "message": "%"
+    },
+    "pidTuningThrustLinearization": {
+        "message": "Линейная тяга"
+    },
+    "pidTuningThrustLinearizationHelp": {
+        "message": "Компенсация нелинейного соотношения между дросселем и тяговй путем применения обратной кривой тяги двигателя к выходу мотора. Размер компенсации может быть изменен в пределах от 0 до 150%."
+    },
+    "pidTuningThrustLinearValue": {
+        "message": "%"
     },
     "pidTuningItermRotation": {
         "message": "I Term поворот"
@@ -3476,12 +3530,6 @@
     "pidTuningItermRelaxAxes": {
         "message": "Oси",
         "description": "Iterm Relax Axes selection"
-    },
-    "pidTuningItermRelaxAxesOptionRP": {
-        "message": "RP"
-    },
-    "pidTuningItermRelaxAxesOptionRPY": {
-        "message": "RPY"
     },
     "pidTuningItermRelaxAxesOptionRPInc": {
         "message": "RP (только увеличения)"
@@ -3509,9 +3557,6 @@
     "pidTuningAbsoluteControlGain": {
         "message": "Абсолютный контроль"
     },
-    "pidTuningAbsoluteControlGainHelp": {
-        "message": "Эта функция решает некоторые основные проблемы $t(pidTuningItermRotation.message) и, как можно надеяться, заменит их в какой-то момент. Этот параметр накапливает значение абсолютной погрешности гироскопа относительно координат квадрокоптера и подмешивает пропорциональную коррекцию в setpoint. Для её работы необходимо включить AirMode и $t(pidTuningItermRelax.message) (для $t(pidTuningItermRelaxAxesOptionRP.message)). Если вы используете эту функцию совместно с $t(pidTuningIntegratedYaw.message), вы можете включить $t(pidTuningItermRelax.message) для $t(pidTuningItermRelaxAxesOptionRPY.message)."
-    },
     "pidTuningThrottleBoost": {
         "message": "Увеличение газа"
     },
@@ -3522,7 +3567,7 @@
         "message": "Динамическое значение холостого хода [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Динамический холостой ход улучшает управление при низких оборотах и уменьшает риск возникновения перегрева двигателей. Он решает проблемы, связанные с ускорением или замедлением пропеллеров воздушным потоком, улучшает влияние PID, стабильность, торможение двигателями и чувствительность. Динамический режим холостого хода должен быть установлен (в rpm) на 20% ниже значения Холостой ход (см. $t(tabMotorTesting.message)). Как правило, нет необходимости изменять значение Холостой ход на отличное от значения по умолчанию. Для более длительного времени зависания \"вверх ногами\" значение Холостой ход и Minimum rpm должны понижаться вместе.<br><br>Посетите <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">эту запись в вики</a> для получения дополнительной информации."
+        "message": "Динамический холостой ход улучшает управление при низких оборотах и уменьшает риск возникновения перегрева двигателей. Он решает проблемы, связанные с ускорением или замедлением пропеллеров воздушным потоком, улучшает влияние PID, стабильность, торможение двигателями и чувствительность. Динамический режим холостого хода должен быть установлен (в rpm) на 20% ниже значения Холостой ход (см. $t(tabMotorTesting.message)). Как правило, нет необходимости изменять значение Холостой ход на отличное от значения по умолчанию. Для более длительного времени зависания \"вверх ногами\" значение Холостой ход и Minimum rpm должны понижаться вместе.<br /><br />Посетите <a href=\"https://github.com/betaflight/betaflight/wiki/Tuning-Dynamic-Idle\"target=\"_blank\" rel=\"noopener noreferrer\">эту запись в вики</a> для получения дополнительной информации."
     },
     "pidTuningAcroTrainerAngleLimit": {
         "message": "Акро тренер лимит угла"
@@ -3619,6 +3664,12 @@
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Пройденное расстояние (м)"
+    },
+    "failsafeGpsRescueItemMinDth": {
+        "message": "Минимальное расстояние до дома (метры)"
+    },
+    "failsafeGpsRescueItemMinDthHelp": {
+        "message": "Минимальное расстояние до дома, необходимое для активации GPS rescue"
     },
     "failsafeGpsRescueItemGroundSpeed": {
         "message": "Скорость относительно земли (м/сек)"
@@ -3773,6 +3824,9 @@
     "powerVoltageHead": {
         "message": "Датчик напряжения"
     },
+    "powerVoltageWarning": {
+        "message": "<span class=\"message-negative\">Предупреждение:</span> Значения ограничены 25.5V."
+    },
     "powerVoltageValue": {
         "message": "$1 V"
     },
@@ -3862,6 +3916,9 @@
     },
     "powerAmperageHead": {
         "message": "Датчик тока"
+    },
+    "powerAmperageWarning": {
+        "message": "<span class=\"message-negative\">Предупреждение:</span> Значения ограничены 63.5A."
     },
     "powerAmperageValue": {
         "message": "$1 A"
@@ -4030,6 +4087,10 @@
     },
     "osdSetupUnitsOptionMetric": {
         "message": "Метрические",
+        "description": "Option for the units system used in the OSD"
+    },
+    "osdSetupUnitsOptionBritish": {
+        "message": "British",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
@@ -4235,6 +4296,14 @@
     "osdDescElementAltitude": {
         "message": "Текущая высота (замигает, если значение будет ниже заданного порога тревоги)"
     },
+    "osdTextElementAltitudeVariant1Decimal": {
+        "message": "С 1 десятичным знаком",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementAltitudeVariantNoDecimal": {
+        "message": "Без десятичных знаков",
+        "description": "One of the variants of the altitude element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Время работы",
         "description": "One of the elements of the OSD"
@@ -4283,6 +4352,22 @@
     },
     "osdDescElementGPSLat": {
         "message": "Координаты широты GPS"
+    },
+    "osdTextElementGPSVariant7Decimals": {
+        "message": "С 7 десятичными знаками",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariant4Decimals": {
+        "message": "С 4 десятичными знаками",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantDegMinSec": {
+        "message": "Использование градусов, минут и секунд",
+        "description": "One of the variants for the GPS element of the OSD"
+    },
+    "osdTextElementGPSVariantOpenLocation": {
+        "message": "Использование открытого кода местоположения",
+        "description": "One of the variants for the GPS element of the OSD"
     },
     "osdTextElementDebug": {
         "message": "Отладка",
@@ -4360,6 +4445,22 @@
     },
     "osdDescElementMainBattUsage": {
         "message": "Отобразить израсходованную ёмкость батареи в виде шкалы"
+    },
+    "osdTextElementMainBattUsageVariantGraphrRemain": {
+        "message": "Графически осталось",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantGraphUsage": {
+        "message": "Графически используемо",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueRemain": {
+        "message": "Осталось процентов",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
+    },
+    "osdTextElementMainBattUsageVariantValueUsage": {
+        "message": "Процент использ",
+        "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
         "message": "Таймер: время работы",
@@ -4583,7 +4684,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCameraFrame": {
-        "message": "Добавляет регулируемый контурный элемент, предназначенный для отображения поля (угла) зрения HD камеры.<br><br>Ширину и высоту можно настроить в CLI с помощью 'osd_camera_frame_width' и 'osd_camera_frame_height'"
+        "message": "Добавляет регулируемый контурный элемент, предназначенный для отображения поля (угла) зрения HD камеры.<br /><br />Ширину и высоту можно настроить в CLI с помощью 'osd_camera_frame_width' и 'osd_camera_frame_height'"
     },
     "osdTextElementEfficiency": {
         "message": "Эффективность батареи",
@@ -4591,6 +4692,27 @@
     },
     "osdDescElementEfficiency": {
         "message": "Мгновенное потребление аккумулятора в mAh/растояние. (Требуется корректный GPS fix)"
+    },
+    "osdTextTotalFlights": {
+        "message": "Всего полётов",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTotalFlights": {
+        "message": "Приблизительно общее количество полетов"
+    },
+    "osdTextElementUpDownReference": {
+        "message": "Опрная точка Верх (питч 90 гр)/Низ (питч -90 гр)",
+        "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
+    },
+    "osdDescUpDownReference": {
+        "message": "Символ OSD для отображения при приближении высоты к вертикали (90 градусов, U) и D для носа вниз (-90 градусов, D)"
+    },
+    "osdTextElementTxUplinkPower": {
+        "message": "Tx uplink мощность",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescTxUplinkPower": {
+        "message": "Показывает значение мощности Tx (mW или W). Полезно, когда <i>динамическая мощность</i> включена для поддерживаемых радиоконтроллеров"
     },
     "osdTextElementUnknown": {
         "message": "Неизвестно ($1)",
@@ -5179,7 +5301,7 @@
         "description": "Help for the number of power levels field of the VTX Table element in the VTX tab"
     },
     "vtxTablePowerLevelsTableHelp": {
-        "message": "Эта таблица представляет разные значения мощности, которые может использовать видеопередатчик. Она состоит из: <br/><b>$t(vtxTablePowerLevelsValue.message):</b> каждому уровню мощности нужно значение, определённое производителем. За правильным значением мощности можно обратиться либо на сайт производителя видеопередатчика, либо поискать на Betaflight wiki, в разделе \"VTX Tables\".<br /><b>$t(vtxTablePowerLevelsLabel.message):</b> вы можете задать здесь любое название (метку) для каждого уровня мощности. Можно использовать цифры (25, 200, 600, 1.2), буквы (OFF, MIN, MAX), или их комбинации.<br /><br />Используйте <b>только</b> разрешённые в вашей стране уровни мощности!",
+        "message": "Эта таблица представляет разные значения мощности, которые может использовать видеопередатчик. Она состоит из: <br/><b>$t(vtxTablePowerLevelsValue.message):</b> каждому уровню мощности нужно значение, определённое производителем. За правильным значением мощности можно обратиться либо на сайт производителя видеопередатчика, либо поискать на Betaflight wiki, в разделе \"VTX Tables\".<br /><b>$t(vtxTablePowerLevelsLabel.message):</b> вы можете задать здесь любое название (метку) для каждого уровня мощности. Можно использовать цифры (25, 200, 600, 1.2), буквы (OFF, MIN, MAX), или их комбинации.<br /><br />Используйте <b>только</b> разрешённые в вашей стране уровни мощности.",
         "description": "Help for the table of power levels (value-label) that appears in the VTX tab"
     },
     "vtxTablePowerLevelsValue": {
@@ -5215,7 +5337,7 @@
         "description": "Text of one of the titles of the VTX Table element in the VTX tab"
     },
     "vtxTableBandsChannelsTableHelp": {
-        "message": "Эта таблица представляет все частоты, которые могут быть использованы для вашего видеопередатчика. У вас может быть несколько сеток частот и для каждой сетки вы должны настроить:<br /><b>$t(vtxTableBandTitleName.message):</b> Название, которое вы хотите присвоить этой сетке, например BOSCAM_A, FATSHARK или RACEBAND.<br /><b>$t(vtxTableBandTitleLetter.message):</b> Буква, представляющая сетку.<br /><b>$t(vtxTableBandTitleFactory.message):</b> Показывает, заводская ли это сетка. Если включено, Betaflight посылает в видеопередатчик сетку и номер канала. Видеопередатчик затем использует свою встроенную таблицу частот, а значения частот, настроенные в таблице на этой странице в конфигураторе используются только для показа в OSD и в других местах. Если выключено, Betaflight посылает в видеопередатчик значения частот, заданные в этой таблице.<br/><b>Частоты:</b> Частоты для этой сетки.<br /><br />Учитывайте, что не все частоты разрешены в вашей стране. Поставьте <b>0</b> в каждую запрещённую частоту, чтобы отключить её.",
+        "message": "Эта таблица представляет все частоты, которые могут быть использованы для вашего видеопередатчика. У вас может быть несколько сеток частот и для каждой сетки вы должны настроить:<br><b>-$t(vtxTableBandTitleName.message):</b> Название, которое вы хотите присвоить этой сетке, например BOSCAM_A, FATSHARK или RACEBAND.<br><b>-$t(vtxTableBandTitleLetter.message):</b> Буква, представляющая сетку.<br><b>-$t(vtxTableBandTitleFactory.message):</b> Показывает, заводская ли это сетка. Если включено, Betaflight посылает в видеопередатчик сетку и номер канала. Видеопередатчик затем использует свою встроенную таблицу частот, а значения частот, настроенные в таблице на этой странице в конфигураторе используются только для показа в OSD и в других местах. Если выключено, Betaflight посылает в видеопередатчик значения частот, заданные в этой таблице.<br><b>Частоты:</b> Частоты для этой сетки.<br /><br />Учитывайте, что не все частоты разрешены в вашей стране. Поставьте <b>0</b> в каждую запрещённую частоту, чтобы отключить её.",
         "description": "Help for the table of bands-channels that appears in the VTX tab"
     },
     "vtxSavedFileOk": {
@@ -5251,7 +5373,7 @@
         "description": "Save Lua script button in the VTX tab"
     },
     "vtxLuaFileHelp": {
-        "message": "Кнопка '$t(vtxButtonSaveLua.message)' позволит вам сохранить файл <i>craftname</i>.lua, содержащий таблицу настройки vtx, которая может быть использована в скриптах lua betaflight. (см. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\">тут</a>.)",
+        "message": "Кнопка '$t(vtxButtonSaveLua.message)' позволит вам сохранить <i>mcuid</i>.lua файл, содержащий конфигурацию таблицы VTX, который может быть использован в <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scripts</a>.<br><br>Версия 1.6. и выше могут использовать файл как есть, но для более старых версий скриптов его нужно переименовать, чтобы он соответствовал названию модели в TX.",
         "description": "Tooltip message for the Save Lua script button in the VTX tab"
     },
     "vtxButtonLoadFile": {
@@ -5269,6 +5391,10 @@
     "vtxButtonSaved": {
         "message": "Сохранено",
         "description": "Saved action button in the VTX tab"
+    },
+    "vtxSmartAudioUnlocked": {
+        "message": "{{version}} разблокировано",
+        "description": "Indicates if SA device is unlocked"
     },
     "mainHelpArmed": {
         "message": "Моторы Арминг"
@@ -5397,7 +5523,7 @@
         "message": "Measurement"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivative from Error</b> обеспечивает более резкую отзывчивость стиков и это предпочтительнее для гонок. <br><br><b>Derivative from Measurement</b> обеспечивает более плавную отзывчивость стиков, что больше подходит для фристайла"
+        "message": "<b>Derivative from Error</b> обеспечивает более резкую отзывчивость стиков и это предпочтительнее для гонок. <br /><br /><b>Derivative from Measurement</b> обеспечивает более плавную отзывчивость стиков, что больше подходит для фристайла"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID коэффициенты и PID логика абсолютно те же. Нет необходимости их перенастраивать. Legacy - это старый betaflight, чей PID-контроллер был основан на целочисленных вычислениях. PID-контроллер Betaflight использует вычисления с дробными числами и имеет множество новых возможностей, специально разработанных для мультироторных приложений. <br> <b>Float vs Integer:</b> PID коэффициенты и PID логика абсолютно те же. Перенастройка не нужна. Полётные контроллеры F1 не имели встроенного FPU и вычисления с дробными числами увеличивают нагрузку на CPU, а вычисления с целыми числами повышают повышают производительность, но вычисления с дробными числами немного увеличивают точность."
@@ -5542,5 +5668,71 @@
     "gpsSbasNone": {
         "message": "Никакой",
         "description": "One of the options selectable for the GPS SBAS system"
+    },
+    "dialogFileNameTitle": {
+        "message": "Имя файла"
+    },
+    "dialogFileAlreadyExistsTitle": {
+        "message": "Этот файл уже существует!"
+    },
+    "dialogFileAlreadyExistsDescription": {
+        "message": "Перезаписать ?"
+    },
+    "cordovaCheckingWebview": {
+        "message": "Проверка веб-приложений ..."
+    },
+    "cordovaIncompatibleWebview": {
+        "message": "Несовместимая версия webview"
+    },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Вы должны обновить webview вашего устройства, чтобы использовать конфигуратор."
+    },
+    "cordovaWebviewTroubleshootingMsg2": {
+        "message": "Приведенный ниже инструмент предназначен для того, чтобы помочь вам установить новый webview или обновить уже установленный."
+    },
+    "cordovaAvailableWebviews": {
+        "message": "Доступные веб-приложения на вашем устройстве"
+    },
+    "cordovaWebviewInstall": {
+        "message": "Установка приложения <b>{{app}}</b> может решить эту проблему совместимости."
+    },
+    "cordovaWebviewInstallBtn": {
+        "message": "Установить из Google Play Store"
+    },
+    "cordovaWebviewUninstall": {
+        "message": "Удаление приложения <b>{{app}}</b> может решить эту проблему совместимости. Если вы не можете удалить его, попробуйте отключить его из настроек."
+    },
+    "cordovaWebviewUninstallBtn1": {
+        "message": "Удалить из Google Play Store"
+    },
+    "cordovaWebviewUninstallBtn2": {
+        "message": "Удалить / отключить из настроек"
+    },
+    "cordovaWebviewUpdate": {
+        "message": "Обновление приложения <b>{{app}}</b> может решить эту проблему совместимости."
+    },
+    "cordovaWebviewUpdateBtn": {
+        "message": "Обновить из Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Перейдите на вкладку информации о вашем устройстве в настройках и нажмите 10 раз на номер версии сборки, чтобы включить 'Параметры разработчика'. После этого найдите и перейдите в настройки разработчика и выберите <b>{{app}}</b> в качестве поставщика веб-просмотра."
+    },
+    "cordovaWebviewEnableBtn": {
+        "message": "Открыть настройки"
+    },
+    "cordovaWebviewIncompatible": {
+        "message": "Кажется, ваше устройство не совместимо. Попробуйте найти другие способы обновить ваш webview"
+    },
+    "cordovaNoWebview": {
+        "message": "Приложение webview не установлено / не включено"
+    },
+    "cordovaWebviewUsed": {
+        "message": "используется"
+    },
+    "cordovaExitAppTitle": {
+        "message": "Подтверждение"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Вы действительно хотите закрыть конфигуратор?"
     }
 }
