@@ -1297,7 +1297,7 @@ firmware_flasher.initialize = function (callback) {
                             // Trigger regular Flashing sequence
                             GUI.timeout_add('initialization_timeout', function () {
                                 $('a.flash_firmware').click();
-                            }, 100); // timeout so bus have time to initialize after being detected by the system
+                            }, 1000); // timeout so bus have time to initialize after being detected by the system
                         } else {
                             GUI.log(i18n.getMessage('firmwareFlasherPreviousDevice', [port]));
                         }
