@@ -1088,6 +1088,13 @@ MspHelper.prototype.process_data = function(dataHandler) {
                                 FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
                                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                                     FC.RX_CONFIG.rcSmoothingMode = data.readU8();
+                                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                                        const elrsUidLength = 6;
+                                        FC.RX_CONFIG.elrsUid = [];
+                                        for (let i = 0; i < elrsUidLength; i++) {
+                                            FC.RX_CONFIG.elrsUid.push(data.readU8());
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -2051,6 +2058,11 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
                                 .push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
                             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44)) {
                                 buffer.push8(FC.RX_CONFIG.rcSmoothingMode);
+                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                                    FC.RX_CONFIG.elrsUid.forEach((b) => {
+                                        buffer.push8(b);
+                                    });
+                                }
                             }
                         }
                     }

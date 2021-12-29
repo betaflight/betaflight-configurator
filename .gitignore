@@ -16,6 +16,9 @@ testresults/
 .eslintcache
 cordova/bundle.keystore
 
+# Junit test results
+test-results-junit/
+
 # OSX
 .DS_store
 

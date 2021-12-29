@@ -80,7 +80,7 @@
     "vue": "^2.7.10"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
+    "@babel/core": "^7.19.6",
     "@quanle94/innosetup": "^6.0.2",
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^22.0.2",
@@ -91,6 +91,7 @@
     "@storybook/addon-links": "^6.5.12",
     "@storybook/vue": "^6.5.12",
     "babel-loader": "^8.2.5",
+    "babelify": "^10.0.0",
     "browserify": "^17.0.0",
     "chai": "^4.3.6",
     "command-exists": "^1.2.9",

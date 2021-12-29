@@ -1,9 +1,13 @@
 import { i18n } from "../localization";
 
+const MD5 = require('md5.js');
+
+
 const receiver = {
     rateChartHeight: 117,
     analyticsChanges: {},
     needReboot: false,
+    elrsPassphraseEnabled: false,
 };
 
 receiver.initialize = function (callback) {
@@ -12,6 +16,30 @@ receiver.initialize = function (callback) {
     if (GUI.active_tab !== 'receiver') {
         GUI.active_tab = 'receiver';
     }
+
+    function lookup_elrs_passphrase(uidString) {
+        const passphraseMap = ConfigStorage.get('passphrase_map').passphrase_map || {};
+        return passphraseMap[uidString] ?? 0;
+    }
+
+    function save_elrs_passphrase(uidString, passphrase) {
+        const passphraseMap = ConfigStorage.get('passphrase_map').passphrase_map ?? {};
+        passphraseMap[uidString] = passphrase;
+        ConfigStorage.set({'passphrase_map': passphraseMap});
+      }
+
+    function elrs_passphrase_to_bytes(text) {
+
+        let uidBytes = [0,0,0,0,0,0];
+        if (text) {
+            const bindingPhraseFull = `-DMY_BINDING_PHRASE="${text}"`;
+            const md5stream = new MD5();
+            md5stream.end(bindingPhraseFull);
+            const    buffer = md5stream.read().subarray(0, 6);
+            uidBytes = Uint8Array.from(buffer);
+        }
+        return uidBytes;
+      }
 
     function get_rc_data() {
         MSP.send_message(MSPCodes.MSP_RC, false, false, get_rssi_config);
@@ -310,6 +338,36 @@ receiver.initialize = function (callback) {
                 spiRxElement.append(`<option value="${i}">${spiRxTypes[i]}</option>`);
             }
 
+            if (FC.FEATURE_CONFIG.features.isEnabled('RX_SPI') &&
+                FC.RX_CONFIG.rxSpiProtocol == 19 &&
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+
+                tab.elrsPassphraseEnabled = true;
+
+                const elrsUid = $('span.elrsUid');
+                const elrsUidString = FC.RX_CONFIG.elrsUid.join(',');
+
+                elrsUid.text(elrsUidString);
+
+                const elrsPassphrase = $('input.elrsPassphrase');
+
+                const passphraseString = lookup_elrs_passphrase(elrsUidString);
+                if (passphraseString) {
+                    elrsPassphrase.val(passphraseString);
+                }
+                elrsPassphrase.keyup(function() {
+                    const passphrase = $(this).val();
+                    if (passphrase) {
+                        elrsUid.text(elrs_passphrase_to_bytes(passphrase));
+                    } else {
+                        elrsUid.text("0.0.0.0.0.0");
+                    }
+                    updateSaveButton(true);
+                });
+            } else {
+                tab.elrsPassphraseEnabled = false;
+            }
+
             spiRxElement.change(function () {
                 const value = parseInt($(this).val());
 
@@ -381,6 +439,16 @@ receiver.initialize = function (callback) {
             }
         }
 
+        function checkShowElrsPassphrase() {
+            if (tab.elrsPassphraseEnabled) {
+                $('#elrsContainer').show();
+                $('input.elrsUid').show();
+            } else {
+                $('#elrsContainer').hide();
+                $('input.elrsUid').hide();
+            }
+        }
+
         $(featuresElement).filter('select').change(function () {
             const element = $(this);
             FC.FEATURE_CONFIG.features.updateData(element);
@@ -388,12 +456,14 @@ receiver.initialize = function (callback) {
             if (element.attr('name') === 'rxMode') {
                 checkShowSerialRxBox();
                 checkShowSpiRxBox();
+                checkShowElrsPassphrase();
                 updateSaveButton(true);
             }
         });
 
         checkShowSerialRxBox();
         checkShowSpiRxBox();
+        checkShowElrsPassphrase();
         updateSaveButton();
 
         $('a.refresh').click(function () {
@@ -440,6 +510,19 @@ receiver.initialize = function (callback) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_42)) {
                 FC.RX_CONFIG.rcSmoothingAutoFactor = parseInt($('input[name="rcSmoothingAutoFactor-number"]').val());
+            }
+
+            if (tab.elrsPassphraseEnabled) {
+                const elrsUidChars = $('span.elrsUid')[0].innerText.split(',').map(uidChar => parseInt(uidChar, 10));
+                if (elrsUidChars.length === 6) {
+                    FC.RX_CONFIG.elrsUid = elrsUidChars;
+
+                    const elrsUid =  $('span.elrsUid')[0].innerText;
+                    const elrsPassphrase = $('input.elrsPassphrase').val();
+                    save_elrs_passphrase(elrsUid, elrsPassphrase);
+                } else {
+                    FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
+                }
             }
 
             function save_rssi_config() {

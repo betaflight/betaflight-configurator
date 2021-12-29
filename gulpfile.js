@@ -1100,7 +1100,8 @@ function cordova_execbrowserify(file) {
     const filename = file.split('/').pop();
     const destpath = file.replace(filename, '');
     console.log(`Include required modules in ${file}`);
-    return browserify(file, { ignoreMissing: true })
+    return browserify(file, { ignoreMissing: true})
+        .transform("babelify", {presets: ["@babel/preset-env"] })
         .bundle()
         .pipe(source(filename))
         .pipe(gulp.dest(destpath));
