@@ -1,3 +1,43 @@
+<template>
+  <div class="logo">
+    <div class="logo_text">
+      <span>
+        {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }}
+      </span>
+      <span v-if="firmwareVersion && firmwareId">
+        {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
+        {{ firmwareId }}
+      </span>
+      <span v-if="hardwareId">
+        {{ $t("versionLabelTarget") }}: {{ hardwareId }}
+      </span>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    configuratorVersion: {
+      type: String,
+      required: true,
+    },
+    firmwareVersion: {
+      type: String,
+      default: '',
+    },
+    firmwareId: {
+      type: String,
+      default: '',
+    },
+    hardwareId: {
+      type: String,
+      default: '',
+    },
+  },
+};
+</script>
+
 <style>
 .logo {
   height: 70px;
@@ -69,40 +109,3 @@
   }
 }
 </style>
-
-<template>
-  <div class="logo">
-    <div class="logo_text">
-      <span>
-        {{ $t("versionLabelConfigurator") }}: {{ configuratorVersion }}
-      </span>
-      <span v-if="firmwareVersion && firmwareId">
-        {{ $t("versionLabelFirmware") }}: {{ firmwareVersion }}
-        {{ firmwareId }}
-      </span>
-      <span v-if="hardwareId">
-        {{ $t("versionLabelTarget") }}: {{ hardwareId }}
-      </span>
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-  props: {
-    configuratorVersion: {
-      type: String,
-      required: true,
-    },
-    firmwareVersion: {
-      type: String,
-    },
-    firmwareId: {
-      type: String,
-    },
-    hardwareId: {
-      type: String,
-    },
-  },
-};
-</script>
