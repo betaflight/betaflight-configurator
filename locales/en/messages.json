@@ -3771,7 +3771,7 @@
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<span class=\"message-negative\">CAUTION</span>: expert settings detected while in non-expert mode. Please enable Expert Mode to be able to make affected sliders accessible again.",
+        "message": "<strong>Note:</strong> Slider(s) are disabled because current values are outside the Basic Mode adjustment range. Switch to Expert Mode to make changes",
         "desciption": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
